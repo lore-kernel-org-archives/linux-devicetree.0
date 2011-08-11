@@ -1,61 +1,63 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Subject: L2x0 OF properties do not include interrupt #
-Date: Thu, 11 Aug 2011 14:09:10 +0100
-Message-ID: <20110811130910.GA10189@e102144-lin.cambridge.arm.com>
-References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
-	<201108101624.27881.arnd@arndb.de>
-	<20110810142808.GL10121@e102144-lin.cambridge.arm.com>
-	<201108111505.11887.arnd@arndb.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] Add interrupts property to L2x0 OF binding
+Date: Thu, 11 Aug 2011 15:01:56 +0100
+Message-ID: <1313071316-3363-1-git-send-email-mark.rutland@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201108111505.11887.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "workgroup.linux-kQvG35nSl+M@public.gmane.org" <workgroup.linux-kQvG35nSl+M@public.gmane.org>, "weizeng.he-kQvG35nSl+M@public.gmane.org" <weizeng.he-kQvG35nSl+M@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Barry Song <21cnbao@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 11, 2011 at 02:05:11PM +0100, Arnd Bergmann wrote:
-> On Wednesday 10 August 2011, Will Deacon wrote:
-> > I was hoping that it was possible to have separate properties which describe
-> > the interrupt. So you could have something like pmu-interrupt <75> and
-> > abort-interrupt <76> rather than interrupts <75, 76>.
-> 
-> Ok, I see.
-> 
-> > I've not played with DT bindings before though, so if it's usually done with
-> > an ordered list then so be it!
-> 
-> A lot of the code assumes that the property is called 'interrupts' and that
-> it contains a fixed-length array of interrupt numbers, each for one specific
-> purpose.
+Following the discussion here:
+http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-August/007301.html
 
-Ok, I wondered if something like that might be the case.
+The L2x0 L2 Cache Controllers support a combined interrupt line
+which can be used for several events (e.g. read/write/parity errors on
+tag/data RAM, event counter increment/overflow). Unfortunately the
+OF binding does not represent the interrupt.
 
-> Given that we have so many different meanings for the interrupts, I'm
-> not sure how this would work best in this case. According to
-> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0246f/CHDFHCFJ.html
-> this looks like a nested interrupt controller, i.e. the L2CC has its own mask
-> and status register with bits for each one of them. We could model these by
-> describing the l2cc interrupt controller with these registers and listing all
-> nine of the current inputs. I suspect however that it would be easier to just
-> assume that there is only one line for now, and treat the l2cc as a single
-> interrupt source with an internal status register.
+This patch adds an "interrupts" property to the L2x0 OF binding,
+representing the combined interrupt line.
 
-Given that this binding is only for the l2x0 / pl310 and I don't know of any
-implementation where > 1 interrupt line is wired up, I'm happy to assume a
-single combined interrupt line for now.
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Barry Song <21cnbao@gmail.com>
+Cc: Will Deacon <will.deacon@arm.com>
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-Cheers,
-
-Will
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index f50e021..7ca5216 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -28,6 +28,7 @@ Optional properties:
+ - arm,filter-ranges : <start length> Starting address and length of window to
+   filter. Addresses in the filter window are directed to the M1 port. Other
+   addresses will go to the M0 port.
++- interrupts : 1 combined interrupt.
+ 
+ Example:
+ 
+@@ -39,4 +40,5 @@ L2: cache-controller {
+         arm,filter-latency = <0x80000000 0x8000000>;
+         cache-unified;
+         cache-level = <2>;
++	interrupts = <45>;
+ };
+-- 
+1.7.0.4
