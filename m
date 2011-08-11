@@ -1,340 +1,105 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCHv4] mtd: gpio-nand: add device tree bindings
-Date: Thu, 11 Aug 2011 10:00:12 +0100
-Message-ID: <20110811090012.GC2732@pulham.picochip.com>
-References: <1312902747-21372-1-git-send-email-jamie@jamieiles.com>
-	<4E42A017.7040608@freescale.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: How to handle named resources with DT?
+Date: Thu, 11 Aug 2011 14:28:55 +0200
+Message-ID: <4E43CB07.20002@ti.com>
+References: <4E4166F0.9050401@ti.com>
+	<CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
+	<4E4172A8.3030101@ti.com> <4E417BD5.8080409@freescale.com>
+	<20110809205723.GE11568@ponder.secretlab.ca>
+	<4E41A1B9.1060400@ti.com>
+	<20110809211747.GJ11568@ponder.secretlab.ca>
+	<4E41AA43.1000506@ti.com>
+	<20110809214905.GK11568@ponder.secretlab.ca>
+	<4E41AC5C.20301@ti.com> <20110810015214.GD23511@yookeroo.fritz.box>
+	<CACxGe6tr5OUxpiVah4s6rRG0cTOWsnohhEkZoSZgCj0xSZkmMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4E42A017.7040608-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACxGe6tr5OUxpiVah4s6rRG0cTOWsnohhEkZoSZgCj0xSZkmMA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G,
+	Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Balbi,
+	Felipe" <balbi@ti.com>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2011 at 10:13:27AM -0500, Scott Wood wrote:
-> On 08/09/2011 10:12 AM, Jamie Iles wrote:
-> > +Optional properties:
-> > +- bank-width : Width (in bytes) of the device.  If not present, the width
-> > +  defaults to 8 bits.
-> 
-> "in bytes" versus "defaults to 8 bits"...
-> 
-> > +- chip-delay : chip dependent delay for transferring data from array to
-> > +  read registers (tR).  If not present then a default of 0 is used.
-> 
-> nand_set_defaults() will set this to 20 us if you pass in zero.
-> 
-> > +- gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
-> > +  location used to guard against bus reordering with regards to accesses to
-> > +  the GPIO's and the NAND flash data bus.  If present, then after changing
-> > +  GPIO state, this register will be read to ensure that the accesses have
-> > +  completed.
-> 
-> The driver does it before and after all cmd_ctrl byte writes, in
-> addition to after changing the GPIO state.
+On 8/10/2011 9:22 PM, Grant Likely wrote:
+> On Tue, Aug 9, 2011 at 7:52 PM, David Gibson
+> <david@gibson.dropbear.id.au>  wrote:
+>> On Tue, Aug 09, 2011 at 11:53:32PM +0200, Cousson, Benoit wrote:
+>>> On 8/9/2011 11:49 PM, Grant Likely wrote:
+>>>> That won't work either because that also breaks the existing 'reg'
+>>>> binding.  Anything you do will need to supplement the existing
+>>>> binding without changing it in an incompatible way.
+>>>
+>>> OK, but can we add a new attribute then? reg2, reg_ng, reg_plusplus,
+>>> reg_named...?
+>>
+>> He already suggested reg-names to be interpreted in parallel with the
+>> existing reg property.  The (serious) problem with replacing the reg
+>> property is that it will break all existing OSes (including old Linux
+>> versions) that don't understand the new property.
+>>
+>> Of course, the problem with reg-names is that it will be ignored by
+>> older OSes, and so 'reg' must still be in the correct order.  In which
+>> case you could argue it's more sensible to just have a static place to
+>> name mapping in the Linux driver.
+>>
+>> In short, yes, named reg elements in the DT would be nice in theory,
+>> but I'm not convinced it's worth a DT flag day to accomplish it.
+>
+> I'm inclined the same way, though I agree with the replies that point
+> out it wouldn't result in a 'flag day' because existing bindings
+> cannot become incompatible.  The problem I have is that adding
+> reg-names or similar implies that ordering of the reg property is no
+> longer defined which I absolutely do not think is a good idea.
 
-Hmm, I haven't done a great job documenting this binding!  Revised patch 
-below.
+That will not be an issue if "reg-named" is a completely new node. It 
+will replace the "reg" node only when a named entry is needed.
+Most devices will use the regular "reg" entry, and only the one that 
+need extra information will use the reg-named.
 
-Thanks Scott!
+That seems to be pretty straightforward to implement, and as soon as it 
+is useful even for a couple of drivers, it worth adding it.
 
-8<----
+It is anyway better than having to add a custom property to get the 
+information we will miss otherwise.
 
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCH] mtd: gpio-nand: add device tree bindings
+Moreover, since some drivers are relying on that call, it will avoid 
+having to add extra code for nothing if CONFIG_OF is set.
 
-Add device tree bindings so that the gpio-nand driver may be
-instantiated from the device tree.  This also allows the partitions
-to be specified in the device tree.
+It will allow the driver to use a pretty standard API in anycase vs 
+using platform_get_resource + some extra optional calls to of_ functions 
++ some code to get the information for non-DT build.
 
-v4:
-	- get io sync address from gpio-control-nand,io-sync-reg
-	  property rather than a resource
-	- clarified a few details in the binding
-v3:
-	- remove redundant cast and a couple of whitespace/naming
-	  changes
-v2:
-	- add CONFIG_OF guards for non-dt platforms
-	- compatible becomes gpio-control-nand
-	- clarify some binding details
+> Please, stick with the established convention and explicitly order
+> 'reg' and 'interrupts' properties.  If there is a specific use case
+> where this doesn't work, then bring it up, but I haven't seen any yet.
 
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
----
- .../devicetree/bindings/mtd/gpio-control-nand.txt  |   44 ++++++
- drivers/mtd/nand/gpio.c                            |  139 ++++++++++++++++++-
- 2 files changed, 175 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+There will always be some alternatives, but they will be uglier, and the 
+effort to add some extra node to DT is so small, that it is better to do 
+that instead of adding some useless extra code in the driver.
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-new file mode 100644
-index 0000000..719f4dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-@@ -0,0 +1,44 @@
-+GPIO assisted NAND flash
-+
-+The GPIO assisted NAND flash uses a memory mapped interface to
-+read/write the NAND commands and data and GPIO pins for the control
-+signals.
-+
-+Required properties:
-+- compatible : "gpio-control-nand"
-+- reg : should specify localbus chip select and size used for the chip.  The
-+  resource describes the data bus connected to the NAND flash and all accesses
-+  are made in native endianness.
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+  representing partitions.
-+- gpios : specifies the gpio pins to control the NAND device.  nwp is an
-+  optional gpio and may be set to 0 if not present.
-+
-+Optional properties:
-+- bank-width : Width (in bytes) of the device.  If not present, the width
-+  defaults to 1 byte.
-+- chip-delay : chip dependent delay for transferring data from array to
-+  read registers (tR).  If not present then a default of 20us is used.
-+- gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
-+  location used to guard against bus reordering with regards to accesses to
-+  the GPIO's and the NAND flash data bus.  If present, then after changing
-+  GPIO state and before and after command byte writes, this register will be
-+  read to ensure that the GPIO accesses have completed.
-+
-+Examples:
-+
-+gpio-nand@1,0 {
-+	compatible = "gpio-control-nand";
-+	reg = <1 0x0000 0x2>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	gpios = <&banka 1 0	/* rdy */
-+		 &banka 2 0 	/* nce */
-+		 &banka 3 0 	/* ale */
-+		 &banka 4 0 	/* cle */
-+		 0		/* nwp */>;
-+
-+	partition@0 {
-+	...
-+	};
-+};
-diff --git a/drivers/mtd/nand/gpio.c b/drivers/mtd/nand/gpio.c
-index 2c2060b..89b819b 100644
---- a/drivers/mtd/nand/gpio.c
-+++ b/drivers/mtd/nand/gpio.c
-@@ -27,6 +27,9 @@
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/nand-gpio.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_gpio.h>
- 
- struct gpiomtd {
- 	void __iomem		*io_sync;
-@@ -171,6 +174,99 @@ static int gpio_nand_devready(struct mtd_info *mtd)
- 	return gpio_get_value(gpiomtd->plat.gpio_rdy);
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id gpio_nand_id_table[] = {
-+	{ .compatible = "gpio-control-nand" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, gpio_nand_id_table);
-+
-+static int gpio_nand_of_get_options(struct device *dev,
-+				    struct gpio_nand_platdata *plat)
-+{
-+	u32 width;
-+
-+	if (!of_property_read_u32(dev->of_node, "bank-width", &width)) {
-+		if (width == 2) {
-+			plat->options |= NAND_BUSWIDTH_16;
-+		} else if (width != 1) {
-+			dev_err(dev, "invalid bank-width %u\n", width);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void gpio_nand_of_get_gpio(struct device *dev,
-+				  struct gpio_nand_platdata *plat)
-+{
-+	plat->gpio_rdy = of_get_gpio(dev->of_node, 0);
-+	plat->gpio_nce = of_get_gpio(dev->of_node, 1);
-+	plat->gpio_ale = of_get_gpio(dev->of_node, 2);
-+	plat->gpio_cle = of_get_gpio(dev->of_node, 3);
-+	plat->gpio_nwp = of_get_gpio(dev->of_node, 4);
-+}
-+
-+static void gpio_nand_of_get_chip_delay(struct device *dev,
-+					struct gpio_nand_platdata *plat)
-+{
-+	u32 chip_delay;
-+
-+	if (!of_property_read_u32(dev->of_node, "chip-delay", &chip_delay))
-+		plat->chip_delay = (int)chip_delay;
-+}
-+
-+static int gpio_nand_of_get_config(struct device *dev,
-+				   struct gpio_nand_platdata *plat)
-+{
-+	int ret = gpio_nand_of_get_options(dev, plat);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	gpio_nand_of_get_gpio(dev, plat);
-+	gpio_nand_of_get_chip_delay(dev, plat);
-+
-+	return 0;
-+}
-+
-+static struct resource *gpio_nand_of_get_io_sync(struct device *dev)
-+{
-+	struct resource *r = kzalloc(sizeof(*r), GFP_KERNEL);
-+	u64 addr;
-+
-+	if (!r)
-+		return NULL;
-+
-+	if (of_property_read_u64(dev->of_node,
-+				 "gpio-control-nand,io-sync-reg", &addr))
-+		goto out_free;
-+
-+	r->start = addr;
-+	r->end = r->start + 0x3;
-+	r->flags = IORESOURCE_MEM;
-+
-+	return r;
-+
-+out_free:
-+	kfree(r);
-+
-+	return NULL;
-+}
-+#else /* CONFIG_OF */
-+#define gpio_nand_id_table NULL
-+static inline int gpio_nand_of_get_config(struct device *dev,
-+					  struct gpio_nand_platdata *plat)
-+{
-+	return -ENODEV;
-+}
-+static inline struct resource *gpio_nand_of_get_io_sync(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_OF */
-+
- static int __devexit gpio_nand_remove(struct platform_device *dev)
- {
- 	struct gpiomtd *gpiomtd = platform_get_drvdata(dev);
-@@ -178,10 +274,15 @@ static int __devexit gpio_nand_remove(struct platform_device *dev)
- 
- 	nand_release(&gpiomtd->mtd_info);
- 
--	res = platform_get_resource(dev, IORESOURCE_MEM, 1);
-+	if (!dev->dev.of_node)
-+		res = platform_get_resource(dev, IORESOURCE_MEM, 1);
-+	else
-+		res = gpio_nand_of_get_io_sync(&dev->dev);
- 	iounmap(gpiomtd->io_sync);
- 	if (res)
- 		release_mem_region(res->start, resource_size(res));
-+	if (!dev->dev.of_node)
-+		kfree(res);
- 
- 	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
- 	iounmap(gpiomtd->nand_chip.IO_ADDR_R);
-@@ -226,9 +327,9 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
- 	struct gpiomtd *gpiomtd;
- 	struct nand_chip *this;
- 	struct resource *res0, *res1;
--	int ret;
-+	int ret = 0;
- 
--	if (!dev->dev.platform_data)
-+	if (!dev->dev.of_node && !dev->dev.platform_data)
- 		return -EINVAL;
- 
- 	res0 = platform_get_resource(dev, IORESOURCE_MEM, 0);
-@@ -248,7 +349,11 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
- 		goto err_map;
- 	}
- 
--	res1 = platform_get_resource(dev, IORESOURCE_MEM, 1);
-+	if (!dev->dev.of_node)
-+		res1 = platform_get_resource(dev, IORESOURCE_MEM, 1);
-+	else
-+		res1 = gpio_nand_of_get_io_sync(&dev->dev);
-+
- 	if (res1) {
- 		gpiomtd->io_sync = request_and_remap(res1, 4, "NAND sync", &ret);
- 		if (!gpiomtd->io_sync) {
-@@ -257,7 +362,16 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
- 		}
- 	}
- 
--	memcpy(&gpiomtd->plat, dev->dev.platform_data, sizeof(gpiomtd->plat));
-+	if (dev->dev.of_node)
-+		kfree(res1);
-+
-+	if (dev->dev.platform_data)
-+		memcpy(&gpiomtd->plat, dev->dev.platform_data,
-+		       sizeof(gpiomtd->plat));
-+	else
-+		ret = gpio_nand_of_get_config(&dev->dev, &gpiomtd->plat);
-+	if (ret)
-+		goto err_nce;
- 
- 	ret = gpio_request(gpiomtd->plat.gpio_nce, "NAND NCE");
- 	if (ret)
-@@ -312,10 +426,18 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
- 		goto err_wp;
- 	}
- 
--	if (gpiomtd->plat.adjust_parts)
--		gpiomtd->plat.adjust_parts(&gpiomtd->plat,
--					   gpiomtd->mtd_info.size);
-+	if (dev->dev.platform_data) {
-+		if (gpiomtd->plat.adjust_parts)
-+			gpiomtd->plat.adjust_parts(&gpiomtd->plat,
-+						   gpiomtd->mtd_info.size);
-+	} else {
-+		ret = of_mtd_parse_partitions(&dev->dev, dev->dev.of_node,
-+					      &gpiomtd->plat.parts);
-+		if (ret < 0)
-+			goto err_wp;
- 
-+		gpiomtd->plat.num_parts = ret;
-+	}
- 	mtd_device_register(&gpiomtd->mtd_info, gpiomtd->plat.parts,
- 			    gpiomtd->plat.num_parts);
- 	platform_set_drvdata(dev, gpiomtd);
-@@ -352,6 +474,7 @@ static struct platform_driver gpio_nand_driver = {
- 	.remove		= gpio_nand_remove,
- 	.driver		= {
- 		.name	= "gpio-nand",
-+		.of_match_table = gpio_nand_id_table,
- 	},
- };
- 
--- 
-1.7.4.1
+>   The current users of _byname that I've looked seem to only use it for
+> convenience, not because a register range may be optional.  ie. they
+> all fail out if a reg resource isn't present.
+
+If that API can help the driver writer and can avoid adding 10 lines of 
+code, it is still useful to use it.
+
+To be honest, I still do not understand why you are so reluctant to add 
+that small feature.
+
+That will not break compatibility and it will make our life easier.
+Don't you want to make our life easier? :-)
+
+Benoit
