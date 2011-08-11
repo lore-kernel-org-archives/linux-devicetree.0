@@ -1,63 +1,53 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] Add interrupts property to L2x0 OF binding
-Date: Thu, 11 Aug 2011 15:01:56 +0100
-Message-ID: <1313071316-3363-1-git-send-email-mark.rutland@arm.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: Subject: L2x0 OF properties do not include interrupt #
+Date: Thu, 11 Aug 2011 10:32:08 -0500
+Message-ID: <4E43F5F8.4060704@gmail.com>
+References: <000201cc575b$c1229010$4367b030$@rutland@arm.com> <201108101624.27881.arnd@arndb.de> <20110810142808.GL10121@e102144-lin.cambridge.arm.com> <201108111505.11887.arnd@arndb.de> <20110811130910.GA10189@e102144-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Barry Song <21cnbao@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110811130910.GA10189@e102144-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <Mark.Rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tglx@linutronix.de" <tglx@linutronix.de>, "weizeng.he@csr.com" <weizeng.he@csr.com>, "workgroup.linux@csr.com" <workgroup.linux@csr.com>, 'Barry Song' <21cnbao@gmail.com>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Olof Johansson' <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Following the discussion here:
-http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-August/007301.html
+On 08/11/2011 08:09 AM, Will Deacon wrote:
+> On Thu, Aug 11, 2011 at 02:05:11PM +0100, Arnd Bergmann wrote:
+>> On Wednesday 10 August 2011, Will Deacon wrote:
+>>> I was hoping that it was possible to have separate properties which describe
+>>> the interrupt. So you could have something like pmu-interrupt <75> and
+>>> abort-interrupt <76> rather than interrupts <75, 76>.
+>>
+>> Ok, I see.
+>>
+>>> I've not played with DT bindings before though, so if it's usually done with
+>>> an ordered list then so be it!
+>>
+>> A lot of the code assumes that the property is called 'interrupts' and that
+>> it contains a fixed-length array of interrupt numbers, each for one specific
+>> purpose.
+> 
+> Ok, I wondered if something like that might be the case.
+> 
+>> Given that we have so many different meanings for the interrupts, I'm
+>> not sure how this would work best in this case. According to
+>> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0246f/CHDFHCFJ.html
+>> this looks like a nested interrupt controller, i.e. the L2CC has its own mask
+>> and status register with bits for each one of them. We could model these by
+>> describing the l2cc interrupt controller with these registers and listing all
+>> nine of the current inputs. I suspect however that it would be easier to just
+>> assume that there is only one line for now, and treat the l2cc as a single
+>> interrupt source with an internal status register.
+> 
+> Given that this binding is only for the l2x0 / pl310 and I don't know of any
+> implementation where > 1 interrupt line is wired up, I'm happy to assume a
+> single combined interrupt line for now.
+> 
 
-The L2x0 L2 Cache Controllers support a combined interrupt line
-which can be used for several events (e.g. read/write/parity errors on
-tag/data RAM, event counter increment/overflow). Unfortunately the
-OF binding does not represent the interrupt.
+I know of one. Although, we have the combined interrupt as well. The
+binding should allow either way and specify the order. If the event
+counter interrupt is 1st, then it should be the same to s/w.
 
-This patch adds an "interrupts" property to the L2x0 OF binding,
-representing the combined interrupt line.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Barry Song <21cnbao@gmail.com>
-Cc: Will Deacon <will.deacon@arm.com>
----
- Documentation/devicetree/bindings/arm/l2cc.txt |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index f50e021..7ca5216 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -28,6 +28,7 @@ Optional properties:
- - arm,filter-ranges : <start length> Starting address and length of window to
-   filter. Addresses in the filter window are directed to the M1 port. Other
-   addresses will go to the M0 port.
-+- interrupts : 1 combined interrupt.
- 
- Example:
- 
-@@ -39,4 +40,5 @@ L2: cache-controller {
-         arm,filter-latency = <0x80000000 0x8000000>;
-         cache-unified;
-         cache-level = <2>;
-+	interrupts = <45>;
- };
--- 
-1.7.0.4
+Rob
