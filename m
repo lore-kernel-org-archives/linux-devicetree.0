@@ -1,82 +1,184 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Subject: L2x0 OF properties do not include interrupt #
-Date: Thu, 11 Aug 2011 11:06:23 -0500
-Message-ID: <4E43FDFF.1080401@gmail.com>
-References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
-	<201108101624.27881.arnd@arndb.de>
-	<20110810142808.GL10121@e102144-lin.cambridge.arm.com>
-	<201108111505.11887.arnd@arndb.de>
-	<20110811130910.GA10189@e102144-lin.cambridge.arm.com>
-	<4E43F5F8.4060704@gmail.com>
-	<20110811153800.GC5154@e102144-lin.cambridge.arm.com>
+From: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Subject: [PATCH v11 3/6] flexcan: Fix up fsl-flexcan device tree binding.
+Date: Thu, 11 Aug 2011 11:07:08 -0500
+Message-ID: <1313078831-2511-4-git-send-email-holt@sgi.com>
+References: <1313078831-2511-1-git-send-email-holt@sgi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110811153800.GC5154-SGELLbQ0bobZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "workgroup.linux-kQvG35nSl+M@public.gmane.org" <workgroup.linux-kQvG35nSl+M@public.gmane.org>, "weizeng.he-kQvG35nSl+M@public.gmane.org" <weizeng.he-kQvG35nSl+M@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <1313078831-2511-1-git-send-email-holt-sJ/iWh9BUns@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, U Bhaskar-B22300 <B22300@freescale.>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2011 10:38 AM, Will Deacon wrote:
-> On Thu, Aug 11, 2011 at 04:32:08PM +0100, Rob Herring wrote:
->> On 08/11/2011 08:09 AM, Will Deacon wrote:
->>> On Thu, Aug 11, 2011 at 02:05:11PM +0100, Arnd Bergmann wrote:
->>>> On Wednesday 10 August 2011, Will Deacon wrote:
->>>>> I was hoping that it was possible to have separate properties which describe
->>>>> the interrupt. So you could have something like pmu-interrupt <75> and
->>>>> abort-interrupt <76> rather than interrupts <75, 76>.
->>>>
->>>> Ok, I see.
->>>>
->>>>> I've not played with DT bindings before though, so if it's usually done with
->>>>> an ordered list then so be it!
->>>>
->>>> A lot of the code assumes that the property is called 'interrupts' and that
->>>> it contains a fixed-length array of interrupt numbers, each for one specific
->>>> purpose.
->>>
->>> Ok, I wondered if something like that might be the case.
->>>
->>>> Given that we have so many different meanings for the interrupts, I'm
->>>> not sure how this would work best in this case. According to
->>>> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0246f/CHDFHCFJ.html
->>>> this looks like a nested interrupt controller, i.e. the L2CC has its own mask
->>>> and status register with bits for each one of them. We could model these by
->>>> describing the l2cc interrupt controller with these registers and listing all
->>>> nine of the current inputs. I suspect however that it would be easier to just
->>>> assume that there is only one line for now, and treat the l2cc as a single
->>>> interrupt source with an internal status register.
->>>
->>> Given that this binding is only for the l2x0 / pl310 and I don't know of any
->>> implementation where > 1 interrupt line is wired up, I'm happy to assume a
->>> single combined interrupt line for now.
->>>
->>
->> I know of one. Although, we have the combined interrupt as well. The
->> binding should allow either way and specify the order. If the event
->> counter interrupt is 1st, then it should be the same to s/w.
-> 
-> You mean putting the combined interrupt first? If so, we may as well just
-> specify that until somebody builds a platform that doesn't have it.
-> 
+This patch cleans up the documentation of the device-tree binding for
+the Flexcan devices on Freescale's PowerPC and ARM cores. Extra
+properties are not used by the driver so we are removing them.
 
-No, either you have 1 interrupt and it is the combined one. or you have
-the 9? separate interrupts.  Having both combined and separate hooked up
-is a bit dumb, so I would not worry about that case. I would just define
-the event counter interrupt 1st as that is probably the primary use.
-Also, I think that was the only interrupt on the L2x0 controllers IIRC.
+Signed-off-by: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>,
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
+To: U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org,
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+Cc: PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ .../devicetree/bindings/net/can/fsl-flexcan.txt    |   69 ++++---------------
+ arch/powerpc/boot/dts/p1010rdb.dts                 |   10 +--
+ arch/powerpc/boot/dts/p1010si.dtsi                 |   10 +--
+ 3 files changed, 21 insertions(+), 68 deletions(-)
 
-It's also conceivable that some of the interrupts get routed somewhere
-else rather than just into the GIC.
-
-Rob
+diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+index 1a729f0..c78dcbb 100644
+--- a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
++++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+@@ -1,61 +1,22 @@
+-CAN Device Tree Bindings
+-------------------------
+-2011 Freescale Semiconductor, Inc.
++Flexcan CAN contoller on Freescale's ARM and PowerPC processors
+ 
+-fsl,flexcan-v1.0 nodes
+------------------------
+-In addition to the required compatible-, reg- and interrupt-properties, you can
+-also specify which clock source shall be used for the controller.
++Required properties:
+ 
+-CPI Clock- Can Protocol Interface Clock
+-	This CLK_SRC bit of CTRL(control register) selects the clock source to
+-	the CAN Protocol Interface(CPI) to be either the peripheral clock
+-	(driven by the PLL) or the crystal oscillator clock. The selected clock
+-	is the one fed to the prescaler to generate the Serial Clock (Sclock).
+-	The PRESDIV field of CTRL(control register) controls a prescaler that
+-	generates the Serial Clock (Sclock), whose period defines the
+-	time quantum used to compose the CAN waveform.
++- compatible : Should be "fsl,<processor>-flexcan" and "fsl,flexcan"
+ 
+-Can Engine Clock Source
+-	There are two sources for CAN clock
+-	- Platform Clock  It represents the bus clock
+-	- Oscillator Clock
++  An implementation should also claim any of the following compatibles
++  that it is fully backwards compatible with:
+ 
+-	Peripheral Clock (PLL)
+-	--------------
+-		     |
+-		    ---------		      -------------
+-		    |       |CPI Clock	      | Prescaler |       Sclock
+-		    |       |---------------->| (1.. 256) |------------>
+-		    ---------		      -------------
+-                     |  |
+-	--------------  ---------------------CLK_SRC
+-	Oscillator Clock
++  - fsl,p1010-flexcan
+ 
+-- fsl,flexcan-clock-source : CAN Engine Clock Source.This property selects
+-			     the peripheral clock. PLL clock is fed to the
+-			     prescaler to generate the Serial Clock (Sclock).
+-			     Valid values are "oscillator" and "platform"
+-			     "oscillator": CAN engine clock source is oscillator clock.
+-			     "platform" The CAN engine clock source is the bus clock
+-		             (platform clock).
++- reg : Offset and length of the register set for this device
++- interrupts : Interrupt tuple for this device
+ 
+-- fsl,flexcan-clock-divider : for the reference and system clock, an additional
+-			      clock divider can be specified.
+-- clock-frequency: frequency required to calculate the bitrate for FlexCAN.
++Example:
+ 
+-Note:
+-	- v1.0 of flexcan-v1.0 represent the IP block version for P1010 SOC.
+-	- P1010 does not have oscillator as the Clock Source.So the default
+-	  Clock Source is platform clock.
+-Examples:
+-
+-	can0@1c000 {
+-		compatible = "fsl,flexcan-v1.0";
+-		reg = <0x1c000 0x1000>;
+-		interrupts = <48 0x2>;
+-		interrupt-parent = <&mpic>;
+-		fsl,flexcan-clock-source = "platform";
+-		fsl,flexcan-clock-divider = <2>;
+-		clock-frequency = <fixed by u-boot>;
+-	};
++  can@1c000 {
++          compatible = "fsl,p1010-flexcan", "fsl,flexcan";
++          reg = <0x1c000 0x1000>;
++          interrupts = <48 0x2>;
++          interrupt-parent = <&mpic>;
++  };
+diff --git a/arch/powerpc/boot/dts/p1010rdb.dts b/arch/powerpc/boot/dts/p1010rdb.dts
+index 6b33b73..d6c669c 100644
+--- a/arch/powerpc/boot/dts/p1010rdb.dts
++++ b/arch/powerpc/boot/dts/p1010rdb.dts
+@@ -23,6 +23,8 @@
+ 		ethernet2 = &enet2;
+ 		pci0 = &pci0;
+ 		pci1 = &pci1;
++		can0 = &can0;
++		can1 = &can1;
+ 	};
+ 
+ 	memory {
+@@ -169,14 +171,6 @@
+ 			};
+ 		};
+ 
+-		can0@1c000 {
+-			fsl,flexcan-clock-source = "platform";
+-		};
+-
+-		can1@1d000 {
+-			fsl,flexcan-clock-source = "platform";
+-		};
+-
+ 		usb@22000 {
+ 			phy_type = "utmi";
+ 		};
+diff --git a/arch/powerpc/boot/dts/p1010si.dtsi b/arch/powerpc/boot/dts/p1010si.dtsi
+index 7f51104..f00076b 100644
+--- a/arch/powerpc/boot/dts/p1010si.dtsi
++++ b/arch/powerpc/boot/dts/p1010si.dtsi
+@@ -140,20 +140,18 @@
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+-		can0@1c000 {
+-			compatible = "fsl,flexcan-v1.0";
++		can0: can@1c000 {
++			compatible = "fsl,p1010-flexcan", "fsl,flexcan";
+ 			reg = <0x1c000 0x1000>;
+ 			interrupts = <48 0x2>;
+ 			interrupt-parent = <&mpic>;
+-			fsl,flexcan-clock-divider = <2>;
+ 		};
+ 
+-		can1@1d000 {
+-			compatible = "fsl,flexcan-v1.0";
++		can1: can@1d000 {
++			compatible = "fsl,p1010-flexcan", "fsl,flexcan";
+ 			reg = <0x1d000 0x1000>;
+ 			interrupts = <61 0x2>;
+ 			interrupt-parent = <&mpic>;
+-			fsl,flexcan-clock-divider = <2>;
+ 		};
+ 
+ 		L2: l2-cache-controller@20000 {
+-- 
+1.7.2.1
