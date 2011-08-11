@@ -1,163 +1,204 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH RESEND 1/2] olpc_battery: bind to device tree
-Date: Wed, 10 Aug 2011 21:45:36 +0100 (BST)
-Message-ID: <20110810204536.C6FCA9D401C__25522.5854264156$1313009464$gmane$org@zog.reactivated.net>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC PATCH] ARM: gic: add OF based initialization
+Date: Thu, 11 Aug 2011 08:56:07 +0100
+Message-ID: <4E438B17.10907@arm.com>
+References: <1313007324-23194-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: cbou-JGs/UdohzUI@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1313007324-23194-1-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "jamie@jamieiles.com" <jamie@jamieiles.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is cleaner, and allows suspend/resume (wakeup) handlers to be
-added in an upcoming patch.
+Hi Rob,
 
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Acked-by: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
----
- .../bindings/power_supply/olpc_battery.txt         |    5 ++
- drivers/power/olpc_battery.c                       |   55 ++++++++++++--------
- 2 files changed, 39 insertions(+), 21 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power_supply/olpc_battery.txt
+Thanks for looking at this.
 
-diff --git a/Documentation/devicetree/bindings/power_supply/olpc_battery.txt b/Documentation/devicetree/bindings/power_supply/olpc_battery.txt
-new file mode 100644
-index 0000000..c8901b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/olpc_battery.txt
-@@ -0,0 +1,5 @@
-+OLPC battery
-+~~~~~~~~~~~~
-+
-+Required properties:
-+  - compatible : "olpc,xo1-battery"
-diff --git a/drivers/power/olpc_battery.c b/drivers/power/olpc_battery.c
-index 0b0ff3a..9972268 100644
---- a/drivers/power/olpc_battery.c
-+++ b/drivers/power/olpc_battery.c
-@@ -519,9 +519,8 @@ static struct device_attribute olpc_bat_error = {
-  *		Initialisation
-  *********************************************************************/
- 
--static struct platform_device *bat_pdev;
--
- static struct power_supply olpc_bat = {
-+	.name = "olpc-battery",
- 	.get_property = olpc_bat_get_property,
- 	.use_for_apm = 1,
- };
-@@ -534,14 +533,11 @@ void olpc_battery_trigger_uevent(unsigned long cause)
- 		kobject_uevent(&olpc_bat.dev->kobj, KOBJ_CHANGE);
- }
- 
--static int __init olpc_bat_init(void)
-+static int __devinit olpc_battery_probe(struct platform_device *pdev)
- {
--	int ret = 0;
-+	int ret;
- 	uint8_t status;
- 
--	if (!olpc_platform_info.ecver)
--		return -ENXIO;
--
- 	/*
- 	 * We've seen a number of EC protocol changes; this driver requires
- 	 * the latest EC protocol, supported by 0x44 and above.
-@@ -558,15 +554,10 @@ static int __init olpc_bat_init(void)
- 
- 	/* Ignore the status. It doesn't actually matter */
- 
--	bat_pdev = platform_device_register_simple("olpc-battery", 0, NULL, 0);
--	if (IS_ERR(bat_pdev))
--		return PTR_ERR(bat_pdev);
--
--	ret = power_supply_register(&bat_pdev->dev, &olpc_ac);
-+	ret = power_supply_register(&pdev->dev, &olpc_ac);
- 	if (ret)
--		goto ac_failed;
-+		return ret;
- 
--	olpc_bat.name = bat_pdev->name;
- 	if (olpc_board_at_least(olpc_board_pre(0xd0))) { /* XO-1.5 */
- 		olpc_bat.properties = olpc_xo15_bat_props;
- 		olpc_bat.num_properties = ARRAY_SIZE(olpc_xo15_bat_props);
-@@ -575,7 +566,7 @@ static int __init olpc_bat_init(void)
- 		olpc_bat.num_properties = ARRAY_SIZE(olpc_xo1_bat_props);
- 	}
- 
--	ret = power_supply_register(&bat_pdev->dev, &olpc_bat);
-+	ret = power_supply_register(&pdev->dev, &olpc_bat);
- 	if (ret)
- 		goto battery_failed;
- 
-@@ -587,7 +578,7 @@ static int __init olpc_bat_init(void)
- 	if (ret)
- 		goto error_failed;
- 
--	goto success;
-+	return 0;
- 
- error_failed:
- 	device_remove_bin_file(olpc_bat.dev, &olpc_bat_eeprom);
-@@ -595,22 +586,44 @@ eeprom_failed:
- 	power_supply_unregister(&olpc_bat);
- battery_failed:
- 	power_supply_unregister(&olpc_ac);
--ac_failed:
--	platform_device_unregister(bat_pdev);
--success:
- 	return ret;
- }
- 
--static void __exit olpc_bat_exit(void)
-+static int __devexit olpc_battery_remove(struct platform_device *pdev)
- {
- 	device_remove_file(olpc_bat.dev, &olpc_bat_error);
- 	device_remove_bin_file(olpc_bat.dev, &olpc_bat_eeprom);
- 	power_supply_unregister(&olpc_bat);
- 	power_supply_unregister(&olpc_ac);
--	platform_device_unregister(bat_pdev);
-+	return 0;
- }
- 
-+static const struct of_device_id olpc_battery_ids[] __devinitconst = {
-+	{ .compatible = "olpc,xo1-battery" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, olpc_battery_ids);
-+
-+static struct platform_driver olpc_battery_drv = {
-+	.driver = {
-+		.name = "olpc-battery",
-+		.owner = THIS_MODULE,
-+		.of_match_table = olpc_battery_ids,
-+	},
-+	.probe = olpc_battery_probe,
-+	.remove = __devexit_p(olpc_battery_remove),
-+};
-+
-+static int __init olpc_bat_init(void)
-+{
-+	return platform_driver_register(&olpc_battery_drv);
-+}
- module_init(olpc_bat_init);
-+
-+static void __exit olpc_bat_exit(void)
-+{
-+	platform_driver_unregister(&olpc_battery_drv);
-+}
- module_exit(olpc_bat_exit);
- 
- MODULE_AUTHOR("David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>");
+On 10/08/11 21:15, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
+> 
+> This adds gic initialization using device tree data. An example device tree
+> binding looks like this:
+> 
+> intc: interrupt-controller@fff11000 {
+>         compatible = "arm,cortex-a9-gic";
+>         #interrupt-cells = <1>;
+
+The SPI interrupt can either be level-high or edge-rising. So you
+probably want #interrupt-cells to be equal to 2...
+
+> 	#size-cells = <0>;
+> 	#address-cells = <1>;
+>
+>         interrupt-controller;
+>         reg = <0xfff11000 0x1000>,
+>               <0xfff10100 0x100>;
+> 
+> 	gicppi0: gic-ppi@0 {
+> 		compatible = "arm,cortex-a9-gic-ppi";
+> 		#interrupt-cells = <1>;
+> 		interrupt-controller;
+> 		reg = <0>;
+> 	};
+> 	gicppi1: gic-ppi@1 {
+> 		compatible = "arm,cortex-a9-gic-ppi";
+> 		#interrupt-cells = <1>;
+> 		interrupt-controller;
+> 		reg = <1>;
+> 	};
+> };
+> 
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> ---
+> 
+> Marc,
+> 
+> This adds PPI handling. I took your binding and modified it a bit to make
+> things a bit simpler for the linux side. Rather than having SPIs as a 
+> child node, I kept them at the parent node. Then PPIs are optional child
+> nodes. This way, a secondary GIC is no more complex than a simple
+> interrupt controller.
+
+Maybe it's not a real problem, but this makes PPIs a sort of "cascaded"
+interrupt controller, which I find rather misleading. In reality, there
+is no hierarchy between SPIs and PPIs.
+
+Is it legal for an interrupt controller to have an interrupt controller
+as a parent, without an interrupt number? How will irq_of_parse_and_map
+react to this? I'm quite sure of_irq_find_parent(ppi) will return the
+wrong thing (the SPI controller).
+
+> The PPI init simply creates an irqdomain for each cpu interface. By using 
+> a domain per PPI and SPI, the translation is simple. The domain irq_base
+> is always 0, so PPI # is always equal to linux irq number. This can be
+> changed if the linux irq numbering of PPI's changes, but that should not
+> affect the binding.
+> 
+> The documentation still needs updating.
+> 
+> Rob
+> 
+>  Documentation/devicetree/bindings/arm/gic.txt |   28 +++++++++++++++++
+>  arch/arm/common/gic.c                         |   40 +++++++++++++++++++++++++
+>  arch/arm/include/asm/hardware/gic.h           |    3 ++
+>  3 files changed, 71 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> new file mode 100644
+> index 0000000..78012e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -0,0 +1,28 @@
+> +* ARM Generic Interrupt Controller
+> +
+> +Some ARM cores have an interrupt controller called GIC. The ARM GIC
+> +representation in the device tree should be done as under:-
+> +
+> +Required properties:
+> +
+> +- compatible : should be one of:
+> +	"arm,cortex-a9-gic"
+> +	"arm,arm11mp-gic"
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source.  The type shall be a <u32> and the value shall be 1.
+> +- reg : Specifies base physical address(s) and size of the GIC registers. The
+> +  first 2 values are the GIC distributor register base and size. The 2nd 2
+> +  values are the GIC cpu interface register base and size.
+> +
+> +Example:
+> +
+> +intc: interrupt-controller@fff11000 {
+> +        compatible = "arm,cortex-a9-gic";
+> +        #interrupt-cells = <1>;
+> +        interrupt-controller;
+> +        reg = <0xfff11000 0x1000>,
+> +              <0xfff10100 0x100>;
+> +};
+> +
+> +
+> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+> index f13298e..b0f11b3 100644
+> --- a/arch/arm/common/gic.c
+> +++ b/arch/arm/common/gic.c
+> @@ -28,6 +28,10 @@
+>  #include <linux/smp.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/irqdomain.h>
+>  
+>  #include <asm/irq.h>
+>  #include <asm/mach/irq.h>
+> @@ -394,3 +398,39 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
+>  	writel_relaxed(map << 16 | irq, gic_data[0].dist_base + GIC_DIST_SOFTINT);
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_OF
+> +static int gic_cnt __initdata = 0;
+> +
+> +void __init gic_of_init(struct of_intc_desc *d)
+> +{
+> +	struct device_node *np = d->controller;
+> +	void __iomem *cpu_base;
+> +	void __iomem *dist_base;
+> +	int irq;
+> +
+> +	if (WARN_ON(!d || !d->controller))
+> +		return;
+> +
+> +	dist_base = of_iomap(np, 0);
+> +	WARN(!dist_base, "unable to map gic dist registers\n");
+> +
+> +	cpu_base = of_iomap(np, 1);
+> +	WARN(!cpu_base, "unable to map gic cpu registers\n");
+> +
+> +	gic_init(gic_cnt, d->irq_base, dist_base, cpu_base);
+> +	irq_domain_add_simple(d->controller, d->irq_base);
+> +
+> +	if (d->parent) {
+> +		irq = irq_of_parse_and_map(np, 0);
+> +		gic_cascade_irq(gic_cnt, irq);
+> +	}
+> +	gic_cnt++;
+> +}
+> +
+> +void __init gic_of_ppi_init(struct of_intc_desc *d)
+> +{
+> +	irq_domain_add_simple(d->controller, d->irq_base);
+> +}
+> +
+> +#endif
+> diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
+> index 435d3f8..a6594d4 100644
+> --- a/arch/arm/include/asm/hardware/gic.h
+> +++ b/arch/arm/include/asm/hardware/gic.h
+> @@ -37,6 +37,9 @@ extern void __iomem *gic_cpu_base_addr;
+>  extern struct irq_chip gic_arch_extn;
+>  
+>  void gic_init(unsigned int, unsigned int, void __iomem *, void __iomem *);
+> +struct of_intc_desc;
+> +void gic_of_init(struct of_intc_desc *d);
+> +void gic_of_ppi_init(struct of_intc_desc *d);
+>  void gic_secondary_init(unsigned int);
+>  void gic_cascade_irq(unsigned int gic_nr, unsigned int irq);
+>  void gic_raise_softirq(const struct cpumask *mask, unsigned int irq);
+
+
 -- 
-1.7.6
+Jazz is not dead. It just smells funny...
