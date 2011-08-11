@@ -1,57 +1,70 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: Subject: L2x0 OF properties do not include interrupt #
-Date: Thu, 11 Aug 2011 17:34:27 +0100
-Message-ID: <20110811163427.GD5154@e102144-lin.cambridge.arm.com>
-References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
-	<201108101624.27881.arnd@arndb.de>
-	<20110810142808.GL10121@e102144-lin.cambridge.arm.com>
-	<201108111505.11887.arnd@arndb.de>
-	<20110811130910.GA10189@e102144-lin.cambridge.arm.com>
-	<4E43F5F8.4060704@gmail.com>
-	<20110811153800.GC5154@e102144-lin.cambridge.arm.com>
-	<4E43FDFF.1080401@gmail.com>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: Re: [PATCH v11 5/6] flexcan: Prefer device tree clock frequency if
+	available.
+Date: Thu, 11 Aug 2011 18:35:50 +0200
+Message-ID: <4E4404E6.5060302@grandegger.com>
+References: <1313078831-2511-1-git-send-email-holt@sgi.com>
+	<1313078831-2511-6-git-send-email-holt@sgi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4E43FDFF.1080401@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, 'Barry Song' <21cnbao@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "workgroup.linux@csr.com" <workgroup.linux@csr.com>, 'Grant Likely' <grant.likely@secretlab.ca>, "weizeng.he@csr.com" <weizeng.he@csr.com>, 'Olof Johansson' <olof@lixom.net>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <1313078831-2511-6-git-send-email-holt-sJ/iWh9BUns@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 11, 2011 at 05:06:23PM +0100, Rob Herring wrote:
-> On 08/11/2011 10:38 AM, Will Deacon wrote:
-> > 
-> > You mean putting the combined interrupt first? If so, we may as well just
-> > specify that until somebody builds a platform that doesn't have it.
-> > 
+On 08/11/2011 06:07 PM, Robin Holt wrote:
+> If our CAN device's device tree node has a clock-frequency property,
+> then use that value for the can devices clock frequency.  If not, fall
+> back to asking the platform/mach code for the clock frequency associated
+> with the flexcan device.
 > 
-> No, either you have 1 interrupt and it is the combined one. or you have
-> the 9? separate interrupts.  Having both combined and separate hooked up
-> is a bit dumb, so I would not worry about that case. I would just define
-> the event counter interrupt 1st as that is probably the primary use.
-> Also, I think that was the only interrupt on the L2x0 controllers IIRC.
+> Signed-off-by: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+> To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
+> To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>,
+> To: U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org,
+> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+> Cc: PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> ---
+>  .../devicetree/bindings/net/can/fsl-flexcan.txt    |    2 +
+>  drivers/net/can/flexcan.c                          |   33 +++++++++++++++-----
+>  2 files changed, 27 insertions(+), 8 deletions(-)
 > 
-> It's also conceivable that some of the interrupts get routed somewhere
-> else rather than just into the GIC.
+> diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> index c78dcbb..a4382c7 100644
+> --- a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> +++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>  
+>  - reg : Offset and length of the register set for this device
+>  - interrupts : Interrupt tuple for this device
+> +- clock-frequency : The oscillator frequency driving the flexcan device
+>  
+>  Example:
+>  
+> @@ -19,4 +20,5 @@ Example:
+>            reg = <0x1c000 0x1000>;
+>            interrupts = <48 0x2>;
+>            interrupt-parent = <&mpic>;
+> +          clock-frequency = <0x0bebc1fc>;
 
-Ok. I think the binding that Mark posted to devicetree-discuss:
+             clock-frequency = <200000000>; // filled in by bootloader
 
-http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-August/007349.html
-
-will take care of this. We have a single interrupt (I don't think we even
-need to specify what it is). Interrupt handlers can request this with
-IRQ_SHARED and then check the status register to see whether they actually
-need to do anything.
-
-Will
+Is better readable. You should also add the comment.
+	
+Wolfgang.
