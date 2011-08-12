@@ -1,46 +1,49 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: How to handle named resources with DT?
-Date: Fri, 12 Aug 2011 19:47:55 +0800
-Message-ID: <20110812114754.GI6618@S2100-06.ap.freescale.net>
-References: <20110809162907.GA630@manju-WNB7PBC4801-0006>
- <4E4166F0.9050401@ti.com>
- <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
- <4E4172A8.3030101@ti.com>
- <20110809205542.GD11568@ponder.secretlab.ca>
- <4E41A156.3030407@ti.com>
- <20110809211657.GI11568@ponder.secretlab.ca>
- <4E41A886.30205@ti.com>
- <20110812041016.GA6618@S2100-06.ap.freescale.net>
- <4E44EAAD.1030805@ti.com>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: Re: [PATCH v12 5/6] flexcan: Prefer device tree clock frequency if
+	available.
+Date: Fri, 12 Aug 2011 14:22:56 +0200
+Message-ID: <4E451B20.2070207@grandegger.com>
+References: <1313138752-24006-1-git-send-email-holt@sgi.com>
+	<1313138752-24006-6-git-send-email-holt@sgi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4E44EAAD.1030805@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <1313138752-24006-6-git-send-email-holt-sJ/iWh9BUns@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2011 at 10:56:13AM +0200, Cousson, Benoit wrote:
-[...]
-> >>The devil is in the details, but the way the DMA lines are connected
-> >>in OMAP is similar to IRQ lines, and maybe a little bit simpler.
-> >>
-> >>So starting with a copy/paste of the of_irq file should be a good start.
-> >>And then the issues will start:-)
-> >>
-> >
-> >I had a conversation with Arnd as below.  Arnd has the concern on
-> >multiple dma controllers.  So it is a question if we need to handle
-> >multiple dma controllers like we do for multiple irq controllers.
+On 08/12/2011 10:45 AM, Robin Holt wrote:
+> If our CAN device's device tree node has a clock-frequency property,
+> then use that value for the can devices clock frequency.  If not, fall
+> back to asking the platform/mach code for the clock frequency associated
+> with the flexcan device.
 > 
-> Quite, interesting, I cannot find the thread, did you discuss that
-> on linaro-dev, lakml?
-> 
-http://thread.gmane.org/gmane.linux.drivers.devicetree/6587
+> Signed-off-by: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+> To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
+> To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>,
+> To: U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org,
+> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+> Cc: PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 
--- 
-Regards,
-Shawn
+Acked-by: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 
+>From the Socket-CAN point of view, this and the other patches can go in.
+Thanks for your effort.
+
+Wolfgang.
