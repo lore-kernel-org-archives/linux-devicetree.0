@@ -1,49 +1,55 @@
-From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Subject: Re: [PATCH v12 5/6] flexcan: Prefer device tree clock frequency if
-	available.
-Date: Fri, 12 Aug 2011 14:22:56 +0200
-Message-ID: <4E451B20.2070207@grandegger.com>
-References: <1313138752-24006-1-git-send-email-holt@sgi.com>
-	<1313138752-24006-6-git-send-email-holt@sgi.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: How to handle named resources with DT?
+Date: Fri, 12 Aug 2011 16:35:42 +0200
+Message-ID: <201108121635.42953.arnd@arndb.de>
+References: <20110809205723.GE11568@ponder.secretlab.ca>
+	<20110812030218.GP30552@yookeroo.fritz.box>
+	<20110812084106.GC19467@legolas.emea.dhcp.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-In-Reply-To: <1313138752-24006-6-git-send-email-holt-sJ/iWh9BUns@public.gmane.org>
-List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
-List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
-Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-To: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110812084106.GC19467-UiBtZHVXSwEVvW8u9ZQWYwjfymiNCTlR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Cc: "Hilman, Kevin" <khilman-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "Cousson,
+	Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/12/2011 10:45 AM, Robin Holt wrote:
-> If our CAN device's device tree node has a clock-frequency property,
-> then use that value for the can devices clock frequency.  If not, fall
-> back to asking the platform/mach code for the clock frequency associated
-> with the flexcan device.
+On Friday 12 August 2011, Felipe Balbi wrote:
+> On Fri, Aug 12, 2011 at 01:02:18PM +1000, David Gibson wrote:
 > 
-> Signed-off-by: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
-> To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
-> To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>,
-> To: U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org,
-> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
-> Cc: PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> the whole point of using *byname() is for the driver to not care about
+> the order of the resources. So if driver has to provided an ordered list
+> of names, what's the benefit ? Sounds really stupid to provide an
+> ordered list of names to an ordered list of resources, just to use
+> *byname() instead of just assuming the list of resources is already
+> ordered.
 
-Acked-by: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+It only make sense for drivers that support both device tree probing
+and legacy probing of static platform devices.
 
->From the Socket-CAN point of view, this and the other patches can go in.
-Thanks for your effort.
+Note how almost all drivers use only platform_get_resource and not
+platform_get_resource_byname:
 
-Wolfgang.
+arnd@ocdc-kvm:~/linux-arm$ git grep -wl platform_get_resource | wc -l
+565
+arnd@ocdc-kvm:~/linux-arm$ git grep -wl platform_get_resource_byname | wc -l
+41
+arnd@ocdc-kvm:~/linux-arm$ git grep -wl platform_get_resource_byname | xargs grep -wL platform_get_resource | wc -l # both
+28
+arnd@ocdc-kvm:~/linux-arm$ git grep -wl platform_get_resource_byname | xargs grep -wl platform_get_resource  | wc -l # only _byname
+13
+
+I think it's much easier to change the existing users of _byname over
+to fixed indexes than to come up with a new scheme that is better.
+
+	Arnd
