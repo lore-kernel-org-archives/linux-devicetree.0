@@ -1,55 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: How to handle named resources with DT?
-Date: Fri, 12 Aug 2011 16:35:42 +0200
-Message-ID: <201108121635.42953.arnd@arndb.de>
-References: <20110809205723.GE11568@ponder.secretlab.ca>
-	<20110812030218.GP30552@yookeroo.fritz.box>
-	<20110812084106.GC19467@legolas.emea.dhcp.ti.com>
+Date: Fri, 12 Aug 2011 16:40:21 +0200
+Message-ID: <201108121640.22199.arnd@arndb.de>
+References: <4E40FC88.5090403@ti.com> <20110812041016.GA6618@S2100-06.ap.freescale.net> <4E44EAAD.1030805@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110812084106.GC19467-UiBtZHVXSwEVvW8u9ZQWYwjfymiNCTlR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
-Cc: "Hilman, Kevin" <khilman-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "Cousson,
-	Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4E44EAAD.1030805@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, Shawn Guo <shawn.guo@freescale.com>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, Grant Likely <grant.likely@secretlab.ca>, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 12 August 2011, Felipe Balbi wrote:
-> On Fri, Aug 12, 2011 at 01:02:18PM +1000, David Gibson wrote:
+On Friday 12 August 2011, Cousson, Benoit wrote:
+> > Arnd Bergmann:
+> > But I really don't think there is value in using IORESOURCE_DMA for this.
+> > We don't have the code to manage DMA resources for more than one DMA
+> > controller AFAICT, and I think we should not add it. Globally
+> > unique interrupt numbers cause us a lot of trouble and we go to great
+> > lengths to fake them on modern devices.
 > 
-> the whole point of using *byname() is for the driver to not care about
-> the order of the resources. So if driver has to provided an ordered list
-> of names, what's the benefit ? Sounds really stupid to provide an
-> ordered list of names to an ordered list of resources, just to use
-> *byname() instead of just assuming the list of resources is already
-> ordered.
+> Yeah, that totally makes sense. We do have several DMA engines in OMAP 
+> anyway, so unique number is clearly not the best approach.
+> But in that case, it means adding a new kernel API for that and not only 
+> an of_XXX one. Because driver should then rely on it with or without DT.
+> 
+> > It would be much better
+> > not to have them visible in the OS, and I don't want to add them to
+> > a modern API like the dmaengine.
+> 
+> That part is less clear to me, what does it means?
+> 
 
-It only make sense for drivers that support both device tree probing
-and legacy probing of static platform devices.
+I mean you can have DMA channel numbers visible in the device
+tree, relative to a 'parent' dma controller, but I would not
+expose them as numbers on a device driver interface. Instead,
+I think the interface we provide to the device driver is one
+where we pass the device using the DMA channel into a generic
+dmaengine API and let that figure out where it's connected
+in order to return a struct dma_chan pointer.
 
-Note how almost all drivers use only platform_get_resource and not
-platform_get_resource_byname:
-
-arnd@ocdc-kvm:~/linux-arm$ git grep -wl platform_get_resource | wc -l
-565
-arnd@ocdc-kvm:~/linux-arm$ git grep -wl platform_get_resource_byname | wc -l
-41
-arnd@ocdc-kvm:~/linux-arm$ git grep -wl platform_get_resource_byname | xargs grep -wL platform_get_resource | wc -l # both
-28
-arnd@ocdc-kvm:~/linux-arm$ git grep -wl platform_get_resource_byname | xargs grep -wl platform_get_resource  | wc -l # only _byname
-13
-
-I think it's much easier to change the existing users of _byname over
-to fixed indexes than to come up with a new scheme that is better.
-
-	Arnd
+	ARnd
