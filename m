@@ -1,144 +1,79 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: How to handle named resources with DT?
-Date: Fri, 12 Aug 2011 12:10:17 +0800
-Message-ID: <20110812041016.GA6618@S2100-06.ap.freescale.net>
-References: <4E40FC88.5090403@ti.com>
- <20110809162907.GA630@manju-WNB7PBC4801-0006>
- <4E4166F0.9050401@ti.com>
- <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
- <4E4172A8.3030101@ti.com>
- <20110809205542.GD11568@ponder.secretlab.ca>
- <4E41A156.3030407@ti.com>
- <20110809211657.GI11568@ponder.secretlab.ca>
- <4E41A886.30205@ti.com>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [PATCH] ASoC: Add device tree binding for WM8753
+Date: Fri, 12 Aug 2011 12:35:37 +0800
+Message-ID: <CAGsJ_4xG9yEqmewL+N5B2Dm7i20AWOk8rYfaxgqrKkW312Wsdg@mail.gmail.com>
+References: <1312778255-29755-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+	<CAGsJ_4y2tDb3ZBPo8bCtrjFt0OWzR8WeG+kL_RKJPRP7-pZopw@mail.gmail.com>
+	<20110809065100.GB8017@core.coreip.homeip.net>
+	<20110809142851.GA15861@opensource.wolfsonmicro.com>
+	<CAGsJ_4w-YhWQTFovkynKVVr6JkwcHJQn-EmfxUxOSd=C2BwhiA@mail.gmail.com>
+	<20110810045113.GA23625@opensource.wolfsonmicro.com>
+	<CAGsJ_4ykb65aD_a-04NuE-DRoERmB+WKLvaS8+5VYpE6pgOh5w@mail.gmail.com>
+	<20110810063025.GA31765@opensource.wolfsonmicro.com>
+	<CAGsJ_4zmY7gXyD6EDmYgRVAkmOaQVa79LuVSrK287Q=pHF6_FA@mail.gmail.com>
+	<20110812035308.GA25184@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4E41A886.30205@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20110812035308.GA25184@core.coreip.homeip.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2011 at 11:37:10PM +0200, Cousson, Benoit wrote:
-> On 8/9/2011 11:16 PM, Grant Likely wrote:
-> >On Tue, Aug 09, 2011 at 11:06:30PM +0200, Cousson, Benoit wrote:
-> >>On 8/9/2011 10:55 PM, Grant Likely wrote:
-> >>>On Tue, Aug 09, 2011 at 07:47:20PM +0200, Cousson, Benoit wrote:
-> >>>>On 8/9/2011 7:23 PM, Grant Likely wrote:
-> >>>>>On Tue, Aug 9, 2011 at 10:57 AM, Cousson, Benoit<b-cousson@ti.com>    wrote:
-> >>>>>>Hi Manju,
-> >>>>>>
-> >>>>>>On 8/9/2011 6:29 PM, G, Manjunath Kondaiah wrote:
-> >>>>>>>
-> >>>>>>>Hi Benoit,
-> >>>>>>>
-> >>>>>>>On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
-> >>>>>>>>
-> >>>>>>>>Hi Grant,
-> >>>>>>>>
-> >>>>>>>>Trying to bind hwmod informations with DT, I'm facing a little
-> >>>>>>>>limitation.
-> >>>>>>>>A bunch of drivers are using the platform_get_resource_byname, so
-> >>>>>>>>the name for the resource is needed.
-> >>>>>>>>
-> >>>>>>>>The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and
-> >>>>>>>>IORESOURCE_DMA types of resources.
-> >>>>>>>
-> >>>>>>>IORESOURCE_MEM and IORESOURCE_IRQ's are fetched from dt blob and
-> >>>>>>>it will be part of pdev.
-> >>>>>>
-> >>>>>>Yes, but without the proper name in the resource structure. It will be then
-> >>>>>>impossible to use the platform_get_resource_byname function that is
-> >>>>>>currently used by a bunch of drivers.
-> >>>>>
-> >>>>>There is no analogous mechanism for _byname in the device tree.  The
-> >>>>>DT binding for a device must explicitly state what order the register
-> >>>>>ranges are in.  The driver will need to be adapted.
-> >>>>
-> >>>>That seems to be a small regression for my point of view. Relying on
-> >>>>the order is not super safe. This is not very readable either.
-> >>>>That's for that exact reason that we changed our drivers to use
-> >>>>platform_get_resource_byname. That's probably the reason why that
-> >>>>API is there as well.
-> >>>>For the same IP, the number of entries can vary depending of the SoC
-> >>>>revision.
-> >>>>By using the _byname, we can check if the resource is there or not
-> >>>>without having to care about the position.
-> >>>
-> >>>We've done it that way for a very long time with the device tree.  If
-> >>>you want to do something by name, then propose a binding that will
-> >>>make it work alongside the existing scheme.
-> >>>
-> >>>>
-> >>>>>>>For IORESOURCE_DMA, you can have property
-> >>>>>>>"dma-channel" in dtsi file and fetch dma-channel in driver probe
-> >>>>>>>through "of_property_read_u32()" api.
-> >>>>>>
-> >>>>>>That will not be enough to get the name. So maybe something like:
-> >>>>>>        dmas =<12>, "rx_req",<13>, "tx_req";
-> >>>>>>will be doable.
-> >>>>>>The issue is that the name is optional so managing the multiple entries
-> >>>>>>might be tricky.
-> >>>>>
-> >>>>>DMA channels will never show up in the resource structure anyway.
-> >>>>
-> >>>>Can you elaborate on that point? AFAIK, IORESOURCE_DMA is already
-> >>>>used today.
-> >>>
-> >>>IORESOURCE_DMA is a Linux construct, as is IORESOURCE_IRQ and
-> >>>IORESOURCE_MEM.  However, IRQ and MEM can be directly mapped from the
-> >>>common 'reg' and 'interrupts' bindings used by pretty much all device
-> >>>tree nodes.  Therefore common code can be written to translate MEM and
-> >>>IRQ that will always work.  There is no such common binding in place
-> >>>for DMA regions, so common setup code cannot do it transparently for
-> >>>the device driver.
-> >>
-> >>OK, sure, I get your point now. I was thinking about a "potential"
-> >>dma support from the core DT, since this is very similar to IRQ.
-> >>
-> >>Otherwise, we can do it OMAP specific if nobody else care about
-> >>that. But I still think it should be useful for other platforms.
-> >
-It is definitely useful for other platforms, so please add the support
-in DT core.
-
-> >I think people care, and it will be a net win, but it does mean you
-> >need do the work of crafting a binding that will work for a large
-> >proportion of SoCs.
-> 
-When it comes out, I will happily test it on imx :)
-
-> The devil is in the details, but the way the DMA lines are connected
-> in OMAP is similar to IRQ lines, and maybe a little bit simpler.
-> 
-> So starting with a copy/paste of the of_irq file should be a good start.
-> And then the issues will start:-)
-> 
-
-I had a conversation with Arnd as below.  Arnd has the concern on
-multiple dma controllers.  So it is a question if we need to handle
-multiple dma controllers like we do for multiple irq controllers.
-
---- quote ---
-Shawn Guo:
-> Then like that IRQ number is decoded and populated into IORESOURCE_IRQ
-> by device tree infrastructural code, we can also do the same into
-> IORESOURCE_DMA.  In that case, drivers do not need any code change for
-> getting dma channel/event numbers from device tree, as
-> platform_get_resource(pdev, IORESOURCE_DMA) still works for them.
-
-Arnd Bergmann:
-But I really don't think there is value in using IORESOURCE_DMA for this.
-We don't have the code to manage DMA resources for more than one DMA
-controller AFAICT, and I think we should not add it. Globally
-unique interrupt numbers cause us a lot of trouble and we go to great
-lengths to fake them on modern devices. It would be much better
-not to have them visible in the OS, and I don't want to add them to
-a modern API like the dmaengine.
----
-
-Regards,
-Shawn
-
+MjAxMS84LzEyIERtaXRyeSBUb3Jva2hvdiA8ZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbT46Cj4g
+T24gRnJpLCBBdWcgMTIsIDIwMTEgYXQgMTE6MTY6NDlBTSArMDgwMCwgQmFycnkgU29uZyB3cm90
+ZToKPj4gMjAxMS84LzEwIE1hcmsgQnJvd24gPGJyb29uaWVAb3BlbnNvdXJjZS53b2xmc29ubWlj
+cm8uY29tPjoKPj4gPiBPbiBXZWQsIEF1ZyAxMCwgMjAxMSBhdCAwMTo1NzoxMVBNICswODAwLCBC
+YXJyeSBTb25nIHdyb3RlOgo+PiA+PiAyMDExLzgvMTAgTWFyayBCcm93biA8YnJvb25pZUBvcGVu
+c291cmNlLndvbGZzb25taWNyby5jb20+Ogo+PiA+Cj4+ID4+ID4+IMKgc3RydWN0IGFkczc4NDZf
+cGxhdGZvcm1fZGF0YSB7Cj4+ID4+ID4+IMKgIMKgIMKgIMKgIHUxNiDCoCDCoCBtb2RlbDsgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAvKiA3ODQzLCA3ODQ1LCA3ODQ2LCA3ODczLiAqLwo+PiA+
+PiA+PiDCoCDCoCDCoCDCoCB1MTYgwqAgwqAgdnJlZl9tdjsgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAvKiBleHRlcm5hbCB2cmVmIHZhbHVlLCBtaWxsaVZvbHRzCj4+ID4+ID4+IMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgKiBhZHM3
+ODQ2OiBpZiAwLCB1c2UgaW50ZXJuYWwgdnJlZiAqLwo+PiA+Cj4+ID4+ID4gVGhlcmUncyBzb21l
+IGNhbGxiYWNrcyBidXQgdGhlIGJ1bGsgb2YgdGhlIHN0cnVjdHVyZSAoaW5jbHVkaW5nIHRoZSBi
+aXRzCj4+ID4+ID4gSSBxdW90ZWQgYWJvdmUgZm9yIGV4YW1wbGUpIGxvb2tzIGxpa2UgaXQncyBw
+dXJlIGRhdGEgYW5kIGNvdWxkIHNlbnNpYmx5Cj4+ID4+ID4gYmUgcmVwcmVzZW50ZWQgaW4gdGhl
+IGRldmljZSB0cmVlLgo+PiA+Cj4+ID4+IHRoZXJlIGhhdmUgYmVlbiBtYW55IGRpc2N1c3Npb25z
+IGFib3V0IHdoYXQgc2hvdWxkIGJlIGluIGR0cy4KPj4gPj4gYmFzaWNhbGx5LCBoYXJkd2FyZSBp
+bmZvcm1hdGlvbiBzaG91bGQgYmUgaW4gZHRzLCBidXQgZGF0YSByZXF1aXJlZCBieQo+PiA+PiBk
+cml2ZXIgaW1wbGVtZW50YXRpb24gc2hvdWxkIGJlIG5vdCBpbiBkdHMuCj4+ID4+IFRoZXJlIGFy
+ZSBhIGxvdCBvZiBmaWVsZHMgaW4gdGhlIHN0cnVjdHVyZSwgbm90IGFsbCBjYW4gYmUgYSBwcm9w
+ZXJ0eQo+PiA+PiBhcyBoYXJkd2FyZSBpbmZvcm1hdGlvbiBpbiBkdHMuIFRoYXQgbWVhbnMgdGhl
+IGRyaXZlciBuZWVkIGEgbG90IG9mCj4+ID4+IGNoYW5nZXMgdGhlbi4KPj4gPgo+PiA+IFRoaW5n
+cyBsaWtlIHRoZSBmaWVsZHMgcXVvdGVkIGFib3ZlIHNlZW0gbGlrZSB0aGV5J3JlIGZpeGVkIGhh
+cmR3YXJlCj4+ID4gcHJvcGVydGllcyB0aGF0IG9ndWh0IHRvIGJlIGluIHRoZSBkZXZpY2UgdHJl
+ZSwgdGhvdWdoLgo+Pgo+PiBhdCBsZWFzdCB3YWtldXAsIGlycV9mbGFncyBpbiB0aGUgc3RydWN0
+dXJlIHNob3VsZCBiZSBzb21ldGhpbmcKPj4gcmVsYXRlZCB3aXRoIGRyaXZlciBpbXBsZW1lbnRh
+dGlvbiBub3QgaGFyZHdhcmUuIFN1cHBvc2UgYWxsIG90aGVycwo+PiBhcmUgaGFyZHdhcmUgcHJv
+cGVydGllcywgaXQgbG9va3MgdGVycmlibGUgdG8gbGlzdCBhbmQgZ2V0IHNvIG1hbnkKPj4gcHJv
+cGVydGllcyBpbiBkdHMgYW5kIGRyaXZlcnMuCj4+IHNvIGRvIHdlIGhhdmUgc29tZSBzaW1wbGVy
+IHdheSB0byBwcmVzZW50IGEgbGFyZ2UgbnVtYmVyIG9mIHByb3BlcnRpZXMgaW4gRFQ/Cj4+IEJU
+VywgZXZlbiB0aG91Z2ggd2UgbWFrZSBhbGwgaGFyZHdhcmUgaW5mb3JtYXRpb24gYmUgcHJvcGVy
+dGllcyBpbgo+PiBkdHMsIGRyaXZlcnMgbWlnaHQgc3RpbGwgbmVlZCBzb21lIG90aGVyIHBsYXRm
+b3JtX2RhdGEgb25seSBpbmNsdWRpbmcKPj4gc29mdHdhcmUtcmVsYXRlZCBzdHVmZiBmb3IgaW1w
+bGVtZW50YXRpb24uIEFuZCBDYWxsYmFjayBpcyBhbHNvCj4+IGFub3RoZXIgYmlnIGlzc3VlIHRv
+by4KPj4gaWYgd2UgY2FuJ3QgYXZvaWQgc29mdHdhcmUgcGxhdGZvcm0gZGF0YSBhbmQgY2FsbGJh
+Y2tzLCB0aGVyZSB3aWxsCj4+IHN0aWxsIGJlIHNvbWUgcGxhdGZvcm0gaW5pdGlsaXphdGlvbiBj
+b2RlcyBpbiBib2FyZCBmaWxlcy4KPgo+IE1heWJlIHNob3VsZCBub3QgYWRkIERUIGJpbmRpbmdz
+IGZvciBkZXZpY2VzIHRoYXQgY2FuJ3QgYmUgYWRlcXVhdGVseQo+IGV4cHJlc3NlZCB2aWEgRFQg
+cHJvcGVydGllcyBbeWV0XT8gQmVjYXVzZSBJIGRvIG5vdCBzZWUgd2hhdCBiZW5lZml0cyB3ZQo+
+IGdldCBzaW5jZSBwbGF0Zm9ybSBjb2RlIHN0aWxsIG5lZWRzIHRvIHByb3ZpZGUgbWlzc2luZyBk
+YXRhIGFuZCBub3cgd2UnZAo+IGhhdmUgaXNzdWUgb2YgZGF0YSBub3QgYmVpbmcgdGhlcmUgd2hl
+biBkZXZpY2UgaXMgcmVnaXN0ZXJlZCBhbmQgZHJpdmVyCj4gaXMgYmVpbmcgYm91bmQgdG8gaXQu
+CgpzbyBpdCBsb29rcyBsaWtlIGEgY29tbW9uIGlzc3VlIGZvciBEVC4gd2hhdCdzIHlvdXIgb3Bp
+bmlvbiwgR3JhbnQ/Cgo+Cj4gLS0KPiBEbWl0cnkKPgotYmFycnkKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxz
+YS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
