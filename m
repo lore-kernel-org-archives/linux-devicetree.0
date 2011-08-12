@@ -1,47 +1,46 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: Subject: L2x0 OF properties do not include interrupt #
-Date: Fri, 12 Aug 2011 10:02:48 +0100
-Message-ID: <20110812090248.GI4775@n2100.arm.linux.org.uk>
-References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
-	<201108101624.27881.arnd@arndb.de>
-	<20110810142808.GL10121@e102144-lin.cambridge.arm.com>
-	<201108111505.11887.arnd@arndb.de>
-	<20110811130910.GA10189@e102144-lin.cambridge.arm.com>
-	<4E43F5F8.4060704@gmail.com>
-	<20110811153800.GC5154@e102144-lin.cambridge.arm.com>
-	<4E43FDFF.1080401@gmail.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: How to handle named resources with DT?
+Date: Fri, 12 Aug 2011 19:47:55 +0800
+Message-ID: <20110812114754.GI6618@S2100-06.ap.freescale.net>
+References: <20110809162907.GA630@manju-WNB7PBC4801-0006>
+ <4E4166F0.9050401@ti.com>
+ <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com>
+ <4E4172A8.3030101@ti.com>
+ <20110809205542.GD11568@ponder.secretlab.ca>
+ <4E41A156.3030407@ti.com>
+ <20110809211657.GI11568@ponder.secretlab.ca>
+ <4E41A886.30205@ti.com>
+ <20110812041016.GA6618@S2100-06.ap.freescale.net>
+ <4E44EAAD.1030805@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4E43FDFF.1080401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "workgroup.linux-kQvG35nSl+M@public.gmane.org" <workgroup.linux-kQvG35nSl+M@public.gmane.org>, "weizeng.he-kQvG35nSl+M@public.gmane.org" <weizeng.he-kQvG35nSl+M@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <4E44EAAD.1030805@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 11, 2011 at 11:06:23AM -0500, Rob Herring wrote:
-> No, either you have 1 interrupt and it is the combined one. or you have
-> the 9? separate interrupts.  Having both combined and separate hooked up
-> is a bit dumb, so I would not worry about that case. I would just define
-> the event counter interrupt 1st as that is probably the primary use.
-> Also, I think that was the only interrupt on the L2x0 controllers IIRC.
+On Fri, Aug 12, 2011 at 10:56:13AM +0200, Cousson, Benoit wrote:
+[...]
+> >>The devil is in the details, but the way the DMA lines are connected
+> >>in OMAP is similar to IRQ lines, and maybe a little bit simpler.
+> >>
+> >>So starting with a copy/paste of the of_irq file should be a good start.
+> >>And then the issues will start:-)
+> >>
+> >
+> >I had a conversation with Arnd as below.  Arnd has the concern on
+> >multiple dma controllers.  So it is a question if we need to handle
+> >multiple dma controllers like we do for multiple irq controllers.
 > 
-> It's also conceivable that some of the interrupts get routed somewhere
-> else rather than just into the GIC.
+> Quite, interesting, I cannot find the thread, did you discuss that
+> on linaro-dev, lakml?
+> 
+http://thread.gmane.org/gmane.linux.drivers.devicetree/6587
 
-A lot of other primecells have the one-combined and individual interrupts.
-So far, in the last 10 years, no one's used the individual interrupts in
-Linux (or even afaik wired them up.)  Not with either the original ARM
-primecells or the vendor modified ones.
+-- 
+Regards,
+Shawn
 
-That tells us something about the individual interrupts.
