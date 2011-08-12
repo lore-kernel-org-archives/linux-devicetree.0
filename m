@@ -1,158 +1,47 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: How to handle named resources with DT?
-Date: Fri, 12 Aug 2011 10:56:13 +0200
-Message-ID: <4E44EAAD.1030805@ti.com>
-References: <4E40FC88.5090403@ti.com> <20110809162907.GA630@manju-WNB7PBC4801-0006> <4E4166F0.9050401@ti.com> <CACxGe6tbEW1EZhqXy78EZVM_sQLH0Qbr7QOzbgbsKBRn1FtVrg@mail.gmail.com> <4E4172A8.3030101@ti.com> <20110809205542.GD11568@ponder.secretlab.ca> <4E41A156.3030407@ti.com> <20110809211657.GI11568@ponder.secretlab.ca> <4E41A886.30205@ti.com> <20110812041016.GA6618@S2100-06.ap.freescale.net>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: Subject: L2x0 OF properties do not include interrupt #
+Date: Fri, 12 Aug 2011 10:02:48 +0100
+Message-ID: <20110812090248.GI4775@n2100.arm.linux.org.uk>
+References: <000201cc575b$c1229010$4367b030$@rutland@arm.com>
+	<201108101624.27881.arnd@arndb.de>
+	<20110810142808.GL10121@e102144-lin.cambridge.arm.com>
+	<201108111505.11887.arnd@arndb.de>
+	<20110811130910.GA10189@e102144-lin.cambridge.arm.com>
+	<4E43F5F8.4060704@gmail.com>
+	<20110811153800.GC5154@e102144-lin.cambridge.arm.com>
+	<4E43FDFF.1080401@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110812041016.GA6618@S2100-06.ap.freescale.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4E43FDFF.1080401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "workgroup.linux-kQvG35nSl+M@public.gmane.org" <workgroup.linux-kQvG35nSl+M@public.gmane.org>, "weizeng.he-kQvG35nSl+M@public.gmane.org" <weizeng.he-kQvG35nSl+M@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/12/2011 6:10 AM, Shawn Guo wrote:
-> On Tue, Aug 09, 2011 at 11:37:10PM +0200, Cousson, Benoit wrote:
->> On 8/9/2011 11:16 PM, Grant Likely wrote:
->>> On Tue, Aug 09, 2011 at 11:06:30PM +0200, Cousson, Benoit wrote:
->>>> On 8/9/2011 10:55 PM, Grant Likely wrote:
->>>>> On Tue, Aug 09, 2011 at 07:47:20PM +0200, Cousson, Benoit wrote:
->>>>>> On 8/9/2011 7:23 PM, Grant Likely wrote:
->>>>>>> On Tue, Aug 9, 2011 at 10:57 AM, Cousson, Benoit<b-cousson@ti.com>     wrote:
->>>>>>>> Hi Manju,
->>>>>>>>
->>>>>>>> On 8/9/2011 6:29 PM, G, Manjunath Kondaiah wrote:
->>>>>>>>>
->>>>>>>>> Hi Benoit,
->>>>>>>>>
->>>>>>>>> On Tue, Aug 09, 2011 at 11:23:20AM +0200, Cousson, Benoit wrote:
->>>>>>>>>>
->>>>>>>>>> Hi Grant,
->>>>>>>>>>
->>>>>>>>>> Trying to bind hwmod informations with DT, I'm facing a little
->>>>>>>>>> limitation.
->>>>>>>>>> A bunch of drivers are using the platform_get_resource_byname, so
->>>>>>>>>> the name for the resource is needed.
->>>>>>>>>>
->>>>>>>>>> The name is used so far for IORESOURCE_MEM, IORESOURCE_IRQ and
->>>>>>>>>> IORESOURCE_DMA types of resources.
->>>>>>>>>
->>>>>>>>> IORESOURCE_MEM and IORESOURCE_IRQ's are fetched from dt blob and
->>>>>>>>> it will be part of pdev.
->>>>>>>>
->>>>>>>> Yes, but without the proper name in the resource structure. It will be then
->>>>>>>> impossible to use the platform_get_resource_byname function that is
->>>>>>>> currently used by a bunch of drivers.
->>>>>>>
->>>>>>> There is no analogous mechanism for _byname in the device tree.  The
->>>>>>> DT binding for a device must explicitly state what order the register
->>>>>>> ranges are in.  The driver will need to be adapted.
->>>>>>
->>>>>> That seems to be a small regression for my point of view. Relying on
->>>>>> the order is not super safe. This is not very readable either.
->>>>>> That's for that exact reason that we changed our drivers to use
->>>>>> platform_get_resource_byname. That's probably the reason why that
->>>>>> API is there as well.
->>>>>> For the same IP, the number of entries can vary depending of the SoC
->>>>>> revision.
->>>>>> By using the _byname, we can check if the resource is there or not
->>>>>> without having to care about the position.
->>>>>
->>>>> We've done it that way for a very long time with the device tree.  If
->>>>> you want to do something by name, then propose a binding that will
->>>>> make it work alongside the existing scheme.
->>>>>
->>>>>>
->>>>>>>>> For IORESOURCE_DMA, you can have property
->>>>>>>>> "dma-channel" in dtsi file and fetch dma-channel in driver probe
->>>>>>>>> through "of_property_read_u32()" api.
->>>>>>>>
->>>>>>>> That will not be enough to get the name. So maybe something like:
->>>>>>>>         dmas =<12>, "rx_req",<13>, "tx_req";
->>>>>>>> will be doable.
->>>>>>>> The issue is that the name is optional so managing the multiple entries
->>>>>>>> might be tricky.
->>>>>>>
->>>>>>> DMA channels will never show up in the resource structure anyway.
->>>>>>
->>>>>> Can you elaborate on that point? AFAIK, IORESOURCE_DMA is already
->>>>>> used today.
->>>>>
->>>>> IORESOURCE_DMA is a Linux construct, as is IORESOURCE_IRQ and
->>>>> IORESOURCE_MEM.  However, IRQ and MEM can be directly mapped from the
->>>>> common 'reg' and 'interrupts' bindings used by pretty much all device
->>>>> tree nodes.  Therefore common code can be written to translate MEM and
->>>>> IRQ that will always work.  There is no such common binding in place
->>>>> for DMA regions, so common setup code cannot do it transparently for
->>>>> the device driver.
->>>>
->>>> OK, sure, I get your point now. I was thinking about a "potential"
->>>> dma support from the core DT, since this is very similar to IRQ.
->>>>
->>>> Otherwise, we can do it OMAP specific if nobody else care about
->>>> that. But I still think it should be useful for other platforms.
->>>
-> It is definitely useful for other platforms, so please add the support
-> in DT core.
+On Thu, Aug 11, 2011 at 11:06:23AM -0500, Rob Herring wrote:
+> No, either you have 1 interrupt and it is the combined one. or you have
+> the 9? separate interrupts.  Having both combined and separate hooked up
+> is a bit dumb, so I would not worry about that case. I would just define
+> the event counter interrupt 1st as that is probably the primary use.
+> Also, I think that was the only interrupt on the L2x0 controllers IIRC.
+> 
+> It's also conceivable that some of the interrupts get routed somewhere
+> else rather than just into the GIC.
 
-Well, I still have to solve the resource_byname issue for IRQ and REG 
-first :-)
+A lot of other primecells have the one-combined and individual interrupts.
+So far, in the last 10 years, no one's used the individual interrupts in
+Linux (or even afaik wired them up.)  Not with either the original ARM
+primecells or the vendor modified ones.
 
->>> I think people care, and it will be a net win, but it does mean you
->>> need do the work of crafting a binding that will work for a large
->>> proportion of SoCs.
->>
-> When it comes out, I will happily test it on imx :)
-
-Now, you are putting a lot of pressure on my shoulders :-)
-
-We are still missing basic DT support for OMAP4 and just started the 
-OMAP3 beagleboard, so it will take some time before facing the DMA 
-issue. But it will happen, probably sooner than later.
-
->
->> The devil is in the details, but the way the DMA lines are connected
->> in OMAP is similar to IRQ lines, and maybe a little bit simpler.
->>
->> So starting with a copy/paste of the of_irq file should be a good start.
->> And then the issues will start:-)
->>
->
-> I had a conversation with Arnd as below.  Arnd has the concern on
-> multiple dma controllers.  So it is a question if we need to handle
-> multiple dma controllers like we do for multiple irq controllers.
-
-Quite, interesting, I cannot find the thread, did you discuss that on 
-linaro-dev, lakml?
-
-> --- quote ---
-> Shawn Guo:
->> Then like that IRQ number is decoded and populated into IORESOURCE_IRQ
->> by device tree infrastructural code, we can also do the same into
->> IORESOURCE_DMA.  In that case, drivers do not need any code change for
->> getting dma channel/event numbers from device tree, as
->> platform_get_resource(pdev, IORESOURCE_DMA) still works for them.
->
-> Arnd Bergmann:
-> But I really don't think there is value in using IORESOURCE_DMA for this.
-> We don't have the code to manage DMA resources for more than one DMA
-> controller AFAICT, and I think we should not add it. Globally
-> unique interrupt numbers cause us a lot of trouble and we go to great
-> lengths to fake them on modern devices.
-
-Yeah, that totally makes sense. We do have several DMA engines in OMAP 
-anyway, so unique number is clearly not the best approach.
-But in that case, it means adding a new kernel API for that and not only 
-an of_XXX one. Because driver should then rely on it with or without DT.
-
-> It would be much better
-> not to have them visible in the OS, and I don't want to add them to
-> a modern API like the dmaengine.
-
-That part is less clear to me, what does it means?
-
-Regards,
-Benoit
-
+That tells us something about the individual interrupts.
