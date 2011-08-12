@@ -1,80 +1,170 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: How to handle named resources with DT?
-Date: Fri, 12 Aug 2011 11:41:07 +0300
-Message-ID: <20110812084106.GC19467@legolas.emea.dhcp.ti.com>
-References: <20110809205723.GE11568@ponder.secretlab.ca>
- <4E41A1B9.1060400@ti.com>
- <20110809211747.GJ11568@ponder.secretlab.ca>
- <4E41AA43.1000506@ti.com>
- <20110809214905.GK11568@ponder.secretlab.ca>
- <4E41AC5C.20301@ti.com>
- <20110810015214.GD23511@yookeroo.fritz.box>
- <CACxGe6tr5OUxpiVah4s6rRG0cTOWsnohhEkZoSZgCj0xSZkmMA@mail.gmail.com>
- <4E43CB07.20002@ti.com>
- <20110812030218.GP30552@yookeroo.fritz.box>
-Reply-To: balbi@ti.com
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JgQwtEuHJzHdouWu"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110812030218.GP30552@yookeroo.fritz.box>
-Sender: linux-omap-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, Grant Likely <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Balbi, Felipe" <balbi@ti.com>
+From: Robin Holt <holt@sgi.com>
+Subject: [PATCH v12 3/6] flexcan: Fix up fsl-flexcan device tree binding.
+Date: Fri, 12 Aug 2011 03:45:49 -0500
+Message-ID: <1313138752-24006-4-git-send-email-holt@sgi.com>
+References: <1313138752-24006-1-git-send-email-holt@sgi.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1313138752-24006-1-git-send-email-holt@sgi.com>
+Sender: netdev-owner@vger.kernel.org
+To: Kumar Gala <galak@kernel.crashing.org>, Wolfgang Grandegger <wg@grandegger.com>, U Bhaskar-B22300 <B22300@freescale.>
+Cc: Robin Holt <holt@sgi.com>, Marc Kleine-Budde <mkl@pengutronix.de>, socketcan-core@lists.berlios.de, netdev@vger.kernel.org, PPC list <linuxppc-dev@lists.ozlabs.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+This patch cleans up the documentation of the device-tree binding for
+the Flexcan devices on Freescale's PowerPC and ARM cores. Extra
+properties are not used by the driver so we are removing them.
 
---JgQwtEuHJzHdouWu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Robin Holt <holt@sgi.com>
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>,
+To: Wolfgang Grandegger <wg@grandegger.com>,
+To: U Bhaskar-B22300 <B22300@freescale.com>
+To: Scott Wood <scottwood@freescale.com>
+To: Grant Likely <grant.likely@secretlab.ca>
+To: Kumar Gala <galak@kernel.crashing.org>
+Cc: socketcan-core@lists.berlios.de,
+Cc: netdev@vger.kernel.org,
+Cc: PPC list <linuxppc-dev@lists.ozlabs.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ .../devicetree/bindings/net/can/fsl-flexcan.txt    |   61 ++++----------------
+ arch/powerpc/boot/dts/p1010rdb.dts                 |   10 +---
+ arch/powerpc/boot/dts/p1010si.dtsi                 |   10 +--
+ 3 files changed, 17 insertions(+), 64 deletions(-)
 
-Hi,
+diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+index 1a729f0..80a78a9 100644
+--- a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
++++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+@@ -1,61 +1,22 @@
+-CAN Device Tree Bindings
+-------------------------
+-2011 Freescale Semiconductor, Inc.
++Flexcan CAN contoller on Freescale's ARM and PowerPC system-on-a-chip (SOC).
+ 
+-fsl,flexcan-v1.0 nodes
+------------------------
+-In addition to the required compatible-, reg- and interrupt-properties, you can
+-also specify which clock source shall be used for the controller.
++Required properties:
+ 
+-CPI Clock- Can Protocol Interface Clock
+-	This CLK_SRC bit of CTRL(control register) selects the clock source to
+-	the CAN Protocol Interface(CPI) to be either the peripheral clock
+-	(driven by the PLL) or the crystal oscillator clock. The selected clock
+-	is the one fed to the prescaler to generate the Serial Clock (Sclock).
+-	The PRESDIV field of CTRL(control register) controls a prescaler that
+-	generates the Serial Clock (Sclock), whose period defines the
+-	time quantum used to compose the CAN waveform.
++- compatible : Should be "fsl,<processor>-flexcan" and "fsl,flexcan"
+ 
+-Can Engine Clock Source
+-	There are two sources for CAN clock
+-	- Platform Clock  It represents the bus clock
+-	- Oscillator Clock
++  An implementation should also claim any of the following compatibles
++  that it is fully backwards compatible with:
+ 
+-	Peripheral Clock (PLL)
+-	--------------
+-		     |
+-		    ---------		      -------------
+-		    |       |CPI Clock	      | Prescaler |       Sclock
+-		    |       |---------------->| (1.. 256) |------------>
+-		    ---------		      -------------
+-                     |  |
+-	--------------  ---------------------CLK_SRC
+-	Oscillator Clock
++  - fsl,p1010-flexcan
+ 
+-- fsl,flexcan-clock-source : CAN Engine Clock Source.This property selects
+-			     the peripheral clock. PLL clock is fed to the
+-			     prescaler to generate the Serial Clock (Sclock).
+-			     Valid values are "oscillator" and "platform"
+-			     "oscillator": CAN engine clock source is oscillator clock.
+-			     "platform" The CAN engine clock source is the bus clock
+-		             (platform clock).
++- reg : Offset and length of the register set for this device
++- interrupts : Interrupt tuple for this device
+ 
+-- fsl,flexcan-clock-divider : for the reference and system clock, an additional
+-			      clock divider can be specified.
+-- clock-frequency: frequency required to calculate the bitrate for FlexCAN.
++Example:
+ 
+-Note:
+-	- v1.0 of flexcan-v1.0 represent the IP block version for P1010 SOC.
+-	- P1010 does not have oscillator as the Clock Source.So the default
+-	  Clock Source is platform clock.
+-Examples:
+-
+-	can0@1c000 {
+-		compatible = "fsl,flexcan-v1.0";
++	can@1c000 {
++		compatible = "fsl,p1010-flexcan", "fsl,flexcan";
+ 		reg = <0x1c000 0x1000>;
+ 		interrupts = <48 0x2>;
+ 		interrupt-parent = <&mpic>;
+-		fsl,flexcan-clock-source = "platform";
+-		fsl,flexcan-clock-divider = <2>;
+-		clock-frequency = <fixed by u-boot>;
+ 	};
+diff --git a/arch/powerpc/boot/dts/p1010rdb.dts b/arch/powerpc/boot/dts/p1010rdb.dts
+index 6b33b73..d6c669c 100644
+--- a/arch/powerpc/boot/dts/p1010rdb.dts
++++ b/arch/powerpc/boot/dts/p1010rdb.dts
+@@ -23,6 +23,8 @@
+ 		ethernet2 = &enet2;
+ 		pci0 = &pci0;
+ 		pci1 = &pci1;
++		can0 = &can0;
++		can1 = &can1;
+ 	};
+ 
+ 	memory {
+@@ -169,14 +171,6 @@
+ 			};
+ 		};
+ 
+-		can0@1c000 {
+-			fsl,flexcan-clock-source = "platform";
+-		};
+-
+-		can1@1d000 {
+-			fsl,flexcan-clock-source = "platform";
+-		};
+-
+ 		usb@22000 {
+ 			phy_type = "utmi";
+ 		};
+diff --git a/arch/powerpc/boot/dts/p1010si.dtsi b/arch/powerpc/boot/dts/p1010si.dtsi
+index 7f51104..f00076b 100644
+--- a/arch/powerpc/boot/dts/p1010si.dtsi
++++ b/arch/powerpc/boot/dts/p1010si.dtsi
+@@ -140,20 +140,18 @@
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+-		can0@1c000 {
+-			compatible = "fsl,flexcan-v1.0";
++		can0: can@1c000 {
++			compatible = "fsl,p1010-flexcan", "fsl,flexcan";
+ 			reg = <0x1c000 0x1000>;
+ 			interrupts = <48 0x2>;
+ 			interrupt-parent = <&mpic>;
+-			fsl,flexcan-clock-divider = <2>;
+ 		};
+ 
+-		can1@1d000 {
+-			compatible = "fsl,flexcan-v1.0";
++		can1: can@1d000 {
++			compatible = "fsl,p1010-flexcan", "fsl,flexcan";
+ 			reg = <0x1d000 0x1000>;
+ 			interrupts = <61 0x2>;
+ 			interrupt-parent = <&mpic>;
+-			fsl,flexcan-clock-divider = <2>;
+ 		};
+ 
+ 		L2: l2-cache-controller@20000 {
+-- 
+1.7.2.1
 
-On Fri, Aug 12, 2011 at 01:02:18PM +1000, David Gibson wrote:
-> > That seems to be pretty straightforward to implement, and as soon as
-> > it is useful even for a couple of drivers, it worth adding it.
-> >=20
-> > It is anyway better than having to add a custom property to get the
-> > information we will miss otherwise.
-> >=20
-> > Moreover, since some drivers are relying on that call, it will avoid
-> > having to add extra code for nothing if CONFIG_OF is set.
-> >=20
-> > It will allow the driver to use a pretty standard API in anycase vs
-> > using platform_get_resource + some extra optional calls to of_
-> > functions + some code to get the information for non-DT build.
->=20
-> You don't need to add stuff to the DT to use the byname interface.
-> Really.  All you need is a way for the driver (well match table entry,
-> really) to provide a list of names to attach to the reg entries in
-> order.
-
-the whole point of using *byname() is for the driver to not care about
-the order of the resources. So if driver has to provided an ordered list
-of names, what's the benefit ? Sounds really stupid to provide an
-ordered list of names to an ordered list of resources, just to use
-*byname() instead of just assuming the list of resources is already
-ordered.
-
---=20
-balbi
-
---JgQwtEuHJzHdouWu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQEcBAEBAgAGBQJOROciAAoJEAv8Txj19kN1C7MIAI1eCJB27RxBjsTWiXbnsaGS
-d3I3BHitQnad+9sMiiehpl1LXIxI9SIRHCaFF6PxpBdhz9jnbUNAIy9KNc1Keio9
-AnCMxJcS4gtGW5kUpJLan+mOez88jRhjQoNoAjBWvdKlP/4YKTFRVm3sDlJng+jG
-GUs9yU2R1Mc0jg/ZGM8fBPVzIhaTHQ54wA6SIbR8zr0gIvpiNwgGPowGAEjYfyjg
-fjtQBiMz6P+b1obm/Vr1gMA8We+a6GiUIqOWKLWano1a6jqTKc6yjUlYOOi6qK2p
-JBbnIMaOn1Oq/oe/bq3YbwYFgVI5m7ltvY+EKehf7cdtZ5Dzud0qIqRqu2wJsbU=
-=5vCo
------END PGP SIGNATURE-----
-
---JgQwtEuHJzHdouWu--
