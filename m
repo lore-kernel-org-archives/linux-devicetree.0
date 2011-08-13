@@ -1,104 +1,77 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC PATCH 00/12] arm/tegra: Initialize GPIO & pinmux from DT
-Date: Sat, 13 Aug 2011 21:08:59 +0800
-Message-ID: <20110813130858.GC7244@S2100-06.ap.freescale.net>
-References: <1313189697-21287-1-git-send-email-swarren@nvidia.com>
+Subject: Re: GPIO and Pinmux device tree support for Exynos.
+Date: Sat, 13 Aug 2011 22:00:47 +0800
+Message-ID: <20110813140046.GD7244@S2100-06.ap.freescale.net>
+References: <CAJuYYwRJ5UJ8OeTEDEh1Mk9yhJGVA7he1EzG8yM+pJYQVo6BXQ@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF04AEA24CD9@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1313189697-21287-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04AEA24CD9-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2011 at 04:54:45PM -0600, Stephen Warren wrote:
-> This patch modifies Tegra's device tree support to remove the dependency
-> on harmony_pinmux_init(), thus making it completely board-independent.
+On Thu, Aug 11, 2011 at 01:06:19PM -0700, Stephen Warren wrote:
+> Thomas Abraham wrote at Thursday, August 11, 2011 12:09 PM:
+> > I did some work on the gpio and pinmux device tree support for exynos.
+> > I thought to discuss with you about what was done before proceeding
+> > further.
+> > 
+> > In the dts file, the interrupt controller node is listed as
+> > 
+> > GPA: gpio-controller@11400000 {
+> > 		compatible = "samsung,exynos4-gpio-gpa0", "samsung,exynos4-gpio";
+> > 		#gpio-cells = <4>;
+> > 		gpio-controller;
+> > };
+> > 
+> > The meaning of the 4 cells are as below. The values of all the cells
+> > are set as per the exynos chip specification.
+> > 
+> > < [GPIO Pin Number]  [Pin-Mux Function Number] [Pull Up/Down Setting]
+> > [Driver Strength Setting] >
+> > 
+> > 
+> > Device nodes would include the gpio's that it would use (as in below example)
+> > 
+> > serial@13800000 {
+> > 		compatible = "samsung,s5pv310-uart";
+> > 		reg = <0x13800000 0x100>;
+> > 		interrupts = <116>;
+> > 		gpios = <&GPA  0  2  0  2   /* Tx */
+> > 				&GPA  1  2  0  2>;  /* Rx */
+> > };
 > 
-> Some notes:
+> The one problem with this approach is that presumably every single driver
+> (e.g. for the serial port above) must look for and handle the gpios
+> property, whereas presumably a serial port would otherwise have no need
+> to deal with GPIOs.
 > 
-> * This series is built on top of linux-next with a bunch of patches
->   applied, in particular the removal of irq_to_gpio and custom gpio_to_irq
->   that I'm in the process of sending to Russell. I haven't yet thought
->   through how/where to merge this without causing all kinds of conflicts.
-> 
-> * I took care to preserve bisectability of Tegra DT support. However,
->   linux-next doesn't yet have entirely useful Tegra DT support; some stuff
->   from Grant's devicetree/next hasn't been pushed into linux-next yet. If
->   we don't care about bisectability, I can remove a couple commits and
->   possibly squash some others.
-> 
-> * The approach taken here is to have a custom semantic SoC-specific
->   binding for each the gpio and pinmux drivers. Other alternatives
->   suggested included:
-> 
->   1) A generic "list of register writes" to be performed at boot. This has
->      the advantage of reusability across different SoCs. However, this
->      approach isn't semantic, and requires detailed knowledge of pinmux
->      registers and potentially fiddly calculations when constructing the
->      device tree.
-> 
->   2) The ability to define disabled child nodes of the pinmux controller
->      that are not processed by tegra_pinmux_probe_dt(). Other devices may
->      refer to those using phandles, and later enable/disable them, thus
->      representing dynamic pinmuxing in the device tree. I wasn't convinced
->      whether we should represent dynamic pinmuxing using phandles.
-> 
->   I discussed in more detail why I prefer the current proposal in various
->   email threads.
-> 
-Glad to see the second soc specific pinmux binding besides the one
-below for i.mx.
+I think that individual driver still needs to look for gpios property
+to actually use gpio with gpiolib api like gpio_request(),
+gpio_direction_output() etc. no?
 
-  http://permalink.gmane.org/gmane.linux.drivers.devicetree/6962
-
-> * tegra_pinmux_probe_dt() enumerates all legal pingroup names, and searches
->   for a pinmux controller subnode of that name, then processes each one
->   that is found. An alternative that some may prefer would be to enumerate
->   each child node of the pinmux controller, and have each node contain an
->   explicit pingroup name property instead. Does anyone have any preference
->   here? I suppose the latter option would obviate the need to add
->   of_find_child_node_by_name().
+> That's probably quite a bit of work. Also, what if some pins need to be
+> configured for which there is no driver to parse that property?
 > 
-I agree with Jamie that the latter option seems better/simper.
-
-> Thanks for reading!
+> I just recently started working on this for Tegra, and in
+> http://www.spinics.net/lists/arm-kernel/msg136138.html
+> I proposed listing all the GPIO/pinmux settings directly within the GPIO
+> and pinmux nodes, thus making only the GPIO and pinmux drivers responsible
+> for parsing them. What do you think of that idea?
 > 
-> Stephen Warren (12):
->   dt: Add of_find_child_node_by_name()
->   arm/tegra: Prep boards for gpio/pinmux conversion to pdevs
->   arm/tegra: Avoid duplicate gpio/pinmux devices with dt
->   arm/tegra: board-dt: Add AUXDATA for tegra-gpio and tegra-pinmux
->   arm/dt: Tegra: Add nvidia,gpios property to GPIO controller
->   arm/dt: Tegra: Add pinmux node
->   gpio/tegra: Convert to a platform device
->   gpio/tegra: Add device tree support
->   arm/tegra: Convert pinmux driver to a platform device
->   arm/tegra: Add device tree support to pinmux driver
->   arm/tegra: board-dt: Remove dependency on non-dt pinmux functions
->   arm/tegra: Remove temporary gpio/pinmux registration workaround
-> 
->  arch/arm/boot/dts/tegra-harmony.dts          |  479 ++++++++++++++++++++++++++
->  arch/arm/boot/dts/tegra-seaboard.dts         |  409 ++++++++++++++++++++++
->  arch/arm/boot/dts/tegra20.dtsi               |    5 +
->  arch/arm/mach-tegra/Makefile                 |    1 -
->  arch/arm/mach-tegra/board-dt.c               |   12 +-
->  arch/arm/mach-tegra/board-harmony-pinmux.c   |    8 +
->  arch/arm/mach-tegra/board-paz00-pinmux.c     |    8 +
->  arch/arm/mach-tegra/board-seaboard-pinmux.c  |    9 +-
->  arch/arm/mach-tegra/board-trimslice-pinmux.c |    7 +
->  arch/arm/mach-tegra/devices.c                |   10 +
->  arch/arm/mach-tegra/devices.h                |    2 +
->  arch/arm/mach-tegra/pinmux.c                 |  136 ++++++++
->  drivers/gpio/gpio-tegra.c                    |   56 +++-
->  drivers/of/base.c                            |   18 +
->  include/linux/of.h                           |    2 +
->  15 files changed, 1138 insertions(+), 24 deletions(-)
-> 
-Generally, you need to document the bindings you come with in
-Documentation/devicetree/bindings/
 
 -- 
 Regards,
