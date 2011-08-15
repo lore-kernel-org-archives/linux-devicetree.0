@@ -1,40 +1,81 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH 08/12] gpio/tegra: Add device tree support
-Date: Mon, 15 Aug 2011 08:47:27 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA25048@HQMAIL01.nvidia.com>
-References: <1313189697-21287-1-git-send-email-swarren@nvidia.com>
-	<1313189697-21287-9-git-send-email-swarren@nvidia.com>
- <CAAfyv34kOtwjerB0gMhEKNTwGd9w-LCE52MCUuvzTyYkXLY-dg@mail.gmail.com>
+Subject: RE: GPIO and Pinmux device tree support for Exynos.
+Date: Mon, 15 Aug 2011 08:54:10 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA2504D@HQMAIL01.nvidia.com>
+References: <CAJuYYwRJ5UJ8OeTEDEh1Mk9yhJGVA7he1EzG8yM+pJYQVo6BXQ@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF04AEA24CD9@HQMAIL01.nvidia.com>
+	<20110813140046.GD7244@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAfyv34kOtwjerB0gMhEKNTwGd9w-LCE52MCUuvzTyYkXLY-dg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110813140046.GD7244-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QmVsaXNrbyBNYXJlayB3cm90ZSBhdCBTYXR1cmRheSwgQXVndXN0IDEzLCAyMDExIDM6NDkgQU06
-DQo+IE9uIFNhdCwgQXVnIDEzLCAyMDExIGF0IDEyOjU0IEFNLCBTdGVwaGVuIFdhcnJlbiA8c3dh
-cnJlbkBudmlkaWEuY29tPiB3cm90ZToNCj4gPiBTaWduZWQtb2ZmLWJ5OiBTdGVwaGVuIFdhcnJl
-biA8c3dhcnJlbkBudmlkaWEuY29tPg0KPiA+IC0tLQ0KPiA+IMKgZHJpdmVycy9ncGlvL2dwaW8t
-dGVncmEuYyB8IMKgIDMxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiDCoDEg
-ZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby10ZWdyYS5jIGIvZHJpdmVycy9ncGlvL2dw
-aW8tdGVncmEuYw0KLi4uDQo+ID4gK3N0YXRpYyB2b2lkIF9faW5pdCB0ZWdyYV9ncGlvX3Byb2Jl
-X2R0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gK3sNCj4gPiArIMKgIMKgIMKg
-IGNvbnN0IF9fYmUzMiAqZ3Bpb3M7DQo+ID4gKyDCoCDCoCDCoCB1MzIgZ3Bpb3NsZW47DQo+ID4g
-KyDCoCDCoCDCoCBpbnQgaTsNCj4gPiArDQo+ID4gKyDCoCDCoCDCoCBncGlvcyA9IG9mX2dldF9w
-cm9wZXJ0eShwZGV2LT5kZXYub2Zfbm9kZSwgIm52aWRpYSxncGlvcyIsICZncGlvc2xlbik7DQo+
-ID4gKyDCoCDCoCDCoCBpZiAoZ3Bpb3MgPT0gTlVMTCkNCj4gPiArIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIHJldHVybjsNCj4gPiArDQo+ID4gKyDCoCDCoCDCoCBncGlvc2xlbiAvPSBzaXplb2YoKmdw
-aW9zKTsNCj4gPiArIMKgIMKgIMKgIGZvciAoaSA9IDA7IGkgPCBncGlvc2xlbjsgaSsrLCBncGlv
-cysrKSB7DQo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCB1MzIgZ3BpbyA9IGJlMzJfdG9fY3B1
-cChncGlvcyk7DQo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBkZXZfZXJyKCZwZGV2LT5kZXYs
-ICJFbmFibGluZyBHUElPICVkXG4iLCBncGlvKTsNCj4NCj4gSXMgcmVhbGx5IG5lY2Vzc2FyeSB0
-byBwcmludCBhbGwgZW5hYmxlZCBncGlvJ3MgdG8gY29uc29sZT8gQWxzbyBzZWVuDQo+IHNhbWUg
-aW4gcGlubXV4IHByb2JlLg0KDQpPb3BzLCB0aGF0J3MgY2VydGFpbmx5IG5vdCBuZWNlc3Nhcnku
-IFRoYXQgd2FzIGRlYnVnZ2luZyBjb2RlLCBhbmQgSSBtZWFudA0KdG8gY29udmVydCB0byBkZXZf
-ZGJnIGJlZm9yZSBwb3N0aW5nLg0KDQotLSANCm52cHVibGljDQoNCg==
+Shawn Guo wrote at Saturday, August 13, 2011 8:01 AM:
+> On Thu, Aug 11, 2011 at 01:06:19PM -0700, Stephen Warren wrote:
+> > Thomas Abraham wrote at Thursday, August 11, 2011 12:09 PM:
+> > > I did some work on the gpio and pinmux device tree support for exynos.
+> > > I thought to discuss with you about what was done before proceeding
+> > > further.
+> > >
+> > > In the dts file, the interrupt controller node is listed as
+> > >
+> > > GPA: gpio-controller@11400000 {
+> > > 		compatible = "samsung,exynos4-gpio-gpa0", "samsung,exynos4-gpio";
+> > > 		#gpio-cells = <4>;
+> > > 		gpio-controller;
+> > > };
+> > >
+> > > The meaning of the 4 cells are as below. The values of all the cells
+> > > are set as per the exynos chip specification.
+> > >
+> > > < [GPIO Pin Number]  [Pin-Mux Function Number] [Pull Up/Down Setting]
+> > > [Driver Strength Setting] >
+> > >
+> > >
+> > > Device nodes would include the gpio's that it would use (as in below example)
+> > >
+> > > serial@13800000 {
+> > > 		compatible = "samsung,s5pv310-uart";
+> > > 		reg = <0x13800000 0x100>;
+> > > 		interrupts = <116>;
+> > > 		gpios = <&GPA  0  2  0  2   /* Tx */
+> > > 				&GPA  1  2  0  2>;  /* Rx */
+> > > };
+> >
+> > The one problem with this approach is that presumably every single driver
+> > (e.g. for the serial port above) must look for and handle the gpios
+> > property, whereas presumably a serial port would otherwise have no need
+> > to deal with GPIOs.
+>
+> I think that individual driver still needs to look for gpios property
+> to actually use gpio with gpiolib api like gpio_request(),
+> gpio_direction_output() etc. no?
+
+If those pins are actually used as GPIOs with gpio_set/get_value, then
+yes, certainly.
+
+However, given the comments in your example at least, it sounds like those
+pins are the serial RX/TX lines, in which case they aren't being used as
+GPIOs, but are driven by hardware. As such, I'd expect gpio_direction_*()
+to be irrelevant for them, since I think those function are only intended
+for SW-controlled literal GPIOs. If HW-controlled pins need direction
+configuration, that's logically pinmux functionality rather than GPIO
+functionality, even if on Exynos, both those functionalities are provided
+by the same HW.
+
+-- 
+nvpublic
