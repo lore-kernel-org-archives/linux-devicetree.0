@@ -1,61 +1,100 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH 10/12] arm/tegra: Add device tree support to pinmux
- driver
-Date: Mon, 15 Aug 2011 09:09:40 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA25055@HQMAIL01.nvidia.com>
-References: <1313189697-21287-1-git-send-email-swarren@nvidia.com>
- <1313189697-21287-11-git-send-email-swarren@nvidia.com>
- <20110813104323.GC2643@pulham.picochip.com>
- <20110813104850.GD2643@pulham.picochip.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v12 3/6] flexcan: Fix up fsl-flexcan device tree binding.
+Date: Mon, 15 Aug 2011 18:13:45 +0200
+Message-ID: <4E4945B9.2020201@pengutronix.de>
+References: <1313138752-24006-1-git-send-email-holt@sgi.com>
+	<1313138752-24006-4-git-send-email-holt@sgi.com>
+	<20110815150357.GM4926@sgi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20110813104850.GD2643-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1435794236241750116=="
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <20110815150357.GM4926-sJ/iWh9BUns@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jamie Iles wrote at Saturday, August 13, 2011 4:49 AM:
-> On Sat, Aug 13, 2011 at 11:43:23AM +0100, Jamie Iles wrote:
-> > Hi Stephen,
-> >
-> > On Fri, Aug 12, 2011 at 04:54:55PM -0600, Stephen Warren wrote:
-...
-> > > diff --git a/arch/arm/mach-tegra/pinmux.c b/arch/arm/mach-tegra/pinmux.c
-...
-> > > +#ifdef CONFIG_OF
-> > > +static void __init tegra_pinmux_probe_dt(struct platform_device *pdev)
-> > > +{
-> > > +	int pg;
-> > > +
-> > > +	for (pg = 0; pg < TEGRA_MAX_PINGROUP; pg++) {
-> > > +		const char *pg_name = pingroup_name(pg);
-> > > +		struct tegra_pingroup_config config;
-> > > +		struct device_node *pg_node;
-> > > +		int ret;
-> > > +		const char *s;
-> > > +
-> > > +		pg_node = of_find_child_node_by_name(pdev->dev.of_node,
-> > > +						     pg_name);
-> > > +		if (pg_node == NULL)
-> > > +			continue;
-> >
-> > Rather than iterating over all of the mux names in the pinmux driver and
-> > searching for a matching DT node, could you not do it the other way
-> > round?  So do an for_each_child_of_node() on the pinmux node then find
-> > the matching pingroup keyed by the node name?  This would eliminate
-> > of_find_child_node_by_name().  You could also catch invalid
-> > configurations for non-existent pins this way.
-> 
-> I just re-read your introduction email and saw you've already discussed
-> this!  Would this require an explicit pin name property though or could
-> you just key off of the pg_node->name?
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--===============1435794236241750116==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enig3856E2123D9DE0B80222F236"
 
-No, I think pg_node->name will work out fine; it's what of_find_child_node_by_name
-is using anyway.
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig3856E2123D9DE0B80222F236
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
--- 
-nvpublic
+On 08/15/2011 05:03 PM, Robin Holt wrote:
+> Earlier, you had asked for a more specific name for the compatible
+> property of the Freescale flexcan device.  I still have not gotten a
+> more specific answer.  Hopefully Marc can give you more details about
+> the flexcan implementations.
+
+There are at least 2 versions of the flexcan ip core in the wild. Due to
+lack of version numbers or other names I call them old and new here :).
+
+The newer one supports rx fifo mode, whereas the older one doesn't. The
+mainline flexcan driver just supports the new core [1]. The older core
+is found on coldfire processors. I don't know if there are coldfire cpus
+with the new flexcan core, too. The driver can be adopted to the old
+core if needed.
+
+The first cpus with the new core I got in touch with was the mx35
+(arm11) and mx25 (arm9) both at the same time. Ask fsl which one was
+released first. After this there was mx28 (arm9) and there should be an
+mx53 (coretexa8) with flexcan too.
+
+> Other than an agreement on the compatible property, I believe we have
+> agreement on all the other code changes in these patches.  Is this chan=
+ge
+> acceptable as is and if we get a better resolution on the fsl,flexcan
+> name later, we can update the documentation and driver then?
+
+cheers, Marc
+
+[1] http://lxr.linux.no/linux+v3.0.1/drivers/net/can/flexcan.c#L871
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--------------enig3856E2123D9DE0B80222F236
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
+
+iEYEARECAAYFAk5JRbwACgkQjTAFq1RaXHMlAgCeLCfI0CuYJRapp88vYkdlauBf
+arUAoI6CTN3jhmmFsf355McyGVf7sSV4
+=YPDm
+-----END PGP SIGNATURE-----
+
+--------------enig3856E2123D9DE0B80222F236--
+
+--===============1435794236241750116==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Socketcan-core mailing list
+Socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+https://lists.berlios.de/mailman/listinfo/socketcan-core
+
+--===============1435794236241750116==--
