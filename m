@@ -1,319 +1,45 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCHv4] mtd: gpio-nand: add device tree bindings
-Date: Mon, 15 Aug 2011 16:24:47 +0100
-Message-ID: <20110815152447.GI2636@pulham.picochip.com>
-References: <1312902747-21372-1-git-send-email-jamie@jamieiles.com>
-	<1313418543.2600.2.camel@sauron>
-	<20110815143816.GH2636@pulham.picochip.com>
-	<1313419536.2600.7.camel@sauron>
+From: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Subject: Re: [PATCH v12 3/6] flexcan: Fix up fsl-flexcan device tree binding.
+Date: Mon, 15 Aug 2011 10:25:40 -0500
+Message-ID: <20110815152540.GP4926@sgi.com>
+References: <1313138752-24006-1-git-send-email-holt@sgi.com>
+	<1313138752-24006-4-git-send-email-holt@sgi.com>
+	<20110815150357.GM4926@sgi.com>
+	<CACxGe6vafc6mYyKCAO+HqkRPsZ3GmeVJnK+z8=BX_wQQMG4LmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1313419536.2600.7.camel@sauron>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+In-Reply-To: <CACxGe6vafc6mYyKCAO+HqkRPsZ3GmeVJnK+z8=BX_wQQMG4LmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 15, 2011 at 05:45:31PM +0300, Artem Bityutskiy wrote:
-> On Mon, 2011-08-15 at 15:38 +0100, Jamie Iles wrote:
-> > On Mon, Aug 15, 2011 at 05:28:57PM +0300, Artem Bityutskiy wrote:
-> > > On Tue, 2011-08-09 at 16:12 +0100, Jamie Iles wrote:
-> > > > -	res1 = platform_get_resource(dev, IORESOURCE_MEM, 1);
-> > > > +	if (!dev->dev.of_node)
-> > > > +		res1 = platform_get_resource(dev, IORESOURCE_MEM, 1);
-> > > > +	else
-> > > > +		res1 = gpio_nand_of_get_io_sync(&dev->dev);
-> > > > +
-> > > >  	if (res1) {
-> > > >  		gpiomtd->io_sync = request_and_remap(res1, 4, "NAND sync", &ret);
-> > > >  		if (!gpiomtd->io_sync) {
-> > > > @@ -257,7 +362,16 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
-> > > >  		}
-> > > >  	}
-> > > >  
-> > > > -	memcpy(&gpiomtd->plat, dev->dev.platform_data, sizeof(gpiomtd->plat));
-> > > > +	if (dev->dev.of_node)
-> > > > +		kfree(res1);
-> > > > +
-> > > > +	if (dev->dev.platform_data)
-> > > > +		memcpy(&gpiomtd->plat, dev->dev.platform_data,
-> > > > +		       sizeof(gpiomtd->plat));
-> > > > +	else
-> > > > +		ret = gpio_nand_of_get_config(&dev->dev, &gpiomtd->plat);
-> > > > +	if (ret)
-> > > > +		goto err_nce;
-> > > >  
-> > > 
-> > > So with this code you can mix platform data and DT? Say, io_sync may
-> > > come from platform data and the rest from the DT? Is this normal
-> > > practice?
-> > 
-> > Well you can use platform_data with DT - it's the only way to pass 
-> > function pointers for example, but I'm not convinced it's required in 
-> > this case (there is the adjust_parts callback, but I can't see a user of 
-> > it) so I'd be inclined to change the conditionals to:
-> > 
-> > 	if (!dev->dev.of_node)
-> > 		memcpy(&gpiomtd->plat, dev->dev.platform_data, ...);
-> > 	else
-> > 		gpio_nand_of_get_config(...);
-> > 
-> > so that we don't use platform_data for the DT case.
-> 
-> Yeah, would be nice to have only one "read platform data" and only one
-> "read DT information" call - this is just cleaner design.
+On Mon, Aug 15, 2011 at 09:13:50AM -0600, Grant Likely wrote:
+> On Mon, Aug 15, 2011 at 9:03 AM, Robin Holt <holt-sJ/iWh9BUns@public.gmane.org> wrote:
+> > Grant,
+> >
+> > Earlier, you had asked for a more specific name for the compatible
+> > property of the Freescale flexcan device. =A0I still have not gotten a
+> > more specific answer. =A0Hopefully Marc can give you more details about
+> > the flexcan implementations.
+> =
 
-OK, how about this?  I think it looks a lot neater.
+> If there is no ip core version, then just stick with the
+> fsl,<soc>-flexcan name and drop "fsl,flexcan".  Marketing may say
+> flexcan is flexcan, but hardware engineers like to change things.
+> Trying to be too generic in compatible values will just lead to
+> problems in the future.
 
-Jamie
-
-8<--
-
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCH] mtd: gpio-nand: add device tree bindings
-
-Add device tree bindings so that the gpio-nand driver may be
-instantiated from the device tree.  This also allows the partitions
-to be specified in the device tree.
-
-v5:	- fold dt config helpers into a single gpio_nand_of_get_config()
-v4:	- get io sync address from gpio-control-nand,io-sync-reg
-	  property rather than a resource
-	- clarified a few details in the binding
-v3:	- remove redundant cast and a couple of whitespace/naming
-	  changes
-v2:	- add CONFIG_OF guards for non-dt platforms
-	- compatible becomes gpio-control-nand
-	- clarify some binding details
-
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
----
- .../devicetree/bindings/mtd/gpio-control-nand.txt  |   44 +++++++++
- drivers/mtd/nand/gpio.c                            |   93 ++++++++++++++++++--
- 2 files changed, 131 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-new file mode 100644
-index 0000000..719f4dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-@@ -0,0 +1,44 @@
-+GPIO assisted NAND flash
-+
-+The GPIO assisted NAND flash uses a memory mapped interface to
-+read/write the NAND commands and data and GPIO pins for the control
-+signals.
-+
-+Required properties:
-+- compatible : "gpio-control-nand"
-+- reg : should specify localbus chip select and size used for the chip.  The
-+  resource describes the data bus connected to the NAND flash and all accesses
-+  are made in native endianness.
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+  representing partitions.
-+- gpios : specifies the gpio pins to control the NAND device.  nwp is an
-+  optional gpio and may be set to 0 if not present.
-+
-+Optional properties:
-+- bank-width : Width (in bytes) of the device.  If not present, the width
-+  defaults to 1 byte.
-+- chip-delay : chip dependent delay for transferring data from array to
-+  read registers (tR).  If not present then a default of 20us is used.
-+- gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
-+  location used to guard against bus reordering with regards to accesses to
-+  the GPIO's and the NAND flash data bus.  If present, then after changing
-+  GPIO state and before and after command byte writes, this register will be
-+  read to ensure that the GPIO accesses have completed.
-+
-+Examples:
-+
-+gpio-nand@1,0 {
-+	compatible = "gpio-control-nand";
-+	reg = <1 0x0000 0x2>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	gpios = <&banka 1 0	/* rdy */
-+		 &banka 2 0 	/* nce */
-+		 &banka 3 0 	/* ale */
-+		 &banka 4 0 	/* cle */
-+		 0		/* nwp */>;
-+
-+	partition@0 {
-+	...
-+	};
-+};
-diff --git a/drivers/mtd/nand/gpio.c b/drivers/mtd/nand/gpio.c
-index 2c2060b..961f4eb 100644
---- a/drivers/mtd/nand/gpio.c
-+++ b/drivers/mtd/nand/gpio.c
-@@ -27,6 +27,9 @@
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/nand-gpio.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_gpio.h>
- 
- struct gpiomtd {
- 	void __iomem		*io_sync;
-@@ -171,6 +174,74 @@ static int gpio_nand_devready(struct mtd_info *mtd)
- 	return gpio_get_value(gpiomtd->plat.gpio_rdy);
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id gpio_nand_id_table[] = {
-+	{ .compatible = "gpio-control-nand" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, gpio_nand_id_table);
-+
-+static int gpio_nand_get_config(const struct device *dev,
-+				struct gpio_nand_platdata *plat)
-+{
-+	u32 val;
-+
-+	if (!of_property_read_u32(dev->of_node, "bank-width", &val)) {
-+		if (val == 2) {
-+			plat->options |= NAND_BUSWIDTH_16;
-+		} else if (val != 1) {
-+			dev_err(dev, "invalid bank-width %u\n", val);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	plat->gpio_rdy = of_get_gpio(dev->of_node, 0);
-+	plat->gpio_nce = of_get_gpio(dev->of_node, 1);
-+	plat->gpio_ale = of_get_gpio(dev->of_node, 2);
-+	plat->gpio_cle = of_get_gpio(dev->of_node, 3);
-+	plat->gpio_nwp = of_get_gpio(dev->of_node, 4);
-+
-+	if (!of_property_read_u32(dev->of_node, "chip-delay", &val))
-+		plat->chip_delay = val;
-+
-+	return 0;
-+}
-+
-+static struct resource *gpio_nand_get_io_sync(struct platform_device *pdev)
-+{
-+	struct resource *r = devm_kzalloc(&pdev->dev, sizeof(*r), GFP_KERNEL);
-+	u64 addr;
-+
-+	if (!r || of_property_read_u64(pdev->dev.of_node,
-+				       "gpio-control-nand,io-sync-reg", &addr))
-+		return NULL;
-+
-+	r->start = addr;
-+	r->end = r->start + 0x3;
-+	r->flags = IORESOURCE_MEM;
-+
-+	return r;
-+}
-+#else /* CONFIG_OF */
-+
-+#define gpio_nand_id_table NULL
-+
-+static inline int gpio_nand_get_config(const struct device *dev,
-+					  struct gpio_nand_platdata *plat)
-+{
-+	if (dev->platform_data)
-+		memcpy(plat, dev->platform_data, sizeof(*plat));
-+
-+	return 0;
-+}
-+
-+static inline struct resource *
-+gpio_nand_get_io_sync(struct platform_device *pdev)
-+{
-+	return platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+}
-+#endif /* CONFIG_OF */
-+
- static int __devexit gpio_nand_remove(struct platform_device *dev)
- {
- 	struct gpiomtd *gpiomtd = platform_get_drvdata(dev);
-@@ -178,7 +249,7 @@ static int __devexit gpio_nand_remove(struct platform_device *dev)
- 
- 	nand_release(&gpiomtd->mtd_info);
- 
--	res = platform_get_resource(dev, IORESOURCE_MEM, 1);
-+	res = gpio_nand_get_io_sync(dev);
- 	iounmap(gpiomtd->io_sync);
- 	if (res)
- 		release_mem_region(res->start, resource_size(res));
-@@ -226,9 +297,9 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
- 	struct gpiomtd *gpiomtd;
- 	struct nand_chip *this;
- 	struct resource *res0, *res1;
--	int ret;
-+	int ret = 0;
- 
--	if (!dev->dev.platform_data)
-+	if (!dev->dev.of_node && !dev->dev.platform_data)
- 		return -EINVAL;
- 
- 	res0 = platform_get_resource(dev, IORESOURCE_MEM, 0);
-@@ -248,7 +319,7 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
- 		goto err_map;
- 	}
- 
--	res1 = platform_get_resource(dev, IORESOURCE_MEM, 1);
-+	res1 = gpio_nand_get_io_sync(dev);
- 	if (res1) {
- 		gpiomtd->io_sync = request_and_remap(res1, 4, "NAND sync", &ret);
- 		if (!gpiomtd->io_sync) {
-@@ -257,7 +328,9 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
- 		}
- 	}
- 
--	memcpy(&gpiomtd->plat, dev->dev.platform_data, sizeof(gpiomtd->plat));
-+	ret = gpio_nand_get_config(&dev->dev, &gpiomtd->plat);
-+	if (ret)
-+		goto err_nce;
- 
- 	ret = gpio_request(gpiomtd->plat.gpio_nce, "NAND NCE");
- 	if (ret)
-@@ -312,10 +385,17 @@ static int __devinit gpio_nand_probe(struct platform_device *dev)
- 		goto err_wp;
- 	}
- 
--	if (gpiomtd->plat.adjust_parts)
-+	if (gpiomtd->plat.adjust_parts) {
- 		gpiomtd->plat.adjust_parts(&gpiomtd->plat,
- 					   gpiomtd->mtd_info.size);
-+	} else {
-+		ret = of_mtd_parse_partitions(&dev->dev, dev->dev.of_node,
-+					      &gpiomtd->plat.parts);
-+		if (ret < 0)
-+			goto err_wp;
- 
-+		gpiomtd->plat.num_parts = ret;
-+	}
- 	mtd_device_register(&gpiomtd->mtd_info, gpiomtd->plat.parts,
- 			    gpiomtd->plat.num_parts);
- 	platform_set_drvdata(dev, gpiomtd);
-@@ -352,6 +432,7 @@ static struct platform_driver gpio_nand_driver = {
- 	.remove		= gpio_nand_remove,
- 	.driver		= {
- 		.name	= "gpio-nand",
-+		.of_match_table = gpio_nand_id_table,
- 	},
- };
- 
--- 
-1.7.4.1
+Thanks,
+Robin
