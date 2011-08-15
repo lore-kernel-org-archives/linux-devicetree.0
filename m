@@ -1,45 +1,40 @@
-From: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
-Subject: Re: [PATCH v12 3/6] flexcan: Fix up fsl-flexcan device tree binding.
-Date: Mon, 15 Aug 2011 10:25:40 -0500
-Message-ID: <20110815152540.GP4926@sgi.com>
-References: <1313138752-24006-1-git-send-email-holt@sgi.com>
-	<1313138752-24006-4-git-send-email-holt@sgi.com>
-	<20110815150357.GM4926@sgi.com>
-	<CACxGe6vafc6mYyKCAO+HqkRPsZ3GmeVJnK+z8=BX_wQQMG4LmQ@mail.gmail.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC PATCH 08/12] gpio/tegra: Add device tree support
+Date: Mon, 15 Aug 2011 08:47:27 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA25048@HQMAIL01.nvidia.com>
+References: <1313189697-21287-1-git-send-email-swarren@nvidia.com>
+	<1313189697-21287-9-git-send-email-swarren@nvidia.com>
+ <CAAfyv34kOtwjerB0gMhEKNTwGd9w-LCE52MCUuvzTyYkXLY-dg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6vafc6mYyKCAO+HqkRPsZ3GmeVJnK+z8=BX_wQQMG4LmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
-List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
-List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
-	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
-Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAfyv34kOtwjerB0gMhEKNTwGd9w-LCE52MCUuvzTyYkXLY-dg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 15, 2011 at 09:13:50AM -0600, Grant Likely wrote:
-> On Mon, Aug 15, 2011 at 9:03 AM, Robin Holt <holt-sJ/iWh9BUns@public.gmane.org> wrote:
-> > Grant,
-> >
-> > Earlier, you had asked for a more specific name for the compatible
-> > property of the Freescale flexcan device. =A0I still have not gotten a
-> > more specific answer. =A0Hopefully Marc can give you more details about
-> > the flexcan implementations.
-> =
-
-> If there is no ip core version, then just stick with the
-> fsl,<soc>-flexcan name and drop "fsl,flexcan".  Marketing may say
-> flexcan is flexcan, but hardware engineers like to change things.
-> Trying to be too generic in compatible values will just lead to
-> problems in the future.
-
-Thanks,
-Robin
+QmVsaXNrbyBNYXJlayB3cm90ZSBhdCBTYXR1cmRheSwgQXVndXN0IDEzLCAyMDExIDM6NDkgQU06
+DQo+IE9uIFNhdCwgQXVnIDEzLCAyMDExIGF0IDEyOjU0IEFNLCBTdGVwaGVuIFdhcnJlbiA8c3dh
+cnJlbkBudmlkaWEuY29tPiB3cm90ZToNCj4gPiBTaWduZWQtb2ZmLWJ5OiBTdGVwaGVuIFdhcnJl
+biA8c3dhcnJlbkBudmlkaWEuY29tPg0KPiA+IC0tLQ0KPiA+IMKgZHJpdmVycy9ncGlvL2dwaW8t
+dGVncmEuYyB8IMKgIDMxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiDCoDEg
+ZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby10ZWdyYS5jIGIvZHJpdmVycy9ncGlvL2dw
+aW8tdGVncmEuYw0KLi4uDQo+ID4gK3N0YXRpYyB2b2lkIF9faW5pdCB0ZWdyYV9ncGlvX3Byb2Jl
+X2R0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gK3sNCj4gPiArIMKgIMKgIMKg
+IGNvbnN0IF9fYmUzMiAqZ3Bpb3M7DQo+ID4gKyDCoCDCoCDCoCB1MzIgZ3Bpb3NsZW47DQo+ID4g
+KyDCoCDCoCDCoCBpbnQgaTsNCj4gPiArDQo+ID4gKyDCoCDCoCDCoCBncGlvcyA9IG9mX2dldF9w
+cm9wZXJ0eShwZGV2LT5kZXYub2Zfbm9kZSwgIm52aWRpYSxncGlvcyIsICZncGlvc2xlbik7DQo+
+ID4gKyDCoCDCoCDCoCBpZiAoZ3Bpb3MgPT0gTlVMTCkNCj4gPiArIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIHJldHVybjsNCj4gPiArDQo+ID4gKyDCoCDCoCDCoCBncGlvc2xlbiAvPSBzaXplb2YoKmdw
+aW9zKTsNCj4gPiArIMKgIMKgIMKgIGZvciAoaSA9IDA7IGkgPCBncGlvc2xlbjsgaSsrLCBncGlv
+cysrKSB7DQo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCB1MzIgZ3BpbyA9IGJlMzJfdG9fY3B1
+cChncGlvcyk7DQo+ID4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCBkZXZfZXJyKCZwZGV2LT5kZXYs
+ICJFbmFibGluZyBHUElPICVkXG4iLCBncGlvKTsNCj4NCj4gSXMgcmVhbGx5IG5lY2Vzc2FyeSB0
+byBwcmludCBhbGwgZW5hYmxlZCBncGlvJ3MgdG8gY29uc29sZT8gQWxzbyBzZWVuDQo+IHNhbWUg
+aW4gcGlubXV4IHByb2JlLg0KDQpPb3BzLCB0aGF0J3MgY2VydGFpbmx5IG5vdCBuZWNlc3Nhcnku
+IFRoYXQgd2FzIGRlYnVnZ2luZyBjb2RlLCBhbmQgSSBtZWFudA0KdG8gY29udmVydCB0byBkZXZf
+ZGJnIGJlZm9yZSBwb3N0aW5nLg0KDQotLSANCm52cHVibGljDQoNCg==
