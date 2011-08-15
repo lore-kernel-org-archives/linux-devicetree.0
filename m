@@ -1,81 +1,44 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: GPIO and Pinmux device tree support for Exynos.
-Date: Mon, 15 Aug 2011 08:54:10 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA2504D@HQMAIL01.nvidia.com>
-References: <CAJuYYwRJ5UJ8OeTEDEh1Mk9yhJGVA7he1EzG8yM+pJYQVo6BXQ@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF04AEA24CD9@HQMAIL01.nvidia.com>
-	<20110813140046.GD7244@S2100-06.ap.freescale.net>
+Subject: RE: [RFC PATCH 12/12] arm/tegra: Remove temporary gpio/pinmux
+ registration workaround
+Date: Mon, 15 Aug 2011 09:03:03 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA25053@HQMAIL01.nvidia.com>
+References: <1313189697-21287-1-git-send-email-swarren@nvidia.com>
+ <1313189697-21287-13-git-send-email-swarren@nvidia.com>
+ <4E48FF29.1030208@ru.mvista.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110813140046.GD7244-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4E48FF29.1030208-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote at Saturday, August 13, 2011 8:01 AM:
-> On Thu, Aug 11, 2011 at 01:06:19PM -0700, Stephen Warren wrote:
-> > Thomas Abraham wrote at Thursday, August 11, 2011 12:09 PM:
-> > > I did some work on the gpio and pinmux device tree support for exynos.
-> > > I thought to discuss with you about what was done before proceeding
-> > > further.
-> > >
-> > > In the dts file, the interrupt controller node is listed as
-> > >
-> > > GPA: gpio-controller@11400000 {
-> > > 		compatible = "samsung,exynos4-gpio-gpa0", "samsung,exynos4-gpio";
-> > > 		#gpio-cells = <4>;
-> > > 		gpio-controller;
-> > > };
-> > >
-> > > The meaning of the 4 cells are as below. The values of all the cells
-> > > are set as per the exynos chip specification.
-> > >
-> > > < [GPIO Pin Number]  [Pin-Mux Function Number] [Pull Up/Down Setting]
-> > > [Driver Strength Setting] >
-> > >
-> > >
-> > > Device nodes would include the gpio's that it would use (as in below example)
-> > >
-> > > serial@13800000 {
-> > > 		compatible = "samsung,s5pv310-uart";
-> > > 		reg = <0x13800000 0x100>;
-> > > 		interrupts = <116>;
-> > > 		gpios = <&GPA  0  2  0  2   /* Tx */
-> > > 				&GPA  1  2  0  2>;  /* Rx */
-> > > };
-> >
-> > The one problem with this approach is that presumably every single driver
-> > (e.g. for the serial port above) must look for and handle the gpios
-> > property, whereas presumably a serial port would otherwise have no need
-> > to deal with GPIOs.
->
-> I think that individual driver still needs to look for gpios property
-> to actually use gpio with gpiolib api like gpio_request(),
-> gpio_direction_output() etc. no?
+Sergei Shtylyov wrote at Monday, August 15, 2011 5:13 AM:
+> Hello.
+> 
+> On 13-08-2011 2:54, Stephen Warren wrote:
+> 
+> > This reverts commit "arm/tegra: Prevent duplicate gpio/pinmux pdev
+> 
+>     Would be good to also include the commit ID for gitweb.
 
-If those pins are actually used as GPIOs with gpio_set/get_value, then
-yes, certainly.
+I can't do that yet, because the commit that's being reverted is earlier
+in the patch series being posted, and hence doesn't have a commit ID that
+will be valid in any upstream repository.
 
-However, given the comments in your example at least, it sounds like those
-pins are the serial RX/TX lines, in which case they aren't being used as
-GPIOs, but are driven by hardware. As such, I'd expect gpio_direction_*()
-to be irrelevant for them, since I think those function are only intended
-for SW-controlled literal GPIOs. If HW-controlled pins need direction
-configuration, that's logically pinmux functionality rather than GPIO
-functionality, even if on Exynos, both those functionalities are provided
-by the same HW.
+I suppose this is the last commit in the series though, so I could remove
+it and submit the revert separately once the rest is upstream.
+
+> > registration with dt"; board-dt.c no long calls harmony/
+> > seaboard_pinmux_init(), so the workaround is no longer needed.
+> 
+> > Signed-off-by: Stephen Warren<swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> WBR, Sergei
 
 -- 
 nvpublic
