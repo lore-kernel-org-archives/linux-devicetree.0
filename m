@@ -1,215 +1,268 @@
-From: Daniel Morsing <daniel.morsing@gmail.com>
-Subject: [RFC PATCH v2] net: dm9000: add support for device tree probing
-Date: Sun, 14 Aug 2011 19:34:12 +0200
-Message-ID: <1313343252-19634-1-git-send-email-daniel.morsing@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH] dt: add of_alias_scan and of_alias_get_id
+Date: Mon, 15 Aug 2011 09:30:17 +0800
+Message-ID: <1313371817-5135-1-git-send-email-shawn.guo@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Ben Dooks <ben-linux@fluff.org>, Daniel Morsing <daniel.morsing@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, David Miller <davem@davemloft.net>, patches@linaro.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for probing the dm9000 driver through device
-trees.
+The patch adds function of_alias_scan to populate a global lookup
+table with the properties of 'aliases' node and function
+of_alias_get_id for drivers to find alias id from the lookup table.
 
-The patch works by supplying its own platform_data struct when probed
-via device tree. This allows us to rely on the existing options parsing
-in the driver and avoid ifdeffery in the probe function.
-
-Signed-off-by: Daniel Morsing <daniel.morsing@gmail.com>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+[grant.likey: add locking and rework parse loop]
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 ---
-Currently there are no users of this functionality, but once support for
-DT on OMAP3 matures, I plan to migrate the devkit8000 board to DT.
+Changes since the last post:
+ * Pass alloc function pointer as a parameter to of_alias_scan()
+ * Move of_chosen and of_aliases populating into function
+   __unflatten_device_tree which is the common path of two
+   unflattening sites
+ * Change simple_strtoul() to kstrtoint() which is suggestion by
+   checkpatch as a warning
 
- Changes since v1:
-	- Changed the binding with input from Grant Likely.
-	- Make explicit what the bindings do instead of refering
-	  to linux specific flags.
-	- Length check the mac address read so we don't copy random data.
-	- simplify parsing of the device tree.
-	- Add relevant driver maintainers to CC (sorry about that)
+ drivers/of/base.c      |  136 ++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/of/fdt.c       |   12 +++--
+ include/linux/of.h     |    8 +++
+ include/linux/of_fdt.h |    1 -
+ 4 files changed, 151 insertions(+), 6 deletions(-)
 
- Documentation/devicetree/bindings/net/dm9000.txt |   42 +++++++++++
- drivers/net/dm9000.c                             |   83 +++++++++++++++++++++-
- 2 files changed, 122 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/dm9000.txt
-
-diff --git a/Documentation/devicetree/bindings/net/dm9000.txt b/Documentation/devicetree/bindings/net/dm9000.txt
-new file mode 100644
-index 0000000..cbbdb3d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dm9000.txt
-@@ -0,0 +1,42 @@
-+Davicom DM9000 ethernet controller
-+
-+Required properties:
-+
-+ - compatible : Should be "davicom,dm9000"
-+
-+ - interrupts : Interrupt controller specific encoding, which specifies 1
-+   or 2 interrupts. The first interrupt is for rx/tx and is required by the
-+   driver to function. The second interrupt is for wake on lan support
-+   and is optional.
-+
-+ - reg : 2 Physical address specifiers, where the first specifies the address
-+   register of device, and the second specifies the data register of the device
-+
-+Optional properties:
-+
-+ - local-mac-address : Binary data specifying a mac address override
-+
-+ - reg-io-width : one cell specifying the width of IO operations in bits.
-+   valid values are 8, 16, and 32. If this property is not specified, or has
-+   an invalid value, the driver will default to 32 bits.
-+
-+ - phy-handle : phandle to external phy.
-+
-+ - no-eeprom  : Empty property specifying that no EEPROM is attached to the
-+   device.
-+
-+ - simple-phy : Empty property specifying that the driver should use the simple
-+   phy polling mode
-+
-+Example:
-+
-+ethernet@2c000000 {
-+	compatible = "davicom,dm9000";
-+	reg = <0x2c000000 0x04>,
-+	      <0x2c000400 0x04>;
-+	interrupts = <185 1>;
-+	local-mac-address = [02 65 16 01 c0 09];
-+	reg-io-width = <16>
-+	phy-handle = <&phy0>
-+	no-eeprom;
-+};
-diff --git a/drivers/net/dm9000.c b/drivers/net/dm9000.c
-index 8ef31dc..81273b7 100644
---- a/drivers/net/dm9000.c
-+++ b/drivers/net/dm9000.c
-@@ -35,6 +35,7 @@
- #include <linux/platform_device.h>
- #include <linux/irq.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- 
- #include <asm/delay.h>
- #include <asm/irq.h>
-@@ -1164,10 +1165,13 @@ dm9000_open(struct net_device *dev)
- 	if (netif_msg_ifup(db))
- 		dev_dbg(db->dev, "enabling %s\n", dev->name);
- 
--	/* If there is no IRQ type specified, default to something that
--	 * may work, and tell the user that this is a problem */
-+	/*
-+	 * If there is no IRQ type specified, tell the user that this is a
-+	 * problem. If we were probed with device tree, we can assume that
-+	 * the IRQ type is already set up, so don't emit the warning.
-+	 */
- 
--	if (irqflags == IRQF_TRIGGER_NONE)
-+	if (!db->dev->of_node && irqflags == IRQF_TRIGGER_NONE)
- 		dev_warn(db->dev, "WARNING: no IRQ resource flags set.\n");
- 
- 	irqflags |= IRQF_SHARED;
-@@ -1350,6 +1354,66 @@ static const struct net_device_ops dm9000_netdev_ops = {
- #endif
- };
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id dm9000_of_match[] = {
-+	{ .compatible = "davicom,dm9000" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dm9000_of_match);
-+
-+static int __devinit
-+dm9000_dt_fill_platdata(struct platform_device *pdev,
-+			struct dm9000_plat_data *pdata)
-+{
-+	struct device_node *of_node = pdev->dev.of_node, *phy_node;
-+	const u8 *mac_addr;
-+	u32 io_width;
-+	int mac_len;
-+
-+	if (!of_property_read_u32(of_node, "reg-io-width", &io_width)) {
-+		switch (io_width) {
-+		case 8:
-+			pdata->flags |= DM9000_PLATF_8BITONLY;
-+			break;
-+		case 16:
-+			pdata->flags |= DM9000_PLATF_16BITONLY;
-+			break;
-+		default:
-+			dev_warn(&pdev->dev,
-+				"Invalid value passed in reg-io-width. Defaulting to 32 bit I/O accesses\n");
-+		case 32:
-+			pdata->flags |= DM9000_PLATF_32BITONLY;
-+			break;
-+		}
-+	}
-+
-+	phy_node = of_parse_phandle(of_node, "phy-handle", 0);
-+	if (phy_node) {
-+		pdata->flags |= DM9000_PLATF_EXT_PHY;
-+		of_node_put(phy_node);
-+	}
-+
-+	if (of_find_property(of_node, "no-eeprom", NULL))
-+		pdata->flags |= DM9000_PLATF_NO_EEPROM;
-+	if (of_find_property(of_node, "simple-phy", NULL))
-+		pdata->flags |= DM9000_PLATF_SIMPLE_PHY;
-+
-+	mac_addr = of_get_property(of_node, "local-mac-address", &mac_len);
-+	if (mac_addr && mac_len == 6)
-+		memcpy(pdata->dev_addr, mac_addr, 6);
-+
-+	return 0;
-+}
-+
-+#else
-+#define dm9000_of_match NULL
-+static inline int dm9000_dt_fill_platdata(struct platform_device *pdev,
-+					   struct dm9000_plat_data *pdata)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_OF */
-+
- /*
-  * Search DM9000 board, allocate space and register it
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 3ff22e3..5e6ce02 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -17,14 +17,39 @@
+  *      as published by the Free Software Foundation; either version
+  *      2 of the License, or (at your option) any later version.
   */
-@@ -1359,12 +1423,24 @@ dm9000_probe(struct platform_device *pdev)
- 	struct dm9000_plat_data *pdata = pdev->dev.platform_data;
- 	struct board_info *db;	/* Point a board information structure */
- 	struct net_device *ndev;
-+	struct dm9000_plat_data pdata_of;
- 	const unsigned char *mac_src;
- 	int ret = 0;
- 	int iosize;
- 	int i;
- 	u32 id_val;
++#include <linux/ctype.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/spinlock.h>
+ #include <linux/slab.h>
+ #include <linux/proc_fs.h>
  
-+	if (pdev->dev.of_node) {
-+		if (!pdata) {
-+			memset(&pdata_of, 0, sizeof(pdata_of));
-+			pdata = &pdata_of;
++/**
++ * struct alias_prop - Alias property in 'aliases' node
++ * @link:	List node to link the structure in aliases_lookup list
++ * @alias:	Alias property name
++ * @np:		Pointer to device_node that the alias stands for
++ * @id:		Index value from end of alias name
++ * @stem:	Alias string without the index
++ *
++ * The structure represents one alias property of 'aliases' node as
++ * an entry in aliases_lookup list.
++ */
++struct alias_prop {
++	struct list_head link;
++	const char *alias;
++	struct device_node *np;
++	int id;
++	char stem[0];
++};
++
++static LIST_HEAD(aliases_lookup);
++
+ struct device_node *allnodes;
+ struct device_node *of_chosen;
++struct device_node *of_aliases;
++
++static DEFINE_MUTEX(of_aliases_mutex);
+ 
+ /* use when traversing tree through the allnext, child, sibling,
+  * or parent members of struct device_node.
+@@ -988,3 +1013,114 @@ out_unlock:
+ }
+ #endif /* defined(CONFIG_OF_DYNAMIC) */
+ 
++static void of_alias_add(struct alias_prop *ap, struct device_node *np,
++			 int id, const char *stem, int stem_len)
++{
++	ap->np = np;
++	ap->id = id;
++	strncpy(ap->stem, stem, stem_len);
++	ap->stem[stem_len] = 0;
++	list_add_tail(&ap->link, &aliases_lookup);
++	pr_debug("adding DT alias:%s: stem=%s id=%i node=%s\n",
++		 ap->alias, ap->stem, ap->id, np ? np->full_name : NULL);
++}
++
++/**
++ * of_alias_scan - Scan all properties of 'aliases' node
++ *
++ * The function scans all the properties of 'aliases' node and populate
++ * the the global lookup table with the properties.  It returns the
++ * number of alias_prop found, or error code in error case.
++ *
++ * @dt_alloc:	An allocator that provides a virtual address to memory
++ *		for the resulting tree
++ */
++void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
++{
++	struct property *pp;
++
++	if (!of_aliases)
++		return;
++
++	for_each_property(pp, of_aliases->properties) {
++		const char *start = pp->name;
++		const char *end = start + strlen(start);
++		struct device_node *np;
++		struct alias_prop *ap;
++		int id, len;
++
++		/* Skip those we do not want to proceed */
++		if (!strcmp(pp->name, "name") ||
++		    !strcmp(pp->name, "phandle") ||
++		    !strcmp(pp->name, "linux,phandle"))
++			continue;
++
++		np = of_find_node_by_path(pp->value);
++		if (!np)
++			continue;
++
++		/* walk the alias backwards to extract the id and work out
++		 * the 'stem' string */
++		while (isdigit(*(end-1)) && end > start)
++			end--;
++		len = end - start;
++
++		if (kstrtoint(end, 10, &id) < 0)
++			continue;
++
++		/* Allocate an alias_prop with enough space for the stem */
++		ap = dt_alloc(sizeof(*ap) + len + 1, 4);
++		if (!ap)
++			continue;
++		ap->alias = start;
++		of_alias_add(ap, np, id, start, len);
++	}
++}
++
++/**
++ * of_alias_get_id - Get alias id for the given device_node
++ * @np:		Pointer to the given device_node
++ * @stem:	Alias stem of the given device_node
++ *
++ * The function travels the lookup table to get alias id for the given
++ * device_node and alias stem.  It returns the alias id if find it.
++ * If not, dynamically creates one in the lookup table and returns it,
++ * or returns error code if fail to create.
++ */
++int of_alias_get_id(struct device_node *np, const char *stem)
++{
++	struct alias_prop *app;
++	int id = 0;
++	bool found = false;
++
++	mutex_lock(&of_aliases_mutex);
++	list_for_each_entry(app, &aliases_lookup, link) {
++		if (strcmp(app->stem, stem) != 0)
++			continue;
++
++		if (np == app->np) {
++			found = true;
++			id = app->id;
++			break;
 +		}
 +
-+		ret = dm9000_dt_fill_platdata(pdev, pdata);
-+		if (ret < 0)
-+			return ret;
++		if (id <= app->id)
++			id = app->id + 1;
 +	}
 +
- 	/* Init network device */
- 	ndev = alloc_etherdev(sizeof(struct board_info));
- 	if (!ndev) {
-@@ -1677,6 +1753,7 @@ static struct platform_driver dm9000_driver = {
- 		.name    = "dm9000",
- 		.owner	 = THIS_MODULE,
- 		.pm	 = &dm9000_drv_pm_ops,
-+		.of_match_table = dm9000_of_match,
- 	},
- 	.probe   = dm9000_probe,
- 	.remove  = __devexit_p(dm9000_drv_remove),
++	/* If an id is not found, then allocate a new one */
++	if (!found) {
++		app = kzalloc(sizeof(*app) + strlen(stem) + 1, 4);
++		if (!app) {
++			id = -ENODEV;
++			goto out;
++		}
++		of_alias_add(app, np, id, stem, strlen(stem));
++	}
++
++ out:
++	mutex_unlock(&of_aliases_mutex);
++
++	return id;
++}
++EXPORT_SYMBOL_GPL(of_alias_get_id);
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 65200af..98b6fb1 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -404,6 +404,13 @@ static void __unflatten_device_tree(struct boot_param_header *blob,
+ 			   be32_to_cpu(((__be32 *)mem)[size / 4]));
+ 	*allnextp = NULL;
+ 
++	/* Get pointer to "/chosen" and "/aliasas" nodes for use everywhere */
++	of_chosen = of_find_node_by_path("/chosen");
++	if (of_chosen == NULL)
++		of_chosen = of_find_node_by_path("/chosen@0");
++	of_aliases = of_find_node_by_path("/aliases");
++	of_alias_scan(dt_alloc);
++
+ 	pr_debug(" <- unflatten_device_tree()\n");
+ }
+ 
+@@ -706,11 +713,6 @@ void __init unflatten_device_tree(void)
+ {
+ 	__unflatten_device_tree(initial_boot_params, &allnodes,
+ 				early_init_dt_alloc_memory_arch);
+-
+-	/* Get pointer to OF "/chosen" node for use everywhere */
+-	of_chosen = of_find_node_by_path("/chosen");
+-	if (of_chosen == NULL)
+-		of_chosen = of_find_node_by_path("/chosen@0");
+ }
+ 
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 9180dc5..4ea7d81 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -68,6 +68,7 @@ struct device_node {
+ /* Pointer for first entry in chain of all nodes. */
+ extern struct device_node *allnodes;
+ extern struct device_node *of_chosen;
++extern struct device_node *of_aliases;
+ extern rwlock_t devtree_lock;
+ 
+ static inline bool of_have_populated_dt(void)
+@@ -209,6 +210,9 @@ extern int of_device_is_available(const struct device_node *device);
+ extern const void *of_get_property(const struct device_node *node,
+ 				const char *name,
+ 				int *lenp);
++#define for_each_property(pp, properties) \
++	for (pp = properties; pp != NULL; pp = pp->next)
++
+ extern int of_n_addr_cells(struct device_node *np);
+ extern int of_n_size_cells(struct device_node *np);
+ extern const struct of_device_id *of_match_node(
+@@ -221,6 +225,10 @@ extern int of_parse_phandles_with_args(struct device_node *np,
+ 	const char *list_name, const char *cells_name, int index,
+ 	struct device_node **out_node, const void **out_args);
+ 
++extern void *early_init_dt_alloc_memory_arch(u64 size, u64 align);
++extern void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align));
++extern int of_alias_get_id(struct device_node *np, const char *stem);
++
+ extern int of_machine_is_compatible(const char *compat);
+ 
+ extern int prom_add_property(struct device_node* np, struct property* prop);
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index c84d900..b74b74f 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -97,7 +97,6 @@ extern void early_init_dt_check_for_initrd(unsigned long node);
+ extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+-extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
+ extern u64 dt_mem_next_cell(int s, __be32 **cellp);
+ 
+ /*
 -- 
-1.7.6
-
+1.7.4.1
