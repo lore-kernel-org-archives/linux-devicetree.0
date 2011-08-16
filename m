@@ -1,80 +1,59 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: at_hdmac: add device tree probe
-Date: Tue, 16 Aug 2011 18:33:28 +0200
-Message-ID: <4E4A9BD8.1040302@atmel.com>
-References: <1312549120-22266-1-git-send-email-nicolas.ferre@atmel.com>
-	<20110807040932.GF7667@ponder.secretlab.ca>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
+Date: Tue, 16 Aug 2011 10:12:17 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA25368@HQMAIL01.nvidia.com>
+References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
+ <201108161509.17157.arnd@arndb.de>
+ <CACRpkdaVx=6AJ5DFjVN1ZYQ++hu9pT6WxD9n+pqmYVaCf1xawg@mail.gmail.com>
+ <201108161637.16620.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110807040932.GF7667-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201108161637.16620.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 07/08/2011 06:09, Grant Likely :
-> On Fri, Aug 05, 2011 at 01:58:40PM +0100, Nicolas Ferre wrote:
->> Add device tree probe support for atmel at_hdmac DMA driver.
->> Bindings are added to specify the number of channels that the implementation of
->> the controller actually has. They also allow to tell if the peripherals/DMA
->> transfer is supported by the IP.
->>
->> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/dma/atmel-hdmac.txt        |   23 +++++++++
->>  drivers/dma/at_hdmac.c                             |   51 ++++++++++++++++----
->>  2 files changed, 65 insertions(+), 9 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-hdmac.txt
->>
->> diff --git a/Documentation/devicetree/bindings/dma/atmel-hdmac.txt b/Documentation/devicetree/bindings/dma/atmel-hdmac.txt
->> new file mode 100644
->> index 0000000..0e48553
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/atmel-hdmac.txt
->> @@ -0,0 +1,23 @@
->> +* Atmel Direct Memory Access Controller
->> +
->> +Required properties:
->> +- compatible: Should be "atmel,<chip>-hdmac"
->> +- reg: Should contain DMA registers location and length
->> +- interrupts: Should contain DMA interrupt
->> +- atmel,hdmac-nr-channels: Should contain number of channels
->> +  available in the controller
->> +
->> +Optional properties:
->> +- atmel,hdmac-cap-memcpy: Chip can do memory to memory transfers
->> +- atmel,hdmac-cap-slave: Chip can do peripherals/memory transfers
+Arnd Bergmann wrote at Tuesday, August 16, 2011 8:37 AM:
+> On Tuesday 16 August 2011, Linus Walleij wrote:
+> > One specific thing worries me: Grant asked me to make sure
+> > to NOT create a global pin number space for the pinmuxes (and thus
+> > pinctrl). This means that in order to proceed, mappings of pinmux
+> > groups or pincontrol (such as bias) groups, each device using such
+> > an entity need to reference the intended pincontroller/mux instance.
+> >
+> > Say mmc instance 0 need pingroup foo on pincontroller bar
+> > means that there must be a specific reference from mmc.0:s
+> > struct device * to pinctrl bar:s struct device *. Maybe this is
+> > peanuts in DT, sorry not enough insight.
 > 
-> Heh, ignore my comments on the other patch about missing documentation
-> for the dma engine.  :-)
-> 
-> Otherwise the patch looks pretty good.
+> I think what you are looking for is the equivalent of the
+> interrupt-parent property for pinmux. The idea is that each
+> node in the device tree can point to a device managing the
+> pinmux, so reference would point to a local number in that
+> space. We have discussed this for the GPIO case already, and
+> I suspect that the two should be identical (gpio-controller
+> and pinmux-controller using the same device node and same
+> property to refer to them). Since the pinmux-parent
+> (gpio-parent, ...) property gets inherited by all child
+> devices, you only need to set it once at the root of the
+> device tree for the simple case where there is only one
+> controller.
 
-[..]
+One issue here: There isn't always a single gpio/pinmux parent; as a
+concrete example, the ALSA/ASoC driver for Tegra+WM8903 uses GPIOs both
+from Tegra itself, and from the WM8903 audio codec.
 
-Grant, Vinod,
+I could imagine the same being true in basically any case where one
+device uses N GPIOs (e.g. SD controller with power, change-detect,
+and read-only GPIOs; some could easily come from the SoC and some
+from a GPIO expander).
 
-Don't you think it would make sense to generalize nr-channels and maybe
-also the capabilities properties for other dmaengine drivers?
-I have seen other dmaengine drivers taking the number of channels from
-platform data so that would make sense.
-It would be new dmaengine device tree properties, but on the other hand,
-I do not know if code can also be centralized for handling of those
-properties... maybe it is better to let drivers deal with them if
-required...
+I'm not quite so sure that multiple parents would be useful for pinmux,
+but I wouldn't say that it was impossible...
 
-Your thoughts?
-
-Best regards,
 -- 
-Nicolas Ferre
+nvpublic
