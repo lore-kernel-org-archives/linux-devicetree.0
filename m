@@ -1,128 +1,42 @@
-From: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Subject: Re: [RFC/PATCH 11/14] dt: omap3: add soc file for handling i2c
- controllers
-Date: Tue, 16 Aug 2011 12:02:27 +0530
-Message-ID: <20110816063227.GA17165@manju-desktop>
-References: <1312897232-4792-1-git-send-email-manjugk@ti.com>
- <1312897232-4792-12-git-send-email-manjugk@ti.com>
- <4E427B62.1000907@ti.com>
- <20110810165745.GB2705@manju-desktop>
- <4E42C3C6.1070806@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
+Date: Tue, 16 Aug 2011 15:09:16 +0200
+Message-ID: <201108161509.17157.arnd@arndb.de>
+References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4E42C3C6.1070806@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1313440100-17131-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2011 at 07:45:42PM +0200, Cousson, Benoit wrote:
-> + Tony
+On Monday 15 August 2011, Stephen Warren wrote:
+> v2:
+> * Enhanced pinmux code to handle "drive pingroups" as well as "mux
+>   pingroups". This altered the pinmux binding a little; shifting each
+>   type of pingroup into a sub-node in the pinmux node.
+> * Enumerate pingroups by enumerating DT child nodes, and mapping them to
+>   pingroups, rather than the other way around. Hence also removed
+>   modifications to <linux/of.h> and drivers/of/base.c.
+> * Included documentation of the bindings.
+> * Represent pingroup names and function names, as lower case in DT.
+> * Used a better name for GPIO binding GPIO list.
+> * Switched to boolean properties for pinmux pull-up/down.
+> * s/dev_err/dev_dbg/ in DT parsing debug code.
+> * Various minor cleanups (e.g. typos, white-space).
 > 
-> On 8/10/2011 6:57 PM, G, Manjunath Kondaiah wrote:
-> >On Wed, Aug 10, 2011 at 02:36:50PM +0200, Cousson, Benoit wrote:
-> >>On 8/9/2011 4:10 PM, G, Manjunath Kondaiah wrote:
-> >>>
-> >>>Add omap3 soc file for handling omap3 soc i2c controllers existing
-> >>>on l4-core bus.
-> >>>
-> >>>Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
-> >>>---
-> >>>  arch/arm/boot/dts/omap3-soc.dtsi |   62 ++++++++++++++++++++++++++++++++++++++
-> >>>  1 files changed, 62 insertions(+), 0 deletions(-)
-> >>>  create mode 100644 arch/arm/boot/dts/omap3-soc.dtsi
-> >>>
-> >>>diff --git a/arch/arm/boot/dts/omap3-soc.dtsi b/arch/arm/boot/dts/omap3-soc.dtsi
-> >>>new file mode 100644
-> >>>index 0000000..85de92f
-> >>>--- /dev/null
-> >>>+++ b/arch/arm/boot/dts/omap3-soc.dtsi
-> >>>@@ -0,0 +1,62 @@
-> >>>+/*
-> >>>+ * Device Tree Source for OMAP3 SoC
-> >>>+ *
-> >>>+ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-> >>>+ *
-> >>>+ * This file is licensed under the terms of the GNU General Public License
-> >>>+ * version 2.  This program is licensed "as is" without any warranty of any
-> >>>+ * kind, whether express or implied.
-> >>>+ */
-> >>>+
-> >>>+/dts-v1/;
-> >>>+/include/ "skeleton.dtsi"
-> >>>+
-> >>>+/ {
-> >>>+	#address-cells =<1>;
-> >>>+	#size-cells =<1>;
-> >>>+	model = "ti,omap3";
-> >>>+
-> >>>+	aliases {
-> >>>+		i2c1 =&i2c1;
-> >>>+		i2c2 =&i2c2;
-> >>>+		i2c3 =&i2c3;
-> >>>+	};
-> >>>+
-> >>>+	l4-core {
-> >>
-> >>That comment is probably subject to discussion, but even if this
-> >>interconnect is there physically, I'm not sure of the added value to
-> >>add it.
-> >>It will add an extra level of indentation and that all. Moreover, it
-> >>will mess up the physical address that are expressed using absolute
-> >>value in the TRM with a less readable offset value.
-> >>In fact, most DTS files in the ARM directory are using a purely flat
-> >>representation of the interconnect.
-> >This is as per alignment with Tony and Grant:
-> >http://permalink.gmane.org/gmane.linux.ports.arm.omap/60391
-> 
-> So I'm asking the same question to Grant and Tony then:-)
+> This patch modifies Tegra's device tree support to remove the dependency
+> on harmony_pinmux_init(), thus making it completely board-independent.
 
-What is the conclusion here? I will go ahead with current approach since
-tony and grant has voted for it.
+I don't understand enough of the technical background to comment on
+the contents, on the surface it all makes sense.
 
--M
+I do think that you should keep Linus Walleij on Cc in these emails, since
+he first started pushing for a common pinmux layer, and we need to make
+sure that the binding works for all SoCs, not just for tegra.
 
-> 
-> >>>+		compatible = "ti,omap3-l4-core";
-> >>
-> >>Assuming we will keep that, you should probably add a more generic
-> >>compatible name after that one. Like "ti,s3220" or even
-> >>"sonics,s3220", assuming that this IP is generic enough for other
-> >>SoC.
-> >will check this. I don't remember any generic names.
-> >>
-> >>>+		#address-cells =<1>;
-> >>>+		#size-cells =<1>;
-> >>>+		ranges =<0 0x48000000 0x1000000>;
-> >>>+
-> >>>+		i2c1: i2c@70000 {
-> >>>+			#address-cells =<1>;
-> >>>+			#size-cells =<0>;
-> >>>+			compatible = "ti,omap3-i2c";
-> >>
-> >>The I2C IP and thus the driver is generic across OMAP generations
-> >>and is even potentially used by other non-OMAP TI chips like DSP or
-> >>Davinci. So having an extra compatible entry with "ti,i2c" or "ti,
-> >>omap-i2c" seems mandatory.
-> >This can be updated as and when new soc/board adaptations are done.
-> >As of now, it is omap3 and when we have omap4 it will be appended with
-> >"ti,omap4-i2c" etc
-> 
-> To infinity and beyond?
-> 
-> There is no need, and we should absolutely not update the driver
-> each time we introduce a new SoC version/revision.
-> The driver should match with the generic device name in that case.
-> Until we change the IP and potentially introduce a new driver.
-> 
-> BTW, even omap3 should not be in the name in theory. It should be
-> potentially "ti,i2c-v3" or whatever HW version the IP is using.
-> But for some reason, most devices are using such convention in
-> existing DTS:-(
-> This is probably due to the lack of well identified IP version in
-> most SoC... including OMAP:-)
-> 
-> 
-> Benoit
+	Arnd
