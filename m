@@ -1,51 +1,181 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
-Date: Tue, 16 Aug 2011 16:45:42 +0200
-Message-ID: <CACRpkdZydMLj5qzbth=tEW9P8p0rrXEzHM2frebsWcDzCJLq8w@mail.gmail.com>
-References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
-	<201108161509.17157.arnd@arndb.de>
-	<CACRpkdaVx=6AJ5DFjVN1ZYQ++hu9pT6WxD9n+pqmYVaCf1xawg@mail.gmail.com>
-	<201108161637.16620.arnd@arndb.de>
+From: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Subject: Re: [RFC/PATCH 09/14] dt: omap: prepare hwmod to support dt
+Date: Tue, 16 Aug 2011 20:32:25 +0530
+Message-ID: <20110816150224.GA22182@manju-desktop>
+References: <1312897232-4792-1-git-send-email-manjugk@ti.com>
+ <1312897232-4792-10-git-send-email-manjugk@ti.com>
+ <4E4270D3.8070807@ti.com>
+ <20110810162846.GC2091@manju-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201108161637.16620.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110810162846.GC2091@manju-desktop>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2011 at 4:37 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 16 August 2011, Linus Walleij wrote:
->> Say mmc instance 0 need pingroup foo on pincontroller bar
->> means that there must be a specific reference from mmc.0:s
->> struct device * to pinctrl bar:s struct device *. Maybe this is
->> peanuts in DT, sorry not enough insight.
->
-> I think what you are looking for is the equivalent of the
-> interrupt-parent property for pinmux. The idea is that each
-> node in the device tree can point to a device managing the
-> pinmux, so reference would point to a local number in that
-> space. We have discussed this for the GPIO case already, and
-> I suspect that the two should be identical (gpio-controller
-> and pinmux-controller using the same device node and same
-> property to refer to them).
+On Wed, Aug 10, 2011 at 09:58:46PM +0530, G, Manjunath Kondaiah wrote:
+> On Wed, Aug 10, 2011 at 01:51:47PM +0200, Cousson, Benoit wrote:
+> > Hi Manju,
+> > 
+> > On 8/9/2011 4:10 PM, G, Manjunath Kondaiah wrote:
+> > >
+> > >The omap dt requires new omap hwmod api to be added for in order
+> > >to support omap dt.
+> > 
+> > Both the subject and the changelog are misleading. You are not doing
+> > any hwmod stuff in it.
+> > You are just passing an "of_node" pointer during omap_device_build_ss.
+> > 
+> > The subject should start with OMAP: omap_device: because it does not
+> > belong to the DT subsystem.
+> > The same comment apply to most patches in that series.
+> 
+> The goal of this patch is to make omap-hwmod ready for dt adaptation hence
+> I used the title "dt: omap: prepare hwmod to support dt" and "of_node" pointer
+> is passed from dt and it is required for dt build.
+> 
+> And as you mentioned, patch does not do anything related to omap_device.
+> 
+> > 
+> > >The new api is added and new parameter "np" is added for existing
+> > >api.
+> > 
+> > I don't think np is not a super meaningful name. Some more
+> > explanation are needed as well.
+> 
+> ok. I can expand it.
+> 
+> > 
+> > >The users of hwmod api is changed accrodingly.
+> > 
+> > omap_device API + typo.
+> > 
+> > >Build and boot tested on omap3 beagle for both dt and not dt build.
+> > >
+> > >Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
+> > >---
+> > >  arch/arm/mach-omap2/devices.c                 |    2 +-
+> > >  arch/arm/mach-omap2/mcbsp.c                   |    2 +-
+> > >  arch/arm/plat-omap/include/plat/omap_device.h |   11 +++++-
+> > >  arch/arm/plat-omap/omap_device.c              |   53 ++++++++++++++++++++++---
+> > >  4 files changed, 59 insertions(+), 9 deletions(-)
+> > >
+> > >diff --git a/arch/arm/mach-omap2/devices.c b/arch/arm/mach-omap2/devices.c
+> > >index 458f7be..d7ff1ae 100644
+> > >--- a/arch/arm/mach-omap2/devices.c
+> > >+++ b/arch/arm/mach-omap2/devices.c
+> > >@@ -92,7 +92,7 @@ static int __init omap4_l3_init(void)
+> > >  			pr_err("could not look up %s\n", oh_name);
+> > >  	}
+> > >
+> > >-	pdev = omap_device_build_ss("omap_l3_noc", 0, oh, 3, NULL,
+> > >+	pdev = omap_device_build_ss(NULL, "omap_l3_noc", 0, oh, 3, NULL,
+> > >  						     0, NULL, 0, 0);
+> > 
+> > OK, maybe that is just me, but in order to extend an API, I'd rather
+> > add the new parameter at the end.
+> 
+> I feel it's fine since node pointer is first parameter is all dt api's.
+> 
+> > 
+> > >  	WARN(IS_ERR(pdev), "could not build omap_device for %s\n", oh_name);
+> > >diff --git a/arch/arm/mach-omap2/mcbsp.c b/arch/arm/mach-omap2/mcbsp.c
+> > >index 7a42f32..98eb95d 100644
+> > >--- a/arch/arm/mach-omap2/mcbsp.c
+> > >+++ b/arch/arm/mach-omap2/mcbsp.c
+> > >@@ -144,7 +144,7 @@ static int omap_init_mcbsp(struct omap_hwmod *oh, void *unused)
+> > >  		(struct omap_mcbsp_dev_attr *)(oh->dev_attr))->sidetone);
+> > >  		count++;
+> > >  	}
+> > >-	pdev = omap_device_build_ss(name, id, oh_device, count, pdata,
+> > >+	pdev = omap_device_build_ss(NULL, name, id, oh_device, count, pdata,
+> > >  				sizeof(*pdata), omap2_mcbsp_latency,
+> > >  				ARRAY_SIZE(omap2_mcbsp_latency), false);
+> > >  	kfree(pdata);
+> > >diff --git a/arch/arm/plat-omap/include/plat/omap_device.h b/arch/arm/plat-omap/include/plat/omap_device.h
+> > >index 7a3ec4f..5e2424b 100644
+> > >--- a/arch/arm/plat-omap/include/plat/omap_device.h
+> > >+++ b/arch/arm/plat-omap/include/plat/omap_device.h
+> > >@@ -33,6 +33,7 @@
+> > >
+> > >  #include<linux/kernel.h>
+> > >  #include<linux/platform_device.h>
+> > >+#include<linux/of.h>
+> > >
+> > >  #include<plat/omap_hwmod.h>
+> > >
+> > >@@ -89,12 +90,20 @@ struct platform_device *omap_device_build(const char *pdev_name, int pdev_id,
+> > >  				      struct omap_device_pm_latency *pm_lats,
+> > >  				      int pm_lats_cnt, int is_early_device);
+> > >
+> > >-struct platform_device *omap_device_build_ss(const char *pdev_name, int pdev_id,
+> > >+struct platform_device *omap_device_build_ss(struct device_node *np,
+> > >+					 const char *pdev_name, int pdev_id,
+> > >  					 struct omap_hwmod **oh, int oh_cnt,
+> > >  					 void *pdata, int pdata_len,
+> > >  					 struct omap_device_pm_latency *pm_lats,
+> > >  					 int pm_lats_cnt, int is_early_device);
+> > >
+> > >+struct platform_device *omap_device_build_dt(struct device_node *np,
+> > >+				      const char *pdev_name, int pdev_id,
+> > >+				      struct omap_hwmod *oh, void *pdata,
+> > >+				      int pdata_len,
+> > >+				      struct omap_device_pm_latency *pm_lats,
+> > >+				      int pm_lats_cnt, int is_early_device);
+> > >+
+> > >  void __iomem *omap_device_get_rt_va(struct omap_device *od);
+> > >
+> > >  /* OMAP PM interface */
+> > >diff --git a/arch/arm/plat-omap/omap_device.c b/arch/arm/plat-omap/omap_device.c
+> > >index 7d5e76b..fa49168 100644
+> > >--- a/arch/arm/plat-omap/omap_device.c
+> > >+++ b/arch/arm/plat-omap/omap_device.c
+> > >@@ -85,6 +85,7 @@
+> > >  #include<linux/clk.h>
+> > >  #include<linux/clkdev.h>
+> > >  #include<linux/pm_runtime.h>
+> > >+#include<linux/of_device.h>
+> > >
+> > >  #include<plat/omap_device.h>
+> > >  #include<plat/omap_hwmod.h>
+> > >@@ -377,6 +378,7 @@ static int omap_device_fill_resources(struct omap_device *od,
+> > >  /**
+> > >   * omap_device_build - build and register an omap_device with one omap_hwmod
+> > 
+> > Need to update the kerneldoc.
+> ok.
 
-Yes. I discussed with Grant and his idea is for e.g.
-advanced combined pincontrol + GPIO blocks that handle
-a lot of stuff like muxing, biasing and GPIO, to expose
-a single pinctrl device that in turn provide also a gpio_chip
-in addition to the pinctrl interfaces so tehy should be
-all on the same struct device *
+As these API's are interim API's and we might have alternate setup to handle
+hwmod in the coming days, the documentation part will be taken care along with
+final solution for hwmod issue.
 
-> Since the pinmux-parent
-> (gpio-parent, ...) property gets inherited by all child
-> devices, you only need to set it once at the root of the
-> device tree for the simple case where there is only one
-> controller.
+> > 
+> > >   * @pdev_name: name of the platform_device driver to use
+> > >+ * @np: device node pointer for attaching it to of_node pointer
+> > >   * @pdev_id: this platform_device's connection ID
+> > >   * @oh: ptr to the single omap_hwmod that backs this omap_device
+> > >   * @pdata: platform_data ptr to associate with the platform_device
+> > >@@ -391,7 +393,8 @@ static int omap_device_fill_resources(struct omap_device *od,
+> > >   * information.  Returns ERR_PTR(-EINVAL) if @oh is NULL; otherwise,
+> > >   * passes along the return value of omap_device_build_ss().
+> > >   */
+> > >-struct platform_device *omap_device_build(const char *pdev_name, int pdev_id,
+> > >+struct platform_device *omap_device_build_dt(struct device_node *np,
+> > >+				      const char *pdev_name, int pdev_id,
+> > >  				      struct omap_hwmod *oh, void *pdata,
+> > >  				      int pdata_len,
+> > >  				      struct omap_device_pm_latency *pm_lats,
+> > 
+> > That function should not be needed. You have to export
+> > omap_device_build_ss, otherwise you will not build any device with
+> > multiple hwmods.
+> ok.
 
-This will likely be the case for most of the advanced muxes
-I know of, OMAP, Tegra and Nomadik.
+confused here. All the three API's *_dt/*_ss/*_dt are exported and can be
+accessed for single or multiple hwmods. Am I missing anything?
 
-Thanks,
-Linus Walleij
+-M
+
