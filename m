@@ -1,47 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/4] msm_serial: Add devicetree support
-Date: Tue, 16 Aug 2011 21:07:08 +0200
-Message-ID: <3445697.36l0oAAgCs@wuerfel>
-References: <1313190008-7551-1-git-send-email-davidb@codeaurora.org>
-	<65679699.l4XXDScc0T@wuerfel>
-	<20110816175702.GA27576@huya.qualcomm.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC PATCH v2 03/13] arm/tegra: board-dt: Add AUXDATA for
+ tegra-gpio and tegra-pinmux
+Date: Tue, 16 Aug 2011 13:24:00 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA25430@HQMAIL01.nvidia.com>
+References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
+ <1313440100-17131-4-git-send-email-swarren@nvidia.com>
+ <20110816033056.GE8044@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110816175702.GA27576@huya.qualcomm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Brown <davidb@codeaurora.org>
-Cc: linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Bryan Huntsman <bryanh@codeaurora.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@xenotime.net>, linux-serial@vger.kernel.org, Daniel Walker <dwalker@fifo99.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110816033056.GE8044-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 16 August 2011 10:57:02 David Brown wrote:
-> How about if I just keep it simple for now.  Since there isn't
-> actually a driver for the DMA version, this driver will handle both
-> UART blocks, so I'll just do the plain thing in the DT.
+Shawn Guo wrote at Monday, August 15, 2011 9:31 PM:
+> On Mon, Aug 15, 2011 at 02:28:10PM -0600, Stephen Warren wrote:
+> > Add AUXDATA so that Tegra GPIO and pinmux devices that are instantiated
+> > from device-tree are named consistently with the static platform devices
+> > in mach-tegra/devices.c. Note that the device-tree file tegra20.dtsi
+> > already includes a node for the Tegra GPIO controller, whereas the node
+> > for the Tegra pinmux controller will be added in a subsequent commit.
+> >
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  arch/arm/mach-tegra/board-dt.c |    2 ++
+> >  1 files changed, 2 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/board-dt.c
+> > index 9f47e04..1995b79 100644
+> > --- a/arch/arm/mach-tegra/board-dt.c
+> > +++ b/arch/arm/mach-tegra/board-dt.c
+> > @@ -50,6 +50,8 @@ void seaboard_pinmux_init(void);
+> >
+> >
+> >  struct of_dev_auxdata tegra20_auxdata_lookup[] __initdata = {
+> > +	OF_DEV_AUXDATA("nvidia,tegra20-gpio", TEGRA_GPIO_BASE, "tegra-gpio", NULL),
+> > +	OF_DEV_AUXDATA("nvidia,tegra20-pinmux", TEGRA_APB_MISC_BASE, "tegra-pinmux", NULL),
+> >  	OF_DEV_AUXDATA("nvidia,tegra20-sdhci", TEGRA_SDMMC1_BASE, "sdhci-tegra.0", NULL),
+> >  	OF_DEV_AUXDATA("nvidia,tegra20-sdhci", TEGRA_SDMMC2_BASE, "sdhci-tegra.1", NULL),
+> >  	OF_DEV_AUXDATA("nvidia,tegra20-sdhci", TEGRA_SDMMC3_BASE, "sdhci-tegra.2", NULL),
+> >
+> The whole auxdata table was primarily added to keep clk API working
+> with the device name looking up.  Your gpio and pinmux can still work
+> without this patch, right?  If that's case, I do not think we need to
+> have this patch just for consistent device name between dt and non-dt.
+> They are not and they do not have to be.
 
-Sounds good to me.
+Indeed, everything does work fine without the AUXDATA; there's no
+dependence on any clock lookups or similar in the new drivers.
 
-> In the future, when a DMA-capable driver exists, we can figure out how
-> to determine which driver should be used.  At this point, I'm not even
-> sure what the correct answer will be, since a given configuration may
-> want to use non-DMA for one msm-hsuart device, and the DMA driver for
-> another.  It's kind of board/use specific, but beyond just describing
-> what the hardware is.
+Initially, I thought consistency in device naming would be important,
+since Tegra works with and without device-tree, but I guess we'll be able
+to turn off the hard-coded board files soon, so device name consistency
+probably isn't too relevant.
 
-In order to be absolutely future-proof, you could mandate that you always
-list two "compatible" values, one for the generic version and one for
-the specific implementation (high-speed or low-speed). It's a simple
-change from what you have now and it allows to change the drivers to
-bind to just the specific name in case you want to handle them separately
-in the future, without having to change the device tree files.
+I'll drop this patch.
 
-	Arnd
+-- 
+nvpublic
