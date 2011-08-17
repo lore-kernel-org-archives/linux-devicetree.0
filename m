@@ -1,107 +1,180 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH v2 02/13] arm/tegra: Avoid duplicate gpio/pinmux
- devices with dt
-Date: Tue, 16 Aug 2011 13:46:12 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AEA25449@HQMAIL01.nvidia.com>
-References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
- <1313440100-17131-3-git-send-email-swarren@nvidia.com>
+From: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Subject: [PATCH v13 3/6] flexcan: Fix up fsl-flexcan device tree binding.
+Date: Tue, 16 Aug 2011 22:32:21 -0500
+Message-ID: <1313551944-28603-4-git-send-email-holt@sgi.com>
+References: <1313551944-28603-1-git-send-email-holt@sgi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1313440100-17131-3-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <1313551944-28603-1-git-send-email-holt-sJ/iWh9BUns@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-core>
+List-Post: <mailto:socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-core>,
+	<mailto:socketcan-core-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-core-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Marc Kleine-Budde <mkl@pengutronix>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote at Monday, August 15, 2011 2:28 PM:
-> A future change will set up gpio and pinmux platform device registration
-> in device-tree files, via board-dt.c. When board-dt.c calls into
-> harmony/seaboard_pinmux_init(), this will cause a duplicate registration
-> of those platform devices, which will cause kernel boot failure.
+This patch cleans up the documentation of the device-tree binding for
+the Flexcan devices on Freescale's PowerPC and ARM cores. Extra
+properties are not used by the driver so we are removing them.
 
-It looks like this patch, and the subsequent revert, aren't actually needed.
+Signed-off-by: Robin Holt <holt-sJ/iWh9BUns@public.gmane.org>
+Acked-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>,
+Acked-by: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
+Cc: U Bhaskar-B22300 <B22300-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: socketcan-core-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org,
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+Cc: PPC list <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ .../devicetree/bindings/net/can/fsl-flexcan.txt    |   61 ++++----------------
+ arch/powerpc/boot/dts/p1010rdb.dts                 |   10 +---
+ arch/powerpc/boot/dts/p1010si.dtsi                 |   10 +--
+ 3 files changed, 17 insertions(+), 64 deletions(-)
 
-The boot failure I saw earlier was actually due to the pinmux driver crashing
-if pdev->dev.of_node==NULL during probe.
-
-With that fixed, with this patch series as is, there are then warnings due
-to tegra-gpio and tegra-pinmux each being registered twice, due to the
-following patch setting up AUXDATA and causing the device-tree-registered
-and platform-device-registered devices to have the same name.
-
-However, I'm dropping the AUXDATA patch, so that issue doesn't occur.
-
-And hence, I will drop this patch, and its subsequent revert. This will
-cause the GPIO and pinmux drivers to be temporarily instantiated twice.
-However, that doesn't actually cause any problems, and will be solved af
-ew patches later anyway.
-
-(Let me know if anyone thinks this patch should stay in).
-
-> To solve this, modify harmony/seaboard_pinmux_init() so that they only
-> register the platform devices when actually running on Harmony/Seaboard;
-> when board-dt.c is in use, a different machine type is used.
-> 
-> This change is a temporary measure to ensure git bisectability. It will
-> be reverted when board-dt.c no longer calls harmony/seaboard_pinmux_init().
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/mach-tegra/board-harmony-pinmux.c  |    5 ++++-
->  arch/arm/mach-tegra/board-seaboard-pinmux.c |    5 ++++-
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/mach-tegra/board-harmony-pinmux.c b/arch/arm/mach-tegra/board-harmony-pinmux.c
-> index e99b456..130018d 100644
-> --- a/arch/arm/mach-tegra/board-harmony-pinmux.c
-> +++ b/arch/arm/mach-tegra/board-harmony-pinmux.c
-> @@ -14,6 +14,8 @@
->   *
->   */
-> 
-> +#include <asm/mach-types.h>
-> +
->  #include <linux/kernel.h>
->  #include <linux/gpio.h>
->  #include <mach/pinmux.h>
-> @@ -161,7 +163,8 @@ static struct tegra_gpio_table gpio_table[] = {
-> 
->  void harmony_pinmux_init(void)
->  {
-> -	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
-> +	if (machine_is_harmony())
-> +		platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
-> 
->  	tegra_pinmux_config_table(harmony_pinmux, ARRAY_SIZE(harmony_pinmux));
-> 
-> diff --git a/arch/arm/mach-tegra/board-seaboard-pinmux.c b/arch/arm/mach-tegra/board-seaboard-pinmux.c
-> index f092298..bc4dc17 100644
-> --- a/arch/arm/mach-tegra/board-seaboard-pinmux.c
-> +++ b/arch/arm/mach-tegra/board-seaboard-pinmux.c
-> @@ -12,6 +12,8 @@
->   *
->   */
-> 
-> +#include <asm/mach-types.h>
-> +
->  #include <linux/kernel.h>
->  #include <linux/init.h>
->  #include <linux/gpio.h>
-> @@ -176,7 +178,8 @@ static struct tegra_gpio_table gpio_table[] = {
-> 
->  void __init seaboard_pinmux_init(void)
->  {
-> -	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
-> +	if (machine_is_seaboard())
-> +		platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
-> 
->  	tegra_pinmux_config_table(seaboard_pinmux, ARRAY_SIZE(seaboard_pinmux));
-> 
-> --
-> 1.7.0.4
-
+diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+index 1a729f0..8dfb98b 100644
+--- a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
++++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+@@ -1,61 +1,22 @@
+-CAN Device Tree Bindings
+-------------------------
+-2011 Freescale Semiconductor, Inc.
++Flexcan CAN contoller on Freescale's ARM and PowerPC system-on-a-chip (SOC).
+ 
+-fsl,flexcan-v1.0 nodes
+------------------------
+-In addition to the required compatible-, reg- and interrupt-properties, you can
+-also specify which clock source shall be used for the controller.
++Required properties:
+ 
+-CPI Clock- Can Protocol Interface Clock
+-	This CLK_SRC bit of CTRL(control register) selects the clock source to
+-	the CAN Protocol Interface(CPI) to be either the peripheral clock
+-	(driven by the PLL) or the crystal oscillator clock. The selected clock
+-	is the one fed to the prescaler to generate the Serial Clock (Sclock).
+-	The PRESDIV field of CTRL(control register) controls a prescaler that
+-	generates the Serial Clock (Sclock), whose period defines the
+-	time quantum used to compose the CAN waveform.
++- compatible : Should be "fsl,<processor>-flexcan"
+ 
+-Can Engine Clock Source
+-	There are two sources for CAN clock
+-	- Platform Clock  It represents the bus clock
+-	- Oscillator Clock
++  An implementation should also claim any of the following compatibles
++  that it is fully backwards compatible with:
+ 
+-	Peripheral Clock (PLL)
+-	--------------
+-		     |
+-		    ---------		      -------------
+-		    |       |CPI Clock	      | Prescaler |       Sclock
+-		    |       |---------------->| (1.. 256) |------------>
+-		    ---------		      -------------
+-                     |  |
+-	--------------  ---------------------CLK_SRC
+-	Oscillator Clock
++  - fsl,p1010-flexcan
+ 
+-- fsl,flexcan-clock-source : CAN Engine Clock Source.This property selects
+-			     the peripheral clock. PLL clock is fed to the
+-			     prescaler to generate the Serial Clock (Sclock).
+-			     Valid values are "oscillator" and "platform"
+-			     "oscillator": CAN engine clock source is oscillator clock.
+-			     "platform" The CAN engine clock source is the bus clock
+-		             (platform clock).
++- reg : Offset and length of the register set for this device
++- interrupts : Interrupt tuple for this device
+ 
+-- fsl,flexcan-clock-divider : for the reference and system clock, an additional
+-			      clock divider can be specified.
+-- clock-frequency: frequency required to calculate the bitrate for FlexCAN.
++Example:
+ 
+-Note:
+-	- v1.0 of flexcan-v1.0 represent the IP block version for P1010 SOC.
+-	- P1010 does not have oscillator as the Clock Source.So the default
+-	  Clock Source is platform clock.
+-Examples:
+-
+-	can0@1c000 {
+-		compatible = "fsl,flexcan-v1.0";
++	can@1c000 {
++		compatible = "fsl,p1010-flexcan";
+ 		reg = <0x1c000 0x1000>;
+ 		interrupts = <48 0x2>;
+ 		interrupt-parent = <&mpic>;
+-		fsl,flexcan-clock-source = "platform";
+-		fsl,flexcan-clock-divider = <2>;
+-		clock-frequency = <fixed by u-boot>;
+ 	};
+diff --git a/arch/powerpc/boot/dts/p1010rdb.dts b/arch/powerpc/boot/dts/p1010rdb.dts
+index 6b33b73..d6c669c 100644
+--- a/arch/powerpc/boot/dts/p1010rdb.dts
++++ b/arch/powerpc/boot/dts/p1010rdb.dts
+@@ -23,6 +23,8 @@
+ 		ethernet2 = &enet2;
+ 		pci0 = &pci0;
+ 		pci1 = &pci1;
++		can0 = &can0;
++		can1 = &can1;
+ 	};
+ 
+ 	memory {
+@@ -169,14 +171,6 @@
+ 			};
+ 		};
+ 
+-		can0@1c000 {
+-			fsl,flexcan-clock-source = "platform";
+-		};
+-
+-		can1@1d000 {
+-			fsl,flexcan-clock-source = "platform";
+-		};
+-
+ 		usb@22000 {
+ 			phy_type = "utmi";
+ 		};
+diff --git a/arch/powerpc/boot/dts/p1010si.dtsi b/arch/powerpc/boot/dts/p1010si.dtsi
+index 7f51104..cabe0a4 100644
+--- a/arch/powerpc/boot/dts/p1010si.dtsi
++++ b/arch/powerpc/boot/dts/p1010si.dtsi
+@@ -140,20 +140,18 @@
+ 			interrupt-parent = <&mpic>;
+ 		};
+ 
+-		can0@1c000 {
+-			compatible = "fsl,flexcan-v1.0";
++		can0: can@1c000 {
++			compatible = "fsl,p1010-flexcan";
+ 			reg = <0x1c000 0x1000>;
+ 			interrupts = <48 0x2>;
+ 			interrupt-parent = <&mpic>;
+-			fsl,flexcan-clock-divider = <2>;
+ 		};
+ 
+-		can1@1d000 {
+-			compatible = "fsl,flexcan-v1.0";
++		can1: can@1d000 {
++			compatible = "fsl,p1010-flexcan";
+ 			reg = <0x1d000 0x1000>;
+ 			interrupts = <61 0x2>;
+ 			interrupt-parent = <&mpic>;
+-			fsl,flexcan-clock-divider = <2>;
+ 		};
+ 
+ 		L2: l2-cache-controller@20000 {
 -- 
-nvpublic
+1.7.2.1
