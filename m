@@ -1,150 +1,174 @@
-From: Barry Song <21cnbao@gmail.com>
-Subject: [RFC] ARM: l2x0: suspend/resume entries
-Date: Wed, 17 Aug 2011 13:11:22 +0800
-Message-ID: <CAGsJ_4wpZGfJDX_q833f-aS16g=_0armXqtqYxcfW2MXN8KpVg@mail.gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC PATCH v2 06/13] docs/dt: Document nvidia,tegra20-pinmux
+ binding
+Date: Wed, 17 Aug 2011 14:02:43 +0800
+Message-ID: <20110817060242.GA10037@S2100-06.ap.freescale.net>
+References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
+ <1313440100-17131-7-git-send-email-swarren@nvidia.com>
+ <201108161551.31389.arnd@arndb.de>
+ <74CDBE0F657A3D45AFBB94109FB122FF04AEA2537D@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux@arm.linux.org.uk
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, workgroup.linux@csr.com, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, weizeng.he@csr.com
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04AEA2537D-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2011/7/7 Rob Herring <robherring2@gmail.com>:
-> From: Rob Herring <rob.herring@calxeda.com>
->
-> This adds probing for ARM L2x0 cache controllers via device tree. Support
-> includes the L210, L220, and PL310 controllers. The binding allows setting
-> up cache RAM latencies and filter addresses (PL310 only).
->
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+On Tue, Aug 16, 2011 at 10:32:05AM -0700, Stephen Warren wrote:
+> Arnd Bergmann wrote at Tuesday, August 16, 2011 7:52 AM:
+> > On Monday 15 August 2011, Stephen Warren wrote:
+> > > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  .../devicetree/bindings/pinmux/pinmux_nvidia.txt   |  294 ++++++++++++++++++++
+> > >  1 files changed, 294 insertions(+), 0 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/pinmux/pinmux_nvidia.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/pinmux/pinmux_nvidia.txt b/Documentation/devicetree/bindings/pinmux/pinmux_nvidia.txt
+> > > new file mode 100644
+> > > index 0000000..744e1b7
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinmux/pinmux_nvidia.txt
+> > > @@ -0,0 +1,294 @@
+> > > +NVIDIA Tegra 2 pinmux controller
+> > > +
+> > > +Required properties:
+> > > +- compatible : "nvidia,tegra20-pinmux"
+> > 
+> > Hmm, I think it would be much better in general if we could define
+> > pinmux bindings in a way that is less specific to just one soc.
+> 
+> > The contents of this file seem to be specific to even just one
+> > version of the tegra chip, and might be completely different for
+> > tegra30 and later, right?
+> 
+> The general concepts are the same between tegra20 and tegra30.
+> 
+> Tegra30 has a different set of mux and drive pingroups.
+> 
+> Tegra30 has more functions that can be assigned to pins.
+> 
+> Tegra30 has three more options per mux pingroup, although I haven't
+> Investigated whether any of those would need to be represented in DT;
+> I suspect at least one will, possibly all.
+> 
+> > Maybe Linus W can comment on this and say whether he thinks it can
+> > be generalized enough to apply to other pinmux drivers.
+> > 
+> > > +Optional sub-nodes:
+> > > +- nvidia,mux-groups : Mux group settings; see below.
+> > > +- nvidia,drive-groups : Drive group settings; see below.
+> > > +
+> > > +nvidia,mux-groups sub-node:
+> > 
+> > These concepts seem general enough to me that they can apply to
+> > other chips, and I would consequently drop the nvidia, prefix.
+> 
+> Two things to note about Tegra that might not apply to all SoCs:
+> 
+> * There are separate groups of pins for Muxing (plus some config) vs.
+> drive-strength (and related config). Some SoCs might use the same set
+> of groups for both. Perhaps some SoC might even have three or more types
+> of groups! I expect this to have some impact on the binding; I created
+> explicit mux-groups and drive-groups sub-nodes to represent this.
+> 
+> * Tegra's pinmux apply settings to groups of pins instead of individual
+> pins. Some SoCs might allow each setting to be configurable per-pin.
+> I don't expect this to have any impact as far as the bindings go though;
+> it'll simply impact the names of the available pin "groups"; some SoCs
+> will name groups, others pins.
+> 
++1
 
-Based on this patch, I simply modified some codes to add preliminary
-suspend/resume entries for l2 cache and request for comments. it is
-not a formal patch.
+imx's pinmux applies settings to individual pins.
 
-From: Barry Song <Baohua.Song@csr.com>
-Subject: [RFC][PATCH] ARM: L2X0: add suspend/resume syscore ops
+> > > +Each mux pin group is represented as a sub-node of the nvidia,mux-groups node.
+> > > +The name of the sub-node should be the name of the mux pingroup. The following
+> > > +names are valid:
+> > > +
+> > > +	ata
+> > > +	atb
+> > > +	atc
+> > > +	atd
+> > > +	ate
+> > > +	cdev1
+> > > +	cdev2
+> > > ...
+> > 
+> > I noticed that each board you define has a complete list of these. Would
+> > it be possible to move a generic list into a tegra20-pinmux.dtsi file and
+> > just override the pins in the per-board .dts file that require some special
+> > setup?
+> 
 
-Signed-off-by: Barry Song <Baohua.Song@csr.com>
----
- arch/arm/mm/cache-l2x0.c |   74 ++++++++++++++++++++++++++++++++++++---------
- 1 files changed, 59 insertions(+), 15 deletions(-)
+It sounds sane for imx though.  I'm going to take this suggestion to
+have imx53-pinmux.dtsi holding register offset for each pin, which is
+common across all i.mx53 boards.
 
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index c035b9a..8db89b5 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -32,6 +32,11 @@ static void __iomem *l2x0_base;
- static DEFINE_SPINLOCK(l2x0_lock);
- static uint32_t l2x0_way_mask;	/* Bitmask of active ways */
- static uint32_t l2x0_size;
-+static uint32_t l2x0_aux_val;
-+static uint32_t l2x0_aux_mask;
-+static void (*l2x0_setup)(const struct device_node *np,
-+                __u32 *aux_val, __u32 *aux_mask);
-+static struct device_node *l2x0_np;
+> I'm not sure how much commonality there will really be.
+> 
+> Certainly, many boards are based off our reference designs and so will
+> have many similarities that could be shared.
+> 
+> That said, comparing even tegra-harmony.dts and tegra-seaboard.dts shows
+> a lot of differences. It seems a lot less error-prone to just completely
+> describe the entire pinmux state in each board's .dts file, rather than
+> trying to represent half the information as default in the SoC .dtsi file,
+> and just the diff in the board .dts file. I suppose perhaps if we put the
+> hardware's own default settings in tegra20.dtsi, that'd make sense, since
+> people are presumably reasonably aware of the delta relative to that.
+> 
+> We'd need to add new properties to override defaults, like:
+> 
+> nvidia,tristate --> nvidia,drive
+> nvidia,pull-*   --> nvidia,no-pull
+> 
+> > > +
+> > > +optional subnode-properties:
+> > > +- nvidia,pull-up : Boolean, apply Tegra's internal pull-up to the pin.
+> > > +- nvidia,pull-down : Boolean, apply Tegra's internal pull-down to the pin.
+> > > +- nvidia,tristate : Boolean, tristate the pin. Otherwise, drive it.
+> > > +
+> > > +If both nvidia,pull-up and nvidia,pull-down are specified, nvidia,pull-up
+> > > +takes precedence.
+> > 
+> > These again seem generic enough to go into a general pinmux binding, without
+> > the nvidia, prefix.
+> 
+> Yes, I believe Jamie Iles was going to try cooking up a generic core binding
+> that could be shared across different SoCs, and extended with custom stuff.
+> 
+I would image that whatever common binding for pin/pad configuration
+comes can hardly work for imx out of box.  For each pin/pad, imx have
+4 configurations for pull:
 
- static inline void cache_wait_way(void __iomem *reg, unsigned long mask)
- {
-@@ -280,7 +285,7 @@ static void l2x0_disable(void)
- 	spin_unlock_irqrestore(&l2x0_lock, flags);
- }
+  00: 100KOhm Pull Down
+  01: 47KOhm Pull Up
+  10: 100KOhm Pull Up
+  11: 22KOhm Pull Up
 
--void __init l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask)
-+void l2x0_init(void __iomem *base, __u32 aux_val, __u32 aux_mask)
- {
- 	__u32 aux;
- 	__u32 cache_id;
-@@ -431,26 +436,65 @@ static const struct of_device_id l2x0_ids[]
-__initconst = {
- 	{}
- };
+4 configurations for drive:
 
--int __init l2x0_of_init(__u32 aux_val, __u32 aux_mask)
-+static void l2x0_arch_init(void)
- {
--	struct device_node *np;
--	void (*l2_setup)(const struct device_node *np,
--		__u32 *aux_val, __u32 *aux_mask);
-+	/* L2 configuration can only be changed if the cache is disabled */
-+	if (!(readl_relaxed(l2x0_base + L2X0_CTRL) & 1)) {
-+		if (l2x0_setup)
-+			l2x0_setup(l2x0_np, &l2x0_aux_val, &l2x0_aux_mask);
-+	}
-+
-+	l2x0_init(l2x0_base, l2x0_aux_val, l2x0_aux_mask);
-+}
-+
-+#ifdef CONFIG_PM
-+#include <linux/syscore_ops.h>
-+
-+static int l2x0_pm_suspend(void)
-+{
-+        l2x0_flush_all();
-+        l2x0_clean_all();
-+        l2x0_disable();
-+        return 0;
-+}
-+
-+static void l2x0_pm_resume(void)
-+{
-+	l2x0_arch_init();
-+}
-+
-+static struct syscore_ops l2x0_pm_syscore_ops = {
-+        .suspend        = l2x0_pm_suspend,
-+        .resume         = l2x0_pm_resume,
-+};
+  00: 100KOhm Pull Down
+  01: 47KOhm Pull Up
+  10: 100KOhm Pull Up
+  11: 22KOhm Pull Up
 
--	np = of_find_matching_node(NULL, l2x0_ids);
--	if (!np)
-+static void __init l2x0_pm_init(void)
-+{
-+        register_syscore_ops(&l2x0_pm_syscore_ops);
-+}
-+
-+#else
-+static inline void l2x0_pm_init(void) { }
-+#endif /* CONFIG_PM */
-+
-+
-+int __init l2x0_of_init(__u32 aux_val, __u32 aux_mask)
-+{
-+	l2x0_np = of_find_matching_node(NULL, l2x0_ids);
-+	if (!l2x0_np)
- 		return -ENODEV;
--	l2x0_base = of_iomap(np, 0);
-+	l2x0_base = of_iomap(l2x0_np, 0);
- 	if (!l2x0_base)
- 		return -ENOMEM;
+some other 1 bit configuration fields:
 
--	/* L2 configuration can only be changed if the cache is disabled */
--	if (!(readl_relaxed(l2x0_base + L2X0_CTRL) & 1)) {
--		l2_setup = of_match_node(l2x0_ids, np)->data;
--		if (l2_setup)
--			l2_setup(np, &aux_val, &aux_mask);
--	}
--	l2x0_init(l2x0_base, aux_val, aux_mask);
-+	l2x0_setup = of_match_node(l2x0_ids, l2x0_np)->data;
-+
-+	l2x0_aux_val = aux_val;
-+	l2x0_aux_mask = aux_mask;
-+
-+	l2x0_arch_init();
-+	l2x0_pm_init();
- 	return 0;
- }
-+
- #endif
+  low/high output voltage Field
+  Hyst. Enable Field
+  Pull / Keep Enable Field
+  Pull / Keep Select Field
+  Slew Rate Field
+
+All these are all in one register <pad_name>_PAD_CTL (mux configuration
+is in another register <pad_name>_PAD_MUX).  The best binding for
+PAD_CTL I can think of so far is to encode the register value in DT
+directly.
+
 -- 
-1.7.1
+Regards,
+Shawn
