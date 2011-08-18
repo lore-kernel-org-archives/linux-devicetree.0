@@ -1,323 +1,68 @@
-From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Subject: Re: [PATCH] USB: isp1362: Add devicetree support
-Date: Wed, 17 Aug 2011 09:22:52 +0200
-Message-ID: <20110817072252.GI24840@distanz.ch>
-References: <1312292961-18309-1-git-send-email-tklauser@distanz.ch> <CACxGe6vL+Lv6f1vK9nNgiU7jXRp0AAAsWFOU8NjiMFcfy=h4Kg@mail.gmail.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
+Date: Wed, 17 Aug 2011 23:22:16 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04AF6F3062@HQMAIL01.nvidia.com>
+References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
+	<201108161637.16620.arnd@arndb.de>
+	<74CDBE0F657A3D45AFBB94109FB122FF04AEA25368@HQMAIL01.nvidia.com>
+	<201108171323.38441.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6vL+Lv6f1vK9nNgiU7jXRp0AAAsWFOU8NjiMFcfy=h4Kg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201108171323.38441.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2011-08-08 at 20:37:49 +0200, Grant Likely <grant.likely@secretlab.c=
-a> wrote:
-> On Tue, Aug 2, 2011 at 7:49 AM, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> =
-wrote:
-> > Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-> > ---
->=20
-> No commit text?
-
-I figured the subject said it all, but that might have been a bit too
-lazy :-) I'll add a description text in the next version of the patch.
-
-> > =A0.../devicetree/bindings/usb/isp1362-hcd.txt =A0 =A0 =A0 =A0| =A0=
- 23 +++++
-> > =A0drivers/usb/host/isp1362-hcd.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | =A0 93 +++++++++++++++++++-
-> > =A02 files changed, 113 insertions(+), 3 deletions(-)
-> > =A0create mode 100644 Documentation/devicetree/bindings/usb/isp1362=
--hcd.txt
+Arnd Bergmann wrote at Wednesday, August 17, 2011 5:24 AM:
+> On Tuesday 16 August 2011, Stephen Warren wrote:
+> > One issue here: There isn't always a single gpio/pinmux parent; as a
+> > concrete example, the ALSA/ASoC driver for Tegra+WM8903 uses GPIOs both
+> > from Tegra itself, and from the WM8903 audio codec.
 > >
-> > diff --git a/Documentation/devicetree/bindings/usb/isp1362-hcd.txt =
-b/Documentation/devicetree/bindings/usb/isp1362-hcd.txt
-> > new file mode 100644
-> > index 0000000..9641a82
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/isp1362-hcd.txt
->=20
-> Woo! Documentation!
->=20
-> > @@ -0,0 +1,23 @@
-> > +NXP ISP1362 USB host controller
-> > +
-> > +Required properties :
-> > + - compatible : should be "nxp,usb-isp1362"
-> > + - reg : offset and length of the register set for the device
-> > + - interrupts : interrupt number
-> > +
-> > +Optional properties :
-> > + - nxp,sel15Kres: boolean; Enable internal pulldown resistors on d=
-ownstream
-> > + =A0 ports.
-> > + - nxp,clknotstop: boolean; Clock cannot be stopped
-> > + - nxp,oc_enable: boolean; Enable on-chip overcurrent protection
->=20
-> '-' is preferred to '_' on property names.
-
-Will change that.
-
-> > + - nxp,int_act_high: boolean; INT output polarity high
-> > + - nxp,int_edge_triggered: boolean; INT edge triggered
->=20
-> Typically interupt polarity/sense is encoded in the flags of the
-> interrupt specifier.
-
-I'll have to figure out how to extract this from the irq resource and
-how to properly handle it in our dts generator (sopc2dts from the nios2
-linux project).
-
-Is this mandatory or just better practice?
-
-> > + - nxp,dreq_act_high: boolean; DREQ output polarity high
-> > + - nxp,dack_act_high: boolean; DACK input polarity high
-> > + - nxp,remote_wakeup_connected: boolean; chip can be resumed via H=
-_WAKEUP pin
-> > + - nxp,no_power_switching: boolean; Switch or not to switch (keep =
-always
-> > + =A0 powered)
-> > + - nxp,power_switching_mode: boolean; Ganged port power switching =
-(0) or
-> > + =A0 individual port power switching (1)
-> > + - nxp,potpg: Power on to power good time (duration the host contr=
-oller has to
-> > + =A0 wait before accessing a power-on-port of the root hub) in uni=
-ts of 2 msecs.
->=20
-> The documentation is a little unclear.  I assume you mean that each o=
-f
-> the boolean options defaults to false, and becomes true if the named
-> property is present.  Is that correct?  You may want to do some
-> wordsmithing here.  The nxp,power_switching_mode property appears to
-> expect an integer instead of being a boolean based on the presense of
-> a property
-
-Jup, the boolean options default to false and are set to true if
-the property is present. I more or less copied the option descriptions
-from comments in the platform_data definition in
-include/linux/usb/isp1362.h
-
-I'll reword them and change the type of the nxp,power-switching-mode to
-integer (even though it only has two valid values, 0 and 1).
-
-> > diff --git a/drivers/usb/host/isp1362-hcd.c b/drivers/usb/host/isp1=
-362-hcd.c
-> > index 9c37dad..dbf6f16 100644
-> > --- a/drivers/usb/host/isp1362-hcd.c
-> > +++ b/drivers/usb/host/isp1362-hcd.c
-> > @@ -78,6 +78,7 @@
-> > =A0#include <linux/usb/isp1362.h>
-> > =A0#include <linux/usb/hcd.h>
-> > =A0#include <linux/platform_device.h>
-> > +#include <linux/of.h>
-> > =A0#include <linux/pm.h>
-> > =A0#include <linux/io.h>
-> > =A0#include <linux/bitmap.h>
-> > @@ -2678,13 +2679,62 @@ static int __devexit isp1362_remove(struct =
-platform_device *pdev)
-> > =A0 =A0 =A0 =A0usb_put_hcd(hcd);
-> > =A0 =A0 =A0 =A0DBG(0, "%s: Done\n", __func__);
+> > I could imagine the same being true in basically any case where one
+> > device uses N GPIOs (e.g. SD controller with power, change-detect,
+> > and read-only GPIOs; some could easily come from the SoC and some
+> > from a GPIO expander).
 > >
-> > + =A0 =A0 =A0 /*
-> > + =A0 =A0 =A0 =A0* If we had no platform_data, we allocated the boa=
-rd struct
-> > + =A0 =A0 =A0 =A0* dynamically and filled it from device tree.
-> > + =A0 =A0 =A0 =A0*/
-> > + =A0 =A0 =A0 if (!pdev->dev.platform_data)
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(isp1362_hcd->board);
->=20
-> If the driver used devm_kzalloc(), it wouldn't have to free the data =
-on exit.
+> > I'm not quite so sure that multiple parents would be useful for pinmux,
+> > but I wouldn't say that it was impossible...
+> 
+> Hmm, how common do you think the example is?
+> 
+> It it's just a very rare case, we can still special-case it by
+> introducing fake subdevices for the Tegra+WM8903 driver, each of
+> which has only one gpio-parent. This is ugly but keeps the special
+> case to the rare devices.
+> 
+> If we can expect more than a handful of these, we probably need
+> a better design for the binding, which will cause a burden for
+> all drivers.
 
-Ok. I guess we could convert the rest of the driver to use the devm_*
-functions at a later stage too...
+It looks like DT already supports the generic case for GPIO; each GPIO
+reference is of the form:
 
-> > +
-> > + =A0 =A0 =A0 return 0;
-> > +}
-> > +
-> > +#ifdef CONFIG_OF
-> > +
-> > +/*
-> > + * Translate device tree nodes to platform data.
-> > + */
-> > +static int isp1362_get_devtree_pdata(struct platform_device *pdev,
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0struct isp1362_platform_data *pdata)
-> > +{
-> > + =A0 =A0 =A0 struct device_node *node =3D pdev->dev.of_node;
-> > + =A0 =A0 =A0 const __be32 *reg;
-> > + =A0 =A0 =A0 int len;
-> > +
-> > + =A0 =A0 =A0 if (!node)
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
-> > +
-> > + =A0 =A0 =A0 pdata->sel15Kres =3D !!of_get_property(node, "nxp,sel=
-15Kres", NULL);
-> > + =A0 =A0 =A0 pdata->clknotstop =3D !!of_get_property(node, "nxp,cl=
-knotstop", NULL);
-> > + =A0 =A0 =A0 pdata->oc_enable =3D !!of_get_property(node, "nxp,oc_=
-enable", NULL);
-> > + =A0 =A0 =A0 pdata->int_act_high =3D !!of_get_property(node, "nxp,=
-int_act_high", NULL);
-> > + =A0 =A0 =A0 pdata->int_edge_triggered =3D
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 !!of_get_property(node, "nxp,int_edge=
-_triggered", NULL);
-> > + =A0 =A0 =A0 pdata->remote_wakeup_connected =3D
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 !!of_get_property(node, "nxp,remote_w=
-akeup_connected", NULL);
-> > + =A0 =A0 =A0 pdata->no_power_switching =3D
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 !!of_get_property(node, "nxp,no_power=
-_switching", NULL);
-> > + =A0 =A0 =A0 pdata->power_switching_mode =3D
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 !!of_get_property(node, "nxp,power_sw=
-itching_mode", NULL);
-> > + =A0 =A0 =A0 reg =3D of_get_property(node, "nxp,potpg", &len);
-> > + =A0 =A0 =A0 if (reg && len =3D=3D sizeof(__be32))
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 pdata->potpg =3D be32_to_cpup(reg);
->=20
-> of_property_read_u32() will help here.
+<&gpio 69 0>
 
-Ok.
+and so each GPIO has a "parent" specified, and hence can come from a
+different controller.
 
-> > +
-> > =A0 =A0 =A0 =A0return 0;
-> > =A0}
-> > +#else
-> > +static int isp1362_get_devtree_pdata(struct platform_device *pdev,
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0struct isp1362_platform_data *pdata)
-> > +{
-> > + =A0 =A0 =A0 return -ENODEV;
-> > +}
-> > +#endif /* CONFIG_OF */
-> >
-> > =A0static int __devinit isp1362_probe(struct platform_device *pdev)
-> > =A0{
-> > =A0 =A0 =A0 =A0struct usb_hcd *hcd;
-> > =A0 =A0 =A0 =A0struct isp1362_hcd *isp1362_hcd;
-> > + =A0 =A0 =A0 struct isp1362_platform_data *pdata;
-> > =A0 =A0 =A0 =A0struct resource *addr, *data;
-> > =A0 =A0 =A0 =A0void __iomem *addr_reg;
-> > =A0 =A0 =A0 =A0void __iomem *data_reg;
-> > @@ -2755,12 +2805,31 @@ static int __devinit isp1362_probe(struct p=
-latform_device *pdev)
-> > =A0 =A0 =A0 =A0INIT_LIST_HEAD(&isp1362_hcd->periodic);
-> > =A0 =A0 =A0 =A0INIT_LIST_HEAD(&isp1362_hcd->isoc);
-> > =A0 =A0 =A0 =A0INIT_LIST_HEAD(&isp1362_hcd->remove_list);
-> > - =A0 =A0 =A0 isp1362_hcd->board =3D pdev->dev.platform_data;
-> > +
-> > + =A0 =A0 =A0 pdata =3D pdev->dev.platform_data;
-> > +
-> > + =A0 =A0 =A0 /* If no platform data is available, try to get it fr=
-om device tree */
-> > + =A0 =A0 =A0 if (!pdata) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 pdata =3D kzalloc(sizeof(struct isp13=
-62_platform_data), GFP_KERNEL);
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!pdata) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 retval =3D -ENOMEM;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err6;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
-> > +
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 retval =3D isp1362_get_devtree_pdata(=
-pdev, pdata);
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (retval) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(pdata);
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err6;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
-> > + =A0 =A0 =A0 }
->=20
-> The kzalloc could be rolled into isp1362_get_devtree_pdata() to
-> simplify the impact on the probe hook.
+For drivers, this is all completely hidden by of_get_gpio().
 
-Ok.
+I imagine we'd just use the same pattern for pinmux. This would both
+support the general case, and end up being consistent with how GPIOs
+already work, so this seems like a win both ways.
 
-> > +
-> > + =A0 =A0 =A0 isp1362_hcd->board =3D pdata;
-> > +
-> > =A0#if USE_PLATFORM_DELAY
-> > =A0 =A0 =A0 =A0if (!isp1362_hcd->board->delay) {
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(hcd->self.controller, "No pl=
-atform delay function given\n");
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0retval =3D -ENODEV;
-> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err6;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err7;
-> > =A0 =A0 =A0 =A0}
-> > =A0#endif
-> >
-> > @@ -2775,13 +2844,20 @@ static int __devinit isp1362_probe(struct p=
-latform_device *pdev)
-> >
-> > =A0 =A0 =A0 =A0retval =3D usb_add_hcd(hcd, irq, irq_flags | IRQF_DI=
-SABLED | IRQF_SHARED);
-> > =A0 =A0 =A0 =A0if (retval !=3D 0)
-> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err6;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err7;
-> > =A0 =A0 =A0 =A0pr_info("%s, irq %d\n", hcd->product_desc, irq);
-> >
-> > =A0 =A0 =A0 =A0create_debug_file(isp1362_hcd);
-> >
-> > =A0 =A0 =A0 =A0return 0;
-> >
-> > +err7:
-> > + =A0 =A0 =A0 /*
-> > + =A0 =A0 =A0 =A0* If we have no platform_data, we allocated the bo=
-ard struct
-> > + =A0 =A0 =A0 =A0* dynamically.
-> > + =A0 =A0 =A0 =A0*/
-> > + =A0 =A0 =A0 if (!pdev->dev.platform_data)
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 kfree(isp1362_hcd->board);
->=20
-> This also would disappear when using devm_kzalloc()
->=20
-> > =A0err6:
-> > =A0 =A0 =A0 =A0DBG(0, "%s: Freeing dev %p\n", __func__, isp1362_hcd=
-);
-> > =A0 =A0 =A0 =A0usb_put_hcd(hcd);
-> > @@ -2852,6 +2928,16 @@ static int isp1362_resume(struct platform_de=
-vice *pdev)
-> > =A0#define =A0 =A0 =A0 =A0isp1362_resume =A0NULL
-> > =A0#endif
-> >
-> > +#ifdef CONFIG_OF
-> > +static struct of_device_id isp1362_match[] =3D {
-> > + =A0 =A0 =A0 { .compatible =3D "nxp,usb-isp1362", },
-> > + =A0 =A0 =A0 {}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, isp1362_match);
-> > +#else
-> > +#define isp1362_match NULL
-> > +#endif /* CONFIG_OF */
-> > +
-> > =A0static struct platform_driver isp1362_driver =3D {
-> > =A0 =A0 =A0 =A0.probe =3D isp1362_probe,
-> > =A0 =A0 =A0 =A0.remove =3D __devexit_p(isp1362_remove),
-> > @@ -2861,6 +2947,7 @@ static struct platform_driver isp1362_driver =
-=3D {
-> > =A0 =A0 =A0 =A0.driver =3D {
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.name =3D (char *)hcd_name,
-> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.owner =3D THIS_MODULE,
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D isp1362_match,
-> > =A0 =A0 =A0 =A0},
-> > =A0};
-> >
-> > --
-> > 1.7.5.4
-> >
-> >
->=20
->=20
->=20
-> --=20
-> Grant Likely, B.Sc., P.Eng.
-> Secret Lab Technologies Ltd.
->=20
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+nvpublic
