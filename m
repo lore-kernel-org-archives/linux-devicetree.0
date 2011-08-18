@@ -1,40 +1,44 @@
-From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: of_iomap() matched with plan iounmap()
-Date: Thu, 18 Aug 2011 10:02:26 -0700
-Message-ID: <20110818170226.GA16721@huya.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: David Brown <davidb@codeaurora.org>
+Subject: [PATCH v3 0/4] Initial DT support for MSM8660
+Date: Thu, 18 Aug 2011 10:25:41 -0700
+Message-ID: <1313688345-17699-1-git-send-email-davidb@codeaurora.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-The SPARC target contains of_ioremap() and of_iounmap(), which various
-drivers use (generally inside of CONFIG_SBUS).
+This series adds initial support for booting the MSM8660 via
+devicetree.  The target boots with a serial console, and no platform
+data.
 
-include/linux/of_address.h contains a definition for of_iomap(), but
-not corresponding unmap call.  Code using this calls the regular
-iounmap().
+In order to test this with a devicetree boot, it is necessary to
+include patches allowing the devicetree to be appended to the kernel,
+and merge ATAG values into the DT.
 
-Is it safe to assume that of_iomap() will always be based on ioremap()
-and therefore it is safe to use iounmap(), or would it be better to
-define another name for drivers to use as the inverse of of_iomap().
-I'm not sure what to call it, since of_iounmap() is already taken by
-SPARC.
+Once these patches reach mainline, I intend to remove the non-DT boot
+for this target.
 
-Thanks,
-David
+History:
+  v2 - Consistent name for msm-uart devices.
+  v3 - Use separate names for hsuart and lsuart, and common name.
+       Clean up io mapping for FPGA registers.
+
+David Brown (4):
+  msm_serial: Use relative resources for iomem
+  msm_serial: Add devicetree support
+  ARM: msm: Add devicetree support for msm8660-surf
+  ARM: msm: Describe MSM 8660 SURF FPGA registers in DT
+
+ .../devicetree/bindings/tty/serial/msm_serial.txt  |   22 +++++
+ arch/arm/boot/dts/msm8660-surf.dts                 |   29 ++++++
+ arch/arm/mach-msm/board-msm8x60.c                  |   98 ++++++++++++++++++--
+ drivers/tty/serial/msm_serial.c                    |   30 ++++--
+ 4 files changed, 162 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/tty/serial/msm_serial.txt
+ create mode 100644 arch/arm/boot/dts/msm8660-surf.dts
 
 -- 
 Sent by an employee of the Qualcomm Innovation Center, Inc.
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+
