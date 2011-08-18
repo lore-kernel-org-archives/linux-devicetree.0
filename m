@@ -1,13 +1,13 @@
 From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 4/4] ARM: msm: Describe MSM 8660 SURF FPGA registers in DT
-Date: Thu, 18 Aug 2011 10:25:45 -0700
-Message-ID: <1313688345-17699-5-git-send-email-davidb__4496.17269118807$1313689753$gmane$org@codeaurora.org>
+Subject: [PATCH v3 1/4] msm_serial: Use relative resources for iomem
+Date: Thu, 18 Aug 2011 10:25:42 -0700
+Message-ID: <1313688345-17699-2-git-send-email-davidb__38987.8494818278$1313689844$gmane$org@codeaurora.org>
 References: <1313688345-17699-1-git-send-email-davidb@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Resent-Message-ID: <20110818173839.GD17990-AOX6H5vLt3Uj8izMo0bVsAC/G2K4zDHf@public.gmane.org>
+Resent-Message-ID: <20110818173809.GA17990-AOX6H5vLt3Uj8izMo0bVsAC/G2K4zDHf@public.gmane.org>
 Resent-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 In-Reply-To: <1313688345-17699-1-git-send-email-davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
@@ -19,104 +19,76 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The MSM 8660 SURF development board contains a register-accessible
-FPGA.  By default, this FPGA configures the first UART in output-only
-mode.  On this target, reconfigure this FPGA to enable the UART to be
-bidirectional.
+Device tree iomem resources are only accessible by index, and not by
+name.  The msm_serial devices always have either 1 or 2 iomem
+resources, that are always in the same order.  Convert the
+platform_get_resource_byname into just platform_get_resource to
+facilitate device tree conversion.
 
 Signed-off-by: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- arch/arm/boot/dts/msm8660-surf.dts |    5 +++
- arch/arm/mach-msm/board-msm8x60.c  |   49 +++++++++++++++++++++++++++++++++---
- 2 files changed, 50 insertions(+), 4 deletions(-)
+ drivers/tty/serial/msm_serial.c |   16 ++++++----------
+ 1 files changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/msm8660-surf.dts b/arch/arm/boot/dts/msm8660-surf.dts
-index 15ded0d..3591c94 100644
---- a/arch/arm/boot/dts/msm8660-surf.dts
-+++ b/arch/arm/boot/dts/msm8660-surf.dts
-@@ -21,4 +21,9 @@
- 		      <0x19c00000 0x1000>;
- 		interrupts = <195>;
- 	};
-+
-+	qcom,fpga@1d000000 {
-+		compatible = "qcom,msm8660-surf-fpga";
-+		reg = < 0x1d000000 0x1000 >;
-+	};
- };
-diff --git a/arch/arm/mach-msm/board-msm8x60.c b/arch/arm/mach-msm/board-msm8x60.c
-index 10fa8f6..f2dacfe 100644
---- a/arch/arm/mach-msm/board-msm8x60.c
-+++ b/arch/arm/mach-msm/board-msm8x60.c
-@@ -58,8 +58,52 @@ static void __init msm8x60_init_irq(void)
+diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+index e6ba838..d9863b2 100644
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -589,9 +589,8 @@ static void msm_release_port(struct uart_port *port)
+ 		iowrite32(GSBI_PROTOCOL_IDLE, msm_port->gsbi_base +
+ 			  GSBI_CONTROL);
+ 
+-		gsbi_resource = platform_get_resource_byname(pdev,
+-							     IORESOURCE_MEM,
+-							     "gsbi_resource");
++		gsbi_resource = platform_get_resource(pdev,
++							IORESOURCE_MEM, 1);
+ 
+ 		if (unlikely(!gsbi_resource))
+ 			return;
+@@ -612,8 +611,7 @@ static int msm_request_port(struct uart_port *port)
+ 	resource_size_t size;
+ 	int ret;
+ 
+-	uart_resource = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-						     "uart_resource");
++	uart_resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (unlikely(!uart_resource))
+ 		return -ENXIO;
+ 
+@@ -628,8 +626,7 @@ static int msm_request_port(struct uart_port *port)
+ 		goto fail_release_port;
  	}
- }
  
-+static void __init msm8660_surf_fpga_init(void __iomem *fpga_mem)
-+{
-+	/* Advanced mode */
-+	writew(0xFFFF, fpga_mem + 0x15C);
-+	/* FPGA_UART_SEL */
-+	writew(0, fpga_mem + 0x172);
-+	/* FPGA_GPIO_CONFIG_117 */
-+	writew(1, fpga_mem + 0xEA);
-+	/* FPGA_GPIO_CONFIG_118 */
-+	writew(1, fpga_mem + 0xEC);
-+	dmb();
-+}
-+
-+static void __init msm8660_surf_fpga_init_platform(void)
-+{
-+	/* 0x1D000000 now belongs to EBI2:CS3 i.e. USB ISP Controller */
-+	void __iomem *fpga_mem = ioremap(0x1D000000, SZ_4K);
-+	msm8660_surf_fpga_init(fpga_mem);
-+	iounmap(fpga_mem);
-+}
-+
-+#ifdef CONFIG_OF
-+static void __init msm8660_surf_fpga_init_dt(void)
-+{
-+	struct device_node *node;
-+	void __iomem *fpga_mem;
-+
-+	node = of_find_compatible_node(NULL, NULL, "qcom,msm8660-surf-fpga");
-+	if (!node)
-+		return;
-+
-+	fpga_mem = of_iomap(node, 0);
-+	of_node_put(node);
-+	if (!fpga_mem) {
-+		printk(KERN_ERR "%s: Can't map fpga registers\n", __func__);
-+		return;
-+	}
-+
-+	msm8660_surf_fpga_init(fpga_mem);
-+	iounmap(fpga_mem);
-+}
-+#endif
-+
- static void __init msm8x60_init(void)
- {
-+	msm8660_surf_fpga_init_platform();
- }
+-	gsbi_resource = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-						     "gsbi_resource");
++	gsbi_resource = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+ 	/* Is this a GSBI-based port? */
+ 	if (gsbi_resource) {
+ 		size = resource_size(gsbi_resource);
+@@ -875,7 +872,7 @@ static int __init msm_serial_probe(struct platform_device *pdev)
+ 	port->dev = &pdev->dev;
+ 	msm_port = UART_TO_MSM(port);
  
- #ifdef CONFIG_OF
-@@ -81,10 +125,7 @@ static void __init msm8x60_dt_init(void)
- 	if (node)
- 		irq_domain_add_simple(node, GIC_SPI_START);
+-	if (platform_get_resource_byname(pdev, IORESOURCE_MEM, "gsbi_resource"))
++	if (platform_get_resource(pdev, IORESOURCE_MEM, 1))
+ 		msm_port->is_uartdm = 1;
+ 	else
+ 		msm_port->is_uartdm = 0;
+@@ -899,8 +896,7 @@ static int __init msm_serial_probe(struct platform_device *pdev)
+ 	printk(KERN_INFO "uartclk = %d\n", port->uartclk);
  
--	if (of_machine_is_compatible("qcom,msm8660-surf")) {
--		printk(KERN_INFO "Init surf UART registers\n");
--		msm8x60_init_uart12dm();
--	}
-+	msm8660_surf_fpga_init_dt();
  
- 	of_platform_populate(NULL, of_default_bus_match_table,
- 			msm_auxdata_lookup, NULL);
+-	resource = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-						     "uart_resource");
++	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (unlikely(!resource))
+ 		return -ENXIO;
+ 	port->mapbase = resource->start;
 -- 
 Sent by an employee of the Qualcomm Innovation Center, Inc.
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
