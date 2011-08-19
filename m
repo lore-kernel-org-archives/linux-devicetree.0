@@ -1,52 +1,41 @@
-From: Andres Salomon <dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org>
-Subject: Re: board identification in /sys
-Date: Thu, 18 Aug 2011 20:14:56 -0700
-Message-ID: <20110818201456.5517ae55@debxo>
-References: <20110818121530.08946a6e@queued.net>
-	<20110819022306.GD30097@yookeroo.fritz.box>
+From: David Miller <davem@davemloft.net>
+Subject: Re: of_iomap() matched with plan iounmap()
+Date: Thu, 18 Aug 2011 20:34:47 -0700 (PDT)
+Message-ID: <20110818.203447.462383652600224162.davem@davemloft.net>
+References: <20110818170226.GA16721@huya.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110819022306.GD30097-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110818170226.GA16721@huya.qualcomm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: davidb@codeaurora.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 19 Aug 2011 12:23:06 +1000
-David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+From: David Brown <davidb@codeaurora.org>
+Date: Thu, 18 Aug 2011 10:02:26 -0700
 
-> On Thu, Aug 18, 2011 at 12:15:30PM -0700, Andres Salomon wrote:
-> > I've been paying partial attention to the following thread:
-> > http://marc.info/?l=linux-hotplug&m=131352330625733&w=2
-> > 
-> > It's an interesting discussion.  I realize that
-> > moving /proc/device-tree to /sys would probably violate
-> > sysrq-rules.txt, but it would be nice to have a common way to
-> > represent things like cpu type, board id, etc in /sys that is
-> > populated from the DT.  I haven't seen that discussed here yet, has
-> > anyone considered it?
+> The SPARC target contains of_ioremap() and of_iounmap(), which various
+> drivers use (generally inside of CONFIG_SBUS).
 > 
-> Seems like a specious argument to me.  Despite all the problems of
-> /proc, the contents of /proc/device-tree are perfectly well-defined.
-> Or at least, its problems are entirely its own and not related to the
-> general problems of /proc.  The only argument here seems to be that
-> it's in /proc, and that's dealt with if that helper script just thinks
-> of /proc/device-tree as one possible place for the device tree path.
-> In the future it could be under /sys.  Indeed on sparc I think their
-> device tree representation is a separate filesystem and could be
-> anywhere.
+> include/linux/of_address.h contains a definition for of_iomap(), but
+> not corresponding unmap call.  Code using this calls the regular
+> iounmap().
+> 
+> Is it safe to assume that of_iomap() will always be based on ioremap()
+> and therefore it is safe to use iounmap(), or would it be better to
+> define another name for drivers to use as the inverse of of_iomap().
+> I'm not sure what to call it, since of_iounmap() is already taken by
+> SPARC.
 
-Under sparc, it's typically in /openprom iirc.
-
-I'd be fine with converting it to /sys/device-tree or some such thing
-if that was okay with maintainers.
+It's better to define a matching of_iounmap() interface, even if for
+now it is exactly iounmap()
