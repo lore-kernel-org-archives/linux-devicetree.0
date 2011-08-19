@@ -1,49 +1,70 @@
-From: Ian Campbell <ian.campbell@citrix.com>
-Subject: [PATCH 52/75] sungem: convert to SKB paged frag API.
-Date: Fri, 19 Aug 2011 14:27:24 +0100
-Message-ID: <1313760467-8598-52-git-send-email-ian.campbell@citrix.com>
+From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 29/75] greth: convert to SKB paged frag API.
+Date: Fri, 19 Aug 2011 14:27:01 +0100
+Message-ID: <1313760467-8598-29-git-send-email-ian.campbell@citrix.com>
 References: <1313760393.5010.356.camel@zakaz.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1313760393.5010.356.camel@zakaz.uk.xensource.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@secretlab.ca>, "David S. Miller" <davem@davemloft.net>, Jiri Kosina <jkosina@suse.cz>, Joe Perches <joe@perches.com>, David Decotigny <decot@google.com>, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1313760393.5010.356.camel-o4Be2W7LfRlXesXXhkcM7miJhflN2719@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Joe Perches <joe@perches.com>
-Cc: David Decotigny <decot@google.com>
-Cc: "Micha=C5=82 Miros=C5=82aw" <mirq-linux@rere.qmqm.pl>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org
----
- drivers/net/sungem.c |    6 ++----
- 1 files changed, 2 insertions(+), 4 deletions(-)
+In order to avoid long lines also use phys_to_virt(page_to_phys(page)) =>
+page_address(page) (since the are effectively the same thing for lowmem pages).
 
-diff --git a/drivers/net/sungem.c b/drivers/net/sungem.c
-index ade35dd..39189bf 100644
---- a/drivers/net/sungem.c
-+++ b/drivers/net/sungem.c
-@@ -1071,10 +1071,8 @@ static netdev_tx_t gem_start_xmit(struct sk_buff=
- *skb,
- 			u64 this_ctrl;
-=20
- 			len =3D this_frag->size;
--			mapping =3D pci_map_page(gp->pdev,
--					       this_frag->page,
--					       this_frag->page_offset,
--					       len, PCI_DMA_TODEVICE);
-+			mapping =3D skb_frag_dma_map(&gp->pdev->dev, this_frag,
-+						   0, len, PCI_DMA_TODEVICE);
- 			this_ctrl =3D ctrl;
- 			if (frag =3D=3D skb_shinfo(skb)->nr_frags - 1)
- 				this_ctrl |=3D TXDCTRL_EOF;
---=20
+Also dump the frag's size instead of the headlen when dumping a frag.
+
+Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Cc: Kristoffer Glembo <kristoffer-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ drivers/net/greth.c |   12 ++++--------
+ 1 files changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/greth.c b/drivers/net/greth.c
+index 16ce45c..562a251 100644
+--- a/drivers/net/greth.c
++++ b/drivers/net/greth.c
+@@ -113,9 +113,8 @@ static void greth_print_tx_packet(struct sk_buff *skb)
+ 	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
+ 
+ 		print_hex_dump(KERN_DEBUG, "TX: ", DUMP_PREFIX_OFFSET, 16, 1,
+-			       phys_to_virt(page_to_phys(skb_shinfo(skb)->frags[i].page)) +
+-			       skb_shinfo(skb)->frags[i].page_offset,
+-			       length, true);
++			       skb_frag_address(&skb_shinfo(skb)->frags[i]),
++			       skb_shinfo(skb)->frags[i].size, true);
+ 	}
+ }
+ 
+@@ -528,11 +527,8 @@ greth_start_xmit_gbit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 		greth_write_bd(&bdp->stat, status);
+ 
+-		dma_addr = dma_map_page(greth->dev,
+-					frag->page,
+-					frag->page_offset,
+-					frag->size,
+-					DMA_TO_DEVICE);
++		dma_addr = skb_frag_dma_map(greth->dev, frag, 0, frag->size,
++					    DMA_TO_DEVICE);
+ 
+ 		if (unlikely(dma_mapping_error(greth->dev, dma_addr)))
+ 			goto frag_map_error;
+-- 
 1.7.2.5
