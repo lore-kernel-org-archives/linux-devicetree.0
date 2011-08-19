@@ -1,45 +1,65 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jamie Iles <jamie@jamieiles.com>
 Subject: Re: [PATCHv4] mtd: gpio-nand: add device tree bindings
-Date: Fri, 19 Aug 2011 22:51:46 +0300
-Message-ID: <1313783508.4475.8.camel@koala>
+Date: Fri, 19 Aug 2011 22:18:08 +0100
+Message-ID: <20110819211808.GC12654@gallagher>
 References: <1312902747-21372-1-git-send-email-jamie@jamieiles.com>
 	<1313418543.2600.2.camel@sauron>
 	<20110815143816.GH2636@pulham.picochip.com>
 	<1313419536.2600.7.camel@sauron>
 	<20110815152447.GI2636@pulham.picochip.com>
-Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+	<1313783508.4475.8.camel@koala>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110815152447.GI2636-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1313783508.4475.8.camel@koala>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+	<mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+	<mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Artem Bityutskiy <dedekind1@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-mtd@lists.infradead.org, Scott Wood <scottwood@freescale.com>, Jamie Iles <jamie@jamieiles.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDExLTA4LTE1IGF0IDE2OjI0ICswMTAwLCBKYW1pZSBJbGVzIHdyb3RlOgo+IEBA
-IC0xNzgsNyArMjQ5LDcgQEAgc3RhdGljIGludCBfX2RldmV4aXQgZ3Bpb19uYW5kX3JlbW92ZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpCj4gIAo+ICAJbmFuZF9yZWxlYXNlKCZncGlvbXRk
-LT5tdGRfaW5mbyk7Cj4gIAo+IC0JcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKGRldiwgSU9S
-RVNPVVJDRV9NRU0sIDEpOwo+ICsJcmVzID0gZ3Bpb19uYW5kX2dldF9pb19zeW5jKGRldik7CgpX
-aHkgZG8geW91IGNhbGwgJ2dwaW9fbmFuZF9nZXRfaW9fc3luYyhkZXYpJyBoZXJlLCBpbgonZ3Bp
-b19uYW5kX3JlbW92ZSgpJyBmdW5jdGlvbj8gWW91IHNob3VsZCBoYXZlIGl0IGluIGdwaW9tdGQt
-PmlvX3N5bmMuClJpZ2h0PwoKSWYgdGhpcyBpcyB0aGUgY2FzZSwgdGhlbiB5b3UgZG8gbm90IG5l
-ZWQgYSBzZXBhcmF0ZQonZ3Bpb19uYW5kX2dldF9pb19zeW5jKCknIGZ1bmN0aW9uIGF0IGFsbCwg
-eW91IGNhbiBtYWtlCidncGlvX25hbmRfZ2V0X2NvbmZpZygpJyB0byBmZXRjaCB0aGUgaW9fc3lu
-YyBpbmZvcm1hdGlvbiBmcm9tIHRoZSBEVC4KQW5kIHRoZW4geW91IHdpbGwgaGF2ZSBvbmUgc2lu
-Z2xlIGZ1bmN0aW9uIHdoaWNoIGdldHMgZGF0YSBmcm9tIERULCBub3QKMiAtPiBzaW1wbGVyIGNv
-ZGUuCgpEbyBJIG1pc3Mgc29tZXRoaW5nPwoKLS0gCkJlc3QgUmVnYXJkcywKQXJ0ZW0gQml0eXV0
-c2tpeSAo0JHQuNGC0Y7RhtC60LjQuSDQkNGA0YLRkdC8KQoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlz
-dApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
-cy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Fri, Aug 19, 2011 at 10:51:46PM +0300, Artem Bityutskiy wrote:
+> On Mon, 2011-08-15 at 16:24 +0100, Jamie Iles wrote:
+> > @@ -178,7 +249,7 @@ static int __devexit gpio_nand_remove(struct platform_device *dev)
+> >  
+> >  	nand_release(&gpiomtd->mtd_info);
+> >  
+> > -	res = platform_get_resource(dev, IORESOURCE_MEM, 1);
+> > +	res = gpio_nand_get_io_sync(dev);
+> 
+> Why do you call 'gpio_nand_get_io_sync(dev)' here, in
+> 'gpio_nand_remove()' function? You should have it in gpiomtd->io_sync.
+> Right?
+>
+> If this is the case, then you do not need a separate
+> 'gpio_nand_get_io_sync()' function at all, you can make
+> 'gpio_nand_get_config()' to fetch the io_sync information from the DT.
+> And then you will have one single function which gets data from DT, not
+> 2 -> simpler code.
+> 
+> Do I miss something?
+
+gpiomtd->io_sync is a void __iomem *, but we need a struct resource here 
+so that we can do the release_mem_region().  I could store the struct 
+resource pointer in gpiomtd rather than calling gpio_nand_get_io_sync() 
+twice though, I'm happy to change if you prefer.
+
+Note that for the device tree case, the iosync register isn't in the reg 
+property so we can't do platform_get_resource() to get it.  We do this 
+because the io_sync address isn't actually a gpio nand resource and 
+can't always be expressed as such in the device tree.
+
+Jamie
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
