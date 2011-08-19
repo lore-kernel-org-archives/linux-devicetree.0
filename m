@@ -1,56 +1,50 @@
 From: Ian Campbell <ian.campbell@citrix.com>
-Subject: [PATCH 38/75] niu: convert to SKB paged frag API.
-Date: Fri, 19 Aug 2011 14:27:10 +0100
-Message-ID: <1313760467-8598-38-git-send-email-ian.campbell@citrix.com>
+Subject: [PATCH 28/75] gianfar: convert to SKB paged frag API.
+Date: Fri, 19 Aug 2011 14:27:00 +0100
+Message-ID: <1313760467-8598-28-git-send-email-ian.campbell@citrix.com>
 References: <1313760393.5010.356.camel@zakaz.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1313760393.5010.356.camel@zakaz.uk.xensource.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@secretlab.ca>, "David S. Miller" <davem@davemloft.net>, Ben Hutchings <bhutchings@solarflare.com>, Stephen Hemminger <shemminger@vyatta.com>, Eric Dumazet <eric.dumazet@gmail.com>, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>, devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@secretlab.ca>, "David S. Miller" <davem@davemloft.net>, Joe Perches <joe@perches.com>, Sebastian Poehn <sebastian.poehn@belden.com>, Eric Dumazet <eric.dumazet@gmail.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Ian Campbell <ian.campbell@citrix.com>
 Cc: Grant Likely <grant.likely@secretlab.ca>
 Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Ben Hutchings <bhutchings@solarflare.com>
-Cc: Stephen Hemminger <shemminger@vyatta.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Sebastian Poehn <sebastian.poehn@belden.com>
 Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: "Micha=C5=82 Miros=C5=82aw" <mirq-linux@rere.qmqm.pl>
 Cc: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org
 ---
- drivers/net/niu.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/gianfar.c |   10 +++++-----
+ 1 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/niu.c b/drivers/net/niu.c
-index ed47585..0191712 100644
---- a/drivers/net/niu.c
-+++ b/drivers/net/niu.c
-@@ -3291,7 +3291,7 @@ static void niu_rx_skb_append(struct sk_buff *skb=
-, struct page *page,
- 	int i =3D skb_shinfo(skb)->nr_frags;
- 	skb_frag_t *frag =3D &skb_shinfo(skb)->frags[i];
-=20
--	frag->page =3D page;
-+	__skb_frag_set_page(frag, page);
- 	frag->page_offset =3D offset;
- 	frag->size =3D size;
-=20
-@@ -6736,7 +6736,7 @@ static netdev_tx_t niu_start_xmit(struct sk_buff =
-*skb,
- 		skb_frag_t *frag =3D &skb_shinfo(skb)->frags[i];
-=20
- 		len =3D frag->size;
--		mapping =3D np->ops->map_page(np->device, frag->page,
-+		mapping =3D np->ops->map_page(np->device, skb_frag_page(frag),
- 					    frag->page_offset, len,
- 					    DMA_TO_DEVICE);
-=20
---=20
+diff --git a/drivers/net/gianfar.c b/drivers/net/gianfar.c
+index 2659daa..6586937 100644
+--- a/drivers/net/gianfar.c
++++ b/drivers/net/gianfar.c
+@@ -2140,11 +2140,11 @@ static int gfar_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 			if (i == nr_frags - 1)
+ 				lstatus |= BD_LFLAG(TXBD_LAST | TXBD_INTERRUPT);
+ 
+-			bufaddr = dma_map_page(&priv->ofdev->dev,
+-					skb_shinfo(skb)->frags[i].page,
+-					skb_shinfo(skb)->frags[i].page_offset,
+-					length,
+-					DMA_TO_DEVICE);
++			bufaddr = skb_frag_dma_map(&priv->ofdev->dev,
++						   &skb_shinfo(skb)->frags[i],
++						   0,
++						   length,
++						   DMA_TO_DEVICE);
+ 
+ 			/* set the TxBD length and buffer pointer */
+ 			txbdp->bufPtr = bufaddr;
+-- 
 1.7.2.5
-
