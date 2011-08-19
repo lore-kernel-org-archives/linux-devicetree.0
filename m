@@ -1,65 +1,58 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCHv4] mtd: gpio-nand: add device tree bindings
-Date: Fri, 19 Aug 2011 22:18:08 +0100
-Message-ID: <20110819211808.GC12654@gallagher>
-References: <1312902747-21372-1-git-send-email-jamie@jamieiles.com>
-	<1313418543.2600.2.camel@sauron>
-	<20110815143816.GH2636@pulham.picochip.com>
-	<1313419536.2600.7.camel@sauron>
-	<20110815152447.GI2636@pulham.picochip.com>
-	<1313783508.4475.8.camel@koala>
+From: David Brown <davidb@codeaurora.org>
+Subject: Re: of_iomap() matched with plan iounmap()
+Date: Fri, 19 Aug 2011 14:19:02 -0700
+Message-ID: <20110819211902.GA19702@huya.qualcomm.com>
+References: <20110818170226.GA16721@huya.qualcomm.com>
+	<20110818.203447.462383652600224162.davem@davemloft.net>
+	<201108191426.19152.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1313783508.4475.8.camel@koala>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
-	<mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
-	<mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: linux-mtd-bounces@lists.infradead.org
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Artem Bityutskiy <dedekind1@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-mtd@lists.infradead.org, Scott Wood <scottwood@freescale.com>, Jamie Iles <jamie@jamieiles.com>, David Woodhouse <dwmw2@infradead.org>
+In-Reply-To: <201108191426.19152.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree-discuss@lists.ozlabs.org, davidb@codeaurora.org, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 19, 2011 at 10:51:46PM +0300, Artem Bityutskiy wrote:
-> On Mon, 2011-08-15 at 16:24 +0100, Jamie Iles wrote:
-> > @@ -178,7 +249,7 @@ static int __devexit gpio_nand_remove(struct platform_device *dev)
-> >  
-> >  	nand_release(&gpiomtd->mtd_info);
-> >  
-> > -	res = platform_get_resource(dev, IORESOURCE_MEM, 1);
-> > +	res = gpio_nand_get_io_sync(dev);
+On Fri, Aug 19, 2011 at 02:26:18PM +0200, Arnd Bergmann wrote:
+> On Friday 19 August 2011, David Miller wrote:
+> > From: David Brown <davidb@codeaurora.org>
+> > Date: Thu, 18 Aug 2011 10:02:26 -0700
+> > 
+> > > The SPARC target contains of_ioremap() and of_iounmap(), which various
+> > > drivers use (generally inside of CONFIG_SBUS).
+> > > 
+> > > include/linux/of_address.h contains a definition for of_iomap(), but
+> > > not corresponding unmap call.  Code using this calls the regular
+> > > iounmap().
+> > > 
+> > > Is it safe to assume that of_iomap() will always be based on ioremap()
+> > > and therefore it is safe to use iounmap(), or would it be better to
+> > > define another name for drivers to use as the inverse of of_iomap().
+> > > I'm not sure what to call it, since of_iounmap() is already taken by
+> > > SPARC.
+> > 
+> > It's better to define a matching of_iounmap() interface, even if for
+> > now it is exactly iounmap()
 > 
-> Why do you call 'gpio_nand_get_io_sync(dev)' here, in
-> 'gpio_nand_remove()' function? You should have it in gpiomtd->io_sync.
-> Right?
->
-> If this is the case, then you do not need a separate
-> 'gpio_nand_get_io_sync()' function at all, you can make
-> 'gpio_nand_get_config()' to fetch the io_sync information from the DT.
-> And then you will have one single function which gets data from DT, not
-> 2 -> simpler code.
-> 
-> Do I miss something?
+> But the problem is that we need conflicting prototypes for of_iounmap.
 
-gpiomtd->io_sync is a void __iomem *, but we need a struct resource here 
-so that we can do the release_mem_region().  I could store the struct 
-resource pointer in gpiomtd rather than calling gpio_nand_get_io_sync() 
-twice though, I'm happy to change if you prefer.
+What if we left the SPARC calls alone, and changed of_iomap() into
+of_dt_iomap() and could then make of_dt_iounmap().  Or, it could just
+be of_dt_map(), and of_dt_unmap().
 
-Note that for the device tree case, the iosync register isn't in the reg 
-property so we can't do platform_get_resource() to get it.  We do this 
-because the io_sync address isn't actually a gpio nand resource and 
-can't always be expressed as such in the device tree.
+David
 
-Jamie
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
