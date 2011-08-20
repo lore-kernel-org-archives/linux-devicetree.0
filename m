@@ -1,53 +1,73 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCH 1/3] picoxcell: support for Picochip picoxcell devices
-Date: Sat, 20 Aug 2011 07:52:51 +0100
-Message-ID: <20110820065251.GB18892@gallagher>
-References: <1312884661-27205-1-git-send-email-jamie@jamieiles.com>
-	<1312884661-27205-2-git-send-email-jamie@jamieiles.com>
-	<4E4F54CC.8000506@secretlab.ca>
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH 1/2] sound/soc/fsl/p1022_ds.c: add missing
+	of_node_put
+Date: Sat, 20 Aug 2011 09:02:00 +0200
+Message-ID: <1313823721-16930-1-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4E4F54CC.8000506@secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <glikely@secretlab.ca>
-Cc: Jamie Iles <jamie@jamieiles.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lrg@ti.com>
+Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Axel Lin <axel.lin@gmail.com>, Timur Tabi <timur@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+From: Julia Lawall <julia@diku.dk>
 
-On Fri, Aug 19, 2011 at 11:31:40PM -0700, Grant Likely wrote:
-> On 11-08-09 03:10 AM, Jamie Iles wrote:
-[...]
-> >+VIC required properties:
-> >+    - compatible = "arm,pl192-vic-pair".
-> >+    - interrupt-controller.
-> >+    - reg : The register bank for the devices.  Picoxcell has two VIC's and the
-> >+      IRQ outputs are wire-OR'd together so we effectively have a combined
-> >+      controller that handles 64 IRQ's.  The first reg tuple is the register
-> >+      bank of the VIC that generates IRQ's 0->31 and the second tuple handles
-> >+      IRQ's 32->63.
-> 
-> If they are two separate devices, then it probably should still be
-> represented as two separate device tree nodes.  Linux can take care
-> of assigning a range of linux irq numbers to each VIC.
+dma_channel_np has been accessed at this point, so decrease its reference
+count before leaving the function.
 
-The reason I did this is because of the entry macro get_irqnr_and_base 
-macro decoding.  If I used irq_domain_generate_simple() rather than 
-irq_domain_add_simple() then I guess the ordering of the VIC's in the DT 
-wont matter.  I'll give this a test when I have access to hardware again 
-and respin.
+A simplified version of the semantic match that finds this problem is as
+follows: (http://coccinelle.lip6.fr/)
 
-Many thanks for the review!
+// <smpl>
+@@
+identifier x;
+expression E1!=0,E2,E3,E4;
+statement S;
+iterator I;
+@@
 
-Jamie
+(
+if (...) { ... when != of_node_put(x)
+               when != x = E3
+               when != E3 = x
+*  return ...;
+ }
+... when != x = E2
+    when != I(...,x,...) S
+if (...) { ... when != x = E4
+ of_node_put(x); ... return ...; }
+)
+// </smpl>
+
+Signed-off-by: Julia Lawall <julia@diku.dk>
+
+---
+ sound/soc/fsl/p1022_ds.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/fsl/p1022_ds.c b/sound/soc/fsl/p1022_ds.c
+index 8fa4d5f..fcb862e 100644
+--- a/sound/soc/fsl/p1022_ds.c
++++ b/sound/soc/fsl/p1022_ds.c
+@@ -297,8 +297,10 @@ static int get_dma_channel(struct device_node *ssi_np,
+ 	 * dai->platform name should already point to an allocated buffer.
+ 	 */
+ 	ret = of_address_to_resource(dma_channel_np, 0, &res);
+-	if (ret)
++	if (ret) {
++		of_node_put(dma_channel_np);
+ 		return ret;
++	}
+ 	snprintf((char *)dai->platform_name, DAI_NAME_SIZE, "%llx.%s",
+ 		 (unsigned long long) res.start, dma_channel_np->name);
+ 
