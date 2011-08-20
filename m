@@ -1,52 +1,73 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4] mtd: gpio-nand: add device tree bindings
-Date: Sat, 20 Aug 2011 06:39:10 +0300
-Message-ID: <1313811552.4475.10.camel@koala>
-References: <1312902747-21372-1-git-send-email-jamie@jamieiles.com>
-	<1313418543.2600.2.camel@sauron>
-	<20110815143816.GH2636@pulham.picochip.com>
-	<1313419536.2600.7.camel@sauron>
-	<20110815152447.GI2636@pulham.picochip.com>
-Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Julia Lawall <julia@diku.dk>
+Subject: [PATCH 4/4] sound/aoa/fabrics/layout.c: remove
+	unneeded kfree
+Date: Sat, 20 Aug 2011 08:12:41 +0200
+Message-ID: <1313820761-12042-4-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110815152447.GI2636-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDExLTA4LTE1IGF0IDE2OjI0ICswMTAwLCBKYW1pZSBJbGVzIHdyb3RlOgo+IEZy
-b206IEphbWllIElsZXMgPGphbWllQGphbWllaWxlcy5jb20+Cj4gU3ViamVjdDogW1BBVENIXSBt
-dGQ6IGdwaW8tbmFuZDogYWRkIGRldmljZSB0cmVlIGJpbmRpbmdzCj4gCj4gQWRkIGRldmljZSB0
-cmVlIGJpbmRpbmdzIHNvIHRoYXQgdGhlIGdwaW8tbmFuZCBkcml2ZXIgbWF5IGJlCj4gaW5zdGFu
-dGlhdGVkIGZyb20gdGhlIGRldmljZSB0cmVlLiAgVGhpcyBhbHNvIGFsbG93cyB0aGUgcGFydGl0
-aW9ucwo+IHRvIGJlIHNwZWNpZmllZCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4gCj4gdjU6CS0gZm9s
-ZCBkdCBjb25maWcgaGVscGVycyBpbnRvIGEgc2luZ2xlIGdwaW9fbmFuZF9vZl9nZXRfY29uZmln
-KCkKPiB2NDoJLSBnZXQgaW8gc3luYyBhZGRyZXNzIGZyb20gZ3Bpby1jb250cm9sLW5hbmQsaW8t
-c3luYy1yZWcKPiAJICBwcm9wZXJ0eSByYXRoZXIgdGhhbiBhIHJlc291cmNlCj4gCS0gY2xhcmlm
-aWVkIGEgZmV3IGRldGFpbHMgaW4gdGhlIGJpbmRpbmcKPiB2MzoJLSByZW1vdmUgcmVkdW5kYW50
-IGNhc3QgYW5kIGEgY291cGxlIG9mIHdoaXRlc3BhY2UvbmFtaW5nCj4gCSAgY2hhbmdlcwo+IHYy
-OgktIGFkZCBDT05GSUdfT0YgZ3VhcmRzIGZvciBub24tZHQgcGxhdGZvcm1zCj4gCS0gY29tcGF0
-aWJsZSBiZWNvbWVzIGdwaW8tY29udHJvbC1uYW5kCj4gCS0gY2xhcmlmeSBzb21lIGJpbmRpbmcg
-ZGV0YWlscwo+IAo+IENjOiBEYXZpZCBXb29kaG91c2UgPGR3bXcyQGluZnJhZGVhZC5vcmc+Cj4g
-Q2M6IEFydGVtIEJpdHl1dHNraXkgPGRlZGVraW5kMUBnbWFpbC5jb20+Cj4gQ2M6IFNjb3R0IFdv
-b2QgPHNjb3R0d29vZEBmcmVlc2NhbGUuY29tPgo+IENjOiBHcmFudCBMaWtlbHkgPGdyYW50Lmxp
-a2VseUBzZWNyZXRsYWIuY2E+Cj4gU2lnbmVkLW9mZi1ieTogSmFtaWUgSWxlcyA8amFtaWVAamFt
-aWVpbGVzLmNvbT4KClB1c2hlZCB0aGlzIHBhdGNoIHRvIGwyLW10ZC0yLjYuZ2l0LCB0aGFua3Mu
-CgpQLlMuIHByb2JhYmx5IGl0IHNob3VsZCBjb250YWluIHNvbWUgcmV2aWV3ZWQtYnkgdGFncz8g
-SSBjYW4gYWx3YXlzIGFkZAp0aGVtLCB0aG91Z2gsIGlmIG5lZWRlZC4KCi0tIApCZXN0IFJlZ2Fy
-ZHMsCkFydGVtIEJpdHl1dHNraXkgKNCR0LjRgtGO0YbQutC40Lkg0JDRgNGC0ZHQvCkKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
-Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
-cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+From: Julia Lawall <julia@diku.dk>
+
+The label outnodev is only used when kzalloc has not yet taken place or has
+failed, so there is no need for the call for kfree under this label.
+
+A simplified version of the semantic match that finds this problem is as
+follows: (http://coccinelle.lip6.fr/)
+
+// <smpl>
+@@
+identifier x;
+expression E1!=0,E2,E3,E4;
+statement S;
+iterator I;
+@@
+
+(
+if (...) { ... when != kfree(x)
+               when != x = E3
+               when != E3 = x
+*  return ...;
+ }
+... when != x = E2
+    when != I(...,x,...) S
+if (...) { ... when != x = E4
+ kfree(x); ... return ...; }
+)
+// </smpl>
+
+Signed-off-by: Julia Lawall <julia@diku.dk>
+
+---
+ sound/aoa/fabrics/layout.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/aoa/fabrics/layout.c b/sound/aoa/fabrics/layout.c
+index 3fd1a7e..552b97a 100644
+--- a/sound/aoa/fabrics/layout.c
++++ b/sound/aoa/fabrics/layout.c
+@@ -1073,10 +1073,10 @@ static int aoa_fabric_layout_probe(struct soundbus_dev *sdev)
+ 	sdev->pcmid = -1;
+ 	list_del(&ldev->list);
+ 	layouts_list_items--;
++	kfree(ldev);
+  outnodev:
+  	of_node_put(sound);
+  	layout_device = NULL;
+- 	kfree(ldev);
+ 	return -ENODEV;
+ }
+ 
