@@ -1,58 +1,52 @@
-From: David Brown <davidb@codeaurora.org>
-Subject: Re: of_iomap() matched with plan iounmap()
-Date: Fri, 19 Aug 2011 14:19:02 -0700
-Message-ID: <20110819211902.GA19702@huya.qualcomm.com>
-References: <20110818170226.GA16721@huya.qualcomm.com>
-	<20110818.203447.462383652600224162.davem@davemloft.net>
-	<201108191426.19152.arnd@arndb.de>
+From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4] mtd: gpio-nand: add device tree bindings
+Date: Sat, 20 Aug 2011 06:39:10 +0300
+Message-ID: <1313811552.4475.10.camel@koala>
+References: <1312902747-21372-1-git-send-email-jamie@jamieiles.com>
+	<1313418543.2600.2.camel@sauron>
+	<20110815143816.GH2636@pulham.picochip.com>
+	<1313419536.2600.7.camel@sauron>
+	<20110815152447.GI2636@pulham.picochip.com>
+Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201108191426.19152.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, davidb@codeaurora.org, David Miller <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110815152447.GI2636-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 19, 2011 at 02:26:18PM +0200, Arnd Bergmann wrote:
-> On Friday 19 August 2011, David Miller wrote:
-> > From: David Brown <davidb@codeaurora.org>
-> > Date: Thu, 18 Aug 2011 10:02:26 -0700
-> > 
-> > > The SPARC target contains of_ioremap() and of_iounmap(), which various
-> > > drivers use (generally inside of CONFIG_SBUS).
-> > > 
-> > > include/linux/of_address.h contains a definition for of_iomap(), but
-> > > not corresponding unmap call.  Code using this calls the regular
-> > > iounmap().
-> > > 
-> > > Is it safe to assume that of_iomap() will always be based on ioremap()
-> > > and therefore it is safe to use iounmap(), or would it be better to
-> > > define another name for drivers to use as the inverse of of_iomap().
-> > > I'm not sure what to call it, since of_iounmap() is already taken by
-> > > SPARC.
-> > 
-> > It's better to define a matching of_iounmap() interface, even if for
-> > now it is exactly iounmap()
-> 
-> But the problem is that we need conflicting prototypes for of_iounmap.
-
-What if we left the SPARC calls alone, and changed of_iomap() into
-of_dt_iomap() and could then make of_dt_iounmap().  Or, it could just
-be of_dt_map(), and of_dt_unmap().
-
-David
-
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+T24gTW9uLCAyMDExLTA4LTE1IGF0IDE2OjI0ICswMTAwLCBKYW1pZSBJbGVzIHdyb3RlOgo+IEZy
+b206IEphbWllIElsZXMgPGphbWllQGphbWllaWxlcy5jb20+Cj4gU3ViamVjdDogW1BBVENIXSBt
+dGQ6IGdwaW8tbmFuZDogYWRkIGRldmljZSB0cmVlIGJpbmRpbmdzCj4gCj4gQWRkIGRldmljZSB0
+cmVlIGJpbmRpbmdzIHNvIHRoYXQgdGhlIGdwaW8tbmFuZCBkcml2ZXIgbWF5IGJlCj4gaW5zdGFu
+dGlhdGVkIGZyb20gdGhlIGRldmljZSB0cmVlLiAgVGhpcyBhbHNvIGFsbG93cyB0aGUgcGFydGl0
+aW9ucwo+IHRvIGJlIHNwZWNpZmllZCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4gCj4gdjU6CS0gZm9s
+ZCBkdCBjb25maWcgaGVscGVycyBpbnRvIGEgc2luZ2xlIGdwaW9fbmFuZF9vZl9nZXRfY29uZmln
+KCkKPiB2NDoJLSBnZXQgaW8gc3luYyBhZGRyZXNzIGZyb20gZ3Bpby1jb250cm9sLW5hbmQsaW8t
+c3luYy1yZWcKPiAJICBwcm9wZXJ0eSByYXRoZXIgdGhhbiBhIHJlc291cmNlCj4gCS0gY2xhcmlm
+aWVkIGEgZmV3IGRldGFpbHMgaW4gdGhlIGJpbmRpbmcKPiB2MzoJLSByZW1vdmUgcmVkdW5kYW50
+IGNhc3QgYW5kIGEgY291cGxlIG9mIHdoaXRlc3BhY2UvbmFtaW5nCj4gCSAgY2hhbmdlcwo+IHYy
+OgktIGFkZCBDT05GSUdfT0YgZ3VhcmRzIGZvciBub24tZHQgcGxhdGZvcm1zCj4gCS0gY29tcGF0
+aWJsZSBiZWNvbWVzIGdwaW8tY29udHJvbC1uYW5kCj4gCS0gY2xhcmlmeSBzb21lIGJpbmRpbmcg
+ZGV0YWlscwo+IAo+IENjOiBEYXZpZCBXb29kaG91c2UgPGR3bXcyQGluZnJhZGVhZC5vcmc+Cj4g
+Q2M6IEFydGVtIEJpdHl1dHNraXkgPGRlZGVraW5kMUBnbWFpbC5jb20+Cj4gQ2M6IFNjb3R0IFdv
+b2QgPHNjb3R0d29vZEBmcmVlc2NhbGUuY29tPgo+IENjOiBHcmFudCBMaWtlbHkgPGdyYW50Lmxp
+a2VseUBzZWNyZXRsYWIuY2E+Cj4gU2lnbmVkLW9mZi1ieTogSmFtaWUgSWxlcyA8amFtaWVAamFt
+aWVpbGVzLmNvbT4KClB1c2hlZCB0aGlzIHBhdGNoIHRvIGwyLW10ZC0yLjYuZ2l0LCB0aGFua3Mu
+CgpQLlMuIHByb2JhYmx5IGl0IHNob3VsZCBjb250YWluIHNvbWUgcmV2aWV3ZWQtYnkgdGFncz8g
+SSBjYW4gYWx3YXlzIGFkZAp0aGVtLCB0aG91Z2gsIGlmIG5lZWRlZC4KCi0tIApCZXN0IFJlZ2Fy
+ZHMsCkFydGVtIEJpdHl1dHNraXkgKNCR0LjRgtGO0YbQutC40Lkg0JDRgNGC0ZHQvCkKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
+Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
+cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
