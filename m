@@ -1,11 +1,11 @@
 From: Julia Lawall <julia@diku.dk>
-Subject: [PATCH 2/2] arch/powerpc/platforms/powermac/setup.c: add missing of_node_put
-Date: Sun, 21 Aug 2011 18:10:01 +0200
-Message-ID: <1313943001-12884-2-git-send-email-julia@diku.dk>
+Subject: [PATCH 1/2] arch/powerpc/platforms/cell/iommu.c: add missing of_node_put
+Date: Sun, 21 Aug 2011 18:10:00 +0200
+Message-ID: <1313943001-12884-1-git-send-email-julia@diku.dk>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: kernel-janitors@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: kernel-janitors@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, cbe-oss-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 From: Julia Lawall <julia@diku.dk>
@@ -31,28 +31,19 @@ expression e,e1,e2;
 Signed-off-by: Julia Lawall <julia@diku.dk>
 
 ---
- arch/powerpc/platforms/powermac/setup.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/cell/iommu.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powermac/setup.c b/arch/powerpc/platforms/powermac/setup.c
-index 96580b1..970ea1d 100644
---- a/arch/powerpc/platforms/powermac/setup.c
-+++ b/arch/powerpc/platforms/powermac/setup.c
-@@ -494,11 +494,15 @@ static int __init pmac_declare_of_platform_devices(void)
- 		return -1;
+diff --git a/arch/powerpc/platforms/cell/iommu.c b/arch/powerpc/platforms/cell/iommu.c
+index 26a0671..d0c5dfd 100644
+--- a/arch/powerpc/platforms/cell/iommu.c
++++ b/arch/powerpc/platforms/cell/iommu.c
+@@ -1038,6 +1038,8 @@ static int __init cell_iommu_fixed_mapping_init(void)
  
- 	np = of_find_node_by_name(NULL, "valkyrie");
--	if (np)
-+	if (np) {
- 		of_platform_device_create(np, "valkyrie", NULL);
-+		of_node_put(np);
-+	}
- 	np = of_find_node_by_name(NULL, "platinum");
--	if (np)
-+	if (np) {
- 		of_platform_device_create(np, "platinum", NULL);
-+		of_node_put(np);
-+	}
-         np = of_find_node_by_type(NULL, "smu");
-         if (np) {
- 		of_platform_device_create(np, "smu", NULL);
+ 	/* The fixed mapping is only supported on axon machines */
+ 	np = of_find_node_by_name(NULL, "axon");
++	of_node_put(np);
++
+ 	if (!np) {
+ 		pr_debug("iommu: fixed mapping disabled, no axons found\n");
+ 		return -1;
