@@ -1,46 +1,107 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: of_iomap() matched with plan iounmap()
-Date: Mon, 22 Aug 2011 11:47:43 -0700 (PDT)
-Message-ID: <20110822.114743.2119393178497975105.davem@davemloft.net>
-References: <201108191426.19152.arnd@arndb.de>
-	<20110819.062609.1865751197015675220.davem@davemloft.net>
-	<201108221607.25179.arnd@arndb.de>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
+Date: Mon, 22 Aug 2011 12:56:28 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B24A3687@HQMAIL01.nvidia.com>
+References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201108221607.25179.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de
-Cc: davidb@codeaurora.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1313440100-17131-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 22 Aug 2011 16:07:25 +0200
+Stephen Warren wrote at Monday, August 15, 2011 2:28 PM:
+> ...
+> This patch modifies Tegra's device tree support to remove the dependency
+> on harmony_pinmux_init(), thus making it completely board-independent.
 
-> How about renaming the sparc of_ioremap/of_iounmap pair to
-> resource_iomap/resource_iounmap? I believe that it is not
-> (any more) tied to device tree based probing at all, and also
-> could be useful for other subsystems on non-sparc architectures.
+I had the good fortune of meeting Grant at LinuxCon last week and talked
+through this patchset a little (thanks!)
 
-Sure, but it would be even nicer if other platforms used pre-computed
-resources :-)
+The message I got from Grant was that the patches are basically OK. He
+did have a couple of concerns:
 
-It would make OF devices match how PCI devices are managed, and that's
-one of the main reasons I implemented it this way.
+* Does this cause the compiled DTB to blow up in size.
 
-I know someone is going to say that OF resource resolution is "hard" or
-difficult to untangle with how drivers on other platforms work.  But
-that situation only exists because other platforms didn't do preresolved
-OF resources from the beginning.
+The DTB goes from ~3-4K to ~8-9K with these patches added. While that
+is a large % increase, Grant said that as an absolute value, that size
+shouldn't be an issue.
 
-Having resource resolution handling and/or knowledge scattered throughout
-all of the non-sparc OF drivers is very unwise.
+* There's lots of repetition in the .dts representation; can this be improved?
+
+We discussed enhancing the syntax a little, so that you can configure
+multiple pins/pingroups from a single node. In particular, the syntax
+in my patches was:
+
+ld0 {
+    nvidia,function = "displaya";
+    nvidia,pull-down;
+};
+ld1 {
+    nvidia,function = "displaya";
+    nvidia,pull-down;
+};
+
+Which we discussed enhancing to something like:
+
+ld0 {
+    additional-pins = "ld1", "ld2", ...;
+    nvidia,function = "displaya";
+    nvidia,pull-down;
+};
+
+or:
+
+meaningless-name { // typically would just use the pin name
+    pins = "ld0", "ld1", "ld2", ...;
+    nvidia,function = "displaya";
+    nvidia,pull-down;
+};
+
+* We also briefly discussed that dtc could be modified to support symbolic
+constants, so we could use named integers for the function names (perhaps
+pin names too). I'll look into how easy it is to modify dtc for this.
+
+I'll look into implementing these enhancements, and others discussed in
+this email thread, and repost.
+
+> ...
+> Stephen Warren (13):
+>   arm/tegra: Prep boards for gpio/pinmux conversion to pdevs
+>   arm/tegra: Avoid duplicate gpio/pinmux devices with dt
+>   arm/tegra: board-dt: Add AUXDATA for tegra-gpio and tegra-pinmux
+>   docs/dt: Document nvidia,tegra20-gpio's nvidia,enabled-gpios property
+>   arm/dt: Tegra: Add nvidia,gpios property to GPIO controller
+>   docs/dt: Document nvidia,tegra20-pinmux binding
+>   arm/dt: Tegra: Add pinmux node
+>   gpio/tegra: Convert to a platform device
+>   gpio/tegra: Add device tree support
+>   arm/tegra: Convert pinmux driver to a platform device
+>   arm/tegra: Add device tree support to pinmux driver
+>   arm/tegra: board-dt: Remove dependency on non-dt pinmux functions
+>   arm/tegra: Remove temporary gpio/pinmux registration workaround
+> 
+>  .../devicetree/bindings/gpio/gpio_nvidia.txt       |   20 +
+>  .../devicetree/bindings/pinmux/pinmux_nvidia.txt   |  294 ++++++++++++
+>  arch/arm/boot/dts/tegra-harmony.dts                |  483 ++++++++++++++++++++
+>  arch/arm/boot/dts/tegra-seaboard.dts               |  421 +++++++++++++++++
+>  arch/arm/boot/dts/tegra20.dtsi                     |    5 +
+>  arch/arm/mach-tegra/Makefile                       |    1 -
+>  arch/arm/mach-tegra/board-dt.c                     |   12 +-
+>  arch/arm/mach-tegra/board-harmony-pinmux.c         |    8 +
+>  arch/arm/mach-tegra/board-paz00-pinmux.c           |    8 +
+>  arch/arm/mach-tegra/board-seaboard-pinmux.c        |    9 +-
+>  arch/arm/mach-tegra/board-trimslice-pinmux.c       |    7 +
+>  arch/arm/mach-tegra/devices.c                      |   10 +
+>  arch/arm/mach-tegra/devices.h                      |    2 +
+>  arch/arm/mach-tegra/pinmux.c                       |  269 +++++++++++
+>  drivers/gpio/gpio-tegra.c                          |   57 ++-
+>  15 files changed, 1582 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinmux/pinmux_nvidia.txt
+
+-- 
+nvpublic
