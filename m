@@ -1,46 +1,57 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH 0/2] WIP: generic OF pinmux binding
-Date: Mon, 22 Aug 2011 12:59:16 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B24A368D@HQMAIL01.nvidia.com>
-References: <1313581648-22303-1-git-send-email-jamie@jamieiles.com>
+From: Liam Girdwood <lrg@ti.com>
+Subject: Re: [PATCH] [v2] sound/soc/fsl/fsl_dma.c: add missing
+	of_node_put
+Date: Mon, 22 Aug 2011 21:05:38 +0100
+Message-ID: <4E52B692.2030601@ti.com>
+References: <1314022961-27513-1-git-send-email-timur@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1313581648-22303-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org" <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, "konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1314022961-27513-1-git-send-email-timur@freescale.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Timur Tabi <timur@freescale.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "tiwai@suse.de" <tiwai@suse.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "julia@diku.dk" <julia@diku.dk>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Jamie Iles wrote at Wednesday, August 17, 2011 5:47 AM:
-> To avoid going too far in the wrong direction I thought I'd post what I
-> have so far for a generic pinmux binding.  Essentially it's just
-> Stephen's nvidia binding but with the nvidia specifics abstracted out so
-> the common loop can be used for other platforms.  This approach works
-> nicely for picoxcell too.
+On 22/08/11 15:22, Timur Tabi wrote:
+> of_parse_phandle increments the reference count of np, so this should be
+> decremented before trying the next possibility.
 > 
-> For more esoteric bindings, such as pull strength, these could be
-> handled in the platform specific configuration function.
+> Since we don't actually use np, we can decrement the reference count
+> immediately.
+> 
+> Reported-by: Julia Lawall <julia@diku.dk>
+> Signed-off-by: Timur Tabi <timur@freescale.com>
 
-Thanks very much. These patches look sane to me. I'll pick them up in my
-local tree, enhance them to support the pins/additional-pins property that
-I just mentioned in a separate email, retest and repost.
+Acked-by: Liam Girdwood <lrg@ti.com>
 
-> This doesn't address the runtime muxing that LinusW's set of patches do,
-> and I'm not sure how to handle that.
-
-I see that LinusW just posted another version of this. I'll go check that
-out too, in case it has any impact on these patches.
-
--- 
-nvpublic
+> ---
+>  sound/soc/fsl/fsl_dma.c |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_dma.c b/sound/soc/fsl/fsl_dma.c
+> index 6680c0b..b300f4b 100644
+> --- a/sound/soc/fsl/fsl_dma.c
+> +++ b/sound/soc/fsl/fsl_dma.c
+> @@ -877,10 +877,12 @@ static struct device_node *find_ssi_node(struct device_node *dma_channel_np)
+>  		 * assume that device_node pointers are a valid comparison.
+>  		 */
+>  		np = of_parse_phandle(ssi_np, "fsl,playback-dma", 0);
+> +		of_node_put(np);
+>  		if (np == dma_channel_np)
+>  			return ssi_np;
+>  
+>  		np = of_parse_phandle(ssi_np, "fsl,capture-dma", 0);
+> +		of_node_put(np);
+>  		if (np == dma_channel_np)
+>  			return ssi_np;
+>  	}
