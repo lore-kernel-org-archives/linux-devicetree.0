@@ -1,107 +1,46 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
-Date: Mon, 22 Aug 2011 12:56:28 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B24A3687@HQMAIL01.nvidia.com>
-References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
+Subject: RE: [RFC PATCH 0/2] WIP: generic OF pinmux binding
+Date: Mon, 22 Aug 2011 12:59:16 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B24A368D@HQMAIL01.nvidia.com>
+References: <1313581648-22303-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1313440100-17131-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1313581648-22303-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org" <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, "konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote at Monday, August 15, 2011 2:28 PM:
-> ...
-> This patch modifies Tegra's device tree support to remove the dependency
-> on harmony_pinmux_init(), thus making it completely board-independent.
-
-I had the good fortune of meeting Grant at LinuxCon last week and talked
-through this patchset a little (thanks!)
-
-The message I got from Grant was that the patches are basically OK. He
-did have a couple of concerns:
-
-* Does this cause the compiled DTB to blow up in size.
-
-The DTB goes from ~3-4K to ~8-9K with these patches added. While that
-is a large % increase, Grant said that as an absolute value, that size
-shouldn't be an issue.
-
-* There's lots of repetition in the .dts representation; can this be improved?
-
-We discussed enhancing the syntax a little, so that you can configure
-multiple pins/pingroups from a single node. In particular, the syntax
-in my patches was:
-
-ld0 {
-    nvidia,function = "displaya";
-    nvidia,pull-down;
-};
-ld1 {
-    nvidia,function = "displaya";
-    nvidia,pull-down;
-};
-
-Which we discussed enhancing to something like:
-
-ld0 {
-    additional-pins = "ld1", "ld2", ...;
-    nvidia,function = "displaya";
-    nvidia,pull-down;
-};
-
-or:
-
-meaningless-name { // typically would just use the pin name
-    pins = "ld0", "ld1", "ld2", ...;
-    nvidia,function = "displaya";
-    nvidia,pull-down;
-};
-
-* We also briefly discussed that dtc could be modified to support symbolic
-constants, so we could use named integers for the function names (perhaps
-pin names too). I'll look into how easy it is to modify dtc for this.
-
-I'll look into implementing these enhancements, and others discussed in
-this email thread, and repost.
-
-> ...
-> Stephen Warren (13):
->   arm/tegra: Prep boards for gpio/pinmux conversion to pdevs
->   arm/tegra: Avoid duplicate gpio/pinmux devices with dt
->   arm/tegra: board-dt: Add AUXDATA for tegra-gpio and tegra-pinmux
->   docs/dt: Document nvidia,tegra20-gpio's nvidia,enabled-gpios property
->   arm/dt: Tegra: Add nvidia,gpios property to GPIO controller
->   docs/dt: Document nvidia,tegra20-pinmux binding
->   arm/dt: Tegra: Add pinmux node
->   gpio/tegra: Convert to a platform device
->   gpio/tegra: Add device tree support
->   arm/tegra: Convert pinmux driver to a platform device
->   arm/tegra: Add device tree support to pinmux driver
->   arm/tegra: board-dt: Remove dependency on non-dt pinmux functions
->   arm/tegra: Remove temporary gpio/pinmux registration workaround
+Jamie Iles wrote at Wednesday, August 17, 2011 5:47 AM:
+> To avoid going too far in the wrong direction I thought I'd post what I
+> have so far for a generic pinmux binding.  Essentially it's just
+> Stephen's nvidia binding but with the nvidia specifics abstracted out so
+> the common loop can be used for other platforms.  This approach works
+> nicely for picoxcell too.
 > 
->  .../devicetree/bindings/gpio/gpio_nvidia.txt       |   20 +
->  .../devicetree/bindings/pinmux/pinmux_nvidia.txt   |  294 ++++++++++++
->  arch/arm/boot/dts/tegra-harmony.dts                |  483 ++++++++++++++++++++
->  arch/arm/boot/dts/tegra-seaboard.dts               |  421 +++++++++++++++++
->  arch/arm/boot/dts/tegra20.dtsi                     |    5 +
->  arch/arm/mach-tegra/Makefile                       |    1 -
->  arch/arm/mach-tegra/board-dt.c                     |   12 +-
->  arch/arm/mach-tegra/board-harmony-pinmux.c         |    8 +
->  arch/arm/mach-tegra/board-paz00-pinmux.c           |    8 +
->  arch/arm/mach-tegra/board-seaboard-pinmux.c        |    9 +-
->  arch/arm/mach-tegra/board-trimslice-pinmux.c       |    7 +
->  arch/arm/mach-tegra/devices.c                      |   10 +
->  arch/arm/mach-tegra/devices.h                      |    2 +
->  arch/arm/mach-tegra/pinmux.c                       |  269 +++++++++++
->  drivers/gpio/gpio-tegra.c                          |   57 ++-
->  15 files changed, 1582 insertions(+), 24 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinmux/pinmux_nvidia.txt
+> For more esoteric bindings, such as pull strength, these could be
+> handled in the platform specific configuration function.
+
+Thanks very much. These patches look sane to me. I'll pick them up in my
+local tree, enhance them to support the pins/additional-pins property that
+I just mentioned in a separate email, retest and repost.
+
+> This doesn't address the runtime muxing that LinusW's set of patches do,
+> and I'm not sure how to handle that.
+
+I see that LinusW just posted another version of this. I'll go check that
+out too, in case it has any impact on these patches.
 
 -- 
 nvpublic
