@@ -1,15 +1,11 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: of_iomap() matched with plan iounmap()
-Date: Mon, 22 Aug 2011 16:07:25 +0200
-Message-ID: <201108221607.25179.arnd@arndb.de>
-References: <20110818170226.GA16721@huya.qualcomm.com>
-	<201108191426.19152.arnd@arndb.de>
-	<20110819.062609.1865751197015675220.davem@davemloft.net>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] [v2] sound/soc/fsl/fsl_dma.c: add missing of_node_put
+Date: Mon, 22 Aug 2011 09:22:41 -0500
+Message-ID: <1314022961-27513-1-git-send-email-timur__19066.1357868978$1314023025$gmane$org@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110819.062609.1865751197015675220.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,36 +15,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 19 August 2011, David Miller wrote:
-> From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Date: Fri, 19 Aug 2011 14:26:18 +0200
-> 
-> > We could of course change all existing users of of_iounmap on sparc to use
-> > the simpler prototype, because it also just calls iounmap.
-> 
-> Check again, on sparc64 it needs the resource to release it.
-> 
-> Only the 32-bit version on sparc evaluates to just a plain iounmap().
+of_parse_phandle increments the reference count of np, so this should be
+decremented before trying the next possibility.
 
-Ok, I see.
+Since we don't actually use np, we can decrement the reference count
+immediately.
 
-On Friday 19 August 2011, David Brown wrote:
-> What if we left the SPARC calls alone, and changed of_iomap() into
-> of_dt_iomap() and could then make of_dt_iounmap().  Or, it could just
-> be of_dt_map(), and of_dt_unmap().
+Reported-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+Signed-off-by: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ sound/soc/fsl/fsl_dma.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-I think at some point in the future, we will have a mass-renaming
-of of_* to dt_* or similar, which would result in a silly name.
-
-Also, the of_iomap() name is modeled after pci_iomap/pci_iomap.
-
-How about renaming the sparc of_ioremap/of_iounmap pair to
-resource_iomap/resource_iounmap? I believe that it is not
-(any more) tied to device tree based probing at all, and also
-could be useful for other subsystems on non-sparc architectures.
-
-	Arnd
+diff --git a/sound/soc/fsl/fsl_dma.c b/sound/soc/fsl/fsl_dma.c
+index 6680c0b..b300f4b 100644
+--- a/sound/soc/fsl/fsl_dma.c
++++ b/sound/soc/fsl/fsl_dma.c
+@@ -877,10 +877,12 @@ static struct device_node *find_ssi_node(struct device_node *dma_channel_np)
+ 		 * assume that device_node pointers are a valid comparison.
+ 		 */
+ 		np = of_parse_phandle(ssi_np, "fsl,playback-dma", 0);
++		of_node_put(np);
+ 		if (np == dma_channel_np)
+ 			return ssi_np;
+ 
+ 		np = of_parse_phandle(ssi_np, "fsl,capture-dma", 0);
++		of_node_put(np);
+ 		if (np == dma_channel_np)
+ 			return ssi_np;
+ 	}
+-- 
+1.7.3.4
