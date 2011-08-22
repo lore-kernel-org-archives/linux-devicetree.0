@@ -1,14 +1,14 @@
 From: Timur Tabi <timur@freescale.com>
-Subject: Re: [PATCH 1/2] sound/soc/fsl/p1022_ds.c: add missing
+Subject: Re: [PATCH] sound/soc/fsl/fsl_dma.c: add missing
 	of_node_put
-Date: Mon, 22 Aug 2011 08:55:28 -0500
-Message-ID: <4E525FD0.5020806@freescale.com>
-References: <1313823721-16930-1-git-send-email-julia@diku.dk>
+Date: Mon, 22 Aug 2011 09:03:17 -0500
+Message-ID: <4E5261A5.5050608@freescale.com>
+References: <1313825025-17590-1-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1313823721-16930-1-git-send-email-julia@diku.dk>
+In-Reply-To: <1313825025-17590-1-git-send-email-julia@diku.dk>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
 	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
@@ -19,44 +19,46 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
 Sender: alsa-devel-bounces@alsa-project.org
 Errors-To: alsa-devel-bounces@alsa-project.org
 To: Julia Lawall <julia@diku.dk>
-Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Axel@alsa-project.org, Lin <axel.lin@gmail.com>, Liam Girdwood <lrg@ti.com>
+Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 Julia Lawall wrote:
-> From: Julia Lawall <julia@diku.dk>
->
-> dma_channel_np has been accessed at this point, so decrease its reference
-> count before leaving the function.
->
-> A simplified version of the semantic match that finds this problem is as
-> follows: (http://coccinelle.lip6.fr/)
->
-> // <smpl>
-> @@
-> identifier x;
-> expression E1!=0,E2,E3,E4;
-> statement S;
-> iterator I;
-> @@
->
-> (
-> if (...) { ... when != of_node_put(x)
->                when != x = E3
->                when != E3 = x
-> *  return ...;
->  }
-> ... when != x = E2
->     when != I(...,x,...) S
-> if (...) { ... when != x = E4
->  of_node_put(x); ... return ...; }
-> )
-> // </smpl>
->
-> Signed-off-by: Julia Lawall <julia@diku.dk>
+> diff --git a/sound/soc/fsl/fsl_dma.c b/sound/soc/fsl/fsl_dma.c
+> index 0efc04a..b33271b 100644
+> --- a/sound/soc/fsl/fsl_dma.c
+> +++ b/sound/soc/fsl/fsl_dma.c
+> @@ -880,10 +880,12 @@ static struct device_node *find_ssi_node(struct device_node *dma_channel_np)
+>  		np = of_parse_phandle(ssi_np, "fsl,playback-dma", 0);
+>  		if (np == dma_channel_np)
+>  			return ssi_np;
+> +		of_node_put(np);
+>  
+>  		np = of_parse_phandle(ssi_np, "fsl,capture-dma", 0);
+>  		if (np == dma_channel_np)
+>  			return ssi_np;
+> +		of_node_put(np);
+>  	}
 
-Acked-by: Timur Tabi <timur@freescale.com>
+Thanks for catching the problem, Julia, but the fix is not quite correct.  My
+code assumes that of_parse_phandle() doesn't claim the node, but it doesn't
+actually use the node pointer, either.  All I care about is whether 'np' is
+equal to dma_channel_np.  I'm not going to use 'np'.  So I think the real fix is
+this:
 
-Thanks, Julia.
+@@ -880,10 +880,12 @@ static struct device_node *find_ssi_node(struct
+device_node *dma_channel_np)
+ 		np = of_parse_phandle(ssi_np, "fsl,playback-dma", 0);
++		of_node_put(np);
+ 		if (np == dma_channel_np)
+ 			return ssi_np;
+
+ 		np = of_parse_phandle(ssi_np, "fsl,capture-dma", 0);
++		of_node_put(np);
+ 		if (np == dma_channel_np)
+ 			return ssi_np;
+ 	}
+
+ 	return NULL;
 
 -- 
 Timur Tabi
