@@ -1,106 +1,81 @@
-From: Julia Lawall <julia@diku.dk>
-Subject: Re: [PATCH 2/2] arch/powerpc/platforms/powermac/setup.c: add missing
- of_node_put
-Date: Mon, 22 Aug 2011 12:14:27 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1108221213150.10948@ask.diku.dk>
-References: <1313943001-12884-2-git-send-email-julia@diku.dk> <4E522AD0.7030907@bfs.de>
+From: Liam Girdwood <lrg@ti.com>
+Subject: Re: [PATCH 1/2] sound/soc/fsl/p1022_ds.c: add missing
+	of_node_put
+Date: Mon, 22 Aug 2011 11:18:17 +0100
+Message-ID: <4E522CE9.7050102@ti.com>
+References: <1313823721-16930-1-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4E522AD0.7030907@bfs.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: walter harms <wharms@bfs.de>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kernel-janitors@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1313823721-16930-1-git-send-email-julia@diku.dk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Julia Lawall <julia@diku.dk>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Takashi Iwai <tiwai@suse.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Brown <broonie@opensource.wolfsonmicro.com>, "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Axel Lin <axel.lin@gmail.com>, Mark@alsa-project.org, Timur Tabi <timur@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Aug 2011, walter harms wrote:
+On 20/08/11 08:02, Julia Lawall wrote:
+> From: Julia Lawall <julia@diku.dk>
+> 
+> dma_channel_np has been accessed at this point, so decrease its reference
+> count before leaving the function.
+> 
+> A simplified version of the semantic match that finds this problem is as
+> follows: (http://coccinelle.lip6.fr/)
+> 
+> // <smpl>
+> @@
+> identifier x;
+> expression E1!=0,E2,E3,E4;
+> statement S;
+> iterator I;
+> @@
+> 
+> (
+> if (...) { ... when != of_node_put(x)
+>                when != x = E3
+>                when != E3 = x
+> *  return ...;
+>  }
+> ... when != x = E2
+>     when != I(...,x,...) S
+> if (...) { ... when != x = E4
+>  of_node_put(x); ... return ...; }
+> )
+> // </smpl>
+> 
+> Signed-off-by: Julia Lawall <julia@diku.dk>
+> 
+> ---
+>  sound/soc/fsl/p1022_ds.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/fsl/p1022_ds.c b/sound/soc/fsl/p1022_ds.c
+> index 8fa4d5f..fcb862e 100644
+> --- a/sound/soc/fsl/p1022_ds.c
+> +++ b/sound/soc/fsl/p1022_ds.c
+> @@ -297,8 +297,10 @@ static int get_dma_channel(struct device_node *ssi_np,
+>  	 * dai->platform name should already point to an allocated buffer.
+>  	 */
+>  	ret = of_address_to_resource(dma_channel_np, 0, &res);
+> -	if (ret)
+> +	if (ret) {
+> +		of_node_put(dma_channel_np);
+>  		return ret;
+> +	}
+>  	snprintf((char *)dai->platform_name, DAI_NAME_SIZE, "%llx.%s",
+>  		 (unsigned long long) res.start, dma_channel_np->name);
+>  
+> 
 
-> 
-> 
-> Am 21.08.2011 18:10, schrieb Julia Lawall:
-> > From: Julia Lawall <julia@diku.dk>
-> > 
-> > np is initialized to the result of calling a function that calls
-> > of_node_get, so of_node_put should be called before the pointer is dropped.
-> > 
-> > The semantic match that finds this problem is as follows:
-> > (http://coccinelle.lip6.fr/)
-> > 
-> > // <smpl>
-> > @@
-> > expression e,e1,e2;
-> > @@
-> > 
-> > * e = \(of_find_node_by_type\|of_find_node_by_name\)(...)
-> >   ... when != of_node_put(e)
-> >       when != true e == NULL
-> >       when != e2 = e
-> >   e = e1
-> > // </smpl>
-> > 
-> > Signed-off-by: Julia Lawall <julia@diku.dk>
-> > 
-> > ---
-> >  arch/powerpc/platforms/powermac/setup.c |    8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/platforms/powermac/setup.c b/arch/powerpc/platforms/powermac/setup.c
-> > index 96580b1..970ea1d 100644
-> > --- a/arch/powerpc/platforms/powermac/setup.c
-> > +++ b/arch/powerpc/platforms/powermac/setup.c
-> > @@ -494,11 +494,15 @@ static int __init pmac_declare_of_platform_devices(void)
-> >  		return -1;
-> >  
-> >  	np = of_find_node_by_name(NULL, "valkyrie");
-> > -	if (np)
-> > +	if (np) {
-> >  		of_platform_device_create(np, "valkyrie", NULL);
-> > +		of_node_put(np);
-> > +	}
-> >  	np = of_find_node_by_name(NULL, "platinum");
-> > -	if (np)
-> > +	if (np) {
-> >  		of_platform_device_create(np, "platinum", NULL);
-> > +		of_node_put(np);
-> > +	}
-> >          np = of_find_node_by_type(NULL, "smu");
-> >          if (np) {
-> >  		of_platform_device_create(np, "smu", NULL);
-> > 
-> 
-> 
-> hi,
-> it seems save to call of_node_put(np) with np==NULL, i assume the same is true
-> for of_platform_device_create().
-> 
-> so the code collapses to:
-> 
-> _test_node(char *name)
-> {
->  struct device_node *np;
->  np = of_find_node_by_name(NULL, name);
->  of_platform_device_create(np, name, NULL);
+Both
 
-of_platform_device_create seems to do a lot of work if np is NULL.  It 
-returns NULL in the end, as far as I can see, but a lot of function calls 
-are required.
-
-julia
-
->  of_node_put(np);
->  return NULL?:0:1;
-> }
-> 
-> maybe there is already something like find_node() ?
-> 
-> re,
->  wh
-> 
-> 
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe kernel-janitors" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Acked-by: Liam Girdwood <lrg@ti.com>
