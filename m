@@ -1,104 +1,63 @@
-From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arch/powerpc/platforms/powermac/setup.c: add missing
+From: Timur Tabi <timur@freescale.com>
+Subject: Re: [PATCH 1/2] sound/soc/fsl/p1022_ds.c: add missing
 	of_node_put
-Date: Mon, 22 Aug 2011 14:31:46 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1108221430320.10948@ask.diku.dk>
-References: <1313943001-12884-2-git-send-email-julia@diku.dk>
-	<4E522AD0.7030907@bfs.de>
+Date: Mon, 22 Aug 2011 08:55:28 -0500
+Message-ID: <4E525FD0.5020806@freescale.com>
+References: <1313823721-16930-1-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E522AD0.7030907-fPG8STNUNVg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: walter harms <wharms-fPG8STNUNVg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1313823721-16930-1-git-send-email-julia@diku.dk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Julia Lawall <julia@diku.dk>
+Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Axel@alsa-project.org, Lin <axel.lin@gmail.com>, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Aug 2011, walter harms wrote:
+Julia Lawall wrote:
+> From: Julia Lawall <julia@diku.dk>
+>
+> dma_channel_np has been accessed at this point, so decrease its reference
+> count before leaving the function.
+>
+> A simplified version of the semantic match that finds this problem is as
+> follows: (http://coccinelle.lip6.fr/)
+>
+> // <smpl>
+> @@
+> identifier x;
+> expression E1!=0,E2,E3,E4;
+> statement S;
+> iterator I;
+> @@
+>
+> (
+> if (...) { ... when != of_node_put(x)
+>                when != x = E3
+>                when != E3 = x
+> *  return ...;
+>  }
+> ... when != x = E2
+>     when != I(...,x,...) S
+> if (...) { ... when != x = E4
+>  of_node_put(x); ... return ...; }
+> )
+> // </smpl>
+>
+> Signed-off-by: Julia Lawall <julia@diku.dk>
 
-> 
-> 
-> Am 21.08.2011 18:10, schrieb Julia Lawall:
-> > From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-> > 
-> > np is initialized to the result of calling a function that calls
-> > of_node_get, so of_node_put should be called before the pointer is dropped.
-> > 
-> > The semantic match that finds this problem is as follows:
-> > (http://coccinelle.lip6.fr/)
-> > 
-> > // <smpl>
-> > @@
-> > expression e,e1,e2;
-> > @@
-> > 
-> > * e = \(of_find_node_by_type\|of_find_node_by_name\)(...)
-> >   ... when != of_node_put(e)
-> >       when != true e == NULL
-> >       when != e2 = e
-> >   e = e1
-> > // </smpl>
-> > 
-> > Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
-> > 
-> > ---
-> >  arch/powerpc/platforms/powermac/setup.c |    8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/platforms/powermac/setup.c b/arch/powerpc/platforms/powermac/setup.c
-> > index 96580b1..970ea1d 100644
-> > --- a/arch/powerpc/platforms/powermac/setup.c
-> > +++ b/arch/powerpc/platforms/powermac/setup.c
-> > @@ -494,11 +494,15 @@ static int __init pmac_declare_of_platform_devices(void)
-> >  		return -1;
-> >  
-> >  	np = of_find_node_by_name(NULL, "valkyrie");
-> > -	if (np)
-> > +	if (np) {
-> >  		of_platform_device_create(np, "valkyrie", NULL);
-> > +		of_node_put(np);
-> > +	}
-> >  	np = of_find_node_by_name(NULL, "platinum");
-> > -	if (np)
-> > +	if (np) {
-> >  		of_platform_device_create(np, "platinum", NULL);
-> > +		of_node_put(np);
-> > +	}
-> >          np = of_find_node_by_type(NULL, "smu");
-> >          if (np) {
-> >  		of_platform_device_create(np, "smu", NULL);
-> > 
-> 
-> 
-> hi,
-> it seems save to call of_node_put(np) with np==NULL, i assume the same is true
-> for of_platform_device_create().
-> 
-> so the code collapses to:
-> 
-> _test_node(char *name)
-> {
->  struct device_node *np;
->  np = of_find_node_by_name(NULL, name);
->  of_platform_device_create(np, name, NULL);
->  of_node_put(np);
->  return NULL?:0:1;
-> }
-> 
-> maybe there is already something like find_node() ?
+Acked-by: Timur Tabi <timur@freescale.com>
 
-of_platform_device_create is not much used, and one might want to use it 
-with other functions than of_find_node_by_name, as indeed is done here.  
-Is the problem just a missing else between the calls?  Is it certain that 
-all of the cases are disjoint?
+Thanks, Julia.
 
-julia
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
