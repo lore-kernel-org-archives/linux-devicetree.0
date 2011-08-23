@@ -1,35 +1,59 @@
 From: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Subject: Re: [RFC/PATCH v2 09/13] dt: omap4: add soc file for handling i2c
- controllers
-Date: Tue, 23 Aug 2011 20:41:52 +0530
-Message-ID: <20110823151152.GA32698@manju-desktop>
-References: <1314074021-25186-1-git-send-email-manjugk@ti.com>
- <1314074021-25186-10-git-send-email-manjugk@ti.com>
- <4E53639A.10606@ti.com>
+Subject: Re: Fwd: [RFC/PATCH v2 09/13] dt: omap4: add soc file for handling
+ i2c controllers
+Date: Tue, 23 Aug 2011 20:48:41 +0530
+Message-ID: <20110823151841.GB32698@manju-desktop>
+References: <1314074021-25186-10-git-send-email-manjugk@ti.com>
+ <4E537FA7.3050609@ti.com>
+ <4E53AF9F.8070607@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4E53639A.10606@ti.com>
+In-Reply-To: <4E53AF9F.8070607@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "Nayak, Rajendra" <rnayak@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2011 at 01:53:54PM +0530, Rajendra Nayak wrote:
-> On 8/23/2011 10:33 AM, G, Manjunath Kondaiah wrote:
+On Tue, Aug 23, 2011 at 03:48:15PM +0200, Cousson, Benoit wrote:
+> From: G, Manjunath Kondaiah<manjugk@ti.com>
+> >To: devicetree-discuss@lists.ozlabs.org
+> >CC: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+> >
 > >
 > >Add omap4 soc dts file for handling omap4 soc i2c
 > >controllers existing on l4-core bus.
+> 
+> The subject and changelog is not accurate. You are doing at least 3 things:
+> Moving the OMAP4 SoC data from panda board file to a SoC specific
+> omap4.dtsi file.
+> Including the omap4.dtsi into panda.
+> Adding some i2c nodes.
+> 
+> You should use at least two or three separated patches to avoid
+> in-accurate subject.
+
+As these changes are straight forward, I can update patch description with
+the required information instead of create too many patches.
+
+If you are too specific on splitting the patches, I am ok with that too.
+
+> 
+> Benoit
+> 
+> 
 > >
 > >Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
 > >---
-> >  arch/arm/boot/dts/omap4-panda.dts |    7 +---
-> >  arch/arm/boot/dts/omap4.dtsi      |   68 +++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 69 insertions(+), 6 deletions(-)
-> >  create mode 100644 arch/arm/boot/dts/omap4.dtsi
+> >   arch/arm/boot/dts/omap4-panda.dts |    7 +---
+> >   arch/arm/boot/dts/omap4.dtsi      |   68
+> >+++++++++++++++++++++++++++++++++++++
+> >   2 files changed, 69 insertions(+), 6 deletions(-)
+> >   create mode 100644 arch/arm/boot/dts/omap4.dtsi
 > >
-> >diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+> >diff --git a/arch/arm/boot/dts/omap4-panda.dts
+> >b/arch/arm/boot/dts/omap4-panda.dts
 > >index 58909e9..c28aa95 100644
 > >--- a/arch/arm/boot/dts/omap4-panda.dts
 > >+++ b/arch/arm/boot/dts/omap4-panda.dts
@@ -42,8 +66,8 @@ On Tue, Aug 23, 2011 at 01:53:54PM +0530, Rajendra Nayak wrote:
 > >-/include/ "skeleton.dtsi"
 > >+/include/ "omap4.dtsi"
 > >
-> >  / {
-> >  	model = "TI OMAP4 PandaBoard";
+> >   / {
+> >   	model = "TI OMAP4 PandaBoard";
 > >diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
 > >new file mode 100644
 > >index 0000000..cb055f5
@@ -64,6 +88,20 @@ On Tue, Aug 23, 2011 at 01:53:54PM +0530, Rajendra Nayak wrote:
 > >+
 > >+/memreserve/ 0x9D000000 0x03000000; /* Frame buffer */
 > >+/memreserve/ 0xB0000000 0x10000000; /* Top 256MB is unaccessable */
+> 
+> That information was already there previously but where does it come from?
+> 48 MB is clearly not for the FB, and the top 256 MB should be
+> accessible with highmem.
+This was originally introduced by Grant and he can provide more info on this
+change.
+
+39881c4e (Grant Likely 2011-07-05 23:42:31 -0600  4)
+
+-M
+
+> 
+> Benoit
+> 
 > >+
 > >+/include/ "skeleton.dtsi"
 > >+
@@ -88,20 +126,6 @@ On Tue, Aug 23, 2011 at 01:53:54PM +0530, Rajendra Nayak wrote:
 > >+		i2c1: i2c@70000 {
 > >+			#address-cells =<1>;
 > >+			#size-cells =<0>;
-> 
-> Are these really needed, given there are no child nodes defined?
-> Same with all other instances.
-This will define all the available resources for a given soc and it
-can be disabled by using "status=disabled" in property field.
-
-This is ongoing debate whether to have status field or not. 
-
-Grant,
-What is the final alignment on using status field?
-
--M
-
-> 
 > >+			compatible = "ti,omap-i2c", "ti,omap-device";
 > >+			reg =<0x70000 0x100>;
 > >+			interrupts =<  88>;
