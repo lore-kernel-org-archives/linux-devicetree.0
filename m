@@ -1,122 +1,129 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [RFC/PATCH v2 09/13] dt: omap4: add soc file for handling i2c
- controllers
-Date: Tue, 23 Aug 2011 13:53:54 +0530
-Message-ID: <4E53639A.10606@ti.com>
-References: <1314074021-25186-1-git-send-email-manjugk@ti.com> <1314074021-25186-10-git-send-email-manjugk@ti.com>
+From: Jamie Iles <jamie@jamieiles.com>
+Subject: Re: [RFC/PATCH v2 07/13] dt: omap: create platform bus for omap
+ devices
+Date: Tue, 23 Aug 2011 10:07:05 +0100
+Message-ID: <20110823090705.GI2796@pulham.picochip.com>
+References: <1314074021-25186-1-git-send-email-manjugk@ti.com>
+ <1314074021-25186-8-git-send-email-manjugk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1314074021-25186-10-git-send-email-manjugk@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1314074021-25186-8-git-send-email-manjugk@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: "G, Manjunath Kondaiah" <manjugk@ti.com>
 Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/23/2011 10:33 AM, G, Manjunath Kondaiah wrote:
->
-> Add omap4 soc dts file for handling omap4 soc i2c
-> controllers existing on l4-core bus.
->
-> Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
+Hi,
+
+This creates a build failure for non-omap platforms as they don't know 
+about struct omap_device_pm_latency, struct omap_hwmod etc.
+
+An empty of_omap_device_create() as inline should do the trick.
+
+Jamie
+
+On Tue, Aug 23, 2011 at 10:03:35AM +0500, G, Manjunath Kondaiah wrote:
+> 
+> The omap devices will use HWMOD for fetching device information
+> hence it needs to be handled seperately during platform bus
+> creation during dt build.
+> 
+> Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
 > ---
->   arch/arm/boot/dts/omap4-panda.dts |    7 +---
->   arch/arm/boot/dts/omap4.dtsi      |   68 +++++++++++++++++++++++++++++++++++++
->   2 files changed, 69 insertions(+), 6 deletions(-)
->   create mode 100644 arch/arm/boot/dts/omap4.dtsi
->
-> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-> index 58909e9..c28aa95 100644
-> --- a/arch/arm/boot/dts/omap4-panda.dts
-> +++ b/arch/arm/boot/dts/omap4-panda.dts
-> @@ -1,9 +1,4 @@
-> -/dts-v1/;
-> -
-> -/memreserve/ 0x9D000000 0x03000000; /* Frame buffer */
-> -/memreserve/ 0xB0000000 0x10000000; /* Top 256MB is unaccessable */
-> -
-> -/include/ "skeleton.dtsi"
-> +/include/ "omap4.dtsi"
->
->   / {
->   	model = "TI OMAP4 PandaBoard";
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> new file mode 100644
-> index 0000000..cb055f5
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -0,0 +1,68 @@
-> +/*
-> + * Device Tree Source for OMAP4 SoC
-> + *
-> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + */
+>  drivers/of/platform.c |   41 ++++++++++++++++++++++++++++++++++++++++-
+>  1 files changed, 40 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index e50ffcb..bd2c089 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -24,6 +24,10 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  
+> +#ifdef CONFIG_ARCH_OMAP2PLUS
+> +#include <plat/omap_device.h>
+> +#endif
 > +
-> +/dts-v1/;
-> +
-> +/memreserve/ 0x9D000000 0x03000000; /* Frame buffer */
-> +/memreserve/ 0xB0000000 0x10000000; /* Top 256MB is unaccessable */
-> +
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	#address-cells =<1>;
-> +	#size-cells =<1>;
-> +	model = "ti,omap4";
-> +
-> +	aliases {
-> +		i2c1 =&i2c1;
-> +		i2c2 =&i2c2;
-> +		i2c3 =&i2c3;
-> +		i2c4 =&i2c4;
-> +	};
-> +
-> +	l4-core {
-> +		compatible = "ti,omap4-l4-core", "sonics,s3220";
-> +		#address-cells =<1>;
-> +		#size-cells =<1>;
-> +		ranges =<0 0x48000000 0x1000000>;
-> +
-> +		i2c1: i2c@70000 {
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
+>  const struct of_device_id of_default_bus_match_table[] = {
+>  	{ .compatible = "simple-bus", },
+>  #ifdef CONFIG_ARM_AMBA
+> @@ -544,6 +548,36 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
+>  	return NULL;
+>  }
 
-Are these really needed, given there are no child nodes defined?
-Same with all other instances.
+#ifdef ARCH_OMAP
 
-> +			compatible = "ti,omap-i2c", "ti,omap-device";
-> +			reg =<0x70000 0x100>;
-> +			interrupts =<  88>;
-> +		};
-> +
-> +		i2c2: i2c@72000 {
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
-> +			compatible = "ti,omap-i2c", "ti,omap-device";
-> +			reg =<0x72000 0x100>;
-> +			interrupts =<  89>;
-> +		};
-> +
-> +		i2c3: i2c@60000 {
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
-> +			compatible = "ti,omap-i2c", "ti,omap-device";
-> +			reg =<0x60000 0x100>;
-> +			interrupts =<  93>;
-> +		};
-> +
-> +		i2c4: i2c@350000 {
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
-> +			compatible = "ti,omap-i2c", "ti,omap-device";
-> +			reg =<0x350000 0x100>;
-> +			interrupts =<  94>;
-> +		};
-> +	};
+> +static struct omap_device_pm_latency omap_device_latency[] = {
+> +	[0] = {
+> +		.deactivate_func	= omap_device_idle_hwmods,
+> +		.activate_func		= omap_device_enable_hwmods,
+> +		.flags			= OMAP_DEVICE_LATENCY_AUTO_ADJUST,
+> +	},
 > +};
+> +
+> +int of_omap_device_create(struct device_node *np, const char *name, int id,
+> +							void *platform_data,
+> +							int pd_size)
+> +{
+> +	struct omap_hwmod *oh;
+> +	struct platform_device *pdev;
+> +
+> +	oh = omap_hwmod_lookup(name);
+> +	if (!oh) {
+> +		pr_err("Could not look up %s\n", name);
+> +		return -EEXIST;
+> +	}
+> +
+> +	pdev = omap_device_build_dt(np, name, id, oh, platform_data,
+> +				sizeof(platform_data), omap_device_latency,
+> +				ARRAY_SIZE(omap_device_latency), 0);
+> +	WARN(IS_ERR(pdev), "Could not build omap_device for %s\n", name);
+> +
+> +	pr_info("DT: omap_device build for %s is successful\n", name);
+> +	return PTR_ERR(pdev);
+> +}
 
+#else /* ARCH_OMAP */
+static inline int of_omap_device_create(struct device_node *np,
+					const char *name, int id,
+					void *platform_data, int pd_size)
+{
+	return -ENODEV;
+}
+#endif /* ARCH_OMAP */
+
+> +
+>  /**
+>   * of_platform_bus_create() - Create a device for a node and its children.
+>   * @bus: device node of the bus to instantiate
+> @@ -565,7 +599,7 @@ static int of_platform_bus_create(struct device_node *bus,
+>  	struct platform_device *dev;
+>  	const char *bus_id = NULL;
+>  	void *platform_data = NULL;
+> -	int pd_size;
+> +	int pd_size = 0;
+>  	int id = -1;
+>  	int rc = 0;
+>  
+> @@ -597,6 +631,11 @@ static int of_platform_bus_create(struct device_node *bus,
+>  		return 0;
+>  	}
+>  
+> +	if (of_device_is_compatible(bus, "ti,omap-device")) {
+> +		of_omap_device_create(bus, bus_id, id, platform_data, pd_size);
+> +		return 0;
+> +	}
+> +
+>  	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
+>  
+>  	/* override the id if auxdata gives an id */
+> -- 
+> 1.7.4.1
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
