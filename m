@@ -1,200 +1,150 @@
-From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: Fwd: [RFC/PATCH v2 11/13] dt: omap4: add generic board file for
-	dt support
-Date: Tue, 23 Aug 2011 15:05:01 +0200
-Message-ID: <4E53A57D.7060905@ti.com>
-References: <1314074021-25186-12-git-send-email-manjugk@ti.com>
-	<4E537F80.1060001@ti.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: Fwd: [RFC/PATCH v2 09/13] dt: omap4: add soc file for handling
+	i2c controllers
+Date: Tue, 23 Aug 2011 15:48:15 +0200
+Message-ID: <4E53AF9F.8070607@ti.com>
+References: <1314074021-25186-10-git-send-email-manjugk@ti.com>
+	<4E537FA7.3050609@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E537F80.1060001-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4E537FA7.3050609@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: G, Manjunath Kondaiah<manjugk-l0cyMroinI0@public.gmane.org>
-> The generic board file is created and derived from omap4 panda board file.
+From: G, Manjunath Kondaiah<manjugk@ti.com>
+> To: devicetree-discuss@lists.ozlabs.org
+> CC: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 >
-> The changes here focus on minimal configuration to boot panda board with
-> dt enabled which provides basic platform for converting device drivers for
-> using dt.
 >
-> Signed-off-by: G, Manjunath Kondaiah<manjugk-l0cyMroinI0@public.gmane.org>
+> Add omap4 soc dts file for handling omap4 soc i2c
+> controllers existing on l4-core bus.
+
+The subject and changelog is not accurate. You are doing at least 3 things:
+Moving the OMAP4 SoC data from panda board file to a SoC specific 
+omap4.dtsi file.
+Including the omap4.dtsi into panda.
+Adding some i2c nodes.
+
+You should use at least two or three separated patches to avoid 
+in-accurate subject.
+
+Benoit
+
+
+>
+> Signed-off-by: G, Manjunath Kondaiah<manjugk@ti.com>
 > ---
->    arch/arm/boot/dts/omap4-panda.dts      |    2 +-
->    arch/arm/mach-omap2/Kconfig            |   11 +++++
->    arch/arm/mach-omap2/Makefile           |    1 +
->    arch/arm/mach-omap2/board-omap4-dt.c   |   66
-> ++++++++++++++++++++++++++++++++
->    arch/arm/mach-omap2/board-omap4panda.c |    6 ---
->    5 files changed, 79 insertions(+), 7 deletions(-)
->    create mode 100644 arch/arm/mach-omap2/board-omap4-dt.c
+>    arch/arm/boot/dts/omap4-panda.dts |    7 +---
+>    arch/arm/boot/dts/omap4.dtsi      |   68
+> +++++++++++++++++++++++++++++++++++++
+>    2 files changed, 69 insertions(+), 6 deletions(-)
+>    create mode 100644 arch/arm/boot/dts/omap4.dtsi
 >
 > diff --git a/arch/arm/boot/dts/omap4-panda.dts
 > b/arch/arm/boot/dts/omap4-panda.dts
-> index 6b831ca..9d1b17c 100644
+> index 58909e9..c28aa95 100644
 > --- a/arch/arm/boot/dts/omap4-panda.dts
 > +++ b/arch/arm/boot/dts/omap4-panda.dts
-> @@ -2,7 +2,7 @@
+> @@ -1,9 +1,4 @@
+> -/dts-v1/;
+> -
+> -/memreserve/ 0x9D000000 0x03000000; /* Frame buffer */
+> -/memreserve/ 0xB0000000 0x10000000; /* Top 256MB is unaccessable */
+> -
+> -/include/ "skeleton.dtsi"
+> +/include/ "omap4.dtsi"
 >
 >    / {
 >    	model = "TI OMAP4 PandaBoard";
-> -	compatible = "ti,omap4-panda", "ti,omap4430";
-> +	compatible = "ti,omap4-panda", "ti,omap4";
-
-That change does not belong here, or at least should be listed in the 
-changelog. Potentially you should keep the ti,omap4430 and just add the 
-ti,omap4 to have the most generic compatible value.
-
->
->    	i2c1 {
->    		clock-frequency =<400000>;
-> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-> index 4fbb54d..853b14c 100644
-> --- a/arch/arm/mach-omap2/Kconfig
-> +++ b/arch/arm/mach-omap2/Kconfig
-> @@ -337,6 +337,17 @@ config MACH_OMAP4_PANDA
->    	select OMAP_PACKAGE_CBS
->    	select REGULATOR_FIXED_VOLTAGE
->
-> +config MACH_OMAP4_DT
-> +	bool "Generic OMAP4 board(FDT support)"
-> +	depends on ARCH_OMAP4
-> +	select OMAP_PACKAGE_CBB
-
-Wrong package... it looks like some OMAP3 copy/paste.
-
-> +	select USE_OF
-> +
-> +	help
-> +	  Support for generic TI OMAP4 boards using Flattened Device Tree.
-> +	  Say Y here to enable OMAP3 device tree support
-
-Some more copy/paste evidence:-)
-
-> +	  More information at Documentation/devicetree
-> +
->    config OMAP3_EMU
->    	bool "OMAP3 debugging peripherals"
->    	depends on ARCH_OMAP3
-> diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-> index e702e47..8b8c29c 100644
-> --- a/arch/arm/mach-omap2/Makefile
-> +++ b/arch/arm/mach-omap2/Makefile
-> @@ -198,6 +198,7 @@ obj-$(CONFIG_MACH_OMAP3EVM)		+= board-omap3evm.o
->    obj-$(CONFIG_MACH_OMAP3_PANDORA)	+= board-omap3pandora.o
->    obj-$(CONFIG_MACH_OMAP_3430SDP)		+= board-3430sdp.o
->    obj-$(CONFIG_MACH_OMAP3_DT)		+= board-omap3-dt.o
-> +obj-$(CONFIG_MACH_OMAP4_DT)		+= board-omap4-dt.o
-
-Boards are grouped by SoC version.
-
->    obj-$(CONFIG_MACH_NOKIA_N8X0)		+= board-n8x0.o
->    obj-$(CONFIG_MACH_NOKIA_RM680)		+= board-rm680.o \
->    					   sdram-nokia.o
-> diff --git a/arch/arm/mach-omap2/board-omap4-dt.c
-> b/arch/arm/mach-omap2/board-omap4-dt.c
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
 > new file mode 100644
-> index 0000000..a4d296c
+> index 0000000..cb055f5
 > --- /dev/null
-> +++ b/arch/arm/mach-omap2/board-omap4-dt.c
-> @@ -0,0 +1,66 @@
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -0,0 +1,68 @@
 > +/*
-> + * TI OMAP3 device tree board support
-
-One more C&P.
-
+> + * Device Tree Source for OMAP4 SoC
 > + *
 > + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
 > + */
 > +
-> +#include<linux/kernel.h>
-> +#include<linux/init.h>
-> +#include<linux/i2c/twl.h>
+> +/dts-v1/;
 > +
-> +#include<mach/omap4-common.h>
+> +/memreserve/ 0x9D000000 0x03000000; /* Frame buffer */
+> +/memreserve/ 0xB0000000 0x10000000; /* Top 256MB is unaccessable */
 
-nitpicking, but it should go after <plat/common.h>.
+That information was already there previously but where does it come from?
+48 MB is clearly not for the FB, and the top 256 MB should be accessible 
+with highmem.
 
-> +#include<asm/mach/arch.h>
-> +#include<asm/mach/map.h>
-> +
-> +#include<plat/common.h>
-> +
-> +#include "common-board-devices.h"
-> +
-> +static void __init omap4_init_early(void)
-> +{
-> +	omap2_init_common_infrastructure();
-> +	omap2_init_common_devices(NULL, NULL);
-> +}
-> +
-> +static struct twl4030_platform_data omap4_twldata = {
-> +	.irq_base	= TWL6030_IRQ_BASE,
-> +	.irq_end	= TWL6030_IRQ_END,
-> +};
-> +
-> +static int __init omap4_i2c_init(void)
-> +{
-> +	omap4_pmic_init("twl6030",&omap4_twldata);
-> +	return 0;
-> +}
-> +
-> +static void __init omap4_init(void)
-> +{
-> +	omap4_i2c_init();
-> +	omap_serial_init();
-> +}
-> +
-> +static void __init omap4_map_io(void)
-> +{
-> +	omap2_set_globals_443x();
-> +	omap44xx_map_common_io();
-> +}
-> +
-> +static const char *omap4_match[] __initdata = {
-> +	"ti,omap4",
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(OMAP4_DT, "TI OMAP4 (Flattened Device Tree)")
-> +	.boot_params	= 0x80000100,
-
-Not needed anymore with DT.
-
-> +	.reserve	= omap_reserve,
-> +	.map_io		= omap4_map_io,
-> +	.init_early	= omap4_init_early,
-> +	.init_irq	= gic_init_irq,
-> +	.init_machine	= omap4_init,
-> +	.timer		=&omap4_timer,
-> +	.dt_compat	= omap4_match,
-> +MACHINE_END
-> diff --git a/arch/arm/mach-omap2/board-omap4panda.c
-> b/arch/arm/mach-omap2/board-omap4panda.c
-> index 1c583c7..9aaa960 100644
-> --- a/arch/arm/mach-omap2/board-omap4panda.c
-> +++ b/arch/arm/mach-omap2/board-omap4panda.c
-
-That change does not really belong here or the changelog is not correct.
-You can potentially do it in an other patch before. It will not really 
-introduce any regression if you do it before adding any information into 
-panda DT.
-
-Regards,
 Benoit
+
+> +
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	#address-cells =<1>;
+> +	#size-cells =<1>;
+> +	model = "ti,omap4";
+> +
+> +	aliases {
+> +		i2c1 =&i2c1;
+> +		i2c2 =&i2c2;
+> +		i2c3 =&i2c3;
+> +		i2c4 =&i2c4;
+> +	};
+> +
+> +	l4-core {
+> +		compatible = "ti,omap4-l4-core", "sonics,s3220";
+> +		#address-cells =<1>;
+> +		#size-cells =<1>;
+> +		ranges =<0 0x48000000 0x1000000>;
+> +
+> +		i2c1: i2c@70000 {
+> +			#address-cells =<1>;
+> +			#size-cells =<0>;
+> +			compatible = "ti,omap-i2c", "ti,omap-device";
+> +			reg =<0x70000 0x100>;
+> +			interrupts =<  88>;
+> +		};
+> +
+> +		i2c2: i2c@72000 {
+> +			#address-cells =<1>;
+> +			#size-cells =<0>;
+> +			compatible = "ti,omap-i2c", "ti,omap-device";
+> +			reg =<0x72000 0x100>;
+> +			interrupts =<  89>;
+> +		};
+> +
+> +		i2c3: i2c@60000 {
+> +			#address-cells =<1>;
+> +			#size-cells =<0>;
+> +			compatible = "ti,omap-i2c", "ti,omap-device";
+> +			reg =<0x60000 0x100>;
+> +			interrupts =<  93>;
+> +		};
+> +
+> +		i2c4: i2c@350000 {
+> +			#address-cells =<1>;
+> +			#size-cells =<0>;
+> +			compatible = "ti,omap-i2c", "ti,omap-device";
+> +			reg =<0x350000 0x100>;
+> +			interrupts =<  94>;
+> +		};
+> +	};
+> +};
