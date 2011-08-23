@@ -1,56 +1,50 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: Fwd: [RFC/PATCH v2 09/13] dt: omap4: add soc file for handling
-	i2c controllers
-Date: Tue, 23 Aug 2011 21:45:09 +0200
-Message-ID: <4E540345.1090004@ti.com>
-References: <1314074021-25186-10-git-send-email-manjugk@ti.com>
-	<4E537FA7.3050609@ti.com> <4E53AF9F.8070607@ti.com>
-	<20110823151841.GB32698@manju-desktop>
+From: Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
+Date: Tue, 23 Aug 2011 22:00:33 +0200
+Message-ID: <CAKnu2MoEvc7KGH-Fu1FzRE1xFFvsSRVdG5Amg6FL-6PrWRw5yA@mail.gmail.com>
+References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
+	<201108161509.17157.arnd@arndb.de>
+	<CACRpkdaVx=6AJ5DFjVN1ZYQ++hu9pT6WxD9n+pqmYVaCf1xawg@mail.gmail.com>
+	<201108161637.16620.arnd@arndb.de>
+	<74CDBE0F657A3D45AFBB94109FB122FF04AEA25368@HQMAIL01.nvidia.com>
+	<CACRpkdY=nVQYnznTU7=_D0n1V1U_xOKH2y75-jKp7k7NzwH8Zw@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF04B24A38E6@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110823151841.GB32698@manju-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04B24A38E6-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/23/2011 5:18 PM, G, Manjunath Kondaiah wrote:
-> On Tue, Aug 23, 2011 at 03:48:15PM +0200, Cousson, Benoit wrote:
->> From: G, Manjunath Kondaiah<manjugk@ti.com>
->>> To: devicetree-discuss@lists.ozlabs.org
->>> CC: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
->>>
->>>
->>> Add omap4 soc dts file for handling omap4 soc i2c
->>> controllers existing on l4-core bus.
->>
->> The subject and changelog is not accurate. You are doing at least 3 things:
->> Moving the OMAP4 SoC data from panda board file to a SoC specific
->> omap4.dtsi file.
->> Including the omap4.dtsi into panda.
->> Adding some i2c nodes.
->>
->> You should use at least two or three separated patches to avoid
->> in-accurate subject.
+2011/8/23 Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
+> Linus Walleij wrote at Tuesday, August 23, 2011 6:51 AM:
+>> Each GPIO chip may have it's respective pin controller as parent
+                               ^^^^^
+>> I guess, or they may simply be the same struct device * whatdoIknow.
 >
-> As these changes are straight forward, I can update patch description with
-> the required information instead of create too many patches.
+> I'm not clear on why the GPIO and pinmux would have any kind of parent
+> relationship. Perhaps that's how your HW is designed. In Tegra, GPIO
+> and pinmux are completely separate HW blocks without much of a defined
+> relationship.
 >
-> If you are too specific on splitting the patches, I am ok with that too.
+> I can certainly see both being implemented by the same code if it makes
+> sense to do so. On Tegra, I think I'd still lean towards keeping them
+> as separate devices, since they have separate register spaces and are
+> documented separately etc. However, I can certainly see that other HW
+> might have both sets of functionality in one HW block.
 
-I already fixed partially the OMAP4 patches as part of my upcoming OMAP4 
-early devices DT migration. So I'll rebase your series on top of it.
+Makes sense, for U300 I will probably also keep them separate
+like this:
 
-I'll send you that tomorrow.
+pinctrl.0 - deal with muxing
+pinctrl.1 - deal with biasing, driving etc
+gpio.0 - the GPIO driver using both of the above, no relationship
 
-Benoit
+The only thing they have in common is some relation to the
+global GPIO pin space. (When/if we get rid of that - something
+better.)
+
+Yours,
+Linus Walleij
