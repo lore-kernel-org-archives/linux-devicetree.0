@@ -1,129 +1,84 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [RFC/PATCH v2 07/13] dt: omap: create platform bus for omap
- devices
-Date: Tue, 23 Aug 2011 10:07:05 +0100
-Message-ID: <20110823090705.GI2796@pulham.picochip.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [RFC/PATCH v2 00/13] dt: omap: dt binding with omap_device and
+	support for i2c1
+Date: Tue, 23 Aug 2011 14:38:21 +0200
+Message-ID: <4E539F3D.4010602@ti.com>
 References: <1314074021-25186-1-git-send-email-manjugk@ti.com>
- <1314074021-25186-8-git-send-email-manjugk@ti.com>
+	<4E537ECB.1060704@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1314074021-25186-8-git-send-email-manjugk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4E537ECB.1060704@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Manju,
 
-This creates a build failure for non-omap platforms as they don't know 
-about struct omap_device_pm_latency, struct omap_hwmod etc.
+Few "minor" comments about your subjects in this series.
 
-An empty of_omap_device_create() as inline should do the trick.
-
-Jamie
-
-On Tue, Aug 23, 2011 at 10:03:35AM +0500, G, Manjunath Kondaiah wrote:
-> 
-> The omap devices will use HWMOD for fetching device information
-> hence it needs to be handled seperately during platform bus
-> creation during dt build.
-> 
-> Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
-> ---
->  drivers/of/platform.c |   41 ++++++++++++++++++++++++++++++++++++++++-
->  1 files changed, 40 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index e50ffcb..bd2c089 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -24,6 +24,10 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  
-> +#ifdef CONFIG_ARCH_OMAP2PLUS
-> +#include <plat/omap_device.h>
-> +#endif
+> Patch series reworked from:
+> http://permalink.gmane.org/gmane.linux.ports.arm.omap/61674
+> Also added support for i2c1 controller on omap4 based panda
+> board.
+>
+> Baseline:
+> =========
+> git://git.secretlab.ca/git/linux-2.6.git
+> Branch: devicetree/test
+> The above branch is rebased with v3.1-rc2 mainline.
 > +
->  const struct of_device_id of_default_bus_match_table[] = {
->  	{ .compatible = "simple-bus", },
->  #ifdef CONFIG_ARM_AMBA
-> @@ -544,6 +548,36 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
->  	return NULL;
->  }
+> pdev decoupling patches from kevin hilman
+> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg53534.html
+>
+> The patch series is also available at:
+> https://gitorious.org/devicetree/dt_omap/commits/devicetree/dt_rfcv2
 
-#ifdef ARCH_OMAP
+Please provide the git URL + branch and not the link to the web page.
+It will allow to copy paste directly the line and do a git fetch <repo> 
+<branch>.
 
-> +static struct omap_device_pm_latency omap_device_latency[] = {
-> +	[0] = {
-> +		.deactivate_func	= omap_device_idle_hwmods,
-> +		.activate_func		= omap_device_enable_hwmods,
-> +		.flags			= OMAP_DEVICE_LATENCY_AUTO_ADJUST,
-> +	},
-> +};
-> +
-> +int of_omap_device_create(struct device_node *np, const char *name, int id,
-> +							void *platform_data,
-> +							int pd_size)
-> +{
-> +	struct omap_hwmod *oh;
-> +	struct platform_device *pdev;
-> +
-> +	oh = omap_hwmod_lookup(name);
-> +	if (!oh) {
-> +		pr_err("Could not look up %s\n", name);
-> +		return -EEXIST;
-> +	}
-> +
-> +	pdev = omap_device_build_dt(np, name, id, oh, platform_data,
-> +				sizeof(platform_data), omap_device_latency,
-> +				ARRAY_SIZE(omap_device_latency), 0);
-> +	WARN(IS_ERR(pdev), "Could not build omap_device for %s\n", name);
-> +
-> +	pr_info("DT: omap_device build for %s is successful\n", name);
-> +	return PTR_ERR(pdev);
-> +}
+> Testing:
+> ========
+> Build : dt and not dt build for omap2plus_defconfig
+> Boot: OMAP3530 Beagle Board and OMAP4430 Panda board
+>
+> Limitation:
+> ===========
+> The current implementation of omap-device build through
+> device tree supports only single instance of hwmod and
+> multiple instances are not supported.
+>
+> G, Manjunath Kondaiah (13):
+>     OMAP: omap_device: Add device tree node pointer
+>     dt: Add pd_size to AUXDATA structure
+>     dt: omap3: add soc file for handling i2c controllers
+>     dt: omap3: beagle board: set clock freq for i2c devices
+>     dt: omap3: add generic board file for dt support
+>     dt: omap3: add omap-device compatible property
+>     dt: omap: create platform bus for omap devices
+>     dt: omap: i2c: add dt support for i2c1 controller
+>     dt: omap4: add soc file for handling i2c controllers
+>     dt: omap4: panda board: set clock freq for i2c devices
+>     dt: omap4: add generic board file for dt support
+>     dt: omap4: enable dt support for i2c1 controller
+>     dt: omap: i2c: dt usage model documentation
 
-#else /* ARCH_OMAP */
-static inline int of_omap_device_create(struct device_node *np,
-					const char *name, int id,
-					void *platform_data, int pd_size)
-{
-	return -ENODEV;
-}
-#endif /* ARCH_OMAP */
+You should adapt the prefix depending of the subsystem your patch is 
+changing. Most patches are changing files inside mach-omap2 and thus in 
+that case should not be prefix with dt: but rather OMAP2+:
+The dts files modification should then be prefixed with arm/dt or arm/dts.
 
-> +
->  /**
->   * of_platform_bus_create() - Create a device for a node and its children.
->   * @bus: device node of the bus to instantiate
-> @@ -565,7 +599,7 @@ static int of_platform_bus_create(struct device_node *bus,
->  	struct platform_device *dev;
->  	const char *bus_id = NULL;
->  	void *platform_data = NULL;
-> -	int pd_size;
-> +	int pd_size = 0;
->  	int id = -1;
->  	int rc = 0;
->  
-> @@ -597,6 +631,11 @@ static int of_platform_bus_create(struct device_node *bus,
->  		return 0;
->  	}
->  
-> +	if (of_device_is_compatible(bus, "ti,omap-device")) {
-> +		of_omap_device_create(bus, bus_id, id, platform_data, pd_size);
-> +		return 0;
-> +	}
-> +
->  	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
->  
->  	/* override the id if auxdata gives an id */
-> -- 
-> 1.7.4.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+Regards,
+Benoit
