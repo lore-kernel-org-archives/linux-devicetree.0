@@ -1,74 +1,83 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
-Date: Mon, 22 Aug 2011 15:56:55 -0700
-Message-ID: <CAOesGMhGb1-sOaBU4oaa_8-1triS01tOmseJqYyCm849feLhXg@mail.gmail.com>
-References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF04B24A3687@HQMAIL01.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04B24A3687-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+From: "G, Manjunath Kondaiah" <manjugk@ti.com>
+Subject: [RFC/PATCH v2 00/13] dt: omap: dt binding with omap_device and support for i2c1
+Date: Tue, 23 Aug 2011 10:03:28 +0500
+Message-ID: <1314074021-25186-1-git-send-email-manjugk@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 22, 2011 at 12:56 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
-rote:
-> Stephen Warren wrote at Monday, August 15, 2011 2:28 PM:
->> ...
->> This patch modifies Tegra's device tree support to remove the depend=
-ency
->> on harmony_pinmux_init(), thus making it completely board-independen=
-t.
->
-> I had the good fortune of meeting Grant at LinuxCon last week and tal=
-ked
-> through this patchset a little (thanks!)
->
-> The message I got from Grant was that the patches are basically OK. H=
-e
-> did have a couple of concerns:
->
-> * Does this cause the compiled DTB to blow up in size.
->
-> The DTB goes from ~3-4K to ~8-9K with these patches added. While that
-> is a large % increase, Grant said that as an absolute value, that siz=
-e
-> shouldn't be an issue.
 
-Agreed, especially if compared with the size of the current in-kernel t=
-able.
+Patch series reworked from:
+http://permalink.gmane.org/gmane.linux.ports.arm.omap/61674
+Also added support for i2c1 controller on omap4 based panda
+board.
 
-> * There's lots of repetition in the .dts representation; can this be =
-improved?
->
-[...]
-> meaningless-name { // typically would just use the pin name
-> =A0 =A0pins =3D "ld0", "ld1", "ld2", ...;
-> =A0 =A0nvidia,function =3D "displaya";
-> =A0 =A0nvidia,pull-down;
-> };
+Baseline:
+=========
+git://git.secretlab.ca/git/linux-2.6.git
+Branch: devicetree/test
+The above branch is rebased with v3.1-rc2 mainline.
++
+pdev decoupling patches from kevin hilman
+http://www.mail-archive.com/linux-omap@vger.kernel.org/msg53534.html
 
-That sounds quite close to what I was thinking about earlier (with
-s/meaningless-name/displaya/ in the above example).
+The patch series is also available at:
+https://gitorious.org/devicetree/dt_omap/commits/devicetree/dt_rfcv2
 
-> * We also briefly discussed that dtc could be modified to support sym=
-bolic
-> constants, so we could use named integers for the function names (per=
-haps
-> pin names too). I'll look into how easy it is to modify dtc for this.
+Testing:
+========
+Build : dt and not dt build for omap2plus_defconfig
+Boot: OMAP3530 Beagle Board and OMAP4430 Panda board
 
-That'd be useful, I think -- there's still the whole issue of the same
-pin function being at different mux locations on different pin groups,
-so an integer representation might not work.
+Limitation:
+===========
+The current implementation of omap-device build through
+device tree supports only single instance of hwmod and 
+multiple instances are not supported.
 
-> I'll look into implementing these enhancements, and others discussed =
-in
-> this email thread, and repost.
+G, Manjunath Kondaiah (13):
+  OMAP: omap_device: Add device tree node pointer
+  dt: Add pd_size to AUXDATA structure
+  dt: omap3: add soc file for handling i2c controllers
+  dt: omap3: beagle board: set clock freq for i2c devices
+  dt: omap3: add generic board file for dt support
+  dt: omap3: add omap-device compatible property
+  dt: omap: create platform bus for omap devices
+  dt: omap: i2c: add dt support for i2c1 controller
+  dt: omap4: add soc file for handling i2c controllers
+  dt: omap4: panda board: set clock freq for i2c devices
+  dt: omap4: add generic board file for dt support
+  dt: omap4: enable dt support for i2c1 controller
+  dt: omap: i2c: dt usage model documentation
 
-Cool.
+ Documentation/devicetree/bindings/i2c/omap-i2c.txt |   57 +++++++++++++
+ arch/arm/boot/dts/omap3-beagle-nunchuck.dts        |   13 +---
+ arch/arm/boot/dts/omap3-beagle.dts                 |   18 ++++-
+ arch/arm/boot/dts/omap3.dtsi                       |   62 ++++++++++++++
+ arch/arm/boot/dts/omap4-panda.dts                  |   25 ++++--
+ arch/arm/boot/dts/omap4.dtsi                       |   68 ++++++++++++++++
+ arch/arm/mach-omap2/Kconfig                        |   22 +++++
+ arch/arm/mach-omap2/Makefile                       |    2 +
+ arch/arm/mach-omap2/board-omap3-dt.c               |   84 ++++++++++++++++++++
+ arch/arm/mach-omap2/board-omap3beagle.c            |   13 ---
+ arch/arm/mach-omap2/board-omap4-dt.c               |   75 +++++++++++++++++
+ arch/arm/mach-omap2/board-omap4panda.c             |    6 --
+ arch/arm/mach-omap2/devices.c                      |    2 +-
+ arch/arm/mach-omap2/mcbsp.c                        |    2 +-
+ arch/arm/plat-omap/include/plat/omap_device.h      |   11 +++-
+ arch/arm/plat-omap/omap_device.c                   |   46 ++++++++++-
+ drivers/i2c/busses/i2c-omap.c                      |   23 +++++-
+ drivers/of/platform.c                              |   41 ++++++++++
+ include/linux/of_platform.h                        |    5 +
+ 19 files changed, 526 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/omap-i2c.txt
+ create mode 100644 arch/arm/boot/dts/omap3.dtsi
+ create mode 100644 arch/arm/boot/dts/omap4.dtsi
+ create mode 100644 arch/arm/mach-omap2/board-omap3-dt.c
+ create mode 100644 arch/arm/mach-omap2/board-omap4-dt.c
 
+-- 
+1.7.4.1
 
--Olof
