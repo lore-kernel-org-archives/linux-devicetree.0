@@ -1,84 +1,41 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [RFC/PATCH v2 00/13] dt: omap: dt binding with omap_device and
-	support for i2c1
-Date: Tue, 23 Aug 2011 14:38:21 +0200
-Message-ID: <4E539F3D.4010602@ti.com>
-References: <1314074021-25186-1-git-send-email-manjugk@ti.com>
-	<4E537ECB.1060704@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2 00/13] arm/tegra: Initialize GPIO & pinmux from DT
+Date: Tue, 23 Aug 2011 14:51:17 +0200
+Message-ID: <CACRpkdY=nVQYnznTU7=_D0n1V1U_xOKH2y75-jKp7k7NzwH8Zw@mail.gmail.com>
+References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
+	<201108161509.17157.arnd@arndb.de>
+	<CACRpkdaVx=6AJ5DFjVN1ZYQ++hu9pT6WxD9n+pqmYVaCf1xawg@mail.gmail.com>
+	<201108161637.16620.arnd@arndb.de>
+	<74CDBE0F657A3D45AFBB94109FB122FF04AEA25368@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4E537ECB.1060704@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "G, Manjunath Kondaiah" <manjugk@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04AEA25368-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manju,
+On Tue, Aug 16, 2011 at 7:12 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-Few "minor" comments about your subjects in this series.
+> One issue here: There isn't always a single gpio/pinmux parent; as a
+> concrete example, the ALSA/ASoC driver for Tegra+WM8903 uses GPIOs both
+> from Tegra itself, and from the WM8903 audio codec.
 
-> Patch series reworked from:
-> http://permalink.gmane.org/gmane.linux.ports.arm.omap/61674
-> Also added support for i2c1 controller on omap4 based panda
-> board.
->
-> Baseline:
-> =========
-> git://git.secretlab.ca/git/linux-2.6.git
-> Branch: devicetree/test
-> The above branch is rebased with v3.1-rc2 mainline.
-> +
-> pdev decoupling patches from kevin hilman
-> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg53534.html
->
-> The patch series is also available at:
-> https://gitorious.org/devicetree/dt_omap/commits/devicetree/dt_rfcv2
+The Ux500 have pinmuxing on the DB8500 and AB8500 - the latter
+is a PMIC (&misc) connected to the DB8500 via I2C.
 
-Please provide the git URL + branch and not the link to the web page.
-It will allow to copy paste directly the line and do a git fetch <repo> 
-<branch>.
+In the pincontrol subsystem I'm brewing, each of these will have
+their own pin controller instance and their own struct gpio_chip as
+well, so:
 
-> Testing:
-> ========
-> Build : dt and not dt build for omap2plus_defconfig
-> Boot: OMAP3530 Beagle Board and OMAP4430 Panda board
->
-> Limitation:
-> ===========
-> The current implementation of omap-device build through
-> device tree supports only single instance of hwmod and
-> multiple instances are not supported.
->
-> G, Manjunath Kondaiah (13):
->     OMAP: omap_device: Add device tree node pointer
->     dt: Add pd_size to AUXDATA structure
->     dt: omap3: add soc file for handling i2c controllers
->     dt: omap3: beagle board: set clock freq for i2c devices
->     dt: omap3: add generic board file for dt support
->     dt: omap3: add omap-device compatible property
->     dt: omap: create platform bus for omap devices
->     dt: omap: i2c: add dt support for i2c1 controller
->     dt: omap4: add soc file for handling i2c controllers
->     dt: omap4: panda board: set clock freq for i2c devices
->     dt: omap4: add generic board file for dt support
->     dt: omap4: enable dt support for i2c1 controller
->     dt: omap: i2c: dt usage model documentation
+DB8500: pinctrl.0, gpio.0
+AB8500: pinctrl.1, gpio.1
 
-You should adapt the prefix depending of the subsystem your patch is 
-changing. Most patches are changing files inside mach-omap2 and thus in 
-that case should not be prefix with dt: but rather OMAP2+:
-The dts files modification should then be prefixed with arm/dt or arm/dts.
+Each GPIO chip may have it's respective pin controller as parent
+I guess, or they may simply be the same struct device * whatdoIknow.
 
+I know this is vaporware, but does this reasoning hold also to
+the Tegra+WM8903 combo?
 
-Regards,
-Benoit
+Linus Walleij
