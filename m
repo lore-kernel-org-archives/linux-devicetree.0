@@ -1,228 +1,101 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCHv2 3/3] picoxcell: add the DTS for the PC7302 board
-Date: Wed, 24 Aug 2011 15:41:46 +0100
-Message-ID: <1314196906-20709-4-git-send-email-jamie@jamieiles.com>
-References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
+From: Kevin Hilman <khilman@ti.com>
+Subject: Re: How to handle named resources with DT?
+Date: Wed, 24 Aug 2011 12:15:03 -0700
+Message-ID: <87r54a1v0o.fsf@ti.com>
+References: <20110809205723.GE11568@ponder.secretlab.ca>
+	<20110812030218.GP30552@yookeroo.fritz.box>
+	<20110812084106.GC19467@legolas.emea.dhcp.ti.com>
+	<201108121635.42953.arnd@arndb.de> <4E45422D.4050708@ti.com>
+	<CACxGe6s-2EAuvSqzn6yzDvCyVXa8vVVqG2X=1XFrUBnB=jsdxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1314196906-20709-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6s-2EAuvSqzn6yzDvCyVXa8vVVqG2X=1XFrUBnB=jsdxQ@mail.gmail.com>
+	(Grant Likely's message of "Fri, 12 Aug 2011 11:21:43 -0600")
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Balbi, Felipe" <balbi@ti.com>, David Gibson <david@gibson.dropbear.id.au>, Paul Walmsley <paul@pwsan.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The PC7302 board can be populated with either a PC3X2 or PC3X3 device.
-Add DTS files for both variants of the PC7302.
+Grant Likely <grant.likely@secretlab.ca> writes:
 
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
----
- arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts |   87 ++++++++++++++++++++++++
- arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts |   93 ++++++++++++++++++++++++++
- 2 files changed, 180 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts
- create mode 100644 arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts
+> On Fri, Aug 12, 2011 at 9:09 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
+>> On 8/12/2011 4:35 PM, Arnd Bergmann wrote:
+ 
+[...]
 
-diff --git a/arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts b/arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts
-new file mode 100644
-index 0000000..4c9a7ba
---- /dev/null
-+++ b/arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts
-@@ -0,0 +1,87 @@
-+/*
-+ *  Copyright (C) 2011 Picochip, Jamie Iles
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+/include/ "picoxcell-pc3x2.dtsi"
-+/ {
-+	model = "Picochip PC7302 (PC3X2)";
-+	compatible = "picochip,pc7302-pc3x2", "picochip,pc3x2";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x08000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk loglevel=9 root=ubi0:rootfs rw rootfstype=ubifs ubi.mtd=5,2048";
-+		linux,stdout-path = &uart0;
-+	};
-+
-+	clocks {
-+		ref_clk: clock@1 {
-+			compatible = "fixed-clock";
-+			clock-outputs = "ref";
-+			clock-frequency = <20000000>;
-+		};
-+	};
-+
-+	rwid-axi {
-+		ebi@50000000 {
-+			nand: gpio-nand@2,0 {
-+				compatible = "gpio-control-nand";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <2 0x0000 0x1000>;
-+				bus-clock = <&pclk>, "bus";
-+				gpio-control-nand,io-sync-reg =
-+					<0x00000000 0x80220000>;
-+
-+				gpios = <&banka 1 0	/* rdy */
-+					 &banka 2 0 	/* nce */
-+					 &banka 3 0 	/* ale */
-+					 &banka 4 0 	/* cle */
-+					 0		/* nwp */>;
-+
-+				boot@100000 {
-+					label = "Boot";
-+					reg = <0x100000 0x80000>;
-+				};
-+
-+				redundant-boot@200000 {
-+					label = "Redundant Boot";
-+					reg = <0x200000 0x80000>;
-+				};
-+
-+				boot-env@300000 {
-+					label = "Boot Evironment";
-+					reg = <0x300000 0x20000>;
-+				};
-+
-+				redundant-boot-env@320000 {
-+					label = "Redundant Boot Environment";
-+					reg = <0x300000 0x20000>;
-+				};
-+
-+				kernel@380000 {
-+					label = "Kernel";
-+					reg = <0x380000 0x800000>;
-+				};
-+
-+				fs@b80000 {
-+					label = "File System";
-+					reg = <0xb80000 0xf480000>;
-+				};
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts b/arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts
-new file mode 100644
-index 0000000..381eb6a
---- /dev/null
-+++ b/arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts
-@@ -0,0 +1,93 @@
-+/*
-+ *  Copyright (C) 2011 Picochip, Jamie Iles
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+/include/ "picoxcell-pc3x3.dtsi"
-+/ {
-+	model = "Picochip PC7302 (PC3X3)";
-+	compatible = "picochip,pc7302-pc3x3", "picochip,pc3x3";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x08000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk loglevel=9 root=ubi0:rootfs rw rootfstype=ubifs ubi.mtd=5,2048";
-+		linux,stdout-path = &uart0;
-+	};
-+
-+	clocks {
-+		ref_clk: clock@10 {
-+			compatible = "fixed-clock";
-+			clock-outputs = "ref";
-+			clock-frequency = <20000000>;
-+		};
-+
-+		clkgate: clkgate@800a0048 {
-+			clock@4 {
-+				picochip,clk-no-disable;
-+			};
-+		};
-+	};
-+
-+	rwid-axi {
-+		ebi@50000000 {
-+			nand: gpio-nand@2,0 {
-+				compatible = "gpio-control-nand";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <2 0x0000 0x1000>;
-+				bus-clock = <&ebi_clk>, "bus";
-+				gpio-control-nand,io-sync-reg =
-+					<0x00000000 0x80220000>;
-+
-+				gpios = <&banka 1 0	/* rdy */
-+					 &banka 2 0 	/* nce */
-+					 &banka 3 0 	/* ale */
-+					 &banka 4 0 	/* cle */
-+					 0		/* nwp */>;
-+
-+				boot@100000 {
-+					label = "Boot";
-+					reg = <0x100000 0x80000>;
-+				};
-+
-+				redundant-boot@200000 {
-+					label = "Redundant Boot";
-+					reg = <0x200000 0x80000>;
-+				};
-+
-+				boot-env@300000 {
-+					label = "Boot Evironment";
-+					reg = <0x300000 0x20000>;
-+				};
-+
-+				redundant-boot-env@320000 {
-+					label = "Redundant Boot Environment";
-+					reg = <0x300000 0x20000>;
-+				};
-+
-+				kernel@380000 {
-+					label = "Kernel";
-+					reg = <0x380000 0x800000>;
-+				};
-+
-+				fs@b80000 {
-+					label = "File System";
-+					reg = <0xb80000 0xf480000>;
-+				};
-+			};
-+		};
-+	};
-+};
--- 
-1.7.4.1
+>>
+>>> I think it's much easier to change the existing users of _byname over
+>>> to fixed indexes than to come up with a new scheme that is better.
+
+I disagree.  It's not only about ordering.  More on that below.
+
+>> As you said previously, since we have to support both legacy probing and DT
+>> for some time, it will be easier for these drivers to rely on the same API.
+>>
+>> Considering that adding that new property is not a huge effort anyway and
+>> _byname API is a standard API that any driver should be able to use if
+>> needed, it still worth adding the DT support for named resources for my
+>> point of view.
+>
+> The assumption being made here is that the current Linux
+> implementation detail dictates the binding design, but it does not.
+>
+> Binding authors should certainly look at the Linux implementation for
+> inspiration, but established DT patterns still prevail if they are
+> suitable for describing the hardware. In this case the pattern is that
+> tuples in the reg property are strongly ordered and specified by the
+> driver binding.
+>
+> So, I remain unconvinced that the 'reg' property binding is
+> insufficient.  
+
+If significant, in-tree usages of the feature for platform_devices is
+not enough, What are you looking for as convincing arguments? 
+
+> I have no plans to merge support for fetching _byname values from the
+> device tree.
+
+I find this an unfortunate position to hold to in this climate of
+consolidation.
+
+One of the goals of consolidation is to have core features handled by
+core code.  To me this is a classic trade-off.  Either we implement it
+in core code, or we force all the users (drivers, in this case) to
+implement it themselves.  IMO, consolidation should be pointing us to
+solving these kinds of problems in core code, rather than spreading it
+across a bunch of drivers (and device code where the data lives.)
+Especially so in this case since there are existing, in-tree users
+demonstrating the usefulness of _byname.
+
+Not implementing this in core code means all drivers using _byname have
+to be converted, adding multiple lines of (IMHO ugly) code when it could
+be implemented cleanly by core code, keeping drivers much more readable.
+To me, the fact that there would also be an API difference compared to
+the existing platform_device probing (which will stay for the forseeable
+future) would be a major eye-sore in the drivers.
+
+In addition, converting all the drivers away from _byname is not just a
+matter of changing the drivers.  It also means of course you have to
+make sure that all of the data is in order.  On OMAP, that means
+reworking and/or regenerating all of the hwmod data to ensure it is in
+the right order.  Sounds like the kind of churn that would get us
+flamed.
+
+But that's not all...
+
+It's not just about data ordering.  As already pointed out, use of
+_byname is also used to differentiate between different
+versions/capabilities of the IP.  The driver can determine based on the
+availability of a named resource the capabilities of the device.
+Forcing resource ordering means some other mechanism also has to be
+added for detection of the IP version and/or capabilities.
+
+In summary, with the push towards consolidation, we're also trying to
+have common drivers that support multiple versions of an IP across
+differnet SoCs with varying capabilities.  Having named resources on the
+platform_device is an established way of handling this cleanly in the
+driver without the driver having to check SoC-specific or IP-version
+specific registers.
+
+Kevin
