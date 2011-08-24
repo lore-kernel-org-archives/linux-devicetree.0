@@ -1,183 +1,74 @@
 From: Benoit Cousson <b-cousson@ti.com>
-Subject: [RFC PATCH 6/7] OMAP4: board-dt: Add generic board with DT support
-Date: Wed, 24 Aug 2011 12:17:19 +0200
-Message-ID: <1314181040-22807-7-git-send-email-b-cousson@ti.com>
-References: <1314181040-22807-1-git-send-email-b-cousson@ti.com>
+Subject: [RFC PATCH 00/10] OMAP: Add DT support for early init OMAP4 devices
+Date: Wed, 24 Aug 2011 15:09:06 +0200
+Message-ID: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1314181040-22807-1-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: grant.likely@secretlab.ca
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khilman@ti.com, devicetree-discuss@lists.ozlabs.org, manjugk@ti.com, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: grant.likely@secretlab.ca, tony@atomide.com
+Cc: khilman@ti.com, Benoit Cousson <b-cousson@ti.com>, manjugk@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Create an OMAP4 generic board to start the DT migration.
+Hi Grant, Tony,
 
-This file is doing the minimal initialization needed to boot
-properly on a RAMDISK filesystem.
+Here are a couple of drivers / devices adaptated to DT on OMAP4.
+I focused first on devices that used to be initialized before machine_init
+time (postcore_initcall most of the time).
 
-As soon as the OMAP4 specifics will be removed, that board will
-be converted to an even more generic board-dt.c that will support
-every OMAP 2+ platform.
+The GPIO adaptation is not taking into account the current cleanup done
+by Charu / Tarun. It will have to be revisited when the cleanup will
+be completed.
 
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
----
- arch/arm/mach-omap2/Kconfig          |    9 +++
- arch/arm/mach-omap2/Makefile         |    1 +
- arch/arm/mach-omap2/board-omap4-dt.c |  110 ++++++++++++++++++++++++++++++++++
- 3 files changed, 120 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/mach-omap2/board-omap4-dt.c
+Patches are based on for_3.2/3_omap4_dt_base + devicetree/test
+and are available here:
+git://gitorious.org/omap-pm/linux.git for_3.2/4_omap4_dt_early_devices
 
-diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-index 57b66d5..5d501d2 100644
---- a/arch/arm/mach-omap2/Kconfig
-+++ b/arch/arm/mach-omap2/Kconfig
-@@ -326,6 +326,15 @@ config MACH_OMAP4_PANDA
- 	select OMAP_PACKAGE_CBS
- 	select REGULATOR_FIXED_VOLTAGE
- 
-+config MACH_OMAP4_DT
-+	bool "Generic OMAP4 board (FDT support)"
-+	default y
-+	depends on ARCH_OMAP4
-+	select OMAP_PACKAGE_CBL
-+	select OMAP_PACKAGE_CBS
-+	select REGULATOR_FIXED_VOLTAGE
-+	select USE_OF
-+
- config OMAP3_EMU
- 	bool "OMAP3 debugging peripherals"
- 	depends on ARCH_OMAP3
-diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
-index b1501bd..79e42a1 100644
---- a/arch/arm/mach-omap2/Makefile
-+++ b/arch/arm/mach-omap2/Makefile
-@@ -223,6 +223,7 @@ obj-$(CONFIG_MACH_OMAP_4430SDP)		+= board-4430sdp.o \
- 					   omap_phy_internal.o
- obj-$(CONFIG_MACH_OMAP4_PANDA)		+= board-omap4panda.o \
- 					   omap_phy_internal.o
-+obj-$(CONFIG_MACH_OMAP4_DT)		+= board-omap4-dt.o
- 
- obj-$(CONFIG_MACH_PCM049)		+= board-omap4pcm049.o \
- 					   omap_phy_internal.o
-diff --git a/arch/arm/mach-omap2/board-omap4-dt.c b/arch/arm/mach-omap2/board-omap4-dt.c
-new file mode 100644
-index 0000000..9553cf1
---- /dev/null
-+++ b/arch/arm/mach-omap2/board-omap4-dt.c
-@@ -0,0 +1,110 @@
-+/*
-+ * OMAP4 Device tree boards support
-+ *
-+ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/i2c/twl.h>
-+
-+#include <asm/mach/arch.h>
-+
-+#include <plat/board.h>
-+#include <plat/common.h>
-+
-+#include <mach/omap4-common.h>
-+
-+#include "mux.h"
-+#include "common-board-devices.h"
-+
-+
-+static void __init omap4_map_io(void)
-+{
-+	omap2_set_globals_443x();
-+	omap44xx_map_common_io();
-+}
-+
-+static void __init omap_init_early(void)
-+{
-+	omap2_init_common_infrastructure();
-+	/*
-+	 * XXX: That name is misleading because it does call only
-+	 * omap2_sdrc_init in the case of OMAP 2&3 platform.
-+	 * It is a no-op in the case of OMAP4, but keep it for the moment.
-+	 * It should be replaced by a init_memory_controller kind of function
-+	 * that will use DT to get the proper memory controller config.
-+	 */
-+	omap2_init_common_devices(NULL, NULL);
-+}
-+
-+static struct of_device_id omap_dt_match_table[] __initdata = {
-+	{ .compatible = "simple-bus", },
-+	{ .compatible = "ti,omap-infra", },
-+	{}
-+};
-+
-+static struct of_device_id omap_dt_gic_match[] __initdata = {
-+	{ .compatible = "ti,omap4-gic", },
-+	{}
-+};
-+
-+/*
-+ * XXX: Still needed to boot until the i2c & twl driver is adapted to
-+ * device-tree
-+ */
-+static struct twl4030_platform_data sdp4430_twldata = {
-+	.irq_base	= TWL6030_IRQ_BASE,
-+	.irq_end	= TWL6030_IRQ_END,
-+};
-+
-+static void __init omap4_i2c_init(void)
-+{
-+	omap4_pmic_init("twl6030", &sdp4430_twldata);
-+}
-+
-+static void __init omap4_init_machine(void)
-+{
-+	int package = OMAP_PACKAGE_CBS;
-+	struct device_node *node;
-+
-+	node = of_find_matching_node(NULL, omap_dt_gic_match);
-+	if (node)
-+		irq_domain_add_simple(node, 0);
-+
-+	if (omap_rev() == OMAP4430_REV_ES1_0)
-+		package = OMAP_PACKAGE_CBL;
-+	omap4_mux_init(NULL, NULL, package);
-+
-+	omap4_i2c_init();
-+	/*
-+	 * XXX: Still needed to boot until the omap-serial driver is adapted
-+	 * to device-tree
-+	 */
-+	omap_serial_init();
-+
-+	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
-+}
-+
-+static const char *omap4_boards_compat[] __initdata = {
-+	"ti,omap4",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(OMAP4_DT, "OMAP4 (Flattened Device Tree)")
-+	.reserve	= omap_reserve,
-+	.map_io		= omap4_map_io,
-+	.init_early	= omap_init_early,
-+	.init_irq	= gic_init_irq,
-+	.init_machine	= omap4_init_machine,
-+	.timer		= &omap4_timer,
-+	.dt_compat	= omap4_boards_compat,
-+MACHINE_END
--- 
-1.7.0.4
+Comments are welcome.
 
+Regards,
+Benoit
+
+
+Benoit Cousson (10):
+  OMAP2+: l3-noc: Add support for device-tree
+  arm/dts: OMAP4: Add a main ocp entry bound to l3-noc driver
+  documentation/dt: Add l3-noc bindings
+  arm/dts: OMAP4: Add mpu, dsp and iva nodes
+  documentation/dt: Add mpu, dsp and iva bindings
+  hwspinlock: OMAP4: Add spinlock support in DT
+  documentation/dt: Add spinlock bindings
+  gpio/omap: Adapt GPIO driver to DT
+  arm/dts: OMAP4: Add gpio nodes
+  documentation/dt: Add OMAP GPIO properties
+
+ Documentation/devicetree/bindings/arm/omap/dsp.txt |   14 +++
+ Documentation/devicetree/bindings/arm/omap/iva.txt |   18 ++++
+ .../devicetree/bindings/arm/omap/l3-noc.txt        |   18 ++++
+ Documentation/devicetree/bindings/arm/omap/mpu.txt |   35 +++++++
+ .../devicetree/bindings/gpio/gpio-omap.txt         |   33 ++++++
+ .../bindings/hwspinlock/omap-spinlock.txt          |    5 +
+ arch/arm/boot/dts/omap4.dtsi                       |  105 +++++++++++++++++++-
+ arch/arm/mach-omap2/Makefile                       |    6 +-
+ arch/arm/mach-omap2/devices.c                      |    2 +
+ arch/arm/mach-omap2/gpio.c                         |    2 +
+ arch/arm/mach-omap2/omap_l3_noc.c                  |   16 +++-
+ arch/arm/mach-omap2/pm.c                           |    5 +-
+ drivers/gpio/gpio-omap.c                           |  103 +++++++++++++++++--
+ drivers/hwspinlock/omap_hwspinlock.c               |   11 ++
+ 14 files changed, 359 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/dsp.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/iva.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/l3-noc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/mpu.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-omap.txt
+ create mode 100644 Documentation/devicetree/bindings/hwspinlock/omap-spinlock.txt
