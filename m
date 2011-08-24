@@ -1,37 +1,101 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH v2 11/13] arm/tegra: Add device tree support to
- pinmux driver
-Date: Tue, 23 Aug 2011 16:35:52 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B24A3A38@HQMAIL01.nvidia.com>
-References: <1313440100-17131-1-git-send-email-swarren@nvidia.com>
- <1313440100-17131-12-git-send-email-swarren@nvidia.com>
- <20110816034509.GG8044@S2100-06.ap.freescale.net>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] i2c-designware: add OF binding support
+Date: Tue, 23 Aug 2011 22:31:30 -0500
+Message-ID: <4E547092.6040008@gmail.com>
+References: <1312579468-19365-1-git-send-email-robherring2@gmail.com> <1312579468-19365-4-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20110816034509.GG8044-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1312579468-19365-4-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote at Monday, August 15, 2011 9:45 PM:
-> On Mon, Aug 15, 2011 at 02:28:18PM -0600, Stephen Warren wrote:
-> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  arch/arm/mach-tegra/pinmux.c |  249 ++++++++++++++++++++++++++++++++++++++++++
-> >  1 files changed, 249 insertions(+), 0 deletions(-)
-> >
-> Same question here, since we are moving over to device tree anyway,
-> is it necessarily to keep these "#ifdef CONFIG_OF" all over the files?
-> Can we manage to get rid of them, since we have a suite of empty OF API
-> created for this?
+Ben,
 
-Yes, the ifdefs can all be eliminated. I'll need to add a couple other
-empty functions to <linux/of.h>. I also folded the foo_probe_dt()
-functions into foo_probe(), since the need for the ifdefs is gone.
+On 08/05/2011 04:24 PM, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
+> Add of_match_table and DT style i2c registration to designware i2c
+> driver.
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
 
--- 
-nvpublic
+Any comments on this? If not, will you apply to your tree?
+
+Rob
+
+>  Documentation/devicetree/bindings/i2c/dw-i2c.txt |   23 ++++++++++++++++++++++
+>  drivers/i2c/busses/i2c-designware.c              |    8 +++++++
+>  2 files changed, 31 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/dw-i2c.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/dw-i2c.txt b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
+> new file mode 100644
+> index 0000000..cbcb404
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
+> @@ -0,0 +1,23 @@
+> +* Synopsys DesignWare I2C
+> +
+> +Required properties :
+> +
+> + - compatible : should be "snps,designware-i2c"
+> + - reg : Offset and length of the register set for the device
+> + - interrupts : <IRQ> where IRQ is the interrupt number.
+> +
+> +Recommended properties :
+> +
+> + - clock-frequency : desired I2C bus clock frequency in Hz.
+> +
+> +Example :
+> +
+> +	i2c@f0000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "snps,designware-i2c";
+> +		reg = <0xf0000 0x1000>;
+> +		interrupts = <11>;
+> +		clock-frequency = <400000>;
+> +	};
+> +
+> diff --git a/drivers/i2c/busses/i2c-designware.c b/drivers/i2c/busses/i2c-designware.c
+> index b7a51c4..0223b98 100644
+> --- a/drivers/i2c/busses/i2c-designware.c
+> +++ b/drivers/i2c/busses/i2c-designware.c
+> @@ -769,6 +769,7 @@ static int __devinit dw_i2c_probe(struct platform_device *pdev)
+>  			sizeof(adap->name));
+>  	adap->algo = &i2c_dw_algo;
+>  	adap->dev.parent = &pdev->dev;
+> +	adap->dev.of_node = pdev->dev.of_node;
+>  
+>  	adap->nr = pdev->id;
+>  	r = i2c_add_numbered_adapter(adap);
+> @@ -819,6 +820,12 @@ static int __devexit dw_i2c_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id dw_i2c_of_match[] = {
+> +	{ .compatible = "snps,designware-i2c", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
+> +
+>  /* work with hotplug and coldplug */
+>  MODULE_ALIAS("platform:i2c_designware");
+>  
+> @@ -827,6 +834,7 @@ static struct platform_driver dw_i2c_driver = {
+>  	.driver		= {
+>  		.name	= "i2c_designware",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = dw_i2c_of_match,
+>  	},
+>  };
+>  
