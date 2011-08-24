@@ -1,65 +1,94 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: [RFC PATCH 10/10] documentation/dt: Add OMAP GPIO properties
-Date: Wed, 24 Aug 2011 15:09:16 +0200
-Message-ID: <1314191356-10963-11-git-send-email-b-cousson@ti.com>
-References: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
+From: Jamie Iles <jamie@jamieiles.com>
+Subject: [PATCHv2 0/3] Initial support for Picochip picoxcell
+Date: Wed, 24 Aug 2011 15:41:43 +0100
+Message-ID: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, tony@atomide.com
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khilman@ti.com, devicetree-discuss@lists.ozlabs.org, manjugk@ti.com, Benoit Cousson <b-cousson@ti.com>, Randy Dunlap <rdunlap@xenotime.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Jamie Iles <jamie@jamieiles.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for GPIO properties specific to OMAP.
+This series adds support for Picochip picoXcell (PC3X2 and PC3X3)
+ARM1176JZ-S based devices.  This is a device tree only platform and
+currently supports interrupt controllers and UARTs.
 
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-Cc: Randy Dunlap <rdunlap@xenotime.net>
----
- .../devicetree/bindings/gpio/gpio-omap.txt         |   33 ++++++++++++++++++++
- 1 files changed, 33 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-omap.txt
+This series is based off of Grant's devicetree/test branch and also uses
+Russell's io and gpio cleanup patches to remove the definition of
+IO_SPACE_LIMIT and trivial gpio definitions.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-new file mode 100644
-index 0000000..692b1c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-@@ -0,0 +1,33 @@
-+OMAP GPIO controller
-+
-+Required properties:
-+- compatible:
-+  - "ti,omap2-gpio" for OMAP2 and OMAP3 controllers
-+  - "ti,omap4-gpio" for OMAP4 controller
-+- #gpio-cells : Should be two.
-+  - first cell is the pin number
-+  - second cell is used to specify optional parameters (unused)
-+- gpio-controller : Marks the device node as a GPIO controller.
-+
-+OMAP specific properties:
-+- hwmods: Name of the hwmod associated to the GPIO
-+- id: 32 bits to identify the id (1 based index)
-+- bank_width: number of pin supported by the controller (16 or 32)
-+- debounce: set if the controller support the debouce funtionnality
-+- bank_count: number of controller support by the SoC. This is a temporary
-+  hack until the bank_count is removed from the driver.
-+
-+
-+Example:
-+
-+gpio4: gpio4 {
-+    compatible = "ti,omap4-gpio", "ti,omap-gpio";
-+    hwmods = "gpio4";
-+    id = <4>;
-+    bank_width = <32>;
-+    debounce;
-+    no_idle_on_suspend;
-+    #gpio-cells = <2>;
-+    gpio-controller;
-+};
-+
+Changes since v1:
+
+	- Cleanup empty headers
+	- Use of_platform_populate() and the default match table
+	- Split the VIC's into separate device nodes
+
+Jamie Iles (3):
+  picoxcell: support for Picochip picoxcell devices
+  picoxcell: add the DTS for pc3x2 and pc3x3 devices
+  picoxcell: add the DTS for the PC7302 board
+
+ .../devicetree/bindings/arm/picoxcell.txt          |   23 ++
+ arch/arm/Kconfig                                   |   18 +
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/picoxcell-pc3x2.dtsi             |  249 +++++++++++++
+ arch/arm/boot/dts/picoxcell-pc3x3.dtsi             |  365 ++++++++++++++++++++
+ arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts       |   87 +++++
+ arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts       |   93 +++++
+ arch/arm/mach-picoxcell/Makefile                   |    3 +
+ arch/arm/mach-picoxcell/Makefile.boot              |    1 +
+ arch/arm/mach-picoxcell/common.c                   |   55 +++
+ arch/arm/mach-picoxcell/common.h                   |   18 +
+ arch/arm/mach-picoxcell/include/mach/debug-macro.S |   35 ++
+ arch/arm/mach-picoxcell/include/mach/entry-macro.S |   19 +
+ arch/arm/mach-picoxcell/include/mach/gpio.h        |    1 +
+ arch/arm/mach-picoxcell/include/mach/hardware.h    |   21 ++
+ arch/arm/mach-picoxcell/include/mach/io.h          |   29 ++
+ arch/arm/mach-picoxcell/include/mach/irqs.h        |   25 ++
+ arch/arm/mach-picoxcell/include/mach/map.h         |   25 ++
+ arch/arm/mach-picoxcell/include/mach/memory.h      |    1 +
+ .../mach-picoxcell/include/mach/picoxcell_soc.h    |   25 ++
+ arch/arm/mach-picoxcell/include/mach/system.h      |   31 ++
+ arch/arm/mach-picoxcell/include/mach/timex.h       |   25 ++
+ arch/arm/mach-picoxcell/include/mach/uncompress.h  |   21 ++
+ arch/arm/mach-picoxcell/include/mach/vmalloc.h     |   18 +
+ arch/arm/mach-picoxcell/io.c                       |   56 +++
+ arch/arm/mach-picoxcell/time.c                     |  132 +++++++
+ 26 files changed, 1377 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/picoxcell.txt
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc3x2.dtsi
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc3x3.dtsi
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts
+ create mode 100644 arch/arm/mach-picoxcell/Makefile
+ create mode 100644 arch/arm/mach-picoxcell/Makefile.boot
+ create mode 100644 arch/arm/mach-picoxcell/common.c
+ create mode 100644 arch/arm/mach-picoxcell/common.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/debug-macro.S
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/entry-macro.S
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/gpio.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/hardware.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/io.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/irqs.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/map.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/memory.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/picoxcell_soc.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/system.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/timex.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/uncompress.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/vmalloc.h
+ create mode 100644 arch/arm/mach-picoxcell/io.c
+ create mode 100644 arch/arm/mach-picoxcell/time.c
+
 -- 
-1.7.0.4
-
+1.7.4.1
