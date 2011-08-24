@@ -1,105 +1,65 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [RFC/PATCH v2 00/13] dt: omap: dt binding with omap_device and
-	support for i2c1
-Date: Wed, 24 Aug 2011 11:41:01 +0200
-Message-ID: <4E54C72D.1050308@ti.com>
-References: <1314074021-25186-1-git-send-email-manjugk@ti.com>
-	<20110823154119.GE32698@manju-desktop>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: [RFC PATCH 0/7] OMAP: Add initial support for DT on OMAP4
+Date: Wed, 24 Aug 2011 12:17:13 +0200
+Message-ID: <1314181040-22807-1-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110823154119.GE32698@manju-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "G, Manjunath Kondaiah" <manjugk@ti.com>, Paul Walmsley <paul@pwsan.com>
-Cc: "Hilman, Kevin" <khilman@ti.com>, "Menon, Nishanth" <nm@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: grant.likely@secretlab.ca
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khilman@ti.com, devicetree-discuss@lists.ozlabs.org, manjugk@ti.com, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manju
+Hi Grant,
 
-On 8/23/2011 5:41 PM, G, Manjunath Kondaiah wrote:
-> On Tue, Aug 23, 2011 at 10:03:28AM +0500, G, Manjunath Kondaiah wrote:
->>
->> Patch series reworked from:
->> http://permalink.gmane.org/gmane.linux.ports.arm.omap/61674
->> Also added support for i2c1 controller on omap4 based panda
->> board.
->>
->> Baseline:
->> =========
->> git://git.secretlab.ca/git/linux-2.6.git
->> Branch: devicetree/test
->> The above branch is rebased with v3.1-rc2 mainline.
->> +
->> pdev decoupling patches from kevin hilman
->> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg53534.html
->>
->> The patch series is also available at:
->> https://gitorious.org/devicetree/dt_omap/commits/devicetree/dt_rfcv2
->>
->> Testing:
->> ========
->> Build : dt and not dt build for omap2plus_defconfig
->> Boot: OMAP3530 Beagle Board and OMAP4430 Panda board
-> 
-> Correction: This series will support only i2c1 controller and it will not
-> handle i2c1 child devices such as twlxxxx pmic. Due to which, twl read/write's
-> might fail during boot.
+Here is the first part of patches to add device-tree support for OMAP4
+platforms. It is partially based on initial works done by Manju for i2c.
+The main difference is the usage of the notifier to create omap_device and
+the addition of the hwmods bindings.
+That series mainly clean the existing DT file and add an empty skeleton for
+OMAP4 soc.
+It adds as well a minimal OMAP4 board file for basic DT support. The goal
+being to remove even the minimal static devices init in order to have a
+fully generic OMAP board file.
+The next one will start adding some real devices.
 
-You mean will fail :-) At least on OMAP4.
+Patches are based on for_3.2/2_omap_device_dt + devicetree/test
+and are available here:
+git://gitorious.org/omap-pm/linux.git for_3.2/3_omap4_dt_base
 
-[    2.680480] [<c025d438>] (twl_i2c_read+0x34/0x128) from [<c0024368>] (twl6030_uv_to_vsel+0x28/0x84)
-[    2.690032] [<c0024368>] (twl6030_uv_to_vsel+0x28/0x84) from [<c0028274>] (_pre_volt_scale+0xac/0x174)
-[    2.699829] [<c0028274>] (_pre_volt_scale+0xac/0x174) from [<c0028354>] (vp_forceupdate_scale_voltage+0x18/0x2b0)
-[    2.710601] [<c0028354>] (vp_forceupdate_scale_voltage+0x18/0x2b0) from [<c00280a0>] (omap_voltage_scale_vdd+0x54/0x64)
-[    2.721954] [<c00280a0>] (omap_voltage_scale_vdd+0x54/0x64) from [<c056ac94>] (omap2_set_init_voltage+0xf0/0x130)
-[    2.732757] [<c056ac94>] (omap2_set_init_voltage+0xf0/0x130) from [<c056ad34>] (omap2_common_pm_late_init+0x60/0xb0)
-[    2.743835] [<c056ad34>] (omap2_common_pm_late_init+0x60/0xb0) from [<c0008900>] (do_one_initcall+0x94/0x168)
-[    2.754272] [<c0008900>] (do_one_initcall+0x94/0x168) from [<c0562828>] (kernel_init+0x80/0x12c)
-[    2.763549] [<c0562828>] (kernel_init+0x80/0x12c) from [<c001338c>] (kernel_thread_exit+0x0/0x8)
-[    2.772796] Code: 8a000008 e59f70ec e1a09080 e59731ac (e7d32080)
+Thanks to your latest hack, for people who want to play with appended dtb:
+ make uImage-dtb.omap4-panda
+ make uImage-dtb.omap4-sdp
 
-That being said, it looks like the voltage layer should be a little bit more robust and should check the i2c status before using it blindly.
-
-Adding Kevin, Paul and Nishanth in Cc since the voltage layer is currently being cleaned.
-
-> I am facing issues in getting platform_data in i2c child device probe function.
-> The issue is reported to grant in patch 08/13 of this series.
-> 
-> -M
-> 
->>
->> Limitation:
->> ===========
->> The current implementation of omap-device build through
->> device tree supports only single instance of hwmod and
->> multiple instances are not supported.
->>
->> G, Manjunath Kondaiah (13):
->>    OMAP: omap_device: Add device tree node pointer
->>    dt: Add pd_size to AUXDATA structure
->>    dt: omap3: add soc file for handling i2c controllers
->>    dt: omap3: beagle board: set clock freq for i2c devices
->>    dt: omap3: add generic board file for dt support
->>    dt: omap3: add omap-device compatible property
->>    dt: omap: create platform bus for omap devices
->>    dt: omap: i2c: add dt support for i2c1 controller
->>    dt: omap4: add soc file for handling i2c controllers
->>    dt: omap4: panda board: set clock freq for i2c devices
->>    dt: omap4: add generic board file for dt support
->>    dt: omap4: enable dt support for i2c1 controller
->>    dt: omap: i2c: dt usage model documentation
-
-Because of the broken i2c support, you should probably re-organize your series to provide at least the basic DT support for people who want to start hacking DT. The i2c support for both OMAP3 & 4 should be added at the very last time with a big disclaimer.
-Ideally, you should maybe fix it first:-)
+Comments are welcome.
 
 Regards,
-Benoit 
+Benoit
+
+
+Benoit Cousson (7):
+  OMAP3+: boards: Fix the __initconst build error
+  arm/dts: Add initial device tree support for OMAP4 SoC
+  arm/dts: Update OMAP4 Panda to include common omap4.dtsi
+  arm/dts: Add support for OMAP4 SDP board
+  OMAP4: board-panda: Remove DT support from regular board
+  OMAP4: board-dt: Add generic board with DT support
+  documentation/dt: Add OMAP bindings
+
+ .../devicetree/bindings/arm/omap/omap.txt          |   38 +++++++
+ arch/arm/boot/dts/omap4-panda.dts                  |   28 ++++-
+ arch/arm/boot/dts/omap4-sdp.dts                    |   29 +++++
+ arch/arm/boot/dts/omap4.dtsi                       |   80 ++++++++++++++
+ arch/arm/mach-omap2/Kconfig                        |    9 ++
+ arch/arm/mach-omap2/Makefile                       |    1 +
+ arch/arm/mach-omap2/board-igep0020.c               |    2 +-
+ arch/arm/mach-omap2/board-omap3beagle.c            |    2 +-
+ arch/arm/mach-omap2/board-omap4-dt.c               |  110 ++++++++++++++++++++
+ arch/arm/mach-omap2/board-omap4panda.c             |    6 -
+ arch/arm/mach-omap2/board-overo.c                  |    2 +-
+ 11 files changed, 293 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/omap.txt
+ create mode 100644 arch/arm/boot/dts/omap4-sdp.dts
+ create mode 100644 arch/arm/boot/dts/omap4.dtsi
+ create mode 100644 arch/arm/mach-omap2/board-omap4-dt.c
+
