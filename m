@@ -1,138 +1,52 @@
-From: David Daney <david.daney@cavium.com>
-Subject: [RFC PATCH 2/2] i2c/of: Automatically populate i2c mux busses from device tree data.
-Date: Wed, 24 Aug 2011 17:25:56 -0700
-Message-ID: <1314231956-21115-3-git-send-email-david.daney@cavium.com>
-References: <1314231956-21115-1-git-send-email-david.daney@cavium.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1314231956-21115-1-git-send-email-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
-Cc: David Daney <david.daney@cavium.com>
+From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 5/9] tg3: convert to SKB paged frag API.
+Date: Thu, 25 Aug 2011 09:28:11 +0100
+Message-ID: <1314260895-15936-5-git-send-email-ian.campbell@citrix.com>
+References: <1314260881.10283.48.camel@zakaz.uk.xensource.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1314260881.10283.48.camel-o4Be2W7LfRlXesXXhkcM7miJhflN2719@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Matt Carlson <mcarlson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Michael Chan <mchan-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For 'normal' i2c bus drivers, we can call of_i2c_register_devices()
-and have the device tree framework automatically populate the bus with
-the devices specified in the device tree.
-
-This patch adds a common code to the i2c mux framework to hate the mux
-sub-busses be populated by the of_i2c_register_devices() too.  If the
-mux device has an of_node, we populate the sub-bus' of_node so that
-the subsequent call to of_i2c_register_devices() will find the
-corresponding devices.
-
-It seemed better to put this logic in i2c_add_mux_adapter() rather
-than the individual mux drivers, as they will all probably want to do
-the same thing.
-
-Signed-off-by: David Daney <david.daney@cavium.com>
+Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: Matt Carlson <mcarlson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Michael Chan <mchan-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 ---
- Documentation/devicetree/bindings/i2c/mux.txt |   54 +++++++++++++++++++++++++
- drivers/i2c/i2c-mux.c                         |   25 +++++++++++
- 2 files changed, 79 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/mux.txt
+ drivers/net/ethernet/broadcom/tg3.c |    6 ++----
+ 1 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/mux.txt b/Documentation/devicetree/bindings/i2c/mux.txt
-new file mode 100644
-index 0000000..7bd9192
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/mux.txt
-@@ -0,0 +1,54 @@
-+Common i2c bus multiplexer/switch properties.
-+
-+An i2c bus multiplexer/switch will have several child busses that are
-+numbered uniquely in a device dependent manner.  The nodes for an i2c bus
-+multiplexer/switch will have one child node for each child
-+bus.
-+
-+Required properties for child nodes:
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+- cell-index : The sub-bus number.
-+
-+Optional properties for child nodes:
-+- Other properties specific to the multiplexer/switch hardware.
-+- Child nodes conforming to i2c bus binding
-+
-+
-+Example :
-+
-+	/*
-+	   An NXP pca9548 8 channel I2C multiplexer at address 0x70
-+	   with two NXP pca8574 GPIO expanders attached, one each to
-+	   ports 3 and 4.
-+	 */
-+
-+	mux@70 {
-+		compatible = "nxp,pca9548";
-+		reg = <0x70>;
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			cell-index = <3>;
-+
-+			gpio1: gpio@38 {
-+				compatible = "nxp,pca8574";
-+				reg = <0x38>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+		};
-+		i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			cell-index = <4>;
-+
-+			gpio2: gpio@38 {
-+				compatible = "nxp,pca8574";
-+				reg = <0x38>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+		};
-+	};
-diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
-index 6fc2dd4..63f8989 100644
---- a/drivers/i2c/i2c-mux.c
-+++ b/drivers/i2c/i2c-mux.c
-@@ -24,6 +24,8 @@
- #include <linux/slab.h>
- #include <linux/i2c.h>
- #include <linux/i2c-mux.h>
-+#include <linux/of.h>
-+#include <linux/of_i2c.h>
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index 0f81111..a7e28a2 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -6311,10 +6311,8 @@ static netdev_tx_t tg3_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 			skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
  
- /* multiplexer per channel data */
- struct i2c_mux_priv {
-@@ -143,6 +145,29 @@ struct i2c_adapter *i2c_add_mux_adapter(struct i2c_adapter *parent,
- 	dev_info(&parent->dev, "Added multiplexed i2c bus %d\n",
- 		 i2c_adapter_id(&priv->adap));
+ 			len = frag->size;
+-			mapping = pci_map_page(tp->pdev,
+-					       frag->page,
+-					       frag->page_offset,
+-					       len, PCI_DMA_TODEVICE);
++			mapping = skb_frag_dma_map(&tp->pdev->dev, frag, 0,
++						   len, PCI_DMA_TODEVICE);
  
-+#ifdef CONFIG_OF
-+	/* Try to get populate the mux adapter's of_node */
-+	if (mux_dev->of_node) {
-+		struct device_node *child = NULL;
-+		const __be32 *cell_index;
-+		int len;
-+
-+		for (;;) {
-+			child = of_get_next_child(mux_dev->of_node, child);
-+			if (!child)
-+				break;
-+			cell_index = of_get_property(child, "cell-index", &len);
-+			if (!cell_index || (len < sizeof(__be32)))
-+				continue;
-+			if (chan_id == be32_to_cpup(cell_index)) {
-+				priv->adap.dev.of_node = child;
-+				break;
-+			}
-+		}
-+	}
-+	of_i2c_register_devices(&priv->adap);
-+#endif
-+
- 	return &priv->adap;
- }
- EXPORT_SYMBOL_GPL(i2c_add_mux_adapter);
+ 			tnapi->tx_buffers[entry].skb = NULL;
+ 			dma_unmap_addr_set(&tnapi->tx_buffers[entry], mapping,
 -- 
-1.7.2.3
+1.7.2.5
