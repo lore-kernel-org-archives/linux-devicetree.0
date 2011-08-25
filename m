@@ -1,13 +1,20 @@
-From: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 5/9] tg3: convert to SKB paged frag API.
-Date: Thu, 25 Aug 2011 09:28:11 +0100
-Message-ID: <1314260895-15936-5-git-send-email-ian.campbell@citrix.com>
-References: <1314260881.10283.48.camel@zakaz.uk.xensource.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: How to handle named resources with DT?
+Date: Thu, 25 Aug 2011 11:28:24 +0100
+Message-ID: <20110825102824.GB10405@n2100.arm.linux.org.uk>
+References: <20110809205723.GE11568@ponder.secretlab.ca>
+	<20110812030218.GP30552@yookeroo.fritz.box>
+	<20110812084106.GC19467@legolas.emea.dhcp.ti.com>
+	<201108121635.42953.arnd@arndb.de> <4E45422D.4050708@ti.com>
+	<CACxGe6s-2EAuvSqzn6yzDvCyVXa8vVVqG2X=1XFrUBnB=jsdxQ@mail.gmail.com>
+	<87r54a1v0o.fsf@ti.com>
+	<20110824231613.GC19890@legolas.emea.dhcp.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1314260881.10283.48.camel-o4Be2W7LfRlXesXXhkcM7miJhflN2719@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110824231613.GC19890-UiBtZHVXSwEVvW8u9ZQWYwjfymiNCTlR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,36 +24,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Matt Carlson <mcarlson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Michael Chan <mchan-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "G,
+	Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: Matt Carlson <mcarlson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Michael Chan <mchan-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
----
- drivers/net/ethernet/broadcom/tg3.c |    6 ++----
- 1 files changed, 2 insertions(+), 4 deletions(-)
+On Thu, Aug 25, 2011 at 02:16:14AM +0300, Felipe Balbi wrote:
+> on top of all that, for IPs which are used on many SoCs (such as MUSB)
+> it's quite silly to force all users to provide resources in a certain
+> order. It sounds to me that this will be prone to error in many ways
+> until everything is synced up and on the correct order.
+> 
+> Ditching _byname is a very bad idea.
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index 0f81111..a7e28a2 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -6311,10 +6311,8 @@ static netdev_tx_t tg3_start_xmit(struct sk_buff *skb, struct net_device *dev)
- 			skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
- 
- 			len = frag->size;
--			mapping = pci_map_page(tp->pdev,
--					       frag->page,
--					       frag->page_offset,
--					       len, PCI_DMA_TODEVICE);
-+			mapping = skb_frag_dma_map(&tp->pdev->dev, frag, 0,
-+						   len, PCI_DMA_TODEVICE);
- 
- 			tnapi->tx_buffers[entry].skb = NULL;
- 			dma_unmap_addr_set(&tnapi->tx_buffers[entry], mapping,
--- 
-1.7.2.5
+I continue to disagree.  The current _byname is an abonimation and hack
+to try to "fix" this problem.
+
+_byname should have been implemented differently - rather than overriding
+the resources name field (which is _normally_ specified to be the device
+or driver name), a new field should have been introduced in struct resource
+to carry the resource sub-name (which is really what it is.)
+
+That would have avoided making /proc/iomem completely illegible with
+multiple devices using this feature.
