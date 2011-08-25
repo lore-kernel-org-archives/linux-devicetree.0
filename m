@@ -1,172 +1,53 @@
-From: "Koul, Vinod" <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 3/3] dmaengine: imx-sdma: add device tree probe support
-Date: Thu, 25 Aug 2011 19:07:58 +0530
-Message-ID: <1314279478.1606.35.camel@vkoul-udesk3>
-References: <1310723066-567-1-git-send-email-shawn.guo@linaro.org>
-	<1310723066-567-4-git-send-email-shawn.guo@linaro.org>
-	<1312430234.1536.552.camel@vkoul-udesk3>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [RFC PATCH 2/7] arm/dts: Add initial device tree support for
+ OMAP4 SoC
+Date: Thu, 25 Aug 2011 15:57:34 +0200
+Message-ID: <4E5654CE.4000303@ti.com>
+References: <1314181040-22807-1-git-send-email-b-cousson@ti.com> <1314181040-22807-3-git-send-email-b-cousson@ti.com> <4E565004.9050806@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1312430234.1536.552.camel@vkoul-udesk3>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4E565004.9050806@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "Hilman, Kevin" <khilman@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2011-08-04 at 09:27 +0530, Koul, Vinod wrote:
-> On Fri, 2011-07-15 at 17:44 +0800, Shawn Guo wrote:
-> > It adds device tree probe support for imx-sdma driver.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > Cc: Vinod Koul <vinod.koul@intel.com>
-> > Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> I need an ack from Grant before I can apply this series
-I don't think I heard back from Grant on this.
-Grant let me know if you are okay with this patch
+Hi Rob,
 
--- 
-~Vinod
+On 8/25/2011 3:37 PM, Rob Herring wrote:
+> Benoit,
 
-> >  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |   17 ++++++++
-> >  drivers/dma/imx-sdma.c                             |   41 ++++++++++++++++++-
-> >  2 files changed, 55 insertions(+), 3 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> > new file mode 100644
-> > index 0000000..d1e3f44
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> > @@ -0,0 +1,17 @@
-> > +* Freescale Smart Direct Memory Access (SDMA) Controller for i.MX
-> > +
-> > +Required properties:
-> > +- compatible : Should be "fsl,<chip>-sdma"
-> > +- reg : Should contain SDMA registers location and length
-> > +- interrupts : Should contain SDMA interrupt
-> > +- fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
-> > +  scripts firmware
-> > +
-> > +Examples:
-> > +
-> > +sdma@83fb0000 {
-> > +	compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
-> > +	reg = <0x83fb0000 0x4000>;
-> > +	interrupts = <6>;
-> > +	fsl,sdma-ram-script-name = "sdma-imx51.bin";
-> > +};
-> > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> > index 6b839a2..20504f0 100644
-> > --- a/drivers/dma/imx-sdma.c
-> > +++ b/drivers/dma/imx-sdma.c
-> > @@ -32,6 +32,8 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/dmaengine.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >  
-> >  #include <asm/irq.h>
-> >  #include <mach/sdma.h>
-> > @@ -331,6 +333,12 @@ static struct platform_device_id sdma_devtypes[] = {
-> >  	}
-> >  };
-> >  
-> > +static const struct of_device_id sdma_dt_ids[] = {
-> > +	{ .compatible = "fsl,imx31-sdma", .data = &sdma_devtypes[IMX31_SDMA], },
-> > +	{ .compatible = "fsl,imx35-sdma", .data = &sdma_devtypes[IMX35_SDMA], },
-> > +	{ /* sentinel */ }
-> > +};
-> > +
-> >  #define SDMA_H_CONFIG_DSPDMA	(1 << 12) /* indicates if the DSPDMA is used */
-> >  #define SDMA_H_CONFIG_RTD_PINS	(1 << 11) /* indicates if Real-Time Debug pins are enabled */
-> >  #define SDMA_H_CONFIG_ACR	(1 << 4)  /* indicates if AHB freq /core freq = 2 or 1 */
-> > @@ -1249,6 +1257,10 @@ err_dma_alloc:
-> >  
-> >  static int __init sdma_probe(struct platform_device *pdev)
-> >  {
-> > +	const struct of_device_id *of_id =
-> > +			of_match_device(sdma_dt_ids, &pdev->dev);
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	const char *fw_name;
-> >  	int ret;
-> >  	int irq;
-> >  	struct resource *iores;
-> > @@ -1264,7 +1276,7 @@ static int __init sdma_probe(struct platform_device *pdev)
-> >  
-> >  	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	irq = platform_get_irq(pdev, 0);
-> > -	if (!iores || irq < 0 || !pdata) {
-> > +	if (!iores || irq < 0) {
-> >  		ret = -EINVAL;
-> >  		goto err_irq;
-> >  	}
-> > @@ -1294,6 +1306,8 @@ static int __init sdma_probe(struct platform_device *pdev)
-> >  	if (!sdma->script_addrs)
-> >  		goto err_alloc;
-> >  
-> > +	if (of_id)
-> > +		pdev->id_entry = of_id->data;
-> >  	sdma->devtype = pdev->id_entry->driver_data;
-> >  
-> >  	dma_cap_set(DMA_SLAVE, sdma->dma_device.cap_mask);
-> > @@ -1324,10 +1338,30 @@ static int __init sdma_probe(struct platform_device *pdev)
-> >  	if (ret)
-> >  		goto err_init;
-> >  
-> > -	if (pdata->script_addrs)
-> > +	if (pdata && pdata->script_addrs)
-> >  		sdma_add_scripts(sdma, pdata->script_addrs);
-> >  
-> > -	sdma_get_firmware(sdma, pdata->fw_name);
-> > +	if (pdata) {
-> > +		sdma_get_firmware(sdma, pdata->fw_name);
-> > +	} else {
-> > +		/*
-> > +		 * Because that device tree does not encode ROM script address,
-> > +		 * the RAM script in firmware is mandatory for device tree
-> > +		 * probe, otherwise it fails.
-> > +		 */
-> > +		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
-> > +					      &fw_name);
-> > +		if (ret) {
-> > +			dev_err(&pdev->dev, "failed to get firmware name\n");
-> > +			goto err_init;
-> > +		}
-> > +
-> > +		ret = sdma_get_firmware(sdma, fw_name);
-> > +		if (ret) {
-> > +			dev_err(&pdev->dev, "failed to get firmware\n");
-> > +			goto err_init;
-> > +		}
-> > +	}
-> >  
-> >  	sdma->dma_device.dev = &pdev->dev;
-> >  
-> > @@ -1375,6 +1409,7 @@ static int __exit sdma_remove(struct platform_device *pdev)
-> >  static struct platform_driver sdma_driver = {
-> >  	.driver		= {
-> >  		.name	= "imx-sdma",
-> > +		.of_match_table = sdma_dt_ids,
-> >  	},
-> >  	.id_table	= sdma_devtypes,
-> >  	.remove		= __exit_p(sdma_remove),
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+[...]
+
+>> +		gic: interrupt-controller@48241000 {
+>> +			compatible = "ti,omap4-gic", "arm,gic";
+>
+> The gic binding is still being hashed out. This needs binding
+> documentation and handling of PPIs. I'm planning on posting an updated
+> series today with this.
+>
+> "arm,gic" should be dropped or replaced with "arm,cortex-a9-gic".
+> Non-specific DT bindings are not well received. Is OMAP4 gic different
+> from standard Cortex-A9?
+
+Not at all. We named it like that based on Grant's comment:
+http://permalink.gmane.org/gmane.linux.ports.arm.omap/60393
+
+I'll update it with the new binding.
+
+>> +			interrupt-controller;
+>> +			#interrupt-cells =<1>;
+>> +			reg =<0x48241000 0x1000>,
+>> +			<0x48240100 0x0200>;
+>
+> Isn't the cpu interface register space 0x100 bytes long?
+
+I've just checked the spec, and this is indeed 256 bytes. I'll fix that.
+
+Thanks for the comments.
+
+Regards,
+Benoit
+
