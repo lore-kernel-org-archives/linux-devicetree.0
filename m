@@ -1,76 +1,42 @@
-From: David Gibson <david@gibson.dropbear.id.au>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: How to handle named resources with DT?
-Date: Fri, 26 Aug 2011 23:06:44 +1000
-Message-ID: <20110826130644.GN2308@yookeroo.fritz.box>
+Date: Fri, 26 Aug 2011 17:35:55 +0200
+Message-ID: <201108261735.55412.arnd@arndb.de>
 References: <20110809205723.GE11568@ponder.secretlab.ca>
- <877h6173wm.fsf@ti.com>
- <20110826041200.GD2308@yookeroo.fritz.box>
- <201108261258.32880.arnd@arndb.de>
+	<201108261258.32880.arnd@arndb.de>
+	<20110826130644.GN2308@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201108261258.32880.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kevin Hilman <khilman@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Paul Walmsley <paul@pwsan.com>, "Cousson, Benoit" <b-cousson@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110826130644.GN2308@yookeroo.fritz.box>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "Cousson,
+	Benoit" <b-cousson@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2011 at 12:58:32PM +0200, Arnd Bergmann wrote:
-> On Friday 26 August 2011, David Gibson wrote:
-> > Seriously, how many times do I have to say it?
-> > 
-> > 
-> > Using _byname in drivers DOES NOT require adding names to the DT.
-> > 
-> > 
-> > All it needs is some glue logic to attach names as the device tree is
-> > read.  This is properly thought of as part of the code which
-> > translates the device tree into struct platform_device, not as part of
-> > drivers proper.
+On Friday 26 August 2011, David Gibson wrote:
+> If you open code it this way then yes, it's silly.  But what about
+> something like this:
 > 
-> But if you do such code, the only logical place for it to live would
-> be in that driver, otherwise you end up with multiple places in the
-> kernel source tree that deal with the same devices and need to be
-> updated in lock-step. Getting away from this mess is one of the main
-> reasons for converting to device tree based probing in the first place.
+> static struct of_device_id foodevice_of_match[] __devinitdata = {
+>         { .compatible = "foocorp,foodevice1234",
+>           .resource_names = {"base_regs", "extra_regs", }, },
+>         { .compatible = "foocorp,foodevice1239",
+>           .resource_names = {"base_regs", "extra_regs", "more_regs", }, }, 
+>         { },
+> };
 
-Obviously it would be in the driver file, but I'd think of it more as
-some metadata attached to the driver, rather than truly part of the
-driver.
+Hmm, I hadn't thought of that. This looks quite nice indeed. No objections
+to this from my side.
 
-> > FURTHERMORE, even if there were names in the DT, you'd still need
-> > this glue logic, so that drivers converted to _byname could still use
-> > old device trees.
-> 
-> I don't think anyone was talking about converting driver /to/ the
-> _byname method, the debate is mostly whether we should move away from
-> that while we convert drivers to no longer rely on board code but
-> instead allow them to be probed from the device tree.
-> 
-> > Insisting that the names come from the DT is to mistakenly think of
-> > the DT as an extension of the kernel's internal interfaces, instead of
-> > as the external and OS neutral data structure it actually is.
-> 
-> Agreed, that was my main point anyway: Getting the name from the
-> device tree would be a huge mistake. By comparison, the scenario you
-> describe -- adding another identifier to struct resource and initializing
-> from the driver that consumes it -- would not be harmful at all, just a
-> little silly when you end up with a probe function like
-
-If you open code it this way then yes, it's silly.  But what about
-something like this:
-
-static struct of_device_id foodevice_of_match[] __devinitdata = {
-	{ .compatible = "foocorp,foodevice1234",
-	  .resource_names = {"base_regs", "extra_regs", }, },
-	{ .compatible = "foocorp,foodevice1239",
-	  .resource_names = {"base_regs", "extra_regs", "more_regs", }, }, 
-	{ },
-};
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+	Arnd
