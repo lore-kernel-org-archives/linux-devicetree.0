@@ -1,114 +1,226 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Removing platform_get_resource_byname() (was Re: How to handle named
-	resources with DT?)
-Date: Fri, 26 Aug 2011 05:01:05 -0600 (MDT)
-Message-ID: <alpine.DEB.2.00.1108260342560.9743@utopia.booyaka.com>
-References: <20110809205723.GE11568@ponder.secretlab.ca>
-	<201108251705.43168.arnd@arndb.de> <877h6173wm.fsf@ti.com>
-	<32081673.hbCQs4qpyo@wuerfel>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 4/6] DMA: PL330: Add device tree support
+Date: Fri, 26 Aug 2011 08:16:11 -0500
+Message-ID: <4E579C9B.7030807@gmail.com>
+References: <1314348014-2481-1-git-send-email-thomas.abraham@linaro.org>	<1314348014-2481-2-git-send-email-thomas.abraham@linaro.org>	<1314348014-2481-3-git-send-email-thomas.abraham@linaro.org>	<1314348014-2481-4-git-send-email-thomas.abraham@linaro.org> <1314348014-2481-5-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <32081673.hbCQs4qpyo@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kevin Hilman <khilman@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "Cousson,
-	Benoit" <b-cousson@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Greg Kroah-Hartman <gregkh@suse.de>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Kumar Gala <galak@kernel.crashing.org>, Grant Likely <grant.likely@secretlab.ca>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Gibson <david@gibson.dropbear.id.au>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1314348014-2481-5-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, boojin.kim@samsung.com, kgene.kim@samsung.com, patches@linaro.org, vinod.koul@intel.com, jassisinghbrar@gmail.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Aug 2011, Arnd Bergmann wrote:
+Thomas,
 
-> It's not at all about whether the Linux codein drivers/of supports this
-> or not, adding it would be trivial. The point is that it would be
-> *wrong* to add it because there already exists a way to identify every
-> resource in the device tree and we should not extend that interface
-> to have multiple ways to do the same thing just for convenience of
-> a few device drivers!
+On 08/26/2011 03:40 AM, Thomas Abraham wrote:
+> For PL330 dma controllers instantiated from device tree, the channel
+> lookup is based on phandle of the dma controller and dma request id
+> specified by the client node. During probe, the private data of each
+> channel of the controller is set to point to the device node of the
+> dma controller. The 'chan_id' of the each channel is used as the
+> dma request id.
+> 
+> Client driver requesting dma channels specify the phandle of the
+> dma controller and the request id. The pl330 filter function
+> converts the phandle to the device node pointer and matches that
+> with channel's private data. If a match is found, the request id
+> from the client node and the 'chan_id' of the channel is matched.
+> A channel is found if both the values match.
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  .../devicetree/bindings/dma/arm-pl330.txt          |   42 +++++++++++++
+>  drivers/dma/pl330.c                                |   63 +++++++++++++++++++-
+>  2 files changed, 103 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/arm-pl330.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+> new file mode 100644
+> index 0000000..46a8307
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+> @@ -0,0 +1,42 @@
+> +* ARM PrimeCell PL330 DMA Controller
+> +
+> +The ARM PrimeCell PL330 DMA controller can move blocks of memory contents
+> +between memory and peripherals or memory to memory.
+> +
+> +Required properties:
+> +  - compatible: should one or more of the following
+> +    - arm,pl330-pdma - For controllers that support mem-to-dev and dev-to-mem
+> +      transfers.
+> +    - arm,pl330-mdma - For controllers that support mem-to-mem transfers only.
 
-The point is that:
+And if they support both? I would think all controllers can support
+mem-to-mem. If so, the distinction can be made with the number of requests.
 
-- there was a reason why platform_get_resource_byname() was added to the 
-  Linux kernel, that at least some people find useful and relevant
+> +    - arm,primecell - should be included for all pl330 dma controller nodes.
+> +
+> +  - reg: physical base address of the controller and length of memory mapped
+> +    region.
+> +
+> +  - interrupts: interrupt number to the cpu.
+> +
+> +  - arm,primecell-periphid: should be 0x00041330.
 
-- some folks are effectively proposing to remove
-  platform_get_resource_byname() not because it's a bad interface, but 
-  because it would result in changes to the way that DT files are 
-  generated and used
+Should be optional. It's only needed when the h/w value is wrong. This
+is already documented in primecell.txt.
 
-Just as you consider the preservation of platform_get_resource_byname() to 
-be wrong (because it conflicts with DT), some people consider the above 
-rationale to be faulty, because it removes a useful way to abstract 
-drivers from SoC data.
+> +
+> +  - arm,pl330-peri-reqs: number of actual peripheral requests connected to the
+> +    dma controller. Maximum value is 32.
 
-For example, consider that the ordering of device resources, such as IRQ 
-lines or memory regions, in the hardware IP block is arbitrary.  Whomever 
-generates a DT file for that hardware will need to hardcode the driver's 
-assumptions for resource order into the DT generator.  And then hope that 
-the binding assumptions made by that driver are coordinated between all of 
-the other potential DT users out there: other OSes (proprietary or not), 
-bootloaders, etc.
+Perhaps could be a bitmask for sparsely populated requests. May not
+matter since phandles will define the connections.
 
-Contrast this with the situation when named resources are used.  The 
-resources are named with a string that represents their use by the 
-hardware IP block.  In this situation, the order in which they appear in 
-the DT file is unimportant.  There need be no extra hacks added to the DT 
-generation code or to the drivers to ensure that they find the correct 
-resource.
+Can be optional and not present means 00 requests (mem-to-mem only).
 
-Please don't misunderstand: I personally don't consider this specific 
-problem to be a showstopper.  It makes sense to me to improve the DT 
-format to use named resources.  But if the consensus is that the problem 
-is just going to be knowingly pushed on to the poor folks who have to 
-generate DT files, who will have to maintain a bunch of hacks to do so, 
-then, so be it.  But the issue highlights a much larger problem: the 
-apparent level of resistance to improving the DT data format in ways that 
-may affect backwards compatibility.
+> +
+> +Example: (from Samsung's Exynos4 processor dtsi file)
+> +
+> +	pdma0: pdma@12680000 {
+> +		compatible = "arm,pl330-pdma", "arm,primecell";
+> +		reg = <0x12680000 0x1000>;
+> +		interrupts = <99>;
+> +		arm,primecell-periphid = <0x00041330>;
+> +		arm,pl330-peri-reqs = <30>;
+> +	};
+> +
+> +Client drivers (device nodes requiring dma transfers from dev-to-mem or
+> +mem-to-dev) should specify the DMA channel numbers using a two-value pair
+> +as shown below.
+> +
+> +  [property name]  = <[phandle of the dma controller] [dma request id]>;
+> +
+> +      where 'dma request id' is the dma request number which is connected
+> +      to the client controller.
+> +
+> +  Example:  tx-dma-channel = <&pdma0 12>;
 
-There are several aspects of DT, and the way that it's used in the kernel, 
-that could be improved -- like, for example, the fact that computer 
-systems for the past several years are not well-represented by a tree of 
-devices.  And if we don't have a strategy for versioning the content and 
-the layout of the device data, as opposed to simply its binary format, 
-then it's unwise to consider it for broader adoption until this exists, 
-IMHO.
+I like this approach. I looked at this some and some PPC platforms do a
+node for each channel/request, but this is much more simple and similar
+to clock binding approach.
 
-> One of the important advantages of using the IEEE device tree bindings 
-> is that we can define device trees that are to a large degree compatible 
-> with how AIX, Solaris, MacOS, FreeBSD and probably many more (lesser 
-> known) operating systems probe their systems.
+You need to define the property name. Probably just "dma-channel" is
+enough. For peripherals with more than 1, just list them out like when
+you have more than 1 interrupt. The order should be defined as part of
+that device's binding (i.e. 1st channel is tx and 2nd channel is rx).
 
-By that rationale, we should just use ACPI.  It's far more widely deployed 
-than all of those other OSes combined.  (No, I don't think we should use 
-ACPI.)
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 9732995..984dc18 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/amba/pl330.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/scatterlist.h>
+> +#include <linux/of.h>
+>  
+>  #define NR_DEFAULT_DESC	16
+>  
+> @@ -277,6 +278,20 @@ bool pl330_filter(struct dma_chan *chan, void *param)
+>  	if (chan->device->dev->driver != &pl330_driver.drv)
+>  		return false;
+>  
+> +#ifdef CONFIG_OF
+> +	if (chan->device->dev->of_node) {
+> +		const __be32 *prop_value;
+> +		phandle phandle;
+> +		struct device_node *node;
+> +
+> +		prop_value = ((struct property *)param)->value;
+> +		phandle = be32_to_cpup(prop_value++);
+> +		node = of_find_node_by_phandle(phandle);
+> +		return ((chan->private == node) &&
+> +				(chan->chan_id == be32_to_cpup(prop_value)));
+> +	}
+> +#endif
+> +
+>  	peri_id = chan->private;
+>  	return *peri_id == (unsigned)param;
+>  }
+> @@ -777,6 +792,40 @@ static irqreturn_t pl330_irq_handler(int irq, void *data)
+>  		return IRQ_NONE;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static struct dma_pl330_platdata *pl330_parse_dt(struct device *dev)
+> +{
+> +	struct dma_pl330_platdata *pdat;
+> +	const void *value;
+> +
+> +	pdat = devm_kzalloc(dev, sizeof(*pdat), GFP_KERNEL);
+> +	if (!pdat)
+> +		return NULL;
 
-By the way, MacOS stopped using Device Tree several years ago.
+Ideally, we will get rid of platform_data completely in the future, so I
+don't think filling it in from DT is the right approach.
 
-> Changing the resource interface in Linux to have two 'name' fields
-> would also be terribly confusing and is not a good interface
+> +
+> +	value = of_get_property(dev->of_node, "arm,pl330-peri-reqs", NULL);
+> +	if (value)
+> +		pdat->nr_valid_peri = be32_to_cpup(value);
 
-There are other ways of solving that particular problem, other than having 
-two 'name' fields.
+Can't you use the u32 helper function here?
 
-> it would just solve another problem (silly entries in /proc/iomem) that 
-> we don't need to have in the first place when we do the obvious 
-> conversion of the drivers to the IEEE standard way of doing this.
+> +
+> +	if (of_device_is_compatible(dev->of_node, "arm,pl330-pdma")) {
+> +		dma_cap_set(DMA_SLAVE, pdat->cap_mask);
+> +		dma_cap_set(DMA_CYCLIC, pdat->cap_mask);
+> +	} else if (of_device_is_compatible(dev->of_node, "arm,pl330-mdma")) {
+> +		dma_cap_set(DMA_MEMCPY, pdat->cap_mask);
+> +	} else if (of_device_is_compatible(dev->of_node, "arm,primecell")) {
 
-Just like MacOS, the IEEE gave up on Device Tree -- in fact, over a decade 
-ago -- so it doesn't make sense to cite them as an authority any more.
+I don't think the driver should look at this property. This is really
+just for the bus code.
 
-My point is not to disrespect DT, which seems like a useful way of moving 
-device data out of the kernel tree; but rather, to try to ensure that 
-we're not locked into a rigid and outdated way of doing things: either 
-technically, or by people's attitudes.
+Rob
 
-
-- Paul
+> +		dma_cap_set(DMA_SLAVE, pdat->cap_mask);
+> +		dma_cap_set(DMA_CYCLIC, pdat->cap_mask);
+> +		dma_cap_set(DMA_MEMCPY, pdat->cap_mask);
+> +	}
+> +
+> +	return pdat;
+> +}
+> +#else
+> +static struct dma_pl330_platdata *pl330_parse_dt(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  static int __devinit
+>  pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  {
+> @@ -789,7 +838,13 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  	int i, ret, irq;
+>  	int num_chan;
+>  
+> -	pdat = adev->dev.platform_data;
+> +	if (adev->dev.of_node) {
+> +		pdat = pl330_parse_dt(&adev->dev);
+> +		if (!pdat)
+> +			return -ENOMEM;
+> +	} else {
+> +		pdat = adev->dev.platform_data;
+> +	}
+>  
+>  	/* Allocate a new DMAC and its Channels */
+>  	pdmac = kzalloc(sizeof(*pdmac), GFP_KERNEL);
+> @@ -862,7 +917,11 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  
+>  	for (i = 0; i < num_chan; i++) {
+>  		pch = &pdmac->peripherals[i];
+> -		pch->chan.private = pdat ? &pdat->peri_id[i] : NULL;
+> +		if (!adev->dev.of_node)
+> +			pch->chan.private = pdat ? &pdat->peri_id[i] : NULL;
+> +		else
+> +			pch->chan.private = adev->dev.of_node;
+> +
+>  		INIT_LIST_HEAD(&pch->work_list);
+>  		spin_lock_init(&pch->lock);
+>  		pch->pl330_chid = NULL;
