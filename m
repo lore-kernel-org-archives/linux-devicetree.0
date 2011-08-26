@@ -1,82 +1,64 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: How to handle named resources with DT?
-Date: Fri, 26 Aug 2011 14:12:00 +1000
-Message-ID: <20110826041200.GD2308@yookeroo.fritz.box>
-References: <20110809205723.GE11568@ponder.secretlab.ca>
- <20110824231613.GC19890@legolas.emea.dhcp.ti.com>
- <20110825102824.GB10405@n2100.arm.linux.org.uk>
- <201108251705.43168.arnd@arndb.de>
- <877h6173wm.fsf@ti.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v3 00/13] arm/tegra: Initialize GPIO & pinmux from DT
+Date: Thu, 25 Aug 2011 22:04:31 -0700
+Message-ID: <CAOesGMiygfaNkPa7uURCiJpC=WDinWhKi07LFgJ+5JoGW_fLKw@mail.gmail.com>
+References: <1314315824-9687-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <877h6173wm.fsf@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@ti.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Paul Walmsley <paul@pwsan.com>, "Cousson, Benoit" <b-cousson@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1314315824-9687-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2011 at 11:16:25AM -0700, Kevin Hilman wrote:
-> Arnd Bergmann <arnd@arndb.de> writes:
-> > On Thursday 25 August 2011, Russell King - ARM Linux wrote:
-> >> On Thu, Aug 25, 2011 at 02:16:14AM +0300, Felipe Balbi wrote:
-> >> > on top of all that, for IPs which are used on many SoCs (such as MUSB)
-> >> > it's quite silly to force all users to provide resources in a certain
-> >> > order. It sounds to me that this will be prone to error in many ways
-> >> > until everything is synced up and on the correct order.
-> >> > 
-> >> > Ditching _byname is a very bad idea.
-> >> 
-> >> I continue to disagree.  The current _byname is an abonimation and hack
-> >> to try to "fix" this problem.
-> >> 
-> >> _byname should have been implemented differently - rather than overriding
-> >> the resources name field (which is normally specified to be the device
-> >> or driver name), a new field should have been introduced in struct resource
-> >> to carry the resource sub-name (which is really what it is.)
-> >> 
-> >> That would have avoided making /proc/iomem completely illegible with
-> >> multiple devices using this feature.
-> >
-> > I agree 100%.
-> 
-> Please clarify. 
-> 
-> What I hear Russell saying is a problem with the *implementation* of the
-> _byname API.  
-> 
-> What I hear you sating is that since DT doesn't support this, we need to
-> remove it's usage completely from platform_devices also.
-> 
-> These are two very different approaches.
-> 
-> Fixing the implementation as Russell suggested seems relatively easy,
-> and conceptually similar to adding it to the DT.  Removing _byname all
-> together seems like significant work just to avoid adding a feature to
-> the DT core.
-
-Seriously, how many times do I have to say it?
+On Thu, Aug 25, 2011 at 4:43 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wr=
+ote:
+> v3:
+> * Build on Jamie Iles' patches to split some of the DT parsing into
+> =A0common code.
+> * Renamed some properties to remove "nvidia," from name; they can be
+> =A0generic.
+> * Support pins property, to apply DT nodes to multiple pins/groups
+> * Some minor error-message changes driven by some of the above.
+> * Removed requirement to #ifdef CONFIG_OF
+> * Removed AUXDATA table entries in mach-tegra/board-dt.c
+>
+> TODO:
+> * Convert from using strings to using integers for the function and p=
+in
+> =A0names. This relies on the dtc patches I posted yesterday, but shou=
+ld
+> =A0be pretty simple once they're in.
+>
+> Jamie Iles (1):
+> =A0of: add a generic pinmux helper
+>
+> Stephen Warren (12):
+> =A0arm/tegra: Prep boards for gpio/pinmux conversion to pdevs
+> =A0docs/dt: Document nvidia,tegra20-gpio's nvidia,enabled-gpios prope=
+rty
+> =A0arm/dt: Tegra: Add nvidia,enabled-gpios property to GPIO controlle=
+r
+> =A0docs/dt: Document nvidia,tegra20-pinmux binding
+> =A0arm/dt: Tegra: Add pinmux node
+> =A0dt: add empty for_each_child_of_node, of_find_property
+> =A0gpio/tegra: Convert to a platform device
+> =A0gpio/tegra: Add device tree support
+> =A0arm/tegra: Convert pinmux driver to a platform device
+> =A0of: add property iteration helpers
+> =A0arm/tegra: Add device tree support to pinmux driver
+> =A0arm/tegra: board-dt: Remove dependency on non-dt pinmux functions
 
 
-Using _byname in drivers DOES NOT require adding names to the DT.
+This is looking pretty sane to me.
+
+Grant, how do you prefer to handle this, since it spans of/dt, gpio
+and tegra code? I can start a topic branch for Arnd to pull in for the
+tegra parts, would you prefer picking up the of helper functions on
+your own or is an ack from you and merge through the arm-soc tree
+easier?
 
 
-All it needs is some glue logic to attach names as the device tree is
-read.  This is properly thought of as part of the code which
-translates the device tree into struct platform_device, not as part of
-drivers proper.
-
-FURTHERMORE, even if there were names in the DT, you'd *still* need
-this glue logic, so that drivers converted to _byname could still use
-old device trees.
-
-Insisting that the names come from the DT is to mistakenly think of
-the DT as an extension of the kernel's internal interfaces, instead of
-as the external and OS neutral data structure it actually is.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+-Olof
