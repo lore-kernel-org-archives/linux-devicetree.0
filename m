@@ -1,51 +1,54 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: How to handle named resources with DT?
-Date: Fri, 26 Aug 2011 17:41:29 +0200
-Message-ID: <201108261741.29850.arnd@arndb.de>
-References: <20110809205723.GE11568@ponder.secretlab.ca>
-	<20110826130644.GN2308@yookeroo.fritz.box>
-	<201108261735.55412.arnd@arndb.de>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v3 11/13] of: add property iteration helpers
+Date: Fri, 26 Aug 2011 08:59:44 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B24A40C8@HQMAIL01.nvidia.com>
+References: <1314315824-9687-1-git-send-email-swarren@nvidia.com>
+ <1314315824-9687-12-git-send-email-swarren@nvidia.com>
+ <20110826092632.GB3926@pulham.picochip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201108261735.55412.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "G,
-	Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110826092632.GB3926-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 August 2011, Arnd Bergmann wrote:
-> On Friday 26 August 2011, David Gibson wrote:
-> > If you open code it this way then yes, it's silly.  But what about
-> > something like this:
-> > 
-> > static struct of_device_id foodevice_of_match[] __devinitdata = {
-> >         { .compatible = "foocorp,foodevice1234",
-> >           .resource_names = {"base_regs", "extra_regs", }, },
-> >         { .compatible = "foocorp,foodevice1239",
-> >           .resource_names = {"base_regs", "extra_regs", "more_regs", }, }, 
-> >         { },
-> > };
+Jamie Iles wrote at Friday, August 26, 2011 3:27 AM:
+> On Thu, Aug 25, 2011 at 05:43:42PM -0600, Stephen Warren wrote:
+> > This patch adds macros for_each_u32_property_value and
+> > for_each_string_property_value, which iterate over an array of values
+> > within a device-tree property. Usage is for example:
+> >
+> > struct of_iter_string_prop iter;
+> > for_each_string_property_value(iter, np, "pins")
+> >         printk("Got value %s\n", iter.value);
+> >
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> Hmm, I hadn't thought of that. This looks quite nice indeed. No objections
-> to this from my side.
-> 
+> Nicely implemented!
 
-Ah well, one objection on second thought:
+Thanks!
 
-This assumes that there is just one type of resource, but named resources
-may be used for iomem, ioport and irq resources. If you have multiple
-IRQs and multiple IOMEM resources, I don't see how the index in the 
-resource_names array can be used for both of them.
+> For the !CONFIG_OF case, I *think* that
+> of_iter_u32_prop and of_iter_string_prop can be empty struct's, but I
+> wouldn't want to bet money on that!
 
-	Arnd
+Empty structs themselves certainly did compile OK, but the code that
+uses these macros references iter.value directly, and isn't under #ifdef
+CONFIG_OF, so that field has to exist.
+
+I suppose an alternative would be to add an accessor function:
+
+struct of_iter_string_prop iter;
+for_each_string_property_value(iter, np, "pins")
+        printk("Got value %s\n", of_iter_string_value(iter));
+
+which would return NULL/"" when !CONFIG_OF, and hence allow iter.value
+to be removed too. Do you think that's a good approach? It'd be easy to
+implement.
+
+-- 
+nvpublic
