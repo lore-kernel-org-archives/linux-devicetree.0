@@ -1,35 +1,50 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] tty: add a DesignWare 8250 driver
-Date: Fri, 26 Aug 2011 18:04:02 +0200
-Message-ID: <201108261804.02784.arnd@arndb.de>
-References: <1314368925-13097-1-git-send-email-jamie@jamieiles.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v3 00/13] arm/tegra: Initialize GPIO & pinmux from DT
+Date: Fri, 26 Aug 2011 09:07:00 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B24A40D2@HQMAIL01.nvidia.com>
+References: <1314315824-9687-1-git-send-email-swarren@nvidia.com>
+ <CAOesGMiygfaNkPa7uURCiJpC=WDinWhKi07LFgJ+5JoGW_fLKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1314368925-13097-1-git-send-email-jamie@jamieiles.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Jamie Iles <jamie@jamieiles.com>
-Cc: linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@suse.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMiygfaNkPa7uURCiJpC=WDinWhKi07LFgJ+5JoGW_fLKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 August 2011, Jamie Iles wrote:
-> The Synopsys DesignWare 8250 is an 8250 that has an extra interrupt that
-> gets raised when writing to the LCR when busy.  To handle this we need
-> special serial_out, serial_in and handle_irq methods.  Add a new
-> platform driver that uses these accessors.
+Olof Johansson wrote at Thursday, August 25, 2011 11:05 PM:
+> On Thu, Aug 25, 2011 at 4:43 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > v3:
+...
+> This is looking pretty sane to me.
 > 
-> Cc: Alan Cox <alan@linux.intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@suse.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+> Grant, how do you prefer to handle this, since it spans of/dt, gpio
+> and tegra code? I can start a topic branch for Arnd to pull in for the
+> tegra parts, would you prefer picking up the of helper functions on
+> your own or is an ack from you and merge through the arm-soc tree
+> easier?
 
-The driver looks good to me,
+I haven't thought through all the merging details yet, but do be aware
+of the dependencies this patchset has:
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+1) Rename of arch/arm/mach-tegra/gpio.c -> drivers/gpio/gpio-tegra.c
+   This is in Grant's gpio for-next branch, and hence linux-next.
+   This is in some GPIO-related branch of Russell's.
 
-Is the patch to export serial8250_handle_irq already in Greg's tree or is that
-still missing?
+2) Various previous Tegra <mach/gpio.h> rework.
+   This is in some GPIO-related branch of Russell's; I assume the same one
+   as (1), but I can't actually find this branch, so can't check.
 
-	Arnd
+Neither of those is in any Linus release or rc.
+
+I *think* that's it.
+
+For reference, this patchset was physical written/tested on top of
+next-20110823, with the patches mentioned in (2) aboe, and some others that
+hopefully aren't relevant, between linux-next and this patchset.
+
+-- 
+nvpublic
