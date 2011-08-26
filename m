@@ -1,34 +1,194 @@
-From: Moon Hwa Hong <armkernel8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: ARMv7 MMU and cache enabling code in boot/compressed/head.S
-Date: Fri, 26 Aug 2011 09:31:25 +0900
-Message-ID: <CAFWwQu_-HirBTsyFpG8EKs6Su9r=O4Wi8=L3b-O4OdMKDC0f8g@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2] ARM: gic: add OF based initialization
+Date: Thu, 25 Aug 2011 21:37:28 -0500
+Message-ID: <4E5706E8.4080408@gmail.com>
+References: <1312921020-6820-1-git-send-email-robherring2@gmail.com>
+	<1314308940-8847-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1314308940-8847-1-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: marc.zyngier@arm.com, Rob Herring <rob.herring@calxeda.com>, grant.likely@secretlab.ca, thomas.abraham@linaro.org, jamie@jamieiles.com, shawn.guo@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On 08/25/2011 04:49 PM, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
+> 
+> This adds gic initialization using device tree data. The initialization
+> functions are intended to be called by a generic OF interrupt
+> controller parsing function once the right pieces are in place.
+> 
+> PPI binding support based on work by Marc Zyngier.
+> 
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> ---
+> Changes in v2:
+> - Add bindings and documentation for PPI
+> - change interrupt-cells to 2
+> - Move init of np pointer to after intc_desc ptr NULL check
+> 
+>  Documentation/devicetree/bindings/arm/gic.txt |   62 +++++++++++++++++++++++++
+>  arch/arm/common/gic.c                         |   41 ++++++++++++++++
+>  arch/arm/include/asm/hardware/gic.h           |    3 +
+>  3 files changed, 106 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> new file mode 100644
+> index 0000000..85be7c9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -0,0 +1,62 @@
+> +* ARM Generic Interrupt Controller
+> +
+> +ARM SMP cores are often associated with a GIC, providing per processor
+> +interrupts (PPI), shared processor interrupts (SPI) and software
+> +generated interrupts (SGI).
+> +
+> +Primary GIC is attached directly to the CPU and typically has PPIs. Secondary GICs are
+> +cascaded into the upward interrupt controller and do not have PPIs.
+> +
+> +Main node required properties:
+> +
+> +- compatible : should be one of:
+> +	"arm,cortex-a9-gic"
+> +	"arm,arm11mp-gic"
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source.  The type shall be a <u32> and the value shall be 2.
 
-I started arm linux kernel hacking.
-I can't understand 554 line.
-I think that 554 line is not necessary.
-Because ISB instruction(556 line) makes synchronization between 553 and 557.
-Please advice to me.
+I need to add the following level sense info. I'm using the same values
+as IRQF_TRIGGER_* as suggested by Grant.
 
+ The 2nd cell contains the level-sense information, encoded as follows:
+                    1 = low-to-high edge triggered
+                    2 = high-to-low edge triggered
+                    4 = active high level-sensitive
+                    8 = active low level-sensitive
 
-530 __armv7_mmu_cache_on:
-.
-.
-.
-553         mcr p15, 0, r0, c1, c0, 0   @ load control register
-554         mrc p15, 0, r0, c1, c0, 0   @ and read it back
-555         mov r0, #0
-556         mcr p15, 0, r0, c7, c5, 4   @ ISB
-557         mov pc, r12
-
-Have a nice day.
-
-MH Hong.
+> +- reg : Specifies base physical address(s) and size of the GIC registers. The
+> +  first 2 values are the GIC distributor register base and size. The 2nd 2
+> +  values are the GIC cpu interface register base and size.
+> +- #size-cells : Shall be <0> as PPIs don't have size for reg property. Optional
+> +  for secondary GICs.
+> +
+> +Optional
+> +- interrupts	: optional, used on secondary GICs only
+> +
+> +PPI sub-nodes required properties:
+> +
+> +- compatible : should match the main node with "-ppi" appended. one of:
+> +	"arm,cortex-a9-gic-ppi"
+> +	"arm,arm11mp-gic-ppi"
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source.  The type shall be a <u32> and the value shall be 1 as PPIs
+> +  don't have edge/level settings.
+> +- reg : Specifies cpu number the PPIs are attached to.
+> +
+> +Example:
+> +
+> +	intc: interrupt-controller@fff11000 {
+> +		compatible = "arm,cortex-a9-gic";
+> +		#interrupt-cells = <2>;
+> +		#size-cells = <0>;
+> +		#address-cells = <1>;
+> +		interrupt-controller;
+> +		reg = <0xfff11000 0x1000>,
+> +		      <0xfff10100 0x100>;
+> +		      
+> +		gicppi0: gic-ppi@0 {
+> +			compatible = "arm,cortex-a9-gic-ppi";
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller;
+> +			reg = <0>;
+> +		};
+> +		gicppi1: gic-ppi@1 {
+> +			compatible = "arm,cortex-a9-gic-ppi";
+> +			#interrupt-cells = <1>;
+> +			interrupt-controller;
+> +			reg = <1>;
+> +		};
+> +	};
+> +
+> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+> index f13298e..a796299 100644
+> --- a/arch/arm/common/gic.c
+> +++ b/arch/arm/common/gic.c
+> @@ -28,6 +28,10 @@
+>  #include <linux/smp.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/irqdomain.h>
+>  
+>  #include <asm/irq.h>
+>  #include <asm/mach/irq.h>
+> @@ -394,3 +398,40 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
+>  	writel_relaxed(map << 16 | irq, gic_data[0].dist_base + GIC_DIST_SOFTINT);
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_OF
+> +static int gic_cnt __initdata = 0;
+> +
+> +void __init gic_of_init(struct of_intc_desc *d)
+> +{
+> +	struct device_node *np;
+> +	void __iomem *cpu_base;
+> +	void __iomem *dist_base;
+> +	int irq;
+> +
+> +	if (WARN_ON(!d || !d->controller))
+> +		return;
+> +
+> +	np = d->controller;
+> +	dist_base = of_iomap(np, 0);
+> +	WARN(!dist_base, "unable to map gic dist registers\n");
+> +
+> +	cpu_base = of_iomap(np, 1);
+> +	WARN(!cpu_base, "unable to map gic cpu registers\n");
+> +
+> +	gic_init(gic_cnt, d->irq_base, dist_base, cpu_base);
+> +	irq_domain_add_simple(d->controller, d->irq_base);
+> +
+> +	if (d->parent) {
+> +		irq = irq_of_parse_and_map(np, 0);
+> +		gic_cascade_irq(gic_cnt, irq);
+> +	}
+> +	gic_cnt++;
+> +}
+> +
+> +void __init gic_of_ppi_init(struct of_intc_desc *d)
+> +{
+> +	irq_domain_add_simple(d->controller, d->irq_base);
+> +}
+> +
+> +#endif
+> diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
+> index 435d3f8..a6594d4 100644
+> --- a/arch/arm/include/asm/hardware/gic.h
+> +++ b/arch/arm/include/asm/hardware/gic.h
+> @@ -37,6 +37,9 @@ extern void __iomem *gic_cpu_base_addr;
+>  extern struct irq_chip gic_arch_extn;
+>  
+>  void gic_init(unsigned int, unsigned int, void __iomem *, void __iomem *);
+> +struct of_intc_desc;
+> +void gic_of_init(struct of_intc_desc *d);
+> +void gic_of_ppi_init(struct of_intc_desc *d);
+>  void gic_secondary_init(unsigned int);
+>  void gic_cascade_irq(unsigned int gic_nr, unsigned int irq);
+>  void gic_raise_softirq(const struct cpumask *mask, unsigned int irq);
