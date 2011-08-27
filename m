@@ -1,62 +1,50 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH] tty: add a DesignWare 8250 driver
-Date: Fri, 26 Aug 2011 10:57:11 -0700
-Message-ID: <20110826175711.GA15324@kroah.com>
-References: <1314368925-13097-1-git-send-email-jamie@jamieiles.com>
- <201108261804.02784.arnd@arndb.de>
- <20110826162021.GC2802@pulham.picochip.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: How to handle named resources with DT?
+Date: Sun, 28 Aug 2011 00:37:36 +1000
+Message-ID: <20110827143736.GA10182@yookeroo.fritz.box>
+References: <20110809205723.GE11568@ponder.secretlab.ca>
+ <20110826130644.GN2308@yookeroo.fritz.box>
+ <201108261735.55412.arnd@arndb.de>
+ <201108261741.29850.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110826162021.GC2802@pulham.picochip.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Jamie Iles <jamie@jamieiles.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@suse.de>
+In-Reply-To: <201108261741.29850.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kevin Hilman <khilman@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Paul Walmsley <paul@pwsan.com>, "Cousson, Benoit" <b-cousson@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2011 at 05:20:21PM +0100, Jamie Iles wrote:
-> On Fri, Aug 26, 2011 at 06:04:02PM +0200, Arnd Bergmann wrote:
-> > On Friday 26 August 2011, Jamie Iles wrote:
-> > > The Synopsys DesignWare 8250 is an 8250 that has an extra interrupt that
-> > > gets raised when writing to the LCR when busy.  To handle this we need
-> > > special serial_out, serial_in and handle_irq methods.  Add a new
-> > > platform driver that uses these accessors.
+On Fri, Aug 26, 2011 at 05:41:29PM +0200, Arnd Bergmann wrote:
+> On Friday 26 August 2011, Arnd Bergmann wrote:
+> > On Friday 26 August 2011, David Gibson wrote:
+> > > If you open code it this way then yes, it's silly.  But what about
+> > > something like this:
 > > > 
-> > > Cc: Alan Cox <alan@linux.intel.com>
-> > > Cc: Greg Kroah-Hartman <gregkh@suse.de>
-> > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+> > > static struct of_device_id foodevice_of_match[] __devinitdata = {
+> > >         { .compatible = "foocorp,foodevice1234",
+> > >           .resource_names = {"base_regs", "extra_regs", }, },
+> > >         { .compatible = "foocorp,foodevice1239",
+> > >           .resource_names = {"base_regs", "extra_regs", "more_regs", }, }, 
+> > >         { },
+> > > };
 > > 
-> > The driver looks good to me,
+> > Hmm, I hadn't thought of that. This looks quite nice indeed. No objections
+> > to this from my side.
 > > 
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> > 
-> > Is the patch to export serial8250_handle_irq already in Greg's tree or is that
-> > still missing?
 > 
-> No, and I really don't know how I missed it.  I was sure an allmodconfig 
-> build worked, but perhaps 8250_dw wasn't selected.  Anyhow, here's the 
-> patch that does that.
+> Ah well, one objection on second thought:
 > 
-> Apologies again for making such a mess out of this series!
-> 
-> Thanks,
-> 
-> Jamie
-> 
-> 8<---
-> 
-> From: Jamie Iles <jamie@jamieiles.com>
-> Subject: [PATCH] tty: 8250: export serial8250_handle_irq
-> 
-> Allow modules to use the normal 8250 irq handler inside their own.
+> This assumes that there is just one type of resource, but named resources
+> may be used for iomem, ioport and irq resources. If you have multiple
+> IRQs and multiple IOMEM resources, I don't see how the index in the 
+> resource_names array can be used for both of them.
 
-So this patch needs to be applied before the first one here, right?
+Details, shmetails, so you have both 'reg_names' and 'interrupt_names'.
 
-Care to just resend the patches again, in the right order, so I am sure
-to get it correct?
-
-confused,
-
-greg k-h
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
