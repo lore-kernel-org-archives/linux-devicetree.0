@@ -1,102 +1,67 @@
-From: Sylwester Nawrocki <snjw23@gmail.com>
-Subject: Re: [ANN] Meeting minutes of the Cambourne meeting
-Date: Sun, 28 Aug 2011 13:28:23 +0200
-Message-ID: <4E5A2657.7030605@gmail.com>
-References: <201107261647.19235.laurent.pinchart@ideasonboard.com> <201108081750.07000.laurent.pinchart@ideasonboard.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: How to handle named resources with DT?
+Date: Sun, 28 Aug 2011 18:39:34 +1000
+Message-ID: <20110828083934.GA4254@yookeroo.fritz.box>
+References: <20110809205723.GE11568@ponder.secretlab.ca>
+ <201108261741.29850.arnd@arndb.de>
+ <20110827143736.GA10182@yookeroo.fritz.box>
+ <5595208.OB5dBohxQP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <201108081750.07000.laurent.pinchart@ideasonboard.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-media <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@maxwell.research.nokia.com>, Tuukka Toivonen <tuukka.toivonen@intel.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree-discuss@lists.ozlabs.org, Mauro Carvalho Chehab <mchehab@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5595208.OB5dBohxQP@wuerfel>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kevin Hilman <khilman@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, Paul Walmsley <paul@pwsan.com>, "Cousson, Benoit" <b-cousson@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On 08/08/2011 05:50 PM, Laurent Pinchart wrote:
-> Subdevs hierachy, Linux device model
-> ------------------------------------
+On Sat, Aug 27, 2011 at 08:13:59PM +0200, Arnd Bergmann wrote:
+> On Sunday 28 August 2011 00:37:36 David Gibson wrote:
+> > On Fri, Aug 26, 2011 at 05:41:29PM +0200, Arnd Bergmann wrote:
+> > > On Friday 26 August 2011, Arnd Bergmann wrote:
+> > > > On Friday 26 August 2011, David Gibson wrote:
+> > > > > If you open code it this way then yes, it's silly.  But what about
+> > > > > something like this:
+> > > > > 
+> > > > > static struct of_device_id foodevice_of_match[] __devinitdata = {
+> > > > >         { .compatible = "foocorp,foodevice1234",
+> > > > >           .resource_names = {"base_regs", "extra_regs", }, },
+> > > > >         { .compatible = "foocorp,foodevice1239",
+> > > > >           .resource_names = {"base_regs", "extra_regs", "more_regs", }, }, 
+> > > > >         { },
+> > > > > };
+> > > > 
+> > > > Hmm, I hadn't thought of that. This looks quite nice indeed. No objections
+> > > > to this from my side.
+> > > > 
+> > > 
+> > > Ah well, one objection on second thought:
+> > > 
+> > > This assumes that there is just one type of resource, but named resources
+> > > may be used for iomem, ioport and irq resources. If you have multiple
+> > > IRQs and multiple IOMEM resources, I don't see how the index in the 
+> > > resource_names array can be used for both of them.
+> > 
+> > Details, shmetails, so you have both 'reg_names' and 'interrupt_names'.
 > 
->   Preliminary conclusions:
-> 
->   - With the move to device tree on ARM (and other platforms), I2C, SPI and
->     platform subdevs should be created from board code, not from bridge/host
->     drivers.
->   - Bus notifiers should be used by bridge/host drivers to wait for all
->     required subdevs. V4L2 core should provide helper functions.
->   - struct clk should be used to handle clocks provided by hosts to subdevs.
+> Right, and I guess we can simply ignore DMA and ioport resources because they
+> are extremely rare, right?
 
-I have been investigating recently possible ways to correct the external clock
-handling in Samsung FIMC driver and this led me up to the device tree stuff. 
-I.e. in order to be able to register any I2C client device there is a need
-to enable its master clock at the v4l2 host/bridge driver.
+Well, remember it's where resources can appear in the DT node that
+matters, not what the types are in the platform device.  ioports will
+typically appear suitably encoded in 'reg', so that's covered.  I've
+never been very clear on what exactly DMA resources cover, but yeah,
+you might need something for dma-reg or other device tree properties.
 
-There is an issue that the v4l2_device (host)/v4l2_subdev hierarchy is not
-reflected by the linux device tree model, e.g. the host might be a platform
-device while the client an I2C client device. Thus a proper device/driver 
-registration order is not assured by the device driver core from v4l2 POV.
+> One more detail: IIRC struct of_device_id is exported to module_init_tools
+> for purposes of autoloading, so changing the structure breaks user
+> space.
 
-I thought about embedding some API in a struct v4l2_device for the subdevs
-to be able to get their master clock(s) as they need it. But this would work
-only when a v4l2_device and v4l2_subdev are matched (registered) before I2C
-client's probe(), or alternatively subdev_internal_ops::registered() callback,
-is called. 
+Ah.  That is a bit more of a problem.
 
-Currently such requirement is satisfied when the I2C client/v4l2 subdev
-devices are registered from within a v4l2 bridge/host driver initialization
-routine. But we may need to stop doing this to adhere to the DT rules.
-
-I guess above you didn't really mean to create subdevs from board code?
-The I2C client registration is now done at the I2C bus drivers, using the OF
-helpers to retrieve the child devices list from fdt.
-
-I guess we could try to create some sort of replacement for
-v4l2_i2c_new_subdev_board() function in linux/drivers/of/* (of_i2c.c ?),
-similar to of_i2c_register_devices().
-
-But first we would have somehow to make sure the host drivers are registered
-and initialized first. I'm not sure how to do it.
-Plus such a new subdev registration method would have to obtain a relevant
-struct v4l2_device object reference during the process; which is getting
-a bit cumbersome..
-
-Also, if we used a 'struct clk' to handle clocks provided by hosts to subdevs,
-could we use any subdev operation callback to pass a reference to such object
-from host to subdev? I doubt since the clock may be needed in the subdev before
-it is allocated and fully initialized, (i.e. available in the host).
-
-If we have embedded a 'struct clk' pointer into struct v4l2_device, it would
-have probably to be an array of clocks and the subdev would have to be able to
-find out which clock applies to it. 
-
-So I thought about doing something like:
-
-diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
-index d61febf..9888f7d 100644
---- a/include/media/v4l2-device.h
-+++ b/include/media/v4l2-device.h
-@@ -54,6 +54,7 @@ struct v4l2_device {
-        /* notify callback called by some sub-devices. */
-        void (*notify)(struct v4l2_subdev *sd,
-                        unsigned int notification, void *arg);
-+       const struct clk * (*clock_get)(struct v4l2_subdev *sd);
-        /* The control handler. May be NULL. */
-        struct v4l2_ctrl_handler *ctrl_handler;
-        /* Device's priority state */
-
-This would allow the host to return proper clock for a subdev.
-But it won't work unless the initialization order is assured..
-
-> 
->   Actions:
-> 
->   - Work on a proof-of-concept implementation of the new subdevs registration
->     mechanism and send an RFC (whoever needs it first).
->   - Work on a proof-of-concept clock handling using struct clk with the OMAP3
->     ISP driver (Laurent).
-
----
-Regards,
-Sylwester
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
