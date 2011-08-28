@@ -1,56 +1,102 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: How to handle named resources with DT?
-Date: Sat, 27 Aug 2011 15:47:55 -0600 (MDT)
-Message-ID: <alpine.DEB.2.00.1108271444240.23968@utopia.booyaka.com>
-References: <20110809205723.GE11568@ponder.secretlab.ca> <877h6173wm.fsf@ti.com> <20110826041200.GD2308@yookeroo.fritz.box> <201108261258.32880.arnd@arndb.de> <20110826130644.GN2308@yookeroo.fritz.box>
+From: Sylwester Nawrocki <snjw23@gmail.com>
+Subject: Re: [ANN] Meeting minutes of the Cambourne meeting
+Date: Sun, 28 Aug 2011 13:28:23 +0200
+Message-ID: <4E5A2657.7030605@gmail.com>
+References: <201107261647.19235.laurent.pinchart@ideasonboard.com> <201108081750.07000.laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110826130644.GN2308@yookeroo.fritz.box>
-Sender: linux-omap-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Felipe Balbi <balbi@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Scott Wood <scottwood@freescale.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <201108081750.07000.laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@maxwell.research.nokia.com>, Tuukka Toivonen <tuukka.toivonen@intel.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree-discuss@lists.ozlabs.org, Mauro Carvalho Chehab <mchehab@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Aug 2011, David Gibson wrote:
+Hi Laurent,
 
-> static struct of_device_id foodevice_of_match[] __devinitdata = {
-> 	{ .compatible = "foocorp,foodevice1234",
-> 	  .resource_names = {"base_regs", "extra_regs", }, },
-> 	{ .compatible = "foocorp,foodevice1239",
-> 	  .resource_names = {"base_regs", "extra_regs", "more_regs", }, }, 
-> 	{ },
-> };
+On 08/08/2011 05:50 PM, Laurent Pinchart wrote:
+> Subdevs hierachy, Linux device model
+> ------------------------------------
+> 
+>   Preliminary conclusions:
+> 
+>   - With the move to device tree on ARM (and other platforms), I2C, SPI and
+>     platform subdevs should be created from board code, not from bridge/host
+>     drivers.
+>   - Bus notifiers should be used by bridge/host drivers to wait for all
+>     required subdevs. V4L2 core should provide helper functions.
+>   - struct clk should be used to handle clocks provided by hosts to subdevs.
 
-This preserves platform_device_get_byname(), which is good.  It also 
-facilitates debugging: like naming resources in the device tree data, it 
-provides something human-readable to output to /proc/iomem and similar 
-mechanisms.
+I have been investigating recently possible ways to correct the external clock
+handling in Samsung FIMC driver and this led me up to the device tree stuff. 
+I.e. in order to be able to register any I2C client device there is a need
+to enable its master clock at the v4l2 host/bridge driver.
 
-But it doesn't resolve the problem on the DT generation side.
+There is an issue that the v4l2_device (host)/v4l2_subdev hierarchy is not
+reflected by the linux device tree model, e.g. the host might be a platform
+device while the client an I2C client device. Thus a proper device/driver 
+registration order is not assured by the device driver core from v4l2 POV.
 
-When someone at a hardware vendor writes the DT generator code, they'll 
-have to implement a similar table to yours for each IP block with multiple 
-resources of the same type.
+I thought about embedding some API in a struct v4l2_device for the subdevs
+to be able to get their master clock(s) as they need it. But this would work
+only when a v4l2_device and v4l2_subdev are matched (registered) before I2C
+client's probe(), or alternatively subdev_internal_ops::registered() callback,
+is called. 
 
-IP blocks with multiple resources of the same type are not isolated cases.  
-For example, of the 82 IP block instances on the OMAP4 that have hwmod 
-data currently upstream (a subset of what's actually on the chip), at 
-least 68 of them (83%) have multiple resources of the same type[1][2].
+Currently such requirement is satisfied when the I2C client/v4l2 subdev
+devices are registered from within a v4l2 bridge/host driver initialization
+routine. But we may need to stop doing this to adhere to the DT rules.
 
-Certainly, from a kernel development perspective, one can decide to just 
-dump this kind of DT generation problem back on the hardware vendors.  
-But it seems more efficient and less error-prone to simply remove both 
-mapping tables, and to export names directly from the IP block data into 
-the device data format.
+I guess above you didn't really mean to create subdevs from board code?
+The I2C client registration is now done at the I2C bus drivers, using the OF
+helpers to retrieve the child devices list from fdt.
 
+I guess we could try to create some sort of replacement for
+v4l2_i2c_new_subdev_board() function in linux/drivers/of/* (of_i2c.c ?),
+similar to of_i2c_register_devices().
 
-- Paul
+But first we would have somehow to make sure the host drivers are registered
+and initialized first. I'm not sure how to do it.
+Plus such a new subdev registration method would have to obtain a relevant
+struct v4l2_device object reference during the process; which is getting
+a bit cumbersome..
 
-1. The number is actually higher than this.  This count doesn't
-   include IP blocks with multiple address ranges on different 
-   interconnects.
+Also, if we used a 'struct clk' to handle clocks provided by hosts to subdevs,
+could we use any subdev operation callback to pass a reference to such object
+from host to subdev? I doubt since the clock may be needed in the subdev before
+it is allocated and fully initialized, (i.e. available in the host).
 
-2. Data from arch/arm/mach-omap2/omap_hwmod_44xx_data.c, as of Linux 
-   v3.1-rc3.
-   Available from http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=blob;f=arch/arm/mach-omap2/omap_hwmod_44xx_data.c;h=6201422c0606b5103c01e563f67060134658774d;hb=HEAD
+If we have embedded a 'struct clk' pointer into struct v4l2_device, it would
+have probably to be an array of clocks and the subdev would have to be able to
+find out which clock applies to it. 
+
+So I thought about doing something like:
+
+diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
+index d61febf..9888f7d 100644
+--- a/include/media/v4l2-device.h
++++ b/include/media/v4l2-device.h
+@@ -54,6 +54,7 @@ struct v4l2_device {
+        /* notify callback called by some sub-devices. */
+        void (*notify)(struct v4l2_subdev *sd,
+                        unsigned int notification, void *arg);
++       const struct clk * (*clock_get)(struct v4l2_subdev *sd);
+        /* The control handler. May be NULL. */
+        struct v4l2_ctrl_handler *ctrl_handler;
+        /* Device's priority state */
+
+This would allow the host to return proper clock for a subdev.
+But it won't work unless the initialization order is assured..
+
+> 
+>   Actions:
+> 
+>   - Work on a proof-of-concept implementation of the new subdevs registration
+>     mechanism and send an RFC (whoever needs it first).
+>   - Work on a proof-of-concept clock handling using struct clk with the OMAP3
+>     ISP driver (Laurent).
+
+---
+Regards,
+Sylwester
