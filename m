@@ -1,40 +1,39 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: How to handle named resources with DT?
-Date: Mon, 29 Aug 2011 22:54:04 +0100
-Message-ID: <20110829215404.GA26846@sirena.org.uk>
-References: <20110809205723.GE11568@ponder.secretlab.ca>
-	<877h6173wm.fsf@ti.com> <20110826041200.GD2308@yookeroo.fritz.box>
-	<201108261258.32880.arnd@arndb.de>
-	<20110826130644.GN2308@yookeroo.fritz.box>
-	<alpine.DEB.2.00.1108271444240.23968@utopia.booyaka.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [ANN] Meeting minutes of the Cambourne meeting
+Date: Tue, 30 Aug 2011 00:20:09 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1108300018490.5065@axis700.grange>
+References: <201107261647.19235.laurent.pinchart@ideasonboard.com>
+ <201108081750.07000.laurent.pinchart@ideasonboard.com> <4E5A2657.7030605@gmail.com>
+ <201108291508.59649.laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.00.1108271444240.23968-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "G,
-	Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <201108291508.59649.laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <snjw23@gmail.com>, linux-media <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@maxwell.research.nokia.com>, Tuukka Toivonen <tuukka.toivonen@intel.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree-discuss@lists.ozlabs.org, Mauro Carvalho Chehab <mchehab@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 27, 2011 at 03:47:55PM -0600, Paul Walmsley wrote:
+On Mon, 29 Aug 2011, Laurent Pinchart wrote:
 
-> Certainly, from a kernel development perspective, one can decide to just 
-> dump this kind of DT generation problem back on the hardware vendors.  
-> But it seems more efficient and less error-prone to simply remove both 
-> mapping tables, and to export names directly from the IP block data into 
-> the device data format.
+[snip]
 
-That seems sensible, though we'd probably want to keep the option to
-remap in there at least on the generation side in case some integrators
-end up renaming the ports on the IP block for some reason.
+> My idea was to let the kernel register all devices based on the DT or board 
+> code. When the V4L2 host/bridge driver gets registered, it will then call a 
+> V4L2 core function with a list of subdevs it needs. The V4L2 core would store 
+> that information and react to bus notifier events to notify the V4L2 
+> host/bridge driver when all subdevs are present. At that point the host/bridge 
+> driver will get hold of all the subdevs and call (probably through the V4L2 
+> core) their .registered operation. That's where the subdevs will get access to 
+> their clock using clk_get().
+
+Correct me, if I'm wrong, but this seems to be the case of sensor (and 
+other i2c-client) drivers having to succeed their probe() methods without 
+being able to actually access the hardware?
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
