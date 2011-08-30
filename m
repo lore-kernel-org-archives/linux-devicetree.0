@@ -1,16 +1,17 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [ANN] Meeting minutes of the Cambourne meeting
-Date: Tue, 30 Aug 2011 00:38:12 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1108300035430.5065@axis700.grange>
-References: <201107261647.19235.laurent.pinchart@ideasonboard.com>
-	<201108291508.59649.laurent.pinchart@ideasonboard.com>
-	<Pine.LNX.4.64.1108300018490.5065@axis700.grange>
-	<201108300026.05489.laurent.pinchart@ideasonboard.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] dmaengine: imx-sdma: add device tree probe support
+Date: Tue, 30 Aug 2011 09:45:38 +0800
+Message-ID: <20110830014537.GA19294@S2100-06.ap.freescale.net>
+References: <1310723066-567-1-git-send-email-shawn.guo@linaro.org>
+	<1310723066-567-4-git-send-email-shawn.guo@linaro.org>
+	<1312430234.1536.552.camel@vkoul-udesk3>
+	<1314279478.1606.35.camel@vkoul-udesk3>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201108300026.05489.laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1314279478.1606.35.camel@vkoul-udesk3>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,46 +21,29 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-2TTamOfO6J3ta4EC/59zMBl4MBrZKKet0E9HWUfgJXw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sylwester Nawrocki <snjw23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuukka Toivonen <tuukka.toivonen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Aug 2011, Laurent Pinchart wrote:
-
-> Hi Guennadi,
+On Thu, Aug 25, 2011 at 07:07:58PM +0530, Koul, Vinod wrote:
+> On Thu, 2011-08-04 at 09:27 +0530, Koul, Vinod wrote:
+> > On Fri, 2011-07-15 at 17:44 +0800, Shawn Guo wrote:
+> > > It adds device tree probe support for imx-sdma driver.
+> > > 
+> > > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > > Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > > Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > I need an ack from Grant before I can apply this series
+> I don't think I heard back from Grant on this.
+> Grant let me know if you are okay with this patch
 > 
-> On Tuesday 30 August 2011 00:20:09 Guennadi Liakhovetski wrote:
-> > On Mon, 29 Aug 2011, Laurent Pinchart wrote:
-> > 
-> > [snip]
-> > 
-> > > My idea was to let the kernel register all devices based on the DT or
-> > > board code. When the V4L2 host/bridge driver gets registered, it will
-> > > then call a V4L2 core function with a list of subdevs it needs. The V4L2
-> > > core would store that information and react to bus notifier events to
-> > > notify the V4L2 host/bridge driver when all subdevs are present. At that
-> > > point the host/bridge driver will get hold of all the subdevs and call
-> > > (probably through the V4L2 core) their .registered operation. That's
-> > > where the subdevs will get access to their clock using clk_get().
-> > 
-> > Correct me, if I'm wrong, but this seems to be the case of sensor (and
-> > other i2c-client) drivers having to succeed their probe() methods without
-> > being able to actually access the hardware?
-> 
-> That's right. I'd love to find a better way :-) Note that this is already the 
-> case for many subdev drivers that probe the hardware in the .registered() 
-> operation instead of the probe() method.
+Hi Vinod,
 
-Then why do you think it is better, than adding devices from bridge 
-drivers? Think about hotpluggable devices - drivers create devices all the 
-time - USB etc. Why cannot we do the same? As a historic reference: 
-soc-camera used to do this too before - probe without hardware access and 
-"really-probe" after the host turns on the clock. Then we switched to 
-registering devices later. I like the present approach better.
+All Grant's comments on v1 had been addressed by v2, and we had not
+seen further comments there for a period of time.  The whole patch
+series had been merged through ARM tree.
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+-- 
+Regards,
+Shawn
