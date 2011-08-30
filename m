@@ -1,34 +1,75 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 1/3] ASoC: Add device tree binding for WM8770
-Date: Tue, 30 Aug 2011 19:18:09 +0100
-Message-ID: <20110830181809.GQ2061@opensource.wolfsonmicro.com>
-References: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
-	<CAOZdJXUQpyvxOVgS9mPnMwJM1TNF-X+zOVkOsDqJM_oBNQih0Q@mail.gmail.com>
-	<20110830181222.GP2061@opensource.wolfsonmicro.com>
-	<4E5D28AB.7040206@freescale.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: [PATCH 1/3] arm/dt: Tegra: Update SDHCI nodes to match bindings
+Date: Tue, 30 Aug 2011 13:17:15 -0600
+Message-ID: <1314731837-6985-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4E5D28AB.7040206-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Ball <cjb@laptop.org>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 30, 2011 at 01:15:07PM -0500, Timur Tabi wrote:
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Acked-by: Olof Johansson <olof@lixom.net>
+---
+This is a repost of http://www.spinics.net/lists/linux-tegra/msg02117.html
+I'm including it here since it's not in linux-next yet, and patch 3 depends
+on it.
 
->  Note that I require a clock-frequency property to indicate the input clock
-> frequency on the codec itself.
+ arch/arm/boot/dts/tegra-harmony.dts  |   12 ++++++------
+ arch/arm/boot/dts/tegra-seaboard.dts |    6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-It's listed as optional in the binding (and would in general need to
-be).
+diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
+index 4c05334..e581866 100644
+--- a/arch/arm/boot/dts/tegra-harmony.dts
++++ b/arch/arm/boot/dts/tegra-harmony.dts
+@@ -57,14 +57,14 @@
+ 	};
+ 
+ 	sdhci@c8000200 {
+-		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
+-			<&gpio 57 0>, /* wp, gpio PH1 */
+-			<&gpio 155 0>; /* power, gpio PT3 */
++		cd-gpios = <&gpio 69 0>; /* gpio PI5 */
++		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
++		power-gpios = <&gpio 155 0>; /* gpio PT3 */
+ 	};
+ 
+ 	sdhci@c8000600 {
+-		gpios = <&gpio 58 0>, /* cd, gpio PH2 */
+-			<&gpio 59 0>, /* wp, gpio PH3 */
+-			<&gpio 70 0>; /* power, gpio PI6 */
++		cd-gpios = <&gpio 58 0>; /* gpio PH2 */
++		wp-gpios = <&gpio 59 0>; /* gpio PH3 */
++		power-gpios = <&gpio 70 0>; /* gpio PI6 */
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+index 1940cae..64cedca 100644
+--- a/arch/arm/boot/dts/tegra-seaboard.dts
++++ b/arch/arm/boot/dts/tegra-seaboard.dts
+@@ -21,8 +21,8 @@
+ 	};
+ 
+ 	sdhci@c8000400 {
+-		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
+-			<&gpio 57 0>, /* wp, gpio PH1 */
+-			<&gpio 70 0>; /* power, gpio PI6 */
++		cd-gpios = <&gpio 69 0>; /* gpio PI5 */
++		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
++		power-gpios = <&gpio 70 0>; /* gpio PI6 */
+ 	};
+ };
+-- 
+1.7.0.4
