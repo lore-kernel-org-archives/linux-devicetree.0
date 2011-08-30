@@ -1,138 +1,321 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: Arm device tree wonder
-Date: Tue, 30 Aug 2011 16:09:08 -0500
-Message-ID: <4E5D5174.9060405@freescale.com>
-References: <1314734987.11994.YahooMailNeo@web132211.mail.ird.yahoo.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] dtc: Add support for named integer constants
+Date: Tue, 30 Aug 2011 15:30:18 -0600
+Message-ID: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1314734987.11994.YahooMailNeo@web132211.mail.ird.yahoo.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pierre Beaumon <pierre.beaumon@yahoo.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, jdl-CYoMK+44s/E@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2011 03:09 PM, Pierre Beaumon wrote:
-> From I understanding the goal of the FDT, is to limit board code for each soc and simplify machine code.
-> 
-> === info provided by FDT ===
-> 
-> We describe the mapping of controllers on the soc (irq, memory map). But this info won't change for a given SOC.
-> What's the point of describing the interrupt controller, timer on FDT ?
-> Do we really expect to support new SOC without any kernel modification ?
+You may define constants as follows:
 
-Depending on how closely it resembles a previously supported SoC, the
-changes might be minimal.
+/define/ TWO 2;
+/define/ FOUR 4;
+/define/ OTHER FOUR;
 
-> If not why not include for once this info in the kernel and avoid to duplicate it for each board ?
+And properties may use these values as follows:
 
-DTC recently grew the ability to do overlay trees, which in combination
-with include files lets you factor out the SoC stuff into its own file.
+foo = <1 TWO 3 FOUR 5>;
 
-For example, see arch/powerpc/boot/dts/p4080si.dtsi and
-arch/powerpc/boot/dts/p4080ds.dts
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v2: Now against upstream dtc, now doesn't use $ as a prefix to variable,
+names, added a test for the new functionality.
 
-> Also most controller aren't stable across SOC version :
-> - there are bugs in hardware (for example omap3 errata is 100 pages) and new revisions correct them
-> - new revisions add new features
-> 
-> How the driver is aware of the revision on the controller. Most of
-> the time hardware guys are lazy and don't provide this info in the
-> controller (no version register). The driver need to deduce it from
-> the SOC version/revision (with dynamic detection).
+I tested this using the dtc test-suite, and against the kernel's Tegra
+device-tree files, after addition of the pinmux initialization table,
+and conversion of that to using identifiers.
 
-You can still use the SOC version info.  You could also encode whatever
-information is relevant into the device's compatible string, or other
-properties.
+ dtc-lexer.l           |   13 +++++++++
+ dtc-parser.y          |   73 +++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/Makefile.tests  |    3 +-
+ tests/identifiers.c   |   44 +++++++++++++++++++++++++++++
+ tests/identifiers.dts |   12 ++++++++
+ tests/run_tests.sh    |    4 +++
+ 6 files changed, 148 insertions(+), 1 deletions(-)
+ create mode 100644 tests/identifiers.c
+ create mode 100644 tests/identifiers.dts
 
-> FDT doesn't seem to provide this info and shouldn't (what if a board got different SOC revisions).
-
-On Freescale powerpc boards we usually patch up things like this from
-U-Boot, though this has some drawbacks.  It could also be done from
-early Linux platform code, or some update program that sits between
-firmware and Linux (such as a U-Boot standalone application).  We use
-these updates for board-level things as well, such as when certain
-devices are enabled/disabled by jumper or similar config.
-
-It's also possible to have the driver just find out about the SOC
-revision from elsewhere, though this can be awkward in a virtualized
-environment if you need to mix emulated devices that belong to different
-SOC types.
-
-> This means there still a link between driver and machine code for hardware probing.
-> 
-> === in or out kernel tree FDT ? ===
-> 
-> Also when the driver is improved (support new feature, ...), how new
-> configuration should be provided to FDT ? Can we break the FDT API or
-> should we provide only new property ?
-
-The FDT is not a driver configuration medium.  It is supposed to just
-describe the hardware.
-
-> If we want to support out of kernel FDT, I think we can't break the API.
-> 
-> But what happen if a board/SOC vendor provide a board with a crappy
-> FDT mapping, we can rewrite it and do new mapping in mainline
-> kernel. But that means the vendor FDT is not supported anymore, and
-> we can't boot new kernel on this board without overriding the vendor
-> FDT.
-
-In general, if you're relying on a binding that hasn't been accepted
-into mainline Linux (or possibly some other designated binding
-repository, such as devicetree.org), you're at risk of breakage.  Same
-as with other APIs.
-
-You can usually have the code support both the new and old bindings, though.
-
-> Sometime when doing a board, we discover too late board bug that can
-> be workaround in the board code. How this will work with FDT ? Should
-> be do like in x86 with quirk in kernel according to dmi indentifier
-> or have machine code somewhere ?
-
-On powerpc we still have board code (identified by string, not
-enumeration).  Even if we eventually develop the ability to boot on an
-unrecognized board purely based on the other things in the device tree
-(provided all the needed support is actually there), the ability to
-match the toplevel compatible when special handling is needed would
-still be there.
-
-> Arm is different of other architecture (sparc/powerpc) where FDT is
-> used because there are lot's of Soc with different controllers.
-> Nearly all vendor got its own uart, i2c, ... I am waiting to see how
-> it will work on arm.
-
-How is this different from powerpc?
-
-> But please don't forget arm isn't only used on laptop/netbook that
-> want generic kernel. It is used for a wide variety of applications.
-> These applications may not be found in the mainline kernel, but that
-> don't mean nobody use them.
-
-This can also be said of powerpc.
-
-> Also I believe one big arm problem is a lack of common infrastructure
-> that lead to code duplication. Some machine try to do too much
-> things. omap2 (mach-omap2 + plat-omap) is about 80 KSLOC over
-> 400KSLOC (76 mach + plat directories). That 8 times bigger than the
-> average ((80/2)/(400/76))! There are either common stuff that should
-> be shared, or some stuff should be moved in drivers.
-> 
-> Also the directory organization of mach-*, plat-* is quite complex. 
-> Why not put a top level directory with the soc family name, and then
-> put in that directory mach-*/plat-* directories.
-
-Why have such a rigid structure at all, versus just having various bits
-of code that support various things, glued together however the device
-tree and/or board code specify?
-
--Scott
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index e866ea5..77492d0 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -28,6 +28,7 @@
+ PROPNODECHAR	[a-zA-Z0-9,._+*#?@-]
+ PATHCHAR	({PROPNODECHAR}|[/])
+ LABEL		[a-zA-Z_][a-zA-Z0-9_]*
++IDENTIFIER	[a-zA-Z_][a-zA-Z0-9_]*
+ STRING		\"([^\\"]|\\.)*\"
+ WS		[[:space:]]
+ COMMENT		"/*"([^*]|\*+[^*/])*\*+"/"
+@@ -96,6 +97,12 @@ static int pop_input_file(void);
+ 			return DT_MEMRESERVE;
+ 		}
+ 
++<*>"/define/"	{
++			DPRINT("Keyword: /define/\n");
++			BEGIN_DEFAULT();
++			return DT_DEFINE;
++		}
++
+ <*>{LABEL}:	{
+ 			DPRINT("Label: %s\n", yytext);
+ 			yylval.labelref = xstrdup(yytext);
+@@ -103,6 +110,12 @@ static int pop_input_file(void);
+ 			return DT_LABEL;
+ 		}
+ 
++<V1>{IDENTIFIER} {
++			DPRINT("identifier: %s\n", yytext);
++			yylval.identifier = xstrdup(yytext + 1);
++			return DT_IDENTIFIER;
++		}
++
+ <V1>[0-9]+|0[xX][0-9a-fA-F]+      {
+ 			yylval.literal = xstrdup(yytext);
+ 			DPRINT("Literal: '%s'\n", yylval.literal);
+diff --git a/dtc-parser.y b/dtc-parser.y
+index 5e84a67..0558c38 100644
+--- a/dtc-parser.y
++++ b/dtc-parser.y
+@@ -33,6 +33,9 @@ extern void yyerror(char const *s);
+ extern struct boot_info *the_boot_info;
+ extern int treesource_error;
+ 
++static struct identifier *get_identifier(const char *s);
++static void set_identifier(const char *name, unsigned long long value);
++static unsigned long long eval_identifier(const char *name);
+ static unsigned long long eval_literal(const char *s, int base, int bits);
+ %}
+ 
+@@ -40,6 +43,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+ 	char *propnodename;
+ 	char *literal;
+ 	char *labelref;
++	char *identifier;
+ 	unsigned int cbase;
+ 	uint8_t byte;
+ 	struct data data;
+@@ -55,7 +59,9 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+ 
+ %token DT_V1
+ %token DT_MEMRESERVE
++%token DT_DEFINE
+ %token <propnodename> DT_PROPNODENAME
++%token <identifier> DT_IDENTIFIER
+ %token <literal> DT_LITERAL
+ %token <cbase> DT_BASE
+ %token <byte> DT_BYTE
+@@ -113,6 +119,13 @@ memreserve:
+ 		}
+ 	;
+ 
++define:
++	  DT_DEFINE DT_IDENTIFIER cellval ';'
++		{
++			set_identifier($2, $3);
++		}
++	;
++
+ addr:
+ 	  DT_LITERAL
+ 		{
+@@ -125,6 +138,10 @@ devicetree:
+ 		{
+ 			$$ = name_node($2, "");
+ 		}
++	| define
++		{
++			$$ = name_node(build_node(NULL, NULL), "");
++		}
+ 	| devicetree '/' nodedef
+ 		{
+ 			$$ = merge_nodes($1, $3);
+@@ -139,6 +156,10 @@ devicetree:
+ 				print_error("label or path, '%s', not found", $2);
+ 			$$ = $1;
+ 		}
++	| devicetree define
++		{
++			$$ = $1;
++		}
+ 	;
+ 
+ nodedef:
+@@ -265,6 +286,10 @@ cellval:
+ 		{
+ 			$$ = eval_literal($1, 0, 32);
+ 		}
++	| DT_IDENTIFIER
++		{
++			$$ = eval_identifier($1);
++		}
+ 	;
+ 
+ bytestring:
+@@ -327,6 +352,54 @@ void yyerror(char const *s) {
+ 	print_error("%s", s);
+ }
+ 
++struct identifier {
++	const char *name;
++	unsigned long long value;
++	struct identifier *next;
++};
++static struct identifier *identifiers;
++
++static struct identifier *get_identifier(const char *name)
++{
++	struct identifier *identifier = identifiers;
++
++	while (identifier != NULL) {
++		if (streq(name, identifier->name))
++			return identifier;
++		identifier = identifier->next;
++	}
++
++	return NULL;
++}
++
++static void set_identifier(const char *name, unsigned long long value)
++{
++	struct identifier *identifier;
++
++	if (get_identifier(name) != NULL) {
++		print_error("redefining %s", name);
++		return;
++	}
++
++	identifier = xmalloc(sizeof(*identifier));
++	identifier->name = name;
++	identifier->value = value;
++	identifier->next = identifiers;
++	identifiers = identifier;
++}
++
++unsigned long long eval_identifier(const char *name)
++{
++	struct identifier *identifier = get_identifier(name);
++
++	if (identifier == NULL) {
++		print_error("identifier %s does not exist", name);
++		return 0;
++	}
++
++	return identifier->value;
++}
++
+ static unsigned long long eval_literal(const char *s, int base, int bits)
+ {
+ 	unsigned long long val;
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index c564e72..25d2e3c 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -15,7 +15,8 @@ LIB_TESTS_L = get_mem_rsv \
+ 	extra-terminating-null \
+ 	dtbs_equal_ordered \
+ 	dtb_reverse dtbs_equal_unordered \
+-	add_subnode_with_nops path_offset_aliases
++	add_subnode_with_nops path_offset_aliases \
++	identifiers
+ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
+ 
+ LIBTREE_TESTS_L = truncated_property
+diff --git a/tests/identifiers.c b/tests/identifiers.c
+new file mode 100644
+index 0000000..a013d00
+--- /dev/null
++++ b/tests/identifiers.c
+@@ -0,0 +1,44 @@
++/*
++ * libfdt - Flat Device Tree manipulation
++ *	Testcase for /define/
++ * Copyright (C) 2011 NVIDIA, Inc.
++ * Derived from code:
++ * Copyright (C) 2006 David Gibson, IBM Corporation.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++#include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdint.h>
++
++#include <fdt.h>
++#include <libfdt.h>
++
++#include "tests.h"
++#include "testdata.h"
++
++int main(int argc, char *argv[])
++{
++	void *fdt;
++
++	test_init(argc, argv);
++	fdt = load_blob_arg(argc, argv);
++
++	check_property_cell(fdt, 0, "var1", TEST_VALUE_1);
++	check_property_cell(fdt, 0, "var2", TEST_VALUE_1);
++
++	PASS();
++}
+diff --git a/tests/identifiers.dts b/tests/identifiers.dts
+new file mode 100644
+index 0000000..e8d8e23
+--- /dev/null
++++ b/tests/identifiers.dts
+@@ -0,0 +1,12 @@
++/dts-v1/;
++
++/define/ VAR1 0xdeadbeef;
++/define/ VAR2 VAR1;
++
++/ {
++	var1 = <VAR1>;
++	var2 = <VAR2>;
++};
++
++/define/ OTHER 0xdeadbeef;
++
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 72dda32..e0da087 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -343,6 +343,10 @@ dtc_tests () {
+     run_dtc_test -I dtb -O dts -o stdin_odts_test_tree1.dtb.test.dts - < test_tree1.dtb
+     run_wrap_test cmp stdin_odts_test_tree1.dtb.test.dts odts_test_tree1.dtb.test.dts
+ 
++    # Test identifiers
++    run_dtc_test -I dts -O dtb -o identifiers.dtb identifiers.dts
++    run_test identifiers identifiers.dtb
++
+     # Check for graceful failure in some error conditions
+     run_sh_test dtc-fatal.sh -I dts -O dtb nosuchfile.dts
+     run_sh_test dtc-fatal.sh -I dtb -O dtb nosuchfile.dtb
+-- 
+1.7.0.4
