@@ -1,41 +1,42 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [ANN] Meeting minutes of the Cambourne meeting
-Date: Tue, 30 Aug 2011 16:46:42 +0100
-Message-ID: <20110830154642.GM2061@opensource.wolfsonmicro.com>
-References: <201107261647.19235.laurent.pinchart@ideasonboard.com>
- <Pine.LNX.4.64.1108301600020.19151@axis700.grange>
- <CACxGe6tCLJ6F-Rsf=1ENj98YzXHRm9p9xr4-TAiWTHpQbQVOVA@mail.gmail.com>
- <201108301742.56581.laurent.pinchart@ideasonboard.com>
+From: Tabi Timur-B04825 <B04825@freescale.com>
+Subject: Re: [PATCH 1/3] ASoC: Add device tree binding for
+	WM8770
+Date: Tue, 30 Aug 2011 15:48:44 +0000
+Message-ID: <CAOZdJXUQpyvxOVgS9mPnMwJM1TNF-X+zOVkOsDqJM_oBNQih0Q@mail.gmail.com>
+References: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201108301742.56581.laurent.pinchart@ideasonboard.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomasz Stanislawski <t.stanislaws@samsung.com>, Sylwester Nawrocki <snjw23@gmail.com>, Sakari Ailus <sakari.ailus@maxwell.research.nokia.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, devicetree-discuss@lists.ozlabs.org, linux-media <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Tuukka Toivonen <tuukka.toivonen@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Content-Language: en-US
+Content-ID: <C1A7647CF199834BA5FDF160448D752C@freescale.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 30, 2011 at 05:42:55PM +0200, Laurent Pinchart wrote:
+On Mon, Aug 29, 2011 at 8:27 AM, Mark Brown
+<broonie@opensource.wolfsonmicro.com> wrote:
+> Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> ---
+> =A0Documentation/devicetree/bindings/sound/wm8770.txt | =A0 16 ++++++++++=
+++++++
 
-> A dependency system is tempting but will be very complex to implement 
-> properly, especially when faced with cyclic dependencies. For instance the 
-> OMAP3 ISP driver requires the camera sensor device to be present to proceed, 
-> and the camera sensor requires a clock provided by the OMAP3 ISP. To solve 
-> this we need to probe the OMAP3 ISP first, have it register its clock devices, 
-> and then wait until all sensors become available.
+I don't think we should have a separate text file for each codec.
+We'll soon have dozens of files that are almost identical.  Can't we
+have one text file that describes most of the codec nodes, and only
+add new text files for exceptions?
 
-With composite devices like that where the borad has sufficient
-interesting stuff on it representing the board itself as a device (this
-is what ASoC does).
+-- =
 
-> A probe deferral system is probably simpler, but it will have its share of 
-> problems as well. In the above example, if the sensor is probed first, the 
-> driver can return -EAGAIN in the probe() method as the clock isn't available 
-> yet (I'm not sure how to differentiate between "not available yet" and "not 
-> present in the system" though). However, if the OMAP3 ISP is probed first, 
-> returning -EAGAIN in its probe() method won't really help, as we need to 
-> register the clock before waiting for the sensor.
-
-Having a device for the camera subsystem as a whole breaks this loop as
-the probe of that device triggers the overall system probe.
+Timur Tabi
+Linux kernel developer at Freescale
