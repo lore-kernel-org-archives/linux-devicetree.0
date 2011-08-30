@@ -1,99 +1,50 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ASoC: Add device tree binding for WM8770
-Date: Tue, 30 Aug 2011 10:13:28 -0600
-Message-ID: <20110830161328.GA3802@ponder.secretlab.ca>
-References: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 1/2] sdhci/tegra: Add Device Tree probing support
+Date: Tue, 30 Aug 2011 09:17:31 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B3279D49@HQMAIL01.nvidia.com>
+References: <1314123334-23133-1-git-send-email-swarren@nvidia.com>
+ <201108300952.02418.marvin24@gmx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1314624471-15381-1-git-send-email-broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201108300952.02418.marvin24-Mmb7MZpHnFY@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Dietich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2011 at 02:27:49PM +0100, Mark Brown wrote:
-> Signed-off-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-
-All three look fine.
-
-I do agree with Timur that if the bindings don't have anything device
-specific in them, then it would be fine to have one text file for all
-of them.
-
-g.
-
-> ---
->  Documentation/devicetree/bindings/sound/wm8770.txt |   16 ++++++++++++++++
->  sound/soc/codecs/wm8770.c                          |    8 ++++++++
->  2 files changed, 24 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/wm8770.txt
+Marc Dietich wrote at Tuesday, August 30, 2011 1:52 AM:
+...
+> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+...
+> > @@ -95,12 +94,10 @@ static irqreturn_t carddetect_irq(int irq, void *data)
+> >
+> >  static int tegra_sdhci_8bit(struct sdhci_host *host, int bus_width)
+> >  {
+> > -	struct platform_device *pdev = to_platform_device(mmc_dev(host->mmc));
+> > -	struct tegra_sdhci_platform_data *plat;
+> > +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> > +	struct tegra_sdhci_platform_data *plat = pltfm_host->priv;
+> >  	u32 ctrl;
+> >
+> > -	plat = pdev->dev.platform_data;
+> > -
+> >  	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+> >  	if (plat->is_8bit && bus_width == MMC_BUS_WIDTH_8) {
+> >  		ctrl &= ~SDHCI_CTRL_4BITBUS;
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/wm8770.txt b/Documentation/devicetree/bindings/sound/wm8770.txt
-> new file mode 100644
-> index 0000000..866e00c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/wm8770.txt
-> @@ -0,0 +1,16 @@
-> +WM8770 audio CODEC
-> +
-> +This device supports SPI.
-> +
-> +Required properties:
-> +
-> +  - compatible : "wlf,wm8770"
-> +
-> +  - reg : the chip select number.
-> +
-> +Example:
-> +
-> +codec: wm8770@1 {
-> +	compatible = "wlf,wm8770";
-> +	reg = <1>;
-> +};
-> diff --git a/sound/soc/codecs/wm8770.c b/sound/soc/codecs/wm8770.c
-> index 19b92ba..aa05e65 100644
-> --- a/sound/soc/codecs/wm8770.c
-> +++ b/sound/soc/codecs/wm8770.c
-> @@ -14,6 +14,7 @@
->  #include <linux/moduleparam.h>
->  #include <linux/init.h>
->  #include <linux/delay.h>
-> +#include <linux/of_device.h>
->  #include <linux/pm.h>
->  #include <linux/platform_device.h>
->  #include <linux/spi/spi.h>
-> @@ -684,6 +685,12 @@ static struct snd_soc_codec_driver soc_codec_dev_wm8770 = {
->  	.reg_cache_default = wm8770_reg_defs
->  };
->  
-> +static const struct of_device_id wm8770_of_match[] = {
-> +	{ .compatible = "wlf,wm8770", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, wm8770_of_match);
-> +
->  #if defined(CONFIG_SPI_MASTER)
->  static int __devinit wm8770_spi_probe(struct spi_device *spi)
->  {
-> @@ -715,6 +722,7 @@ static struct spi_driver wm8770_spi_driver = {
->  	.driver = {
->  		.name = "wm8770",
->  		.owner = THIS_MODULE,
-> +		.of_match_table = wm8770_of_match,
->  	},
->  	.probe = wm8770_spi_probe,
->  	.remove = __devexit_p(wm8770_spi_remove)
-> -- 
-> 1.7.5.4
-> 
+> what about 8 bit support?
+
+I didn't understand the question at first; I assume you're asking about
+8-bit support in the device-tree binding/parsing.
+
+Yes, that's a missing feature, and I should add it. Thanks for pointing
+that out.
+
+(I'll also fix the binding docs issue that Shawn pointed out while I'm
+at it).
+
+-- 
+nvpublic
