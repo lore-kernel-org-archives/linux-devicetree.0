@@ -1,143 +1,53 @@
-From: Pierre Beaumon <pierre.beaumon-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
-Subject: Arm device tree wonder
-Date: Tue, 30 Aug 2011 21:09:47 +0100 (BST)
-Message-ID: <1314734987.11994.YahooMailNeo@web132211.mail.ird.yahoo.com>
-Reply-To: Pierre Beaumon <pierre.beaumon-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [ANN] Meeting minutes of the Cambourne meeting
+Date: Tue, 30 Aug 2011 22:12:30 +0200
+Message-ID: <201108302212.31144.laurent.pinchart@ideasonboard.com>
+References: <201107261647.19235.laurent.pinchart@ideasonboard.com> <201108301742.56581.laurent.pinchart@ideasonboard.com> <20110830154642.GM2061@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-References: 
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20110830154642.GM2061@opensource.wolfsonmicro.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Tomasz Stanislawski <t.stanislaws@samsung.com>, Sylwester Nawrocki <snjw23@gmail.com>, Sakari Ailus <sakari.ailus@maxwell.research.nokia.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, devicetree-discuss@lists.ozlabs.org, linux-media <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Tuukka Toivonen <tuukka.toivonen@intel.com>
 List-Id: devicetree@vger.kernel.org
 
->From I understanding the goal of the FDT, is to limit board code for each s=
-oc and simplify machine code.
+Hi Mark,
 
-=3D=3D=3D info provided by FDT =3D=3D=3D
+On Tuesday 30 August 2011 17:46:42 Mark Brown wrote:
+> On Tue, Aug 30, 2011 at 05:42:55PM +0200, Laurent Pinchart wrote:
+> > A dependency system is tempting but will be very complex to implement
+> > properly, especially when faced with cyclic dependencies. For instance
+> > the OMAP3 ISP driver requires the camera sensor device to be present to
+> > proceed, and the camera sensor requires a clock provided by the OMAP3
+> > ISP. To solve this we need to probe the OMAP3 ISP first, have it
+> > register its clock devices, and then wait until all sensors become
+> > available.
+> 
+> With composite devices like that where the borad has sufficient
+> interesting stuff on it representing the board itself as a device (this
+> is what ASoC does).
+> 
+> > A probe deferral system is probably simpler, but it will have its share
+> > of problems as well. In the above example, if the sensor is probed
+> > first, the driver can return -EAGAIN in the probe() method as the clock
+> > isn't available yet (I'm not sure how to differentiate between "not
+> > available yet" and "not present in the system" though). However, if the
+> > OMAP3 ISP is probed first, returning -EAGAIN in its probe() method won't
+> > really help, as we need to register the clock before waiting for the
+> > sensor.
+> 
+> Having a device for the camera subsystem as a whole breaks this loop as
+> the probe of that device triggers the overall system probe.
 
-We describe the mapping of controllers on the soc (irq, memory map). But th=
-is info won't change for a given SOC.
-What's the point of describing the interrupt controller, timer on FDT ?
-Do we really expect to support new SOC without any kernel modification ?
-If not why not include for once this info in the kernel and avoid to duplic=
-ate it for each board ?
+The exact same idea crossed my mind after hitting the "Send" button :-)
 
-Also most controller aren't stable across SOC version :
-- there are bugs in hardware (for example omap3 errata is 100 pages) and ne=
-w revisions correct them
-- new revisions add new features
+Would such a device be included in the DT ? My understanding is that the DT 
+should only describe the hardware.
 
-How the driver is aware of the revision on the controller. Most of the time=
- hardware guys are lazy and don't provide this info in the controller (no v=
-ersion register). The driver need to deduce it from the SOC version/revisio=
-n (with dynamic detection).
+-- 
+Regards,
 
-FDT doesn't seem to provide this info and shouldn't (what if a board got di=
-fferent SOC revisions).
-This means there still a link between driver and machine code for hardware =
-probing.
-
-=3D=3D=3D in or out kernel tree FDT ? =3D=3D=3D
-
-Also when the driver is improved (support new feature, ...), how new config=
-uration should be provided to FDT ?
-Can we break the FDT API or should we provide only new property ?
-
-If we want to support out of kernel FDT, I think we can't break the API.
-
-But what happen if a board/SOC vendor provide a board with a crappy FDT map=
-ping, we can rewrite it and do new mapping in mainline kernel.
-But that means the vendor FDT is not supported anymore, and we can't boot n=
-ew kernel on this board without overriding the vendor FDT.
-This is the same problem with acpi table. In theory we could rewrite them, =
-but in practice we add workaround in the interpreter.
-
-An alternative should be to always include the FDT with the kernel.
-But in this case :
-- we don't solve unique board id problem
-- we need tags in order bootloader pass limited information
-- we can't boot new board of generic kernel
--=A0FDT is only an abstraction for board/machine code that is provided by p=
-latform driver/device.
-
-=3D=3D=3D flexibility of FDT =3D=3D=3D
-
-The current code use platform data to configure driver (sdcard bus width, r=
-eset pin, speed info, ...).
-This is easy to convert it to FDT (textual conversion).
-
-But in the current board code conditional can be used. According to the boa=
-rd revision (gpio, fuse, rev atag), different platform data can be provided=
-. Same apply for static external device (i2c, spi, ...).
-How can this be done with FDT ?
-Can FDT support conditional stuff ?
-Should we have a FDT per revision, should the bootloader patch the FDT, sho=
-uld the kernel select/patch the FDT ?
-
-If we have a FDT per revision, I don't believe it is acceptable to be able =
-to flash the FDT with the correct revision.
-Production chain can be complex and making the flashing stage detect the re=
-vision and flashing the correct FDT can't be easy to do (tools they use can=
- be basic, ...).
-
-If I do a generic module (ie a daughter board containing the SOC/pmu) that =
-can be connected to different motherboards.
-The size of memory can change, the external devices can change (spi, usb ph=
-y present or not, lcd, ...).
-The current model can allow to do a generic board code driven by gpio/fuse =
-to do the motherboard configuration. And the customer (that integrate modul=
-e on their motherboard) doesn't need any kernel modification.
-
-How this will work with FDT ?
-
-Some platform data need callback. How this will work with FDT ?
-
-Sometime when doing a board, we discover too late board bug that can be wor=
-karound in the board code.
-How this will work with FDT ?
-Should be do like in x86 with quirk in kernel according to dmi indentifier =
-or have machine code somewhere ?
-
-The kernel FDT can help to unify how platform declare controller resource, =
-but I wonder if it will be enough. It could be interesting to have a soc_bu=
-s (or even emulate a pci_bus) that is look like the pci_bus.
-The advantage of the pci_bus is that it is widely used on most architecture.
-Also it provide interesting functions that are not provided by the platform=
-_bus :
-- vendor/device id/revision
-- pci_(enable|disable)_device (were the clock could be manipulated)
-- pci_prepare_to_sleep/pci_back_from_sleep (for suspend/resume stuff)
-
-=3D=3D=3D=3D
-
-Arm is different of other architecture (sparc/powerpc) where FDT is used be=
-cause there are lot's of Soc with different controllers. Nearly all vendor =
-got its own uart, i2c, ...
-I am waiting to see how it will work on arm.
-
-But please don't forget arm isn't only used on laptop/netbook that want gen=
-eric kernel.
-It is used for a wide variety of applications. These applications may not b=
-e found in the mainline kernel, but that don't mean nobody use them.
-
-Also I believe one big arm problem is a lack of common infrastructure that =
-lead to code duplication.
-Some machine try to do too much things. omap2 (mach-omap2 + plat-omap) is a=
-bout 80 KSLOC over 400KSLOC (76 mach + plat directories). That 8 times bigg=
-er than the average ((80/2)/(400/76))! There are either common stuff that s=
-hould be shared, or some stuff should be moved in drivers.
-
-Also the directory organization of mach-*, plat-* is quite complex.
-Why not put a top level directory with the soc family name, and then put in=
- that directory mach-*/plat-* directories.
+Laurent Pinchart
