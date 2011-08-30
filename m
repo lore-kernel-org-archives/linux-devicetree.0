@@ -1,42 +1,36 @@
-From: Tabi Timur-B04825 <B04825@freescale.com>
-Subject: Re: [PATCH 1/3] ASoC: Add device tree binding for
-	WM8770
-Date: Tue, 30 Aug 2011 15:48:44 +0000
-Message-ID: <CAOZdJXUQpyvxOVgS9mPnMwJM1TNF-X+zOVkOsDqJM_oBNQih0Q@mail.gmail.com>
-References: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [ANN] Meeting minutes of the Cambourne meeting
+Date: Tue, 30 Aug 2011 17:59:25 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1108301755390.19151@axis700.grange>
+References: <201107261647.19235.laurent.pinchart@ideasonboard.com>
+ <Pine.LNX.4.64.1108301600020.19151@axis700.grange>
+ <CACxGe6tCLJ6F-Rsf=1ENj98YzXHRm9p9xr4-TAiWTHpQbQVOVA@mail.gmail.com>
+ <201108301742.56581.laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
-Content-Language: en-US
-Content-ID: <C1A7647CF199834BA5FDF160448D752C@freescale.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <201108301742.56581.laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>, Sylwester Nawrocki <snjw23@gmail.com>, Sakari Ailus <sakari.ailus@maxwell.research.nokia.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, devicetree-discuss@lists.ozlabs.org, linux-media <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Tuukka Toivonen <tuukka.toivonen@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2011 at 8:27 AM, Mark Brown
-<broonie@opensource.wolfsonmicro.com> wrote:
-> Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> ---
-> =A0Documentation/devicetree/bindings/sound/wm8770.txt | =A0 16 ++++++++++=
-++++++
+On Tue, 30 Aug 2011, Laurent Pinchart wrote:
 
-I don't think we should have a separate text file for each codec.
-We'll soon have dozens of files that are almost identical.  Can't we
-have one text file that describes most of the codec nodes, and only
-add new text files for exceptions?
+> A dependency system is tempting but will be very complex to implement 
+> properly, especially when faced with cyclic dependencies. For instance the 
+> OMAP3 ISP driver requires the camera sensor device to be present to proceed, 
 
--- =
+Switching to a notifier instead of waiting in probe() might be a good idea 
+(TM).
 
-Timur Tabi
-Linux kernel developer at Freescale
+> and the camera sensor requires a clock provided by the OMAP3 ISP. To solve 
+> this we need to probe the OMAP3 ISP first, have it register its clock devices, 
+> and then wait until all sensors become available.
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
