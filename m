@@ -1,68 +1,73 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 1/2] sdhci/tegra: Add Device Tree probing support
-Date: Tue, 30 Aug 2011 11:40:36 +0800
-Message-ID: <20110830034035.GC19294@S2100-06.ap.freescale.net>
-References: <1314123334-23133-1-git-send-email-swarren@nvidia.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC PATCH] dtc: Add support for named constants
+Date: Tue, 30 Aug 2011 14:23:16 +1000
+Message-ID: <20110830042316.GH4254@yookeroo.fritz.box>
+References: <1314139400-31984-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1314123334-23133-1-git-send-email-swarren@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-tegra@vger.kernel.org, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1314139400-31984-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnaud Lacombe <lacombar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2011 at 12:15:33PM -0600, Stephen Warren wrote:
-> From: Grant Likely <grant.likely@secretlab.ca>
+On Tue, Aug 23, 2011 at 04:43:20PM -0600, Stephen Warren wrote:
+> You may define constants as follows:
 > 
-> Add hooks to read gpio configuration out of the device tree node.
+> /define/ $TWO 2;
+> /define/ $FOUR 4;
+> /define/ $OTHER $FOUR;
 > 
-> [grant.likely: Rewrite of original patch from John Bonesio]
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> [swarren: Fixed tegra_sdhci_get_ro() to retrieve pdata correctly]
-> [swarren: Reworked to avoid #ifdef CONFIG_OF]
-> [swarren: Reworked binding based on fsl-imx-esdhc.txt]
-> [swarren: Documented binding]
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> And properties may use these values as follows:
+> 
+> foo = <1 $TWO 3 $FOUR 5>;
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
-> Theoretically, these two patches should be merged in order in one place,
-> since the 2nd logically depends on the first. However, it's really just
-> a documentation dependency, so I think it's fine to merge them into the
-> MMC and DT trees separately and let them meet in linux-next.
-> 
->  .../devicetree/bindings/mmc/nvidia-sdhci.txt       |   25 ++++++++++
->  drivers/mmc/host/sdhci-tegra.c                     |   51 +++++++++++++++----
->  2 files changed, 65 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
-> new file mode 100644
-> index 0000000..c87f667
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
-> @@ -0,0 +1,25 @@
-> +* NVIDIA Tegra Secure Digital Host Controller
-> +
-> +This controller on Tegra family SoCs provides an interface for MMC, SD,
-> +and SDIO types of memory cards.
-> +
-> +Required properties:
-> +- compatible : Should be "nvidia,<chip>-sdhci"
-> +- reg : Should contain eSDHC registers location and length
-> +- interrupts : Should contain eSDHC interrupt
+> Note 1: This is against dtc in the Linux kernel. Should this patch be
+> against upstream dtc, then back-ported to the kernel?
 
-You may want to replace eSDHC with something Tegra specific.
+Yes, it should.  It's not even really a backport to the kernel, we
+can just drop a new upstream version in there.
+
+> Note 2: I'd prefer the syntax of /define/ to be:
+> 
+> /define/ TWO 2;
+
+Oh goodness, yes.  The dollar signs are revolting.
+
+> but I assume that'd cause the lexing for DT_DEFINEREF to conflict with
+> that for DT_LABEL?
+
+Nope, the final colon should distinguish DT_LABEL.  In dts-v1 C-like
+identifiers should be lexically distinct in most contexts.  This is
+not by accident.  They could be confused with node or property names,
+but that shouldn't cause trouble.
+
+> Note 3: The define syntax only handles integers. Should it be string-
+> based instead?
+> 
+> Note 4: I'm not sure what to do about re-generating the lex/yacc results;
+> my local tools aren't the versions used previously, and so introduce some
+> changes not related to mine.
+
+This problem will go away when you work against upstream dtc; it has
+bison flex as a build dependency.  We only worry about pre-generating
+the lex and yacc output when we import into the kernel.
 
 -- 
-Regards,
-Shawn
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
