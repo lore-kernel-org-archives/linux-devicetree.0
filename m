@@ -1,45 +1,99 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [PATCH 1/2] sdhci/tegra: Add Device Tree probing support
-Date: Tue, 30 Aug 2011 09:01:37 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B3279D3F@HQMAIL01.nvidia.com>
-References: <1314123334-23133-1-git-send-email-swarren@nvidia.com>
- <20110830034035.GC19294@S2100-06.ap.freescale.net>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ASoC: Add device tree binding for WM8770
+Date: Tue, 30 Aug 2011 10:13:28 -0600
+Message-ID: <20110830161328.GA3802@ponder.secretlab.ca>
+References: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20110830034035.GC19294@S2100-06.ap.freescale.net>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Chris Ball <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1314624471-15381-1-git-send-email-broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote at Monday, August 29, 2011 9:41 PM:
-> On Tue, Aug 23, 2011 at 12:15:33PM -0600, Stephen Warren wrote:
-> > From: Grant Likely <grant.likely@secretlab.ca>
-> >
-> > Add hooks to read gpio configuration out of the device tree node.
-...
-> > diff --git a/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
-...
-> > +* NVIDIA Tegra Secure Digital Host Controller
-> > +
-> > +This controller on Tegra family SoCs provides an interface for MMC, SD,
-> > +and SDIO types of memory cards.
-> > +
-> > +Required properties:
-> > +- compatible : Should be "nvidia,<chip>-sdhci"
-> > +- reg : Should contain eSDHC registers location and length
-> > +- interrupts : Should contain eSDHC interrupt
+On Mon, Aug 29, 2011 at 02:27:49PM +0100, Mark Brown wrote:
+> Signed-off-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+
+All three look fine.
+
+I do agree with Timur that if the bindings don't have anything device
+specific in them, then it would be fine to have one text file for all
+of them.
+
+g.
+
+> ---
+>  Documentation/devicetree/bindings/sound/wm8770.txt |   16 ++++++++++++++++
+>  sound/soc/codecs/wm8770.c                          |    8 ++++++++
+>  2 files changed, 24 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/wm8770.txt
 > 
-> You may want to replace eSDHC with something Tegra specific.
-
-True. The patch is already submitted. Do you think it's worth posting one
-just to fix that; it still seems pretty clear what's required?
-
-Thanks.
-
--- 
-nvpublic
-
+> diff --git a/Documentation/devicetree/bindings/sound/wm8770.txt b/Documentation/devicetree/bindings/sound/wm8770.txt
+> new file mode 100644
+> index 0000000..866e00c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/wm8770.txt
+> @@ -0,0 +1,16 @@
+> +WM8770 audio CODEC
+> +
+> +This device supports SPI.
+> +
+> +Required properties:
+> +
+> +  - compatible : "wlf,wm8770"
+> +
+> +  - reg : the chip select number.
+> +
+> +Example:
+> +
+> +codec: wm8770@1 {
+> +	compatible = "wlf,wm8770";
+> +	reg = <1>;
+> +};
+> diff --git a/sound/soc/codecs/wm8770.c b/sound/soc/codecs/wm8770.c
+> index 19b92ba..aa05e65 100644
+> --- a/sound/soc/codecs/wm8770.c
+> +++ b/sound/soc/codecs/wm8770.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/moduleparam.h>
+>  #include <linux/init.h>
+>  #include <linux/delay.h>
+> +#include <linux/of_device.h>
+>  #include <linux/pm.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/spi/spi.h>
+> @@ -684,6 +685,12 @@ static struct snd_soc_codec_driver soc_codec_dev_wm8770 = {
+>  	.reg_cache_default = wm8770_reg_defs
+>  };
+>  
+> +static const struct of_device_id wm8770_of_match[] = {
+> +	{ .compatible = "wlf,wm8770", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, wm8770_of_match);
+> +
+>  #if defined(CONFIG_SPI_MASTER)
+>  static int __devinit wm8770_spi_probe(struct spi_device *spi)
+>  {
+> @@ -715,6 +722,7 @@ static struct spi_driver wm8770_spi_driver = {
+>  	.driver = {
+>  		.name = "wm8770",
+>  		.owner = THIS_MODULE,
+> +		.of_match_table = wm8770_of_match,
+>  	},
+>  	.probe = wm8770_spi_probe,
+>  	.remove = __devexit_p(wm8770_spi_remove)
+> -- 
+> 1.7.5.4
+> 
