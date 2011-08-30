@@ -1,36 +1,45 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [ANN] Meeting minutes of the Cambourne meeting
-Date: Tue, 30 Aug 2011 17:59:25 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1108301755390.19151@axis700.grange>
-References: <201107261647.19235.laurent.pinchart@ideasonboard.com>
- <Pine.LNX.4.64.1108301600020.19151@axis700.grange>
- <CACxGe6tCLJ6F-Rsf=1ENj98YzXHRm9p9xr4-TAiWTHpQbQVOVA@mail.gmail.com>
- <201108301742.56581.laurent.pinchart@ideasonboard.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [PATCH 1/2] sdhci/tegra: Add Device Tree probing support
+Date: Tue, 30 Aug 2011 09:01:37 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B3279D3F@HQMAIL01.nvidia.com>
+References: <1314123334-23133-1-git-send-email-swarren@nvidia.com>
+ <20110830034035.GC19294@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <201108301742.56581.laurent.pinchart@ideasonboard.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>, Sylwester Nawrocki <snjw23@gmail.com>, Sakari Ailus <sakari.ailus@maxwell.research.nokia.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, devicetree-discuss@lists.ozlabs.org, linux-media <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Tuukka Toivonen <tuukka.toivonen@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20110830034035.GC19294@S2100-06.ap.freescale.net>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Chris Ball <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Aug 2011, Laurent Pinchart wrote:
+Shawn Guo wrote at Monday, August 29, 2011 9:41 PM:
+> On Tue, Aug 23, 2011 at 12:15:33PM -0600, Stephen Warren wrote:
+> > From: Grant Likely <grant.likely@secretlab.ca>
+> >
+> > Add hooks to read gpio configuration out of the device tree node.
+...
+> > diff --git a/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
+...
+> > +* NVIDIA Tegra Secure Digital Host Controller
+> > +
+> > +This controller on Tegra family SoCs provides an interface for MMC, SD,
+> > +and SDIO types of memory cards.
+> > +
+> > +Required properties:
+> > +- compatible : Should be "nvidia,<chip>-sdhci"
+> > +- reg : Should contain eSDHC registers location and length
+> > +- interrupts : Should contain eSDHC interrupt
+> 
+> You may want to replace eSDHC with something Tegra specific.
 
-> A dependency system is tempting but will be very complex to implement 
-> properly, especially when faced with cyclic dependencies. For instance the 
-> OMAP3 ISP driver requires the camera sensor device to be present to proceed, 
+True. The patch is already submitted. Do you think it's worth posting one
+just to fix that; it still seems pretty clear what's required?
 
-Switching to a notifier instead of waiting in probe() might be a good idea 
-(TM).
+Thanks.
 
-> and the camera sensor requires a clock provided by the OMAP3 ISP. To solve 
-> this we need to probe the OMAP3 ISP first, have it register its clock devices, 
-> and then wait until all sensors become available.
+-- 
+nvpublic
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
