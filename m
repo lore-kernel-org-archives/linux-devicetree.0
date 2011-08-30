@@ -1,50 +1,75 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 1/2] sdhci/tegra: Add Device Tree probing support
-Date: Tue, 30 Aug 2011 09:17:31 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B3279D49@HQMAIL01.nvidia.com>
-References: <1314123334-23133-1-git-send-email-swarren@nvidia.com>
- <201108300952.02418.marvin24@gmx.de>
+Subject: RE: [RFC PATCH] dtc: Add support for named constants
+Date: Tue, 30 Aug 2011 09:37:40 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B3279D55@HQMAIL01.nvidia.com>
+References: <1314139400-31984-1-git-send-email-swarren@nvidia.com>
+	<20110830042316.GH4254@yookeroo.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201108300952.02418.marvin24-Mmb7MZpHnFY@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110830042316.GH4254-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Dietich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Arnaud Lacombe <lacombar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Marc Dietich wrote at Tuesday, August 30, 2011 1:52 AM:
-...
-> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-...
-> > @@ -95,12 +94,10 @@ static irqreturn_t carddetect_irq(int irq, void *data)
+David Gibson wrote at Monday, August 29, 2011 10:23 PM:
+> On Tue, Aug 23, 2011 at 04:43:20PM -0600, Stephen Warren wrote:
+> > You may define constants as follows:
 > >
-> >  static int tegra_sdhci_8bit(struct sdhci_host *host, int bus_width)
-> >  {
-> > -	struct platform_device *pdev = to_platform_device(mmc_dev(host->mmc));
-> > -	struct tegra_sdhci_platform_data *plat;
-> > +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> > +	struct tegra_sdhci_platform_data *plat = pltfm_host->priv;
-> >  	u32 ctrl;
+> > /define/ $TWO 2;
+> > /define/ $FOUR 4;
+> > /define/ $OTHER $FOUR;
 > >
-> > -	plat = pdev->dev.platform_data;
-> > -
-> >  	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> >  	if (plat->is_8bit && bus_width == MMC_BUS_WIDTH_8) {
-> >  		ctrl &= ~SDHCI_CTRL_4BITBUS;
+> > And properties may use these values as follows:
+> >
+> > foo = <1 $TWO 3 $FOUR 5>;
+...
+> > Note 2: I'd prefer the syntax of /define/ to be:
+> >
+> > /define/ TWO 2;
 > 
-> what about 8 bit support?
+> Oh goodness, yes.  The dollar signs are revolting.
+> 
+> > but I assume that'd cause the lexing for DT_DEFINEREF to conflict with
+> > that for DT_LABEL?
+> 
+> Nope, the final colon should distinguish DT_LABEL.  In dts-v1 C-like
+> identifiers should be lexically distinct in most contexts.  This is
+> not by accident.  They could be confused with node or property names,
+> but that shouldn't cause trouble.
 
-I didn't understand the question at first; I assume you're asking about
-8-bit support in the device-tree binding/parsing.
+OK, I'll take a stab at that and see.
 
-Yes, that's a missing feature, and I should add it. Thanks for pointing
-that out.
+As background, I found the following thread from 2008:
 
-(I'll also fix the binding docs issue that Shawn pointed out while I'm
-at it).
+http://lists.ozlabs.org/pipermail/devicetree-discuss/2008-September/000149.html
+
+... where Jon Loeliger was working on much more extensive new syntax,
+and it sounded like you had some patches at least for math expressions
+in cells etc. The conversation seemed to die off after a few weeks. Did
+anything come of that; is anyone else working on e.g. at least the math
+expressions and defines part, even if not the scripting stuff?
+
+I see that a little later, Jon pushed:
+
+http://git.jdl.com/gitweb/?p=dtc.git;a=shortlog;h=refs/heads/testing
+
+I'm mainly asking because if /any/ of that is something that's still
+useful to pursue, I might want to align this patch with some of that so
+as not to preclude any of that being ported to ToT.
+
+Thanks.
 
 -- 
 nvpublic
