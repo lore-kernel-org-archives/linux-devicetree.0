@@ -1,57 +1,45 @@
 From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: Arm device tree wonder
-Date: Tue, 30 Aug 2011 19:30:57 -0600 (MDT)
-Message-ID: <alpine.DEB.2.00.1108301910390.26173@utopia.booyaka.com>
-References: <1314734987.11994.YahooMailNeo@web132211.mail.ird.yahoo.com>
+Subject: Re: Virtual addresses in arch/powerpc/boot/dts/tqm8548*.dts ?
+Date: Tue, 30 Aug 2011 19:55:48 -0600 (MDT)
+Message-ID: <alpine.DEB.2.00.1108301946391.26173@utopia.booyaka.com>
+References: <alpine.DEB.2.00.1108301508130.26173@utopia.booyaka.com>
+	<4E5D668B.1060609@mlbassoc.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1314734987.11994.YahooMailNeo@web132211.mail.ird.yahoo.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pierre Beaumon <pierre.beaumon@yahoo.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <4E5D668B.1060609@mlbassoc.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Gary Thomas <gary@mlbassoc.com>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Aug 2011, Pierre Beaumon wrote:
+On Tue, 30 Aug 2011, Gary Thomas wrote:
 
-> Also I believe one big arm problem is a lack of common infrastructure 
-> that lead to code duplication. Some machine try to do too much things. 
-> omap2 (mach-omap2 + plat-omap) is about 80 KSLOC over 400KSLOC (76 mach 
-> + plat directories). That 8 times bigger than the average 
-> ((80/2)/(400/76))! There are either common stuff that should be shared, 
-> or some stuff should be moved in drivers.
+> On 2011-08-30 15:43, Paul Walmsley wrote:
+> 
+> > So are these addresses virtual?  My (perhaps incorrect) understanding of
+> > the device tree files was that they were intended to describe the physical
+> > memory map, rather than the virtual memory map.  Or does this PowerPC
+> > variant have the ability to dynamically change its own physical address
+> > decoding?  Or is something else going on?
+> 
+> These addresses correspond to the internal registers which can be moved. 
+> The default address is set by hardware at reset time (check out the 
+> documentation on the hardware reset word).  Obviously one board is 
+> strapped for the IMMR at one address, another board at a different 
+> address.  I almost always configure my boards to use 0xF0000000 for the 
+> IMMR.
 
-Here are some additional data points you might consider adding to your 
-analysis:
-
-- Consider taking into account what percentage of those lines are for 
-  SoC-specific device data files.  Where should those files be moved, 
-  before a DT (or other data format) conversion?
-
-- Consider comparing the number of on-chip devices supported by the core 
-  OMAP code to the number of devices supported by the average SoC core 
-  code, in mainline.
-
-- Consider accounting for the extra code and data needed for fine-grained 
-  power management, compared to the average SoC core code, assuming the
-  SoC supports it.
-
-- Consider taking into account the number of OMAP variants supported by 
-  the core OMAP code (at least thirty, not counting silicon revision 
-  differences, which can be significant) compared to the average SoC.
-
-- Consider comparing the number of boards supported by the core OMAP code
-  to the number supported by the average SoC code.  To what other shared
-  directory or drivers/ subdirectory should these files be moved to,
-  before a DT conversion?
-
-To be sure, there's a fair amount of OMAP core code that should be moved 
-out to drivers.  My guess is about 10-15% of the current total.  Work 
-along those lines is proceeding.  If you're offering to help, we could use 
-it.
-
-But I don't think that the way to deal with the remaining 85-90% of the 
-core code and data is quite as simple as your rough summary suggests.
+Got it.  Thanks Gary.
 
 
 - Paul
