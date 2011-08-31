@@ -1,77 +1,36 @@
-From: Tobias Klauser <tklauser@distanz.ch>
-Subject: [PATCH] Input: gpio_keys - Use of_property_read_u32
-Date: Wed, 31 Aug 2011 09:32:25 +0200
-Message-ID: <1314775945-6822-1-git-send-email-tklauser@distanz.ch>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, David Jander <david@protonic.nl>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Liam Girdwood <lrg@ti.com>
+Subject: Re: [PATCH 1/3] ASoC: Add device tree binding for
+	WM8770
+Date: Wed, 31 Aug 2011 11:30:32 +0100
+Message-ID: <4E5E0D48.5030406@ti.com>
+References: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1314624471-15381-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the of_property_read_u32 helper function to retreive u32 values
-from the device tree. Also do not pass the len parameter to
-of_get_property if it isn't checked afterwards.
+On 29/08/11 14:27, Mark Brown wrote:
+> Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> ---
+>  Documentation/devicetree/bindings/sound/wm8770.txt |   16 ++++++++++++++++
+>  sound/soc/codecs/wm8770.c                          |    8 ++++++++
+>  2 files changed, 24 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/wm8770.txt
+> 
 
-Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
----
- drivers/input/keyboard/gpio_keys.c |   22 ++++++++++++----------
- 1 files changed, 12 insertions(+), 10 deletions(-)
+These all look fine to me wrt ASoC. All
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 67df91a..e913294 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -462,7 +462,6 @@ static int gpio_keys_get_devtree_pdata(struct device *dev,
- 	int i;
- 	struct gpio_keys_button *buttons;
- 	const u32 *reg;
--	int len;
- 
- 	node = dev->of_node;
- 	if (node == NULL)
-@@ -470,7 +469,7 @@ static int gpio_keys_get_devtree_pdata(struct device *dev,
- 
- 	memset(pdata, 0, sizeof *pdata);
- 
--	pdata->rep = !!of_get_property(node, "autorepeat", &len);
-+	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
- 
- 	/* First count the subnodes */
- 	pdata->nbuttons = 0;
-@@ -498,22 +497,25 @@ static int gpio_keys_get_devtree_pdata(struct device *dev,
- 		buttons[i].gpio = of_get_gpio_flags(pp, 0, &flags);
- 		buttons[i].active_low = flags & OF_GPIO_ACTIVE_LOW;
- 
--		reg = of_get_property(pp, "linux,code", &len);
--		if (!reg) {
-+		if (of_property_read_u32(pp, "linux,code", &reg))
- 			dev_err(dev, "Button without keycode: 0x%x\n", buttons[i].gpio);
- 			goto out_fail;
- 		}
--		buttons[i].code = be32_to_cpup(reg);
-+		buttons[i].code = reg;
- 
--		buttons[i].desc = of_get_property(pp, "label", &len);
-+		buttons[i].desc = of_get_property(pp, "label", NULL);
- 
--		reg = of_get_property(pp, "linux,input-type", &len);
--		buttons[i].type = reg ? be32_to_cpup(reg) : EV_KEY;
-+		if (of_property_read_u32(pp, "linux,input-type", &reg) == 0)
-+			buttons[i].type = reg;
-+		else
-+			buttons[i].type = EV_KEY;
- 
- 		buttons[i].wakeup = !!of_get_property(pp, "gpio-key,wakeup", NULL);
- 
--		reg = of_get_property(pp, "debounce-interval", &len);
--		buttons[i].debounce_interval = reg ? be32_to_cpup(reg) : 5;
-+		if (of_property_read_u32(pp, "debounce-interval", &reg) == 0)
-+			buttons[i].debounce_interval = reg;
-+		else
-+			buttons[i].debounce_interval = 5;
- 
- 		i++;
- 	}
--- 
-1.7.5.4
-
+Acked-by: Liam Girdwood <lrg@ti.com>
