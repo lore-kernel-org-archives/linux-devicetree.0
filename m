@@ -1,55 +1,49 @@
-From: Kumar Gala <kumar.gala@freescale.com>
-Subject: Re: [PATCH] powerpc/85xx: clean up FPGA device tree nodes for
-	Freecsale QorIQ boards
-Date: Tue, 30 Aug 2011 21:26:40 -0500
-Message-ID: <3F34FBCD-3F0B-4D59-A947-C16CC812B42E@freescale.com>
-References: <1314644999-16955-1-git-send-email-timur@freescale.com>
-Mime-Version: 1.0 (Apple Message framework v1084)
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 1/2] sdhci/tegra: Add Device Tree probing support
+Date: Wed, 31 Aug 2011 10:49:30 +0800
+Message-ID: <20110831024929.GA19795@S2100-06.ap.freescale.net>
+References: <1314123334-23133-1-git-send-email-swarren@nvidia.com>
+ <20110830034035.GC19294@S2100-06.ap.freescale.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF04B3279D3F@HQMAIL01.nvidia.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1314644999-16955-1-git-send-email-timur@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Timur Tabi <timur@freescale.com>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04B3279D3F@HQMAIL01.nvidia.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Chris Ball <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Aug 29, 2011, at 2:09 PM, Timur Tabi wrote:
-
-> Standarize and document the FPGA nodes used on Freescale QorIQ reference
-> boards.  There are three kinds of FPGAs used on the boards: pixis, qixis, and
-> cpld.  Although their are minor differences among the boards that have one
-> kind of FPGA, most of the functionality is the same, so it makes sense
-> to create common compatibility strings.
+On Tue, Aug 30, 2011 at 09:01:37AM -0700, Stephen Warren wrote:
+> Shawn Guo wrote at Monday, August 29, 2011 9:41 PM:
+> > On Tue, Aug 23, 2011 at 12:15:33PM -0600, Stephen Warren wrote:
+> > > From: Grant Likely <grant.likely@secretlab.ca>
+> > >
+> > > Add hooks to read gpio configuration out of the device tree node.
+> ...
+> > > diff --git a/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
+> ...
+> > > +* NVIDIA Tegra Secure Digital Host Controller
+> > > +
+> > > +This controller on Tegra family SoCs provides an interface for MMC, SD,
+> > > +and SDIO types of memory cards.
+> > > +
+> > > +Required properties:
+> > > +- compatible : Should be "nvidia,<chip>-sdhci"
+> > > +- reg : Should contain eSDHC registers location and length
+> > > +- interrupts : Should contain eSDHC interrupt
+> > 
+> > You may want to replace eSDHC with something Tegra specific.
 > 
-> Signed-off-by: Timur Tabi <timur@freescale.com>
-> ---
+> True. The patch is already submitted. Do you think it's worth posting one
+> just to fix that;
+
+It's totally your call.
+
+Regards,
+Shawn
+
+> it still seems pretty clear what's required?
 > 
-> Changes for other Freescale boards will be made in future patches.
-> 
-> .../devicetree/bindings/powerpc/fsl/board.txt      |   30 ++++++++++++--------
-> arch/powerpc/boot/dts/p1010rdb.dts                 |   10 ++----
-> arch/powerpc/boot/dts/p1020rdb.dts                 |    7 ++++-
-> arch/powerpc/boot/dts/p1022ds.dts                  |    2 +-
-> arch/powerpc/boot/dts/p2020ds.dts                  |    5 +++
-> arch/powerpc/boot/dts/p2020rdb.dts                 |    4 ++
-> arch/powerpc/boot/dts/p2040rdb.dts                 |    8 ++++-
-> arch/powerpc/boot/dts/p3041ds.dts                  |    4 +-
-> arch/powerpc/boot/dts/p4080ds.dts                  |    8 ++++-
-> arch/powerpc/boot/dts/p5020ds.dts                  |    4 +-
-> 10 files changed, 55 insertions(+), 27 deletions(-)
 
-Do we really want the generic "fsl,fpga-cpld" & "fsl,fpga-pixis"?  This seems to vague.  Also you need "pixis" on MPC8544DS, MPC8572DS, MPC8536DS.
-
-Also fpga-cpld makes no sense if we keep this.  You are either a CPLD or FPGA not both.
-
-- k
