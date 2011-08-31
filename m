@@ -1,14 +1,14 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: Virtual addresses in arch/powerpc/boot/dts/tqm8548*.dts ?
-Date: Tue, 30 Aug 2011 19:55:48 -0600 (MDT)
-Message-ID: <alpine.DEB.2.00.1108301946391.26173@utopia.booyaka.com>
-References: <alpine.DEB.2.00.1108301508130.26173@utopia.booyaka.com>
-	<4E5D668B.1060609@mlbassoc.com>
-Mime-Version: 1.0
+From: Kumar Gala <kumar.gala@freescale.com>
+Subject: Re: [PATCH] powerpc/85xx: clean up FPGA device tree nodes for
+	Freecsale QorIQ boards
+Date: Tue, 30 Aug 2011 21:26:40 -0500
+Message-ID: <3F34FBCD-3F0B-4D59-A947-C16CC812B42E@freescale.com>
+References: <1314644999-16955-1-git-send-email-timur@freescale.com>
+Mime-Version: 1.0 (Apple Message framework v1084)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4E5D668B.1060609@mlbassoc.com>
+In-Reply-To: <1314644999-16955-1-git-send-email-timur@freescale.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
@@ -18,28 +18,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
 	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
 Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
 Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Gary Thomas <gary@mlbassoc.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+To: Timur Tabi <timur@freescale.com>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Aug 2011, Gary Thomas wrote:
 
-> On 2011-08-30 15:43, Paul Walmsley wrote:
+On Aug 29, 2011, at 2:09 PM, Timur Tabi wrote:
+
+> Standarize and document the FPGA nodes used on Freescale QorIQ reference
+> boards.  There are three kinds of FPGAs used on the boards: pixis, qixis, and
+> cpld.  Although their are minor differences among the boards that have one
+> kind of FPGA, most of the functionality is the same, so it makes sense
+> to create common compatibility strings.
 > 
-> > So are these addresses virtual?  My (perhaps incorrect) understanding of
-> > the device tree files was that they were intended to describe the physical
-> > memory map, rather than the virtual memory map.  Or does this PowerPC
-> > variant have the ability to dynamically change its own physical address
-> > decoding?  Or is something else going on?
+> Signed-off-by: Timur Tabi <timur@freescale.com>
+> ---
 > 
-> These addresses correspond to the internal registers which can be moved. 
-> The default address is set by hardware at reset time (check out the 
-> documentation on the hardware reset word).  Obviously one board is 
-> strapped for the IMMR at one address, another board at a different 
-> address.  I almost always configure my boards to use 0xF0000000 for the 
-> IMMR.
+> Changes for other Freescale boards will be made in future patches.
+> 
+> .../devicetree/bindings/powerpc/fsl/board.txt      |   30 ++++++++++++--------
+> arch/powerpc/boot/dts/p1010rdb.dts                 |   10 ++----
+> arch/powerpc/boot/dts/p1020rdb.dts                 |    7 ++++-
+> arch/powerpc/boot/dts/p1022ds.dts                  |    2 +-
+> arch/powerpc/boot/dts/p2020ds.dts                  |    5 +++
+> arch/powerpc/boot/dts/p2020rdb.dts                 |    4 ++
+> arch/powerpc/boot/dts/p2040rdb.dts                 |    8 ++++-
+> arch/powerpc/boot/dts/p3041ds.dts                  |    4 +-
+> arch/powerpc/boot/dts/p4080ds.dts                  |    8 ++++-
+> arch/powerpc/boot/dts/p5020ds.dts                  |    4 +-
+> 10 files changed, 55 insertions(+), 27 deletions(-)
 
-Got it.  Thanks Gary.
+Do we really want the generic "fsl,fpga-cpld" & "fsl,fpga-pixis"?  This seems to vague.  Also you need "pixis" on MPC8544DS, MPC8572DS, MPC8536DS.
 
+Also fpga-cpld makes no sense if we keep this.  You are either a CPLD or FPGA not both.
 
-- Paul
+- k
