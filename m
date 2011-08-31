@@ -1,49 +1,45 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 1/2] sdhci/tegra: Add Device Tree probing support
-Date: Wed, 31 Aug 2011 10:49:30 +0800
-Message-ID: <20110831024929.GA19795@S2100-06.ap.freescale.net>
-References: <1314123334-23133-1-git-send-email-swarren@nvidia.com>
- <20110830034035.GC19294@S2100-06.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF04B3279D3F@HQMAIL01.nvidia.com>
+From: Tabi Timur-B04825 <B04825@freescale.com>
+Subject: Re: [PATCH] powerpc/85xx: clean up FPGA device tree nodes for
+	Freecsale QorIQ boards
+Date: Wed, 31 Aug 2011 02:51:57 +0000
+Message-ID: <4E5DA1CC.1020808@freescale.com>
+References: <1314644999-16955-1-git-send-email-timur@freescale.com>
+	<3F34FBCD-3F0B-4D59-A947-C16CC812B42E@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04B3279D3F@HQMAIL01.nvidia.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Chris Ball <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <3F34FBCD-3F0B-4D59-A947-C16CC812B42E@freescale.com>
+Content-Language: en-US
+Content-ID: <EC74057E1F014640BFC185168AB7D65A@freescale.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Gala Kumar-B11780 <B11780@freescale.com>
+Cc: "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 30, 2011 at 09:01:37AM -0700, Stephen Warren wrote:
-> Shawn Guo wrote at Monday, August 29, 2011 9:41 PM:
-> > On Tue, Aug 23, 2011 at 12:15:33PM -0600, Stephen Warren wrote:
-> > > From: Grant Likely <grant.likely@secretlab.ca>
-> > >
-> > > Add hooks to read gpio configuration out of the device tree node.
-> ...
-> > > diff --git a/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia-sdhci.txt
-> ...
-> > > +* NVIDIA Tegra Secure Digital Host Controller
-> > > +
-> > > +This controller on Tegra family SoCs provides an interface for MMC, SD,
-> > > +and SDIO types of memory cards.
-> > > +
-> > > +Required properties:
-> > > +- compatible : Should be "nvidia,<chip>-sdhci"
-> > > +- reg : Should contain eSDHC registers location and length
-> > > +- interrupts : Should contain eSDHC interrupt
-> > 
-> > You may want to replace eSDHC with something Tegra specific.
-> 
-> True. The patch is already submitted. Do you think it's worth posting one
-> just to fix that;
+Kumar Gala wrote:
+> Do we really want the generic "fsl,fpga-cpld"&  "fsl,fpga-pixis"?  This seems to vague.
 
-It's totally your call.
+Yes, the PIXIS is generally register compatible across all boards.  There 
+may be some minor differences, but the OCM driver can work with all PIXIS 
+boards that have an PIXIS.
 
-Regards,
-Shawn
+>  Also you need "pixis" on MPC8544DS, MPC8572DS, MPC8536DS.
 
-> it still seems pretty clear what's required?
-> 
+Ok.
 
+> Also fpga-cpld makes no sense if we keep this.  You are either a CPLD or FPGA not both.
+
+Then I don't understand what the CPLD is.
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
