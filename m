@@ -1,63 +1,97 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v2 6/6] ARM: EXYNOS4: Limit usage of pl330 device instance to
- non-dt build
-Date: Thu, 01 Sep 2011 14:34:42 +0530
-Message-ID: <1314867882-11755-7-git-send-email-thomas.abraham@linaro.org>
-References: <1314867882-11755-1-git-send-email-thomas.abraham@linaro.org>
- <1314867882-11755-2-git-send-email-thomas.abraham@linaro.org>
- <1314867882-11755-3-git-send-email-thomas.abraham@linaro.org>
- <1314867882-11755-4-git-send-email-thomas.abraham@linaro.org>
- <1314867882-11755-5-git-send-email-thomas.abraham@linaro.org>
- <1314867882-11755-6-git-send-email-thomas.abraham@linaro.org>
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1314867882-11755-6-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, vinod.koul@intel.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 10/13] of: add a generic pinmux helper
+Date: Thu, 1 Sep 2011 13:30:51 +0200
+Message-ID: <CACRpkdaEQaM31SkuSEOzkA8neyF21CcDOc1yQQc3NqOXVSmB=g@mail.gmail.com>
+References: <1314315824-9687-1-git-send-email-swarren@nvidia.com>
+	<1314315824-9687-11-git-send-email-swarren@nvidia.com>
+	<CACRpkdaTiWEtgjVOhUKeXhpiESvrWyz97p5j_PHe3MvEM4UaCw@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF04B3279BEB@HQMAIL01.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04B3279BEB-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The pl330 device instances and associated platform data is required only
-for non-device-tree builds. With device tree, all of this information is
-obtained from the device tree.
+On Mon, Aug 29, 2011 at 11:46 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
 
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
----
- arch/arm/mach-exynos4/Kconfig  |    7 +++++++
- arch/arm/mach-exynos4/Makefile |    3 ++-
- 2 files changed, 9 insertions(+), 1 deletions(-)
+>> > +EXPORT_SYMBOL_GPL(of_pinmux_parse);
+>>
+>> Renamed of_pinctrl_parse I'm happier with it.
+>
+> Well, it's not just that; the struct contains the function field to
+> select for each pingroup, so it's not just pinctrl either.
 
-diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
-index d4d401c..3edbf37 100644
---- a/arch/arm/mach-exynos4/Kconfig
-+++ b/arch/arm/mach-exynos4/Kconfig
-@@ -21,6 +21,13 @@ config EXYNOS4_MCT
- 	help
- 	  Use MCT (Multi Core Timer) as kernel timers
- 
-+config EXYNOS4_DEV_DMA
-+	bool
-+	default y if !OF
-+	help
-+	  Compile in amba device definitions for DMA controller if OF
-+	  is not enabled.
-+
- config EXYNOS4_DEV_AHCI
- 	bool
- 	help
-diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
-index d2bf5bf..a2f33dc 100644
---- a/arch/arm/mach-exynos4/Makefile
-+++ b/arch/arm/mach-exynos4/Makefile
-@@ -13,7 +13,8 @@ obj-				:=
- # Core support for EXYNOS4 system
- 
- obj-$(CONFIG_CPU_EXYNOS4210)	+= cpu.o init.o clock.o irq-combiner.o
--obj-$(CONFIG_CPU_EXYNOS4210)	+= setup-i2c0.o irq-eint.o dma.o pmu.o
-+obj-$(CONFIG_CPU_EXYNOS4210)	+= setup-i2c0.o irq-eint.o pmu.o
-+obj-$(CONFIG_EXYNOS4_DEV_DMA)	+= dma.o
- obj-$(CONFIG_PM)		+= pm.o sleep.o
- obj-$(CONFIG_CPU_IDLE)		+= cpuidle.o
- 
--- 
-1.6.6.rc2
+OK as of my thinking in the v6 pin control patch set groups
+are an abstract concept that is part of pin control and pin
+definitions (does not need to be used for muxing, could be
+anything you want to do with pins) so that sorts it out I guess?
+
+So in line with that terminology I think this should be
+named pinctrl.
+
+>> The current pinctrl patch set would probably want an unsigned
+>> "position" attribute too. (If we should build on that.)
+>
+> This does beg the question I asked previously:
+>
+> The intent of this patch was to provide a way for devicetree to set the
+> complete initial state of the pinmux, in a SoC-specific fashion, without
+> interaction with the pinmux API.
+>
+> However, I'm guessing you see the pinmux driver as not touching HW at
+> boot at all, and never programming anything except in response to a
+> driver calling pinmux_get()/pinmux_enable()?
+
+Since the pin control driver is (supposedly) the only driver that knows
+about the register range dealing with muxing, all kind of fiddling
+with these registers that are *necessary* on boot (e.g. to get the
+thing up in a known state) need to be in the pincontrol driver.
+
+So it may touch hardware on boot, i.e. write default values,
+even though one may argue that the boot loader should have
+taken care about such things, it's now always the case in
+practice.
+
+> In the former case, this code and related bindings wouldn't be influenced
+> by the pinmux API at all (and indeed arguably never should be, since DT
+> is supposed to be oriented purely at HW, and not influenced by driver
+> design). This approach might make the pinmux API mostly relevant only
+> for drivers that actively change between configurations at run-time, and
+> not for drivers that don't need dynamic muxing.
+
+Platforms that do not need dynamic muxing should be using it
+if they need to configure default states of the pins at boot I think.
+
+> However, in the latter case, this code should be part of the pinmux core,
+> and my patches to Tegra's pinmux driver dropped. It'd be difficult to
+> define a pinmux binding that wasn't influenced by the pinmux API's needs
+> in this case.
+
+Well that depends on what you want to do.
+
+The patch subject seems to suggest that all SoCs should use this,
+not just the Tegra driver. If it had the subject "of: add a tegra
+pinmux helper" and functions named of_tegra_pinmux_parse() and
+so on I wouldn't have any objections whatsoever.
+
+If however you want to create a DT binding that should be used by
+anyone (as indicated by the subject) it must use abstract concepts of
+some kind and then I have opinions on how to name things and
+some idea that I'd like them to correspond to what the pin control
+subsystem will call things.
+
+For example not call things dealing with biasing as part of
+something called "pinmux", since in the pin controller
+subsystem I'm envisioning I'm striving to separation of
+concerns to the point where biasing and muxing are
+completely orthogonal concepts, though they might be
+using the same abstract concept of pin groups...
+
+I don't know if I'm getting across properly, I'm trying
+my best.
+
+Thanks,
+Linus Walleij
