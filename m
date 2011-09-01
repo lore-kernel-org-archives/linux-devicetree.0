@@ -1,48 +1,41 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/7] arm/dts: OMAP3: Add mpu and iva nodes
-Date: Thu, 01 Sep 2011 20:17:09 +0200
-Message-ID: <1377915.IaVE5xAurc@wuerfel>
-References: <1314897912-18178-1-git-send-email-b-cousson@ti.com> <1314897912-18178-3-git-send-email-b-cousson@ti.com>
+Subject: Re: [PATCH 04/13] mfd: twl-core: Add initial DT support for twl4030/twl6030
+Date: Thu, 01 Sep 2011 20:27:30 +0200
+Message-ID: <4690440.pddZTpGgxd@wuerfel>
+References: <1314897689-17791-1-git-send-email-b-cousson@ti.com> <1314897689-17791-5-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1314897912-18178-3-git-send-email-b-cousson@ti.com>
+In-Reply-To: <1314897689-17791-5-git-send-email-b-cousson@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Benoit Cousson <b-cousson@ti.com>, grant.likely@secretlab.ca, tony@atomide.com, Kevin Hilman <khilman@ti.com>, manjugk@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org
+Cc: Benoit Cousson <b-cousson@ti.com>, grant.likely@secretlab.ca, tony@atomide.com, manjugk@ti.com, devicetree-discuss@lists.ozlabs.org, Graeme Gregory <gg@slimlogic.co.uk>, Samuel Ortiz <sameo@linux.intel.com>, linux-omap@vger.kernel.org, Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 September 2011 19:25:07 Benoit Cousson wrote:
-> 
->         /*
-> +        * XXX: The cpus node is mandatory, but since the CPUs are as well part
-> +        * of the mpu subsystem below, it is not clear where the information
-> +        * should be. Maybe here with a phandle inside the mpu?
-> +        */
-> +       cpus {
-> +       };
+On Thursday 01 September 2011 19:21:20 Benoit Cousson wrote:
+> +#ifdef CONFIG_OF
+> +#define MODALIAS_SIZE 32
 > +
-> +       /*
->          * The soc node represents the soc top level view. It is uses for IPs
->          * that are not memory mapped in the MPU view or for the MPU itself.
->          */
->         soc {
->                 compatible = "ti,omap-infra";
-> +               mpu {
-> +                       compatible = "ti,omap3-mpu";
-> +                       hwmods = "mpu";
-> +                       cpu@0 {
-> +                               compatible = "arm,cortex-a8";
-> +                       };
-> +               };
+> +static int add_of_children(struct i2c_client *client, unsigned long features)
+> +{
+> +       u32 reg;
+> +       struct device *child, *dev = &client->dev;
+> +       struct device_node *node, *parent = client->dev.of_node;
+> +       int irq;
+> +       char alias[MODALIAS_SIZE];
+> +
+> +       for_each_child_of_node(parent, node) {
+> +               if (of_property_read_u32(node, "reg", &reg)) {
+> +                       dev_err(dev, "%s(): invalid reg on %s\n", __func__,
+> +                               node->full_name);
+> +                       continue;
+> +               }
 > +
 
-I would always put the cpu nodes in the top-level, even if that's
-a slight misrepresentation of the truth. The point is basically
-that CPU nodes are special (you cannot have device drivers for them)
-and that the device tree is basically laid out from the perspective
-of the CPU, which may be different from the perspective that a
-hardware designer has.
+Have you tried just calling calling of_platform_bus_probe on the
+parent? If all child devices are in the device tree, I think that 
+should work, too. It probably requires some tweaking in the
+child drivers though.
 
 	Arnd
