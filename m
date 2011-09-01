@@ -1,43 +1,602 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 00/13] OMAP4: Add DT support for i2c and twl6030
-Date: Thu, 01 Sep 2011 21:14:07 +0200
-Message-ID: <2756178.9Ir4cpMAU8@wuerfel>
-References: <1314897689-17791-1-git-send-email-b-cousson@ti.com>
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: [PATCH 4/4] powerpc/85xx: Adding DCSR node to dtsi device trees
+Date: Thu,  1 Sep 2011 14:26:38 -0500
+Message-ID: <1314905198-4440-1-git-send-email-galak@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1314897689-17791-1-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Benoit Cousson <b-cousson@ti.com>, grant.likely@secretlab.ca, tony@atomide.com, manjugk@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen George <stephen.george-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 September 2011 19:21:16 Benoit Cousson wrote:
-> This is a rework of the original series done by Manju:
-> http://www.spinics.net/lists/linux-omap/msg55827.html
-> 
-> It fixes the main issue of the previous series that was not booting at all
-> due to the lack of twl support. That fix is mandatory to allow further
-> work on the regulators DT bindings.
-> In order to have a minimal i2c support, both i2c and twl must be added
-> at the same time.
-> Please note than some patches can be reshuffle with the previous OMAP4
-> series to avoid the intermediate step with static i2c initialization.
-> 
-> That series is as well using the hwmods binding introduced in my previous
-> series.
-> The OMAP3/beagle support will be added in an other series.
-> 
-> A couple of basic i2c devices are added for panda and sdp board.
-> 
-> Patches are based on for_3.2/4_omap4_dt_early_devices + devicetree/test
-> and are available here:
-> git://gitorious.org/omap-pm/linux.git for_3.2/5_omap_dt_i2c_twl
-> 
-> Tested on PandaBoard and sdp4430.
+From: Stephen George <stephen.george-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-I think this is great stuff. I missed the original series, but
-it's definitely good to see progress on this!
+Adding new device tree binding file for the DCSR node.  Modifying device
+tree dtsi files to add DCSR node for P2041, P3041, P3060, P4080, & P5020.
 
-	Arnd
+Signed-off-by: Stephen George <stephen.george-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+---
+ arch/powerpc/boot/dts/p2041rdb.dts |    4 ++
+ arch/powerpc/boot/dts/p2041si.dtsi |   70 +++++++++++++++++++++++++-
+ arch/powerpc/boot/dts/p3041ds.dts  |    4 ++
+ arch/powerpc/boot/dts/p3041si.dtsi |   70 +++++++++++++++++++++++++-
+ arch/powerpc/boot/dts/p3060qds.dts |    4 ++
+ arch/powerpc/boot/dts/p3060si.dtsi |   80 +++++++++++++++++++++++++++++-
+ arch/powerpc/boot/dts/p4080ds.dts  |    4 ++
+ arch/powerpc/boot/dts/p4080si.dtsi |   97 +++++++++++++++++++++++++++++++++++-
+ arch/powerpc/boot/dts/p5020ds.dts  |    4 ++
+ arch/powerpc/boot/dts/p5020si.dtsi |   67 ++++++++++++++++++++++++-
+ 10 files changed, 397 insertions(+), 7 deletions(-)
+
+diff --git a/arch/powerpc/boot/dts/p2041rdb.dts b/arch/powerpc/boot/dts/p2041rdb.dts
+index 47bb461..79b6895 100644
+--- a/arch/powerpc/boot/dts/p2041rdb.dts
++++ b/arch/powerpc/boot/dts/p2041rdb.dts
+@@ -45,6 +45,10 @@
+ 		device_type = "memory";
+ 	};
+ 
++	dcsr: dcsr@f00000000 {
++		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++	};
++
+ 	soc: soc@ffe000000 {
+ 		spi@110000 {
+ 			flash@0 {
+diff --git a/arch/powerpc/boot/dts/p2041si.dtsi b/arch/powerpc/boot/dts/p2041si.dtsi
+index 420cdb0..628ba82 100644
+--- a/arch/powerpc/boot/dts/p2041si.dtsi
++++ b/arch/powerpc/boot/dts/p2041si.dtsi
+@@ -109,6 +109,74 @@
+ 		};
+ 	};
+ 
++	dcsr: dcsr@f00000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,dcsr", "simple-bus";
++
++		dcsr-epu@0 {
++			compatible = "fsl,dcsr-epu";
++			interrupts = <36 2 0 0
++				      68 2 0 0
++				      69 2 0 0>;
++			interrupt-parent = <&mpic>;
++			reg = <0x0 0x1000>;
++		};
++		dcsr-npc {
++			compatible = "fsl,dcsr-npc";
++			reg = <0x1000 0x1000 0x1000000 0x8000>;
++		};
++		dcsr-nxc@2000 {
++			compatible = "fsl,dcsr-nxc";
++			reg = <0x2000 0x1000>;
++		};
++		dcsr-corenet {
++			compatible = "fsl,dcsr-corenet";
++			reg = <0x8000 0x1000 0xB0000 0x1000>;
++		};
++		dcsr-dpaa@9000 {
++			compatible = "fsl,p2041-dcsr-dpaa", "fsl,dcsr-dpaa";
++			reg = <0x9000 0x1000>;
++		};
++		dcsr-ocn@11000 {
++			compatible = "fsl,p2041-dcsr-ocn", "fsl,dcsr-ocn";
++			reg = <0x11000 0x1000>;
++		};
++		dcsr-ddr@12000 {
++			compatible = "fsl,dcsr-ddr";
++			dev-handle = <&ddr>;
++			reg = <0x12000 0x1000>;
++		};
++		dcsr-nal@18000 {
++			compatible = "fsl,p2041-dcsr-nal", "fsl,dcsr-nal";
++			reg = <0x18000 0x1000>;
++		};
++		dcsr-rcpm@22000 {
++			compatible = "fsl,p2041-dcsr-rcpm", "fsl,dcsr-rcpm";
++			reg = <0x22000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@40000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu0>;
++			reg = <0x40000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@41000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu1>;
++			reg = <0x41000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@42000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu2>;
++			reg = <0x42000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@43000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu3>;
++			reg = <0x43000 0x1000>;
++		};
++	};
++
+ 	soc: soc@ffe000000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -128,7 +196,7 @@
+ 			fsl,num-laws = <32>;
+ 		};
+ 
+-		memory-controller@8000 {
++		ddr: memory-controller@8000 {
+ 			compatible = "fsl,qoriq-memory-controller-v4.5", "fsl,qoriq-memory-controller";
+ 			reg = <0x8000 0x1000>;
+ 			interrupts = <16 2 1 23>;
+diff --git a/arch/powerpc/boot/dts/p3041ds.dts b/arch/powerpc/boot/dts/p3041ds.dts
+index 69cae67..ce15726 100644
+--- a/arch/powerpc/boot/dts/p3041ds.dts
++++ b/arch/powerpc/boot/dts/p3041ds.dts
+@@ -45,6 +45,10 @@
+ 		device_type = "memory";
+ 	};
+ 
++	dcsr: dcsr@f00000000 {
++		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++	};
++
+ 	soc: soc@ffe000000 {
+ 		spi@110000 {
+ 			flash@0 {
+diff --git a/arch/powerpc/boot/dts/p3041si.dtsi b/arch/powerpc/boot/dts/p3041si.dtsi
+index 8b69580..0468899 100644
+--- a/arch/powerpc/boot/dts/p3041si.dtsi
++++ b/arch/powerpc/boot/dts/p3041si.dtsi
+@@ -133,7 +133,7 @@
+ 			fsl,num-laws = <32>;
+ 		};
+ 
+-		memory-controller@8000 {
++		ddr: memory-controller@8000 {
+ 			compatible = "fsl,qoriq-memory-controller-v4.5", "fsl,qoriq-memory-controller";
+ 			reg = <0x8000 0x1000>;
+ 			interrupts = <16 2 1 23>;
+@@ -542,6 +542,74 @@
+ 	rapidio0: rapidio@ffe0c0000
+ */
+ 
++	dcsr: dcsr@f00000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,dcsr", "simple-bus";
++
++		dcsr-epu@0 {
++			compatible = "fsl,dcsr-epu";
++			interrupts = <36 2 0 0
++				      68 2 0 0
++				      69 2 0 0>;
++			interrupt-parent = <&mpic>;
++			reg = <0x0 0x1000>;
++		};
++		dcsr-npc {
++			compatible = "fsl,dcsr-npc";
++			reg = <0x1000 0x1000 0x1000000 0x8000>;
++		};
++		dcsr-nxc@2000 {
++			compatible = "fsl,dcsr-nxc";
++			reg = <0x2000 0x1000>;
++		};
++		dcsr-corenet {
++			compatible = "fsl,dcsr-corenet";
++			reg = <0x8000 0x1000 0xB0000 0x1000>;
++		};
++		dcsr-dpaa@9000 {
++			compatible = "fsl,p43041-dcsr-dpaa", "fsl,dcsr-dpaa";
++			reg = <0x9000 0x1000>;
++		};
++		dcsr-ocn@11000 {
++			compatible = "fsl,p43041-dcsr-ocn", "fsl,dcsr-ocn";
++			reg = <0x11000 0x1000>;
++		};
++		dcsr-ddr@12000 {
++			compatible = "fsl,dcsr-ddr";
++			dev-handle = <&ddr>;
++			reg = <0x12000 0x1000>;
++		};
++		dcsr-nal@18000 {
++			compatible = "fsl,p43041-dcsr-nal", "fsl,dcsr-nal";
++			reg = <0x18000 0x1000>;
++		};
++		dcsr-rcpm@22000 {
++			compatible = "fsl,p43041-dcsr-rcpm", "fsl,dcsr-rcpm";
++			reg = <0x22000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@40000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu0>;
++			reg = <0x40000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@41000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu1>;
++			reg = <0x41000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@42000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu2>;
++			reg = <0x42000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@43000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu3>;
++			reg = <0x43000 0x1000>;
++		};
++	};
++
+ 	localbus@ffe124000 {
+ 		compatible = "fsl,p3041-elbc", "fsl,elbc", "simple-bus";
+ 		interrupts = <25 2 0 0>;
+diff --git a/arch/powerpc/boot/dts/p3060qds.dts b/arch/powerpc/boot/dts/p3060qds.dts
+index bf3844b..89beeab 100644
+--- a/arch/powerpc/boot/dts/p3060qds.dts
++++ b/arch/powerpc/boot/dts/p3060qds.dts
+@@ -45,6 +45,10 @@
+ 		device_type = "memory";
+ 	};
+ 
++	dcsr: dcsr@f00000000 {
++		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++	};
++
+ 	soc: soc@ffe000000 {
+ 		spi@110000 {
+ 			flash@0 {
+diff --git a/arch/powerpc/boot/dts/p3060si.dtsi b/arch/powerpc/boot/dts/p3060si.dtsi
+index 0e2cd10..65fe383 100644
+--- a/arch/powerpc/boot/dts/p3060si.dtsi
++++ b/arch/powerpc/boot/dts/p3060si.dtsi
+@@ -125,6 +125,84 @@
+ 		};
+ 	};
+ 
++	dcsr: dcsr@f00000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,dcsr", "simple-bus";
++
++		dcsr-epu@0 {
++			compatible = "fsl,dcsr-epu";
++			interrupts = <36 2 0 0
++				      68 2 0 0
++				      69 2 0 0>;
++			interrupt-parent = <&mpic>;
++			reg = <0x0 0x1000>;
++		};
++		dcsr-npc {
++			compatible = "fsl,dcsr-npc";
++			reg = <0x1000 0x1000 0x1000000 0x8000>;
++		};
++		dcsr-nxc@2000 {
++			compatible = "fsl,dcsr-nxc";
++			reg = <0x2000 0x1000>;
++		};
++		dcsr-corenet {
++			compatible = "fsl,dcsr-corenet";
++			reg = <0x8000 0x1000 0xB0000 0x1000>;
++		};
++		dcsr-dpaa@9000 {
++			compatible = "fsl,p3060-dcsr-dpaa", "fsl,dcsr-dpaa";
++			reg = <0x9000 0x1000>;
++		};
++		dcsr-ocn@11000 {
++			compatible = "fsl,p3060-dcsr-ocn", "fsl,dcsr-ocn";
++			reg = <0x11000 0x1000>;
++		};
++		dcsr-ddr@12000 {
++			compatible = "fsl,dcsr-ddr";
++			dev-handle = <&ddr>;
++			reg = <0x12000 0x1000>;
++		};
++		dcsr-nal@18000 {
++			compatible = "fsl,p3060-dcsr-nal", "fsl,dcsr-nal";
++			reg = <0x18000 0x1000>;
++		};
++		dcsr-rcpm@22000 {
++			compatible = "fsl,p3060-dcsr-rcpm", "fsl,dcsr-rcpm";
++			reg = <0x22000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@40000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu0>;
++			reg = <0x40000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@41000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu1>;
++			reg = <0x41000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@44000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu4>;
++			reg = <0x44000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@45000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu5>;
++			reg = <0x45000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@46000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu6>;
++			reg = <0x46000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@47000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu7>;
++			reg = <0x47000 0x1000>;
++		};
++	};
++
+ 	soc: soc@ffe000000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -144,7 +222,7 @@
+ 			fsl,num-laws = <32>;
+ 		};
+ 
+-		memory-controller@8000 {
++		ddr: memory-controller@8000 {
+ 			compatible = "fsl,qoriq-memory-controller-v4.4", "fsl,qoriq-memory-controller";
+ 			reg = <0x8000 0x1000>;
+ 			interrupts = <16 2 1 23>;
+diff --git a/arch/powerpc/boot/dts/p4080ds.dts b/arch/powerpc/boot/dts/p4080ds.dts
+index eb11098..c1ab435 100644
+--- a/arch/powerpc/boot/dts/p4080ds.dts
++++ b/arch/powerpc/boot/dts/p4080ds.dts
+@@ -45,6 +45,10 @@
+ 		device_type = "memory";
+ 	};
+ 
++	dcsr: dcsr@f00000000 {
++		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++	};
++
+ 	soc: soc@ffe000000 {
+ 		spi@110000 {
+ 			flash@0 {
+diff --git a/arch/powerpc/boot/dts/p4080si.dtsi b/arch/powerpc/boot/dts/p4080si.dtsi
+index 4984edb..57dec98 100644
+--- a/arch/powerpc/boot/dts/p4080si.dtsi
++++ b/arch/powerpc/boot/dts/p4080si.dtsi
+@@ -162,13 +162,13 @@
+ 			fsl,num-laws = <32>;
+ 		};
+ 
+-		memory-controller@8000 {
++		ddr1: memory-controller@8000 {
+ 			compatible = "fsl,qoriq-memory-controller-v4.4", "fsl,qoriq-memory-controller";
+ 			reg = <0x8000 0x1000>;
+ 			interrupts = <16 2 1 23>;
+ 		};
+ 
+-		memory-controller@9000 {
++		ddr2: memory-controller@9000 {
+ 			compatible = "fsl,qoriq-memory-controller-v4.4","fsl,qoriq-memory-controller";
+ 			reg = <0x9000 0x1000>;
+ 			interrupts = <16 2 1 22>;
+@@ -557,6 +557,99 @@
+ 		};
+ 	};
+ 
++	dcsr: dcsr@f00000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,dcsr", "simple-bus";
++
++		dcsr-epu@0 {
++			compatible = "fsl,dcsr-epu";
++			interrupts = <36 2 0 0
++				      68 2 0 0
++				      69 2 0 0>;
++			interrupt-parent = <&mpic>;
++			reg = <0x0 0x1000>;
++		};
++		dcsr-npc {
++			compatible = "fsl,dcsr-npc";
++			reg = <0x1000 0x1000 0x1000000 0x8000>;
++		};
++		dcsr-nxc@2000 {
++			compatible = "fsl,dcsr-nxc";
++			reg = <0x2000 0x1000>;
++		};
++		dcsr-corenet {
++			compatible = "fsl,dcsr-corenet";
++			reg = <0x8000 0x1000 0xB0000 0x1000>;
++		};
++		dcsr-dpaa@9000 {
++			compatible = "fsl,p4080-dcsr-dpaa", "fsl,dcsr-dpaa";
++			reg = <0x9000 0x1000>;
++		};
++		dcsr-ocn@11000 {
++			compatible = "fsl,p4080-dcsr-ocn", "fsl,dcsr-ocn";
++			reg = <0x11000 0x1000>;
++		};
++		dcsr-ddr@12000 {
++			compatible = "fsl,dcsr-ddr";
++			dev-handle = <&ddr1>;
++			reg = <0x12000 0x1000>;
++		};
++		dcsr-ddr@13000 {
++			compatible = "fsl,dcsr-ddr";
++			dev-handle = <&ddr2>;
++			reg = <0x13000 0x1000>;
++		};
++		dcsr-nal@18000 {
++			compatible = "fsl,p4080-dcsr-nal", "fsl,dcsr-nal";
++			reg = <0x18000 0x1000>;
++		};
++		dcsr-rcpm@22000 {
++			compatible = "fsl,p4080-dcsr-rcpm", "fsl,dcsr-rcpm";
++			reg = <0x22000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@40000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu0>;
++			reg = <0x40000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@41000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu1>;
++			reg = <0x41000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@42000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu2>;
++			reg = <0x42000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@43000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu3>;
++			reg = <0x43000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@44000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu4>;
++			reg = <0x44000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@45000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu5>;
++			reg = <0x45000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@46000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu6>;
++			reg = <0x46000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@47000 {
++			compatible = "fsl,dcsr-e500mc-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu7>;
++			reg = <0x47000 0x1000>;
++		};
++	};
++
+ 	rapidio0: rapidio@ffe0c0000 {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+diff --git a/arch/powerpc/boot/dts/p5020ds.dts b/arch/powerpc/boot/dts/p5020ds.dts
+index 8366e2f..38fbf5c 100644
+--- a/arch/powerpc/boot/dts/p5020ds.dts
++++ b/arch/powerpc/boot/dts/p5020ds.dts
+@@ -45,6 +45,10 @@
+ 		device_type = "memory";
+ 	};
+ 
++	dcsr: dcsr@f00000000 {
++		ranges = <0x00000000 0xf 0x00000000 0x01008000>;
++	};
++
+ 	soc: soc@ffe000000 {
+ 		spi@110000 {
+ 			flash@0 {
+diff --git a/arch/powerpc/boot/dts/p5020si.dtsi b/arch/powerpc/boot/dts/p5020si.dtsi
+index 5e6048e..a248853 100644
+--- a/arch/powerpc/boot/dts/p5020si.dtsi
++++ b/arch/powerpc/boot/dts/p5020si.dtsi
+@@ -117,13 +117,13 @@
+ 			fsl,num-laws = <32>;
+ 		};
+ 
+-		memory-controller@8000 {
++		ddr1: memory-controller@8000 {
+ 			compatible = "fsl,qoriq-memory-controller-v4.5", "fsl,qoriq-memory-controller";
+ 			reg = <0x8000 0x1000>;
+ 			interrupts = <16 2 1 23>;
+ 		};
+ 
+-		memory-controller@9000 {
++		ddr2: memory-controller@9000 {
+ 			compatible = "fsl,qoriq-memory-controller-v4.5", "fsl,qoriq-memory-controller";
+ 			reg = <0x9000 0x1000>;
+ 			interrupts = <16 2 1 22>;
+@@ -534,6 +534,69 @@
+ 	rapidio0: rapidio@ffe0c0000
+ */
+ 
++	dcsr: dcsr@f00000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,dcsr", "simple-bus";
++
++		dcsr-epu@0 {
++			compatible = "fsl,dcsr-epu";
++			interrupts = <36 2 0 0
++				      68 2 0 0
++				      69 2 0 0>;
++			interrupt-parent = <&mpic>;
++			reg = <0x0 0x1000>;
++		};
++		dcsr-npc {
++			compatible = "fsl,dcsr-npc";
++			reg = <0x1000 0x1000 0x1000000 0x8000>;
++		};
++		dcsr-nxc@2000 {
++			compatible = "fsl,dcsr-nxc";
++			reg = <0x2000 0x1000>;
++		};
++		dcsr-corenet {
++			compatible = "fsl,dcsr-corenet";
++			reg = <0x8000 0x1000 0xB0000 0x1000>;
++		};
++		dcsr-dpaa@9000 {
++			compatible = "fsl,p5020-dcsr-dpaa", "fsl,dcsr-dpaa";
++			reg = <0x9000 0x1000>;
++		};
++		dcsr-ocn@11000 {
++			compatible = "fsl,p5020-dcsr-ocn", "fsl,dcsr-ocn";
++			reg = <0x11000 0x1000>;
++		};
++		dcsr-ddr@12000 {
++			compatible = "fsl,dcsr-ddr";
++			dev-handle = <&ddr1>;
++			reg = <0x12000 0x1000>;
++		};
++		dcsr-ddr@13000 {
++			compatible = "fsl,dcsr-ddr";
++			dev-handle = <&ddr2>;
++			reg = <0x13000 0x1000>;
++		};
++		dcsr-nal@18000 {
++			compatible = "fsl,p5020-dcsr-nal", "fsl,dcsr-nal";
++			reg = <0x18000 0x1000>;
++		};
++		dcsr-rcpm@22000 {
++			compatible = "fsl,p5020-dcsr-rcpm", "fsl,dcsr-rcpm";
++			reg = <0x22000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@40000 {
++			compatible = "fsl,dcsr-e5500-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu0>;
++			reg = <0x40000 0x1000>;
++		};
++		dcsr-cpu-sb-proxy@41000 {
++			compatible = "fsl,dcsr-e5500-sb-proxy", "fsl,dcsr-cpu-sb-proxy";
++			cpu-handle = <&cpu1>;
++			reg = <0x41000 0x1000>;
++		};
++	};
++
+ 	localbus@ffe124000 {
+ 		compatible = "fsl,p5020-elbc", "fsl,elbc", "simple-bus";
+ 		interrupts = <25 2 0 0>;
+-- 
+1.7.3.4
