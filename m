@@ -1,98 +1,63 @@
 From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v2 1/6] DMA: PL330: move filter function into driver
-Date: Thu, 01 Sep 2011 14:34:37 +0530
-Message-ID: <1314867882-11755-2-git-send-email-thomas.abraham@linaro.org>
+Subject: [PATCH v2 6/6] ARM: EXYNOS4: Limit usage of pl330 device instance to
+ non-dt build
+Date: Thu, 01 Sep 2011 14:34:42 +0530
+Message-ID: <1314867882-11755-7-git-send-email-thomas.abraham@linaro.org>
 References: <1314867882-11755-1-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-2-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-3-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-4-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-5-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-6-git-send-email-thomas.abraham@linaro.org>
 Content-Transfer-Encoding: 7BIT
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1314867882-11755-1-git-send-email-thomas.abraham@linaro.org>
+In-reply-to: <1314867882-11755-6-git-send-email-thomas.abraham@linaro.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: devicetree-discuss@lists.ozlabs.org
 Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, vinod.koul@intel.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-The dma channel selection filter function is moved from plat-samsung
-into the pl330 driver. In additon to that, a check is added in the
-filter function to ensure that the channel on which the filter has
-been invoked is pl330 channel instance (and avoid any incorrect
-access of chan->private in a system with multiple types of DMA
-drivers).
+The pl330 device instances and associated platform data is required only
+for non-device-tree builds. With device tree, all of this information is
+obtained from the device tree.
 
-Suggested-by: Russell King <rmk+kernel@arm.linux.org.uk>
 Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 ---
- arch/arm/plat-samsung/dma-ops.c |    6 ------
- drivers/dma/pl330.c             |   15 +++++++++++++++
- include/linux/amba/pl330.h      |    2 ++
- 3 files changed, 17 insertions(+), 6 deletions(-)
+ arch/arm/mach-exynos4/Kconfig  |    7 +++++++
+ arch/arm/mach-exynos4/Makefile |    3 ++-
+ 2 files changed, 9 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/plat-samsung/dma-ops.c b/arch/arm/plat-samsung/dma-ops.c
-index 6e3d9ab..8d18425 100644
---- a/arch/arm/plat-samsung/dma-ops.c
-+++ b/arch/arm/plat-samsung/dma-ops.c
-@@ -17,12 +17,6 @@
+diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
+index d4d401c..3edbf37 100644
+--- a/arch/arm/mach-exynos4/Kconfig
++++ b/arch/arm/mach-exynos4/Kconfig
+@@ -21,6 +21,13 @@ config EXYNOS4_MCT
+ 	help
+ 	  Use MCT (Multi Core Timer) as kernel timers
  
- #include <mach/dma.h>
- 
--static inline bool pl330_filter(struct dma_chan *chan, void *param)
--{
--	struct dma_pl330_peri *peri = chan->private;
--	return peri->peri_id == (unsigned)param;
--}
--
- static unsigned samsung_dmadev_request(enum dma_ch dma_ch,
- 				struct samsung_dma_info *info)
- {
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 95976cf..7df2516 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -116,6 +116,9 @@ struct dma_pl330_desc {
- 	struct dma_pl330_chan *pchan;
- };
- 
-+/* forward declaration */
-+static struct amba_driver pl330_driver;
++config EXYNOS4_DEV_DMA
++	bool
++	default y if !OF
++	help
++	  Compile in amba device definitions for DMA controller if OF
++	  is not enabled.
 +
- static inline struct dma_pl330_chan *
- to_pchan(struct dma_chan *ch)
- {
-@@ -267,6 +270,18 @@ static void dma_pl330_rqcb(void *token, enum pl330_op_err err)
- 	tasklet_schedule(&pch->task);
- }
+ config EXYNOS4_DEV_AHCI
+ 	bool
+ 	help
+diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
+index d2bf5bf..a2f33dc 100644
+--- a/arch/arm/mach-exynos4/Makefile
++++ b/arch/arm/mach-exynos4/Makefile
+@@ -13,7 +13,8 @@ obj-				:=
+ # Core support for EXYNOS4 system
  
-+bool pl330_filter(struct dma_chan *chan, void *param)
-+{
-+	struct dma_pl330_peri *peri;
-+
-+	if (chan->device->dev->driver != &pl330_driver.drv)
-+		return false;
-+
-+	peri = chan->private;
-+	return peri->peri_id == (unsigned)param;
-+}
-+EXPORT_SYMBOL(pl330_filter);
-+
- static int pl330_alloc_chan_resources(struct dma_chan *chan)
- {
- 	struct dma_pl330_chan *pch = to_pchan(chan);
-diff --git a/include/linux/amba/pl330.h b/include/linux/amba/pl330.h
-index d12f077..6db72da 100644
---- a/include/linux/amba/pl330.h
-+++ b/include/linux/amba/pl330.h
-@@ -12,6 +12,7 @@
- #ifndef	__AMBA_PL330_H_
- #define	__AMBA_PL330_H_
+ obj-$(CONFIG_CPU_EXYNOS4210)	+= cpu.o init.o clock.o irq-combiner.o
+-obj-$(CONFIG_CPU_EXYNOS4210)	+= setup-i2c0.o irq-eint.o dma.o pmu.o
++obj-$(CONFIG_CPU_EXYNOS4210)	+= setup-i2c0.o irq-eint.o pmu.o
++obj-$(CONFIG_EXYNOS4_DEV_DMA)	+= dma.o
+ obj-$(CONFIG_PM)		+= pm.o sleep.o
+ obj-$(CONFIG_CPU_IDLE)		+= cpuidle.o
  
-+#include <linux/dmaengine.h>
- #include <asm/hardware/pl330.h>
- 
- struct dma_pl330_peri {
-@@ -38,4 +39,5 @@ struct dma_pl330_platdata {
- 	unsigned mcbuf_sz;
- };
- 
-+extern bool pl330_filter(struct dma_chan *chan, void *param);
- #endif	/* __AMBA_PL330_H_ */
 -- 
 1.6.6.rc2
