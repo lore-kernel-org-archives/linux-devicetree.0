@@ -1,51 +1,52 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCHv2 3/3] picoxcell: add the DTS for the PC7302 board
-Date: Thu, 1 Sep 2011 08:58:15 +0100
-Message-ID: <20110901075815.GA2585@pulham.picochip.com>
-References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
-	<1314196906-20709-4-git-send-email-jamie@jamieiles.com>
-	<CAGsJ_4wp8aSJ2Kug2FkAznbVA9ifLfHt95P8+9bUijKAqJj5kA@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 4/6] DMA: PL330: Add device tree support
+Date: Thu, 1 Sep 2011 14:33:21 +0530
+Message-ID: <CAJuYYwS5ish3okCNfseF_LhWkc2CPmAJMqNkDsdBKQxmwhndKg@mail.gmail.com>
+References: <1314348014-2481-1-git-send-email-thomas.abraham@linaro.org>
+	<1314348014-2481-2-git-send-email-thomas.abraham@linaro.org>
+	<1314348014-2481-3-git-send-email-thomas.abraham@linaro.org>
+	<1314348014-2481-4-git-send-email-thomas.abraham@linaro.org>
+	<1314348014-2481-5-git-send-email-thomas.abraham@linaro.org>
+	<4E579C9B.7030807@gmail.com>
+	<CAJuYYwR5GqqKjbMngQqorLuka4XN0jin5s6O66orTtSQg5eKRw@mail.gmail.com>
+	<4E5CE37E.1050104@gmail.com>
+	<CAJuYYwT5HGy9b06AyrLJv5hFCFf_YRA4md9N=m+cwcJNTqRDWg@mail.gmail.com>
+	<4E5E2E36.1070006@gmail.com>
+	<CAJuYYwQ17MPD=hTYUxES5touFfd73W1unbtWfu_XqPR48t3P0w@mail.gmail.com>
+	<4E5E5B73.20603@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAGsJ_4wp8aSJ2Kug2FkAznbVA9ifLfHt95P8+9bUijKAqJj5kA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Barry Song <21cnbao@gmail.com>
-Cc: Jamie Iles <jamie@jamieiles.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4E5E5B73.20603@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, boojin.kim@samsung.com, kgene.kim@samsung.com, patches@linaro.org, vinod.koul@intel.com, jassisinghbrar@gmail.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 01, 2011 at 02:36:17PM +0800, Barry Song wrote:
-> 2011/8/24 Jamie Iles <jamie@jamieiles.com>:
+Hi Rob,
+
+On 31 August 2011 21:34, Rob Herring <robherring2@gmail.com> wrote:
+> Thomas,
+
 [...]
-> > + =A0 =A0 =A0 clocks {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 ref_clk: clock@10 {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fixed-clo=
-ck";
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-outputs =3D "ref";
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock-frequency =3D <2000=
-0000>;
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-> =
 
-> ok. find it. is its name just "ref_clk"? could it be a pll/osc or some
-> meaningful name?
+>
+> As it says in Documentation/devicetree/bindings/arm/primecell.txt, you
+> should have "arm,primecell" and a value for the specific peripheral. It
+> should be in order of most specific to least specific.
+>
+> What Linux uses currently from the binding is a bit irrelevant. The
+> binding is supposed to be future proof. An OS could choose to not use
+> the primecell ID at all and only match with compatible string.
 
-Well it's the board reference clock.  Typically this is a crystal, but =
+Thanks for pointing this out. "arm,pl330" has been added as another
+mandatory compatible string for the pl330 device node.
 
-can also be an accurate, external reference or a VCTCXO so it didn't =
+Regards,
+Thomas.
 
-feel right to encode that into the name for the SoC DTSI.  I guess it =
+>
+> Rob
+>
 
-could be called board_clk if that makes things easier though.
-
-Jamie
+[...]
