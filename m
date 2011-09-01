@@ -1,138 +1,136 @@
-From: David Daney <david.daney@cavium.com>
-Subject: [PATCH 2/2] i2c/of: Automatically populate i2c mux busses from device tree data.
-Date: Wed, 31 Aug 2011 14:44:39 -0700
-Message-ID: <1314827079-21245-3-git-send-email-david.daney@cavium.com>
-References: <1314827079-21245-1-git-send-email-david.daney@cavium.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1314827079-21245-1-git-send-email-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: khali@linux-fr.org, ben-linux@fluff.org, peter.korsgaard@barco.com, guenter.roeck@ericsson.com, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [PATCHv2 2/3] picoxcell: add the DTS for pc3x2 and pc3x3 devices
+Date: Thu, 1 Sep 2011 14:30:39 +0800
+Message-ID: <CAGsJ_4w9ghQkzA1RjKx3b9=ELw3KYCcu0x+6s-M_RmY_GCJVmw@mail.gmail.com>
+References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
+	<1314196906-20709-3-git-send-email-jamie@jamieiles.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1314196906-20709-3-git-send-email-jamie@jamieiles.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-For 'normal' i2c bus drivers, we can call of_i2c_register_devices()
-and have the device tree framework automatically populate the bus with
-the devices specified in the device tree.
-
-This patch adds a common code to the i2c mux framework to have the mux
-sub-busses be populated by the of_i2c_register_devices() too.  If the
-mux device has an of_node, we populate the sub-bus' of_node so that
-the subsequent call to of_i2c_register_devices() will find the
-corresponding devices.
-
-It seemed better to put this logic in i2c_add_mux_adapter() rather
-than the individual mux drivers, as they will all probably want to do
-the same thing.
-
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- Documentation/devicetree/bindings/i2c/mux.txt |   54 +++++++++++++++++++++++++
- drivers/i2c/i2c-mux.c                         |   25 +++++++++++
- 2 files changed, 79 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/mux.txt
-
-diff --git a/Documentation/devicetree/bindings/i2c/mux.txt b/Documentation/devicetree/bindings/i2c/mux.txt
-new file mode 100644
-index 0000000..7bd9192
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/mux.txt
-@@ -0,0 +1,54 @@
-+Common i2c bus multiplexer/switch properties.
-+
-+An i2c bus multiplexer/switch will have several child busses that are
-+numbered uniquely in a device dependent manner.  The nodes for an i2c bus
-+multiplexer/switch will have one child node for each child
-+bus.
-+
-+Required properties for child nodes:
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+- cell-index : The sub-bus number.
-+
-+Optional properties for child nodes:
-+- Other properties specific to the multiplexer/switch hardware.
-+- Child nodes conforming to i2c bus binding
-+
-+
-+Example :
-+
-+	/*
-+	   An NXP pca9548 8 channel I2C multiplexer at address 0x70
-+	   with two NXP pca8574 GPIO expanders attached, one each to
-+	   ports 3 and 4.
-+	 */
-+
-+	mux@70 {
-+		compatible = "nxp,pca9548";
-+		reg = <0x70>;
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			cell-index = <3>;
-+
-+			gpio1: gpio@38 {
-+				compatible = "nxp,pca8574";
-+				reg = <0x38>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+		};
-+		i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			cell-index = <4>;
-+
-+			gpio2: gpio@38 {
-+				compatible = "nxp,pca8574";
-+				reg = <0x38>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+		};
-+	};
-diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
-index 26ab31d..0d0fd96 100644
---- a/drivers/i2c/i2c-mux.c
-+++ b/drivers/i2c/i2c-mux.c
-@@ -24,6 +24,8 @@
- #include <linux/slab.h>
- #include <linux/i2c.h>
- #include <linux/i2c-mux.h>
-+#include <linux/of.h>
-+#include <linux/of_i2c.h>
- 
- /* multiplexer per channel data */
- struct i2c_mux_priv {
-@@ -142,6 +144,29 @@ struct i2c_adapter *i2c_add_mux_adapter(struct i2c_adapter *parent,
- 	dev_info(&parent->dev, "Added multiplexed i2c bus %d\n",
- 		 i2c_adapter_id(&priv->adap));
- 
-+#ifdef CONFIG_OF
-+	/* Try to get populate the mux adapter's of_node */
-+	if (mux_dev->of_node) {
-+		struct device_node *child = NULL;
-+		const __be32 *cell_index;
-+		int len;
-+
-+		for (;;) {
-+			child = of_get_next_child(mux_dev->of_node, child);
-+			if (!child)
-+				break;
-+			cell_index = of_get_property(child, "cell-index", &len);
-+			if (!cell_index || (len < sizeof(__be32)))
-+				continue;
-+			if (chan_id == be32_to_cpup(cell_index)) {
-+				priv->adap.dev.of_node = child;
-+				break;
-+			}
-+		}
-+	}
-+	of_i2c_register_devices(&priv->adap);
-+#endif
-+
- 	return &priv->adap;
- }
- EXPORT_SYMBOL_GPL(i2c_add_mux_adapter);
--- 
-1.7.2.3
+SGkgSmFtaWVzLAo+ICsgwqAgwqAgwqAgY2xvY2tzIHsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+ICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgI3NpemUtY2Vs
+bHMgPSA8MT47Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCByYW5nZXM7Cj4gKwo+ICsgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgY2xrZ2F0ZTogY2xrZ2F0ZUA4MDBhMDA0OCB7Cj4gKyDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgICNzaXplLWNlbGxzID0gPDA+Owo+ICsgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcmVnID0gPDB4ODAwYTAwNDggND47Cj4gKyDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjb21wYXRpYmxlID0gInBpY29jaGlwLHBjM3gzLWNs
+ay1nYXRlIjsKPiArCj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCB0enByb3Rf
+Y2xrOiBjbG9ja0AwIHsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIGNvbXBhdGlibGUgPSAicGljb2NoaXAscGMzeDMtZ2F0ZWQtY2xrIjsKPiArIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNsb2NrLW91dHB1dHMgPSAi
+YnVzIjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHBp
+Y29jaGlwLGNsay1kaXNhYmxlLWJpdCA9IDwwPjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNsb2NrLWZyZXF1ZW5jeSA9IDwyMDAwMDAwMDA+Owo+ICsg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcmVmLWNsb2NrID0g
+PCZyZWZfY2xrPiwgInJlZiI7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCB9
+Owo+ICsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHNwaV9jbGs6IGNsb2Nr
+QDEgewo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgY29t
+cGF0aWJsZSA9ICJwaWNvY2hpcCxwYzN4My1nYXRlZC1jbGsiOwo+ICsgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgY2xvY2stb3V0cHV0cyA9ICJidXMiOwo+ICsg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcGljb2NoaXAsY2xr
+LWRpc2FibGUtYml0ID0gPDE+Owo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgY2xvY2stZnJlcXVlbmN5ID0gPDIwMDAwMDAwMD47Cj4gKyDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZWYtY2xvY2sgPSA8JnJlZl9jbGs+
+LCAicmVmIjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIH07Cj4gKwo+ICsg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZG1hYzBfY2xrOiBjbG9ja0AyIHsKPiAr
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNvbXBhdGlibGUg
+PSAicGljb2NoaXAscGMzeDMtZ2F0ZWQtY2xrIjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNsb2NrLW91dHB1dHMgPSAiYnVzIjsKPiArIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIHBpY29jaGlwLGNsay1kaXNhYmxl
+LWJpdCA9IDwyPjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIGNsb2NrLWZyZXF1ZW5jeSA9IDwyMDAwMDAwMDA+Owo+ICsgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcmVmLWNsb2NrID0gPCZyZWZfY2xrPiwgInJlZiI7
+Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCB9Owo+ICsKPiArIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGRtYWMxX2NsazogY2xvY2tAMyB7Cj4gKyDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjb21wYXRpYmxlID0gInBpY29j
+aGlwLHBjM3gzLWdhdGVkLWNsayI7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCBjbG9jay1vdXRwdXRzID0gImJ1cyI7Cj4gKyDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBwaWNvY2hpcCxjbGstZGlzYWJsZS1iaXQgPSA8
+Mz47Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjbG9j
+ay1mcmVxdWVuY3kgPSA8MjAwMDAwMDAwPjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIHJlZi1jbG9jayA9IDwmcmVmX2Nsaz4sICJyZWYiOwo+ICsgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgfTsKPiArCj4gKyDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCBlYmlfY2xrOiBjbG9ja0A0IHsKPiArIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNvbXBhdGlibGUgPSAicGljb2NoaXAscGMzeDMt
+Z2F0ZWQtY2xrIjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIGNsb2NrLW91dHB1dHMgPSAiYnVzIjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIHBpY29jaGlwLGNsay1kaXNhYmxlLWJpdCA9IDw0PjsKPiArIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIGNsb2NrLWZyZXF1ZW5j
+eSA9IDwyMDAwMDAwMDA+Owo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgcmVmLWNsb2NrID0gPCZyZWZfY2xrPiwgInJlZiI7Cj4gKyDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCB9Owo+ICsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIGlwc2VjX2NsazogY2xvY2tANSB7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCBjb21wYXRpYmxlID0gInBpY29jaGlwLHBjM3gzLWdhdGVkLWNs
+ayI7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjbG9j
+ay1vdXRwdXRzID0gImJ1cyI7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCBwaWNvY2hpcCxjbGstZGlzYWJsZS1iaXQgPSA8NT47Cj4gKyDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjbG9jay1mcmVxdWVuY3kgPSA8MjAw
+MDAwMDAwPjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IHJlZi1jbG9jayA9IDwmcmVmX2Nsaz4sICJyZWYiOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgfTsKPiArCj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBs
+Ml9jbGs6IGNsb2NrQDYgewo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgY29tcGF0aWJsZSA9ICJwaWNvY2hpcCxwYzN4My1nYXRlZC1jbGsiOwo+ICsgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgY2xvY2stb3V0cHV0cyA9
+ICJidXMiOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+cGljb2NoaXAsY2xrLWRpc2FibGUtYml0ID0gPDY+Owo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgY2xvY2stZnJlcXVlbmN5ID0gPDIwMDAwMDAwMD47Cj4g
+KyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZWYtY2xvY2sg
+PSA8JnJlZl9jbGs+LCAicmVmIjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IH07Cj4gKwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgdHJuZ19jbGs6IGNs
+b2NrQDcgewo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+Y29tcGF0aWJsZSA9ICJwaWNvY2hpcCxwYzN4My1nYXRlZC1jbGsiOwo+ICsgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgY2xvY2stb3V0cHV0cyA9ICJidXMiOwo+
+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcGljb2NoaXAs
+Y2xrLWRpc2FibGUtYml0ID0gPDc+Owo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgY2xvY2stZnJlcXVlbmN5ID0gPDIwMDAwMDAwMD47Cj4gKyDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZWYtY2xvY2sgPSA8JnJlZl9j
+bGs+LCAicmVmIjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIH07Cj4gKwo+
+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgZnVzZV9jbGs6IGNsb2NrQDggewo+
+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgY29tcGF0aWJs
+ZSA9ICJwaWNvY2hpcCxwYzN4My1nYXRlZC1jbGsiOwo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgY2xvY2stb3V0cHV0cyA9ICJidXMiOwo+ICsgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgcGljb2NoaXAsY2xrLWRpc2Fi
+bGUtYml0ID0gPDg+Owo+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgY2xvY2stZnJlcXVlbmN5ID0gPDIwMDAwMDAwMD47Cj4gKyDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCByZWYtY2xvY2sgPSA8JnJlZl9jbGs+LCAicmVm
+IjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIH07Cj4gKwo+ICsgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgb3RwX2NsazogY2xvY2tAOSB7Cj4gKyDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjb21wYXRpYmxlID0gInBpY29j
+aGlwLHBjM3gzLWdhdGVkLWNsayI7Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCBjbG9jay1vdXRwdXRzID0gImJ1cyI7Cj4gKyDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBwaWNvY2hpcCxjbGstZGlzYWJsZS1iaXQgPSA8
+OT47Cj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBjbG9j
+ay1mcmVxdWVuY3kgPSA8MjAwMDAwMDAwPjsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIHJlZi1jbG9jayA9IDwmcmVmX2Nsaz4sICJyZWYiOwo+ICsgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgfTsKPiArIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IH07Cj4gKwoKZGlkIGkgbWlzcyBhbnl0aGluZz8gaSBkaWRuJ3QgZmluZCB3aG8gaXMgdGhlIHJl
+Zl9jbGsuIHJlZl9jbGsgc2hvdWxkCmJlIHRoZSBzb3VyY2Ugb2YgdGhlIGNsb2NrIHdobyByZWZl
+cmVuY2UgaXQuIEZvciBleGFtcGxlOgoKLyogZXh0ZXJuYWwgb3NjaWxsYXRvciAqLwogICBvc2M6
+IG9zY2lsbGF0b3IgewogICAgICAgY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7CiAgICAgICBm
+cmVxdWVuY3kgID0gPDMyNjc4PjsKICAgICAgIGNsb2NrLW91dHB1dHMgPSAib3NjIjsKICAgfTsK
+CiAgIC8qIHBoYXNlLWxvY2tlZC1sb29wIGRldmljZSwgZ2VuZXJhdGVzIGEgaGlnaGVyIGZyZXF1
+ZW5jeSBjbG9jawogICAgKiBmcm9tIHRoZSBleHRlcm5hbCBvc2NpbGxhdG9yIHJlZmVyZW5jZSAq
+LwogICBwbGw6IHBsbCB7CiAgICAgICBjb21wYXRpYmxlID0gInNvbWUtcGxsLWludGVyZmFjZSIK
+ICAgICAgIHJlZi1jbG9jayA9IDwmb3NjPiwgIm9zYyI7CiAgICAgICByZWcgPSA8MHg0YzAwMCAw
+eDEwMDA+OwogICAgICAgY2xvY2stb3V0cHV0cyA9ICJwbGwiLCAicGxsLXN3aXRjaGVkIjsKICAg
+fTsKCm9zYyBpcyB0aGUgc291cmNlIG9mIHBsbC4gVGhlbiBpdCBpcyB0aGUgcmVmLWNsb2NrIG9m
+IHBsbC4KClRoYW5rcwpCYXJyeQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
