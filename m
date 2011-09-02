@@ -1,114 +1,88 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
+From: Tony Lindgren <tony@atomide.com>
 Subject: Re: [PATCH 7/7] OMAP3: beagleboard: Remove DT support from regular
-	board
-Date: Fri, 2 Sep 2011 14:35:04 +0200
-Message-ID: <4E60CD78.9030602@ti.com>
+ board
+Date: Fri, 2 Sep 2011 16:08:39 +0300
+Message-ID: <20110902130838.GY3548@atomide.com>
 References: <1314897912-18178-1-git-send-email-b-cousson@ti.com>
-	<1314897912-18178-8-git-send-email-b-cousson@ti.com>
-	<20110902081246.GQ3548@atomide.com> <4E609B0A.1020804@ti.com>
-	<20110902104850.GS3548@atomide.com>
+ <1314897912-18178-8-git-send-email-b-cousson@ti.com>
+ <20110902081246.GQ3548@atomide.com>
+ <4E609B0A.1020804@ti.com>
+ <20110902104850.GS3548@atomide.com>
+ <4E60CD78.9030602@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110902104850.GS3548@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "G,
-	Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4E60CD78.9030602@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/2/2011 12:48 PM, Tony Lindgren wrote:
-> * Cousson, Benoit<b-cousson@ti.com>  [110902 11:26]:
->> On 9/2/2011 10:12 AM, Tony Lindgren wrote:
->>> * Benoit Cousson<b-cousson@ti.com>   [110901 19:52]:
->>>> In order to avoid conflict with the new board-omap3-dt.c file,
->>>> remove the .dt_compat entry from the beagle regular board
->>>> file.
->>>>
->>>> Any DT work for OMAP3 will have to be done on the generic DT
->>>> board file to avoid breaking the legacy board support until
->>>> DT migration is done.
->>>
->>> In general we should not keep duplicate old non-DT data around
->>> now that we have the DT append support. Instead we should just
->>> require the .dts file appended to zImage for all mach-omap2
->>> machines. Otherwise we'll end up with double bloat :)
->>
->> Mmm, I'm not sure to get your point. We are not duplicating, since a
->> pure DT generic board will not have anything except a
->> of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
->> And the regular board files will keep initializing devices statically.
->> The drivers will then for the moment support both pdata and DT
->> method to get board parameters.
->
-> Well when converting a driver to DT, we should just drop pdata
-> support. No need to keep it around as it will just make it harder
-> for us to clean up afterwards.
+* Cousson, Benoit <b-cousson@ti.com> [110902 15:02]:
+> On 9/2/2011 12:48 PM, Tony Lindgren wrote:
+> 
+> I'm not sure it is that simple. We have 20+ OMAP3+ boards supported
+> so far. Dropping pdata when a driver is adapted means that all these
+> boards should be properly adapted to DT and tested... (board-XXX.dts
+> + board-XXX.c).
+> That's a huge effort for my point of view. Whereas keeping the
+> legacy pdata method will allow progressing on the boart-dt only
+> without breaking any legacy boards. It will allow the board
+> manufacturers to potentially do the DTS file for their own system
+> using then the generic board-dt.c file.
 
-I'm not sure it is that simple. We have 20+ OMAP3+ boards supported so 
-far. Dropping pdata when a driver is adapted means that all these boards 
-should be properly adapted to DT and tested... (board-XXX.dts + 
-board-XXX.c).
-That's a huge effort for my point of view. Whereas keeping the legacy 
-pdata method will allow progressing on the boart-dt only without 
-breaking any legacy boards. It will allow the board manufacturers to 
-potentially do the DTS file for their own system using then the generic 
-board-dt.c file.
+Yeah but we've seen how badly "we'll clean it up later" approach
+works :(
 
-That being said, keeping the legacy pdata code in some driver along with 
-the DT is a big pain as well:-(
-In some cases, DT can even provide some good way to encode HW 
-information that we do not have today with hwmod/omap_device. So in that 
-case we do not even have any alternative method yet.
+Unfortunately that path means nobody comes back to clean-up
+anything after the party is over and all that work falls on the
+maintainers.
 
->>> So it's OK to have the DT entries in board files so drivers
->>> that get converted will work with them.
->>
->> Well, it will be a little bit more tricky, because having DT in
->> current board files will be a mess with a bunch of #ifdef CONFIG_OF,
->> and adding DT compatible inside each boards will prevent the pure
->> generic DT one to work. In that case we will duplicate the DT
->> migration in every legacy boards files...
->
-> We should just select CONFIG_OF deal with it that way.
->
->> That's why the current strategy is to keep the current board files
->> non-DT aware and add the DT support only to the generic DT board
->> file.
->
-> Well I don't like that, it will be a big mess. We'll end up with
-> twice the amount of platform_data and init code. It's OK to
-> require CONFIG_OF as it's known to work with the append support
-> for older boards.
->
-> It's easier just to require DT append for all the boards. In most
-> cases it's just a trivial include of the common dts file for now.
+So the one driver at a time conversion approach is better.
+ 
+> That being said, keeping the legacy pdata code in some driver along
+> with the DT is a big pain as well:-(
 
-That part is easy indeed, this is hacking every board-XXX.c and testing 
-them that will be tricky. This is as well the board specifics settings 
-that are tricky not the generic OMAP stuff. We do have to set GPIOs, pin 
-mux, regulator bindings, audio codec stuff...
+Yup and duplicate data will lead to nasty bugs and support issues.
 
-> When we convert something to DT, there's no point going back.
+> >It's easier just to require DT append for all the boards. In most
+> >cases it's just a trivial include of the common dts file for now.
+> 
+> That part is easy indeed, this is hacking every board-XXX.c and
+> testing them that will be tricky. This is as well the board
+> specifics settings that are tricky not the generic OMAP stuff. We do
+> have to set GPIOs, pin mux, regulator bindings, audio codec stuff...
 
-Agree on that, in theory, I'm just wondering how practical it will be to 
-progress on every board at the same time.
+Right but for most part it's just removing the data. The board
+specific things are usually number of MMC data lines, number of
+USB transceiver data lines, GPIO to enable etc. Pretty trivial
+stuff that the board maintainers can test.
+ 
+> >When we convert something to DT, there's no point going back.
+> 
+> Agree on that, in theory, I'm just wondering how practical it will
+> be to progress on every board at the same time.
 
-I guess we do need some advice from the DT gurus on that as well.
+That should not be too bad for most part. For example, the board-*.c
+files all just call  omap_register_i2c_bus with the controllers.
+So not much there to convert, just add the controllers to board
+.dts files and remove from board-*.c files.
+ 
+> I guess we do need some advice from the DT gurus on that as well.
+> 
+> It looks to me that both approaches are painful and will require
+> some efforts.
 
-It looks to me that both approaches are painful and will require some 
-efforts.
-It is too bad that nobody did a 
-devicetree-migration-o-matic-for-lazy-developer.py script to handle that...
+Yes, but if we don't drop the pdata then we'll be in half-converted
+state eternally.
+
+> It is too bad that nobody did a
+> devicetree-migration-o-matic-for-lazy-developer.py script to handle
+> that...
+
+The conversion for some drivers can be scripted for sure :)
 
 Regards,
-Benoit
+
+Tony
