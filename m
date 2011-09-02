@@ -1,74 +1,191 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 7/7] OMAP3: beagleboard: Remove DT support from regular
- board
-Date: Fri, 2 Sep 2011 13:48:50 +0300
-Message-ID: <20110902104850.GS3548@atomide.com>
-References: <1314897912-18178-1-git-send-email-b-cousson@ti.com>
- <1314897912-18178-8-git-send-email-b-cousson@ti.com>
- <20110902081246.GQ3548@atomide.com>
- <4E609B0A.1020804@ti.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 6/7] OMAP3: board-dt: Add generic board file for DT support
+Date: Fri, 2 Sep 2011 13:43:48 +0200
+Message-ID: <4E60C174.50604@ti.com>
+References: <1314897912-18178-1-git-send-email-b-cousson@ti.com> <1314897912-18178-7-git-send-email-b-cousson@ti.com> <20110902080944.GP3548@atomide.com> <4E609800.9090402@ti.com> <20110902104330.GR3548@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4E609B0A.1020804@ti.com>
+In-Reply-To: <20110902104330.GR3548@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
+To: Tony Lindgren <tony@atomide.com>
 Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-* Cousson, Benoit <b-cousson@ti.com> [110902 11:26]:
-> On 9/2/2011 10:12 AM, Tony Lindgren wrote:
-> >* Benoit Cousson<b-cousson@ti.com>  [110901 19:52]:
-> >>In order to avoid conflict with the new board-omap3-dt.c file,
-> >>remove the .dt_compat entry from the beagle regular board
-> >>file.
-> >>
-> >>Any DT work for OMAP3 will have to be done on the generic DT
-> >>board file to avoid breaking the legacy board support until
-> >>DT migration is done.
-> >
-> >In general we should not keep duplicate old non-DT data around
-> >now that we have the DT append support. Instead we should just
-> >require the .dts file appended to zImage for all mach-omap2
-> >machines. Otherwise we'll end up with double bloat :)
+On 9/2/2011 12:43 PM, Tony Lindgren wrote:
+> * Cousson, Benoit<b-cousson@ti.com>  [110902 11:13]:
+>> Hi Tony,
+>>
+>> On 9/2/2011 10:09 AM, Tony Lindgren wrote:
+>>> Hi,
+>>>
+>>> * Benoit Cousson<b-cousson@ti.com>   [110901 19:52]:
+>>>> Create an OMAP3 generic board to start the DT migration.
+>>>
+>>> I don't think this needs to be SoC specific, we can add multiple
+>>> DT_MACHINE_START entries into a single file. So it should be
+>>> just board-omap-dt.c.
+>>
+>> I do agree, it should not, I made that comment into the
+>> board-omap4-dt.c, but for the moment we still have dedicated OMAP
+>> specifics stuff at board level, like the map_io.
 > 
-> Mmm, I'm not sure to get your point. We are not duplicating, since a
-> pure DT generic board will not have anything except a
-> of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
-> And the regular board files will keep initializing devices statically.
-> The drivers will then for the moment support both pdata and DT
-> method to get board parameters.
+> Well map_io can also be set in DT_MACHINE_START. For most part
+> it already is generic like omap3_map_io and omap4_map_io.
+> So that should not stop anything.
 
-Well when converting a driver to DT, we should just drop pdata
-support. No need to keep it around as it will just make it harder
-for us to clean up afterwards.
- 
-> >So it's OK to have the DT entries in board files so drivers
-> >that get converted will work with them.
+OK, I think I was trying to be a little bit more extreme, meaning only one omap_map_io for every OMAPs.
+Then, inside omap_map_io we can use the DT compatible information to retrieve the proper OMAPs revision and thus use the proper init table.
+
+Whereas in your case you are still relying on the various DT_MACHINE entries to detect which OMAP revision is used.
+
+It looks to me that relying on several DT_MACHINE_START to identify a SoC version is a little bit more a hack. 
+I will let the device-tree experts answering that question :-)
+For my point of view, using DT compatible in the various place where the OMAP revision is important, might allow a finer granularity.
+
+>> I have an other series that make the map_io DT aware to get rid of
+>> that, but it still not finalized.
 > 
-> Well, it will be a little bit more tricky, because having DT in
-> current board files will be a mess with a bunch of #ifdef CONFIG_OF,
-> and adding DT compatible inside each boards will prevent the pure
-> generic DT one to work. In that case we will duplicate the DT
-> migration in every legacy boards files...
+> Hmm maybe take a look again? We've already sorted out quite a bit
+> of the init stuff over past few merge windows. If there's still
+> something blocking that, let's clear it out ASAP.
 
-We should just select CONFIG_OF deal with it that way.
+Now that I understand your approach, it is fine. Please find below an example of what I was trying to achieve, and why that point was an issue.
+The clear advantage of your method is that not further effort will be require for this part. At least for the moment.
+
+>> My goal was have a single DT_MACHINE_START for every OMAPs.
+>> But, meanwhile, if you prefer one file with many board descriptors,
+>> that's fine.
+> 
+> Yes that's better. We should only need a separate DT_MACHINE_START
+> for major SoC variants.
+
+OK, I'll try that.
+
+Thanks,
+Benoit
+
+---
+>From a8edcd113b6fa38620dae11bcbb55daa84dfb07c Mon Sep 17 00:00:00 2001
+From: Benoit Cousson <b-cousson@ti.com>
+Date: Mon, 22 Aug 2011 11:10:38 +0200
+Subject: [PATCH] OMAP2+: Add a common method to init globals using DT compatible
+
+Thanks to the DT root node compatible information, we can extract
+the compatible SoC and use it to select the proper globals.
+Create a common omap2_set_globals API that can be used by every
+OMAP2+ platforms.
+
+Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/mach-omap2/common.c             |   73 ++++++++++++++++++++++++++++++
+ arch/arm/plat-omap/include/plat/common.h |    1 +
+ 2 files changed, 74 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/common.c b/arch/arm/mach-omap2/common.c
+index 3f20cbb..ee5a225 100644
+--- a/arch/arm/mach-omap2/common.c
++++ b/arch/arm/mach-omap2/common.c
+@@ -16,6 +16,7 @@
+ #include <linux/init.h>
+ #include <linux/clk.h>
+ #include <linux/io.h>
++#include <linux/of_fdt.h>
  
-> That's why the current strategy is to keep the current board files
-> non-DT aware and add the DT support only to the generic DT board
-> file.
+ #include <plat/common.h>
+ #include <plat/board.h>
+@@ -140,3 +141,75 @@ void __init omap2_set_globals_443x(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_OF
++/*
++ * DT method to get the proper globals configuration
++ */
++static const struct of_device_id omap_soc_match[] = {
++#if defined(CONFIG_ARCH_OMAP4)
++        {
++                .compatible = "ti,omap4",
++                .data = &omap4_globals,
++        },
++#endif
++#if defined(CONFIG_ARCH_OMAP3)
++        {
++                .compatible = "ti,omap3",
++                .data = &omap3_globals,
++        },
++#endif
++#if defined(CONFIG_SOC_OMAP2430)
++        {
++                .compatible = "ti,omap2430",
++                .data = &omap243x_globals,
++        },
++#endif
++#if defined(CONFIG_SOC_OMAP2420)
++        {
++                .compatible = "ti,omap2420",
++                .data = &omap242x_globals,
++        },
++#endif
++	{},
++};
++
++/* Helper to find the proper of_device_id from a FDT */
++static __init const struct of_device_id *_fdt_match_node(
++					const struct of_device_id *matches,
++					int fdt_node)
++{
++	unsigned int score = 0;
++
++	if (!matches)
++		return NULL;
++
++	while (matches->compatible[0]) {
++		score = of_flat_dt_is_compatible(fdt_node, matches->compatible);
++		if (score > 0)
++			return matches;
++		matches++;
++	}
++	return NULL;
++}
++
++void __init omap2_set_globals(void)
++{
++        unsigned long fdt_root;
++	const struct of_device_id *match;
++
++	/* the DT is still flat at map_io time... */
++        fdt_root = of_get_flat_dt_root();
++	match = _fdt_match_node(omap_soc_match, fdt_root);
++	if (!match) {
++		pr_err("%s(): Cannot initialize the platform globals data\n",
++		       __func__);
++	}
++
++	pr_info("%s(): %s\n", __func__, match->compatible);
++
++	omap2_set_globals_tap(match->data);
++	omap2_set_globals_sdrc(match->data);
++	omap2_set_globals_control(match->data);
++	omap2_set_globals_prcm(match->data);
++}
++#endif
+diff --git a/arch/arm/plat-omap/include/plat/common.h b/arch/arm/plat-omap/include/plat/common.h
+index 4564cc6..fb79269 100644
+--- a/arch/arm/plat-omap/include/plat/common.h
++++ b/arch/arm/plat-omap/include/plat/common.h
+@@ -67,6 +67,7 @@ void omap2_set_globals_243x(void);
+ void omap2_set_globals_3xxx(void);
+ void omap2_set_globals_443x(void);
+ void omap2_set_globals_ti816x(void);
++void omap2_set_globals(void);
+ 
+ /* These get called from omap2_set_globals_xxxx(), do not call these */
+ void omap2_set_globals_tap(struct omap_globals *);
+-- 
+1.7.0.4
 
-Well I don't like that, it will be a big mess. We'll end up with
-twice the amount of platform_data and init code. It's OK to
-require CONFIG_OF as it's known to work with the append support
-for older boards.
 
-It's easier just to require DT append for all the boards. In most
-cases it's just a trivial include of the common dts file for now.
 
-When we convert something to DT, there's no point going back.
-
-Regards,
-
-Tony
