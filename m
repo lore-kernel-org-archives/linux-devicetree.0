@@ -1,17 +1,14 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/9] Add dtget utility to read property values from device
-	tree
-Date: Fri, 2 Sep 2011 10:54:28 -0700
-Message-ID: <CAPnjgZ1mSifP1rSSCZgDCDQvd-PR3Q++Qr_TovJVPW_BrH3fgA@mail.gmail.com>
-References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
-	<1309892577-23828-3-git-send-email-sjg@chromium.org>
-	<20110719033437.GB6399@yookeroo.fritz.box>
-	<CAPnjgZ3GgOx-Sja2Lq2WzYy+FYv3oyUF9vzdZ8RPYE-Hsmjf0Q@mail.gmail.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2] dtc: Add support for named integer constants
+Date: Fri, 2 Sep 2011 11:34:25 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>
+References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPnjgZ3GgOx-Sja2Lq2WzYy+FYv3oyUF9vzdZ8RPYE-Hsmjf0Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1314739818-13904-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,82 +18,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "jdl-CYoMK+44s/E@public.gmane.org" <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Stephen Warren wrote at Tuesday, August 30, 2011 3:30 PM:
+> You may define constants as follows:
+> 
+> /define/ TWO 2;
+> /define/ FOUR 4;
+> /define/ OTHER FOUR;
+> 
+> And properties may use these values as follows:
+> 
+> foo = <1 TWO 3 FOUR 5>;
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-On Thu, Jul 28, 2011 at 5:22 AM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Hi David,
->
-> On Tue, Jul 19, 2011 at 3:34 PM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> On Tue, Jul 05, 2011 at 12:02:50PM -0700, Simon Glass wrote:
->>> This simply utility makes it easy for scripts to read values from the d=
-evice
->>> tree.
-[snip]
+David, Jon,
 
->>> +static int show_data_for_key(const void *blob, const char *format, int=
- type,
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0char *key)
->>> +{
->>> + =A0 =A0 char *ptr, *prop;
->>> + =A0 =A0 int node, guess_node =3D 0;
->>> + =A0 =A0 const void *value;
->>> + =A0 =A0 int len;
->>> +
->>> + =A0 =A0 /* First extract the property from the end */
->>> + =A0 =A0 ptr =3D strrchr(key, '/');
->>> + =A0 =A0 if (!ptr) {
->>> + =A0 =A0 =A0 =A0 =A0 =A0 fprintf(stderr, "No node found in key '%s'\n"=
-, key);
->>> + =A0 =A0 =A0 =A0 =A0 =A0 return 5;
->>> + =A0 =A0 }
->>
->> This is wrong. =A0properties do not have paths - they exist in a
->> separate namespace to nodes. =A0The node path and property name should
->> be supplied as separate parameters. =A0As well as being actually right,
->> it will greatly simplify this function's convoluted logic.
->
-> Well yes, but I feel that it makes it harder to use also. My thinking
-> with this was to try to make it easy to extract information. In my
-> view:
->
-> /lcd/width
->
-> is better than
->
-> /lcd width
->
-> But this is the kind of discussion / feedback I was hoping to get as I
-> am new to device trees. My thoughts:
->
-> 1. / is not generally used in property names so there is no conflict
-> 2. Neither is there any ambiguity
-> 3. The 'complex' logic is there to make life easy for the poor
-> hard-pressed user.
-> 4. Creating the concept of a sort-of unified name space for a device
-> tree property is probably not a bad idea.
+Does this seem reasonable?
 
-I didn't hear back on this so I going to assume this is reasonable,
-and submit another patch set with your other comments addressed. The
-intent of the fdt seems clearly hierarchical to me. Hope this is ok.
+I think the syntax is simple enough it wouldn't interfere with any more
+advanced expression/function/... support in the future, and it could be
+easily extended to allow e.g.:
 
-Regards,
-Simon
+/define/ FOO "BAR";
+/define/ BAX [0af8dacb0];
+...
 
->
-[more snip]
+And even arbitrary expressions on the RHS as/when/if support is added
+for those more generally:
 
->> --
->> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music=
- baroque, and my code
->> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ =
-_other_
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _=
-around_!
->> http://www.ozlabs.org/~dgibson
->>
->
+/define/ A (B | (C << 2));
+
+-- 
+nvpublic
