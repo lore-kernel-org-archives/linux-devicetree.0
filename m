@@ -1,75 +1,102 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH] ahci: add DT binding for Calxeda AHCI controller
-Date: Fri,  2 Sep 2011 10:10:15 -0500
-Message-ID: <1314976215-23902-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-ide@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>, Jeff Garzik <jgarzik@pobox.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/9] Add dtget utility to read property values from device
+	tree
+Date: Fri, 2 Sep 2011 10:54:28 -0700
+Message-ID: <CAPnjgZ1mSifP1rSSCZgDCDQvd-PR3Q++Qr_TovJVPW_BrH3fgA@mail.gmail.com>
+References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
+	<1309892577-23828-3-git-send-email-sjg@chromium.org>
+	<20110719033437.GB6399@yookeroo.fritz.box>
+	<CAPnjgZ3GgOx-Sja2Lq2WzYy+FYv3oyUF9vzdZ8RPYE-Hsmjf0Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPnjgZ3GgOx-Sja2Lq2WzYy+FYv3oyUF9vzdZ8RPYE-Hsmjf0Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+Hi David,
 
-Add devicetree match table to ahci platform driver for Calxeda Highbank
-AHCI controller.
+On Thu, Jul 28, 2011 at 5:22 AM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Hi David,
+>
+> On Tue, Jul 19, 2011 at 3:34 PM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> On Tue, Jul 05, 2011 at 12:02:50PM -0700, Simon Glass wrote:
+>>> This simply utility makes it easy for scripts to read values from the d=
+evice
+>>> tree.
+[snip]
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Jeff Garzik <jgarzik@pobox.com>
-Cc: linux-ide@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org
----
- .../devicetree/bindings/ata/calxeda-sata.txt       |   17 +++++++++++++++++
- drivers/ata/ahci_platform.c                        |    7 +++++++
- 2 files changed, 24 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/calxeda-sata.txt
+>>> +static int show_data_for_key(const void *blob, const char *format, int=
+ type,
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0char *key)
+>>> +{
+>>> + =A0 =A0 char *ptr, *prop;
+>>> + =A0 =A0 int node, guess_node =3D 0;
+>>> + =A0 =A0 const void *value;
+>>> + =A0 =A0 int len;
+>>> +
+>>> + =A0 =A0 /* First extract the property from the end */
+>>> + =A0 =A0 ptr =3D strrchr(key, '/');
+>>> + =A0 =A0 if (!ptr) {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 fprintf(stderr, "No node found in key '%s'\n"=
+, key);
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 return 5;
+>>> + =A0 =A0 }
+>>
+>> This is wrong. =A0properties do not have paths - they exist in a
+>> separate namespace to nodes. =A0The node path and property name should
+>> be supplied as separate parameters. =A0As well as being actually right,
+>> it will greatly simplify this function's convoluted logic.
+>
+> Well yes, but I feel that it makes it harder to use also. My thinking
+> with this was to try to make it easy to extract information. In my
+> view:
+>
+> /lcd/width
+>
+> is better than
+>
+> /lcd width
+>
+> But this is the kind of discussion / feedback I was hoping to get as I
+> am new to device trees. My thoughts:
+>
+> 1. / is not generally used in property names so there is no conflict
+> 2. Neither is there any ambiguity
+> 3. The 'complex' logic is there to make life easy for the poor
+> hard-pressed user.
+> 4. Creating the concept of a sort-of unified name space for a device
+> tree property is probably not a bad idea.
 
-diff --git a/Documentation/devicetree/bindings/ata/calxeda-sata.txt b/Documentation/devicetree/bindings/ata/calxeda-sata.txt
-new file mode 100644
-index 0000000..79caa56
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/calxeda-sata.txt
-@@ -0,0 +1,17 @@
-+* Calxeda SATA Controller
-+
-+SATA nodes are defined to describe on-chip Serial ATA controllers.
-+Each SATA controller should have its own node.
-+
-+Required properties:
-+- compatible        : compatible list, contains "calxeda,hb-ahci"
-+- interrupts        : <interrupt mapping for SATA IRQ>
-+- reg               : <registers mapping>
-+
-+Example:
-+        sata@ffe08000 {
-+		compatible = "calxeda,hb-ahci";
-+                reg = <0xffe08000 0x1000>;
-+                interrupts = <115>;
-+        };
-+
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index 6fef1fa..9bfc970 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -171,11 +171,18 @@ static int __devexit ahci_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id ahci_of_match[] = {
-+	{ .compatible = "calxeda,hb-ahci", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ahci_of_match);
-+
- static struct platform_driver ahci_driver = {
- 	.remove = __devexit_p(ahci_remove),
- 	.driver = {
- 		.name = "ahci",
- 		.owner = THIS_MODULE,
-+		.of_match_table = ahci_of_match,
- 	},
- };
- 
--- 
-1.7.5.4
+I didn't hear back on this so I going to assume this is reasonable,
+and submit another patch set with your other comments addressed. The
+intent of the fdt seems clearly hierarchical to me. Hope this is ok.
 
+Regards,
+Simon
+
+>
+[more snip]
+
+>> --
+>> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music=
+ baroque, and my code
+>> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ =
+_other_
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _=
+around_!
+>> http://www.ozlabs.org/~dgibson
+>>
+>
