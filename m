@@ -1,85 +1,53 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 2/7] arm/dts: OMAP3: Add mpu and iva nodes
-Date: Mon, 5 Sep 2011 17:05:11 +0200
-Message-ID: <4E64E527.4040409@ti.com>
-References: <1314897912-18178-1-git-send-email-b-cousson@ti.com> <1314897912-18178-3-git-send-email-b-cousson@ti.com> <1377915.IaVE5xAurc@wuerfel>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Mon, 5 Sep 2011 08:43:36 -0700
+Message-ID: <20110905154335.GH1903@atomide.com>
+References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
+	<BANLkTik_hH9tZ5MMbOYzhZwLFTFQyJyfRg@mail.gmail.com>
+	<alpine.LFD.2.00.1106131640370.2142@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1377915.IaVE5xAurc@wuerfel>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "tony@atomide.com" <tony@atomide.com>, "Hilman, Kevin" <khilman@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.00.1106131640370.2142@xanadu.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, John Bonesio <bones@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+* Nicolas Pitre <nicolas.pitre@linaro.org> [110613 13:41]:
+> On Sun, 12 Jun 2011, Grant Likely wrote:
+> 
+> > On Sun, Jun 12, 2011 at 12:06 AM, Nicolas Pitre
+> > <nicolas.pitre@linaro.org> wrote:
+> > > This is a resend of those patches with fixups after the latest changes
+> > > in mainline.
+> > >
+> > > [PATCH 1/3] ARM: zImage: ensure it is always a multiple of 64 bits in size
+> > > This one is new and trivial.
+> > >
+> > > [PATCH 2/3] ARM: zImage: Allow the appending of a device tree binary
+> > > Mostly John Bonesio's version with some adjustments and cleanups.
+> > >
+> > > [PATCH 3/3] ARM: zImage: make sure appended DTB doesn't get overwritten by kernel .bss
+> > > New, simpler alternative to Tony Lindgren's version.
+> > 
+> > I've gone ahead and added the series to devicetree/test for anyone who
+> > want to play with it.
+> 
+> I've published those patches with all the latest fixes and ACKs here:
+> 
+> 	git://git.linaro.org/people/nico/linux.git zImage_DTB_append
 
-On 9/1/2011 8:17 PM, Arnd Bergmann wrote:
-> On Thursday 01 September 2011 19:25:07 Benoit Cousson wrote:
->>
->>          /*
->> +        * XXX: The cpus node is mandatory, but since the CPUs are as well part
->> +        * of the mpu subsystem below, it is not clear where the information
->> +        * should be. Maybe here with a phandle inside the mpu?
->> +        */
->> +       cpus {
->> +       };
->> +
->> +       /*
->>           * The soc node represents the soc top level view. It is uses for IPs
->>           * that are not memory mapped in the MPU view or for the MPU itself.
->>           */
->>          soc {
->>                  compatible = "ti,omap-infra";
->> +               mpu {
->> +                       compatible = "ti,omap3-mpu";
->> +                       hwmods = "mpu";
->> +                       cpu@0 {
->> +                               compatible = "arm,cortex-a8";
->> +                       };
->> +               };
->> +
->
-> I would always put the cpu nodes in the top-level, even if that's
-> a slight misrepresentation of the truth. The point is basically
-> that CPU nodes are special (you cannot have device drivers for them)
-> and that the device tree is basically laid out from the perspective
-> of the CPU, which may be different from the perspective that a
-> hardware designer has.
+Ping, any news on getting these merged?
 
-Yeah, I saw that in the "cpus" node documentation. My point here is that 
-I do need to represent the MPU subsystem that will contain the cpus. And 
-thus the Cortex is inside the MPU subsystem.
-
-I can potentially keep the CPUs inside the cpus node, and just represent 
-the mpu node inside the soc, with potentially some phandle to the real 
-cpu nodes.
-
-Something like that:
-
-cpus {
-	cpu0: cpu@0 {
-			compatible = "arm,cortex-a8";
-	};
-};
-
-[...]
-
-soc {
-	compatible = "ti,omap-infra";
-	mpu {
-		compatible = "ti,omap3-mpu";
-		hwmods = "mpu";
-		cpu@0 {
-			phandle = <&cpu0>;
-			[...]
-		};
-	};
-};
-
-
-Does that look better?
-
-Thanks,
-Benoit
+Tony
