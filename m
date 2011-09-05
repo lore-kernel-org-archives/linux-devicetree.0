@@ -1,41 +1,85 @@
-From: Vinod Koul <vinod.koul@linux.intel.com>
-Subject: Re: [PATCH 0/6] Add device tree support for PL330 dma controller
- driver
-Date: Mon, 05 Sep 2011 18:44:52 +0530
-Message-ID: <1315228492.26251.76.camel@vkoul-udesk3>
-References: <1314348014-2481-1-git-send-email-thomas.abraham@linaro.org>
-	 <1314638947.1606.157.camel@vkoul-udesk3>
-	 <CAJuYYwQCdWjEzAeO-Gm2GTKO3_ocSOx8sZeBQP-7Y=GbHf=5vQ@mail.gmail.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 2/7] arm/dts: OMAP3: Add mpu and iva nodes
+Date: Mon, 5 Sep 2011 17:05:11 +0200
+Message-ID: <4E64E527.4040409@ti.com>
+References: <1314897912-18178-1-git-send-email-b-cousson@ti.com> <1314897912-18178-3-git-send-email-b-cousson@ti.com> <1377915.IaVE5xAurc@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwQCdWjEzAeO-Gm2GTKO3_ocSOx8sZeBQP-7Y=GbHf=5vQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, boojin.kim@samsung.com, kgene.kim@samsung.com, patches@linaro.org, jassisinghbrar@gmail.com, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1377915.IaVE5xAurc@wuerfel>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "tony@atomide.com" <tony@atomide.com>, "Hilman, Kevin" <khilman@ti.com>, "G, Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2011-08-30 at 17:58 +0530, Thomas Abraham wrote:
-> Hi Vinod,
-> 
-> On 29 August 2011 22:59, Vinod Koul <vinod.koul@linux.intel.com> wrote:
-> > On Fri, 2011-08-26 at 14:10 +0530, Thomas Abraham wrote:
-> >> This patchset adds device tree support for PL330 driver and uses it
-> >> to add device tree support for Samsung platforms, specifically Exynos4.
-> > The DMA patches looks good to me. Do you want this to go thru slave-dma
-> > tree or somewhere else.
-> > I will need acks on 3, 5 and 6th patch to carry them.
-> 
-> There are couple of changes required in patch 4/6 of this series. I
-> will do that and resubmit.
-> 
-> Since these patches are based on Boojin's pl330 driver update patches,
-> it would be easier to take the same route which Boojin's patches will
-> take. I will try to get acks' for the patches that you have listed.
-> 
-And I think these might need to be rebased based on Boojin's latest
-version
+Hi Arnd,
 
--- 
-~Vinod
+On 9/1/2011 8:17 PM, Arnd Bergmann wrote:
+> On Thursday 01 September 2011 19:25:07 Benoit Cousson wrote:
+>>
+>>          /*
+>> +        * XXX: The cpus node is mandatory, but since the CPUs are as well part
+>> +        * of the mpu subsystem below, it is not clear where the information
+>> +        * should be. Maybe here with a phandle inside the mpu?
+>> +        */
+>> +       cpus {
+>> +       };
+>> +
+>> +       /*
+>>           * The soc node represents the soc top level view. It is uses for IPs
+>>           * that are not memory mapped in the MPU view or for the MPU itself.
+>>           */
+>>          soc {
+>>                  compatible = "ti,omap-infra";
+>> +               mpu {
+>> +                       compatible = "ti,omap3-mpu";
+>> +                       hwmods = "mpu";
+>> +                       cpu@0 {
+>> +                               compatible = "arm,cortex-a8";
+>> +                       };
+>> +               };
+>> +
+>
+> I would always put the cpu nodes in the top-level, even if that's
+> a slight misrepresentation of the truth. The point is basically
+> that CPU nodes are special (you cannot have device drivers for them)
+> and that the device tree is basically laid out from the perspective
+> of the CPU, which may be different from the perspective that a
+> hardware designer has.
+
+Yeah, I saw that in the "cpus" node documentation. My point here is that 
+I do need to represent the MPU subsystem that will contain the cpus. And 
+thus the Cortex is inside the MPU subsystem.
+
+I can potentially keep the CPUs inside the cpus node, and just represent 
+the mpu node inside the soc, with potentially some phandle to the real 
+cpu nodes.
+
+Something like that:
+
+cpus {
+	cpu0: cpu@0 {
+			compatible = "arm,cortex-a8";
+	};
+};
+
+[...]
+
+soc {
+	compatible = "ti,omap-infra";
+	mpu {
+		compatible = "ti,omap3-mpu";
+		hwmods = "mpu";
+		cpu@0 {
+			phandle = <&cpu0>;
+			[...]
+		};
+	};
+};
+
+
+Does that look better?
+
+Thanks,
+Benoit
