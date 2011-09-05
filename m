@@ -1,15 +1,16 @@
-From: Mitch Bradley <wmb@firmworks.com>
-Subject: Re: [PATCH 2/7] arm/dts: OMAP3: Add mpu and iva nodes
-Date: Mon, 05 Sep 2011 07:46:18 -1000
-Message-ID: <4E650AEA.2090109@firmworks.com>
-References: <1314897912-18178-1-git-send-email-b-cousson@ti.com>
-	<1377915.IaVE5xAurc@wuerfel> <4E64E527.4040409@ti.com>
-	<201109051923.51084.arnd@arndb.de>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
+Date: Mon, 5 Sep 2011 15:32:44 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1109051528520.20358@xanadu.home>
+References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
+	<BANLkTik_hH9tZ5MMbOYzhZwLFTFQyJyfRg@mail.gmail.com>
+	<alpine.LFD.2.00.1106131640370.2142@xanadu.home>
+	<20110905154335.GH1903@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201109051923.51084.arnd@arndb.de>
+In-Reply-To: <20110905154335.GH1903@atomide.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,57 +20,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Hilman, Kevin" <khilman@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>, "tony@atomide.com" <tony@atomide.com>, "G,
-	Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, John Bonesio <bones@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/5/2011 7:23 AM, Arnd Bergmann wrote:
-> On Monday 05 September 2011, Cousson, Benoit wrote:
->> Yeah, I saw that in the "cpus" node documentation. My point here is that
->> I do need to represent the MPU subsystem that will contain the cpus. And
->> thus the Cortex is inside the MPU subsystem.
+On Mon, 5 Sep 2011, Tony Lindgren wrote:
+
+> * Nicolas Pitre <nicolas.pitre@linaro.org> [110613 13:41]:
+> > On Sun, 12 Jun 2011, Grant Likely wrote:
+> > 
+> > > On Sun, Jun 12, 2011 at 12:06 AM, Nicolas Pitre
+> > > <nicolas.pitre@linaro.org> wrote:
+> > > > This is a resend of those patches with fixups after the latest changes
+> > > > in mainline.
+> > > >
+> > > > [PATCH 1/3] ARM: zImage: ensure it is always a multiple of 64 bits in size
+> > > > This one is new and trivial.
+> > > >
+> > > > [PATCH 2/3] ARM: zImage: Allow the appending of a device tree binary
+> > > > Mostly John Bonesio's version with some adjustments and cleanups.
+> > > >
+> > > > [PATCH 3/3] ARM: zImage: make sure appended DTB doesn't get overwritten by kernel .bss
+> > > > New, simpler alternative to Tony Lindgren's version.
+> > > 
+> > > I've gone ahead and added the series to devicetree/test for anyone who
+> > > want to play with it.
+> > 
+> > I've published those patches with all the latest fixes and ACKs here:
+> > 
+> > 	git://git.linaro.org/people/nico/linux.git zImage_DTB_append
+> 
+> Ping, any news on getting these merged?
+
+I should come around to it once my current memory.h cleanup work is in 
+shape. This might depend on some new Kbuild facility from Arnaud Lacombe 
+I've yet to test.
 
 
-The device tree hierarchy does not represent "containment", but rather 
-addressing from the standpoint of a program running on a CPU.
-
- From that viewpoint, it might be better to have a phandle reference to 
-the mpu in each CPU node.
-
->>
->> I can potentially keep the CPUs inside the cpus node, and just represent
->> the mpu node inside the soc, with potentially some phandle to the real
->> cpu nodes.
->>
->> Something like that:
->>
->> cpus {
->>          cpu0: cpu@0 {
->>                          compatible = "arm,cortex-a8";
->>          };
->> };
->>
->> [...]
->>
->> soc {
->>          compatible = "ti,omap-infra";
->>          mpu {
->>                  compatible = "ti,omap3-mpu";
->>                  hwmods = "mpu";
->>                  cpu@0 {
->>                          phandle =<&cpu0>;
->>                          [...]
->>                  };
->>          };
->> };
->
-> Yes, that looks good. I wouldn't name the attribute "phandle" if I could
-> think of anything better (which I can't at the moment).
->
-> 	Arnd
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
+Nicolas
