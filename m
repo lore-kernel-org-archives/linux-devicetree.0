@@ -1,60 +1,105 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH 0/3] patches to allow DTB to be appended to the ARM zImage
-Date: Mon, 5 Sep 2011 15:32:44 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1109051528520.20358@xanadu.home>
-References: <1307858800-16712-1-git-send-email-nicolas.pitre@linaro.org>
-	<BANLkTik_hH9tZ5MMbOYzhZwLFTFQyJyfRg@mail.gmail.com>
-	<alpine.LFD.2.00.1106131640370.2142@xanadu.home>
-	<20110905154335.GH1903@atomide.com>
+From: Pierre Beaumon <pierre.beaumon@yahoo.com>
+Subject: Re : Arm device tree wonder
+Date: Mon, 5 Sep 2011 23:04:20 +0100 (BST)
+Message-ID: <1315260260.18862.YahooMailNeo@web132209.mail.ird.yahoo.com>
+References: <1314734987.11994.YahooMailNeo@web132211.mail.ird.yahoo.com> <alpine.DEB.2.00.1108301910390.26173@utopia.booyaka.com>
+Reply-To: Pierre Beaumon <pierre.beaumon@yahoo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110905154335.GH1903@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, John Bonesio <bones@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 5 Sep 2011, Tony Lindgren wrote:
+Hello Paul,
 
-> * Nicolas Pitre <nicolas.pitre@linaro.org> [110613 13:41]:
-> > On Sun, 12 Jun 2011, Grant Likely wrote:
-> > 
-> > > On Sun, Jun 12, 2011 at 12:06 AM, Nicolas Pitre
-> > > <nicolas.pitre@linaro.org> wrote:
-> > > > This is a resend of those patches with fixups after the latest changes
-> > > > in mainline.
-> > > >
-> > > > [PATCH 1/3] ARM: zImage: ensure it is always a multiple of 64 bits in size
-> > > > This one is new and trivial.
-> > > >
-> > > > [PATCH 2/3] ARM: zImage: Allow the appending of a device tree binary
-> > > > Mostly John Bonesio's version with some adjustments and cleanups.
-> > > >
-> > > > [PATCH 3/3] ARM: zImage: make sure appended DTB doesn't get overwritten by kernel .bss
-> > > > New, simpler alternative to Tony Lindgren's version.
-> > > 
-> > > I've gone ahead and added the series to devicetree/test for anyone who
-> > > want to play with it.
-> > 
-> > I've published those patches with all the latest fixes and ACKs here:
-> > 
-> > 	git://git.linaro.org/people/nico/linux.git zImage_DTB_append
-> 
-> Ping, any news on getting these merged?
+thanks for your reply.
 
-I should come around to it once my current memory.h cleanup work is in 
-shape. This might depend on some new Kbuild facility from Arnaud Lacombe 
-I've yet to test.
+> On Tue, 30 Aug 2011, Pierre Beaumon wrote:
+>=A0
+> > Also I believe one big arm problem is a lack of common
+> > infrastructure that lead to code duplication. Some machine try to
+> > do too much things. omap2 (mach-omap2 + plat-omap) is about 80
+> > KSLOC over 400KSLOC (76 mach=A0
+> > + plat directories). That 8 times bigger than the average=A0
+> > ((80/2)/(400/76))! There are either common stuff that should be
+> > shared, or some stuff should be moved in drivers.
+>=A0
+> Here are some additional data points you might consider adding to
+> your analysis:
+>=A0
+> - Consider taking into account what percentage of those lines are for=
+=A0
+> =A0 SoC-specific device data files. =A0Where should those files be mo=
+ved,=A0
+> =A0 before a DT (or other data format) conversion?
+Soc specific data are mainly in file starting with board* on omap and t=
+ake only=A015 KSLOC.
+
+Most of code come from=A0=A0omap_device, clock, powerdomain, hwmod, mux=
+ code (in mach-omap2 more than 30KSLOC for=A0clock* omap_hwmod* mux*)
+This code won't be removed when we switch to DT, and I believe this cod=
+e can be shared with others.
+
+=46or each driver/framework in bsp (plat-*/mach-*) it could be interest=
+ing to have an=A0answer=A0to the following questions :=A0
+- what it does
+- why it is specific to this SOC
+- can it be usefull for other SOC
+- can an existing framework be used/enhanced
+
+=46or example the mux code it a common problem to all SOC and is not sp=
+ecific to omap. Having a generic framework could be great (pinmux ?)=A0
 
 
-Nicolas
+hwmod [1] doesn't look like specific to OMAP and can apply to any arm S=
+OC. Why should it be in omap code ?
+Platform_bus is limited (see my example on pci like bus) and arm may ne=
+ed a better bus. Why not omap_device/hwmod ?
+
+This make me think of the time when linux didn't get a wifi stack and e=
+ach driver came with its own stack.
+
+
+> - Consider accounting for the extra code and data needed for
+> fine-grained power management, compared to the average SoC core code,
+> assuming the SoC supports it.
+Yes omap=A0is fine tuned for power management, but the power management=
+ concept is not limited to omap and can be shared.
+See for example the pm_runtime framework that can be used by everybody =
+(pc, arm, ...).
+
+
+
+[1]
+=A0* One way to view an OMAP SoC is as a collection of largely unrelate=
+d
+=A0* IP blocks connected by interconnects. =A0The IP blocks include
+=A0* devices such as ARM processors, audio serial interfaces, UARTs,
+=A0* etc. =A0Some of these devices, like the DSP, are created by TI;
+=A0* others, like the SGX, largely originate from external vendors. =A0=
+In
+=A0* TI's documentation, on-chip devices are referred to as "OMAP
+=A0* modules." =A0Some of these IP blocks are identical across several
+=A0* OMAP versions. =A0Others are revised frequently.
+[...]
+* OMAP hwmod provides a consistent way to describe the on-chip
+=A0* hardware blocks and their integration into the rest of the chip.
+=A0* This description can be automatically generated from the TI
+=A0* hardware database. =A0OMAP hwmod provides a standard, consistent A=
+PI
+=A0* to reset, enable, idle, and disable these hardware blocks. =A0And
+=A0* hwmod provides a way for other core code, such as the Linux device=
+=A0
+=A0* code or the OMAP power management and address space mapping code,
+=A0* code or the OMAP power management and add
+ress space mapping code,
+=A0* to query the hardware database.
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
