@@ -1,101 +1,99 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/9] Add dtget utility to read property values from device
-	tree
-Date: Sun, 4 Sep 2011 14:18:29 -0700
-Message-ID: <CAPnjgZ0gx6fpRwkCNkK5u=ZDoOMG+fqSB15ZSPLVb2dQ7tByCQ@mail.gmail.com>
-References: <1309892577-23828-1-git-send-email-sjg@chromium.org>
-	<1309892577-23828-3-git-send-email-sjg@chromium.org>
-	<20110719033437.GB6399@yookeroo.fritz.box>
-	<CAPnjgZ3GgOx-Sja2Lq2WzYy+FYv3oyUF9vzdZ8RPYE-Hsmjf0Q@mail.gmail.com>
-	<CAPnjgZ1mSifP1rSSCZgDCDQvd-PR3Q++Qr_TovJVPW_BrH3fgA@mail.gmail.com>
-	<20110903143355.GB12965@yookeroo.fritz.box>
-	<CAPnjgZ3hB_nfGqVA_4+wQfxuanUn7nhVQMboEFSODK0UvsNqmg@mail.gmail.com>
-	<20110904111448.GA30278@yookeroo.fritz.box>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v2 6/6] ARM: EXYNOS4: Limit usage of pl330 device instance
+ to non-dt build
+Date: Mon, 05 Sep 2011 14:17:08 +0900
+Message-ID: <001901cc6b8b$0f450730$2dcf1590$%kim@samsung.com>
+References: <1314867882-11755-1-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-2-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-3-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-4-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-5-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-6-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-7-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110904111448.GA30278-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1314867882-11755-7-git-send-email-thomas.abraham@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, robherring2@gmail.com, vinod.koul@intel.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+> -----Original Message-----
+> From: Thomas Abraham [mailto:thomas.abraham@linaro.org]
+> Sent: Thursday, September 01, 2011 6:05 PM
+> To: devicetree-discuss@lists.ozlabs.org
+> Cc: grant.likely@secretlab.ca; linux-arm-kernel@lists.infradead.org;
+linux-samsung-
+> soc@vger.kernel.org; kgene.kim@samsung.com; robherring2@gmail.com;
+> vinod.koul@intel.com; patches@linaro.org; jassisinghbrar@gmail.com;
+> boojin.kim@samsung.com
+> Subject: [PATCH v2 6/6] ARM: EXYNOS4: Limit usage of pl330 device instance
+to
+> non-dt build
+> 
+> The pl330 device instances and associated platform data is required only
+> for non-device-tree builds. With device tree, all of this information is
+> obtained from the device tree.
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  arch/arm/mach-exynos4/Kconfig  |    7 +++++++
+>  arch/arm/mach-exynos4/Makefile |    3 ++-
+>  2 files changed, 9 insertions(+), 1 deletions(-)
+> 
+> diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
+> index d4d401c..3edbf37 100644
+> --- a/arch/arm/mach-exynos4/Kconfig
+> +++ b/arch/arm/mach-exynos4/Kconfig
+> @@ -21,6 +21,13 @@ config EXYNOS4_MCT
+>  	help
+>  	  Use MCT (Multi Core Timer) as kernel timers
+> 
+> +config EXYNOS4_DEV_DMA
+> +	bool
+> +	default y if !OF
+> +	help
+> +	  Compile in amba device definitions for DMA controller if OF
+> +	  is not enabled.
+> +
+>  config EXYNOS4_DEV_AHCI
+>  	bool
+>  	help
+> diff --git a/arch/arm/mach-exynos4/Makefile
+b/arch/arm/mach-exynos4/Makefile
+> index d2bf5bf..a2f33dc 100644
+> --- a/arch/arm/mach-exynos4/Makefile
+> +++ b/arch/arm/mach-exynos4/Makefile
+> @@ -13,7 +13,8 @@ obj-				:=
+>  # Core support for EXYNOS4 system
+> 
+>  obj-$(CONFIG_CPU_EXYNOS4210)	+= cpu.o init.o clock.o irq-combiner.o
+> -obj-$(CONFIG_CPU_EXYNOS4210)	+= setup-i2c0.o irq-eint.o dma.o
+> pmu.o
+> +obj-$(CONFIG_CPU_EXYNOS4210)	+= setup-i2c0.o irq-eint.o pmu.o
+> +obj-$(CONFIG_EXYNOS4_DEV_DMA)	+= dma.o
 
-On Sun, Sep 4, 2011 at 4:14 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Sat, Sep 03, 2011 at 08:18:08PM -0700, Simon Glass wrote:
->> Hi David,
->>
->> On Sat, Sep 3, 2011 at 7:33 AM, David Gibson
->> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> > On Fri, Sep 02, 2011 at 10:54:28AM -0700, Simon Glass wrote:
-> [snip]
->> >> >> This is wrong. =A0properties do not have paths - they exist in a
->> >> >> separate namespace to nodes. =A0The node path and property name sh=
-ould
->> >> >> be supplied as separate parameters. =A0As well as being actually r=
-ight,
->> >> >> it will greatly simplify this function's convoluted logic.
->> >> >
->> >> > Well yes, but I feel that it makes it harder to use also. My thinki=
-ng
->> >> > with this was to try to make it easy to extract information. In my
->> >> > view:
->> >> >
->> >> > /lcd/width
->> >> >
->> >> > is better than
->> >> >
->> >> > /lcd width
->> >> >
->> >> > But this is the kind of discussion / feedback I was hoping to get a=
-s I
->> >> > am new to device trees. My thoughts:
->> >> >
->> >> > 1. / is not generally used in property names so there is no conflict
->> >> > 2. Neither is there any ambiguity
->> >
->> > Yes there is. =A0Real device trees exist where a node has both a
->> > property and a subnode with the same name.
->>
->> Er, ok. How about something like:
->>
->> /path/to/node/.property
->>
->> as a compromise? It removes the ambiguity I think, and still lets me
->
-> That's not a compromise, that's worse!
+Do we need _really_ EXYNOS4_DEV_DMA here?
+How about to use like following?
 
-Oh dear.
++obj-$(!CONFIG_OF)		+= dma.o
 
->
->> avoid having 3 parameters in fdtput per assignment.
->
-> For pete's sake, just add the extra parameter. =A0It's the right way to
-> do it.
+If any problems, let me know.
 
-Right oh. Thanks for the quick response.
+Thanks.
 
-Regards,
-Simon
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
 
->
+
+>  obj-$(CONFIG_PM)		+= pm.o sleep.o
+>  obj-$(CONFIG_CPU_IDLE)		+= cpuidle.o
+> 
 > --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
+> 1.6.6.rc2
