@@ -1,105 +1,116 @@
-From: Pierre Beaumon <pierre.beaumon@yahoo.com>
-Subject: Re : Arm device tree wonder
-Date: Mon, 5 Sep 2011 23:04:20 +0100 (BST)
-Message-ID: <1315260260.18862.YahooMailNeo@web132209.mail.ird.yahoo.com>
-References: <1314734987.11994.YahooMailNeo@web132211.mail.ird.yahoo.com> <alpine.DEB.2.00.1108301910390.26173@utopia.booyaka.com>
-Reply-To: Pierre Beaumon <pierre.beaumon@yahoo.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 2/7] arm/dts: OMAP3: Add mpu and iva nodes
+Date: Tue, 6 Sep 2011 09:15:59 +0200
+Message-ID: <4E65C8AF.1060501@ti.com>
+References: <1314897912-18178-1-git-send-email-b-cousson@ti.com>
+	<1377915.IaVE5xAurc@wuerfel> <4E64E527.4040409@ti.com>
+	<201109051923.51084.arnd@arndb.de> <4E650AEA.2090109@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4E650AEA.2090109@firmworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: "Hilman, Kevin" <khilman@ti.com>, Arnd Bergmann <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "G,
+	Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Paul,
+On 9/5/2011 7:46 PM, Mitch Bradley wrote:
+> On 9/5/2011 7:23 AM, Arnd Bergmann wrote:
+>> On Monday 05 September 2011, Cousson, Benoit wrote:
+>>> Yeah, I saw that in the "cpus" node documentation. My point here is that
+>>> I do need to represent the MPU subsystem that will contain the cpus. And
+>>> thus the Cortex is inside the MPU subsystem.
+>
+>
+> The device tree hierarchy does not represent "containment", but rather
+> addressing from the standpoint of a program running on a CPU.
+>
+>   From that viewpoint, it might be better to have a phandle reference to
+> the mpu in each CPU node.
 
-thanks for your reply.
+So in that case, I'd rather use a scheme similar to a shared cache 
+between CPUs:
 
-> On Tue, 30 Aug 2011, Pierre Beaumon wrote:
->=A0
-> > Also I believe one big arm problem is a lack of common
-> > infrastructure that lead to code duplication. Some machine try to
-> > do too much things. omap2 (mach-omap2 + plat-omap) is about 80
-> > KSLOC over 400KSLOC (76 mach=A0
-> > + plat directories). That 8 times bigger than the average=A0
-> > ((80/2)/(400/76))! There are either common stuff that should be
-> > shared, or some stuff should be moved in drivers.
->=A0
-> Here are some additional data points you might consider adding to
-> your analysis:
->=A0
-> - Consider taking into account what percentage of those lines are for=
-=A0
-> =A0 SoC-specific device data files. =A0Where should those files be mo=
-ved,=A0
-> =A0 before a DT (or other data format) conversion?
-Soc specific data are mainly in file starting with board* on omap and t=
-ake only=A015 KSLOC.
+cpus {
+	cpu@0 {
+		compatible = "arm,cortex-a8";
+		subsystem = <&mpu>
 
-Most of code come from=A0=A0omap_device, clock, powerdomain, hwmod, mux=
- code (in mach-omap2 more than 30KSLOC for=A0clock* omap_hwmod* mux*)
-This code won't be removed when we switch to DT, and I believe this cod=
-e can be shared with others.
+		mpu: arm_mpu {
+			compatible = "ti,omap3-mpu";
+			hwmods = "mpu";
+	};
+};
 
-=46or each driver/framework in bsp (plat-*/mach-*) it could be interest=
-ing to have an=A0answer=A0to the following questions :=A0
-- what it does
-- why it is specific to this SOC
-- can it be usefull for other SOC
-- can an existing framework be used/enhanced
+And for an OMAP4 SMP system:
 
-=46or example the mux code it a common problem to all SOC and is not sp=
-ecific to omap. Having a generic framework could be great (pinmux ?)=A0
+cpus {
+	cpu@0 {
+		compatible = "arm,cortex-a9";
+		subsystem = <&mpu>
 
+		mpu: arm_mpu {
+			compatible = "ti,omap4-mpu";
+			hwmods = "mpu";
+	};
 
-hwmod [1] doesn't look like specific to OMAP and can apply to any arm S=
-OC. Why should it be in omap code ?
-Platform_bus is limited (see my example on pci like bus) and arm may ne=
-ed a better bus. Why not omap_device/hwmod ?
+	cpu@1 {
+		compatible = "arm,cortex-a9";
+		subsystem = <&mpu>
+	};
+};
 
-This make me think of the time when linux didn't get a wifi stack and e=
-ach driver came with its own stack.
+Ideally the interrupt-controller/GIC should probably be inside that MPU 
+node, isn't it?
 
-
-> - Consider accounting for the extra code and data needed for
-> fine-grained power management, compared to the average SoC core code,
-> assuming the SoC supports it.
-Yes omap=A0is fine tuned for power management, but the power management=
- concept is not limited to omap and can be shared.
-See for example the pm_runtime framework that can be used by everybody =
-(pc, arm, ...).
+Thanks,
+Benoit
 
 
-
-[1]
-=A0* One way to view an OMAP SoC is as a collection of largely unrelate=
-d
-=A0* IP blocks connected by interconnects. =A0The IP blocks include
-=A0* devices such as ARM processors, audio serial interfaces, UARTs,
-=A0* etc. =A0Some of these devices, like the DSP, are created by TI;
-=A0* others, like the SGX, largely originate from external vendors. =A0=
-In
-=A0* TI's documentation, on-chip devices are referred to as "OMAP
-=A0* modules." =A0Some of these IP blocks are identical across several
-=A0* OMAP versions. =A0Others are revised frequently.
-[...]
-* OMAP hwmod provides a consistent way to describe the on-chip
-=A0* hardware blocks and their integration into the rest of the chip.
-=A0* This description can be automatically generated from the TI
-=A0* hardware database. =A0OMAP hwmod provides a standard, consistent A=
-PI
-=A0* to reset, enable, idle, and disable these hardware blocks. =A0And
-=A0* hwmod provides a way for other core code, such as the Linux device=
-=A0
-=A0* code or the OMAP power management and address space mapping code,
-=A0* code or the OMAP power management and add
-ress space mapping code,
-=A0* to query the hardware database.
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>>>
+>>> I can potentially keep the CPUs inside the cpus node, and just represent
+>>> the mpu node inside the soc, with potentially some phandle to the real
+>>> cpu nodes.
+>>>
+>>> Something like that:
+>>>
+>>> cpus {
+>>>           cpu0: cpu@0 {
+>>>                           compatible = "arm,cortex-a8";
+>>>           };
+>>> };
+>>>
+>>> [...]
+>>>
+>>> soc {
+>>>           compatible = "ti,omap-infra";
+>>>           mpu {
+>>>                   compatible = "ti,omap3-mpu";
+>>>                   hwmods = "mpu";
+>>>                   cpu@0 {
+>>>                           phandle =<&cpu0>;
+>>>                           [...]
+>>>                   };
+>>>           };
+>>> };
+>>
+>> Yes, that looks good. I wouldn't name the attribute "phandle" if I could
+>> think of anything better (which I can't at the moment).
+>>
+>> 	Arnd
+>> _______________________________________________
+>> devicetree-discuss mailing list
+>> devicetree-discuss@lists.ozlabs.org
+>> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>>
