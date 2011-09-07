@@ -1,15 +1,15 @@
-From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: Appended devicetree with Torvalds' HEAD
-Date: Tue, 6 Sep 2011 23:46:56 -0700
-Message-ID: <20110907064656.GB28639@huya.qualcomm.com>
-References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
-	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
+From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] powerpc/fsl_msi: Handle msi-available-ranges better
+Date: Wed, 7 Sep 2011 16:20:19 +0000
+Message-ID: <CAOZdJXVm1YL-T8i26O0BiB-uTkXUDnYQdacU8k52aG-K0pZ1Lg@mail.gmail.com>
+References: <20110117202528.GB561@udp111988uds.am.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.00.1109061347410.20358-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+In-Reply-To: <20110117202528.GB561-N/eSCTBpGwP7j4BuCOFQISmX4OfbXNuMKnGXBo5VDl8@public.gmane.org>
+Content-Language: en-US
+Content-ID: <DD0135D7DC0049448D0D8B074E8D6414-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,25 +19,80 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 06, 2011 at 01:52:43PM -0400, Nicolas Pitre wrote:
+On Mon, Jan 17, 2011 at 2:25 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
 
-> They sure do, (or so I hope).
-> 
-> My latest patchset is here:
-> 
->   git://git.linaro.org/people/nico/linux zImage_DTB_append
-> 
-> I'm not fully satisfied to send them upstream yet though.
+> + =A0 =A0 =A0 for (irq_index =3D 0, i =3D 0; i < len / (2 * sizeof(u32));=
+ i++) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (p[i * 2] % IRQS_PER_MSI_REG ||
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p[i * 2 + 1] % IRQS_PER_MSI_REG) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(KERN_WARNING "%s: %s=
+: msi available range of %u at %u is not IRQ-aligned\n",
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0__func__, de=
+v->dev.of_node->full_name,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p[i * 2 + 1]=
+, p[i * 2]);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 err =3D -EINVAL;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto error_out;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 offset =3D p[i * 2] / IRQS_PER_MSI_REG;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 count =3D p[i * 2 + 1] / IRQS_PER_MSI_REG;
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 for (j =3D 0; j < count; j++, irq_index++) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 err =3D fsl_msi_setup_hwirq=
+(msi, dev, offset, irq_index);
 
-I'll give these a try, once I'm back from LPC and let you know if they
-still work.
+Scott,
 
-David
+I know it's been eight months since you posted this patch, but I'm not
+sure this part is correct.   fsl_msi_setup_hwirq() does this:
 
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+cascade_data->index =3D offset + irq_index;
+
+"cascade_data->index" is supposed to be the index of the MSIIR
+register, so it's a number between 0 and 7.  irq_index is incremented
+on every pass of loop 'j'.  My understanding is that the following two
+definitions of msi-available-ranges are equivalent:
+
+static const u32 all_avail[] =3D { 0, NR_MSI_IRQS };
+
+static const u32 all_avail[] =3D { 0, 64, 64, 32, 96, 32, 128, 32, 160, 96};
+
+When I use the first definition, I get this on each call to
+fsl_msi_setup_hwirq():
+
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D0 cascade_data->index=3D0
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D1 cascade_data->index=3D1
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D2 cascade_data->index=3D2
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D3 cascade_data->index=3D3
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D4 cascade_data->index=3D4
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D5 cascade_data->index=3D5
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D6 cascade_data->index=3D6
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D7 cascade_data->index=3D7
+
+But when I use the second definition of all_avail[], I get this instead:
+
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D0 cascade_data->index=3D0
+fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D1 cascade_data->index=3D1
+fsl_msi_setup_hwirq:299 offset=3D2 irq_index=3D2 cascade_data->index=3D4
+fsl_msi_setup_hwirq:299 offset=3D3 irq_index=3D3 cascade_data->index=3D6
+fsl_msi_setup_hwirq:299 offset=3D4 irq_index=3D4 cascade_data->index=3D8
+fsl_msi_setup_hwirq:299 offset=3D5 irq_index=3D5 cascade_data->index=3D10
+fsl_msi_setup_hwirq:299 offset=3D5 irq_index=3D6 cascade_data->index=3D11
+fsl_msi_setup_hwirq:299 offset=3D5 irq_index=3D7 cascade_data->index=3D12
+
+The problem is that both offset and irq_index are being incremented in
+the loop, and cascade_data->index is set to the sum of the two.
+
+Perhaps you meant this:
+
+		err =3D fsl_msi_setup_hwirq(msi, dev, offset, j);
+
+-- =
+
+Timur Tabi
+Linux kernel developer at Freescale
