@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 4/6] fdtget: Add basic tests
-Date: Wed,  7 Sep 2011 12:54:18 -0700
-Message-ID: <1315425260-2711-5-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 1/6] Add utilfdt for common functions
+Date: Wed,  7 Sep 2011 12:54:15 -0700
+Message-ID: <1315425260-2711-2-git-send-email-sjg@chromium.org>
 References: <1315425260-2711-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,139 +20,210 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a few tests for common use cases.
+This adds a new utility library for performing libfdt operations.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 Changes in v2:
-- Adjust tests for new fdtget arguments
+- Remove util_decode_key
+- Add utilfdt_decode_type to be used by fdtget/put
+- Remove limits on device tree binary size
 
- tests/fdtget-runtest.sh |   35 +++++++++++++++++++++++++++++++++++
- tests/run_tests.sh      |   36 +++++++++++++++++++++++++++++++++++-
- tests/tests.sh          |    1 +
- 3 files changed, 71 insertions(+), 1 deletions(-)
- create mode 100755 tests/fdtget-runtest.sh
+ utilfdt.c |  120 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ utilfdt.h |   58 +++++++++++++++++++++++++++++
+ 2 files changed, 178 insertions(+), 0 deletions(-)
+ create mode 100644 utilfdt.c
+ create mode 100644 utilfdt.h
 
-diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
-new file mode 100755
-index 0000000..f38184f
+diff --git a/utilfdt.c b/utilfdt.c
+new file mode 100644
+index 0000000..5c3682e
 --- /dev/null
-+++ b/tests/fdtget-runtest.sh
-@@ -0,0 +1,35 @@
-+#! /bin/sh
++++ b/utilfdt.c
+@@ -0,0 +1,120 @@
++/*
++ * Copyright 2011 The Chromium Authors, All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
 +
-+. ./tests.sh
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/stat.h>
 +
-+LOG="tmp.log.$$"
-+EXPECT="tmp.expect.$$"
++#include "libfdt.h"
++#include "utilfdt.h"
 +
-+rm -f $TMPFILE $LOG
++char *util_read_fdt(const char *filename)
++{
++	FILE *fp;
++	char *buf = NULL;
++	struct stat stat_buf;
++	off_t size, upto = 0, toread;
++	int err = 0;
 +
-+expect="$1"
-+echo "$expect" >$EXPECT
-+shift
++	/* Open the file, or stdin, and work out how many bytes to read */
++	if (strcmp(filename, "-") == 0) {
++		fp = stdin;
++		toread = 64 * 1024;	/* Suitable likely maximum */
++	} else {
++		fp = fopen(filename, "rb");
++		if (fp == NULL) {
++			fprintf(stderr, "unable to open '%s'\n", filename);
++			return NULL;
++		}
++		if (fstat(fileno(fp), &stat_buf)) {
++			fprintf(stderr, "couldn't get size of file\n");
++			return NULL;
++		}
++		toread = stat_buf.st_size;
++	}
 +
-+verbose_run_log "$LOG" $VALGRIND "$DTGET" "$@"
-+ret="$?"
++	/* Loop until we have everything */
++	size = toread;
++	while (!feof(fp)) {
++		buf = realloc(buf, size);
++		if (!buf) {
++			fprintf(stderr, "couldn't allocate %ld byte buffer\n",
++				size);
++			return NULL;
++		}
 +
-+if [ "$ret" -ne 0 -a "$expect" = "ERR" ]; then
-+	PASS
-+fi
++		upto += fread(buf + upto, 1, toread, fp);
++		if (ferror(fp)) {
++			fprintf(stderr, "file read error\n");
++			err = -1;
++			break;
++		}
 +
-+if [ "$ret" -gt 127 ]; then
-+    signame=$(kill -l $[ret - 128])
-+    FAIL "Killed by SIG$signame"
-+fi
++		/* Expand the buffer in case we need to read more */
++		size += toread;
++	}
 +
-+diff $EXPECT $LOG
-+ret="$?"
-+
-+rm -f $LOG $EXPECT
-+
-+if [ "$ret" -eq 0 ]; then
-+	PASS
-+else
-+	FAIL
-+fi
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 72dda32..9acdeb5 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -83,6 +83,13 @@ asm_to_so_test () {
-     run_wrap_test asm_to_so "$@"
- }
- 
-+run_fdtget_test () {
-+    # run_fdtget_test name expected_output dtb_file args...
-+    echo -n "$1:	"
-+    shift
-+    base_run_test sh fdtget-runtest.sh "$@"
++	/* Clean up, returning NULL on error */
++	if (fp != stdin)
++		fclose(fp);
++	if (err) {
++		free(buf);
++		buf = NULL;
++	}
++	return buf;
 +}
 +
- tree1_tests () {
-     TREE=$1
- 
-@@ -388,6 +395,30 @@ dtbs_equal_tests () {
-     cmp_tests test_tree1.dtb $WRONG_TREE1
- }
- 
-+fdtget_tests () {
-+    file=label01.dtb
-+    $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
++int util_write_fdt(const char *buf, const char *filename)
++{
++	FILE *fp;
++	size_t size, written;
 +
-+    # run_fdtget_test <test-name> <expected-result> <args>...
-+    run_fdtget_test "Simple string" "MyBoardName" $file / model
-+    run_fdtget_test "Multiple string i" "77 121 66 111 \
-+97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
-+108 121 78 97 109 101 0" $file / compatible
-+    run_fdtget_test "Multiple string s" "MyBoardName MyBoardFamilyName" \
-+	-t s $file / compatible
-+    run_fdtget_test "Integer" "32768" $file /cpus/PowerPC,970@1 d-cache-size
-+    run_fdtget_test "Integer hex" "8000" -tx $file \
-+	/cpus/PowerPC,970@1 d-cache-size
-+    run_fdtget_test "Integer list" "61 62 63 0" -tbx $file \
-+	/randomnode tricky1
-+    run_fdtget_test "Byte list short" "a b c d de ea ad be ef" -tbx \
-+	$file /randomnode blob
-+    run_fdtget_test "Integer list short" "a0b0c0d deeaadbe ef000000" -tx \
-+	-t i $file /randomnode blob
-+    run_fdtget_test "Missing property" ERR -tx \
-+	$file /randomnode doctor-who
++	if (strcmp(filename, "-") == 0) {
++		fp = stdout;
++	} else {
++		fp = fopen(filename, "wb");
++		if (fp == NULL) {
++			fprintf(stderr, "unable to open %s\n", filename);
++			return -1;
++		}
++	}
++
++	size = fdt_totalsize(buf);
++	written = fwrite(buf, 1, size, fp);
++	if (size != written) {
++		fprintf(stderr, "file write failed\n");
++		return -1;
++	}
++	return 0;
 +}
 +
- while getopts "vt:m" ARG ; do
-     case $ARG in
- 	"v")
-@@ -403,7 +434,7 @@ while getopts "vt:m" ARG ; do
- done
- 
- if [ -z "$TESTSETS" ]; then
--    TESTSETS="libfdt dtc dtbs_equal"
-+    TESTSETS="libfdt dtc dtbs_equal fdtget"
- fi
- 
- # Make sure we don't have stale blobs lying around
-@@ -420,6 +451,9 @@ for set in $TESTSETS; do
- 	"dtbs_equal")
- 	    dtbs_equal_tests
- 	    ;;
-+	"fdtget")
-+	    fdtget_tests
-+	    ;;
-     esac
- done
- 
-diff --git a/tests/tests.sh b/tests/tests.sh
-index 30ffead..d9a0524 100644
---- a/tests/tests.sh
-+++ b/tests/tests.sh
-@@ -11,6 +11,7 @@ FAIL () {
- }
- 
- DTC=../dtc
-+DTGET=../fdtget
- 
- verbose_run () {
-     if [ -z "$QUIET_TEST" ]; then
++int utilfdt_decode_type(const char *arg, int *type, int *format)
++{
++	const char *s;
++
++	for (s = arg; *s; s++) {
++		if (strchr("iubs", *s))
++			*type = *s;
++		else if (*s == 'x')
++			*format = *s;
++		else
++			return -1;
++	}
++	return 0;
++}
+diff --git a/utilfdt.h b/utilfdt.h
+new file mode 100644
+index 0000000..7c2828a
+--- /dev/null
++++ b/utilfdt.h
+@@ -0,0 +1,58 @@
++#ifndef _UTILFDT_H
++#define _UTILFDT_H
++
++/*
++ * Copyright 2011 The Chromium Authors, All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
++ *                                                                   USA
++ */
++
++/**
++ * Read a device tree file into a buffer.
++ *
++ * @param filename	The filename to read, or - for stdin
++ * @return		Poiner to allocated buffer containing fdt, or NULL
++ *			on error
++ */
++char *util_read_fdt(const char *filename);
++
++/**
++ * Write a device tree buffer to a file.
++ *
++ * @param filename	The filename to write, or - for stdout
++ * @param buf		Poiner to buffer containing fdt
++ * @return 0 if ok, -1 on error
++ */
++int util_write_fdt(const char *buf, const char *filename);
++
++/**
++ * Decode a data type string.
++ *
++ * The string consists of:
++ *	One optional character (s=string, i=int, u=unsigned b=byte)
++ *	Optional format character (x=hex)
++ *
++ * If either of type or format is not found, then that variable is not
++ * updated, and the caller's default will be used.
++ *
++ * @param arg		Argument string to process
++ * @param type		Returns type found, if any
++ * @param format	Returns format fonud, if any
++ * @return 0 if ok, -1 on error
++ */
++int utilfdt_decode_type(const char *arg, int *type, int *format);
++
++#endif /* _UTILFDT_H */
 -- 
 1.7.3.1
