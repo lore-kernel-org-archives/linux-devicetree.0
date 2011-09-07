@@ -1,65 +1,97 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] input: samsung-keypad: Add HAVE_SAMSUNG_KEYPAD
- config option
-Date: Wed, 7 Sep 2011 11:22:48 -0700
-Message-ID: <20110907182248.GA2874@core.coreip.homeip.net>
-References: <1315317317-21873-1-git-send-email-thomas.abraham@linaro.org>
- <1315317317-21873-2-git-send-email-thomas.abraham@linaro.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 0/6] Add fdtget and fdtput for access to fdt from build
+	system
+Date: Wed,  7 Sep 2011 12:54:14 -0700
+Message-ID: <1315425260-2711-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1315317317-21873-2-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+This patch set adds two new utilities:
 
-On Tue, Sep 06, 2011 at 07:25:16PM +0530, Thomas Abraham wrote:
-> Samsung keyboard driver could be used with platforms using device tree.
-> So the inclusion of samsung keyboard driver cannot be based on
-> SAMSUNG_DEV_KEYPAD. A new config option HAVE_SAMSUNG_KEYPAD is added
-> which device tree based platforms should use to include samsung keyboard
-> driver.
+   fdtget for reading properties from a device tree binary file
+   fdtput for updating the device tree binary file
 
-I am sorry, I do not follow... What is the difference between
-SAMSUNG_DEV_KEYPAD and HAVE_SAMSUNG_KEYPAD? They look exactly the same.
+These are useful in scripts where configuration or other information must be
+passed to the running system from the build system or vice versa. For
+example, fdtget can be used to obtain the LCD screen width/height for use
+with preparing custom bitmap images for display on the screen. Going the
+other way, fdtput can be used to set configuration parameters known only to
+the build or manufacturing test system, for example a hardware ID or the
+particular type of boot EEPROM used on this PCB.
 
-Thanks,
+It is desirable to use these utilities rather than parsing or updating the
+device tree source file, since this parsing is already implemented in dtc and
+it makes no sense to reimplement it in a script. It also means that the build
+system and the run-time environment see the same device tree values, so that
+parsing or updating bugs do not creap in.
 
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
->  drivers/input/keyboard/Kconfig |    9 ++++++++-
->  1 files changed, 8 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index b4dee9d..370fb18 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -423,9 +423,16 @@ config KEYBOARD_PMIC8XXX
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called pmic8xxx-keypad.
->  
-> +config HAVE_SAMSUNG_KEYPAD
-> +	bool
-> +	help
-> +	  This will include Samsung Keypad controller driver support. If you
-> +	  want to include Samsung Keypad support for any machine, kindly
-> +	  select this in the respective mach-xxxx/Kconfig file.
-> +
->  config KEYBOARD_SAMSUNG
->  	tristate "Samsung keypad support"
-> -	depends on SAMSUNG_DEV_KEYPAD
-> +	depends on SAMSUNG_DEV_KEYPAD || HAVE_SAMSUNG_KEYPAD
->  	help
->  	  Say Y here if you want to use the Samsung keypad.
->  
-> -- 
-> 1.6.6.rc2
-> 
+I believe that these utilities belong with dtc rather than libfdt since they
+are more useful in the build system context rather than at run-time. At
+run-time it is easier and better to use the provided library rather than
+these utiltiies. But for build scripts and production automation, these
+uitilites are better.
+
+Some effort has been made to add tests and the parameter format has been
+revised after previous feedback.
+
+Changes in v2:
+- Adjust tests for new fdtput arguments
+- Add test for multiple strings
+- Add test for exhausting fdt space
+- Separate arguments for node and property
+- Remove limits on data size of property writting to fdt
+- Remove use of getopt_long()
+- Adjust tests for new fdtget arguments
+- Merge two related commits into this one
+- Use structure for storing display options
+- Remove util_decode_key
+- Add utilfdt_decode_type to be used by fdtget/put
+- Remove limits on device tree binary size
+
+Simon Glass (6):
+  Add utilfdt for common functions
+  ftdump: use util_read_fdt
+  Add fdtget utility to read property values from device tree
+  fdtget: Add basic tests
+  Add new fdtput utility to write values to fdt
+  fdtput: Add basic tests
+
+ .gitignore              |    2 +
+ Makefile                |   12 +++-
+ Makefile.fdtget         |   12 +++
+ Makefile.fdtput         |   12 +++
+ Makefile.ftdump         |    3 +-
+ fdtget.c                |  200 +++++++++++++++++++++++++++++++++++++++++++
+ fdtput.c                |  217 +++++++++++++++++++++++++++++++++++++++++++++++
+ ftdump.c                |   33 +------
+ tests/fdtget-runtest.sh |   35 ++++++++
+ tests/fdtput-runtest.sh |   55 ++++++++++++
+ tests/run_tests.sh      |  105 ++++++++++++++++++++++-
+ tests/tests.sh          |    2 +
+ utilfdt.c               |  120 ++++++++++++++++++++++++++
+ utilfdt.h               |   58 +++++++++++++
+ 14 files changed, 835 insertions(+), 31 deletions(-)
+ create mode 100644 Makefile.fdtget
+ create mode 100644 Makefile.fdtput
+ create mode 100644 fdtget.c
+ create mode 100644 fdtput.c
+ create mode 100755 tests/fdtget-runtest.sh
+ create mode 100644 tests/fdtput-runtest.sh
+ create mode 100644 utilfdt.c
+ create mode 100644 utilfdt.h
 
 -- 
-Dmitry
+1.7.3.1
