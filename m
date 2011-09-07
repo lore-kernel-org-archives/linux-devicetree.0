@@ -1,98 +1,65 @@
-From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc/fsl_msi: Handle msi-available-ranges better
-Date: Wed, 7 Sep 2011 16:20:19 +0000
-Message-ID: <CAOZdJXVm1YL-T8i26O0BiB-uTkXUDnYQdacU8k52aG-K0pZ1Lg@mail.gmail.com>
-References: <20110117202528.GB561@udp111988uds.am.freescale.net>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/2] input: samsung-keypad: Add HAVE_SAMSUNG_KEYPAD
+ config option
+Date: Wed, 7 Sep 2011 11:22:48 -0700
+Message-ID: <20110907182248.GA2874@core.coreip.homeip.net>
+References: <1315317317-21873-1-git-send-email-thomas.abraham@linaro.org>
+ <1315317317-21873-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110117202528.GB561-N/eSCTBpGwP7j4BuCOFQISmX4OfbXNuMKnGXBo5VDl8@public.gmane.org>
-Content-Language: en-US
-Content-ID: <DD0135D7DC0049448D0D8B074E8D6414-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1315317317-21873-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 17, 2011 at 2:25 PM, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+Hi Thomas,
 
-> + =A0 =A0 =A0 for (irq_index =3D 0, i =3D 0; i < len / (2 * sizeof(u32));=
- i++) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (p[i * 2] % IRQS_PER_MSI_REG ||
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 p[i * 2 + 1] % IRQS_PER_MSI_REG) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(KERN_WARNING "%s: %s=
-: msi available range of %u at %u is not IRQ-aligned\n",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0__func__, de=
-v->dev.of_node->full_name,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0p[i * 2 + 1]=
-, p[i * 2]);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 err =3D -EINVAL;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto error_out;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+On Tue, Sep 06, 2011 at 07:25:16PM +0530, Thomas Abraham wrote:
+> Samsung keyboard driver could be used with platforms using device tree.
+> So the inclusion of samsung keyboard driver cannot be based on
+> SAMSUNG_DEV_KEYPAD. A new config option HAVE_SAMSUNG_KEYPAD is added
+> which device tree based platforms should use to include samsung keyboard
+> driver.
+
+I am sorry, I do not follow... What is the difference between
+SAMSUNG_DEV_KEYPAD and HAVE_SAMSUNG_KEYPAD? They look exactly the same.
+
+Thanks,
+
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  drivers/input/keyboard/Kconfig |    9 ++++++++-
+>  1 files changed, 8 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index b4dee9d..370fb18 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -423,9 +423,16 @@ config KEYBOARD_PMIC8XXX
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called pmic8xxx-keypad.
+>  
+> +config HAVE_SAMSUNG_KEYPAD
+> +	bool
+> +	help
+> +	  This will include Samsung Keypad controller driver support. If you
+> +	  want to include Samsung Keypad support for any machine, kindly
+> +	  select this in the respective mach-xxxx/Kconfig file.
 > +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 offset =3D p[i * 2] / IRQS_PER_MSI_REG;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 count =3D p[i * 2 + 1] / IRQS_PER_MSI_REG;
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 for (j =3D 0; j < count; j++, irq_index++) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 err =3D fsl_msi_setup_hwirq=
-(msi, dev, offset, irq_index);
+>  config KEYBOARD_SAMSUNG
+>  	tristate "Samsung keypad support"
+> -	depends on SAMSUNG_DEV_KEYPAD
+> +	depends on SAMSUNG_DEV_KEYPAD || HAVE_SAMSUNG_KEYPAD
+>  	help
+>  	  Say Y here if you want to use the Samsung keypad.
+>  
+> -- 
+> 1.6.6.rc2
+> 
 
-Scott,
-
-I know it's been eight months since you posted this patch, but I'm not
-sure this part is correct.   fsl_msi_setup_hwirq() does this:
-
-cascade_data->index =3D offset + irq_index;
-
-"cascade_data->index" is supposed to be the index of the MSIIR
-register, so it's a number between 0 and 7.  irq_index is incremented
-on every pass of loop 'j'.  My understanding is that the following two
-definitions of msi-available-ranges are equivalent:
-
-static const u32 all_avail[] =3D { 0, NR_MSI_IRQS };
-
-static const u32 all_avail[] =3D { 0, 64, 64, 32, 96, 32, 128, 32, 160, 96};
-
-When I use the first definition, I get this on each call to
-fsl_msi_setup_hwirq():
-
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D0 cascade_data->index=3D0
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D1 cascade_data->index=3D1
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D2 cascade_data->index=3D2
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D3 cascade_data->index=3D3
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D4 cascade_data->index=3D4
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D5 cascade_data->index=3D5
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D6 cascade_data->index=3D6
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D7 cascade_data->index=3D7
-
-But when I use the second definition of all_avail[], I get this instead:
-
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D0 cascade_data->index=3D0
-fsl_msi_setup_hwirq:299 offset=3D0 irq_index=3D1 cascade_data->index=3D1
-fsl_msi_setup_hwirq:299 offset=3D2 irq_index=3D2 cascade_data->index=3D4
-fsl_msi_setup_hwirq:299 offset=3D3 irq_index=3D3 cascade_data->index=3D6
-fsl_msi_setup_hwirq:299 offset=3D4 irq_index=3D4 cascade_data->index=3D8
-fsl_msi_setup_hwirq:299 offset=3D5 irq_index=3D5 cascade_data->index=3D10
-fsl_msi_setup_hwirq:299 offset=3D5 irq_index=3D6 cascade_data->index=3D11
-fsl_msi_setup_hwirq:299 offset=3D5 irq_index=3D7 cascade_data->index=3D12
-
-The problem is that both offset and irq_index are being incremented in
-the loop, and cascade_data->index is set to the sum of the two.
-
-Perhaps you meant this:
-
-		err =3D fsl_msi_setup_hwirq(msi, dev, offset, j);
-
--- =
-
-Timur Tabi
-Linux kernel developer at Freescale
+-- 
+Dmitry
