@@ -1,7 +1,7 @@
 From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 3/3] dtc: Support character literals in bytestrings
-Date: Wed,  7 Sep 2011 16:15:40 -0700
-Message-ID: <1315437340-1661-4-git-send-email-robotboy@chromium.org>
+Subject: [PATCH v2 1/3] dtc: Refactor character literal parsing code
+Date: Wed,  7 Sep 2011 16:15:38 -0700
+Message-ID: <1315437340-1661-2-git-send-email-robotboy@chromium.org>
 References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,65 +20,254 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With this patch the following property assignment:
-
-    property = ['a' 2b '\r'];
-
-is equivalent to:
-
-    property = [61 2b 0d];
+Move the parsing of hex, octal and escaped characters from data.c
+to util.c where it can be used for character literal parsing within
+strings as well as for stand alone C style character literals.
 
 Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
- Documentation/dts-format.txt |    5 +++--
- dtc-lexer.l                  |   14 ++++++++++++++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ data.c |   77 +-------------------------------------------------
+ util.c |   99 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ util.h |   18 +++++++++++
+ 3 files changed, 118 insertions(+), 76 deletions(-)
 
-diff --git a/Documentation/dts-format.txt b/Documentation/dts-format.txt
-index eae8b76..555bd89 100644
---- a/Documentation/dts-format.txt
-+++ b/Documentation/dts-format.txt
-@@ -48,11 +48,12 @@ NUL-terminated strings, as bytestrings or a combination of these.
- 	e.g. compatible = "simple-bus";
+diff --git a/data.c b/data.c
+index fe555e8..471f6c3 100644
+--- a/data.c
++++ b/data.c
+@@ -68,40 +68,6 @@ struct data data_copy_mem(const char *mem, int len)
+ 	return d;
+ }
  
- * A bytestring is enclosed in square brackets [] with each byte
--  represented by two hexadecimal digits.  Spaces between each byte are
--  optional.
-+  represented by two hexadecimal digits or a character literal.
-+  Spaces between each byte or character literal are optional.
- 
- 	e.g. local-mac-address = [00 00 12 34 56 78]; or equivalently
- 	     local-mac-address = [000012345678];
-+	e.g. keymap = ['a' 'b' 'c' 'd'];
- 
- * Values may have several comma-separated components, which are
-   concatenated together.
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index d4f9eaa..31cd18a 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -142,6 +142,20 @@ static int pop_input_file(void);
- 			return DT_BYTE;
+-static char get_oct_char(const char *s, int *i)
+-{
+-	char x[4];
+-	char *endx;
+-	long val;
+-
+-	x[3] = '\0';
+-	strncpy(x, s + *i, 3);
+-
+-	val = strtol(x, &endx, 8);
+-
+-	assert(endx > x);
+-
+-	(*i) += endx - x;
+-	return val;
+-}
+-
+-static char get_hex_char(const char *s, int *i)
+-{
+-	char x[3];
+-	char *endx;
+-	long val;
+-
+-	x[2] = '\0';
+-	strncpy(x, s + *i, 2);
+-
+-	val = strtol(x, &endx, 16);
+-	if (!(endx  > x))
+-		die("\\x used with no following hex digits\n");
+-
+-	(*i) += endx - x;
+-	return val;
+-}
+-
+ struct data data_copy_escape_string(const char *s, int len)
+ {
+ 	int i = 0;
+@@ -119,48 +85,7 @@ struct data data_copy_escape_string(const char *s, int len)
+ 			continue;
  		}
  
-+<BYTESTRING>{CHAR_LITERAL} {
-+			DPRINT("Character literal: %s\n", yytext);
-+			yylval.byte = yytext[1];
-+			DPRINT("Byte: %02x\n", (int)yylval.byte);
-+			return DT_BYTE;
-+		}
+-		c = s[i++];
+-		assert(c);
+-		switch (c) {
+-		case 'a':
+-			q[d.len++] = '\a';
+-			break;
+-		case 'b':
+-			q[d.len++] = '\b';
+-			break;
+-		case 't':
+-			q[d.len++] = '\t';
+-			break;
+-		case 'n':
+-			q[d.len++] = '\n';
+-			break;
+-		case 'v':
+-			q[d.len++] = '\v';
+-			break;
+-		case 'f':
+-			q[d.len++] = '\f';
+-			break;
+-		case 'r':
+-			q[d.len++] = '\r';
+-			break;
+-		case '0':
+-		case '1':
+-		case '2':
+-		case '3':
+-		case '4':
+-		case '5':
+-		case '6':
+-		case '7':
+-			i--; /* need to re-read the first digit as
+-			      * part of the octal value */
+-			q[d.len++] = get_oct_char(s, &i);
+-			break;
+-		case 'x':
+-			q[d.len++] = get_hex_char(s, &i);
+-			break;
+-		default:
+-			q[d.len++] = c;
+-		}
++                q[d.len++] = get_escape_char(s, &i);
+ 	}
+ 
+ 	q[d.len++] = '\0';
+diff --git a/util.c b/util.c
+index 994436f..b39392c 100644
+--- a/util.c
++++ b/util.c
+@@ -25,6 +25,7 @@
+ #include <stdlib.h>
+ #include <stdarg.h>
+ #include <string.h>
++#include <assert.h>
+ 
+ #include "util.h"
+ 
+@@ -85,3 +86,101 @@ int util_is_printable_string(const void *data, int len)
+ 
+ 	return 1;
+ }
 +
-+<BYTESTRING>{CHAR_ESCAPED} {
-+			DPRINT("Character escaped literal: %s\n", yytext);
-+			yylval.byte = get_escape_char_exact(yytext+1, yyleng-2);
-+			DPRINT("Byte: %02x\n", (int)yylval.byte);
-+			return DT_BYTE;
-+		}
++char get_oct_char(const char *s, int *i)
++{
++	char x[4];
++	char *endx;
++	long val;
 +
- <BYTESTRING>"]"	{
- 			DPRINT("/BYTESTRING\n");
- 			BEGIN_DEFAULT();
++	x[3] = '\0';
++	strncpy(x, s + *i, 3);
++
++	val = strtol(x, &endx, 8);
++
++	assert(endx > x);
++
++	(*i) += endx - x;
++	return val;
++}
++
++char get_hex_char(const char *s, int *i)
++{
++	char x[3];
++	char *endx;
++	long val;
++
++	x[2] = '\0';
++	strncpy(x, s + *i, 2);
++
++	val = strtol(x, &endx, 16);
++	if (!(endx  > x))
++		die("\\x used with no following hex digits\n");
++
++	(*i) += endx - x;
++	return val;
++}
++
++char get_escape_char(const char *s, int *i)
++{
++	char	c = s[*i];
++	int	j = *i + 1;
++	char	val;
++
++	assert(c);
++	switch (c) {
++	case 'a':
++		val = '\a';
++		break;
++	case 'b':
++		val = '\b';
++		break;
++	case 't':
++		val = '\t';
++		break;
++	case 'n':
++		val = '\n';
++		break;
++	case 'v':
++		val = '\v';
++		break;
++	case 'f':
++		val = '\f';
++		break;
++	case 'r':
++		val = '\r';
++		break;
++	case '0':
++	case '1':
++	case '2':
++	case '3':
++	case '4':
++	case '5':
++	case '6':
++	case '7':
++		j--; /* need to re-read the first digit as
++		      * part of the octal value */
++		val = get_oct_char(s, &j);
++		break;
++	case 'x':
++		val = get_hex_char(s, &j);
++		break;
++	default:
++		val = c;
++	}
++
++	(*i) = j;
++	return val;
++}
++
++char get_escape_char_exact(const char *s, int len)
++{
++	int	j = 1; //skip intial "\"
++	char	c = get_escape_char(s, &j);
++
++	if (j != len)
++		die("Extra characters at end of character literal '%s' "
++		    "(%d != %d)\n", s, j, len);
++
++	return c;
++}
+diff --git a/util.h b/util.h
+index cc68933..4332b6e 100644
+--- a/util.h
++++ b/util.h
+@@ -64,4 +64,22 @@ extern char *join_path(const char *path, const char *name);
+  * @return 1 if a valid printable string, 0 if not */
+ int util_is_printable_string(const void *data, int len);
+ 
++/*
++ * Octal, Hex and escaped character parsing routines.  Each of these routines
++ * will parse an encoded character starting at index i in string s.  The
++ * resulting character will be returned and the index i will be updated to
++ * point at the character directly after the end of the encoding, this may
++ * be the '\0' terminator of the string.
++ */
++char get_oct_char(const char *s, int *i);
++char get_hex_char(const char *s, int *i);
++char get_escape_char(const char *s, int *i);
++
++/*
++ * Parse an escaped character of exactly len characters starting at the
++ * beginning of the passed string.  If the escape sequence is not exactly
++ * len characters long we die.  Otherwise the parsed character is returned.
++ */
++char get_escape_char_exact(const char *s, int len);
++
+ #endif /* _UTIL_H */
 -- 
 1.7.3.1
