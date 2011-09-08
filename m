@@ -1,15 +1,16 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] Add new fdtput utility to write values to fdt
-Date: Thu, 8 Sep 2011 15:32:09 +1000
-Message-ID: <20110908053209.GT30278@yookeroo.fritz.box>
+Subject: Re: [PATCH v2 3/6] Add fdtget utility to read property values from
+	device tree
+Date: Thu, 8 Sep 2011 15:25:47 +1000
+Message-ID: <20110908052547.GR30278@yookeroo.fritz.box>
 References: <1315425260-2711-1-git-send-email-sjg@chromium.org>
-	<1315425260-2711-6-git-send-email-sjg@chromium.org>
+	<1315425260-2711-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1315425260-2711-6-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1315425260-2711-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,113 +24,106 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 07, 2011 at 12:54:19PM -0700, Simon Glass wrote:
-> This simple utility allows writing of values into a device tree from the
-> command line. It aimes to be the opposite of fdtget.
+On Wed, Sep 07, 2011 at 12:54:17PM -0700, Simon Glass wrote:
+> This simply utility makes it easy for scripts to read values from the device
+> tree. It is written in C and uses the same libfdt as the rest of the dtc
+> package.
 > 
 > What is it for:
-> - Updating fdt values when a binary blob already exists
->    (even though source may be available it might be easier to use this
->     utility rather than sed, etc.)
-> - Writing machine-specific fdt values within a build system
+> - Reading fdt values from scripts
+> - Extracting fdt information within build systems
+> - Looking at particular values without having to dump the entire tree
 > 
-> To use it, specify the fdt binary file on command line followed by the node
-> and property to set. Then, provide a list of values to put into that
-> property. Often there will be just one, but fdtput also supports arrays and
-> string lists.
+> To use it, specify the fdt binary file on command line followed by a list of
+> node, property pairs. The utility then looks up each node, finds the property
+> and displays the value.
 > 
-> fdtput does not trit to guess the type of the property based on looking at
-> the arguments. Instead it always assumed that an integer is provided. To
-> indicate that you want to write a string, use -ts. You can also provide
-> hex values with -tx.
+> Each value is printed on a new line.
 > 
-> The command line arguments are joined together into a single value. For
-> strings, a nul terminator is placed between each string. To avoid this, pass
-> the string as a single parameter.
+> fdtget tries to guess the type of each property based on its contents. This
+> is not always reliable, so you can use the -t option to force fdtget to decode
+> the value as a string, or byte, etc.
+> 
+> To read from stdin, use - as the file.
 > 
 > Usage:
-> 	fdtput <options> <dt file> <<node> <property> [<value>...]
+> 	fdtget <options> <dt file> [<node> <property>]...
 > Options:
 > 	-t [<type>][<format>]	Type of data
-> 	-v		Verbose: display each value decoded from command line
 > 	-h		Print this help
 > 
 > 	<type>		One character (s=string, i=int, u=unsigned, b=byte)
 > 	<format>	Optional format character (x=hex)
-> 
-> To read from stdin and write to stdout, use - as the file. So you can do:
-> 
-> cat somefile.dtb | fdtput -ts - /node prop "My string value" > newfile.dtb
+
+It is not terribly clear how these are combined.
+
+Is there any way to make these more closely resemble printf() style
+format specifiers?
+
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
 > Changes in v2:
 > - Separate arguments for node and property
-> - Remove limits on data size of property writting to fdt
+> - Merge two related commits into this one
+> - Use structure for storing display options
 > - Remove use of getopt_long()
 > 
 >  .gitignore      |    1 +
->  Makefile        |    6 ++
->  Makefile.fdtput |   12 +++
->  fdtput.c        |  217 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 236 insertions(+), 0 deletions(-)
->  create mode 100644 Makefile.fdtput
->  create mode 100644 fdtput.c
+>  Makefile        |    4 +
+>  Makefile.fdtget |   12 +++
+>  fdtget.c        |  200 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 217 insertions(+), 0 deletions(-)
+>  create mode 100644 Makefile.fdtget
+>  create mode 100644 fdtget.c
 > 
 > diff --git a/.gitignore b/.gitignore
-> index 9f27f34..2c9a64e 100644
+> index ae7a46a..9f27f34 100644
 > --- a/.gitignore
 > +++ b/.gitignore
-> @@ -11,3 +11,4 @@ lex.yy.c
+> @@ -10,3 +10,4 @@ lex.yy.c
+>  /ftdump
 >  /convert-dtsv0
 >  /version_gen.h
->  /fdtget
-> +/fdtput
+> +/fdtget
 > diff --git a/Makefile b/Makefile
-> index 3d460d7..c6b57d7 100644
+> index 0baada5..3d460d7 100644
 > --- a/Makefile
 > +++ b/Makefile
-> @@ -107,11 +107,13 @@ include Makefile.convert-dtsv0
+> @@ -106,10 +106,12 @@ endef
+>  include Makefile.convert-dtsv0
 >  include Makefile.dtc
 >  include Makefile.ftdump
->  include Makefile.fdtget
-> +include Makefile.fdtput
-
-Separate makefile fragments for the two utilities seems overkill.
-Can't you just have one Makefile.utils or something.
-
+> +include Makefile.fdtget
 >  
 >  BIN += convert-dtsv0
 >  BIN += dtc
 >  BIN += ftdump
->  BIN += fdtget
-> +BIN += fdtput
+> +BIN += fdtget
 >  
 >  SCRIPTS = dtdiff
 >  
-> @@ -123,6 +125,7 @@ ifneq ($(DEPTARGETS),)
+> @@ -120,6 +122,7 @@ ifneq ($(DEPTARGETS),)
+>  -include $(DTC_OBJS:%.o=%.d)
 >  -include $(CONVERT_OBJS:%.o=%.d)
 >  -include $(FTDUMP_OBJS:%.o=%.d)
->  -include $(FDTGET_OBJS:%.o=%.d)
-> +-include $(FDTPUT_OBJS:%.o=%.d)
+> +-include $(FDTGET_OBJS:%.o=%.d)
 >  endif
 >  
 >  
-> @@ -185,6 +188,9 @@ ftdump:	$(FTDUMP_OBJS) $(LIBFDT_archive)
+> @@ -180,6 +183,7 @@ convert-dtsv0: $(CONVERT_OBJS)
 >  
->  fdtget:	$(FDTGET_OBJS) $(LIBFDT_archive)
+>  ftdump:	$(FTDUMP_OBJS) $(LIBFDT_archive)
 >  
-> +fdtput:	$(FDTPUT_OBJS) $(LIBFDT_archive)
-> +
-> +
+> +fdtget:	$(FDTGET_OBJS) $(LIBFDT_archive)
+>  
 >  #
 >  # Testsuite rules
->  #
-> diff --git a/Makefile.fdtput b/Makefile.fdtput
+> diff --git a/Makefile.fdtget b/Makefile.fdtget
 > new file mode 100644
-> index 0000000..de1cfdf
+> index 0000000..c1ab041
 > --- /dev/null
-> +++ b/Makefile.fdtput
+> +++ b/Makefile.fdtget
 > @@ -0,0 +1,12 @@
 > +#
 > +# This is not a complete Makefile.
@@ -137,24 +131,26 @@ Can't you just have one Makefile.utils or something.
 > +# into other systems of Makefiles.
 > +#
 > +
-> +FDTPUT_SRCS = \
-> +	fdtput.c \
+> +FDTGET_SRCS = \
+> +	fdtget.c \
 > +	util.c \
 > +	utilfdt.c
 > +
-> +FDTPUT_OBJS = $(FDTPUT_SRCS:%.c=%.o)
-> diff --git a/fdtput.c b/fdtput.c
+> +FDTGET_OBJS = $(FDTGET_SRCS:%.c=%.o)
+> diff --git a/fdtget.c b/fdtget.c
 > new file mode 100644
-> index 0000000..fd03d76
+> index 0000000..4a94e99
 > --- /dev/null
-> +++ b/fdtput.c
-> @@ -0,0 +1,217 @@
+> +++ b/fdtget.c
+> @@ -0,0 +1,200 @@
 > +/*
 > + * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
 > + * Distributed under the terms of the GNU General Public License v2
+> + *
+> + * is_printable_string from ftdump.c
+> + * Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
 > + */
 > +
-> +#include <assert.h>
 > +#include <ctype.h>
 > +#include <getopt.h>
 > +#include <stdio.h>
@@ -166,10 +162,10 @@ Can't you just have one Makefile.utils or something.
 > +#include "util.h"
 > +#include "utilfdt.h"
 > +
+> +/* Holds information which controls our output and options */
 > +struct display_info {
 > +	int type;		/* data type (s/i/u/b or 0 for default) */
 > +	int format;		/* data format (x or 0 for default) */
-> +	int verbose;		/* verbose output */
 > +};
 > +
 > +static void report_error(const char *where, int err)
@@ -178,127 +174,120 @@ Can't you just have one Makefile.utils or something.
 > +}
 > +
 > +/**
-> + * Encode a series of arguments in a property value.
+> + * Displays data of a given length according to selected options
+> + *
+> + * If a specific data type is provided in disp, then this is used. Otherwise
+> + * we try to guess the data type / size from the contents.
 > + *
 > + * @param disp		Display information / options
-> + * @param arg		List of arguments from command line
-> + * @param arg_count	Number of arguments (may be 0)
-> + * @param valuep	Returns buffer containing value
-> + * @param *value_len	Returns length of value encoded
+> + * @param data		Data to display
+> + * @param len		Maximum length of buffer
 > + */
-> +static int encode_value(struct display_info *disp, char **arg, int arg_count,
-> +			char **valuep, int *value_len)
+> +static void show_data(struct display_info *disp, const char *data, int len)
 > +{
-> +	char *value = NULL;	/* holding area for value */
-> +	int value_size = 0;	/* size of holding area */
-> +	char *ptr;		/* pointer to current value position */
-> +	int len;		/* length of this cell/string/byte */
-> +	int ival;
-> +	int upto;	/* the number of bytes we have written to buf */
+> +	int i, size;
+> +	const char *p = data, *s;
+> +	int value;
+> +	int is_string;
 > +
-> +	upto = 0;
+> +	/* no data, don't print */
+> +	if (len == 0)
+> +		return;
 > +
-> +	if (disp->verbose)
-> +		fprintf(stderr, "Decoding value:\n");
-> +	for (; arg_count > 0; arg++, arg_count--, upto += len) {
-> +		/* assume integer unless told otherwise */
-> +		if (disp->type == 's')
-> +			len = strlen(*arg) + 1;
-> +		else
-> +			len = disp->type == 'b' ? 1 : 4;
-> +
-> +		/* enlarge our value buffer by a suitable margin if needed */
-> +		if (upto + len > value_size) {
-> +			value_size = (upto + len) + 500;
-> +			value = realloc(value, value_size);
-> +			if (!value) {
-> +				fprintf(stderr, "Out of mmory: cannot alloc "
-> +					"%d bytes\n", value_size);
-> +				return -1;
-> +			}
+> +	is_string = (disp->type) == 's' ||
+> +		(!disp->type && util_is_printable_string(data, len));
+> +	if (is_string) {
+> +		for (s = data; s - data < len; s += strlen(s) + 1) {
+> +			if (s != data)
+> +				printf(" ");
+> +			printf("%s", (const char *)s);
 > +		}
-> +
-> +		ptr = value + upto;
-> +		if (disp->type == 's') {
-> +			memcpy(ptr, *arg, len);
-> +			if (disp->verbose)
-> +				fprintf(stderr, "\tstring: '%s'\n", ptr);
-> +		} else {
-> +			int *iptr = (int *)ptr;
-> +
-> +			sscanf(*arg, disp->format == 'x' ? "%x" : "%d", &ival);
-> +			if (len == 4)
-> +				*iptr = cpu_to_fdt32(ival);
-> +			else
-> +				*ptr = (uint8_t)ival;
-> +			if (disp->verbose) {
-> +				fprintf(stderr, "\t%s: %d\n",
-> +					disp->type == 'b' ? "byte" : "int",
-> +					ival);
-> +			}
-> +		}
+> +		return;
 > +	}
-> +	*value_len = upto;
-> +	*valuep = value;
-> +	if (disp->verbose)
-> +		fprintf(stderr, "Value size %d\n", upto);
-> +	return 0;
+> +	if (disp->type == 'i' || disp->type == 'u')
+> +		size = 4;
+> +	else if (disp->type == 'b')
+> +		size = 1;
+> +	else
+> +		size = (len % 4) == 0 ? 4 : 1;
+> +	for (i = 0; i < len; i += size, p += size) {
+> +		if (i)
+> +			printf(" ");
+> +		value = size == 4 ? fdt32_to_cpu(*(const uint32_t *)p) :
+> +			*(const unsigned char *)p;
+> +		printf(disp->format == 'x' ? "%x" : "%d", value);
+> +	}
 > +}
 > +
-> +static int store_key_value(void *blob, const char *node_name,
-> +		const char *property, const char *buf, int len)
+> +/**
+> + * Show the data for a given node (and perhaps property) according to the
+> + * display option provided.
+
+"and perhaps property"?  AFAICT this will SEGV if property is NULL.
+
+> + * @param blob		FDT blob
+> + * @param disp		Display information / options
+> + * @param node		Node to display
+> + * @param property	Name of property to display, or NULL if none
+> + * @return 0 if ok, -ve on error
+> + */
+> +static int show_data_for_item(const void *blob, struct display_info *disp,
+> +		int node, const char *property)
 > +{
-> +	int node;
-> +	int err;
+> +	const void *value = NULL;
+> +	int len, err = 0;
 > +
-> +	node = fdt_path_offset(blob, node_name);
-> +	if (node < 0) {
-> +		report_error(node_name, node);
-> +		return -1;
+> +	value = fdt_getprop(blob, node, property, &len);
+> +	if (value) {
+> +		show_data(disp, value, len);
+> +		printf("\n");
+> +	} else {
+> +		report_error(property, len);
+> +		err = -1;
 > +	}
-> +
-> +	err = fdt_setprop(blob, node, property, buf, len);
-> +	if (err) {
-> +		report_error(property, err);
-> +		return -1;
-> +	}
-> +	return 0;
+> +	return err;
 > +}
 > +
-> +static int do_fdtput(struct display_info *disp, const char *filename,
-> +		    char **arg, int arg_count)
+> +/**
+> + * Run the main fdtget operation, given a filename and valid arguments
+> + *
+> + * @param disp		Display information / options
+> + * @param filename	Filename of blob file
+> + * @param arg		List of arguments to process
+> + * @param arg_count	Number of arguments
+> + * @param return 0 if ok, -ve on error
+> + */
+> +static int do_fdtget(struct display_info *disp, const char *filename,
+> +		     char **arg, int arg_count)
 > +{
-> +	char *value;
 > +	char *blob;
-> +	int len, ret = 0;
+> +	int i, node;
 > +
 > +	blob = util_read_fdt(filename);
 > +	if (!blob)
 > +		return -1;
 > +
-> +	/* convert the arguments into a single binary value, then store */
-> +	assert(arg_count >= 2);
-> +	if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
-> +		store_key_value(blob, *arg, arg[1], value, len))
-> +		ret = -1;
+> +	for (i = 0; i + 2 <= arg_count; i += 2) {
+> +		node = fdt_path_offset(blob, arg[0]);
+> +		if (node < 0) {
+> +			report_error(arg[0], node);
+> +			return -1;
+> +		}
 > +
-> +	if (!ret)
-> +		ret = util_write_fdt(blob, filename);
-> +
-> +	free(blob);
-> +	return ret;
+> +		if (show_data_for_item(blob, disp, node, arg[1]))
+> +			return -1;
+> +	}
+> +	return 0;
 > +}
 > +
 > +static const char *usage_msg =
-> +	"fdtput - write a property value to a device tree\n"
+> +	"fdtget - read values from device tree\n"
 > +	"\n"
-> +	"The command line arguments are joined together into a single value.\n"
-> +	"\n"
+> +	"Each value is printed on a new line.\n\n"
 > +	"Usage:\n"
-> +	"	fdtput <options> <dt file> <<node> <property> [<value>...]\n"
+> +	"	fdtget <options> <dt file> [<node> <property>]...\n"
 > +	"Options:\n"
 > +	"\t-t [<type>][<format>]\tType of data\n"
-> +	"\t-v\t\tVerbose: display each value decoded from command line\n"
 > +	"\t-h\t\tPrint this help\n\n"
 > +	"\t<type>\t\tOne character (s=string, i=int, u=unsigned, b=byte)\n"
 > +	"\t<format>\tOptional format character (x=hex)\n";
@@ -314,24 +303,15 @@ Can't you just have one Makefile.utils or something.
 > +
 > +int main(int argc, char *argv[])
 > +{
-> +	struct display_info disp;
 > +	char *filename = NULL;
+> +	struct display_info disp;
 > +
 > +	memset(&disp, '\0', sizeof(disp));
 > +	for (;;) {
-> +		int c = getopt(argc, argv, "ht:v");
+> +		int c = getopt(argc, argv, "ht:");
 > +		if (c == -1)
 > +			break;
 > +
-> +		/*
-> +		 * TODO: add options to:
-> +		 * - delete property
-> +		 * - delete node (optionally recursively)
-> +		 * - rename node
-> +		 * - pack fdt before writing
-> +		 * - set amount of free space when writing
-> +		 * - expand fdt if value doesn't fit
-> +		 */
 > +		switch (c) {
 > +		case 'h':
 > +		case '?':
@@ -341,10 +321,6 @@ Can't you just have one Makefile.utils or something.
 > +			if (utilfdt_decode_type(optarg, &disp.type,
 > +					&disp.format))
 > +				usage("Invalid type string");
-> +			break;
-> +
-> +		case 'v':
-> +			disp.verbose = 1;
 > +			break;
 > +		}
 > +	}
@@ -357,12 +333,15 @@ Can't you just have one Makefile.utils or something.
 > +	argv += optind;
 > +	argc -= optind;
 > +
-> +	if (argc < 1)
-> +		usage("Missing node");
-> +	if (argc < 2)
-> +		usage("Missing property");
+> +	/* Allow no arguments, and silently succeed */
+> +	if (!argc)
+> +		return 0;
 > +
-> +	if (do_fdtput(&disp, filename, argv, argc))
+> +	/* Check for node, property arguments */
+> +	if (argc % 2)
+> +		usage("Must have an even number of arguments");
+> +
+> +	if (do_fdtget(&disp, filename, argv, argc))
 > +		return 1;
 > +	return 0;
 > +}
