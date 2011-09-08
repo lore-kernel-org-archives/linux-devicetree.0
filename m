@@ -1,76 +1,117 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 03/10] documentation/dt: Add l3-noc bindings
-Date: Thu, 8 Sep 2011 11:06:04 -0700
-Message-ID: <20110908180604.GC2967@ponder.secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC PATCH 04/10] arm/dts: OMAP4: Add mpu, dsp and iva nodes
+Date: Thu, 8 Sep 2011 11:07:07 -0700
+Message-ID: <20110908180707.GD2967@ponder.secretlab.ca>
 References: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
-	<1314191356-10963-4-git-send-email-b-cousson@ti.com>
+	<1314191356-10963-5-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1314191356-10963-4-git-send-email-b-cousson@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: khilman@ti.com, tony@atomide.com, manjugk@ti.com, devicetree-discuss@lists.ozlabs.org, Randy Dunlap <rdunlap@xenotime.net>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1314191356-10963-5-git-send-email-b-cousson-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: khilman-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, manjugk-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2011 at 03:09:09PM +0200, Benoit Cousson wrote:
-> Add documentation for the l3-noc bindings.
+On Wed, Aug 24, 2011 at 03:09:10PM +0200, Benoit Cousson wrote:
+> Add nodes for devices used by PM code (mpu, dsp, iva).
 > 
-> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Randy Dunlap <rdunlap@xenotime.net>
+> Add an empty cpus node as well as recommended in the DT spec.
+> 
+> Remove mpu, dsp, iva devices init if CONFIG_OF is defined.
+> Ideally the whole function should be removed. It will be doable as
+> soon as the OMAP3 DT support will be added.
+> 
+> Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/omap/l3-noc.txt        |   18 ++++++++++++++++++
->  1 files changed, 18 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/l3-noc.txt
+>  arch/arm/boot/dts/omap4.dtsi |   28 ++++++++++++++++++++++++++++
+>  arch/arm/mach-omap2/pm.c     |    5 ++++-
+>  2 files changed, 32 insertions(+), 1 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/l3-noc.txt b/Documentation/devicetree/bindings/arm/omap/l3-noc.txt
-> new file mode 100644
-> index 0000000..dbfa878
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/omap/l3-noc.txt
-> @@ -0,0 +1,18 @@
-> +* TI - L3 Network On Chip (NoC)
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index 928a74c..a3efe76 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -25,11 +25,39 @@
+>  	};
+>  
+>  	/*
+> +	 * XXX: The cpus node is mandatory, but since the CPUs are as well part
+> +	 * of the mpu subsystem below, it is not clear where the information
+> +	 * should be. Maybe here with a phandle inside the mpu?
+> +	 */
+> +	cpus {
+> +	};
 > +
-> +This version is an implementation of the generic NoC IP
-> +provided by Arteris.
-
-Hahaha.  Here's the documentation.  Okay.
-
+> +	/*
+>  	 * The soc node represents the soc top level view. It is uses for IPs
+>  	 * that are not memory mapped in the MPU view or for the MPU itself.
+>  	 */
+>  	soc {
+>  		compatible = "ti,omap-infra";
+> +		mpu {
+> +			compatible = "ti,omap4-mpu";
+> +			hwmods = "mpu";
+> +			cpu@0 {
+> +				compatible = "arm,cortex-a9";
+> +			};
+> +			cpu@1 {
+> +				compatible = "arm,cortex-a9";
+> +			};
+> +		};
 > +
-> +Required properties:
-> +- compatible : Should be "ti,l3-noc", "arteris,noc"
-
-Should probably be "ti,omap4-l3-noc", and it isn't necessary to have a
-value for the IP core vendor... or at least if an arteris value is
-provided, then it should have some form of ip-core version
-information.
-
-> +- hwmods: "l3_main_1", ... One hwmod for each noc domain.
-
-Is there some documentation on how the "hwmods" property is to be
-used?  I expect that this should be "ti,hwmods" because this is a TI
-specific property.
-
+> +		dsp {
+> +			compatible = "ti,omap4-c64", "ti,c64";
+> +			hwmods = "dsp";
+> +		};
 > +
-> +Examples:
-> +
-> +ocp {
-> +	compatible = "ti,l3-noc", "arteris,noc", "simple-bus";
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
-> +	hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
-> +};
+> +		iva {
+> +			compatible = "ti,ivahd", "ti,iva";
+> +			hwmods = "iva";
+> +		};
+>  	};
+>  
+>  	/*
+> diff --git a/arch/arm/mach-omap2/pm.c b/arch/arm/mach-omap2/pm.c
+> index 832577a..ba4d187 100644
+> --- a/arch/arm/mach-omap2/pm.c
+> +++ b/arch/arm/mach-omap2/pm.c
+> @@ -49,15 +49,18 @@ static int _init_omap_device(char *name)
+>   */
+>  static void omap2_init_processor_devices(void)
+>  {
+> -	_init_omap_device("mpu");
+>  	if (omap3_has_iva())
+>  		_init_omap_device("iva");
+>  
+>  	if (cpu_is_omap44xx()) {
+> +#ifndef CONFIG_OF
+> +		_init_omap_device("mpu");
+>  		_init_omap_device("l3_main_1");
+>  		_init_omap_device("dsp");
+>  		_init_omap_device("iva");
+> +#endif
+
+Ditto here, turning on CONFIG_OF should not be an either/or option
+with ATAGs support.
+
+>  	} else {
+> +		_init_omap_device("mpu");
+>  		_init_omap_device("l3_main");
+>  	}
+>  }
 > -- 
 > 1.7.0.4
 > 
