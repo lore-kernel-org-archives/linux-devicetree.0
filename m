@@ -1,15 +1,16 @@
 From: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Support character literals
-Date: Thu, 8 Sep 2011 08:51:54 -0700
-Message-ID: <CAF6FioVSMD2rT89tBeZEirNWj3DKO2=TXy9cE+z_FvYSn3M_dA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dtc: Support character literals in bytestrings
+Date: Thu, 8 Sep 2011 09:02:33 -0700
+Message-ID: <CAF6FioURFeRZ5Oe3-QUA9Ww4_tiZ0iKyUcioLvuYC=CJcCXC9Q@mail.gmail.com>
 References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
-	<20110908031842.GL30278@yookeroo.fritz.box>
-	<20110908050354.GP30278@yookeroo.fritz.box>
+	<1315437340-1661-4-git-send-email-robotboy@chromium.org>
+	<20110908035149.GO30278@yookeroo.fritz.box>
+	<20110908070716.GC15955@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110908050354.GP30278-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-Reply-To: <20110908070716.GC15955-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,54 +20,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 7, 2011 at 10:03 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Thu, Sep 08, 2011 at 01:18:42PM +1000, David Gibson wrote:
->> On Wed, Sep 07, 2011 at 04:15:37PM -0700, Anton Staaf wrote:
->> > =A0 =A0 These patches add simple and escaped character literal parsing=
- support
->> > to the dtc for cell lists and bytestrings. =A0The first patch refactor=
-s the
->> > string parsing code in data.c to expose the more primitive character p=
-arsing
->> > code for use in the later patches. =A0I have left the bytestring suppo=
-rt in
->> > place but my hope is that it is now separate enough to be discussed
->> > independantly of the refactor and cell list changes.
+On Thu, Sep 8, 2011 at 12:07 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+> On Thu, Sep 08, 2011 at 01:51:49PM +1000, David Gibson wrote:
+>> On Wed, Sep 07, 2011 at 04:15:40PM -0700, Anton Staaf wrote:
+>> > With this patch the following property assignment:
 >> >
->> > =A0 =A0 Thanks,
->> > =A0 =A0 =A0 =A0 Anton
+>> > =A0 =A0 property =3D ['a' 2b '\r'];
 >> >
->> > Changes in v2:
->> > - Move the refactor of data.c to a separate patch
->> > - Add support for character literals in cell lists
->> > - Merge normal and escaped literal support for bytestrings into
->> > - single patch
+>> > is equivalent to:
+>> >
+>> > =A0 =A0 property =3D [61 2b 0d];
 >>
->> Getting very close with version, although there are still some minor
->> warts I'd like you to address.
+>> So, I still have some reservations about this syntax.
+>>
+>> It occurred to me: do you actually need to intermix character and
+>> hexbyte values that much? =A0Could I suggest an alternate sytax as:
+>>
+>> =A0 =A0 =A0 property =3D 'a', [2b], 'r';
+>>
+>> The new character literals sufficiently distinct not to cause problems
+>> here, and it maintains the , =3D=3D bytestring append behaviour we alrea=
+dy
+>> have.
+>>
+>> Thoughts?
 >
-> Oh, and one other thing, I forgot to say yet: you need some testcases
-> for the new functionality.
+> Does it matter much? =A0I'm happy with either. =A0Is there a downside to
+> the first syntax?
 
-Yup, I'll work on these today.  I'm still working on deciphering the
-testing code.  :)  Do you have a pointer to a good example of a dtc
-test to work from?  I tried looking around for a bytestring or literal
-test, but couldn't find anything obvious.
+I don't think it matters that much, though in my use case of encoding
+a keyboard mapping table I do actually intermix character literals and
+two character hex values a lot.  In particular, I use 00 to indicate a
+key that is not present in the scan matrix.  I also use hex values
+with the top bit set to indicate special characters, such as modifiers
+or arrow keys.  So I guess I have a slight preference for my original
+syntax, which has another advantage of looking a bit more C-like.
+Though I could certainly use the alternate syntax as well.  One last
+thought, the alternate syntax will require quite a few additional
+commas and square brackets, most likely causing my tables to wrap and
+thus get become even longer in the dts file.
 
 Thanks,
     Anton
 
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
+> g.
+>
 >
