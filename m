@@ -1,154 +1,105 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH REPOST 2/2] i2c-imx: add device tree probe support
-Date: Thu, 8 Sep 2011 15:09:35 +0800
-Message-ID: <1315465775-31335-3-git-send-email-shawn.guo@linaro.org>
-References: <1315465775-31335-1-git-send-email-shawn.guo@linaro.org>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [RFC PATCH 06/10] hwspinlock: OMAP4: Add spinlock support in
+ DT
+Date: Thu, 8 Sep 2011 09:14:57 +0200
+Message-ID: <4E686B71.2060107@ti.com>
+References: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
+	<1314191356-10963-7-git-send-email-b-cousson@ti.com>
+	<CAK=WgbYX50R_MCgwdzywgrAEDJkmDSmeSSCuuqst5UBYk_sYow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1315465775-31335-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Darius Augulis <augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK=WgbYX50R_MCgwdzywgrAEDJkmDSmeSSCuuqst5UBYk_sYow@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: "Hilman, Kevin" <khilman@ti.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "G,
+	Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-It adds device tree probe support for i2c-imx driver.
+Hi Ohad,
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Darius Augulis <augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
- .../devicetree/bindings/i2c/fsl-imx-i2c.txt        |   25 ++++++++++++++++++++
- drivers/i2c/busses/i2c-imx.c                       |   25 +++++++++++++++----
- 2 files changed, 44 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/fsl-imx-i2c.txt
+On 9/7/2011 9:58 PM, Ohad Ben-Cohen wrote:
+> On Wed, Aug 24, 2011 at 4:09 PM, Benoit Cousson<b-cousson@ti.com>  wrote:
+>> Add a device-tree node for the spinlock.
+>> Remove the static device build code if CONFIG_OF
+>> is set.
+>> Update the hwspinlock driver to use the of_match method.
+>> Add the information in Documentation/devicetree.
+>>
+>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>> Cc: Grant Likely<grant.likely@secretlab.ca>
+>> Cc: Ohad Ben-Cohen<ohad@wizery.com>
+>> ---
+> ...
+>> +               spinlock {
+>> +                       compatible = "ti,omap-spinlock";
+>> +                       hwmods = "spinlock";
+>> +               };
+>
+> This seem to satisfy the current hwspinlock driver, but I'm wondering
+> about an issue which was discussed awhile ago by Arnd and Mathieu:
+>
+> Hwspinlock devices provide system-wide hardware locks that are used by
+> remote processors that have no other way to achieve synchronization.
+>
+> For that to work, each physical lock must have a system-wide unique id
+> number that all processors are familiar with, otherwise they can't
+> possibly assume they're using the same hardware lock.
+>
+> Usually SoC have a single hwspinlock device, which provides several
+> hardware spinlocks, and in this case, the locks can be trivially
+> numbered 0 to (num-of-locks - 1).
+>
+> In case boards have several hwspinlocks devices (each of which
+> providing numerous hardware spinlocks) a different base id should be
+> used for each hwspinlock device (they can't all use 0 as a starting
+> id!).
+>
+> While this is certainly not common, it's just plain wrong for the
+> hwspinlock driver to silently use 0 as a base id whenever it is probed
+> with a device (and by that implicitly assume there will always be only
+> one device).
 
-diff --git a/Documentation/devicetree/bindings/i2c/fsl-imx-i2c.txt b/Documentation/devicetree/bindings/i2c/fsl-imx-i2c.txt
-new file mode 100644
-index 0000000..f3cf43b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/fsl-imx-i2c.txt
-@@ -0,0 +1,25 @@
-+* Freescale Inter IC (I2C) and High Speed Inter IC (HS-I2C) for i.MX
-+
-+Required properties:
-+- compatible : Should be "fsl,<chip>-i2c"
-+- reg : Should contain I2C/HS-I2C registers location and length
-+- interrupts : Should contain I2C/HS-I2C interrupt
-+
-+Optional properties:
-+- clock-frequency : Constains desired I2C/HS-I2C bus clock frequency in Hz.
-+  The absence of the propoerty indicates the default frequency 100 kHz.
-+
-+Examples:
-+
-+i2c@83fc4000 { /* I2C2 on i.MX51 */
-+	compatible = "fsl,imx51-i2c", "fsl,imx1-i2c";
-+	reg = <0x83fc4000 0x4000>;
-+	interrupts = <63>;
-+};
-+
-+i2c@70038000 { /* HS-I2C on i.MX51 */
-+	compatible = "fsl,imx51-i2c", "fsl,imx1-i2c";
-+	reg = <0x70038000 0x4000>;
-+	interrupts = <64>;
-+	clock-frequency = <400000>;
-+};
-diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-index 54d809e..58832e5 100644
---- a/drivers/i2c/busses/i2c-imx.c
-+++ b/drivers/i2c/busses/i2c-imx.c
-@@ -48,6 +48,9 @@
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_i2c.h>
- 
- #include <mach/irqs.h>
- #include <mach/hardware.h>
-@@ -125,6 +128,11 @@ struct imx_i2c_struct {
- 	unsigned int		ifdr; /* IMX_I2C_IFDR */
- };
- 
-+static const struct of_device_id i2c_imx_dt_ids[] = {
-+	{ .compatible = "fsl,imx1-i2c", },
-+	{ /* sentinel */ }
-+};
-+
- /** Functions for IMX I2C adapter driver ***************************************
- *******************************************************************************/
- 
-@@ -469,7 +477,7 @@ static int __init i2c_imx_probe(struct platform_device *pdev)
- 	struct imxi2c_platform_data *pdata = pdev->dev.platform_data;
- 	void __iomem *base;
- 	resource_size_t res_size;
--	int irq;
-+	int irq, bitrate;
- 	int ret;
- 
- 	dev_dbg(&pdev->dev, "<%s>\n", __func__);
-@@ -512,6 +520,7 @@ static int __init i2c_imx_probe(struct platform_device *pdev)
- 	i2c_imx->adapter.algo		= &i2c_imx_algo;
- 	i2c_imx->adapter.dev.parent	= &pdev->dev;
- 	i2c_imx->adapter.nr 		= pdev->id;
-+	i2c_imx->adapter.dev.of_node	= pdev->dev.of_node;
- 	i2c_imx->irq			= irq;
- 	i2c_imx->base			= base;
- 	i2c_imx->res			= res;
-@@ -538,10 +547,12 @@ static int __init i2c_imx_probe(struct platform_device *pdev)
- 	i2c_set_adapdata(&i2c_imx->adapter, i2c_imx);
- 
- 	/* Set up clock divider */
--	if (pdata && pdata->bitrate)
--		i2c_imx_set_clk(i2c_imx, pdata->bitrate);
--	else
--		i2c_imx_set_clk(i2c_imx, IMX_I2C_BIT_RATE);
-+	bitrate = IMX_I2C_BIT_RATE;
-+	ret = of_property_read_u32(pdev->dev.of_node,
-+				   "clock-frequency", &bitrate);
-+	if (ret < 0 && pdata && pdata->bitrate)
-+		bitrate = pdata->bitrate;
-+	i2c_imx_set_clk(i2c_imx, bitrate);
- 
- 	/* Set up chip registers to defaults */
- 	writeb(0, i2c_imx->base + IMX_I2C_I2CR);
-@@ -554,6 +565,8 @@ static int __init i2c_imx_probe(struct platform_device *pdev)
- 		goto fail5;
- 	}
- 
-+	of_i2c_register_devices(&i2c_imx->adapter);
-+
- 	/* Set up platform driver data */
- 	platform_set_drvdata(pdev, i2c_imx);
- 
-@@ -584,7 +597,6 @@ fail1:
- static int __exit i2c_imx_remove(struct platform_device *pdev)
- {
- 	struct imx_i2c_struct *i2c_imx = platform_get_drvdata(pdev);
--	struct imxi2c_platform_data *pdata = pdev->dev.platform_data;
- 
- 	/* remove adapter */
- 	dev_dbg(&i2c_imx->adapter.dev, "adapter removed\n");
-@@ -613,6 +625,7 @@ static struct platform_driver i2c_imx_driver = {
- 	.driver	= {
- 		.name	= DRIVER_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = i2c_imx_dt_ids,
- 	}
- };
- 
--- 
-1.7.4.1
+Hehe, I'm not the one who wrote that driver :-)
+
+This is not wrong for the current HW. The point is do we want to 
+anticipate potential HW evolution that might never happen on that IP?
+
+> So we need to couple an hwspinlock device with a base id (which is
+> trivially zero when there's only a single hwspinlock device). This can
+> be easily achieved today using platform data, which boards will use to
+> set a different base id for each of the hwspinlock devices they have
+> (i'll send a patch demonstrating this soon), but I'm wondering how to
+> specify this hwspinlock-specific data with DT: is there an existing
+> binding we can use for this ? or should we create something like a
+> "baseid" one especially for the hwspinlock driver ?
+
+This is no different than the multiple GPIO controllers we have today.
+Since we cannot rely on the DT nodes order, I added an explicit "id" 
+attribute to provide that information to the driver. And then the baseid 
+is "id * #gpios".
+
+>> +#if defined(CONFIG_OF)
+>> +static const struct of_device_id spinlock_match[] = {
+>> +       {.compatible = "ti,omap-spinlock", },
+>> +       {},
+>> +}
+>
+> you're missing a semicolon there (yeah I actually tried to build this ;)
+
+That was a test :-)
+In fact it looks like this driver is not built with a default 
+omap2plus_defconfig :-(
+I'll fix that.
+
+Thanks for the review,
+Benoit
