@@ -1,74 +1,52 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2] dtc: Add support for named integer constants
-Date: Thu, 8 Sep 2011 06:09:27 -0700
-Message-ID: <CAPnjgZ0NzN510XJZ1ONAbMTS3vrrP8qCV8NYHq4_heZL+PizNg@mail.gmail.com>
-References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 06/10] hwspinlock: OMAP4: Add spinlock support in DT
+Date: Thu, 8 Sep 2011 16:47:55 +0200
+Message-ID: <201109081647.55377.arnd@arndb.de>
+References: <1314191356-10963-1-git-send-email-b-cousson@ti.com> <4E6877A9.3090104@ti.com> <CAK=WgbbN-RYj2quMQOyYbEBBfV3gty4dOE7DgjvsRcoYO=F3kw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04B327A62D-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbbN-RYj2quMQOyYbEBBfV3gty4dOE7DgjvsRcoYO=F3kw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hilman, Kevin" <khilman@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>, Mathieu Poirier <mathieu.poirier@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Thursday 08 September 2011, Ohad Ben-Cohen wrote:
+> On Thu, Sep 8, 2011 at 11:07 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
+> > The (small) issue for my point of view is that the #hwspinlock is already
+> > encoded in the IP itself. So adding a baseid directly in DT will look like
+> > duplicating indirectly something that is already there in the HW.
+> > That being said, since we cannot rely on the order, we will not be able to
+> > get the proper baseid until the driver probe every hwspinlock devices :-(
+> > So baseid might be a easier choice.
+> 
+> Sounds good. Thanks a lot !
 
-On Fri, Sep 2, 2011 at 11:34 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> Stephen Warren wrote at Tuesday, August 30, 2011 3:30 PM:
->> You may define constants as follows:
->>
->> /define/ TWO 2;
->> /define/ FOUR 4;
->> /define/ OTHER FOUR;
->>
->> And properties may use these values as follows:
->>
->> foo = <1 TWO 3 FOUR 5>;
->>
->> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> David, Jon,
->
-> Does this seem reasonable?
->
-> I think the syntax is simple enough it wouldn't interfere with any more
-> advanced expression/function/... support in the future, and it could be
-> easily extended to allow e.g.:
->
-> /define/ FOO "BAR";
-> /define/ BAX [0af8dacb0];
-> ...
+I think a number would work here but is not optimal for the device tree
+representation. I think a better binding would be to encode it like
+interrupt numbers, where every device that uses a hwspinlock will describe
+that as a combination of phandle to the hwspinlock controller and
+identifier to be used by that controller, e.g.
 
-This seems very reasonable to me, and very useful. From the syntax it
-looks like lower case symbols are allowed also, which is fine with me.
+	spinlock1 {
+		compatible = "ti,omap-spinlock";
+		regs = ...
+		interrupts = <42>;
+		interrupt-parent = &irq-controller;
+	};
 
-I hope that this can go into dtc as we would definitely use it.
+	dsp {
+		compatible = ...
+		regs = ...
+		spinlocks = <23>; // local number withing &spinlock1;
+		spinlock-controller = &spinlock1;
+	};
 
-Regards,
-Simon
+or possibly shorter
 
->
-> And even arbitrary expressions on the RHS as/when/if support is added
-> for those more generally:
->
-> /define/ A (B | (C << 2));
->
-> --
-> nvpublic
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
+		spinlocks = <&spinlock1 23>;
+
+	Arnd
