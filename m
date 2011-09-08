@@ -1,15 +1,16 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] Add utilfdt for common functions
-Date: Thu, 8 Sep 2011 05:37:08 -0700
-Message-ID: <CAPnjgZ1J0k93vo1A5ns5OxW5=nesr9pwLMMPAc+gyaOWmtmwuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] Add fdtget utility to read property values from
+	device tree
+Date: Thu, 8 Sep 2011 05:47:34 -0700
+Message-ID: <CAPnjgZ0qnr8VVOX7kCq6wEZ-OxAsxmHkPcTGE7wu1B_9ME_SPA@mail.gmail.com>
 References: <1315425260-2711-1-git-send-email-sjg@chromium.org>
-	<1315425260-2711-2-git-send-email-sjg@chromium.org>
-	<20110908052028.GQ30278@yookeroo.fritz.box>
+	<1315425260-2711-4-git-send-email-sjg@chromium.org>
+	<20110908052547.GR30278@yookeroo.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110908052028.GQ30278-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-Reply-To: <20110908052547.GR30278-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,97 +26,109 @@ List-Id: devicetree@vger.kernel.org
 
 Hi David,
 
-On Wed, Sep 7, 2011 at 10:20 PM, David Gibson
+On Wed, Sep 7, 2011 at 10:25 PM, David Gibson
 <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Wed, Sep 07, 2011 at 12:54:15PM -0700, Simon Glass wrote:
->> This adds a new utility library for performing libfdt operations.
+> On Wed, Sep 07, 2011 at 12:54:17PM -0700, Simon Glass wrote:
+>> This simply utility makes it easy for scripts to read values from the de=
+vice
+>> tree. It is written in C and uses the same libfdt as the rest of the dtc
+>> package.
 >>
->> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->> Changes in v2:
->> - Remove util_decode_key
->> - Add utilfdt_decode_type to be used by fdtget/put
->> - Remove limits on device tree binary size
-
-[snip]
-
->> + =A0 =A0 if (strcmp(filename, "-") =3D=3D 0) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 fp =3D stdin;
->> + =A0 =A0 =A0 =A0 =A0 =A0 toread =3D 64 * 1024; =A0 =A0 /* Suitable like=
-ly maximum */
+>> What is it for:
+>> - Reading fdt values from scripts
+>> - Extracting fdt information within build systems
+>> - Looking at particular values without having to dump the entire tree
+>>
+>> To use it, specify the fdt binary file on command line followed by a lis=
+t of
+>> node, property pairs. The utility then looks up each node, finds the pro=
+perty
+>> and displays the value.
+>>
+>> Each value is printed on a new line.
+>>
+>> fdtget tries to guess the type of each property based on its contents. T=
+his
+>> is not always reliable, so you can use the -t option to force fdtget to =
+decode
+>> the value as a string, or byte, etc.
+>>
+>> To read from stdin, use - as the file.
+>>
+>> Usage:
+>> =A0 =A0 =A0 fdtget <options> <dt file> [<node> <property>]...
+>> Options:
+>> =A0 =A0 =A0 -t [<type>][<format>] =A0 Type of data
+>> =A0 =A0 =A0 -h =A0 =A0 =A0 =A0 =A0 =A0 =A0Print this help
+>>
+>> =A0 =A0 =A0 <type> =A0 =A0 =A0 =A0 =A0One character (s=3Dstring, i=3Dint=
+, u=3Dunsigned, b=3Dbyte)
+>> =A0 =A0 =A0 <format> =A0 =A0 =A0 =A0Optional format character (x=3Dhex)
 >
-> Arbitrary limits, yuck.
+> It is not terribly clear how these are combined.
 
-There is no arbitrary limit here - it is just the number of bytes read
-initially.
+A type character, then an optional format character. In fact the type
+character is also optional at present since integer is assumed.
+
+Please can you suggest a suitable help message to convey this?
 
 >
->> + =A0 =A0 } else {
->> + =A0 =A0 =A0 =A0 =A0 =A0 fp =3D fopen(filename, "rb");
->> + =A0 =A0 =A0 =A0 =A0 =A0 if (fp =3D=3D NULL) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fprintf(stderr, "unable to ope=
-n '%s'\n", filename);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
->> + =A0 =A0 =A0 =A0 =A0 =A0 }
->> + =A0 =A0 =A0 =A0 =A0 =A0 if (fstat(fileno(fp), &stat_buf)) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 fprintf(stderr, "couldn't get =
-size of file\n");
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
->
-> stdin is not the only possibility for something that's not stat()able.
->
-> You shouldn't use stat() at all to get the size, but either just
-> read() until EOF, or read the header first and use the size in there.
->
-> Wait.. I already wrote this function.. look at load_blob() in
-> tests/testutils.c. =A0Why don't you give it a cleaner name, rather than
-> rewriting it badly.
+> Is there any way to make these more closely resemble printf() style
+> format specifiers?
 
-Thanks for the pointer to the existing code. It looks very similar
-except for my use of stat and its use of xmalloc() and CONFIG. Also I
-note that it uses open() rather than fopen(). I will need to move it
-to the library and change it a bit.
+The first patch series allowed printf specifiers but could segfault if
+the user specified %s for something that was in fact not a string. I
+have moved away from that as you suggested at the time. I am not keen
+to re-implement printf(), or manually decode a partial subset of
+printf strings, to avoid that problem. So something simple like this
+is what I have come up with.
 
-It uses this macro to display errors:
+We need to encode the data size in there also - byte or integer - so
+it is not quite the same as what printf is trying to do. While
+printf() has %c I don't think it is a good idea to use that, since we
+are printing a byte as a number, not an ASCII character.
 
-#define CONFIG(fmt, ...)				\
-	do {						\
-		cleanup();				\
-		printf("Bad configuration: " fmt "\n", ##__VA_ARGS__);	\
-		exit(RC_CONFIG);			\
-	} while (0)
+But it is fairly close to printf, in that you can use:
 
-Given that I am trying to write a general utility function I would
-prefer not to bomb out in a low-level function, but to return an error
-result.
+-ts
+-tx
+-ti
+-tu
+-tix
+-tbx
 
-So are you ok with the error message bring different in this case (not
-printing 'Bad configuration' before the error, and going out on
-stderr)? Then I can make all the test code call this function in
-libfdt.
+We could combine -tbx into a single letter somehow but I'm not sure I
+like that idea.
 
-[snip]
-> [snip]
->> +/**
->> + * Decode a data type string.
->> + *
->> + * The string consists of:
->> + * =A0 One optional character (s=3Dstring, i=3Dint, u=3Dunsigned b=3Dby=
-te)
->> + * =A0 Optional format character (x=3Dhex)
->> + *
->> + * If either of type or format is not found, then that variable is not
->> + * updated, and the caller's default will be used.
->
-> Yes, but what does the function actually *do*?
+I don't see any point in requiring a % since then users would expect
+to be able to provide an arbitrary printf() string (see first patch
+set).
 
-I don't follow - are you asking that I make it more specific like
-"Decode a data type string as used by fdtget and fdtput to specify the
-data type format to use for property values"?
+So, suggestions please.
 
 Regards,
 Simon
 
+>
+>>
+>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> - Separate arguments for node and property
+>> - Merge two related commits into this one
+>> - Use structure for storing display options
+>> - Remove use of getopt_long()
+>>
+>> =A0.gitignore =A0 =A0 =A0| =A0 =A01 +
+>> =A0Makefile =A0 =A0 =A0 =A0| =A0 =A04 +
+>> =A0Makefile.fdtget | =A0 12 +++
+>> =A0fdtget.c =A0 =A0 =A0 =A0| =A0200 ++++++++++++++++++++++++++++++++++++=
++++++++++++++++++++
+>> =A04 files changed, 217 insertions(+), 0 deletions(-)
+>> =A0create mode 100644 Makefile.fdtget
+>> =A0create mode 100644 fdtget.c
+>>
+[snip]
 >
 > --
 > David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
