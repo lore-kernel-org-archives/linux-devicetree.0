@@ -1,18 +1,16 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] input: samsung-keypad: Add HAVE_SAMSUNG_KEYPAD
-	config option
-Date: Thu, 8 Sep 2011 09:33:22 -0700
-Message-ID: <20110908163322.GB17503@core.coreip.homeip.net>
-References: <1315317317-21873-1-git-send-email-thomas.abraham@linaro.org>
-	<1315317317-21873-2-git-send-email-thomas.abraham@linaro.org>
-	<20110907182248.GA2874@core.coreip.homeip.net>
-	<CAJuYYwQg8pMaM7Y-AQD5eDqw32rMOHggL2gWOtJH_ri8gsH-yg@mail.gmail.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Appended devicetree with Torvalds' HEAD
+Date: Thu, 8 Sep 2011 12:35:10 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1109080927010.20358@xanadu.home>
+References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
+	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
+	<CACRpkdZFT6+FNxupNT0xZN4ZvEx1rNF3=xiSo-0H4hOZwj4Ygg@mail.gmail.com>
+	<CACRpkdZDxwkr4ybf6jWAAMpKd3MWfdi-p6uWR2tBx=h_=vkd1w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJuYYwQg8pMaM7Y-AQD5eDqw32rMOHggL2gWOtJH_ri8gsH-yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CACRpkdZDxwkr4ybf6jWAAMpKd3MWfdi-p6uWR2tBx=h_=vkd1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,52 +20,44 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2011 at 09:16:46AM +0530, Thomas Abraham wrote:
-> Hi Dmitry,
-> 
-> On 7 September 2011 23:52, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi Thomas,
+On Thu, 8 Sep 2011, Linus Walleij wrote:
+
+> On Tue, Sep 6, 2011 at 9:24 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, Sep 6, 2011 at 7:52 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 > >
-> > On Tue, Sep 06, 2011 at 07:25:16PM +0530, Thomas Abraham wrote:
-> >> Samsung keyboard driver could be used with platforms using device tree.
-> >> So the inclusion of samsung keyboard driver cannot be based on
-> >> SAMSUNG_DEV_KEYPAD. A new config option HAVE_SAMSUNG_KEYPAD is added
-> >> which device tree based platforms should use to include samsung keyboard
-> >> driver.
+> >> They sure do, (or so I hope).
+> >> My latest patchset is here:
 > >
-> > I am sorry, I do not follow... What is the difference between
-> > SAMSUNG_DEV_KEYPAD and HAVE_SAMSUNG_KEYPAD? They look exactly the same.
+> > OK I have cloned your git and already made some minor adjustments,
+> > will return with more details when/if I get this going.
 > 
-> The inclusion of platform device instance for keypad (in
-> arch/arm/plat-samsung/dev-keypad.c) in the build depends on
-> SAMSUNG_DEV_KEYPAD. The samsung-keypad driver is also dependent on
-> SAMSUNG_DEV_KEYPAD.
+> Hm it doesn't boot, if I configure out the DT support it
+> works fine. (On v3.1-rc4 and ux500) How typical :-/
 > 
-> In case of device tree based instantiation of keypad, compilation of
-> dev-keypad.c file is not required. So SAMSUNG_DEV_KEYPAD config option
-> will not be selected.In that case, the compilation of the keypad
-> driver cannot be dependent on SAMSUNG_DEV_KEYPAD. There should be
-> another option to select the keypad driver and so HAVE_SAMSUNG_KEYPAD
-> was introduced. HAVE_SAMSUNG_KEYPAD can be selected on platforms that
-> need the samsung-keypad driver but do no need the keypad platform
-> device.
+> I tried to regression-test it on a legacy system but then
+> I ran into a problem that may be serious: that platform does
+> not use a compressed zImage, it users the plain vmlinux
+> converted to binary with objcopy.
+> 
+> Is there a particular reason why we want to append the
+> device tree to the zImage rather than to vmlinux?
 
-I still think that it is an extra option... What about the following
-dependencies:
+Absolutely.
 
-	depends on SAMSUNG_DEV_KEYPAD || OF
-	depends on HAVE_CLK
+The ultimate goal of DT is to separate the board configuration data from 
+the kernel image.  This is why we expect all bootloaders to provide this 
+DTB eventually, so that the kernel could be upgraded at will, and even 
+booted on future boards unchanged.
 
-although I think we should relax dependencies like I did in my other
-patch. This will extend compile coverage of the driver and lessen the
-chances that API changes will cause unintended breakage because noone
-but Samsung platform users compile it.
+So this ability to simply append the DTB to a zImage is just a 
+convenience to accommodate legacy bootloaders.  It should _not_ become 
+the primary way of providing a DTB to the kernel.  At least by appending 
+it to zImage it can be done independently from the kernel build process 
+and performed right before the kernel is stored on the boot media.
 
-Thanks.
 
--- 
-Dmitry
+Nicolas
