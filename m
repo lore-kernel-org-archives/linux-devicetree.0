@@ -1,53 +1,45 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dtc: Support character literals in bytestrings
-Date: Thu, 8 Sep 2011 00:07:16 -0700
-Message-ID: <20110908070716.GC15955@ponder.secretlab.ca>
-References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
-	<1315437340-1661-4-git-send-email-robotboy@chromium.org>
-	<20110908035149.GO30278@yookeroo.fritz.box>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [RFC PATCH 06/10] hwspinlock: OMAP4: Add spinlock support in DT
+Date: Thu, 8 Sep 2011 10:56:17 +0300
+Message-ID: <CAK=WgbYgatyLWqmrZnUfSGxCkZsRiJ3sbQwmenxyiJ6JBw5vJA@mail.gmail.com>
+References: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
+ <1314191356-10963-7-git-send-email-b-cousson@ti.com> <CAK=WgbYX50R_MCgwdzywgrAEDJkmDSmeSSCuuqst5UBYk_sYow@mail.gmail.com>
+ <4E686B71.2060107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110908035149.GO30278-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4E686B71.2060107@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hilman, Kevin" <khilman@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>, Arnd Bergmann <arnd@arndb.de>, Mathieu Poirier <mathieu.poirier@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2011 at 01:51:49PM +1000, David Gibson wrote:
-> On Wed, Sep 07, 2011 at 04:15:40PM -0700, Anton Staaf wrote:
-> > With this patch the following property assignment:
-> > 
-> >     property = ['a' 2b '\r'];
-> > 
-> > is equivalent to:
-> > 
-> >     property = [61 2b 0d];
-> 
-> So, I still have some reservations about this syntax.
-> 
-> It occurred to me: do you actually need to intermix character and
-> hexbyte values that much?  Could I suggest an alternate sytax as:
-> 
-> 	property = 'a', [2b], 'r';
-> 
-> The new character literals sufficiently distinct not to cause problems
-> here, and it maintains the , == bytestring append behaviour we already
-> have.
-> 
-> Thoughts?
+Hi Benoit,
 
-Does it matter much?  I'm happy with either.  Is there a downside to
-the first syntax?
+On Thu, Sep 8, 2011 at 10:14 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
+> Hehe, I'm not the one who wrote that driver :-)
+>
+> This is not wrong for the current HW. The point is do we want to anticipate
+> potential HW evolution that might never happen on that IP?
 
-g.
+I originally really thought we can ignore those cases (hence the 0
+base id ;), and personally I still think the scenario is a bit
+fictional, and wouldn't even mind just having omap_hwspinlock_probe()
+return an error if it is unexpectedly probed with a second device.
+
+But if fixing this entirely only means doing a small change, then it's
+surely nicer.
+
+> This is no different than the multiple GPIO controllers we have today.
+> Since we cannot rely on the DT nodes order, I added an explicit "id"
+> attribute to provide that information to the driver. And then the baseid is
+> "id * #gpios".
+
+That would work if #hwspinlock is a fixed number, but a "baseid"
+attribute would allow supporting devices with different #hwspinlocks
+per device. Since I am not aware of any real hardware that does this
+kind of blasphemy, I can't say if the latter is really necessary :) If
+you prefer the former, I'm entirely fine with it.
+
+Thanks,
+Ohad.
