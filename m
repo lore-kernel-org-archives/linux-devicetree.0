@@ -1,69 +1,47 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2] i2c: Add Device Tree support to versatile-i2c driver
-Date: Thu,  8 Sep 2011 10:43:39 +0100
-Message-ID: <1315475019-10088-1-git-send-email-pawel.moll@arm.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Appended devicetree with Torvalds' HEAD
+Date: Thu, 8 Sep 2011 11:52:56 +0200
+Message-ID: <CACRpkdZDxwkr4ybf6jWAAMpKd3MWfdi-p6uWR2tBx=h_=vkd1w@mail.gmail.com>
+References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
+	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
+	<CACRpkdZFT6+FNxupNT0xZN4ZvEx1rNF3=xiSo-0H4hOZwj4Ygg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdZFT6+FNxupNT0xZN4ZvEx1rNF3=xiSo-0H4hOZwj4Ygg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Device Tree binding ("arm,versatile-i2c") and
-basic support (bus population) to versatile-i2c driver.
+On Tue, Sep 6, 2011 at 9:24 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Sep 6, 2011 at 7:52 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> They sure do, (or so I hope).
+>> My latest patchset is here:
+>
+> OK I have cloned your git and already made some minor adjustments,
+> will return with more details when/if I get this going.
 
-Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
----
- drivers/i2c/busses/i2c-versatile.c |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+Hm it doesn't boot, if I configure out the DT support it
+works fine. (On v3.1-rc4 and ux500) How typical :-/
 
-diff --git a/drivers/i2c/busses/i2c-versatile.c b/drivers/i2c/busses/i2c-versatile.c
-index 6055601..7bfdf40 100644
---- a/drivers/i2c/busses/i2c-versatile.c
-+++ b/drivers/i2c/busses/i2c-versatile.c
-@@ -16,6 +16,7 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/io.h>
-+#include <linux/of_i2c.h>
- 
- #define I2C_CONTROL	0x00
- #define I2C_CONTROLS	0x00
-@@ -99,6 +100,7 @@ static int i2c_versatile_probe(struct platform_device *dev)
- 	strlcpy(i2c->adap.name, "Versatile I2C adapter", sizeof(i2c->adap.name));
- 	i2c->adap.algo_data = &i2c->algo;
- 	i2c->adap.dev.parent = &dev->dev;
-+	i2c->adap.dev.of_node = dev->dev.of_node;
- 	i2c->algo = i2c_versatile_algo;
- 	i2c->algo.data = i2c;
- 
-@@ -111,6 +113,7 @@ static int i2c_versatile_probe(struct platform_device *dev)
- 		ret = i2c_bit_add_bus(&i2c->adap);
- 	if (ret >= 0) {
- 		platform_set_drvdata(dev, i2c);
-+		of_i2c_register_devices(&i2c->adap);
- 		return 0;
- 	}
- 
-@@ -133,12 +136,19 @@ static int i2c_versatile_remove(struct platform_device *dev)
- 	return 0;
- }
- 
-+static struct of_device_id i2c_versatile_match[] = {
-+	{ .compatible = "arm,versatile-i2c", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, i2c_versatile_match);
-+
- static struct platform_driver i2c_versatile_driver = {
- 	.probe		= i2c_versatile_probe,
- 	.remove		= i2c_versatile_remove,
- 	.driver		= {
- 		.name	= "versatile-i2c",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = i2c_versatile_match,
- 	},
- };
- 
--- 
-1.6.3.3
+I tried to regression-test it on a legacy system but then
+I ran into a problem that may be serious: that platform does
+not use a compressed zImage, it users the plain vmlinux
+converted to binary with objcopy.
+
+Is there a particular reason why we want to append the
+device tree to the zImage rather than to vmlinux?
+
+Yours,
+Linus Walleij
