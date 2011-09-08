@@ -1,52 +1,78 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 06/10] hwspinlock: OMAP4: Add spinlock support in DT
-Date: Thu, 8 Sep 2011 16:47:55 +0200
-Message-ID: <201109081647.55377.arnd@arndb.de>
-References: <1314191356-10963-1-git-send-email-b-cousson@ti.com> <4E6877A9.3090104@ti.com> <CAK=WgbbN-RYj2quMQOyYbEBBfV3gty4dOE7DgjvsRcoYO=F3kw@mail.gmail.com>
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH v3] net/smsc911x: add device tree probe support
+Date: Thu, 8 Sep 2011 15:59:46 +0100
+Message-ID: <20110908145946.GE2070@arm.com>
+References: <1311587040-8988-1-git-send-email-shawn.guo@linaro.org>
+ <1312050360-15767-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAK=WgbbN-RYj2quMQOyYbEBBfV3gty4dOE7DgjvsRcoYO=F3kw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hilman, Kevin" <khilman@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>, Mathieu Poirier <mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1312050360-15767-1-git-send-email-shawn.guo@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: netdev@vger.kernel.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Steve Glendinning <steve.glendinning@smsc.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 September 2011, Ohad Ben-Cohen wrote:
-> On Thu, Sep 8, 2011 at 11:07 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
-> > The (small) issue for my point of view is that the #hwspinlock is already
-> > encoded in the IP itself. So adding a baseid directly in DT will look like
-> > duplicating indirectly something that is already there in the HW.
-> > That being said, since we cannot rely on the order, we will not be able to
-> > get the proper baseid until the driver probe every hwspinlock devices :-(
-> > So baseid might be a easier choice.
+Hi Shawn,
+
+On Sun, Jul 31, 2011 at 02:26:00AM +0800, Shawn Guo wrote:
+> It adds device tree probe support for smsc911x driver.
 > 
-> Sounds good. Thanks a lot !
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Steve Glendinning <steve.glendinning@smsc.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+> Changes since v2:
+>  * Fix a typo in smsc911x.txt
+> 
+> Changes since v1:
+>  * Instead of getting irq line from gpio number, it use irq domain
+>    to keep platform_get_resource(IORESOURCE_IRQ) works for dt too.
+>  * Use 'lan9115' the first model that smsc911x supports in the match
+>    table
+>  * Use reg-shift and reg-io-width which already used in of_serial for
+>    shift and access size binding
 
-I think a number would work here but is not optimal for the device tree
-representation. I think a better binding would be to encode it like
-interrupt numbers, where every device that uses a hwspinlock will describe
-that as a combination of phandle to the hwspinlock controller and
-identifier to be used by that controller, e.g.
+When using this patch with vexpress, I found that 16-bit register access
+mode doesn't seem to be getting set correctly.
 
-	spinlock1 {
-		compatible = "ti,omap-spinlock";
-		regs = ...
-		interrupts = <42>;
-		interrupt-parent = &irq-controller;
-	};
+Can you take a look at this additional patch and let me know if it looks
+correct?
 
-	dsp {
-		compatible = ...
-		regs = ...
-		spinlocks = <23>; // local number withing &spinlock1;
-		spinlock-controller = &spinlock1;
-	};
+Cheers
+---Dave
 
-or possibly shorter
+From: Dave Martin <dave.martin@linaro.org>
+Date: Wed, 7 Sep 2011 17:26:31 +0100
+Subject: [PATCH] net/smsc911x: Correctly configure 16-bit register access from DT
 
-		spinlocks = <&spinlock1 23>;
+The SMSC911X_USE_16BIT needs to be set when using 16-bit register
+access.  However, currently no flag is set if the DT doesn't specify
+32-bit access.
 
-	Arnd
+This patch should set the SMSC911X_USE_16BIT flag in a manner consistent
+with the documented DT bindings.
+
+Signed-off-by: Dave Martin <dave.martin@linaro.org>
+---
+ drivers/net/smsc911x.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/net/smsc911x.c b/drivers/net/smsc911x.c
+index 75c08a5..1a35c25 100644
+--- a/drivers/net/smsc911x.c
++++ b/drivers/net/smsc911x.c
+@@ -2121,6 +2121,8 @@ static int __devinit smsc911x_probe_config_dt(
+ 	of_property_read_u32(np, "reg-io-width", &width);
+ 	if (width == 4)
+ 		config->flags |= SMSC911X_USE_32BIT;
++	else
++		config->flags |= SMSC911X_USE_16BIT;
+ 
+ 	if (of_get_property(np, "smsc,irq-active-high", NULL))
+ 		config->irq_polarity = SMSC911X_IRQ_POLARITY_ACTIVE_HIGH;
+-- 
+1.7.4.1
