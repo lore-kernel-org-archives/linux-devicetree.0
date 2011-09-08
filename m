@@ -1,47 +1,91 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Appended devicetree with Torvalds' HEAD
-Date: Thu, 8 Sep 2011 11:52:56 +0200
-Message-ID: <CACRpkdZDxwkr4ybf6jWAAMpKd3MWfdi-p6uWR2tBx=h_=vkd1w@mail.gmail.com>
-References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
-	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
-	<CACRpkdZFT6+FNxupNT0xZN4ZvEx1rNF3=xiSo-0H4hOZwj4Ygg@mail.gmail.com>
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH] ARM: supply a DTB file to be appended
+Date: Thu, 8 Sep 2011 12:14:44 +0200
+Message-ID: <1315476884-28470-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdZFT6+FNxupNT0xZN4ZvEx1rNF3=xiSo-0H4hOZwj4Ygg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Niklas Hernaeus <niklas.hernaeus@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, David Brown <davidb@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 6, 2011 at 9:24 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Sep 6, 2011 at 7:52 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->> They sure do, (or so I hope).
->> My latest patchset is here:
->
-> OK I have cloned your git and already made some minor adjustments,
-> will return with more details when/if I get this going.
+From: Linus Walleij <linus.walleij@linaro.org>
 
-Hm it doesn't boot, if I configure out the DT support it
-works fine. (On v3.1-rc4 and ux500) How typical :-/
+This adds a Kconfig string where you can specify a
+file to be appended to the zImage on build, then
+auto-appends it. The idea is to mimic how we supply
+an initramfs image by a similar parameter.
 
-I tried to regression-test it on a legacy system but then
-I ran into a problem that may be serious: that platform does
-not use a compressed zImage, it users the plain vmlinux
-converted to binary with objcopy.
+This makes it easy to script the kernel build with
+different device trees, and it also vastly simplifies
+building uImages since "make uImage" will now pick
+up the devcie tree and include it in the final image
+as part of the build process.
 
-Is there a particular reason why we want to append the
-device tree to the zImage rather than to vmlinux?
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: David Brown <davidb@codeaurora.org>
+Cc: Niklas Hernaeus <niklas.hernaeus@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+This builds on top of Nicos pending appended device tree
+patches. Nico, if this gains some liking, please include
+it in your series.
+---
+ arch/arm/Kconfig       |   10 ++++++++++
+ arch/arm/boot/Makefile |    8 +++++++-
+ 2 files changed, 17 insertions(+), 1 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 4ea9974..cb8ee68 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1789,6 +1789,16 @@ config ARM_APPENDED_DTB
+ 	  (dtb) appended to zImage
+ 	  (e.g. cat zImage <filename>.dtb > zImage_w_dtb).
+ 
++config ARM_APPENDED_DTB_FILE
++	string "DTB file"
++	depends on ARM_APPENDED_DTB
++	default ""
++	help
++	  This gives the name of file from the build directory to append
++	  to the zImage after it has been built.
++
++	  If you are not sure, leave it blank.
++
+ config ARM_ATAG_DTB_COMPAT
+ 	bool "Supplement the appended DTB with traditional ATAG information"
+ 	depends on ARM_APPENDED_DTB
+diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
+index a1edfd5..5ab6abf 100644
+--- a/arch/arm/boot/Makefile
++++ b/arch/arm/boot/Makefile
+@@ -53,8 +53,14 @@ $(obj)/Image: vmlinux FORCE
+ $(obj)/compressed/vmlinux: $(obj)/Image FORCE
+ 	$(Q)$(MAKE) $(build)=$(obj)/compressed $@
+ 
+-$(obj)/zImage:	$(obj)/compressed/vmlinux FORCE
++# Rule to optionally append a DTB
++dtbfile := $(shell echo $(CONFIG_ARM_APPENDED_DTB_FILE))
++quiet_cmd_append = CAT     $@
++      cmd_append = (cat /dev/null $(dtbfile) >> $@)
++
++$(obj)/zImage:	$(obj)/compressed/vmlinux $(dtbfile) FORCE
+ 	$(call if_changed,objcopy)
++	$(call if_changed,append)
+ 	@echo '  Kernel: $@ is ready'
+ 
+ endif
+-- 
+1.7.3.2
