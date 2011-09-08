@@ -1,273 +1,103 @@
-From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 1/3] dtc: Refactor character literal parsing code
-Date: Wed,  7 Sep 2011 16:15:38 -0700
-Message-ID: <1315437340-1661-2-git-send-email-robotboy@chromium.org>
-References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 1/2] input: samsung-keypad: Add HAVE_SAMSUNG_KEYPAD config
+	option
+Date: Thu, 8 Sep 2011 09:16:46 +0530
+Message-ID: <CAJuYYwQg8pMaM7Y-AQD5eDqw32rMOHggL2gWOtJH_ri8gsH-yg@mail.gmail.com>
+References: <1315317317-21873-1-git-send-email-thomas.abraham@linaro.org>
+	<1315317317-21873-2-git-send-email-thomas.abraham@linaro.org>
+	<20110907182248.GA2874@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1315437340-1661-1-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110907182248.GA2874@core.coreip.homeip.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, devicetree-discuss@lists.ozlabs.org, dh09.lee@samsung.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Move the parsing of hex, octal and escaped characters from data.c
-to util.c where it can be used for character literal parsing within
-strings as well as for stand alone C style character literals.
+Hi Dmitry,
 
-Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
----
- data.c |   77 +-------------------------------------------------
- util.c |   99 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- util.h |   18 +++++++++++
- 3 files changed, 118 insertions(+), 76 deletions(-)
+On 7 September 2011 23:52, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrot=
+e:
+> Hi Thomas,
+>
+> On Tue, Sep 06, 2011 at 07:25:16PM +0530, Thomas Abraham wrote:
+>> Samsung keyboard driver could be used with platforms using device tree.
+>> So the inclusion of samsung keyboard driver cannot be based on
+>> SAMSUNG_DEV_KEYPAD. A new config option HAVE_SAMSUNG_KEYPAD is added
+>> which device tree based platforms should use to include samsung keyboard
+>> driver.
+>
+> I am sorry, I do not follow... What is the difference between
+> SAMSUNG_DEV_KEYPAD and HAVE_SAMSUNG_KEYPAD? They look exactly the same.
 
-diff --git a/data.c b/data.c
-index fe555e8..471f6c3 100644
---- a/data.c
-+++ b/data.c
-@@ -68,40 +68,6 @@ struct data data_copy_mem(const char *mem, int len)
- 	return d;
- }
- 
--static char get_oct_char(const char *s, int *i)
--{
--	char x[4];
--	char *endx;
--	long val;
--
--	x[3] = '\0';
--	strncpy(x, s + *i, 3);
--
--	val = strtol(x, &endx, 8);
--
--	assert(endx > x);
--
--	(*i) += endx - x;
--	return val;
--}
--
--static char get_hex_char(const char *s, int *i)
--{
--	char x[3];
--	char *endx;
--	long val;
--
--	x[2] = '\0';
--	strncpy(x, s + *i, 2);
--
--	val = strtol(x, &endx, 16);
--	if (!(endx  > x))
--		die("\\x used with no following hex digits\n");
--
--	(*i) += endx - x;
--	return val;
--}
--
- struct data data_copy_escape_string(const char *s, int len)
- {
- 	int i = 0;
-@@ -119,48 +85,7 @@ struct data data_copy_escape_string(const char *s, int len)
- 			continue;
- 		}
- 
--		c = s[i++];
--		assert(c);
--		switch (c) {
--		case 'a':
--			q[d.len++] = '\a';
--			break;
--		case 'b':
--			q[d.len++] = '\b';
--			break;
--		case 't':
--			q[d.len++] = '\t';
--			break;
--		case 'n':
--			q[d.len++] = '\n';
--			break;
--		case 'v':
--			q[d.len++] = '\v';
--			break;
--		case 'f':
--			q[d.len++] = '\f';
--			break;
--		case 'r':
--			q[d.len++] = '\r';
--			break;
--		case '0':
--		case '1':
--		case '2':
--		case '3':
--		case '4':
--		case '5':
--		case '6':
--		case '7':
--			i--; /* need to re-read the first digit as
--			      * part of the octal value */
--			q[d.len++] = get_oct_char(s, &i);
--			break;
--		case 'x':
--			q[d.len++] = get_hex_char(s, &i);
--			break;
--		default:
--			q[d.len++] = c;
--		}
-+                q[d.len++] = get_escape_char(s, &i);
- 	}
- 
- 	q[d.len++] = '\0';
-diff --git a/util.c b/util.c
-index 994436f..b39392c 100644
---- a/util.c
-+++ b/util.c
-@@ -25,6 +25,7 @@
- #include <stdlib.h>
- #include <stdarg.h>
- #include <string.h>
-+#include <assert.h>
- 
- #include "util.h"
- 
-@@ -85,3 +86,101 @@ int util_is_printable_string(const void *data, int len)
- 
- 	return 1;
- }
-+
-+char get_oct_char(const char *s, int *i)
-+{
-+	char x[4];
-+	char *endx;
-+	long val;
-+
-+	x[3] = '\0';
-+	strncpy(x, s + *i, 3);
-+
-+	val = strtol(x, &endx, 8);
-+
-+	assert(endx > x);
-+
-+	(*i) += endx - x;
-+	return val;
-+}
-+
-+char get_hex_char(const char *s, int *i)
-+{
-+	char x[3];
-+	char *endx;
-+	long val;
-+
-+	x[2] = '\0';
-+	strncpy(x, s + *i, 2);
-+
-+	val = strtol(x, &endx, 16);
-+	if (!(endx  > x))
-+		die("\\x used with no following hex digits\n");
-+
-+	(*i) += endx - x;
-+	return val;
-+}
-+
-+char get_escape_char(const char *s, int *i)
-+{
-+	char	c = s[*i];
-+	int	j = *i + 1;
-+	char	val;
-+
-+	assert(c);
-+	switch (c) {
-+	case 'a':
-+		val = '\a';
-+		break;
-+	case 'b':
-+		val = '\b';
-+		break;
-+	case 't':
-+		val = '\t';
-+		break;
-+	case 'n':
-+		val = '\n';
-+		break;
-+	case 'v':
-+		val = '\v';
-+		break;
-+	case 'f':
-+		val = '\f';
-+		break;
-+	case 'r':
-+		val = '\r';
-+		break;
-+	case '0':
-+	case '1':
-+	case '2':
-+	case '3':
-+	case '4':
-+	case '5':
-+	case '6':
-+	case '7':
-+		j--; /* need to re-read the first digit as
-+		      * part of the octal value */
-+		val = get_oct_char(s, &j);
-+		break;
-+	case 'x':
-+		val = get_hex_char(s, &j);
-+		break;
-+	default:
-+		val = c;
-+	}
-+
-+	(*i) = j;
-+	return val;
-+}
-+
-+char get_escape_char_exact(const char *s, int len)
-+{
-+	int	j = 1; //skip intial "\"
-+	char	c = get_escape_char(s, &j);
-+
-+	if (j != len)
-+		die("Extra characters at end of character literal '%s' "
-+		    "(%d != %d)\n", s, j, len);
-+
-+	return c;
-+}
-diff --git a/util.h b/util.h
-index cc68933..4332b6e 100644
---- a/util.h
-+++ b/util.h
-@@ -64,4 +64,22 @@ extern char *join_path(const char *path, const char *name);
-  * @return 1 if a valid printable string, 0 if not */
- int util_is_printable_string(const void *data, int len);
- 
-+/*
-+ * Octal, Hex and escaped character parsing routines.  Each of these routines
-+ * will parse an encoded character starting at index i in string s.  The
-+ * resulting character will be returned and the index i will be updated to
-+ * point at the character directly after the end of the encoding, this may
-+ * be the '\0' terminator of the string.
-+ */
-+char get_oct_char(const char *s, int *i);
-+char get_hex_char(const char *s, int *i);
-+char get_escape_char(const char *s, int *i);
-+
-+/*
-+ * Parse an escaped character of exactly len characters starting at the
-+ * beginning of the passed string.  If the escape sequence is not exactly
-+ * len characters long we die.  Otherwise the parsed character is returned.
-+ */
-+char get_escape_char_exact(const char *s, int len);
-+
- #endif /* _UTIL_H */
--- 
-1.7.3.1
+The inclusion of platform device instance for keypad (in
+arch/arm/plat-samsung/dev-keypad.c) in the build depends on
+SAMSUNG_DEV_KEYPAD. The samsung-keypad driver is also dependent on
+SAMSUNG_DEV_KEYPAD.
+
+In case of device tree based instantiation of keypad, compilation of
+dev-keypad.c file is not required. So SAMSUNG_DEV_KEYPAD config option
+will not be selected.In that case, the compilation of the keypad
+driver cannot be dependent on SAMSUNG_DEV_KEYPAD. There should be
+another option to select the keypad driver and so HAVE_SAMSUNG_KEYPAD
+was introduced. HAVE_SAMSUNG_KEYPAD can be selected on platforms that
+need the samsung-keypad driver but do no need the keypad platform
+device.
+
+Thanks for your review and comments.
+
+Regards,
+Thomas.
+
+>
+> Thanks,
+>
+>>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>> =A0drivers/input/keyboard/Kconfig | =A0 =A09 ++++++++-
+>> =A01 files changed, 8 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kco=
+nfig
+>> index b4dee9d..370fb18 100644
+>> --- a/drivers/input/keyboard/Kconfig
+>> +++ b/drivers/input/keyboard/Kconfig
+>> @@ -423,9 +423,16 @@ config KEYBOARD_PMIC8XXX
+>> =A0 =A0 =A0 =A0 To compile this driver as a module, choose M here: the m=
+odule will
+>> =A0 =A0 =A0 =A0 be called pmic8xxx-keypad.
+>>
+>> +config HAVE_SAMSUNG_KEYPAD
+>> + =A0 =A0 bool
+>> + =A0 =A0 help
+>> + =A0 =A0 =A0 This will include Samsung Keypad controller driver support=
+. If you
+>> + =A0 =A0 =A0 want to include Samsung Keypad support for any machine, ki=
+ndly
+>> + =A0 =A0 =A0 select this in the respective mach-xxxx/Kconfig file.
+>> +
+>> =A0config KEYBOARD_SAMSUNG
+>> =A0 =A0 =A0 tristate "Samsung keypad support"
+>> - =A0 =A0 depends on SAMSUNG_DEV_KEYPAD
+>> + =A0 =A0 depends on SAMSUNG_DEV_KEYPAD || HAVE_SAMSUNG_KEYPAD
+>> =A0 =A0 =A0 help
+>> =A0 =A0 =A0 =A0 Say Y here if you want to use the Samsung keypad.
+>>
+>> --
+>> 1.6.6.rc2
+>>
+>
+> --
+> Dmitry
+>
