@@ -1,11 +1,13 @@
 From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 0/3] Support character literals
-Date: Fri,  9 Sep 2011 12:16:28 -0700
-Message-ID: <1315595791-25793-1-git-send-email-robotboy@chromium.org>
+Subject: [PATCH v4 3/3] dtc: Support character literals in bytestrings
+Date: Fri,  9 Sep 2011 12:16:31 -0700
+Message-ID: <1315595791-25793-4-git-send-email-robotboy@chromium.org>
+References: <1315595791-25793-1-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1315595791-25793-1-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,58 +17,96 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.orgdevicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-    These patches add simple and escaped character literal parsing support
-to the dtc for cell lists and bytestrings.  The first patch refactors the
-string parsing code in data.c to expose the more primitive character parsing
-code for use in the later patches.  I have left the bytestring support in
-place but my hope is that it is now separate enough to be discussed
-independantly of the refactor and cell list changes.
+With this patch the following property assignment:
 
-    Thanks,
-        Anton
+    property = ['a' 2b '\r'];
 
-Changes in v4:
-- Make character literal regex more permissive
-- Check for empty character literal in eval_char_literal
-- Allow lexing of character literals in all contexts
-- Remove special case lexing of character literals in bytestrings
+is equivalent to:
 
-Changes in v3:
-- Make octal and hex parsing code static to util.c
-- Add test cases for both cell lists and bytestings w/ character literals
-- Better error handling and simpler lexing
-- Removed changes to out of date manual.txt
-- Simplify use of get_escape_char in data_copy_escape_string
-- Remove get_escape_char_exact
+    property = [61 2b 0d];
 
-Changes in v2:
-- Move the refactor of data.c to a separate patch
-- Add support for character literals in cell lists
-- Merge normal and escaped literal support for bytestrings into single patch
+Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+ Documentation/dts-format.txt |    5 +++--
+ dtc-parser.y                 |    4 ++++
+ tests/char_literal.c         |    8 ++++++++
+ tests/char_literal.dts       |    1 +
+ 4 files changed, 16 insertions(+), 2 deletions(-)
 
-Anton Staaf (3):
-  dtc: Refactor character literal parsing code
-  dtc: Support character literals in cell lists
-  dtc: Support character literals in bytestrings
-
- Documentation/dts-format.txt |    7 ++-
- data.c                       |   85 ++----------------------------------
- dtc-lexer.l                  |    8 +++
- dtc-parser.y                 |   36 +++++++++++++++
- tests/.gitignore             |    1 +
- tests/Makefile.tests         |    1 +
- tests/char_literal.c         |   58 ++++++++++++++++++++++++
- tests/char_literal.dts       |    6 +++
- tests/run_tests.sh           |    3 +
- tests/testdata.h             |    6 +++
- util.c                       |   99 ++++++++++++++++++++++++++++++++++++++++++
- util.h                       |    8 +++
- 12 files changed, 234 insertions(+), 84 deletions(-)
- create mode 100644 tests/char_literal.c
- create mode 100644 tests/char_literal.dts
-
+diff --git a/Documentation/dts-format.txt b/Documentation/dts-format.txt
+index eae8b76..555bd89 100644
+--- a/Documentation/dts-format.txt
++++ b/Documentation/dts-format.txt
+@@ -48,11 +48,12 @@ NUL-terminated strings, as bytestrings or a combination of these.
+ 	e.g. compatible = "simple-bus";
+ 
+ * A bytestring is enclosed in square brackets [] with each byte
+-  represented by two hexadecimal digits.  Spaces between each byte are
+-  optional.
++  represented by two hexadecimal digits or a character literal.
++  Spaces between each byte or character literal are optional.
+ 
+ 	e.g. local-mac-address = [00 00 12 34 56 78]; or equivalently
+ 	     local-mac-address = [000012345678];
++	e.g. keymap = ['a' 'b' 'c' 'd'];
+ 
+ * Values may have several comma-separated components, which are
+   concatenated together.
+diff --git a/dtc-parser.y b/dtc-parser.y
+index 554f11a..bc05a24 100644
+--- a/dtc-parser.y
++++ b/dtc-parser.y
+@@ -286,6 +286,10 @@ bytestring:
+ 		{
+ 			$$ = data_add_marker($1, LABEL, $2);
+ 		}
++	| bytestring DT_CHAR_LITERAL
++		{
++			$$ = data_append_byte($1, eval_char_literal($2));
++		}
+ 	;
+ 
+ subnodes:
+diff --git a/tests/char_literal.c b/tests/char_literal.c
+index 150f2a0..c6e2405 100644
+--- a/tests/char_literal.c
++++ b/tests/char_literal.c
+@@ -33,6 +33,11 @@ int main(int argc, char *argv[])
+ {
+ 	void *fdt;
+ 	uint32_t expected_cells[5];
++	uint8_t expected_bytes[5] = {TEST_CHAR1,
++				     TEST_CHAR2,
++				     TEST_CHAR3,
++				     TEST_CHAR4,
++				     TEST_CHAR5};
+ 
+ 	expected_cells[0] = cpu_to_fdt32((unsigned char)TEST_CHAR1);
+ 	expected_cells[1] = cpu_to_fdt32((unsigned char)TEST_CHAR2);
+@@ -46,5 +51,8 @@ int main(int argc, char *argv[])
+ 	check_getprop(fdt, 0, "char-literal-cells",
+ 		      sizeof(expected_cells), expected_cells);
+ 
++	check_getprop(fdt, 0, "char-literal-bytes",
++		      sizeof(expected_bytes), expected_bytes);
++
+ 	PASS();
+ }
+diff --git a/tests/char_literal.dts b/tests/char_literal.dts
+index 22e17ed..9baba5c 100644
+--- a/tests/char_literal.dts
++++ b/tests/char_literal.dts
+@@ -2,4 +2,5 @@
+ 
+ / {
+ 	char-literal-cells = <'\r' 'b' '\0' '\'' '\xff'>;
++	char-literal-bytes = ['\r' 'b' '\0' '\'' '\xff'];
+ };
 -- 
 1.7.3.1
