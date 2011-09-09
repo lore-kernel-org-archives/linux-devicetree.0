@@ -1,73 +1,54 @@
-From: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] dtc: Support character literals in bytestrings
-Date: Fri, 9 Sep 2011 08:31:25 -0700
-Message-ID: <CAF6FioW_nbGzX-jOfJ9OuNfRhDsPptHdTZ0m97b-u7283aop7g@mail.gmail.com>
-References: <1315517957-3546-1-git-send-email-robotboy@chromium.org>
-	<1315517957-3546-4-git-send-email-robotboy@chromium.org>
-	<20110909011510.GA21002@yookeroo.fritz.box>
-	<CAF6FioWvY0=qJGKsu=i=8TB9FF34xeo966hwuEht+o+krYPKGQ@mail.gmail.com>
-	<20110909070118.GA9025@yookeroo.fritz.box>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
+ MPC5xxx PSC AC97 audio driver
+Date: Fri, 9 Sep 2011 17:37:14 +0100
+Message-ID: <20110909163714.GA4302@sirena.org.uk>
+References: <20110908121600.267dee07@archvile>
+	<CAKON4OzsMd0T6KyDK_5P_pz8R5Pax+Bd+f5+00cO5E0OMCYQpQ@mail.gmail.com>
+	<20110908124529.520c1388@archvile>
+	<CAKON4OwvYy6Dy-MfHT90syPyAUcTVRXqXca-qAVjk-KWkak53A@mail.gmail.com>
+	<20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
+	<20110909082844.3dbf0e72@archvile>
+	<20110909120216.263eeb54@archvile>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110909070118.GA9025-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20110909120216.263eeb54@archvile>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: David Jander <david.jander@protonic.nl>
+Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 9, 2011 at 12:01 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Thu, Sep 08, 2011 at 11:37:21PM -0700, Anton Staaf wrote:
->> On Thu, Sep 8, 2011 at 6:15 PM, David Gibson
->> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> > On Thu, Sep 08, 2011 at 02:39:17PM -0700, Anton Staaf wrote:
->> >> With this patch the following property assignment:
->> >>
->> >> =A0 =A0 property =3D ['a' 2b '\r'];
->> >>
->> >> is equivalent to:
->> >>
->> >> =A0 =A0 property =3D [61 2b 0d];
->> >
->> > [snip]
->> >> +<BYTESTRING>{CHAR_LITERAL} {
->> >
->> > You should just be able to make the existing rule a <*> one,
->> > rather than having a separate rule for BYTESTRING context.
->>
->> I thought about that too, but I was concerned that it would then allow
->> character literals in properties outside of the cell list or
->> bytestring syntax. =A0Which I suppose is exactly what you had suggested
->> before now that I think about it. =A0And would end up being no more
->> ambiguous, and possibly more internally consistent. =A0I'll make the
->> change and add a test case that shows that functionality as well if
->> that makes sense to you.
->
-> Well, it would allow character literals to be *lexed* in other places,
-> but the parser would still reject them outside of the (so far)
-> intended contexts without further changes.
+On Fri, Sep 09, 2011 at 12:02:16PM +0200, David Jander wrote:
 
-True, and it simplifies the lexer.  OK, I'll make that change as well.
+> Ok, I actually spent a while thinking about this. What about the following
+> idea:
 
-Thanks,
-    Anton
+*Always* CC maintainers.
 
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
+> 1: By adding compatible = "alsa,cpu-dai", this DAI is marked for binding.
+
+This isn't really something that should go into device tree, ALSA is a
+Linux specific concept.
+
+> 3: Many ac97 codecs are compatible with the generic codec driver "ac97-codec".
+
+All should be.  The only reason for specific drivers is to enable
+additional non-standard functionality.
+
+> 4: Don't know if this is the right way to work the codec DAI name in. See the
+> next note:
+
+What we should really be doing here is to autodiscover by reading the ID
+registers in the device.  That needs generic AC'97 bus work which we
+don't have right now.
