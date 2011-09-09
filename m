@@ -1,92 +1,126 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: Re: [PATCH v3] net/smsc911x: add device tree probe support
-Date: Fri, 9 Sep 2011 09:50:30 +0100
-Message-ID: <20110909085030.GA3069@arm.com>
-References: <1311587040-8988-1-git-send-email-shawn.guo@linaro.org>
- <1312050360-15767-1-git-send-email-shawn.guo@linaro.org>
- <20110908145946.GE2070@arm.com>
- <20110908182920.GL2967@ponder.secretlab.ca>
+From: David Jander <david.jander@protonic.nl>
+Subject: ASoC audio fabric OF bindings RFC. was: Re: ASoC
+ MPC5xxx PSC AC97 audio driver
+Date: Fri, 9 Sep 2011 12:02:16 +0200
+Message-ID: <20110909120216.263eeb54@archvile>
+References: <20110908121600.267dee07@archvile>
+	<CAKON4OzsMd0T6KyDK_5P_pz8R5Pax+Bd+f5+00cO5E0OMCYQpQ@mail.gmail.com>
+	<20110908124529.520c1388@archvile>
+	<CAKON4OwvYy6Dy-MfHT90syPyAUcTVRXqXca-qAVjk-KWkak53A@mail.gmail.com>
+	<20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
+	<20110909082844.3dbf0e72@archvile>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110908182920.GL2967@ponder.secretlab.ca>
-Sender: netdev-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Shawn Guo <shawn.guo@linaro.org>, netdev@vger.kernel.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Steve Glendinning <steve.glendinning@smsc.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20110909082844.3dbf0e72@archvile>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: torbenh <torbenh@gmx.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2011 at 11:29:20AM -0700, Grant Likely wrote:
-> On Thu, Sep 08, 2011 at 03:59:46PM +0100, Dave Martin wrote:
-> > Hi Shawn,
-> > 
-> > On Sun, Jul 31, 2011 at 02:26:00AM +0800, Shawn Guo wrote:
-> > > It adds device tree probe support for smsc911x driver.
-> > > 
-> > > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > > Cc: Steve Glendinning <steve.glendinning@smsc.com>
-> > > Cc: David S. Miller <davem@davemloft.net>
-> > > Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
-> > > ---
-> > > Changes since v2:
-> > >  * Fix a typo in smsc911x.txt
-> > > 
-> > > Changes since v1:
-> > >  * Instead of getting irq line from gpio number, it use irq domain
-> > >    to keep platform_get_resource(IORESOURCE_IRQ) works for dt too.
-> > >  * Use 'lan9115' the first model that smsc911x supports in the match
-> > >    table
-> > >  * Use reg-shift and reg-io-width which already used in of_serial for
-> > >    shift and access size binding
-> > 
-> > When using this patch with vexpress, I found that 16-bit register access
-> > mode doesn't seem to be getting set correctly.
-> > 
-> > Can you take a look at this additional patch and let me know if it looks
-> > correct?
-> > 
-> > Cheers
-> > ---Dave
-> > 
-> > From: Dave Martin <dave.martin@linaro.org>
-> > Date: Wed, 7 Sep 2011 17:26:31 +0100
-> > Subject: [PATCH] net/smsc911x: Correctly configure 16-bit register access from DT
-> > 
-> > The SMSC911X_USE_16BIT needs to be set when using 16-bit register
-> > access.  However, currently no flag is set if the DT doesn't specify
-> > 32-bit access.
-> > 
-> > This patch should set the SMSC911X_USE_16BIT flag in a manner consistent
-> > with the documented DT bindings.
-> > 
-> > Signed-off-by: Dave Martin <dave.martin@linaro.org>
-> > ---
-> >  drivers/net/smsc911x.c |    2 ++
-> >  1 files changed, 2 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/drivers/net/smsc911x.c b/drivers/net/smsc911x.c
-> > index 75c08a5..1a35c25 100644
-> > --- a/drivers/net/smsc911x.c
-> > +++ b/drivers/net/smsc911x.c
-> > @@ -2121,6 +2121,8 @@ static int __devinit smsc911x_probe_config_dt(
-> >  	of_property_read_u32(np, "reg-io-width", &width);
-> >  	if (width == 4)
-> >  		config->flags |= SMSC911X_USE_32BIT;
-> > +	else
-> > +		config->flags |= SMSC911X_USE_16BIT;
+On Fri, 9 Sep 2011 08:28:44 +0200
+David Jander <david.jander@protonic.nl> wrote:
+
+>[...]
+> > i am also interested in a proper fabric example.
 > 
-> Would it be better to do "else if (width == 2)"?  (completely
-> uninformed comment.  I've not looked at what the non-DT probe path
-> does on this driver.)
+> What do you think about creating device-tree bindings for that? I tend to
+> like the idea of not needing any special board support code besides the DT,
+> and the audio fabric driver part is the only obstacle for that.
 
-I wouldn't have a problem with that.  But currently the binding
-documentation says that any value other than 4, or a missing property,
-implies 16-bit register access.
+Ok, I actually spent a while thinking about this. What about the following
+idea:
 
-So the binding documentation would need to change too in that case.
+Given the following devicetree:
 
-Personally I think this would be better, but it's just an opinion.
+		...
+		// PSC11 in ac97 mode
+		ac97@11b00 {
+/* 1 */			compatible = "fsl,mpc5121-psc-ac97", "fsl,mpc5121-psc", "alsa,cpu-dai";
+			cell-index = <11>;
+			reg = <0x11b00 0x100>;
+			interrupts = <40 0x8>;
+			fsl,mode = "ac97-slave";
+			fsl,rx-fifo-size = <384>;
+			fsl,tx-fifo-size = <384>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+/* 2 */			codec0: psc-ac97-analog@0 {
+/* 3 */				compatible = "national,lm4550", "ac97-codec";
+/* 4 */				alsa,codec-dai-name = "ac97-hifi";
+			};
+		};
 
-Cheers
----Dave
+Consider the following pseudo-code in sound/soc/soc-of.c:
+
+static struct snd_soc_card card;
+static struct snd_soc_dai_link *of_dai;
+
+static __init int of_fabric_init(void)
+{
+	of_for_each_compatible_node("alsa,cpu-dai") do {
+		count++;
+	}
+
+	of_dai = kzalloc(count * (sizeof struct snd_soc_dai_link));
+
+	of_for_each_compatible_node("alsa,cpu-dai") as parent do {
+		of_for_each_child(parent) as node {
+			of_dai[i].name = of_get_name(parent);  /* "ac97" */
+			of_dai[i].stream_name = of_fabric_dai[i].name + str(i);
+			of_dai[i].cpu_dai_name = of_get_name(node); /* "psc-ac97-analog" */
+			of_dai[i].codec_dai_name = of_get_property(node, "alsa,codec_dai_name");
+/* 5 */			of_dai[i].codec_name = match_of_compatible_with_registered_codec_list(node);
+			of_dai[i].platform_name = of_soc_name + "-pcm-audio";
+			i++;
+		}
+	}
+
+	card.name = "of-audio";
+	card.dai_link = of_dai;
+	card.num_links = i;
+
+	pdev = platform_device_alloc("soc-audio", 1);
+	platform_set_drvdata(pdev, &card);
+	platform_device_add(pdev);
+}
+
+Notes in the pseudo-source above:
+
+1: By adding compatible = "alsa,cpu-dai", this DAI is marked for binding.
+
+2: Child nodes list all CPU DAI's and their conected codecs. Child node name
+is name of the CPU DAI.
+
+3: Many ac97 codecs are compatible with the generic codec driver "ac97-codec".
+
+4: Don't know if this is the right way to work the codec DAI name in. See the
+next note:
+
+5: The pseudo-function match_of_compatible_with_registered_codec_list() will
+search through the list of registered ALSA codecs and match the compatible
+strings of this codec with one in the list. If one is found, the name is used
+for of_dai[i].codec_name, otherwise the current node is discarded (no matching
+codec driver registered). Maybe the corresponding "codec-dai-name" can be
+extracted from the codec database? That would eliminate line /* 4 */.
+
+Unfortunately, this way we will probably need to get back the Kconfig option
+to choose which codecs should be built. Apparently this option existed before,
+but was removed.
+
+All comments are welcome.
+
+Best regards,
+
+-- 
+David Jander
+Protonic Holland.
