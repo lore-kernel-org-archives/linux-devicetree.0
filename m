@@ -1,17 +1,19 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dtc: Support character literals in cell lists
-Date: Fri, 9 Sep 2011 17:03:25 +1000
-Message-ID: <20110909070325.GB9025@yookeroo.fritz.box>
-References: <1315517957-3546-1-git-send-email-robotboy@chromium.org>
-	<1315517957-3546-3-git-send-email-robotboy@chromium.org>
-	<20110909011221.GC30278@yookeroo.fritz.box>
-	<CAF6FioVRJoNzUtVe7z67ujgxbZxEJfLprtw9MdnEJnoSQjTVtA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dtc: Support character literals in bytestrings
+Date: Fri, 9 Sep 2011 17:25:32 +1000
+Message-ID: <20110909072532.GC9025@yookeroo.fritz.box>
+References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
+	<1315437340-1661-4-git-send-email-robotboy@chromium.org>
+	<20110908035149.GO30278@yookeroo.fritz.box>
+	<20110908070716.GC15955@ponder.secretlab.ca>
+	<20110908130109.GW30278@yookeroo.fritz.box>
+	<CAF6FioWOuK3szFb8FD+_fde0HpZ0TJJXx51ZL=BAcZFSojRGCQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAF6FioVRJoNzUtVe7z67ujgxbZxEJfLprtw9MdnEJnoSQjTVtA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAF6FioWOuK3szFb8FD+_fde0HpZ0TJJXx51ZL=BAcZFSojRGCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,52 +23,154 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2011 at 11:40:59PM -0700, Anton Staaf wrote:
-> On Thu, Sep 8, 2011 at 6:12 PM, David Gibson
+On Thu, Sep 08, 2011 at 11:30:42PM -0700, Anton Staaf wrote:
+> On Thu, Sep 8, 2011 at 6:01 AM, David Gibson
 > <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > On Thu, Sep 08, 2011 at 02:39:16PM -0700, Anton Staaf wrote:
-> >> With this patch the following property assignment:
+> > On Thu, Sep 08, 2011 at 12:07:16AM -0700, Grant Likely wrote:
+> >> On Thu, Sep 08, 2011 at 01:51:49PM +1000, David Gibson wrote:
+> >> > On Wed, Sep 07, 2011 at 04:15:40PM -0700, Anton Staaf wrote:
+> >> > > With this patch the following property assignment:
+> >> > >
+> >> > > =A0 =A0 property =3D ['a' 2b '\r'];
+> >> > >
+> >> > > is equivalent to:
+> >> > >
+> >> > > =A0 =A0 property =3D [61 2b 0d];
+> >> >
+> >> > So, I still have some reservations about this syntax.
+> >> >
+> >> > It occurred to me: do you actually need to intermix character and
+> >> > hexbyte values that much? =A0Could I suggest an alternate sytax as:
+> >> >
+> >> > =A0 =A0 property =3D 'a', [2b], 'r';
+> >> >
+> >> > The new character literals sufficiently distinct not to cause proble=
+ms
+> >> > here, and it maintains the , =3D=3D bytestring append behaviour we a=
+lready
+> >> > have.
+> >> >
+> >> > Thoughts?
 > >>
-> >> =A0 =A0 property =3D <0x12345678 'a' '\r' 100>;
-> >>
-> >> is equivalent to:
-> >>
-> >> =A0 =A0 property =3D <0x12345678 0x00000061 0x0000000D 0x00000064>
+> >> Does it matter much? =A0I'm happy with either. =A0Is there a downside =
+to
+> >> the first syntax?
 > >
-> > One tiny nit..
-> >
-> > [snip]
-> >> diff --git a/dtc-lexer.l b/dtc-lexer.l
-> >> index e866ea5..94151da 100644
-> >> --- a/dtc-lexer.l
-> >> +++ b/dtc-lexer.l
-> >> @@ -29,6 +29,7 @@ PROPNODECHAR =A0 =A0 =A0 =A0[a-zA-Z0-9,._+*#?@-]
-> >> =A0PATHCHAR =A0 =A0 ({PROPNODECHAR}|[/])
-> >> =A0LABEL =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0[a-zA-Z_][a-zA-Z0-9_]*
-> >> =A0STRING =A0 =A0 =A0 =A0 =A0 =A0 =A0 \"([^\\"]|\\.)*\"
-> >> +CHAR_LITERAL '[^']+'|'\\''
-> >
-> > I think this should be
-> > =A0 =A0 =A0 =A0'([^']|\\')*'
-> >
-> > On the same grounds I described before. =A0That does mean
-> > eval_char_literal() will have to cope with the case of ''.
+> > Well.. probably not. =A0I'm just nervous about adding anything in the
+> > lexically weird bytestring context.
 > =
 
-> OK, I could also make it '([^']|\\')+'
+> Which is completely understandable.  Let's continue to mull that over
+> while we think up a sane syntax for specifying the size of a cell in a
+> cell list.  Would it be reasonable to specify the size per list?
+
+That was what I had in mind.
+
+>  Or
+> would you like to have a mechanism and syntax to specify it per cell
+> entry in the list.  If it is per cell entry then we have to deal with
+> the strange packings that would come from something like:
 > =
 
-> That way the empty character literal wouldn't be allowed and it still
-> allows all of the cases we care about.
+> property =3D <0x11223344 byte(0x55) 0x66778899>
+> =
 
-You could, but the same reasoning applies here:  An error message
-saying "empty character literal" is almost certainly more useful than
-"syntax error, Unexpected '" or whatever bison will give us on its
-own.
+> I'm not suggesting that the byte(...) syntax be used by the way.  :)
+> But the above situation would lead to a value of 0x55667788 and a
+> trailing 0x99, which then has to be either promoted to a uint32_t
+
+Well.. only if you're now interpreting the property as an array of
+u32s, which if you specified it with that byte in the middle, is
+presumably not how this property is typically interpreted.
+
+> because it was originally in a uint32_t literal, or left as a byte,
+> not very obvious.  The other option would be to do some sort of local
+> packing.  Where the above would turn into the same as:
+
+> property =3D <0x11223344 0x55 0x66778899>
+
+Um, I'm really not sure what you're getting at with this one.
+
+> But that has all sorts of problems.  When do you start a new uint32_t
+> cell.  If it's only when you overflow out of the current one or when
+> you see a full uint32_t literal then you could split a uint16_t across
+> a cell boundary.
+
+So, I have it on Mitch Bradley's authority, that the properties should
+in general be treated as bytestrings and that we should *never* do
+padding in there for the sake of alignment.
+
+>  I suppose this problem already exists because of the
+> "," syntax.  And so you could make a cell list that contains a bunch
+> of uint32_t values that are stored in a property in such a way as to
+> be unaligned.
+
+Yes, and intentionally so.  Way back, we used to always 4-byte align
+at the beginning of a cell list, but I took that out on Mitch's advice
+(plus it was easier that way).  I believe there are some bindings out
+there (though they don't seem to be in common, current use) than
+define properties to contain a string followed by cells, which will
+lead to unaligned cell values.
+
+> The alternative of specifying the size of the cells in a list seems
+> cleaner to me.  You still can generate unaligned values in a property
+> using ",", but within a cell list you can't.  So then what would be a
+> good syntax for that.  Perhaps:
+
+I concur.
+
+> property =3D !uint16 <0x12 0x3456>
+> =
+
+> or
+> =
+
+> property =3D !uint8 <0xff 0xaa>
+> =
+
+> or to explicitly get the default uint32_t behavior
+> =
+
+> property =3D !uint32 <0x12345678 0 12>
+
+Well, I think this is better than anything I've yet considered, though
+still not quite good enough.
+
+> This has the advantage that ! is not currently used in any of the dts
+> syntax.  And having it at the front of the cell list definition means
+> that you can check and correctly pack/append each literal as they are
+> read.  It has the disadvantage that if we want to use ! to mean
+> logical not at some point it will complicate that parsing.
+
+Yeah, and I'd really prefer not to make life difficult for
+implementing expressions.  So, some vague, and possibly contradictory
+points on this topic:
+
+ * If we can do it in a way that's not too verbose, I'd prefer both
+a marker for the size present at both < and >, so that on a big array
+a human has an extra visual clue that this is an array of non-default
+size.
+
+ * I've toyed with the idea of different bracketing types for the
+different sizes.  e.g. << >> for 64-bit values, and, uh, something for
+8 and 16.  Haven't come up with any variants on this that don't seem
+excessively brief and cryptic, though.
+
+ * Also contemplated something like <$8 0xff 0x00 > or <.8 0xff 0x00>
+for 8-bit values, but it seems pretty ugly.
+
+I supposed modifying your suggestion, but combining with our existing
+convention for "reserved words" we could do:
+
+	prop =3D /uint8/ <0xab 0xcd>;
+
+I don't love it, but it's about the best I've come up with yet.  And
+in particular it's probably the variant I'd be least upset to carry
+around as legacy if we come up with a better way in future.
 
 -- =
 
