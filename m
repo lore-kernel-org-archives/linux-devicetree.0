@@ -1,98 +1,68 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v3] net/smsc911x: add device tree probe support
-Date: Fri, 9 Sep 2011 20:59:58 +0800
-Message-ID: <20110909125957.GB32138@S2100-06.ap.freescale.net>
-References: <1311587040-8988-1-git-send-email-shawn.guo@linaro.org>
- <1312050360-15767-1-git-send-email-shawn.guo@linaro.org>
- <20110908145946.GE2070@arm.com>
- <20110908182920.GL2967@ponder.secretlab.ca>
- <20110909085030.GA3069@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 06/10] hwspinlock: OMAP4: Add spinlock support in DT
+Date: Fri, 9 Sep 2011 14:58:43 +0200
+Message-ID: <201109091458.44153.arnd@arndb.de>
+References: <1314191356-10963-1-git-send-email-b-cousson@ti.com> <201109081647.55377.arnd@arndb.de> <CAK=WgbZmFGqo2B_MO_FXDiQHUx1SoKvHEReTpVr9O6XZ2uo7Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110909085030.GA3069@arm.com>
-Sender: netdev-owner@vger.kernel.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Shawn Guo <shawn.guo@linaro.org>, netdev@vger.kernel.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Steve Glendinning <steve.glendinning@smsc.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbZmFGqo2B_MO_FXDiQHUx1SoKvHEReTpVr9O6XZ2uo7Ng@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hilman, Kevin" <khilman@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>, Mathieu Poirier <mathieu.poirier@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 09, 2011 at 09:50:30AM +0100, Dave Martin wrote:
-> On Thu, Sep 08, 2011 at 11:29:20AM -0700, Grant Likely wrote:
-> > On Thu, Sep 08, 2011 at 03:59:46PM +0100, Dave Martin wrote:
-> > > Hi Shawn,
-> > > 
-> > > On Sun, Jul 31, 2011 at 02:26:00AM +0800, Shawn Guo wrote:
-> > > > It adds device tree probe support for smsc911x driver.
-> > > > 
-> > > > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > > > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > > > Cc: Steve Glendinning <steve.glendinning@smsc.com>
-> > > > Cc: David S. Miller <davem@davemloft.net>
-> > > > Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
-> > > > ---
-> > > > Changes since v2:
-> > > >  * Fix a typo in smsc911x.txt
-> > > > 
-> > > > Changes since v1:
-> > > >  * Instead of getting irq line from gpio number, it use irq domain
-> > > >    to keep platform_get_resource(IORESOURCE_IRQ) works for dt too.
-> > > >  * Use 'lan9115' the first model that smsc911x supports in the match
-> > > >    table
-> > > >  * Use reg-shift and reg-io-width which already used in of_serial for
-> > > >    shift and access size binding
-> > > 
-> > > When using this patch with vexpress, I found that 16-bit register access
-> > > mode doesn't seem to be getting set correctly.
-> > > 
-> > > Can you take a look at this additional patch and let me know if it looks
-> > > correct?
-> > > 
-> > > Cheers
-> > > ---Dave
-> > > 
-> > > From: Dave Martin <dave.martin@linaro.org>
-> > > Date: Wed, 7 Sep 2011 17:26:31 +0100
-> > > Subject: [PATCH] net/smsc911x: Correctly configure 16-bit register access from DT
-> > > 
-> > > The SMSC911X_USE_16BIT needs to be set when using 16-bit register
-> > > access.  However, currently no flag is set if the DT doesn't specify
-> > > 32-bit access.
-> > > 
-> > > This patch should set the SMSC911X_USE_16BIT flag in a manner consistent
-> > > with the documented DT bindings.
-> > > 
-> > > Signed-off-by: Dave Martin <dave.martin@linaro.org>
-> > > ---
-> > >  drivers/net/smsc911x.c |    2 ++
-> > >  1 files changed, 2 insertions(+), 0 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/smsc911x.c b/drivers/net/smsc911x.c
-> > > index 75c08a5..1a35c25 100644
-> > > --- a/drivers/net/smsc911x.c
-> > > +++ b/drivers/net/smsc911x.c
-> > > @@ -2121,6 +2121,8 @@ static int __devinit smsc911x_probe_config_dt(
-> > >  	of_property_read_u32(np, "reg-io-width", &width);
-> > >  	if (width == 4)
-> > >  		config->flags |= SMSC911X_USE_32BIT;
-> > > +	else
-> > > +		config->flags |= SMSC911X_USE_16BIT;
-> > 
-> > Would it be better to do "else if (width == 2)"?  (completely
-> > uninformed comment.  I've not looked at what the non-DT probe path
-> > does on this driver.)
+On Thursday 08 September 2011, Ohad Ben-Cohen wrote:
+> On Thu, Sep 8, 2011 at 5:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > I think a number would work here but is not optimal for the device tree
+> > representation. I think a better binding would be to encode it like
+> > interrupt numbers, where every device that uses a hwspinlock will describe
+> > that as a combination of phandle to the hwspinlock controller and
+> > identifier to be used by that controller
 > 
-> I wouldn't have a problem with that.  But currently the binding
-> documentation says that any value other than 4, or a missing property,
-> implies 16-bit register access.
+> I'm not sure.
 > 
-> So the binding documentation would need to change too in that case.
+> This implies that devices are hardwired to the specific
+> controller+identifier, which is true for interrupts, but not for
+> hwspinlocks. As a result the hardware depicted by such representation
+> would be imprecise and might unnecessarily limit the software.
 > 
-> Personally I think this would be better, but it's just an opinion.
-> 
-Yes.  SMSC911X_USE_32BIT and SMSC911X_USE_16BIT are the only two cases
-supported by the driver.
+> hwspinlock devices are really just a pool of locks, which are not
+> inherently bound to any device: any master that can initiate
+> read/write bus access can use any of the locks (hardware-wise). One
+> just needs to make sure that ownership of the locks, even if
+> determined dynamically at runtime, is managed correctly.
 
--- 
-Regards,
-Shawn
+ok
+
+> I think the phandle+identifier approach is very elegant to achieve
+> static allocation of the hwspinlocks, and some boards will definitely
+> need it (e.g. those unlucky designs which arbiter i2c access using an
+> hwspinlock).
+> 
+> But wouldn't that limit us from providing dynamic allocation of
+> hwspinlocks ? I was told about teams working on complex multimedia use
+> cases which involves numerous object sharing and require actually more
+> hwspinlocks than exist (so they're planning on multiplexing several
+> logical locks on a single hwspinlock). They use dynamic allocation of
+> hwspinlocks in order to allow different hwspinlocks users to co-exist
+> (but naturally not run together at the same time).
+
+Good point. I guess we will need both static and dynamic allocation
+then. You need the static allocation for cases where the other
+user of the spinlock is not under the control of Linux, but is known
+at boot time. For dynamic allocation, my impression is that we don't
+need any link from the spinlock user device to the controller at all,
+but instead the controller should have a list of the available
+spinlocks.
+
+In a case where you have three operating systems running independently
+on the same hardware and each of the shares one spinlock with the
+other two, you want to be able to model in the device tree which
+spinlocks are already known to the other instances and therefore
+fixed, which ones are available to the local OS and which ones
+are not available.
+
+	Arnd
