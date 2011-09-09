@@ -1,188 +1,92 @@
-From: Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] arm/dt: Add SoC detection macros
-Date: Fri,  9 Sep 2011 01:02:19 -0700
-Message-ID: <1315555339-12685-1-git-send-email-amartin@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH v3] net/smsc911x: add device tree probe support
+Date: Fri, 9 Sep 2011 09:50:30 +0100
+Message-ID: <20110909085030.GA3069@arm.com>
+References: <1311587040-8988-1-git-send-email-shawn.guo@linaro.org>
+ <1312050360-15767-1-git-send-email-shawn.guo@linaro.org>
+ <20110908145946.GE2070@arm.com>
+ <20110908182920.GL2967@ponder.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20110908182920.GL2967@ponder.secretlab.ca>
+Sender: netdev-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Shawn Guo <shawn.guo@linaro.org>, netdev@vger.kernel.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Steve Glendinning <steve.glendinning@smsc.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-These macros allow runtime query of SoC family and version via
-soc_is_*()  If the corresponding SoC is not configured the macro will
-evaluate to 0.  If the corresponding SoC is the only architecure
-configured, the macro will evaluate to 1.  If multiple architecures
-are configured the macro will evaluate to a runtime call to
-soc_get_version().
+On Thu, Sep 08, 2011 at 11:29:20AM -0700, Grant Likely wrote:
+> On Thu, Sep 08, 2011 at 03:59:46PM +0100, Dave Martin wrote:
+> > Hi Shawn,
+> > 
+> > On Sun, Jul 31, 2011 at 02:26:00AM +0800, Shawn Guo wrote:
+> > > It adds device tree probe support for smsc911x driver.
+> > > 
+> > > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > > Cc: Grant Likely <grant.likely@secretlab.ca>
+> > > Cc: Steve Glendinning <steve.glendinning@smsc.com>
+> > > Cc: David S. Miller <davem@davemloft.net>
+> > > Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
+> > > ---
+> > > Changes since v2:
+> > >  * Fix a typo in smsc911x.txt
+> > > 
+> > > Changes since v1:
+> > >  * Instead of getting irq line from gpio number, it use irq domain
+> > >    to keep platform_get_resource(IORESOURCE_IRQ) works for dt too.
+> > >  * Use 'lan9115' the first model that smsc911x supports in the match
+> > >    table
+> > >  * Use reg-shift and reg-io-width which already used in of_serial for
+> > >    shift and access size binding
+> > 
+> > When using this patch with vexpress, I found that 16-bit register access
+> > mode doesn't seem to be getting set correctly.
+> > 
+> > Can you take a look at this additional patch and let me know if it looks
+> > correct?
+> > 
+> > Cheers
+> > ---Dave
+> > 
+> > From: Dave Martin <dave.martin@linaro.org>
+> > Date: Wed, 7 Sep 2011 17:26:31 +0100
+> > Subject: [PATCH] net/smsc911x: Correctly configure 16-bit register access from DT
+> > 
+> > The SMSC911X_USE_16BIT needs to be set when using 16-bit register
+> > access.  However, currently no flag is set if the DT doesn't specify
+> > 32-bit access.
+> > 
+> > This patch should set the SMSC911X_USE_16BIT flag in a manner consistent
+> > with the documented DT bindings.
+> > 
+> > Signed-off-by: Dave Martin <dave.martin@linaro.org>
+> > ---
+> >  drivers/net/smsc911x.c |    2 ++
+> >  1 files changed, 2 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/drivers/net/smsc911x.c b/drivers/net/smsc911x.c
+> > index 75c08a5..1a35c25 100644
+> > --- a/drivers/net/smsc911x.c
+> > +++ b/drivers/net/smsc911x.c
+> > @@ -2121,6 +2121,8 @@ static int __devinit smsc911x_probe_config_dt(
+> >  	of_property_read_u32(np, "reg-io-width", &width);
+> >  	if (width == 4)
+> >  		config->flags |= SMSC911X_USE_32BIT;
+> > +	else
+> > +		config->flags |= SMSC911X_USE_16BIT;
+> 
+> Would it be better to do "else if (width == 2)"?  (completely
+> uninformed comment.  I've not looked at what the non-DT probe path
+> does on this driver.)
 
-I've added tegra2 and tegra3 SoCs as a starting point.
+I wouldn't have a problem with that.  But currently the binding
+documentation says that any value other than 4, or a missing property,
+implies 16-bit register access.
 
-Signed-off-by: Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/include/asm/soc.h |   76 ++++++++++++++++++++++++++++++++++++++++++++
- arch/arm/kernel/Makefile   |    1 +
- arch/arm/kernel/setup.c    |    2 +
- arch/arm/kernel/soc.c      |   37 +++++++++++++++++++++
- 4 files changed, 116 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/include/asm/soc.h
- create mode 100644 arch/arm/kernel/soc.c
+So the binding documentation would need to change too in that case.
 
-diff --git a/arch/arm/include/asm/soc.h b/arch/arm/include/asm/soc.h
-new file mode 100644
-index 0000000..d95f643
---- /dev/null
-+++ b/arch/arm/include/asm/soc.h
-@@ -0,0 +1,76 @@
-+/*
-+ * arch/arm/include/asm/soc.h
-+ *
-+ * Copyright (C) 2011 NVIDIA, Inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+/* determine if multiple SoCs are enabled */
-+#undef MULTI_SOC
-+#undef SOC_NAME
-+
-+#ifdef CONFIG_ARCH_TEGRA_2x_SOC
-+# ifdef SOC_NAME
-+#  undef MULTI_SOC
-+#  define MULTI_SOC
-+# else
-+#   define SOC_NAME tegra2
-+# endif
-+#endif
-+#ifdef CONFIG_ARCH_TEGRA_3x_SOC
-+# ifdef SOC_NAME
-+#  undef MULTI_SOC
-+#  define MULTI_SOC
-+# else
-+#   define SOC_NAME tegra3
-+# endif
-+#endif
-+
-+#define soc_is_tegra2()			0
-+#define soc_is_tegra3()			0
-+
-+#if defined(MULTI_SOC)
-+# if defined(CONFIG_ARCH_TEGRA_2x_SOC)
-+#  undef soc_is_tegra2
-+#  define soc_is_tegra2()		is_tegra2()
-+# endif
-+# if defined(CONFIG_ARCH_TEGRA_3x_SOC)
-+#  undef soc_is_tegra3
-+#  define soc_is_tegra3()		is_tegra3()
-+# endif
-+#else /* non-multi, only one architecture is on */
-+# if defined(CONFIG_ARCH_TEGRA_2x_SOC)
-+#  undef soc_is_tegra2
-+#  define soc_is_tegra2()		1
-+# elif defined(CONFIG_ARCH_TEGRA_3x_SOC)
-+#  undef soc_is_tegra3
-+#  define soc_is_tegra3()		1
-+# endif
-+#endif
-+
-+enum soc_version {
-+	SOC_UNKNOWN = 0,
-+	TEGRA_T20,
-+	TEGRA_T30,
-+};
-+
-+void soc_init_version(void);
-+enum soc_version soc_get_version(void);
-+
-+static inline int is_tegra2(void)
-+{
-+	return soc_get_version() == TEGRA_T20;
-+}
-+
-+static inline int is_tegra3(void)
-+{
-+	return soc_get_version() == TEGRA_T30;
-+}
-diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
-index c687bce..de29477 100644
---- a/arch/arm/kernel/Makefile
-+++ b/arch/arm/kernel/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_KGDB)		+= kgdb.o
- obj-$(CONFIG_ARM_UNWIND)	+= unwind.o
- obj-$(CONFIG_HAVE_TCM)		+= tcm.o
- obj-$(CONFIG_OF)		+= devtree.o
-+obj-$(CONFIG_OF)		+= soc.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
- obj-$(CONFIG_SWP_EMULATE)	+= swp_emulate.o
- CFLAGS_swp_emulate.o		:= -Wa,-march=armv7-a
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index 0ca06f7..63ad6de 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -52,6 +52,7 @@
- #include <asm/mach/time.h>
- #include <asm/traps.h>
- #include <asm/unwind.h>
-+#include <asm/soc.h>
- 
- #if defined(CONFIG_DEPRECATED_PARAM_STRUCT)
- #include "compat.h"
-@@ -922,6 +923,7 @@ void __init setup_arch(char **cmdline_p)
- 	request_standard_resources(mdesc);
- 
- 	unflatten_device_tree();
-+	soc_init_version();
- 
- #ifdef CONFIG_SMP
- 	if (is_smp())
-diff --git a/arch/arm/kernel/soc.c b/arch/arm/kernel/soc.c
-new file mode 100644
-index 0000000..8686468
---- /dev/null
-+++ b/arch/arm/kernel/soc.c
-@@ -0,0 +1,37 @@
-+/*
-+ * arch/arm/kernel/soc.c
-+ *
-+ * Copyright (C) 2011 NVIDIA, Inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+
-+#include <asm/soc.h>
-+
-+static enum soc_version soc_version;
-+
-+enum soc_version soc_get_version(void)
-+{
-+	return soc_version;
-+}
-+
-+void soc_init_version(void)
-+{
-+	if (of_machine_is_compatible("nvidia,tegra20"))
-+		soc_version = TEGRA_T20;
-+	else if (of_machine_is_compatible("nvidia,tegra30"))
-+		soc_version = TEGRA_T30;
-+	else
-+		panic("Unknown SoC");
-+}
--- 
-1.7.4.1
+Personally I think this would be better, but it's just an opinion.
+
+Cheers
+---Dave
