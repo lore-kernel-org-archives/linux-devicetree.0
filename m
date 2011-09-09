@@ -1,68 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 06/10] hwspinlock: OMAP4: Add spinlock support in DT
-Date: Fri, 9 Sep 2011 14:58:43 +0200
-Message-ID: <201109091458.44153.arnd@arndb.de>
-References: <1314191356-10963-1-git-send-email-b-cousson@ti.com> <201109081647.55377.arnd@arndb.de> <CAK=WgbZmFGqo2B_MO_FXDiQHUx1SoKvHEReTpVr9O6XZ2uo7Ng@mail.gmail.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] dtc: Support character literals in bytestrings
+Date: Fri, 09 Sep 2011 09:22:37 -0500
+Message-ID: <E1R21yX-0007Z1-T7@jdl.com>
+References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
+	<1315437340-1661-4-git-send-email-robotboy@chromium.org>
+	<20110908035149.GO30278@yookeroo.fritz.box>
+	<20110908070716.GC15955@ponder.secretlab.ca>
+	<20110908130109.GW30278@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAK=WgbZmFGqo2B_MO_FXDiQHUx1SoKvHEReTpVr9O6XZ2uo7Ng@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hilman, Kevin" <khilman@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>, Mathieu Poirier <mathieu.poirier@linaro.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20110908130109.GW30278-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org> 
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 September 2011, Ohad Ben-Cohen wrote:
-> On Thu, Sep 8, 2011 at 5:47 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > I think a number would work here but is not optimal for the device tree
-> > representation. I think a better binding would be to encode it like
-> > interrupt numbers, where every device that uses a hwspinlock will describe
-> > that as a combination of phandle to the hwspinlock controller and
-> > identifier to be used by that controller
+> > > >     property = ['a' 2b '\r'];
+> > > > 
+> > > >     property = [61 2b 0d];
+
+> > Does it matter much?  I'm happy with either.  Is there a downside to
+> > the first syntax?
 > 
-> I'm not sure.
-> 
-> This implies that devices are hardwired to the specific
-> controller+identifier, which is true for interrupts, but not for
-> hwspinlocks. As a result the hardware depicted by such representation
-> would be imprecise and might unnecessarily limit the software.
-> 
-> hwspinlock devices are really just a pool of locks, which are not
-> inherently bound to any device: any master that can initiate
-> read/write bus access can use any of the locks (hardware-wise). One
-> just needs to make sure that ownership of the locks, even if
-> determined dynamically at runtime, is managed correctly.
+> Well.. probably not.  I'm just nervous about adding anything in the
+> lexically weird bytestring context.
 
-ok
+As a general statement, it is often difficult for parsers
+to establish enough look-ahead when lists of things are
+simply placed side-by-side without some sort of connecting
+syntax.  So a structure like "foo1 foo2 foo3" can be more prone
+to S/R and R/R errors than something like "foo1, foo2, foo3".
+No, that's not a hard and fast rule because prior context
+can make it clear to a parsing rule set.  In this case,
+the '[' can estabish that context and make it clear what
+is intended as a list of values.  But if there were ever
+any future notion of wanting to create a bracketed list
+of values for another purpose, then a comma separated list
+would be preferable.
 
-> I think the phandle+identifier approach is very elegant to achieve
-> static allocation of the hwspinlocks, and some boards will definitely
-> need it (e.g. those unlucky designs which arbiter i2c access using an
-> hwspinlock).
-> 
-> But wouldn't that limit us from providing dynamic allocation of
-> hwspinlocks ? I was told about teams working on complex multimedia use
-> cases which involves numerous object sharing and require actually more
-> hwspinlocks than exist (so they're planning on multiplexing several
-> logical locks on a single hwspinlock). They use dynamic allocation of
-> hwspinlocks in order to allow different hwspinlocks users to co-exist
-> (but naturally not run together at the same time).
-
-Good point. I guess we will need both static and dynamic allocation
-then. You need the static allocation for cases where the other
-user of the spinlock is not under the control of Linux, but is known
-at boot time. For dynamic allocation, my impression is that we don't
-need any link from the spinlock user device to the controller at all,
-but instead the controller should have a list of the available
-spinlocks.
-
-In a case where you have three operating systems running independently
-on the same hardware and each of the shares one spinlock with the
-other two, you want to be able to model in the device tree which
-spinlocks are already known to the other instances and therefore
-fixed, which ones are available to the local OS and which ones
-are not available.
-
-	Arnd
+jdl
