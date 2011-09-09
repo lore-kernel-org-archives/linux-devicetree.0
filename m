@@ -1,35 +1,77 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] dtc: Refactor character literal parsing code
-Date: Fri, 09 Sep 2011 16:07:27 -0500
-Message-ID: <E1R28IJ-0000WO-SG@jdl.com>
-References: <1315595791-25793-1-git-send-email-robotboy@chromium.org>
-	<1315595791-25793-2-git-send-email-robotboy@chromium.org>
+From: Andy Fleming <afleming@gmail.com>
+Subject: Re: [PATCH 2/3] netdev/of/phy: Add MDIO bus multiplexer support.
+Date: Fri, 9 Sep 2011 18:22:32 -0500
+Message-ID: <CAKWjMd7pa=BikH0VkUZEFZ9yH+g6g9RSus9woqs1hbR+rb3u9A@mail.gmail.com>
+References: <1314820906-14004-1-git-send-email-david.daney@cavium.com>
+	<1314820906-14004-3-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1315595791-25793-2-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> 
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1314820906-14004-3-git-send-email-david.daney@cavium.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-> Move the parsing of hex, octal and escaped characters from data.c
-> to util.c where it can be used for character literal parsing within
-> strings as well as for stand alone C style character literals.
-> 
-> Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-> Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+On Wed, Aug 31, 2011 at 3:01 PM, David Daney <david.daney@cavium.com> w=
+rote:
+> This patch adds a somewhat generic framework for MDIO bus
+> multiplexers. =A0It is modeled on the I2C multiplexer.
+>
+> The multiplexer is needed if there are multiple PHYs with the same
+> address connected to the same MDIO bus adepter, or if there is
+> insufficient electrical drive capability for all the connected PHY
+> devices.
+>
+> Conceptually it could look something like this:
+>
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ------------------
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | Control Signal |
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 --------+---------
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |
+> =A0--------------- =A0 --------+------
+> =A0| MDIO MASTER |---| Multiplexer |
+> =A0--------------- =A0 --+-------+----
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A0 =A0 |
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 C =A0 =A0 =A0 C
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 h =A0 =A0 =A0 h
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 i =A0 =A0 =A0 i
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 l =A0 =A0 =A0 l
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 d =A0 =A0 =A0 d
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A0 =A0 |
+> =A0 =A0 --------- =A0 =A0 =A0 A =A0 =A0 =A0 B =A0 ---------
+> =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 | =A0 =A0 =A0=
+ |
+> =A0 =A0 | PHY@1 +-------+ =A0 =A0 =A0 +---+ PHY@1 |
+> =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 | =A0 =A0 =A0=
+ |
+> =A0 =A0 --------- =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 ---------
+> =A0 =A0 --------- =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 ---------
+> =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 | =A0 =A0 =A0=
+ |
+> =A0 =A0 | PHY@2 +-------+ =A0 =A0 =A0 +---+ PHY@2 |
+> =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A0=
+ =A0 |
+> =A0 =A0 --------- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ---------
+>
+> This framework configures the bus topology from device tree data. =A0=
+The
+> mechanics of switching the multiplexer is left to device specific
+> drivers.
+>
+> The follow-on patch contains a multiplexer driven by GPIO lines.
 
-Applied.  Thanks.
 
-jdl
+It's amazing how various companies' board designers have come up with
+the same brain-dead PHY topologies. We (Freescale) have some similar
+code in our tree, but it's not this generically applicable.
+
+>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: "David S. Miller" <davem@davemloft.net>
+
+Looks good to me.
+
+Acked-by: Andy Fleming <afleming@freescale.com>
