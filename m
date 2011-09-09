@@ -1,62 +1,77 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [RFC PATCH 10/10] documentation/dt: Add OMAP GPIO properties
-Date: Fri, 9 Sep 2011 03:51:46 +0200
-Message-ID: <4E697132.9070505@ti.com>
-References: <1314191356-10963-1-git-send-email-b-cousson@ti.com> <1314191356-10963-11-git-send-email-b-cousson@ti.com> <20110908181819.GI2967@ponder.secretlab.ca>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v2] dtc: Add support for named integer constants
+Date: Fri, 9 Sep 2011 11:34:33 +1000
+Message-ID: <20110909013433.GC21002@yookeroo.fritz.box>
+References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>
+	<CAPnjgZ0NzN510XJZ1ONAbMTS3vrrP8qCV8NYHq4_heZL+PizNg@mail.gmail.com>
+	<20110908183211.GM2967@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110908181819.GI2967@ponder.secretlab.ca>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hilman, Kevin" <khilman@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>, Randy Dunlap <rdunlap@xenotime.net>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110908183211.GM2967-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/8/2011 8:18 PM, Grant Likely wrote:
-> On Wed, Aug 24, 2011 at 03:09:16PM +0200, Benoit Cousson wrote:
->> Add documentation for GPIO properties specific to OMAP.
->>
->> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
->> Cc: Randy Dunlap<rdunlap@xenotime.net>
->> ---
->>   .../devicetree/bindings/gpio/gpio-omap.txt         |   33 ++++++++++++++++++++
->>   1 files changed, 33 insertions(+), 0 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->> new file mode 100644
->> index 0000000..692b1c7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->> @@ -0,0 +1,33 @@
->> +OMAP GPIO controller
->> +
->> +Required properties:
->> +- compatible:
->> +  - "ti,omap2-gpio" for OMAP2 and OMAP3 controllers
->> +  - "ti,omap4-gpio" for OMAP4 controller
->> +- #gpio-cells : Should be two.
->> +  - first cell is the pin number
->> +  - second cell is used to specify optional parameters (unused)
->> +- gpio-controller : Marks the device node as a GPIO controller.
->> +
->> +OMAP specific properties:
->> +- hwmods: Name of the hwmod associated to the GPIO
->> +- id: 32 bits to identify the id (1 based index)
->
-> id should not be necessary.  Linux GPIO numbers are to be dynamically
-> assigned when using DT.
->
->> +- bank_width: number of pin supported by the controller (16 or 32)
->> +- debounce: set if the controller support the debouce funtionnality
->> +- bank_count: number of controller support by the SoC. This is a temporary
->> +  hack until the bank_count is removed from the driver.
->
-> All these properties should be prefixed with "ti,".
-> Use '-' instead of '_' in property names
+On Thu, Sep 08, 2011 at 11:32:11AM -0700, Grant Likely wrote:
+> On Thu, Sep 08, 2011 at 06:09:27AM -0700, Simon Glass wrote:
+> > Hi Stephen,
+> > 
+> > On Fri, Sep 2, 2011 at 11:34 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > > Stephen Warren wrote at Tuesday, August 30, 2011 3:30 PM:
+> > >> You may define constants as follows:
+> > >>
+> > >> /define/ TWO 2;
+> > >> /define/ FOUR 4;
+> > >> /define/ OTHER FOUR;
+> > >>
+> > >> And properties may use these values as follows:
+> > >>
+> > >> foo = <1 TWO 3 FOUR 5>;
+> > >>
+> > >> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > >
+> > > David, Jon,
+> > >
+> > > Does this seem reasonable?
+> > >
+> > > I think the syntax is simple enough it wouldn't interfere with any more
+> > > advanced expression/function/... support in the future, and it could be
+> > > easily extended to allow e.g.:
+> > >
+> > > /define/ FOO "BAR";
+> > > /define/ BAX [0af8dacb0];
+> > > ...
+> > 
+> > This seems very reasonable to me, and very useful. From the syntax it
+> > looks like lower case symbols are allowed also, which is fine with me.
+> > 
+> > I hope that this can go into dtc as we would definitely use it.
+> 
+> What are the risks of symbol conflict with this approach?  I'm
+> concerned that a poorly chosen /define/ name will break parsing in
+> non-obvious ways.  Would it be better to have a every define reference
+> to be explicit in the syntax?
 
-I'll fix that.
+I really don't want to make identifiers - which is essentially what
+we're talking here - explicitly marked, on the basis of "be like C".
+I believe they should be safe, as long as we don't attempt to
+recognize them in property/nodename context.
 
-Thanks,
-Benoit
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
