@@ -1,17 +1,17 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] dtc: Support character literals in bytestrings
-Date: Fri, 9 Sep 2011 17:01:18 +1000
-Message-ID: <20110909070118.GA9025@yookeroo.fritz.box>
+Subject: Re: [PATCH v3 2/3] dtc: Support character literals in cell lists
+Date: Fri, 9 Sep 2011 17:03:25 +1000
+Message-ID: <20110909070325.GB9025@yookeroo.fritz.box>
 References: <1315517957-3546-1-git-send-email-robotboy@chromium.org>
-	<1315517957-3546-4-git-send-email-robotboy@chromium.org>
-	<20110909011510.GA21002@yookeroo.fritz.box>
-	<CAF6FioWvY0=qJGKsu=i=8TB9FF34xeo966hwuEht+o+krYPKGQ@mail.gmail.com>
+	<1315517957-3546-3-git-send-email-robotboy@chromium.org>
+	<20110909011221.GC30278@yookeroo.fritz.box>
+	<CAF6FioVRJoNzUtVe7z67ujgxbZxEJfLprtw9MdnEJnoSQjTVtA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAF6FioWvY0=qJGKsu=i=8TB9FF34xeo966hwuEht+o+krYPKGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAF6FioVRJoNzUtVe7z67ujgxbZxEJfLprtw9MdnEJnoSQjTVtA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,36 +25,48 @@ To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2011 at 11:37:21PM -0700, Anton Staaf wrote:
-> On Thu, Sep 8, 2011 at 6:15 PM, David Gibson
+On Thu, Sep 08, 2011 at 11:40:59PM -0700, Anton Staaf wrote:
+> On Thu, Sep 8, 2011 at 6:12 PM, David Gibson
 > <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > On Thu, Sep 08, 2011 at 02:39:17PM -0700, Anton Staaf wrote:
+> > On Thu, Sep 08, 2011 at 02:39:16PM -0700, Anton Staaf wrote:
 > >> With this patch the following property assignment:
 > >>
-> >> =A0 =A0 property =3D ['a' 2b '\r'];
+> >> =A0 =A0 property =3D <0x12345678 'a' '\r' 100>;
 > >>
 > >> is equivalent to:
 > >>
-> >> =A0 =A0 property =3D [61 2b 0d];
+> >> =A0 =A0 property =3D <0x12345678 0x00000061 0x0000000D 0x00000064>
+> >
+> > One tiny nit..
 > >
 > > [snip]
-> >> +<BYTESTRING>{CHAR_LITERAL} {
+> >> diff --git a/dtc-lexer.l b/dtc-lexer.l
+> >> index e866ea5..94151da 100644
+> >> --- a/dtc-lexer.l
+> >> +++ b/dtc-lexer.l
+> >> @@ -29,6 +29,7 @@ PROPNODECHAR =A0 =A0 =A0 =A0[a-zA-Z0-9,._+*#?@-]
+> >> =A0PATHCHAR =A0 =A0 ({PROPNODECHAR}|[/])
+> >> =A0LABEL =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0[a-zA-Z_][a-zA-Z0-9_]*
+> >> =A0STRING =A0 =A0 =A0 =A0 =A0 =A0 =A0 \"([^\\"]|\\.)*\"
+> >> +CHAR_LITERAL '[^']+'|'\\''
 > >
-> > You should just be able to make the existing rule a <*> one,
-> > rather than having a separate rule for BYTESTRING context.
+> > I think this should be
+> > =A0 =A0 =A0 =A0'([^']|\\')*'
+> >
+> > On the same grounds I described before. =A0That does mean
+> > eval_char_literal() will have to cope with the case of ''.
 > =
 
-> I thought about that too, but I was concerned that it would then allow
-> character literals in properties outside of the cell list or
-> bytestring syntax.  Which I suppose is exactly what you had suggested
-> before now that I think about it.  And would end up being no more
-> ambiguous, and possibly more internally consistent.  I'll make the
-> change and add a test case that shows that functionality as well if
-> that makes sense to you.
+> OK, I could also make it '([^']|\\')+'
+> =
 
-Well, it would allow character literals to be *lexed* in other places,
-but the parser would still reject them outside of the (so far)
-intended contexts without further changes.
+> That way the empty character literal wouldn't be allowed and it still
+> allows all of the cases we care about.
+
+You could, but the same reasoning applies here:  An error message
+saying "empty character literal" is almost certainly more useful than
+"syntax error, Unexpected '" or whatever bison will give us on its
+own.
 
 -- =
 
