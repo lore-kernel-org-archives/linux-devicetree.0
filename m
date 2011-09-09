@@ -1,54 +1,49 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
- MPC5xxx PSC AC97 audio driver
-Date: Fri, 9 Sep 2011 17:37:14 +0100
-Message-ID: <20110909163714.GA4302@sirena.org.uk>
-References: <20110908121600.267dee07@archvile>
-	<CAKON4OzsMd0T6KyDK_5P_pz8R5Pax+Bd+f5+00cO5E0OMCYQpQ@mail.gmail.com>
-	<20110908124529.520c1388@archvile>
-	<CAKON4OwvYy6Dy-MfHT90syPyAUcTVRXqXca-qAVjk-KWkak53A@mail.gmail.com>
-	<20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
-	<20110909082844.3dbf0e72@archvile>
-	<20110909120216.263eeb54@archvile>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH] arm/dt: Add SoC detection macros
+Date: Fri, 9 Sep 2011 09:45:48 -0700
+Message-ID: <CAOesGMj7cwJ-B9cc0DbJ=ePMWeQtp6UiMQT7HCBdOxsmyJReZg@mail.gmail.com>
+References: <1315555339-12685-1-git-send-email-amartin@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20110909120216.263eeb54@archvile>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: David Jander <david.jander@protonic.nl>
-Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1315555339-12685-1-git-send-email-amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 09, 2011 at 12:02:16PM +0200, David Jander wrote:
+On Fri, Sep 9, 2011 at 1:02 AM, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote=
+:
+> These macros allow runtime query of SoC family and version via
+> soc_is_*() =A0If the corresponding SoC is not configured the macro wi=
+ll
+> evaluate to 0. =A0If the corresponding SoC is the only architecure
+> configured, the macro will evaluate to 1. =A0If multiple architecures
+> are configured the macro will evaluate to a runtime call to
+> soc_get_version().
 
-> Ok, I actually spent a while thinking about this. What about the following
-> idea:
+> +void soc_init_version(void)
+> +{
+> + =A0 =A0 =A0 if (of_machine_is_compatible("nvidia,tegra20"))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 soc_version =3D TEGRA_T20;
+> + =A0 =A0 =A0 else if (of_machine_is_compatible("nvidia,tegra30"))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 soc_version =3D TEGRA_T30;
+> + =A0 =A0 =A0 else
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 panic("Unknown SoC");
+> +}
 
-*Always* CC maintainers.
 
-> 1: By adding compatible = "alsa,cpu-dai", this DAI is marked for binding.
+The above should be enough for your local code, no need to wrap it in
+layers of indirection.
 
-This isn't really something that should go into device tree, ALSA is a
-Linux specific concept.
+Sure, doing the of_machine_is...() calls are slow, but you shouldn't
+be doing runtime decisions about what SoC you are on during critical
+path anyway -- it should be done at setup/probe time, much of the rest
+should be possible to handle with setting appropriate function
+pointers, etc.
 
-> 3: Many ac97 codecs are compatible with the generic codec driver "ac97-codec".
+Also, panic:ing is unacceptable.
 
-All should be.  The only reason for specific drivers is to enable
-additional non-standard functionality.
 
-> 4: Don't know if this is the right way to work the codec DAI name in. See the
-> next note:
-
-What we should really be doing here is to autodiscover by reading the ID
-registers in the device.  That needs generic AC'97 bus work which we
-don't have right now.
+-Olof
