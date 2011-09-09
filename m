@@ -1,10 +1,10 @@
 From: "Olivier Martin" <olivier.martin-5wv7dgnIgG8@public.gmane.org>
 Subject: UEFI port of Fdtlib
-Date: Thu, 8 Sep 2011 15:14:09 +0100
-Message-ID: <37925.7617555142$1316624769@news.gmane.org>
+Date: Fri, 9 Sep 2011 11:16:17 +0100
+Message-ID: <13966.7114512578$1316624781@news.gmane.org>
 Mime-Version: 1.0
 Content-Type: multipart/mixed;
-	boundary="----=_NextPart_000_00AA_01CC6E39.F5853200"
+	boundary="----=_NextPart_000_00BC_01CC6EE1.E50EEF80"
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Language: en-gb
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
@@ -21,7 +21,7 @@ List-Id: devicetree@vger.kernel.org
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_00AA_01CC6E39.F5853200
+------=_NextPart_000_00BC_01CC6EE1.E50EEF80
 Content-Type: text/plain;
 	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -49,7 +49,7 @@ Olivier
 
 [1] http://sourceforge.net/apps/mediawiki/tianocore/
 
-------=_NextPart_000_00AA_01CC6E39.F5853200
+------=_NextPart_000_00BC_01CC6EE1.E50EEF80
 Content-Type: text/plain;
 	name="libfdt_env.h"
 Content-Transfer-Encoding: quoted-printable
@@ -116,7 +116,7 @@ static inline char *strchr(const char *s, int c) {=0A=
 =0A=
 #endif /* _LIBFDT_ENV_H */=0A=
 
-------=_NextPart_000_00AA_01CC6E39.F5853200
+------=_NextPart_000_00BC_01CC6EE1.E50EEF80
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -127,4 +127,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-------=_NextPart_000_00AA_01CC6E39.F5853200--
+------=_NextPart_000_00BC_01CC6EE1.E50EEF80--
