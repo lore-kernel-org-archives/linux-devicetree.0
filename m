@@ -1,7 +1,7 @@
 From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 3/3] dtc: Support character literals in bytestrings
-Date: Fri,  9 Sep 2011 12:16:31 -0700
-Message-ID: <1315595791-25793-4-git-send-email-robotboy@chromium.org>
+Subject: [PATCH v4 2/3] dtc: Support character literals in cell lists
+Date: Fri,  9 Sep 2011 12:16:30 -0700
+Message-ID: <1315595791-25793-3-git-send-email-robotboy@chromium.org>
 References: <1315595791-25793-1-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,91 +22,250 @@ List-Id: devicetree@vger.kernel.org
 
 With this patch the following property assignment:
 
-    property = ['a' 2b '\r'];
+    property = <0x12345678 'a' '\r' 100>;
 
 is equivalent to:
 
-    property = [61 2b 0d];
+    property = <0x12345678 0x00000061 0x0000000D 0x00000064>
 
 Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- Documentation/dts-format.txt |    5 +++--
- dtc-parser.y                 |    4 ++++
- tests/char_literal.c         |    8 ++++++++
- tests/char_literal.dts       |    1 +
- 4 files changed, 16 insertions(+), 2 deletions(-)
+ Documentation/dts-format.txt |    2 +-
+ dtc-lexer.l                  |    8 ++++++
+ dtc-parser.y                 |   32 ++++++++++++++++++++++++++
+ tests/.gitignore             |    1 +
+ tests/Makefile.tests         |    1 +
+ tests/char_literal.c         |   50 ++++++++++++++++++++++++++++++++++++++++++
+ tests/char_literal.dts       |    5 ++++
+ tests/run_tests.sh           |    3 ++
+ tests/testdata.h             |    6 +++++
+ 9 files changed, 107 insertions(+), 1 deletions(-)
+ create mode 100644 tests/char_literal.c
+ create mode 100644 tests/char_literal.dts
 
 diff --git a/Documentation/dts-format.txt b/Documentation/dts-format.txt
-index eae8b76..555bd89 100644
+index a655b87..eae8b76 100644
 --- a/Documentation/dts-format.txt
 +++ b/Documentation/dts-format.txt
-@@ -48,11 +48,12 @@ NUL-terminated strings, as bytestrings or a combination of these.
- 	e.g. compatible = "simple-bus";
+@@ -33,7 +33,7 @@ Property values may be defined as an array of 32-bit integer cells, as
+ NUL-terminated strings, as bytestrings or a combination of these.
  
- * A bytestring is enclosed in square brackets [] with each byte
--  represented by two hexadecimal digits.  Spaces between each byte are
--  optional.
-+  represented by two hexadecimal digits or a character literal.
-+  Spaces between each byte or character literal are optional.
+ * Arrays of cells are represented by angle brackets surrounding a
+-  space separated list of C-style integers
++  space separated list of C-style integers or character literals.
  
- 	e.g. local-mac-address = [00 00 12 34 56 78]; or equivalently
- 	     local-mac-address = [000012345678];
-+	e.g. keymap = ['a' 'b' 'c' 'd'];
+ 	e.g. interrupts = <17 0xc>;
  
- * Values may have several comma-separated components, which are
-   concatenated together.
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index e866ea5..494e342 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -29,6 +29,7 @@ PROPNODECHAR	[a-zA-Z0-9,._+*#?@-]
+ PATHCHAR	({PROPNODECHAR}|[/])
+ LABEL		[a-zA-Z_][a-zA-Z0-9_]*
+ STRING		\"([^\\"]|\\.)*\"
++CHAR_LITERAL	'([^']|\\')*'
+ WS		[[:space:]]
+ COMMENT		"/*"([^*]|\*+[^*/])*\*+"/"
+ LINECOMMENT	"//".*\n
+@@ -109,6 +110,13 @@ static int pop_input_file(void);
+ 			return DT_LITERAL;
+ 		}
+ 
++<*>{CHAR_LITERAL}	{
++			yytext[yyleng-1] = '\0';
++			yylval.literal = xstrdup(yytext+1);
++			DPRINT("Character literal: %s\n", yylval.literal);
++			return DT_CHAR_LITERAL;
++		}
++
+ <*>\&{LABEL}	{	/* label reference */
+ 			DPRINT("Ref: %s\n", yytext+1);
+ 			yylval.labelref = xstrdup(yytext+1);
 diff --git a/dtc-parser.y b/dtc-parser.y
-index 554f11a..bc05a24 100644
+index 5e84a67..554f11a 100644
 --- a/dtc-parser.y
 +++ b/dtc-parser.y
-@@ -286,6 +286,10 @@ bytestring:
+@@ -34,6 +34,7 @@ extern struct boot_info *the_boot_info;
+ extern int treesource_error;
+ 
+ static unsigned long long eval_literal(const char *s, int base, int bits);
++static unsigned char eval_char_literal(const char *s);
+ %}
+ 
+ %union {
+@@ -57,6 +58,7 @@ static unsigned long long eval_literal(const char *s, int base, int bits);
+ %token DT_MEMRESERVE
+ %token <propnodename> DT_PROPNODENAME
+ %token <literal> DT_LITERAL
++%token <literal> DT_CHAR_LITERAL
+ %token <cbase> DT_BASE
+ %token <byte> DT_BYTE
+ %token <data> DT_STRING
+@@ -265,6 +267,10 @@ cellval:
  		{
- 			$$ = data_add_marker($1, LABEL, $2);
+ 			$$ = eval_literal($1, 0, 32);
  		}
-+	| bytestring DT_CHAR_LITERAL
++	| DT_CHAR_LITERAL
 +		{
-+			$$ = data_append_byte($1, eval_char_literal($2));
++			$$ = eval_char_literal($1);
 +		}
  	;
  
- subnodes:
-diff --git a/tests/char_literal.c b/tests/char_literal.c
-index 150f2a0..c6e2405 100644
---- a/tests/char_literal.c
-+++ b/tests/char_literal.c
-@@ -33,6 +33,11 @@ int main(int argc, char *argv[])
- {
- 	void *fdt;
- 	uint32_t expected_cells[5];
-+	uint8_t expected_bytes[5] = {TEST_CHAR1,
-+				     TEST_CHAR2,
-+				     TEST_CHAR3,
-+				     TEST_CHAR4,
-+				     TEST_CHAR5};
- 
- 	expected_cells[0] = cpu_to_fdt32((unsigned char)TEST_CHAR1);
- 	expected_cells[1] = cpu_to_fdt32((unsigned char)TEST_CHAR2);
-@@ -46,5 +51,8 @@ int main(int argc, char *argv[])
- 	check_getprop(fdt, 0, "char-literal-cells",
- 		      sizeof(expected_cells), expected_cells);
- 
-+	check_getprop(fdt, 0, "char-literal-bytes",
-+		      sizeof(expected_bytes), expected_bytes);
-+
- 	PASS();
+ bytestring:
+@@ -343,3 +349,29 @@ static unsigned long long eval_literal(const char *s, int base, int bits)
+ 		print_error("bad literal");
+ 	return val;
  }
++
++static unsigned char eval_char_literal(const char *s)
++{
++	int i = 1;
++	char c = s[0];
++
++	if (c == '\0')
++	{
++		print_error("empty character literal");
++		return 0;
++	}
++
++	/*
++	 * If the first character in the character literal is a \ then process
++	 * the remaining characters as an escape encoding. If the first
++	 * character is neither an escape or a terminator it should be the only
++	 * character in the literal and will be returned.
++	 */
++	if (c == '\\')
++		c = get_escape_char(s, &i);
++
++	if (s[i] != '\0')
++		print_error("malformed character literal");
++
++	return c;
++}
+diff --git a/tests/.gitignore b/tests/.gitignore
+index f4e58b2..a3e9bd1 100644
+--- a/tests/.gitignore
++++ b/tests/.gitignore
+@@ -4,6 +4,7 @@
+ /add_subnode_with_nops
+ /asm_tree_dump
+ /boot-cpuid
++/char_literal
+ /del_node
+ /del_property
+ /dtbs_equal_ordered
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index c564e72..e718b63 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -5,6 +5,7 @@ LIB_TESTS_L = get_mem_rsv \
+ 	node_offset_by_prop_value node_offset_by_phandle \
+ 	node_check_compatible node_offset_by_compatible \
+ 	get_alias \
++	char_literal \
+ 	notfound \
+ 	setprop_inplace nop_property nop_node \
+ 	sw_tree1 \
+diff --git a/tests/char_literal.c b/tests/char_literal.c
+new file mode 100644
+index 0000000..150f2a0
+--- /dev/null
++++ b/tests/char_literal.c
+@@ -0,0 +1,50 @@
++/*
++ * libfdt - Flat Device Tree manipulation
++ *	Testcase for character literals in dtc
++ * Copyright (C) 2006 David Gibson, IBM Corporation.
++ * Copyright (C) 2011 The Chromium Authors. All rights reserved.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++#include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdint.h>
++
++#include <fdt.h>
++#include <libfdt.h>
++
++#include "tests.h"
++#include "testdata.h"
++
++int main(int argc, char *argv[])
++{
++	void *fdt;
++	uint32_t expected_cells[5];
++
++	expected_cells[0] = cpu_to_fdt32((unsigned char)TEST_CHAR1);
++	expected_cells[1] = cpu_to_fdt32((unsigned char)TEST_CHAR2);
++	expected_cells[2] = cpu_to_fdt32((unsigned char)TEST_CHAR3);
++	expected_cells[3] = cpu_to_fdt32((unsigned char)TEST_CHAR4);
++	expected_cells[4] = cpu_to_fdt32((unsigned char)TEST_CHAR5);
++
++	test_init(argc, argv);
++	fdt = load_blob_arg(argc, argv);
++
++	check_getprop(fdt, 0, "char-literal-cells",
++		      sizeof(expected_cells), expected_cells);
++
++	PASS();
++}
 diff --git a/tests/char_literal.dts b/tests/char_literal.dts
-index 22e17ed..9baba5c 100644
---- a/tests/char_literal.dts
+new file mode 100644
+index 0000000..22e17ed
+--- /dev/null
 +++ b/tests/char_literal.dts
-@@ -2,4 +2,5 @@
+@@ -0,0 +1,5 @@
++/dts-v1/;
++
++/ {
++	char-literal-cells = <'\r' 'b' '\0' '\'' '\xff'>;
++};
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 72dda32..1246df1 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -206,6 +206,9 @@ dtc_tests () {
+     run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb escapes.dts
+     run_test string_escapes dtc_escapes.test.dtb
  
- / {
- 	char-literal-cells = <'\r' 'b' '\0' '\'' '\xff'>;
-+	char-literal-bytes = ['\r' 'b' '\0' '\'' '\xff'];
- };
++    run_dtc_test -I dts -O dtb -o dtc_char_literal.test.dtb char_literal.dts
++    run_test char_literal dtc_char_literal.test.dtb
++
+     run_dtc_test -I dts -O dtb -o dtc_extra-terminating-null.test.dtb extra-terminating-null.dts
+     run_test extra-terminating-null dtc_extra-terminating-null.test.dtb
+ 
+diff --git a/tests/testdata.h b/tests/testdata.h
+index 5b5a9a3..d4c6759 100644
+--- a/tests/testdata.h
++++ b/tests/testdata.h
+@@ -19,6 +19,12 @@
+ #define TEST_STRING_2	"nastystring: \a\b\t\n\v\f\r\\\""
+ #define TEST_STRING_3	"\xde\xad\xbe\xef"
+ 
++#define TEST_CHAR1	'\r'
++#define TEST_CHAR2	'b'
++#define TEST_CHAR3	'\0'
++#define TEST_CHAR4	'\''
++#define TEST_CHAR5	'\xff'
++
+ #ifndef __ASSEMBLY__
+ extern struct fdt_header _test_tree1;
+ extern struct fdt_header _truncated_property;
 -- 
 1.7.3.1
