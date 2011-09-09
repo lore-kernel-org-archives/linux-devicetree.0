@@ -1,62 +1,95 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dtc: Support character literals in bytestrings
-Date: Thu, 8 Sep 2011 23:01:09 +1000
-Message-ID: <20110908130109.GW30278@yookeroo.fritz.box>
-References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
-	<1315437340-1661-4-git-send-email-robotboy@chromium.org>
-	<20110908035149.GO30278@yookeroo.fritz.box>
-	<20110908070716.GC15955@ponder.secretlab.ca>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [RFC PATCH 05/10] documentation/dt: Add mpu, dsp and iva bindings
+Date: Fri, 9 Sep 2011 02:30:24 +0200
+Message-ID: <4E695E20.5070506@ti.com>
+References: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
+	<1314191356-10963-6-git-send-email-b-cousson@ti.com>
+	<20110908180910.GE2967@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110908070716.GC15955-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110908180910.GE2967@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "Hilman, Kevin" <khilman@ti.com>, "tony@atomide.com" <tony@atomide.com>, "G,
+	Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Randy Dunlap <rdunlap@xenotime.net>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2011 at 12:07:16AM -0700, Grant Likely wrote:
-> On Thu, Sep 08, 2011 at 01:51:49PM +1000, David Gibson wrote:
-> > On Wed, Sep 07, 2011 at 04:15:40PM -0700, Anton Staaf wrote:
-> > > With this patch the following property assignment:
-> > > 
-> > >     property = ['a' 2b '\r'];
-> > > 
-> > > is equivalent to:
-> > > 
-> > >     property = [61 2b 0d];
-> > 
-> > So, I still have some reservations about this syntax.
-> > 
-> > It occurred to me: do you actually need to intermix character and
-> > hexbyte values that much?  Could I suggest an alternate sytax as:
-> > 
-> > 	property = 'a', [2b], 'r';
-> > 
-> > The new character literals sufficiently distinct not to cause problems
-> > here, and it maintains the , == bytestring append behaviour we already
-> > have.
-> > 
-> > Thoughts?
-> 
-> Does it matter much?  I'm happy with either.  Is there a downside to
-> the first syntax?
+On 9/8/2011 8:09 PM, Grant Likely wrote:
+> On Wed, Aug 24, 2011 at 03:09:11PM +0200, Benoit Cousson wrote:
+>> Add documentation for the OMAP4 processors bindings.
+>>
+>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>> Cc: Randy Dunlap<rdunlap@xenotime.net>
+>> ---
+>>   Documentation/devicetree/bindings/arm/omap/dsp.txt |   14 ++++++++
+>>   Documentation/devicetree/bindings/arm/omap/iva.txt |   18 ++++++++++
+>>   Documentation/devicetree/bindings/arm/omap/mpu.txt |   35 ++++++++++++++++++++
+>>   3 files changed, 67 insertions(+), 0 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/omap/dsp.txt
+>>   create mode 100644 Documentation/devicetree/bindings/arm/omap/iva.txt
+>>   create mode 100644 Documentation/devicetree/bindings/arm/omap/mpu.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/omap/dsp.txt b/Documentation/devicetree/bindings/arm/omap/dsp.txt
+>> new file mode 100644
+>> index 0000000..8fcd82c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/omap/dsp.txt
+>> @@ -0,0 +1,14 @@
+>> +* TI - DSP (Digital Signal Processor)
+>> +
+>> +TI DSP included in OMAP SoC
+>> +
+>> +Required properties:
+>> +- compatible : Should be "ti,c64" for OMAP3&  4
+>> +- hwmods: "dsp"
+>> +
+>> +Examples:
+>> +
+>> +dsp {
+>> +    compatible = "ti,omap4-c64", "ti,c64";
+>> +    hwmods = "dsp";
+>> +};
+>> diff --git a/Documentation/devicetree/bindings/arm/omap/iva.txt b/Documentation/devicetree/bindings/arm/omap/iva.txt
+>> new file mode 100644
+>> index 0000000..f428e88
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/omap/iva.txt
+>> @@ -0,0 +1,18 @@
+>> +* TI - IVA (Imaging and Video Accelerator) subsystem
+>> +
+>> +The IVA contain various audio, video or imaging HW accelerator
+>> +depending of the version.
+>> +
+>> +Required properties:
+>> +- compatible : Should be:
+>> +  - "ti,ivahd", "ti,iva" for OMAP4
+>> +  - "ti,iva2", "ti,iva" for OMAP3
+>> +  - "ti,iva1", "ti,iva" for OMAP2
+>
+> Again, be specific to the instantiation and encode the omap version
+> into the compatible value.  Use the form "ti,omap4-*", etc.
 
-Well.. probably not.  I'm just nervous about adding anything in the
-lexically weird bytestring context.
+In that case, I do not necessarily agree. The IVA is a generic TI IP 
+used in various chips. The IP version is well documented in the TRM.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+OK, in fact I didn't pick the proper version:-(
+It should be:
+
++  - "ti,ivahd", for OMAP4
++  - "ti,iva2.2", for OMAP3
++  - "ti,iva2.1", for OMAP2430
++  - "ti,iva1", for OMAP2420
+
+But still, no need to rely on OMAP version to identify the IVA version.
+
+Benoit
