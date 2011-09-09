@@ -1,126 +1,52 @@
-From: David Jander <david.jander@protonic.nl>
-Subject: ASoC audio fabric OF bindings RFC. was: Re: ASoC
- MPC5xxx PSC AC97 audio driver
-Date: Fri, 9 Sep 2011 12:02:16 +0200
-Message-ID: <20110909120216.263eeb54@archvile>
-References: <20110908121600.267dee07@archvile>
-	<CAKON4OzsMd0T6KyDK_5P_pz8R5Pax+Bd+f5+00cO5E0OMCYQpQ@mail.gmail.com>
-	<20110908124529.520c1388@archvile>
-	<CAKON4OwvYy6Dy-MfHT90syPyAUcTVRXqXca-qAVjk-KWkak53A@mail.gmail.com>
-	<20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
-	<20110909082844.3dbf0e72@archvile>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH REPOST 2/2] i2c-imx: add device tree probe support
+Date: Fri, 9 Sep 2011 19:04:34 +0800
+Message-ID: <20110909110433.GH31581@S2100-06.ap.freescale.net>
+References: <1315465775-31335-1-git-send-email-shawn.guo@linaro.org>
+ <1315465775-31335-3-git-send-email-shawn.guo@linaro.org>
+ <4E69A0AE.1060004@gmail.com>
+ <20110909071845.GI28816@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20110909082844.3dbf0e72@archvile>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: torbenh <torbenh@gmx.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110909071845.GI28816-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Darius Augulis <augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 9 Sep 2011 08:28:44 +0200
-David Jander <david.jander@protonic.nl> wrote:
+On Fri, Sep 09, 2011 at 09:18:45AM +0200, Uwe Kleine-K=F6nig wrote:
+> Hello Rob,
+>=20
+> On Fri, Sep 09, 2011 at 12:14:22AM -0500, Rob Herring wrote:
+> > > +i2c@83fc4000 { /* I2C2 on i.MX51 */
+> > > +	compatible =3D "fsl,imx51-i2c", "fsl,imx1-i2c";
+> > > +	reg =3D <0x83fc4000 0x4000>;
+> > > +	interrupts =3D <63>;
+> > > +};
+> > > +
+> > > +i2c@70038000 { /* HS-I2C on i.MX51 */
+> >=20
+> > The mainline driver doesn't support the HS-I2C block does it?
+> >=20
+> > The high speed and "old" i2c blocks on MX51 are basically different
+> > blocks, so the compatible property should be different.
+> I stumbled about that recently, too and found in
+> arch/arm/plat-mxc/devices/platform-imx-i2c.c that the third device
+> description for imx51 is a normal "imx-i2c" one using
+> MX51_HSI2C_DMA_BASE_ADDR. So I concluded it's different but compatibl=
+e.
+>=20
+> board-mx51_babbage.c uses imx51_add_hsi2c but doesn't add a bus
+> description. So It might not attract attention if the driver doesn't
+> match the device.
+>=20
+Aha, I was confused by the platform codes.  Will drop HSI2C.
 
->[...]
-> > i am also interested in a proper fabric example.
-> 
-> What do you think about creating device-tree bindings for that? I tend to
-> like the idea of not needing any special board support code besides the DT,
-> and the audio fabric driver part is the only obstacle for that.
+Thanks for catching this, Rob.
 
-Ok, I actually spent a while thinking about this. What about the following
-idea:
-
-Given the following devicetree:
-
-		...
-		// PSC11 in ac97 mode
-		ac97@11b00 {
-/* 1 */			compatible = "fsl,mpc5121-psc-ac97", "fsl,mpc5121-psc", "alsa,cpu-dai";
-			cell-index = <11>;
-			reg = <0x11b00 0x100>;
-			interrupts = <40 0x8>;
-			fsl,mode = "ac97-slave";
-			fsl,rx-fifo-size = <384>;
-			fsl,tx-fifo-size = <384>;
-			#address-cells = <1>;
-			#size-cells = <0>;
-/* 2 */			codec0: psc-ac97-analog@0 {
-/* 3 */				compatible = "national,lm4550", "ac97-codec";
-/* 4 */				alsa,codec-dai-name = "ac97-hifi";
-			};
-		};
-
-Consider the following pseudo-code in sound/soc/soc-of.c:
-
-static struct snd_soc_card card;
-static struct snd_soc_dai_link *of_dai;
-
-static __init int of_fabric_init(void)
-{
-	of_for_each_compatible_node("alsa,cpu-dai") do {
-		count++;
-	}
-
-	of_dai = kzalloc(count * (sizeof struct snd_soc_dai_link));
-
-	of_for_each_compatible_node("alsa,cpu-dai") as parent do {
-		of_for_each_child(parent) as node {
-			of_dai[i].name = of_get_name(parent);  /* "ac97" */
-			of_dai[i].stream_name = of_fabric_dai[i].name + str(i);
-			of_dai[i].cpu_dai_name = of_get_name(node); /* "psc-ac97-analog" */
-			of_dai[i].codec_dai_name = of_get_property(node, "alsa,codec_dai_name");
-/* 5 */			of_dai[i].codec_name = match_of_compatible_with_registered_codec_list(node);
-			of_dai[i].platform_name = of_soc_name + "-pcm-audio";
-			i++;
-		}
-	}
-
-	card.name = "of-audio";
-	card.dai_link = of_dai;
-	card.num_links = i;
-
-	pdev = platform_device_alloc("soc-audio", 1);
-	platform_set_drvdata(pdev, &card);
-	platform_device_add(pdev);
-}
-
-Notes in the pseudo-source above:
-
-1: By adding compatible = "alsa,cpu-dai", this DAI is marked for binding.
-
-2: Child nodes list all CPU DAI's and their conected codecs. Child node name
-is name of the CPU DAI.
-
-3: Many ac97 codecs are compatible with the generic codec driver "ac97-codec".
-
-4: Don't know if this is the right way to work the codec DAI name in. See the
-next note:
-
-5: The pseudo-function match_of_compatible_with_registered_codec_list() will
-search through the list of registered ALSA codecs and match the compatible
-strings of this codec with one in the list. If one is found, the name is used
-for of_dai[i].codec_name, otherwise the current node is discarded (no matching
-codec driver registered). Maybe the corresponding "codec-dai-name" can be
-extracted from the codec database? That would eliminate line /* 4 */.
-
-Unfortunately, this way we will probably need to get back the Kconfig option
-to choose which codecs should be built. Apparently this option existed before,
-but was removed.
-
-All comments are welcome.
-
-Best regards,
-
--- 
-David Jander
-Protonic Holland.
+--=20
+Regards,
+Shawn
