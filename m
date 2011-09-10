@@ -1,77 +1,65 @@
-From: Andy Fleming <afleming@gmail.com>
-Subject: Re: [PATCH 2/3] netdev/of/phy: Add MDIO bus multiplexer support.
-Date: Fri, 9 Sep 2011 18:22:32 -0500
-Message-ID: <CAKWjMd7pa=BikH0VkUZEFZ9yH+g6g9RSus9woqs1hbR+rb3u9A@mail.gmail.com>
-References: <1314820906-14004-1-git-send-email-david.daney@cavium.com>
-	<1314820906-14004-3-git-send-email-david.daney@cavium.com>
+From: Rhyland Klein <rklein@nvidia.com>
+Subject: [PATCH 2/2 v2] power: bq20z75: Add Device Tree Binding
+Date: Fri,  9 Sep 2011 17:47:49 -0700
+Message-ID: <1315615669-8701-2-git-send-email-rklein@nvidia.com>
+References: <1315615669-8701-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1314820906-14004-3-git-send-email-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1315615669-8701-1-git-send-email-rklein@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Rhyland Klein <rklein@nvidia.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2011 at 3:01 PM, David Daney <david.daney@cavium.com> w=
-rote:
-> This patch adds a somewhat generic framework for MDIO bus
-> multiplexers. =A0It is modeled on the I2C multiplexer.
->
-> The multiplexer is needed if there are multiple PHYs with the same
-> address connected to the same MDIO bus adepter, or if there is
-> insufficient electrical drive capability for all the connected PHY
-> devices.
->
-> Conceptually it could look something like this:
->
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ------------------
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | Control Signal |
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 --------+---------
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |
-> =A0--------------- =A0 --------+------
-> =A0| MDIO MASTER |---| Multiplexer |
-> =A0--------------- =A0 --+-------+----
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A0 =A0 |
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 C =A0 =A0 =A0 C
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 h =A0 =A0 =A0 h
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 i =A0 =A0 =A0 i
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 l =A0 =A0 =A0 l
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 d =A0 =A0 =A0 d
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A0 =A0 |
-> =A0 =A0 --------- =A0 =A0 =A0 A =A0 =A0 =A0 B =A0 ---------
-> =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 | =A0 =A0 =A0=
- |
-> =A0 =A0 | PHY@1 +-------+ =A0 =A0 =A0 +---+ PHY@1 |
-> =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 | =A0 =A0 =A0=
- |
-> =A0 =A0 --------- =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 ---------
-> =A0 =A0 --------- =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 ---------
-> =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 | =A0 | =A0 =A0 =A0=
- |
-> =A0 =A0 | PHY@2 +-------+ =A0 =A0 =A0 +---+ PHY@2 |
-> =A0 =A0 | =A0 =A0 =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A0=
- =A0 |
-> =A0 =A0 --------- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ---------
->
-> This framework configures the bus topology from device tree data. =A0=
-The
-> mechanics of switching the multiplexer is left to device specific
-> drivers.
->
-> The follow-on patch contains a multiplexer driven by GPIO lines.
+Adding the binding for the TI bq20z75 fuel gadge and the
+bq20z75 driver.
 
+Signed-off-by: Rhyland Klein <rklein@nvidia.com>
+---
+ .../bindings/power_supply/ti_bq20z75.txt           |   25 ++++++++++++++++++++
+ 1 files changed, 25 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
 
-It's amazing how various companies' board designers have come up with
-the same brain-dead PHY topologies. We (Freescale) have some similar
-code in our tree, but it's not this generically applicable.
-
->
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: "David S. Miller" <davem@davemloft.net>
-
-Looks good to me.
-
-Acked-by: Andy Fleming <afleming@freescale.com>
+diff --git a/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+new file mode 100644
+index 0000000..3deccfe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+@@ -0,0 +1,25 @@
++TI bq20z75
++~~~~~~~~~~
++
++Required properties :
++ - compatible : "ti,bq20z75"
++
++Optional properties :
++ - i2c-retry-count : The number of times to retry i2c transactions on i2c
++   IO failure.
++ - poll-retry-count : The number of times to try looking for new status
++   after an external change notification.
++ - battery-detect : The GPIO which is used to detect battery presence.
++ - battery-detect-present : The state of the GPIO when the battery is
++   present ( 0 or 1).
++
++Example:
++
++	bq20z75@b {
++		compatible = "ti,bq20z75";
++		reg = < 0xb >;
++		i2c-retry-count = <2>;
++		poll-retry-count = <10>;
++		battery-detect = <314>;
++		battery-detect-present = <0>;
++	}
+-- 
+1.7.6
