@@ -1,131 +1,54 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2 v2] power: bq20z75: devicetree init support
-Date: Fri,  9 Sep 2011 17:47:48 -0700
-Message-ID: <1315615669-8701-1-git-send-email-rklein@nvidia.com>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [RFC PATCH 06/10] hwspinlock: OMAP4: Add spinlock support in DT
+Date: Sun, 11 Sep 2011 10:57:41 +0300
+Message-ID: <CAK=WgbYTo=R1=KhMzLv0iw2qYBPXXyLtB43Z4wvN5p-EvLL9Xw@mail.gmail.com>
+References: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
+	<201109081647.55377.arnd@arndb.de>
+	<CAK=WgbZmFGqo2B_MO_FXDiQHUx1SoKvHEReTpVr9O6XZ2uo7Ng@mail.gmail.com>
+	<201109091458.44153.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201109091458.44153.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "Hilman, Kevin" <khilman@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, "tony@atomide.com" <tony@atomide.com>, "G,
+	Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding support to generate platform data when kernel is configured
-through device tree.
+On Fri, Sep 9, 2011 at 3:58 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> For dynamic allocation, my impression is that we don't
+> need any link from the spinlock user device to the controller at all,
 
-Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-	v2: Fixed typo in binding description
+I agree.
 
- drivers/power/bq20z75.c |   73 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 73 insertions(+), 0 deletions(-)
+> but instead the controller should have a list of the available
+> spinlocks.
 
-diff --git a/drivers/power/bq20z75.c b/drivers/power/bq20z75.c
-index 9c5e5be..922f725 100644
---- a/drivers/power/bq20z75.c
-+++ b/drivers/power/bq20z75.c
-@@ -613,6 +613,76 @@ static void bq20z75_delayed_work(struct work_struct *work)
- 	}
- }
- 
-+#if defined(CONFIG_OF)
-+#include <linux/of_device.h>
-+static const struct of_device_id bq20z75_dt_ids[] = {
-+	{ .compatible = "ti,bq20z75" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(platform, bq20z75_dt_ids);
-+
-+static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-+	struct i2c_client *client)
-+{
-+	const struct of_device_id *dtid;
-+	struct device_node *of_node = client->dev.of_node;
-+	struct bq20z75_platform_data *pdata = client->dev.platform_data;
-+	int rc;
-+	u32 prop;
-+
-+	/* verify this driver matches this device */
-+	dtid = of_match_device(bq20z75_dt_ids, &client->dev);
-+	if (!dtid)
-+		return NULL;
-+
-+	/* if platform data is set, honor it */
-+	if (pdata)
-+		return pdata;
-+
-+	/* first make sure at least one property is set, otherwise
-+	 * it won't change behavior from running without pdata.
-+	 */
-+	if (!of_get_property(of_node, "i2c-retry-count", NULL) &&
-+		!of_get_property(of_node, "poll-retry-count", NULL) &&
-+		!of_get_property(of_node, "battery-detect", NULL) &&
-+		!of_get_property(of_node, "battery-detect-present", NULL))
-+		goto of_out;
-+
-+	pdata = devm_kzalloc(&client->dev, sizeof(struct bq20z75_platform_data),
-+				GFP_KERNEL);
-+	if (!pdata)
-+		goto of_out;
-+
-+	rc = of_property_read_u32(of_node, "i2c-retry-count", &prop);
-+	if (!rc)
-+		pdata->i2c_retry_count = prop;
-+
-+	rc = of_property_read_u32(of_node, "battery-detect", &prop);
-+	if (!rc)
-+		pdata->battery_detect = prop;
-+	else
-+		pdata->battery_detect = -1; /*default is no gpio */
-+
-+	rc = of_property_read_u32(of_node, "battery-detect-present", &prop);
-+	if (!rc)
-+		pdata->battery_detect_present = prop;
-+
-+	rc = of_property_read_u32(of_node, "poll-retry-count", &prop);
-+	if (!rc)
-+		pdata->poll_retry_count = prop;
-+
-+of_out:
-+	return pdata;
-+}
-+#else
-+#define bq20z75_dt_ids NULL
-+static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-+	struct i2c_client *client)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int __devinit bq20z75_probe(struct i2c_client *client,
- 	const struct i2c_device_id *id)
- {
-@@ -642,6 +712,8 @@ static int __devinit bq20z75_probe(struct i2c_client *client,
- 	bq20z75_device->power_supply.external_power_changed =
- 		bq20z75_external_power_changed;
- 
-+	pdata = bq20z75_of_populate_pdata(client);
-+
- 	if (pdata) {
- 		bq20z75_device->gpio_detect =
- 			gpio_is_valid(pdata->battery_detect);
-@@ -775,6 +847,7 @@ static struct i2c_driver bq20z75_battery_driver = {
- 	.id_table	= bq20z75_id,
- 	.driver = {
- 		.name	= "bq20z75-battery",
-+		.of_match_table = bq20z75_dt_ids,
- 	},
- };
- 
--- 
-1.7.6
+Might make more sense to give it the list of reserved (i.e. those that
+were statically allocated) spinlocks, and then let it treat the rest
+as available.
+
+hwspinlock drivers will tell the core which of their spinlocks are
+reserved, so it can make sure not to allocate them when someone calls
+hwspin_lock_request(). To use those reserved spinlocks, users will
+explicitly have to call hwspin_lock_request_specific().
+
+The controller's node should still have something like a "baseid"
+attribute, and possibly also the number of available spinlocks. The
+latter is a bit redundant though, as drivers already know how many
+spinlocks are available (at least the OMAP driver reads it from an
+hardware register. The U8500 one seem just to have it hardcoded in the
+driver).
+
+Vast majority of hwspinlocks are not statically allocated, so this
+would keep the DT minimal, and IMHO, cleaner.
