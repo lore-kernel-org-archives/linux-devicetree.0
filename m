@@ -1,116 +1,73 @@
-From: "Olivier Martin" <olivier.martin-5wv7dgnIgG8@public.gmane.org>
-Subject: RE: UEFI port of Fdtlib
-Date: Mon, 12 Sep 2011 11:00:27 +0100
-Message-ID: <35903.3506167636$1315821671@news.gmane.org>
-References: <00cd01cc6f23$0c9f5990$25de0cb0$@martin@arm.com>
-	<20110912013930.GL9025@yookeroo.fritz.box>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
+ MPC5xxx PSC AC97 audio driver
+Date: Mon, 12 Sep 2011 12:09:50 +0100
+Message-ID: <20110912110950.GD2953@opensource.wolfsonmicro.com>
+References: <20110908121600.267dee07@archvile>
+	<CAKON4OzsMd0T6KyDK_5P_pz8R5Pax+Bd+f5+00cO5E0OMCYQpQ@mail.gmail.com>
+	<20110908124529.520c1388@archvile>
+	<CAKON4OwvYy6Dy-MfHT90syPyAUcTVRXqXca-qAVjk-KWkak53A@mail.gmail.com>
+	<20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
+	<20110909082844.3dbf0e72@archvile>
+	<20110909120216.263eeb54@archvile>
+	<20110909163714.GA4302@sirena.org.uk>
+	<20110912083158.29d9e1fe@archvile>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110912013930.GL9025-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-Content-Language: en-gb
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: 'David Gibson' <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20110912083158.29d9e1fe@archvile>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: David Jander <david.jander@protonic.nl>
+Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Thanks David for the feedback,
+On Mon, Sep 12, 2011 at 08:31:58AM +0200, David Jander wrote:
+> Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
 
-You right I should better use the Tianocore functions "UINT32
-SwapBytes32(UINT32 Value)" and "UINT64 SwapBytes64(UINT64 Value)".
-And the Tianocore's CopyMem() supports the overlapped source and
-destination.
+> > This isn't really something that should go into device tree, ALSA is a
+> > Linux specific concept.
 
-Olivier
+> There are many Linux-specific details in Linux's implementation of Open
+> Firmware Device Trees. Right now, thanks to Linux, Open-Firmware device trees
 
------Original Message-----
-From: David Gibson [mailto:david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org] 
-Sent: 12 September 2011 02:40
-To: Olivier Martin
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Subject: Re: UEFI port of Fdtlib
+This is generally considered a bug in the bindings, the bindings are for
+cross-platform usage and should not be specific to any OS.
 
-On Fri, Sep 09, 2011 at 08:02:40PM +0100, Olivier Martin wrote:
-> Hello all,
-> 
-> I have ported the libfdt to Tianocore project [1] (under BSD license)
-which
-> is an implementation of UEFI specification supported by Intel, ARM Ltd and
-> other major companies.
-> I took the libfdt directory from the head revision of
-> git://git.jdl.com/software/dtc.git and ported it to the Tianocore project.
-> I had just needed to edit the libfdt_env.h to translate the POSIX types
-and
-> functions into their Tianocore equivalents.
-> I was advised to send my changes to this mailing-list (please find the
-> edited lifdt_env.h attached to this email).
-> 
-> I am using this libfdt library to add/update information to the Device
-Tree
-> (Linux kernel cmd line, etc) that is passed to the Linux kernel. I am
-> planning to push upstream my changes in the next couple of days.
-> 
-> Questions and comment are welcome !
-> 
-> Best Regards,
-> Olivier
-> 
-> [1] http://sourceforge.net/apps/mediawiki/tianocore/
+> introduced in arch/arm right now. On all these platforms, its sole existence
+> is purely for running Linux with minimal board support code in the kernel.
 
-> #ifndef _LIBFDT_ENV_H
-> #define _LIBFDT_ENV_H
-> 
-> #include <Library/BaseLib.h>
-> #include <Library/BaseMemoryLib.h>
-> 
-> typedef UINT8 uint8_t;
-> typedef UINT32 uint32_t;
-> typedef UINT64 uint64_t;
-> typedef UINTN uintptr_t;
-> typedef UINTN size_t;
-> 
-> #define _B(n)	((unsigned long long)((uint8_t *)&x)[n])
-> static inline uint32_t fdt32_to_cpu(uint32_t x)
-> {
-> 	return (_B(0) << 24) | (_B(1) << 16) | (_B(2) << 8) | _B(3);
-> }
-> #define cpu_to_fdt32(x) fdt32_to_cpu(x)
-> 
-> static inline uint64_t fdt64_to_cpu(uint64_t x)
-> {
-> 	return (_B(0) << 56) | (_B(1) << 48) | (_B(2) << 40) | (_B(3) << 32)
-> 		| (_B(4) << 24) | (_B(5) << 16) | (_B(6) << 8) | _B(7);
-> }
-> #define cpu_to_fdt64(x) fdt64_to_cpu(x)
-> #undef _B
+Other OSs are actively using device tree.
 
-Tianocore really doesn't have any byte swapping functions?  I only
-used these nasty versions, because they're portable, whereas very
-little about userspace endian.h/bytesex.h is.
+> So, why not add a few more Linux-specific bits to it, if it helps get rid of
+> the last bit of board-specific code?
 
-> static inline void* memcpy(void* dest, const void* src, size_t len) {
->   return CopyMem (dest, src, len);
-> }
-> 
-> static inline void *memmove(void *dest, const void *src, size_t n) {
->   return CopyMem (dest, src, n);
-> }
+Eliminating board specific code for audio is not a realistic goal, the
+configuration of modern audio subsystems is too complex and dynamic.  It
+is realistic to make machine drivers which cover broad classes of
+devices with similar hardware.
 
-Ok, I take it that Tianocore's CopyMem can operate on overlapping
-source and destination, like memmove()?
+> The platforms that will use those bindings, will never have
+> Open-Firmware bioses in the first place, and their DT sources will be part of
+> the kernel source tree anyway.
 
+The plan is to push the device trees out of the kernel into a separate
+repository.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+> > What we should really be doing here is to autodiscover by reading the ID
+> > registers in the device.  That needs generic AC'97 bus work which we
+> > don't have right now.
+
+> Seems reasonable, but is correct autodiscovery really possible for all
+> configurations and all DAI-codec combinations?
+
+Yes, it's a very basic part of AC'97.
