@@ -1,145 +1,55 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2 v2] power: bq20z75: devicetree init support
-Date: Mon, 12 Sep 2011 14:45:34 -0600
-Message-ID: <20110912204533.GI23345@ponder.secretlab.ca>
-References: <1315615669-8701-1-git-send-email-rklein@nvidia.com>
+From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 06/24] C6X: devicetree
+Date: Mon, 12 Sep 2011 19:20:35 -0400
+Message-ID: <1315869636.11280.26.camel@deneb.redhat.com>
+References: <1314826019-22330-1-git-send-email-msalter@redhat.com>
+	<1314826019-22330-7-git-send-email-msalter@redhat.com>
+	<20110912201102.GF23345@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1315615669-8701-1-git-send-email-rklein@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rhyland Klein <rklein@nvidia.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Anton Vorontsov <cbouatmailru@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110912201102.GF23345-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 09, 2011 at 05:47:48PM -0700, Rhyland Klein wrote:
-> Adding support to generate platform data when kernel is configured
-> through device tree.
+On Mon, 2011-09-12 at 14:11 -0600, Grant Likely wrote:
+> On Wed, Aug 31, 2011 at 05:26:41PM -0400, Mark Salter wrote:
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <1>;
+> > +		compatible = "ti,c64x+core-pic";
 > 
-> Signed-off-by: Rhyland Klein <rklein@nvidia.com>
-> ---
-> 	v2: Fixed typo in binding description
-> 
->  drivers/power/bq20z75.c |   73 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 files changed, 73 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/power/bq20z75.c b/drivers/power/bq20z75.c
-> index 9c5e5be..922f725 100644
-> --- a/drivers/power/bq20z75.c
-> +++ b/drivers/power/bq20z75.c
-> @@ -613,6 +613,76 @@ static void bq20z75_delayed_work(struct work_struct *work)
->  	}
->  }
->  
-> +#if defined(CONFIG_OF)
-> +#include <linux/of_device.h>
-> +static const struct of_device_id bq20z75_dt_ids[] = {
-> +	{ .compatible = "ti,bq20z75" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, bq20z75_dt_ids);
-> +
-> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-> +	struct i2c_client *client)
-> +{
-> +	const struct of_device_id *dtid;
-> +	struct device_node *of_node = client->dev.of_node;
-> +	struct bq20z75_platform_data *pdata = client->dev.platform_data;
-> +	int rc;
-> +	u32 prop;
-> +
-> +	/* verify this driver matches this device */
-> +	dtid = of_match_device(bq20z75_dt_ids, &client->dev);
-> +	if (!dtid)
-> +		return NULL;
+> The interrupt controller isn't addressable?  Is it integrated into
+> the CPU?
 
-Just the fact that of_node pointer is set means that a match was made
-against the table.  No need for calling of_match_device.
+Yes, that core controller is controlled through registers accessed
+with special-purpose instructions, not MMIO. Other controllers, like
+megamodule and some as-yet unimplemented use MMIO.
 
-> +
-> +	/* if platform data is set, honor it */
-> +	if (pdata)
-> +		return pdata;
-> +
-> +	/* first make sure at least one property is set, otherwise
-> +	 * it won't change behavior from running without pdata.
-> +	 */
-> +	if (!of_get_property(of_node, "i2c-retry-count", NULL) &&
-> +		!of_get_property(of_node, "poll-retry-count", NULL) &&
-> +		!of_get_property(of_node, "battery-detect", NULL) &&
-> +		!of_get_property(of_node, "battery-detect-present", NULL))
-> +		goto of_out;
-> +
-> +	pdata = devm_kzalloc(&client->dev, sizeof(struct bq20z75_platform_data),
-> +				GFP_KERNEL);
-> +	if (!pdata)
-> +		goto of_out;
-> +
-> +	rc = of_property_read_u32(of_node, "i2c-retry-count", &prop);
-> +	if (!rc)
-> +		pdata->i2c_retry_count = prop;
-> +
-> +	rc = of_property_read_u32(of_node, "battery-detect", &prop);
-> +	if (!rc)
-> +		pdata->battery_detect = prop;
-> +	else
-> +		pdata->battery_detect = -1; /*default is no gpio */
-> +
-> +	rc = of_property_read_u32(of_node, "battery-detect-present", &prop);
-> +	if (!rc)
-> +		pdata->battery_detect_present = prop;
-> +
-> +	rc = of_property_read_u32(of_node, "poll-retry-count", &prop);
-> +	if (!rc)
-> +		pdata->poll_retry_count = prop;
-> +
-> +of_out:
-> +	return pdata;
-> +}
-> +#else
-> +#define bq20z75_dt_ids NULL
-> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-> +	struct i2c_client *client)
-> +{
-> +	return NULL;
-> +}
-> +#endif
-> +
->  static int __devinit bq20z75_probe(struct i2c_client *client,
->  	const struct i2c_device_id *id)
->  {
-> @@ -642,6 +712,8 @@ static int __devinit bq20z75_probe(struct i2c_client *client,
->  	bq20z75_device->power_supply.external_power_changed =
->  		bq20z75_external_power_changed;
->  
-> +	pdata = bq20z75_of_populate_pdata(client);
-> +
->  	if (pdata) {
->  		bq20z75_device->gpio_detect =
->  			gpio_is_valid(pdata->battery_detect);
-> @@ -775,6 +847,7 @@ static struct i2c_driver bq20z75_battery_driver = {
->  	.id_table	= bq20z75_id,
->  	.driver = {
->  		.name	= "bq20z75-battery",
-> +		.of_match_table = bq20z75_dt_ids,
->  	},
->  };
->  
-> -- 
-> 1.7.6
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> > +	};
+> > +
+> > +	soc@00000000 {
+> 
+> "soc@2a80000" to match the 'reg' property of this node.
+
+Okay, I think I need a separate node for that reg property. The SoC
+address space does actually start at 0. The registers in that reg
+property are "SoC-level" registers holding silicon revision, pin
+strap status, etc. All of the SoCs have a "device state config"
+node which have registers like that. Instead of having them in the
+device state block, this SoC has them in a separate area. I just
+got lazy and put them the reg property in the soc node, but I think
+it really calls for a separate node.
+
+--Mark
