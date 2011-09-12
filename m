@@ -1,71 +1,68 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
- MPC5xxx PSC AC97 audio driver
-Date: Mon, 12 Sep 2011 15:52:14 +0100
-Message-ID: <20110912145214.GC5887@opensource.wolfsonmicro.com>
-References: <20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
-	<20110909082844.3dbf0e72@archvile>
-	<20110909120216.263eeb54@archvile>
-	<20110909163714.GA4302@sirena.org.uk>
-	<20110912083158.29d9e1fe@archvile>
-	<20110912110950.GD2953@opensource.wolfsonmicro.com>
-	<20110912145507.4ac0d56f@archvile>
-	<20110912131924.GB5887@opensource.wolfsonmicro.com>
-	<20110912155905.35cda85b@archvile>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Appended devicetree with Torvalds' HEAD
+Date: Mon, 12 Sep 2011 12:15:51 -0400 (EDT)
+Message-ID: <alpine.LFD.2.00.1109121159270.20358@xanadu.home>
+References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
+	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
+	<CACRpkdaVL5L2-DR8gshN9b0sOn5rDY5QyP4fwZggXjFPmFr9-g@mail.gmail.com>
+	<alpine.LFD.2.00.1109120922140.20358@xanadu.home>
+	<20110912155414.GA28954@glitch.intra.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20110912155905.35cda85b@archvile>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: David Jander <david.jander@protonic.nl>
-Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110912155414.GA28954-DoxiOL6zdryAm1IiwMqfSqzUEOm+Xw19@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2011 at 03:59:05PM +0200, David Jander wrote:
-> Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
+On Mon, 12 Sep 2011, Domenico Andreoli wrote:
 
-> > Note the "dynamic" bit - the configuration changes at runtime.
-> > Describing the hardware for something like a modern smartphone isn't
-> > particularly useful due to the flexibility, there are too many different
-> > ways of configuring the system and we need code to acutally take those
-> > decision.
+> On Mon, Sep 12, 2011 at 09:25:26AM -0400, Nicolas Pitre wrote:
+> > On Mon, 12 Sep 2011, Linus Walleij wrote:
+> > 
+> > > So it appears that the appended device tree does not
+> > > show up.
+> > > 
+> > > I don't quite know how to debug this further...
+> > 
+> > I'm in the process of refreshing those patches, bringing them forward 
+> > and cleaning up the parts that I dislike in the process.  I will 
+> > certainly look at your failure case.
+> > 
+> > > Given that the appended approach is generally
+> > > frowned upon maybe we are better off trying to fix
+> > > our U-Boot, getting a combo that is known to work
+> > > with device tree, than trying to get appended device
+> > > trees to work?
+> > 
+> > It still has to minimally work as some bootloaders out there simply 
+> > can't be updated at all.
+> 
+> Appending dtb to the kernel image solves the case of those boot loaders
+> that cannot be updated but also reduces the genericity of the so built
+> kernel because you then need a kernel+dtb bundle for each affected
+> bootloader+board combination.
+> 
+> Couldn't this drawback be mitigated allowing the append of multiple dtbs?
+> Kernel would not be truly generic but surely more than kernel+single dtb.
 
-> Ok, but you could still describe the hardwired part of it (Audio muxes,
-> codecs, busses and physical interfaces). Isn't that what OF is all about?
-> In our case, its just a simple AC97 codec connected to a simple AC97 bus.
-> Sounds like total overkill having to write a "fabric driver" for this....
-> while there are already quite a few that are all 99% the same!
+No.  A line must be drawn somewhere and as I said I don't want this 
+feature to become more handy than it strictly has to be.  If you care so 
+deeply about 1) device tree and 2) having a generic kernel supporting 
+multiple targets, then you should really think about updating your 
+bootloader. Otherwise you should simply make the DTB concatenation at 
+the very last minute before storing the result onto your boot medium and 
+distribute the kernel and the various DTBs separately otherwise.
 
-I'm not sure I understand what you are talking about.  As I've already
-said at least once having a *machine* driver which covers multiple
-machines is absolutely OK.  We already have several such drivers in
-kernel.
 
-*Please* look at the existing code and read what I'm saying, and ideally
-also read the prior discussions on this topic.  Please also try to avoid
-inventing your own techncial terms.  It's enormously repetitive and not
-terribly useful to have to go through all this stuff from square one
-every single time someone looks at this stuff.
-
-> > > > The plan is to push the device trees out of the kernel into a separate
-> > > > repository.
-
-> > > Good idea.... but where should such a repository be hosted?
-
-> > Still an open issue.
-
-> Seems like its hard to find a vendor- and OS-neutral entity to host this?
-> OpenBIOS maybe?
-
-More a problem of deciding which of the many available options to
-choose.
+Nicolas
