@@ -1,94 +1,84 @@
-From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dtc: Support character literals in bytestrings
-Date: Sun, 11 Sep 2011 22:09:32 -0700
-Message-ID: <CAF6FioW9iY1JAEq5_vn0ZbHC81LBF7xN6JNzBVTbs+k19p2pRg@mail.gmail.com>
-References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
-	<1315437340-1661-4-git-send-email-robotboy@chromium.org>
-	<20110908035149.GO30278@yookeroo.fritz.box>
-	<20110908070716.GC15955@ponder.secretlab.ca>
-	<20110908130109.GW30278@yookeroo.fritz.box>
-	<CAF6FioWOuK3szFb8FD+_fde0HpZ0TJJXx51ZL=BAcZFSojRGCQ@mail.gmail.com>
-	<20110909072532.GC9025@yookeroo.fritz.box>
-	<CAF6FioVxYZW7grfwE1Q_FP5T95Omh9sqzAVyzsZr8EbfM6WV_Q@mail.gmail.com>
-	<20110912004807.GH9025@yookeroo.fritz.box>
+From: David Jander <david.jander@protonic.nl>
+Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
+ MPC5xxx PSC AC97 audio driver
+Date: Mon, 12 Sep 2011 08:31:58 +0200
+Message-ID: <20110912083158.29d9e1fe@archvile>
+References: <20110908121600.267dee07@archvile>
+	<CAKON4OzsMd0T6KyDK_5P_pz8R5Pax+Bd+f5+00cO5E0OMCYQpQ@mail.gmail.com>
+	<20110908124529.520c1388@archvile>
+	<CAKON4OwvYy6Dy-MfHT90syPyAUcTVRXqXca-qAVjk-KWkak53A@mail.gmail.com>
+	<20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
+	<20110909082844.3dbf0e72@archvile>
+	<20110909120216.263eeb54@archvile>
+	<20110909163714.GA4302@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110912004807.GH9025-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20110909163714.GA4302@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 11, 2011 at 5:48 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Fri, Sep 09, 2011 at 11:37:51AM -0700, Anton Staaf wrote:
->> On Fri, Sep 9, 2011 at 12:25 AM, David Gibson
->> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> > On Thu, Sep 08, 2011 at 11:30:42PM -0700, Anton Staaf wrote:
-> [snip]
->> > I supposed modifying your suggestion, but combining with our existing
->> > convention for "reserved words" we could do:
->> >
->> > =A0 =A0 =A0 =A0prop =3D /uint8/ <0xab 0xcd>;
->> >
->> > I don't love it, but it's about the best I've come up with yet. =A0And
->> > in particular it's probably the variant I'd be least upset to carry
->> > around as legacy if we come up with a better way in future.
->>
->> Yes, I like this better than my suggestions of using !. =A0I wasn't sure
->> if the /.../ syntax was something that was going to be allowed in
->> property definitions. =A0One other option working from this could be:
->>
->> property =3D /size/ 8 <0xab 0xcd>;
->
-> I quite like that idea.
+On Fri, 9 Sep 2011 17:37:14 +0100
+Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
 
-OK, I can take a look at writing up a patch to add this.  Unless it
-was something anyone else wanted to do.  :)
+> On Fri, Sep 09, 2011 at 12:02:16PM +0200, David Jander wrote:
+> 
+> > Ok, I actually spent a while thinking about this. What about the following
+> > idea:
+> 
+> *Always* CC maintainers.
 
--Anton
+Sorry ;-)
 
->> It has the advantage of limiting the number of reserved words created.
->> =A0It could also be:
->>
->> property =3D /type/ uint8 <0xab 0xcd>;
->
-> Not so fond of this one. =A0The "uint8" would have to be some new
-> lexical type - "identifed" probably, which we'd then have to look up.
->
->> Which would allow us to define new types for cell lists without adding
->> new syntax. =A0I'm not sure if this is too useful though because the
->> only types that I can think of that are not summed up by their size
->> are things like float and double...
->
-> Yeah, it's my feeling that the < > symtax should remain for integer
-> arrays. =A0If we need something for other types in future, we should
-> define new, distinct syntax for that when the time comes.
->
->> But it does have a nice look to
->> it in my opinion. =A0And I would assume that if the /type/ <typename>
->> was left off it would default to a uint32_t cell list. =A0So the
->> additional verbosity of having to indicate it's a different type and
->> what the type is will only be needed in a few instances.
->
-> Yes.
->
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
+> > 1: By adding compatible = "alsa,cpu-dai", this DAI is marked for binding.
+> 
+> This isn't really something that should go into device tree, ALSA is a
+> Linux specific concept.
+
+There are many Linux-specific details in Linux's implementation of Open
+Firmware Device Trees. Right now, thanks to Linux, Open-Firmware device trees
+are used for much more hardware platforms than just Oracle hardware that
+probably isn't manufactured anymore and IBM Power servers. For embedded
+systems for example, DT's have been used on all PowerPC platforms and is being
+introduced in arch/arm right now. On all these platforms, its sole existence
+is purely for running Linux with minimal board support code in the kernel.
+So, why not add a few more Linux-specific bits to it, if it helps get rid of
+the last bit of board-specific code?
+The platforms that will use those bindings, will never have
+Open-Firmware bioses in the first place, and their DT sources will be part of
+the kernel source tree anyway.
+
+> > 3: Many ac97 codecs are compatible with the generic codec driver
+> > "ac97-codec".
+> 
+> All should be.  The only reason for specific drivers is to enable
+> additional non-standard functionality.
+
+I was being careful.
+
+> > 4: Don't know if this is the right way to work the codec DAI name in. See
+> > the next note:
+> 
+> What we should really be doing here is to autodiscover by reading the ID
+> registers in the device.  That needs generic AC'97 bus work which we
+> don't have right now.
+
+Seems reasonable, but is correct autodiscovery really possible for all
+configurations and all DAI-codec combinations?
+
+Best regards,
+
+-- 
+David Jander
+Protonic Holland.
