@@ -1,103 +1,107 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Appended devicetree with Torvalds' HEAD
-Date: Mon, 12 Sep 2011 14:15:58 +0200
-Message-ID: <CACRpkdaVL5L2-DR8gshN9b0sOn5rDY5QyP4fwZggXjFPmFr9-g@mail.gmail.com>
-References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
-	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
+From: David Jander <david.jander@protonic.nl>
+Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
+ MPC5xxx PSC AC97 audio driver
+Date: Mon, 12 Sep 2011 14:55:07 +0200
+Message-ID: <20110912145507.4ac0d56f@archvile>
+References: <20110908121600.267dee07@archvile>
+	<CAKON4OzsMd0T6KyDK_5P_pz8R5Pax+Bd+f5+00cO5E0OMCYQpQ@mail.gmail.com>
+	<20110908124529.520c1388@archvile>
+	<CAKON4OwvYy6Dy-MfHT90syPyAUcTVRXqXca-qAVjk-KWkak53A@mail.gmail.com>
+	<20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
+	<20110909082844.3dbf0e72@archvile>
+	<20110909120216.263eeb54@archvile>
+	<20110909163714.GA4302@sirena.org.uk>
+	<20110912083158.29d9e1fe@archvile>
+	<20110912110950.GD2953@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.00.1109061347410.20358-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20110912110950.GD2953@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 6, 2011 at 7:52 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, 6 Sep 2011, Linus Walleij wrote:
->
->> Does anyone happen to run a mainline kernel with
->> zImage-appended device tree?
->>
->> Or:
->>
->> Are there out-of-tree patches required to do this?
->> (I guess so.)
->>
->> And:
->>
->> Do they actually work?
->
-> They sure do, (or so I hope).
->
-> My latest patchset is here:
+On Mon, 12 Sep 2011 12:09:50 +0100
+Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
 
-I've tested this a bit now with U8500 and RealView
-PB1176.
+> On Mon, Sep 12, 2011 at 08:31:58AM +0200, David Jander wrote:
+> > Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
+> 
+> > > This isn't really something that should go into device tree, ALSA is a
+> > > Linux specific concept.
+> 
+> > There are many Linux-specific details in Linux's implementation of Open
+> > Firmware Device Trees. Right now, thanks to Linux, Open-Firmware device
+> > trees
+> 
+> This is generally considered a bug in the bindings, the bindings are for
+> cross-platform usage and should not be specific to any OS.
 
-I'm using the clean patches on a clean tree, i.e.
-just relying on the code already in mainline.
+Ok. I get your point.
 
-We add this to the MACHINE_START()
+> > introduced in arch/arm right now. On all these platforms, its sole
+> > existence is purely for running Linux with minimal board support code in
+> > the kernel.
+> 
+> Other OSs are actively using device tree.
 
-static const char * realview_dt_board_compat[] = {
-       "arm,realview-pb1176",
-       NULL
-};
+Interesting. I wasn't aware of "actively using". Sure, there's MacOS-X-ppc,
+IBM AIX, Oracle Solaris.... and I just discovered that Free-/OpenBSD also use
+them.
 
-.dt_compat      = realview_dt_board_compat,
+> > So, why not add a few more Linux-specific bits to it, if it helps get rid
+> > of the last bit of board-specific code?
+> 
+> Eliminating board specific code for audio is not a realistic goal, the
+> configuration of modern audio subsystems is too complex and dynamic.  
 
-On kernel 3.1-rc4 the system hangs in early boot
-(early printk does not help). But this is not related to
-these patches at all, it happens as soon as you enable
-CONFIG_USE_OF. (Any hints on how to fix that?)
+Why not? How complex could it be in order to not be able to describe it in a
+Device-Tree in some OS-agnostic way?
 
-So I tested a bit with just a plain v3.0 kernel.
+> It
+> is realistic to make machine drivers which cover broad classes of
+> devices with similar hardware.
 
-Using the "supplementing DTB with traditional ATAG data"
-patch totally hangs my systems, even if I don't enable
-CONFIG_ATAG_DTB_COMPAT, so I think that patch
-needs some scrutiny.
+Ok. That was my original plan... it just occurred to me that describing the
+audio fabric in OF-DT would be a better idea :-(
 
-Removing that patch the system boots, and I can use
-CONFIG_USE_OF with CONFIG_PROC_DEVICETREE
-to inspect an empty tree in /proc/device-tree
+> > The platforms that will use those bindings, will never have
+> > Open-Firmware bioses in the first place, and their DT sources will be part
+> > of the kernel source tree anyway.
+> 
+> The plan is to push the device trees out of the kernel into a separate
+> repository.
 
-If I then try to enable these patches it dies
-by not finding any "compatible" property. (But it boots,
-yay!)
+Good idea.... but where should such a repository be hosted?
 
-Error: unrecognized/unsupported device tree compatible list:
-[ ]
-Available machine support:
-ID (hex)	NAME
-ffffffff	ARM-RealView PB1176
-Please check your kernel config and/or bootloader.
+> > > What we should really be doing here is to autodiscover by reading the ID
+> > > registers in the device.  That needs generic AC'97 bus work which we
+> > > don't have right now.
+> 
+> > Seems reasonable, but is correct autodiscovery really possible for all
+> > configurations and all DAI-codec combinations?
+> 
+> Yes, it's a very basic part of AC'97.
 
-(I know the MACHINE_TYPE isn't sane.)
+Thanks for pointing out. I suspected that already, but since everyone seems to
+just go ahead and write his own piece of fabric-code, I started wondering
+about the reason. I wouldn't consider a second about just blindfolded
+duplicating what several others already did before me without seriously
+thinking about a universal "fits almost all" solution instead. And I still
+refuse to just copy-cat audio fabric code for our board!
 
-Anyway, so the
-prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
-returns NULL.
+Best regards,
 
-So it appears that the appended device tree does not
-show up.
-
-I don't quite know how to debug this further...
-Given that the appended approach is generally
-frowned upon maybe we are better off trying to fix
-our U-Boot, getting a combo that is known to work
-with device tree, than trying to get appended device
-trees to work?
-
-Yours,
-Linus Walleij
+-- 
+David Jander
+Protonic Holland.
