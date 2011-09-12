@@ -1,142 +1,235 @@
-From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dtc: Support character literals in bytestrings
-Date: Mon, 12 Sep 2011 10:53:23 -0700
-Message-ID: <CAF6FioWhaddgCRRC70SpzWKtP-GjQagk7WxeVvRTRHvZaPtO6A@mail.gmail.com>
-References: <1315437340-1661-1-git-send-email-robotboy@chromium.org>
-	<1315437340-1661-4-git-send-email-robotboy@chromium.org>
-	<20110908035149.GO30278@yookeroo.fritz.box>
-	<20110908070716.GC15955@ponder.secretlab.ca>
-	<20110908130109.GW30278@yookeroo.fritz.box>
-	<CAF6FioWOuK3szFb8FD+_fde0HpZ0TJJXx51ZL=BAcZFSojRGCQ@mail.gmail.com>
-	<20110909072532.GC9025@yookeroo.fritz.box>
-	<CAF6FioVxYZW7grfwE1Q_FP5T95Omh9sqzAVyzsZr8EbfM6WV_Q@mail.gmail.com>
-	<20110912004807.GH9025@yookeroo.fritz.box>
-	<CAF6FioW9iY1JAEq5_vn0ZbHC81LBF7xN6JNzBVTbs+k19p2pRg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAF6FioW9iY1JAEq5_vn0ZbHC81LBF7xN6JNzBVTbs+k19p2pRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v3 2/6] DMA: PL330: Infer transfer direction from transfer
+ request instead of platform data
+Date: Mon, 12 Sep 2011 23:59:21 +0530
+Message-ID: <1315852165-32402-3-git-send-email-thomas.abraham@linaro.org>
+References: <1315852165-32402-1-git-send-email-thomas.abraham@linaro.org>
+ <1315852165-32402-2-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1315852165-32402-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, vinod.koul@intel.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 11, 2011 at 10:09 PM, Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> On Sun, Sep 11, 2011 at 5:48 PM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> On Fri, Sep 09, 2011 at 11:37:51AM -0700, Anton Staaf wrote:
->>> On Fri, Sep 9, 2011 at 12:25 AM, David Gibson
->>> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->>> > On Thu, Sep 08, 2011 at 11:30:42PM -0700, Anton Staaf wrote:
->> [snip]
->>> > I supposed modifying your suggestion, but combining with our existing
->>> > convention for "reserved words" we could do:
->>> >
->>> > =A0 =A0 =A0 =A0prop =3D /uint8/ <0xab 0xcd>;
->>> >
->>> > I don't love it, but it's about the best I've come up with yet. =A0And
->>> > in particular it's probably the variant I'd be least upset to carry
->>> > around as legacy if we come up with a better way in future.
->>>
->>> Yes, I like this better than my suggestions of using !. =A0I wasn't sure
->>> if the /.../ syntax was something that was going to be allowed in
->>> property definitions. =A0One other option working from this could be:
->>>
->>> property =3D /size/ 8 <0xab 0xcd>;
->>
->> I quite like that idea.
->
-> OK, I can take a look at writing up a patch to add this. =A0Unless it
-> was something anyone else wanted to do. =A0:)
->
-> -Anton
+The transfer direction for a channel can be inferred from the transfer
+request and the need for specifying transfer direction in platfrom data
+can be eliminated. So the structure definition 'struct dma_pl330_peri'
+is no longer required.
 
-So, I've done some looking into an implementation of the /size/
-syntax.  Here's what I'm thinking so far:
+The channel's private data is set to point to a channel id specified in
+the platform data (instead of an instance of type 'struct dma_pl330_peri').
+The filter function is correspondingly modified to match the channel id.
 
-1) Parsing /size/ and the subsequent literal are easy, we knew this already.
+With the 'struct dma_pl330_peri' removed from platform data, the dma
+controller transfer capabilities cannot be inferred any more. Hence,
+the dma controller capabilities is specified using platform data.
 
-2) The phandle references are a problem.  They are fixed up in
-checks.c:fixup_phandle_references and that function expects that there
-is 32-bits of space (sizeof(cell_t)) available to write the phandle
-into.
+Cc: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Boojin Kim <boojin.kim@samsung.com>
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+Acked-by: Jassi Brar <jassisinghbrar@gmail.com>
+---
+ drivers/dma/pl330.c        |   65 +++++++++++---------------------------------
+ include/linux/amba/pl330.h |   13 ++-------
+ 2 files changed, 19 insertions(+), 59 deletions(-)
 
-3) Communicating the current size of the cells from the parser rule
-that reads the DT_SIZE and DT_LITERAL to the parser rule that reads
-the cellval requires either some auxiliary data or an explosion of the
-parser rules (one per size we want to support).  Obviously the latter
-is bad.
-
-So, one solution to the above problems is to disallow phandle
-references in anything other than a uint32 cell list, and to augment
-the "data" struct to include the current cell size.  This can be used
-to reject any attempts to add a REF_PHANDLE marker when the cell size
-is not 32-bits.  The fixup code in checks.c would then never encounter
-a REF_PHANDLE in a location that didn't have enough space reserved for
-it.  A slight modification of the above could be to allow a
-REF_PHANDLE any time the current cell size is greater than 32 bits.
-
-Other solutions include always appending 32-bits and adding the
-REF_PHANDLE, no matter the current size of the cell.  Or always adding
-the minimum of 32-bits or the current size of the cell.
-
-Updating the current cell size will also be a trick.  The parser rules
-will need to be split up a bit I think so that once the DT_SIZE and
-DT_LITERAL are read the current cell size can be updated and then the
-celllist can be read.
-
-In any of these solutions I think we still need to track the current
-cell size in the data struct.
-
-I don't see any problem with adding LABEL markers to cell lists of
-size smaller than 32-bits.
-
-Thoughts?
-
-Thanks,
-    Anton
-
->>> It has the advantage of limiting the number of reserved words created.
->>> =A0It could also be:
->>>
->>> property =3D /type/ uint8 <0xab 0xcd>;
->>
->> Not so fond of this one. =A0The "uint8" would have to be some new
->> lexical type - "identifed" probably, which we'd then have to look up.
->>
->>> Which would allow us to define new types for cell lists without adding
->>> new syntax. =A0I'm not sure if this is too useful though because the
->>> only types that I can think of that are not summed up by their size
->>> are things like float and double...
->>
->> Yeah, it's my feeling that the < > symtax should remain for integer
->> arrays. =A0If we need something for other types in future, we should
->> define new, distinct syntax for that when the time comes.
->>
->>> But it does have a nice look to
->>> it in my opinion. =A0And I would assume that if the /type/ <typename>
->>> was left off it would default to a uint32_t cell list. =A0So the
->>> additional verbosity of having to indicate it's a different type and
->>> what the type is will only be needed in a few instances.
->>
->> Yes.
->>
->> --
->> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music=
- baroque, and my code
->> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ =
-_other_
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _=
-around_!
->> http://www.ozlabs.org/~dgibson
->>
->
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 5f1d24c..992bf82 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -272,13 +272,13 @@ static void dma_pl330_rqcb(void *token, enum pl330_op_err err)
+ 
+ bool pl330_filter(struct dma_chan *chan, void *param)
+ {
+-	struct dma_pl330_peri *peri;
++	u8 *peri_id;
+ 
+ 	if (chan->device->dev->driver != &pl330_driver.drv)
+ 		return false;
+ 
+-	peri = chan->private;
+-	return peri->peri_id == (unsigned)param;
++	peri_id = chan->private;
++	return *peri_id == (unsigned)param;
+ }
+ EXPORT_SYMBOL(pl330_filter);
+ 
+@@ -512,7 +512,7 @@ pluck_desc(struct dma_pl330_dmac *pdmac)
+ static struct dma_pl330_desc *pl330_get_desc(struct dma_pl330_chan *pch)
+ {
+ 	struct dma_pl330_dmac *pdmac = pch->dmac;
+-	struct dma_pl330_peri *peri = pch->chan.private;
++	u8 *peri_id = pch->chan.private;
+ 	struct dma_pl330_desc *desc;
+ 
+ 	/* Pluck one desc from the pool of DMAC */
+@@ -537,13 +537,7 @@ static struct dma_pl330_desc *pl330_get_desc(struct dma_pl330_chan *pch)
+ 	desc->txd.cookie = 0;
+ 	async_tx_ack(&desc->txd);
+ 
+-	if (peri) {
+-		desc->req.rqtype = peri->rqtype;
+-		desc->req.peri = pch->chan.chan_id;
+-	} else {
+-		desc->req.rqtype = MEMTOMEM;
+-		desc->req.peri = 0;
+-	}
++	desc->req.peri = peri_id ? pch->chan.chan_id : 0;
+ 
+ 	dma_async_tx_descriptor_init(&desc->txd, &pch->chan);
+ 
+@@ -630,12 +624,14 @@ static struct dma_async_tx_descriptor *pl330_prep_dma_cyclic(
+ 	case DMA_TO_DEVICE:
+ 		desc->rqcfg.src_inc = 1;
+ 		desc->rqcfg.dst_inc = 0;
++		desc->req.rqtype = MEMTODEV;
+ 		src = dma_addr;
+ 		dst = pch->fifo_addr;
+ 		break;
+ 	case DMA_FROM_DEVICE:
+ 		desc->rqcfg.src_inc = 0;
+ 		desc->rqcfg.dst_inc = 1;
++		desc->req.rqtype = DEVTOMEM;
+ 		src = pch->fifo_addr;
+ 		dst = dma_addr;
+ 		break;
+@@ -661,16 +657,12 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
+ {
+ 	struct dma_pl330_desc *desc;
+ 	struct dma_pl330_chan *pch = to_pchan(chan);
+-	struct dma_pl330_peri *peri = chan->private;
+ 	struct pl330_info *pi;
+ 	int burst;
+ 
+ 	if (unlikely(!pch || !len))
+ 		return NULL;
+ 
+-	if (peri && peri->rqtype != MEMTOMEM)
+-		return NULL;
+-
+ 	pi = &pch->dmac->pif;
+ 
+ 	desc = __pl330_prep_dma_memcpy(pch, dst, src, len);
+@@ -679,6 +671,7 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
+ 
+ 	desc->rqcfg.src_inc = 1;
+ 	desc->rqcfg.dst_inc = 1;
++	desc->req.rqtype = MEMTOMEM;
+ 
+ 	/* Select max possible burst size */
+ 	burst = pi->pcfg.data_bus_width / 8;
+@@ -707,24 +700,13 @@ pl330_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ {
+ 	struct dma_pl330_desc *first, *desc = NULL;
+ 	struct dma_pl330_chan *pch = to_pchan(chan);
+-	struct dma_pl330_peri *peri = chan->private;
+ 	struct scatterlist *sg;
+ 	unsigned long flags;
+ 	int i;
+ 	dma_addr_t addr;
+ 
+-	if (unlikely(!pch || !sgl || !sg_len || !peri))
+-		return NULL;
+-
+-	/* Make sure the direction is consistent */
+-	if ((direction == DMA_TO_DEVICE &&
+-				peri->rqtype != MEMTODEV) ||
+-			(direction == DMA_FROM_DEVICE &&
+-				peri->rqtype != DEVTOMEM)) {
+-		dev_err(pch->dmac->pif.dev, "%s:%d Invalid Direction\n",
+-				__func__, __LINE__);
++	if (unlikely(!pch || !sgl || !sg_len))
+ 		return NULL;
+-	}
+ 
+ 	addr = pch->fifo_addr;
+ 
+@@ -765,11 +747,13 @@ pl330_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 		if (direction == DMA_TO_DEVICE) {
+ 			desc->rqcfg.src_inc = 1;
+ 			desc->rqcfg.dst_inc = 0;
++			desc->req.rqtype = MEMTODEV;
+ 			fill_px(&desc->px,
+ 				addr, sg_dma_address(sg), sg_dma_len(sg));
+ 		} else {
+ 			desc->rqcfg.src_inc = 0;
+ 			desc->rqcfg.dst_inc = 1;
++			desc->req.rqtype = DEVTOMEM;
+ 			fill_px(&desc->px,
+ 				sg_dma_address(sg), addr, sg_dma_len(sg));
+ 		}
+@@ -876,28 +860,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ 
+ 	for (i = 0; i < num_chan; i++) {
+ 		pch = &pdmac->peripherals[i];
+-		if (pdat) {
+-			struct dma_pl330_peri *peri = &pdat->peri[i];
+-
+-			switch (peri->rqtype) {
+-			case MEMTOMEM:
+-				dma_cap_set(DMA_MEMCPY, pd->cap_mask);
+-				break;
+-			case MEMTODEV:
+-			case DEVTOMEM:
+-				dma_cap_set(DMA_SLAVE, pd->cap_mask);
+-				dma_cap_set(DMA_CYCLIC, pd->cap_mask);
+-				break;
+-			default:
+-				dev_err(&adev->dev, "DEVTODEV Not Supported\n");
+-				continue;
+-			}
+-			pch->chan.private = peri;
+-		} else {
+-			dma_cap_set(DMA_MEMCPY, pd->cap_mask);
+-			pch->chan.private = NULL;
+-		}
+-
++		pch->chan.private = pdat ? &pdat->peri_id[i] : NULL;
+ 		INIT_LIST_HEAD(&pch->work_list);
+ 		spin_lock_init(&pch->lock);
+ 		pch->pl330_chid = NULL;
+@@ -911,6 +874,10 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ 	}
+ 
+ 	pd->dev = &adev->dev;
++	if (pdat)
++		pd->cap_mask = pdat->cap_mask;
++	else
++		dma_cap_set(DMA_MEMCPY, pd->cap_mask);
+ 
+ 	pd->device_alloc_chan_resources = pl330_alloc_chan_resources;
+ 	pd->device_free_chan_resources = pl330_free_chan_resources;
+diff --git a/include/linux/amba/pl330.h b/include/linux/amba/pl330.h
+index 6db72da..12e023c 100644
+--- a/include/linux/amba/pl330.h
++++ b/include/linux/amba/pl330.h
+@@ -15,15 +15,6 @@
+ #include <linux/dmaengine.h>
+ #include <asm/hardware/pl330.h>
+ 
+-struct dma_pl330_peri {
+-	/*
+-	 * Peri_Req i/f of the DMAC that is
+-	 * peripheral could be reached from.
+-	 */
+-	u8 peri_id; /* specific dma id */
+-	enum pl330_reqtype rqtype;
+-};
+-
+ struct dma_pl330_platdata {
+ 	/*
+ 	 * Number of valid peripherals connected to DMAC.
+@@ -34,7 +25,9 @@ struct dma_pl330_platdata {
+ 	 */
+ 	u8 nr_valid_peri;
+ 	/* Array of valid peripherals */
+-	struct dma_pl330_peri *peri;
++	u8 *peri_id;
++	/* Operational capabilities */
++	dma_cap_mask_t cap_mask;
+ 	/* Bytes to allocate for MC buffer */
+ 	unsigned mcbuf_sz;
+ };
+-- 
+1.6.6.rc2
