@@ -1,94 +1,103 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH 1/2] input: samsung-keypad: Add HAVE_SAMSUNG_KEYPAD config
-	option
-Date: Mon, 12 Sep 2011 16:49:49 +0530
-Message-ID: <CAJuYYwSyJ3pKDSYLtad5hDKER2cgxOGo-pC93dtXtLfybvs=+w@mail.gmail.com>
-References: <1315317317-21873-1-git-send-email-thomas.abraham@linaro.org>
-	<1315317317-21873-2-git-send-email-thomas.abraham@linaro.org>
-	<20110907182248.GA2874@core.coreip.homeip.net>
-	<CAJuYYwQg8pMaM7Y-AQD5eDqw32rMOHggL2gWOtJH_ri8gsH-yg@mail.gmail.com>
-	<20110908163322.GB17503@core.coreip.homeip.net>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Appended devicetree with Torvalds' HEAD
+Date: Mon, 12 Sep 2011 14:15:58 +0200
+Message-ID: <CACRpkdaVL5L2-DR8gshN9b0sOn5rDY5QyP4fwZggXjFPmFr9-g@mail.gmail.com>
+References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
+	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110908163322.GB17503@core.coreip.homeip.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, devicetree-discuss@lists.ozlabs.org, dh09.lee@samsung.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.00.1109061347410.20358-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On 8 September 2011 22:03, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrot=
-e:
-> On Thu, Sep 08, 2011 at 09:16:46AM +0530, Thomas Abraham wrote:
->> Hi Dmitry,
->>
->> On 7 September 2011 23:52, Dmitry Torokhov <dmitry.torokhov@gmail.com> w=
-rote:
->> > Hi Thomas,
->> >
->> > On Tue, Sep 06, 2011 at 07:25:16PM +0530, Thomas Abraham wrote:
->> >> Samsung keyboard driver could be used with platforms using device tre=
-e.
->> >> So the inclusion of samsung keyboard driver cannot be based on
->> >> SAMSUNG_DEV_KEYPAD. A new config option HAVE_SAMSUNG_KEYPAD is added
->> >> which device tree based platforms should use to include samsung keybo=
-ard
->> >> driver.
->> >
->> > I am sorry, I do not follow... What is the difference between
->> > SAMSUNG_DEV_KEYPAD and HAVE_SAMSUNG_KEYPAD? They look exactly the same.
->>
->> The inclusion of platform device instance for keypad (in
->> arch/arm/plat-samsung/dev-keypad.c) in the build depends on
->> SAMSUNG_DEV_KEYPAD. The samsung-keypad driver is also dependent on
->> SAMSUNG_DEV_KEYPAD.
->>
->> In case of device tree based instantiation of keypad, compilation of
->> dev-keypad.c file is not required. So SAMSUNG_DEV_KEYPAD config option
->> will not be selected.In that case, the compilation of the keypad
->> driver cannot be dependent on SAMSUNG_DEV_KEYPAD. There should be
->> another option to select the keypad driver and so HAVE_SAMSUNG_KEYPAD
->> was introduced. HAVE_SAMSUNG_KEYPAD can be selected on platforms that
->> need the samsung-keypad driver but do no need the keypad platform
->> device.
+On Tue, Sep 6, 2011 at 7:52 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 6 Sep 2011, Linus Walleij wrote:
 >
-> I still think that it is an extra option... What about the following
-> dependencies:
+>> Does anyone happen to run a mainline kernel with
+>> zImage-appended device tree?
+>>
+>> Or:
+>>
+>> Are there out-of-tree patches required to do this?
+>> (I guess so.)
+>>
+>> And:
+>>
+>> Do they actually work?
 >
-> =A0 =A0 =A0 =A0depends on SAMSUNG_DEV_KEYPAD || OF
-> =A0 =A0 =A0 =A0depends on HAVE_CLK
-
-There could be OF based Samsung platforms that might not need the
-keypad controller driver to be compiled. And it could get selected for
-non-samsung platforms using OF. So, this change would not provide the
-intended dependencies.
-
+> They sure do, (or so I hope).
 >
-> although I think we should relax dependencies like I did in my other
-> patch. This will extend compile coverage of the driver and lessen the
-> chances that API changes will cause unintended breakage because noone
-> but Samsung platform users compile it.
+> My latest patchset is here:
 
-The only concern with your patch was that Samsung keypad driver gets
-listed even for non-samsung platforms. There is no particular
-preference on this. But if you prefer to extend Samsung keypad
-controller driver to other platforms as well, and if others agree,
-that should be fine.
+I've tested this a bit now with U8500 and RealView
+PB1176.
 
-(Sorry for the delayed reply. I was out of office for three days.)
+I'm using the clean patches on a clean tree, i.e.
+just relying on the code already in mainline.
 
-Thanks,
-Thomas.
+We add this to the MACHINE_START()
 
-[...]
+static const char * realview_dt_board_compat[] = {
+       "arm,realview-pb1176",
+       NULL
+};
+
+.dt_compat      = realview_dt_board_compat,
+
+On kernel 3.1-rc4 the system hangs in early boot
+(early printk does not help). But this is not related to
+these patches at all, it happens as soon as you enable
+CONFIG_USE_OF. (Any hints on how to fix that?)
+
+So I tested a bit with just a plain v3.0 kernel.
+
+Using the "supplementing DTB with traditional ATAG data"
+patch totally hangs my systems, even if I don't enable
+CONFIG_ATAG_DTB_COMPAT, so I think that patch
+needs some scrutiny.
+
+Removing that patch the system boots, and I can use
+CONFIG_USE_OF with CONFIG_PROC_DEVICETREE
+to inspect an empty tree in /proc/device-tree
+
+If I then try to enable these patches it dies
+by not finding any "compatible" property. (But it boots,
+yay!)
+
+Error: unrecognized/unsupported device tree compatible list:
+[ ]
+Available machine support:
+ID (hex)	NAME
+ffffffff	ARM-RealView PB1176
+Please check your kernel config and/or bootloader.
+
+(I know the MACHINE_TYPE isn't sane.)
+
+Anyway, so the
+prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
+returns NULL.
+
+So it appears that the appended device tree does not
+show up.
+
+I don't quite know how to debug this further...
+Given that the appended approach is generally
+frowned upon maybe we are better off trying to fix
+our U-Boot, getting a combo that is known to work
+with device tree, than trying to get appended device
+trees to work?
+
+Yours,
+Linus Walleij
