@@ -1,20 +1,12 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] Add fdtget utility to read property values from
-	device tree
-Date: Mon, 12 Sep 2011 10:53:57 +1000
-Message-ID: <20110912005357.GI9025@yookeroo.fritz.box>
-References: <1315425260-2711-1-git-send-email-sjg@chromium.org>
-	<1315425260-2711-4-git-send-email-sjg@chromium.org>
-	<20110908052547.GR30278@yookeroo.fritz.box>
-	<CAPnjgZ0qnr8VVOX7kCq6wEZ-OxAsxmHkPcTGE7wu1B_9ME_SPA@mail.gmail.com>
-	<20110909044945.GF21002@yookeroo.fritz.box>
-	<CAPnjgZ3xw7ByV4Yzeot3zgs4oo0zciX2OV_V4vfQ8tGsgLcPvw@mail.gmail.com>
+Subject: dtc: Remove gcc 4.6 "set but not used" warnings
+Date: Mon, 12 Sep 2011 11:18:43 +1000
+Message-ID: <20110912011843.GK9025@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPnjgZ3xw7ByV4Yzeot3zgs4oo0zciX2OV_V4vfQ8tGsgLcPvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,89 +16,109 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2011 at 10:44:40PM -0700, Simon Glass wrote:
-> Hi David,
-> =
+A number of the dtc testcases trigger the new "variable set but not
+used" warning from gcc 4.6.  That is they have variables which are
+assigned, but then never read after that point.
 
-> A bit rushed as late here but I wanted to respond before your weekend.
-> =
+In a couple of cases this is just because the variables aren't needed,
+so this patch removes them.  In subnode_offset.c, it's because one
+pair of variables we clearly intended to test we don't actually test.
+This patch also adds this missing check.
 
-> On Thu, Sep 8, 2011 at 9:49 PM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > On Thu, Sep 08, 2011 at 05:47:34AM -0700, Simon Glass wrote:
-[snip]
-> > 1) Use a subset of printf() specifiers. =A0Despite your balking at that,
-> > I don't really think it would be any harder than what you have now.
-> > Last character is always the non-optional "format" specifier, anything
-> > preceding it is modifiers. =A0So for the integer formats "d", "x" and
-> > "o", valid modifiers are size, either "hh" (1 byte), "h" (2 byte), "l"
-> > (4 byte, default) or "ll" (8 byte). =A0For the string format "s", no
-> > modifiers are valid.
-> =
+This patch makes the testsuite compile clean with gcc 4.6.
 
-> OK, I like this option more. Particularly if you think I might get
-> away with also supporting 'b' as a shortcut for 'hh'.
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Hrm, I have mixed feelings about that. "hh" is kind of obscure.  And
-as far as I can tell "b" is not used for anything else at present (at
-least in glibc printf()).  But there are so many letters with existing
-meanings for printf() that redefining any makes me a little nervous.
+---
 
-> > 2) Treat the size as a different parameter. =A0So the -f option gives a
-> > single format char (or instead use -s, -x, -d, .. options). =A0Then have
-> > a -s option for size (-s1 ... -s8) which is valid only with the
-> > integer format options.
-> =
+Jon, please apply.
 
-> More like what I had - have moved away from that and feel more
-> comfortable in my new space.
+Index: dtc/tests/notfound.c
+===================================================================
+--- dtc.orig/tests/notfound.c	2011-09-12 11:12:31.089861742 +1000
++++ dtc/tests/notfound.c	2011-09-12 11:12:31.765865100 +1000
+@@ -37,27 +37,25 @@ static void check_error(const char *s, i
+ 
+ int main(int argc, char *argv[])
+ {
+-	const struct fdt_property *prop;
+ 	void *fdt;
+ 	int offset;
+ 	int subnode1_offset;
+-	const void *val;
+ 	int lenerr;
+ 
+ 	test_init(argc, argv);
+ 	fdt = load_blob_arg(argc, argv);
+ 
+-	prop = fdt_get_property(fdt, 0, "nonexistant-property", &lenerr);
++	fdt_get_property(fdt, 0, "nonexistant-property", &lenerr);
+ 	check_error("fdt_get_property(\"nonexistant-property\")", lenerr);
+ 
+-	val = fdt_getprop(fdt, 0, "nonexistant-property", &lenerr);
++	fdt_getprop(fdt, 0, "nonexistant-property", &lenerr);
+ 	check_error("fdt_getprop(\"nonexistant-property\"", lenerr);
+ 
+ 	subnode1_offset = fdt_subnode_offset(fdt, 0, "subnode@1");
+ 	if (subnode1_offset < 0)
+ 		FAIL("Couldn't find subnode1: %s", fdt_strerror(subnode1_offset));
+ 
+-	val = fdt_getprop(fdt, subnode1_offset, "prop-str", &lenerr);
++	fdt_getprop(fdt, subnode1_offset, "prop-str", &lenerr);
+ 	check_error("fdt_getprop(\"prop-str\")", lenerr);
+ 
+ 	offset = fdt_subnode_offset(fdt, 0, "nonexistant-subnode");
+Index: dtc/tests/path_offset.c
+===================================================================
+--- dtc.orig/tests/path_offset.c	2011-09-12 11:12:31.109861849 +1000
++++ dtc/tests/path_offset.c	2011-09-12 11:12:31.765865100 +1000
+@@ -104,5 +104,9 @@ int main(int argc, char *argv[])
+ 		FAIL("Mismatch between subnode_offset (%d) and path_offset (%d)",
+ 		     subsubnode2_offset, subsubnode2_offset_p);
+ 
++	if (subsubnode2_offset2 != subsubnode2_offset2_p)
++		FAIL("Mismatch between subnode_offset (%d) and path_offset (%d)",
++		     subsubnode2_offset2, subsubnode2_offset2_p);
++
+ 	PASS();
+ }
+Index: dtc/tests/subnode_offset.c
+===================================================================
+--- dtc.orig/tests/subnode_offset.c	2011-09-12 11:12:31.133861968 +1000
++++ dtc/tests/subnode_offset.c	2011-09-12 11:12:31.765865100 +1000
+@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
+ 	void *fdt;
+ 	int subnode1_offset, subnode2_offset;
+ 	int subsubnode1_offset, subsubnode2_offset, subsubnode2_offset2;
+-	int ss11_off, ss12_off, ss21_off, ss22_off;
++	int ss12_off, ss21_off;
+ 
+ 	test_init(argc, argv);
+ 	fdt = load_blob_arg(argc, argv);
+@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
+ 	if (subsubnode2_offset != subsubnode2_offset2)
+ 		FAIL("Different offsets with and without unit address");
+ 
+-	ss11_off = check_subnode(fdt, subnode1_offset, "ss1");
++	check_subnode(fdt, subnode1_offset, "ss1");
+ 	ss21_off = fdt_subnode_offset(fdt, subnode2_offset, "ss1");
+ 	if (ss21_off != -FDT_ERR_NOTFOUND)
+ 		FAIL("Incorrectly found ss1 in subnode2");
+@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
+ 	ss12_off = fdt_subnode_offset(fdt, subnode1_offset, "ss2");
+ 	if (ss12_off != -FDT_ERR_NOTFOUND)
+ 		FAIL("Incorrectly found ss2 in subnode1");
+-	ss22_off = check_subnode(fdt, subnode2_offset, "ss2");
++	check_subnode(fdt, subnode2_offset, "ss2");
+ 
+ 	PASS();
+ }
 
-Ok.
-
-> > Either way does leave a couple of unanswered questions:
-> >
-> > A) What to do if the format doesn't consume the whole parameter. =A0I
-> > see two options:
-> > =A0 =A0 =A0 =A0A1) Just print as much as the format says, then stop
-> > =A0 =A0 =A0 =A0A2) Keep repeating the same format until the property is
-> > consumed (note that this makes sense for "s" as well, and would be an
-> > obvious way of handling the pretty common list-of-strings properties).
-> =
-
-> Well I think you have to keep printing. This is not a true format
-> string, but just a data type for each element. Again we have moved
-> away from being able to say -f "The %d item is %d and has a flag word
-> of %d".
-> =
-
-> So no need to use -tddd if there are three cells - just -td is enough.
-
-Yes, I tend to agree.
-
-> > B) What to do when the property just doesn't fit into that format -
-> > either it's length is not a multiple of the fixed integer size, or
-> > it's not NUL-terminated for "s". =A0Obviously some kind of error is in
-> > order, but in case A2 above, do we *just* error, or print what we can
-> > before giving up.
-> =
-
-> Prefer to error since any output might be confusing. But I will take a
-> look to make sure that is easy to do.
-
-It is trivial to check in advance for the existing types - for
-integers just check if the property has length a multiple of the
-integer size, for strings check if the last byte is '\0'.  Well.. then
-it depends a bit on how safe you want "s" to be - do you check for
-reasonably printable characters first or not.  How easy it is to
-pre-check for possible future types is not neccessarily obvious of
-course.
-
--- =
-
+-- 
 David Gibson			| I'll have my music baroque, and my code
 david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
