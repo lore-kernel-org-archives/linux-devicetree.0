@@ -1,516 +1,282 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 6/7] Add fdtget utility to read property values from a
-	device tree
-Date: Mon, 12 Sep 2011 13:04:06 -0700
-Message-ID: <1315857847-17343-7-git-send-email-sjg@chromium.org>
-References: <1315857847-17343-1-git-send-email-sjg@chromium.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 06/24] C6X: devicetree
+Date: Mon, 12 Sep 2011 14:11:02 -0600
+Message-ID: <20110912201102.GF23345@ponder.secretlab.ca>
+References: <1314826019-22330-1-git-send-email-msalter@redhat.com>
+	<1314826019-22330-7-git-send-email-msalter@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1315857847-17343-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1314826019-22330-7-git-send-email-msalter@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Salter <msalter@redhat.com>
+Cc: devicetree-discuss@lists.ozlabs.org, ming.lei@canonical.com, stern@rowland.harvard.edu, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This simply utility makes it easy for scripts to read values from the device
-tree. It is written in C and uses the same libfdt as the rest of the dtc
-package.
+On Wed, Aug 31, 2011 at 05:26:41PM -0400, Mark Salter wrote:
+> This is the basic devicetree support for C6X. Currently, four boards are
+> supported. Each one uses a different SoC part. Two of the four supported
+> SoCs are multicore. One with 3 cores and the other with 6 cores. There is
+> no coherency between the core-level caches, so SMP is not an option. It is
+> possible to run separate kernel instances on the various cores. There is
+> currently no C6X bootloader support for device trees so we build in the
+> DTB for now.
+> 
+> There are some interesting twists to the hardware which are of note for device
+> tree support. Each core has its own interrupt controller which is controlled
+> by special purpose core registers. This core controller provides 12 general
+> purpose prioritized interrupt sources. Each core is contained within a
+> hardware "module" which provides L1 and L2 caches, power control, and another
+> interrupt controller which cascades into the core interrupt controller. These
+> core module functions are controlled by memory mapped registers. The addresses
+> for these registers are the same for each core. That is, when coreN accesses
+> a module-level MMIO register at a given address, it accesses the register for
+> coreN even though other cores would use the same address to access the register
+> in the module containing those cores. Other hardware modules (timers, enet, etc)
+> which are memory mapped can be accessed by all cores.
+> 
+> The timers need some further explanation for multicore SoCs. Even though all
+> timer control registers are visible to all cores, interrupt routing or other
+> considerations may make a given timer more suitable for use by a core than
+> some other timer. Because of this and the desire to have the same image run
+> on more than one core, the timer nodes have a "ti,core-mask" property which
+> is used by the driver to scan for a suitable timer to use.
+> 
+> Signed-off-by: Mark Salter <msalter@redhat.com>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> ---
+>  arch/c6x/boot/dts/dsk6455.dts  |  128 +++++++++++++++
+>  arch/c6x/boot/dts/evmc6457.dts |  106 +++++++++++++
+>  arch/c6x/boot/dts/evmc6472.dts |  176 +++++++++++++++++++++
+>  arch/c6x/boot/dts/evmc6474.dts |  133 ++++++++++++++++
+>  arch/c6x/boot/install-dtb.c    |  333 ++++++++++++++++++++++++++++++++++++++++
+>  arch/c6x/kernel/devicetree.c   |   53 +++++++
+>  arch/c6x/platforms/platform.c  |   23 +++
+>  7 files changed, 952 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/c6x/boot/dts/dsk6455.dts
+>  create mode 100644 arch/c6x/boot/dts/evmc6457.dts
+>  create mode 100644 arch/c6x/boot/dts/evmc6472.dts
+>  create mode 100644 arch/c6x/boot/dts/evmc6474.dts
+>  create mode 100644 arch/c6x/boot/install-dtb.c
+>  create mode 100644 arch/c6x/kernel/devicetree.c
+>  create mode 100644 arch/c6x/platforms/platform.c
+> 
+> diff --git a/arch/c6x/boot/dts/dsk6455.dts b/arch/c6x/boot/dts/dsk6455.dts
+> new file mode 100644
+> index 0000000..ef703aa
+> --- /dev/null
+> +++ b/arch/c6x/boot/dts/dsk6455.dts
+> @@ -0,0 +1,128 @@
+> +/*
+> + * arch/c6x/boot/dts/dsk6455.dts
+> + *
+> + * DSK6455 Evaluation Platform For TMS320C6455
+> + * Copyright (C) 2011 Texas Instruments Incorporated
+> + *
+> + * Author: Mark Salter <msalter@redhat.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +
 
-What is it for:
-- Reading fdt values from scripts
-- Extracting fdt information within build systems
-- Looking at particular values without having to dump the entire tree
+I expect you'll want to use the /include/ functionality here to avoid
+duplicating all the SoC details in each and every board file.
 
-To use it, specify the fdt binary file on command line followed by a list of
-node, property pairs. The utility then looks up each node, finds the property
-and displays the value.
+> +/ {
+> +	model = "Spectrum Digital DSK6455";
+> +	compatible = "spectrum-digital,dsk6455";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	chosen {
+> +		bootargs = "root=/dev/nfs ip=dhcp rw";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0xE0000000 0x08000000>;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			model = "ti,c64x+";
+> +			reg = <0>;
+> +		};
+> +	};
+> +
+> +	/*
+> +	 * Core priority interrupt controller
+> +	 */
+> +	core_pic: interrupt-controller@0 {
 
-Each value is printed on a new line.
+@0 doesn't make sense without a 'reg' property.
 
-fdtget tries to guess the type of each property based on its contents. This
-is not always reliable, so you can use the -t option to force fdtget to decode
-the value as a string, or byte, etc.
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		compatible = "ti,c64x+core-pic";
 
-To read from stdin, use - as the file.
+The interrupt controller isn't addressable?  Is it integrated into
+the CPU?
 
-Usage:
-	fdtget <options> <dt file> [<node> <property>]...
-Options:
-	-t <type>	Type of data
-	-h		Print this help
+> +	};
+> +
+> +	soc@00000000 {
 
-<type>	s=string, i=int, u=unsigned, x=hex
-	Optional modifier prefix:
-		hh or b=byte, h=2 byte, l=4 byte (default)
+"soc@2a80000" to match the 'reg' property of this node.
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v2:
-- Separate arguments for node and property
-- Merge two related commits into this one
-- Use structure for storing display options
-- Remove use of getopt_long()
-- Adjust tests for new fdtget arguments
+> +		compatible = "ti,tms320c6455";
 
-Changes in v3:
-- Squash fdtget test commit into fdtget
-- Add a few more tests for 1- and 2-byte formats
-- Change format of -t argument to be more like printf
-- Change help string and make part of it common
-- Add error checking for the property not being a multiple of value size
+Make sure you add documentation for all new compatible properties to
+Documentation/devicetree/bindings
 
- .gitignore              |    1 +
- Makefile                |    3 +
- Makefile.utils          |    7 ++
- fdtget.c                |  227 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/fdtget-runtest.sh |   35 +++++++
- tests/run_tests.sh      |   43 +++++++++-
- tests/tests.sh          |    1 +
- utilfdt/utilfdt.h       |   10 ++
- 8 files changed, 326 insertions(+), 1 deletions(-)
- create mode 100644 fdtget.c
- create mode 100755 tests/fdtget-runtest.sh
+> +		device_type = "soc";
 
-diff --git a/.gitignore b/.gitignore
-index ae7a46a..9f27f34 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -10,3 +10,4 @@ lex.yy.c
- /ftdump
- /convert-dtsv0
- /version_gen.h
-+/fdtget
-diff --git a/Makefile b/Makefile
-index 6238541..2fadb10 100644
---- a/Makefile
-+++ b/Makefile
-@@ -110,6 +110,7 @@ include Makefile.utils
- BIN += convert-dtsv0
- BIN += dtc
- BIN += ftdump
-+BIN += fdtget
- 
- SCRIPTS = dtdiff
- 
-@@ -120,6 +121,7 @@ ifneq ($(DEPTARGETS),)
- -include $(DTC_OBJS:%.o=%.d)
- -include $(CONVERT_OBJS:%.o=%.d)
- -include $(FTDUMP_OBJS:%.o=%.d)
-+-include $(FDTGET_OBJS:%.o=%.d)
- endif
- 
- 
-@@ -209,6 +211,7 @@ convert-dtsv0: $(CONVERT_OBJS)
- 
- ftdump:	$(FTDUMP_OBJS) $(ALL_LIBS)
- 
-+fdtget:	$(FDTGET_OBJS) $(ALL_LIBS)
- 
- #
- # Testsuite rules
-diff --git a/Makefile.utils b/Makefile.utils
-index 0ed9297..095cacd 100644
---- a/Makefile.utils
-+++ b/Makefile.utils
-@@ -8,3 +8,10 @@ FTDUMP_SRCS = \
- 	util.c
- 
- FTDUMP_OBJS = $(FTDUMP_SRCS:%.c=%.o)
-+
-+
-+FDTGET_SRCS = \
-+	fdtget.c \
-+	util.c
-+
-+FDTGET_OBJS = $(FDTGET_SRCS:%.c=%.o)
-diff --git a/fdtget.c b/fdtget.c
-new file mode 100644
-index 0000000..5389529
---- /dev/null
-+++ b/fdtget.c
-@@ -0,0 +1,227 @@
-+/*
-+ * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-+ * MA 02111-1307 USA
-+ */
-+
-+#include <ctype.h>
-+#include <getopt.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#include <libfdt.h>
-+
-+#include "util.h"
-+#include "utilfdt.h"
-+
-+/* Holds information which controls our output and options */
-+struct display_info {
-+	int type;		/* data type (s/i/u/x or 0 for default) */
-+	int size;		/* data size (1/2/4) */
-+};
-+
-+static void report_error(const char *where, int err)
-+{
-+	fprintf(stderr, "Error at '%s': %s\n", where, fdt_strerror(err));
-+}
-+
-+/**
-+ * Displays data of a given length according to selected options
-+ *
-+ * If a specific data type is provided in disp, then this is used. Otherwise
-+ * we try to guess the data type / size from the contents.
-+ *
-+ * @param disp		Display information / options
-+ * @param data		Data to display
-+ * @param len		Maximum length of buffer
-+ * @return 0 if ok, -1 if data does not match format
-+ */
-+static int show_data(struct display_info *disp, const char *data, int len)
-+{
-+	int i, size;
-+	const uint8_t *p = (const uint8_t *)data;
-+	const char *s;
-+	int value;
-+	int is_string;
-+	char fmt[3];
-+
-+	/* no data, don't print */
-+	if (len == 0)
-+		return 0;
-+
-+	is_string = (disp->type) == 's' ||
-+		(!disp->type && util_is_printable_string(data, len));
-+	if (is_string) {
-+		if (data[len - 1] != '\0') {
-+			fprintf(stderr, "Unterminated string\n");
-+			return -1;
-+		}
-+		for (s = data; s - data < len; s += strlen(s) + 1) {
-+			if (s != data)
-+				printf(" ");
-+			printf("%s", (const char *)s);
-+		}
-+		return 0;
-+	}
-+	size = disp->size;
-+	if (size == -1)
-+		size = (len % 4) == 0 ? 4 : 1;
-+	else if (len % size) {
-+		fprintf(stderr, "Property length must be a multiple of "
-+				"selected data size\n");
-+		return -1;
-+	}
-+	fmt[0] = '%';
-+	fmt[1] = disp->type ? disp->type : 'd';
-+	fmt[2] = '\0';
-+	for (i = 0; i < len; i += size, p += size) {
-+		if (i)
-+			printf(" ");
-+		value = size == 4 ? fdt32_to_cpu(*(const uint32_t *)p) :
-+			size == 2 ? (*p << 8) | p[1] : *p;
-+		printf(fmt, value);
-+	}
-+	return 0;
-+}
-+
-+/**
-+ * Show the data for a given node (and perhaps property) according to the
-+ * display option provided.
-+ *
-+ * @param blob		FDT blob
-+ * @param disp		Display information / options
-+ * @param node		Node to display
-+ * @param property	Name of property to display, or NULL if none
-+ * @return 0 if ok, -ve on error
-+ */
-+static int show_data_for_item(const void *blob, struct display_info *disp,
-+		int node, const char *property)
-+{
-+	const void *value = NULL;
-+	int len, err = 0;
-+
-+	value = fdt_getprop(blob, node, property, &len);
-+	if (value) {
-+		if (show_data(disp, value, len))
-+			err = -1;
-+		else
-+			printf("\n");
-+	} else {
-+		report_error(property, len);
-+		err = -1;
-+	}
-+	return err;
-+}
-+
-+/**
-+ * Run the main fdtget operation, given a filename and valid arguments
-+ *
-+ * @param disp		Display information / options
-+ * @param filename	Filename of blob file
-+ * @param arg		List of arguments to process
-+ * @param arg_count	Number of arguments
-+ * @param return 0 if ok, -ve on error
-+ */
-+static int do_fdtget(struct display_info *disp, const char *filename,
-+		     char **arg, int arg_count)
-+{
-+	char *blob;
-+	int i, node;
-+
-+	blob = utilfdt_read(filename);
-+	if (!blob)
-+		return -1;
-+
-+	for (i = 0; i + 2 <= arg_count; i += 2) {
-+		node = fdt_path_offset(blob, arg[0]);
-+		if (node < 0) {
-+			report_error(arg[0], node);
-+			return -1;
-+		}
-+
-+		if (show_data_for_item(blob, disp, node, arg[1]))
-+			return -1;
-+	}
-+	return 0;
-+}
-+
-+static const char *usage_msg =
-+	"fdtget - read values from device tree\n"
-+	"\n"
-+	"Each value is printed on a new line.\n\n"
-+	"Usage:\n"
-+	"	fdtget <options> <dt file> [<node> <property>]...\n"
-+	"Options:\n"
-+	"\t-t <type>\tType of data\n"
-+	"\t-h\t\tPrint this help\n\n"
-+	USAGE_TYPE_MSG;
-+
-+static void usage(const char *msg)
-+{
-+	if (msg)
-+		fprintf(stderr, "Error: %s\n\n", msg);
-+
-+	fprintf(stderr, "%s", usage_msg);
-+	exit(2);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	char *filename = NULL;
-+	struct display_info disp;
-+
-+	/* set defaults */
-+	memset(&disp, '\0', sizeof(disp));
-+	disp.size = -1;
-+	for (;;) {
-+		int c = getopt(argc, argv, "ht:");
-+		if (c == -1)
-+			break;
-+
-+		switch (c) {
-+		case 'h':
-+		case '?':
-+			usage(NULL);
-+
-+		case 't':
-+			if (utilfdt_decode_type(optarg, &disp.type,
-+					&disp.size))
-+				usage("Invalid type string");
-+			break;
-+		}
-+	}
-+
-+	if (optind < argc)
-+		filename = argv[optind++];
-+	if (!filename)
-+		usage("Missing filename");
-+
-+	argv += optind;
-+	argc -= optind;
-+
-+	/* Allow no arguments, and silently succeed */
-+	if (!argc)
-+		return 0;
-+
-+	/* Check for node, property arguments */
-+	if (argc % 2)
-+		usage("Must have an even number of arguments");
-+
-+	if (do_fdtget(&disp, filename, argv, argc))
-+		return 1;
-+	return 0;
-+}
-diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
-new file mode 100755
-index 0000000..f38184f
---- /dev/null
-+++ b/tests/fdtget-runtest.sh
-@@ -0,0 +1,35 @@
-+#! /bin/sh
-+
-+. ./tests.sh
-+
-+LOG="tmp.log.$$"
-+EXPECT="tmp.expect.$$"
-+
-+rm -f $TMPFILE $LOG
-+
-+expect="$1"
-+echo "$expect" >$EXPECT
-+shift
-+
-+verbose_run_log "$LOG" $VALGRIND "$DTGET" "$@"
-+ret="$?"
-+
-+if [ "$ret" -ne 0 -a "$expect" = "ERR" ]; then
-+	PASS
-+fi
-+
-+if [ "$ret" -gt 127 ]; then
-+    signame=$(kill -l $[ret - 128])
-+    FAIL "Killed by SIG$signame"
-+fi
-+
-+diff $EXPECT $LOG
-+ret="$?"
-+
-+rm -f $LOG $EXPECT
-+
-+if [ "$ret" -eq 0 ]; then
-+	PASS
-+else
-+	FAIL
-+fi
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 486ceae..e63c5c7 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -83,6 +83,13 @@ asm_to_so_test () {
- run_wrap_test asm_to_so "$@"
- }
- 
-+run_fdtget_test () {
-+    # run_fdtget_test name expected_output dtb_file args...
-+    echo -n "$1:	"
-+    shift
-+    base_run_test sh fdtget-runtest.sh "$@"
-+}
-+
- tree1_tests () {
- TREE=$1
- 
-@@ -388,6 +395,37 @@ dtbs_equal_tests () {
- cmp_tests test_tree1.dtb $WRONG_TREE1
- }
- 
-+fdtget_tests () {
-+    file=label01.dtb
-+    $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
-+
-+    # run_fdtget_test <test-name> <expected-result> <args>...
-+    run_fdtget_test "Simple string" "MyBoardName" $file / model
-+    run_fdtget_test "Multiple string i" "77 121 66 111 \
-+97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
-+108 121 78 97 109 101 0" $file / compatible
-+    run_fdtget_test "Multiple string s" "MyBoardName MyBoardFamilyName" \
-+	-t s $file / compatible
-+    run_fdtget_test "Integer" "32768" $file /cpus/PowerPC,970@1 d-cache-size
-+    run_fdtget_test "Integer hex" "8000" -tx $file \
-+	/cpus/PowerPC,970@1 d-cache-size
-+    run_fdtget_test "Integer list" "61 62 63 0" -tbx $file \
-+	/randomnode tricky1
-+    run_fdtget_test "Byte list short" "a b c d de ea ad be ef" -tbx \
-+	$file /randomnode blob
-+
-+    # Here the property size is not a multiple of 4 bytes, so it should fail
-+    run_fdtget_test "Integer list invalid" ERR -tlx \
-+	$file /randomnode mixed
-+    run_fdtget_test "Integer list halfword" "6162 6300 1234 0 a 0 b 0 c" -thx \
-+	$file /randomnode mixed
-+    run_fdtget_test "Integer list byte" \
-+	"61 62 63 0 12 34 0 0 0 a 0 0 0 b 0 0 0 c" -thhx \
-+	$file /randomnode mixed
-+    run_fdtget_test "Missing property" ERR -ts \
-+	$file /randomnode doctor-who
-+}
-+
- utilfdt_tests () {
- run_test utilfdt_test
- }
-@@ -407,7 +445,7 @@ while getopts "vt:m" ARG ; do
- done
- 
- if [ -z "$TESTSETS" ]; then
--    TESTSETS="libfdt utilfdt dtc dtbs_equal"
-+    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget"
- fi
- 
- # Make sure we don't have stale blobs lying around
-@@ -427,6 +465,9 @@ for set in $TESTSETS; do
- 	"dtbs_equal")
- 	    dtbs_equal_tests
- 	    ;;
-+	"fdtget")
-+	    fdtget_tests
-+	    ;;
- esac
- done
- 
-diff --git a/tests/tests.sh b/tests/tests.sh
-index 30ffead..d9a0524 100644
---- a/tests/tests.sh
-+++ b/tests/tests.sh
-@@ -11,6 +11,7 @@ FAIL () {
- }
- 
- DTC=../dtc
-+DTGET=../fdtget
- 
- verbose_run () {
- if [ -z "$QUIET_TEST" ]; then
-diff --git a/utilfdt/utilfdt.h b/utilfdt/utilfdt.h
-index fd6dc9d..2606179 100644
---- a/utilfdt/utilfdt.h
-+++ b/utilfdt/utilfdt.h
-@@ -88,4 +88,14 @@ int utilfdt_write_err(const char *filename, const void *blob);
-  */
- int utilfdt_decode_type(const char *fmt, int *type, int *size);
- 
-+/*
-+ * This is a usage message fragment for the -t option. It is the format
-+ * supported by utilfdt_decode_type.
-+ */
-+
-+#define USAGE_TYPE_MSG \
-+	"<type>\ts=string, i=int, u=unsigned, x=hex\n" \
-+	"\tOptional modifier prefix:\n" \
-+	"\t\thh or b=byte, h=2 byte, l=4 byte (default)\n";
-+
- #endif /* _UTILFDT_H */
--- 
-1.7.3.1
+Drop device_type from everything except the memory node.
+
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		#interrupt-cells = <1>;
+
+#interrupt-cells doesn't make any sense for nodes that aren't an
+interrupt controller.
+
+> diff --git a/arch/c6x/boot/install-dtb.c b/arch/c6x/boot/install-dtb.c
+> new file mode 100644
+> index 0000000..fa979ce
+> --- /dev/null
+> +++ b/arch/c6x/boot/install-dtb.c
+> @@ -0,0 +1,333 @@
+> +/*
+> + * Program to hack in a DTB to an ELF file having a placeholder
+> + * section named __fst_blob.
+> + *
+> + * This allows for building multiple images with builtin DTBs
+> + * using a single vmlinux image. This is only necessary until
+> + * bootloader support exists.
+> + *
+> + * Copyright 2011 Texas Instruments Incorporated
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + *
+> + * Usage: install-dtb <image.dtb> <kernel.elf>
+> + */
+
+Surely this can be done with objcopy or with the linker.
+
+> diff --git a/arch/c6x/kernel/devicetree.c b/arch/c6x/kernel/devicetree.c
+> new file mode 100644
+> index 0000000..bdb56f0
+> --- /dev/null
+> +++ b/arch/c6x/kernel/devicetree.c
+> @@ -0,0 +1,53 @@
+> +/*
+> + *  Architecture specific OF callbacks.
+> + *
+> + *  Copyright (C) 2011 Texas Instruments Incorporated
+> + *  Author: Mark Salter <msalter@redhat.com>
+> + *
+> + *  This program is free software; you can redistribute it and/or modify
+> + *  it under the terms of the GNU General Public License version 2 as
+> + *  published by the Free Software Foundation.
+> + *
+> + */
+> +#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/initrd.h>
+> +#include <linux/memblock.h>
+> +
+> +void __init early_init_devtree(void *params)
+> +{
+> +	/* Setup flat device-tree pointer */
+> +	initial_boot_params = params;
+> +
+> +	/* Retrieve various informations from the /chosen node of the
+> +	 * device-tree, including the platform type, initrd location and
+> +	 * size and more ...
+> +	 */
+> +	of_scan_flat_dt(early_init_dt_scan_chosen, c6x_command_line);
+> +
+> +	/* Scan memory nodes and rebuild MEMBLOCKs */
+> +	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+> +	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+> +}
+> +
+> +
+> +#ifdef CONFIG_BLK_DEV_INITRD
+> +void __init early_init_dt_setup_initrd_arch(unsigned long start,
+> +		unsigned long end)
+> +{
+> +	initrd_start = (unsigned long)__va(start);
+> +	initrd_end = (unsigned long)__va(end);
+> +	initrd_below_start_ok = 1;
+> +}
+> +#endif
+> +
+> +void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+> +{
+> +	c6x_add_memory(base, size);
+> +}
+> +
+> +void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+> +{
+> +	return __va(memblock_alloc(size, align));
+> +}
+> diff --git a/arch/c6x/platforms/platform.c b/arch/c6x/platforms/platform.c
+> new file mode 100644
+> index 0000000..83fbedd
+> --- /dev/null
+> +++ b/arch/c6x/platforms/platform.c
+> @@ -0,0 +1,23 @@
+> +/*
+> + * Copyright 2011 Texas Instruments Incorporated
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2. This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/of_platform.h>
+> +
+> +static struct of_device_id c6x_bus_ids[] __initdata = {
+> +	{ .type = "soc", },
+
+Drop .type matching.  Only ever use .compatible, unless supporting
+legacy platforms.
+
+> +	{ .compatible = "simple-bus", },
+> +	{}
+> +};
+> +
+> +static int __init c6x_device_probe(void)
+> +{
+> +	of_platform_bus_probe(NULL, c6x_bus_ids, NULL);
+
+You can probably just use the stock of_default_bus_match_table
+
+g.
