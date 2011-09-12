@@ -1,8 +1,8 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 7/7] Add fdtput utility to write property values to a
+Subject: [PATCH v3 6/7] Add fdtget utility to read property values from a
 	device tree
-Date: Mon, 12 Sep 2011 13:04:07 -0700
-Message-ID: <1315857847-17343-8-git-send-email-sjg@chromium.org>
+Date: Mon, 12 Sep 2011 13:04:06 -0700
+Message-ID: <1315857847-17343-7-git-send-email-sjg@chromium.org>
 References: <1315857847-17343-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,130 +21,123 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This simple utility allows writing of values into a device tree from the
-command line. It aimes to be the opposite of fdtget.
+This simply utility makes it easy for scripts to read values from the device
+tree. It is written in C and uses the same libfdt as the rest of the dtc
+package.
 
 What is it for:
-- Updating fdt values when a binary blob already exists
-   (even though source may be available it might be easier to use this
-utility rather than sed, etc.)
-- Writing machine-specific fdt values within a build system
+- Reading fdt values from scripts
+- Extracting fdt information within build systems
+- Looking at particular values without having to dump the entire tree
 
-To use it, specify the fdt binary file on command line followed by the node
-and property to set. Then, provide a list of values to put into that
-property. Often there will be just one, but fdtput also supports arrays and
-string lists.
+To use it, specify the fdt binary file on command line followed by a list of
+node, property pairs. The utility then looks up each node, finds the property
+and displays the value.
 
-fdtput does not try to guess the type of the property based on looking at
-the arguments. Instead it always assumes that an integer is provided. To
-indicate that you want to write a string, use -ts. You can also provide
-hex values with -tx.
+Each value is printed on a new line.
 
-The command line arguments are joined together into a single value. For
-strings, a nul terminator is placed between each string when it is packed
-into the property. To avoid this, pass the string as a single argument.
+fdtget tries to guess the type of each property based on its contents. This
+is not always reliable, so you can use the -t option to force fdtget to decode
+the value as a string, or byte, etc.
+
+To read from stdin, use - as the file.
 
 Usage:
-	fdtput <options> <dt file> <<node> <property> [<value>...]
+	fdtget <options> <dt file> [<node> <property>]...
 Options:
 	-t <type>	Type of data
-	-v		Verbose: display each value decoded from command line
 	-h		Print this help
 
 <type>	s=string, i=int, u=unsigned, x=hex
 	Optional modifier prefix:
 		hh or b=byte, h=2 byte, l=4 byte (default)
 
-To read from stdin and write to stdout, use - as the file. So you can do:
-
-cat somefile.dtb | fdtput -ts - /node prop "My string value" > newfile.dtb
-
-This commit also adds basic tests to verify the major features.
-
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 Changes in v2:
 - Separate arguments for node and property
-- Remove limits on data size of property writting to fdt
+- Merge two related commits into this one
+- Use structure for storing display options
 - Remove use of getopt_long()
-- Adjust tests for new fdtput arguments
-- Add test for multiple strings
-- Add test for exhausting fdt space
+- Adjust tests for new fdtget arguments
 
 Changes in v3:
-- Squash fdtput tests into fdtput commit
+- Squash fdtget test commit into fdtget
+- Add a few more tests for 1- and 2-byte formats
+- Change format of -t argument to be more like printf
+- Change help string and make part of it common
+- Add error checking for the property not being a multiple of value size
 
  .gitignore              |    1 +
- Makefile                |    5 +
+ Makefile                |    3 +
  Makefile.utils          |    7 ++
- fdtput.c                |  236 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/fdtput-runtest.sh |   55 +++++++++++
- tests/run_tests.sh      |   73 ++++++++++++++-
+ fdtget.c                |  227 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/fdtget-runtest.sh |   35 +++++++
+ tests/run_tests.sh      |   43 +++++++++-
  tests/tests.sh          |    1 +
- 7 files changed, 377 insertions(+), 1 deletions(-)
- create mode 100644 fdtput.c
- create mode 100644 tests/fdtput-runtest.sh
+ utilfdt/utilfdt.h       |   10 ++
+ 8 files changed, 326 insertions(+), 1 deletions(-)
+ create mode 100644 fdtget.c
+ create mode 100755 tests/fdtget-runtest.sh
 
 diff --git a/.gitignore b/.gitignore
-index 9f27f34..2c9a64e 100644
+index ae7a46a..9f27f34 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -11,3 +11,4 @@ lex.yy.c
+@@ -10,3 +10,4 @@ lex.yy.c
+ /ftdump
  /convert-dtsv0
  /version_gen.h
- /fdtget
-+/fdtput
++/fdtget
 diff --git a/Makefile b/Makefile
-index 2fadb10..85ac04c 100644
+index 6238541..2fadb10 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -111,6 +111,7 @@ BIN += convert-dtsv0
+@@ -110,6 +110,7 @@ include Makefile.utils
+ BIN += convert-dtsv0
  BIN += dtc
  BIN += ftdump
- BIN += fdtget
-+BIN += fdtput
++BIN += fdtget
  
  SCRIPTS = dtdiff
  
-@@ -122,6 +123,7 @@ ifneq ($(DEPTARGETS),)
+@@ -120,6 +121,7 @@ ifneq ($(DEPTARGETS),)
+ -include $(DTC_OBJS:%.o=%.d)
  -include $(CONVERT_OBJS:%.o=%.d)
  -include $(FTDUMP_OBJS:%.o=%.d)
- -include $(FDTGET_OBJS:%.o=%.d)
-+-include $(FDTPUT_OBJS:%.o=%.d)
++-include $(FDTGET_OBJS:%.o=%.d)
  endif
  
  
-@@ -213,6 +215,9 @@ ftdump:	$(FTDUMP_OBJS) $(ALL_LIBS)
+@@ -209,6 +211,7 @@ convert-dtsv0: $(CONVERT_OBJS)
  
- fdtget:	$(FDTGET_OBJS) $(ALL_LIBS)
+ ftdump:	$(FTDUMP_OBJS) $(ALL_LIBS)
  
-+fdtput:	$(FDTPUT_OBJS) $(ALL_LIBS)
-+
-+
++fdtget:	$(FDTGET_OBJS) $(ALL_LIBS)
+ 
  #
  # Testsuite rules
- #
 diff --git a/Makefile.utils b/Makefile.utils
-index 095cacd..df1d6fc 100644
+index 0ed9297..095cacd 100644
 --- a/Makefile.utils
 +++ b/Makefile.utils
-@@ -15,3 +15,10 @@ FDTGET_SRCS = \
+@@ -8,3 +8,10 @@ FTDUMP_SRCS = \
  	util.c
  
- FDTGET_OBJS = $(FDTGET_SRCS:%.c=%.o)
+ FTDUMP_OBJS = $(FTDUMP_SRCS:%.c=%.o)
 +
 +
-+FDTPUT_SRCS = \
-+	fdtput.c \
++FDTGET_SRCS = \
++	fdtget.c \
 +	util.c
 +
-+FDTPUT_OBJS = $(FDTPUT_SRCS:%.c=%.o)
-diff --git a/fdtput.c b/fdtput.c
++FDTGET_OBJS = $(FDTGET_SRCS:%.c=%.o)
+diff --git a/fdtget.c b/fdtget.c
 new file mode 100644
-index 0000000..64ccd02
+index 0000000..5389529
 --- /dev/null
-+++ b/fdtput.c
-@@ -0,0 +1,236 @@
++++ b/fdtget.c
+@@ -0,0 +1,227 @@
 +/*
 + * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
 + *
@@ -164,7 +157,6 @@ index 0000000..64ccd02
 + * MA 02111-1307 USA
 + */
 +
-+#include <assert.h>
 +#include <ctype.h>
 +#include <getopt.h>
 +#include <stdio.h>
@@ -176,10 +168,10 @@ index 0000000..64ccd02
 +#include "util.h"
 +#include "utilfdt.h"
 +
++/* Holds information which controls our output and options */
 +struct display_info {
 +	int type;		/* data type (s/i/u/x or 0 for default) */
 +	int size;		/* data size (1/2/4) */
-+	int verbose;		/* verbose output */
 +};
 +
 +static void report_error(const char *where, int err)
@@ -188,132 +180,133 @@ index 0000000..64ccd02
 +}
 +
 +/**
-+ * Encode a series of arguments in a property value.
++ * Displays data of a given length according to selected options
++ *
++ * If a specific data type is provided in disp, then this is used. Otherwise
++ * we try to guess the data type / size from the contents.
 + *
 + * @param disp		Display information / options
-+ * @param arg		List of arguments from command line
-+ * @param arg_count	Number of arguments (may be 0)
-+ * @param valuep	Returns buffer containing value
-+ * @param *value_len	Returns length of value encoded
++ * @param data		Data to display
++ * @param len		Maximum length of buffer
++ * @return 0 if ok, -1 if data does not match format
 + */
-+static int encode_value(struct display_info *disp, char **arg, int arg_count,
-+			char **valuep, int *value_len)
++static int show_data(struct display_info *disp, const char *data, int len)
 +{
-+	char *value = NULL;	/* holding area for value */
-+	int value_size = 0;	/* size of holding area */
-+	char *ptr;		/* pointer to current value position */
-+	int len;		/* length of this cell/string/byte */
-+	int ival;
-+	int upto;	/* the number of bytes we have written to buf */
++	int i, size;
++	const uint8_t *p = (const uint8_t *)data;
++	const char *s;
++	int value;
++	int is_string;
 +	char fmt[3];
 +
-+	upto = 0;
++	/* no data, don't print */
++	if (len == 0)
++		return 0;
 +
-+	if (disp->verbose)
-+		fprintf(stderr, "Decoding value:\n");
-+
++	is_string = (disp->type) == 's' ||
++		(!disp->type && util_is_printable_string(data, len));
++	if (is_string) {
++		if (data[len - 1] != '\0') {
++			fprintf(stderr, "Unterminated string\n");
++			return -1;
++		}
++		for (s = data; s - data < len; s += strlen(s) + 1) {
++			if (s != data)
++				printf(" ");
++			printf("%s", (const char *)s);
++		}
++		return 0;
++	}
++	size = disp->size;
++	if (size == -1)
++		size = (len % 4) == 0 ? 4 : 1;
++	else if (len % size) {
++		fprintf(stderr, "Property length must be a multiple of "
++				"selected data size\n");
++		return -1;
++	}
 +	fmt[0] = '%';
 +	fmt[1] = disp->type ? disp->type : 'd';
 +	fmt[2] = '\0';
-+	for (; arg_count > 0; arg++, arg_count--, upto += len) {
-+		/* assume integer unless told otherwise */
-+		if (disp->type == 's')
-+			len = strlen(*arg) + 1;
++	for (i = 0; i < len; i += size, p += size) {
++		if (i)
++			printf(" ");
++		value = size == 4 ? fdt32_to_cpu(*(const uint32_t *)p) :
++			size == 2 ? (*p << 8) | p[1] : *p;
++		printf(fmt, value);
++	}
++	return 0;
++}
++
++/**
++ * Show the data for a given node (and perhaps property) according to the
++ * display option provided.
++ *
++ * @param blob		FDT blob
++ * @param disp		Display information / options
++ * @param node		Node to display
++ * @param property	Name of property to display, or NULL if none
++ * @return 0 if ok, -ve on error
++ */
++static int show_data_for_item(const void *blob, struct display_info *disp,
++		int node, const char *property)
++{
++	const void *value = NULL;
++	int len, err = 0;
++
++	value = fdt_getprop(blob, node, property, &len);
++	if (value) {
++		if (show_data(disp, value, len))
++			err = -1;
 +		else
-+			len = disp->size == -1 ? 4 : disp->size;
-+
-+		/* enlarge our value buffer by a suitable margin if needed */
-+		if (upto + len > value_size) {
-+			value_size = (upto + len) + 500;
-+			value = realloc(value, value_size);
-+			if (!value) {
-+				fprintf(stderr, "Out of mmory: cannot alloc "
-+					"%d bytes\n", value_size);
-+				return -1;
-+			}
-+		}
-+
-+		ptr = value + upto;
-+		if (disp->type == 's') {
-+			memcpy(ptr, *arg, len);
-+			if (disp->verbose)
-+				fprintf(stderr, "\tstring: '%s'\n", ptr);
-+		} else {
-+			int *iptr = (int *)ptr;
-+			sscanf(*arg, fmt, &ival);
-+			if (len == 4)
-+				*iptr = cpu_to_fdt32(ival);
-+			else
-+				*ptr = (uint8_t)ival;
-+			if (disp->verbose) {
-+				fprintf(stderr, "\t%s: %d\n",
-+					disp->size == 1 ? "byte" :
-+					disp->size == 2 ? "short" : "int",
-+					ival);
-+			}
-+		}
++			printf("\n");
++	} else {
++		report_error(property, len);
++		err = -1;
 +	}
-+	*value_len = upto;
-+	*valuep = value;
-+	if (disp->verbose)
-+		fprintf(stderr, "Value size %d\n", upto);
-+	return 0;
++	return err;
 +}
 +
-+static int store_key_value(void *blob, const char *node_name,
-+		const char *property, const char *buf, int len)
++/**
++ * Run the main fdtget operation, given a filename and valid arguments
++ *
++ * @param disp		Display information / options
++ * @param filename	Filename of blob file
++ * @param arg		List of arguments to process
++ * @param arg_count	Number of arguments
++ * @param return 0 if ok, -ve on error
++ */
++static int do_fdtget(struct display_info *disp, const char *filename,
++		     char **arg, int arg_count)
 +{
-+	int node;
-+	int err;
-+
-+	node = fdt_path_offset(blob, node_name);
-+	if (node < 0) {
-+		report_error(node_name, node);
-+		return -1;
-+	}
-+
-+	err = fdt_setprop(blob, node, property, buf, len);
-+	if (err) {
-+		report_error(property, err);
-+		return -1;
-+	}
-+	return 0;
-+}
-+
-+static int do_fdtput(struct display_info *disp, const char *filename,
-+		    char **arg, int arg_count)
-+{
-+	char *value;
 +	char *blob;
-+	int len, ret = 0;
++	int i, node;
 +
 +	blob = utilfdt_read(filename);
 +	if (!blob)
 +		return -1;
 +
-+	/* convert the arguments into a single binary value, then store */
-+	assert(arg_count >= 2);
-+	if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
-+		store_key_value(blob, *arg, arg[1], value, len))
-+		ret = -1;
++	for (i = 0; i + 2 <= arg_count; i += 2) {
++		node = fdt_path_offset(blob, arg[0]);
++		if (node < 0) {
++			report_error(arg[0], node);
++			return -1;
++		}
 +
-+	if (!ret)
-+		ret = utilfdt_write(filename, blob);
-+
-+	free(blob);
-+	return ret;
++		if (show_data_for_item(blob, disp, node, arg[1]))
++			return -1;
++	}
++	return 0;
 +}
 +
 +static const char *usage_msg =
-+	"fdtput - write a property value to a device tree\n"
++	"fdtget - read values from device tree\n"
 +	"\n"
-+	"The command line arguments are joined together into a single value.\n"
-+	"\n"
++	"Each value is printed on a new line.\n\n"
 +	"Usage:\n"
-+	"	fdtput <options> <dt file> <<node> <property> [<value>...]\n"
++	"	fdtget <options> <dt file> [<node> <property>]...\n"
 +	"Options:\n"
 +	"\t-t <type>\tType of data\n"
-+	"\t-v\t\tVerbose: display each value decoded from command line\n"
 +	"\t-h\t\tPrint this help\n\n"
 +	USAGE_TYPE_MSG;
 +
@@ -328,25 +321,17 @@ index 0000000..64ccd02
 +
 +int main(int argc, char *argv[])
 +{
-+	struct display_info disp;
 +	char *filename = NULL;
++	struct display_info disp;
 +
++	/* set defaults */
 +	memset(&disp, '\0', sizeof(disp));
 +	disp.size = -1;
 +	for (;;) {
-+		int c = getopt(argc, argv, "ht:v");
++		int c = getopt(argc, argv, "ht:");
 +		if (c == -1)
 +			break;
 +
-+		/*
-+		 * TODO: add options to:
-+		 * - delete property
-+		 * - delete node (optionally recursively)
-+		 * - rename node
-+		 * - pack fdt before writing
-+		 * - set amount of free space when writing
-+		 * - expand fdt if value doesn't fit
-+		 */
 +		switch (c) {
 +		case 'h':
 +		case '?':
@@ -356,10 +341,6 @@ index 0000000..64ccd02
 +			if (utilfdt_decode_type(optarg, &disp.type,
 +					&disp.size))
 +				usage("Invalid type string");
-+			break;
-+
-+		case 'v':
-+			disp.verbose = 1;
 +			break;
 +		}
 +	}
@@ -372,28 +353,25 @@ index 0000000..64ccd02
 +	argv += optind;
 +	argc -= optind;
 +
-+	if (argc < 1)
-+		usage("Missing node");
-+	if (argc < 2)
-+		usage("Missing property");
++	/* Allow no arguments, and silently succeed */
++	if (!argc)
++		return 0;
 +
-+	if (do_fdtput(&disp, filename, argv, argc))
++	/* Check for node, property arguments */
++	if (argc % 2)
++		usage("Must have an even number of arguments");
++
++	if (do_fdtget(&disp, filename, argv, argc))
 +		return 1;
 +	return 0;
 +}
-diff --git a/tests/fdtput-runtest.sh b/tests/fdtput-runtest.sh
-new file mode 100644
-index 0000000..ea51569
+diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
+new file mode 100755
+index 0000000..f38184f
 --- /dev/null
-+++ b/tests/fdtput-runtest.sh
-@@ -0,0 +1,55 @@
++++ b/tests/fdtget-runtest.sh
+@@ -0,0 +1,35 @@
 +#! /bin/sh
-+
-+# Run script for fdtput tests
-+# We run fdtput to update the device tree, thn fdtget to check it
-+
-+# Usage
-+#    fdtput-runtest.sh name expected_output dtb_file node property flags value
 +
 +. ./tests.sh
 +
@@ -404,28 +382,14 @@ index 0000000..ea51569
 +
 +expect="$1"
 +echo "$expect" >$EXPECT
-+dtb="$2"
-+node="$3"
-+property="$4"
-+flags="$5"
-+shift 5
-+value="$@"
++shift
 +
-+# First run fdtput
-+verbose_run $VALGRIND "$DTPUT" "$dtb" "$node" "$property" $value $flags
++verbose_run_log "$LOG" $VALGRIND "$DTGET" "$@"
 +ret="$?"
 +
 +if [ "$ret" -ne 0 -a "$expect" = "ERR" ]; then
 +	PASS
 +fi
-+if [ "$ret" -gt 127 ]; then
-+    signame=$(kill -l $[ret - 128])
-+    FAIL "Killed by SIG$signame"
-+fi
-+
-+# Now fdtget to read the value
-+verbose_run_log "$LOG" $VALGRIND "$DTGET" "$dtb" "$node" "$property" $flags
-+ret="$?"
 +
 +if [ "$ret" -gt 127 ]; then
 +    signame=$(kill -l $[ret - 128])
@@ -443,121 +407,110 @@ index 0000000..ea51569
 +	FAIL
 +fi
 diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index e63c5c7..05970e8 100755
+index 486ceae..e63c5c7 100755
 --- a/tests/run_tests.sh
 +++ b/tests/run_tests.sh
-@@ -90,6 +90,21 @@ run_fdtget_test () {
- base_run_test sh fdtget-runtest.sh "$@"
+@@ -83,6 +83,13 @@ asm_to_so_test () {
+ run_wrap_test asm_to_so "$@"
  }
  
-+run_fdtput_test () {
-+    # run_fdtput_test name expected_output dtb_file node property flags value...
++run_fdtget_test () {
++    # run_fdtget_test name expected_output dtb_file args...
 +    echo -n "$1:	"
 +    shift
-+    output="$1"
-+    dtb="$2"
-+    node="$3"
-+    property="$4"
-+    flags="$5"
-+    shift 5
-+    base_run_test sh fdtput-runtest.sh "$output" "$dtb" "$node" "$property" \
-+		"$flags" $@
-+#     base_run_test sh fdtput-runtest.sh "$@"
++    base_run_test sh fdtget-runtest.sh "$@"
 +}
 +
  tree1_tests () {
  TREE=$1
  
-@@ -426,6 +441,59 @@ fdtget_tests () {
- 	$file /randomnode doctor-who
+@@ -388,6 +395,37 @@ dtbs_equal_tests () {
+ cmp_tests test_tree1.dtb $WRONG_TREE1
  }
  
-+fdtput_tests () {
++fdtget_tests () {
 +    file=label01.dtb
-+    src=label01.dts
++    $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
 +
-+    # Create some test files containing useful strings
-+    base=tmp.test0
-+    file1=tmp.test1
-+    file2=tmp.test2
-+    bigfile1=tmp.test3
-+    bigfile2=tmp.test4
++    # run_fdtget_test <test-name> <expected-result> <args>...
++    run_fdtget_test "Simple string" "MyBoardName" $file / model
++    run_fdtget_test "Multiple string i" "77 121 66 111 \
++97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
++108 121 78 97 109 101 0" $file / compatible
++    run_fdtget_test "Multiple string s" "MyBoardName MyBoardFamilyName" \
++	-t s $file / compatible
++    run_fdtget_test "Integer" "32768" $file /cpus/PowerPC,970@1 d-cache-size
++    run_fdtget_test "Integer hex" "8000" -tx $file \
++	/cpus/PowerPC,970@1 d-cache-size
++    run_fdtget_test "Integer list" "61 62 63 0" -tbx $file \
++	/randomnode tricky1
++    run_fdtget_test "Byte list short" "a b c d de ea ad be ef" -tbx \
++	$file /randomnode blob
 +
-+    # Filter out anything the shell might not like
-+    cat $src | tr -d "'\"\n\;/\.\*{}\-" | tr -s "[:blank:]" " " >$base
-+
-+    # Make two small files
-+    head -5 $base >$file1
-+    cat $file1 | tr a-z A-Z | cut -c10-30 | sort -r >$file2
-+
-+    # and two larger ones
-+    cat $base > $bigfile1
-+    tac $base | tr a-z A-Z | sort -r >$bigfile2
-+
-+    # Allow just enough space for both file1 and file2
-+    (( space = $(stat -c %s $file1) + $(stat -c %s $file2) ))
-+    $DTC -O dtb -p $space -o $file ${file%.dtb}.dts 2>/dev/null
-+
-+    # run_fdtput_test <test-name> <expected-result> <file> <key> <flags>
-+    #		<args>...
-+    run_fdtput_test "Simple string" "a_model" $file / model -ts "a_model"
-+    run_fdtput_test "Multiple string s" "board1 board2" \
-+	$file / compatible -ts board1 board2
-+    run_fdtput_test "Single string with spaces" "board1 board2" \
-+	$file / compatible -ts "board1 board2"
-+    run_fdtput_test "Integer" "32768" \
-+	$file /cpus/PowerPC,970@1 d-cache-size "" "32768"
-+    run_fdtput_test "Integer hex" "8001" \
-+	$file /cpus/PowerPC,970@1 d-cache-size -tx 0x8001
-+    run_fdtput_test "Integer list" "2 3 12" \
-+	$file /randomnode tricky1 -tbi "02 003 12"
-+    run_fdtput_test "Byte list short" "a b c ea ad be ef" \
-+	$file /randomnode blob -tbx "a b c ea ad be ef"
-+    run_fdtput_test "Integer list short" "a0b0c0d deeaae ef000000" \
-+	$file /randomnode blob -tx "a0b0c0d deeaae ef000000"
-+    run_fdtput_test "Large string list" "`cat $file1 $file2`" \
-+	$file /randomnode blob -ts "`cat $file1`" "`cat $file2`"
-+
-+    # This should be larger than available space in the fdt ($space)
-+    run_fdtput_test "Enormous string list" ERR \
-+	$file /randomnode blob -ts "`cat $bigfile1`" "`cat $bigfile2`"
-+
-+    # TODO: Add tests for verbose mode?
++    # Here the property size is not a multiple of 4 bytes, so it should fail
++    run_fdtget_test "Integer list invalid" ERR -tlx \
++	$file /randomnode mixed
++    run_fdtget_test "Integer list halfword" "6162 6300 1234 0 a 0 b 0 c" -thx \
++	$file /randomnode mixed
++    run_fdtget_test "Integer list byte" \
++	"61 62 63 0 12 34 0 0 0 a 0 0 0 b 0 0 0 c" -thhx \
++	$file /randomnode mixed
++    run_fdtget_test "Missing property" ERR -ts \
++	$file /randomnode doctor-who
 +}
 +
  utilfdt_tests () {
  run_test utilfdt_test
  }
-@@ -445,7 +513,7 @@ while getopts "vt:m" ARG ; do
+@@ -407,7 +445,7 @@ while getopts "vt:m" ARG ; do
  done
  
  if [ -z "$TESTSETS" ]; then
--    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget"
-+    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget fdtput"
+-    TESTSETS="libfdt utilfdt dtc dtbs_equal"
++    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget"
  fi
  
  # Make sure we don't have stale blobs lying around
-@@ -468,6 +536,9 @@ for set in $TESTSETS; do
- 	"fdtget")
- 	    fdtget_tests
+@@ -427,6 +465,9 @@ for set in $TESTSETS; do
+ 	"dtbs_equal")
+ 	    dtbs_equal_tests
  	    ;;
-+	"fdtput")
-+	    fdtput_tests
++	"fdtget")
++	    fdtget_tests
 +	    ;;
  esac
  done
  
 diff --git a/tests/tests.sh b/tests/tests.sh
-index d9a0524..6e5e76a 100644
+index 30ffead..d9a0524 100644
 --- a/tests/tests.sh
 +++ b/tests/tests.sh
-@@ -12,6 +12,7 @@ FAIL () {
+@@ -11,6 +11,7 @@ FAIL () {
+ }
  
  DTC=../dtc
- DTGET=../fdtget
-+DTPUT=../fdtput
++DTGET=../fdtget
  
  verbose_run () {
  if [ -z "$QUIET_TEST" ]; then
+diff --git a/utilfdt/utilfdt.h b/utilfdt/utilfdt.h
+index fd6dc9d..2606179 100644
+--- a/utilfdt/utilfdt.h
++++ b/utilfdt/utilfdt.h
+@@ -88,4 +88,14 @@ int utilfdt_write_err(const char *filename, const void *blob);
+  */
+ int utilfdt_decode_type(const char *fmt, int *type, int *size);
+ 
++/*
++ * This is a usage message fragment for the -t option. It is the format
++ * supported by utilfdt_decode_type.
++ */
++
++#define USAGE_TYPE_MSG \
++	"<type>\ts=string, i=int, u=unsigned, x=hex\n" \
++	"\tOptional modifier prefix:\n" \
++	"\t\thh or b=byte, h=2 byte, l=4 byte (default)\n";
++
+ #endif /* _UTILFDT_H */
 -- 
 1.7.3.1
