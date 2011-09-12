@@ -1,80 +1,54 @@
-From: David Jander <david.jander@protonic.nl>
-Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
- MPC5xxx PSC AC97 audio driver
-Date: Mon, 12 Sep 2011 15:59:05 +0200
-Message-ID: <20110912155905.35cda85b@archvile>
-References: <20110908124529.520c1388@archvile>
-	<CAKON4OwvYy6Dy-MfHT90syPyAUcTVRXqXca-qAVjk-KWkak53A@mail.gmail.com>
-	<20110908163231.4b721973@archvile> <20110908184441.GD16989@siel.b>
-	<20110909082844.3dbf0e72@archvile>
-	<20110909120216.263eeb54@archvile>
-	<20110909163714.GA4302@sirena.org.uk>
-	<20110912083158.29d9e1fe@archvile>
-	<20110912110950.GD2953@opensource.wolfsonmicro.com>
-	<20110912145507.4ac0d56f@archvile>
-	<20110912131924.GB5887@opensource.wolfsonmicro.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 06/10] hwspinlock: OMAP4: Add spinlock support in DT
+Date: Mon, 12 Sep 2011 16:32:42 +0200
+Message-ID: <201109121632.42688.arnd@arndb.de>
+References: <1314191356-10963-1-git-send-email-b-cousson@ti.com>
+	<201109091458.44153.arnd@arndb.de>
+	<CAK=WgbYTo=R1=KhMzLv0iw2qYBPXXyLtB43Z4wvN5p-EvLL9Xw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20110912131924.GB5887@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK=WgbYTo=R1=KhMzLv0iw2qYBPXXyLtB43Z4wvN5p-EvLL9Xw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: "Hilman, Kevin" <khilman@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, "tony@atomide.com" <tony@atomide.com>, "G,
+	Manjunath Kondaiah" <manjugk@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Sep 2011 14:19:24 +0100
-Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
+On Sunday 11 September 2011, Ohad Ben-Cohen wrote:
+> > but instead the controller should have a list of the available
+> > spinlocks.
+> 
+> Might make more sense to give it the list of reserved (i.e. those that
+> were statically allocated) spinlocks, and then let it treat the rest
+> as available.
 
-> On Mon, Sep 12, 2011 at 02:55:07PM +0200, David Jander wrote:
-> > Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
-> 
-> > > Other OSs are actively using device tree.
-> 
-> > Interesting. I wasn't aware of "actively using". Sure, there's MacOS-X-ppc,
-> > IBM AIX, Oracle Solaris.... and I just discovered that Free-/OpenBSD also
-> > use them.
-> 
-> *BSD are the main ones to consider here.
-> 
-> > > Eliminating board specific code for audio is not a realistic goal, the
-> > > configuration of modern audio subsystems is too complex and dynamic.  
-> 
-> > Why not? How complex could it be in order to not be able to describe it in
-> > a Device-Tree in some OS-agnostic way?
-> 
-> Note the "dynamic" bit - the configuration changes at runtime.
-> Describing the hardware for something like a modern smartphone isn't
-> particularly useful due to the flexibility, there are too many different
-> ways of configuring the system and we need code to acutally take those
-> decision.
+Fair enough. Whatever you expect to be a shorter list, I guess.
 
-Ok, but you could still describe the hardwired part of it (Audio muxes,
-codecs, busses and physical interfaces). Isn't that what OF is all about?
-In our case, its just a simple AC97 codec connected to a simple AC97 bus.
-Sounds like total overkill having to write a "fabric driver" for this....
-while there are already quite a few that are all 99% the same!
-
-> > > The plan is to push the device trees out of the kernel into a separate
-> > > repository.
+> hwspinlock drivers will tell the core which of their spinlocks are
+> reserved, so it can make sure not to allocate them when someone calls
+> hwspin_lock_request(). To use those reserved spinlocks, users will
+> explicitly have to call hwspin_lock_request_specific().
 > 
-> > Good idea.... but where should such a repository be hosted?
+> The controller's node should still have something like a "baseid"
+> attribute, and possibly also the number of available spinlocks. The
+> latter is a bit redundant though, as drivers already know how many
+> spinlocks are available (at least the OMAP driver reads it from an
+> hardware register. The U8500 one seem just to have it hardcoded in the
+> driver).
 > 
-> Still an open issue.
+> Vast majority of hwspinlocks are not statically allocated, so this
+> would keep the DT minimal, and IMHO, cleaner.
 
-Seems like its hard to find a vendor- and OS-neutral entity to host this?
-OpenBIOS maybe?
+Ok.
 
-Best regards,
-
--- 
-David Jander
-Protonic Holland.
+	Arnd
