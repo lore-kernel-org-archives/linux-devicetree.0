@@ -1,65 +1,56 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: [PATCH 2/2 v3] power: bq20z75: Add Device Tree Binding
-Date: Tue, 13 Sep 2011 14:21:39 -0700
-Message-ID: <1315948899-21536-1-git-send-email-rklein@nvidia.com>
+From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 06/24] C6X: devicetree
+Date: Tue, 13 Sep 2011 18:26:03 -0400
+Message-ID: <1315952764.11280.49.camel@deneb.redhat.com>
+References: <1314826019-22330-1-git-send-email-msalter@redhat.com>
+	<6360771.ouEC5EKNMR@wuerfel>
+	<1315917546.11280.38.camel@deneb.redhat.com>
+	<201109131733.59700.arnd@arndb.de>
+	<CACxGe6tVafwVN6vdU7sCxL5JM7+as0bp_AaHaGAyE9+eTgR5Tw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, Rhyland Klein <rklein@nvidia.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6tVafwVN6vdU7sCxL5JM7+as0bp_AaHaGAyE9+eTgR5Tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding the binding for the TI bq20z75 fuel gadge and the
-bq20z75 driver.
+On Tue, 2011-09-13 at 11:54 -0600, Grant Likely wrote:
+> On Tue, Sep 13, 2011 at 9:33 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Tuesday 13 September 2011, Mark Salter wrote:
+> >> On Tue, 2011-09-13 at 08:43 +0200, Arnd Bergmann wrote:
+> >> > Are these instructions specific to the interrupt controller or
+> >> > do they access a register space that can contain arbitrary
+> >> > devices?
+> >> >
+> >> > If there is a separate address space for special devices, it might
+> >> > be good to describe that in the device tree, like we do for PCI
+> >> > I/O space.
+> >> >
+> >>
+> >> It is a core register area. Similar to ARM or MIPS coprocessor
+> >> registers.
+> >
+> > I guess it still depends, it's probably a grey area. If the register layout
+> > is the same on all c6x cores and it's only for core stuff, there is no need
+> > to put it in the device tree. If you have multiple soc (off-core) devices
+> > being controlled through the registers, or the numbers vary a lot between
+> > different chips, I would put all of them into the device tree.
+> 
+> It's an interrupt controller.  There still needs to be a node to act
+> as the interrupt-parent and specify #interrupt-cells.
 
-Signed-off-by: Rhyland Klein <rklein@nvidia.com>
----
-	v2: Fixed typo in binding description
-	v3: Changed unique properties to be use "ti,"
-	    Changed to use single gpio entry for gpio info
+It already has that. But maybe that node should be moved into the cpu
+node.
 
- .../bindings/power_supply/ti_bq20z75.txt           |   23 ++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-
-diff --git a/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-new file mode 100644
-index 0000000..7571294
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-@@ -0,0 +1,23 @@
-+TI bq20z75
-+~~~~~~~~~~
-+
-+Required properties :
-+ - compatible : "ti,bq20z75"
-+
-+Optional properties :
-+ - ti,i2c-retry-count : The number of times to retry i2c transactions on i2c
-+   IO failure.
-+ - ti,poll-retry-count : The number of times to try looking for new status
-+   after an external change notification.
-+ - ti,battery-detect-gpios : The gpio which signals battery detection and
-+   a flag specifying its polarity.
-+
-+Example:
-+
-+	bq20z75@b {
-+		compatible = "ti,bq20z75";
-+		reg = < 0xb >;
-+		ti,i2c-retry-count = <2>;
-+		ti,poll-retry-count = <10>;
-+		ti,battery-detect-gpios = <&gpio-controller 122 1>;
-+	}
--- 
-1.7.6
+--Mark
