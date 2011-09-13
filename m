@@ -1,39 +1,43 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: [PATCH] net/smsc911x: Correctly configure 16-bit register access from DT
-Date: Tue, 13 Sep 2011 11:49:29 +0100
-Message-ID: <1315910969-4018-1-git-send-email-dave.martin@linaro.org>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: patches@linaro.org, Steve Glendinning <steve.glendinning@smsc.com>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, Dave Martin <dave.martin@linaro.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v2 0/2] Add device tree support for Samsung's keypad controller
+ driver
+Date: Tue, 13 Sep 2011 17:56:17 +0530
+Message-ID: <1315916779-21793-1-git-send-email-thomas.abraham@linaro.org>
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-The SMSC911X_USE_16BIT needs to be set when using 16-bit register
-access.  However, currently no flag is set if the device tree
-doesn't specify 32-bit access, resulting in a BUG() and a non-
-working driver when 16-bit register access is configured for
-smsc911x in the DT.
+Changes since v1:
+- Addressed comments from Dmitry Torokhov.
+  - Type of controller is cached in driver's private data and the function
+    that determines the type of the controller for each keypad scan is
+    removed.
+  - pdata allocated during probe is explicitly freed after probe completes
+    without any error. In case of exit from probe due a error, no explicit
+    deallocation of pdata memory is performed and it is left to devres to
+    handle that.
+  - The generic code to translate KEY(x,y,code) is retained in the driver
+    itself. I am unsure of a right common place for it.
+  - Driver continues with the probe even if one or more gpio configuration
+    fails.
+  - Patch 1 that adds a new config option is still retained in this patchset.
 
-This patch should set the SMSC911X_USE_16BIT flag in a manner
-consistent with the documented DT bindings.
 
-Signed-off-by: Dave Martin <dave.martin@linaro.org>
----
- drivers/net/ethernet/smsc/smsc911x.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+This patchset adds device tree support for samsung's keypad controller driver.
+First patch adds a new config option to be used by device tree enabled platforms
+for selecting the samsung's keypad controller driver. The second patch adds device
+tree support for the keypad driver.
 
-diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
-index 788c4fd..a3aa4c0 100644
---- a/drivers/net/ethernet/smsc/smsc911x.c
-+++ b/drivers/net/ethernet/smsc/smsc911x.c
-@@ -2121,6 +2121,8 @@ static int __devinit smsc911x_probe_config_dt(
- 	of_property_read_u32(np, "reg-io-width", &width);
- 	if (width == 4)
- 		config->flags |= SMSC911X_USE_32BIT;
-+	else
-+		config->flags |= SMSC911X_USE_16BIT;
- 
- 	if (of_get_property(np, "smsc,irq-active-high", NULL))
- 		config->irq_polarity = SMSC911X_IRQ_POLARITY_ACTIVE_HIGH;
--- 
-1.7.4.1
+Thomas Abraham (2):
+  input: samsung-keypad: Add HAVE_SAMSUNG_KEYPAD config option
+  input: samsung-keypad: Add device tree support
+
+ .../devicetree/bindings/input/samsung-keypad.txt   |   88 ++++++++++
+ drivers/input/keyboard/Kconfig                     |    9 +-
+ drivers/input/keyboard/samsung-keypad.c            |  177 ++++++++++++++++++--
+ 3 files changed, 261 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/samsung-keypad.txt
+
