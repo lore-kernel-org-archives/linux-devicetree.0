@@ -1,38 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 06/24] C6X: devicetree
-Date: Tue, 13 Sep 2011 08:43:56 +0200
-Message-ID: <6360771.ouEC5EKNMR@wuerfel>
-References: <1314826019-22330-1-git-send-email-msalter@redhat.com> <20110912201102.GF23345@ponder.secretlab.ca> <1315869636.11280.26.camel@deneb.redhat.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] i2c: s3c2410: Keep a copy of platform data and
+ use it
+Date: Tue, 13 Sep 2011 00:01:17 -0700
+Message-ID: <4E6EFFBD.6050609@codeaurora.org>
+References: <1315887365-30532-1-git-send-email-thomas.abraham@linaro.org> <1315887365-30532-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1315869636.11280.26.camel@deneb.redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Mark Salter <msalter@redhat.com>, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1315887365-30532-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 September 2011 19:20:35 Mark Salter wrote:
-> On Mon, 2011-09-12 at 14:11 -0600, Grant Likely wrote:
-> > On Wed, Aug 31, 2011 at 05:26:41PM -0400, Mark Salter wrote:
-> > > +           interrupt-controller;
-> > > +           #interrupt-cells = <1>;
-> > > +           compatible = "ti,c64x+core-pic";
-> > 
-> > The interrupt controller isn't addressable?  Is it integrated into
-> > the CPU?
-> 
-> Yes, that core controller is controlled through registers accessed
-> with special-purpose instructions, not MMIO. Other controllers, like
-> megamodule and some as-yet unimplemented use MMIO.
+On 9/12/2011 9:16 PM, Thomas Abraham wrote:
+> @@ -809,6 +810,15 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
+>  
+> +	i2c->pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!i2c->pdata) {
+> +		ret = -ENOMEM;
+> +		goto err_noclk;
+> +	}
+> +
+> +	if (pdata)
+> +		memcpy(i2c->pdata, pdata, sizeof(*pdata));
+> +
 
-Are these instructions specific to the interrupt controller or
-do they access a register space that can contain arbitrary
-devices?
+Is there a devm_kmemdup()? If not, maybe it would be a good idea to add it.
 
-If there is a separate address space for special devices, it might
-be good to describe that in the device tree, like we do for PCI
-I/O space.
-
-	Arnd
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
