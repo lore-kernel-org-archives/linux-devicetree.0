@@ -1,77 +1,38 @@
-From: David Jander <david.jander@protonic.nl>
-Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
- MPC5xxx PSC AC97 audio driver
-Date: Tue, 13 Sep 2011 08:31:38 +0200
-Message-ID: <20110913083138.2e0661de@archvile>
-References: <20110908184441.GD16989@siel.b> <20110909082844.3dbf0e72@archvile>
-	<20110909120216.263eeb54@archvile>
-	<20110909163714.GA4302@sirena.org.uk>
-	<20110912083158.29d9e1fe@archvile>
-	<20110912110950.GD2953@opensource.wolfsonmicro.com>
-	<20110912145507.4ac0d56f@archvile>
-	<20110912131924.GB5887@opensource.wolfsonmicro.com>
-	<20110912155905.35cda85b@archvile>
-	<20110912145214.GC5887@opensource.wolfsonmicro.com>
-	<20110912194850.GC23345@ponder.secretlab.ca>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 06/24] C6X: devicetree
+Date: Tue, 13 Sep 2011 08:43:56 +0200
+Message-ID: <6360771.ouEC5EKNMR@wuerfel>
+References: <1314826019-22330-1-git-send-email-msalter@redhat.com> <20110912201102.GF23345@ponder.secretlab.ca> <1315869636.11280.26.camel@deneb.redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20110912194850.GC23345@ponder.secretlab.ca>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: lrg@ti.com, alsa-devel@alsa-project.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1315869636.11280.26.camel@deneb.redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Mark Salter <msalter@redhat.com>, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Sep 2011 13:48:50 -0600
-Grant Likely <grant.likely@secretlab.ca> wrote:
-
-> On Mon, Sep 12, 2011 at 03:52:14PM +0100, Mark Brown wrote:
-> > On Mon, Sep 12, 2011 at 03:59:05PM +0200, David Jander wrote:
-> > > Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
+On Monday 12 September 2011 19:20:35 Mark Salter wrote:
+> On Mon, 2011-09-12 at 14:11 -0600, Grant Likely wrote:
+> > On Wed, Aug 31, 2011 at 05:26:41PM -0400, Mark Salter wrote:
+> > > +           interrupt-controller;
+> > > +           #interrupt-cells = <1>;
+> > > +           compatible = "ti,c64x+core-pic";
 > > 
-> > > > Note the "dynamic" bit - the configuration changes at runtime.
-> > > > Describing the hardware for something like a modern smartphone isn't
-> > > > particularly useful due to the flexibility, there are too many
-> > > > different ways of configuring the system and we need code to acutally
-> > > > take those decision.
-> > 
-> > > Ok, but you could still describe the hardwired part of it (Audio muxes,
-> > > codecs, busses and physical interfaces). Isn't that what OF is all about?
-> > > In our case, its just a simple AC97 codec connected to a simple AC97 bus.
-> > > Sounds like total overkill having to write a "fabric driver" for this....
-> > > while there are already quite a few that are all 99% the same!
-> > 
-> > I'm not sure I understand what you are talking about.  As I've already
-> > said at least once having a *machine* driver which covers multiple
-> > machines is absolutely OK.  We already have several such drivers in
-> > kernel.
+> > The interrupt controller isn't addressable?  Is it integrated into
+> > the CPU?
 > 
-> Yes, a machine driver is quite a sane way to manage the huge range of
-> variability of a machine's audio complex.  If it turns out that an SoC
-> only ever has one machine driver that handles all possible
-> configurations, it still isn't really more complex.  If, however, the
-> permutations are sufficiently different to warrant separate driver
-> then the groundwork is already established to support it sanely.
-> 
-> BTW, this isn't a question about "what OF is all about".  It makes
-> perfect sense in the OF context to have a node describing how multiple
-> devices are aggregated into a single logically composite device.
-> 
-> Do a machine driver.  It's the right thing to do.
+> Yes, that core controller is controlled through registers accessed
+> with special-purpose instructions, not MMIO. Other controllers, like
+> megamodule and some as-yet unimplemented use MMIO.
 
-Ok, thanks.
+Are these instructions specific to the interrupt controller or
+do they access a register space that can contain arbitrary
+devices?
 
-Best regards,
+If there is a separate address space for special devices, it might
+be good to describe that in the device tree, like we do for PCI
+I/O space.
 
--- 
-David Jander
-Protonic Holland.
+	Arnd
