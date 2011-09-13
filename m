@@ -1,55 +1,38 @@
-From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 06/24] C6X: devicetree
-Date: Mon, 12 Sep 2011 19:20:35 -0400
-Message-ID: <1315869636.11280.26.camel@deneb.redhat.com>
-References: <1314826019-22330-1-git-send-email-msalter@redhat.com>
-	<1314826019-22330-7-git-send-email-msalter@redhat.com>
-	<20110912201102.GF23345@ponder.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110912201102.GF23345-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v3 0/2] Add device tree support for Samsung's I2C driver
+Date: Tue, 13 Sep 2011 09:46:03 +0530
+Message-ID: <1315887365-30532-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-i2c@vger.kernel.org, grant.likely@secretlab.ca, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2011-09-12 at 14:11 -0600, Grant Likely wrote:
-> On Wed, Aug 31, 2011 at 05:26:41PM -0400, Mark Salter wrote:
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <1>;
-> > +		compatible = "ti,c64x+core-pic";
-> 
-> The interrupt controller isn't addressable?  Is it integrated into
-> the CPU?
+This patchset adds device tree support for Samsung's I2C driver.
 
-Yes, that core controller is controlled through registers accessed
-with special-purpose instructions, not MMIO. Other controllers, like
-megamodule and some as-yet unimplemented use MMIO.
+Changes since v2:
+- Addressed all comments from Grant Likely
+    - Used dev_kzalloc to allocate memory for platform data.
+    - Removed redundant check while adding i2c adapter.
+- Added support to retrieve gpio pin information from dt and request
+  gpio pins (retained Grant's Ack even though this is a new addition
+  in this version of the patch).
 
-> 
-> > +	};
-> > +
-> > +	soc@00000000 {
-> 
-> "soc@2a80000" to match the 'reg' property of this node.
+Changes since v1:
+- Addressed all comments from Grant Likely
+    - s3c24xx_i2c_is2440 function is simpler now.
+    - Consolidated all the scatterd dt support code into a single function
+      to make the dt support code non-invasive.
+    - but the dependency on i2c pinmux handler function passed from the
+      platform data is retained. It would be removed eventually when the
+      new pinmux api is finalized and the i2c driver is modified to
+      support the pinmux settings using the pinmux api.
 
-Okay, I think I need a separate node for that reg property. The SoC
-address space does actually start at 0. The registers in that reg
-property are "SoC-level" registers holding silicon revision, pin
-strap status, etc. All of the SoCs have a "device state config"
-node which have registers like that. Instead of having them in the
-device state block, this SoC has them in a separate area. I just
-got lazy and put them the reg property in the soc node, but I think
-it really calls for a separate node.
+Thomas Abraham (2):
+  i2c: s3c2410: Keep a copy of platform data and use it
+  i2c: s3c2410: Add device tree support
 
---Mark
+ .../devicetree/bindings/i2c/samsung-i2c.txt        |   39 ++++++
+ drivers/i2c/busses/i2c-s3c2410.c                   |  128 ++++++++++++++++++--
+ 2 files changed, 159 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/samsung-i2c.txt
