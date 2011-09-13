@@ -1,53 +1,54 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH 1/2] input: samsung-keypad: Add HAVE_SAMSUNG_KEYPAD config
- option
-Date: Tue, 13 Sep 2011 17:56:18 +0530
-Message-ID: <1315916779-21793-2-git-send-email-thomas.abraham@linaro.org>
-References: <1315916779-21793-1-git-send-email-thomas.abraham@linaro.org>
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1315916779-21793-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: grant.likely@secretlab.ca, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com
+From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 06/24] C6X: devicetree
+Date: Tue, 13 Sep 2011 08:39:04 -0400
+Message-ID: <1315917546.11280.38.camel@deneb.redhat.com>
+References: <1314826019-22330-1-git-send-email-msalter@redhat.com>
+	<20110912201102.GF23345@ponder.secretlab.ca>
+	<1315869636.11280.26.camel@deneb.redhat.com>
+	<6360771.ouEC5EKNMR@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <6360771.ouEC5EKNMR@wuerfel>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For platforms using device tree, the static keypad device instances
-are not required and SAMSUNG_DEV_KEYPAD is not selected. Since,
-samsung keypad driver has dependency on SAMSUNG_DEV_KEYPAD config
-option, the driver is left out of the compilation for dt enabled
-platforms.
+On Tue, 2011-09-13 at 08:43 +0200, Arnd Bergmann wrote:
+> On Monday 12 September 2011 19:20:35 Mark Salter wrote:
+> > On Mon, 2011-09-12 at 14:11 -0600, Grant Likely wrote:
+> > > On Wed, Aug 31, 2011 at 05:26:41PM -0400, Mark Salter wrote:
+> > > > +           interrupt-controller;
+> > > > +           #interrupt-cells = <1>;
+> > > > +           compatible = "ti,c64x+core-pic";
+> > > 
+> > > The interrupt controller isn't addressable?  Is it integrated into
+> > > the CPU?
+> > 
+> > Yes, that core controller is controlled through registers accessed
+> > with special-purpose instructions, not MMIO. Other controllers, like
+> > megamodule and some as-yet unimplemented use MMIO.
+> 
+> Are these instructions specific to the interrupt controller or
+> do they access a register space that can contain arbitrary
+> devices?
+> 
+> If there is a separate address space for special devices, it might
+> be good to describe that in the device tree, like we do for PCI
+> I/O space.
+> 
 
-An additional config option 'HAVE_SAMSUNG_KEYPAD' is added
-which the device tree based platforms can select. This config
-option is added as an alternative dependency for keypad driver.
+It is a core register area. Similar to ARM or MIPS coprocessor
+registers.
 
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
----
- drivers/input/keyboard/Kconfig |    9 ++++++++-
- 1 files changed, 8 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index b4dee9d..7c322a3 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -423,9 +423,16 @@ config KEYBOARD_PMIC8XXX
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called pmic8xxx-keypad.
- 
-+config HAVE_SAMSUNG_KEYPAD
-+	bool
-+	help
-+	  This will include Samsung Keypad controller driver support. If you
-+	  want to include Samsung Keypad support for any machine, kindly
-+	  select this in the respective mach-xxxx/Kconfig file.
-+
- config KEYBOARD_SAMSUNG
- 	tristate "Samsung keypad support"
--	depends on SAMSUNG_DEV_KEYPAD
-+	depends on SAMSUNG_DEV_KEYPAD || HAVE_SAMSUNG_KEYPAD
- 	help
- 	  Say Y here if you want to use the Samsung keypad.
- 
--- 
-1.6.6.rc2
+--Mark
