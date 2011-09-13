@@ -1,276 +1,77 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v3 2/2] i2c: s3c2410: Add device tree support
-Date: Tue, 13 Sep 2011 09:46:05 +0530
-Message-ID: <1315887365-30532-3-git-send-email-thomas.abraham@linaro.org>
-References: <1315887365-30532-1-git-send-email-thomas.abraham@linaro.org>
- <1315887365-30532-2-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1315887365-30532-2-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-i2c@vger.kernel.org, grant.likely@secretlab.ca, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+From: David Jander <david.jander@protonic.nl>
+Subject: Re: ASoC audio fabric OF bindings RFC. was: Re: ASoC
+ MPC5xxx PSC AC97 audio driver
+Date: Tue, 13 Sep 2011 08:31:38 +0200
+Message-ID: <20110913083138.2e0661de@archvile>
+References: <20110908184441.GD16989@siel.b> <20110909082844.3dbf0e72@archvile>
+	<20110909120216.263eeb54@archvile>
+	<20110909163714.GA4302@sirena.org.uk>
+	<20110912083158.29d9e1fe@archvile>
+	<20110912110950.GD2953@opensource.wolfsonmicro.com>
+	<20110912145507.4ac0d56f@archvile>
+	<20110912131924.GB5887@opensource.wolfsonmicro.com>
+	<20110912155905.35cda85b@archvile>
+	<20110912145214.GC5887@opensource.wolfsonmicro.com>
+	<20110912194850.GC23345@ponder.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20110912194850.GC23345@ponder.secretlab.ca>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Sender: alsa-devel-bounces@alsa-project.org
+Errors-To: alsa-devel-bounces@alsa-project.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: lrg@ti.com, alsa-devel@alsa-project.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, devicetree-discuss@lists.ozlabs.org, torbenh <torbenh@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree probe support for Samsung's s3c2410 i2c driver.
+On Mon, 12 Sep 2011 13:48:50 -0600
+Grant Likely <grant.likely@secretlab.ca> wrote:
 
-Cc: Ben Dooks <ben-linux@fluff.org>
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
----
- .../devicetree/bindings/i2c/samsung-i2c.txt        |   39 +++++++
- drivers/i2c/busses/i2c-s3c2410.c                   |  110 +++++++++++++++++++-
- 2 files changed, 145 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/samsung-i2c.txt
+> On Mon, Sep 12, 2011 at 03:52:14PM +0100, Mark Brown wrote:
+> > On Mon, Sep 12, 2011 at 03:59:05PM +0200, David Jander wrote:
+> > > Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
+> > 
+> > > > Note the "dynamic" bit - the configuration changes at runtime.
+> > > > Describing the hardware for something like a modern smartphone isn't
+> > > > particularly useful due to the flexibility, there are too many
+> > > > different ways of configuring the system and we need code to acutally
+> > > > take those decision.
+> > 
+> > > Ok, but you could still describe the hardwired part of it (Audio muxes,
+> > > codecs, busses and physical interfaces). Isn't that what OF is all about?
+> > > In our case, its just a simple AC97 codec connected to a simple AC97 bus.
+> > > Sounds like total overkill having to write a "fabric driver" for this....
+> > > while there are already quite a few that are all 99% the same!
+> > 
+> > I'm not sure I understand what you are talking about.  As I've already
+> > said at least once having a *machine* driver which covers multiple
+> > machines is absolutely OK.  We already have several such drivers in
+> > kernel.
+> 
+> Yes, a machine driver is quite a sane way to manage the huge range of
+> variability of a machine's audio complex.  If it turns out that an SoC
+> only ever has one machine driver that handles all possible
+> configurations, it still isn't really more complex.  If, however, the
+> permutations are sufficiently different to warrant separate driver
+> then the groundwork is already established to support it sanely.
+> 
+> BTW, this isn't a question about "what OF is all about".  It makes
+> perfect sense in the OF context to have a node describing how multiple
+> devices are aggregated into a single logically composite device.
+> 
+> Do a machine driver.  It's the right thing to do.
 
-diff --git a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-new file mode 100644
-index 0000000..d04186d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-@@ -0,0 +1,39 @@
-+* Samsung's I2C controller
-+
-+The Samsung's I2C controller is used to interface with I2C devices.
-+
-+Required properties:
-+  - compatible: value should be either of the following.
-+      (a) "samsung, s3c2410-i2c", for i2c compatible with s3c2410 i2c.
-+      (b) "samsung, s3c2440-i2c", for i2c compatible with s3c2440 i2c.
-+  - reg: physical base address of the controller and length of memory mapped
-+    region.
-+  - interrupts: interrupt number to the cpu.
-+  - samsung,i2c-sda-delay: Delay (in ns) applied to data line (SDA) edges.
-+  - gpios: The order of the gpios should be the following: <SDA, SCL>.
-+    The gpio specifier depends on the gpio controller.
-+
-+Optional properties:
-+  - samsung,i2c-slave-addr: Slave address in multi-master enviroment. If not
-+    specified, default value is 0.
-+  - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. If not
-+    specified, the default value in Hz is 100000.
-+
-+Example:
-+
-+	i2c@13870000 {
-+		compatible = "samsung,s3c2440-i2c";
-+		reg = <0x13870000 0x100>;
-+		interrupts = <345>;
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-max-bus-freq = <100000>;
-+		gpios = <&gpd1 2 0 /* SDA */
-+			 &gpd1 3 0 /* SCL */>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		wm8994@1a {
-+			compatible = "wlf,wm8994";
-+			reg = <0x1a>;
-+		};
-+	};
-diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-index 266dd83..aaeabf9 100644
---- a/drivers/i2c/busses/i2c-s3c2410.c
-+++ b/drivers/i2c/busses/i2c-s3c2410.c
-@@ -35,6 +35,8 @@
- #include <linux/cpufreq.h>
- #include <linux/slab.h>
- #include <linux/io.h>
-+#include <linux/of_i2c.h>
-+#include <linux/of_gpio.h>
- 
- #include <asm/irq.h>
- 
-@@ -79,6 +81,7 @@ struct s3c24xx_i2c {
- 	struct i2c_adapter	adap;
- 
- 	struct s3c2410_platform_i2c	*pdata;
-+	int			gpios[2];
- #ifdef CONFIG_CPU_FREQ
- 	struct notifier_block	freq_transition;
- #endif
-@@ -96,6 +99,12 @@ static inline int s3c24xx_i2c_is2440(struct s3c24xx_i2c *i2c)
- 	struct platform_device *pdev = to_platform_device(i2c->dev);
- 	enum s3c24xx_i2c_type type;
- 
-+#ifdef CONFIG_OF
-+	if (i2c->dev->of_node)
-+		return of_device_is_compatible(i2c->dev->of_node,
-+				"samsung,s3c2440-i2c");
-+#endif
-+
- 	type = platform_get_device_id(pdev)->driver_data;
- 	return type == TYPE_S3C2440;
- }
-@@ -742,6 +751,49 @@ static inline void s3c24xx_i2c_deregister_cpufreq(struct s3c24xx_i2c *i2c)
- }
- #endif
- 
-+#ifdef CONFIG_OF
-+static int s3c24xx_i2c_parse_dt_gpio(struct s3c24xx_i2c *i2c)
-+{
-+	int idx, gpio, ret;
-+
-+	for (idx = 0; idx < 2; idx++) {
-+		gpio = of_get_gpio(i2c->dev->of_node, idx);
-+		if (!gpio_is_valid(gpio)) {
-+			dev_err(i2c->dev, "invalid gpio[%d]: %d\n", idx, gpio);
-+			goto free_gpio;
-+		}
-+
-+		ret = gpio_request(gpio, "i2c-bus");
-+		if (ret) {
-+			dev_err(i2c->dev, "gpio [%d] request failed\n", gpio);
-+			goto free_gpio;
-+		}
-+	}
-+	return 0;
-+
-+free_gpio:
-+	while (--idx >= 0)
-+		gpio_free(i2c->gpios[idx]);
-+	return -EINVAL;
-+}
-+
-+static void s3c24xx_i2c_dt_gpio_free(struct s3c24xx_i2c *i2c)
-+{
-+	unsigned int idx;
-+	for (idx = 0; idx < 2; idx++)
-+		gpio_free(i2c->gpios[idx]);
-+}
-+#else
-+static int s3c24xx_i2c_parse_dt_gpio(struct s3c24xx_i2c *i2c)
-+{
-+	return -EINVAL;
-+}
-+
-+static void s3c24xx_i2c_dt_gpio_free(struct s3c24xx_i2c *i2c)
-+{
-+}
-+#endif
-+
- /* s3c24xx_i2c_init
-  *
-  * initialise the controller, set the IO lines and frequency
-@@ -761,6 +813,9 @@ static int s3c24xx_i2c_init(struct s3c24xx_i2c *i2c)
- 
- 	if (pdata->cfg_gpio)
- 		pdata->cfg_gpio(to_platform_device(i2c->dev));
-+	else
-+		if (s3c24xx_i2c_parse_dt_gpio(i2c))
-+			return -EINVAL;
- 
- 	/* write slave address */
- 
-@@ -786,6 +841,34 @@ static int s3c24xx_i2c_init(struct s3c24xx_i2c *i2c)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+/* s3c24xx_i2c_parse_dt
-+ *
-+ * Parse the device tree node and retreive the platform data.
-+*/
-+
-+static void
-+s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
-+{
-+	struct s3c2410_platform_i2c *pdata = i2c->pdata;
-+
-+	if (!np)
-+		return;
-+
-+	pdata->bus_num = -1; /* i2c bus number is dynamically assigned */
-+	of_property_read_u32(np, "samsung,i2c-sda-delay", &pdata->sda_delay);
-+	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
-+	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
-+				(u32 *)&pdata->frequency);
-+}
-+#else
-+static void
-+s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
-+{
-+	return;
-+}
-+#endif
-+
- /* s3c24xx_i2c_probe
-  *
-  * called by the bus driver when a suitable device is found
-@@ -798,10 +881,12 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	int ret;
- 
--	pdata = pdev->dev.platform_data;
--	if (!pdata) {
--		dev_err(&pdev->dev, "no platform data\n");
--		return -EINVAL;
-+	if (!pdev->dev.of_node) {
-+		pdata = pdev->dev.platform_data;
-+		if (!pdata) {
-+			dev_err(&pdev->dev, "no platform data\n");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	i2c = kzalloc(sizeof(struct s3c24xx_i2c), GFP_KERNEL);
-@@ -818,6 +903,8 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
- 
- 	if (pdata)
- 		memcpy(i2c->pdata, pdata, sizeof(*pdata));
-+	else
-+		s3c24xx_i2c_parse_dt(pdev->dev.of_node, i2c);
- 
- 	strlcpy(i2c->adap.name, "s3c2410-i2c", sizeof(i2c->adap.name));
- 	i2c->adap.owner   = THIS_MODULE;
-@@ -914,6 +1001,7 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
- 	 */
- 
- 	i2c->adap.nr = i2c->pdata->bus_num;
-+	i2c->adap.dev.of_node = pdev->dev.of_node;
- 
- 	ret = i2c_add_numbered_adapter(&i2c->adap);
- 	if (ret < 0) {
-@@ -921,6 +1009,7 @@ static int s3c24xx_i2c_probe(struct platform_device *pdev)
- 		goto err_cpufreq;
- 	}
- 
-+	of_i2c_register_devices(&i2c->adap);
- 	platform_set_drvdata(pdev, i2c);
- 
- 	dev_info(&pdev->dev, "%s: S3C I2C adapter\n", dev_name(&i2c->adap.dev));
-@@ -969,6 +1058,7 @@ static int s3c24xx_i2c_remove(struct platform_device *pdev)
- 	iounmap(i2c->regs);
- 
- 	release_resource(i2c->ioarea);
-+	s3c24xx_i2c_dt_gpio_free(i2c);
- 	kfree(i2c->ioarea);
- 	kfree(i2c);
- 
-@@ -1022,6 +1112,17 @@ static struct platform_device_id s3c24xx_driver_ids[] = {
- };
- MODULE_DEVICE_TABLE(platform, s3c24xx_driver_ids);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id s3c24xx_i2c_match[] = {
-+	{ .compatible = "samsung,s3c2410-i2c" },
-+	{ .compatible = "samsung,s3c2440-i2c" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, s3c24xx_i2c_match);
-+#else
-+#define s3c24xx_i2c_match NULL
-+#endif
-+
- static struct platform_driver s3c24xx_i2c_driver = {
- 	.probe		= s3c24xx_i2c_probe,
- 	.remove		= s3c24xx_i2c_remove,
-@@ -1030,6 +1131,7 @@ static struct platform_driver s3c24xx_i2c_driver = {
- 		.owner	= THIS_MODULE,
- 		.name	= "s3c-i2c",
- 		.pm	= S3C24XX_DEV_PM_OPS,
-+		.of_match_table = s3c24xx_i2c_match,
- 	},
- };
- 
+Ok, thanks.
+
+Best regards,
+
 -- 
-1.6.6.rc2
+David Jander
+Protonic Holland.
