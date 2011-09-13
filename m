@@ -1,40 +1,50 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 06/24] C6X: devicetree
-Date: Tue, 13 Sep 2011 11:54:36 -0600
-Message-ID: <CACxGe6tVafwVN6vdU7sCxL5JM7+as0bp_AaHaGAyE9+eTgR5Tw@mail.gmail.com>
-References: <1314826019-22330-1-git-send-email-msalter@redhat.com>
- <6360771.ouEC5EKNMR@wuerfel> <1315917546.11280.38.camel@deneb.redhat.com> <201109131733.59700.arnd@arndb.de>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] powerpc/fsl_msi: Handle msi-available-ranges better
+Date: Tue, 13 Sep 2011 13:33:06 -0500
+Message-ID: <4E6FA1E2.2060706@freescale.com>
+References: <20110117202528.GB561@udp111988uds.am.freescale.net>
+	<CAOZdJXVm1YL-T8i26O0BiB-uTkXUDnYQdacU8k52aG-K0pZ1Lg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201109131733.59700.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Salter <msalter@redhat.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOZdJXVm1YL-T8i26O0BiB-uTkXUDnYQdacU8k52aG-K0pZ1Lg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 13, 2011 at 9:33 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 13 September 2011, Mark Salter wrote:
->> On Tue, 2011-09-13 at 08:43 +0200, Arnd Bergmann wrote:
->> > Are these instructions specific to the interrupt controller or
->> > do they access a register space that can contain arbitrary
->> > devices?
->> >
->> > If there is a separate address space for special devices, it might
->> > be good to describe that in the device tree, like we do for PCI
->> > I/O space.
->> >
->>
->> It is a core register area. Similar to ARM or MIPS coprocessor
->> registers.
->
-> I guess it still depends, it's probably a grey area. If the register layout
-> is the same on all c6x cores and it's only for core stuff, there is no need
-> to put it in the device tree. If you have multiple soc (off-core) devices
-> being controlled through the registers, or the numbers vary a lot between
-> different chips, I would put all of them into the device tree.
+On 09/07/2011 11:20 AM, Tabi Timur-B04825 wrote:
+> The problem is that both offset and irq_index are being incremented in
+> the loop, and cascade_data->index is set to the sum of the two.
+> 
+> Perhaps you meant this:
+> 
+> 		err = fsl_msi_setup_hwirq(msi, dev, offset, j);
 
-It's an interrupt controller.  There still needs to be a node to act
-as the interrupt-parent and specify #interrupt-cells.
+That's not right either, it would retrieve the wrong IRQ from the
+interrupts property if you have holes -- try with something like
+{ 0 64, 128, 64 }.  The desired behavior there is:
 
-g.
+  offset = 0 irq_index = 0
+  offset = 1 irq_index = 1
+  offset = 4 irq_index = 2
+  offset = 5 irq_index = 3
+
+I think the right code (untested) might be:
+
+	err = fsl_msi_setup_hwirq(msi, dev, offset + j, irq_index);
+
+and
+
+	cascade_data->index = offset;
+
+-Scott
