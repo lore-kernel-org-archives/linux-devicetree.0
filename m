@@ -1,67 +1,62 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] isp1760: Fix endianness-sensitivity in
- of_isp1760_probe()
-Date: Wed, 14 Sep 2011 09:46:29 -0600
-Message-ID: <20110914154629.GB3134@ponder.secretlab.ca>
-References: <1316008633-31009-1-git-send-email-dave.martin@linaro.org>
- <1316008633-31009-3-git-send-email-dave.martin@linaro.org>
+Subject: Re: [PATCH] MAINTAINERS: update devicetree maintainers
+Date: Wed, 14 Sep 2011 09:47:25 -0600
+Message-ID: <20110914154725.GC3134@ponder.secretlab.ca>
+References: <1316004470-22643-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1316008633-31009-3-git-send-email-dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Arvid Brodin <arvid.brodin-AM1FMPraTHU@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <1316004470-22643-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2011 at 02:57:13PM +0100, Dave Martin wrote:
-> Data read direct from device tree properties will be in the device
-> tree's native endianness (i.e., big-endian).
+On Wed, Sep 14, 2011 at 07:47:50AM -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-> This patch uses of_property_read_u32() to read the bus-width
-> property in host byte order instead.
+> As requested by Grant, adding myself as an additional devicetree maintainer.
 > 
-> Signed-off-by: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Also, add Documentation/devicetree to the file list for devicetree.
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+Thanks for agreeing to help Rob!
+
 > ---
->  drivers/usb/host/isp1760-if.c |    6 +++---
->  1 files changed, 3 insertions(+), 3 deletions(-)
+>  MAINTAINERS |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 > 
-> diff --git a/drivers/usb/host/isp1760-if.c b/drivers/usb/host/isp1760-if.c
-> index 69ee32c..fa99c27 100644
-> --- a/drivers/usb/host/isp1760-if.c
-> +++ b/drivers/usb/host/isp1760-if.c
-> @@ -39,8 +39,8 @@ static int of_isp1760_probe(struct platform_device *dev)
->  	int virq;
->  	resource_size_t res_len;
->  	int ret;
-> -	const unsigned int *prop;
->  	unsigned int devflags = 0;
-> +	u32 bus_width = 0;
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1a8cc60..09754a6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4719,10 +4719,12 @@ F:	drivers/i2c/busses/i2c-ocores.c
 >  
->  	ret = of_address_to_resource(dp, 0, &memory);
->  	if (ret)
-> @@ -64,8 +64,8 @@ static int of_isp1760_probe(struct platform_device *dev)
->  		devflags |= ISP1760_FLAG_ISP1761;
->  
->  	/* Some systems wire up only 16 of the 32 data lines */
-> -	prop = of_get_property(dp, "bus-width", NULL);
-> -	if (prop && *prop == 16)
-> +	of_property_read_u32(dp, "bus-width", bus_width);
-
-Shouldn't this be '&bus_width'?
-
-g.
-
-> +	if (bus_width == 16)
->  		devflags |= ISP1760_FLAG_BUS_WIDTH_16;
->  
->  	if (of_get_property(dp, "port1-otg", NULL) != NULL)
+>  OPEN FIRMWARE AND FLATTENED DEVICE TREE
+>  M:	Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> +M:	Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>  L:	devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org (moderated for non-subscribers)
+>  W:	http://fdt.secretlab.ca
+>  T:	git git://git.secretlab.ca/git/linux-2.6.git
+>  S:	Maintained
+> +F:	Documentation/devicetree
+>  F:	drivers/of
+>  F:	include/linux/of*.h
+>  K:	of_get_property
 > -- 
-> 1.7.4.1
+> 1.7.5.4
 > 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
