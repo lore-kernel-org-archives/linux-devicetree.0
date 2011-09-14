@@ -1,7 +1,7 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCHv3] dt: add helper to read 64-bit integers
-Date: Wed, 14 Sep 2011 20:49:59 +0100
-Message-ID: <1316029799-10609-1-git-send-email-jamie@jamieiles.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5] power: bq20z75: devicetree init support
+Date: Wed, 14 Sep 2011 13:19:07 -0700
+Message-ID: <1316031547-18281-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -15,92 +15,160 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a helper similar to of_property_read_u32() that handles 64-bit
-integers.
+Adding support to generate platform data when kernel is configured
+through device tree.
 
-v2/v3: constify device node and property name parameters.
+Also adding the binding for the TI bq20z75 fuel gadge and the
+bq20z75 driver.
 
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+v2: Fixed typo in binding description.
+v3: Changed to use "ti," properties
+    Changed to use single gpio property for battery detect info
+    Removed unnecessary call to of_match_device
+v4: Squashed Binding and driver changes together.
+    Fixed case where CONFIG_OF is not selected, return existing pdata pointer
+v5: Fixed MODULE_DEVICE_TABLE to be i2c instead of platform
+
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
+ .../bindings/power_supply/ti_bq20z75.txt           |   23 ++++++
+ drivers/power/bq20z75.c                            |   75 ++++++++++++++++++++
+ 2 files changed, 98 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
 
-Just a resend but with Rob's Reviewed-by added since it was a while
-since last posted.
-
- drivers/of/base.c  |   29 +++++++++++++++++++++++++++++
- include/linux/of.h |    8 ++++++++
- 2 files changed, 37 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 3ff22e3..9361cfe 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -632,6 +632,35 @@ int of_property_read_u32_array(const struct device_node *np,
- EXPORT_SYMBOL_GPL(of_property_read_u32_array);
- 
- /**
-+ * of_property_read_u64 - Find and read a 64 bit integer from a property
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_value:	pointer to return value, modified only if return value is 0.
-+ *
-+ * Search for a property in a device node and read a 64-bit value from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_value is modified only if a valid u64 value can be decoded.
-+ */
-+int of_property_read_u64(const struct device_node *np, const char *propname,
-+			 u64 *out_value)
-+{
-+	struct property *prop = of_find_property(np, propname, NULL);
+diff --git a/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+new file mode 100644
+index 0000000..7571294
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+@@ -0,0 +1,23 @@
++TI bq20z75
++~~~~~~~~~~
 +
-+	if (!prop)
-+		return -EINVAL;
-+	if (!prop->value)
-+		return -ENODATA;
-+	if (sizeof(*out_value) > prop->length)
-+		return -EOVERFLOW;
-+	*out_value = of_read_number(prop->value, 2);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u64);
++Required properties :
++ - compatible : "ti,bq20z75"
 +
-+/**
-  * of_property_read_string - Find and read a string from a property
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 9180dc5..dc5995e 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -199,6 +199,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
- 				      const char *propname,
- 				      u32 *out_values,
- 				      size_t sz);
-+extern int of_property_read_u64(const struct device_node *np,
-+				const char *propname, u64 *out_value);
- 
- extern int of_property_read_string(struct device_node *np,
- 				   const char *propname,
-@@ -263,6 +265,12 @@ static inline const void *of_get_property(const struct device_node *node,
- 	return NULL;
++Optional properties :
++ - ti,i2c-retry-count : The number of times to retry i2c transactions on i2c
++   IO failure.
++ - ti,poll-retry-count : The number of times to try looking for new status
++   after an external change notification.
++ - ti,battery-detect-gpios : The gpio which signals battery detection and
++   a flag specifying its polarity.
++
++Example:
++
++	bq20z75@b {
++		compatible = "ti,bq20z75";
++		reg = < 0xb >;
++		ti,i2c-retry-count = <2>;
++		ti,poll-retry-count = <10>;
++		ti,battery-detect-gpios = <&gpio-controller 122 1>;
++	}
+diff --git a/drivers/power/bq20z75.c b/drivers/power/bq20z75.c
+index 9c5e5be..4014a2c 100644
+--- a/drivers/power/bq20z75.c
++++ b/drivers/power/bq20z75.c
+@@ -613,6 +613,78 @@ static void bq20z75_delayed_work(struct work_struct *work)
+ 	}
  }
  
-+static inline int of_property_read_u64(const struct device_node *np,
-+				       const char *propname, u64 *out_value)
-+{
-+	return -ENOSYS;
-+}
++#if defined(CONFIG_OF)
++#include <linux/of_device.h>
++static const struct of_device_id bq20z75_dt_ids[] = {
++	{ .compatible = "ti,bq20z75" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, bq20z75_dt_ids);
 +
- #endif /* CONFIG_OF */
++static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
++	struct i2c_client *client)
++{
++	const struct of_device_id *dtid;
++	struct device_node *of_node = client->dev.of_node;
++	struct bq20z75_platform_data *pdata = client->dev.platform_data;
++	enum of_gpio_flags gpio_flags;
++	int rc;
++	u32 prop;
++
++	/* verify this driver matches this device */
++	if (!of_node)
++		return NULL;
++
++	/* if platform data is set, honor it */
++	if (pdata)
++		return pdata;
++
++	/* first make sure at least one property is set, otherwise
++	 * it won't change behavior from running without pdata.
++	 */
++	if (!of_get_property(of_node, "ti,i2c-retry-count", NULL) &&
++		!of_get_property(of_node, "ti,poll-retry-count", NULL) &&
++		!of_get_property(of_node, "ti,battery-detect-gpios", NULL))
++		goto of_out;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(struct bq20z75_platform_data),
++				GFP_KERNEL);
++	if (!pdata)
++		goto of_out;
++
++	rc = of_property_read_u32(of_node, "ti,i2c-retry-count", &prop);
++	if (!rc)
++		pdata->i2c_retry_count = prop;
++
++	rc = of_property_read_u32(of_node, "ti,poll-retry-count", &prop);
++	if (!rc)
++		pdata->poll_retry_count = prop;
++
++	if (!of_get_property(of_node, "ti,battery-detect-gpios", NULL)) {
++		pdata->battery_detect = -1;
++		goto of_out;
++	}
++
++	pdata->battery_detect = of_get_named_gpio_flags(of_node,
++			"ti,battery-detect-gpios", 0, &gpio_flags);
++
++	if (gpio_flags & OF_GPIO_ACTIVE_LOW)
++		pdata->battery_detect_present = 0;
++	else
++		pdata->battery_detect_present = 1;
++
++of_out:
++	return pdata;
++}
++#else
++#define bq20z75_dt_ids NULL
++static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
++	struct i2c_client *client)
++{
++	return client->dev.platform_data;
++}
++#endif
++
+ static int __devinit bq20z75_probe(struct i2c_client *client,
+ 	const struct i2c_device_id *id)
+ {
+@@ -642,6 +714,8 @@ static int __devinit bq20z75_probe(struct i2c_client *client,
+ 	bq20z75_device->power_supply.external_power_changed =
+ 		bq20z75_external_power_changed;
  
- static inline int of_property_read_u32(const struct device_node *np,
++	pdata = bq20z75_of_populate_pdata(client);
++
+ 	if (pdata) {
+ 		bq20z75_device->gpio_detect =
+ 			gpio_is_valid(pdata->battery_detect);
+@@ -775,6 +849,7 @@ static struct i2c_driver bq20z75_battery_driver = {
+ 	.id_table	= bq20z75_id,
+ 	.driver = {
+ 		.name	= "bq20z75-battery",
++		.of_match_table = bq20z75_dt_ids,
+ 	},
+ };
+ 
 -- 
-1.7.4.1
+1.7.6
