@@ -1,78 +1,56 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/2] input: samsung-keypad: Add device tree support
-Date: Wed, 14 Sep 2011 13:10:47 -0600
-Message-ID: <CACxGe6uh82U_uFUBCdk4anDywUre974xU8OqEpvVq7AF5Oj8KQ@mail.gmail.com>
-References: <1315916779-21793-1-git-send-email-thomas.abraham@linaro.org>
- <1315916779-21793-2-git-send-email-thomas.abraham@linaro.org>
- <1315916779-21793-3-git-send-email-thomas.abraham@linaro.org>
- <20110914161144.GF3134@ponder.secretlab.ca> <CAJuYYwSNaVCnHFTMtW0RZLGLaS+iKBibWYwn5mqNT-0EW31yAQ@mail.gmail.com>
- <20110914171318.GA24425@ponder.secretlab.ca> <CAJuYYwRP2DGge1aHz-CWMnUrdz686s6X5Fp=LvRkM35VQS1XYw@mail.gmail.com>
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] isp1760: Fix endianness-sensitivity in of_isp1760_probe()
+Date: Wed, 14 Sep 2011 23:12:57 +0400
+Message-ID: <4E70FCB9.4050907@ru.mvista.com>
+References: <1316008633-31009-1-git-send-email-dave.martin@linaro.org> <1316008633-31009-3-git-send-email-dave.martin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwRP2DGge1aHz-CWMnUrdz686s6X5Fp=LvRkM35VQS1XYw@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1316008633-31009-3-git-send-email-dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arvid Brodin <arvid.brodin-AM1FMPraTHU@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2011 at 12:09 PM, Thomas Abraham
-<thomas.abraham@linaro.org> wrote:
-> On 14 September 2011 22:43, Grant Likely <grant.likely@secretlab.ca> =
-wrote:
->> On Wed, Sep 14, 2011 at 10:19:22PM +0530, Thomas Abraham wrote:
->>> On 14 September 2011 21:41, Grant Likely <grant.likely@secretlab.ca=
-> wrote:
->>> > On Tue, Sep 13, 2011 at 05:56:19PM +0530, Thomas Abraham wrote:
->>> >> +- Keys represented as child nodes: Each key connected to the ke=
-ypad
->>> >> + =A0controller is represented as a child node to the keypad con=
-troller
->>> >> + =A0device node and should include the following properties.
->>> >> + =A0- keypad,row: the row number to which the key is connected.
->>> >> + =A0- keypad,column: the column number to which the key is conn=
-ected.
->>> >> + =A0- keypad,key-code: the key-code to be reported when the key=
- is pressed
->>> >> + =A0 =A0and released.
->>> >
->>> > What defines the meanings of the key codes?
->>>
->>> The key-code could be any value which the system would want the key=
-pad
->>> driver to report when that key is pressed.
->>
->> Are they linux keycodes? =A0If so, then this property name can
->> probably be linux,code. =A0There is already precedence for that
->> usage in Documentation/devicetree/bindings/gpio/gpio-keys.txt. =A0(I
->> would personally prefer "linux,key-code", but sometimes it is better
->> to go with existing precidence) You could also use linux,input-type =
-as
->> specified in that binding.
+Hello.
+
+On 09/14/2011 05:57 PM, Dave Martin wrote:
+
+> Data read direct from device tree properties will be in the device
+> tree's native endianness (i.e., big-endian).
+
+> This patch uses of_property_read_u32() to read the bus-width
+> property in host byte order instead.
+
+> Signed-off-by: Dave Martin<dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Pawel Moll<pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> ---
+>   drivers/usb/host/isp1760-if.c |    6 +++---
+>   1 files changed, 3 insertions(+), 3 deletions(-)
+
+> diff --git a/drivers/usb/host/isp1760-if.c b/drivers/usb/host/isp1760-if.c
+> index 69ee32c..fa99c27 100644
+> --- a/drivers/usb/host/isp1760-if.c
+> +++ b/drivers/usb/host/isp1760-if.c
+[...]
+> @@ -64,8 +64,8 @@ static int of_isp1760_probe(struct platform_device *dev)
+>   		devflags |= ISP1760_FLAG_ISP1761;
 >
-> Ok. For linux, "keypad,key-code" would mean linux keycodes. The
-> property name 'keypad,key-code' was chosen since it can be reused on
-> non-linux platforms as well. I did have a look at
-> Documentation/devicetree/bindings/gpio/gpio-keys.txt while doing this=
-,
-> but preferred using 'keypad,key-code' since it would be generic. Give=
-n
-> a choice, I would like to retain this.
+>   	/* Some systems wire up only 16 of the 32 data lines */
+> -	prop = of_get_property(dp, "bus-width", NULL);
+> -	if (prop&&  *prop == 16)
+> +	of_property_read_u32(dp, "bus-width", bus_width);
 
-This was debated a bit on the gpio-keys binding.  The binding *must*
-specify where it is getting the keycodes from.  For the gpio-keys
-binding, it was decided that the Linux keycodes were sufficient since
-they are exported to userspace, and therefore part of the stable
-kernel ABI (they will never change).  "keypad,key-code" is completely
-useless as a generic binding since it doesn't specify where the
-keycode meanings come from.  Besides, "linux,code" can be reused on
-non-linux platforms too, it just means that the authoritative source
-of the keycodes is the Linux kernel.
+    You probably mean '&bus_width'?
 
-g
+> +	if (bus_width == 16)
+>   		devflags |= ISP1760_FLAG_BUS_WIDTH_16;
+>
+>   	if (of_get_property(dp, "port1-otg", NULL) != NULL)
+
+WBR, Sergei
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
