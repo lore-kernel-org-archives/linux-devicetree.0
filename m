@@ -1,62 +1,70 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 6/6] ARM: EXYNOS4: Limit usage of pl330 device
- instance to non-dt build
-Date: Wed, 14 Sep 2011 10:26:33 -0600
-Message-ID: <20110914162633.GL3134@ponder.secretlab.ca>
-References: <1315852165-32402-1-git-send-email-thomas.abraham@linaro.org>
- <1315852165-32402-2-git-send-email-thomas.abraham@linaro.org>
- <1315852165-32402-3-git-send-email-thomas.abraham@linaro.org>
- <1315852165-32402-4-git-send-email-thomas.abraham@linaro.org>
- <1315852165-32402-5-git-send-email-thomas.abraham@linaro.org>
- <1315852165-32402-6-git-send-email-thomas.abraham@linaro.org>
- <1315852165-32402-7-git-send-email-thomas.abraham@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/5] GIC OF bindings
+Date: Wed, 14 Sep 2011 11:31:35 -0500
+Message-ID: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1315852165-32402-7-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, vinod.koul@intel.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2011 at 11:59:25PM +0530, Thomas Abraham wrote:
-> The pl330 device instances and associated platform data is required only
-> for non-device-tree builds. With device tree enabled, the data about the
-> platform is obtained from the device tree. For images that include both
-> dt and non-dt platforms, an addditional check is added to ensure that
-> static amba device registrations is applicable to only non-dt platforms.
-> 
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Cc: Kyungmin Park <kyungmin.park@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
-> diff --git a/arch/arm/mach-exynos4/dma.c b/arch/arm/mach-exynos4/dma.c
-> index c3c0d17..3203a31 100644
-> --- a/arch/arm/mach-exynos4/dma.c
-> +++ b/arch/arm/mach-exynos4/dma.c
-> @@ -24,6 +24,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/amba/bus.h>
->  #include <linux/amba/pl330.h>
-> +#include <linux/of.h>
->  
->  #include <asm/irq.h>
->  #include <plat/devs.h>
-> @@ -138,6 +139,11 @@ struct amba_device exynos4_device_pdma1 = {
->  
->  static int __init exynos4_dma_init(void)
->  {
-> +#ifdef CONFIG_OF
-> +	if (of_have_populated_dt())
-> +		return 0;
-> +#endif
-> +
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Drop the #ifdef.  of_have_populated_dt() has an empty stub for
-!CONFIG_OF.  Otherwise looks good to me.  Well done not breaking
-non-DT support when CONFIG_OF is enabled.  :-)
+This series introduces of_irq_init to scan the device tree for interrupt
+controller nodes and call their init functions in proper order. The GIC
+init function is then called from this function. The platform code then
+looks something like this:
 
-The other patches in this series look good to me too.
+const static struct of_device_id irq_match[] = {
+	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
+	{}
+};
 
-g.
+static void __init highbank_init_irq(void)
+{
+	of_irq_init(irq_match);
+}
+
+The binding for GIC PPIs is now done with a 3rd interrupt cell to specify
+a cpu mask for which cpu the PPI is connected to. This was discussed at LPC
+and suggested by Grant.
+
+I dropped the public intc_desc struct. The the interrupt controller's node
+and the interrupt parent's node are passed in directly to the controller's
+init function. The linux irq assignment is now done dynamically using
+irq_alloc_descs.
+
+The first 2 patches are minor fixes to irqdomains.
+
+Rob
+
+Rob Herring (5):
+  irq: add declaration of irq_domain_simple_ops to irqdomain.h
+  irq: fix existing domain check in irq_domain_add
+  of/irq: introduce of_irq_init
+  ARM: gic: allow irq_start to be 0
+  ARM: gic: add OF based initialization
+
+ Documentation/devicetree/bindings/arm/gic.txt |   53 ++++++++++++++
+ arch/arm/common/gic.c                         |   57 +++++++++++++--
+ arch/arm/include/asm/hardware/gic.h           |   10 +++
+ drivers/of/irq.c                              |   96 +++++++++++++++++++++++++
+ include/linux/irqdomain.h                     |    1 +
+ include/linux/of_irq.h                        |    1 +
+ kernel/irq/irqdomain.c                        |    2 +-
+ 7 files changed, 214 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+
+-- 
+1.7.5.4
