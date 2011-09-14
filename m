@@ -1,56 +1,64 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] isp1760: Fix endianness-sensitivity in of_isp1760_probe()
-Date: Wed, 14 Sep 2011 23:12:57 +0400
-Message-ID: <4E70FCB9.4050907@ru.mvista.com>
-References: <1316008633-31009-1-git-send-email-dave.martin@linaro.org> <1316008633-31009-3-git-send-email-dave.martin@linaro.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4] power: bq20z75: devicetree init support
+Date: Wed, 14 Sep 2011 13:14:08 -0600
+Message-ID: <CACxGe6uWvWz-8rFVv4HPs_DgoJabV2N0aUQTx7xJ8Zr6thkSMA@mail.gmail.com>
+References: <1316023462-3287-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1316008633-31009-3-git-send-email-dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arvid Brodin <arvid.brodin-AM1FMPraTHU@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1316023462-3287-1-git-send-email-rklein@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rhyland Klein <rklein@nvidia.com>
+Cc: Anton Vorontsov <cbouatmailru@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 09/14/2011 05:57 PM, Dave Martin wrote:
-
-> Data read direct from device tree properties will be in the device
-> tree's native endianness (i.e., big-endian).
-
-> This patch uses of_property_read_u32() to read the bus-width
-> property in host byte order instead.
-
-> Signed-off-by: Dave Martin<dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Pawel Moll<pawel.moll-5wv7dgnIgG8@public.gmane.org>
+On Wed, Sep 14, 2011 at 12:04 PM, Rhyland Klein <rklein@nvidia.com> wro=
+te:
+> Adding support to generate platform data when kernel is configured
+> through device tree.
+>
+> Also adding the binding for the TI bq20z75 fuel gadge and the
+> bq20z75 driver.
+>
+> Signed-off-by: Rhyland Klein <rklein@nvidia.com>
 > ---
->   drivers/usb/host/isp1760-if.c |    6 +++---
->   1 files changed, 3 insertions(+), 3 deletions(-)
+> =A0 =A0 =A0 =A0v2: Fixed typo in binding description
+> =A0 =A0 =A0 =A0v3: Changed to use "ti," for properties
+> =A0 =A0 =A0 =A0 =A0 =A0Changed to use single gpio entry for battery d=
+etect info.
+> =A0 =A0 =A0 =A0 =A0 =A0Removed unnecessary call to of_match_device.
+> =A0 =A0 =A0 =A0v4: squashed bindings and drivers changes together.
+> =A0 =A0 =A0 =A0 =A0 =A0fixed case where CONFIG_OF is not selected, to=
+ return existing
+> =A0 =A0 =A0 =A0 =A0 =A0pdata pointer if it exists.
 
-> diff --git a/drivers/usb/host/isp1760-if.c b/drivers/usb/host/isp1760-if.c
-> index 69ee32c..fa99c27 100644
-> --- a/drivers/usb/host/isp1760-if.c
-> +++ b/drivers/usb/host/isp1760-if.c
-[...]
-> @@ -64,8 +64,8 @@ static int of_isp1760_probe(struct platform_device *dev)
->   		devflags |= ISP1760_FLAG_ISP1761;
+Nit: Personally, I'm much happier when the revision list is above the
+--- line so it appears in the linux commit text.  That helps when
+trying to figure out exactly which posting of a patch got merged.
+
 >
->   	/* Some systems wire up only 16 of the 32 data lines */
-> -	prop = of_get_property(dp, "bus-width", NULL);
-> -	if (prop&&  *prop == 16)
-> +	of_property_read_u32(dp, "bus-width", bus_width);
-
-    You probably mean '&bus_width'?
-
-> +	if (bus_width == 16)
->   		devflags |= ISP1760_FLAG_BUS_WIDTH_16;
+> diff --git a/drivers/power/bq20z75.c b/drivers/power/bq20z75.c
+> index 9c5e5be..4c4669e 100644
+> --- a/drivers/power/bq20z75.c
+> +++ b/drivers/power/bq20z75.c
+> @@ -613,6 +613,78 @@ static void bq20z75_delayed_work(struct work_str=
+uct *work)
+> =A0 =A0 =A0 =A0}
+> =A0}
 >
->   	if (of_get_property(dp, "port1-otg", NULL) != NULL)
+> +#if defined(CONFIG_OF)
+> +#include <linux/of_device.h>
+> +static const struct of_device_id bq20z75_dt_ids[] =3D {
+> + =A0 =A0 =A0 { .compatible =3D "ti,bq20z75" },
+> + =A0 =A0 =A0 { }
+> +};
+> +MODULE_DEVICE_TABLE(platform, bq20z75_dt_ids);
 
-WBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MODULE_DEVICE_TABLE(of, ...)
+
+It's not a platform_device_id table.
+
+Otherwise:
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
