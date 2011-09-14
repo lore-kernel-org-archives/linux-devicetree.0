@@ -1,39 +1,39 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 2/5] irq: fix existing domain check in irq_domain_add
-Date: Wed, 14 Sep 2011 11:31:37 -0500
-Message-ID: <1316017900-19918-3-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 4/5] ARM: gic: allow irq_start to be 0
+Date: Wed, 14 Sep 2011 11:31:39 -0500
+Message-ID: <1316017900-19918-5-git-send-email-robherring2@gmail.com>
 References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: grant.likely@secretlab.ca, marc.zyngier@arm.com, thomas.abraham@linaro.org, jamie@jamieiles.com, b-cousson@ti.com, shawn.guo@linaro.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: grant.likely@secretlab.ca, marc.zyngier@arm.com, thomas.abraham@linaro.org, jamie@jamieiles.com, b-cousson@ti.com, shawn.guo@linaro.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-irq_data will normally exist, so the domain was prevented from being set.
-The simple domain code did not hit this as nr_irq is always 0.
+There's really no need to set irq_start per platform for the primary gic.
+The SGIs and PPIs are not handled as normal irqs, so how irqs 0-31 are
+setup doesn't really matter. So allow irq_start to be set to 0 to match
+the linux irq numbering.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/irq/irqdomain.c |    2 +-
+ arch/arm/common/gic.c |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index d5828da..84f4110 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -29,7 +29,7 @@ void irq_domain_add(struct irq_domain *domain)
- 	 */
- 	for (hwirq = 0; hwirq < domain->nr_irq; hwirq++) {
- 		d = irq_get_irq_data(irq_domain_to_irq(domain, hwirq));
--		if (d || d->domain) {
-+		if (d && d->domain) {
- 			/* things are broken; just report, don't clean up */
- 			WARN(1, "error: irq_desc already assigned to a domain");
- 			return;
+diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+index 666b278..d1ccc72 100644
+--- a/arch/arm/common/gic.c
++++ b/arch/arm/common/gic.c
+@@ -359,7 +359,7 @@ void __init gic_init(unsigned int gic_nr, unsigned int irq_start,
+ 	gic = &gic_data[gic_nr];
+ 	gic->dist_base = dist_base;
+ 	gic->cpu_base = cpu_base;
+-	gic->irq_offset = (irq_start - 1) & ~31;
++	gic->irq_offset = irq_start ? (irq_start - 1) & ~31 : 0;
+ 
+ 	if (gic_nr == 0)
+ 		gic_cpu_base_addr = cpu_base;
 -- 
 1.7.5.4
