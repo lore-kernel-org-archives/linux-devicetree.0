@@ -1,15 +1,11 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
-Date: Wed, 14 Sep 2011 12:57:51 -0500
-Message-ID: <4E70EB1F.4060000@gmail.com>
-References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
-	<1316017900-19918-6-git-send-email-robherring2@gmail.com>
-	<4E70E88E.4090503@arm.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4] power: bq20z75: devicetree init support
+Date: Wed, 14 Sep 2011 11:04:22 -0700
+Message-ID: <1316023462-3287-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E70E88E.4090503-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,82 +15,159 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Marc,
+Adding support to generate platform data when kernel is configured
+through device tree.
 
-On 09/14/2011 12:46 PM, Marc Zyngier wrote:
-> On 14/09/11 17:31, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> This adds gic initialization using device tree data. The initialization
->> functions are intended to be called by a generic OF interrupt
->> controller parsing function once the right pieces are in place.
->>
->> PPIs are handled using 3rd cell of interrupts properties to specify the cpu
->> mask the PPI is assigned to.
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/gic.txt |   53 ++++++++++++++++++++++++
->>  arch/arm/common/gic.c                         |   55 +++++++++++++++++++++++--
->>  arch/arm/include/asm/hardware/gic.h           |   10 +++++
->>  3 files changed, 114 insertions(+), 4 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
->> new file mode 100644
->> index 0000000..6c513de
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/gic.txt
->> @@ -0,0 +1,53 @@
->> +* ARM Generic Interrupt Controller
->> +
->> +ARM SMP cores are often associated with a GIC, providing per processor
->> +interrupts (PPI), shared processor interrupts (SPI) and software
->> +generated interrupts (SGI).
->> +
->> +Primary GIC is attached directly to the CPU and typically has PPIs and SGIs.
->> +Secondary GICs are cascaded into the upward interrupt controller and do not
->> +have PPIs or SGIs.
->> +
->> +Main node required properties:
->> +
->> +- compatible : should be one of:
->> +	"arm,cortex-a9-gic"
->> +	"arm,arm11mp-gic"
->> +- interrupt-controller : Identifies the node as an interrupt controller
->> +- #interrupt-cells : Specifies the number of cells needed to encode an
->> +  interrupt source.  The type shall be a <u32> and the value shall be 3.
->> +
->> +  The 1st cell is the interrupt number. 0-15 are reserved for SGIs. 16-31 are
->> +  for PPIs.
->> +
->> +  The 2nd cell is the level-sense information, encoded as follows:
->> +                    1 = low-to-high edge triggered
->> +                    2 = high-to-low edge triggered
->> +                    4 = active high level-sensitive
->> +                    8 = active low level-sensitive
->> +
->> +  Only values of 1 and 4 are valid for GIC 1.0 spec.
->> +
->> +  The 3rd cell contains the mask of the cpu number for the interrupt source.
->> +  The cpu mask is only valid for PPIs and shall be 0 for SPIs. This value shall
->> +  be 0 for PPIs.
->      ^^^^^^^^^^^^^
-> 
-> Typo here ? The way I understand it, it should read "For PPIs, this
-> value shall be the mask of the possible CPU numbers for the interrupt
-> source" (or something to similar effect...).
-> 
+Also adding the binding for the TI bq20z75 fuel gadge and the
+bq20z75 driver.
 
-Cut and paste error. This sentence goes in the previous paragraph. What
-I meant is the 2nd cell should contain 0 for PPIs as you cannot set the
-edge/level on PPIs (that is always true, right?). I probably should also
-add 0 in the list of values.
+Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+	v2: Fixed typo in binding description
+	v3: Changed to use "ti," for properties
+	    Changed to use single gpio entry for battery detect info.
+	    Removed unnecessary call to of_match_device.
+	v4: squashed bindings and drivers changes together.
+	    fixed case where CONFIG_OF is not selected, to return existing
+	    pdata pointer if it exists.
 
-I take it you are otherwise fine with this binding?
+ .../bindings/power_supply/ti_bq20z75.txt           |   23 ++++++
+ drivers/power/bq20z75.c                            |   75 ++++++++++++++++++++
+ 2 files changed, 98 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
 
-Rob
+diff --git a/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+new file mode 100644
+index 0000000..7571294
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+@@ -0,0 +1,23 @@
++TI bq20z75
++~~~~~~~~~~
++
++Required properties :
++ - compatible : "ti,bq20z75"
++
++Optional properties :
++ - ti,i2c-retry-count : The number of times to retry i2c transactions on i2c
++   IO failure.
++ - ti,poll-retry-count : The number of times to try looking for new status
++   after an external change notification.
++ - ti,battery-detect-gpios : The gpio which signals battery detection and
++   a flag specifying its polarity.
++
++Example:
++
++	bq20z75@b {
++		compatible = "ti,bq20z75";
++		reg = < 0xb >;
++		ti,i2c-retry-count = <2>;
++		ti,poll-retry-count = <10>;
++		ti,battery-detect-gpios = <&gpio-controller 122 1>;
++	}
+diff --git a/drivers/power/bq20z75.c b/drivers/power/bq20z75.c
+index 9c5e5be..4c4669e 100644
+--- a/drivers/power/bq20z75.c
++++ b/drivers/power/bq20z75.c
+@@ -613,6 +613,78 @@ static void bq20z75_delayed_work(struct work_struct *work)
+ 	}
+ }
+ 
++#if defined(CONFIG_OF)
++#include <linux/of_device.h>
++static const struct of_device_id bq20z75_dt_ids[] = {
++	{ .compatible = "ti,bq20z75" },
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, bq20z75_dt_ids);
++
++static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
++	struct i2c_client *client)
++{
++	const struct of_device_id *dtid;
++	struct device_node *of_node = client->dev.of_node;
++	struct bq20z75_platform_data *pdata = client->dev.platform_data;
++	enum of_gpio_flags gpio_flags;
++	int rc;
++	u32 prop;
++
++	/* verify this driver matches this device */
++	if (!of_node)
++		return NULL;
++
++	/* if platform data is set, honor it */
++	if (pdata)
++		return pdata;
++
++	/* first make sure at least one property is set, otherwise
++	 * it won't change behavior from running without pdata.
++	 */
++	if (!of_get_property(of_node, "ti,i2c-retry-count", NULL) &&
++		!of_get_property(of_node, "ti,poll-retry-count", NULL) &&
++		!of_get_property(of_node, "ti,battery-detect-gpios", NULL))
++		goto of_out;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(struct bq20z75_platform_data),
++				GFP_KERNEL);
++	if (!pdata)
++		goto of_out;
++
++	rc = of_property_read_u32(of_node, "ti,i2c-retry-count", &prop);
++	if (!rc)
++		pdata->i2c_retry_count = prop;
++
++	rc = of_property_read_u32(of_node, "ti,poll-retry-count", &prop);
++	if (!rc)
++		pdata->poll_retry_count = prop;
++
++	if (!of_get_property(of_node, "ti,battery-detect-gpios", NULL)) {
++		pdata->battery_detect = -1;
++		goto of_out;
++	}
++
++	pdata->battery_detect = of_get_named_gpio_flags(of_node,
++			"ti,battery-detect-gpios", 0, &gpio_flags);
++
++	if (gpio_flags & OF_GPIO_ACTIVE_LOW)
++		pdata->battery_detect_present = 0;
++	else
++		pdata->battery_detect_present = 1;
++
++of_out:
++	return pdata;
++}
++#else
++#define bq20z75_dt_ids NULL
++static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
++	struct i2c_client *client)
++{
++	return client->dev.platform_data;
++}
++#endif
++
+ static int __devinit bq20z75_probe(struct i2c_client *client,
+ 	const struct i2c_device_id *id)
+ {
+@@ -642,6 +714,8 @@ static int __devinit bq20z75_probe(struct i2c_client *client,
+ 	bq20z75_device->power_supply.external_power_changed =
+ 		bq20z75_external_power_changed;
+ 
++	pdata = bq20z75_of_populate_pdata(client);
++
+ 	if (pdata) {
+ 		bq20z75_device->gpio_detect =
+ 			gpio_is_valid(pdata->battery_detect);
+@@ -775,6 +849,7 @@ static struct i2c_driver bq20z75_battery_driver = {
+ 	.id_table	= bq20z75_id,
+ 	.driver = {
+ 		.name	= "bq20z75-battery",
++		.of_match_table = bq20z75_dt_ids,
+ 	},
+ };
+ 
+-- 
+1.7.6
