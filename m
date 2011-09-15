@@ -1,19 +1,23 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH 03/11] DT: regulator: Helper routine to extract regulator_init_data
-Date: Thu, 15 Sep 2011 13:30:08 -0500
-Message-ID: <4E724430.4020208@gmail.com>
-References: <1316085727-15023-1-git-send-email-rnayak@ti.com> <1316085727-15023-2-git-send-email-rnayak@ti.com> <1316085727-15023-3-git-send-email-rnayak@ti.com> <1316085727-15023-4-git-send-email-rnayak@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 03/11] DT: regulator: Helper routine to extract
+ regulator_init_data
+Date: Thu, 15 Sep 2011 16:12:58 -0600
+Message-ID: <20110915221258.GK3523@ponder.secretlab.ca>
+References: <1316085727-15023-1-git-send-email-rnayak@ti.com>
+ <1316085727-15023-2-git-send-email-rnayak@ti.com>
+ <1316085727-15023-3-git-send-email-rnayak@ti.com>
+ <1316085727-15023-4-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <1316085727-15023-4-git-send-email-rnayak@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Rajendra Nayak <rnayak@ti.com>
-Cc: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Cc: broonie@opensource.wolfsonmicro.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2011 06:21 AM, Rajendra Nayak wrote:
+On Thu, Sep 15, 2011 at 04:51:59PM +0530, Rajendra Nayak wrote:
 > The helper routine is meant to be used by regulator drivers
 > to extract the regulator_init_data structure passed from device tree.
 > 'consumer_supplies' which is part of regulator_init_data is not extracted
@@ -29,6 +33,12 @@ On 09/15/2011 06:21 AM, Rajendra Nayak wrote:
 >  drivers/of/Kconfig                                 |    6 ++
 >  drivers/of/Makefile                                |    1 +
 >  drivers/of/of_regulator.c                          |   85 ++++++++++++++++++++
+
+I originally put the DT stuff under drivers/of for i2c and spi because
+there was resistance from driver subsystem maintainers to having code
+for something that was powerpc only.  Now that it is no longer the
+case, I recommend putting this code under drivers/regulator.
+
 >  include/linux/of_regulator.h                       |   23 +++++
 >  5 files changed, 152 insertions(+), 0 deletions(-)
 >  create mode 100644 Documentation/devicetree/bindings/regulator/regulator.txt
@@ -46,14 +56,24 @@ On 09/15/2011 06:21 AM, Rajendra Nayak wrote:
 > +Required properties:
 > +- compatible: Must be "regulator";
 
-This is way too generic. compatible is not for matching a class of
-devices. It is for matching a specific piece of h/w. So I would expect
-names like "wolfson,wm8350-dcdc".
-
+A "regulator" compatible doesn't actually help much.  Compatible is
+for specifying the specific device, not for trying to describe what
+kind of device it is.  Instead, specific regulator bindings can adopt
+& extend this binding.
 
 > +
 > +Optional properties:
 > +- supply-regulator: Name of the parent regulator
+
+If this is a reference to another regulator node then don't use names.
+Use phandles instead.  In which case it should probably be named
+something like "regulator-parent" (similar to interrupt parent).
+
+However, I can imagine it possible for a regulator to have multiple
+parents.  It may just be better to go with something like the gpio
+scheme of <phandle gpio-specifier> list of entries.  Or maybe just a
+list of phandles would be sufficient.
+
 > +- min-uV: smallest voltage consumers may set
 > +- max-uV: largest voltage consumers may set
 > +- uV-offset: Offset applied to voltages from consumer to compensate for voltage drops
@@ -73,6 +93,15 @@ names like "wolfson,wm8350-dcdc".
 > +- always-on: boolean, regulator should never be disabled
 > +- boot-on: bootloader/firmware enabled regulator
 > +- apply-uV: apply uV constraint if min == max
+
+To avoid collisions, I'd prefix all of these with a common prefix.
+Something like regulator-*.
+
+These map 1:1 to how Linux currently implements regulators; which
+isn't exactly bad, but it means that even if Linux changes, we're
+still have to support this binding.  Does this represent the best
+layout for high level description of regulators?
+
 > +
 > +Example:
 > +
@@ -84,11 +113,6 @@ names like "wolfson,wm8350-dcdc".
 > +		change-voltage;
 > +		always-on;
 > +	};
-
-You need to show how a node references the regulator.
-
-Rob
-
 > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
 > index b3bfea5..296b96d 100644
 > --- a/drivers/of/Kconfig
@@ -145,6 +169,11 @@ Rob
 > +	of_property_read_u32(np, "uV-offset", &(*init_data)->constraints.uV_offset);
 > +	of_property_read_u32(np, "min-uA", &(*init_data)->constraints.min_uA);
 > +	of_property_read_u32(np, "max-uA", &(*init_data)->constraints.max_uA);
+
+Are all these structure members are int and unsigned int.  They need
+to be u32 to be used with of_property_read_u32()  (which also tells
+me that the of_property_read_*() api still needs work).
+
 > +
 > +	/* valid modes mask */
 > +	if (of_find_property(np, "mode-fast", NULL))
@@ -204,6 +233,11 @@ Rob
 > +	return init_data;
 > +}
 > +EXPORT_SYMBOL(of_get_regulator_init_data);
+
+Who will call this?  If it is done by proper device drivers, it would
+be better have it do the alloc so that it can do devm_kzalloc().  Or
+maybe have a devm_kzalloc variant.
+
 > diff --git a/include/linux/of_regulator.h b/include/linux/of_regulator.h
 > new file mode 100644
 > index 0000000..5eb048c
@@ -233,4 +267,6 @@ Rob
 > +
 > +#endif /* __LINUX_OF_REG_H */
 > +
-
+> -- 
+> 1.7.1
+> 
