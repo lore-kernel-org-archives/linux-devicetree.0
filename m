@@ -1,49 +1,48 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCH 0/5] GIC OF bindings
-Date: Thu, 15 Sep 2011 09:50:36 +0100
-Message-ID: <20110915085036.GB3089@pulham.picochip.com>
-References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] isp1760: Fix endianness-sensitivity in
+ of_isp1760_probe()
+Date: Thu, 15 Sep 2011 09:53:21 +0100
+Message-ID: <20110915085321.GA2016@arm.com>
+References: <1316008633-31009-1-git-send-email-dave.martin@linaro.org>
+ <1316008633-31009-3-git-send-email-dave.martin@linaro.org>
+ <4E70FCB9.4050907@ru.mvista.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, marc.zyngier@arm.com, thomas.abraham@linaro.org, jamie@jamieiles.com, b-cousson@ti.com, shawn.guo@linaro.org, Rob Herring <rob.herring@calxeda.com>
+In-Reply-To: <4E70FCB9.4050907-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Arvid Brodin <arvid.brodin-AM1FMPraTHU@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2011 at 11:31:35AM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> This series introduces of_irq_init to scan the device tree for interrupt
-> controller nodes and call their init functions in proper order. The GIC
-> init function is then called from this function. The platform code then
-> looks something like this:
-> 
-> const static struct of_device_id irq_match[] = {
-> 	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
-> 	{}
-> };
-> 
-> static void __init highbank_init_irq(void)
-> {
-> 	of_irq_init(irq_match);
-> }
-> 
-> The binding for GIC PPIs is now done with a 3rd interrupt cell to specify
-> a cpu mask for which cpu the PPI is connected to. This was discussed at LPC
-> and suggested by Grant.
-> 
-> I dropped the public intc_desc struct. The the interrupt controller's node
-> and the interrupt parent's node are passed in directly to the controller's
-> init function. The linux irq assignment is now done dynamically using
-> irq_alloc_descs.
+Hi,
 
-Hi Rob,
+On Wed, Sep 14, 2011 at 09:46:29AM -0600, Grant Likely wrote:
+> On Wed, Sep 14, 2011 at 02:57:13PM +0100, Dave Martin wrote:
 
-This looks really nicely implemented to me.
+[...]
 
-Reviewed-by: Jamie Iles <jamie@jamieiles.com>
+> > +   of_property_read_u32(dp, "bus-width", bus_width);
+>
+> Shouldn't this be '&bus_width'?
 
-Jamie
+
+On Wed, Sep 14, 2011 at 11:12:57PM +0400, Sergei Shtylyov wrote:
+[...]
+
+> On 09/14/2011 05:57 PM, Dave Martin wrote:
+[...]
+
+> >+	of_property_read_u32(dp, "bus-width", bus_width);
+> 
+>    You probably mean '&bus_width'?
+
+Yes, it should -- quite right.
+
+Cheers
+---Dave
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
