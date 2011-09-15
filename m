@@ -1,113 +1,103 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: Add Device Tree support to versatile-i2c driver
-Date: Thu, 15 Sep 2011 09:55:13 +0100
-Message-ID: <1316076913.3297.102.camel@hornet.cambridge.arm.com>
-References: <1315475019-10088-1-git-send-email-pawel.moll@arm.com>
-	 <20110914211556.GB2146@freya.fluff.org>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
+Date: Thu, 15 Sep 2011 12:07:25 +0200
+Message-ID: <4E71CE5D.9030900@ti.com>
+References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
+	<1316017900-19918-6-git-send-email-robherring2@gmail.com>
+	<CAJuYYwSFu2HC+u2NY41+yw9tEyy85RKa4Dpm3SL+jbwS_OOA0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20110914211556.GB2146-RazCHl0VsYgkUSuvROHNpA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAJuYYwSFu2HC+u2NY41+yw9tEyy85RKa4Dpm3SL+jbwS_OOA0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Morning,
+Hi Rob,
 
-> > This patch adds Device Tree binding ("arm,versatile-i2c") and
-> > basic support (bus population) to versatile-i2c driver.
->=20
-> what happens when !CONFIG_OF ?
+On 9/15/2011 9:55 AM, Thomas Abraham wrote:
+> Hi Rob,
+>
+> On 14 September 2011 22:01, Rob Herring<robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>  wrote:
+>> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
+>> This adds gic initialization using device tree data. The initialization
+>> functions are intended to be called by a generic OF interrupt
+>> controller parsing function once the right pieces are in place.
+>>
+>> PPIs are handled using 3rd cell of interrupts properties to specify the cpu
+>> mask the PPI is assigned to.
+>>
+>> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/arm/gic.txt |   53 ++++++++++++++++++++++++
+>>   arch/arm/common/gic.c                         |   55 +++++++++++++++++++++++--
+>>   arch/arm/include/asm/hardware/gic.h           |   10 +++++
+>>   3 files changed, 114 insertions(+), 4 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+>
+> [...]
+>
+>
+>> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+>> index d1ccc72..14de380 100644
+>> --- a/arch/arm/common/gic.c
+>> +++ b/arch/arm/common/gic.c
+>
+> [...]
+>
+>> +void __init gic_of_init(struct device_node *node, struct device_node *parent)
+>> +{
+>> +       void __iomem *cpu_base;
+>> +       void __iomem *dist_base;
+>> +       int irq;
+>> +       struct irq_domain *domain =&gic_data[gic_cnt].domain;
+>> +
+>> +       if (WARN_ON(!node))
+>> +               return;
+>> +
+>> +       dist_base = of_iomap(node, 0);
+>> +       WARN(!dist_base, "unable to map gic dist registers\n");
+>> +
+>> +       cpu_base = of_iomap(node, 1);
+>> +       WARN(!cpu_base, "unable to map gic cpu registers\n");
+>> +
+>> +       domain->nr_irq = gic_irq_count(dist_base);
+>> +       domain->irq_base = irq_alloc_descs(-1, 0, domain->nr_irq, numa_node_id());
+>
+> For exynos4, all the interrupts originating from GIC are statically
+> mapped to start from 32 in the linux virq space (GIC SPI interrupts
+> start from 64). In the above code, since irq_base would be 0 for
+> exynos4, the interrupt mapping is not working correctly. In your
+> previous version of the patch, you have given a option to the platform
+> code to choose the offset. Could that option be added to this series
+> also. Or a provision to use platform specific translate function
+> instead of the irq_domain_simple translator.
 
-Nothing sinister, really...
-=20
+I have another concern on a similar topic.
 
-> > @@ -99,6 +100,7 @@ static int i2c_versatile_probe(struct platform_d=
-evice *dev)
-> >  	strlcpy(i2c->adap.name, "Versatile I2C adapter", sizeof(i2c->adap=
-=2Ename));
-> >  	i2c->adap.algo_data =3D &i2c->algo;
-> >  	i2c->adap.dev.parent =3D &dev->dev;
-> > +	i2c->adap.dev.of_node =3D dev->dev.of_node;
-> >  	i2c->algo =3D i2c_versatile_algo;
-> >  	i2c->algo.data =3D i2c;
+On OMAP4 the SoC interrupts external to the MPU (SPI) have an offset of 
+32. Only the internal PPI are between 0 and 31.
 
-include/linux/device.h:551
-struct device {
-<...>
-        struct dev_archdata     archdata;
-       =20
-        struct device_node      *of_node; /* associated device tree nod=
-e */
+For the moment we add 32 to every SoC interrupts in the irq.h define, 
+but I'm assuming that this offset calculation should be done thanks to a 
+dedicated irq domain for the SPI.
+The real HW physical number start at 0, and thus this is that value that 
+should be in the irq binding of the device.
 
-        dev_t                   devt;   /* dev_t, creates the sysfs "de=
-v" */
-<...>
-}
+So ideally we should have a irq domain for the PPI starting at 0 and 
+another one for the SPI starting at 32. Or 32 and 64 for the exynos4 
+case, but it looks like the PPI/SPI offset is always 32.
 
-As you see of_node is always present...
-=20
-> > @@ -111,6 +113,7 @@ static int i2c_versatile_probe(struct platform_=
-device *dev)
-> >  		ret =3D i2c_bit_add_bus(&i2c->adap);
-> >  	if (ret >=3D 0) {
-> >  		platform_set_drvdata(dev, i2c);
-> > +		of_i2c_register_devices(&i2c->adap);
-> >  		return 0;
-> >  	}
-
-include/linux/of_i2c.h:
-
-#if defined(CONFIG_OF_I2C) || defined(CONFIG_OF_I2C_MODULE)
-<...>
-#else
-static inline void of_i2c_register_devices(struct i2c_adapter *adap)
-{
-        return;
-}      =20
-#endif /* CONFIG_OF_I2C */
-
-> > @@ -133,12 +136,19 @@ static int i2c_versatile_remove(struct platfo=
-rm_device *dev)
-> >  	return 0;
-> >  }
-> > =20
-> > +static struct of_device_id i2c_versatile_match[] =3D {
-> > +	{ .compatible =3D "arm,versatile-i2c", },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, i2c_versatile_match);
-> > +
-> >  static struct platform_driver i2c_versatile_driver =3D {
-> >  	.probe		=3D i2c_versatile_probe,
-> >  	.remove		=3D i2c_versatile_remove,
-> >  	.driver		=3D {
-> >  		.name	=3D "versatile-i2c",
-> >  		.owner	=3D THIS_MODULE,
-> > +		.of_match_table =3D i2c_versatile_match,
-> >  	},
-> >  };
-
-include/linux/device.h:185:
-
-struct device_driver {
-<...>
-        bool suppress_bind_attrs;       /* disables bind/unbind via sys=
-fs */
-       =20
-        const struct of_device_id       *of_match_table;
-       =20
-        int (*probe) (struct device *dev);
-<...>
-}
-
-Same here.
-
-Generally Grant claims that there is no more need for #ifdef CONFIG_OF,
-and I trust him :-)
-
-Cheers!
-
-Pawe=C5=82
+Regards,
+Benoit
