@@ -1,70 +1,51 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH 0/5] GIC OF bindings
-Date: Thu, 15 Sep 2011 21:53:12 +0800
-Message-ID: <20110915135310.GA25690@S2100-06.ap.freescale.net>
-References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [RFC PATCH 06/11] DT: regulator: Helper routine to extract
+ fixed_voltage_config
+Date: Thu, 15 Sep 2011 14:50:51 +0100
+Message-ID: <20110915135051.GL7988@opensource.wolfsonmicro.com>
+References: <1316085727-15023-1-git-send-email-rnayak@ti.com>
+ <1316085727-15023-2-git-send-email-rnayak@ti.com>
+ <1316085727-15023-3-git-send-email-rnayak@ti.com>
+ <1316085727-15023-4-git-send-email-rnayak@ti.com>
+ <1316085727-15023-5-git-send-email-rnayak@ti.com>
+ <1316085727-15023-6-git-send-email-rnayak@ti.com>
+ <1316085727-15023-7-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
+In-Reply-To: <1316085727-15023-7-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2011 at 11:31:35AM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> This series introduces of_irq_init to scan the device tree for interrupt
-> controller nodes and call their init functions in proper order. The GIC
-> init function is then called from this function. The platform code then
-> looks something like this:
-> 
-> const static struct of_device_id irq_match[] = {
-> 	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
-> 	{}
-> };
-> 
-> static void __init highbank_init_irq(void)
-> {
-> 	of_irq_init(irq_match);
-> }
-> 
-> The binding for GIC PPIs is now done with a 3rd interrupt cell to specify
-> a cpu mask for which cpu the PPI is connected to. This was discussed at LPC
-> and suggested by Grant.
-> 
-> I dropped the public intc_desc struct. The the interrupt controller's node
-> and the interrupt parent's node are passed in directly to the controller's
-> init function. The linux irq assignment is now done dynamically using
-> irq_alloc_descs.
-> 
-> The first 2 patches are minor fixes to irqdomains.
-> 
-> Rob
-> 
-> Rob Herring (5):
->   irq: add declaration of irq_domain_simple_ops to irqdomain.h
->   irq: fix existing domain check in irq_domain_add
->   of/irq: introduce of_irq_init
->   ARM: gic: allow irq_start to be 0
->   ARM: gic: add OF based initialization
-> 
->  Documentation/devicetree/bindings/arm/gic.txt |   53 ++++++++++++++
->  arch/arm/common/gic.c                         |   57 +++++++++++++--
->  arch/arm/include/asm/hardware/gic.h           |   10 +++
->  drivers/of/irq.c                              |   96 +++++++++++++++++++++++++
->  include/linux/irqdomain.h                     |    1 +
->  include/linux/of_irq.h                        |    1 +
->  kernel/irq/irqdomain.c                        |    2 +-
->  7 files changed, 214 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+On Thu, Sep 15, 2011 at 04:52:02PM +0530, Rajendra Nayak wrote:
 
-On imx6q:
+>  .../devicetree/bindings/regulator/regulator.txt    |   19 ++++++++++++
+>  drivers/of/of_regulator.c                          |   31 ++++++++++++++++++++
+>  include/linux/of_regulator.h                       |    7 ++++
+>  3 files changed, 57 insertions(+), 0 deletions(-)
 
-Tested-by: Shawn Guo <shawn.guo@linaro.org>
+Again, this should be part of the regulator API code not hidden away
+where it will only get reviewed by device tree people.
 
--- 
-Regards,
-Shawn
+>  Required properties:
+>  - compatible: Must be "regulator";
+> +or
+> +- compatible: Must be "regulator-fixed"; /* For Fixed volatge regulator */
+
+This seems at best confusing - the fixed voltage regulator is a
+particular regulator driver, and the general concept of a fixed voltage
+regulator is still a subset of regulators.
+
+> +# For fixed voltage regulators
+> +- supply-name: Name of the regulator supply
+> +- microvolts: Output voltage of regulator
+> +- gpio: gpio to use for enable control
+> +- startup-delay: startup time in microseconds
+> +- enable-high: Polarity of enable GPIO, 1 = Active High, 0 = Active low
+> +- enabled-at-boot: 1 = yes, 0 = no
+
+Much of this is specific to the Linux fixed voltage regulator driver
+rather than a generic regulator with a fixed voltage.
