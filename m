@@ -1,212 +1,360 @@
-From: Timur Tabi <timur@freescale.com>
-Subject: [PATCH] [v2] powerpc/85xx: clean up FPGA device tree nodes for
-	Freecsale QorIQ boards
-Date: Wed, 14 Sep 2011 16:42:18 -0500
-Message-ID: <1316036538-311-1-git-send-email-timur@freescale.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device tree property names for MDIO bus multiplexer. Was: Re:
+	[PATCH 2/3] netdev/of/phy: Add MDIO bus multiplexer support.
+Date: Wed, 14 Sep 2011 18:41:21 -0600
+Message-ID: <CACxGe6ubxrd=UL7WVgO2ZcgyLfyKdpHG=+MMgGT5G_TKvaaGUg@mail.gmail.com>
+References: <1314820906-14004-1-git-send-email-david.daney@cavium.com>
+	<1314820906-14004-3-git-send-email-david.daney@cavium.com>
+	<129FAAB3-C9AD-43F6-A8CB-96548A47C4DC@kernel.crashing.org>
+	<4E6FE5F9.2060604@cavium.com>
+	<678076BE-4CF8-4AC9-BE9B-9AF1A17B7AF8@kernel.crashing.org>
+	<4E711F59.6000801@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: kumar.gala@freescale.com, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="===============7977552771947630206=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4E711F59.6000801-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Standarize and document the FPGA nodes used on Freescale QorIQ reference
-boards.  There are different kinds of FPGAs used on the boards, but
-only two are currently standard: "pixis" and "qixis".  Although there are
-minor differences among the boards that have one kind of FPGA, most of the
-functionality is the same, so it makes sense to create common compatibility
-strings.
+--===============7977552771947630206==
+Content-Type: multipart/alternative; boundary=20cf307d0050b1886104acf022bc
 
-Signed-off-by: Timur Tabi <timur@freescale.com>
----
+--20cf307d0050b1886104acf022bc
+Content-Type: text/plain; charset=ISO-8859-1
 
-v2: removed references to the CPLD
+On Sep 14, 2011 3:40 PM, "David Daney" <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+>
+> Well, I would really like to get an official maintainer's take on the name
+of the parent MDIO bus property.  Prehaps Grant or Rob could opine on the
+matter.
+>
+> Sooner would be better than later as I am about to start shipping boards
+with this burnt into the bootloader.  If it needs changing, I could do it in
+the next couple of days, but after that it escapes into the wild.
 
-This patch applies on top of "[PATCH 3/4] powerpc/p3060qds: Add support for
-P3060QDS board", but it also assumes that the 'ranges' property for the
-localbus node on the P3060QDS device tree includes the missing line for
-the NAND devices.
+Considering that the parent bus should be either implicit in the node
+topology, or if not then part of something like an i2c controlled bus
+multiplexer, I don't think this is even remotely a big deal. Each bus
+multiplexer will still likely have it's own binding, and therefore her to
+make its own decision.
 
- .../devicetree/bindings/powerpc/fsl/board.txt      |   30 ++++++++++++--------
- arch/powerpc/boot/dts/p1022ds.dts                  |    2 +-
- arch/powerpc/boot/dts/p2020ds.dts                  |    5 +++
- arch/powerpc/boot/dts/p3041ds.dts                  |    4 +-
- arch/powerpc/boot/dts/p3060qds.dts                 |    8 ++++-
- arch/powerpc/boot/dts/p4080ds.dts                  |    8 ++++-
- arch/powerpc/boot/dts/p5020ds.dts                  |    4 +-
- 7 files changed, 42 insertions(+), 19 deletions(-)
+That said, in the interest of commonality, I think mdio-parent-bus would be
+just fine.  parent-bus is probably too generic.
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/board.txt b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-index 39e9415..ba46a7a 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/board.txt
-@@ -1,3 +1,8 @@
-+Freescale Reference Board Bindings
-+
-+This document describes device tree bindings for various devices that
-+exist on some Freescale reference boards.
-+
- * Board Control and Status (BCSR)
- 
- Required properties:
-@@ -12,25 +17,26 @@ Example:
- 		reg = <f8000000 8000>;
- 	};
- 
--* Freescale on board FPGA
-+* Freescale on-board FPGA
- 
- This is the memory-mapped registers for on board FPGA.
- 
- Required properities:
--- compatible : should be "fsl,fpga-pixis".
--- reg : should contain the address and the length of the FPPGA register
--  set.
-+- compatible: should be a board-specific string followed by a string
-+  indicating the type of FPGA.  Example:
-+	"fsl,<board>-pixis", "fsl,fpga-pixis"
-+- reg: should contain the address and the length of the FPGA register set.
- - interrupt-parent: should specify phandle for the interrupt controller.
--- interrupts : should specify event (wakeup) IRQ.
-+- interrupts: should specify event (wakeup) IRQ.
- 
--Example (MPC8610HPCD):
-+Example (P1022DS):
- 
--	board-control@e8000000 {
--		compatible = "fsl,fpga-pixis";
--		reg = <0xe8000000 32>;
--		interrupt-parent = <&mpic>;
--		interrupts = <8 8>;
--	};
-+	 board-control@3,0 {
-+		 compatible = "fsl,p1022ds-pixis", "fsl,fpga-pixis";
-+		 reg = <3 0 0x30>;
-+		 interrupt-parent = <&mpic>;
-+		 interrupts = <8 8 0 0>;
-+	 };
- 
- * Freescale BCSR GPIO banks
- 
-diff --git a/arch/powerpc/boot/dts/p1022ds.dts b/arch/powerpc/boot/dts/p1022ds.dts
-index 1be9743..97a0b87 100644
---- a/arch/powerpc/boot/dts/p1022ds.dts
-+++ b/arch/powerpc/boot/dts/p1022ds.dts
-@@ -150,7 +150,7 @@
- 		};
- 
- 		board-control@3,0 {
--			compatible = "fsl,p1022ds-pixis";
-+			compatible = "fsl,p1022ds-pixis", "fsl,fpga-pixis";
- 			reg = <3 0 0x30>;
- 			interrupt-parent = <&mpic>;
- 			/*
-diff --git a/arch/powerpc/boot/dts/p2020ds.dts b/arch/powerpc/boot/dts/p2020ds.dts
-index dae4031..d1e52f3 100644
---- a/arch/powerpc/boot/dts/p2020ds.dts
-+++ b/arch/powerpc/boot/dts/p2020ds.dts
-@@ -118,6 +118,11 @@
- 			};
- 		};
- 
-+		board-control@3,0 {
-+			compatible = "fsl,p2020ds-pixis", "fsl,fpga-pixis";
-+			reg = <0x3 0x0 0x30>;
-+		};
-+
- 		nand@4,0 {
- 			compatible = "fsl,elbc-fcm-nand";
- 			reg = <0x4 0x0 0x40000>;
-diff --git a/arch/powerpc/boot/dts/p3041ds.dts b/arch/powerpc/boot/dts/p3041ds.dts
-index 69cae67..92937ce 100644
---- a/arch/powerpc/boot/dts/p3041ds.dts
-+++ b/arch/powerpc/boot/dts/p3041ds.dts
-@@ -147,8 +147,8 @@
- 		};
- 
- 		board-control@3,0 {
--			compatible = "fsl,p3041ds-pixis";
--			reg = <3 0 0x20>;
-+			compatible = "fsl,p3041ds-pixis", "fsl,fpga-pixis";
-+			reg = <3 0 0x30>;
- 		};
- 	};
- 
-diff --git a/arch/powerpc/boot/dts/p3060qds.dts b/arch/powerpc/boot/dts/p3060qds.dts
-index 55edfd0..6758852 100644
---- a/arch/powerpc/boot/dts/p3060qds.dts
-+++ b/arch/powerpc/boot/dts/p3060qds.dts
-@@ -109,7 +109,8 @@
- 	localbus@ffe124000 {
- 		reg = <0xf 0xfe124000 0 0x1000>;
- 		ranges = <0 0 0xf 0xe8000000 0x08000000
--			  2 0 0xf 0xffa00000 0x00040000>;
-+			  2 0 0xf 0xffa00000 0x00040000
-+			  3 0 0xf 0xffdf0000 0x00008000>;
- 
- 		flash@0,0 {
- 			compatible = "cfi-flash";
-@@ -155,6 +156,11 @@
- 				reg = <0x1f000000 0x21000000>;
- 			};
- 		};
-+
-+		board-control@3,0 {
-+			compatible = "fsl,p3060qds-qixis", "fsl,fpga-qixis";
-+			reg = <3 0 0x100>;
-+		};
- 	};
- 
- 	pci0: pcie@ffe200000 {
-diff --git a/arch/powerpc/boot/dts/p4080ds.dts b/arch/powerpc/boot/dts/p4080ds.dts
-index eb11098..a26cf15 100644
---- a/arch/powerpc/boot/dts/p4080ds.dts
-+++ b/arch/powerpc/boot/dts/p4080ds.dts
-@@ -108,7 +108,8 @@
- 
- 	localbus@ffe124000 {
- 		reg = <0xf 0xfe124000 0 0x1000>;
--		ranges = <0 0 0xf 0xe8000000 0x08000000>;
-+		ranges = <0 0 0xf 0xe8000000 0x08000000
-+			  3 0 0xf 0xffdf0000 0x00008000>;
- 
- 		flash@0,0 {
- 			compatible = "cfi-flash";
-@@ -116,6 +117,11 @@
- 			bank-width = <2>;
- 			device-width = <2>;
- 		};
-+
-+		board-control@3,0 {
-+			compatible = "fsl,p4080ds-pixis", "fsl,fpga-pixis";
-+			reg = <3 0 0x30>;
-+		};
- 	};
- 
- 	pci0: pcie@ffe200000 {
-diff --git a/arch/powerpc/boot/dts/p5020ds.dts b/arch/powerpc/boot/dts/p5020ds.dts
-index 8366e2f..b959986 100644
---- a/arch/powerpc/boot/dts/p5020ds.dts
-+++ b/arch/powerpc/boot/dts/p5020ds.dts
-@@ -147,8 +147,8 @@
- 		};
- 
- 		board-control@3,0 {
--			compatible = "fsl,p5020ds-pixis";
--			reg = <3 0 0x20>;
-+			compatible = "fsl,p5020ds-pixis", "fsl,fpga-pixis";
-+			reg = <3 0 0x30>;
- 		};
- 	};
- 
--- 
-1.7.3.4
+g.
+
+>
+> Thanks in advance,
+> David Daney
+>
+>
+> On 09/14/2011 01:42 PM, Kumar Gala wrote:
+>>
+>>
+>> On Sep 13, 2011, at 6:23 PM, David Daney wrote:
+>>
+>>> On 09/13/2011 04:07 PM, Kumar Gala wrote:
+>>>>
+>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/mdio-mux.txt
+b/Documentation/devicetree/bindings/net/mdio-mux.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..a908312
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/net/mdio-mux.txt
+>>>>> @@ -0,0 +1,132 @@
+>>>>> +Common MDIO bus multiplexer/switch properties.
+>>>>> +
+>>>>> +An MDIO bus multiplexer/switch will have several child busses that
+are
+>>>>> +numbered uniquely in a device dependent manner.  The nodes for an
+MDIO
+>>>>> +bus multiplexer/switch will have one child node for each child bus.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- parent-bus : phandle to the parent MDIO bus.
+>>>>
+>>>>
+>>>> Should probably be mdio-parent-bus
+>>>
+>>>
+>>> Why?  We know it is MDIO.
+>>>
+>>> Serial bus multiplexing is not a concept limited to MDIO.  We would want
+to use "parent-bus" for some I2C multiplexers as well.
+>>
+>>
+>>> From many years of dealing with device trees.  We typically don't name
+things overlay generically unless they will be used over and over again as a
+common idiom (like reg, interrupt, etc.).
+>>
+>>
+>> We don't really use 'bus' generically today.
+>>
+>>>
+>>>>
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +- Other properties specific to the multiplexer/switch hardware.
+>>>>> +
+>>>>> +Required properties for child nodes:
+>>>>> +- #address-cells =<1>;
+>>>>> +- #size-cells =<0>;
+>>>>> +- cell-index : The sub-bus number.
+>>>>
+>>>>
+>>>> What does sub-bus number mean?
+>>>
+>>>
+>>> There are N child buses (or sub-buses) coming out of the multiplexer.
+The cell-index is used as a handle or identifier for each of these.
+>>>
+>>> The concrete example in Patch 3/3 is a multiplexer with four child
+buses.  The happen to have cell-indexes of 0, 1, 2 and 3.
+>>>
+>>> In the GPIO case of patch 3/3, these directly correspond the the state
+of the two GPIO pins controlling the multiplexer.  The driver then uses the
+cell-index property to determine the state of the GPIO to connect any given
+child.
+>>>
+>>> It is possible that the documentation part of the patch could be made
+more clear about this.
+>>>
+>>>>
+>>>>> +
+>>>>> +
+>>>>> +Example :
+>>>>
+>>>>
+>>> [...]
+>>>>>
+>>>>> +
+>>>>> +int mdio_mux_probe(struct platform_device *pdev,
+>>>>> +                  int (*switch_fn)(int cur, int desired, void *data),
+>>>>> +                  void *data)
+>>>>> +{
+>>>>> +       struct device_node *parent_bus_node;
+>>>>> +       struct device_node *child_bus_node;
+>>>>> +       int r, n, ret_val;
+>>>>> +       struct mii_bus *parent_bus;
+>>>>> +       struct mdio_mux_parent_bus *pb;
+>>>>> +       struct mdio_mux_child_bus *cb;
+>>>>> +
+>>>>> +       if (!pdev->dev.of_node)
+>>>>> +               return -ENODEV;
+>>>>> +
+>>>>> +       parent_bus_node = of_parse_phandle(pdev->dev.of_node,
+"parent-bus", 0);
+>>>>> +
+>>>>> +       if (!parent_bus_node)
+>>>>> +               return -ENODEV;
+>>>>> +
+>>>>> +       parent_bus = of_mdio_find_bus(parent_bus_node);
+>>>>
+>>>>
+>>>>
+>>>> So what happens if the parent bus probe happens after the mux probe?
+>>>>
+>>>
+>>> The whole house of cards collapses.
+>>>
+>>> Grant Likely has a patch to deal with this by retrying the probing,  but
+as far as I know, it has not been merged yet.
+>>
+>>
+>> - k--
+>> To unsubscribe from this list: send the line "unsubscribe netdev" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>
+
+--20cf307d0050b1886104acf022bc
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<p><br>
+On Sep 14, 2011 3:40 PM, &quot;David Daney&quot; &lt;<a href=3D"mailto:davi=
+d.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org">david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org</a>&gt; wrote:<br>
+&gt;<br>
+&gt; Well, I would really like to get an official maintainer&#39;s take on =
+the name of the parent MDIO bus property. =A0Prehaps Grant or Rob could opi=
+ne on the matter.<br>
+&gt;<br>
+&gt; Sooner would be better than later as I am about to start shipping boar=
+ds with this burnt into the bootloader. =A0If it needs changing, I could do=
+ it in the next couple of days, but after that it escapes into the wild.</p=
+>
+
+<p>Considering that the parent bus should be either implicit in the node to=
+pology, or if not then part of something like an i2c controlled bus multipl=
+exer, I don&#39;t think this is even remotely a big deal. Each bus multiple=
+xer will still likely have it&#39;s own binding, and therefore her to make =
+its own decision.</p>
+
+<p>That said, in the interest of commonality, I think mdio-parent-bus would=
+ be just fine.=A0 parent-bus is probably too generic.</p>
+<p>g.</p>
+<p>&gt;<br>
+&gt; Thanks in advance,<br>
+&gt; David Daney<br>
+&gt;<br>
+&gt;<br>
+&gt; On 09/14/2011 01:42 PM, Kumar Gala wrote:<br>
+&gt;&gt;<br>
+&gt;&gt;<br>
+&gt;&gt; On Sep 13, 2011, at 6:23 PM, David Daney wrote:<br>
+&gt;&gt;<br>
+&gt;&gt;&gt; On 09/13/2011 04:07 PM, Kumar Gala wrote:<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; diff --git a/Documentation/devicetree/bindings/net/mdi=
+o-mux.txt b/Documentation/devicetree/bindings/net/mdio-mux.txt<br>
+&gt;&gt;&gt;&gt;&gt; new file mode 100644<br>
+&gt;&gt;&gt;&gt;&gt; index 0000000..a908312<br>
+&gt;&gt;&gt;&gt;&gt; --- /dev/null<br>
+&gt;&gt;&gt;&gt;&gt; +++ b/Documentation/devicetree/bindings/net/mdio-mux.t=
+xt<br>
+&gt;&gt;&gt;&gt;&gt; @@ -0,0 +1,132 @@<br>
+&gt;&gt;&gt;&gt;&gt; +Common MDIO bus multiplexer/switch properties.<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; +An MDIO bus multiplexer/switch will have several chil=
+d busses that are<br>
+&gt;&gt;&gt;&gt;&gt; +numbered uniquely in a device dependent manner. =A0Th=
+e nodes for an MDIO<br>
+&gt;&gt;&gt;&gt;&gt; +bus multiplexer/switch will have one child node for e=
+ach child bus.<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; +Required properties:<br>
+&gt;&gt;&gt;&gt;&gt; +- parent-bus : phandle to the parent MDIO bus.<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; Should probably be mdio-parent-bus<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Why? =A0We know it is MDIO.<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Serial bus multiplexing is not a concept limited to MDIO. =A0W=
+e would want to use &quot;parent-bus&quot; for some I2C multiplexers as wel=
+l.<br>
+&gt;&gt;<br>
+&gt;&gt;<br>
+&gt;&gt;&gt; From many years of dealing with device trees. =A0We typically =
+don&#39;t name things overlay generically unless they will be used over and=
+ over again as a common idiom (like reg, interrupt, etc.).<br>
+&gt;&gt;<br>
+&gt;&gt;<br>
+&gt;&gt; We don&#39;t really use &#39;bus&#39; generically today.<br>
+&gt;&gt;<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; +Optional properties:<br>
+&gt;&gt;&gt;&gt;&gt; +- Other properties specific to the multiplexer/switch=
+ hardware.<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; +Required properties for child nodes:<br>
+&gt;&gt;&gt;&gt;&gt; +- #address-cells =3D&lt;1&gt;;<br>
+&gt;&gt;&gt;&gt;&gt; +- #size-cells =3D&lt;0&gt;;<br>
+&gt;&gt;&gt;&gt;&gt; +- cell-index : The sub-bus number.<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; What does sub-bus number mean?<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; There are N child buses (or sub-buses) coming out of the multi=
+plexer. The cell-index is used as a handle or identifier for each of these.=
+<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; The concrete example in Patch 3/3 is a multiplexer with four c=
+hild buses. =A0The happen to have cell-indexes of 0, 1, 2 and 3.<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; In the GPIO case of patch 3/3, these directly correspond the t=
+he state of the two GPIO pins controlling the multiplexer. =A0The driver th=
+en uses the cell-index property to determine the state of the GPIO to conne=
+ct any given child.<br>
+
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; It is possible that the documentation part of the patch could =
+be made more clear about this.<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; +Example :<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt; [...]<br>
+&gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; +int mdio_mux_probe(struct platform_device *pdev,<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0int (*switch_fn)(=
+int cur, int desired, void *data),<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0void *data)<br>
+&gt;&gt;&gt;&gt;&gt; +{<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 struct device_node *parent_bus_node;<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 struct device_node *child_bus_node;<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 int r, n, ret_val;<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 struct mii_bus *parent_bus;<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 struct mdio_mux_parent_bus *pb;<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 struct mdio_mux_child_bus *cb;<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 if (!pdev-&gt;dev.of_node)<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 parent_bus_node =3D of_parse_phandle(pde=
+v-&gt;dev.of_node, &quot;parent-bus&quot;, 0);<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 if (!parent_bus_node)<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;<br>
+&gt;&gt;&gt;&gt;&gt; +<br>
+&gt;&gt;&gt;&gt;&gt; + =A0 =A0 =A0 parent_bus =3D of_mdio_find_bus(parent_b=
+us_node);<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; So what happens if the parent bus probe happens after the =
+mux probe?<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; The whole house of cards collapses.<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Grant Likely has a patch to deal with this by retrying the pro=
+bing, =A0but as far as I know, it has not been merged yet.<br>
+&gt;&gt;<br>
+&gt;&gt;<br>
+&gt;&gt; - k--<br>
+&gt;&gt; To unsubscribe from this list: send the line &quot;unsubscribe net=
+dev&quot; in<br>
+&gt;&gt; the body of a message to <a href=3D"mailto:majordomo-u79uwXL29TbrhsbdSgBK9A@public.gmane.org=
+rg">majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org</a><br>
+&gt;&gt; More majordomo info at =A0<a href=3D"http://vger.kernel.org/majord=
+omo-info.html">http://vger.kernel.org/majordomo-info.html</a><br>
+&gt;&gt;<br>
+&gt;<br>
+</p>
+
+--20cf307d0050b1886104acf022bc--
+
+--===============7977552771947630206==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7977552771947630206==--
