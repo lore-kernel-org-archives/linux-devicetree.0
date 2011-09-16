@@ -1,43 +1,37 @@
-From: Gala Kumar-B11780 <B11780@freescale.com>
-Subject: Re: [PATCH] [v2] powerpc/85xx: clean up FPGA device tree nodes for
-	Freecsale QorIQ boards
-Date: Thu, 15 Sep 2011 17:04:00 +0000
-Message-ID: <95760360-FBCE-4D68-B2AB-A5270F8FBD0F@freescale.com>
-References: <1316036538-311-1-git-send-email-timur@freescale.com>
-	<454A6F08-BD85-4C80-BF0D-3BC04D95EA36@freescale.com>,
-	<4E722860.8090605@freescale.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [RFC PATCH 01/11] OMAP: TWL: Clean up mode and ops mask passed
+ from board files
+Date: Fri, 16 Sep 2011 12:41:53 +0530
+Message-ID: <4E72F6B9.4050207@ti.com>
+References: <1316085727-15023-1-git-send-email-rnayak@ti.com> <1316085727-15023-2-git-send-email-rnayak@ti.com> <20110915133236.GH7988@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <4E722860.8090605@freescale.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
-	<mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Tabi Timur-B04825 <B04825@freescale.com>
-Cc: "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, Gala Kumar-B11780 <B11780@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110915133236.GH7988@opensource.wolfsonmicro.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com
 List-Id: devicetree@vger.kernel.org
 
-I pulling the p3060qds bit out so drop that change from next patch.
+On Thursday 15 September 2011 07:02 PM, Mark Brown wrote:
+> On Thu, Sep 15, 2011 at 04:51:57PM +0530, Rajendra Nayak wrote:
+>> The TWL driver seems to set the default .valid_modes_mask to
+>> (REGULATOR_MODE_NORMAL | REGULATOR_MODE_STANDBY) and .valid_ops_mask
+>> to (REGULATOR_CHANGE_VOLTAGE | REGULATOR_CHANGE_MODE | REGULATOR_CHANGE_STATUS)
+>> for all the registered regulators.
+>>
+>> There is no need for all the board files to pass this information
+>> additionally, when the driver already sets them by default.
+>
+> "the driver"?  This sounds very buggy...
 
-- k
+Yeah, the driver currently sets some default based on what
+the chip itself supports and completely ignores the board
+inputs.
+How about the driver using the defaults and letting the boards
+override it (if it ever wants to)?
+Currently none of the boards (using any of the twl
+regulators) seem to override the defaults and that way a lot of
+this duplication in board files could be avoided.
 
-
-
-On Sep 15, 2011, at 11:31 AM, "Tabi Timur-B04825" <B04825@freescale.com> wrote:
-
-> Kumar Gala wrote:
->> What happened to looking at pixis vs ngpixis ?
-> 
-> Doh, I knew I was forgetting something.
-> 
-> -- 
-> Timur Tabi
-> Linux kernel developer at Freescale
