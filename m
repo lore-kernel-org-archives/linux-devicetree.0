@@ -1,85 +1,113 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 RESEND 2] gpio-vx855: add device tree binding
-Date: Fri, 16 Sep 2011 19:12:20 +0100 (BST)
-Message-ID: <20110916181220.E12109D401C@zog.reactivated.net>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2] pata-generic/of: Make probing via device tree non-powerpc-specific
+Date: Fri, 16 Sep 2011 16:34:51 -0500
+Message-ID: <4E73C0FB.4030904@gmail.com>
+References: <1316183890-13677-1-git-send-email-dave.martin@linaro.org> <1316190120-17010-1-git-send-email-dave.martin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1316190120-17010-1-git-send-email-dave.martin@linaro.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-ide@vger.kernel.org, Jeff Garzik <jgarzik@pobox.com>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This is needed to enable the HDD LED on the OLPC XO-1.5 laptop,
-enabled through devicetree and the gpio-leds driver.
+Dave,
 
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio_vx855.txt        |   20 ++++++++++++++++++++
- drivers/gpio/gpio-vx855.c                          |    5 +++++
- 2 files changed, 25 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_vx855.txt
+On 09/16/2011 11:22 AM, Dave Martin wrote:
+> This patch enables device-tree-based probing of the pata-generic
+> platform driver across all architectures:
+> 
+>   * make the pata_of_generic module depend on OF instead of PPC_OF;
+>   * supply some missing inclues;
+>   * replace endianness-sensitive raw access to device tree data
+>     with of_property_read_u32() calls.
+> 
+> Signed-off-by: Dave Martin <dave.martin@linaro.org>
+> ---
+> v2: correct sense of the check of_property_read_u32(dn, "pio-mode",
+> &pio_mode).  Somehow I posted an old version of this patch, depite
+> having already fixed this...
+> 
+> Tested on ARM Versatile Express, with my soon-to-be-posted device
+> tree support patches.
+> 
+> I'm not in a position to build/test this for powerpc easily --
+> if anyone is able to do that, it would be appreciated.
+> 
+Building just requires getting Codesourcery PPC toolchain...
 
-v2: extended the documentation with information about the pin numbering
-scheme, which matches that of the driver.
+You also have to be aware that you are enabling this for all OF-enabled
+arches which could break with an allyesconfig. So really you need sparc,
+x86, mips, and microblaze, but a subset is probably sufficient.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_vx855.txt b/Documentation/devicetree/bindings/gpio/gpio_vx855.txt
-new file mode 100644
-index 0000000..17285a5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio_vx855.txt
-@@ -0,0 +1,20 @@
-+VIA VX855 GPIO controller
-+
-+Required properties:
-+- compatible : "via,vx855-gpio"
-+- #gpio-cells : Should be two. The first cell is the pin number and the
-+  second cell is used to specify optional parameters:
-+  - bit 0 specifies polarity (0 for normal, 1 for inverted)
-+- gpio-controller : Marks the device node as a GPIO controller.
-+
-+As VIA differentiates between GPI, GPO and GPIO on its 42 available pins,
-+with each pin type restarting numbering at 0, the following numbering scheme
-+is used in the device tree for the pin number:
-+
-+PIN NO		VIA NAME
-+0..13		GPI 0..13
-+14..26		GPO 0..12
-+27..41		GPIO 0..14
-+
-+For example, GPIO 11 (VIA name) is referred to with pin number 38 in the
-+device tree.
-diff --git a/drivers/gpio/gpio-vx855.c b/drivers/gpio/gpio-vx855.c
-index ef5aabd..5b7e9ba 100644
---- a/drivers/gpio/gpio-vx855.c
-+++ b/drivers/gpio/gpio-vx855.c
-@@ -31,6 +31,7 @@
- #include <linux/platform_device.h>
- #include <linux/pci.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- 
- #define MODULE_NAME "vx855_gpio"
- 
-@@ -216,6 +217,10 @@ static void vx855gpio_gpio_setup(struct vx855_gpio *vg)
- 	c->ngpio = NR_VX855_GP;
- 	c->can_sleep = 0;
- 	c->names = vx855gpio_names;
-+
-+#ifdef CONFIG_OF_GPIO
-+	c->of_node = of_find_compatible_node(NULL, NULL, "via,vx855-gpio");
-+#endif
- }
- 
- /* This platform device is ordinarily registered by the vx855 mfd driver */
--- 
-1.7.6
+> Grant, does this require similar cleanup to the isp1760 USB hcd driver?
+> 
+Yes. It really should be merged with pata_platform.c. If you're willing
+to combine them, I'll do ppc and sparc builds as I already have those on
+my system.
+
+Rob
+
+>  drivers/ata/Kconfig            |    2 +-
+>  drivers/ata/pata_of_platform.c |   16 +++++++---------
+>  2 files changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+> index 5987e0b..c6ef9d0 100644
+> --- a/drivers/ata/Kconfig
+> +++ b/drivers/ata/Kconfig
+> @@ -820,7 +820,7 @@ config PATA_PLATFORM
+>  
+>  config PATA_OF_PLATFORM
+>  	tristate "OpenFirmware platform device PATA support"
+> -	depends on PATA_PLATFORM && PPC_OF
+> +	depends on PATA_PLATFORM && OF
+>  	help
+>  	  This option enables support for generic directly connected ATA
+>  	  devices commonly found on embedded systems with OpenFirmware
+> diff --git a/drivers/ata/pata_of_platform.c b/drivers/ata/pata_of_platform.c
+> index f305400..e6e9aa9 100644
+> --- a/drivers/ata/pata_of_platform.c
+> +++ b/drivers/ata/pata_of_platform.c
+> @@ -11,6 +11,9 @@
+>  
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/ata_platform.h>
+>  
+> @@ -21,10 +24,9 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
+>  	struct resource io_res;
+>  	struct resource ctl_res;
+>  	struct resource irq_res;
+> -	unsigned int reg_shift = 0;
+> -	int pio_mode = 0;
+> +	u32 reg_shift = 0;
+> +	u32 pio_mode = 0;
+>  	int pio_mask;
+> -	const u32 *prop;
+>  
+>  	ret = of_address_to_resource(dn, 0, &io_res);
+>  	if (ret) {
+> @@ -55,13 +57,9 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
+>  	else
+>  		irq_res.flags = 0;
+>  
+> -	prop = of_get_property(dn, "reg-shift", NULL);
+> -	if (prop)
+> -		reg_shift = *prop;
+> +	of_property_read_u32(dn, "reg-shift", &reg_shift);
+>  
+> -	prop = of_get_property(dn, "pio-mode", NULL);
+> -	if (prop) {
+> -		pio_mode = *prop;
+> +	if (!of_property_read_u32(dn, "pio-mode", &pio_mode)) {
+>  		if (pio_mode > 6) {
+>  			dev_err(&ofdev->dev, "invalid pio-mode\n");
+>  			return -EINVAL;
+
