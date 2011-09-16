@@ -1,95 +1,108 @@
 From: Dave Martin <dave.martin@linaro.org>
-Subject: [PATCH] pata-generic/of: Make probing via device tree non-powerpc-specific
-Date: Fri, 16 Sep 2011 15:38:10 +0100
-Message-ID: <1316183890-13677-1-git-send-email-dave.martin@linaro.org>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-ide@vger.kernel.org
-Cc: patches@linaro.org, Jeff Garzik <jgarzik@pobox.com>, linux-arm-kernel@lists.infradead.org, Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
+Date: Fri, 16 Sep 2011 17:09:39 +0100
+Message-ID: <20110916160939.GA2100@arm.com>
+References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
+ <1316017900-19918-6-git-send-email-robherring2@gmail.com>
+ <CAJuYYwSFu2HC+u2NY41+yw9tEyy85RKa4Dpm3SL+jbwS_OOA0A@mail.gmail.com>
+ <4E71CE5D.9030900@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4E71CE5D.9030900@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Rob Herring <robherring2@gmail.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Thomas Abraham <thomas.abraham@linaro.org>, "jamie@jamieiles.com" <jamie@jamieiles.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables device-tree-based probing of the pata-generic
-platform driver across all architectures:
+On Thu, Sep 15, 2011 at 12:07:25PM +0200, Cousson, Benoit wrote:
+> Hi Rob,
+> 
+> On 9/15/2011 9:55 AM, Thomas Abraham wrote:
+> >Hi Rob,
+> >
+> >On 14 September 2011 22:01, Rob Herring<robherring2@gmail.com>  wrote:
+> >>From: Rob Herring<rob.herring@calxeda.com>
+> >>
+> >>This adds gic initialization using device tree data. The initialization
+> >>functions are intended to be called by a generic OF interrupt
+> >>controller parsing function once the right pieces are in place.
+> >>
+> >>PPIs are handled using 3rd cell of interrupts properties to specify the cpu
+> >>mask the PPI is assigned to.
+> >>
+> >>Signed-off-by: Rob Herring<rob.herring@calxeda.com>
+> >>---
+> >>  Documentation/devicetree/bindings/arm/gic.txt |   53 ++++++++++++++++++++++++
+> >>  arch/arm/common/gic.c                         |   55 +++++++++++++++++++++++--
+> >>  arch/arm/include/asm/hardware/gic.h           |   10 +++++
+> >>  3 files changed, 114 insertions(+), 4 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+> >
+> >[...]
+> >
+> >
+> >>diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+> >>index d1ccc72..14de380 100644
+> >>--- a/arch/arm/common/gic.c
+> >>+++ b/arch/arm/common/gic.c
+> >
+> >[...]
+> >
+> >>+void __init gic_of_init(struct device_node *node, struct device_node *parent)
+> >>+{
+> >>+       void __iomem *cpu_base;
+> >>+       void __iomem *dist_base;
+> >>+       int irq;
+> >>+       struct irq_domain *domain =&gic_data[gic_cnt].domain;
+> >>+
+> >>+       if (WARN_ON(!node))
+> >>+               return;
+> >>+
+> >>+       dist_base = of_iomap(node, 0);
+> >>+       WARN(!dist_base, "unable to map gic dist registers\n");
+> >>+
+> >>+       cpu_base = of_iomap(node, 1);
+> >>+       WARN(!cpu_base, "unable to map gic cpu registers\n");
+> >>+
+> >>+       domain->nr_irq = gic_irq_count(dist_base);
+> >>+       domain->irq_base = irq_alloc_descs(-1, 0, domain->nr_irq, numa_node_id());
+> >
+> >For exynos4, all the interrupts originating from GIC are statically
+> >mapped to start from 32 in the linux virq space (GIC SPI interrupts
+> >start from 64). In the above code, since irq_base would be 0 for
+> >exynos4, the interrupt mapping is not working correctly. In your
+> >previous version of the patch, you have given a option to the platform
+> >code to choose the offset. Could that option be added to this series
+> >also. Or a provision to use platform specific translate function
+> >instead of the irq_domain_simple translator.
+> 
+> I have another concern on a similar topic.
+> 
+> On OMAP4 the SoC interrupts external to the MPU (SPI) have an offset
+> of 32. Only the internal PPI are between 0 and 31.
 
-  * make the pata_of_generic module depend on OF instead of PPC_OF;
-  * supply some missing inclues;
-  * replace endianness-sensitive raw access to device tree data
-    with of_property_read_u32() calls.
+On a similar theme, on Versatile express the motherboard and core-tiles
+are independent things, and the GIC lives on the core-tile (the motherboard
+has no interrupt controller of its owh).
 
-Signed-off-by: Dave Martin <dave.martin@linaro.org>
----
+This means that the mapping of motherboard peripheral interrupts onto
+GIC inputs is dependent on the coretile.
 
-Tested on ARM Versatile Express, with my soon-to-be-posted device
-tree support patches.
+Since the DT is supposed to be descrbing the hardware in a componentised
+way, the motherboard description should be independent of the core-tile
+description except for describing the interface between the two.
 
-I'm not in a position to build/test this for powerpc easily --
-if anyone is able to do that, it would be appreciated.
 
-Grant, does this require similar cleanup to the isp1760 USB hcd driver?
+For now, we express the mapping by putting an interrupt-map in the
+core-tile DT, but this feels inelegant as well as wasteful -- expressing
+"+ 32" using a table which is about 1K in size and duplicates that
+information 43 times.
+
+Using a dedicated irq domain or a fake interrupt controller node to
+encapsulate the motherboard interrupts feels like a cleaner approach,
+but for now I'm not clear on the best way to do it.
 
 Cheers
 ---Dave
-
- drivers/ata/Kconfig            |    2 +-
- drivers/ata/pata_of_platform.c |   16 +++++++---------
- 2 files changed, 8 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 5987e0b..c6ef9d0 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -820,7 +820,7 @@ config PATA_PLATFORM
- 
- config PATA_OF_PLATFORM
- 	tristate "OpenFirmware platform device PATA support"
--	depends on PATA_PLATFORM && PPC_OF
-+	depends on PATA_PLATFORM && OF
- 	help
- 	  This option enables support for generic directly connected ATA
- 	  devices commonly found on embedded systems with OpenFirmware
-diff --git a/drivers/ata/pata_of_platform.c b/drivers/ata/pata_of_platform.c
-index f305400..ac7c9f7 100644
---- a/drivers/ata/pata_of_platform.c
-+++ b/drivers/ata/pata_of_platform.c
-@@ -11,6 +11,9 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/ata_platform.h>
- 
-@@ -21,10 +24,9 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
- 	struct resource io_res;
- 	struct resource ctl_res;
- 	struct resource irq_res;
--	unsigned int reg_shift = 0;
--	int pio_mode = 0;
-+	u32 reg_shift = 0;
-+	u32 pio_mode = 0;
- 	int pio_mask;
--	const u32 *prop;
- 
- 	ret = of_address_to_resource(dn, 0, &io_res);
- 	if (ret) {
-@@ -55,13 +57,9 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
- 	else
- 		irq_res.flags = 0;
- 
--	prop = of_get_property(dn, "reg-shift", NULL);
--	if (prop)
--		reg_shift = *prop;
-+	of_property_read_u32(dn, "reg-shift", &reg_shift);
- 
--	prop = of_get_property(dn, "pio-mode", NULL);
--	if (prop) {
--		pio_mode = *prop;
-+	if (of_property_read_u32(dn, "pio-mode", &pio_mode)) {
- 		if (pio_mode > 6) {
- 			dev_err(&ofdev->dev, "invalid pio-mode\n");
- 			return -EINVAL;
--- 
-1.7.4.1
-
