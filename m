@@ -1,97 +1,97 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: [PATCH v2] pata-generic/of: Make probing via device tree non-powerpc-specific
-Date: Fri, 16 Sep 2011 17:22:00 +0100
-Message-ID: <1316190120-17010-1-git-send-email-dave.martin@linaro.org>
-References: <1316183890-13677-1-git-send-email-dave.martin@linaro.org>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1316183890-13677-1-git-send-email-dave.martin@linaro.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-ide@vger.kernel.org
-Cc: patches@linaro.org, Jeff Garzik <jgarzik@pobox.com>, linux-arm-kernel@lists.infradead.org, Dave Martin <dave.martin@linaro.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] Add fdtget utility to read property values from
+	device tree
+Date: Fri, 16 Sep 2011 09:25:10 -0700
+Message-ID: <CAPnjgZ1LUPm9mRft5q=KHGe2h2+Masdh0kGXQ-7j1VTUDsMP7g@mail.gmail.com>
+References: <1315425260-2711-1-git-send-email-sjg@chromium.org>
+	<1315425260-2711-4-git-send-email-sjg@chromium.org>
+	<20110908052547.GR30278@yookeroo.fritz.box>
+	<CAPnjgZ0qnr8VVOX7kCq6wEZ-OxAsxmHkPcTGE7wu1B_9ME_SPA@mail.gmail.com>
+	<20110909044945.GF21002@yookeroo.fritz.box>
+	<CAPnjgZ3xw7ByV4Yzeot3zgs4oo0zciX2OV_V4vfQ8tGsgLcPvw@mail.gmail.com>
+	<20110912005357.GI9025@yookeroo.fritz.box>
+	<CAPnjgZ1vevcwCQU+uyjAA3YZd--RhU9MgAF8O8G4Hr5e4CYo_g@mail.gmail.com>
+	<20110916081804.GF9025@yookeroo.fritz.box>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110916081804.GF9025-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables device-tree-based probing of the pata-generic
-platform driver across all architectures:
+Hi David,
 
-  * make the pata_of_generic module depend on OF instead of PPC_OF;
-  * supply some missing inclues;
-  * replace endianness-sensitive raw access to device tree data
-    with of_property_read_u32() calls.
+On Fri, Sep 16, 2011 at 1:18 AM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Sun, Sep 11, 2011 at 09:34:01PM -0700, Simon Glass wrote:
+>> Hi David,
+>>
+>> Thanks for your comments.
+>
+> [snip]
+>> >> > B) What to do when the property just doesn't fit into that format -
+>> >> > either it's length is not a multiple of the fixed integer size, or
+>> >> > it's not NUL-terminated for "s". =A0Obviously some kind of error is=
+ in
+>> >> > order, but in case A2 above, do we *just* error, or print what we c=
+an
+>> >> > before giving up.
+>> >>
+>> >> Prefer to error since any output might be confusing. But I will take a
+>> >> look to make sure that is easy to do.
+>> >
+>> > It is trivial to check in advance for the existing types - for
+>> > integers just check if the property has length a multiple of the
+>> > integer size, for strings check if the last byte is '\0'. =A0Well.. th=
+en
+>> > it depends a bit on how safe you want "s" to be - do you check for
+>> > reasonably printable characters first or not. =A0How easy it is to
+>> > pre-check for possible future types is not neccessarily obvious of
+>> > course.
+>>
+>> Yes I have added a check for (length % size) =3D=3D 0. For strings I don=
+'t
+>> think we should be picky so long as there is a NUL terminator. If you
+>> don't specify a type, the utility already tries to guess, and will
+>> fall back to integer or even byte if it finds the string has ctrl
+>> characters. When the user says -ts I think we need to try hard to
+>> obey. I can't think of any reason to store strange characters in a
+>> string property, but others might.
+>
+> Yes, that makes sense. =A0One reason for funny bytes in a string that
+> springs to mind would be inclusion of UTF-8 or other high-bit
+> character encodings.
+>
+> One useful extension of what you have now might be to add a "raw
+> binary" format. =A0Not much use for humans, but could be handy for
+> scripts extracting blobs from the device tree. =A0In fact, using the
+> same interpretation of existing printf() descriptors, that would
+> actually be equivalent to 'c'.
 
-Signed-off-by: Dave Martin <dave.martin@linaro.org>
----
-v2: correct sense of the check of_property_read_u32(dn, "pio-mode",
-&pio_mode).  Somehow I posted an old version of this patch, depite
-having already fixed this...
+Yes I was thinking about how to do that as it might be useful. I think
+'c' makes perfect sense. Will add to the todo.
 
-Tested on ARM Versatile Express, with my soon-to-be-posted device
-tree support patches.
+Regards,
+Simon
 
-I'm not in a position to build/test this for powerpc easily --
-if anyone is able to do that, it would be appreciated.
-
-Grant, does this require similar cleanup to the isp1760 USB hcd driver?
-
- drivers/ata/Kconfig            |    2 +-
- drivers/ata/pata_of_platform.c |   16 +++++++---------
- 2 files changed, 8 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 5987e0b..c6ef9d0 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -820,7 +820,7 @@ config PATA_PLATFORM
- 
- config PATA_OF_PLATFORM
- 	tristate "OpenFirmware platform device PATA support"
--	depends on PATA_PLATFORM && PPC_OF
-+	depends on PATA_PLATFORM && OF
- 	help
- 	  This option enables support for generic directly connected ATA
- 	  devices commonly found on embedded systems with OpenFirmware
-diff --git a/drivers/ata/pata_of_platform.c b/drivers/ata/pata_of_platform.c
-index f305400..e6e9aa9 100644
---- a/drivers/ata/pata_of_platform.c
-+++ b/drivers/ata/pata_of_platform.c
-@@ -11,6 +11,9 @@
- 
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/ata_platform.h>
- 
-@@ -21,10 +24,9 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
- 	struct resource io_res;
- 	struct resource ctl_res;
- 	struct resource irq_res;
--	unsigned int reg_shift = 0;
--	int pio_mode = 0;
-+	u32 reg_shift = 0;
-+	u32 pio_mode = 0;
- 	int pio_mask;
--	const u32 *prop;
- 
- 	ret = of_address_to_resource(dn, 0, &io_res);
- 	if (ret) {
-@@ -55,13 +57,9 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
- 	else
- 		irq_res.flags = 0;
- 
--	prop = of_get_property(dn, "reg-shift", NULL);
--	if (prop)
--		reg_shift = *prop;
-+	of_property_read_u32(dn, "reg-shift", &reg_shift);
- 
--	prop = of_get_property(dn, "pio-mode", NULL);
--	if (prop) {
--		pio_mode = *prop;
-+	if (!of_property_read_u32(dn, "pio-mode", &pio_mode)) {
- 		if (pio_mode > 6) {
- 			dev_err(&ofdev->dev, "invalid pio-mode\n");
- 			return -EINVAL;
--- 
-1.7.4.1
-
+>
+> --
+> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
+baroque, and my code
+> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
+other_
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
+round_!
+> http://www.ozlabs.org/~dgibson
+>
