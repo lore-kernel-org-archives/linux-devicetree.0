@@ -1,49 +1,70 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2] pata-generic/of: Make probing via device tree non-powerpc-specific
-Date: Sat, 17 Sep 2011 15:30:25 -0600
-Message-ID: <CACxGe6u8a0HbCSisVadhasMKpdmgmVP1OZOo0+pLWcNncJozbQ@mail.gmail.com>
-References: <1316183890-13677-1-git-send-email-dave.martin@linaro.org>
- <1316190120-17010-1-git-send-email-dave.martin@linaro.org>
- <20110917153732.GR3523@ponder.secretlab.ca> <2615461.zA8fCfbHH2@wuerfel>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/5] irq: fix existing domain check in irq_domain_add
+Date: Sat, 17 Sep 2011 17:24:42 -0600
+Message-ID: <20110917232442.GZ3523@ponder.secretlab.ca>
+References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
+	<1316017900-19918-3-git-send-email-robherring2@gmail.com>
+	<alpine.LFD.2.02.1109141838510.2723@ionos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <2615461.zA8fCfbHH2@wuerfel>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Dave Martin <dave.martin@linaro.org>, linux-ide@vger.kernel.org, Jeff Garzik <jgarzik@pobox.com>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.02.1109141838510.2723@ionos>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 17, 2011 at 12:40 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Saturday 17 September 2011 09:37:32 Grant Likely wrote:
->> What driver is normally used for versatile express pata? =A0This dri=
-ver
->> is kind of legacy in that it was created when there was a split
->> between platform_device and of_platform_devices. =A0But that split w=
-as a
->> bad idea and the same driver should be used regardless of whether or
->> not DT is enabled. =A0pata_of_platform.c really should be removed.
->
-> It normally uses the plain pata_platform.c driver.
->
-> Note that the pata_of_platform driver is already just a shim on
-> top of the regular pata_platform driver. They could easily be combine=
-d,
-> but the current state is also ok, since there is very little code
-> duplication.
+On Wed, Sep 14, 2011 at 06:44:50PM +0200, Thomas Gleixner wrote:
+> On Wed, 14 Sep 2011, Rob Herring wrote:
+> 
+> > From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > irq_data will normally exist, so the domain was prevented from being set.
+> > The simple domain code did not hit this as nr_irq is always 0.
+> > 
+> > Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> 
+> I take this and 1/5 through irq/urgent
 
-A bunch of the code is actually redundant since the resource table is
-no populated for DT devices.  I also see some directly references to
-reg-shift and pio-mode property values without using be32_to_cpu(), so
-that will also need to be fixed.  The of_irq_to_resource() and
-of_address_to_resource() calls are now redundant since
-platform_get_*() works for DT sourced platform device (with one quirk
-for the electra-ide device).  Given that the conversion is straight
-forward, I'd rather see pata_of_platform.c dropped and rolled into
-pata_platform.c.  I've hacked together a patch to do so, but I've only
-compile tested it.  Dave, if I send it to you, can you take care of
-testing it?
+Thanks Thomas.
 
-Thanks,
 g.
+
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+> > ---
+> >  kernel/irq/irqdomain.c |    2 +-
+> >  1 files changed, 1 insertions(+), 1 deletions(-)
+> > 
+> > diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> > index d5828da..84f4110 100644
+> > --- a/kernel/irq/irqdomain.c
+> > +++ b/kernel/irq/irqdomain.c
+> > @@ -29,7 +29,7 @@ void irq_domain_add(struct irq_domain *domain)
+> >  	 */
+> >  	for (hwirq = 0; hwirq < domain->nr_irq; hwirq++) {
+> >  		d = irq_get_irq_data(irq_domain_to_irq(domain, hwirq));
+> > -		if (d || d->domain) {
+> > +		if (d && d->domain) {
+> >  			/* things are broken; just report, don't clean up */
+> >  			WARN(1, "error: irq_desc already assigned to a domain");
+> >  			return;
+> > -- 
+> > 1.7.5.4
+> > 
+> > 
