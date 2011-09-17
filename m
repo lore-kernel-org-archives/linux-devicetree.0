@@ -1,14 +1,13 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 RESEND 2] gpio-vx855: add device tree binding
-Date: Sat, 17 Sep 2011 09:56:15 -0600
-Message-ID: <20110917155615.GT3523@ponder.secretlab.ca>
-References: <20110916181220.E12109D401C@zog.reactivated.net>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: dtc: Remove gcc 4.6 "set but not used" warnings
+Date: Sat, 17 Sep 2011 11:47:43 -0500
+Message-ID: <E1R4y3M-0000NB-0L@jdl.com>
+References: <20110912011843.GK9025@yookeroo.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110916181220.E12109D401C-k/4jFdqg8LLlyo9zxV8I99HuzzzSOjJt@public.gmane.org>
+In-reply-to: <20110912011843.GK9025-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,78 +17,23 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 16, 2011 at 07:12:20PM +0100, Daniel Drake wrote:
-> This is needed to enable the HDD LED on the OLPC XO-1.5 laptop,
-> enabled through devicetree and the gpio-leds driver.
+> A number of the dtc testcases trigger the new "variable set but not
+> used" warning from gcc 4.6.  That is they have variables which are
+> assigned, but then never read after that point.
 > 
-> Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/gpio/gpio_vx855.txt        |   20 ++++++++++++++++++++
->  drivers/gpio/gpio-vx855.c                          |    5 +++++
->  2 files changed, 25 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_vx855.txt
+> In a couple of cases this is just because the variables aren't needed,
+> so this patch removes them.  In subnode_offset.c, it's because one
+> pair of variables we clearly intended to test we don't actually test.
+> This patch also adds this missing check.
 > 
-> v2: extended the documentation with information about the pin numbering
-> scheme, which matches that of the driver.
+> This patch makes the testsuite compile clean with gcc 4.6.
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_vx855.txt b/Documentation/devicetree/bindings/gpio/gpio_vx855.txt
-> new file mode 100644
-> index 0000000..17285a5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio_vx855.txt
-> @@ -0,0 +1,20 @@
-> +VIA VX855 GPIO controller
-> +
-> +Required properties:
-> +- compatible : "via,vx855-gpio"
-> +- #gpio-cells : Should be two. The first cell is the pin number and the
-> +  second cell is used to specify optional parameters:
-> +  - bit 0 specifies polarity (0 for normal, 1 for inverted)
-> +- gpio-controller : Marks the device node as a GPIO controller.
-> +
-> +As VIA differentiates between GPI, GPO and GPIO on its 42 available pins,
-> +with each pin type restarting numbering at 0, the following numbering scheme
-> +is used in the device tree for the pin number:
-> +
-> +PIN NO		VIA NAME
-> +0..13		GPI 0..13
-> +14..26		GPO 0..12
-> +27..41		GPIO 0..14
-> +
-> +For example, GPIO 11 (VIA name) is referred to with pin number 38 in the
-> +device tree.
+> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Binding looks good.
+Applied.
 
-> diff --git a/drivers/gpio/gpio-vx855.c b/drivers/gpio/gpio-vx855.c
-> index ef5aabd..5b7e9ba 100644
-> --- a/drivers/gpio/gpio-vx855.c
-> +++ b/drivers/gpio/gpio-vx855.c
-> @@ -31,6 +31,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pci.h>
->  #include <linux/io.h>
-> +#include <linux/of.h>
->  
->  #define MODULE_NAME "vx855_gpio"
->  
-> @@ -216,6 +217,10 @@ static void vx855gpio_gpio_setup(struct vx855_gpio *vg)
->  	c->ngpio = NR_VX855_GP;
->  	c->can_sleep = 0;
->  	c->names = vx855gpio_names;
-> +
-> +#ifdef CONFIG_OF_GPIO
-> +	c->of_node = of_find_compatible_node(NULL, NULL, "via,vx855-gpio");
-> +#endif
-
-drivers/mfd/vx855.c should be modified to assign pdev->of_node, which
-can be used here for setting up c->of_node.  Also, if there is any
-possibility of more than one of these being in a system, then you
-should use something like of_find_matching_node_by_address() for
-additional safety.
-
-g.
+jdl
