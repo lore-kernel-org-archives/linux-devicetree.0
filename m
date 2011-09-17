@@ -1,186 +1,55 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4] power: bq20z75: devicetree init support
-Date: Sat, 17 Sep 2011 11:16:30 -0600
-Message-ID: <20110917171630.GY3523@ponder.secretlab.ca>
-References: <1316023462-3287-1-git-send-email-rklein@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] pata-generic/of: Make probing via device tree non-powerpc-specific
+Date: Sat, 17 Sep 2011 20:35:57 +0200
+Message-ID: <2922376.ufKFh1svrE@wuerfel>
+References: <1316183890-13677-1-git-send-email-dave.martin@linaro.org> <20110916214313.GB16381@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1316023462-3287-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20110916214313.GB16381@n2100.arm.linux.org.uk>
+Sender: linux-ide-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Dave Martin <dave.martin@linaro.org>, patches@linaro.org, linux-ide@vger.kernel.org, Jeff Garzik <jgarzik@pobox.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2011 at 11:04:22AM -0700, Rhyland Klein wrote:
-> Adding support to generate platform data when kernel is configured
-> through device tree.
+On Friday 16 September 2011 22:43:13 Russell King - ARM Linux wrote:
+> On Fri, Sep 16, 2011 at 03:38:10PM +0100, Dave Martin wrote:
+> > This patch enables device-tree-based probing of the pata-generic
+> > platform driver across all architectures:
+> > 
+> >   * make the pata_of_generic module depend on OF instead of PPC_OF;
+> >   * supply some missing inclues;
+> >   * replace endianness-sensitive raw access to device tree data
+> >     with of_property_read_u32() calls.
+> > 
+> > Signed-off-by: Dave Martin <dave.martin@linaro.org>
+> > ---
+> > 
+> > Tested on ARM Versatile Express, with my soon-to-be-posted device
+> > tree support patches.
 > 
-> Also adding the binding for the TI bq20z75 fuel gadge and the
-> bq20z75 driver.
+> This may not be the correct way to support the CF slot on Versatile
+> Express - it depends whether the CF slot on VE supports just CF
+> memory cards or whether it can take any CF card.
 > 
-> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> If the latter, then what may be inserted could be a CF network card,
+> and that means it's probably wrong to tell the kernel that what's
+> there is a PATA interface.
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+The documentation at
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0447e/CACECHFJ.html
+claims that the slot only supports TrueIDE and PIO/Taskfile mode, which
+are the two modes for CF memory cards. Of course this is highly dependent
+on what you load into the FPGA that implements the CF interface on
+the versatile express, but at least for the currect Versatile Express
+FPGA load it should be right.
 
-> ---
-> 	v2: Fixed typo in binding description
-> 	v3: Changed to use "ti," for properties
-> 	    Changed to use single gpio entry for battery detect info.
-> 	    Removed unnecessary call to of_match_device.
-> 	v4: squashed bindings and drivers changes together.
-> 	    fixed case where CONFIG_OF is not selected, to return existing
-> 	    pdata pointer if it exists.
-> 
->  .../bindings/power_supply/ti_bq20z75.txt           |   23 ++++++
->  drivers/power/bq20z75.c                            |   75 ++++++++++++++++++++
->  2 files changed, 98 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-> new file mode 100644
-> index 0000000..7571294
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-> @@ -0,0 +1,23 @@
-> +TI bq20z75
-> +~~~~~~~~~~
-> +
-> +Required properties :
-> + - compatible : "ti,bq20z75"
-> +
-> +Optional properties :
-> + - ti,i2c-retry-count : The number of times to retry i2c transactions on i2c
-> +   IO failure.
-> + - ti,poll-retry-count : The number of times to try looking for new status
-> +   after an external change notification.
-> + - ti,battery-detect-gpios : The gpio which signals battery detection and
-> +   a flag specifying its polarity.
-> +
-> +Example:
-> +
-> +	bq20z75@b {
-> +		compatible = "ti,bq20z75";
-> +		reg = < 0xb >;
-> +		ti,i2c-retry-count = <2>;
-> +		ti,poll-retry-count = <10>;
-> +		ti,battery-detect-gpios = <&gpio-controller 122 1>;
-> +	}
-> diff --git a/drivers/power/bq20z75.c b/drivers/power/bq20z75.c
-> index 9c5e5be..4c4669e 100644
-> --- a/drivers/power/bq20z75.c
-> +++ b/drivers/power/bq20z75.c
-> @@ -613,6 +613,78 @@ static void bq20z75_delayed_work(struct work_struct *work)
->  	}
->  }
->  
-> +#if defined(CONFIG_OF)
-> +#include <linux/of_device.h>
-> +static const struct of_device_id bq20z75_dt_ids[] = {
-> +	{ .compatible = "ti,bq20z75" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(platform, bq20z75_dt_ids);
-> +
-> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-> +	struct i2c_client *client)
-> +{
-> +	const struct of_device_id *dtid;
-> +	struct device_node *of_node = client->dev.of_node;
-> +	struct bq20z75_platform_data *pdata = client->dev.platform_data;
-> +	enum of_gpio_flags gpio_flags;
-> +	int rc;
-> +	u32 prop;
-> +
-> +	/* verify this driver matches this device */
-> +	if (!of_node)
-> +		return NULL;
-> +
-> +	/* if platform data is set, honor it */
-> +	if (pdata)
-> +		return pdata;
-> +
-> +	/* first make sure at least one property is set, otherwise
-> +	 * it won't change behavior from running without pdata.
-> +	 */
-> +	if (!of_get_property(of_node, "ti,i2c-retry-count", NULL) &&
-> +		!of_get_property(of_node, "ti,poll-retry-count", NULL) &&
-> +		!of_get_property(of_node, "ti,battery-detect-gpios", NULL))
-> +		goto of_out;
-> +
-> +	pdata = devm_kzalloc(&client->dev, sizeof(struct bq20z75_platform_data),
-> +				GFP_KERNEL);
-> +	if (!pdata)
-> +		goto of_out;
-> +
-> +	rc = of_property_read_u32(of_node, "ti,i2c-retry-count", &prop);
-> +	if (!rc)
-> +		pdata->i2c_retry_count = prop;
-> +
-> +	rc = of_property_read_u32(of_node, "ti,poll-retry-count", &prop);
-> +	if (!rc)
-> +		pdata->poll_retry_count = prop;
-> +
-> +	if (!of_get_property(of_node, "ti,battery-detect-gpios", NULL)) {
-> +		pdata->battery_detect = -1;
-> +		goto of_out;
-> +	}
-> +
-> +	pdata->battery_detect = of_get_named_gpio_flags(of_node,
-> +			"ti,battery-detect-gpios", 0, &gpio_flags);
-> +
-> +	if (gpio_flags & OF_GPIO_ACTIVE_LOW)
-> +		pdata->battery_detect_present = 0;
-> +	else
-> +		pdata->battery_detect_present = 1;
-> +
-> +of_out:
-> +	return pdata;
-> +}
-> +#else
-> +#define bq20z75_dt_ids NULL
-> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-> +	struct i2c_client *client)
-> +{
-> +	return client->dev.platform_data;
-> +}
-> +#endif
-> +
->  static int __devinit bq20z75_probe(struct i2c_client *client,
->  	const struct i2c_device_id *id)
->  {
-> @@ -642,6 +714,8 @@ static int __devinit bq20z75_probe(struct i2c_client *client,
->  	bq20z75_device->power_supply.external_power_changed =
->  		bq20z75_external_power_changed;
->  
-> +	pdata = bq20z75_of_populate_pdata(client);
-> +
->  	if (pdata) {
->  		bq20z75_device->gpio_detect =
->  			gpio_is_valid(pdata->battery_detect);
-> @@ -775,6 +849,7 @@ static struct i2c_driver bq20z75_battery_driver = {
->  	.id_table	= bq20z75_id,
->  	.driver = {
->  		.name	= "bq20z75-battery",
-> +		.of_match_table = bq20z75_dt_ids,
->  	},
->  };
->  
-> -- 
-> 1.7.6
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Also, the patch makes sense regardless of versatile express, it's just
+basic cleanup.
+
+One extension we might want to add eventually is support for the UDMA
+modes that are present on most of the current CF cards but not supported
+by this driver (AFAICT).
+
+	Arnd
