@@ -1,45 +1,51 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] arm/dt: Add SoC detection macros
-Date: Sat, 17 Sep 2011 12:23:21 +0100
-Message-ID: <20110917112321.GE16381@n2100.arm.linux.org.uk>
-References: <1315555339-12685-1-git-send-email-amartin@nvidia.com> <20110917102811.GC16381@n2100.arm.linux.org.uk> <20110917103457.GP28104@game.jcrosoft.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2] pata-generic/of: Make probing via device tree
+ non-powerpc-specific
+Date: Sat, 17 Sep 2011 09:37:32 -0600
+Message-ID: <20110917153732.GR3523@ponder.secretlab.ca>
+References: <1316183890-13677-1-git-send-email-dave.martin@linaro.org>
+ <1316190120-17010-1-git-send-email-dave.martin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110917103457.GP28104-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1316190120-17010-1-git-send-email-dave.martin@linaro.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-ide@vger.kernel.org, patches@linaro.org, Jeff Garzik <jgarzik@pobox.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 17, 2011 at 12:34:57PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 11:28 Sat 17 Sep     , Russell King - ARM Linux wrote:
-> > One last point to raise here is - and it's quite a fundamental one - do we
-> > really want this?  If we're making decisions based on the SoC type, that
-> > suggests to me that the hardware description in DT is incomplete, and
-> > we're hiding stuff in the kernel behind the SoC type.  That doesn't sound
-> > particularly appealing given the point of DT is to encode the hardware
-> > specific information outside the kernel code.
->
-> except if a machine can run on 2 soc so detect it will avoid to have 2 Device
-> Tree
+On Fri, Sep 16, 2011 at 05:22:00PM +0100, Dave Martin wrote:
+> This patch enables device-tree-based probing of the pata-generic
+> platform driver across all architectures:
+> 
+>   * make the pata_of_generic module depend on OF instead of PPC_OF;
+>   * supply some missing inclues;
+>   * replace endianness-sensitive raw access to device tree data
+>     with of_property_read_u32() calls.
+> 
+> Signed-off-by: Dave Martin <dave.martin@linaro.org>
+> ---
+> v2: correct sense of the check of_property_read_u32(dn, "pio-mode",
+> &pio_mode).  Somehow I posted an old version of this patch, depite
+> having already fixed this...
+> 
+> Tested on ARM Versatile Express, with my soon-to-be-posted device
+> tree support patches.
+> 
+> I'm not in a position to build/test this for powerpc easily --
+> if anyone is able to do that, it would be appreciated.
 
-This code is structured to match the SoC based upon an entry in the DT,
-so for tegra2 vs tegra3 it's already having to have two different DTs
-to distinguish between them.
+What driver is normally used for versatile express pata?  This driver
+is kind of legacy in that it was created when there was a split
+between platform_device and of_platform_devices.  But that split was a
+bad idea and the same driver should be used regardless of whether or
+not DT is enabled.  pata_of_platform.c really should be removed.
 
-However, I still go back to my original point: the point of DT is to
-provide a description of the hardware which the kernel is running on -
-not only for current hardware but possibly future hardware as well.  Eg,
-if Tegra4 comes along with more peripherals than Tegra3 but has basic
-hardware which the kernel already supports, just wired up differently,
-then Tegra4 should just work with a new DT file and no code changes.
+So, instead of removing the PPC_OF restriction from
+pata_of_platform.c, you should look at adding DT support to the
+existing binding.  Bonus points if you can roll pata_of_platform.c
+support into pata_platform.c (assuming that is the correct driver).
 
-What I'm saying is that in that scenario it should not be necessary to
-edit the kernel to invent new SoC types, and then teach it that Tegra4
-is mostly the same as Tegra3.  That information should all be encoded
-into the DT rather than the C code in the kernel.
+g.
 
-So, I think adding this SoC type stuff is the wrong approach to the
-problem.
