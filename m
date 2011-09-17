@@ -1,38 +1,125 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] pata-generic/of: Make probing via device tree
-	non-powerpc-specific
-Date: Fri, 16 Sep 2011 22:43:13 +0100
-Message-ID: <20110916214313.GB16381@n2100.arm.linux.org.uk>
-References: <1316183890-13677-1-git-send-email-dave.martin@linaro.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] arm/dt: Add SoC detection macros
+Date: Sat, 17 Sep 2011 11:28:11 +0100
+Message-ID: <20110917102811.GC16381@n2100.arm.linux.org.uk>
+References: <1315555339-12685-1-git-send-email-amartin@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1316183890-13677-1-git-send-email-dave.martin@linaro.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-ide@vger.kernel.org, Jeff Garzik <jgarzik@pobox.com>, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+In-Reply-To: <1315555339-12685-1-git-send-email-amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 16, 2011 at 03:38:10PM +0100, Dave Martin wrote:
-> This patch enables device-tree-based probing of the pata-generic
-> platform driver across all architectures:
-> 
->   * make the pata_of_generic module depend on OF instead of PPC_OF;
->   * supply some missing inclues;
->   * replace endianness-sensitive raw access to device tree data
->     with of_property_read_u32() calls.
-> 
-> Signed-off-by: Dave Martin <dave.martin@linaro.org>
-> ---
-> 
-> Tested on ARM Versatile Express, with my soon-to-be-posted device
-> tree support patches.
+On Fri, Sep 09, 2011 at 01:02:19AM -0700, Allen Martin wrote:
+> +#ifdef CONFIG_ARCH_TEGRA_2x_SOC
+> +# ifdef SOC_NAME
+> +#  undef MULTI_SOC
+> +#  define MULTI_SOC
+> +# else
+> +#   define SOC_NAME tegra2
+> +# endif
+> +#endif
+> +#ifdef CONFIG_ARCH_TEGRA_3x_SOC
+> +# ifdef SOC_NAME
+> +#  undef MULTI_SOC
+> +#  define MULTI_SOC
+> +# else
+> +#   define SOC_NAME tegra3
+> +# endif
+> +#endif
+> +
+> +#define soc_is_tegra2()			0
+> +#define soc_is_tegra3()			0
+> +
+> +#if defined(MULTI_SOC)
+> +# if defined(CONFIG_ARCH_TEGRA_2x_SOC)
+> +#  undef soc_is_tegra2
+> +#  define soc_is_tegra2()		is_tegra2()
+> +# endif
+> +# if defined(CONFIG_ARCH_TEGRA_3x_SOC)
+> +#  undef soc_is_tegra3
+> +#  define soc_is_tegra3()		is_tegra3()
+> +# endif
+> +#else /* non-multi, only one architecture is on */
+> +# if defined(CONFIG_ARCH_TEGRA_2x_SOC)
+> +#  undef soc_is_tegra2
+> +#  define soc_is_tegra2()		1
+> +# elif defined(CONFIG_ARCH_TEGRA_3x_SOC)
+> +#  undef soc_is_tegra3
+> +#  define soc_is_tegra3()		1
+> +# endif
+> +#endif
 
-This may not be the correct way to support the CF slot on Versatile
-Express - it depends whether the CF slot on VE supports just CF
-memory cards or whether it can take any CF card.
+This is not the way to do this, especially for a file in asm/*.h.  Look
+at the way machine_is_xxx() is dealt with in include/generated/mach-types.h.
 
-If the latter, then what may be inserted could be a CF network card,
-and that means it's probably wrong to tell the kernel that what's
-there is a PATA interface.
+#define MULTI_SOC			0
+#undef SOC_SELECTED
+
+#ifdef CONFIG_ARCH_TEGRA_2x_SOC
+# ifdef SOC_SELECTED
+#  undef MULTI_SOC
+#  define MULTI_SOC			1
+# else
+#  define SOC_SELECTED
+# endif
+# define soc_is_tegra2()		(!MULTI_SOC || is_tegra2())
+#else
+# define soc_is_tegra2()		0
+#endif
+
+#ifdef CONFIG_ARCH_TEGRA_3x_SOC
+# ifdef SOC_SELECTED
+#  undef MULTI_SOC
+#  define MULTI_SOC			1
+# else
+#  define SOC_SELECTED
+# endif
+# define soc_is_tegra3()		(!MULTI_SOC || is_tegra3())
+#else
+# define soc_is_tegra3()		0
+#endif
+
+#undef SOC_SELECTED
+
+The above is nicely extensible - if other SoCs need to extend this they
+just need to add another outer ifdef..endif section to the file.
+
+> +
+> +enum soc_version {
+> +	SOC_UNKNOWN = 0,
+> +	TEGRA_T20,
+> +	TEGRA_T30,
+
+I'd suggest prefixing these with SOC_ to avoid any namespace problems.
+
+> +};
+> +
+> +void soc_init_version(void);
+> +enum soc_version soc_get_version(void);
+> +
+> +static inline int is_tegra2(void)
+> +{
+> +	return soc_get_version() == TEGRA_T20;
+> +}
+> +
+> +static inline int is_tegra3(void)
+> +{
+> +	return soc_get_version() == TEGRA_T30;
+> +}
+
+If we require all SoCs to provide a value in soc_version, then we can use
+exactly the same method as mach-types.h uses - and while at this, please
+get rid of soc_get_version().  It's far cheaper to access the variable
+directly rather than indirect through a function, just like we do with
+__machine_arch_type.  Mark it __read_mostly too.
+
+One last point to raise here is - and it's quite a fundamental one - do we
+really want this?  If we're making decisions based on the SoC type, that
+suggests to me that the hardware description in DT is incomplete, and
+we're hiding stuff in the kernel behind the SoC type.  That doesn't sound
+particularly appealing given the point of DT is to encode the hardware
+specific information outside the kernel code.
