@@ -1,15 +1,17 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: gic: allow irq_start to be 0
-Date: Sun, 18 Sep 2011 13:03:12 +0100
-Message-ID: <20110918120312.GL16381@n2100.arm.linux.org.uk>
-References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
-	<1316017900-19918-5-git-send-email-robherring2@gmail.com>
+From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: Appended devicetree with Torvalds' HEAD
+Date: Sun, 18 Sep 2011 08:17:55 -0700
+Message-ID: <20110918151755.GA1426@huya.qualcomm.com>
+References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
+	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
+	<20110913184207.GA20440@huya.qualcomm.com>
+	<CACRpkdbvq2A_eJgCgq5JWgO-VDBd25D0qhrVTf9isnDxZ2k+4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1316017900-19918-5-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CACRpkdbvq2A_eJgCgq5JWgO-VDBd25D0qhrVTf9isnDxZ2k+4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,34 +21,44 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2011 at 11:31:39AM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> There's really no need to set irq_start per platform for the primary gic.
-> The SGIs and PPIs are not handled as normal irqs, so how irqs 0-31 are
-> setup doesn't really matter. So allow irq_start to be set to 0 to match
-> the linux irq numbering.
+On Sun, Sep 18, 2011 at 12:34:20PM +0200, Linus Walleij wrote:
+> On Tue, Sep 13, 2011 at 8:42 PM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrot=
+e:
+> > On Tue, Sep 06, 2011 at 01:52:43PM -0400, Nicolas Pitre wrote:
+> >
+> >> My latest patchset is here:
+> >>
+> >> =A0 git://git.linaro.org/people/nico/linux zImage_DTB_append
+> >>
+> >> I'm not fully satisfied to send them upstream yet though.
+> >
+> > These patches do appear to still work on MSM.
+> =
 
-That's not correct.  The hardware starts numbering SPI IRQs from 32 when
-reading the INTACK register.  The number which gets passed through into
-asm_do_IRQ() will therefore be from 32 and above.
+> Hm I wonder what is wrong on our end, probably our own fault :-/
+> =
 
-There's several reasons for this:
-1. To avoid IRQ0, which is commonly used to indicate 'no interrupt' to
-   drivers.
-2. To avoid the ISA IRQ range 1-15 which are hard-coded into various
-   drivers (and we want those to fail.)
-3. It's wasteful and pointless to manipulate the IRQ number given that we
-   have sparse irq support.
+> Arey you encapsulating the zImage+DTB in a uImage like I do
+> (so as to use with elder U-Boot) or are you using some other
+> method to get the zImage+DTB into the system?
 
-Also, bear in mind that gic_irq(SPI0) needs to return 32 to hit the
-right registers - so you'd have to set gic->irq_start to -32 to make
-SPI0 = IRQ0 work.
+Our targets use littlekernel (an Android bootloader), so the
+zImage+DTB is combined with an initrd using mkbootimage.
 
-Finally, the valid range for irq_start is 16 to 32 + the Linux IRQ base
-for the first GIC (SGI) interrupt.  We should probably make gic_init()
-BUG() if its passed values less than 16.
+The first time I tried the append patches (not this version), I did
+end up having to use JTAG to debug it, and even then the problem was
+confusing, since a bug was causing it to move all of the code around
+in memory, but some was still cached.
+
+Are you getting far enough to print messages with DEBUG_LL?
+
+David
+
+-- =
+
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
