@@ -1,15 +1,15 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] of/irq: introduce of_irq_init
-Date: Sat, 17 Sep 2011 20:37:26 -0500
-Message-ID: <4E754B56.1010404@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: gic: allow irq_start to be 0
+Date: Sun, 18 Sep 2011 00:24:02 -0600
+Message-ID: <20110918062402.GG3523@ponder.secretlab.ca>
 References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
-	<1316017900-19918-4-git-send-email-robherring2@gmail.com>
-	<20110917235328.GA3523@ponder.secretlab.ca>
+	<1316017900-19918-5-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110917235328.GA3523-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1316017900-19918-5-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,242 +19,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
-
-On 09/17/2011 06:53 PM, Grant Likely wrote:
-> On Wed, Sep 14, 2011 at 11:31:38AM -0500, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> of_irq_init will scan the devicetree for matching interrupt controller
->> nodes. Then it calls an initialization function for each found controller
->> in the proper order with parent nodes initialized before child nodes.
->>
->> Based on initial pseudo code from Grant Likely.
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> ---
->>  drivers/of/irq.c       |   96 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/of_irq.h |    1 +
->>  2 files changed, 97 insertions(+), 0 deletions(-)
->>
->> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
->> index 9f689f1..a0cd7e8 100644
->> --- a/drivers/of/irq.c
->> +++ b/drivers/of/irq.c
->> @@ -19,10 +19,13 @@
->>   */
->>  
->>  #include <linux/errno.h>
->> +#include <linux/list.h>
->> +#include <linux/list_sort.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->>  #include <linux/of_irq.h>
->>  #include <linux/string.h>
->> +#include <linux/slab.h>
->>  
->>  /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
->>  #ifndef NO_IRQ
->> @@ -386,3 +389,96 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
->>  
->>  	return i;
->>  }
->> +
->> +struct intc_desc {
->> +	struct list_head	list;
->> +	struct device_node	*dev;
->> +	struct device_node	*parent;
->> +};
->> +
->> +typedef void (*irq_init_cb_t)(struct device_node *, struct device_node *);
->> +
->> +static int __init irq_cmp_intc_desc(void *unused, struct list_head *a,
->> +				    struct list_head *b)
->> +{
->> +	const struct intc_desc *da = list_entry(a, typeof(*da), list);
->> +	const struct intc_desc *db = list_entry(b, typeof(*db), list);
->> +
->> +	/* same parent, so order doesn't matter */
->> +	if (da->parent == db->parent)
->> +		return 0;
->> +
->> +	/* NULL parent comes first */
->> +	if (!da->parent && db->parent)
->> +		return -1;
->> +	if (!db->parent && da->parent)
->> +		return 1;
->> +
->> +	/* parent node must be before child node */
->> +	if (da->dev == db->parent)
->> +		return -1;
->> +	if (db->dev == da->parent)
->> +		return 1;
+On Wed, Sep 14, 2011 at 11:31:39AM -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-> Does sort_list work for relationships 4 or more levels deep?  ie. if
-> there was a relationship of A <- B <- C <- D, then B compared with D
-> would return 0 from this function which could potentially result in an
-> incorrectly ordered list.
-> 
+> There's really no need to set irq_start per platform for the primary gic.
+> The SGIs and PPIs are not handled as normal irqs, so how irqs 0-31 are
+> setup doesn't really matter. So allow irq_start to be set to 0 to match
+> the linux irq numbering.
 
-Doh! Um, 3 levels is enough for everyone!? ;)
+Is this really what you want?  Linux irq 0 is not supposed to be used.
+With the transition to dynamically allocated irq_descs, I want to make
+sure 0 never gets assigned.
 
-> The other option for implementing this would be to take the probe
-> deferral approach and not try to sort the list, but instead allow
-> probe functions to fail & request retry if the parent hasn't yet been
-> probed.  I haven't thought enough about it though to say which would
-> be the best approach.
-> 
-
-Considering the list will typically be only a few entries, it is
-probably not so important how efficiently we sort or walk the list.
-
-The only way I see controller code knowing if it needs to defer init is
-if of_irq_create_mapping fails. The core code could simply do this
-itself. However, I would imagine sorting it would be faster than that path.
-
-How about something like this (untested):
-
-int find_order(struct intc_desc *node)
-{
-	struct intc_desc *d;
-
-	list_for_each_entry(d, &intc_desc_list, list) {
-		if (node->parent != d->dev)
-			continue;
-
-		if (d->order < 0)
-			find_order(d);
-
-		node->order = d->order + 1;
-		break;
-	}
-}
-
-
-Then rather than sorting, do this:
-
-
-	list_for_each_entry(desc, &intc_desc_list, list)
-		find_order(desc);
-
-	for (order = 0; !list_empty(&intc_desc_list); order++) {
-		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
-			if (desc->order != order)
-				continue;
-			
-			match = of_match_node(matches, desc->dev);
-			if (match && match->data) {
-				irq_init_cb_t irq_init_cb = match->data;
-				pr_debug("of_irq_init: init %s @ %p, parent %p\n",
-					 match->compatible, desc->dev, desc->parent);
-				irq_init_cb(desc->dev, desc->parent);
-			}
-			list_del(&desc->list);
-			kfree(desc);
-		}
-	}
-
-
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * of_irq_init - Scan the device tree for matching interrupt controllers and
->> + * call their initialization functions in order with parents first.
->> + * @matches: 0 terminated array of nodes to match and initialization function
->> + * to call on match
->> + */
->> +void __init of_irq_init(const struct of_device_id *matches)
->> +{
->> +	struct device_node *np;
->> +	const struct of_device_id *match;
->> +	struct intc_desc *desc;
->> +	struct intc_desc *temp_desc;
->> +	struct list_head intc_desc_list;
->> +
->> +	INIT_LIST_HEAD(&intc_desc_list);
->> +
->> +	for_each_matching_node(np, matches) {
->> +		if (!of_find_property(np, "interrupt-controller", NULL))
->> +			continue;
->> +		/* Here, we allocate and populate an intc_desc with the node
->> +		* pointer, interrupt-parent device_node etc. */
->> +		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
->> +		if (!desc) {
->> +			WARN_ON(1);
->> +			goto err;
->> +		}
->> +		desc->dev = np;
->> +		desc->parent = of_irq_find_parent(np);
->> +		list_add(&desc->list, &intc_desc_list);
->> +	}
->> +	if (list_empty(&intc_desc_list))
->> +		return;
->> +
->> +	/*
->> +	 * The root irq controller is the one without an interrupt-parent.
->> +	 * That one goes first, followed by the controllers that reference it,
->> +	 * followed by the ones that reference the 2nd level controllers, etc
->> +	 */
-> 
-> I don't believe that this actually turns out to be true (and yes I
-> know it is how I originally described it).  :-)  When the
-> interrupt-parent property is at the root of the tree, then the root
-> interrupt controller may very well inherit itself as it's interrupt
-> parent, and of_irq_find_parent() will still return a value.  This
-> should probably be considered a bug in of_irq_find_parent(), and it
-> should return NULL if the parent is itself.
-
-I did hit this exact issue. There is an easy, but not obvious fix to the
-device tree. Simply adding "interupt-parent;" to the root interrupt
-controller node will do the trick and override the value in the tree root.
+g.
 
 > 
-> of_irq_find_parent should probably be implemented thusly (completely
-> untested); although the only functional change is the line:
-> 	return (p == child) ? NULL : p;
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/common/gic.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
 > 
-> /**
->  * of_irq_find_parent - Given a device node, find its interrupt parent node
->  * @child: pointer to device node
->  *
->  * Returns a pointer to the interrupt parent node, or NULL if the
->  * interrupt parent could not be determined.
->  */
-> struct device_node *of_irq_find_parent(struct device_node *child)
-> {
-> 	struct device_node *p, *c = child;
-> 	const __be32 *parp;
+> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+> index 666b278..d1ccc72 100644
+> --- a/arch/arm/common/gic.c
+> +++ b/arch/arm/common/gic.c
+> @@ -359,7 +359,7 @@ void __init gic_init(unsigned int gic_nr, unsigned int irq_start,
+>  	gic = &gic_data[gic_nr];
+>  	gic->dist_base = dist_base;
+>  	gic->cpu_base = cpu_base;
+> -	gic->irq_offset = (irq_start - 1) & ~31;
+> +	gic->irq_offset = irq_start ? (irq_start - 1) & ~31 : 0;
+>  
+>  	if (gic_nr == 0)
+>  		gic_cpu_base_addr = cpu_base;
+> -- 
+> 1.7.5.4
 > 
-> 	if (!of_node_get(c))
-> 		return NULL;
-> 
-> 	do {
-> 		p = of_parse_phandle(c, "interrupt-parent", 0);
-> 
-> 		if (!p && (of_irq_workarounds & OF_IMAP_NO_PHANDLE) &&
-> 		    of_find_property(c, "interrupt-parent", NULL))
-> 			p = of_node_get(of_irq_dflt_pic);
-> 
-> 		if (!p)
-> 			p = of_get_parent(c);
-> 
-> 		of_node_put(c);
-> 		c = p;
-> 	} while (p && !of_find_property(p, "#interrupt-cells", NULL));
-> 
-> 	return (p == child) ? NULL : p;
-> }
-> 
-
-This change should probably be implemented as well as this is likely a
-common occurrence that will be stumbled over or existing device trees
-won't have this. I'll test and add to the next series.
-
-Rob
