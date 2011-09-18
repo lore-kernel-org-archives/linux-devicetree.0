@@ -1,100 +1,45 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
-Date: Sun, 18 Sep 2011 00:30:26 -0600
-Message-ID: <20110918063026.GH3523@ponder.secretlab.ca>
-References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
-	<1316017900-19918-6-git-send-email-robherring2@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] arm/dt: Add SoC detection macros
+Date: Sun, 18 Sep 2011 11:28:04 +0200
+Message-ID: <7625276.j6vA9T0aOV@wuerfel>
+References: <1315555339-12685-1-git-send-email-amartin@nvidia.com> <3353131.FJY7smc8i5@wuerfel> <20110918004615.GC16141@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1316017900-19918-6-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20110918004615.GC16141-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2011 at 11:31:40AM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> This adds gic initialization using device tree data. The initialization
-> functions are intended to be called by a generic OF interrupt
-> controller parsing function once the right pieces are in place.
-> 
-> PPIs are handled using 3rd cell of interrupts properties to specify the cpu
-> mask the PPI is assigned to.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/gic.txt |   53 ++++++++++++++++++++++++
->  arch/arm/common/gic.c                         |   55 +++++++++++++++++++++++--
->  arch/arm/include/asm/hardware/gic.h           |   10 +++++
->  3 files changed, 114 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-> new file mode 100644
-> index 0000000..6c513de
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -0,0 +1,53 @@
-> +* ARM Generic Interrupt Controller
-> +
-> +ARM SMP cores are often associated with a GIC, providing per processor
-> +interrupts (PPI), shared processor interrupts (SPI) and software
-> +generated interrupts (SGI).
-> +
-> +Primary GIC is attached directly to the CPU and typically has PPIs and SGIs.
-> +Secondary GICs are cascaded into the upward interrupt controller and do not
-> +have PPIs or SGIs.
-> +
-> +Main node required properties:
-> +
-> +- compatible : should be one of:
-> +	"arm,cortex-a9-gic"
-> +	"arm,arm11mp-gic"
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source.  The type shall be a <u32> and the value shall be 3.
-> +
-> +  The 1st cell is the interrupt number. 0-15 are reserved for SGIs. 16-31 are
-> +  for PPIs.
-> +
-> +  The 2nd cell is the level-sense information, encoded as follows:
-> +                    1 = low-to-high edge triggered
-> +                    2 = high-to-low edge triggered
-> +                    4 = active high level-sensitive
-> +                    8 = active low level-sensitive
-> +
-> +  Only values of 1 and 4 are valid for GIC 1.0 spec.
-> +
-> +  The 3rd cell contains the mask of the cpu number for the interrupt source.
-> +  The cpu mask is only valid for PPIs and shall be 0 for SPIs. This value shall
-> +  be 0 for PPIs.
+On Sunday 18 September 2011 02:46:15 Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 22:56 Sat 17 Sep     , Arnd Bergmann wrote:
+> > On Saturday 17 September 2011 20:19:07 Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > > 
+> > > I agree about it I just mean that if you have the same board with 2 SoC which
+> > > are pin to pin compatible detect the soc type will be usefull as the soc
+> > > resource may not be the same
+> > 
+> > In that scenario, you would put all SOC specific data into one .dtsi
+> > file and all board data into another .dtsi file and then create a
+> > description for the combination using a trivial .dts file with two
+> > include statements. This is all solved outside of the kernel already,
+> > so there is no need for infrastructure in the kernel.
+> except in this case you must have 2 machine id which can be avoided if you can
+> detect the soc at kernel level
 
-THe binding looks good, but I really think the first cell should be
-the mask; followed by the irq number in the 2nd and the flags in the
-3rd.  That would better match with existing practice.
+But when you move to device tree based probing, you don't use machine numbers
+at all, so it doesn't matter.
 
-> +
-> +- reg : Specifies base physical address(s) and size of the GIC registers. The
-> +  first 2 values are the GIC distributor register base and size. The 2nd 2
+Detecting the soc in the kernel is pointless, since you describe it in
+the device tree anyway. Ideally, the kernel should not need to know about
+the possible SoCs at all, it just needs to know the components on it.
 
-... first region is the GIC distributor...
+While we first want to get to the point where the device tree only needs
+to describe the off-chip devices, in the long run it's much better to
+describe all of the hardware in the device tree, as we do with new platforms
+(zynq, prima2, ...) already. I don't think we need to introduce
+infrastructure now when we know that we want to get rid of it later.
 
-... The 2nd region is the GIC cpu ...
-
-
-I've only looked at the code changes superficially, but it looks good
-to me.
-
-g.
+	Arnd
