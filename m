@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: Appended devicetree with Torvalds' HEAD
-Date: Mon, 19 Sep 2011 09:39:47 +0200
-Message-ID: <CACRpkdaSqKCT389hNj2xmCSp787TtH-aUONC5wSmpUHuMiqGhQ@mail.gmail.com>
+Date: Mon, 19 Sep 2011 09:48:23 +0200
+Message-ID: <CACRpkdZ9K8swOz_SS8LZnXrAUMWis1H5+vifsN3V82eoPhReCw@mail.gmail.com>
 References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
 	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
 	<20110913184207.GA20440@huya.qualcomm.com>
@@ -28,10 +28,6 @@ List-Id: devicetree@vger.kernel.org
 On Sun, Sep 18, 2011 at 7:31 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> w=
 rote:
 
->> Arey you encapsulating the zImage+DTB in a uImage like I do
->> (so as to use with elder U-Boot) or are you using some other
->> method to get the zImage+DTB into the system?
->
 > What I do to thest it here is along those lines:
 >
 > =A0 =A0 =A0 =A0make <whatever_foo_defconfig_you_want>
@@ -39,11 +35,27 @@ rote:
 > =A0 =A0 =A0 =A0cat foobar.dtb >> arch/arm/boot/zImage
 > =A0 =A0 =A0 =A0make uImage
 
-This is what I do, that patch I made does exactly that while supplying
-the necessary -e -a -T arguments etc to mkimage.
+BTW this sequence does not work, and that is why I wrote the patch
+attaching the DTB from a specified file in the first place.
 
-Oh well, U-Boot is working for us now I think, so the problem isn't
-imminent.
+After you have issued "cat foobar.dtb >> arch/arm/boot/zImage"
+and you issue "make uImage" the zImage is rebuilt and
+overwrites your zImage, since the timestamp changes.
 
-Thanks,
+So they mkimage command creating the uImage has to be
+issued outside of the kernel build with
+
+mkimage <various parameters> zImage uImage
+
+Which is very inconvenient, but as I understood it, this was
+intended.
+
+Just making sure it is as inconvenient as you'd want it, and not
+overly inconvenient...
+
+For testing uImage I'm using my patch, of course, it's the easiest
+way to get a uImage with attached device tree out. I guess
+most people wanting to use uImages with attached trees will
+use that out-of-tree patch too...
+
 Linus Walleij
