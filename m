@@ -1,17 +1,24 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Appended devicetree with Torvalds' HEAD
-Date: Mon, 19 Sep 2011 09:48:23 +0200
-Message-ID: <CACRpkdZ9K8swOz_SS8LZnXrAUMWis1H5+vifsN3V82eoPhReCw@mail.gmail.com>
-References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
-	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
-	<20110913184207.GA20440@huya.qualcomm.com>
-	<CACRpkdbvq2A_eJgCgq5JWgO-VDBd25D0qhrVTf9isnDxZ2k+4g@mail.gmail.com>
-	<alpine.LFD.2.00.1109181327000.20358@xanadu.home>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] Add fdtget utility to read property values from
+	device tree
+Date: Mon, 19 Sep 2011 18:05:57 +1000
+Message-ID: <20110919080557.GA29197@yookeroo.fritz.box>
+References: <20110908052547.GR30278@yookeroo.fritz.box>
+	<CAPnjgZ0qnr8VVOX7kCq6wEZ-OxAsxmHkPcTGE7wu1B_9ME_SPA@mail.gmail.com>
+	<20110909044945.GF21002@yookeroo.fritz.box>
+	<CAPnjgZ3xw7ByV4Yzeot3zgs4oo0zciX2OV_V4vfQ8tGsgLcPvw@mail.gmail.com>
+	<20110912005357.GI9025@yookeroo.fritz.box>
+	<CAPnjgZ1vevcwCQU+uyjAA3YZd--RhU9MgAF8O8G4Hr5e4CYo_g@mail.gmail.com>
+	<20110916081804.GF9025@yookeroo.fritz.box>
+	<CAPnjgZ1LUPm9mRft5q=KHGe2h2+Masdh0kGXQ-7j1VTUDsMP7g@mail.gmail.com>
+	<20110919020440.GA15001@yookeroo.fritz.box>
+	<CAPnjgZ09mO06uruZtC=86BuitUWtQkGQfaHTf25HXK9KzoiD+w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.00.1109181327000.20358-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPnjgZ09mO06uruZtC=86BuitUWtQkGQfaHTf25HXK9KzoiD+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,41 +28,56 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 18, 2011 at 7:31 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> w=
-rote:
+On Sun, Sep 18, 2011 at 10:46:04PM -0700, Simon Glass wrote:
+> Hi David,
+> =
 
-> What I do to thest it here is along those lines:
->
-> =A0 =A0 =A0 =A0make <whatever_foo_defconfig_you_want>
-> =A0 =A0 =A0 =A0make zImage
-> =A0 =A0 =A0 =A0cat foobar.dtb >> arch/arm/boot/zImage
-> =A0 =A0 =A0 =A0make uImage
+> On Sun, Sep 18, 2011 at 7:04 PM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> > On Fri, Sep 16, 2011 at 09:25:10AM -0700, Simon Glass wrote:
+> >> Hi David,
+> > [snip]
+> >> > One useful extension of what you have now might be to add a "raw
+> >> > binary" format. =A0Not much use for humans, but could be handy for
+> >> > scripts extracting blobs from the device tree. =A0In fact, using the
+> >> > same interpretation of existing printf() descriptors, that would
+> >> > actually be equivalent to 'c'.
+> >>
+> >> Yes I was thinking about how to do that as it might be useful. I think
+> >> 'c' makes perfect sense. Will add to the todo.
+> >
+> > Actually, on second thoughts using 'c' for this doesn't quite work.
+> > For the other format specifiers, you will presumably have some sort of
+> > separator between each repeat (newline, I'm guessing). =A0True binary
+> > output, obviously, doesn't want that.
+> =
 
-BTW this sequence does not work, and that is why I wrote the patch
-attaching the DTB from a specified file in the first place.
+> There is a space between each repeat and a newline after each property
+> printed. It makes sense to suppress the space for binary output and I
+> think an option to flick this switch either way might be in order, too
+> (even something to select a new separator char?). Something else for
+> the todo once this patch set is in perhaps.
 
-After you have issued "cat foobar.dtb >> arch/arm/boot/zImage"
-and you issue "make uImage" the zImage is rebuilt and
-overwrites your zImage, since the timestamp changes.
+Yeah, fair enough.  I don't think skipping the separators should be
+explicit one way or another, not a magic side-effect of using a 'c'
+type.
 
-So they mkimage command creating the uImage has to be
-issued outside of the kernel build with
+> I suppose we need to be a bit careful not to build out the pier too
+> far until we have some pedestrian traffic.
 
-mkimage <various parameters> zImage uImage
+A good point.
 
-Which is very inconvenient, but as I understood it, this was
-intended.
+> Did you see patch set 3?
 
-Just making sure it is as inconvenient as you'd want it, and not
-overly inconvenient...
+Uh, no I don't think so.
 
-For testing uImage I'm using my patch, of course, it's the easiest
-way to get a uImage with attached device tree out. I guess
-most people wanting to use uImages with attached trees will
-use that out-of-tree patch too...
+-- =
 
-Linus Walleij
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
