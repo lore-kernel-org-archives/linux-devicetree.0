@@ -1,20 +1,18 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
-Date: Mon, 19 Sep 2011 16:53:39 -0500
-Message-ID: <4E77B9E3.40004@gmail.com>
-References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
-	<1316017900-19918-6-git-send-email-robherring2@gmail.com>
-	<CAJuYYwSFu2HC+u2NY41+yw9tEyy85RKa4Dpm3SL+jbwS_OOA0A@mail.gmail.com>
-	<4E71CE5D.9030900@ti.com> <4E71F978.6020402@gmail.com>
-	<4E72030F.1090300@ti.com> <4E722B2D.4050307@gmail.com>
-	<4E76615C.3000005@gmail.com> <4E77310A.3000106@ti.com>
-	<4E774847.3020104@gmail.com>
-	<CACxGe6v9nd5f5x-eu9hUyAqdS1+p3h6ixyutECYLdNo3ewDH0w@mail.gmail.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2] dtc: Add support for named integer constants
+Date: Mon, 19 Sep 2011 15:13:55 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B732144F@HQMAIL01.nvidia.com>
+References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>
+	<CAPnjgZ0NzN510XJZ1ONAbMTS3vrrP8qCV8NYHq4_heZL+PizNg@mail.gmail.com>
+	<20110908183211.GM2967@ponder.secretlab.ca>
+	<20110909013433.GC21002@yookeroo.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6v9nd5f5x-eu9hUyAqdS1+p3h6ixyutECYLdNo3ewDH0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110909013433.GC21002-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,158 +22,50 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "jdl-CYoMK+44s/E@public.gmane.org" <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2011 04:14 PM, Grant Likely wrote:
-> On Mon, Sep 19, 2011 at 7:48 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 09/19/2011 07:09 AM, Cousson, Benoit wrote:
->>> On 9/18/2011 11:23 PM, Rob Herring wrote:
->>>> I was headed down the path of implementing the 2nd option above,
->>>> but had a dilemma. What would be the numbering base for PPIs in
->>>> this case? Should it be 0 in the DT as proposed for SPIs or does it
->>>> stay at 16?
->>>
->>> Both SGI and PPI are internal to the CortexA9 MP core, and referring
->>> to the CortexA9 MP core TRM [1], you can see that the PPI# -> ID#
->>> mapping is already documented: - Private timer, PPI(2) Each Cortex-A9
->>> processor has its own private timers that can generate interrupts,
->>> using ID29. - Watchdog timers, PPI(3) Each Cortex-A9 processor has
->>> its own watchdog timers that can generate interrupts, using ID30.
->>>
->>> So in that case, it can makes sense to use the ID. But it is
->>> interesting to note that the PPI is identified with a 0 based index
->>> number.
->>>
->> It's even worse than I thought: we could use 13 (ID16 == PPI0), 29 or 2
->> for the timer interrupt. The first would match 0 based SPI convention.
->> The last 2 would both match the documentation. We could never use 2 as
->> this will for sure be different and the GIC code will have no way to
->> know how to do the translation to ID. The only sane choice is using the
->> ID as you say.
->>
->> But you can't have it both ways. It does not make sense to use the ID
->> for some interrupts and a different scheme for others.
+David Gibson wrote at Thursday, September 08, 2011 7:35 PM:
+> On Thu, Sep 08, 2011 at 11:32:11AM -0700, Grant Likely wrote:
+> > On Thu, Sep 08, 2011 at 06:09:27AM -0700, Simon Glass wrote:
+> > > Hi Stephen,
+> > >
+> > > On Fri, Sep 2, 2011 at 11:34 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > > > Stephen Warren wrote at Tuesday, August 30, 2011 3:30 PM:
+> > > >> You may define constants as follows:
+> > > >>
+> > > >> /define/ TWO 2;
+> > > >> /define/ FOUR 4;
+> > > >> /define/ OTHER FOUR;
+> > > >>
+> > > >> And properties may use these values as follows:
+> > > >>
+> > > >> foo = <1 TWO 3 FOUR 5>;
+> > > >>
+> > > >> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+...
+> >
+> > What are the risks of symbol conflict with this approach?  I'm
+> > concerned that a poorly chosen /define/ name will break parsing in
+> > non-obvious ways.  Would it be better to have a every define reference
+> > to be explicit in the syntax?
 > 
-> Hmmm, it seems to me that some orthogonal issues are getting
-> conflated.  Specifically, the binding vs. what the GIC driver using
-> internally.  For my own understanding, let me see if I can summarize
-> and clarify the problem.
-> 
-> Each GIC IRQ is represented in 5 different ways:
-> 1) the hardware documentation (PPI[0-15] or SPI[988] input pin)
-> 2) The DT binding to represent the connection.
-> 3) The Interrupt ID as specified by the GIC architecture reference[1]
-> (SGI:[0-15], PPI:[16-31], SPI:[32-1019], special:[1020-1023])
-> 4) The internal HWIRQ representation used by the GIC driver
-> 5) The Linux VIRQ number that #4 maps to.
-> 
-> [1] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ihi0048b/BCGBFHCH.html
-> 
-> Some thoughts:
-> - Generally the DT binding (#2) should reflect the HW view of the
-> system (#1) since that is the number most likely to be represented in
-> hardware manuals.  The interrupt ID is an internal detail of the GIC,
-> and isn't really exposed in the block diagram of the hardware.
-> - Presumably it is preferable for the GIC to directly use the
-> Interrupt ID (#3) as the HWIRQ number (#4) because it is the most
-> efficient from an interrupt handling perspective, and indeed this is
-> currently what the GIC driver does.
-> - Translation between the DT binding (#2) and the Interrupt ID / HWIRQ
-> (#3/#4) is trivial, and easily managed by the GIC's irq_domain.
-> - Though not necessarily as trivial, the mapping between Linux VIRQ
-> and HWIRQ is not fixed, and when migrating to DT it should be assumed
-> to be assigned at runtime.  Perhaps not so important for a core IRQ
-> controller like the GIC (as opposed to an i2c irq expander), but
-> assuming an fixed offset still should be avoided.  We may still force
-> a SPI0->VIRQ32 on the root GIC as an optimization, but it is not
-> necessary and the driver still needs to support remapping for a
-> secondary GIC.
+> I really don't want to make identifiers - which is essentially what
+> we're talking here - explicitly marked, on the basis of "be like C".
+> I believe they should be safe, as long as we don't attempt to
+> recognize them in property/nodename context.
 
-The irq base is dynamic in my series, but is typically still GIC ID =
-VIRQ for a primary GIC for now. A platform can adjust this with
-irq_alloc_descs if necessary (but recommended not to of course).
+Grant,
 
-> 
-> So, for the GIC DT binding, I'm inclined to agree with Benoit that the
-> binding should reflect the hardware connections, not the values used
-> by software for decoding IRQs.  Also, I see absolutely no need to use
-> separate nodes for each GIC interrupt space.  The DT interrupt
-> specifier number space can more than handle the features of the GIC in
-> a clear and concise manor.  So, here's my counter proposal for a GIC
-> bindings (using Rob's text as the starting point):
-> 
-> ----
-> 
-> * ARM Generic Interrupt Controller
-> 
-> ARM SMP cores are often associated with a GIC, providing per processor
-> interrupts (PPI), shared processor interrupts (SPI) and software
-> generated interrupts (SGI).
-> 
-> Primary GIC is attached directly to the CPU and typically has PPIs and SGIs.
-> Secondary GICs are cascaded into the upward interrupt controller and do not
-> have PPIs or SGIs.
-> 
-> Main node required properties:
-> 
-> - compatible : should be one of:
->        "arm,cortex-a9-gic"
->        "arm,arm11mp-gic"
-> - interrupt-controller : Identifies the node as an interrupt controller
-> - #interrupt-cells : Specifies the number of cells needed to encode an
->   interrupt source.  The type shall be a <u32> and the value shall be 3.
-> 
->   The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
-> interrupts.
->   The 2nd cell contains the interrupt number for the interrupt type.
-> SPI interrupts are in the range [0-987].  PPI interrupts are in the
-> range [0-15].
->   The 3rd cell is the flags, encoded as follows:
->         bits[3:0] trigger type and level flags.
->                     1 = low-to-high edge triggered
->                     2 = high-to-low edge triggered
->                     4 = active high level-sensitive
->                     8 = active low level-sensitive
->         bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to
-> each of the 8 possible cpus attached to the GIC.  A bit set to '1'
-> indicated the interrupt is wired to that CPU.  Only valid for PPI
-> interrupts.
-> 
-How about a cpu mask of 0 means SPI and non-zero means PPI? Then we can
-drop the first cell.
+As far as I understand the parser code, the define names aren't accepted
+where they'd cause conflicts with node names etc. I just tested using
+node names that matched names set up with /define/, and didn't see it
+cause any unexpected syntax errors.
 
-> (Alternately, if there is no need for a CPU mask because PPI
-> interrupts will never be wired to more than one CPU, then it would be
-> better to encode the CPU number into the second cell with the SPI
-> number).
-You meant PPI number, right?                                    ^^^
+Jon, David, 
 
-The common case at least on the A9 is a PPI is routed to all cores. QC
-is different though. This was discussed previously. Basically, anything
-is possible here, so the mask is needed for sure.
+Does the change look good to go in?
 
-Overall I'm fine with this and just happy to have some conclusion. I
-will send out an updated series if there are no further comments.
-
-Rob
-
-> 
-> - reg : Specifies base physical address(s) and size of the GIC registers. The
->   first 2 values are the GIC distributor register base and size. The 2nd 2
->   values are the GIC cpu interface register base and size.
-> 
-> Optional
-> - interrupts   : Interrupt source of the parent interrupt controller. Only
->   present on secondary GICs.
-> 
-> Example:
->        intc: interrupt-controller@fff11000 {
->                compatible = "arm,cortex-a9-gic";
->                #interrupt-cells = <3>;
->                #address-cells = <1>;
->                interrupt-controller;
->                reg = <0xfff11000 0x1000>,
->                      <0xfff10100 0x100>;
->        };
+-- 
+nvpublic
