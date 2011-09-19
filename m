@@ -1,128 +1,62 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH 6/6] ARM: EXYNOS4: Limit usage of pl330 device instance to
- non-dt build
-Date: Mon, 19 Sep 2011 11:59:02 +0530
-Message-ID: <1316413742-23535-7-git-send-email-thomas.abraham@linaro.org>
-References: <1316413742-23535-1-git-send-email-thomas.abraham@linaro.org>
- <1316413742-23535-2-git-send-email-thomas.abraham@linaro.org>
- <1316413742-23535-3-git-send-email-thomas.abraham@linaro.org>
- <1316413742-23535-4-git-send-email-thomas.abraham@linaro.org>
- <1316413742-23535-5-git-send-email-thomas.abraham@linaro.org>
- <1316413742-23535-6-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1316413742-23535-6-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, vinod.koul@intel.com
-Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Appended devicetree with Torvalds' HEAD
+Date: Mon, 19 Sep 2011 09:34:35 +0200
+Message-ID: <CACRpkdbLtTX2hf=_OZwwCje1=LUvXrQEo=Gu2y0YEy6fgi=dgQ@mail.gmail.com>
+References: <CACRpkdb1iD2RkpmMkN1d5VNVr-M3KgrkE7Xg-Bxcr-xd2fcuPw@mail.gmail.com>
+	<alpine.LFD.2.00.1109061347410.20358@xanadu.home>
+	<20110913184207.GA20440@huya.qualcomm.com>
+	<CACRpkdbvq2A_eJgCgq5JWgO-VDBd25D0qhrVTf9isnDxZ2k+4g@mail.gmail.com>
+	<20110918151755.GA1426@huya.qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110918151755.GA1426-AOX6H5vLt3Uj8izMo0bVsAC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The pl330 device instances and associated platform data is required only
-for non-device-tree builds. With device tree enabled, the data about the
-platform is obtained from the device tree. For images that include both
-dt and non-dt platforms, an addditional check is added to ensure that
-static amba device registrations is applicable to only non-dt platforms.
+On Sun, Sep 18, 2011 at 5:17 PM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On Sun, Sep 18, 2011 at 12:34:20PM +0200, Linus Walleij wrote:
+>> On Tue, Sep 13, 2011 at 8:42 PM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wro=
+te:
+>> > On Tue, Sep 06, 2011 at 01:52:43PM -0400, Nicolas Pitre wrote:
+>> >
+>> >> My latest patchset is here:
+>> >>
+>> >> =A0 git://git.linaro.org/people/nico/linux zImage_DTB_append
+>> >>
+>> >> I'm not fully satisfied to send them upstream yet though.
+>> >
+>> > These patches do appear to still work on MSM.
+>>
+>> Hm I wonder what is wrong on our end, probably our own fault :-/
+>>
+>> Arey you encapsulating the zImage+DTB in a uImage like I do
+>> (so as to use with elder U-Boot) or are you using some other
+>> method to get the zImage+DTB into the system?
+>
+> Our targets use littlekernel (an Android bootloader), so the
+> zImage+DTB is combined with an initrd using mkbootimage.
+>
+> The first time I tried the append patches (not this version), I did
+> end up having to use JTAG to debug it, and even then the problem was
+> confusing, since a bug was causing it to move all of the code around
+> in memory, but some was still cached.
+>
+> Are you getting far enough to print messages with DEBUG_LL?
 
-Cc: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
----
- arch/arm/mach-exynos4/Kconfig  |   10 ++++++++++
- arch/arm/mach-exynos4/Makefile |    3 ++-
- arch/arm/mach-exynos4/dma.c    |    4 ++++
- 3 files changed, 16 insertions(+), 1 deletions(-)
+Nope :-(
 
-diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
-index d4d401c..679ba48 100644
---- a/arch/arm/mach-exynos4/Kconfig
-+++ b/arch/arm/mach-exynos4/Kconfig
-@@ -21,6 +21,11 @@ config EXYNOS4_MCT
- 	help
- 	  Use MCT (Multi Core Timer) as kernel timers
- 
-+config EXYNOS4_DEV_DMA
-+	bool
-+	help
-+	  Compile in amba device definitions for DMA controller
-+
- config EXYNOS4_DEV_AHCI
- 	bool
- 	help
-@@ -129,6 +134,7 @@ config MACH_SMDKC210
- 	select EXYNOS4_SETUP_FIMD0
- 	select EXYNOS4_SETUP_I2C1
- 	select EXYNOS4_SETUP_SDHCI
-+	select EXYNOS4_DEV_DMA
- 	help
- 	  Machine support for Samsung SMDKC210
- 
-@@ -153,6 +159,7 @@ config MACH_SMDKV310
- 	select EXYNOS4_SETUP_I2C1
- 	select EXYNOS4_SETUP_KEYPAD
- 	select EXYNOS4_SETUP_SDHCI
-+	select EXYNOS4_DEV_DMA
- 	help
- 	  Machine support for Samsung SMDKV310
- 
-@@ -191,6 +198,7 @@ config MACH_UNIVERSAL_C210
- 	select EXYNOS4_SETUP_I2C3
- 	select EXYNOS4_SETUP_I2C5
- 	select EXYNOS4_SETUP_SDHCI
-+	select EXYNOS4_DEV_DMA
- 	help
- 	  Machine support for Samsung Mobile Universal S5PC210 Reference
- 	  Board.
-@@ -215,6 +223,7 @@ config MACH_NURI
- 	select EXYNOS4_SETUP_USB_PHY
- 	select SAMSUNG_DEV_PWM
- 	select SAMSUNG_DEV_ADC
-+	select EXYNOS4_DEV_DMA
- 	help
- 	  Machine support for Samsung Mobile NURI Board.
- 
-@@ -222,6 +231,7 @@ config MACH_EXYNOS4_DT
- 	bool "Samsung Exynos4 Machine using device tree"
- 	select CPU_EXYNOS4210
- 	select USE_OF
-+	select ARM_AMBA
- 	help
- 	  Machine support for Samsung Exynos4 machine with device tree enabled.
- 
-diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
-index d2bf5bf..a2f33dc 100644
---- a/arch/arm/mach-exynos4/Makefile
-+++ b/arch/arm/mach-exynos4/Makefile
-@@ -13,7 +13,8 @@ obj-				:=
- # Core support for EXYNOS4 system
- 
- obj-$(CONFIG_CPU_EXYNOS4210)	+= cpu.o init.o clock.o irq-combiner.o
--obj-$(CONFIG_CPU_EXYNOS4210)	+= setup-i2c0.o irq-eint.o dma.o pmu.o
-+obj-$(CONFIG_CPU_EXYNOS4210)	+= setup-i2c0.o irq-eint.o pmu.o
-+obj-$(CONFIG_EXYNOS4_DEV_DMA)	+= dma.o
- obj-$(CONFIG_PM)		+= pm.o sleep.o
- obj-$(CONFIG_CPU_IDLE)		+= cpuidle.o
- 
-diff --git a/arch/arm/mach-exynos4/dma.c b/arch/arm/mach-exynos4/dma.c
-index c3c0d17..921d31d 100644
---- a/arch/arm/mach-exynos4/dma.c
-+++ b/arch/arm/mach-exynos4/dma.c
-@@ -24,6 +24,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/amba/bus.h>
- #include <linux/amba/pl330.h>
-+#include <linux/of.h>
- 
- #include <asm/irq.h>
- #include <plat/devs.h>
-@@ -138,6 +139,9 @@ struct amba_device exynos4_device_pdma1 = {
- 
- static int __init exynos4_dma_init(void)
- {
-+	if (of_have_populated_dt())
-+		return 0;
-+
- 	dma_cap_set(DMA_SLAVE, exynos4_pdma0_pdata.cap_mask);
- 	dma_cap_set(DMA_CYCLIC, exynos4_pdma0_pdata.cap_mask);
- 	amba_device_register(&exynos4_device_pdma0, &iomem_resource);
--- 
-1.6.6.rc2
+So it'll be JTAG if I should get further with this.
+
+Linus Walleij
