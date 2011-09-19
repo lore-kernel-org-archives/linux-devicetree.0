@@ -1,79 +1,83 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] Add fdtget utility to read property values from
-	device tree
-Date: Sun, 18 Sep 2011 22:46:04 -0700
-Message-ID: <CAPnjgZ09mO06uruZtC=86BuitUWtQkGQfaHTf25HXK9KzoiD+w@mail.gmail.com>
-References: <1315425260-2711-1-git-send-email-sjg@chromium.org>
-	<1315425260-2711-4-git-send-email-sjg@chromium.org>
-	<20110908052547.GR30278@yookeroo.fritz.box>
-	<CAPnjgZ0qnr8VVOX7kCq6wEZ-OxAsxmHkPcTGE7wu1B_9ME_SPA@mail.gmail.com>
-	<20110909044945.GF21002@yookeroo.fritz.box>
-	<CAPnjgZ3xw7ByV4Yzeot3zgs4oo0zciX2OV_V4vfQ8tGsgLcPvw@mail.gmail.com>
-	<20110912005357.GI9025@yookeroo.fritz.box>
-	<CAPnjgZ1vevcwCQU+uyjAA3YZd--RhU9MgAF8O8G4Hr5e4CYo_g@mail.gmail.com>
-	<20110916081804.GF9025@yookeroo.fritz.box>
-	<CAPnjgZ1LUPm9mRft5q=KHGe2h2+Masdh0kGXQ-7j1VTUDsMP7g@mail.gmail.com>
-	<20110919020440.GA15001@yookeroo.fritz.box>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110919020440.GA15001-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v4 0/6] Add device tree support for PL330 dma controller driver
+Date: Mon, 19 Sep 2011 11:58:56 +0530
+Message-ID: <1316413742-23535-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, vinod.koul@intel.com
+Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Changes since v3:
+- In Patch 4/6, a recommendation is added in the pl330 binding documentation
+  for the name of the property which specifies the dma channel in the client
+  device node.
+- In Patch 6/6, dropped #ifdef around of_have_populated_dt.
 
-On Sun, Sep 18, 2011 at 7:04 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Fri, Sep 16, 2011 at 09:25:10AM -0700, Simon Glass wrote:
->> Hi David,
-> [snip]
->> > One useful extension of what you have now might be to add a "raw
->> > binary" format. =A0Not much use for humans, but could be handy for
->> > scripts extracting blobs from the device tree. =A0In fact, using the
->> > same interpretation of existing printf() descriptors, that would
->> > actually be equivalent to 'c'.
->>
->> Yes I was thinking about how to do that as it might be useful. I think
->> 'c' makes perfect sense. Will add to the todo.
->
-> Actually, on second thoughts using 'c' for this doesn't quite work.
-> For the other format specifiers, you will presumably have some sort of
-> separator between each repeat (newline, I'm guessing). =A0True binary
-> output, obviously, doesn't want that.
+Changes since v2:
+- Only the sixth patch is changed, to make dma platform data conditionally
+  selectable.
+- Tested with v8 version of pl330 dma driver update patches from Boojin Kim.
 
-There is a space between each repeat and a newline after each property
-printed. It makes sense to suppress the space for binary output and I
-think an option to flick this switch either way might be in order, too
-(even something to select a new separator char?). Something else for
-the todo once this patch set is in perhaps.
+Changes since v1:
+- Removed "arm,pl330-pdma" and "arm,pl330-mdma" compatible values.
+- Removed "arm,primecell-periphid" and "arm,pl330-peri-reqs"
+  property requirements.
 
-I suppose we need to be a bit careful not to build out the pier too
-far until we have some pedestrian traffic.
+This patchset adds device tree support for PL330 driver and uses it
+to add device tree support for Samsung platforms, specifically Exynos4.
 
-Did you see patch set 3?
+First patch moves the pl330_filter function from Samsung specific wrappers
+to pl330 dma driver and also adds a check to ensure that the filter function
+proceeds only if it the dma channel being investigated belongs to pl330
+dma controller instance.
 
-Regards,
-Simon
+Second patch adds support to infer the direction of the dma transfer
+using the direction specified with the transfer request instead of
+including this information in the platform data. This simlifies the
+addition of device tree support. Third patch simplifies the platform
+data for Exynos4 pl330 dma controllers. Similar patches simplifying
+the platform data for other Samsung platforms is under development.
 
->
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
+Fourth patch adds device tree support for pl330 dma controller driver.
+A dma channel is represented using a phandle of the dma controller
+node and the channel id within that controller. Client driver request
+a dma channel using the phandle and channel id pair. Correspondingly,
+the pl330 filter function has been modified to lookup a channel based
+on this value.
+
+Fifth patch adds device tree support for Samsung's DMA engine wrappers.
+Client drivers retrive the channel property from their device node and
+pass it to the wrappers. The wrapper functions use the property value
+as the filter function parameter. Sixth patch restricts the usage of
+pl330 device and platform data instances to non-dt platforms.
+
+This patchset is based on Linux 3.1-rc6 with the following patch sets.
+
+* To use DMA generic APIs for Samsung DMA - v8 - (16 patches)
+* ARM: Samsung: use dma-pl330 device name for clock (3 patches)
+* ARM: S5P64X0: Add the devname for DMA clock.
+* ARM: SAMSUNG: register the second instance of PL330 DMAC (3 patches)
+
+This patchset has been tested for both device-tree and non-device-tree
+based linux 3.1-rc6 kernel.
+
+Thomas Abraham (6):
+  DMA: PL330: move filter function into driver
+  DMA: PL330: Infer transfer direction from transfer request instead of platform data
+  ARM: EXYNOS4: Modify platform data for pl330 driver
+  DMA: PL330: Add device tree support
+  ARM: SAMSUNG: Add device tree support for pl330 dma engine wrappers
+  ARM: EXYNOS4: Limit usage of pl330 device instance to non-dt build
+
+ .../devicetree/bindings/dma/arm-pl330.txt          |   30 +++
+ arch/arm/mach-exynos4/Kconfig                      |   10 +
+ arch/arm/mach-exynos4/Makefile                     |    3 +-
+ arch/arm/mach-exynos4/dma.c                        |  227 ++++++--------------
+ arch/arm/plat-samsung/dma-ops.c                    |   15 +-
+ arch/arm/plat-samsung/include/plat/dma-ops.h       |    1 +
+ arch/arm/plat-samsung/include/plat/dma-pl330.h     |    3 +-
+ drivers/dma/pl330.c                                |   99 +++++----
+ include/linux/amba/pl330.h                         |   15 +-
+ 9 files changed, 177 insertions(+), 226 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/arm-pl330.txt
