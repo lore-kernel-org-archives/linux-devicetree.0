@@ -1,386 +1,190 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v3 2/2] input: samsung-keypad: Add device tree support
-Date: Mon, 19 Sep 2011 15:49:13 +0530
-Message-ID: <1316427553-5033-3-git-send-email-thomas.abraham@linaro.org>
-References: <1316427553-5033-1-git-send-email-thomas.abraham@linaro.org>
-Content-Transfer-Encoding: 7BIT
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v2 6/6] ARM: EXYNOS4: Limit usage of pl330 device instance
+ to non-dt build
+Date: Mon, 19 Sep 2011 19:26:20 +0900
+Message-ID: <001801cc76b6$92d65ff0$b8831fd0$%kim@samsung.com>
+References: <1314867882-11755-1-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-2-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-3-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-4-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-5-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-6-git-send-email-thomas.abraham@linaro.org>
+ <1314867882-11755-7-git-send-email-thomas.abraham@linaro.org>
+ <001901cc6b8b$0f450730$2dcf1590$%kim@samsung.com>
+ <CAJuYYwSB3f8BPQx1jgsSykKKMMGsbeCCj7zSLp2-+gtonBrdVw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1316427553-5033-1-git-send-email-thomas.abraham@linaro.org>
+In-reply-to: <CAJuYYwSB3f8BPQx1jgsSykKKMMGsbeCCj7zSLp2-+gtonBrdVw@mail.gmail.com>
+Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com
-Cc: grant.likely@secretlab.ca, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, robherring2@gmail.com, vinod.koul@intel.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add device tree based discovery support for Samsung's keypad controller.
+Thomas Abraham wrote:
+>=20
+> Dear Mr. Kim,
+>=20
+> On 5 September 2011 10:47, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> >> Subject: [PATCH v2 6/6] ARM: EXYNOS4: Limit usage of pl330 device
+instance
+> > to
+> >> non-dt build
+> >>
+> >> The pl330 device instances and associated platform data is require=
+d
+only
+> >> for non-device-tree builds. With device tree, all of this informat=
+ion
+is
+> >> obtained from the device tree.
+> >>
+> >> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> >> ---
+> >> =A0arch/arm/mach-exynos4/Kconfig =A0| =A0 =A07 +++++++
+> >> =A0arch/arm/mach-exynos4/Makefile | =A0 =A03 ++-
+> >> =A02 files changed, 9 insertions(+), 1 deletions(-)
+> >>
+> >> diff --git a/arch/arm/mach-exynos4/Kconfig
+b/arch/arm/mach-exynos4/Kconfig
+> >> index d4d401c..3edbf37 100644
+> >> --- a/arch/arm/mach-exynos4/Kconfig
+> >> +++ b/arch/arm/mach-exynos4/Kconfig
+> >> @@ -21,6 +21,13 @@ config EXYNOS4_MCT
+> >> =A0 =A0 =A0 help
+> >> =A0 =A0 =A0 =A0 Use MCT (Multi Core Timer) as kernel timers
+> >>
+> >> +config EXYNOS4_DEV_DMA
+> >> + =A0 =A0 bool
+> >> + =A0 =A0 default y if !OF
+> >> + =A0 =A0 help
+> >> + =A0 =A0 =A0 Compile in amba device definitions for DMA controlle=
+r if OF
+> >> + =A0 =A0 =A0 is not enabled.
+> >> +
+> >> =A0config EXYNOS4_DEV_AHCI
+> >> =A0 =A0 =A0 bool
+> >> =A0 =A0 =A0 help
+> >> diff --git a/arch/arm/mach-exynos4/Makefile
+> > b/arch/arm/mach-exynos4/Makefile
+> >> index d2bf5bf..a2f33dc 100644
+> >> --- a/arch/arm/mach-exynos4/Makefile
+> >> +++ b/arch/arm/mach-exynos4/Makefile
+> >> @@ -13,7 +13,8 @@ obj- =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0:=3D
+> >> =A0# Core support for EXYNOS4 system
+> >>
+> >> =A0obj-$(CONFIG_CPU_EXYNOS4210) +=3D cpu.o init.o clock.o irq-comb=
+iner.o
+> >> -obj-$(CONFIG_CPU_EXYNOS4210) +=3D setup-i2c0.o irq-eint.o dma.o
+> >> pmu.o
+> >> +obj-$(CONFIG_CPU_EXYNOS4210) +=3D setup-i2c0.o irq-eint.o pmu.o
+> >> +obj-$(CONFIG_EXYNOS4_DEV_DMA) =A0 =A0 =A0 =A0+=3D dma.o
+> >
+> > Do we need _really_ EXYNOS4_DEV_DMA here?
+> > How about to use like following?
+> >
+> > +obj-$(!CONFIG_OF) =A0 =A0 =A0 =A0 =A0 =A0 =A0+=3D dma.o
+> >
+> > If any problems, let me know.
+>=20
+> While trying out your suggestion, I found a issue with this patch
+> related to compiling a kernel with both dt and non-dt board files
+> included in the build.
+>=20
+> When compiling a single kernel image with mach-smdkv310.c file and
+> exynos4 device tree enabled machine file, since CONFIG_OF is enabled,
+> dma platform data does not get compiled which is required for
+> mach-smdkv310. So, I would like to resubmit this patch and the update=
+d
+> diff is listed below. Could you please review the following diff.
+>=20
 
-Cc: Joonyoung Shim <jy0922.shim@samsung.com>
-Cc: Donghwa Lee <dh09.lee@samsung.com>
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
----
- .../devicetree/bindings/input/samsung-keypad.txt   |   88 ++++++++++
- drivers/input/keyboard/samsung-keypad.c            |  179 ++++++++++++++++++--
- 2 files changed, 255 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/samsung-keypad.txt
+Hi Thomas,
 
-diff --git a/Documentation/devicetree/bindings/input/samsung-keypad.txt b/Documentation/devicetree/bindings/input/samsung-keypad.txt
-new file mode 100644
-index 0000000..ce3e394
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/samsung-keypad.txt
-@@ -0,0 +1,88 @@
-+* Samsung's Keypad Controller device tree bindings
-+
-+Samsung's Keypad controller is used to interface a SoC with a matrix-type
-+keypad device. The keypad controller supports multiple row and column lines.
-+A key can be placed at each intersection of a unique row and a unique column.
-+The keypad controller can sense a key-press and key-release and report the
-+event using a interrupt to the cpu.
-+
-+Required SoC Specific Properties:
-+- compatible: should be one of the following
-+  - "samsung,s3c6410-keypad": For controllers compatible with s3c6410 keypad
-+    controller.
-+  - "samsung,s5pv210-keypad": For controllers compatible with s5pv210 keypad
-+    controller.
-+
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+
-+- interrupts: The interrupt number to the cpu.
-+
-+Required Board Specific Properties:
-+- samsung,keypad-num-rows: Number of row lines connected to the keypad
-+  controller.
-+
-+- samsung,keypad-num-columns: Number of column lines connected to the
-+  keypad controller.
-+
-+- row-gpios: List of gpios used as row lines. The gpio specifier for
-+  this property depends on the gpio controller to which these row lines
-+  are connected.
-+
-+- col-gpios: List of gpios used as column lines. The gpio specifier for
-+  this property depends on the gpio controller to which these column
-+  lines are connected.
-+
-+- Keys represented as child nodes: Each key connected to the keypad
-+  controller is represented as a child node to the keypad controller
-+  device node and should include the following properties.
-+  - keypad,row: the row number to which the key is connected.
-+  - keypad,column: the column number to which the key is connected.
-+  - linux,code: the key-code to be reported when the key is pressed
-+    and released.
-+
-+Optional Properties specific to linux:
-+- linux,keypad-no-autorepeat: do no enable autorepeat feature.
-+- linux,keypad-wakeup: use any event on keypad as wakeup event.
-+
-+
-+Example:
-+	keypad@100A0000 {
-+		compatible = "samsung,s5pv210-keypad";
-+		reg = <0x100A0000 0x100>;
-+		interrupts = <173>;
-+		samsung,keypad-num-rows = <2>;
-+		samsung,keypad-num-columns = <8>;
-+		linux,input-no-autorepeat;
-+		linux,input-wakeup;
-+
-+		row-gpios = <&gpx2 0 3 3 0
-+			     &gpx2 1 3 3 0>;
-+
-+		col-gpios = <&gpx1 0 3 0 0
-+			     &gpx1 1 3 0 0
-+			     &gpx1 2 3 0 0
-+			     &gpx1 3 3 0 0
-+			     &gpx1 4 3 0 0
-+			     &gpx1 5 3 0 0
-+			     &gpx1 6 3 0 0
-+			     &gpx1 7 3 0 0>;
-+
-+		key_1 {
-+			keypad,row = <0>;
-+			keypad,column = <3>;
-+			linux,code = <2>;
-+		};
-+
-+		key_2 {
-+			keypad,row = <0>;
-+			keypad,column = <4>;
-+			linux,code = <3>;
-+		};
-+
-+		key_3 {
-+			keypad,row = <0>;
-+			keypad,column = <5>;
-+			linux,code = <4>;
-+		};
-+	};
-diff --git a/drivers/input/keyboard/samsung-keypad.c b/drivers/input/keyboard/samsung-keypad.c
-index f689f49..2a477bc 100644
---- a/drivers/input/keyboard/samsung-keypad.c
-+++ b/drivers/input/keyboard/samsung-keypad.c
-@@ -21,6 +21,8 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/sched.h>
- #include <plat/keypad.h>
- 
-@@ -68,31 +70,26 @@ struct samsung_keypad {
- 	wait_queue_head_t wait;
- 	bool stopped;
- 	int irq;
-+	enum samsung_keypad_type type;
- 	unsigned int row_shift;
- 	unsigned int rows;
- 	unsigned int cols;
- 	unsigned int row_state[SAMSUNG_MAX_COLS];
-+#ifdef CONFIG_OF
-+	int row_gpios[SAMSUNG_MAX_ROWS];
-+	int col_gpios[SAMSUNG_MAX_COLS];
-+#endif
- 	unsigned short keycodes[];
- };
- 
--static int samsung_keypad_is_s5pv210(struct device *dev)
--{
--	struct platform_device *pdev = to_platform_device(dev);
--	enum samsung_keypad_type type =
--		platform_get_device_id(pdev)->driver_data;
--
--	return type == KEYPAD_TYPE_S5PV210;
--}
--
- static void samsung_keypad_scan(struct samsung_keypad *keypad,
- 				unsigned int *row_state)
- {
--	struct device *dev = keypad->input_dev->dev.parent;
- 	unsigned int col;
- 	unsigned int val;
- 
- 	for (col = 0; col < keypad->cols; col++) {
--		if (samsung_keypad_is_s5pv210(dev)) {
-+		if (keypad->type == KEYPAD_TYPE_S5PV210) {
- 			val = S5PV210_KEYIFCOLEN_MASK;
- 			val &= ~(1 << col) << 8;
- 		} else {
-@@ -235,6 +232,131 @@ static void samsung_keypad_close(struct input_dev *input_dev)
- 	samsung_keypad_stop(keypad);
- }
- 
-+#ifdef CONFIG_OF
-+static struct samsung_keypad_platdata *samsung_keypad_parse_dt(
-+				struct device *dev)
-+{
-+	struct samsung_keypad_platdata *pdata;
-+	struct matrix_keymap_data *keymap_data;
-+	uint32_t *keymap, num_rows, num_cols;
-+	struct device_node *np = dev->of_node, *key_np;
-+	unsigned int key_count = 0;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_err(dev, "could not allocate memory for platform data\n");
-+		return NULL;
-+	}
-+
-+	of_property_read_u32(np, "samsung,keypad-num-rows", &num_rows);
-+	of_property_read_u32(np, "samsung,keypad-num-columns", &num_cols);
-+	if (!num_rows || !num_cols) {
-+		dev_err(dev, "number of keypad rows/columns not specified\n");
-+		return NULL;
-+	}
-+	pdata->rows = num_rows;
-+	pdata->cols = num_cols;
-+
-+	keymap_data = devm_kzalloc(dev, sizeof(*keymap_data), GFP_KERNEL);
-+	if (!keymap_data) {
-+		dev_err(dev, "could not allocate memory for keymap data\n");
-+		return NULL;
-+	}
-+	pdata->keymap_data = keymap_data;
-+
-+	for_each_child_of_node(np, key_np)
-+		key_count++;
-+
-+	keymap_data->keymap_size = key_count;
-+	keymap = devm_kzalloc(dev, sizeof(uint32_t) * key_count, GFP_KERNEL);
-+	if (!keymap) {
-+		dev_err(dev, "could not allocate memory for keymap\n");
-+		return NULL;
-+	}
-+	keymap_data->keymap = keymap;
-+
-+	for_each_child_of_node(np, key_np) {
-+		u32 row, col, key_code;
-+		of_property_read_u32(key_np, "keypad,row", &row);
-+		of_property_read_u32(key_np, "keypad,column", &col);
-+		of_property_read_u32(key_np, "linux,code", &key_code);
-+		*keymap++ = KEY(row, col, key_code);
-+	}
-+
-+	if (of_get_property(np, "linux,input-no-autorepeat", NULL))
-+		pdata->no_autorepeat = true;
-+	if (of_get_property(np, "linux,input-wakeup", NULL))
-+		pdata->wakeup = true;
-+
-+	return pdata;
-+}
-+
-+static void samsung_keypad_parse_dt_gpio(struct device *dev,
-+				struct samsung_keypad *keypad)
-+{
-+	struct device_node *np = dev->of_node;
-+	int gpio, ret, row, col;
-+
-+	for (row = 0; row < keypad->rows; row++) {
-+		gpio = of_get_named_gpio(np, "row-gpios", row);
-+		keypad->row_gpios[row] = gpio;
-+		if (!gpio_is_valid(gpio)) {
-+			dev_err(dev, "keypad row[%d]: invalid gpio %d\n",
-+					row, gpio);
-+			continue;
-+		}
-+
-+		ret = gpio_request(gpio, "keypad-row");
-+		if (ret)
-+			dev_err(dev, "keypad row[%d] gpio request failed\n",
-+					row);
-+	}
-+
-+	for (col = 0; col < keypad->cols; col++) {
-+		gpio = of_get_named_gpio(np, "col-gpios", col);
-+		keypad->col_gpios[col] = gpio;
-+		if (!gpio_is_valid(gpio)) {
-+			dev_err(dev, "keypad column[%d]: invalid gpio %d\n",
-+					col, gpio);
-+			continue;
-+		}
-+
-+		ret = gpio_request(col, "keypad-col");
-+		if (ret)
-+			dev_err(dev, "keypad column[%d] gpio request failed\n",
-+					col);
-+	}
-+}
-+
-+static void samsung_keypad_dt_gpio_free(struct samsung_keypad *keypad)
-+{
-+	int cnt;
-+
-+	for (cnt = 0; cnt < keypad->rows; cnt++)
-+		if (gpio_is_valid(keypad->row_gpios[cnt]))
-+			gpio_free(keypad->row_gpios[cnt]);
-+
-+	for (cnt = 0; cnt < keypad->cols; cnt++)
-+		if (gpio_is_valid(keypad->col_gpios[cnt]))
-+			gpio_free(keypad->col_gpios[cnt]);
-+}
-+#else
-+static
-+struct samsung_keypad_platdata *samsung_keypad_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+
-+static void samsung_keypad_parse_dt_gpio(struct device *dev,
-+				struct samsung_keypad *keypad)
-+{
-+}
-+
-+static void samsung_keypad_dt_gpio_free(struct samsung_keypad *keypad)
-+{
-+}
-+#endif
-+
- static int __devinit samsung_keypad_probe(struct platform_device *pdev)
- {
- 	const struct samsung_keypad_platdata *pdata;
-@@ -246,7 +368,10 @@ static int __devinit samsung_keypad_probe(struct platform_device *pdev)
- 	unsigned int keymap_size;
- 	int error;
- 
--	pdata = pdev->dev.platform_data;
-+	if (pdev->dev.of_node)
-+		pdata = samsung_keypad_parse_dt(&pdev->dev);
-+	else
-+		pdata = pdev->dev.platform_data;
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "no platform data defined\n");
- 		return -EINVAL;
-@@ -303,6 +428,16 @@ static int __devinit samsung_keypad_probe(struct platform_device *pdev)
- 	keypad->cols = pdata->cols;
- 	init_waitqueue_head(&keypad->wait);
- 
-+	if (pdev->dev.of_node) {
-+		samsung_keypad_parse_dt_gpio(&pdev->dev, keypad);
-+#ifdef CONFIG_OF
-+		keypad->type = of_device_is_compatible(pdev->dev.of_node,
-+					"samsung,s5pv210-keypad");
-+#endif
-+	} else {
-+		keypad->type = platform_get_device_id(pdev)->driver_data;
-+	}
-+
- 	input_dev->name = pdev->name;
- 	input_dev->id.bustype = BUS_HOST;
- 	input_dev->dev.parent = &pdev->dev;
-@@ -343,12 +478,19 @@ static int __devinit samsung_keypad_probe(struct platform_device *pdev)
- 
- 	device_init_wakeup(&pdev->dev, pdata->wakeup);
- 	platform_set_drvdata(pdev, keypad);
-+
-+	if (pdev->dev.of_node) {
-+		devm_kfree(&pdev->dev, (void *)pdata->keymap_data->keymap);
-+		devm_kfree(&pdev->dev, (void *)pdata->keymap_data);
-+		devm_kfree(&pdev->dev, (void *)pdata);
-+	}
- 	return 0;
- 
- err_free_irq:
- 	free_irq(keypad->irq, keypad);
- err_put_clk:
- 	clk_put(keypad->clk);
-+	samsung_keypad_dt_gpio_free(keypad);
- err_unmap_base:
- 	iounmap(keypad->base);
- err_free_mem:
-@@ -374,6 +516,7 @@ static int __devexit samsung_keypad_remove(struct platform_device *pdev)
- 	free_irq(keypad->irq, keypad);
- 
- 	clk_put(keypad->clk);
-+	samsung_keypad_dt_gpio_free(keypad);
- 
- 	iounmap(keypad->base);
- 	kfree(keypad);
-@@ -447,6 +590,17 @@ static const struct dev_pm_ops samsung_keypad_pm_ops = {
- };
- #endif
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id samsung_keypad_dt_match[] = {
-+	{ .compatible = "samsung,s3c6410-keypad" },
-+	{ .compatible = "samsung,s5pv210-keypad" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, samsung_keypad_dt_match);
-+#else
-+#define samsung_keypad_dt_match NULL
-+#endif
-+
- static struct platform_device_id samsung_keypad_driver_ids[] = {
- 	{
- 		.name		= "samsung-keypad",
-@@ -465,6 +619,7 @@ static struct platform_driver samsung_keypad_driver = {
- 	.driver		= {
- 		.name	= "samsung-keypad",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = samsung_keypad_dt_match,
- #ifdef CONFIG_PM
- 		.pm	= &samsung_keypad_pm_ops,
- #endif
--- 
-1.6.6.rc2
+Oops, you're right...so following is ok to me but you need to rebase th=
+is
+based on latest my tree.
+
+If any problems, please let me know.
+
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
+
+>=20
+> diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kc=
+onfig
+> index d4d401c..953ead7 100644
+> --- a/arch/arm/mach-exynos4/Kconfig
+> +++ b/arch/arm/mach-exynos4/Kconfig
+> @@ -21,6 +21,11 @@ config EXYNOS4_MCT
+>  	help
+>  	  Use MCT (Multi Core Timer) as kernel timers
+>=20
+> +config EXYNOS4_DEV_DMA
+> +	bool
+> +	help
+> +	  Compile in amba device definitions for DMA controller
+> +
+>  config EXYNOS4_DEV_AHCI
+>  	bool
+>  	help
+> @@ -129,6 +134,7 @@ config MACH_SMDKC210
+>  	select EXYNOS4_SETUP_FIMD0
+>  	select EXYNOS4_SETUP_I2C1
+>  	select EXYNOS4_SETUP_SDHCI
+> +	select EXYNOS4_DEV_DMA
+>  	help
+>  	  Machine support for Samsung SMDKC210
+>=20
+> @@ -153,6 +159,7 @@ config MACH_SMDKV310
+>  	select EXYNOS4_SETUP_I2C1
+>  	select EXYNOS4_SETUP_KEYPAD
+>  	select EXYNOS4_SETUP_SDHCI
+> +	select EXYNOS4_DEV_DMA
+>  	help
+>  	  Machine support for Samsung SMDKV310
+>=20
+> @@ -191,6 +198,7 @@ config MACH_UNIVERSAL_C210
+>  	select EXYNOS4_SETUP_I2C3
+>  	select EXYNOS4_SETUP_I2C5
+>  	select EXYNOS4_SETUP_SDHCI
+> +	select EXYNOS4_DEV_DMA
+>  	help
+>  	  Machine support for Samsung Mobile Universal S5PC210 Reference
+>  	  Board.
+> @@ -215,6 +223,7 @@ config MACH_NURI
+>  	select EXYNOS4_SETUP_USB_PHY
+>  	select SAMSUNG_DEV_PWM
+>  	select SAMSUNG_DEV_ADC
+> +	select EXYNOS4_DEV_DMA
+>  	help
+>  	  Machine support for Samsung Mobile NURI Board.
+>=20
+> diff --git a/arch/arm/mach-exynos4/Makefile
+b/arch/arm/mach-exynos4/Makefile
+> index 929262a..a2f33dc 100644
+> --- a/arch/arm/mach-exynos4/Makefile
+> +++ b/arch/arm/mach-exynos4/Makefile
+> @@ -14,7 +14,8 @@ obj-				:=3D
+>=20
+>  obj-$(CONFIG_CPU_EXYNOS4210)	+=3D cpu.o init.o clock.o irq-combiner.=
+o
+> -obj-$(CONFIG_CPU_EXYNOS4210)	+=3D setup-i2c0.o irq-eint.o dma.o
+> pmu.o
+> +obj-$(CONFIG_CPU_EXYNOS4210)	+=3D setup-i2c0.o irq-eint.o pmu.o
+> +obj-$(CONFIG_EXYNOS4_DEV_DMA)	+=3D dma.o
+>  obj-$(CONFIG_PM)		+=3D pm.o sleep.o
+>  obj-$(CONFIG_CPU_IDLE)		+=3D cpuidle.o
+>=20
+>=20
+>=20
+> Thanks,
+> Thomas.
