@@ -1,24 +1,17 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] Add fdtget utility to read property values from
-	device tree
-Date: Mon, 19 Sep 2011 18:05:57 +1000
-Message-ID: <20110919080557.GA29197@yookeroo.fritz.box>
-References: <20110908052547.GR30278@yookeroo.fritz.box>
-	<CAPnjgZ0qnr8VVOX7kCq6wEZ-OxAsxmHkPcTGE7wu1B_9ME_SPA@mail.gmail.com>
-	<20110909044945.GF21002@yookeroo.fritz.box>
-	<CAPnjgZ3xw7ByV4Yzeot3zgs4oo0zciX2OV_V4vfQ8tGsgLcPvw@mail.gmail.com>
-	<20110912005357.GI9025@yookeroo.fritz.box>
-	<CAPnjgZ1vevcwCQU+uyjAA3YZd--RhU9MgAF8O8G4Hr5e4CYo_g@mail.gmail.com>
-	<20110916081804.GF9025@yookeroo.fritz.box>
-	<CAPnjgZ1LUPm9mRft5q=KHGe2h2+Masdh0kGXQ-7j1VTUDsMP7g@mail.gmail.com>
-	<20110919020440.GA15001@yookeroo.fritz.box>
-	<CAPnjgZ09mO06uruZtC=86BuitUWtQkGQfaHTf25HXK9KzoiD+w@mail.gmail.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
+Date: Mon, 19 Sep 2011 10:47:53 +0200
+Message-ID: <4E7701B9.1040505@ti.com>
+References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
+	<1316017900-19918-6-git-send-email-robherring2@gmail.com>
+	<CAJuYYwSFu2HC+u2NY41+yw9tEyy85RKa4Dpm3SL+jbwS_OOA0A@mail.gmail.com>
+	<4E71CE5D.9030900@ti.com>
+	<20110918061526.GE3523@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPnjgZ09mO06uruZtC=86BuitUWtQkGQfaHTf25HXK9KzoiD+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110918061526.GE3523-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,56 +21,121 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 18, 2011 at 10:46:04PM -0700, Simon Glass wrote:
-> Hi David,
-> =
+On 9/18/2011 8:15 AM, Grant Likely wrote:
+> On Thu, Sep 15, 2011 at 12:07:25PM +0200, Cousson, Benoit wrote:
+>> Hi Rob,
+>>
+>> On 9/15/2011 9:55 AM, Thomas Abraham wrote:
+>>> Hi Rob,
+>>>
+>>> On 14 September 2011 22:01, Rob Herring<robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>   wrote:
+>>>> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>>>
+>>>> This adds gic initialization using device tree data. The initialization
+>>>> functions are intended to be called by a generic OF interrupt
+>>>> controller parsing function once the right pieces are in place.
+>>>>
+>>>> PPIs are handled using 3rd cell of interrupts properties to specify the cpu
+>>>> mask the PPI is assigned to.
+>>>>
+>>>> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>>> ---
+>>>>   Documentation/devicetree/bindings/arm/gic.txt |   53 ++++++++++++++++++++++++
+>>>>   arch/arm/common/gic.c                         |   55 +++++++++++++++++++++++--
+>>>>   arch/arm/include/asm/hardware/gic.h           |   10 +++++
+>>>>   3 files changed, 114 insertions(+), 4 deletions(-)
+>>>>   create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+>>>
+>>> [...]
+>>>
+>>>
+>>>> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+>>>> index d1ccc72..14de380 100644
+>>>> --- a/arch/arm/common/gic.c
+>>>> +++ b/arch/arm/common/gic.c
+>>>
+>>> [...]
+>>>
+>>>> +void __init gic_of_init(struct device_node *node, struct device_node *parent)
+>>>> +{
+>>>> +       void __iomem *cpu_base;
+>>>> +       void __iomem *dist_base;
+>>>> +       int irq;
+>>>> +       struct irq_domain *domain =&gic_data[gic_cnt].domain;
+>>>> +
+>>>> +       if (WARN_ON(!node))
+>>>> +               return;
+>>>> +
+>>>> +       dist_base = of_iomap(node, 0);
+>>>> +       WARN(!dist_base, "unable to map gic dist registers\n");
+>>>> +
+>>>> +       cpu_base = of_iomap(node, 1);
+>>>> +       WARN(!cpu_base, "unable to map gic cpu registers\n");
+>>>> +
+>>>> +       domain->nr_irq = gic_irq_count(dist_base);
+>>>> +       domain->irq_base = irq_alloc_descs(-1, 0, domain->nr_irq, numa_node_id());
+>>>
+>>> For exynos4, all the interrupts originating from GIC are statically
+>>> mapped to start from 32 in the linux virq space (GIC SPI interrupts
+>>> start from 64). In the above code, since irq_base would be 0 for
+>>> exynos4, the interrupt mapping is not working correctly. In your
+>>> previous version of the patch, you have given a option to the platform
+>>> code to choose the offset. Could that option be added to this series
+>>> also. Or a provision to use platform specific translate function
+>>> instead of the irq_domain_simple translator.
+>>
+>> I have another concern on a similar topic.
+>>
+>> On OMAP4 the SoC interrupts external to the MPU (SPI) have an offset
+>> of 32. Only the internal PPI are between 0 and 31.
+>>
+>> For the moment we add 32 to every SoC interrupts in the irq.h
+>> define, but I'm assuming that this offset calculation should be done
+>> thanks to a dedicated irq domain for the SPI.
+>> The real HW physical number start at 0, and thus this is that value
+>> that should be in the irq binding of the device.
+>
+> Yes.
+>
+>> So ideally we should have a irq domain for the PPI starting at 0 and
+>> another one for the SPI starting at 32. Or 32 and 64 for the exynos4
+>> case, but it looks like the PPI/SPI offset is always 32.
+>
+> Part of the purpose behind irq_domains is to have a translator
+> callback that can take care of complex mappings, such as mapping each
+> of the GIC irq ranges onto the Linux irq space.  Plus, by being based
+> on the DT irq specifiers and dynamically assigning the linux numbers,
+> the actual mapping that the kernel chooses to use shouldn't actually
+> have any relevance.  So whether or not the driver uses an offset is 32
+> becomes an implementation detail.
 
-> On Sun, Sep 18, 2011 at 7:04 PM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > On Fri, Sep 16, 2011 at 09:25:10AM -0700, Simon Glass wrote:
-> >> Hi David,
-> > [snip]
-> >> > One useful extension of what you have now might be to add a "raw
-> >> > binary" format. =A0Not much use for humans, but could be handy for
-> >> > scripts extracting blobs from the device tree. =A0In fact, using the
-> >> > same interpretation of existing printf() descriptors, that would
-> >> > actually be equivalent to 'c'.
-> >>
-> >> Yes I was thinking about how to do that as it might be useful. I think
-> >> 'c' makes perfect sense. Will add to the todo.
-> >
-> > Actually, on second thoughts using 'c' for this doesn't quite work.
-> > For the other format specifiers, you will presumably have some sort of
-> > separator between each repeat (newline, I'm guessing). =A0True binary
-> > output, obviously, doesn't want that.
-> =
+I do agree, my point was not about the driver usage but about how the 
+device node should populate its irq entry. The +32 offset is due to the 
+internal implementation of the GIC. That should not be exposed outside 
+the MPUSS.
 
-> There is a space between each repeat and a newline after each property
-> printed. It makes sense to suppress the space for binary output and I
-> think an option to flick this switch either way might be in order, too
-> (even something to select a new separator char?). Something else for
-> the todo once this patch set is in perhaps.
+Here are the first IRQs from the OMAP4430 public TRM.
 
-Yeah, fair enough.  I don't think skipping the separators should be
-explicit one way or another, not a magic side-effect of using a 'c'
-type.
+MA_IRQ_0 L2_CACHE_IRQ CORTEXA9 L2 cache controller interrupt
+MA_IRQ_1 CTI_IRQ_0 CORTEXA9 Cross-trigger module 0 (CTI0) interrupt
+MA_IRQ_2 CTI_IRQ_1 CORTEXA9 Cross-trigger module 1 (CTI1) interrupt
+MA_IRQ_3 Reserved Reserved Reserved
+MA_IRQ_4 ELM_IRQ ELM Error location process completion
+MA_IRQ_5 Reserved Reserved Reserved
+MA_IRQ_6 Reserved Reserved Reserved
+MA_IRQ_7 sys_nirq1 External External interrupt 1 (active low)
+MA_IRQ_8 Reserved Reserved Reserved
+MA_IRQ_9 L3_DBG_IRQ L3 L3 interconnect debug error
+MA_IRQ_10 L3_APP_IRQ L3 L3 interconnect application error
+MA_IRQ_11 PRCM_MPU_IRQ PRCM PRCM interrupt
+...
 
-> I suppose we need to be a bit careful not to build out the pier too
-> far until we have some pedestrian traffic.
+It is a 0 based index, and thus this is the value I'm expecting to enter 
+in the irq attribute of the DT node.
 
-A good point.
-
-> Did you see patch set 3?
-
-Uh, no I don't think so.
-
--- =
-
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Regards,
+Benoit
