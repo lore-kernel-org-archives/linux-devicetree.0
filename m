@@ -1,12 +1,15 @@
-From: y@google.com
-Subject: [PATCH v3 0/7] Add fdtget and fdtput for access to fdt from build
-	system
-Date: Mon, 12 Sep 2011 13:03:02 -0700
-Message-ID: <38737.9548083574$1316624818@news.gmane.org>
+From: Simon Glass <sjg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 2/7] Add utilfdt for common functions
+Date: Mon, 19 Sep 2011 20:54:02 -0700
+Message-ID: <CAPnjgZ0U_gYkQQR14UNZ0tAOT8jYxzwi_mEYXsT134m14m=8Bg@mail.gmail.com>
+References: <1316463668-976-1-git-send-email-sjg@chromium.org>
+	<1316463668-976-3-git-send-email-sjg@chromium.org>
+	<20110920010859.GE29197@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110920010859.GE29197-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,104 +19,102 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Hi David,
 
-This patch set adds two new utilities:
+On Mon, Sep 19, 2011 at 6:08 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Mon, Sep 19, 2011 at 01:21:03PM -0700, Simon Glass wrote:
+>> This adds a new utility library for performing libfdt operations.
+>>
+>> This is a separate library from libfdt because it performs OS operations,
+>> like open/close/read/write, while libfdt is OS-neutral. These utility
+>> functions are useful within the dtc package, and could potentially even
+>> be generally useful, but should not be part of libfdt.
+>>
+>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> - Remove util_decode_key
+>> - Add utilfdt_decode_type to be used by fdtget/put
+>> - Remove limits on device tree binary size
+>>
+>> Changes in v3:
+>> - Change format of -t argument to be more like printf
+>> - Move utilfdt into its own directory and make it a library
+>> - Use code closer to testutils.c implementation
+>> - Use open/close instead of fopen/fclose
+>
+> [snip]
+>> diff --git a/Makefile b/Makefile
+>> index 380a705..4f5ccdd 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -15,7 +15,7 @@ EXTRAVERSION =3D
+>> =A0LOCAL_VERSION =3D
+>> =A0CONFIG_LOCALVERSION =3D
+>>
+>> -CPPFLAGS =3D -I libfdt
+>> +CPPFLAGS =3D -I libfdt -I utilfdt
+>> =A0WARNINGS =3D -Werror -Wall -Wpointer-arith -Wcast-qual -Wnested-exter=
+ns \
+>> =A0 =A0 =A0 -Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls
+>> =A0CFLAGS =3D -g -Os -fPIC -Werror $(WARNINGS)
+>> @@ -151,6 +151,35 @@ ifneq ($(DEPTARGETS),)
+>> =A0-include $(LIBFDT_OBJS:%.o=3D$(LIBFDT_objdir)/%.d)
+>> =A0endif
+>>
+>> +#
+>> +# Rules for utilfdt
+>> +#
+>> +UTILFDT_objdir =3D utilfdt
+>> +UTILFDT_srcdir =3D utilfdt
+>> +UTILFDT_archive =3D $(UTILFDT_objdir)/libutilfdt.a
+>> +UTILFDT_lib =3D $(UTILFDT_objdir)/libutilfdt-$(DTC_VERSION).$(SHAREDLIB=
+_EXT)
+>> +UTILFDT_include =3D $(addprefix $(UTILFDT_srcdir)/,$(UTILFDT_INCLUDES))
+>> +
+>> +include $(UTILFDT_srcdir)/Makefile.utilfdt
+>> +
+>> +.PHONY: utilfdt
+>> +utilfdt: $(UTILFDT_archive) $(UTILFDT_lib)
+>> +
+>> +$(UTILFDT_archive): $(addprefix $(UTILFDT_objdir)/,$(UTILFDT_OBJS))
+>> +$(UTILFDT_lib): $(addprefix $(UTILFDT_objdir)/,$(UTILFDT_OBJS))
+>
+> Building a shared library out of this is complete overkill. =A0In fact,
+> so is building a .a of it. =A0This is not an exported library for
+> general use, but just an internal mini-"library" for use by the fdtget
+> and fdtput functions. =A0Just have them both link with utilfdt.o.
 
-   fdtget for reading properties from a device tree binary file
-   fdtput for updating the device tree binary file
+I guess I misunderstood your comment on this patch in v2, referring I
+thought to the function to read an fdt:
 
-These are useful in scripts where configuration or other information must be
-passed to the running system from the build system or vice versa. For
-example, fdtget can be used to obtain the LCD screen width/height for use
-with preparing custom bitmap images for display on the screen. Going the
-other way, fdtput can be used to set configuration parameters known only to
-the build or manufacturing test system, for example a hardware ID or the
-particular type of boot EEPROM used on this PCB.
+> Yes, you'll need to fix that for a general library version.  It
+> should indeed return an error rather than dying.
 
-It is desirable to use these utilities rather than parsing or updating the
-device tree source file, since this parsing is already implemented in dtc and
-it makes no sense to reimplement it in a script. It also means that the build
-system and the run-time environment see the same device tree values, so that
-parsing or updating bugs do not creap in.
+I took that to me it should be in a library, and of course it couldn't
+be in libfdt due to the OS use...
 
-I believe that these utilities belong with dtc rather than libfdt since they
-are more useful in the build system context rather than at run-time. At
-run-time it is easier and better to use the provided library rather than
-these utiltiies. But for build scripts and production automation, these
-uitilites are better.
+It is used by the tests, ftdump, fdtget and fdtput. I didn't really
+want the tests to have to have -I.. and linking ../utilfdt.o.
 
-Some effort has been made to add tests and the parameter format has been
-revised after previous feedback.
+So should I just make in an object file in the root that everything
+except dtc links with?
 
-Changes in v2:
-- Separate arguments for node and property
-- Remove limits on data size of property writting to fdt
-- Remove use of getopt_long()
-- Adjust tests for new fdtput arguments
-- Add test for multiple strings
-- Add test for exhausting fdt space
-- Merge two related commits into this one
-- Use structure for storing display options
-- Adjust tests for new fdtget arguments
-- Remove util_decode_key
-- Add utilfdt_decode_type to be used by fdtget/put
-- Remove limits on device tree binary size
+Regards,
+Simon
 
-Changes in v3:
-- Squash fdtput tests into fdtput commit
-- Squash fdtget test commit into fdtget
-- Add a few more tests for 1- and 2-byte formats
-- Change format of -t argument to be more like printf
-- Change help string and make part of it common
-- Add error checking for the property not being a multiple of value size
-- Make testutils.c use utilfdt for load/save blobs
-- Add tests for utilfdt
-- Move utilfdt into its own directory and make it a library
-- Use code closer to testutils.c implementation
-- Use open/close instead of fopen/fclose
-- Use Makefile.utils instead of separate Makefiles
-
-Simon Glass (7):
-  Create Makefile.utils and move ftdump into it
-  Add utilfdt for common functions
-  Add utilfdt tests
-  Make testutils use utilfdt
-  ftdump: use utilfdt to read blob
-  Add fdtget utility to read property values from a device tree
-  Add fdtput utility to write property values to a device tree
-
- .gitignore               |    2 +
- Makefile                 |   43 ++++++++-
- Makefile.ftdump          |   13 ---
- Makefile.utils           |   24 +++++
- fdtget.c                 |  227 ++++++++++++++++++++++++++++++++++++++++++++
- fdtput.c                 |  236 ++++++++++++++++++++++++++++++++++++++++++++++
- ftdump.c                 |   33 +------
- tests/Makefile.tests     |    9 +-
- tests/fdtget-runtest.sh  |   35 +++++++
- tests/fdtput-runtest.sh  |   55 +++++++++++
- tests/run_tests.sh       |  121 +++++++++++++++++++++++-
- tests/tests.sh           |    2 +
- tests/testutils.c        |   60 +++----------
- tests/utilfdt_test.c     |  128 +++++++++++++++++++++++++
- utilfdt/Makefile.utilfdt |    9 ++
- utilfdt/utilfdt.c        |  167 ++++++++++++++++++++++++++++++++
- utilfdt/utilfdt.h        |  101 ++++++++++++++++++++
- 17 files changed, 1168 insertions(+), 97 deletions(-)
- delete mode 100644 Makefile.ftdump
- create mode 100644 Makefile.utils
- create mode 100644 fdtget.c
- create mode 100644 fdtput.c
- create mode 100755 tests/fdtget-runtest.sh
- create mode 100644 tests/fdtput-runtest.sh
- create mode 100644 tests/utilfdt_test.c
- create mode 100644 utilfdt/Makefile.utilfdt
- create mode 100644 utilfdt/utilfdt.c
- create mode 100644 utilfdt/utilfdt.h
-
--- 
-1.7.3.1
+>
+> --
+> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
+baroque, and my code
+> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
+other_
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
+round_!
+> http://www.ozlabs.org/~dgibson
+>
