@@ -1,56 +1,229 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH REPOST 1/2] arm/dt: Tegra: Update SDHCI nodes to match bindings
-Date: Tue, 20 Sep 2011 14:39:06 -0700
-Message-ID: <CAOesGMg4kBH77Ou1xyyVT-Ojxg=9uyxmfsmhbbKquru=j+z6Gg@mail.gmail.com>
-References: <1316537186-26753-1-git-send-email-swarren@nvidia.com>
-	<20110920180731.GL7781@ponder.secretlab.ca>
-	<201109202134.50242.arnd@arndb.de>
-	<201109202301.56983.arnd@arndb.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/3] of/irq: introduce of_irq_init
+Date: Tue, 20 Sep 2011 17:00:55 -0600
+Message-ID: <20110920230055.GR7781@ponder.secretlab.ca>
+References: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
+ <1316550244-3655-3-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201109202301.56983.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>, nicolas.pitre@linaro.org, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1316550244-3655-3-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, thomas.abraham@linaro.org, jamie@jamieiles.com, b-cousson@ti.com, shawn.guo@linaro.org, dave.martin@linaro.org, linux@arm.linux.org.uk, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 20, 2011 at 2:01 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 20 September 2011, Arnd Bergmann wrote:
->> On Tuesday 20 September 2011, Grant Likely wrote:
->> > On Tue, Sep 20, 2011 at 07:43:29PM +0200, Arnd Bergmann wrote:
->> > > On Tuesday 20 September 2011, Stephen Warren wrote:
->> > > > The bindings were recently updated to have separate properties for each
->> > > > type of GPIO. Update the Device Tree source to match that.
->> > > >
->> > > > Signed-off-by: Stephen Warren <swarren@nvidia.com>
->> > > > Acked-by: Olof Johansson <olof@lixom.net>
->> > > > ---
->> > > > I'd previously sent these to Grant assuming they'd go in his dt/next branch,
->> > > > but perhaps these should go in through Arnd's arm-soc next/dt branch?
->> > > >
->> > >
->> > > Which tree has the update that changed the bindings? I think it should
->> > > go into the same one.
->> > >
->> > > If it's already upstream, I can take it into the fixes branch.
->> >
->> > Already upstream
->>
->> Ok, I see. I've applied both patches to the fixes branch and will send
->> it out with the next pull request for 3.1 to Linus then.
->
-> Sorry, I just noticed that the second patch is not a bug fix, so I took it out
-> again and kept only patch 1/2 in the fixes branch for 3.1.
->
-> Should I take the other one as well? It's probably better to let that
-> go the proper way through the tegra tree for 3.2, right?
+On Tue, Sep 20, 2011 at 03:24:03PM -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
+> 
+> of_irq_init will scan the devicetree for matching interrupt controller
+> nodes. Then it calls an initialization function for each found controller
+> in the proper order with parent nodes initialized before child nodes.
+> 
+> Based on initial pseudo code from Grant Likely.
+> 
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
 
-Given that you have a public tree right now, and I don't (since
-kernel.org is down), please feel free to start a tegra/for-3.2 branch
-for me and apply it there. I'll base further work on top of that if
-needed.
+Thanks Rob.  Looks pretty good.
 
-(There also aren't a whole lot of other patches queued for 3.2 right now).
+Comments below.
 
--Olof
+> ---
+>  drivers/of/irq.c       |  114 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_irq.h |    1 +
+>  2 files changed, 115 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 6a5b5e7..1d51bc7 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -19,10 +19,12 @@
+>   */
+>  
+>  #include <linux/errno.h>
+> +#include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/string.h>
+> +#include <linux/slab.h>
+>  
+>  /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
+>  #ifndef NO_IRQ
+> @@ -386,3 +388,115 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+>  
+>  	return i;
+>  }
+> +
+> +struct intc_desc {
+> +	struct list_head	list;
+> +	struct device_node	*dev;
+> +	struct device_node	*interrupt_parent;
+> +};
+> +
+> +typedef int (*irq_init_cb_t)(struct device_node *, struct device_node *);
+
+This typedef should be in a header file.  I'd like to try and find a
+way to typecheck the .data parameter in the matches table (maybe with
+a macro), but I've not dug into the problem.
+
+> +
+> +/**
+> + * of_irq_init - Scan the device tree for matching interrupt controllers and
+
+kerneldoc format is:
+ * of_irq_init() - ...
+
+And the short description should fit on the one line.  Further
+description can appear after the argument list documentation.
+
+> + * call their initialization functions in order with parents first.
+> + * @matches: 0 terminated array of nodes to match and initialization function
+> + * to call on match
+> + */
+> +void __init of_irq_init(const struct of_device_id *matches)
+> +{
+> +	struct device_node *np;
+> +	struct intc_desc *desc;
+> +	struct intc_desc *temp_desc;
+> +	struct intc_desc *parent_desc = NULL;
+> +	struct list_head intc_desc_list;
+> +	struct list_head intc_parent_list;
+
+Nit: these lines can be collapsed a bit.
+	struct intc_desc *desc, *temp_desc, *parent_desc = NULL;
+	struct list_head intc_desc_list, intc_parent_list;
+
+> +	INIT_LIST_HEAD(&intc_desc_list);
+> +	INIT_LIST_HEAD(&intc_parent_list);
+> +
+> +	for_each_matching_node(np, matches) {
+> +		if (!of_find_property(np, "interrupt-controller", NULL))
+> +			continue;
+> +		/* Here, we allocate and populate an intc_desc with the node
+> +		* pointer, interrupt-parent device_node etc. */
+> +		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+> +		if (!desc) {
+> +			WARN_ON(1);
+> +			goto err;
+> +		}
+> +		desc->dev = np;
+> +		desc->interrupt_parent = of_irq_find_parent(np);
+> +		list_add(&desc->list, &intc_desc_list);
+
+list_add_tail() would keep things ordered.
+
+> +	}
+> +	if (list_empty(&intc_desc_list))
+> +		return;
+
+This test can be dropped because the while loop performs the exact
+same test.
+
+> +
+> +	/*
+> +	 * The root irq controller is the one without an interrupt-parent.
+> +	 * That one goes first, followed by the controllers that reference it,
+> +	 * followed by the ones that reference the 2nd level controllers, etc
+> +	 */
+> +	while (!list_empty(&intc_desc_list)) {
+> +		/*
+> +		 * Process all controllers with the current 'parent'.
+> +		 * First pass will be looking for NULL as the parent.
+> +		 * The assumption is that NULL parent means a root controller.
+> +		 */
+> +		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
+> +			const struct of_device_id *match;
+> +			int ret;
+> +			irq_init_cb_t irq_init_cb;
+> +
+> +			if (parent_desc &&
+> +				(desc->interrupt_parent != parent_desc->dev))
+> +				continue;
+
+If you changed
+	struct intc_desc *parent_desc = NULL;
+to
+	struct device_node *parent_np = NULL;
+
+Then this test could be simplified to:
+	if (desc->interupt_parent != parent_np)
+		continue;
+
+And the kfree could be done immediately after the next parent is
+pulled off the intc_desc_list since the only thing actually needed
+from the parent_desc is the parent node pointer.
+
+> +
+> +			list_del(&desc->list);
+> +			match = of_match_node(matches, desc->dev);
+> +			if (!match || !match->data)
+> +				continue;
+> +
+> +			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
+> +				 match->compatible,
+> +				 desc->dev, desc->interrupt_parent);
+> +			irq_init_cb = match->data;
+> +			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
+> +			if (ret)
+> +				continue;
+> +
+> +			/*
+> +			 * This one is now set up; add it to the parent list so
+> +			 * its children can get processed in a subsequent pass.
+> +			 */
+> +			list_add_tail(&desc->list, &intc_parent_list);
+> +		}
+> +		/*
+> +		 * All the direct children for the current parent are
+> +		 * processed, so free the parent now.
+> +		 */
+> +		if (parent_desc)
+> +			kfree(parent_desc);
+> +
+> +		/* Get the next pending parent that might have children */
+> +		parent_desc = list_first_entry(&intc_parent_list,
+> +					       typeof(*parent_desc), list);
+> +		if (list_empty(&intc_parent_list) || !parent_desc) {
+> +			pr_debug("of_irq_init: children remain, but no parents\n");
+> +			goto err;
+> +		}
+> +
+> +		list_del(&parent_desc->list);
+> +	}
+
+Need a loop here to clear and free any remaining entries in the
+intc_parent_list.  Actually, everything would work fine by simply
+removing the below 'return' statement and letting the code fall
+through to the free loops unconditionally.  And the "goto err" above
+can be simplified to "break".
+
+> +	return;
+> +
+> +err:
+> +	list_for_each_entry_safe(desc, temp_desc, &intc_parent_list, list) {
+> +		list_del(&desc->list);
+> +		kfree(desc);
+> +	}
+> +	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
+> +		list_del(&desc->list);
+> +		kfree(desc);
+> +	}
+> +}
+> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+> index cd2e61c..032d76c 100644
+> --- a/include/linux/of_irq.h
+> +++ b/include/linux/of_irq.h
+> @@ -73,6 +73,7 @@ extern int of_irq_to_resource_table(struct device_node *dev,
+>  		struct resource *res, int nr_irqs);
+>  extern struct device_node *of_irq_find_parent(struct device_node *child);
+>  
+> +extern void of_irq_init(const struct of_device_id *matches);
+>  
+>  #endif /* CONFIG_OF_IRQ */
+>  #endif /* CONFIG_OF */
+> -- 
+> 1.7.5.4
+> 
