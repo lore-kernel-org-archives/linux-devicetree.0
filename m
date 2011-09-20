@@ -1,15 +1,21 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DT vs ARM static mappings
-Date: Tue, 20 Sep 2011 09:37:58 -0500
-Message-ID: <4E78A546.9040604@gmail.com>
-References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
-	<4E788E12.8000801@gmail.com>
-	<1316527365.4611.354.camel@hornet.cambridge.arm.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
+Date: Tue, 20 Sep 2011 17:23:02 +0200
+Message-ID: <4E78AFD6.9030209@ti.com>
+References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
+	<1316017900-19918-6-git-send-email-robherring2@gmail.com>
+	<CAJuYYwSFu2HC+u2NY41+yw9tEyy85RKa4Dpm3SL+jbwS_OOA0A@mail.gmail.com>
+	<4E71CE5D.9030900@ti.com> <4E71F978.6020402@gmail.com>
+	<4E72030F.1090300@ti.com> <4E722B2D.4050307@gmail.com>
+	<4E76615C.3000005@gmail.com> <4E77310A.3000106@ti.com>
+	<4E774847.3020104@gmail.com>
+	<CACxGe6v9nd5f5x-eu9hUyAqdS1+p3h6ixyutECYLdNo3ewDH0w@mail.gmail.com>
+	<4E77B9E3.40004@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1316527365.4611.354.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+In-Reply-To: <4E77B9E3.40004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,119 +25,143 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-UGF3ZWwsCgpPbiAwOS8yMC8yMDExIDA5OjAyIEFNLCBQYXdlbCBNb2xsIHdyb3RlOgo+Pj4gT2Yg
-Y291cnNlIHRoZSBzaW1wbGVzdCBzb2x1dGlvbiB3b3VsZCBiZSB0byBkZWZpbmUgdHdvIGRpZmZl
-cmVudAo+Pj4gY29tcGF0aWJsZSB2YWx1ZXMsIGVnLiAiYXJtLHZleHByZXNzLWxlZ2FjeSIgd291
-bGQgZXhlY3V0ZSB0aGUgY3VycmVudAo+Pj4gbWFwX2lvIGltcGxlbWVudGF0aW9uLCB3aGlsZSAi
-YXJtLHZleHByZXNzLXJzMSIgd291bGQgdXNlIGRpZmZlcmVudCBvbmUsCj4+PiBzZXR0aW5nIHVw
-IHRoZSBvdGhlciBtYXBfZGVzYyAodGhlIE1NSU9fUDJWIG1hY3JvIG11c3QgZGllIG9mIGNvdXJz
-ZSwKPj4+IHJlcGxhY2VkIHdpdGggYSBydW50aW1lLWRlZmluZWQgdmlydHVhbCBiYXNlIGFkZHJl
-c3MgZm9yIHRoZQo+Pj4gcGVyaXBoZXJhbHMpLgo+Pj4KPj4+IElmIHlvdSBiZWxpZXZlIHRoYXQn
-cyB3aGF0IEkgc2hvdWxkIGRvLCBzYXkgaXQgYW5kIHN0b3AgcmVhZGluZyA6LSkKPj4KPj4gWWVz
-LiBEaWZmZXJlbnQgdGlsZXMgYXJlIGZ1bmRhbWVudGFsbHkgZGlmZmVyZW50IGJvYXJkcywgc28g
-dGhleSBzaG91bGQKPj4gaGF2ZSBkaWZmZXJlbnQgRFRzLiBVc2luZyBpbmNsdWRlcyBzaG91bGQg
-aGVscCBtaW5pbWl6ZSBkdXBsaWNhdGlvbiB0aG91Z2guCj4gCj4gWW91J3ZlIG1pc3VuZGVyc3Rv
-b2QgbWUgb3IgKG1vc3QgbGlrZWx5IDstKSBwcm9iYWJseSBJIHdhc24ndCBjbGVhcgo+IGVub3Vn
-aC4KPiAKPiBUaGVyZSBpcyBubyBkb3VidCB0aGUgRFRzIHdpbGwgYmUgZGlmZmVyZW50IGFjcm9z
-cyB0aGUgInBvcnRmb2xpbyIuCj4gCj4gV2UgYWxyZWFkeSBoYXZlIChwYXRjaGVzIHNvb24pIHZl
-eHByZXNzLXYycC1jYTkuZHRzIHRoYXQgaW5jbHVkZXMKPiB2ZXhwcmVzcy12Mm0tbGVnYWN5LmR0
-c2kuCj4gCj4gQTUgd2lsbCBiZSB2ZXhwcmVzcy12MnAtY2E1cC5kdHMrdmV4cHJlc3MtdjJtLXJz
-MS5kdHNpLCBBMTUKPiB2ZXhwcmVzcy12MnAtY2ExNS5kdHMrdmV4cHJlc3MtdjJtLXJzMS5kdHNp
-IChub3RpY2UgdGhhdCB0aGUgQTUvQTE1IGFyZQo+IHNoYXJpbmcgdGhlIHYybSBiaXQsIGFzIHRo
-ZSBtb3RoZXJib2FyZCBpcyBjb21tb24pLgo+IAo+IE15IHBvaW50IGlzIHRoYXQgd2Ugc2hvdWxk
-IGJlIGFibGUgdG8gaGFuZGxlIF9hbGxfIG9mIHRoZW0gdXNpbmcgb25lCj4gRFRfTUFDSElORV9T
-VEFSVCB3aXRoIGEgc2luZ2xlIGNvbXBhdCB2YWx1ZSAiYXJtLHZleHByZXNzIi4gVGhlIG9ubHkK
-PiBwcm9ibGVtIHdpdGggdGhpcyAoc28gZmFyKSBpcyB0aGUgbWFwcGluZy4KPiAKClllcywgeW91
-IHNob3VsZCBoYXZlIDEgRFRfTUFDSElORV9TVEFSVCwgYnV0IGFybSx2ZXhwcmVzcyBpcyB0b28K
-Z2VuZXJpYy4gWW91IGNhbiBhbmQgc2hvdWxkIGhhdmUgYSBsaXN0IG9mIGNvbXBhdGlibGUgc3Ry
-aW5ncyBmb3IgZWFjaApib2FyZC9tYWNoaW5lLgoKPj4gVGhpbmsgYWJvdXQgaXQgdGhpcyB3YXku
-IEhvdyB3b3VsZCB5b3Ugc29sdmUgdGhpcyB3aXRob3V0IERUPyBZb3UKPj4gd291bGQgaGF2ZSBh
-IGJ1bmNoIG9mIGR1cGxpY2F0ZWQgZGF0YSBpbiB0aGUga2VybmVsIGZvciB0aGUgZGlmZmVyZW50
-Cj4+IGNvbmZpZ3MuIFNvIHlvdSdyZSBub3QgYW55IHdvcnNlIG9mZiBpbiB0aGlzIHJlZ2FyZCBh
-bmQgc3RpbGwgaGF2ZSB0aGUKPj4gb3RoZXIgYWR2YW50YWdlcyBvZiBEVC4KPiAKPiBFeGFjdGx5
-IG15IHBvaW50IDotKSBJIHdhbnQgdG8gaGF2ZSBhcyBsaXR0bGUgZHVwbGljYXRpb24gYXMgcG9z
-c2libGUuCj4gQW5kIHRoZSBzdGF0aWMgbWFwcGluZyBpc3N1ZSBpcyBpbiB0aGUgd2F5Lgo+IAo+
-Pj4gVG8gbXkgbWluZCBpdCBsb29rZWQgbGlrZSB0aGUgd2hvbGUgbWVjaGFuaXNtIHdhcyBub3Qg
-ZmxleGlibGUgZW5vdWdoLAo+Pj4gc28gSSB3YW50ZWQgdG8gZXhwbG9yZSBvdGhlciBvcHRpb25z
-Li4uCj4+Pgo+Pj4gVGhlIG9idmlvdXMgb25lIHdhcyB0byBkZXNjcmliZSB0aGUgcmVxdWlyZWQg
-c3RhdGljIG1hcHBpbmcgaW4gdGhlIERUUy4KPj4+IEkgZG9uJ3QgbGlrZSB0aGlzIGlkZWEsIHRo
-b3VnaC4gSXQgY2FuIGhhcmRseSBiZSBjYWxsZWQgImhhcmR3YXJlCj4+PiBkZXNjcmlwdGlvbiIu
-IEJlc2lkZXMsIHdoYXQgbm9kZSB3b3VsZCBjYXJyeSBzdWNoIGRhdGE/ICJjaG9zZW4iPwo+Pj4g
-SGFyZGx5Li4uCj4+Pgo+Pj4gV291bGQgaXQgY29udGFpbiBhICJyZWdzIiBwcm9wZXJ0eSB3aXRo
-IHRoZSBwaHlzaWNhbCBhZGRyZXNzIGFuZAo+Pj4gInZpcnR1YWwtcmVnIiB3aXRoIHRoZSB2aXJ0
-dWFsIG9uZT8gQWdhaW4sIGRvZXNuJ3Qgc291bmQgcmlnaHQgdG8gbWUKPj4+IChlc3BlY2lhbGx5
-IHRoZSB2aXJ0dWFsIGJpdCwgaG93ZXZlciB0aGUgdmlydHVhbCBhZGRyZXNzIGNvdWxkIGJlIGNv
-bW1vbgo+Pj4gYmV0d2VlbiBkaWZmZXJlbnQgdmFyaWFudHMgYW5kIGJlIGRlZmluZWQgaW4gdGhl
-IGJvYXJkIHN1cHBvcnQgY29kZSwgbm90Cj4+PiB0aGUgRFRTKS4KPj4+Cj4+PiBJIGhhdmUgY29u
-c2lkZXJlZCBhIHJlZmVyZW5jZSAocGhhbmRsZSBvciBhbiBhbGlhcz8pIHRvIHRoZSBub2RlIHRv
-IGJlCj4+PiBtYXBwZWQgKCJwZXJpcGhlcmFscyIgaW4gbXkgY2FzZSksIGJ1dCB3aGVyZSB0byBk
-ZWZpbmUgdGhpcyByZWZlcmVuY2U/Cj4+PiBBbnkgaWRlYXM/Cj4+Cj4+IEluICJjaG9zZW4iIGxp
-a2UgdGhlIGtlcm5lbCBjb21tYW5kIGxpbmUgd291bGQgYmUgdGhlIHBsYWNlLCBidXQgSSBkb24n
-dAo+PiB0aGluayB0aGF0IGlzIHRoZSByaWdodCBhcHByb2FjaC4gQ2hvc2VuIGlzIHJlYWxseSBm
-b3IgdGhpbmdzIHRoYXQKPj4gY2hhbmdlIGZyZXF1ZW50bHkgYW5kIHRoaXMgZG9lc24ndCByZWFs
-bHkgZmFsbCBpbiB0aGF0IGNhdGVnb3J5Lgo+IAo+IEFnYWluLCBubyBhcmd1bWVudCBmcm9tIG1l
-IGhlcmUgOi0pCj4gCj4gVGhlIHF1ZXN0aW9uIGlzIC0gd2hlcmUgc2hvdWxkIGl0IGJlPwo+IAoK
-Tm93aGVyZS4gSXQncyBhbiBPUyBzcGVjaWZpYyBpc3N1ZSwgbm90IGEgaC93IGlzc3VlLgoKPj4+
-IFRoZXJlIGlzIGFuIGFkZGl0aW9uYWwgcHJvYmxlbSBoZXJlLi4uIFRoZSAibWFwX2lvIiBpcyBl
-eGVjdXRlZCBiZWZvcmUKPj4+IHRoZSB0cmVlIGlzIHVuLWZsYXR0ZW5lZCwgc286Cj4+Pgo+Pj4g
-MS4gT25lIGNhbid0IHNpbXBseSB1c2UgIm9mX2ZpbmRfbWF0Y2hpbmdfbm9kZSgpIiAoYXMgaW4g
-dGhlIGxhdGVzdCBsMngwCj4+PiBwYXRjaGVzKSB0byBmaW5kIHRoZSBpbnRlcmVzdGluZyBub2Rl
-cyAtIHRoZSBvbmx5IHdheSBvZiBnb2luZyB0aHJvdWdoCj4+PiB0aGUgdHJlZSBpcyByYXcgb2Zf
-c2Nhbl9mbGF0X2R0KCkgZnVuY3Rpb24uIFRoZXJlZm9yZSBhbnkgY29uZGl0aW9ucwo+Pj4gbW9y
-ZSBjb21wbGV4IHRoZW4gc3RyaW5nIGNvbXBhcmlzb24gd2l0aCB0aGUgKGZ1bGwpIG5vZGUgbmFt
-ZSBhcmUKPj4+IHByb2JsZW1hdGljLgo+Pj4KPj4+IDIuIFRoZSB0cmVlIG1hcHBpbmdzIChyYW5n
-ZXMpIGFyZSBub3QgcmVzb2x2ZWQgeWV0LCBzbyBvbmUgY2FuJ3Qgc2ltcGx5Cj4+PiBnZXQgdGhl
-IGVmZmVjdGl2ZSBhZGRyZXNzIG9mIGEgbm9kZS4gT25seSAicmF3IiBwcm9wZXJ0aWVzIGFyZQo+
-Pj4gYXZhaWxhYmxlLCBzbyBhbGwgb25lIGNhbiBnZXQgc2Nhbm5pbmcgZm9yICJwZXJpcGhlcmFs
-c0A3IiBub2RlIGlzICIwIDcKPj4+IDAgMHgyMDAwMCIgYXJyYXksIGluc3RlYWQgb2YgdGhlICIw
-eDEwMDAwMDAwIDB4MDAwMjAwMDAiIHRoYXQgaXMgcmVhbGx5Cj4+PiBpbXBvcnRhbnQuIAo+Pgo+
-PiBJZiB5b3UgYWRkIGEgY29tcGF0aWJsZSBmaWVsZCB0byAibW90aGVyYm9hcmQiIG5vZGUsIHRo
-ZW4geW91IGNhbiByZWFkCj4+IHRoZSByYW5nZXMuCj4gCj4gLi4uIGFuZCB0aGVuIGFuZCB0aGVu
-IHNjYW4gZm9yIHRoZSBzeXNyZWdzLCBhbmQgYWRkIHRoZSBvZmZzZXQgYW5kIGJhc2UKPiB0b2dl
-dGhlci4uLiBTb3VuZHMgdG8gbWUgbGlrZSBkdXBsaWNhdGlvbiBvZiB0aGUgb2ZfdHJhbnNsYXRl
-XyooKT8KPiAKPj4+IEluaXRpYWxseSBJIHdhbnRlZCB0byBmaW5kIHRoZSBtZW50aW9uZWQgZGV2
-aWNlcyBhbmQgY3JlYXRlIGluZGl2aWR1YWwKPj4+IG1hcHBpbmdzIGZvciB0aGVtLCBzbyB0aGUg
-TU1JT19QMlYgd291bGQgYmUgc3RpbGwgdmFsaWQgKGlmIHNsaWdodGx5Cj4+PiAiYWJ1c2VkIiks
-IGJ1dCBJIGZhaWxlZCBkdWUgdG8gdGhlIHByb2JsZW1zIG1lbnRpb25lZCBhYm92ZS4gQW5kIEkg
-Y2FuJ3QKPj4+IGRlbGF5IHRoaXMgb3BlcmF0aW9uIHRpbGwgdGhlIHRyZWUgaXMgdW4tZmxhdHRl
-bmVkLCBhcyB0aGUgY29yZSB0aWxlCj4+PiBtdXN0IGJlIHByb2JlZCAodmlhIHN5c3JlZykgaW4g
-bWFwX2lvICh0aWxlJ3Mgc3BlY2lmaWMgY29kZSBtdXN0IGJlIGFibGUKPj4+IHRvIGNyZWF0ZSBp
-dHMgb3duIG1hcHBpbmdzKToKPj4KPj4gRG8geW91IHJlYWxseSBuZWVkIE1NSU9fUDJWPyBJZiB5
-b3UgaGF2ZSBmaXhlZCB2aXJ0dWFsIGFkZHJlc3NlcyBpbiB0aGUKPj4ga2VybmVsIGFuZCBjYW4g
-cHVsbCB0aGUgcGh5cyBhZGRyZXNzZXMgZnJvbSBEVCB0byBwb3B1bGF0ZSB0aGUgaW90YWJsZSwK
-Pj4gaXMgdGhhdCBzdWZmaWNpZW50Pwo+IAo+IEZvciB0aGUgdGhpcmQgdGltZSwgMTAwJSBhZ3Jl
-ZSA6LSkgV2VsbCwgOTAlLgo+IAo+IFdoYXQgSSBuZWVkIGlzOgo+IAo+IDEuIEdldCB0aGUgcGh5
-cyBhZGRyZXNzIGZyb20gRFQuIEJ1dCBob3c/IFRoaXMgaXMgZ2V0dGluZyBhcyBiYWNrIHRvIG15
-Cj4gY29tcGxhaW50cyBhYm91dCBzdGlsbC1mbGF0IHRyZWUgYW5kIHJhbmdlcywgdGhlIG5vZGUg
-dG8gYmUgdXNlZCB0bwo+IGRlc2NyaWJlIHRoZSBtYXBwaW5nLgo+IAo+IDIuIFRoZSBvZmZzZXQg
-aW5zaWRlIHRoZSBtYXBwaW5nIHdpbGwgYmUgZGlmZmVyZW50IChmb3Igc3lzcmVncyBpdCB3aWxs
-Cj4gYmUgMCBmb3Igb2xkIG1hcHBpbmcsIDB4MTAwMDAgZm9yIHRoZSBuZXcgb25lKSwgc28gSSBo
-YXZlIHRvIHdvcmsgaXQgb3V0Cj4gZnJvbSB0aGUgdHJlZSBhcyB3ZWxsLiBBbmQgYXMgd2UgYXJl
-IGluIG1hcF9pbywgdGhlIHRyZWUgaXMgc3RpbGwgZmxhdAo+IGFuZC4uLiByZWFkIDEgOi0pCgpT
-byBjcmVhdGUgYSBtYXBwaW5nIHBlciBwZXJpcGhlcmFsIHJhdGhlciB0aGFuIHBlciBjaGlwIHNl
-bGVjdC4gVGhlbiB0aGUKdmlydHVhbCBhZGRyZXNzIGNhbiBhbHdheXMgYmUgdGhlIHNhbWUuCgo+
-IAo+PiBHZW5lcmFsbHksIHRoZSB0cmVuZCBpcyB0byBnZXQgcmlkIG9mIHN0YXRpYyBtYXBwaW5n
-cyBhcyBtdWNoIGFzCj4+IHBvc3NpYmxlLiBEb2luZyB0aGF0IGZpcnN0IG1pZ2h0IHNpbXBsaWZ5
-IHRoaW5ncy4KPiAKPiBZb3UgY2FuJ3QgZG8gaW9yZW1hcCgpIGJlZm9yZSBrbWFsbG9jKCkgaXMg
-dXAgYW5kIHJ1bm5pbmcgKGNvcnJlY3QgbWUgaWYKPiBJIGFtIHdyb25nKSwgYXQgbGVhc3QgeW91
-IGNhbid0IGRvIHRoaXMgaW4gbWFwX2lvLiBTbyB0aGUgc3RhdGljIG1hcHBpbmcKPiBpcyBhIG11
-c3Qgc29tZXRpbWVzLiBBbmQgYWN0dWFsbHksIHdpdGggdGhlIGxhdGVzdCBOaWNvJ3MgY2hhbmdl
-czoKPiAKQ29ycmVjdC4gWW91IGNhbid0IGRvIGlvcmVtYXAgdW50aWwgaW5pdF9pcnEuIG1hcF9p
-byBhbmQgaW5pdF9lYXJseSBhcmUKdG9vIGVhcmx5LiBNeSBwb2ludCB3YXMgaWYgeW91IGNhbiBk
-ZWxheSBoL3cgYWNjZXNzIHRoZW4geW91IGNhbiByZW1vdmUKdGhlIHN0YXRpYyBtYXBwaW5ncy4g
-QnV0IHllcywgd2UgZ2VuZXJhbGx5IGNhbid0IHJlbW92ZSB0aGVtIGFsbC4gU0NVCmFuZCBMTCBk
-ZWJ1ZyB1YXJ0IGFyZSAyIGV4YW1wbGVzLgoKRm9yIHRoZSBzaG9ydCB0ZXJtLCBJIHdvdWxkIGp1
-c3QgaGF2ZSAyIHN0YXRpYyBpb3RhYmxlcyBhbmQgc2VsZWN0IHRoZQpyaWdodCBvbmUgYmFzZWQg
-b24gdGhlIGJvYXJkJ3MgKG9yIG1vdGhlcmJvYXJkJ3MpIGNvbXBhdGlibGUgc3RyaW5nLgoKTG9u
-ZyB0ZXJtLCB3ZSBzaG91bGQgbG9vayBpbnRvIGltcGxlbWVudGluZyBhIGNvbW1vbiBlYXJseSBE
-VCBhZGRyZXNzCnBhcnNpbmcgZnVuY3Rpb24uCgpSb2IKCj4gaHR0cDovL3RocmVhZC5nbWFuZS5v
-cmcvZ21hbmUubGludXgucG9ydHMuYXJtLmtlcm5lbC8xMzI3NjIKPiAKPiBpdCBtYXkgZXZlbiBi
-ZSBwcmVmZXJyZWQgZm9yIHBlcmlwaGVyYWxzIChvbmUgbWFwcGluZyBzaGFyZWQgYWNyb3NzIGFs
-bAo+IHVzZXJzKS4KPiAKPiBDaGVlcnMhCj4gCj4gUGF3ZcWCCj4gCj4gCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFp
-bGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlz
-dHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On 9/19/2011 11:53 PM, Rob Herring wrote:
+> On 09/19/2011 04:14 PM, Grant Likely wrote:
+>> On Mon, Sep 19, 2011 at 7:48 AM, Rob Herring<robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>  wrote:
+>>> On 09/19/2011 07:09 AM, Cousson, Benoit wrote:
+>>>> On 9/18/2011 11:23 PM, Rob Herring wrote:
+>>>>> I was headed down the path of implementing the 2nd option above,
+>>>>> but had a dilemma. What would be the numbering base for PPIs in
+>>>>> this case? Should it be 0 in the DT as proposed for SPIs or does it
+>>>>> stay at 16?
+>>>>
+>>>> Both SGI and PPI are internal to the CortexA9 MP core, and referring
+>>>> to the CortexA9 MP core TRM [1], you can see that the PPI# ->  ID#
+>>>> mapping is already documented: - Private timer, PPI(2) Each Cortex-A9
+>>>> processor has its own private timers that can generate interrupts,
+>>>> using ID29. - Watchdog timers, PPI(3) Each Cortex-A9 processor has
+>>>> its own watchdog timers that can generate interrupts, using ID30.
+>>>>
+>>>> So in that case, it can makes sense to use the ID. But it is
+>>>> interesting to note that the PPI is identified with a 0 based index
+>>>> number.
+>>>>
+>>> It's even worse than I thought: we could use 13 (ID16 == PPI0), 29 or 2
+>>> for the timer interrupt. The first would match 0 based SPI convention.
+>>> The last 2 would both match the documentation. We could never use 2 as
+>>> this will for sure be different and the GIC code will have no way to
+>>> know how to do the translation to ID. The only sane choice is using the
+>>> ID as you say.
+>>>
+>>> But you can't have it both ways. It does not make sense to use the ID
+>>> for some interrupts and a different scheme for others.
+>>
+>> Hmmm, it seems to me that some orthogonal issues are getting
+>> conflated.  Specifically, the binding vs. what the GIC driver using
+>> internally.  For my own understanding, let me see if I can summarize
+>> and clarify the problem.
+>>
+>> Each GIC IRQ is represented in 5 different ways:
+>> 1) the hardware documentation (PPI[0-15] or SPI[988] input pin)
+>> 2) The DT binding to represent the connection.
+>> 3) The Interrupt ID as specified by the GIC architecture reference[1]
+>> (SGI:[0-15], PPI:[16-31], SPI:[32-1019], special:[1020-1023])
+>> 4) The internal HWIRQ representation used by the GIC driver
+>> 5) The Linux VIRQ number that #4 maps to.
+>>
+>> [1] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ihi0048b/BCGBFHCH.html
+>>
+>> Some thoughts:
+>> - Generally the DT binding (#2) should reflect the HW view of the
+>> system (#1) since that is the number most likely to be represented in
+>> hardware manuals.  The interrupt ID is an internal detail of the GIC,
+>> and isn't really exposed in the block diagram of the hardware.
+>> - Presumably it is preferable for the GIC to directly use the
+>> Interrupt ID (#3) as the HWIRQ number (#4) because it is the most
+>> efficient from an interrupt handling perspective, and indeed this is
+>> currently what the GIC driver does.
+>> - Translation between the DT binding (#2) and the Interrupt ID / HWIRQ
+>> (#3/#4) is trivial, and easily managed by the GIC's irq_domain.
+>> - Though not necessarily as trivial, the mapping between Linux VIRQ
+>> and HWIRQ is not fixed, and when migrating to DT it should be assumed
+>> to be assigned at runtime.  Perhaps not so important for a core IRQ
+>> controller like the GIC (as opposed to an i2c irq expander), but
+>> assuming an fixed offset still should be avoided.  We may still force
+>> a SPI0->VIRQ32 on the root GIC as an optimization, but it is not
+>> necessary and the driver still needs to support remapping for a
+>> secondary GIC.
+>
+> The irq base is dynamic in my series, but is typically still GIC ID =
+> VIRQ for a primary GIC for now. A platform can adjust this with
+> irq_alloc_descs if necessary (but recommended not to of course).
+>
+>>
+>> So, for the GIC DT binding, I'm inclined to agree with Benoit that the
+>> binding should reflect the hardware connections, not the values used
+>> by software for decoding IRQs.  Also, I see absolutely no need to use
+>> separate nodes for each GIC interrupt space.  The DT interrupt
+>> specifier number space can more than handle the features of the GIC in
+>> a clear and concise manor.  So, here's my counter proposal for a GIC
+>> bindings (using Rob's text as the starting point):
+>>
+>> ----
+>>
+>> * ARM Generic Interrupt Controller
+>>
+>> ARM SMP cores are often associated with a GIC, providing per processor
+>> interrupts (PPI), shared processor interrupts (SPI) and software
+>> generated interrupts (SGI).
+>>
+>> Primary GIC is attached directly to the CPU and typically has PPIs and SGIs.
+>> Secondary GICs are cascaded into the upward interrupt controller and do not
+>> have PPIs or SGIs.
+>>
+>> Main node required properties:
+>>
+>> - compatible : should be one of:
+>>         "arm,cortex-a9-gic"
+>>         "arm,arm11mp-gic"
+>> - interrupt-controller : Identifies the node as an interrupt controller
+>> - #interrupt-cells : Specifies the number of cells needed to encode an
+>>    interrupt source.  The type shall be a<u32>  and the value shall be 3.
+>>
+>>    The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
+>> interrupts.
+>>    The 2nd cell contains the interrupt number for the interrupt type.
+>> SPI interrupts are in the range [0-987].  PPI interrupts are in the
+>> range [0-15].
+>>    The 3rd cell is the flags, encoded as follows:
+>>          bits[3:0] trigger type and level flags.
+>>                      1 = low-to-high edge triggered
+>>                      2 = high-to-low edge triggered
+>>                      4 = active high level-sensitive
+>>                      8 = active low level-sensitive
+>>          bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to
+>> each of the 8 possible cpus attached to the GIC.  A bit set to '1'
+>> indicated the interrupt is wired to that CPU.  Only valid for PPI
+>> interrupts.
+>>
+> How about a cpu mask of 0 means SPI and non-zero means PPI? Then we can
+> drop the first cell.
+>
+>> (Alternately, if there is no need for a CPU mask because PPI
+>> interrupts will never be wired to more than one CPU, then it would be
+>> better to encode the CPU number into the second cell with the SPI
+>> number).
+> You meant PPI number, right?                                    ^^^
+>
+> The common case at least on the A9 is a PPI is routed to all cores. QC
+> is different though. This was discussed previously. Basically, anything
+> is possible here, so the mask is needed for sure.
+>
+> Overall I'm fine with this and just happy to have some conclusion. I
+> will send out an updated series if there are no further comments.
+
+I'm OK with that proposal too. That solve all the concerns I had.
+
+Thanks for the good discussion,
+Benoit
