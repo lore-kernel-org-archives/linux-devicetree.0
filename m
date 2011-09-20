@@ -1,81 +1,82 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] dtc: Add support for named integer constants
-Date: Tue, 20 Sep 2011 12:35:29 -0500
-Message-ID: <4E78CEE1.3090403@freescale.com>
-References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>	<74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>	<CAPnjgZ0NzN510XJZ1ONAbMTS3vrrP8qCV8NYHq4_heZL+PizNg@mail.gmail.com>	<20110908183211.GM2967@ponder.secretlab.ca>	<20110909013433.GC21002@yookeroo.fritz.box>	<74CDBE0F657A3D45AFBB94109FB122FF04B732144F@HQMAIL01.nvidia.com>
-	<20110920080409.GL29197@yookeroo.fritz.box>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH REPOST 1/2] arm/dt: Tegra: Update SDHCI nodes to match
+ bindings
+Date: Tue, 20 Sep 2011 11:42:29 -0600
+Message-ID: <20110920174229.GH7781@ponder.secretlab.ca>
+References: <1316537186-26753-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110920080409.GL29197-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1316537186-26753-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2011 03:04 AM, David Gibson wrote:
-> So, there are basically two approaches to macro or function support.
+On Tue, Sep 20, 2011 at 10:46:25AM -0600, Stephen Warren wrote:
+> The bindings were recently updated to have separate properties for each
+> type of GPIO. Update the Device Tree source to match that.
 > 
-> A) Functions
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+> ---
+> I'd previously sent these to Grant assuming they'd go in his dt/next branch,
+> but perhaps these should go in through Arnd's arm-soc next/dt branch?
+
+Yes, they should probably go via Arnd's tree.
+
+g.
+
 > 
-> We allow definition of functions with parameters.  These are stored
-> in some kind of parse tree representation in a symbol table.  Instead
-> of producing a more-or-less fully realised device tree as we parse, we
-> produce some kind of parse tree showing the expressions and function
-> calls.  After parsing is complete we make another pass evaluating all
-> the expressions and functions.
+>  arch/arm/boot/dts/tegra-harmony.dts  |   12 ++++++------
+>  arch/arm/boot/dts/tegra-seaboard.dts |    6 +++---
+>  2 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> Advantages:
->  * Allows repeats / iteration to be done simply.
->  * Potentially allows superior type and other error reporting
->  * Jon already has a prototype in the test branch
+> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
+> index 4c05334..e581866 100644
+> --- a/arch/arm/boot/dts/tegra-harmony.dts
+> +++ b/arch/arm/boot/dts/tegra-harmony.dts
+> @@ -57,14 +57,14 @@
+>  	};
+>  
+>  	sdhci@c8000200 {
+> -		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
+> -			<&gpio 57 0>, /* wp, gpio PH1 */
+> -			<&gpio 155 0>; /* power, gpio PT3 */
+> +		cd-gpios = <&gpio 69 0>; /* gpio PI5 */
+> +		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
+> +		power-gpios = <&gpio 155 0>; /* gpio PT3 */
+>  	};
+>  
+>  	sdhci@c8000600 {
+> -		gpios = <&gpio 58 0>, /* cd, gpio PH2 */
+> -			<&gpio 59 0>, /* wp, gpio PH3 */
+> -			<&gpio 70 0>; /* power, gpio PI6 */
+> +		cd-gpios = <&gpio 58 0>; /* gpio PH2 */
+> +		wp-gpios = <&gpio 59 0>; /* gpio PH3 */
+> +		power-gpios = <&gpio 70 0>; /* gpio PI6 */
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+> index 1940cae..64cedca 100644
+> --- a/arch/arm/boot/dts/tegra-seaboard.dts
+> +++ b/arch/arm/boot/dts/tegra-seaboard.dts
+> @@ -21,8 +21,8 @@
+>  	};
+>  
+>  	sdhci@c8000400 {
+> -		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
+> -			<&gpio 57 0>, /* wp, gpio PH1 */
+> -			<&gpio 70 0>; /* power, gpio PI6 */
+> +		cd-gpios = <&gpio 69 0>; /* gpio PI5 */
+> +		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
+> +		power-gpios = <&gpio 70 0>; /* gpio PI6 */
+>  	};
+>  };
+> -- 
+> 1.7.0.4
 > 
-> Disadvantages:
->  * Requires a substantial runtime evaluation infrastructure to be
->    implemented, including representation and storage of function
->    definitions.
->  * I don't like Jon's proposed syntax in the test branch because
->    although it's C like, it's very much against the current
->    declarative feel of dts.  That is, it feels somewhat like a program
->    that's executed to produce the device tree rather than a
->    representation of the device tree itself
-
-You could say the same thing about macros.  This is just doing it at a
-higher semantic level.
-
->   Disadvantages:
->    * The # used for preprocessor directives clashes with common
->      property names beginning with #.  In practice this can be
->      disambiguated by assuming only # in column 0 is for cpp, but the
->      options to make cpp behave this way are not necessarily portable.
-
-There are other disadvantages, namely that cpp, while familiar, is not a
-very good macro language:
- - No recursive macro expansion ("self-referential" in cpp's terms) --
-   useful for iteration in the absence of explicit support
- - No conditionals inside the macro body -- needed to make recursive
-   macros work, but also useful on their own
- - Awkward handling of multi-line macro bodies -- backslashes
-   everywhere, and makes it difficult/awkward to fix the previous
-   issues with incremental extensions of the macro language
- - Does not integrate well with the surrounding language's
-   indentation/formatting, especially if the directives need to be in
-   column 0
-
-If we're going to use an existing macro language, something more like
-the GNU assembler's macros would be nicer.
-
-Another disadvantage of any approach that tries to separate macros from
-the underlying language is that you can't have anything be conditional
-on an expression that the macro layer doesn't understand.
-
--Scott
