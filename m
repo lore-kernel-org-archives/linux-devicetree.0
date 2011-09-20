@@ -1,48 +1,69 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: [PATCH REPOST 2/2] arm/dt: Tegra: Add support-8bit to SDHCI nodes
-Date: Tue, 20 Sep 2011 10:46:26 -0600
-Message-ID: <1316537186-26753-2-git-send-email-swarren@nvidia.com>
-References: <1316537186-26753-1-git-send-email-swarren@nvidia.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1316537186-26753-1-git-send-email-swarren@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, nicolas.pitre@linaro.org
-Cc: Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2] dtc: Add support for named integer constants
+Date: Tue, 20 Sep 2011 10:02:18 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B73215D8@HQMAIL01.nvidia.com>
+References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>
+	<CAPnjgZ0NzN510XJZ1ONAbMTS3vrrP8qCV8NYHq4_heZL+PizNg@mail.gmail.com>
+	<20110908183211.GM2967@ponder.secretlab.ca>
+	<20110909013433.GC21002@yookeroo.fritz.box>
+	<74CDBE0F657A3D45AFBB94109FB122FF04B732144F@HQMAIL01.nvidia.com>
+	<20110920080409.GL29197@yookeroo.fritz.box> <E1R60g6-0002XP-Pt@jdl.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <E1R60g6-0002XP-Pt-CYoMK+44s/E@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For Seaboard's internal eMMC, this makes the difference between a
-5.5MB/s and 10.2MB/s transfer rate. On Harmony, there wasn't any
-measurable difference on my cheap/slow ~2MB/s card.
+Jon Loeliger wrote at Tuesday, September 20, 2011 7:48 AM:
+> David Gibson wrote:
+> > Things get trickier when we want to extend this to macros or
+> > functions.  The only problem I have with your patch at present is that
+> > I'd prefer not to implement a constant defining syntax, only to have
+> > it obsoleted by whatever we do for macros or functions.
+> 
+> Exactly.
+> 
+> > So, there are basically two approaches to macro or function support.
+> >
+> > A) Functions
+> > B) Macros
+> >   B1) Use cpp itself
+> >   B2) Make our own preprocessor, isomorphic to cpp
+> 
+> To be thorough, there has been one other macro proposal: Use m4.
+> Suggesting that, however, has had the entertaining side effect
+> of causing internet-wide vomiting.
+> 
+> > Our current impasse is roughly that Jon prefers approach (A), whereas
+> > I prefer (B1) on balance.  (B1) would obsolete your suggested define
+> > syntax.  (A) and (B2) could both potentially subsume it, instead.
+> 
+> Right.
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
- arch/arm/boot/dts/tegra-harmony.dts  |    1 +
- arch/arm/boot/dts/tegra-seaboard.dts |    4 ++++
- 2 files changed, 5 insertions(+), 0 deletions(-)
+OK, that all makes sense.
 
-diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
-index e581866..0e225b8 100644
---- a/arch/arm/boot/dts/tegra-harmony.dts
-+++ b/arch/arm/boot/dts/tegra-harmony.dts
-@@ -66,5 +66,6 @@
- 		cd-gpios = <&gpio 58 0>; /* gpio PH2 */
- 		wp-gpios = <&gpio 59 0>; /* gpio PH3 */
- 		power-gpios = <&gpio 70 0>; /* gpio PI6 */
-+		support-8bit;
- 	};
- };
-diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
-index 64cedca..a72299b 100644
---- a/arch/arm/boot/dts/tegra-seaboard.dts
-+++ b/arch/arm/boot/dts/tegra-seaboard.dts
-@@ -25,4 +25,8 @@
- 		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
- 		power-gpios = <&gpio 70 0>; /* gpio PI6 */
- 	};
-+
-+	sdhci@c8000600 {
-+		support-8bit;
-+	};
- };
+However, it leaves me wondering what the next steps are; I was hoping to
+get a quick and simple constant syntax into dtc that I could use for the
+pinmux initialization patches I was working on, so the data tables there
+would be integer-based for efficiency, yet named using constant names
+instead of seemingly random numbers. It sounds like the dtc issue isn't
+going to be resolved particularly quickly; should I just go back to using
+strings in my pinmux patches? But that'd tie us to using strings forever
+in order for the bindings to remain compatible...
+
 -- 
-1.7.0.4
+nvpublic
