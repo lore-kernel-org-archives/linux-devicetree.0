@@ -1,18 +1,21 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v2] dtc: Add support for named integer constants
-Date: Mon, 19 Sep 2011 15:13:55 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B732144F@HQMAIL01.nvidia.com>
-References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>
-	<CAPnjgZ0NzN510XJZ1ONAbMTS3vrrP8qCV8NYHq4_heZL+PizNg@mail.gmail.com>
-	<20110908183211.GM2967@ponder.secretlab.ca>
-	<20110909013433.GC21002@yookeroo.fritz.box>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
+Date: Mon, 19 Sep 2011 18:22:15 -0600
+Message-ID: <CACxGe6vrksxkEhsKm5zWG5P3g0wqOBxsM3yqtP4yk0Us-=EPWw@mail.gmail.com>
+References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
+	<1316017900-19918-6-git-send-email-robherring2@gmail.com>
+	<CAJuYYwSFu2HC+u2NY41+yw9tEyy85RKa4Dpm3SL+jbwS_OOA0A@mail.gmail.com>
+	<4E71CE5D.9030900@ti.com> <4E71F978.6020402@gmail.com>
+	<4E72030F.1090300@ti.com>
+	<4E722B2D.4050307@gmail.com> <4E76615C.3000005@gmail.com>
+	<4E77310A.3000106@ti.com> <4E774847.3020104@gmail.com>
+	<CACxGe6v9nd5f5x-eu9hUyAqdS1+p3h6ixyutECYLdNo3ewDH0w@mail.gmail.com>
+	<4E77B9E3.40004@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110909013433.GC21002-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <4E77B9E3.40004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,50 +25,55 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "jdl-CYoMK+44s/E@public.gmane.org" <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-David Gibson wrote at Thursday, September 08, 2011 7:35 PM:
-> On Thu, Sep 08, 2011 at 11:32:11AM -0700, Grant Likely wrote:
-> > On Thu, Sep 08, 2011 at 06:09:27AM -0700, Simon Glass wrote:
-> > > Hi Stephen,
-> > >
-> > > On Fri, Sep 2, 2011 at 11:34 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> > > > Stephen Warren wrote at Tuesday, August 30, 2011 3:30 PM:
-> > > >> You may define constants as follows:
-> > > >>
-> > > >> /define/ TWO 2;
-> > > >> /define/ FOUR 4;
-> > > >> /define/ OTHER FOUR;
-> > > >>
-> > > >> And properties may use these values as follows:
-> > > >>
-> > > >> foo = <1 TWO 3 FOUR 5>;
-> > > >>
-> > > >> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-...
-> >
-> > What are the risks of symbol conflict with this approach?  I'm
-> > concerned that a poorly chosen /define/ name will break parsing in
-> > non-obvious ways.  Would it be better to have a every define reference
-> > to be explicit in the syntax?
-> 
-> I really don't want to make identifiers - which is essentially what
-> we're talking here - explicitly marked, on the basis of "be like C".
-> I believe they should be safe, as long as we don't attempt to
-> recognize them in property/nodename context.
+On Mon, Sep 19, 2011 at 3:53 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 09/19/2011 04:14 PM, Grant Likely wrote:
+>> * ARM Generic Interrupt Controller
+>>
+>> ARM SMP cores are often associated with a GIC, providing per processor
+>> interrupts (PPI), shared processor interrupts (SPI) and software
+>> generated interrupts (SGI).
+>>
+>> Primary GIC is attached directly to the CPU and typically has PPIs and S=
+GIs.
+>> Secondary GICs are cascaded into the upward interrupt controller and do =
+not
+>> have PPIs or SGIs.
+>>
+>> Main node required properties:
+>>
+>> - compatible : should be one of:
+>> =A0 =A0 =A0 =A0"arm,cortex-a9-gic"
+>> =A0 =A0 =A0 =A0"arm,arm11mp-gic"
+>> - interrupt-controller : Identifies the node as an interrupt controller
+>> - #interrupt-cells : Specifies the number of cells needed to encode an
+>> =A0 interrupt source. =A0The type shall be a <u32> and the value shall b=
+e 3.
+>>
+>> =A0 The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
+>> interrupts.
+>> =A0 The 2nd cell contains the interrupt number for the interrupt type.
+>> SPI interrupts are in the range [0-987]. =A0PPI interrupts are in the
+>> range [0-15].
+>> =A0 The 3rd cell is the flags, encoded as follows:
+>> =A0 =A0 =A0 =A0 bits[3:0] trigger type and level flags.
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 1 =3D low-to-high edge triggered
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 2 =3D high-to-low edge triggered
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 4 =3D active high level-sensitive
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 8 =3D active low level-sensitive
+>> =A0 =A0 =A0 =A0 bits[15:8] PPI interrupt cpu mask. =A0Each bit correspon=
+ds to
+>> each of the 8 possible cpus attached to the GIC. =A0A bit set to '1'
+>> indicated the interrupt is wired to that CPU. =A0Only valid for PPI
+>> interrupts.
+>>
+> How about a cpu mask of 0 means SPI and non-zero means PPI? Then we can
+> drop the first cell.
 
-Grant,
+Cells are cheap, and it is better to be explicit.  It is certainly
+easier to extend in the future too if the type cell is used.
 
-As far as I understand the parser code, the define names aren't accepted
-where they'd cause conflicts with node names etc. I just tested using
-node names that matched names set up with /define/, and didn't see it
-cause any unexpected syntax errors.
-
-Jon, David, 
-
-Does the change look good to go in?
-
--- 
-nvpublic
+g.
