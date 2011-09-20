@@ -1,42 +1,46 @@
-From: "Olivier Martin" <olivier.martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Passing an initrd to a Linux kernel with Device Tree
-Date: Tue, 20 Sep 2011 18:46:22 +0100
-Message-ID: <45292.4717603766$1316541362@news.gmane.org>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [PATCH REPOST 1/2] arm/dt: Tegra: Update SDHCI nodes to match
+ bindings
+Date: Tue, 20 Sep 2011 10:59:33 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF04B732161E@HQMAIL01.nvidia.com>
+References: <1316537186-26753-1-git-send-email-swarren@nvidia.com>
+ <201109201943.29510.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Language: en-gb
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201109201943.29510.arnd@arndb.de>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "nicolas.pitre@linaro.org" <nicolas.pitre@linaro.org>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Arnd Bergmann wrote at Tuesday, September 20, 2011 11:43 AM:
+> On Tuesday 20 September 2011, Stephen Warren wrote:
+> > The bindings were recently updated to have separate properties for each
+> > type of GPIO. Update the Device Tree source to match that.
+> >
+> > Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> > Acked-by: Olof Johansson <olof@lixom.net>
+> > ---
+> > I'd previously sent these to Grant assuming they'd go in his dt/next branch,
+> > but perhaps these should go in through Arnd's arm-soc next/dt branch?
+> >
+> 
+> Which tree has the update that changed the bindings? I think it should
+> go into the same one.
+> 
+> If it's already upstream, I can take it into the fixes branch.
 
-I tried recently to add support in UEFI to pass an initrd with FDT to a
-Linux kernel. I have searched the Internet but I did not find any
-information to do that.
+Chris applied them to the mmc-next tree:
 
-FYI, this is the way it is done in ATAG:
-typedef struct {
-  UINT32  start;
-  UINT32  size;
-} LINUX_ATAG_INITRD2;
+git://git.kernel.org/pub/scm/linux/kernel/git/cjb/mmc.git
 
-The boot loader loads the initrd in system memory and passes the memory
-region information through ATAG.
+which appears to be temporarily at:
 
+git://dev.laptop.org/users/cjb/mmc
 
-Sorry, if it is the wrong mailing-list. In this case, can someone point me
-on the right forum for any Linux FDT oriented questions.
+-- 
+nvpublic
 
-Thanks,
-Olivier
