@@ -1,167 +1,103 @@
-From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: gic: add OF based initialization
-Date: Tue, 20 Sep 2011 17:23:02 +0200
-Message-ID: <4E78AFD6.9030209@ti.com>
-References: <1316017900-19918-1-git-send-email-robherring2@gmail.com>
-	<1316017900-19918-6-git-send-email-robherring2@gmail.com>
-	<CAJuYYwSFu2HC+u2NY41+yw9tEyy85RKa4Dpm3SL+jbwS_OOA0A@mail.gmail.com>
-	<4E71CE5D.9030900@ti.com> <4E71F978.6020402@gmail.com>
-	<4E72030F.1090300@ti.com> <4E722B2D.4050307@gmail.com>
-	<4E76615C.3000005@gmail.com> <4E77310A.3000106@ti.com>
-	<4E774847.3020104@gmail.com>
-	<CACxGe6v9nd5f5x-eu9hUyAqdS1+p3h6ixyutECYLdNo3ewDH0w@mail.gmail.com>
-	<4E77B9E3.40004@gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: DT vs ARM static mappings
+Date: Tue, 20 Sep 2011 17:16:43 +0100
+Message-ID: <1316535403.4611.534.camel@hornet.cambridge.arm.com>
+References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
+	<4E788E12.8000801@gmail.com>
+	<1316527365.4611.354.camel@hornet.cambridge.arm.com>
+	<4E78A546.9040604@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E77B9E3.40004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4E78A546.9040604@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/19/2011 11:53 PM, Rob Herring wrote:
-> On 09/19/2011 04:14 PM, Grant Likely wrote:
->> On Mon, Sep 19, 2011 at 7:48 AM, Rob Herring<robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>  wrote:
->>> On 09/19/2011 07:09 AM, Cousson, Benoit wrote:
->>>> On 9/18/2011 11:23 PM, Rob Herring wrote:
->>>>> I was headed down the path of implementing the 2nd option above,
->>>>> but had a dilemma. What would be the numbering base for PPIs in
->>>>> this case? Should it be 0 in the DT as proposed for SPIs or does it
->>>>> stay at 16?
->>>>
->>>> Both SGI and PPI are internal to the CortexA9 MP core, and referring
->>>> to the CortexA9 MP core TRM [1], you can see that the PPI# ->  ID#
->>>> mapping is already documented: - Private timer, PPI(2) Each Cortex-A9
->>>> processor has its own private timers that can generate interrupts,
->>>> using ID29. - Watchdog timers, PPI(3) Each Cortex-A9 processor has
->>>> its own watchdog timers that can generate interrupts, using ID30.
->>>>
->>>> So in that case, it can makes sense to use the ID. But it is
->>>> interesting to note that the PPI is identified with a 0 based index
->>>> number.
->>>>
->>> It's even worse than I thought: we could use 13 (ID16 == PPI0), 29 or 2
->>> for the timer interrupt. The first would match 0 based SPI convention.
->>> The last 2 would both match the documentation. We could never use 2 as
->>> this will for sure be different and the GIC code will have no way to
->>> know how to do the translation to ID. The only sane choice is using the
->>> ID as you say.
->>>
->>> But you can't have it both ways. It does not make sense to use the ID
->>> for some interrupts and a different scheme for others.
->>
->> Hmmm, it seems to me that some orthogonal issues are getting
->> conflated.  Specifically, the binding vs. what the GIC driver using
->> internally.  For my own understanding, let me see if I can summarize
->> and clarify the problem.
->>
->> Each GIC IRQ is represented in 5 different ways:
->> 1) the hardware documentation (PPI[0-15] or SPI[988] input pin)
->> 2) The DT binding to represent the connection.
->> 3) The Interrupt ID as specified by the GIC architecture reference[1]
->> (SGI:[0-15], PPI:[16-31], SPI:[32-1019], special:[1020-1023])
->> 4) The internal HWIRQ representation used by the GIC driver
->> 5) The Linux VIRQ number that #4 maps to.
->>
->> [1] http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ihi0048b/BCGBFHCH.html
->>
->> Some thoughts:
->> - Generally the DT binding (#2) should reflect the HW view of the
->> system (#1) since that is the number most likely to be represented in
->> hardware manuals.  The interrupt ID is an internal detail of the GIC,
->> and isn't really exposed in the block diagram of the hardware.
->> - Presumably it is preferable for the GIC to directly use the
->> Interrupt ID (#3) as the HWIRQ number (#4) because it is the most
->> efficient from an interrupt handling perspective, and indeed this is
->> currently what the GIC driver does.
->> - Translation between the DT binding (#2) and the Interrupt ID / HWIRQ
->> (#3/#4) is trivial, and easily managed by the GIC's irq_domain.
->> - Though not necessarily as trivial, the mapping between Linux VIRQ
->> and HWIRQ is not fixed, and when migrating to DT it should be assumed
->> to be assigned at runtime.  Perhaps not so important for a core IRQ
->> controller like the GIC (as opposed to an i2c irq expander), but
->> assuming an fixed offset still should be avoided.  We may still force
->> a SPI0->VIRQ32 on the root GIC as an optimization, but it is not
->> necessary and the driver still needs to support remapping for a
->> secondary GIC.
->
-> The irq base is dynamic in my series, but is typically still GIC ID =
-> VIRQ for a primary GIC for now. A platform can adjust this with
-> irq_alloc_descs if necessary (but recommended not to of course).
->
->>
->> So, for the GIC DT binding, I'm inclined to agree with Benoit that the
->> binding should reflect the hardware connections, not the values used
->> by software for decoding IRQs.  Also, I see absolutely no need to use
->> separate nodes for each GIC interrupt space.  The DT interrupt
->> specifier number space can more than handle the features of the GIC in
->> a clear and concise manor.  So, here's my counter proposal for a GIC
->> bindings (using Rob's text as the starting point):
->>
->> ----
->>
->> * ARM Generic Interrupt Controller
->>
->> ARM SMP cores are often associated with a GIC, providing per processor
->> interrupts (PPI), shared processor interrupts (SPI) and software
->> generated interrupts (SGI).
->>
->> Primary GIC is attached directly to the CPU and typically has PPIs and SGIs.
->> Secondary GICs are cascaded into the upward interrupt controller and do not
->> have PPIs or SGIs.
->>
->> Main node required properties:
->>
->> - compatible : should be one of:
->>         "arm,cortex-a9-gic"
->>         "arm,arm11mp-gic"
->> - interrupt-controller : Identifies the node as an interrupt controller
->> - #interrupt-cells : Specifies the number of cells needed to encode an
->>    interrupt source.  The type shall be a<u32>  and the value shall be 3.
->>
->>    The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
->> interrupts.
->>    The 2nd cell contains the interrupt number for the interrupt type.
->> SPI interrupts are in the range [0-987].  PPI interrupts are in the
->> range [0-15].
->>    The 3rd cell is the flags, encoded as follows:
->>          bits[3:0] trigger type and level flags.
->>                      1 = low-to-high edge triggered
->>                      2 = high-to-low edge triggered
->>                      4 = active high level-sensitive
->>                      8 = active low level-sensitive
->>          bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to
->> each of the 8 possible cpus attached to the GIC.  A bit set to '1'
->> indicated the interrupt is wired to that CPU.  Only valid for PPI
->> interrupts.
->>
-> How about a cpu mask of 0 means SPI and non-zero means PPI? Then we can
-> drop the first cell.
->
->> (Alternately, if there is no need for a CPU mask because PPI
->> interrupts will never be wired to more than one CPU, then it would be
->> better to encode the CPU number into the second cell with the SPI
->> number).
-> You meant PPI number, right?                                    ^^^
->
-> The common case at least on the A9 is a PPI is routed to all cores. QC
-> is different though. This was discussed previously. Basically, anything
-> is possible here, so the mask is needed for sure.
->
-> Overall I'm fine with this and just happy to have some conclusion. I
-> will send out an updated series if there are no further comments.
-
-I'm OK with that proposal too. That solve all the concerns I had.
-
-Thanks for the good discussion,
-Benoit
+T24gVHVlLCAyMDExLTA5LTIwIGF0IDE1OjM3ICswMTAwLCBSb2IgSGVycmluZyB3cm90ZQo+ID4g
+TXkgcG9pbnQgaXMgdGhhdCB3ZSBzaG91bGQgYmUgYWJsZSB0byBoYW5kbGUgX2FsbF8gb2YgdGhl
+bSB1c2luZyBvbmUKPiA+IERUX01BQ0hJTkVfU1RBUlQgd2l0aCBhIHNpbmdsZSBjb21wYXQgdmFs
+dWUgImFybSx2ZXhwcmVzcyIuIFRoZSBvbmx5Cj4gPiBwcm9ibGVtIHdpdGggdGhpcyAoc28gZmFy
+KSBpcyB0aGUgbWFwcGluZy4KPiAKPiBZZXMsIHlvdSBzaG91bGQgaGF2ZSAxIERUX01BQ0hJTkVf
+U1RBUlQsIGJ1dCBhcm0sdmV4cHJlc3MgaXMgdG9vCj4gZ2VuZXJpYy4gWW91IGNhbiBhbmQgc2hv
+dWxkIGhhdmUgYSBsaXN0IG9mIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgZWFjaAo+IGJvYXJkL21h
+Y2hpbmUuCgpPdXIgRFRTIGhhczoKCmNvbXBhdGlibGUgPSAiYXJtLHZleHByZXNzLXYycC1jYTki
+LCAiYXJtLHZleHByZXNzIjsKCmFuZCB2Mm0uYzoKCnN0YXRpYyBjb25zdCBjaGFyICp2Mm1fZHRf
+bWF0Y2hbXSBfX2luaXRjb25zdCA9IHsKICAgICAgICJhcm0sdmV4cHJlc3MiLAogICAgICAgTlVM
+TCwKfTsKCkRUX01BQ0hJTkVfU1RBUlQoVkVYUFJFU1NfRFQsICJBUk0gVmVyc2F0aWxlIEV4cHJl
+c3MiKQogICAgICAgLm1hcF9pbyAgICAgICAgID0gdjJtX21hcF9pbywKICAgICAgIC5pbml0X2Vh
+cmx5ICAgICA9IHYybV9pbml0X2Vhcmx5LAogICAgICAgLmluaXRfaXJxICAgICAgID0gdjJtX2lu
+aXRfaXJxLAogICAgICAgLnRpbWVyICAgICAgICAgID0gJnYybV90aW1lciwKICAgICAgIC5pbml0
+X21hY2hpbmUgICA9IHYybV9kdF9pbml0LAogICAgICAgLmR0X2NvbXBhdCAgICAgID0gdjJtX2R0
+X21hdGNoLApNQUNISU5FX0VORAoKSXNuJ3QgaXQgd2hhdCB5b3UgbWVhbnQ/CgpFc3NlbnRpYWxs
+eSBJIHNlZSB0d28gd2F5cyBvZiBkb2luZyB3aGF0IHdlIGFyZSBkaXNjdXNzaW5nOgoKMS4gVHdv
+IERUX01BQ0hJTkVfU1RBUlQsIG9uZSBtYXRjaGluZyAiYXJtLHZleHByZXNzLWxlZ2FjeSIgd2l0
+aCBtYXBfaW8KPSB2Mm1fbWFwX2lvX2xlZ2FjeSBhbmQgc2Vjb25kIG1hdGNoaW5nICJhcm0sdmV4
+cHJlc3MtcnMxIiB3aXRoIG1hcF9pbyA9CnYybV9tYXBfaW9fcnMxLAoKMi4gU2luZ2xlIERUX01B
+Q0hJTkVfU1RBUlQgbWF0Y2hpbmcgKHRoZSBtb3N0IGdlbmVyaWMpICJhcm0sdmV4cHJlc3MiCmFu
+ZCBkb2luZyAocm91Z2x5KSB0aGlzIGluIHYybV9tYXBfaW86CgpvZl9zY2FuX2ZsYXRfZHQodjJt
+X2R0X2lvdGFibGVfaW5pdCwgTlVMTCk7Cgp2Mm1fZHRfaW90YWJsZV9pbml0KC4uLikKewoJaWYg
+KGRlcHRoICE9IDApCgkJcmV0dXJuIDA7CglpZiAob2ZfZmxhdF9kdF9pc19jb21wYXRpYmxlKG5v
+ZGUsICJhcm0sdmV4cHJlc3MtbGVnYWN5IikpCgkJaW90YWJsZV9pbml0KHYybV9pb19kZXNjX2xl
+Z2FjeSk7CgllbHNlIChvZl9mbGF0X2R0X2lzX2NvbXBhdGlibGUobm9kZSwgImFybSx2ZXhwcmVz
+cy1yczEiKSkKCQlpb3RhYmxlX2luaXQodjJtX2lvX2Rlc2NfcnMxKTsKCWVsc2UKCQlwYW5pYygp
+Owp9CgpOZWl0aGVyIG9mIHRoZW0gc2VlbSBwYXJ0aWN1bGFybHkgYXBwZWFsaW5nLi4uIDstKQoK
+PiA+PiBJbiAiY2hvc2VuIiBsaWtlIHRoZSBrZXJuZWwgY29tbWFuZCBsaW5lIHdvdWxkIGJlIHRo
+ZSBwbGFjZSwgYnV0IEkgZG9uJ3QKPiA+PiB0aGluayB0aGF0IGlzIHRoZSByaWdodCBhcHByb2Fj
+aC4gQ2hvc2VuIGlzIHJlYWxseSBmb3IgdGhpbmdzIHRoYXQKPiA+PiBjaGFuZ2UgZnJlcXVlbnRs
+eSBhbmQgdGhpcyBkb2Vzbid0IHJlYWxseSBmYWxsIGluIHRoYXQgY2F0ZWdvcnkuCj4gPiAKPiA+
+IEFnYWluLCBubyBhcmd1bWVudCBmcm9tIG1lIGhlcmUgOi0pCj4gPiAKPiA+IFRoZSBxdWVzdGlv
+biBpcyAtIHdoZXJlIHNob3VsZCBpdCBiZT8KPgo+IE5vd2hlcmUuIEl0J3MgYW4gT1Mgc3BlY2lm
+aWMgaXNzdWUsIG5vdCBhIGgvdyBpc3N1ZS4KClRoYXQncyBleGFjdGx5IHdoeSBJIGRpZG4ndCBs
+aWtlIHRoaXMgaWRlYSBpbiB0aGUgZmlyc3QgcGxhY2UuIFRoaXMKZG9lc24ndCBjaGFuZ2UgdGhl
+IGZhY3QgdGhhdCBjdXJyZW50IGluZnJhc3RydWN0dXJlIGlzbid0IHJlYWxseSBoZWxwZnVsCmhl
+cmUuCgo+IFNvIGNyZWF0ZSBhIG1hcHBpbmcgcGVyIHBlcmlwaGVyYWwgcmF0aGVyIHRoYW4gcGVy
+IGNoaXAgc2VsZWN0LiBUaGVuIHRoZQo+IHZpcnR1YWwgYWRkcmVzcyBjYW4gYWx3YXlzIGJlIHRo
+ZSBzYW1lLgoKQXMgSSBzYWlkIChzZWUgYmVsb3cpIHRoaXMgaXMgZXhhY3RseSB3aGF0IEkgd2Fu
+dGVkIHRvIGRvLCBidXQgSSB3YXMKZGVmZWF0ZWQgYnkgdGhlIHJlYWxpdHkgOi0pCgpPbiBUdWUs
+IDIwMTEtMDktMjAgYXQgMTI6NTEgKzAxMDAsIFBhd2VsIE1vbGwgd3JvdGU6IAo+ID4gPiBJbml0
+aWFsbHkgSSB3YW50ZWQgdG8gZmluZCB0aGUgbWVudGlvbmVkIGRldmljZXMgYW5kIGNyZWF0ZSBp
+bmRpdmlkdWFsCj4gPiA+IG1hcHBpbmdzIGZvciB0aGVtLCBzbyB0aGUgTU1JT19QMlYgd291bGQg
+YmUgc3RpbGwgdmFsaWQgKGlmIHNsaWdodGx5Cj4gPiA+ICJhYnVzZWQiKSwgYnV0IEkgZmFpbGVk
+IGR1ZSB0byB0aGUgcHJvYmxlbXMgbWVudGlvbmVkIGFib3ZlLiBBbmQgSSBjYW4ndAo+ID4gPiBk
+ZWxheSB0aGlzIG9wZXJhdGlvbiB0aWxsIHRoZSB0cmVlIGlzIHVuLWZsYXR0ZW5lZCwgYXMgdGhl
+IGNvcmUgdGlsZQo+ID4gPiBtdXN0IGJlIHByb2JlZCAodmlhIHN5c3JlZykgaW4gbWFwX2lvICh0
+aWxlJ3Mgc3BlY2lmaWMgY29kZSBtdXN0IGJlIGFibGUKPiA+ID4gdG8gY3JlYXRlIGl0cyBvd24g
+bWFwcGluZ3MpOgoKCj4gPj4gR2VuZXJhbGx5LCB0aGUgdHJlbmQgaXMgdG8gZ2V0IHJpZCBvZiBz
+dGF0aWMgbWFwcGluZ3MgYXMgbXVjaCBhcwo+ID4+IHBvc3NpYmxlLiBEb2luZyB0aGF0IGZpcnN0
+IG1pZ2h0IHNpbXBsaWZ5IHRoaW5ncy4KPiA+IAo+ID4gWW91IGNhbid0IGRvIGlvcmVtYXAoKSBi
+ZWZvcmUga21hbGxvYygpIGlzIHVwIGFuZCBydW5uaW5nIChjb3JyZWN0IG1lIGlmCj4gPiBJIGFt
+IHdyb25nKSwgYXQgbGVhc3QgeW91IGNhbid0IGRvIHRoaXMgaW4gbWFwX2lvLiBTbyB0aGUgc3Rh
+dGljIG1hcHBpbmcKPiA+IGlzIGEgbXVzdCBzb21ldGltZXMuIEFuZCBhY3R1YWxseSwgd2l0aCB0
+aGUgbGF0ZXN0IE5pY28ncyBjaGFuZ2VzOgo+ID4gCj4gQ29ycmVjdC4gWW91IGNhbid0IGRvIGlv
+cmVtYXAgdW50aWwgaW5pdF9pcnEuIG1hcF9pbyBhbmQgaW5pdF9lYXJseSBhcmUKPiB0b28gZWFy
+bHkuIE15IHBvaW50IHdhcyBpZiB5b3UgY2FuIGRlbGF5IGgvdyBhY2Nlc3MgdGhlbiB5b3UgY2Fu
+IHJlbW92ZQo+IHRoZSBzdGF0aWMgbWFwcGluZ3MuIEJ1dCB5ZXMsIHdlIGdlbmVyYWxseSBjYW4n
+dCByZW1vdmUgdGhlbSBhbGwuIFNDVQo+IGFuZCBMTCBkZWJ1ZyB1YXJ0IGFyZSAyIGV4YW1wbGVz
+LgoKSW4gbXkgY2FzZSBpdCdzIHN5c3JlZyBhbmQgc3lzY3RsLiBUaGVyZSBhcmUgdHdvIG1vcmUg
+dXNlcnMgb2Ygc3RhdGljCm1hcHBpbmdzOiB0aW1lcjAxIGFuZCB0aW1lcjIzLCBidXQgdGhleSBj
+b3VsZCBhdCBzb21lIHBvaW50IGRvIGlvcmVtYXAoKQpvbiB0aGVpciBvd24gKGVzcGVjaWFsbHkg
+d2l0aCBOaWNvJ3MgY2hhbmdlcykuCgo+IEZvciB0aGUgc2hvcnQgdGVybSwgSSB3b3VsZCBqdXN0
+IGhhdmUgMiBzdGF0aWMgaW90YWJsZXMgYW5kIHNlbGVjdCB0aGUKPiByaWdodCBvbmUgYmFzZWQg
+b24gdGhlIGJvYXJkJ3MgKG9yIG1vdGhlcmJvYXJkJ3MpIGNvbXBhdGlibGUgc3RyaW5nLgoKWWVz
+LCBhcyBtZW50aW9uZWQgYWJvdmUuIFRoaXMgZG9lc24ndCBoZWxwIHdpdGggdGhlIHN5c3JlZyBv
+ZmZzZXQKcHJvYmxlbSB0aG91Z2guIEkgbWF5IGp1c3Qgc2NhbiB0aGUgZmxhdCB0cmVlIGxvb2tp
+bmcgZm9yIHRoZWlyCnBhcnRpY3VsYXIgbmFtZXMgYW5kIGdldHRpbmcgcmF3IG9mZnNldCBmcm9t
+IHRoZWlyIHJlZ3MuLi4gU291bmRzIGxpa2UgYQpoYWNrLCB0aG91Z2guCgo+IExvbmcgdGVybSwg
+d2Ugc2hvdWxkIGxvb2sgaW50byBpbXBsZW1lbnRpbmcgYSBjb21tb24gZWFybHkgRFQgYWRkcmVz
+cwo+IHBhcnNpbmcgZnVuY3Rpb24uCgpXZWxsLCBhc3N1bWluZyB0aGF0IHdlIHdhbnQgdG8gaGF2
+ZSB0aGVtIGF0IGFsbC4gSSdtIG5vdCBjb252aW5jZWQsCmZyYW5rbHkgOy0pCgpQYXdlxYIKCgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
