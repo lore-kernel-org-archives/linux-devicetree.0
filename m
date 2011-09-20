@@ -1,103 +1,67 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: DT vs ARM static mappings
-Date: Tue, 20 Sep 2011 17:16:43 +0100
-Message-ID: <1316535403.4611.534.camel@hornet.cambridge.arm.com>
-References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
-	<4E788E12.8000801@gmail.com>
-	<1316527365.4611.354.camel@hornet.cambridge.arm.com>
-	<4E78A546.9040604@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4E78A546.9040604@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: [PATCH REPOST 1/2] arm/dt: Tegra: Update SDHCI nodes to match bindings
+Date: Tue, 20 Sep 2011 10:46:25 -0600
+Message-ID: <1316537186-26753-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, nicolas.pitre@linaro.org
+Cc: Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDExLTA5LTIwIGF0IDE1OjM3ICswMTAwLCBSb2IgSGVycmluZyB3cm90ZQo+ID4g
-TXkgcG9pbnQgaXMgdGhhdCB3ZSBzaG91bGQgYmUgYWJsZSB0byBoYW5kbGUgX2FsbF8gb2YgdGhl
-bSB1c2luZyBvbmUKPiA+IERUX01BQ0hJTkVfU1RBUlQgd2l0aCBhIHNpbmdsZSBjb21wYXQgdmFs
-dWUgImFybSx2ZXhwcmVzcyIuIFRoZSBvbmx5Cj4gPiBwcm9ibGVtIHdpdGggdGhpcyAoc28gZmFy
-KSBpcyB0aGUgbWFwcGluZy4KPiAKPiBZZXMsIHlvdSBzaG91bGQgaGF2ZSAxIERUX01BQ0hJTkVf
-U1RBUlQsIGJ1dCBhcm0sdmV4cHJlc3MgaXMgdG9vCj4gZ2VuZXJpYy4gWW91IGNhbiBhbmQgc2hv
-dWxkIGhhdmUgYSBsaXN0IG9mIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgZWFjaAo+IGJvYXJkL21h
-Y2hpbmUuCgpPdXIgRFRTIGhhczoKCmNvbXBhdGlibGUgPSAiYXJtLHZleHByZXNzLXYycC1jYTki
-LCAiYXJtLHZleHByZXNzIjsKCmFuZCB2Mm0uYzoKCnN0YXRpYyBjb25zdCBjaGFyICp2Mm1fZHRf
-bWF0Y2hbXSBfX2luaXRjb25zdCA9IHsKICAgICAgICJhcm0sdmV4cHJlc3MiLAogICAgICAgTlVM
-TCwKfTsKCkRUX01BQ0hJTkVfU1RBUlQoVkVYUFJFU1NfRFQsICJBUk0gVmVyc2F0aWxlIEV4cHJl
-c3MiKQogICAgICAgLm1hcF9pbyAgICAgICAgID0gdjJtX21hcF9pbywKICAgICAgIC5pbml0X2Vh
-cmx5ICAgICA9IHYybV9pbml0X2Vhcmx5LAogICAgICAgLmluaXRfaXJxICAgICAgID0gdjJtX2lu
-aXRfaXJxLAogICAgICAgLnRpbWVyICAgICAgICAgID0gJnYybV90aW1lciwKICAgICAgIC5pbml0
-X21hY2hpbmUgICA9IHYybV9kdF9pbml0LAogICAgICAgLmR0X2NvbXBhdCAgICAgID0gdjJtX2R0
-X21hdGNoLApNQUNISU5FX0VORAoKSXNuJ3QgaXQgd2hhdCB5b3UgbWVhbnQ/CgpFc3NlbnRpYWxs
-eSBJIHNlZSB0d28gd2F5cyBvZiBkb2luZyB3aGF0IHdlIGFyZSBkaXNjdXNzaW5nOgoKMS4gVHdv
-IERUX01BQ0hJTkVfU1RBUlQsIG9uZSBtYXRjaGluZyAiYXJtLHZleHByZXNzLWxlZ2FjeSIgd2l0
-aCBtYXBfaW8KPSB2Mm1fbWFwX2lvX2xlZ2FjeSBhbmQgc2Vjb25kIG1hdGNoaW5nICJhcm0sdmV4
-cHJlc3MtcnMxIiB3aXRoIG1hcF9pbyA9CnYybV9tYXBfaW9fcnMxLAoKMi4gU2luZ2xlIERUX01B
-Q0hJTkVfU1RBUlQgbWF0Y2hpbmcgKHRoZSBtb3N0IGdlbmVyaWMpICJhcm0sdmV4cHJlc3MiCmFu
-ZCBkb2luZyAocm91Z2x5KSB0aGlzIGluIHYybV9tYXBfaW86CgpvZl9zY2FuX2ZsYXRfZHQodjJt
-X2R0X2lvdGFibGVfaW5pdCwgTlVMTCk7Cgp2Mm1fZHRfaW90YWJsZV9pbml0KC4uLikKewoJaWYg
-KGRlcHRoICE9IDApCgkJcmV0dXJuIDA7CglpZiAob2ZfZmxhdF9kdF9pc19jb21wYXRpYmxlKG5v
-ZGUsICJhcm0sdmV4cHJlc3MtbGVnYWN5IikpCgkJaW90YWJsZV9pbml0KHYybV9pb19kZXNjX2xl
-Z2FjeSk7CgllbHNlIChvZl9mbGF0X2R0X2lzX2NvbXBhdGlibGUobm9kZSwgImFybSx2ZXhwcmVz
-cy1yczEiKSkKCQlpb3RhYmxlX2luaXQodjJtX2lvX2Rlc2NfcnMxKTsKCWVsc2UKCQlwYW5pYygp
-Owp9CgpOZWl0aGVyIG9mIHRoZW0gc2VlbSBwYXJ0aWN1bGFybHkgYXBwZWFsaW5nLi4uIDstKQoK
-PiA+PiBJbiAiY2hvc2VuIiBsaWtlIHRoZSBrZXJuZWwgY29tbWFuZCBsaW5lIHdvdWxkIGJlIHRo
-ZSBwbGFjZSwgYnV0IEkgZG9uJ3QKPiA+PiB0aGluayB0aGF0IGlzIHRoZSByaWdodCBhcHByb2Fj
-aC4gQ2hvc2VuIGlzIHJlYWxseSBmb3IgdGhpbmdzIHRoYXQKPiA+PiBjaGFuZ2UgZnJlcXVlbnRs
-eSBhbmQgdGhpcyBkb2Vzbid0IHJlYWxseSBmYWxsIGluIHRoYXQgY2F0ZWdvcnkuCj4gPiAKPiA+
-IEFnYWluLCBubyBhcmd1bWVudCBmcm9tIG1lIGhlcmUgOi0pCj4gPiAKPiA+IFRoZSBxdWVzdGlv
-biBpcyAtIHdoZXJlIHNob3VsZCBpdCBiZT8KPgo+IE5vd2hlcmUuIEl0J3MgYW4gT1Mgc3BlY2lm
-aWMgaXNzdWUsIG5vdCBhIGgvdyBpc3N1ZS4KClRoYXQncyBleGFjdGx5IHdoeSBJIGRpZG4ndCBs
-aWtlIHRoaXMgaWRlYSBpbiB0aGUgZmlyc3QgcGxhY2UuIFRoaXMKZG9lc24ndCBjaGFuZ2UgdGhl
-IGZhY3QgdGhhdCBjdXJyZW50IGluZnJhc3RydWN0dXJlIGlzbid0IHJlYWxseSBoZWxwZnVsCmhl
-cmUuCgo+IFNvIGNyZWF0ZSBhIG1hcHBpbmcgcGVyIHBlcmlwaGVyYWwgcmF0aGVyIHRoYW4gcGVy
-IGNoaXAgc2VsZWN0LiBUaGVuIHRoZQo+IHZpcnR1YWwgYWRkcmVzcyBjYW4gYWx3YXlzIGJlIHRo
-ZSBzYW1lLgoKQXMgSSBzYWlkIChzZWUgYmVsb3cpIHRoaXMgaXMgZXhhY3RseSB3aGF0IEkgd2Fu
-dGVkIHRvIGRvLCBidXQgSSB3YXMKZGVmZWF0ZWQgYnkgdGhlIHJlYWxpdHkgOi0pCgpPbiBUdWUs
-IDIwMTEtMDktMjAgYXQgMTI6NTEgKzAxMDAsIFBhd2VsIE1vbGwgd3JvdGU6IAo+ID4gPiBJbml0
-aWFsbHkgSSB3YW50ZWQgdG8gZmluZCB0aGUgbWVudGlvbmVkIGRldmljZXMgYW5kIGNyZWF0ZSBp
-bmRpdmlkdWFsCj4gPiA+IG1hcHBpbmdzIGZvciB0aGVtLCBzbyB0aGUgTU1JT19QMlYgd291bGQg
-YmUgc3RpbGwgdmFsaWQgKGlmIHNsaWdodGx5Cj4gPiA+ICJhYnVzZWQiKSwgYnV0IEkgZmFpbGVk
-IGR1ZSB0byB0aGUgcHJvYmxlbXMgbWVudGlvbmVkIGFib3ZlLiBBbmQgSSBjYW4ndAo+ID4gPiBk
-ZWxheSB0aGlzIG9wZXJhdGlvbiB0aWxsIHRoZSB0cmVlIGlzIHVuLWZsYXR0ZW5lZCwgYXMgdGhl
-IGNvcmUgdGlsZQo+ID4gPiBtdXN0IGJlIHByb2JlZCAodmlhIHN5c3JlZykgaW4gbWFwX2lvICh0
-aWxlJ3Mgc3BlY2lmaWMgY29kZSBtdXN0IGJlIGFibGUKPiA+ID4gdG8gY3JlYXRlIGl0cyBvd24g
-bWFwcGluZ3MpOgoKCj4gPj4gR2VuZXJhbGx5LCB0aGUgdHJlbmQgaXMgdG8gZ2V0IHJpZCBvZiBz
-dGF0aWMgbWFwcGluZ3MgYXMgbXVjaCBhcwo+ID4+IHBvc3NpYmxlLiBEb2luZyB0aGF0IGZpcnN0
-IG1pZ2h0IHNpbXBsaWZ5IHRoaW5ncy4KPiA+IAo+ID4gWW91IGNhbid0IGRvIGlvcmVtYXAoKSBi
-ZWZvcmUga21hbGxvYygpIGlzIHVwIGFuZCBydW5uaW5nIChjb3JyZWN0IG1lIGlmCj4gPiBJIGFt
-IHdyb25nKSwgYXQgbGVhc3QgeW91IGNhbid0IGRvIHRoaXMgaW4gbWFwX2lvLiBTbyB0aGUgc3Rh
-dGljIG1hcHBpbmcKPiA+IGlzIGEgbXVzdCBzb21ldGltZXMuIEFuZCBhY3R1YWxseSwgd2l0aCB0
-aGUgbGF0ZXN0IE5pY28ncyBjaGFuZ2VzOgo+ID4gCj4gQ29ycmVjdC4gWW91IGNhbid0IGRvIGlv
-cmVtYXAgdW50aWwgaW5pdF9pcnEuIG1hcF9pbyBhbmQgaW5pdF9lYXJseSBhcmUKPiB0b28gZWFy
-bHkuIE15IHBvaW50IHdhcyBpZiB5b3UgY2FuIGRlbGF5IGgvdyBhY2Nlc3MgdGhlbiB5b3UgY2Fu
-IHJlbW92ZQo+IHRoZSBzdGF0aWMgbWFwcGluZ3MuIEJ1dCB5ZXMsIHdlIGdlbmVyYWxseSBjYW4n
-dCByZW1vdmUgdGhlbSBhbGwuIFNDVQo+IGFuZCBMTCBkZWJ1ZyB1YXJ0IGFyZSAyIGV4YW1wbGVz
-LgoKSW4gbXkgY2FzZSBpdCdzIHN5c3JlZyBhbmQgc3lzY3RsLiBUaGVyZSBhcmUgdHdvIG1vcmUg
-dXNlcnMgb2Ygc3RhdGljCm1hcHBpbmdzOiB0aW1lcjAxIGFuZCB0aW1lcjIzLCBidXQgdGhleSBj
-b3VsZCBhdCBzb21lIHBvaW50IGRvIGlvcmVtYXAoKQpvbiB0aGVpciBvd24gKGVzcGVjaWFsbHkg
-d2l0aCBOaWNvJ3MgY2hhbmdlcykuCgo+IEZvciB0aGUgc2hvcnQgdGVybSwgSSB3b3VsZCBqdXN0
-IGhhdmUgMiBzdGF0aWMgaW90YWJsZXMgYW5kIHNlbGVjdCB0aGUKPiByaWdodCBvbmUgYmFzZWQg
-b24gdGhlIGJvYXJkJ3MgKG9yIG1vdGhlcmJvYXJkJ3MpIGNvbXBhdGlibGUgc3RyaW5nLgoKWWVz
-LCBhcyBtZW50aW9uZWQgYWJvdmUuIFRoaXMgZG9lc24ndCBoZWxwIHdpdGggdGhlIHN5c3JlZyBv
-ZmZzZXQKcHJvYmxlbSB0aG91Z2guIEkgbWF5IGp1c3Qgc2NhbiB0aGUgZmxhdCB0cmVlIGxvb2tp
-bmcgZm9yIHRoZWlyCnBhcnRpY3VsYXIgbmFtZXMgYW5kIGdldHRpbmcgcmF3IG9mZnNldCBmcm9t
-IHRoZWlyIHJlZ3MuLi4gU291bmRzIGxpa2UgYQpoYWNrLCB0aG91Z2guCgo+IExvbmcgdGVybSwg
-d2Ugc2hvdWxkIGxvb2sgaW50byBpbXBsZW1lbnRpbmcgYSBjb21tb24gZWFybHkgRFQgYWRkcmVz
-cwo+IHBhcnNpbmcgZnVuY3Rpb24uCgpXZWxsLCBhc3N1bWluZyB0aGF0IHdlIHdhbnQgdG8gaGF2
-ZSB0aGVtIGF0IGFsbC4gSSdtIG5vdCBjb252aW5jZWQsCmZyYW5rbHkgOy0pCgpQYXdlxYIKCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+The bindings were recently updated to have separate properties for each
+type of GPIO. Update the Device Tree source to match that.
+
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Acked-by: Olof Johansson <olof@lixom.net>
+---
+I'd previously sent these to Grant assuming they'd go in his dt/next branch,
+but perhaps these should go in through Arnd's arm-soc next/dt branch?
+
+ arch/arm/boot/dts/tegra-harmony.dts  |   12 ++++++------
+ arch/arm/boot/dts/tegra-seaboard.dts |    6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
+index 4c05334..e581866 100644
+--- a/arch/arm/boot/dts/tegra-harmony.dts
++++ b/arch/arm/boot/dts/tegra-harmony.dts
+@@ -57,14 +57,14 @@
+ 	};
+ 
+ 	sdhci@c8000200 {
+-		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
+-			<&gpio 57 0>, /* wp, gpio PH1 */
+-			<&gpio 155 0>; /* power, gpio PT3 */
++		cd-gpios = <&gpio 69 0>; /* gpio PI5 */
++		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
++		power-gpios = <&gpio 155 0>; /* gpio PT3 */
+ 	};
+ 
+ 	sdhci@c8000600 {
+-		gpios = <&gpio 58 0>, /* cd, gpio PH2 */
+-			<&gpio 59 0>, /* wp, gpio PH3 */
+-			<&gpio 70 0>; /* power, gpio PI6 */
++		cd-gpios = <&gpio 58 0>; /* gpio PH2 */
++		wp-gpios = <&gpio 59 0>; /* gpio PH3 */
++		power-gpios = <&gpio 70 0>; /* gpio PI6 */
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+index 1940cae..64cedca 100644
+--- a/arch/arm/boot/dts/tegra-seaboard.dts
++++ b/arch/arm/boot/dts/tegra-seaboard.dts
+@@ -21,8 +21,8 @@
+ 	};
+ 
+ 	sdhci@c8000400 {
+-		gpios = <&gpio 69 0>, /* cd, gpio PI5 */
+-			<&gpio 57 0>, /* wp, gpio PH1 */
+-			<&gpio 70 0>; /* power, gpio PI6 */
++		cd-gpios = <&gpio 69 0>; /* gpio PI5 */
++		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
++		power-gpios = <&gpio 70 0>; /* gpio PI6 */
+ 	};
+ };
+-- 
+1.7.0.4
+
