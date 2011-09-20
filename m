@@ -1,17 +1,15 @@
-From: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH REPOST 1/2] arm/dt: Tegra: Update SDHCI nodes to match
-	bindings
-Date: Tue, 20 Sep 2011 14:07:15 -0400
-Message-ID: <m2d3evhyuk.fsf@bob.laptop.org>
-References: <1316537186-26753-1-git-send-email-swarren@nvidia.com>
-	<201109201943.29510.arnd@arndb.de>
-	<74CDBE0F657A3D45AFBB94109FB122FF04B732161E@HQMAIL01.nvidia.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: DT vs ARM static mappings
+Date: Tue, 20 Sep 2011 21:28:55 +0200
+Message-ID: <201109202128.55517.arnd@arndb.de>
+References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
+	<4E78A546.9040604@gmail.com>
+	<1316535403.4611.534.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF04B732161E-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-	(Stephen Warren's message of "Tue, 20 Sep 2011 10:59:33 -0700")
+In-Reply-To: <1316535403.4611.534.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,52 +19,127 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tuesday 20 September 2011, Pawel Moll wrote:
+> On Tue, 2011-09-20 at 15:37 +0100, Rob Herring wrote
+> > > My point is that we should be able to handle _all_ of them using one
+> > > DT_MACHINE_START with a single compat value "arm,vexpress". The only
+> > > problem with this (so far) is the mapping.
+> > 
+> > Yes, you should have 1 DT_MACHINE_START, but arm,vexpress is too
+> > generic. You can and should have a list of compatible strings for each
+> > board/machine.
+> 
+> Our DTS has:
+> 
+> compatible = "arm,vexpress-v2p-ca9", "arm,vexpress";
+> 
+> and v2m.c:
+> 
+> static const char *v2m_dt_match[] __initconst = {
+>        "arm,vexpress",
+>        NULL,
+> };
+> 
+> DT_MACHINE_START(VEXPRESS_DT, "ARM Versatile Express")
+>        .map_io         = v2m_map_io,
+>        .init_early     = v2m_init_early,
+>        .init_irq       = v2m_init_irq,
+>        .timer          = &v2m_timer,
+>        .init_machine   = v2m_dt_init,
+>        .dt_compat      = v2m_dt_match,
+> MACHINE_END
+> 
+> Isn't it what you meant?
+> 
+> Essentially I see two ways of doing what we are discussing:
+> 
+> 1. Two DT_MACHINE_START, one matching "arm,vexpress-legacy" with map_io
+> = v2m_map_io_legacy and second matching "arm,vexpress-rs1" with map_io =
+> v2m_map_io_rs1,
+> 
+> 2. Single DT_MACHINE_START matching (the most generic) "arm,vexpress"
+> and doing (rougly) this in v2m_map_io:
+> 
+> of_scan_flat_dt(v2m_dt_iotable_init, NULL);
+> 
+> v2m_dt_iotable_init(...)
+> {
+> 	if (depth != 0)
+> 		return 0;
+> 	if (of_flat_dt_is_compatible(node, "arm,vexpress-legacy"))
+> 		iotable_init(v2m_io_desc_legacy);
+> 	else (of_flat_dt_is_compatible(node, "arm,vexpress-rs1"))
+> 		iotable_init(v2m_io_desc_rs1);
+> 	else
+> 		panic();
+> }
+> 
+> Neither of them seem particularly appealing... ;-)
 
-On Tue, Sep 20 2011, Stephen Warren wrote:
-> Arnd Bergmann wrote at Tuesday, September 20, 2011 11:43 AM:
->> On Tuesday 20 September 2011, Stephen Warren wrote:
->> > The bindings were recently updated to have separate properties for each
->> > type of GPIO. Update the Device Tree source to match that.
->> >
->> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> > Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
->> > ---
->> > I'd previously sent these to Grant assuming they'd go in his dt/next branch,
->> > but perhaps these should go in through Arnd's arm-soc next/dt branch?
->> >
->> 
->> Which tree has the update that changed the bindings? I think it should
->> go into the same one.
->> 
->> If it's already upstream, I can take it into the fixes branch.
->
-> Chris applied them to the mmc-next tree:
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/cjb/mmc.git
->
-> which appears to be temporarily at:
->
-> git://dev.laptop.org/users/cjb/mmc
+But I think both ways would be acceptable in the end. It's not a lot
+of extra code either way. In the second case, I would probably have
+the legacy case as a special variant of the map_io function and have
+all others be the default instead of falling back to panic though.
 
-Sending these via Arnd's next/dt sounds good to me.  I know we'd usually
-take changes that require an atomic update through the same tree, but
-Stephen said in https://lkml.org/lkml/2011/8/30/352 :
+> > >> In "chosen" like the kernel command line would be the place, but I don't
+> > >> think that is the right approach. Chosen is really for things that
+> > >> change frequently and this doesn't really fall in that category.
+> > > 
+> > > Again, no argument from me here :-)
+> > > 
+> > > The question is - where should it be?
+> >
+> > Nowhere. It's an OS specific issue, not a h/w issue.
+> 
+> That's exactly why I didn't like this idea in the first place. This
+> doesn't change the fact that current infrastructure isn't really helpful
+> here.
 
-   I don't think there's actually any need for that; initializing
-   Tegra's SDHCI from device-tree has never worked in mainline to date;
-   it relies on patch 1 being there. And if patch 2 was there without
-   patch 3, the worst that will happen is some port runs in 4-bit mode
-   instead of 8-bit, which evidently works fine since I didn't even
-   notice 8-bit support was missing...
+Agreed, I think that approach would be much worse.
 
-Thanks,
+> > >> Generally, the trend is to get rid of static mappings as much as
+> > >> possible. Doing that first might simplify things.
+> > > 
+> > > You can't do ioremap() before kmalloc() is up and running (correct me if
+> > > I am wrong), at least you can't do this in map_io. So the static mapping
+> > > is a must sometimes. And actually, with the latest Nico's changes:
+> > > 
+> > Correct. You can't do ioremap until init_irq. map_io and init_early are
+> > too early. My point was if you can delay h/w access then you can remove
+> > the static mappings. But yes, we generally can't remove them all. SCU
+> > and LL debug uart are 2 examples.
+> 
+> In my case it's sysreg and sysctl. There are two more users of static
+> mappings: timer01 and timer23, but they could at some point do ioremap()
+> on their own (especially with Nico's changes).
 
-- Chris.
--- 
-Chris Ball   <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>   <http://printf.net/>
-One Laptop Per Child
+Well, I think with Nico's cahnges, you /can/ actually do ioremap for
+areas that have been mapped through the iotable before kmalloc is up.
+IIRC, omap does this for a number of peripherals.
+
+It's a bit of a hack, but I think it's much better than taking hardcoded
+addresses.
+
+> > For the short term, I would just have 2 static iotables and select the
+> > right one based on the board's (or motherboard's) compatible string.
+> 
+> Yes, as mentioned above. This doesn't help with the sysreg offset
+> problem though. I may just scan the flat tree looking for their
+> particular names and getting raw offset from their regs... Sounds like a
+> hack, though.
+
+With the combination of the points mentioned above, you should be
+able to do:
+
+- map the entire I/O area in map_io(), depending on the board
+- have an __iomem pointer for the sysreg
+- populate that pointer using of_iomap from the device tree address
+  before you first access it.
+
+Do you think that would work?
+
+	Arnd
