@@ -1,15 +1,16 @@
-From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
-Subject: RE: Passing an initrd to a Linux kernel with Device Tree
-Date: Wed, 21 Sep 2011 10:25:13 -0400 (EDT)
-Message-ID: <alpine.LFD.2.00.1109210957050.12663@xanadu.home>
-References: <4e78d3aa.21b0ec0a.63e9.1591SMTPIN_ADDED@mx.google.com>
-	<20110920201058.GM7781@ponder.secretlab.ca>
-	<3A52818B08EC2744B4FE79467451246180DF6E9E12@GEORGE.Emea.Arm.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: initial device tree support
+Date: Wed, 21 Sep 2011 16:49:39 +0100
+Message-ID: <20110921154939.GF2872@arm.com>
+References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
+	<4E79E588.6010703@gmail.com> <20110921142425.GE2872@arm.com>
+	<1316615590.4611.624.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <3A52818B08EC2744B4FE79467451246180DF6E9E12-x8AJ9SVuP1o/DnoT/0QEu0EOCMrvLtNR@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1316615590.4611.624.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,65 +20,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Olivier Martin <Olivier.Martin-5wv7dgnIgG8@public.gmane.org>
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Sep 2011, Dave P Martin wrote:
-
+On Wed, Sep 21, 2011 at 03:33:10PM +0100, Pawel Moll wrote:
+> > OK, I'll try to propose documentation for these:
+> >         * arm,pl180
 > 
-> 
-> > -----Original Message-----
-> > From:
-> > devicetree-discuss-bounces+dave.martin=arm.com-uLR06cmDAlY8sQ00jmICUQ@public.gmane.org
-> g [mailto:devicetree-discuss-> bounces+dave.martin=arm.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of
-> > Grant Likely
-> > Sent: 20 September 2011 21:11
-> > To: Olivier Martin
-> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Subject: Re: Passing an initrd to a Linux kernel with Device Tree
-> >
-> > On Tue, Sep 20, 2011 at 06:46:22PM +0100, Olivier Martin wrote:
-> > > Hello,
-> > >
-> > > I tried recently to add support in UEFI to pass an initrd
-> > with FDT to
-> > > a Linux kernel. I have searched the Internet but I did not find any
-> > > information to do that.
-> > >
-> > > FYI, this is the way it is done in ATAG:
-> > > typedef struct {
-> > >   UINT32  start;
-> > >   UINT32  size;
-> > > } LINUX_ATAG_INITRD2;
-> > >
-> > > The boot loader loads the initrd in system memory and passes the
-> > > memory region information through ATAG.
-> > >
-> > >
-> > > Sorry, if it is the wrong mailing-list. In this case, can someone
-> > > point me on the right forum for any Linux FDT oriented questions.
-> >
-> > Hmmm, it may not be documented (the binding was implemented a
-> > long time ago before we got strict about documenting
-> > bindings).  The magic is two properties in the /chosen node;
-> > "linux,initrd-start" and "linux,initrd-end".  Each contains
-> > the physical start and end addresses of the initrd.
-> 
-> What does "end address" mean here?
-> 
-> It could be read as meaning either:
-> 
-> a) address of the the final byte of the image
-> b) address of the first byte following the image (0 if the image ends at 4G)
+> You can skip this one - I'll add the description together with the MMCI
+> driver bindings (it will be 180 and 181, by the way :-)
 
-Looking at the code (remember this is always the ultimate 
-documentation), end_address = start_address + size.  So (b) would be the 
-right answer.
+Done.
 
-Obviously, it is adviseable not to locate your ramdisk so close to the 
-end of memory so that its end precisely matches the end of the address 
-space, and that is if your RAM is located at the top too.
+> > > > +			// Timer init is hardcoded in v2m_timer_init(), for now.
+> > > > +			// timer@11000 {
+> > > > +			//	compatible = "arm,arm-sp804";
+> > > 
+> > > arm,sp804 is more consistent. I believe the sp804 does have the periphid
+> > > registers, so arm,primecell should also be added.
+> > 
+> > Do you mean "does not have"?  If so, the periphid will be needed -- thanks for
+> > pointing it out in that case.
+> 
+> I think Rob meant it should be
+> 	compatible = "arm,sp804", "arm,primecell",
+> as SP804 contains the PrimeCell periphid registers, so will be
+> recognized by amba bus driver.
 
+Oh, right -- misunderstanding, sorry for that.
 
-Nicolas
+> > I will make the names consistent.  These were pasted from someone Lorenzo's
+> > older patches, and failed to sport e the inconsistency since I wasn't
+> > actually making use of these entries yet.
+> > 
+> > > > +			//	reg = <0x11000 0x1000>;
+> > > > +			//	interrupts = <2>;
+> > > > +			// };
+> > > > +
+> > > > +			// timer@12000 {
+> > > > +			//	compatible = "arm,arm-sp804";
+> > > > +			//	reg = <0x12000 0x1000>;
+> > > > +			// };
+> > > 
+> > > Just because Linux is not using it, doesn't mean you should comment it out.
+> > 
+> > From the point of view of describing the hardware, yes.  However, I was
+> > a bit worried that if sp804 is turned into a full driver, it will get
+> > initialised twice -- once explicitly and once in of_platform_populate()...
+> > at least until the baord code is adapted to work properly with the new
+> > driver.
+> > 
+> > Commenting these entries out for now seemed a good idea to avoid the flag-day
+> > hazard.  Am I being too cautious?
+> 
+> I think you are ;-) Besides my static-mapping-rework is already using
+> those...
+
+OK, I will uncomment it then.
+
+Cheers
+---Dave
