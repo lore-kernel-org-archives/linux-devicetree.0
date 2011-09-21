@@ -1,11 +1,15 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] dt: add empty for_each_child_of_node, of_find_property
-Date: Wed, 21 Sep 2011 13:23:10 -0600
-Message-ID: <1316632990-12876-1-git-send-email-swarren@nvidia.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: gic: add OF based initialization
+Date: Wed, 21 Sep 2011 21:28:48 +0200
+Message-ID: <4E7A3AF0.1020809@ti.com>
+References: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
+	<1316550244-3655-4-git-send-email-robherring2@gmail.com>
+	<4E7A1BCA.1090006@ti.com> <4E7A252F.2000402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4E7A252F.2000402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,42 +19,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch adds a couple empty functions for non-dt build, so that
-drivers migrating to dt can save some '#ifdef CONFIG_OF'.
+On 9/21/2011 7:55 PM, Rob Herring wrote:
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Unfortunately, I screwed up and my recent sdhci-tegra.c changes rely on this
-change to compile without CONFIG_OF; I really need to stop doing my test-
-builds in a single branch will all my outstanding changes present:-(
+[...]
 
- include/linux/of.h |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+> I fixed that in the prior series and tglx picked it up, so I did not
+> repost. It should hit mainline for 3.1, but I haven't verified if it is
+> in yet. Sorry for the confusion, I should have mentioned that.
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 9180dc5..1fc5875 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -242,6 +242,16 @@ static inline bool of_have_populated_dt(void)
- 	return false;
- }
- 
-+#define for_each_child_of_node(parent, child) \
-+	while (0)
-+
-+static inline struct property *of_find_property(const struct device_node *np,
-+						const char *name,
-+						int *lenp)
-+{
-+	return NULL;
-+}
-+
- static inline int of_property_read_u32_array(const struct device_node *np,
- 					     const char *propname,
- 					     u32 *out_values, size_t sz)
--- 
-1.7.0.4
+OK, I remember now as well that Thomas took patched 2 patches from your 
+previous one. And I found it:
+https://lkml.org/lkml/2011/9/14/190
+
+Now, I have to find why the twl interrupt-controller is not working 
+anymore even with that fix.
+
+Almost-Tested-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+
+Thanks,
+Benoit
