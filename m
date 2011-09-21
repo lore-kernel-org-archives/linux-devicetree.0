@@ -1,64 +1,75 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: DT vs ARM static mappings
-Date: Wed, 21 Sep 2011 10:41:49 +0100
-Message-ID: <1316598109.4611.613.camel@hornet.cambridge.arm.com>
-References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
-	<4E78A546.9040604@gmail.com>
-	<1316535403.4611.534.camel@hornet.cambridge.arm.com>
-	<201109202128.55517.arnd@arndb.de>
+From: Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: RE: Passing an initrd to a Linux kernel with Device Tree
+Date: Wed, 21 Sep 2011 10:35:26 +0100
+Message-ID: <3A52818B08EC2744B4FE79467451246180DF6E9E12@GEORGE.Emea.Arm.com>
+References: <4e78d3aa.21b0ec0a.63e9.1591SMTPIN_ADDED@mx.google.com>
+	<20110920201058.GM7781@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201109202128.55517.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110920201058.GM7781-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olivier Martin <Olivier.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiA+IDIuIFNpbmdsZSBEVF9NQUNISU5FX1NUQVJUIG1hdGNoaW5nICh0aGUgbW9zdCBnZW5lcmlj
-KSAiYXJtLHZleHByZXNzIgo+ID4gYW5kIGRvaW5nIChyb3VnbHkpIHRoaXMgaW4gdjJtX21hcF9p
-bzoKPiA+IAo+ID4gb2Zfc2Nhbl9mbGF0X2R0KHYybV9kdF9pb3RhYmxlX2luaXQsIE5VTEwpOwo+
-ID4gCj4gPiB2Mm1fZHRfaW90YWJsZV9pbml0KC4uLikKPiA+IHsKPiA+IAlpZiAoZGVwdGggIT0g
-MCkKPiA+IAkJcmV0dXJuIDA7Cj4gPiAJaWYgKG9mX2ZsYXRfZHRfaXNfY29tcGF0aWJsZShub2Rl
-LCAiYXJtLHZleHByZXNzLWxlZ2FjeSIpKQo+ID4gCQlpb3RhYmxlX2luaXQodjJtX2lvX2Rlc2Nf
-bGVnYWN5KTsKPiA+IAllbHNlIChvZl9mbGF0X2R0X2lzX2NvbXBhdGlibGUobm9kZSwgImFybSx2
-ZXhwcmVzcy1yczEiKSkKPiA+IAkJaW90YWJsZV9pbml0KHYybV9pb19kZXNjX3JzMSk7Cj4gPiAJ
-ZWxzZQo+ID4gCQlwYW5pYygpOwo+ID4gfQo+ID4gCj4gPiBOZWl0aGVyIG9mIHRoZW0gc2VlbSBw
-YXJ0aWN1bGFybHkgYXBwZWFsaW5nLi4uIDstKQo+IAo+IEJ1dCBJIHRoaW5rIGJvdGggd2F5cyB3
-b3VsZCBiZSBhY2NlcHRhYmxlIGluIHRoZSBlbmQuIEl0J3Mgbm90IGEgbG90Cj4gb2YgZXh0cmEg
-Y29kZSBlaXRoZXIgd2F5LiBJbiB0aGUgc2Vjb25kIGNhc2UsIEkgd291bGQgcHJvYmFibHkgaGF2
-ZQo+IHRoZSBsZWdhY3kgY2FzZSBhcyBhIHNwZWNpYWwgdmFyaWFudCBvZiB0aGUgbWFwX2lvIGZ1
-bmN0aW9uIGFuZCBoYXZlCj4gYWxsIG90aGVycyBiZSB0aGUgZGVmYXVsdCBpbnN0ZWFkIG9mIGZh
-bGxpbmcgYmFjayB0byBwYW5pYyB0aG91Z2guCgpPaywgSSdsbCBnbyAocm91Z2hseSkgdGhhdCB3
-YXkuCgo+ID4gSW4gbXkgY2FzZSBpdCdzIHN5c3JlZyBhbmQgc3lzY3RsLiBUaGVyZSBhcmUgdHdv
-IG1vcmUgdXNlcnMgb2Ygc3RhdGljCj4gPiBtYXBwaW5nczogdGltZXIwMSBhbmQgdGltZXIyMywg
-YnV0IHRoZXkgY291bGQgYXQgc29tZSBwb2ludCBkbyBpb3JlbWFwKCkKPiA+IG9uIHRoZWlyIG93
-biAoZXNwZWNpYWxseSB3aXRoIE5pY28ncyBjaGFuZ2VzKS4KPiAKPiBXZWxsLCBJIHRoaW5rIHdp
-dGggTmljbydzIGNhaG5nZXMsIHlvdSAvY2FuLyBhY3R1YWxseSBkbyBpb3JlbWFwIGZvcgo+IGFy
-ZWFzIHRoYXQgaGF2ZSBiZWVuIG1hcHBlZCB0aHJvdWdoIHRoZSBpb3RhYmxlIGJlZm9yZSBrbWFs
-bG9jIGlzIHVwLgo+IElJUkMsIG9tYXAgZG9lcyB0aGlzIGZvciBhIG51bWJlciBvZiBwZXJpcGhl
-cmFscy4KPiAKPiBJdCdzIGEgYml0IG9mIGEgaGFjaywgYnV0IEkgdGhpbmsgaXQncyBtdWNoIGJl
-dHRlciB0aGFuIHRha2luZyBoYXJkY29kZWQKPiBhZGRyZXNzZXMuCgpZZXMsIEkgd2FzIHRoaW5r
-aW5nIGFib3V0IHRoYXQgbGFzdCBuaWdodC4gSWYgeW91IHRoaW5rIGl0J3MgYWNjZXB0YWJsZQpJ
-J2xsIGRvIHRoaXMgKGtpbGxpbmcgTU1JT19QMlYgb24gdGhlIHdheSA7LSkKCj4gV2l0aCB0aGUg
-Y29tYmluYXRpb24gb2YgdGhlIHBvaW50cyBtZW50aW9uZWQgYWJvdmUsIHlvdSBzaG91bGQgYmUK
-PiBhYmxlIHRvIGRvOgo+IAo+IC0gbWFwIHRoZSBlbnRpcmUgSS9PIGFyZWEgaW4gbWFwX2lvKCks
-IGRlcGVuZGluZyBvbiB0aGUgYm9hcmQKPiAtIGhhdmUgYW4gX19pb21lbSBwb2ludGVyIGZvciB0
-aGUgc3lzcmVnCj4gLSBwb3B1bGF0ZSB0aGF0IHBvaW50ZXIgdXNpbmcgb2ZfaW9tYXAgZnJvbSB0
-aGUgZGV2aWNlIHRyZWUgYWRkcmVzcwo+ICAgYmVmb3JlIHlvdSBmaXJzdCBhY2Nlc3MgaXQuCj4g
-Cj4gRG8geW91IHRoaW5rIHRoYXQgd291bGQgd29yaz8KClllcywgSSBzdXBwb3NlIHNvLiBUaGUg
-bGFzdCBiaXQgKGdldHRpbmcgdGhlIG9mZnNldCBmcm9tIERUKSB3aWxsIGJlIGEKbGl0dGxlIHVn
-bHksIEkgdGhpbmssIGJ1dCBsZXQncyB3YWl0IHRpbGwgSSBnZXQgc29tZSBjb2RlIGRvbmUuCgpD
-aGVlcnMhCgpQYXdlxYIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+
+> -----Original Message-----
+> From:
+> devicetree-discuss-bounces+dave.martin=arm.com-uLR06cmDAlY8sQ00jmICUQ@public.gmane.org
+g [mailto:devicetree-discuss-> bounces+dave.martin=arm.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of
+> Grant Likely
+> Sent: 20 September 2011 21:11
+> To: Olivier Martin
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Subject: Re: Passing an initrd to a Linux kernel with Device Tree
+>
+> On Tue, Sep 20, 2011 at 06:46:22PM +0100, Olivier Martin wrote:
+> > Hello,
+> >
+> > I tried recently to add support in UEFI to pass an initrd
+> with FDT to
+> > a Linux kernel. I have searched the Internet but I did not find any
+> > information to do that.
+> >
+> > FYI, this is the way it is done in ATAG:
+> > typedef struct {
+> >   UINT32  start;
+> >   UINT32  size;
+> > } LINUX_ATAG_INITRD2;
+> >
+> > The boot loader loads the initrd in system memory and passes the
+> > memory region information through ATAG.
+> >
+> >
+> > Sorry, if it is the wrong mailing-list. In this case, can someone
+> > point me on the right forum for any Linux FDT oriented questions.
+>
+> Hmmm, it may not be documented (the binding was implemented a
+> long time ago before we got strict about documenting
+> bindings).  The magic is two properties in the /chosen node;
+> "linux,initrd-start" and "linux,initrd-end".  Each contains
+> the physical start and end addresses of the initrd.
+
+What does "end address" mean here?
+
+It could be read as meaning either:
+
+a) address of the the final byte of the image
+b) address of the first byte following the image (0 if the image ends at 4G)
+
+Cheers
+---Dave
+
+-- IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium.  Thank you.
