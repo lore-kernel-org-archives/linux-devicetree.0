@@ -1,59 +1,86 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Wed, 21 Sep 2011 15:33:10 +0100
-Message-ID: <1316615590.4611.624.camel@hornet.cambridge.arm.com>
-References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
-	<4E79E588.6010703@gmail.com>  <20110921142425.GE2872@arm.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Passing an initrd to a Linux kernel with Device Tree
+Date: Wed, 21 Sep 2011 08:38:28 -0600
+Message-ID: <CACxGe6tvHvR4sWUCFFJ+nP7ewH0pr-=bZqwR8o8AjjgnXhck+g@mail.gmail.com>
+References: <4e78d3aa.21b0ec0a.63e9.1591SMTPIN_ADDED@mx.google.com>
+	<20110920201058.GM7781@ponder.secretlab.ca>
+	<3A52818B08EC2744B4FE79467451246180DF6E9E12@GEORGE.Emea.Arm.com>
+	<alpine.LFD.2.00.1109210957050.12663@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110921142425.GE2872@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, patches@linaro.org, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@smooth-stone.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.00.1109210957050.12663-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Olivier Martin <Olivier.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBPSywgSSdsbCB0cnkgdG8gcHJvcG9zZSBkb2N1bWVudGF0aW9uIGZvciB0aGVzZToKPiAgICAg
-ICAgICogYXJtLHBsMTgwCgpZb3UgY2FuIHNraXAgdGhpcyBvbmUgLSBJJ2xsIGFkZCB0aGUgZGVz
-Y3JpcHRpb24gdG9nZXRoZXIgd2l0aCB0aGUgTU1DSQpkcml2ZXIgYmluZGluZ3MgKGl0IHdpbGwg
-YmUgMTgwIGFuZCAxODEsIGJ5IHRoZSB3YXkgOi0pCgo+ID4gPiArCQkJLy8gVGltZXIgaW5pdCBp
-cyBoYXJkY29kZWQgaW4gdjJtX3RpbWVyX2luaXQoKSwgZm9yIG5vdy4KPiA+ID4gKwkJCS8vIHRp
-bWVyQDExMDAwIHsKPiA+ID4gKwkJCS8vCWNvbXBhdGlibGUgPSAiYXJtLGFybS1zcDgwNCI7Cj4g
-PiAKPiA+IGFybSxzcDgwNCBpcyBtb3JlIGNvbnNpc3RlbnQuIEkgYmVsaWV2ZSB0aGUgc3A4MDQg
-ZG9lcyBoYXZlIHRoZSBwZXJpcGhpZAo+ID4gcmVnaXN0ZXJzLCBzbyBhcm0scHJpbWVjZWxsIHNo
-b3VsZCBhbHNvIGJlIGFkZGVkLgo+IAo+IERvIHlvdSBtZWFuICJkb2VzIG5vdCBoYXZlIj8gIElm
-IHNvLCB0aGUgcGVyaXBoaWQgd2lsbCBiZSBuZWVkZWQgLS0gdGhhbmtzIGZvcgo+IHBvaW50aW5n
-IGl0IG91dCBpbiB0aGF0IGNhc2UuCgpJIHRoaW5rIFJvYiBtZWFudCBpdCBzaG91bGQgYmUKCWNv
-bXBhdGlibGUgPSAiYXJtLHNwODA0IiwgImFybSxwcmltZWNlbGwiLAphcyBTUDgwNCBjb250YWlu
-cyB0aGUgUHJpbWVDZWxsIHBlcmlwaGlkIHJlZ2lzdGVycywgc28gd2lsbCBiZQpyZWNvZ25pemVk
-IGJ5IGFtYmEgYnVzIGRyaXZlci4KCj4gSSB3aWxsIG1ha2UgdGhlIG5hbWVzIGNvbnNpc3RlbnQu
-ICBUaGVzZSB3ZXJlIHBhc3RlZCBmcm9tIHNvbWVvbmUgTG9yZW56bydzCj4gb2xkZXIgcGF0Y2hl
-cywgYW5kIGZhaWxlZCB0byBzcG9ydCBlIHRoZSBpbmNvbnNpc3RlbmN5IHNpbmNlIEkgd2Fzbid0
-Cj4gYWN0dWFsbHkgbWFraW5nIHVzZSBvZiB0aGVzZSBlbnRyaWVzIHlldC4KPiAKPiA+ID4gKwkJ
-CS8vCXJlZyA9IDwweDExMDAwIDB4MTAwMD47Cj4gPiA+ICsJCQkvLwlpbnRlcnJ1cHRzID0gPDI+
-Owo+ID4gPiArCQkJLy8gfTsKPiA+ID4gKwo+ID4gPiArCQkJLy8gdGltZXJAMTIwMDAgewo+ID4g
-PiArCQkJLy8JY29tcGF0aWJsZSA9ICJhcm0sYXJtLXNwODA0IjsKPiA+ID4gKwkJCS8vCXJlZyA9
-IDwweDEyMDAwIDB4MTAwMD47Cj4gPiA+ICsJCQkvLyB9Owo+ID4gCj4gPiBKdXN0IGJlY2F1c2Ug
-TGludXggaXMgbm90IHVzaW5nIGl0LCBkb2Vzbid0IG1lYW4geW91IHNob3VsZCBjb21tZW50IGl0
-IG91dC4KPiAKPiBGcm9tIHRoZSBwb2ludCBvZiB2aWV3IG9mIGRlc2NyaWJpbmcgdGhlIGhhcmR3
-YXJlLCB5ZXMuICBIb3dldmVyLCBJIHdhcwo+IGEgYml0IHdvcnJpZWQgdGhhdCBpZiBzcDgwNCBp
-cyB0dXJuZWQgaW50byBhIGZ1bGwgZHJpdmVyLCBpdCB3aWxsIGdldAo+IGluaXRpYWxpc2VkIHR3
-aWNlIC0tIG9uY2UgZXhwbGljaXRseSBhbmQgb25jZSBpbiBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSgp
-Li4uCj4gYXQgbGVhc3QgdW50aWwgdGhlIGJhb3JkIGNvZGUgaXMgYWRhcHRlZCB0byB3b3JrIHBy
-b3Blcmx5IHdpdGggdGhlIG5ldwo+IGRyaXZlci4KPiAKPiBDb21tZW50aW5nIHRoZXNlIGVudHJp
-ZXMgb3V0IGZvciBub3cgc2VlbWVkIGEgZ29vZCBpZGVhIHRvIGF2b2lkIHRoZSBmbGFnLWRheQo+
-IGhhemFyZC4gIEFtIEkgYmVpbmcgdG9vIGNhdXRpb3VzPwoKSSB0aGluayB5b3UgYXJlIDstKSBC
-ZXNpZGVzIG15IHN0YXRpYy1tYXBwaW5nLXJld29yayBpcyBhbHJlYWR5IHVzaW5nCnRob3NlLi4u
-CgpDaGVlcnMhCgpQYXdlxYIKCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Sep 21, 2011 at 8:25 AM, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> wrote:
+> On Wed, 21 Sep 2011, Dave P Martin wrote:
+>
+>>
+>>
+>> > -----Original Message-----
+>> > From:
+>> > devicetree-discuss-bounces+dave.martin=3Darm.com-uLR06cmDAlY8sQ00jmICUQ@public.gmane.org
+>> g [mailto:devicetree-discuss-> bounces+dave.martin=3Darm.com-uLR06cmDAlZ4lb6lR7t5LA@public.gmane.org=
+s.org] On Behalf Of
+>> > Grant Likely
+>> > Sent: 20 September 2011 21:11
+>> > To: Olivier Martin
+>> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> > Subject: Re: Passing an initrd to a Linux kernel with Device Tree
+>> >
+>> > On Tue, Sep 20, 2011 at 06:46:22PM +0100, Olivier Martin wrote:
+>> > > Hello,
+>> > >
+>> > > I tried recently to add support in UEFI to pass an initrd
+>> > with FDT to
+>> > > a Linux kernel. I have searched the Internet but I did not find any
+>> > > information to do that.
+>> > >
+>> > > FYI, this is the way it is done in ATAG:
+>> > > typedef struct {
+>> > > =A0 UINT32 =A0start;
+>> > > =A0 UINT32 =A0size;
+>> > > } LINUX_ATAG_INITRD2;
+>> > >
+>> > > The boot loader loads the initrd in system memory and passes the
+>> > > memory region information through ATAG.
+>> > >
+>> > >
+>> > > Sorry, if it is the wrong mailing-list. In this case, can someone
+>> > > point me on the right forum for any Linux FDT oriented questions.
+>> >
+>> > Hmmm, it may not be documented (the binding was implemented a
+>> > long time ago before we got strict about documenting
+>> > bindings). =A0The magic is two properties in the /chosen node;
+>> > "linux,initrd-start" and "linux,initrd-end". =A0Each contains
+>> > the physical start and end addresses of the initrd.
+>>
+>> What does "end address" mean here?
+>>
+>> It could be read as meaning either:
+>>
+>> a) address of the the final byte of the image
+>> b) address of the first byte following the image (0 if the image ends at=
+ 4G)
+>
+> Looking at the code (remember this is always the ultimate
+> documentation), end_address =3D start_address + size. =A0So (b) would be =
+the
+> right answer.
+
+Yes, (b) is correct.  I lost 2 days of my life tracking down a bug
+last year that turned out to be that I incorrectly assumed (a).
+
+g.
