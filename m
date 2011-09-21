@@ -1,208 +1,60 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: gic: add OF based initialization
-Date: Tue, 20 Sep 2011 20:54:38 -0500
-Message-ID: <4E7943DE.3040700@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 0/3] GIC OF bindings
+Date: Tue, 20 Sep 2011 22:49:10 -0400 (EDT)
+Message-ID: <20110920.224910.1996429830782124690.davem@davemloft.net>
 References: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
-	<1316550244-3655-4-git-send-email-robherring2@gmail.com>
-	<20110920230800.GS7781@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110920230800.GS7781-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robherring2@gmail.com
+Cc: dave.martin@linaro.org, linux@arm.linux.org.uk, b-cousson@ti.com, marc.zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, thomas.abraham@linaro.org, jamie@jamieiles.com, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2011 06:08 PM, Grant Likely wrote:
-> On Tue, Sep 20, 2011 at 03:24:04PM -0500, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> This adds ARM gic interrupt controller initialization using device tree
->> data.
->>
->> The initialization function is intended to be called by of_irq_init
->> function like this:
->>
->> const static struct of_device_id irq_match[] = {
->>         { .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
->>         {}
->> };
->>
->> static void __init init_irqs(void)
->> {
->>         of_irq_init(irq_match);
->> }
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/gic.txt |   55 +++++++++++++++
->>  arch/arm/common/gic.c                         |   89 +++++++++++++++++++++++-
->>  arch/arm/include/asm/hardware/gic.h           |   12 ++++
->>  3 files changed, 152 insertions(+), 4 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
->> new file mode 100644
->> index 0000000..52916b4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/gic.txt
->> @@ -0,0 +1,55 @@
->> +* ARM Generic Interrupt Controller
->> +
->> +ARM SMP cores are often associated with a GIC, providing per processor
->> +interrupts (PPI), shared processor interrupts (SPI) and software
->> +generated interrupts (SGI).
->> +
->> +Primary GIC is attached directly to the CPU and typically has PPIs and SGIs.
->> +Secondary GICs are cascaded into the upward interrupt controller and do not
->> +have PPIs or SGIs.
->> +
->> +Main node required properties:
->> +
->> +- compatible : should be one of:
->> +	"arm,cortex-a9-gic"
->> +	"arm,arm11mp-gic"
->> +- interrupt-controller : Identifies the node as an interrupt controller
->> +- #interrupt-cells : Specifies the number of cells needed to encode an
->> +  interrupt source.  The type shall be a <u32> and the value shall be 3.
->> +
->> +  The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
->> +  interrupts.
->> +
->> +  The 2nd cell contains the interrupt number for the interrupt type.
->> +  SPI interrupts are in the range [0-987].  PPI interrupts are in the
->> +  range [0-15].
->> +
->> +  The 3rd cell is the flags, encoded as follows:
->> +	bits[3:0] trigger type and level flags.
->> +		1 = low-to-high edge triggered
->> +		2 = high-to-low edge triggered
->> +		4 = active high level-sensitive
->> +		8 = active low level-sensitive
->> +	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
->> +	the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
->> +	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
->> +
->> +- reg : Specifies base physical address(s) and size of the GIC registers. The
->> +  first region is the GIC distributor register base and size. The 2nd region is
->> +  the GIC cpu interface register base and size.
->> +
->> +Optional
->> +- interrupts	: Interrupt source of the parent interrupt controller. Only
->> +  present on secondary GICs.
->> +
->> +Example:
->> +
->> +	intc: interrupt-controller@fff11000 {
->> +		compatible = "arm,cortex-a9-gic";
->> +		#interrupt-cells = <3>;
->> +		#address-cells = <1>;
->> +		interrupt-controller;
->> +		reg = <0xfff11000 0x1000>,
->> +		      <0xfff10100 0x100>;
->> +	};
->> +
+From: Rob Herring <robherring2@gmail.com>
+Date: Tue, 20 Sep 2011 15:24:01 -0500
+
+> Hopefully, this is the final or near final version of GIC binding support.
 > 
-> Ack on the binding.
+> Changes from the previous version:
+> - SPIs and PPIs are numbered starting at 0. Now the gic has it's own irq
+>   domain translate function instead of the simple domain one.
+> - interrupt cell format has changed based on Grant's proposal.
+> - Dropped "ARM: gic: allow irq_start to be 0". Instead, the first 16 irqs
+>   are skipped and the domain irq_base adjusted accordingly.
+> - Added a fix to of_irq_find_parent when the parent == child.
+> - Renamed intc_desc.parent to intc_desc.interrupt_parent.
+> - Implemented Grant's algorithm for walking the list of interrupt
+>   controllers. Added a return value to interrupt init functions, so they
+>   don't get added to the parent list on a init failure.
 > 
->> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
->> index 666b278..84e69a4 100644
->> --- a/arch/arm/common/gic.c
->> +++ b/arch/arm/common/gic.c
->> @@ -28,6 +28,10 @@
->>  #include <linux/smp.h>
->>  #include <linux/cpumask.h>
->>  #include <linux/io.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/irqdomain.h>
->>  
->>  #include <asm/irq.h>
->>  #include <asm/mach/irq.h>
->> @@ -255,6 +259,15 @@ void __init gic_cascade_irq(unsigned int gic_nr, unsigned int irq)
->>  	irq_set_chained_handler(irq, gic_handle_cascade_irq);
->>  }
->>  
->> +static int gic_irq_count(void __iomem *dist_base)
->> +{
->> +	int gic_irqs = readl_relaxed(dist_base + GIC_DIST_CTR) & 0x1f;
->> +	gic_irqs = (gic_irqs + 1) * 32;
->> +	if (gic_irqs > 1020)
->> +		gic_irqs = 1020;
->> +	return gic_irqs;
->> +}
->> +
->>  static void __init gic_dist_init(struct gic_chip_data *gic,
->>  	unsigned int irq_start)
->>  {
->> @@ -277,10 +290,7 @@ static void __init gic_dist_init(struct gic_chip_data *gic,
->>  	 * Find out how many interrupts are supported.
->>  	 * The GIC only supports up to 1020 interrupt sources.
->>  	 */
->> -	gic_irqs = readl_relaxed(base + GIC_DIST_CTR) & 0x1f;
->> -	gic_irqs = (gic_irqs + 1) * 32;
->> -	if (gic_irqs > 1020)
->> -		gic_irqs = 1020;
->> +	gic_irqs = gic_irq_count(base);
->>  
->>  	/*
->>  	 * Set all global interrupts to be level triggered, active low.
->> @@ -405,3 +415,74 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
->>  	writel_relaxed(map << 16 | irq, gic_data[0].dist_base + GIC_DIST_SOFTINT);
->>  }
->>  #endif
->> +
->> +#ifdef CONFIG_OF
->> +static int gic_cnt __initdata = 0;
->> +
->> +int gic_irq_domain_dt_translate(struct irq_domain *d,
->> +			    struct device_node *controller,
->> +			    const u32 *intspec, unsigned int intsize,
->> +			    unsigned long *out_hwirq, unsigned int *out_type)
->> +{
->> +	struct gic_chip_data *gic_data = d->priv;
->> +
->> +	if (d->of_node != controller)
->> +		return -EINVAL;
->> +	if (intsize < 3)
->> +		return -EINVAL;
->> +
->> +	*out_hwirq = intspec[1];
->> +	/*
->> +	 * We've already skipped over SGIs, so PPIs need no translation.
->> +	 * For SPIs, we need to skip over 16 PPIs on primary GICs.
->> +	 */
->> +	if (!intspec[0] && !gic_data->irq_offset)
->> +		*out_hwirq += 16;
-> 
-> I though that the offset was 32 to get from SPI number to Interrrupt
-> ID?  And that PPI interrupts start at Interrupt ID 16?  Or am I
-> mistaken about the hwirq number that this driver uses internally?
-> 
+> The changes are significant enough that I did not include previous
+> acked/reviewed/tested-by's.
 
-There's basically 2 cases to handle: primary and secondary controllers.
+Just out of curiosity where does this "interrupt-parent" property
+come from?
 
-For primary ctrlrs, the domain irq_base is already 16 to skip over SGIs
-and legacy ISA interrupts. So PPIs don't need any conversion and SPIs
-only need 16 more added. I misspoke previously as it's not quite
-independent of virq numbering because entry-macro-gic.S is still fixed
-GIC ID = Linux virq (or offset of 32 in Exynos case).
+On platforms I am familiar with, the parent path is walked to the root
+and we stop at device nodes that have "interrupt-map" and
+"interrupt-map-mask" properties.
 
-For secondary ctrlrs, the gic code already accounts for 32 offset in ID
-to Linux virq with the irq_offset field which is set to Linux virq base
-- 32. So in this case, no conversion is needed.
+The map and mask are applied to the "reg" property of the device in
+question to see which map entry matches, if a match is found the map
+entry contains the translated interrupt.
 
-I don't really see a better way without breaking non-DT use of the gic.
+And this process continues over and over all the way to the root to get
+the system interrupt that processor actually deals with.
 
-Rob
+The mechanism shown here seems overly simplistic and not able to handle
+the cases handled by existing OF property schemes in use for several
+years on real systems.
