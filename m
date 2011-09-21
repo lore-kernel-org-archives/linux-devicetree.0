@@ -1,21 +1,16 @@
-From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] dtc: Support character literals in cell lists
-Date: Wed, 21 Sep 2011 12:38:17 -0700
-Message-ID: <CAF6FioUJkya4kSFQ6+6tYbGcNw5WPSUT8UkgUANmqhhBwZhU1g@mail.gmail.com>
-References: <1315595791-25793-1-git-send-email-robotboy@chromium.org>
-	<1315595791-25793-3-git-send-email-robotboy@chromium.org>
-	<20110912004437.GG9025@yookeroo.fritz.box>
-	<E1R4y4v-0000Nf-5A@jdl.com>
-	<20110919020034.GJ9025@yookeroo.fritz.box>
-	<CAF6FioU5_uEh0fLyRBnD7DkPyo_UfjAaWxNONXSxDukpg3QPeg@mail.gmail.com>
-	<20110920005931.GB29197@yookeroo.fritz.box>
-	<CAF6FioWTyMEf_BP+_VcJ57jqQt-y9np0n7SkTy6TFMNWWQE-MQ@mail.gmail.com>
-	<20110920033441.GI29197@yookeroo.fritz.box>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: gic: add OF based initialization
+Date: Wed, 21 Sep 2011 22:27:15 +0200
+Message-ID: <4E7A48A3.5090602@ti.com>
+References: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
+	<1316550244-3655-4-git-send-email-robherring2@gmail.com>
+	<4E7A1BCA.1090006@ti.com> <4E7A252F.2000402@gmail.com>
+	<4E7A3AF0.1020809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110920033441.GI29197-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-Reply-To: <4E7A3AF0.1020809-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,115 +20,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 19, 2011 at 8:34 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Mon, Sep 19, 2011 at 07:54:09PM -0700, Anton Staaf wrote:
->> On Mon, Sep 19, 2011 at 5:59 PM, David Gibson
->> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> > On Mon, Sep 19, 2011 at 09:45:34AM -0700, Anton Staaf wrote:
->> >> On Sun, Sep 18, 2011 at 7:00 PM, David Gibson
->> >> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> >> > On Sat, Sep 17, 2011 at 11:49:21AM -0500, Jon Loeliger wrote:
->> >> >> > On Fri, Sep 09, 2011 at 12:16:30PM -0700, Anton Staaf wrote:
->> >> >> > > With this patch the following property assignment:
->> >> >> > >
->> >> >> > > =A0 =A0 property =3D <0x12345678 'a' '\r' 100>;
->> >> >> > >
->> >> >> > > is equivalent to:
->> >> >> > >
->> >> >> > > =A0 =A0 property =3D <0x12345678 0x00000061 0x0000000D 0x00000=
-064>
->> >> >> > >
->> >> >> > > Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> >> >> >
->> >> >> > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
->> >> >>
->> >> >> So, I *think* we want to wait until the question of size
->> >> >> is resolved some more, right? =A0Or, take this in any event
->> >> >> as "without a type indicator they are all 32-bit values"?
->> >> >
->> >> > No this patch is fine to take without changing the cell size
->> >> > semantics. =A0It's just that it becomes a lot more useful when we d=
-o get
->> >> > those.
->> >>
->> >> Yup, I'm working on a size patch by the way. =A0Any comments on my
->> >> previous post about it would be helpful. =A0But in the mean time I'm
->> >> going ahead with a solution where the current cell size is stored in
->> >> the "struct data" type references are not allowed in cell lists of
->> >> size other than 32 bits.
->> >
->> > Ah, sorry, I meant to give comments on that earlier but got
->> > sidetracked.
->> >
->> > Storing the cell size in struct data doesn't really work - a single
->> > property could be assembled from several cell lists of different
->> > sizes. =A0By the time the reference substitution happens, they will ha=
-ve
->> > been all merged into a single struct data.
->> >
->> > I think prohibiting cell references anywhere but 32-bit cell lists is
->> > the right approach, but we need to work out a way to do the check
->> > during the parse phase.
->>
->> Yes absolutely. =A0My intent with storing the current cell size in the
->> data struct was to use that to do the parse time rejection of
->> references in all but 32-bit cell lists. =A0That is the current cell
->> size would not be used past parsing, for exactly the reason you
->> mention. =A0My thought was that every creation of a cell list would set
->> the current cell size to 32 or the value defined by /size/ and the
->> closing '>' would set it back to 0. =A0The empty_data initializer would
->> set the current cell size to 0, even though it should never be used
->> outside of the <...> context. =A0Then when a reference or literal are to
->> be appended to the current data struct we can check for the value 32
->> if it's a reference, and otherwise use the current cell size to
->> validate (ensure it fits in the current cell size) and pad (add
->> leading zero's) the literal. =A0Padding won't actually be required if
->> the literal parsing routine always returns a 64-bit value.
+On 9/21/2011 9:28 PM, Cousson, Benoit wrote:
+> On 9/21/2011 7:55 PM, Rob Herring wrote:
 >
-> Oh, I see. =A0I guess that would work, but it's a really nasty misuse of
-> a long-term data structure to store some short-term information. =A0No,
-> I'm pretty sure we can rearrange the grammer to handle this more
-> cleanly.
+> [...]
 >
-> Maybe something like this:
+>> I fixed that in the prior series and tglx picked it up, so I did not
+>> repost. It should hit mainline for 3.1, but I haven't verified if it is
+>> in yet. Sorry for the confusion, I should have mentioned that.
 >
-> cellarrayprefix =3D DT_SIZE DT_LITERAL '<'
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| cellarrayprefix cellval
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| cellarrayprefix DT_REF
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| cellarrayprefix DT_LABEL
+> OK, I remember now as well that Thomas took patched 2 patches from your
+> previous one. And I found it:
+> https://lkml.org/lkml/2011/9/14/190
 >
-> The semantic type of cellarray prefix would need to contain both a
-> struct data and a int for the cell size, which is a bit fiddly, but
-> should be doable. =A0The DT_REF case can check the cell size part of $1
-> and error if it's no 32-bit.
+> Now, I have to find why the twl interrupt-controller is not working
+> anymore even with that fix.
 
-I like this more than my solution.  I've written it up along with some
-tests.  I'm now working on the dts format doc.
+This is much better with the proper #interrupt-cells size:-)
 
-Should I submit this assuming that the character literal support in
-cell lists will be accepted shortly?  Or should I remove the use of
-character literals from my test case?  It would be simpler for me to
-leave the patches based on top of the character literal in cell list
-patch that has been acked but not submitted.  I won't base them on top
-of the character literals in bytestring patch since that is not going
-in without more discussion.  Also, would you prefer that I squash the
-test cases into the commit with the variable sized cell support and
-documentation changes?
+> Almost-Tested-by: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
 
-Thanks,
-    Anton
+Tested-by: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
 
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
+With a still very limited number of OMAP4 peripherals for the moment.
+
+Regards,
+Benoit
