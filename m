@@ -1,83 +1,60 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Pawel Moll <pawel.moll@arm.com>
 Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Wed, 21 Sep 2011 16:49:39 +0100
-Message-ID: <20110921154939.GF2872@arm.com>
+Date: Wed, 21 Sep 2011 17:01:17 +0100
+Message-ID: <1316620877.4611.647.camel@hornet.cambridge.arm.com>
 References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
-	<4E79E588.6010703@gmail.com> <20110921142425.GE2872@arm.com>
-	<1316615590.4611.624.camel@hornet.cambridge.arm.com>
+	<4E79E588.6010703@gmail.com>
+	<CACxGe6sTYYXbpXvPb4C+y4JX0eRxLvwjbFycXA8Mjc-XWS1QUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1316615590.4611.624.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACxGe6sTYYXbpXvPb4C+y4JX0eRxLvwjbFycXA8Mjc-XWS1QUA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Dave Martin <dave.martin@linaro.org>, "patches@linaro.org" <patches@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@smooth-stone.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2011 at 03:33:10PM +0100, Pawel Moll wrote:
-> > OK, I'll try to propose documentation for these:
-> >         * arm,pl180
-> 
-> You can skip this one - I'll add the description together with the MMCI
-> driver bindings (it will be 180 and 181, by the way :-)
-
-Done.
-
-> > > > +			// Timer init is hardcoded in v2m_timer_init(), for now.
-> > > > +			// timer@11000 {
-> > > > +			//	compatible = "arm,arm-sp804";
-> > > 
-> > > arm,sp804 is more consistent. I believe the sp804 does have the periphid
-> > > registers, so arm,primecell should also be added.
-> > 
-> > Do you mean "does not have"?  If so, the periphid will be needed -- thanks for
-> > pointing it out in that case.
-> 
-> I think Rob meant it should be
-> 	compatible = "arm,sp804", "arm,primecell",
-> as SP804 contains the PrimeCell periphid registers, so will be
-> recognized by amba bus driver.
-
-Oh, right -- misunderstanding, sorry for that.
-
-> > I will make the names consistent.  These were pasted from someone Lorenzo's
-> > older patches, and failed to sport e the inconsistency since I wasn't
-> > actually making use of these entries yet.
-> > 
-> > > > +			//	reg = <0x11000 0x1000>;
-> > > > +			//	interrupts = <2>;
-> > > > +			// };
-> > > > +
-> > > > +			// timer@12000 {
-> > > > +			//	compatible = "arm,arm-sp804";
-> > > > +			//	reg = <0x12000 0x1000>;
-> > > > +			// };
-> > > 
-> > > Just because Linux is not using it, doesn't mean you should comment it out.
-> > 
-> > From the point of view of describing the hardware, yes.  However, I was
-> > a bit worried that if sp804 is turned into a full driver, it will get
-> > initialised twice -- once explicitly and once in of_platform_populate()...
-> > at least until the baord code is adapted to work properly with the new
-> > driver.
-> > 
-> > Commenting these entries out for now seemed a good idea to avoid the flag-day
-> > hazard.  Am I being too cautious?
-> 
-> I think you are ;-) Besides my static-mapping-rework is already using
-> those...
-
-OK, I will uncomment it then.
-
-Cheers
----Dave
+T24gV2VkLCAyMDExLTA5LTIxIGF0IDE1OjU3ICswMTAwLCBHcmFudCBMaWtlbHkgd3JvdGU6Cj4g
+T24gV2VkLCBTZXAgMjEsIDIwMTEgYXQgNzoyNCBBTSwgUm9iIEhlcnJpbmcgPHJvYmhlcnJpbmcy
+QGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiBPbiAwOS8yMS8yMDExIDA0OjE5IEFNLCBEYXZlIE1hcnRp
+biB3cm90ZToKPiA+PiAgICAgICAqIGFybSxhbWJhLWJ1cyAtLSB3aWRlbHkgdXNlZCBieSBvdGhl
+ciBib2FyZHMgYW5kIHBhdGNoc2V0cywgYnV0Cj4gPj4gICAgICAgICBzZWVtcyBub3QgdG8gYmUg
+ZG9jdW1lbnRlZC4KPiA+Pgo+ID4KPiA+IFRoaXMgc2hvdWxkIGJlIGRyb3BwZWQuIFRoZXJlJ3Mg
+bm90IHJlYWxseSBhbnkgYnVzIGNvbXBvbmVudCB0byBhbiBhbWJhCj4gPiBidXMuIEFsbCB0aGUg
+cHJvYmluZyBpbmZvIGlzIHdpdGhpbiB0aGUgcHJpbWVjZWxsIHBlcmlwaGVyYWxzLgo+IAo+IE5v
+LCBpZiBpdCBpcyBhbiBBTUJBIGJ1cywgdGhlbiBpdCBpcyBlbnRpcmVseSBhcHByb3ByaWF0ZSB0
+byBkZWNsYXJlCj4gaXQgYXMgYW4gYW1iYSBidXMsIGJ1dCB0byBhbHNvIGJlIGNvbXBhdGlibGUg
+d2l0aCAic2ltcGxlLWJ1cyIuICBJbgo+IGZhY3QsIGl0IHdvdWxkIGJlIGJldHRlciB0byB1c2Ug
+YSBjb21wYXRpYmxlIHN0cmluZyB0aGF0IHNwZWNpZmllcyB0aGUKPiBzcGVjaWZpYyBpbXBsZW1l
+bnRhdGlvbiBvZiBBTUJBIGJ1cyBzaW5jZSB0aGVyZSBhcmUgc2V2ZXJhbCB2ZXJzaW9ucwo+IG9m
+IHRoZSBzcGVjLgoKRGF2ZSBhc2tlZCBtZSBhYm91dCBkZXRhaWxzIG9mIHRoZSBWRSBpbXBsZW1l
+bnRhdGlvbi4gSXQncwpzb3J0LW9mLWNvbXBsaWNhdGVkLi4uIDstKQoKMS4gQ29yZSB0YWxrcyB0
+byBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgdmlhIEFNQkEgKEFYSSkKCiAgIFNPQyB7IGNvcmUg
+LS1BWEktLT4gU01DIH0KCjIuIFNNQyBnZW5lcmF0ZXMgdHJhbnNhY3Rpb24gb24gU3RhdGljIE1l
+bW9yeSBCdXMgdGFsa2luZyB0byB0aGUgSU8gRlBHQQoKICAgdGlsZS9tb3RoZXJib2FyZCBjb25u
+ZWN0b3IgeyBTTUMgLS1TTUItLT4gSU9GUEdBIH0KCjMuIE5vdywgZGVwZW5kaW5nIG9uIHRoZSBk
+ZXZpY2UgYmVpbmcgYWNjZXNzZWQ6CgphKSBUcmFuc2FjdGlvbnMgYWNjZXNzaW5nIFNNU0M5MTE4
+LCBJU1AxNzYxLCBOT1IgRmxhc2ggYW5kIFBTUkFNIGFyZQpyb3V0ZWQgZGlyZWN0bHkgdG8gdGhl
+IGRldmljZXMKCiAgIElPRlBHQSB7IFNNQiAtLT4gU01TQzkxMTggZXQgYWwuIH0KCmIpIFRoZSBy
+ZXN0IG9mIHRoZSB0cmFmZmljIGlzIGNvbnZlcnRlZCBiYWNrIHRvIEFNQkEgKEFIQi9BUEIpCnRy
+YW5zYWN0aW9ucyBhbmQgc2VudCB0byB0aGUgZGV2aWNlcyBjb25uZWN0ZWQgdG8gaW50ZXJuYWwg
+QU1CQSBtYXRyaXguCgogICBJT0ZQR0EgeyBTTUIgLS0+IEFIQi9BUEIgYnVzIG1hc3RlciAtLUFI
+Qi9BUEItLT4gUEwxODAgfQoKSSBkb24ndCBiZWxpZXZlLCB0aG91Z2gsIHRoYXQgdGhlIERUUyBt
+dXN0IHJlZmxlY3Qgc3VjaCBsZXZlbCBvZgpkZXRhaWxzLiBUaGF0J3Mgd2h5IEkgdGhpbmsgdGhh
+dDoKCisgICAgICAgbW90aGVyYm9hcmQgeworICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJz
+aW1wbGUtYnVzIjsKCmFuZAoKKyAgICAgICAgICAgICAgIHBlcmlwaGVyYWxzQDcsMDAwMDAwMDAg
+eworICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxhbWJhLWJ1cyIsICJz
+aW1wbGUtYnVzIjsKCmlzIHRoZSBiZXN0IGRlc2NyaXB0aW9uIG9mIHRoZSByZWFsaXR5IDotKQoK
+Q2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
