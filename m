@@ -1,14 +1,11 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Wed, 21 Sep 2011 08:57:46 -0600
-Message-ID: <CACxGe6sTYYXbpXvPb4C+y4JX0eRxLvwjbFycXA8Mjc-XWS1QUA@mail.gmail.com>
-References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
-	<4E79E588.6010703@gmail.com>
+Subject: [PATCH] devicetree: Add a registry of vendor prefixes
+Date: Wed, 21 Sep 2011 09:23:25 -0600
+Message-ID: <20110921152324.15993.96272.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E79E588.6010703-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,27 +15,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2011 at 7:24 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 09/21/2011 04:19 AM, Dave Martin wrote:
->> =A0 =A0 =A0 * arm,amba-bus -- widely used by other boards and patchsets,=
- but
->> =A0 =A0 =A0 =A0 seems not to be documented.
->>
->
-> This should be dropped. There's not really any bus component to an amba
-> bus. All the probing info is within the primecell peripherals.
+There is no centralized listing for the in-use vendor prefixes
+used in compatible strings and property names.  This patch adds one.
+New prefixes should get added to this list to reduce the likelyhood
+of namespace collisions.
 
-No, if it is an AMBA bus, then it is entirely appropriate to declare
-it as an amba bus, but to also be compatible with "simple-bus".  In
-fact, it would be better to use a compatible string that specifies the
-specific implementation of AMBA bus since there are several versions
-of the spec.
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |   38 ++++++++++++++++++++
+ 1 files changed, 38 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/vendor-prefixes.txt
 
-Don't let Linux's current implementation detail derail what is
-considered good practice.
-
-g.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+new file mode 100644
+index 0000000..81465c1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -0,0 +1,38 @@
++Device tree binding vendor prefix registry.  Keep list in alphabetical order.
++
++This isn't an exhaustive list, but you should add new prefixes to it before
++using them to avoid name-space collisions.
++
++adi	Analog Devices, Inc.
++amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
++apm	Applied Micro Circuits Corporation (APM)
++arm	ARM Ltd.
++chrp	Common Hardware Reference Platform
++dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
++denx	Denx Software Engineering
++epson	Seiko Epson Corp.
++est	ESTeem Wireless Modems
++fsl	Freescale Semiconductor
++GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
++gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
++hp	Hewlett Packard
++ibm	International Business Machines (IBM)
++idt	Integrated Device Technologies, Inc.
++intercontrol	Inter Control Group
++linux	Linux-specific binding
++marvell	Marvell Technology Group Ltd.
++maxim	Maxim Integrated Products
++mosaixtech	Mosaix Technologies, Inc.
++national	National Semiconductor
++nintendo	Nintendo
++nvidia	NVIDIA
++nxp	NXP Semiconductors
++powervr	Imagination Technologies
++ramtron	Ramtron International
++samsung	Samsung Semiconductor
++schindler	Schindler
++simtek
++sirf	SiRF Technology, Inc.
++stericsson	ST-Ericsson
++ti	Texas Instruments
++xlnx	Xilinx
