@@ -1,14 +1,15 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 6/6] Add fdtput utility to write property values to a
-	device tree
-Date: Wed, 21 Sep 2011 13:32:49 -0700
-Message-ID: <1316637169-24112-7-git-send-email-sjg@chromium.org>
-References: <1316637169-24112-1-git-send-email-sjg@chromium.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2] dt: add of_alias_scan and of_alias_get_id
+Date: Wed, 21 Sep 2011 14:35:23 -0600
+Message-ID: <20110921203523.GB17168@ponder.secretlab.ca>
+References: <1313371817-5135-1-git-send-email-shawn.guo@linaro.org>
+	<1313393294-8867-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1316637169-24112-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1313393294-8867-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,544 +19,318 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This simple utility allows writing of values into a device tree from the
-command line. It aimes to be the opposite of fdtget.
+On Mon, Aug 15, 2011 at 03:28:14PM +0800, Shawn Guo wrote:
+> The patch adds function of_alias_scan to populate a global lookup
+> table with the properties of 'aliases' node and function
+> of_alias_get_id for drivers to find alias id from the lookup table.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> [grant.likey: add locking and rework parse loop]
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> ---
+> Changes since v1:
+>  * Add of_chosen/of_aliases populating and of_alias_scan() invocation
+>    for OF_PROMTREE (non-tested).
 
-What is it for:
-- Updating fdt values when a binary blob already exists
-   (even though source may be available it might be easier to use this
-utility rather than sed, etc.)
-- Writing machine-specific fdt values within a build system
+Hi Shawn,
 
-To use it, specify the fdt binary file on command line followed by the node
-and property to set. Then, provide a list of values to put into that
-property. Often there will be just one, but fdtput also supports arrays and
-string lists.
+It's taken me a very long time to get some bandwidth to look at this
+patch.  I do have some minor comments, but rather than waiting for a
+respin and delaying even further, I'm picking up the bits that are
+are ready to go so that the remaining part (auto allocating of unused
+ids) can be debated without holding things up.
 
-fdtput does not try to guess the type of the property based on looking at
-the arguments. Instead it always assumes that an integer is provided. To
-indicate that you want to write a string, use -ts. You can also provide
-hex values with -tx.
+> 
+>  drivers/of/base.c      |  136 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/of/fdt.c       |   12 +++--
+>  drivers/of/pdt.c       |   12 ++++
+>  include/linux/of.h     |    8 +++
+>  include/linux/of_fdt.h |    1 -
+>  5 files changed, 163 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 3ff22e3..5e6ce02 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -17,14 +17,39 @@
+>   *      as published by the Free Software Foundation; either version
+>   *      2 of the License, or (at your option) any later version.
+>   */
+> +#include <linux/ctype.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/slab.h>
+>  #include <linux/proc_fs.h>
+>  
+> +/**
+> + * struct alias_prop - Alias property in 'aliases' node
+> + * @link:	List node to link the structure in aliases_lookup list
+> + * @alias:	Alias property name
+> + * @np:		Pointer to device_node that the alias stands for
+> + * @id:		Index value from end of alias name
+> + * @stem:	Alias string without the index
+> + *
+> + * The structure represents one alias property of 'aliases' node as
+> + * an entry in aliases_lookup list.
+> + */
+> +struct alias_prop {
+> +	struct list_head link;
+> +	const char *alias;
+> +	struct device_node *np;
+> +	int id;
+> +	char stem[0];
+> +};
+> +
+> +static LIST_HEAD(aliases_lookup);
+> +
+>  struct device_node *allnodes;
+>  struct device_node *of_chosen;
+> +struct device_node *of_aliases;
+> +
+> +static DEFINE_MUTEX(of_aliases_mutex);
+>  
+>  /* use when traversing tree through the allnext, child, sibling,
+>   * or parent members of struct device_node.
+> @@ -988,3 +1013,114 @@ out_unlock:
+>  }
+>  #endif /* defined(CONFIG_OF_DYNAMIC) */
+>  
+> +static void of_alias_add(struct alias_prop *ap, struct device_node *np,
+> +			 int id, const char *stem, int stem_len)
+> +{
+> +	ap->np = np;
+> +	ap->id = id;
+> +	strncpy(ap->stem, stem, stem_len);
+> +	ap->stem[stem_len] = 0;
+> +	list_add_tail(&ap->link, &aliases_lookup);
+> +	pr_debug("adding DT alias:%s: stem=%s id=%i node=%s\n",
+> +		 ap->alias, ap->stem, ap->id, np ? np->full_name : NULL);
+> +}
+> +
+> +/**
+> + * of_alias_scan - Scan all properties of 'aliases' node
+> + *
+> + * The function scans all the properties of 'aliases' node and populate
+> + * the the global lookup table with the properties.  It returns the
+> + * number of alias_prop found, or error code in error case.
+> + *
+> + * @dt_alloc:	An allocator that provides a virtual address to memory
+> + *		for the resulting tree
+> + */
+> +void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+> +{
+> +	struct property *pp;
+> +
+> +	if (!of_aliases)
+> +		return;
+> +
+> +	for_each_property(pp, of_aliases->properties) {
+> +		const char *start = pp->name;
+> +		const char *end = start + strlen(start);
+> +		struct device_node *np;
+> +		struct alias_prop *ap;
+> +		int id, len;
+> +
+> +		/* Skip those we do not want to proceed */
+> +		if (!strcmp(pp->name, "name") ||
+> +		    !strcmp(pp->name, "phandle") ||
+> +		    !strcmp(pp->name, "linux,phandle"))
+> +			continue;
+> +
+> +		np = of_find_node_by_path(pp->value);
+> +		if (!np)
+> +			continue;
+> +
+> +		/* walk the alias backwards to extract the id and work out
+> +		 * the 'stem' string */
+> +		while (isdigit(*(end-1)) && end > start)
+> +			end--;
+> +		len = end - start;
+> +
+> +		if (kstrtoint(end, 10, &id) < 0)
+> +			continue;
+> +
+> +		/* Allocate an alias_prop with enough space for the stem */
+> +		ap = dt_alloc(sizeof(*ap) + len + 1, 4);
+> +		if (!ap)
+> +			continue;
+> +		ap->alias = start;
+> +		of_alias_add(ap, np, id, start, len);
+> +	}
+> +}
+> +
+> +/**
+> + * of_alias_get_id - Get alias id for the given device_node
+> + * @np:		Pointer to the given device_node
+> + * @stem:	Alias stem of the given device_node
+> + *
+> + * The function travels the lookup table to get alias id for the given
+> + * device_node and alias stem.  It returns the alias id if find it.
+> + * If not, dynamically creates one in the lookup table and returns it,
+> + * or returns error code if fail to create.
+> + */
+> +int of_alias_get_id(struct device_node *np, const char *stem)
+> +{
+> +	struct alias_prop *app;
+> +	int id = 0;
+> +	bool found = false;
+> +
+> +	mutex_lock(&of_aliases_mutex);
+> +	list_for_each_entry(app, &aliases_lookup, link) {
+> +		if (strcmp(app->stem, stem) != 0)
+> +			continue;
+> +
+> +		if (np == app->np) {
+> +			found = true;
+> +			id = app->id;
+> +			break;
+> +		}
+> +
+> +		if (id <= app->id)
+> +			id = app->id + 1;
+> +	}
+> +
+> +	/* If an id is not found, then allocate a new one */
+> +	if (!found) {
+> +		app = kzalloc(sizeof(*app) + strlen(stem) + 1, 4);
+> +		if (!app) {
+> +			id = -ENODEV;
+> +			goto out;
+> +		}
+> +		of_alias_add(app, np, id, stem, strlen(stem));
+> +	}
 
-The command line arguments are joined together into a single value. For
-strings, a nul terminator is placed between each string when it is packed
-into the property. To avoid this, pass the string as a single argument.
+This was the controversial bit last time around.  I'm dropping this
+block from the patch because the core aliases scanning is still
+important.  The allocating of new ids can be debated separately.
 
-Usage:
-	fdtput <options> <dt file> <<node> <property> [<value>...]
-Options:
-	-t <type>	Type of data
-	-v		Verbose: display each value decoded from command line
-	-h		Print this help
+> +
+> + out:
+> +	mutex_unlock(&of_aliases_mutex);
+> +
+> +	return id;
+> +}
+> +EXPORT_SYMBOL_GPL(of_alias_get_id);
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 65200af..98b6fb1 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -404,6 +404,13 @@ static void __unflatten_device_tree(struct boot_param_header *blob,
+>  			   be32_to_cpu(((__be32 *)mem)[size / 4]));
+>  	*allnextp = NULL;
+>  
+> +	/* Get pointer to "/chosen" and "/aliasas" nodes for use everywhere */
+> +	of_chosen = of_find_node_by_path("/chosen");
+> +	if (of_chosen == NULL)
+> +		of_chosen = of_find_node_by_path("/chosen@0");
+> +	of_aliases = of_find_node_by_path("/aliases");
+> +	of_alias_scan(dt_alloc);
+> +
+>  	pr_debug(" <- unflatten_device_tree()\n");
+>  }
+>  
+> @@ -706,11 +713,6 @@ void __init unflatten_device_tree(void)
+>  {
+>  	__unflatten_device_tree(initial_boot_params, &allnodes,
+>  				early_init_dt_alloc_memory_arch);
+> -
+> -	/* Get pointer to OF "/chosen" node for use everywhere */
+> -	of_chosen = of_find_node_by_path("/chosen");
+> -	if (of_chosen == NULL)
+> -		of_chosen = of_find_node_by_path("/chosen@0");
 
-<type>	s=string, i=int, u=unsigned, x=hex
-	Optional modifier prefix:
-		hh or b=byte, h=2 byte, l=4 byte (default)
+Don't move this hunk.  There are callers of __unflatten_device_tree,
+such as when processing device tree fragments, which do not want to
+proceses /chosen or /aliases.  I've moved it back to where it started
+from.
 
-To read from stdin and write to stdout, use - as the file. So you can do:
+>  }
+>  
+>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+> diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+> index 4d87b5d..686a4b3 100644
+> --- a/drivers/of/pdt.c
+> +++ b/drivers/of/pdt.c
+> @@ -229,6 +229,11 @@ static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
+>  	return ret;
+>  }
+>  
+> +static void *kernel_tree_alloc(u64 size, u64 align)
+> +{
+> +	return prom_early_alloc(size);
+> +}
+> +
+>  void __init of_pdt_build_devicetree(phandle root_node, struct of_pdt_ops *ops)
+>  {
+>  	struct device_node **nextp;
+> @@ -245,4 +250,11 @@ void __init of_pdt_build_devicetree(phandle root_node, struct of_pdt_ops *ops)
+>  	nextp = &allnodes->allnext;
+>  	allnodes->child = of_pdt_build_tree(allnodes,
+>  			of_pdt_prom_ops->getchild(allnodes->phandle), &nextp);
+> +
+> +	/* Get pointer to "/chosen" and "/aliasas" nodes for use everywhere */
+> +	of_chosen = of_find_node_by_path("/chosen");
+> +	if (of_chosen == NULL)
+> +		of_chosen = of_find_node_by_path("/chosen@0");
+> +	of_aliases = of_find_node_by_path("/aliases");
+> +	of_alias_scan(kernel_tree_alloc);
 
-cat somefile.dtb | fdtput -ts - /node prop "My string value" > newfile.dtb
+Thinking about it more, there is no need to have the
+of_find_node_by_path() outside of of_alias_scan().  I've moved it.  In
+fact, I think I'll move the /chosen search into of_alias_scan() too.
 
-This commit also adds basic tests to verify the major features.
+>  }
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 9180dc5..4ea7d81 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -68,6 +68,7 @@ struct device_node {
+>  /* Pointer for first entry in chain of all nodes. */
+>  extern struct device_node *allnodes;
+>  extern struct device_node *of_chosen;
+> +extern struct device_node *of_aliases;
+>  extern rwlock_t devtree_lock;
+>  
+>  static inline bool of_have_populated_dt(void)
+> @@ -209,6 +210,9 @@ extern int of_device_is_available(const struct device_node *device);
+>  extern const void *of_get_property(const struct device_node *node,
+>  				const char *name,
+>  				int *lenp);
+> +#define for_each_property(pp, properties) \
+> +	for (pp = properties; pp != NULL; pp = pp->next)
+> +
+>  extern int of_n_addr_cells(struct device_node *np);
+>  extern int of_n_size_cells(struct device_node *np);
+>  extern const struct of_device_id *of_match_node(
+> @@ -221,6 +225,10 @@ extern int of_parse_phandles_with_args(struct device_node *np,
+>  	const char *list_name, const char *cells_name, int index,
+>  	struct device_node **out_node, const void **out_args);
+>  
+> +extern void *early_init_dt_alloc_memory_arch(u64 size, u64 align);
+> +extern void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align));
+> +extern int of_alias_get_id(struct device_node *np, const char *stem);
+> +
+>  extern int of_machine_is_compatible(const char *compat);
+>  
+>  extern int prom_add_property(struct device_node* np, struct property* prop);
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index c84d900..b74b74f 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -97,7 +97,6 @@ extern void early_init_dt_check_for_initrd(unsigned long node);
+>  extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+>  				     int depth, void *data);
+>  extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+> -extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v2:
-- Separate arguments for node and property
-- Remove limits on data size of property writting to fdt
-- Remove use of getopt_long()
-- Adjust tests for new fdtput arguments
-- Add test for multiple strings
-- Add test for exhausting fdt space
+This prototype doesn't need to move.  I've moved it back.
 
-Changes in v3:
-- Squash fdtput tests into fdtput commit
+Otherwise looks good.  I'll post a v3 showing the version that I'm
+merging.
 
- .gitignore              |    1 +
- Makefile                |    4 +
- Makefile.utils          |    7 ++
- fdtput.c                |  235 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/fdtput-runtest.sh |   55 +++++++++++
- tests/run_tests.sh      |   73 ++++++++++++++-
- tests/tests.sh          |    1 +
- 7 files changed, 375 insertions(+), 1 deletions(-)
- create mode 100644 fdtput.c
- create mode 100644 tests/fdtput-runtest.sh
-
-diff --git a/.gitignore b/.gitignore
-index 9f27f34..2c9a64e 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -11,3 +11,4 @@ lex.yy.c
- /convert-dtsv0
- /version_gen.h
- /fdtget
-+/fdtput
-diff --git a/Makefile b/Makefile
-index 00e137a..0d56d2e 100644
---- a/Makefile
-+++ b/Makefile
-@@ -111,6 +111,7 @@ BIN += convert-dtsv0
- BIN += dtc
- BIN += ftdump
- BIN += fdtget
-+BIN += fdtput
- 
- SCRIPTS = dtdiff
- 
-@@ -122,6 +123,7 @@ ifneq ($(DEPTARGETS),)
- -include $(CONVERT_OBJS:%.o=%.d)
- -include $(FTDUMP_OBJS:%.o=%.d)
- -include $(FDTGET_OBJS:%.o=%.d)
-+-include $(FDTPUT_OBJS:%.o=%.d)
- endif
- 
- 
-@@ -184,6 +186,8 @@ ftdump:	$(FTDUMP_OBJS)
- 
- fdtget:	$(FDTGET_OBJS) $(LIBFDT_archive)
- 
-+fdtput:	$(FDTPUT_OBJS) $(LIBFDT_archive)
-+
- 
- #
- # Testsuite rules
-diff --git a/Makefile.utils b/Makefile.utils
-index 095cacd..df1d6fc 100644
---- a/Makefile.utils
-+++ b/Makefile.utils
-@@ -15,3 +15,10 @@ FDTGET_SRCS = \
- 	util.c
- 
- FDTGET_OBJS = $(FDTGET_SRCS:%.c=%.o)
-+
-+
-+FDTPUT_SRCS = \
-+	fdtput.c \
-+	util.c
-+
-+FDTPUT_OBJS = $(FDTPUT_SRCS:%.c=%.o)
-diff --git a/fdtput.c b/fdtput.c
-new file mode 100644
-index 0000000..f6ebd24
---- /dev/null
-+++ b/fdtput.c
-@@ -0,0 +1,235 @@
-+/*
-+ * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-+ * MA 02111-1307 USA
-+ */
-+
-+#include <assert.h>
-+#include <ctype.h>
-+#include <getopt.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#include <libfdt.h>
-+
-+#include "util.h"
-+
-+struct display_info {
-+	int type;		/* data type (s/i/u/x or 0 for default) */
-+	int size;		/* data size (1/2/4) */
-+	int verbose;		/* verbose output */
-+};
-+
-+static void report_error(const char *where, int err)
-+{
-+	fprintf(stderr, "Error at '%s': %s\n", where, fdt_strerror(err));
-+}
-+
-+/**
-+ * Encode a series of arguments in a property value.
-+ *
-+ * @param disp		Display information / options
-+ * @param arg		List of arguments from command line
-+ * @param arg_count	Number of arguments (may be 0)
-+ * @param valuep	Returns buffer containing value
-+ * @param *value_len	Returns length of value encoded
-+ */
-+static int encode_value(struct display_info *disp, char **arg, int arg_count,
-+			char **valuep, int *value_len)
-+{
-+	char *value = NULL;	/* holding area for value */
-+	int value_size = 0;	/* size of holding area */
-+	char *ptr;		/* pointer to current value position */
-+	int len;		/* length of this cell/string/byte */
-+	int ival;
-+	int upto;	/* the number of bytes we have written to buf */
-+	char fmt[3];
-+
-+	upto = 0;
-+
-+	if (disp->verbose)
-+		fprintf(stderr, "Decoding value:\n");
-+
-+	fmt[0] = '%';
-+	fmt[1] = disp->type ? disp->type : 'd';
-+	fmt[2] = '\0';
-+	for (; arg_count > 0; arg++, arg_count--, upto += len) {
-+		/* assume integer unless told otherwise */
-+		if (disp->type == 's')
-+			len = strlen(*arg) + 1;
-+		else
-+			len = disp->size == -1 ? 4 : disp->size;
-+
-+		/* enlarge our value buffer by a suitable margin if needed */
-+		if (upto + len > value_size) {
-+			value_size = (upto + len) + 500;
-+			value = realloc(value, value_size);
-+			if (!value) {
-+				fprintf(stderr, "Out of mmory: cannot alloc "
-+					"%d bytes\n", value_size);
-+				return -1;
-+			}
-+		}
-+
-+		ptr = value + upto;
-+		if (disp->type == 's') {
-+			memcpy(ptr, *arg, len);
-+			if (disp->verbose)
-+				fprintf(stderr, "\tstring: '%s'\n", ptr);
-+		} else {
-+			int *iptr = (int *)ptr;
-+			sscanf(*arg, fmt, &ival);
-+			if (len == 4)
-+				*iptr = cpu_to_fdt32(ival);
-+			else
-+				*ptr = (uint8_t)ival;
-+			if (disp->verbose) {
-+				fprintf(stderr, "\t%s: %d\n",
-+					disp->size == 1 ? "byte" :
-+					disp->size == 2 ? "short" : "int",
-+					ival);
-+			}
-+		}
-+	}
-+	*value_len = upto;
-+	*valuep = value;
-+	if (disp->verbose)
-+		fprintf(stderr, "Value size %d\n", upto);
-+	return 0;
-+}
-+
-+static int store_key_value(void *blob, const char *node_name,
-+		const char *property, const char *buf, int len)
-+{
-+	int node;
-+	int err;
-+
-+	node = fdt_path_offset(blob, node_name);
-+	if (node < 0) {
-+		report_error(node_name, node);
-+		return -1;
-+	}
-+
-+	err = fdt_setprop(blob, node, property, buf, len);
-+	if (err) {
-+		report_error(property, err);
-+		return -1;
-+	}
-+	return 0;
-+}
-+
-+static int do_fdtput(struct display_info *disp, const char *filename,
-+		    char **arg, int arg_count)
-+{
-+	char *value;
-+	char *blob;
-+	int len, ret = 0;
-+
-+	blob = utilfdt_read(filename);
-+	if (!blob)
-+		return -1;
-+
-+	/* convert the arguments into a single binary value, then store */
-+	assert(arg_count >= 2);
-+	if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
-+		store_key_value(blob, *arg, arg[1], value, len))
-+		ret = -1;
-+
-+	if (!ret)
-+		ret = utilfdt_write(filename, blob);
-+
-+	free(blob);
-+	return ret;
-+}
-+
-+static const char *usage_msg =
-+	"fdtput - write a property value to a device tree\n"
-+	"\n"
-+	"The command line arguments are joined together into a single value.\n"
-+	"\n"
-+	"Usage:\n"
-+	"	fdtput <options> <dt file> <<node> <property> [<value>...]\n"
-+	"Options:\n"
-+	"\t-t <type>\tType of data\n"
-+	"\t-v\t\tVerbose: display each value decoded from command line\n"
-+	"\t-h\t\tPrint this help\n\n"
-+	USAGE_TYPE_MSG;
-+
-+static void usage(const char *msg)
-+{
-+	if (msg)
-+		fprintf(stderr, "Error: %s\n\n", msg);
-+
-+	fprintf(stderr, "%s", usage_msg);
-+	exit(2);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct display_info disp;
-+	char *filename = NULL;
-+
-+	memset(&disp, '\0', sizeof(disp));
-+	disp.size = -1;
-+	for (;;) {
-+		int c = getopt(argc, argv, "ht:v");
-+		if (c == -1)
-+			break;
-+
-+		/*
-+		 * TODO: add options to:
-+		 * - delete property
-+		 * - delete node (optionally recursively)
-+		 * - rename node
-+		 * - pack fdt before writing
-+		 * - set amount of free space when writing
-+		 * - expand fdt if value doesn't fit
-+		 */
-+		switch (c) {
-+		case 'h':
-+		case '?':
-+			usage(NULL);
-+
-+		case 't':
-+			if (utilfdt_decode_type(optarg, &disp.type,
-+					&disp.size))
-+				usage("Invalid type string");
-+			break;
-+
-+		case 'v':
-+			disp.verbose = 1;
-+			break;
-+		}
-+	}
-+
-+	if (optind < argc)
-+		filename = argv[optind++];
-+	if (!filename)
-+		usage("Missing filename");
-+
-+	argv += optind;
-+	argc -= optind;
-+
-+	if (argc < 1)
-+		usage("Missing node");
-+	if (argc < 2)
-+		usage("Missing property");
-+
-+	if (do_fdtput(&disp, filename, argv, argc))
-+		return 1;
-+	return 0;
-+}
-diff --git a/tests/fdtput-runtest.sh b/tests/fdtput-runtest.sh
-new file mode 100644
-index 0000000..ea51569
---- /dev/null
-+++ b/tests/fdtput-runtest.sh
-@@ -0,0 +1,55 @@
-+#! /bin/sh
-+
-+# Run script for fdtput tests
-+# We run fdtput to update the device tree, thn fdtget to check it
-+
-+# Usage
-+#    fdtput-runtest.sh name expected_output dtb_file node property flags value
-+
-+. ./tests.sh
-+
-+LOG="tmp.log.$$"
-+EXPECT="tmp.expect.$$"
-+
-+rm -f $TMPFILE $LOG
-+
-+expect="$1"
-+echo "$expect" >$EXPECT
-+dtb="$2"
-+node="$3"
-+property="$4"
-+flags="$5"
-+shift 5
-+value="$@"
-+
-+# First run fdtput
-+verbose_run $VALGRIND "$DTPUT" "$dtb" "$node" "$property" $value $flags
-+ret="$?"
-+
-+if [ "$ret" -ne 0 -a "$expect" = "ERR" ]; then
-+	PASS
-+fi
-+if [ "$ret" -gt 127 ]; then
-+    signame=$(kill -l $[ret - 128])
-+    FAIL "Killed by SIG$signame"
-+fi
-+
-+# Now fdtget to read the value
-+verbose_run_log "$LOG" $VALGRIND "$DTGET" "$dtb" "$node" "$property" $flags
-+ret="$?"
-+
-+if [ "$ret" -gt 127 ]; then
-+    signame=$(kill -l $[ret - 128])
-+    FAIL "Killed by SIG$signame"
-+fi
-+
-+diff $EXPECT $LOG
-+ret="$?"
-+
-+rm -f $LOG $EXPECT
-+
-+if [ "$ret" -eq 0 ]; then
-+	PASS
-+else
-+	FAIL
-+fi
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index e63c5c7..05970e8 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -90,6 +90,21 @@ run_fdtget_test () {
- base_run_test sh fdtget-runtest.sh "$@"
- }
- 
-+run_fdtput_test () {
-+    # run_fdtput_test name expected_output dtb_file node property flags value...
-+    echo -n "$1:	"
-+    shift
-+    output="$1"
-+    dtb="$2"
-+    node="$3"
-+    property="$4"
-+    flags="$5"
-+    shift 5
-+    base_run_test sh fdtput-runtest.sh "$output" "$dtb" "$node" "$property" \
-+		"$flags" $@
-+#     base_run_test sh fdtput-runtest.sh "$@"
-+}
-+
- tree1_tests () {
- TREE=$1
- 
-@@ -426,6 +441,59 @@ fdtget_tests () {
- 	$file /randomnode doctor-who
- }
- 
-+fdtput_tests () {
-+    file=label01.dtb
-+    src=label01.dts
-+
-+    # Create some test files containing useful strings
-+    base=tmp.test0
-+    file1=tmp.test1
-+    file2=tmp.test2
-+    bigfile1=tmp.test3
-+    bigfile2=tmp.test4
-+
-+    # Filter out anything the shell might not like
-+    cat $src | tr -d "'\"\n\;/\.\*{}\-" | tr -s "[:blank:]" " " >$base
-+
-+    # Make two small files
-+    head -5 $base >$file1
-+    cat $file1 | tr a-z A-Z | cut -c10-30 | sort -r >$file2
-+
-+    # and two larger ones
-+    cat $base > $bigfile1
-+    tac $base | tr a-z A-Z | sort -r >$bigfile2
-+
-+    # Allow just enough space for both file1 and file2
-+    (( space = $(stat -c %s $file1) + $(stat -c %s $file2) ))
-+    $DTC -O dtb -p $space -o $file ${file%.dtb}.dts 2>/dev/null
-+
-+    # run_fdtput_test <test-name> <expected-result> <file> <key> <flags>
-+    #		<args>...
-+    run_fdtput_test "Simple string" "a_model" $file / model -ts "a_model"
-+    run_fdtput_test "Multiple string s" "board1 board2" \
-+	$file / compatible -ts board1 board2
-+    run_fdtput_test "Single string with spaces" "board1 board2" \
-+	$file / compatible -ts "board1 board2"
-+    run_fdtput_test "Integer" "32768" \
-+	$file /cpus/PowerPC,970@1 d-cache-size "" "32768"
-+    run_fdtput_test "Integer hex" "8001" \
-+	$file /cpus/PowerPC,970@1 d-cache-size -tx 0x8001
-+    run_fdtput_test "Integer list" "2 3 12" \
-+	$file /randomnode tricky1 -tbi "02 003 12"
-+    run_fdtput_test "Byte list short" "a b c ea ad be ef" \
-+	$file /randomnode blob -tbx "a b c ea ad be ef"
-+    run_fdtput_test "Integer list short" "a0b0c0d deeaae ef000000" \
-+	$file /randomnode blob -tx "a0b0c0d deeaae ef000000"
-+    run_fdtput_test "Large string list" "`cat $file1 $file2`" \
-+	$file /randomnode blob -ts "`cat $file1`" "`cat $file2`"
-+
-+    # This should be larger than available space in the fdt ($space)
-+    run_fdtput_test "Enormous string list" ERR \
-+	$file /randomnode blob -ts "`cat $bigfile1`" "`cat $bigfile2`"
-+
-+    # TODO: Add tests for verbose mode?
-+}
-+
- utilfdt_tests () {
- run_test utilfdt_test
- }
-@@ -445,7 +513,7 @@ while getopts "vt:m" ARG ; do
- done
- 
- if [ -z "$TESTSETS" ]; then
--    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget"
-+    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget fdtput"
- fi
- 
- # Make sure we don't have stale blobs lying around
-@@ -468,6 +536,9 @@ for set in $TESTSETS; do
- 	"fdtget")
- 	    fdtget_tests
- 	    ;;
-+	"fdtput")
-+	    fdtput_tests
-+	    ;;
- esac
- done
- 
-diff --git a/tests/tests.sh b/tests/tests.sh
-index d9a0524..6e5e76a 100644
---- a/tests/tests.sh
-+++ b/tests/tests.sh
-@@ -12,6 +12,7 @@ FAIL () {
- 
- DTC=../dtc
- DTGET=../fdtget
-+DTPUT=../fdtput
- 
- verbose_run () {
- if [ -z "$QUIET_TEST" ]; then
--- 
-1.7.3.1
+g.
