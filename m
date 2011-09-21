@@ -1,55 +1,64 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 0/3] GIC OF bindings
-Date: Wed, 21 Sep 2011 17:43:14 +0800
-Message-ID: <20110921094313.GD28907@S2100-06.ap.freescale.net>
-References: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: DT vs ARM static mappings
+Date: Wed, 21 Sep 2011 10:41:49 +0100
+Message-ID: <1316598109.4611.613.camel@hornet.cambridge.arm.com>
+References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
+	<4E78A546.9040604@gmail.com>
+	<1316535403.4611.534.camel@hornet.cambridge.arm.com>
+	<201109202128.55517.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1316550244-3655-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201109202128.55517.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 20, 2011 at 03:24:01PM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> Hopefully, this is the final or near final version of GIC binding support.
-> 
-> Changes from the previous version:
-> - SPIs and PPIs are numbered starting at 0. Now the gic has it's own irq
->   domain translate function instead of the simple domain one.
-> - interrupt cell format has changed based on Grant's proposal.
-> - Dropped "ARM: gic: allow irq_start to be 0". Instead, the first 16 irqs
->   are skipped and the domain irq_base adjusted accordingly.
-> - Added a fix to of_irq_find_parent when the parent == child.
-> - Renamed intc_desc.parent to intc_desc.interrupt_parent.
-> - Implemented Grant's algorithm for walking the list of interrupt
->   controllers. Added a return value to interrupt init functions, so they
->   don't get added to the parent list on a init failure.
-> 
-> The changes are significant enough that I did not include previous
-> acked/reviewed/tested-by's.
-> 
-You can add mine back.  On imx6q:
-
-Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Hopefully, this is the last round of binding scheme change.  There are
-63 nodes in imx6q dts with 'interrupts' property.  I have changed them
-3 times :)
-
--- 
-Regards,
-Shawn
+PiA+IDIuIFNpbmdsZSBEVF9NQUNISU5FX1NUQVJUIG1hdGNoaW5nICh0aGUgbW9zdCBnZW5lcmlj
+KSAiYXJtLHZleHByZXNzIgo+ID4gYW5kIGRvaW5nIChyb3VnbHkpIHRoaXMgaW4gdjJtX21hcF9p
+bzoKPiA+IAo+ID4gb2Zfc2Nhbl9mbGF0X2R0KHYybV9kdF9pb3RhYmxlX2luaXQsIE5VTEwpOwo+
+ID4gCj4gPiB2Mm1fZHRfaW90YWJsZV9pbml0KC4uLikKPiA+IHsKPiA+IAlpZiAoZGVwdGggIT0g
+MCkKPiA+IAkJcmV0dXJuIDA7Cj4gPiAJaWYgKG9mX2ZsYXRfZHRfaXNfY29tcGF0aWJsZShub2Rl
+LCAiYXJtLHZleHByZXNzLWxlZ2FjeSIpKQo+ID4gCQlpb3RhYmxlX2luaXQodjJtX2lvX2Rlc2Nf
+bGVnYWN5KTsKPiA+IAllbHNlIChvZl9mbGF0X2R0X2lzX2NvbXBhdGlibGUobm9kZSwgImFybSx2
+ZXhwcmVzcy1yczEiKSkKPiA+IAkJaW90YWJsZV9pbml0KHYybV9pb19kZXNjX3JzMSk7Cj4gPiAJ
+ZWxzZQo+ID4gCQlwYW5pYygpOwo+ID4gfQo+ID4gCj4gPiBOZWl0aGVyIG9mIHRoZW0gc2VlbSBw
+YXJ0aWN1bGFybHkgYXBwZWFsaW5nLi4uIDstKQo+IAo+IEJ1dCBJIHRoaW5rIGJvdGggd2F5cyB3
+b3VsZCBiZSBhY2NlcHRhYmxlIGluIHRoZSBlbmQuIEl0J3Mgbm90IGEgbG90Cj4gb2YgZXh0cmEg
+Y29kZSBlaXRoZXIgd2F5LiBJbiB0aGUgc2Vjb25kIGNhc2UsIEkgd291bGQgcHJvYmFibHkgaGF2
+ZQo+IHRoZSBsZWdhY3kgY2FzZSBhcyBhIHNwZWNpYWwgdmFyaWFudCBvZiB0aGUgbWFwX2lvIGZ1
+bmN0aW9uIGFuZCBoYXZlCj4gYWxsIG90aGVycyBiZSB0aGUgZGVmYXVsdCBpbnN0ZWFkIG9mIGZh
+bGxpbmcgYmFjayB0byBwYW5pYyB0aG91Z2guCgpPaywgSSdsbCBnbyAocm91Z2hseSkgdGhhdCB3
+YXkuCgo+ID4gSW4gbXkgY2FzZSBpdCdzIHN5c3JlZyBhbmQgc3lzY3RsLiBUaGVyZSBhcmUgdHdv
+IG1vcmUgdXNlcnMgb2Ygc3RhdGljCj4gPiBtYXBwaW5nczogdGltZXIwMSBhbmQgdGltZXIyMywg
+YnV0IHRoZXkgY291bGQgYXQgc29tZSBwb2ludCBkbyBpb3JlbWFwKCkKPiA+IG9uIHRoZWlyIG93
+biAoZXNwZWNpYWxseSB3aXRoIE5pY28ncyBjaGFuZ2VzKS4KPiAKPiBXZWxsLCBJIHRoaW5rIHdp
+dGggTmljbydzIGNhaG5nZXMsIHlvdSAvY2FuLyBhY3R1YWxseSBkbyBpb3JlbWFwIGZvcgo+IGFy
+ZWFzIHRoYXQgaGF2ZSBiZWVuIG1hcHBlZCB0aHJvdWdoIHRoZSBpb3RhYmxlIGJlZm9yZSBrbWFs
+bG9jIGlzIHVwLgo+IElJUkMsIG9tYXAgZG9lcyB0aGlzIGZvciBhIG51bWJlciBvZiBwZXJpcGhl
+cmFscy4KPiAKPiBJdCdzIGEgYml0IG9mIGEgaGFjaywgYnV0IEkgdGhpbmsgaXQncyBtdWNoIGJl
+dHRlciB0aGFuIHRha2luZyBoYXJkY29kZWQKPiBhZGRyZXNzZXMuCgpZZXMsIEkgd2FzIHRoaW5r
+aW5nIGFib3V0IHRoYXQgbGFzdCBuaWdodC4gSWYgeW91IHRoaW5rIGl0J3MgYWNjZXB0YWJsZQpJ
+J2xsIGRvIHRoaXMgKGtpbGxpbmcgTU1JT19QMlYgb24gdGhlIHdheSA7LSkKCj4gV2l0aCB0aGUg
+Y29tYmluYXRpb24gb2YgdGhlIHBvaW50cyBtZW50aW9uZWQgYWJvdmUsIHlvdSBzaG91bGQgYmUK
+PiBhYmxlIHRvIGRvOgo+IAo+IC0gbWFwIHRoZSBlbnRpcmUgSS9PIGFyZWEgaW4gbWFwX2lvKCks
+IGRlcGVuZGluZyBvbiB0aGUgYm9hcmQKPiAtIGhhdmUgYW4gX19pb21lbSBwb2ludGVyIGZvciB0
+aGUgc3lzcmVnCj4gLSBwb3B1bGF0ZSB0aGF0IHBvaW50ZXIgdXNpbmcgb2ZfaW9tYXAgZnJvbSB0
+aGUgZGV2aWNlIHRyZWUgYWRkcmVzcwo+ICAgYmVmb3JlIHlvdSBmaXJzdCBhY2Nlc3MgaXQuCj4g
+Cj4gRG8geW91IHRoaW5rIHRoYXQgd291bGQgd29yaz8KClllcywgSSBzdXBwb3NlIHNvLiBUaGUg
+bGFzdCBiaXQgKGdldHRpbmcgdGhlIG9mZnNldCBmcm9tIERUKSB3aWxsIGJlIGEKbGl0dGxlIHVn
+bHksIEkgdGhpbmssIGJ1dCBsZXQncyB3YWl0IHRpbGwgSSBnZXQgc29tZSBjb2RlIGRvbmUuCgpD
+aGVlcnMhCgpQYXdlxYIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
