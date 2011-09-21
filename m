@@ -1,60 +1,38 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Wed, 21 Sep 2011 17:28:14 +0100
-Message-ID: <1316622494.4611.657.camel@hornet.cambridge.arm.com>
-References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
-	<4E79E588.6010703@gmail.com>
-	<CACxGe6sTYYXbpXvPb4C+y4JX0eRxLvwjbFycXA8Mjc-XWS1QUA@mail.gmail.com>
-	<1316620877.4611.647.camel@hornet.cambridge.arm.com>
-	<CA+wbFdcOSC6YfsmLndM9CCg2WC9GbQqHmgzk3r8JKs71Bsn8Xg@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] gpio-vx855: Add device tree binding
+Date: Wed, 21 Sep 2011 10:29:06 -0600
+Message-ID: <20110921162906.GY7781@ponder.secretlab.ca>
+References: <20110921120214.DFDC79D401E@zog.reactivated.net>
+	<20110921125051.GB25620@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+wbFdcOSC6YfsmLndM9CCg2WC9GbQqHmgzk3r8JKs71Bsn8Xg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: "patches@linaro.org" <patches@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@smooth-stone.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20110921125051.GB25620-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiA+IERhdmUgYXNrZWQgbWUgYWJvdXQgZGV0YWlscyBvZiB0aGUgVkUgaW1wbGVtZW50YXRpb24u
-IEl0J3MKPiA+IHNvcnQtb2YtY29tcGxpY2F0ZWQuLi4gOy0pCj4gPgo+ID4gMS4gQ29yZSB0YWxr
-cyB0byBTdGF0aWMgTWVtb3J5IENvbnRyb2xsZXIgdmlhIEFNQkEgKEFYSSkKPiA+Cj4gPiAgIFNP
-QyB7IGNvcmUgLS1BWEktLT4gU01DIH0KPiA+Cj4gPiAyLiBTTUMgZ2VuZXJhdGVzIHRyYW5zYWN0
-aW9uIG9uIFN0YXRpYyBNZW1vcnkgQnVzIHRhbGtpbmcgdG8gdGhlIElPIEZQR0EKPiA+Cj4gPiAg
-IHRpbGUvbW90aGVyYm9hcmQgY29ubmVjdG9yIHsgU01DIC0tU01CLS0+IElPRlBHQSB9Cj4gPgo+
-ID4gMy4gTm93LCBkZXBlbmRpbmcgb24gdGhlIGRldmljZSBiZWluZyBhY2Nlc3NlZDoKPiA+Cj4g
-PiBhKSBUcmFuc2FjdGlvbnMgYWNjZXNzaW5nIFNNU0M5MTE4LCBJU1AxNzYxLCBOT1IgRmxhc2gg
-YW5kIFBTUkFNIGFyZQo+ID4gcm91dGVkIGRpcmVjdGx5IHRvIHRoZSBkZXZpY2VzCj4gPgo+ID4g
-ICBJT0ZQR0EgeyBTTUIgLS0+IFNNU0M5MTE4IGV0IGFsLiB9Cj4gPgo+ID4gYikgVGhlIHJlc3Qg
-b2YgdGhlIHRyYWZmaWMgaXMgY29udmVydGVkIGJhY2sgdG8gQU1CQSAoQUhCL0FQQikKPiA+IHRy
-YW5zYWN0aW9ucyBhbmQgc2VudCB0byB0aGUgZGV2aWNlcyBjb25uZWN0ZWQgdG8gaW50ZXJuYWwg
-QU1CQSBtYXRyaXguCj4gPgo+ID4gICBJT0ZQR0EgeyBTTUIgLS0+IEFIQi9BUEIgYnVzIG1hc3Rl
-ciAtLUFIQi9BUEItLT4gUEwxODAgfQo+ID4KPiA+IEkgZG9uJ3QgYmVsaWV2ZSwgdGhvdWdoLCB0
-aGF0IHRoZSBEVFMgbXVzdCByZWZsZWN0IHN1Y2ggbGV2ZWwgb2YKPiA+IGRldGFpbHMuIFRoYXQn
-cyB3aHkgSSB0aGluayB0aGF0Ogo+ID4KPiA+ICsgICAgICAgbW90aGVyYm9hcmQgewo+ID4gKyAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7Cj4gPgo+ID4gYW5kCj4gPgo+
-ID4gKyAgICAgICAgICAgICAgIHBlcmlwaGVyYWxzQDcsMDAwMDAwMDAgewo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhcm0sYW1iYS1idXMiLCAic2ltcGxlLWJ1cyI7
-Cj4gPgo+ID4gaXMgdGhlIGJlc3QgZGVzY3JpcHRpb24gb2YgdGhlIHJlYWxpdHkgOi0pCj4gCj4g
-SSB3b25kZXIgd2hldGhlciBhbiBPUyB3aWxsIGV2ZXIgbmVlZCB0byBrbm93IHRoaXMgZGV0YWls
-LgoKV2hpY2ggb25lIG9mIHRoZSBkZXRhaWxzIHlvdSBtZWFuPyBFeGFjdCBhcmNoaXRlY3R1cmUg
-ZGVzY3JpYmluZyB3aGF0IEkKc2FpZCBhYm92ZT8gSSBkb24ndCB0aGluayBzby4KClRoZSBjb21w
-YXRpYmxlID0gImFybSxhbWJhLWJ1cyIgZm9yIENTNz8gUHJvYmFibHkgbm90LCBidXQgSSB0aGlu
-ayBpdCdzCmdvb2QgdG8gaGF2ZSBpdCB0aGVyZSBhcyBpdCBhbnN3ZXJzIHRoZSBxdWVzdGlvbiAi
-c28gaG93IGNhbiBBTUJBIGRldmljZQpsaWtlIFBMMTgwIGJlIGNvbm5lY3RlZCB0byBhIHN0YXRp
-YyBtZW1vcnkgYnVzPyE/Ii4KCj4gQW0gSSByaWdodCBpbiB1bmRlcnN0YW5kaW5nIHRoYXQgdGhl
-c2UgYnVzZXMgYXJlIGp1c3QgaW50ZXJjb25uZWN0Cj4gbG9naWMsIHdpdGggbm8gT1MtdmlzaWJs
-ZSBjb250cm9sL2NvbmZpZ3VyYXRpb24gaW50ZXJmYWNlPwoKRGVmaW5pdGVseSBub3RoaW5nIHB1
-YmxpY2x5IHNwZWNpZmllZCA6LSkKCkNoZWVycyEKClBhd2XFggoKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Wed, Sep 21, 2011 at 01:50:52PM +0100, Mark Brown wrote:
+> On Wed, Sep 21, 2011 at 01:02:14PM +0100, Daniel Drake wrote:
+> 
+> > +- #gpio-cells : Should be two. The first cell is the pin number and the
+> > +  second cell is used to specify optional parameters:
+> > +  - bit 0 specifies polarity (0 for normal, 1 for inverted)
+> 
+> Shouldn't we just have a property for the polarity?
+
+A flags cell in gpio specifiers (and irq specifiers for that matter) is
+well established practice.
+
+g.
