@@ -1,197 +1,38 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] of/irq: introduce of_irq_init
-Date: Wed, 21 Sep 2011 11:01:10 +0100
-Message-ID: <20110921100110.GE18931@pulham.picochip.com>
-References: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
-	<1316550244-3655-3-git-send-email-robherring2@gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: DT vs ARM static mappings
+Date: Wed, 21 Sep 2011 11:02:01 +0100
+Message-ID: <1316599321.4611.614.camel@hornet.cambridge.arm.com>
+References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
+	<4E78A546.9040604@gmail.com>
+	<1316535403.4611.534.camel@hornet.cambridge.arm.com>
+	<201109202128.55517.arnd@arndb.de>
+	<1316598109.4611.613.camel@hornet.cambridge.arm.com>
+	<20110921095926.GA2041@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1316550244-3655-3-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110921095926.GA2041@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Sep 20, 2011 at 03:24:03PM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> of_irq_init will scan the devicetree for matching interrupt controller
-> nodes. Then it calls an initialization function for each found controller
-> in the proper order with parent nodes initialized before child nodes.
-> 
-> Based on initial pseudo code from Grant Likely.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> ---
->  drivers/of/irq.c       |  114 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_irq.h |    1 +
->  2 files changed, 115 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 6a5b5e7..1d51bc7 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -19,10 +19,12 @@
->   */
->  
->  #include <linux/errno.h>
-> +#include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
->  #include <linux/string.h>
-> +#include <linux/slab.h>
->  
->  /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
->  #ifndef NO_IRQ
-> @@ -386,3 +388,115 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
->  
->  	return i;
->  }
-> +
-> +struct intc_desc {
-> +	struct list_head	list;
-> +	struct device_node	*dev;
-> +	struct device_node	*interrupt_parent;
-> +};
-> +
-> +typedef int (*irq_init_cb_t)(struct device_node *, struct device_node *);
-> +
-> +/**
-> + * of_irq_init - Scan the device tree for matching interrupt controllers and
-> + * call their initialization functions in order with parents first.
-> + * @matches: 0 terminated array of nodes to match and initialization function
-> + * to call on match
-> + */
-> +void __init of_irq_init(const struct of_device_id *matches)
-> +{
-> +	struct device_node *np;
-> +	struct intc_desc *desc;
-> +	struct intc_desc *temp_desc;
-> +	struct intc_desc *parent_desc = NULL;
-> +	struct list_head intc_desc_list;
-> +	struct list_head intc_parent_list;
-> +
-> +	INIT_LIST_HEAD(&intc_desc_list);
-> +	INIT_LIST_HEAD(&intc_parent_list);
-> +
-> +	for_each_matching_node(np, matches) {
-> +		if (!of_find_property(np, "interrupt-controller", NULL))
-> +			continue;
-> +		/* Here, we allocate and populate an intc_desc with the node
-> +		* pointer, interrupt-parent device_node etc. */
-> +		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
-> +		if (!desc) {
-> +			WARN_ON(1);
-> +			goto err;
-> +		}
-> +		desc->dev = np;
-> +		desc->interrupt_parent = of_irq_find_parent(np);
-> +		list_add(&desc->list, &intc_desc_list);
-> +	}
-> +	if (list_empty(&intc_desc_list))
-> +		return;
-> +
-> +	/*
-> +	 * The root irq controller is the one without an interrupt-parent.
-> +	 * That one goes first, followed by the controllers that reference it,
-> +	 * followed by the ones that reference the 2nd level controllers, etc
-> +	 */
-> +	while (!list_empty(&intc_desc_list)) {
-> +		/*
-> +		 * Process all controllers with the current 'parent'.
-> +		 * First pass will be looking for NULL as the parent.
-> +		 * The assumption is that NULL parent means a root controller.
-> +		 */
-> +		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
-> +			const struct of_device_id *match;
-> +			int ret;
-> +			irq_init_cb_t irq_init_cb;
-> +
-> +			if (parent_desc &&
-> +				(desc->interrupt_parent != parent_desc->dev))
-> +				continue;
-> +
-> +			list_del(&desc->list);
-> +			match = of_match_node(matches, desc->dev);
-> +			if (!match || !match->data)
-> +				continue;
-
-Doesn't this case need to kfree(desc)?
-
-> +
-> +			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
-> +				 match->compatible,
-> +				 desc->dev, desc->interrupt_parent);
-> +			irq_init_cb = match->data;
-> +			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
-> +			if (ret)
-> +				continue;
-
-and here?
-
-> +
-> +			/*
-> +			 * This one is now set up; add it to the parent list so
-> +			 * its children can get processed in a subsequent pass.
-> +			 */
-> +			list_add_tail(&desc->list, &intc_parent_list);
-> +		}
-> +		/*
-> +		 * All the direct children for the current parent are
-> +		 * processed, so free the parent now.
-> +		 */
-> +		if (parent_desc)
-> +			kfree(parent_desc);
-> +
-> +		/* Get the next pending parent that might have children */
-> +		parent_desc = list_first_entry(&intc_parent_list,
-> +					       typeof(*parent_desc), list);
-> +		if (list_empty(&intc_parent_list) || !parent_desc) {
-> +			pr_debug("of_irq_init: children remain, but no parents\n");
-> +			goto err;
-> +		}
-> +
-> +		list_del(&parent_desc->list);
-> +	}
-> +	return;
-> +
-> +err:
-> +	list_for_each_entry_safe(desc, temp_desc, &intc_parent_list, list) {
-> +		list_del(&desc->list);
-> +		kfree(desc);
-> +	}
-> +	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
-> +		list_del(&desc->list);
-> +		kfree(desc);
-> +	}
-> +}
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index cd2e61c..032d76c 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -73,6 +73,7 @@ extern int of_irq_to_resource_table(struct device_node *dev,
->  		struct resource *res, int nr_irqs);
->  extern struct device_node *of_irq_find_parent(struct device_node *child);
->  
-> +extern void of_irq_init(const struct of_device_id *matches);
->  
->  #endif /* CONFIG_OF_IRQ */
->  #endif /* CONFIG_OF */
-> -- 
-> 1.7.5.4
-> 
+PiBJIHdvbid0IGF0dGVtcHQgdG8gbW9kaWZ5IHRoZSByZXN0IG9mIHRoZSBwYXRjaCB5ZXQsIGJ1
+dCB3ZSBjYW4gcm9sbAo+IGNoYW5nZXMgaW4gd2hlbiB5b3UndmUgZGVjaWRlZCBvbiBhIHdheSBm
+b3J3YXJkLgo+IAo+IEFsdGVybmF0aXZlbHksIHRoZSByZXF1aXNpdGUgY2hhbmdlcyBjYW4gYmUg
+ZG9uZSBhcyBwYXRjaGVzIG9uIHRvcCBvZgo+IHRoZSBiYXNpYyBwYXRjaCAtLSBzaW5jZSB0aGUg
+aW5pdGlhbCBwYXRjaCBkb2Vzbid0IGF0dGVtcHQgdG8gc3VwcG9ydAo+IG11bHRpcGxlIGNvcmUg
+dGlsZXMgYW55d2F5LgoKU3VyZSB0aGluZyAtIEknbGwgd29yayBvbiB0b3Agb2YgeW91ciBwYXRj
+aC4KClBhd2XFggoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
