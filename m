@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 4/6] ftdump: use utilfdt to read blob
-Date: Wed, 21 Sep 2011 13:32:47 -0700
-Message-ID: <1316637169-24112-5-git-send-email-sjg@chromium.org>
+Subject: [PATCH v4 1/6] Create Makefile.utils and move ftdump into it
+Date: Wed, 21 Sep 2011 13:32:44 -0700
+Message-ID: <1316637169-24112-2-git-send-email-sjg@chromium.org>
 References: <1316637169-24112-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,70 +20,69 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have utilfdt_read(), ftdump should use it too.
+We want to avoid a separate Makefile include for each utility, so this sets
+up a general one for utilities.
 
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- ftdump.c |   32 ++++----------------------------
- 1 files changed, 4 insertions(+), 28 deletions(-)
+Changes in v3:
+- Use Makefile.utils instead of separate Makefiles
 
-diff --git a/ftdump.c b/ftdump.c
-index db932e3..cc55fe2 100644
---- a/ftdump.c
-+++ b/ftdump.c
-@@ -13,8 +13,6 @@
+ Makefile        |    2 +-
+ Makefile.ftdump |   13 -------------
+ Makefile.utils  |   10 ++++++++++
+ 3 files changed, 11 insertions(+), 14 deletions(-)
+ delete mode 100644 Makefile.ftdump
+ create mode 100644 Makefile.utils
+
+diff --git a/Makefile b/Makefile
+index 2172d9a..380a705 100644
+--- a/Makefile
++++ b/Makefile
+@@ -105,7 +105,7 @@ endef
  
- #include "util.h"
+ include Makefile.convert-dtsv0
+ include Makefile.dtc
+-include Makefile.ftdump
++include Makefile.utils
  
--#define FTDUMP_BUF_SIZE	65536
+ BIN += convert-dtsv0
+ BIN += dtc
+diff --git a/Makefile.ftdump b/Makefile.ftdump
+deleted file mode 100644
+index 2744a18..0000000
+--- a/Makefile.ftdump
++++ /dev/null
+@@ -1,13 +0,0 @@
+-#
+-# This is not a complete Makefile of itself.
+-# Instead, it is designed to be easily embeddable
+-# into other systems of Makefiles.
+-#
 -
- #define ALIGN(x, a)	(((x) + ((a) - 1)) & ~((a) - 1))
- #define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
- #define GET_CELL(p)	(p += 4, *((const uint32_t *)(p-4)))
-@@ -147,40 +145,18 @@ static void dump_blob(void *blob)
- 
- int main(int argc, char *argv[])
- {
--	FILE *fp;
- 	char *buf;
--	int size;
- 
- 	if (argc < 2) {
- 		fprintf(stderr, "supply input filename\n");
- 		return 5;
- 	}
- 
--	if (strcmp(argv[1], "-") == 0) {
--		fp = stdin;
--	} else {
--		fp = fopen(argv[1], "rb");
--		if (fp == NULL) {
--			fprintf(stderr, "unable to open %s\n", argv[1]);
--			return 10;
--		}
--	}
+-FTDUMP_SRCS = \
+-	ftdump.c \
+-	util.c
 -
--	buf = malloc(FTDUMP_BUF_SIZE);
--	if (!buf) {
--		fprintf(stderr, "Couldn't allocate %d byte buffer\n", FTDUMP_BUF_SIZE);
-+	buf = utilfdt_read(argv[1]);
-+	if (buf)
-+		dump_blob(buf);
-+	else
- 		return 10;
--	}
+-FTDUMP_GEN_SRCS =
 -
--	size = fread(buf, 1, FTDUMP_BUF_SIZE, fp);
--	if (size == FTDUMP_BUF_SIZE) {
--		fprintf(stderr, "file too large (maximum is %d bytes)\n", FTDUMP_BUF_SIZE);
--		return 10;
--	}
--
--	dump_blob(buf);
--
--	fclose(fp);
- 
- 	return 0;
- }
+-FTDUMP_OBJS = $(FTDUMP_SRCS:%.c=%.o) $(FTDUMP_GEN_SRCS:%.c=%.o)
+diff --git a/Makefile.utils b/Makefile.utils
+new file mode 100644
+index 0000000..0ed9297
+--- /dev/null
++++ b/Makefile.utils
+@@ -0,0 +1,10 @@
++#
++# This is not a complete Makefile of itself.  Instead, it is designed to
++# be easily embeddable into other systems of Makefiles.
++#
++
++FTDUMP_SRCS = \
++	ftdump.c \
++	util.c
++
++FTDUMP_OBJS = $(FTDUMP_SRCS:%.c=%.o)
 -- 
 1.7.3.1
