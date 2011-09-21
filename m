@@ -1,58 +1,36 @@
 From: Daniel Drake <dsd@laptop.org>
-Subject: [PATCH 1/3] mfd: allow mfd_cell association with device tree node
-Date: Wed, 21 Sep 2011 13:01:48 +0100 (BST)
-Message-ID: <20110921120148.4A81E9D401D__9449.84825696356$1316610136$gmane$org@zog.reactivated.net>
+Subject: [PATCH 2/3] mfd: link vx855 GPIO cell with device tree
+Date: Wed, 21 Sep 2011 13:02:07 +0100 (BST)
+Message-ID: <20110921120207.AD6719D401D__3936.54086296937$1316610138$gmane$org@zog.reactivated.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: grant.likely@secretlab.ca, sameo@linux.intel.com
 Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dilinger@queued.net
 List-Id: devicetree@vger.kernel.org
 
-This allows a mfd_cell to be linked with a device tree node, which
-then allows child drivers to have easy access to that handle.
+The child driver will then pass the handle to gpiolib, which
+enables device-tree-probed gpio-leds and more.
 
 Signed-off-by: Daniel Drake <dsd@laptop.org>
 ---
- drivers/mfd/mfd-core.c   |    1 +
- include/linux/mfd/core.h |    4 ++++
- 2 files changed, 5 insertions(+), 0 deletions(-)
+ drivers/mfd/vx855.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
 
-I think this is what is being suggested at 
-http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-September/008235.html
-
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 0902523..7d22dcd 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -87,6 +87,7 @@ static int mfd_add_device(struct device *parent, int id,
- 		goto fail_device;
+diff --git a/drivers/mfd/vx855.c b/drivers/mfd/vx855.c
+index d698703..6466c21 100644
+--- a/drivers/mfd/vx855.c
++++ b/drivers/mfd/vx855.c
+@@ -101,6 +101,11 @@ static __devinit int vx855_probe(struct pci_dev *pdev,
+ 	vx855_gpio_resources[1].start = gpio_io_offset + VX855_PMIO_R_GPO;
+ 	vx855_gpio_resources[1].end = vx855_gpio_resources[1].start + 3;
  
- 	pdev->dev.parent = parent;
-+	pdev->dev.of_node = cell->of_node;
- 
- 	if (cell->pdata_size) {
- 		ret = platform_device_add_data(pdev,
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index 4e76163..9b836f9 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -15,6 +15,7 @@
- #define MFD_CORE_H
- 
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- 
- /*
-  * This struct describes the MFD part ("cell").
-@@ -37,6 +38,9 @@ struct mfd_cell {
- 	void			*platform_data;
- 	size_t			pdata_size;
- 
-+	/* association with device tree node (optional) */
-+	struct device_node	*of_node;
++#ifdef CONFIG_OF_GPIO
++	vx855_cells[0].of_node = of_find_compatible_node(NULL, NULL,
++							 "via,vx855-gpio");
++#endif
 +
- 	/*
- 	 * These resources can be specified relative to the parent device.
- 	 * For accessing hardware you should use resources from the platform dev
+ 	ret = mfd_add_devices(&pdev->dev, -1, vx855_cells, ARRAY_SIZE(vx855_cells),
+ 			NULL, 0);
+ 
 -- 
 1.7.6.2
