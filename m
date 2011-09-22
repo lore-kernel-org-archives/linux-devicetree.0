@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 3/5] ftdump: use utilfdt to read blob
-Date: Thu, 22 Sep 2011 10:11:04 -0700
-Message-ID: <1316711466-14199-4-git-send-email-sjg@chromium.org>
+Subject: [PATCH v5 2/5] Make testutils use utilfdt
+Date: Thu, 22 Sep 2011 10:11:03 -0700
+Message-ID: <1316711466-14199-3-git-send-email-sjg@chromium.org>
 References: <1316711466-14199-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,71 +20,115 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have utilfdt_read(), ftdump should use it too.
+The load_blob() and save_blob() functions are very similar to the utilfdt
+versions. This removes the duplicated code.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
- ftdump.c |   32 ++++----------------------------
- 1 files changed, 4 insertions(+), 28 deletions(-)
+Changes in v3:
+- Make testutils.c use utilfdt for load/save blobs
 
-diff --git a/ftdump.c b/ftdump.c
-index db932e3..cc55fe2 100644
---- a/ftdump.c
-+++ b/ftdump.c
-@@ -13,8 +13,6 @@
+ tests/Makefile.tests |    5 ++-
+ tests/testutils.c    |   59 +++++++++----------------------------------------
+ 2 files changed, 14 insertions(+), 50 deletions(-)
+
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index 41695df..cae8390 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -45,11 +45,12 @@ tests:	$(TESTS) $(TESTS_TREES)
  
- #include "util.h"
+ $(LIB_TESTS): %: $(TESTS_PREFIX)testutils.o util.o $(LIBFDT_archive)
  
--#define FTDUMP_BUF_SIZE	65536
--
- #define ALIGN(x, a)	(((x) + ((a) - 1)) & ~((a) - 1))
- #define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
- #define GET_CELL(p)	(p += 4, *((const uint32_t *)(p-4)))
-@@ -147,40 +145,18 @@ static void dump_blob(void *blob)
+-$(DL_LIB_TESTS): %: %.o $(TESTS_PREFIX)testutils.o $(LIBFDT_archive)
++$(DL_LIB_TESTS): %: %.o $(TESTS_PREFIX)testutils.o util.o $(LIBFDT_archive)
+ 	@$(VECHO) LD [libdl] $@
+ 	$(LINK.c) -o $@ $^ -ldl
  
- int main(int argc, char *argv[])
+-$(LIBTREE_TESTS): %: $(TESTS_PREFIX)testutils.o $(TESTS_PREFIX)trees.o $(LIBFDT_archive)
++$(LIBTREE_TESTS): %: $(TESTS_PREFIX)testutils.o $(TESTS_PREFIX)trees.o \
++		util.o $(LIBFDT_archive)
+ 
+ $(TESTS_PREFIX)dumptrees: $(TESTS_PREFIX)trees.o
+ 
+diff --git a/tests/testutils.c b/tests/testutils.c
+index b0a2230..f185133 100644
+--- a/tests/testutils.c
++++ b/tests/testutils.c
+@@ -159,33 +159,13 @@ int nodename_eq(const char *s1, const char *s2)
+ 
+ void *load_blob(const char *filename)
  {
--	FILE *fp;
- 	char *buf;
--	int size;
- 
- 	if (argc < 2) {
- 		fprintf(stderr, "supply input filename\n");
- 		return 5;
- 	}
- 
--	if (strcmp(argv[1], "-") == 0) {
--		fp = stdin;
--	} else {
--		fp = fopen(argv[1], "rb");
--		if (fp == NULL) {
--			fprintf(stderr, "unable to open %s\n", argv[1]);
--			return 10;
+-	int fd;
+-	int offset = 0;
+-	int bufsize = 1024;
+-	char *p = NULL;
+-	int ret;
+-
+-	fd = open(filename, O_RDONLY);
+-	if (fd < 0)
+-		CONFIG("Couldn't open blob from \"%s\": %s", filename,
+-		       strerror(errno));
+-
+-	p = xmalloc(bufsize);
+-	do {
+-		if (offset == bufsize) {
+-			bufsize *= 2;
+-			p = xrealloc(p, bufsize);
 -		}
--	}
 -
--	buf = malloc(FTDUMP_BUF_SIZE);
--	if (!buf) {
--		fprintf(stderr, "Couldn't allocate %d byte buffer\n", FTDUMP_BUF_SIZE);
-+	buf = utilfdt_read(argv[1]);
-+	if (buf)
-+		dump_blob(buf);
-+	else
- 		return 10;
--	}
+-		ret = read(fd, &p[offset], bufsize - offset);
+-		if (ret < 0)
+-			CONFIG("Couldn't read from \"%s\": %s", filename,
+-			       strerror(errno));
 -
--	size = fread(buf, 1, FTDUMP_BUF_SIZE, fp);
--	if (size == FTDUMP_BUF_SIZE) {
--		fprintf(stderr, "file too large (maximum is %d bytes)\n", FTDUMP_BUF_SIZE);
--		return 10;
--	}
--
--	dump_blob(buf);
--
--	fclose(fp);
+-		offset += ret;
+-	} while (ret != 0);
++	char *blob;
++	int ret = utilfdt_read_err(filename, &blob);
  
- 	return 0;
+-	return p;
++	if (ret)
++		CONFIG("Couldn't open blob from \"%s\": %s", filename,
++		       strerror(ret));
++	return blob;
  }
+ 
+ void *load_blob_arg(int argc, char *argv[])
+@@ -197,28 +177,11 @@ void *load_blob_arg(int argc, char *argv[])
+ 
+ void save_blob(const char *filename, void *fdt)
+ {
+-	int fd;
+-	int totalsize;
+-	int offset;
+-	char *p;
+-	int ret;
+-
+-	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+-	if (fd < 0)
+-		CONFIG("Couldn't open \"%s\" to write blob: %s", filename,
+-		       strerror(errno));
+-
+-	totalsize = fdt_totalsize(fdt);
+-	offset = 0;
+-	p = fdt;
+-
+-	while (offset < totalsize) {
+-		ret = write(fd, p + offset, totalsize - offset);
+-		if (ret < 0)
+-			CONFIG("Couldn't write to \"%s\": %s", filename,
+-			       strerror(errno));
+-		offset += ret;
+-	}
++	int ret = utilfdt_write_err(filename, fdt);
++
++	if (ret)
++		CONFIG("Couldn't write blob to \"%s\": %s", filename,
++		       strerror(ret));
+ }
+ 
+ void *open_blob_rw(void *blob)
 -- 
 1.7.3.1
