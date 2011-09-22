@@ -1,75 +1,52 @@
-From: Pawel Moll <pawel.moll@arm.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: DT vs ARM static mappings
-Date: Thu, 22 Sep 2011 14:04:56 +0100
-Message-ID: <1316696696.4611.844.camel@hornet.cambridge.arm.com>
+Date: Thu, 22 Sep 2011 14:13:02 +0100
+Message-ID: <20110922131302.GO17169@n2100.arm.linux.org.uk>
 References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
 	<alpine.LFD.2.00.1109211320090.12663@xanadu.home>
+	<1316696696.4611.844.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.LFD.2.00.1109211320090.12663@xanadu.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Pitre <nico@fluxnic.net>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1316696696.4611.844.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiA+IEFSTSBtYWNoaW5lIGRlc2NyaXB0aW9uIGNvbnRhaW5zIGEgIm1hcF9pbyIgbWV0aG9kLCB3
-aGljaCBpcyB1c2VkIHRvCj4gPiBjcmVhdGUgc3RhdGljIG1lbW9yeSBtYXBwaW5ncyAodXNpbmcg
-aW90YWJsZV9pbml0KCkgZnVuY3Rpb24pIGZvciB0aGluZ3MKPiA+IGxpa2UgcGVyaXBoZXJhbHMg
-b3IgU1JBTXMuIEF0IGxlYXN0IHRoYXQncyB0aGUgdGhlb3J5LCBiZWNhdXNlIG1vc3Qgb2YKPiA+
-IHRoZSBwbGF0Zm9ybXMgYXJlIGRvaW5nIG11Y2ggbW9yZSBzdHVmZiB0aGVyZSwgbGlrZSBjbG9j
-a2luZy9HUElPcy9VQVJUcwo+ID4gaW5pdGlhbGl6YXRpb24sIGhhcmR3YXJlIHByb2JpbmcgZXRj
-Lgo+IAo+IE5vLCBtb3N0IG9mIHRoZW0gZG9uJ3QuICBNYXliZSBhIGZldyBjYXNlcyBkbyBmb3Ig
-aGlzdG9yaWNhbCByZWFzb25zLCAKPiBidXQgdGhlcmUgYXJlIG90aGVyIGhvb2tzIG5vdyB0byBs
-aW5rIHByb2JpbmcgYW5kIGluaXRpYWxpemF0aW9uIGNvZGUgCj4gdG8uCgpPaywgd2hhdCBJIGRp
-ZCB3YXMgZ3JlcHBpbmcgZm9yIGFsbCAubWFwX2lvLXMuIFRoZW4gSSBzb3J0ZWQgdGhlIGxpc3QK
-YW5kIGhhZCBhIGxvb2sgYXQgZmlyc3QgMTAwIGFuZCBhYm91dCA1MCUgb2YgdGhlbSB3ZXJlIGRv
-aW5nIG1vcmUgdGhhbgpqdXN0IGNyZWF0aW5nIG1hcHBpbmdzLgoKTmV2ZXIgbWluZCAtIEknbGwg
-cmVwaHJhc2UgbXlzZWxmIHRvICJtYW55IiBpbnN0ZWFkIG9mICJtb3N0IiA6LSkKCj4gVGhlIHN0
-YXRpYyBtYXBwaW5ncyBzaG91bGQgYmUganVzdCB0aGF0OiBzdGF0aWMuICBNb3N0IHRoaW5ncyBz
-aG91bGQgYmUgCj4gZHluYW1pY2FsbHkgbWFwcGVkIGluc3RlYWQuICBXaXRoIHRoZSBzZXJpZXMg
-SSdtIHdvcmtpbmcgb24sIGV2ZXJ5Ym9keSAKPiB3aWxsIGdldCB0aGUgYmVuZWZpdCBvZiBhIHN0
-YXRpYyBtYXBwaW5nIHdoZW4gb25lIGlzIGF2YWlsYWJsZSBldmVuIGlmIAo+IHRoZSBkeW5hbWlj
-IG1hcHBpbmcgaW50ZXJmYWNlIGxpa2UgaW9yZW1hcCgpIGlzIHVzZWQuICBTbyBoYXZpbmcgYSBi
-dW5jaCAKPiBvZiBzdGF0aWMgbWFwcGluZ3MgaXMgbm90IGJhZCwgZXNwZWNpYWxseSBpZiB0aGV5
-IGFyZSBlYXN5LiAgQnV0IHlvdSAKPiBzaG91bGQgZGVmZXIgYXMgbXVjaCBoYXJkd2FyZSBwcm9i
-aW5nIGFzIHBvc3NpYmxlIGFmdGVyIHRoZSBtZW1vcnkgaXMgCj4gaW5pdGlhbGl6ZWQgYW5kIHRo
-ZSBzdGFuZGFyZCBpbnRlcmZhY2VzIGFyZSBhdmFpbGFibGUsIGtlZXBpbmcgcmVsaWFuY2UgCj4g
-b24gZGlyZWN0IGFjY2VzcyB0byBzdGF0aWMgbWFwcGluZ3MgYXMgc21hbGwgYXMgcG9zc2libGUu
-CgpZb3Ugd29uJ3QgZ2V0IGFueSBhcmd1bWVudCBmcm9tIG1lIGhlcmUgLSBteSB0YXNrIHdvdWxk
-IGJlIGVhc2llcgp3aXRob3V0IHRoZSBhZGRpdGlvbmFsIHRoaW5ncyBoYXBwZW5pbmcgaW4gbWFw
-X2lvLi4uCgo+IFlvdXIgYmVzdCBiZXQgd291bGQgcHJvYmFibHkgY29uc2lzdCBvZiBrZWVwaW5n
-IHRoZSB2aXJ0dWFsIGFkZHJlc3MgCj4gY29uc3RhbnQgd2hpbGUgdGhlIHBoeXNpY2FsIGFkZHJl
-c3MgaXMgdmFyaWFibGUuICBBZGp1c3RpbmcgdGhlIC5wZm4gCj4gZmllbGQgaW4gdGhlIHYybV9p
-b19kZXNjIHRhYmxlIHJpZ2h0IGJlZm9yZSBjYWxsaW5nIGlvdGFibGVfaW5pdCgpIAo+IHNob3Vs
-ZCBiZSBmaW5lLiAgQWx0ZXJuYXRpdmVseSB5b3UgY291bGQgaGF2ZSB0d28gc3VjaCB0YWJsZXMg
-YW5kIHNlbGVjdCAKPiB0aGUgcmlnaHQgb25lIGF0IHJ1biB0aW1lLiAgVGhlIGlvX3AydiBtYWNy
-byBkb2Vzbid0IG1ha2UgYW55IHNlbnNlIAo+IGFueW1vcmUgaW4gdGhhdCBjb250ZXh0IHNvIGl0
-IHNob3VsZCBiZSBlbGltaW5hdGVkLCBhbmQga2VlcGluZyBvbmx5IGEgCj4gbWluaW11bSBzZXQg
-b2YgZml4ZWQgdmlydHVhbCBhZGRyZXNzZXMgZm9yIHRoZSBwZXJpcGhlcmFscyB0aGF0IGNhbid0
-IAo+IHdhaXQgdW50aWwgaW9yZW1hcCBpcyBhdmFpbGFibGUgc2hvdWxkIGJlIGZpbmUuCgpZZXAs
-IHRoYXQncyAocm91Z2hseSkgd2hhdCBteSBjb2RlIGlzIGRvaW5nIG5vdy4gVGhlcmUgaXMgc29t
-ZSBoYWNrZXJ5Cmludm9sdmVkIChtYW51YWwgb3BlcmF0aW9ucyBvbiBwb2ludGVycykgdGhhdCB3
-aWxsIGRpc2FwcGVhciB3aXRoIHlvdXIKY2hhbmdlcy4KCkFuZCBNTUlPX1AyViBtYWNybyBpcyBk
-eWluZyAtIG1vdGhlcmJvYXJkIGNvZGUgaXMgbm90IHVzaW5nIGl0IGFueSBtb3JlLAp0aGUgdGls
-ZSBjb2RlIHdpbGwgc3RvcCB1c2luZyBpdCBuZXh0IHdlZWsuCgo+IEFuZCBpZiBzdGF0aWMgbWFw
-cGluZ3MgYXJlIGEgcHJvYmxlbSwgdGhlbiB0cnkgdG8gbGl2ZSB3aXRob3V0IHRoZW0gYXMgCj4g
-bXVjaCBhcyBwb3NzaWJsZS4gIEFnYWluIHRoZXJlIGlzIG5vIHJlYXNvbiB5b3Ugc2hvdWxkIGJl
-IGRvaW5nIHRvbyBtdWNoIAo+IGhhcmR3YXJlIHByb2JpbmcgYXQgLm1hcF9pbyB0aW1lLgoKQ3Vy
-cmVudCBpbXBsZW1lbnRhdGlvbiBpcyBkb2luZyB2ZXJ5IGxpdHRsZSAoanVzdCBwcm9iaW5nIHRp
-bGUgSUQgYW5kCmNhbGxpbmcgdGlsZSdzIHByaXZhdGUgbWFwX2lvKSBidXQgaXQncyBlbm91Z2gg
-dG8gYmUgYSBwYWluIGluIHRoZSBuZWNrLgoKQW55d2F5LCBwYXRjaCAob24gdG9wIG9mIERhdmUn
-cyBpbml0aWFsIHN1cHBvcnQpIHRvIGZvbGxvdyBzb29uLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwK
+On Thu, Sep 22, 2011 at 02:04:56PM +0100, Pawel Moll wrote:
+> > > ARM machine description contains a "map_io" method, which is used to
+> > > create static memory mappings (using iotable_init() function) for things
+> > > like peripherals or SRAMs. At least that's the theory, because most of
+> > > the platforms are doing much more stuff there, like clocking/GPIOs/UARTs
+> > > initialization, hardware probing etc.
+> > 
+> > No, most of them don't.  Maybe a few cases do for historical reasons, 
+> > but there are other hooks now to link probing and initialization code 
+> > to.
+> 
+> Ok, what I did was grepping for all .map_io-s. Then I sorted the list
+> and had a look at first 100 and about 50% of them were doing more than
+> just creating mappings.
+
+The answer to that is: they shouldn't be now that we have the init_early
+hook.  The only remainder for .map_io is where platforms make run-time
+decisions about what to map based on some register value somewhere
+(eg, Assabet vs Assabet+Neponset).
+
+I do have a large patch series floating around in my git tree which tries
+to clean up to all those map_io functions - the biggest stumbling block
+to them is the Samsung stuff being indirected through its own tables.
+
+Of course, with all the changes to .boot_params etc, the patches no longer
+apply to current kernels.
