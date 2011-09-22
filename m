@@ -1,34 +1,34 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH REPOST 1/2] arm/dt: Tegra: Update SDHCI nodes to match bindings
-Date: Thu, 22 Sep 2011 16:40:16 +0200
-Message-ID: <201109221640.16985.arnd@arndb.de>
-References: <1316537186-26753-1-git-send-email-swarren@nvidia.com> <201109202301.56983.arnd@arndb.de> <CAOesGMg4kBH77Ou1xyyVT-Ojxg=9uyxmfsmhbbKquru=j+z6Gg@mail.gmail.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH v4 1/6] Create Makefile.utils and move ftdump into it
+Date: Thu, 22 Sep 2011 10:29:39 -0500
+Message-ID: <E1R6lDX-00088J-RG@jdl.com>
+References: <1316637169-24112-1-git-send-email-sjg@chromium.org>
+	<1316637169-24112-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMg4kBH77Ou1xyyVT-Ojxg=9uyxmfsmhbbKquru=j+z6Gg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>, nicolas.pitre@linaro.org, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1316637169-24112-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 September 2011, Olof Johansson wrote:
-> On Tue, Sep 20, 2011 at 2:01 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-
-> > Should I take the other one as well? It's probably better to let that
-> > go the proper way through the tegra tree for 3.2, right?
+> We want to avoid a separate Makefile include for each utility, so this sets
+> up a general one for utilities.
 > 
-> Given that you have a public tree right now, and I don't (since
-> kernel.org is down), please feel free to start a tegra/for-3.2 branch
-> for me and apply it there. I'll base further work on top of that if
-> needed.
-> 
-> (There also aren't a whole lot of other patches queued for 3.2 right now).
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Ok, I've put it into the next/fixes branch now, so it will be in 3.2.
+Applied.
 
 Thanks,
-
-	Arnd
+jdl
