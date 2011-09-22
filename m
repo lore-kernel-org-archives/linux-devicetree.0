@@ -1,16 +1,16 @@
-From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH] devicetree: Add a registry of vendor prefixes
-Date: Wed, 21 Sep 2011 15:51:00 -0700
-Message-ID: <20110921225100.GA20726@huya.qualcomm.com>
+Date: Wed, 21 Sep 2011 19:56:35 -0600
+Message-ID: <CACxGe6t4mmL2WtUj7WPeB0Y_AY-F+pdd53pS-Cocr5c-n5EFdg@mail.gmail.com>
 References: <20110921152324.15993.96272.stgit@ponder>
 	<20110921203853.GA2824@huya.qualcomm.com>
 	<20110921205336.GD17168@ponder.secretlab.ca>
+	<20110921225100.GA20726@huya.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110921205336.GD17168-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <20110921225100.GA20726-AOX6H5vLt3Uj8izMo0bVsAC/G2K4zDHf@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,29 +20,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2011 at 02:53:36PM -0600, Grant Likely wrote:
-> On Wed, Sep 21, 2011 at 01:38:54PM -0700, David Brown wrote:
-> > On Wed, Sep 21, 2011 at 09:23:25AM -0600, Grant Likely wrote:
-> > > There is no centralized listing for the in-use vendor prefixes
-> > > used in compatible strings and property names.  This patch adds one.
-> > > New prefixes should get added to this list to reduce the likelyhood
-> > > of namespace collisions.
-> > > 
-> > > +powervr	Imagination Technologies
-> > > +ramtron	Ramtron International
-> > 
-> > qcom is already used by the patches I sent out (and should be in the
-> > soc tree).  I can make a patch for that, but I guess I first need to
-> > ask around here for what company name we should use.
-> 
-> This isn't any kind of "authoritative" list, and it represents who
-> makes the components, not who writes the code.  I'll use Qualcomm.
+On Wed, Sep 21, 2011 at 4:51 PM, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On Wed, Sep 21, 2011 at 02:53:36PM -0600, Grant Likely wrote:
+>> On Wed, Sep 21, 2011 at 01:38:54PM -0700, David Brown wrote:
+>> > On Wed, Sep 21, 2011 at 09:23:25AM -0600, Grant Likely wrote:
+>> > > There is no centralized listing for the in-use vendor prefixes
+>> > > used in compatible strings and property names. =A0This patch adds on=
+e.
+>> > > New prefixes should get added to this list to reduce the likelyhood
+>> > > of namespace collisions.
+>> > >
+>> > > +powervr =A0Imagination Technologies
+>> > > +ramtron =A0Ramtron International
+>> >
+>> > qcom is already used by the patches I sent out (and should be in the
+>> > soc tree). =A0I can make a patch for that, but I guess I first need to
+>> > ask around here for what company name we should use.
+>>
+>> This isn't any kind of "authoritative" list, and it represents who
+>> makes the components, not who writes the code. =A0I'll use Qualcomm.
+>
+> Probably Qualcomm, Inc or Qualcomm Incorporated would be best, but if
+> you make the change (rather than me) it matters less.
 
-Probably Qualcomm, Inc or Qualcomm Incorporated would be best, but if
-you make the change (rather than me) it matters less.
+Done.
 
-David
+g.
