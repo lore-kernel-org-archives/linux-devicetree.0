@@ -1,14 +1,13 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] dt: add of_alias_scan and of_alias_get_id
-Date: Thu, 22 Sep 2011 14:53:08 +0800
-Message-ID: <20110922065307.GB27978@S2100-06.ap.freescale.net>
-References: <20110921204545.19871.99088.stgit@ponder>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add a registry of vendor prefixes
+Date: Thu, 22 Sep 2011 10:00:23 +0200
+Message-ID: <4E7AEB17.9010009@atmel.com>
+References: <20110921152324.15993.96272.stgit@ponder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20110921204545.19871.99088.stgit@ponder>
+In-Reply-To: <20110921152324.15993.96272.stgit@ponder>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,37 +18,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
-
-On Wed, Sep 21, 2011 at 02:46:54PM -0600, Grant Likely wrote:
-> From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> The patch adds function of_alias_scan to populate a global lookup
-> table with the properties of 'aliases' node and function
-> of_alias_get_id for drivers to find alias id from the lookup table.
-> 
-> v3: Split out automatic addition of aliases on id lookup so that it can be
->     debated separately from the core functionality.
-> v2: - Add of_chosen/of_aliases populating and of_alias_scan() invocation
->     for OF_PROMTREE.
->     - Add locking
->     - rework parse loop
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-On imx serial driver:
-
-Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Hi Grant,
 
-I just posted a patch to have of_alias_get_id() back for imx serial
-driver with replying to this one.  Can you please merge it to through
-your tree as well?
+Le 21/09/2011 17:23, Grant Likely :
+> There is no centralized listing for the in-use vendor prefixes
+> used in compatible strings and property names.  This patch adds one.
+> New prefixes should get added to this list to reduce the likelyhood
+> of namespace collisions.
+> 
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |   38 ++++++++++++++++++++
+>  1 files changed, 38 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/vendor-prefixes.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> new file mode 100644
+> index 0000000..81465c1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -0,0 +1,38 @@
+> +Device tree binding vendor prefix registry.  Keep list in alphabetical order.
+> +
+> +This isn't an exhaustive list, but you should add new prefixes to it before
+> +using them to avoid name-space collisions.
+> +
+> +adi	Analog Devices, Inc.
+> +amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+> +apm	Applied Micro Circuits Corporation (APM)
+> +arm	ARM Ltd.
 
+Can we add:
++atmel	Atmel Corporation
+
+I am working on a revival of patches that I have cooked at Linaro
+Connect for AT91...
+
+Best regards,
 -- 
-Regards,
-Shawn
+Nicolas Ferre
