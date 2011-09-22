@@ -1,11 +1,13 @@
 From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 0/3] Variable sized cell support
-Date: Thu, 22 Sep 2011 11:25:24 -0700
-Message-ID: <1316715927-11944-1-git-send-email-robotboy@chromium.org>
+Subject: [PATCH v2 1/3] libfdt: Add fdt16_to_cpu utility function
+Date: Thu, 22 Sep 2011 11:25:25 -0700
+Message-ID: <1316715927-11944-2-git-send-email-robotboy@chromium.org>
+References: <1316715927-11944-1-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1316715927-11944-1-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,44 +20,34 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds, tests, and documents support for variable sized cells in
-cell arrays.  The new syntax is:
+This utility routine will be used in the variable size cell literal
+append code.  It is a straightforward adaptation of the fdt32_to_cpu
+function.
 
-    property = /size/ [8|16|32|64] <0x00 .... 0x12>;
+Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+ libfdt/libfdt_env.h |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-So cell arrays of 8, 16, 32, or 64-bits can now be created.  No padding is
-done on the resulting cell array.  So if three 8-bit cells are specified the
-resulting property will contain three bytes.
-
-Changes in v2:
-- sized_data renamed to celllist
-- celllist definition moved to dtc-parser.y
-- celllist non-terminal renamed to celllistprefix
-- references always appended as -1 masked to the size of the cell
-- smaller test values derived from TEST_VALUE_1
-- data_append_literal renamed to data_append_integer
-- be_ removed from values in data_append_integer
-- len renamed to bits in data_append_integer
-
-Anton Staaf (3):
-  libfdt: Add fdt16_to_cpu utility function
-  dtc: Add data_append_integer function
-  dtc: Add support for variable sized cells
-
- Documentation/dts-format.txt |   18 +++++++-
- data.c                       |   33 ++++++++++++++++
- dtc-lexer.l                  |    6 +++
- dtc-parser.y                 |   67 ++++++++++++++++++++++-----------
- dtc.h                        |    1 +
- libfdt/libfdt_env.h          |    6 +++
- tests/.gitignore             |    1 +
- tests/Makefile.tests         |    1 +
- tests/run_tests.sh           |    3 +
- tests/sized_cells.c          |   84 ++++++++++++++++++++++++++++++++++++++++++
- tests/sized_cells.dts        |   11 +++++
- 11 files changed, 206 insertions(+), 25 deletions(-)
- create mode 100644 tests/sized_cells.c
- create mode 100644 tests/sized_cells.dts
-
+diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
+index 449bf60..da952e7 100644
+--- a/libfdt/libfdt_env.h
++++ b/libfdt/libfdt_env.h
+@@ -6,6 +6,12 @@
+ #include <string.h>
+ 
+ #define _B(n)	((unsigned long long)((uint8_t *)&x)[n])
++static inline uint16_t fdt16_to_cpu(uint16_t x)
++{
++	return (_B(0) << 8) | _B(1);
++}
++#define cpu_to_fdt16(x) fdt16_to_cpu(x)
++
+ static inline uint32_t fdt32_to_cpu(uint32_t x)
+ {
+ 	return (_B(0) << 24) | (_B(1) << 16) | (_B(2) << 8) | _B(3);
 -- 
 1.7.3.1
