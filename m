@@ -1,44 +1,40 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: DT vs ARM static mappings
-Date: Thu, 22 Sep 2011 14:45:53 +0100
-Message-ID: <1316699153.4611.858.camel@hornet.cambridge.arm.com>
-References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
-	<alpine.LFD.2.00.1109211320090.12663@xanadu.home>
-	<1316696696.4611.844.camel@hornet.cambridge.arm.com>
-	<20110922131302.GO17169@n2100.arm.linux.org.uk>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] dtc: Support character literals in cell lists
+Date: Thu, 22 Sep 2011 09:27:01 -0500
+Message-ID: <E1R6kEv-0007P6-3J@jdl.com>
+References: <1315595791-25793-1-git-send-email-robotboy@chromium.org>
+	<1315595791-25793-3-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110922131302.GO17169@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nicolas Pitre <nico@fluxnic.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1315595791-25793-3-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiA+IE9rLCB3aGF0IEkgZGlkIHdhcyBncmVwcGluZyBmb3IgYWxsIC5tYXBfaW8tcy4gVGhlbiBJ
-IHNvcnRlZCB0aGUgbGlzdAo+ID4gYW5kIGhhZCBhIGxvb2sgYXQgZmlyc3QgMTAwIGFuZCBhYm91
-dCA1MCUgb2YgdGhlbSB3ZXJlIGRvaW5nIG1vcmUgdGhhbgo+ID4ganVzdCBjcmVhdGluZyBtYXBw
-aW5ncy4KPiAKPiBUaGUgYW5zd2VyIHRvIHRoYXQgaXM6IHRoZXkgc2hvdWxkbid0IGJlIG5vdyB0
-aGF0IHdlIGhhdmUgdGhlIGluaXRfZWFybHkKPiBob29rLiAgVGhlIG9ubHkgcmVtYWluZGVyIGZv
-ciAubWFwX2lvIGlzIHdoZXJlIHBsYXRmb3JtcyBtYWtlIHJ1bi10aW1lCj4gZGVjaXNpb25zIGFi
-b3V0IHdoYXQgdG8gbWFwIGJhc2VkIG9uIHNvbWUgcmVnaXN0ZXIgdmFsdWUgc29tZXdoZXJlCj4g
-KGVnLCBBc3NhYmV0IHZzIEFzc2FiZXQrTmVwb25zZXQpLgo+IAo+IEkgZG8gaGF2ZSBhIGxhcmdl
-IHBhdGNoIHNlcmllcyBmbG9hdGluZyBhcm91bmQgaW4gbXkgZ2l0IHRyZWUgd2hpY2ggdHJpZXMK
-PiB0byBjbGVhbiB1cCB0byBhbGwgdGhvc2UgbWFwX2lvIGZ1bmN0aW9ucyAtIHRoZSBiaWdnZXN0
-IHN0dW1ibGluZyBibG9jawo+IHRvIHRoZW0gaXMgdGhlIFNhbXN1bmcgc3R1ZmYgYmVpbmcgaW5k
-aXJlY3RlZCB0aHJvdWdoIGl0cyBvd24gdGFibGVzLgoKQXdlc29tZS4gSSdsbCB3b3JrIHdpdGgg
-YW4gYXNzdW1wdGlvbiB0aGF0IGZ1dHVyZSBtYXBfaW8tcyB3aWxsIG9ubHkKY3JlYXRlIHN0YXRp
-YyBtYXBwaW5ncyBhbmQgbm90aGluZyBtb3JlIHRoZW4uCgpDaGVlcnMhCgpQYXdlxYIKCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+> With this patch the following property assignment:
+> 
+>     property = <0x12345678 'a' '\r' 100>;
+> 
+> is equivalent to:
+> 
+>     property = <0x12345678 0x00000061 0x0000000D 0x00000064>
+> 
+> Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+> Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+
+Apllied.
+
+Thanks,
+jdl
