@@ -1,52 +1,44 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Pawel Moll <pawel.moll@arm.com>
 Subject: Re: DT vs ARM static mappings
-Date: Thu, 22 Sep 2011 14:13:02 +0100
-Message-ID: <20110922131302.GO17169@n2100.arm.linux.org.uk>
+Date: Thu, 22 Sep 2011 14:45:53 +0100
+Message-ID: <1316699153.4611.858.camel@hornet.cambridge.arm.com>
 References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
 	<alpine.LFD.2.00.1109211320090.12663@xanadu.home>
 	<1316696696.4611.844.camel@hornet.cambridge.arm.com>
+	<20110922131302.GO17169@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1316696696.4611.844.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110922131302.GO17169@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nicolas Pitre <nico@fluxnic.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 22, 2011 at 02:04:56PM +0100, Pawel Moll wrote:
-> > > ARM machine description contains a "map_io" method, which is used to
-> > > create static memory mappings (using iotable_init() function) for things
-> > > like peripherals or SRAMs. At least that's the theory, because most of
-> > > the platforms are doing much more stuff there, like clocking/GPIOs/UARTs
-> > > initialization, hardware probing etc.
-> > 
-> > No, most of them don't.  Maybe a few cases do for historical reasons, 
-> > but there are other hooks now to link probing and initialization code 
-> > to.
-> 
-> Ok, what I did was grepping for all .map_io-s. Then I sorted the list
-> and had a look at first 100 and about 50% of them were doing more than
-> just creating mappings.
-
-The answer to that is: they shouldn't be now that we have the init_early
-hook.  The only remainder for .map_io is where platforms make run-time
-decisions about what to map based on some register value somewhere
-(eg, Assabet vs Assabet+Neponset).
-
-I do have a large patch series floating around in my git tree which tries
-to clean up to all those map_io functions - the biggest stumbling block
-to them is the Samsung stuff being indirected through its own tables.
-
-Of course, with all the changes to .boot_params etc, the patches no longer
-apply to current kernels.
+PiA+IE9rLCB3aGF0IEkgZGlkIHdhcyBncmVwcGluZyBmb3IgYWxsIC5tYXBfaW8tcy4gVGhlbiBJ
+IHNvcnRlZCB0aGUgbGlzdAo+ID4gYW5kIGhhZCBhIGxvb2sgYXQgZmlyc3QgMTAwIGFuZCBhYm91
+dCA1MCUgb2YgdGhlbSB3ZXJlIGRvaW5nIG1vcmUgdGhhbgo+ID4ganVzdCBjcmVhdGluZyBtYXBw
+aW5ncy4KPiAKPiBUaGUgYW5zd2VyIHRvIHRoYXQgaXM6IHRoZXkgc2hvdWxkbid0IGJlIG5vdyB0
+aGF0IHdlIGhhdmUgdGhlIGluaXRfZWFybHkKPiBob29rLiAgVGhlIG9ubHkgcmVtYWluZGVyIGZv
+ciAubWFwX2lvIGlzIHdoZXJlIHBsYXRmb3JtcyBtYWtlIHJ1bi10aW1lCj4gZGVjaXNpb25zIGFi
+b3V0IHdoYXQgdG8gbWFwIGJhc2VkIG9uIHNvbWUgcmVnaXN0ZXIgdmFsdWUgc29tZXdoZXJlCj4g
+KGVnLCBBc3NhYmV0IHZzIEFzc2FiZXQrTmVwb25zZXQpLgo+IAo+IEkgZG8gaGF2ZSBhIGxhcmdl
+IHBhdGNoIHNlcmllcyBmbG9hdGluZyBhcm91bmQgaW4gbXkgZ2l0IHRyZWUgd2hpY2ggdHJpZXMK
+PiB0byBjbGVhbiB1cCB0byBhbGwgdGhvc2UgbWFwX2lvIGZ1bmN0aW9ucyAtIHRoZSBiaWdnZXN0
+IHN0dW1ibGluZyBibG9jawo+IHRvIHRoZW0gaXMgdGhlIFNhbXN1bmcgc3R1ZmYgYmVpbmcgaW5k
+aXJlY3RlZCB0aHJvdWdoIGl0cyBvd24gdGFibGVzLgoKQXdlc29tZS4gSSdsbCB3b3JrIHdpdGgg
+YW4gYXNzdW1wdGlvbiB0aGF0IGZ1dHVyZSBtYXBfaW8tcyB3aWxsIG9ubHkKY3JlYXRlIHN0YXRp
+YyBtYXBwaW5ncyBhbmQgbm90aGluZyBtb3JlIHRoZW4uCgpDaGVlcnMhCgpQYXdlxYIKCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
