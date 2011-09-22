@@ -1,55 +1,55 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH] serial/imx: add of_alias_get_id() reference back
-Date: Thu, 22 Sep 2011 14:48:13 +0800
-Message-ID: <1316674093-14802-1-git-send-email-shawn.guo@linaro.org>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] dt: add of_alias_scan and of_alias_get_id
+Date: Thu, 22 Sep 2011 14:53:08 +0800
+Message-ID: <20110922065307.GB27978@S2100-06.ap.freescale.net>
 References: <20110921204545.19871.99088.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <20110921204545.19871.99088.stgit@ponder>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, patches@linaro.org, Shawn Guo <shawn.guo@linaro.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As of_alias_get_id() gets fixed and ready for use, the patch adds the
-of_alias_get_id() reference back to imx serial driver.
+On Wed, Sep 21, 2011 at 02:46:54PM -0600, Grant Likely wrote:
+> From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> The patch adds function of_alias_scan to populate a global lookup
+> table with the properties of 'aliases' node and function
+> of_alias_get_id for drivers to find alias id from the lookup table.
+> 
+> v3: Split out automatic addition of aliases on id lookup so that it can be
+>     debated separately from the core functionality.
+> v2: - Add of_chosen/of_aliases populating and of_alias_scan() invocation
+>     for OF_PROMTREE.
+>     - Add locking
+>     - rework parse loop
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
----
- drivers/tty/serial/imx.c |   13 +++++++++----
- 1 files changed, 9 insertions(+), 4 deletions(-)
+On imx serial driver:
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 4a36470..b550cff 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -1318,17 +1318,22 @@ static int serial_imx_resume(struct platform_device *dev)
- static int serial_imx_probe_dt(struct imx_port *sport,
- 		struct platform_device *pdev)
- {
--	static int portnum = 0;
- 	struct device_node *np = pdev->dev.of_node;
- 	const struct of_device_id *of_id =
- 			of_match_device(imx_uart_dt_ids, &pdev->dev);
-+	int ret;
- 
- 	if (!np)
- 		return -ENODEV;
- 
--	sport->port.line = portnum++;
--	if (sport->port.line >= UART_NR)
--		return -EINVAL;
-+	ret = of_alias_get_id(np, "serial");
-+	if (ret < 0) {
-+		pr_err("%s: failed to get alias id, errno %d\n",
-+			__func__, ret);
-+		return -ENODEV;
-+	} else {
-+		sport->port.line = ret;
-+	}
- 
- 	if (of_get_property(np, "fsl,uart-has-rtscts", NULL))
- 		sport->have_rtscts = 1;
+Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Hi Grant,
+
+I just posted a patch to have of_alias_get_id() back for imx serial
+driver with replying to this one.  Can you please merge it to through
+your tree as well?
+
 -- 
-1.7.4.1
+Regards,
+Shawn
