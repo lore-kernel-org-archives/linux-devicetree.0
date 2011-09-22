@@ -1,14 +1,15 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 0/3] Variable sized cell support
-Date: Thu, 22 Sep 2011 12:26:34 +1000
-Message-ID: <20110922022634.GE22223@yookeroo.fritz.box>
+Subject: Re: [PATCH 3/3] dtc: Add support for variable sized cells
+Date: Thu, 22 Sep 2011 12:42:55 +1000
+Message-ID: <20110922024255.GG22223@yookeroo.fritz.box>
 References: <1316637731-21872-1-git-send-email-robotboy@chromium.org>
+	<1316637731-21872-4-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1316637731-21872-1-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1316637731-21872-4-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,26 +23,437 @@ To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2011 at 01:42:08PM -0700, Anton Staaf wrote:
-> This patch set adds, tests, and documents support for variable sized cells in
-> cell arrays.  The new syntax is:
+On Wed, Sep 21, 2011 at 01:42:11PM -0700, Anton Staaf wrote:
+> Cells of size 8, 16, 32, and 64 bits are supported.  The new
+> /size/ syntax was selected so as to not pollute the reserved
+> keyword space with uint8/uint16/... type names.
 > 
->     property = /size/ [8|16|32|64] <0x00 .... 0x12>;
+> With this patch the following property assignment:
 > 
-> So cell arrays of 8, 16, 32, or 64-bits can now be created.  No padding is
-> done on the resulting cell array.  So if three 8-bit cells are specified the
-> resulting property will contain three bytes.
-> 
-> This patch set assumes that the character literals in cell lists patch has
-> already been applied to your tree as it uses them in it's test case and the
-> diff will not apply cleanly to TOT without the character literals patch because
-> both patch sets modify the same locations in the parser.  You do not need to
-> apply the character literal support in bytestrings patch however.
+>     property = /size/ 16 <0x1234 0x5678 0x0 0xffff>;
 
-Nice.
+I'm now thinking that just plain "/size/" is maybe a bit too generic
+for this keyword.  But I'm not sure what would be better.  Maybe
+/cellsize/ or /intsize/ or /arraysize/.
 
-Still wants a little polish, I think.  And some time to sit around
-in case we have a better idea on the syntax, but a very good start.
+> 
+> is equivalent to:
+> 
+>     property = <0x12345678 0x0000ffff>;
+> 
+> It is now also possible to directly specify a 64 bit literal in a
+> cell list using:
+> 
+>     property = /size/ 64 <0xdeadbeef00000000>;
+> 
+> It is an error to attempt to store a literal into a cell that is too
+> small to hold the literal, and the compiler will generate an error
+> when it detects this.  For instance:
+> 
+>     property = /size/ 8 <256>;
+> 
+> Will fail to compile.  It is also an error to attempt to place a
+> reference in a non 32-bit cell.
+> 
+> The sized_cells test tests the creation and access of 8, 16, 32,
+> and 64-bit sized cells.  It also tests that the creation of two
+> properties, one with 16 bit cells and one with 32 bit cells result
+> in the same property contents.
+> 
+> Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+> Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> ---
+>  Documentation/dts-format.txt |   18 +++++++-
+>  dtc-lexer.l                  |    6 +++
+>  dtc-parser.y                 |   59 +++++++++++++++++++----------
+>  dtc.h                        |    4 ++
+>  tests/.gitignore             |    1 +
+>  tests/Makefile.tests         |    1 +
+>  tests/run_tests.sh           |    3 +
+>  tests/sized_cells.c          |   84 ++++++++++++++++++++++++++++++++++++++++++
+>  tests/sized_cells.dts        |   11 +++++
+>  tests/testdata.h             |    2 +
+>  10 files changed, 165 insertions(+), 24 deletions(-)
+>  create mode 100644 tests/sized_cells.c
+>  create mode 100644 tests/sized_cells.dts
+> 
+> diff --git a/Documentation/dts-format.txt b/Documentation/dts-format.txt
+> index 555bd89..0502f49 100644
+> --- a/Documentation/dts-format.txt
+> +++ b/Documentation/dts-format.txt
+> @@ -29,18 +29,27 @@ except for properties with empty (zero length) value which have the
+>  form:
+>  	[label:] property-name;
+>  
+> -Property values may be defined as an array of 32-bit integer cells, as
+> -NUL-terminated strings, as bytestrings or a combination of these.
+> +Property values may be defined as an array of 8, 16, 32, or 64-bit integer
+> +cells, as NUL-terminated strings, as bytestrings or a combination of these.
+>  
+>  * Arrays of cells are represented by angle brackets surrounding a
+>    space separated list of C-style integers or character literals.
+> +  Cells default to 32-bits in size.
+>  
+>  	e.g. interrupts = <17 0xc>;
+>  
+> -* A 64-bit value is represented with two 32-bit cells.
+> +* A 64-bit value can be represented with two 32-bit cells.
+>  
+>  	e.g. clock-frequency = <0x00000001 0x00000000>;
+>  
+> +* The storage size of a cell can be changed using the /size/ prefix.  The
+> +  /size/ prefix allows for the creation of 8, 16, 32, and 64-bit cells.
+> +  The resulting cell array will not be padded to a multiple of the default
+> +  32-bit cell size.
+> +
+> +	e.g. interrupts = /size/ 8 <17 0xc>;
+> +	e.g. clock-frequenct = /size/ 64 <0x0000000100000000>;
+> +
+>  * A NUL-terminated string value is represented using double quotes
+>    (the property value is considered to include the terminating NUL
+>    character).
+> @@ -65,6 +74,8 @@ NUL-terminated strings, as bytestrings or a combination of these.
+>  	e.g. interrupt-parent = < &mpic >;
+>    or they may be '&' followed by a node's full path in braces:
+>  	e.g. interrupt-parent = < &{/soc/interrupt-controller@40000} >;
+> +  References are only permitted in cell arrays that have a cell size of
+> +  32-bits.
+>  
+>  * Outside a cell array, a reference to another node will be expanded
+>    to that node's full path.
+> @@ -109,3 +120,4 @@ Version 1 DTS files have the overall layout:
+>  
+>  	-- David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+>  	-- Yoder Stuart <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> +	-- Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> diff --git a/dtc-lexer.l b/dtc-lexer.l
+> index 494e342..01ed628 100644
+> --- a/dtc-lexer.l
+> +++ b/dtc-lexer.l
+> @@ -97,6 +97,12 @@ static int pop_input_file(void);
+>  			return DT_MEMRESERVE;
+>  		}
+>  
+> +<*>"/size/"	{
+> +			DPRINT("Keyword: /size/\n");
+> +			BEGIN_DEFAULT();
+> +			return DT_SIZE;
+> +		}
+> +
+>  <*>{LABEL}:	{
+>  			DPRINT("Label: %s\n", yytext);
+>  			yylval.labelref = xstrdup(yytext);
+> diff --git a/dtc-parser.y b/dtc-parser.y
+> index bc05a24..6355ce2 100644
+> --- a/dtc-parser.y
+> +++ b/dtc-parser.y
+> @@ -44,9 +44,9 @@ static unsigned char eval_char_literal(const char *s);
+>  	unsigned int cbase;
+>  	uint8_t byte;
+>  	struct data data;
+> +	struct sized_data sized_data;
+>  
+>  	uint64_t addr;
+> -	cell_t cell;
+>  	struct property *prop;
+>  	struct property *proplist;
+>  	struct node *node;
+> @@ -56,6 +56,7 @@ static unsigned char eval_char_literal(const char *s);
+>  
+>  %token DT_V1
+>  %token DT_MEMRESERVE
+> +%token DT_SIZE
+>  %token <propnodename> DT_PROPNODENAME
+>  %token <literal> DT_LITERAL
+>  %token <literal> DT_CHAR_LITERAL
+> @@ -71,8 +72,7 @@ static unsigned char eval_char_literal(const char *s);
+>  %type <re> memreserve
+>  %type <re> memreserves
+>  %type <addr> addr
+> -%type <data> celllist
+> -%type <cell> cellval
+> +%type <sized_data> celllist
+>  %type <data> bytestring
+>  %type <prop> propdef
+>  %type <proplist> proplist
+> @@ -182,9 +182,9 @@ propdata:
+>  		{
+>  			$$ = data_merge($1, $2);
+>  		}
+> -	| propdataprefix '<' celllist '>'
+> +	| propdataprefix celllist '>'
+
+I'd rename celllist to cellistprefix or something, or this looks
+decidedly odd.
+
+>  		{
+> -			$$ = data_merge($1, $3);
+> +			$$ = data_merge($1, $2.data);
+>  		}
+>  	| propdataprefix '[' bytestring ']'
+>  		{
+> @@ -243,33 +243,50 @@ propdataprefix:
+>  	;
+>  
+>  celllist:
+> -	  /* empty */
+> +	DT_SIZE DT_LITERAL '<'
+>  		{
+> -			$$ = empty_data;
+> +			$$.data = empty_data;
+> +			$$.size = eval_literal($2, 0, 7);
+> +
+> +			if (($$.size !=  8) &&
+> +			    ($$.size != 16) &&
+> +			    ($$.size != 32) &&
+> +			    ($$.size != 64))
+> +			{
+> +				print_error("Only 8, 16, 32 and 64-bit cell"
+> +					    " sizes are currently supported");
+> +				$$.size = 32;
+> +			}
+>  		}
+> -	| celllist cellval
+> +	| '<'
+>  		{
+> -			$$ = data_append_cell($1, $2);
+> +			$$.data = empty_data;
+> +			$$.size = 32;
+>  		}
+> -	| celllist DT_REF
+> +	| celllist DT_LITERAL
+>  		{
+> -			$$ = data_append_cell(data_add_marker($1, REF_PHANDLE,
+> -							      $2), -1);
+> +			uint64_t val = eval_literal($2, 0, $1.size);
+> +
+> +			$$.data = data_append_literal($1.data, val, $1.size);
+>  		}
+> -	| celllist DT_LABEL
+> +	| celllist DT_CHAR_LITERAL
+>  		{
+> -			$$ = data_add_marker($1, LABEL, $2);
+> -		}
+> -	;
+> +			uint64_t val = eval_char_literal($2);
+>  
+> -cellval:
+> -	  DT_LITERAL
+> +			$$.data = data_append_literal($1.data, val, $1.size);
+> +		}
+> +	| celllist DT_REF
+>  		{
+> -			$$ = eval_literal($1, 0, 32);
+> +			if ($1.size != 32)
+> +				print_error("References only allowed in 32-bit"
+> +					    " cell lists");
+> +
+> +			$$.data = data_add_marker($1.data, REF_PHANDLE, $2);
+> +			$$.data = data_append_cell($$.data, -1);
+
+Ouch, this is kind of nasty.  If you get a REF in a celllist of the
+wrong size, you print an error, but then insert the ref as a 32-bit
+quantity, regardless of the actual cell size.  While you can argue
+that correct behaviour is undefined in this error case, I think this
+is a fair way from least-surprise.
+
+I'd suggest instead that in the error case, you insert either a 0 or
+-1 of the correct cell size instead of the reference.
+
+>  		}
+> -	| DT_CHAR_LITERAL
+> +	| celllist DT_LABEL
+>  		{
+> -			$$ = eval_char_literal($1);
+> +			$$.data = data_add_marker($1.data, LABEL, $2);
+>  		}
+>  	;
+>  
+> diff --git a/dtc.h b/dtc.h
+> index 50433f6..199b3f1 100644
+> --- a/dtc.h
+> +++ b/dtc.h
+> @@ -87,6 +87,10 @@ struct data {
+>  	struct marker *markers;
+>  };
+>  
+> +struct sized_data {
+> +	struct data	data;
+> +	int		size;
+> +};
+
+This is only used internal to the parser, so the definition can just
+go in dtc-parser.y.  And maybe call it cellarray or something more
+specific to its usage.  "sized_data" suggests it holds the size of the
+whole of the data, which doesn't make sense, since a struct data does
+that already.
+
+>  #define empty_data ((struct data){ /* all .members = 0 or NULL */ })
+>  
+> diff --git a/tests/.gitignore b/tests/.gitignore
+> index a3e9bd1..9e062c3 100644
+> --- a/tests/.gitignore
+> +++ b/tests/.gitignore
+> @@ -40,6 +40,7 @@
+>  /set_name
+>  /setprop
+>  /setprop_inplace
+> +/sized_cells
+>  /string_escapes
+>  /subnode_offset
+>  /supernode_atdepth_offset
+> diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+> index e718b63..60f3af0 100644
+> --- a/tests/Makefile.tests
+> +++ b/tests/Makefile.tests
+> @@ -6,6 +6,7 @@ LIB_TESTS_L = get_mem_rsv \
+>  	node_check_compatible node_offset_by_compatible \
+>  	get_alias \
+>  	char_literal \
+> +	sized_cells \
+>  	notfound \
+>  	setprop_inplace nop_property nop_node \
+>  	sw_tree1 \
+> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+> index 1246df1..df97f83 100755
+> --- a/tests/run_tests.sh
+> +++ b/tests/run_tests.sh
+> @@ -209,6 +209,9 @@ dtc_tests () {
+>      run_dtc_test -I dts -O dtb -o dtc_char_literal.test.dtb char_literal.dts
+>      run_test char_literal dtc_char_literal.test.dtb
+>  
+> +    run_dtc_test -I dts -O dtb -o dtc_sized_cells.test.dtb sized_cells.dts
+> +    run_test sized_cells dtc_sized_cells.test.dtb
+> +
+>      run_dtc_test -I dts -O dtb -o dtc_extra-terminating-null.test.dtb extra-terminating-null.dts
+>      run_test extra-terminating-null dtc_extra-terminating-null.test.dtb
+>  
+> diff --git a/tests/sized_cells.c b/tests/sized_cells.c
+> new file mode 100644
+> index 0000000..5a5e7c2
+> --- /dev/null
+> +++ b/tests/sized_cells.c
+> @@ -0,0 +1,84 @@
+> +/*
+> + * libfdt - Flat Device Tree manipulation
+> + *	Testcase for variable sized cells in dtc
+> + * Copyright (C) 2006 David Gibson, IBM Corporation.
+> + * Copyright (C) 2011 The Chromium Authors. All rights reserved.
+> + *
+> + * This library is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU Lesser General Public License
+> + * as published by the Free Software Foundation; either version 2.1 of
+> + * the License, or (at your option) any later version.
+> + *
+> + * This library is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> + * Lesser General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU Lesser General Public
+> + * License along with this library; if not, write to the Free Software
+> + * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+> + */
+> +#include <stdlib.h>
+> +#include <stdio.h>
+> +#include <string.h>
+> +#include <stdint.h>
+> +
+> +#include <fdt.h>
+> +#include <libfdt.h>
+> +
+> +#include "tests.h"
+> +#include "testdata.h"
+> +
+> +static void check_compare_properties(void *fdt,
+> +				     char const *name_one,
+> +				     char const *name_two)
+> +{
+> +	const void *propval;
+> +	int proplen;
+> +
+> +	propval = fdt_getprop(fdt, 0, name_one, &proplen);
+> +
+> +	if (!propval)
+> +		FAIL("fdt_getprop(\"%s\"): %s",
+> +		     name_one,
+> +		     fdt_strerror(proplen));
+> +
+> +	check_getprop(fdt, 0, name_two, proplen, propval);
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	void *fdt;
+> +	uint8_t expected_8[6] = {TEST_CHAR1,
+> +				 TEST_CHAR2,
+> +				 TEST_CHAR3,
+> +				 TEST_CHAR4,
+> +				 TEST_CHAR5,
+> +				 TEST_VALUE_3};
+> +	uint16_t expected_16[6];
+> +	uint32_t expected_32[6];
+> +	uint64_t expected_64[6];
+> +	int i;
+> +
+> +	for (i = 0; i < 5; ++i) {
+> +		expected_16[i] = cpu_to_fdt16(expected_8[i]);
+> +		expected_32[i] = cpu_to_fdt32(expected_8[i]);
+> +		expected_64[i] = cpu_to_fdt64(expected_8[i]);
+> +	}
+> +
+> +	expected_16[5] = cpu_to_fdt16(TEST_VALUE_4);
+> +	expected_32[5] = cpu_to_fdt32(TEST_VALUE_1);
+> +	expected_64[5] = cpu_to_fdt64(TEST_ADDR_1);
+> +
+> +	test_init(argc, argv);
+> +	fdt = load_blob_arg(argc, argv);
+> +
+> +	check_getprop(fdt, 0, "cells-8b", sizeof(expected_8), expected_8);
+> +	check_getprop(fdt, 0, "cells-16b", sizeof(expected_16), expected_16);
+> +	check_getprop(fdt, 0, "cells-32b", sizeof(expected_32), expected_32);
+> +	check_getprop(fdt, 0, "cells-64b", sizeof(expected_64), expected_64);
+> +
+> +	check_compare_properties(fdt, "cells-one-16", "cells-one-32");
+> +
+> +	PASS();
+> +}
+> diff --git a/tests/sized_cells.dts b/tests/sized_cells.dts
+> new file mode 100644
+> index 0000000..abd0caf
+> --- /dev/null
+> +++ b/tests/sized_cells.dts
+> @@ -0,0 +1,11 @@
+> +/dts-v1/;
+> +
+> +/ {
+> +	cells-8b = /size/ 8 <'\r' 'b' '\0' '\'' '\xff' 0xde>;
+> +	cells-16b = /size/ 16 <'\r' 'b' '\0' '\'' '\xff' 0xdead>;
+> +	cells-32b = /size/ 32 <'\r' 'b' '\0' '\'' '\xff' 0xdeadbeef>;
+> +	cells-64b = /size/ 64 <'\r' 'b' '\0' '\'' '\xff' 0xdeadbeef00000000>;
+> +
+> +	cells-one-16 = /size/ 16 <0x1234 0x5678 0x0 0xffff>;
+> +	cells-one-32 = <0x12345678 0x0000ffff>;
+> +};
+> diff --git a/tests/testdata.h b/tests/testdata.h
+> index d4c6759..2d89470 100644
+> --- a/tests/testdata.h
+> +++ b/tests/testdata.h
+> @@ -11,6 +11,8 @@
+>  
+>  #define TEST_VALUE_1	0xdeadbeef
+>  #define TEST_VALUE_2	123456789
+> +#define TEST_VALUE_3	0xde
+> +#define TEST_VALUE_4	0xdead
+
+I think it would be better to use masked versions of the existing
+constants, rather than defining new short ones.
+
+>  
+>  #define PHANDLE_1	0x2000
+>  #define PHANDLE_2	0x2001
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
