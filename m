@@ -1,82 +1,59 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] Add fdt read/write utility functions
-Date: Thu, 22 Sep 2011 12:07:34 -0700
-Message-ID: <CAPnjgZ1in8v8TsAxY--=HwTS8=3EsS9i3Z7i7j7cU1iAKatnPA@mail.gmail.com>
-References: <1316711466-14199-1-git-send-email-sjg@chromium.org>
-	<1316711466-14199-2-git-send-email-sjg@chromium.org>
-	<E1R6oQ2-00016C-DY@jdl.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E1R6oQ2-00016C-DY-CYoMK+44s/E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/4] arm/tegra: Convert gpio & pinmux to platform devices
+Date: Thu, 22 Sep 2011 15:06:03 -0600
+Message-ID: <1316725567-17881-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Erik Gilling <konkers-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+This series converts the Tegra GPIO and pinmux drivers to be regular
+platform devices.
 
-On Thu, Sep 22, 2011 at 11:54 AM, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org> wrote:
->> This adds higher-level libfdt operations for reading/writing an fdt
->> blob from/to a file, as well as a function to decode a data type string
->> as will be used by fdtget, fdtput.
->>
->> This also adds a few tests for the simple type argument supported by
->> utilfdt_decode_type.
->>
->> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
->
->
-> Applied.
->
-> This patch still had corrupted content here:
->
-> =A0 =A0142c42
-> =A0 =A0< =A0cmp_tests test_tree1.dtb $WRONG_TREE1
-> =A0 =A0---
-> =A0 =A0> =A0 =A0 =A0cmp_tests test_tree1.dtb $WRONG_TREE1
-> =A0 =A0150c50
-> =A0 =A0< =A0case $ARG in
-> =A0 =A0---
-> =A0 =A0> =A0 =A0 =A0case $ARG in
->
-> in this hunk:
->
-> =A0 =A0> --- a/tests/run_tests.sh
-> =A0 =A0> +++ b/tests/run_tests.sh
-> =A0 =A0> @@ -391,6 +391,10 @@ dtbs_equal_tests () {
-> =A0 =A0> =A0cmp_tests test_tree1.dtb $WRONG_TREE1
-> =A0 =A0> =A0}
-> =A0 =A0>
-> =A0 =A0> +utilfdt_tests () {
-> =A0 =A0> + =A0 =A0run_test utilfdt_test
-> =A0 =A0> +}
-> =A0 =A0> +
-> =A0 =A0> =A0while getopts "vt:m" ARG ; do
-> =A0 =A0> =A0case $ARG in
-> =A0 =A0> =A0 "v")
->
-> Using 'git am --ignore-whitespace' allowed it to apply.
+The series is extracted from an earlier series I posted that augmented
+these drivers to initialize HW state from the device-tree. I'm holding
+off on that aspect of the changes, since it's not entirely clear to me
+whether the new pinmux API should drive the initial pinmux state setup
+via "system hog" definitions, or whether pinmux drivers should indeed
+do their own thing.
 
-Thanks for fixing that. It wasn't apparent in my git branch. I have
-been thinking about adding 'git am' to my checking flow and it looks
-like there are cases where it is needed, although I'm still not sure
-why.
+Dependencies:
+* The patches need to be merged in one branch in order for bisectability.
 
-Regards,
-Simon
+* At least patch 3 depends on changes in Russell's gpio branch, since it
+  edits a file renamed there. I imagine the series will be merged into
+  that branch.
 
->
-> Thanks,
-> jdl
->
+* The whole series is based off next-20110922 plus a couple patches in the
+  ARM patch system (7094, 7095).
+
+* This series affects both the GPIO and pinmux drivers. Potentially, the
+  changes to the two driver could be split into separate series, but this
+  would be complicated by the fact patch 1 edits all the board files to
+  make the same change for both GPIO and pinmux; if split up, merging that
+  all back together would cause conflicts.
+
+* Patch 1's changes to board-seaboard-pinmux.c will have some merge
+  conflicts with the patches Peter De Schrijver recently posted to enhance
+  that file to support Ventana; each of our patches will change the context
+  changes in the others' diffs. I'm not sure how best to manage this.
+ 
+Stephen Warren (4):
+  arm/tegra: Prep boards for gpio/pinmux conversion to pdevs
+  arm/dt: Tegra: Add pinmux node to tegra20.dtsi
+  gpio/tegra: Convert to a platform device
+  arm/tegra: Convert pinmux driver to a platform device
+
+ .../devicetree/bindings/pinmux/pinmux_nvidia.txt   |    5 +++
+ arch/arm/boot/dts/tegra20.dtsi                     |    5 +++
+ arch/arm/mach-tegra/board-harmony-pinmux.c         |    8 +++++
+ arch/arm/mach-tegra/board-paz00-pinmux.c           |    8 +++++
+ arch/arm/mach-tegra/board-seaboard-pinmux.c        |    9 ++++-
+ arch/arm/mach-tegra/board-trimslice-pinmux.c       |    7 ++++
+ arch/arm/mach-tegra/devices.c                      |   10 ++++++
+ arch/arm/mach-tegra/devices.h                      |    2 +
+ arch/arm/mach-tegra/pinmux.c                       |   26 ++++++++++++++++
+ drivers/gpio/gpio-tegra.c                          |   31 +++++++++++++-------
+ 10 files changed, 98 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinmux/pinmux_nvidia.txt
