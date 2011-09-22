@@ -1,37 +1,55 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] ftdump: use utilfdt to read blob
-Date: Thu, 22 Sep 2011 16:24:02 +1000
-Message-ID: <20110922062402.GS22223@yookeroo.fritz.box>
-References: <1316637169-24112-1-git-send-email-sjg@chromium.org>
-	<1316637169-24112-5-git-send-email-sjg@chromium.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH] serial/imx: add of_alias_get_id() reference back
+Date: Thu, 22 Sep 2011 14:48:13 +0800
+Message-ID: <1316674093-14802-1-git-send-email-shawn.guo@linaro.org>
+References: <20110921204545.19871.99088.stgit@ponder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1316637169-24112-5-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110921204545.19871.99088.stgit@ponder>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, patches@linaro.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2011 at 01:32:47PM -0700, Simon Glass wrote:
-> Now that we have utilfdt_read(), ftdump should use it too.
-> 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+As of_alias_get_id() gets fixed and ready for use, the patch adds the
+of_alias_get_id() reference back to imx serial driver.
 
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+---
+ drivers/tty/serial/imx.c |   13 +++++++++----
+ 1 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 4a36470..b550cff 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -1318,17 +1318,22 @@ static int serial_imx_resume(struct platform_device *dev)
+ static int serial_imx_probe_dt(struct imx_port *sport,
+ 		struct platform_device *pdev)
+ {
+-	static int portnum = 0;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	const struct of_device_id *of_id =
+ 			of_match_device(imx_uart_dt_ids, &pdev->dev);
++	int ret;
+ 
+ 	if (!np)
+ 		return -ENODEV;
+ 
+-	sport->port.line = portnum++;
+-	if (sport->port.line >= UART_NR)
+-		return -EINVAL;
++	ret = of_alias_get_id(np, "serial");
++	if (ret < 0) {
++		pr_err("%s: failed to get alias id, errno %d\n",
++			__func__, ret);
++		return -ENODEV;
++	} else {
++		sport->port.line = ret;
++	}
+ 
+ 	if (of_get_property(np, "fsl,uart-has-rtscts", NULL))
+ 		sport->have_rtscts = 1;
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.4.1
