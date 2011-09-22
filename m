@@ -1,13 +1,14 @@
-From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 2/3] dtc: Add data_append_integer function
-Date: Thu, 22 Sep 2011 11:25:26 -0700
-Message-ID: <1316715927-11944-3-git-send-email-robotboy@chromium.org>
-References: <1316715927-11944-1-git-send-email-robotboy@chromium.org>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] Add fdt read/write utility functions
+Date: Thu, 22 Sep 2011 13:54:46 -0500
+Message-ID: <E1R6oQ2-00016C-DY@jdl.com>
+References: <1316711466-14199-1-git-send-email-sjg@chromium.org>
+	<1316711466-14199-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1316715927-11944-1-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-reply-to: <1316711466-14199-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,78 +18,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This function deals with appending integers of various sizes (8, 16
-32, and 64 bit currently).  It handles endianess conversions and
-verifies that the given integer is not larger than the specified
-size.
+> This adds higher-level libfdt operations for reading/writing an fdt
+> blob from/to a file, as well as a function to decode a data type string
+> as will be used by fdtget, fdtput.
+> 
+> This also adds a few tests for the simple type argument supported by
+> utilfdt_decode_type.
+> 
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
- data.c |   33 +++++++++++++++++++++++++++++++++
- dtc.h  |    1 +
- 2 files changed, 34 insertions(+), 0 deletions(-)
 
-diff --git a/data.c b/data.c
-index b5f3066..8ce1a21 100644
---- a/data.c
-+++ b/data.c
-@@ -175,6 +175,39 @@ struct data data_append_cell(struct data d, cell_t word)
- 	return data_append_data(d, &beword, sizeof(beword));
- }
- 
-+struct data data_append_integer(struct data d, uint64_t value, int bits)
-+{
-+	uint8_t value_8;
-+	uint16_t value_16;
-+	uint32_t value_32;
-+	uint64_t value_64;
-+
-+	if ((bits < 64) && (value >= (1ULL << bits)))
-+		die("Literal value 0x%x too large to fit in %d-bit cell\n",
-+		    value, bits);
-+
-+	switch (bits) {
-+	case 8:
-+		value_8 = value;
-+		return data_append_data(d, &value_8, 1);
-+
-+	case 16:
-+		value_16 = cpu_to_fdt16(value);
-+		return data_append_data(d, &value_16, 2);
-+
-+	case 32:
-+		value_32 = cpu_to_fdt32(value);
-+		return data_append_data(d, &value_32, 4);
-+
-+	case 64:
-+		value_64 = cpu_to_fdt64(value);
-+		return data_append_data(d, &value_64, 8);
-+
-+	default:
-+		die("Invalid literal size (%d)\n", bits);
-+	}
-+}
-+
- struct data data_append_re(struct data d, const struct fdt_reserve_entry *re)
- {
- 	struct fdt_reserve_entry bere;
-diff --git a/dtc.h b/dtc.h
-index f37c97e..7b4c65b 100644
---- a/dtc.h
-+++ b/dtc.h
-@@ -109,6 +109,7 @@ struct data data_insert_at_marker(struct data d, struct marker *m,
- 				  const void *p, int len);
- struct data data_merge(struct data d1, struct data d2);
- struct data data_append_cell(struct data d, cell_t word);
-+struct data data_append_integer(struct data d, uint64_t word, int bits);
- struct data data_append_re(struct data d, const struct fdt_reserve_entry *re);
- struct data data_append_addr(struct data d, uint64_t addr);
- struct data data_append_byte(struct data d, uint8_t byte);
--- 
-1.7.3.1
+Applied.
+
+This patch still had corrupted content here:
+
+    142c42
+    <  cmp_tests test_tree1.dtb $WRONG_TREE1
+    ---
+    >      cmp_tests test_tree1.dtb $WRONG_TREE1
+    150c50
+    <  case $ARG in
+    ---
+    >      case $ARG in
+
+in this hunk:
+
+    > --- a/tests/run_tests.sh
+    > +++ b/tests/run_tests.sh
+    > @@ -391,6 +391,10 @@ dtbs_equal_tests () {
+    >  cmp_tests test_tree1.dtb $WRONG_TREE1
+    >  }
+    >  
+    > +utilfdt_tests () {
+    > +    run_test utilfdt_test
+    > +}
+    > +
+    >  while getopts "vt:m" ARG ; do
+    >  case $ARG in
+    >  	"v")
+
+Using 'git am --ignore-whitespace' allowed it to apply.
+
+Thanks,
+jdl
