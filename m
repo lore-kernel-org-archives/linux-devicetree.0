@@ -1,7 +1,8 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 1/5] Add fdt read/write utility functions
-Date: Thu, 22 Sep 2011 10:11:02 -0700
-Message-ID: <1316711466-14199-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH v5 4/5] Add fdtget utility to read property values from a
+	device tree
+Date: Thu, 22 Sep 2011 10:11:05 -0700
+Message-ID: <1316711466-14199-5-git-send-email-sjg@chromium.org>
 References: <1316711466-14199-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,529 +21,495 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds higher-level libfdt operations for reading/writing an fdt
-blob from/to a file, as well as a function to decode a data type string
-as will be used by fdtget, fdtput.
+This simply utility makes it easy for scripts to read values from the device
+tree. It is written in C and uses the same libfdt as the rest of the dtc
+package.
 
-This also adds a few tests for the simple type argument supported by
-utilfdt_decode_type.
+What is it for:
+- Reading fdt values from scripts
+- Extracting fdt information within build systems
+- Looking at particular values without having to dump the entire tree
+
+To use it, specify the fdt binary file on command line followed by a list of
+node, property pairs. The utility then looks up each node, finds the property
+and displays the value.
+
+Each value is printed on a new line.
+
+fdtget tries to guess the type of each property based on its contents. This
+is not always reliable, so you can use the -t option to force fdtget to decode
+the value as a string, or byte, etc.
+
+To read from stdin, use - as the file.
+
+Usage:
+	fdtget <options> <dt file> [<node> <property>]...
+Options:
+	-t <type>	Type of data
+	-h		Print this help
+
+<type>	s=string, i=int, u=unsigned, x=hex
+	Optional modifier prefix:
+		hh or b=byte, h=2 byte, l=4 byte (default)
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
 Changes in v2:
-- Remove util_decode_key
-- Add utilfdt_decode_type to be used by fdtget/put
-- Remove limits on device tree binary size
+- Separate arguments for node and property
+- Merge two related commits into this one
+- Use structure for storing display options
+- Remove use of getopt_long()
+- Adjust tests for new fdtget arguments
 
 Changes in v3:
+- Squash fdtget test commit into fdtget
+- Add a few more tests for 1- and 2-byte formats
 - Change format of -t argument to be more like printf
-- Move utilfdt into its own directory and make it a library
-- Use code closer to testutils.c implementation
-- Use open/close instead of fopen/fclose
-- Add tests for utilfdt functions
+- Change help string and make part of it common
+- Add error checking for the property not being a multiple of value size
 
-Changes in v4:
-- Squash utilfdt functions into util.c
-- Squash utilfdt tests into main commit (this is getting very squashed)
-- Remove xmalloc() etc. from tests.h since they are in util.h
+ .gitignore              |    1 +
+ Makefile                |    4 +
+ Makefile.utils          |    7 ++
+ fdtget.c                |  226 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/fdtget-runtest.sh |   35 +++++++
+ tests/run_tests.sh      |   43 +++++++++-
+ tests/tests.sh          |    1 +
+ util.h                  |   10 ++
+ 8 files changed, 326 insertions(+), 1 deletions(-)
+ create mode 100644 fdtget.c
+ create mode 100755 tests/fdtget-runtest.sh
 
-Changes in v5:
-- Tidy up commit message
-- Rebase to ToT
-
- Makefile             |    2 +-
- tests/Makefile.tests |    5 +-
- tests/run_tests.sh   |    9 +++-
- tests/tests.h        |   18 +------
- tests/utilfdt_test.c |  128 +++++++++++++++++++++++++++++++++++++++++++++
- util.c               |  142 ++++++++++++++++++++++++++++++++++++++++++++++++++
- util.h               |   68 ++++++++++++++++++++++++
- 7 files changed, 352 insertions(+), 20 deletions(-)
- create mode 100644 tests/utilfdt_test.c
-
+diff --git a/.gitignore b/.gitignore
+index ae7a46a..9f27f34 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -10,3 +10,4 @@ lex.yy.c
+ /ftdump
+ /convert-dtsv0
+ /version_gen.h
++/fdtget
 diff --git a/Makefile b/Makefile
-index 380a705..b32409b 100644
+index b32409b..00e137a 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -15,7 +15,7 @@ EXTRAVERSION =
- LOCAL_VERSION =
- CONFIG_LOCALVERSION =
+@@ -110,6 +110,7 @@ include Makefile.utils
+ BIN += convert-dtsv0
+ BIN += dtc
+ BIN += ftdump
++BIN += fdtget
  
--CPPFLAGS = -I libfdt
-+CPPFLAGS = -I libfdt -I .
- WARNINGS = -Werror -Wall -Wpointer-arith -Wcast-qual -Wnested-externs \
- 	-Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls
- CFLAGS = -g -Os -fPIC -Werror $(WARNINGS)
-diff --git a/tests/Makefile.tests b/tests/Makefile.tests
-index e718b63..41695df 100644
---- a/tests/Makefile.tests
-+++ b/tests/Makefile.tests
-@@ -16,7 +16,8 @@ LIB_TESTS_L = get_mem_rsv \
- 	extra-terminating-null \
- 	dtbs_equal_ordered \
- 	dtb_reverse dtbs_equal_unordered \
--	add_subnode_with_nops path_offset_aliases
-+	add_subnode_with_nops path_offset_aliases \
-+	utilfdt_test
- LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
+ SCRIPTS = dtdiff
  
- LIBTREE_TESTS_L = truncated_property
-@@ -42,7 +43,7 @@ TESTS_CLEANFILES = $(TESTS) $(TESTS_CLEANFILES_L:%=$(TESTS_PREFIX)%)
- .PHONY: tests
- tests:	$(TESTS) $(TESTS_TREES)
+@@ -120,6 +121,7 @@ ifneq ($(DEPTARGETS),)
+ -include $(DTC_OBJS:%.o=%.d)
+ -include $(CONVERT_OBJS:%.o=%.d)
+ -include $(FTDUMP_OBJS:%.o=%.d)
++-include $(FDTGET_OBJS:%.o=%.d)
+ endif
  
--$(LIB_TESTS): %: $(TESTS_PREFIX)testutils.o $(LIBFDT_archive)
-+$(LIB_TESTS): %: $(TESTS_PREFIX)testutils.o util.o $(LIBFDT_archive)
  
- $(DL_LIB_TESTS): %: %.o $(TESTS_PREFIX)testutils.o $(LIBFDT_archive)
- 	@$(VECHO) LD [libdl] $@
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 1246df1..e2c3046 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -391,6 +391,10 @@ dtbs_equal_tests () {
- cmp_tests test_tree1.dtb $WRONG_TREE1
- }
+@@ -180,6 +182,8 @@ convert-dtsv0: $(CONVERT_OBJS)
  
-+utilfdt_tests () {
-+    run_test utilfdt_test
-+}
+ ftdump:	$(FTDUMP_OBJS)
+ 
++fdtget:	$(FDTGET_OBJS) $(LIBFDT_archive)
 +
- while getopts "vt:m" ARG ; do
- case $ARG in
- 	"v")
-@@ -406,7 +410,7 @@ while getopts "vt:m" ARG ; do
- done
  
- if [ -z "$TESTSETS" ]; then
--    TESTSETS="libfdt dtc dtbs_equal"
-+    TESTSETS="libfdt utilfdt dtc dtbs_equal"
- fi
+ #
+ # Testsuite rules
+diff --git a/Makefile.utils b/Makefile.utils
+index 0ed9297..095cacd 100644
+--- a/Makefile.utils
++++ b/Makefile.utils
+@@ -8,3 +8,10 @@ FTDUMP_SRCS = \
+ 	util.c
  
- # Make sure we don't have stale blobs lying around
-@@ -417,6 +421,9 @@ for set in $TESTSETS; do
- 	"libfdt")
- 	    libfdt_tests
- 	    ;;
-+	"utilfdt")
-+	    utilfdt_tests
-+	    ;;
- 	"dtc")
- 	    dtc_tests
- 	    ;;
-diff --git a/tests/tests.h b/tests/tests.h
-index fcb2b2a..a51556d 100644
---- a/tests/tests.h
-+++ b/tests/tests.h
-@@ -93,22 +93,6 @@ void cleanup(void);
- 		exit(RC_BUG);				\
- 	} while (0)
- 
--static inline void *xmalloc(size_t size)
--{
--	void *p = malloc(size);
--	if (! p)
--		FAIL("malloc() failure");
--	return p;
--}
--
--static inline void *xrealloc(void *p, size_t size)
--{
--	p = realloc(p, size);
--	if (! p)
--		FAIL("realloc() failure");
--	return p;
--}
--
- void check_mem_rsv(void *fdt, int n, uint64_t addr, uint64_t size);
- 
- void check_property(void *fdt, int nodeoffset, const char *name,
-@@ -135,4 +119,6 @@ void *load_blob_arg(int argc, char *argv[]);
- void save_blob(const char *filename, void *blob);
- void *open_blob_rw(void *blob);
- 
-+#include "util.h"
+ FTDUMP_OBJS = $(FTDUMP_SRCS:%.c=%.o)
 +
- #endif /* _TESTS_H */
-diff --git a/tests/utilfdt_test.c b/tests/utilfdt_test.c
++
++FDTGET_SRCS = \
++	fdtget.c \
++	util.c
++
++FDTGET_OBJS = $(FDTGET_SRCS:%.c=%.o)
+diff --git a/fdtget.c b/fdtget.c
 new file mode 100644
-index 0000000..36b4aa5
+index 0000000..48ab615
 --- /dev/null
-+++ b/tests/utilfdt_test.c
-@@ -0,0 +1,128 @@
++++ b/fdtget.c
+@@ -0,0 +1,226 @@
 +/*
-+ * Copyright 2011 The Chromium Authors, All Rights Reserved.
++ * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
 + *
-+ * utilfdt_test - Tests for utilfdt library
-+ *
-+ * This library is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU Lesser General Public License
-+ * as published by the Free Software Foundation; either version 2.1 of
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
 + * the License, or (at your option) any later version.
 + *
-+ * This library is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * Lesser General Public License for more details.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + *
-+ * You should have received a copy of the GNU Lesser General Public
-+ * License along with this library; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
 + */
-+#include <assert.h>
-+#include <stdlib.h>
++
++#include <ctype.h>
++#include <getopt.h>
 +#include <stdio.h>
++#include <stdlib.h>
 +#include <string.h>
-+#include <stdint.h>
-+#include <stdarg.h>
 +
-+#include <fdt.h>
 +#include <libfdt.h>
-+#include <util.h>
 +
-+#include "tests.h"
-+#include "testdata.h"
++#include "util.h"
 +
-+static void check(const char *fmt, int expect_type, int expect_size)
++/* Holds information which controls our output and options */
++struct display_info {
++	int type;		/* data type (s/i/u/x or 0 for default) */
++	int size;		/* data size (1/2/4) */
++};
++
++static void report_error(const char *where, int err)
 +{
-+	int type;
-+	int size;
-+
-+	if (utilfdt_decode_type(fmt, &type, &size))
-+		FAIL("format '%s': valid format string returned failure", fmt);
-+	if (expect_type != type)
-+		FAIL("format '%s': expected type='%c', got type='%c'", fmt,
-+		     expect_type, type);
-+	if (expect_size != size)
-+		FAIL("format '%s': expected size=%d, got size=%d", fmt,
-+		     expect_size, size);
-+}
-+
-+static void checkfail(const char *fmt)
-+{
-+	int type;
-+	int size;
-+
-+	if (!utilfdt_decode_type(fmt, &type, &size))
-+		FAIL("format '%s': invalid format string returned success",
-+		     fmt);
++	fprintf(stderr, "Error at '%s': %s\n", where, fdt_strerror(err));
 +}
 +
 +/**
-+ * Add the given modifier to each of the valid sizes, and check that we get
-+ * correct values.
++ * Displays data of a given length according to selected options
 + *
-+ * \param modifier	Modifer string to use as a prefix
-+ * \param expected_size	The size (in bytes) that we expect (ignored for
-+ *			strings)
++ * If a specific data type is provided in disp, then this is used. Otherwise
++ * we try to guess the data type / size from the contents.
++ *
++ * @param disp		Display information / options
++ * @param data		Data to display
++ * @param len		Maximum length of buffer
++ * @return 0 if ok, -1 if data does not match format
 + */
-+static void check_sizes(char *modifier, int expected_size)
++static int show_data(struct display_info *disp, const char *data, int len)
 +{
-+	char fmt[10], *ptr;
++	int i, size;
++	const uint8_t *p = (const uint8_t *)data;
++	const char *s;
++	int value;
++	int is_string;
++	char fmt[3];
 +
-+	/* set up a string with a hole in it for the format character */
-+	if (strlen(modifier) + 2 >= sizeof(fmt))
-+		FAIL("modifier string '%s' too long", modifier);
-+	strcpy(fmt, modifier);
-+	ptr = fmt + strlen(fmt);
-+	ptr[1] = '\0';
++	/* no data, don't print */
++	if (len == 0)
++		return 0;
 +
-+	/* now try each format character in turn */
-+	*ptr = 'i';
-+	check(fmt, 'i', expected_size);
-+
-+	*ptr = 'u';
-+	check(fmt, 'u', expected_size);
-+
-+	*ptr = 'x';
-+	check(fmt, 'x', expected_size);
-+
-+	*ptr = 's';
-+	check(fmt, 's', -1);
++	is_string = (disp->type) == 's' ||
++		(!disp->type && util_is_printable_string(data, len));
++	if (is_string) {
++		if (data[len - 1] != '\0') {
++			fprintf(stderr, "Unterminated string\n");
++			return -1;
++		}
++		for (s = data; s - data < len; s += strlen(s) + 1) {
++			if (s != data)
++				printf(" ");
++			printf("%s", (const char *)s);
++		}
++		return 0;
++	}
++	size = disp->size;
++	if (size == -1)
++		size = (len % 4) == 0 ? 4 : 1;
++	else if (len % size) {
++		fprintf(stderr, "Property length must be a multiple of "
++				"selected data size\n");
++		return -1;
++	}
++	fmt[0] = '%';
++	fmt[1] = disp->type ? disp->type : 'd';
++	fmt[2] = '\0';
++	for (i = 0; i < len; i += size, p += size) {
++		if (i)
++			printf(" ");
++		value = size == 4 ? fdt32_to_cpu(*(const uint32_t *)p) :
++			size == 2 ? (*p << 8) | p[1] : *p;
++		printf(fmt, value);
++	}
++	return 0;
 +}
 +
-+static void test_utilfdt_decode_type(void)
++/**
++ * Show the data for a given node (and perhaps property) according to the
++ * display option provided.
++ *
++ * @param blob		FDT blob
++ * @param disp		Display information / options
++ * @param node		Node to display
++ * @param property	Name of property to display, or NULL if none
++ * @return 0 if ok, -ve on error
++ */
++static int show_data_for_item(const void *blob, struct display_info *disp,
++		int node, const char *property)
 +{
-+	char fmt[10];
-+	int ch;
++	const void *value = NULL;
++	int len, err = 0;
 +
-+	/* check all the valid modifiers and sizes */
-+	check_sizes("", -1);
-+	check_sizes("b", 1);
-+	check_sizes("hh", 1);
-+	check_sizes("h", 2);
-+	check_sizes("l", 4);
-+
-+	/* try every other character */
-+	checkfail("");
-+	for (ch = ' '; ch < 127; ch++) {
-+		if (!strchr("iuxs", ch)) {
-+			*fmt = ch;
-+			fmt[1] = '\0';
-+			checkfail(fmt);
-+		}
++	value = fdt_getprop(blob, node, property, &len);
++	if (value) {
++		if (show_data(disp, value, len))
++			err = -1;
++		else
++			printf("\n");
++	} else {
++		report_error(property, len);
++		err = -1;
 +	}
++	return err;
++}
 +
-+	/* try a few modifiers at the end */
-+	checkfail("sx");
-+	checkfail("ihh");
-+	checkfail("xb");
++/**
++ * Run the main fdtget operation, given a filename and valid arguments
++ *
++ * @param disp		Display information / options
++ * @param filename	Filename of blob file
++ * @param arg		List of arguments to process
++ * @param arg_count	Number of arguments
++ * @param return 0 if ok, -ve on error
++ */
++static int do_fdtget(struct display_info *disp, const char *filename,
++		     char **arg, int arg_count)
++{
++	char *blob;
++	int i, node;
 +
-+	/* and one for the doomsday archives */
-+	checkfail("He has all the virtues I dislike and none of the vices "
-+			"I admire.");
++	blob = utilfdt_read(filename);
++	if (!blob)
++		return -1;
++
++	for (i = 0; i + 2 <= arg_count; i += 2) {
++		node = fdt_path_offset(blob, arg[0]);
++		if (node < 0) {
++			report_error(arg[0], node);
++			return -1;
++		}
++
++		if (show_data_for_item(blob, disp, node, arg[1]))
++			return -1;
++	}
++	return 0;
++}
++
++static const char *usage_msg =
++	"fdtget - read values from device tree\n"
++	"\n"
++	"Each value is printed on a new line.\n\n"
++	"Usage:\n"
++	"	fdtget <options> <dt file> [<node> <property>]...\n"
++	"Options:\n"
++	"\t-t <type>\tType of data\n"
++	"\t-h\t\tPrint this help\n\n"
++	USAGE_TYPE_MSG;
++
++static void usage(const char *msg)
++{
++	if (msg)
++		fprintf(stderr, "Error: %s\n\n", msg);
++
++	fprintf(stderr, "%s", usage_msg);
++	exit(2);
 +}
 +
 +int main(int argc, char *argv[])
 +{
-+	test_utilfdt_decode_type();
-+	PASS();
-+}
-diff --git a/util.c b/util.c
-index 6d07292..d82d41f 100644
---- a/util.c
-+++ b/util.c
-@@ -1,4 +1,5 @@
- /*
-+ * Copyright 2011 The Chromium Authors, All Rights Reserved.
-  * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
-  *
-  * util_is_printable_string contributed by
-@@ -27,6 +28,11 @@
- #include <string.h>
- #include <assert.h>
- 
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <unistd.h>
++	char *filename = NULL;
++	struct display_info disp;
 +
-+#include "libfdt.h"
- #include "util.h"
- 
- char *xstrdup(const char *s)
-@@ -184,3 +190,139 @@ char get_escape_char(const char *s, int *i)
- 	(*i) = j;
- 	return val;
- }
++	/* set defaults */
++	memset(&disp, '\0', sizeof(disp));
++	disp.size = -1;
++	for (;;) {
++		int c = getopt(argc, argv, "ht:");
++		if (c == -1)
++			break;
 +
-+int utilfdt_read_err(const char *filename, char **buffp)
-+{
-+	int fd = 0;	/* assume stdin */
-+	char *buf = NULL;
-+	off_t bufsize = 1024, offset = 0;
-+	int ret = 0;
++		switch (c) {
++		case 'h':
++		case '?':
++			usage(NULL);
 +
-+	*buffp = NULL;
-+	if (strcmp(filename, "-") != 0) {
-+		fd = open(filename, O_RDONLY);
-+		if (fd < 0)
-+			return errno;
-+	}
-+
-+	/* Loop until we have read everything */
-+	buf = malloc(bufsize);
-+	do {
-+		/* Expand the buffer to hold the next chunk */
-+		if (offset == bufsize) {
-+			bufsize *= 2;
-+			buf = realloc(buf, bufsize);
-+			if (!buf) {
-+				ret = ENOMEM;
-+				break;
-+			}
-+		}
-+
-+		ret = read(fd, &buf[offset], bufsize - offset);
-+		if (ret < 0) {
-+			ret = errno;
++		case 't':
++			if (utilfdt_decode_type(optarg, &disp.type,
++					&disp.size))
++				usage("Invalid type string");
 +			break;
 +		}
-+		offset += ret;
-+	} while (ret != 0);
-+
-+	/* Clean up, including closing stdin; return errno on error */
-+	close(fd);
-+	if (ret)
-+		free(buf);
-+	else
-+		*buffp = buf;
-+	return ret;
-+}
-+
-+char *utilfdt_read(const char *filename)
-+{
-+	char *buff;
-+	int ret = utilfdt_read_err(filename, &buff);
-+
-+	if (ret) {
-+		fprintf(stderr, "Couldn't open blob from '%s': %s\n", filename,
-+			strerror(ret));
-+		return NULL;
-+	}
-+	/* Successful read */
-+	return buff;
-+}
-+
-+int utilfdt_write_err(const char *filename, const void *blob)
-+{
-+	int fd = 1;	/* assume stdout */
-+	int totalsize;
-+	int offset;
-+	int ret = 0;
-+	const char *ptr = blob;
-+
-+	if (strcmp(filename, "-") != 0) {
-+		fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-+		if (fd < 0)
-+			return errno;
 +	}
 +
-+	totalsize = fdt_totalsize(blob);
-+	offset = 0;
++	if (optind < argc)
++		filename = argv[optind++];
++	if (!filename)
++		usage("Missing filename");
 +
-+	while (offset < totalsize) {
-+		ret = write(fd, ptr + offset, totalsize - offset);
-+		if (ret < 0) {
-+			ret = -errno;
-+			break;
-+		}
-+		offset += ret;
-+	}
-+	/* Close the file/stdin; return errno on error */
-+	if (fd != 1)
-+		close(fd);
-+	return ret < 0 ? -ret : 0;
-+}
++	argv += optind;
++	argc -= optind;
 +
++	/* Allow no arguments, and silently succeed */
++	if (!argc)
++		return 0;
 +
-+int utilfdt_write(const char *filename, const void *blob)
-+{
-+	int ret = utilfdt_write_err(filename, blob);
++	/* Check for node, property arguments */
++	if (argc % 2)
++		usage("Must have an even number of arguments");
 +
-+	if (ret) {
-+		fprintf(stderr, "Couldn't write blob to '%s': %s\n", filename,
-+			strerror(ret));
-+	}
-+	return ret ? -1 : 0;
-+}
-+
-+int utilfdt_decode_type(const char *fmt, int *type, int *size)
-+{
-+	int qualifier = 0;
-+
-+	/* get the conversion qualifier */
-+	*size = -1;
-+	if (strchr("hlLb", *fmt)) {
-+		qualifier = *fmt++;
-+		if (qualifier == *fmt) {
-+			switch (*fmt++) {
-+/* TODO:		case 'l': qualifier = 'L'; break;*/
-+			case 'h':
-+				qualifier = 'b';
-+				break;
-+			}
-+		}
-+	}
-+
-+	/* we should now have a type */
-+	if (!strchr("iuxs", *fmt))
-+		return -1;
-+
-+	/* convert qualifier (bhL) to byte size */
-+	if (*fmt != 's')
-+		*size = qualifier == 'b' ? 1 :
-+				qualifier == 'h' ? 2 :
-+				qualifier == 'l' ? 4 : -1;
-+	*type = *fmt++;
-+
-+	/* that should be it! */
-+	if (*fmt)
-+		return -1;
++	if (do_fdtget(&disp, filename, argv, argc))
++		return 1;
 +	return 0;
 +}
+diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
+new file mode 100755
+index 0000000..f38184f
+--- /dev/null
++++ b/tests/fdtget-runtest.sh
+@@ -0,0 +1,35 @@
++#! /bin/sh
++
++. ./tests.sh
++
++LOG="tmp.log.$$"
++EXPECT="tmp.expect.$$"
++
++rm -f $TMPFILE $LOG
++
++expect="$1"
++echo "$expect" >$EXPECT
++shift
++
++verbose_run_log "$LOG" $VALGRIND "$DTGET" "$@"
++ret="$?"
++
++if [ "$ret" -ne 0 -a "$expect" = "ERR" ]; then
++	PASS
++fi
++
++if [ "$ret" -gt 127 ]; then
++    signame=$(kill -l $[ret - 128])
++    FAIL "Killed by SIG$signame"
++fi
++
++diff $EXPECT $LOG
++ret="$?"
++
++rm -f $LOG $EXPECT
++
++if [ "$ret" -eq 0 ]; then
++	PASS
++else
++	FAIL
++fi
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index e2c3046..a37a11d 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -83,6 +83,13 @@ asm_to_so_test () {
+ run_wrap_test asm_to_so "$@"
+ }
+ 
++run_fdtget_test () {
++    # run_fdtget_test name expected_output dtb_file args...
++    echo -n "$1:	"
++    shift
++    base_run_test sh fdtget-runtest.sh "$@"
++}
++
+ tree1_tests () {
+ TREE=$1
+ 
+@@ -391,6 +398,37 @@ dtbs_equal_tests () {
+ cmp_tests test_tree1.dtb $WRONG_TREE1
+ }
+ 
++fdtget_tests () {
++    file=label01.dtb
++    $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
++
++    # run_fdtget_test <test-name> <expected-result> <args>...
++    run_fdtget_test "Simple string" "MyBoardName" $file / model
++    run_fdtget_test "Multiple string i" "77 121 66 111 \
++97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
++108 121 78 97 109 101 0" $file / compatible
++    run_fdtget_test "Multiple string s" "MyBoardName MyBoardFamilyName" \
++	-t s $file / compatible
++    run_fdtget_test "Integer" "32768" $file /cpus/PowerPC,970@1 d-cache-size
++    run_fdtget_test "Integer hex" "8000" -tx $file \
++	/cpus/PowerPC,970@1 d-cache-size
++    run_fdtget_test "Integer list" "61 62 63 0" -tbx $file \
++	/randomnode tricky1
++    run_fdtget_test "Byte list short" "a b c d de ea ad be ef" -tbx \
++	$file /randomnode blob
++
++    # Here the property size is not a multiple of 4 bytes, so it should fail
++    run_fdtget_test "Integer list invalid" ERR -tlx \
++	$file /randomnode mixed
++    run_fdtget_test "Integer list halfword" "6162 6300 1234 0 a 0 b 0 c" -thx \
++	$file /randomnode mixed
++    run_fdtget_test "Integer list byte" \
++	"61 62 63 0 12 34 0 0 0 a 0 0 0 b 0 0 0 c" -thhx \
++	$file /randomnode mixed
++    run_fdtget_test "Missing property" ERR -ts \
++	$file /randomnode doctor-who
++}
++
+ utilfdt_tests () {
+ run_test utilfdt_test
+ }
+@@ -410,7 +448,7 @@ while getopts "vt:m" ARG ; do
+ done
+ 
+ if [ -z "$TESTSETS" ]; then
+-    TESTSETS="libfdt utilfdt dtc dtbs_equal"
++    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget"
+ fi
+ 
+ # Make sure we don't have stale blobs lying around
+@@ -430,6 +468,9 @@ for set in $TESTSETS; do
+ 	"dtbs_equal")
+ 	    dtbs_equal_tests
+ 	    ;;
++	"fdtget")
++	    fdtget_tests
++	    ;;
+ esac
+ done
+ 
+diff --git a/tests/tests.sh b/tests/tests.sh
+index 30ffead..d9a0524 100644
+--- a/tests/tests.sh
++++ b/tests/tests.sh
+@@ -11,6 +11,7 @@ FAIL () {
+ }
+ 
+ DTC=../dtc
++DTGET=../fdtget
+ 
+ verbose_run () {
+ if [ -z "$QUIET_TEST" ]; then
 diff --git a/util.h b/util.h
-index f251480..730918e 100644
+index 730918e..c8eb45d 100644
 --- a/util.h
 +++ b/util.h
-@@ -4,6 +4,7 @@
- #include <stdarg.h>
- 
- /*
-+ * Copyright 2011 The Chromium Authors, All Rights Reserved.
-  * Copyright 2008 Jon Loeliger, Freescale Semiconductor, Inc.
-  *
-  * This program is free software; you can redistribute it and/or
-@@ -72,4 +73,71 @@ int util_is_printable_string(const void *data, int len);
+@@ -140,4 +140,14 @@ int utilfdt_write_err(const char *filename, const void *blob);
   */
- char get_escape_char(const char *s, int *i);
+ int utilfdt_decode_type(const char *fmt, int *type, int *size);
  
-+/**
-+ * Read a device tree file into a buffer. This will report any errors on
-+ * stderr.
-+ *
-+ * @param filename	The filename to read, or - for stdin
-+ * @return Pointer to allocated buffer containing fdt, or NULL on error
++/*
++ * This is a usage message fragment for the -t option. It is the format
++ * supported by utilfdt_decode_type.
 + */
-+char *utilfdt_read(const char *filename);
 +
-+/**
-+ * Read a device tree file into a buffer. Does not report errors, but only
-+ * returns them. The value returned can be passed to strerror() to obtain
-+ * an error message for the user.
-+ *
-+ * @param filename	The filename to read, or - for stdin
-+ * @param buffp		Returns pointer to buffer containing fdt
-+ * @return 0 if ok, else an errno value representing the error
-+ */
-+int utilfdt_read_err(const char *filename, char **buffp);
-+
-+
-+/**
-+ * Write a device tree buffer to a file. This will report any errors on
-+ * stderr.
-+ *
-+ * @param filename	The filename to write, or - for stdout
-+ * @param blob		Poiner to buffer containing fdt
-+ * @return 0 if ok, -1 on error
-+ */
-+int utilfdt_write(const char *filename, const void *blob);
-+
-+/**
-+ * Write a device tree buffer to a file. Does not report errors, but only
-+ * returns them. The value returned can be passed to strerror() to obtain
-+ * an error message for the user.
-+ *
-+ * @param filename	The filename to write, or - for stdout
-+ * @param blob		Poiner to buffer containing fdt
-+ * @return 0 if ok, else an errno value representing the error
-+ */
-+int utilfdt_write_err(const char *filename, const void *blob);
-+
-+/**
-+ * Decode a data type string. The purpose of this string
-+ *
-+ * The string consists of an optional character followed by the type:
-+ *	Modifier characters:
-+ *		hh or b	1 byte
-+ *		h	2 byte
-+ *		l	4 byte, default
-+ *
-+ *	Type character:
-+ *		s	string
-+ *		i	signed integer
-+ *		u	unsigned integer
-+ *		x	hex
-+ *
-+ * TODO: Implement ll modifier (8 bytes)
-+ * TODO: Implement o type (octal)
-+ *
-+ * @param fmt		Format string to process
-+ * @param type		Returns type found(s/d/u/x), or 0 if none
-+ * @param size		Returns size found(1,2,4,8) or 4 if none
-+ * @return 0 if ok, -1 on error (no type given, or other invalid format)
-+ */
-+int utilfdt_decode_type(const char *fmt, int *type, int *size);
++#define USAGE_TYPE_MSG \
++	"<type>\ts=string, i=int, u=unsigned, x=hex\n" \
++	"\tOptional modifier prefix:\n" \
++	"\t\thh or b=byte, h=2 byte, l=4 byte (default)\n";
 +
  #endif /* _UTIL_H */
 -- 
