@@ -1,101 +1,75 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Thu, 22 Sep 2011 13:19:57 +0100
-Message-ID: <20110922121951.GA2026@arm.com>
-References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
-	<4E79E588.6010703@gmail.com>
-	<CACxGe6sTYYXbpXvPb4C+y4JX0eRxLvwjbFycXA8Mjc-XWS1QUA@mail.gmail.com>
-	<4E7A12E2.9040107@gmail.com> <20110921171545.GG2872@arm.com>
-	<4E7A2334.7020904@firmworks.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: DT vs ARM static mappings
+Date: Thu, 22 Sep 2011 14:04:56 +0100
+Message-ID: <1316696696.4611.844.camel@hornet.cambridge.arm.com>
+References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
+	<alpine.LFD.2.00.1109211320090.12663@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4E7A2334.7020904-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: =?utf-8?B?UGF3ZcWC?= Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <alpine.LFD.2.00.1109211320090.12663@xanadu.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Pitre <nico@fluxnic.net>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 21, 2011 at 07:47:32AM -1000, Mitch Bradley wrote:
-> On 9/21/2011 7:15 AM, Dave Martin wrote:
-> >On Wed, Sep 21, 2011 at 11:37:54AM -0500, Rob Herring wrote:
-> >>On 09/21/2011 09:57 AM, Grant Likely wrote:
-> >>>On Wed, Sep 21, 2011 at 7:24 AM, Rob Herring<robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>  wrote:
-> >>>>On 09/21/2011 04:19 AM, Dave Martin wrote:
-> >>>>>       * arm,amba-bus -- widely used by other boards and patchsets, but
-> >>>>>         seems not to be documented.
-> >>>>>
-> >>>>
-> >>>>This should be dropped. There's not really any bus component to an amba
-> >>>>bus. All the probing info is within the primecell peripherals.
-> >>>
-> >>>No, if it is an AMBA bus, then it is entirely appropriate to declare
-> >>>it as an amba bus, but to also be compatible with "simple-bus".  In
-> >>>fact, it would be better to use a compatible string that specifies the
-> >>>specific implementation of AMBA bus since there are several versions
-> >>>of the spec.
-> >>
-> >>And type of AMBA bus as the spec includes AXI, AHB, and APB. None of
-> >>which have any sort of programmability or software view.
-> >>
-> >>If this is required, then the policy should be simple-bus should never
-> >>be allowed alone as every bus has some underlying type. Seems like
-> >>overkill for buses like this.
-> >
-> >The key question is _where_ to draw the line between generic and specific.
-> >By definition, the DT can never be a comprehensive description of the
-> >hardware -- rather a good DT is a description of those details of the hardware
-> >which could relevant to any hypothetical OS.
-> >
-> >The flipside is that details which were thought to be irrelevant at
-> >design/implementation time can turn out to be relevant in practice, due
-> >to errata and implementation issues etc.  So taking the description slightly
-> >beyond what the OS needs to know can still have some merit.
-> >
-> >
-> >I still don't know how to say where the line should be drawn in this particular
-> >case though.
-> 
-> Here are some criteria:
-> 
-> If the controller for the bus itself has registers, include the bus node
-> 
-> If it is possible to plug new stuff into the bus, include the bus node
-> 
-> If the base address for the bus can be changed, thereby changing all
-> the addresses of its subordinates by the same offset, include the
-> bus node (this usually goes along with "has registers".)
-> 
-> ARM buses typically don't have any of those attributes, but there
-> are some weaker criteria that can be used to justify including a bus
-> node. The SoC on which I'm currently working has some peripherals on
-> AXI and others on APB.  That doesn't matter from that addressing
-> standpoint - the individual peripherals can each be viewed as having
-> an address, end of story - but it does matter from a power
-> management standpoint.  The clock tree is quite related to the bus
-> layout.  Including bus nodes in the device tree might provide useful
-> place-holders for properties describing power or clock domains.
-> 
-> So, on the whole, I'm in favor of including bus nodes for ARM
-> standard buses.  There is little down side to doing so, and a fair
-> chance that it might come in handy in the future.
-
-I'm guessing that that would motivate describing most of the bus layout,
-with the possible exception of bus adaptors which exist solely for the
-purpose of integrating a single slave with the parent bus -- providing
-such adaptors are transparent to software.
-
-I'll have a think about what we would need to add...
-
-Cheers
----Dave
+PiA+IEFSTSBtYWNoaW5lIGRlc2NyaXB0aW9uIGNvbnRhaW5zIGEgIm1hcF9pbyIgbWV0aG9kLCB3
+aGljaCBpcyB1c2VkIHRvCj4gPiBjcmVhdGUgc3RhdGljIG1lbW9yeSBtYXBwaW5ncyAodXNpbmcg
+aW90YWJsZV9pbml0KCkgZnVuY3Rpb24pIGZvciB0aGluZ3MKPiA+IGxpa2UgcGVyaXBoZXJhbHMg
+b3IgU1JBTXMuIEF0IGxlYXN0IHRoYXQncyB0aGUgdGhlb3J5LCBiZWNhdXNlIG1vc3Qgb2YKPiA+
+IHRoZSBwbGF0Zm9ybXMgYXJlIGRvaW5nIG11Y2ggbW9yZSBzdHVmZiB0aGVyZSwgbGlrZSBjbG9j
+a2luZy9HUElPcy9VQVJUcwo+ID4gaW5pdGlhbGl6YXRpb24sIGhhcmR3YXJlIHByb2JpbmcgZXRj
+Lgo+IAo+IE5vLCBtb3N0IG9mIHRoZW0gZG9uJ3QuICBNYXliZSBhIGZldyBjYXNlcyBkbyBmb3Ig
+aGlzdG9yaWNhbCByZWFzb25zLCAKPiBidXQgdGhlcmUgYXJlIG90aGVyIGhvb2tzIG5vdyB0byBs
+aW5rIHByb2JpbmcgYW5kIGluaXRpYWxpemF0aW9uIGNvZGUgCj4gdG8uCgpPaywgd2hhdCBJIGRp
+ZCB3YXMgZ3JlcHBpbmcgZm9yIGFsbCAubWFwX2lvLXMuIFRoZW4gSSBzb3J0ZWQgdGhlIGxpc3QK
+YW5kIGhhZCBhIGxvb2sgYXQgZmlyc3QgMTAwIGFuZCBhYm91dCA1MCUgb2YgdGhlbSB3ZXJlIGRv
+aW5nIG1vcmUgdGhhbgpqdXN0IGNyZWF0aW5nIG1hcHBpbmdzLgoKTmV2ZXIgbWluZCAtIEknbGwg
+cmVwaHJhc2UgbXlzZWxmIHRvICJtYW55IiBpbnN0ZWFkIG9mICJtb3N0IiA6LSkKCj4gVGhlIHN0
+YXRpYyBtYXBwaW5ncyBzaG91bGQgYmUganVzdCB0aGF0OiBzdGF0aWMuICBNb3N0IHRoaW5ncyBz
+aG91bGQgYmUgCj4gZHluYW1pY2FsbHkgbWFwcGVkIGluc3RlYWQuICBXaXRoIHRoZSBzZXJpZXMg
+SSdtIHdvcmtpbmcgb24sIGV2ZXJ5Ym9keSAKPiB3aWxsIGdldCB0aGUgYmVuZWZpdCBvZiBhIHN0
+YXRpYyBtYXBwaW5nIHdoZW4gb25lIGlzIGF2YWlsYWJsZSBldmVuIGlmIAo+IHRoZSBkeW5hbWlj
+IG1hcHBpbmcgaW50ZXJmYWNlIGxpa2UgaW9yZW1hcCgpIGlzIHVzZWQuICBTbyBoYXZpbmcgYSBi
+dW5jaCAKPiBvZiBzdGF0aWMgbWFwcGluZ3MgaXMgbm90IGJhZCwgZXNwZWNpYWxseSBpZiB0aGV5
+IGFyZSBlYXN5LiAgQnV0IHlvdSAKPiBzaG91bGQgZGVmZXIgYXMgbXVjaCBoYXJkd2FyZSBwcm9i
+aW5nIGFzIHBvc3NpYmxlIGFmdGVyIHRoZSBtZW1vcnkgaXMgCj4gaW5pdGlhbGl6ZWQgYW5kIHRo
+ZSBzdGFuZGFyZCBpbnRlcmZhY2VzIGFyZSBhdmFpbGFibGUsIGtlZXBpbmcgcmVsaWFuY2UgCj4g
+b24gZGlyZWN0IGFjY2VzcyB0byBzdGF0aWMgbWFwcGluZ3MgYXMgc21hbGwgYXMgcG9zc2libGUu
+CgpZb3Ugd29uJ3QgZ2V0IGFueSBhcmd1bWVudCBmcm9tIG1lIGhlcmUgLSBteSB0YXNrIHdvdWxk
+IGJlIGVhc2llcgp3aXRob3V0IHRoZSBhZGRpdGlvbmFsIHRoaW5ncyBoYXBwZW5pbmcgaW4gbWFw
+X2lvLi4uCgo+IFlvdXIgYmVzdCBiZXQgd291bGQgcHJvYmFibHkgY29uc2lzdCBvZiBrZWVwaW5n
+IHRoZSB2aXJ0dWFsIGFkZHJlc3MgCj4gY29uc3RhbnQgd2hpbGUgdGhlIHBoeXNpY2FsIGFkZHJl
+c3MgaXMgdmFyaWFibGUuICBBZGp1c3RpbmcgdGhlIC5wZm4gCj4gZmllbGQgaW4gdGhlIHYybV9p
+b19kZXNjIHRhYmxlIHJpZ2h0IGJlZm9yZSBjYWxsaW5nIGlvdGFibGVfaW5pdCgpIAo+IHNob3Vs
+ZCBiZSBmaW5lLiAgQWx0ZXJuYXRpdmVseSB5b3UgY291bGQgaGF2ZSB0d28gc3VjaCB0YWJsZXMg
+YW5kIHNlbGVjdCAKPiB0aGUgcmlnaHQgb25lIGF0IHJ1biB0aW1lLiAgVGhlIGlvX3AydiBtYWNy
+byBkb2Vzbid0IG1ha2UgYW55IHNlbnNlIAo+IGFueW1vcmUgaW4gdGhhdCBjb250ZXh0IHNvIGl0
+IHNob3VsZCBiZSBlbGltaW5hdGVkLCBhbmQga2VlcGluZyBvbmx5IGEgCj4gbWluaW11bSBzZXQg
+b2YgZml4ZWQgdmlydHVhbCBhZGRyZXNzZXMgZm9yIHRoZSBwZXJpcGhlcmFscyB0aGF0IGNhbid0
+IAo+IHdhaXQgdW50aWwgaW9yZW1hcCBpcyBhdmFpbGFibGUgc2hvdWxkIGJlIGZpbmUuCgpZZXAs
+IHRoYXQncyAocm91Z2hseSkgd2hhdCBteSBjb2RlIGlzIGRvaW5nIG5vdy4gVGhlcmUgaXMgc29t
+ZSBoYWNrZXJ5Cmludm9sdmVkIChtYW51YWwgb3BlcmF0aW9ucyBvbiBwb2ludGVycykgdGhhdCB3
+aWxsIGRpc2FwcGVhciB3aXRoIHlvdXIKY2hhbmdlcy4KCkFuZCBNTUlPX1AyViBtYWNybyBpcyBk
+eWluZyAtIG1vdGhlcmJvYXJkIGNvZGUgaXMgbm90IHVzaW5nIGl0IGFueSBtb3JlLAp0aGUgdGls
+ZSBjb2RlIHdpbGwgc3RvcCB1c2luZyBpdCBuZXh0IHdlZWsuCgo+IEFuZCBpZiBzdGF0aWMgbWFw
+cGluZ3MgYXJlIGEgcHJvYmxlbSwgdGhlbiB0cnkgdG8gbGl2ZSB3aXRob3V0IHRoZW0gYXMgCj4g
+bXVjaCBhcyBwb3NzaWJsZS4gIEFnYWluIHRoZXJlIGlzIG5vIHJlYXNvbiB5b3Ugc2hvdWxkIGJl
+IGRvaW5nIHRvbyBtdWNoIAo+IGhhcmR3YXJlIHByb2JpbmcgYXQgLm1hcF9pbyB0aW1lLgoKQ3Vy
+cmVudCBpbXBsZW1lbnRhdGlvbiBpcyBkb2luZyB2ZXJ5IGxpdHRsZSAoanVzdCBwcm9iaW5nIHRp
+bGUgSUQgYW5kCmNhbGxpbmcgdGlsZSdzIHByaXZhdGUgbWFwX2lvKSBidXQgaXQncyBlbm91Z2gg
+dG8gYmUgYSBwYWluIGluIHRoZSBuZWNrLgoKQW55d2F5LCBwYXRjaCAob24gdG9wIG9mIERhdmUn
+cyBpbml0aWFsIHN1cHBvcnQpIHRvIGZvbGxvdyBzb29uLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
