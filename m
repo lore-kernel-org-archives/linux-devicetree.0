@@ -1,18 +1,11 @@
-From: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/3] dtc: Add data_append_literal function
-Date: Fri, 23 Sep 2011 10:02:00 -0700
-Message-ID: <CAF6FioWdC5bA7mYQ2e5ncswPfJWc9UEHg200uBk3FTKFgcDc7g@mail.gmail.com>
-References: <1316637731-21872-1-git-send-email-robotboy@chromium.org>
-	<1316637731-21872-3-git-send-email-robotboy@chromium.org>
-	<20110922023328.GF22223@yookeroo.fritz.box>
-	<CAF6FioWE+ybLhXmfw8OUMTXiJ3Hi-ErDai_J63trcahSwSLOag@mail.gmail.com>
-	<20110923001345.GA12286@yookeroo.fritz.box>
-	<CAF6FioXEh+nACgBV924cPf+MoHUpYdazG8n=JG5dmqSgUu84hg@mail.gmail.com>
+From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 0/3] Variable sized cell support
+Date: Fri, 23 Sep 2011 11:02:51 -0700
+Message-ID: <1316800974-30129-1-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAF6FioXEh+nACgBV924cPf+MoHUpYdazG8n=JG5dmqSgUu84hg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,57 +15,53 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 22, 2011 at 8:25 PM, Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
-> On Thu, Sep 22, 2011 at 5:13 PM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> On Thu, Sep 22, 2011 at 10:57:58AM -0700, Anton Staaf wrote:
->>> On Wed, Sep 21, 2011 at 7:33 PM, David Gibson
->>> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->>> > On Wed, Sep 21, 2011 at 01:42:10PM -0700, Anton Staaf wrote:
->> [snip]
->>> >> +
->>> >> + =A0 =A0 if ((len < 64) && (value >=3D (1ULL << len)))
->>> >> + =A0 =A0 =A0 =A0 =A0 =A0 die("Literal value 0x%x too large to fit i=
-n %d-bit cell\n",
->>> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 value, len);
->>> >
->>> > This really shouldn't be a die(). =A0In general bad input should not
->>> > directly trigger a die() during parse - it should give an error but
->>> > continue parse as best it can and only drop out afterwards.
->>>
->>> Hmm, so this check should never happen when called from the
->>> parser because the parser uses eval_literal to read the cell values
->>> and that function also checks this.
->>
->> Um.. it checks and prints an error, but it doesn't die() or otherwise
->> stop you from reaching here AFAICT.
->
-> Hah, yes, you are correct. =A0The same is true for the other die as well
-> then I think.
->
-> I'll take a closer look tomorrow.
+This patch set adds, tests, and documents support for variable sized cells in
+cell arrays.  The new syntax is:
 
-Yup, you're right, first die has to go, second die can stay because I am fo=
-rcing
-the size to a valid size (32-bits) in the parser.
+    property = /bits/ [8|16|32|64] <0x00 .... 0x12>;
 
-Thanks again,
-    Anton
+So cell arrays of 8, 16, 32, or 64-bits can now be created.  No padding is
+done on the resulting cell array.  So if three 8-bit cells are specified the
+resulting property will contain three bytes.
 
-> Thanks,
-> =A0 =A0Anton
->
->> --
->> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music=
- baroque, and my code
->> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ =
-_other_
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _=
-around_!
->> http://www.ozlabs.org/~dgibson
->>
->
+Changes in v2:
+- sized_data renamed to celllist
+- celllist definition moved to dtc-parser.y
+- celllist non-terminal renamed to celllistprefix
+- references always appended as -1 masked to the size of the cell
+- smaller test values derived from TEST_VALUE_1
+- data_append_literal renamed to data_append_integer
+- be_ removed from values in data_append_integer
+- len renamed to bits in data_append_integer
+
+Changes in v3:
+- Renamed size to bits in docs, parser, commit messages, and celllist struct
+- Remove die on overflow from data_append_integer
+- Rewrite data_append_cell|addr in terms of data_append_integer
+- Minor cosmetic change to property names in test case (added 'b' to last two)
+
+Anton Staaf (3):
+  libfdt: Add fdt16_to_cpu utility function
+  dtc: Add data_append_integer function
+  dtc: Add support for variable sized cells
+
+ Documentation/dts-format.txt |   18 +++++++-
+ data.c                       |   39 ++++++++++++++++---
+ dtc-lexer.l                  |    6 +++
+ dtc-parser.y                 |   67 ++++++++++++++++++++++-----------
+ dtc.h                        |    1 +
+ libfdt/libfdt_env.h          |    6 +++
+ tests/.gitignore             |    1 +
+ tests/Makefile.tests         |    1 +
+ tests/run_tests.sh           |    3 +
+ tests/sized_cells.c          |   84 ++++++++++++++++++++++++++++++++++++++++++
+ tests/sized_cells.dts        |   11 +++++
+ 11 files changed, 205 insertions(+), 32 deletions(-)
+ create mode 100644 tests/sized_cells.c
+ create mode 100644 tests/sized_cells.dts
+
+-- 
+1.7.3.1
