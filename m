@@ -1,17 +1,15 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCHv2 3/3] picoxcell: add the DTS for the PC7302 board
-Date: Fri, 23 Sep 2011 12:48:58 +1000
-Message-ID: <1316746138.2629.6.camel@pasglop>
-References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
-	<1314196906-20709-4-git-send-email-jamie@jamieiles.com>
-	<1316086322.2602.1.camel@pasglop>
-	<20110915121512.GG3089@pulham.picochip.com>
-	<CAGsJ_4wniCS+85Hs7-vbaUyEL-yKEBnbgDOFPm0+THh6PMfCdw@mail.gmail.com>
+From: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] dtc: Add data_append_integer function
+Date: Thu, 22 Sep 2011 20:24:25 -0700
+Message-ID: <CAF6FioVH7t6Rd32AfRjSyDjd0ww8TFxwG_wRjRHhYNTrHFpddg@mail.gmail.com>
+References: <1316715927-11944-1-git-send-email-robotboy@chromium.org>
+	<1316715927-11944-3-git-send-email-robotboy@chromium.org>
+	<20110923001917.GD12286@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAGsJ_4wniCS+85Hs7-vbaUyEL-yKEBnbgDOFPm0+THh6PMfCdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20110923001917.GD12286-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,46 +19,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2011-09-23 at 10:31 +0800, Barry Song wrote:
-> 2011/9/15 Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>:
-> > On Thu, Sep 15, 2011 at 08:32:02AM -0300, Benjamin Herrenschmidt wrote:
-> >> On Wed, 2011-08-24 at 15:41 +0100, Jamie Iles wrote:
-> >>
-> >> > +   chosen {
-> >> > +           bootargs = "console=ttyS0,115200 earlyprintk loglevel=9 root=ubi0:rootfs rw rootfstype=ubifs ubi.mtd=5,2048";
-> >> > +           linux,stdout-path = &uart0;
-> >> > +   };
-> >>
-> >> Hrm... we don't normally put the bootargs in the device-tree.
-> >>
-> >> Either you have a way to pass it from a previous firmware (which
-> >> can then slap it into the device-tree at runtime), or you
-> >> can have a way to compile it in the kernel image but the device-tree
-> >> isn't the right place for it.
-> >
-> > OK, that's fair enough.  A few other ARM platforms (tegra, prima2 and
-> > zynq) have bootargs in the chosen node and that's where I got it from,
-> > but our bootloader has fdt support so this can easily be removed.
-> 
-> some powerpc platforms also do that:
+On Thu, Sep 22, 2011 at 5:19 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Thu, Sep 22, 2011 at 11:25:26AM -0700, Anton Staaf wrote:
+>> This function deals with appending integers of various sizes (8, 16
+>> 32, and 64 bit currently). =A0It handles endianess conversions and
+>> verifies that the given integer is not larger than the specified
+>> size.
+>>
+>> Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+>
+> It occurs to me that data_append_cell() could be rewritten in terms of
+> this function.
 
-Right, I never said I was perfect :-)
+Good point, I'll send a patch tomorrow if you haven't already.
 
-> asp834x-redboot.dts:		bootargs = "console=ttyS0,38400
-> root=/dev/mtdblock3 rootfstype=jffs2";
-> gamecube.dts:		bootargs = "root=/dev/gcnsda2 rootwait udbg-immortal";
-> prpmc2800.dts:		bootargs = "ip=on";
-> rainier.dts:		bootargs = "console=ttyS0,115200";
-> sequoia.dts:		bootargs = "console=ttyS0,115200";
-> virtex440-ml507.dts:		bootargs = "console=ttyS0 root=/dev/ram";
-> virtex440-ml510.dts:		bootargs = "console=ttyS0 root=/dev/ram";
-> wii.dts:		bootargs = "root=/dev/mmcblk0p2 rootwait udbg-immortal";
-> 
-> if we have no bootargs in bootloader, kernel will use that one in DT.
+Thanks,
+    Anton
 
-Cheers,
-Ben.
+> --
+> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
+baroque, and my code
+> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
+other_
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
+round_!
+> http://www.ozlabs.org/~dgibson
+>
