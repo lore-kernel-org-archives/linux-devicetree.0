@@ -1,13 +1,16 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3] of/irq: introduce of_irq_init
-Date: Thu, 22 Sep 2011 21:21:13 -0500
-Message-ID: <1316744473-13158-1-git-send-email-robherring2@gmail.com>
-References: <1316550244-3655-3-git-send-email-robherring2@gmail.com>
+From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 3/3] picoxcell: add the DTS for the PC7302 board
+Date: Fri, 23 Sep 2011 10:31:54 +0800
+Message-ID: <CAGsJ_4wniCS+85Hs7-vbaUyEL-yKEBnbgDOFPm0+THh6PMfCdw@mail.gmail.com>
+References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
+	<1314196906-20709-4-git-send-email-jamie@jamieiles.com>
+	<1316086322.2602.1.camel@pasglop>
+	<20110915121512.GG3089@pulham.picochip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1316550244-3655-3-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20110915121512.GG3089-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,175 +20,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-of_irq_init will scan the devicetree for matching interrupt controller
-nodes. Then it calls an initialization function for each found controller
-in the proper order with parent nodes initialized before child nodes.
-
-Based on initial pseudo code from Grant Likely.
-
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
-Changes from v2:
-- add missing kfree's found by Jamie
-- Implement Grant's comments to simplify the init loop
-- fix function comments
-
- drivers/of/irq.c       |  106 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_irq.h |    3 +
- 2 files changed, 109 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 6a5b5e7..aedd39b 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -19,10 +19,12 @@
-  */
- 
- #include <linux/errno.h>
-+#include <linux/list.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/string.h>
-+#include <linux/slab.h>
- 
- /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
- #ifndef NO_IRQ
-@@ -386,3 +388,107 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
- 
- 	return i;
- }
-+
-+struct intc_desc {
-+	struct list_head	list;
-+	struct device_node	*dev;
-+	struct device_node	*interrupt_parent;
-+};
-+
-+/**
-+ * of_irq_init - Scan and init matching interrupt controllers in DT
-+ * @matches: 0 terminated array of nodes to match and init function to call
-+ *
-+ * This function scans the device tree for matching interrupt controller nodes,
-+ * and calls their initialization functions in order with parents first.
-+ */
-+void __init of_irq_init(const struct of_device_id *matches)
-+{
-+	struct device_node *np, *parent = NULL;
-+	struct intc_desc *desc, *temp_desc;
-+	struct list_head intc_desc_list, intc_parent_list;
-+
-+	INIT_LIST_HEAD(&intc_desc_list);
-+	INIT_LIST_HEAD(&intc_parent_list);
-+
-+	for_each_matching_node(np, matches) {
-+		if (!of_find_property(np, "interrupt-controller", NULL))
-+			continue;
-+		/* Here, we allocate and populate an intc_desc with the node
-+		* pointer, interrupt-parent device_node etc. */
-+		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
-+		if (!desc) {
-+			WARN_ON(1);
-+			goto err;
-+		}
-+		desc->dev = np;
-+		desc->interrupt_parent = of_irq_find_parent(np);
-+		list_add_tail(&desc->list, &intc_desc_list);
-+	}
-+	if (list_empty(&intc_desc_list))
-+		return;
-+
-+	/*
-+	 * The root irq controller is the one without an interrupt-parent.
-+	 * That one goes first, followed by the controllers that reference it,
-+	 * followed by the ones that reference the 2nd level controllers, etc
-+	 */
-+	while (!list_empty(&intc_desc_list)) {
-+		/*
-+		 * Process all controllers with the current 'parent'.
-+		 * First pass will be looking for NULL as the parent.
-+		 * The assumption is that NULL parent means a root controller.
-+		 */
-+		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
-+			const struct of_device_id *match;
-+			int ret;
-+			of_irq_init_cb_t irq_init_cb;
-+
-+			if (desc->interrupt_parent != parent)
-+				continue;
-+
-+			list_del(&desc->list);
-+			match = of_match_node(matches, desc->dev);
-+			if (!match || !match->data) {
-+				kfree(desc);
-+				continue;
-+			}
-+
-+			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
-+				 match->compatible,
-+				 desc->dev, desc->interrupt_parent);
-+			irq_init_cb = match->data;
-+			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
-+			if (ret) {
-+				kfree(desc);
-+				continue;
-+			}
-+
-+			/*
-+			 * This one is now set up; add it to the parent list so
-+			 * its children can get processed in a subsequent pass.
-+			 */
-+			list_add_tail(&desc->list, &intc_parent_list);
-+		}
-+
-+		/* Get the next pending parent that might have children */
-+		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
-+		if (list_empty(&intc_parent_list) || !desc) {
-+			pr_debug("of_irq_init: children remain, but no parents\n");
-+			break;
-+		}
-+		list_del(&desc->list);
-+		parent = desc->dev;
-+		kfree(desc);
-+	}
-+
-+	list_for_each_entry_safe(desc, temp_desc, &intc_parent_list, list) {
-+		list_del(&desc->list);
-+		kfree(desc);
-+	}
-+err:
-+	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
-+		list_del(&desc->list);
-+		kfree(desc);
-+	}
-+}
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index cd2e61c..d0307ee 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -33,6 +33,8 @@ struct of_irq {
- 	u32 specifier[OF_MAX_IRQ_SPEC]; /* Specifier copy */
- };
- 
-+typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
-+
- /*
-  * Workarounds only applied to 32bit powermac machines
-  */
-@@ -73,6 +75,7 @@ extern int of_irq_to_resource_table(struct device_node *dev,
- 		struct resource *res, int nr_irqs);
- extern struct device_node *of_irq_find_parent(struct device_node *child);
- 
-+extern void of_irq_init(const struct of_device_id *matches);
- 
- #endif /* CONFIG_OF_IRQ */
- #endif /* CONFIG_OF */
--- 
-1.7.5.4
+MjAxMS85LzE1IEphbWllIElsZXMgPGphbWllQGphbWllaWxlcy5jb20+Ogo+IE9uIFRodSwgU2Vw
+IDE1LCAyMDExIGF0IDA4OjMyOjAyQU0gLTAzMDAsIEJlbmphbWluIEhlcnJlbnNjaG1pZHQgd3Jv
+dGU6Cj4+IE9uIFdlZCwgMjAxMS0wOC0yNCBhdCAxNTo0MSArMDEwMCwgSmFtaWUgSWxlcyB3cm90
+ZToKPj4KPj4gPiArIMKgIGNob3NlbiB7Cj4+ID4gKyDCoCDCoCDCoCDCoCDCoCBib290YXJncyA9
+ICJjb25zb2xlPXR0eVMwLDExNTIwMCBlYXJseXByaW50ayBsb2dsZXZlbD05IHJvb3Q9dWJpMDpy
+b290ZnMgcncgcm9vdGZzdHlwZT11YmlmcyB1YmkubXRkPTUsMjA0OCI7Cj4+ID4gKyDCoCDCoCDC
+oCDCoCDCoCBsaW51eCxzdGRvdXQtcGF0aCA9ICZ1YXJ0MDsKPj4gPiArIMKgIH07Cj4+Cj4+IEhy
+bS4uLiB3ZSBkb24ndCBub3JtYWxseSBwdXQgdGhlIGJvb3RhcmdzIGluIHRoZSBkZXZpY2UtdHJl
+ZS4KPj4KPj4gRWl0aGVyIHlvdSBoYXZlIGEgd2F5IHRvIHBhc3MgaXQgZnJvbSBhIHByZXZpb3Vz
+IGZpcm13YXJlICh3aGljaAo+PiBjYW4gdGhlbiBzbGFwIGl0IGludG8gdGhlIGRldmljZS10cmVl
+IGF0IHJ1bnRpbWUpLCBvciB5b3UKPj4gY2FuIGhhdmUgYSB3YXkgdG8gY29tcGlsZSBpdCBpbiB0
+aGUga2VybmVsIGltYWdlIGJ1dCB0aGUgZGV2aWNlLXRyZWUKPj4gaXNuJ3QgdGhlIHJpZ2h0IHBs
+YWNlIGZvciBpdC4KPgo+IE9LLCB0aGF0J3MgZmFpciBlbm91Z2guIMKgQSBmZXcgb3RoZXIgQVJN
+IHBsYXRmb3JtcyAodGVncmEsIHByaW1hMiBhbmQKPiB6eW5xKSBoYXZlIGJvb3RhcmdzIGluIHRo
+ZSBjaG9zZW4gbm9kZSBhbmQgdGhhdCdzIHdoZXJlIEkgZ290IGl0IGZyb20sCj4gYnV0IG91ciBi
+b290bG9hZGVyIGhhcyBmZHQgc3VwcG9ydCBzbyB0aGlzIGNhbiBlYXNpbHkgYmUgcmVtb3ZlZC4K
+CnNvbWUgcG93ZXJwYyBwbGF0Zm9ybXMgYWxzbyBkbyB0aGF0OgoKYXNwODM0eC1yZWRib290LmR0
+czoJCWJvb3RhcmdzID0gImNvbnNvbGU9dHR5UzAsMzg0MDAKcm9vdD0vZGV2L210ZGJsb2NrMyBy
+b290ZnN0eXBlPWpmZnMyIjsKZ2FtZWN1YmUuZHRzOgkJYm9vdGFyZ3MgPSAicm9vdD0vZGV2L2dj
+bnNkYTIgcm9vdHdhaXQgdWRiZy1pbW1vcnRhbCI7CnBycG1jMjgwMC5kdHM6CQlib290YXJncyA9
+ICJpcD1vbiI7CnJhaW5pZXIuZHRzOgkJYm9vdGFyZ3MgPSAiY29uc29sZT10dHlTMCwxMTUyMDAi
+OwpzZXF1b2lhLmR0czoJCWJvb3RhcmdzID0gImNvbnNvbGU9dHR5UzAsMTE1MjAwIjsKdmlydGV4
+NDQwLW1sNTA3LmR0czoJCWJvb3RhcmdzID0gImNvbnNvbGU9dHR5UzAgcm9vdD0vZGV2L3JhbSI7
+CnZpcnRleDQ0MC1tbDUxMC5kdHM6CQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwIHJvb3Q9L2Rl
+di9yYW0iOwp3aWkuZHRzOgkJYm9vdGFyZ3MgPSAicm9vdD0vZGV2L21tY2JsazBwMiByb290d2Fp
+dCB1ZGJnLWltbW9ydGFsIjsKCmlmIHdlIGhhdmUgbm8gYm9vdGFyZ3MgaW4gYm9vdGxvYWRlciwg
+a2VybmVsIHdpbGwgdXNlIHRoYXQgb25lIGluIERULgoKPgo+IFRoYW5rcywKPgo+IEphbWllCgot
+YmFycnkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2
+aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3ps
+YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNj
+dXNzCg==
