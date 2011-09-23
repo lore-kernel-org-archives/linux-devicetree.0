@@ -1,16 +1,17 @@
-From: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: [PATCHv2 3/3] picoxcell: add the DTS for the PC7302 board
-Date: Fri, 23 Sep 2011 10:31:54 +0800
-Message-ID: <CAGsJ_4wniCS+85Hs7-vbaUyEL-yKEBnbgDOFPm0+THh6PMfCdw@mail.gmail.com>
+Date: Fri, 23 Sep 2011 12:48:58 +1000
+Message-ID: <1316746138.2629.6.camel@pasglop>
 References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
 	<1314196906-20709-4-git-send-email-jamie@jamieiles.com>
 	<1316086322.2602.1.camel@pasglop>
 	<20110915121512.GG3089@pulham.picochip.com>
+	<CAGsJ_4wniCS+85Hs7-vbaUyEL-yKEBnbgDOFPm0+THh6PMfCdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110915121512.GG3089-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <CAGsJ_4wniCS+85Hs7-vbaUyEL-yKEBnbgDOFPm0+THh6PMfCdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,38 +21,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MjAxMS85LzE1IEphbWllIElsZXMgPGphbWllQGphbWllaWxlcy5jb20+Ogo+IE9uIFRodSwgU2Vw
-IDE1LCAyMDExIGF0IDA4OjMyOjAyQU0gLTAzMDAsIEJlbmphbWluIEhlcnJlbnNjaG1pZHQgd3Jv
-dGU6Cj4+IE9uIFdlZCwgMjAxMS0wOC0yNCBhdCAxNTo0MSArMDEwMCwgSmFtaWUgSWxlcyB3cm90
-ZToKPj4KPj4gPiArIMKgIGNob3NlbiB7Cj4+ID4gKyDCoCDCoCDCoCDCoCDCoCBib290YXJncyA9
-ICJjb25zb2xlPXR0eVMwLDExNTIwMCBlYXJseXByaW50ayBsb2dsZXZlbD05IHJvb3Q9dWJpMDpy
-b290ZnMgcncgcm9vdGZzdHlwZT11YmlmcyB1YmkubXRkPTUsMjA0OCI7Cj4+ID4gKyDCoCDCoCDC
-oCDCoCDCoCBsaW51eCxzdGRvdXQtcGF0aCA9ICZ1YXJ0MDsKPj4gPiArIMKgIH07Cj4+Cj4+IEhy
-bS4uLiB3ZSBkb24ndCBub3JtYWxseSBwdXQgdGhlIGJvb3RhcmdzIGluIHRoZSBkZXZpY2UtdHJl
-ZS4KPj4KPj4gRWl0aGVyIHlvdSBoYXZlIGEgd2F5IHRvIHBhc3MgaXQgZnJvbSBhIHByZXZpb3Vz
-IGZpcm13YXJlICh3aGljaAo+PiBjYW4gdGhlbiBzbGFwIGl0IGludG8gdGhlIGRldmljZS10cmVl
-IGF0IHJ1bnRpbWUpLCBvciB5b3UKPj4gY2FuIGhhdmUgYSB3YXkgdG8gY29tcGlsZSBpdCBpbiB0
-aGUga2VybmVsIGltYWdlIGJ1dCB0aGUgZGV2aWNlLXRyZWUKPj4gaXNuJ3QgdGhlIHJpZ2h0IHBs
-YWNlIGZvciBpdC4KPgo+IE9LLCB0aGF0J3MgZmFpciBlbm91Z2guIMKgQSBmZXcgb3RoZXIgQVJN
-IHBsYXRmb3JtcyAodGVncmEsIHByaW1hMiBhbmQKPiB6eW5xKSBoYXZlIGJvb3RhcmdzIGluIHRo
-ZSBjaG9zZW4gbm9kZSBhbmQgdGhhdCdzIHdoZXJlIEkgZ290IGl0IGZyb20sCj4gYnV0IG91ciBi
-b290bG9hZGVyIGhhcyBmZHQgc3VwcG9ydCBzbyB0aGlzIGNhbiBlYXNpbHkgYmUgcmVtb3ZlZC4K
-CnNvbWUgcG93ZXJwYyBwbGF0Zm9ybXMgYWxzbyBkbyB0aGF0OgoKYXNwODM0eC1yZWRib290LmR0
-czoJCWJvb3RhcmdzID0gImNvbnNvbGU9dHR5UzAsMzg0MDAKcm9vdD0vZGV2L210ZGJsb2NrMyBy
-b290ZnN0eXBlPWpmZnMyIjsKZ2FtZWN1YmUuZHRzOgkJYm9vdGFyZ3MgPSAicm9vdD0vZGV2L2dj
-bnNkYTIgcm9vdHdhaXQgdWRiZy1pbW1vcnRhbCI7CnBycG1jMjgwMC5kdHM6CQlib290YXJncyA9
-ICJpcD1vbiI7CnJhaW5pZXIuZHRzOgkJYm9vdGFyZ3MgPSAiY29uc29sZT10dHlTMCwxMTUyMDAi
-OwpzZXF1b2lhLmR0czoJCWJvb3RhcmdzID0gImNvbnNvbGU9dHR5UzAsMTE1MjAwIjsKdmlydGV4
-NDQwLW1sNTA3LmR0czoJCWJvb3RhcmdzID0gImNvbnNvbGU9dHR5UzAgcm9vdD0vZGV2L3JhbSI7
-CnZpcnRleDQ0MC1tbDUxMC5kdHM6CQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwIHJvb3Q9L2Rl
-di9yYW0iOwp3aWkuZHRzOgkJYm9vdGFyZ3MgPSAicm9vdD0vZGV2L21tY2JsazBwMiByb290d2Fp
-dCB1ZGJnLWltbW9ydGFsIjsKCmlmIHdlIGhhdmUgbm8gYm9vdGFyZ3MgaW4gYm9vdGxvYWRlciwg
-a2VybmVsIHdpbGwgdXNlIHRoYXQgb25lIGluIERULgoKPgo+IFRoYW5rcywKPgo+IEphbWllCgot
-YmFycnkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2
-aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3ps
-YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNj
-dXNzCg==
+On Fri, 2011-09-23 at 10:31 +0800, Barry Song wrote:
+> 2011/9/15 Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>:
+> > On Thu, Sep 15, 2011 at 08:32:02AM -0300, Benjamin Herrenschmidt wrote:
+> >> On Wed, 2011-08-24 at 15:41 +0100, Jamie Iles wrote:
+> >>
+> >> > +   chosen {
+> >> > +           bootargs = "console=ttyS0,115200 earlyprintk loglevel=9 root=ubi0:rootfs rw rootfstype=ubifs ubi.mtd=5,2048";
+> >> > +           linux,stdout-path = &uart0;
+> >> > +   };
+> >>
+> >> Hrm... we don't normally put the bootargs in the device-tree.
+> >>
+> >> Either you have a way to pass it from a previous firmware (which
+> >> can then slap it into the device-tree at runtime), or you
+> >> can have a way to compile it in the kernel image but the device-tree
+> >> isn't the right place for it.
+> >
+> > OK, that's fair enough.  A few other ARM platforms (tegra, prima2 and
+> > zynq) have bootargs in the chosen node and that's where I got it from,
+> > but our bootloader has fdt support so this can easily be removed.
+> 
+> some powerpc platforms also do that:
+
+Right, I never said I was perfect :-)
+
+> asp834x-redboot.dts:		bootargs = "console=ttyS0,38400
+> root=/dev/mtdblock3 rootfstype=jffs2";
+> gamecube.dts:		bootargs = "root=/dev/gcnsda2 rootwait udbg-immortal";
+> prpmc2800.dts:		bootargs = "ip=on";
+> rainier.dts:		bootargs = "console=ttyS0,115200";
+> sequoia.dts:		bootargs = "console=ttyS0,115200";
+> virtex440-ml507.dts:		bootargs = "console=ttyS0 root=/dev/ram";
+> virtex440-ml510.dts:		bootargs = "console=ttyS0 root=/dev/ram";
+> wii.dts:		bootargs = "root=/dev/mmcblk0p2 rootwait udbg-immortal";
+> 
+> if we have no bootargs in bootloader, kernel will use that one in DT.
+
+Cheers,
+Ben.
