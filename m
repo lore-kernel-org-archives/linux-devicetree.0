@@ -1,15 +1,18 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: DT vs ARM static mappings
-Date: Fri, 23 Sep 2011 17:45:06 +0200
-Message-ID: <201109231745.06264.arnd@arndb.de>
-References: <1316519479.4611.150.camel@hornet.cambridge.arm.com>
-	<201109202128.55517.arnd@arndb.de>
-	<1316708611.4611.873.camel@hornet.cambridge.arm.com>
+From: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/3] dtc: Add data_append_literal function
+Date: Fri, 23 Sep 2011 10:02:00 -0700
+Message-ID: <CAF6FioWdC5bA7mYQ2e5ncswPfJWc9UEHg200uBk3FTKFgcDc7g@mail.gmail.com>
+References: <1316637731-21872-1-git-send-email-robotboy@chromium.org>
+	<1316637731-21872-3-git-send-email-robotboy@chromium.org>
+	<20110922023328.GF22223@yookeroo.fritz.box>
+	<CAF6FioWE+ybLhXmfw8OUMTXiJ3Hi-ErDai_J63trcahSwSLOag@mail.gmail.com>
+	<20110923001345.GA12286@yookeroo.fritz.box>
+	<CAF6FioXEh+nACgBV924cPf+MoHUpYdazG8n=JG5dmqSgUu84hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1316708611.4611.873.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+In-Reply-To: <CAF6FioXEh+nACgBV924cPf+MoHUpYdazG8n=JG5dmqSgUu84hg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,35 +22,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 September 2011, Pawel Moll wrote:
-> Executive summary:
-> 
-> * I have second map_desc with pfn for RS1 memory map, but using the same
-> virtual address as the legacy one. The legacy one is used if root of the
-> tree is compatible with "arm,vexpress-legacy".
-> 
-> * The devices I need to use in v2m.c have aliases in DTS so I can find
-> their offsets in the flat tree (the *_find_node_by_alias() function is
-> rather generic and could be moved to drivers/of/fdt.c if you think it
-> would be useful for others).
-> 
-> * There are no more users of MMIO_P2V in v2m.c, next thing I will do is
-> the same in core tile; then the macro can be killed. Once this happens
-> the virtual address currently taken from __MMIO_P2V(V2M_PA_CS7) will be
-> replaced by some kind of "#define V2M_PERIPH_BASE 0xf8000000".
-> 
-> * Once Nico's changes regarding static maps are in, the manual pointer
-> operations in v2m_dt_map_io can be replaced with neat ioremap()-s.
-> 
-> All feedback appreciated, cheers!
+On Thu, Sep 22, 2011 at 8:25 PM, Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Thu, Sep 22, 2011 at 5:13 PM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> On Thu, Sep 22, 2011 at 10:57:58AM -0700, Anton Staaf wrote:
+>>> On Wed, Sep 21, 2011 at 7:33 PM, David Gibson
+>>> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>>> > On Wed, Sep 21, 2011 at 01:42:10PM -0700, Anton Staaf wrote:
+>> [snip]
+>>> >> +
+>>> >> + =A0 =A0 if ((len < 64) && (value >=3D (1ULL << len)))
+>>> >> + =A0 =A0 =A0 =A0 =A0 =A0 die("Literal value 0x%x too large to fit i=
+n %d-bit cell\n",
+>>> >> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 value, len);
+>>> >
+>>> > This really shouldn't be a die(). =A0In general bad input should not
+>>> > directly trigger a die() during parse - it should give an error but
+>>> > continue parse as best it can and only drop out afterwards.
+>>>
+>>> Hmm, so this check should never happen when called from the
+>>> parser because the parser uses eval_literal to read the cell values
+>>> and that function also checks this.
+>>
+>> Um.. it checks and prints an error, but it doesn't die() or otherwise
+>> stop you from reaching here AFAICT.
+>
+> Hah, yes, you are correct. =A0The same is true for the other die as well
+> then I think.
+>
+> I'll take a closer look tomorrow.
 
-Look ok to me. Just a comment on the submission:
+Yup, you're right, first die has to go, second die can stay because I am fo=
+rcing
+the size to a valid size (32-bits) in the parser.
 
-Even when you post something for review instead of inclusion, please add
-a Signed-off-by: line and a diffstat.
+Thanks again,
+    Anton
 
-	Arnd
+> Thanks,
+> =A0 =A0Anton
+>
+>> --
+>> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music=
+ baroque, and my code
+>> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ =
+_other_
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _=
+around_!
+>> http://www.ozlabs.org/~dgibson
+>>
+>
