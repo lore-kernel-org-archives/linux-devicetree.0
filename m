@@ -1,16 +1,13 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v5 5/5] Add fdtput utility to write property values to a
-	device tree
-Date: Fri, 23 Sep 2011 11:20:28 +1000
-Message-ID: <20110923012028.GH12286@yookeroo.fritz.box>
-References: <1316711466-14199-1-git-send-email-sjg@chromium.org>
-	<1316711466-14199-6-git-send-email-sjg@chromium.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] of/irq: introduce of_irq_init
+Date: Thu, 22 Sep 2011 21:21:13 -0500
+Message-ID: <1316744473-13158-1-git-send-email-robherring2@gmail.com>
+References: <1316550244-3655-3-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1316711466-14199-6-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1316550244-3655-3-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,57 +17,175 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 22, 2011 at 10:11:06AM -0700, Simon Glass wrote:
-> This simple utility allows writing of values into a device tree from the
-> command line. It aimes to be the opposite of fdtget.
-> 
-> What is it for:
-> - Updating fdt values when a binary blob already exists
->    (even though source may be available it might be easier to use this
-> utility rather than sed, etc.)
-> - Writing machine-specific fdt values within a build system
-> 
-> To use it, specify the fdt binary file on command line followed by the node
-> and property to set. Then, provide a list of values to put into that
-> property. Often there will be just one, but fdtput also supports arrays and
-> string lists.
-> 
-> fdtput does not try to guess the type of the property based on looking at
-> the arguments. Instead it always assumes that an integer is provided. To
-> indicate that you want to write a string, use -ts. You can also provide
-> hex values with -tx.
-> 
-> The command line arguments are joined together into a single value. For
-> strings, a nul terminator is placed between each string when it is packed
-> into the property. To avoid this, pass the string as a single argument.
-> 
-> Usage:
-> 	fdtput <options> <dt file> <<node> <property> [<value>...]
-> Options:
-> 	-t <type>	Type of data
-> 	-v		Verbose: display each value decoded from command line
-> 	-h		Print this help
-> 
-> <type>	s=string, i=int, u=unsigned, x=hex
-> 	Optional modifier prefix:
-> 		hh or b=byte, h=2 byte, l=4 byte (default)
-> 
-> To read from stdin and write to stdout, use - as the file. So you can do:
-> 
-> cat somefile.dtb | fdtput -ts - /node prop "My string value" > newfile.dtb
-> 
-> This commit also adds basic tests to verify the major features.
-> 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+of_irq_init will scan the devicetree for matching interrupt controller
+nodes. Then it calls an initialization function for each found controller
+in the proper order with parent nodes initialized before child nodes.
 
+Based on initial pseudo code from Grant Likely.
+
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+Changes from v2:
+- add missing kfree's found by Jamie
+- Implement Grant's comments to simplify the init loop
+- fix function comments
+
+ drivers/of/irq.c       |  106 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_irq.h |    3 +
+ 2 files changed, 109 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 6a5b5e7..aedd39b 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -19,10 +19,12 @@
+  */
+ 
+ #include <linux/errno.h>
++#include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/string.h>
++#include <linux/slab.h>
+ 
+ /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
+ #ifndef NO_IRQ
+@@ -386,3 +388,107 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+ 
+ 	return i;
+ }
++
++struct intc_desc {
++	struct list_head	list;
++	struct device_node	*dev;
++	struct device_node	*interrupt_parent;
++};
++
++/**
++ * of_irq_init - Scan and init matching interrupt controllers in DT
++ * @matches: 0 terminated array of nodes to match and init function to call
++ *
++ * This function scans the device tree for matching interrupt controller nodes,
++ * and calls their initialization functions in order with parents first.
++ */
++void __init of_irq_init(const struct of_device_id *matches)
++{
++	struct device_node *np, *parent = NULL;
++	struct intc_desc *desc, *temp_desc;
++	struct list_head intc_desc_list, intc_parent_list;
++
++	INIT_LIST_HEAD(&intc_desc_list);
++	INIT_LIST_HEAD(&intc_parent_list);
++
++	for_each_matching_node(np, matches) {
++		if (!of_find_property(np, "interrupt-controller", NULL))
++			continue;
++		/* Here, we allocate and populate an intc_desc with the node
++		* pointer, interrupt-parent device_node etc. */
++		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
++		if (!desc) {
++			WARN_ON(1);
++			goto err;
++		}
++		desc->dev = np;
++		desc->interrupt_parent = of_irq_find_parent(np);
++		list_add_tail(&desc->list, &intc_desc_list);
++	}
++	if (list_empty(&intc_desc_list))
++		return;
++
++	/*
++	 * The root irq controller is the one without an interrupt-parent.
++	 * That one goes first, followed by the controllers that reference it,
++	 * followed by the ones that reference the 2nd level controllers, etc
++	 */
++	while (!list_empty(&intc_desc_list)) {
++		/*
++		 * Process all controllers with the current 'parent'.
++		 * First pass will be looking for NULL as the parent.
++		 * The assumption is that NULL parent means a root controller.
++		 */
++		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
++			const struct of_device_id *match;
++			int ret;
++			of_irq_init_cb_t irq_init_cb;
++
++			if (desc->interrupt_parent != parent)
++				continue;
++
++			list_del(&desc->list);
++			match = of_match_node(matches, desc->dev);
++			if (!match || !match->data) {
++				kfree(desc);
++				continue;
++			}
++
++			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
++				 match->compatible,
++				 desc->dev, desc->interrupt_parent);
++			irq_init_cb = match->data;
++			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
++			if (ret) {
++				kfree(desc);
++				continue;
++			}
++
++			/*
++			 * This one is now set up; add it to the parent list so
++			 * its children can get processed in a subsequent pass.
++			 */
++			list_add_tail(&desc->list, &intc_parent_list);
++		}
++
++		/* Get the next pending parent that might have children */
++		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
++		if (list_empty(&intc_parent_list) || !desc) {
++			pr_debug("of_irq_init: children remain, but no parents\n");
++			break;
++		}
++		list_del(&desc->list);
++		parent = desc->dev;
++		kfree(desc);
++	}
++
++	list_for_each_entry_safe(desc, temp_desc, &intc_parent_list, list) {
++		list_del(&desc->list);
++		kfree(desc);
++	}
++err:
++	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
++		list_del(&desc->list);
++		kfree(desc);
++	}
++}
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index cd2e61c..d0307ee 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -33,6 +33,8 @@ struct of_irq {
+ 	u32 specifier[OF_MAX_IRQ_SPEC]; /* Specifier copy */
+ };
+ 
++typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
++
+ /*
+  * Workarounds only applied to 32bit powermac machines
+  */
+@@ -73,6 +75,7 @@ extern int of_irq_to_resource_table(struct device_node *dev,
+ 		struct resource *res, int nr_irqs);
+ extern struct device_node *of_irq_find_parent(struct device_node *child);
+ 
++extern void of_irq_init(const struct of_device_id *matches);
+ 
+ #endif /* CONFIG_OF_IRQ */
+ #endif /* CONFIG_OF */
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.5.4
