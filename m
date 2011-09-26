@@ -1,79 +1,29 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: gic: add OF based initialization
-Date: Mon, 26 Sep 2011 23:29:18 +0100
-Message-ID: <20110926222918.GG9194@gallagher>
-References: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
-	<1316550244-3655-4-git-send-email-robherring2@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 01/11] OMAP2+: Add SoC specific map_io functions
+Date: Mon, 26 Sep 2011 16:15:16 -0700
+Message-ID: <20110926231516.GI6324@atomide.com>
+References: <1316809399-19579-1-git-send-email-b-cousson@ti.com>
+ <1316809399-19579-2-git-send-email-b-cousson@ti.com>
+ <20110923230049.GC6324@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1316550244-3655-4-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20110923230049.GC6324@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: grant.likely@secretlab.ca, paul@pwsan.com, khilman@ti.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Apologies for the noise!  One minor comment below.
-
-Jamie
-
-On Tue, Sep 20, 2011 at 03:24:04PM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+* Tony Lindgren <tony@atomide.com> [110923 15:27]:
+> * Benoit Cousson <b-cousson@ti.com> [110923 12:50]:
+> > Add SoC specific map_io function to be used by the generic DT
+> > board file. This is an intermediate step before having some
+> > generic DT aware map_io function.
 > 
-> This adds ARM gic interrupt controller initialization using device tree
-> data.
-> 
-> The initialization function is intended to be called by of_irq_init
-> function like this:
-> 
-> const static struct of_device_id irq_match[] = {
->         { .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
->         {}
-> };
-> 
-> static void __init init_irqs(void)
-> {
->         of_irq_init(irq_match);
-> }
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> ---
-[...]
-> diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
-> index 435d3f8..2862d0e 100644
-> --- a/arch/arm/include/asm/hardware/gic.h
-> +++ b/arch/arm/include/asm/hardware/gic.h
-> @@ -33,10 +33,21 @@
->  #define GIC_DIST_SOFTINT		0xf00
->  
->  #ifndef __ASSEMBLY__
-> +#include <linux/irqdomain.h>
-> +
->  extern void __iomem *gic_cpu_base_addr;
->  extern struct irq_chip gic_arch_extn;
->  
->  void gic_init(unsigned int, unsigned int, void __iomem *, void __iomem *);
-> +#ifdef CONFIG_OF
-> +int gic_of_init(struct device_node *node, struct device_node *parent);
-> +#else
-> +static inline void gic_of_init(struct device_node *node,
-> +			       struct device_node *parent)
+> Thanks, I'll apply this into cleanup branch and with the related
+> conversion of board files.
 
-This should return int?
+Following replies contain the two related patches.
 
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
+Tony
