@@ -1,347 +1,101 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCHv3 2/4] picoxcell: add the DTS for pc3x2 and pc3x3 devices
-Date: Mon, 26 Sep 2011 19:29:35 +0100
-Message-ID: <20110926182934.GA9194@gallagher>
-References: <1317050689-16417-1-git-send-email-jamie@jamieiles.com>
-	<1317050689-16417-3-git-send-email-jamie@jamieiles.com>
-	<4E80BEA3.1030803@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4E80BEA3.1030803-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: serial: samsung: add clkdev based clock lookup and device tree support
+Date: Tue, 27 Sep 2011 00:37:09 +0530
+Message-ID: <1317064038-32428-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, alan@linux.intel.com, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patchset adds clkdev based clock lookup support and device tree based
+discovery for Samsung uart controller driver. Passing of clock names in
+platform data is removed.
 
-Thanks for taking a look at this!  A few comments inline.
+In the process of adding these features, other changes have also been made
+that merges all the SoC specfic extensions into the parent driver.
 
-Jamie
+This patch has been tested with a following addtional macro suggested by
+Russell King (<rmk+kernel@arm.linux.org.uk>) but this macro is not
+included in this patch nor is it available in any tree yet. There is a
+seperate work going on to prepare a patch series that consolidates
+the macros used to instantiate a 'struct clk_lookup'. This patchset
+would use that work when it is submitted.
 
-On Mon, Sep 26, 2011 at 01:04:19PM -0500, Rob Herring wrote:
-> Jamie,
-> 
-> On 09/26/2011 10:24 AM, Jamie Iles wrote:
-> > This describes the basic hierarchy of picoxcell pc3x3 devices including
-> > clocks and bus interconnect.  Some onchip devices are currently omitted
-> > as there haven't been bindings created for them.
-> > 
-> > v2:	- change timer compatible strings to be more soc specific
-> > 	- split vic node into 2 devices
-> > 
-> > Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/picoxcell-pc3x2.dtsi |  249 ++++++++++++++++++++++
-> >  arch/arm/boot/dts/picoxcell-pc3x3.dtsi |  365 ++++++++++++++++++++++++++++++++
-> >  2 files changed, 614 insertions(+), 0 deletions(-)
-> >  create mode 100644 arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-> >  create mode 100644 arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-> > 
-> > diff --git a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-> > new file mode 100644
-> > index 0000000..f0a8c20
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-> > @@ -0,0 +1,249 @@
-> > +/*
-> > + *  Copyright (C) 2011 Picochip, Jamie Iles
-> > + *
-> > + * This software is licensed under the terms of the GNU General Public
-> > + * License version 2, as published by the Free Software Foundation, and
-> > + * may be copied, distributed, and modified under those terms.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +/include/ "skeleton.dtsi"
-> > +/ {
-> > +	model = "Picochip picoXcell PC3X2";
-> > +	compatible = "picochip,pc3x2";
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu@0 {
-> > +			compatible = "arm,1176jz-s";
-> > +			clock-frequency = <400000000>;
-> > +			reg = <0>;
-> > +			d-cache-line-size = <32>;
-> > +			d-cache-size = <32768>;
-> > +			i-cache-line-size = <32>;
-> > +			i-cache-size = <32768>;
-> > +		};
-> > +	};
-> > +
-> > +	clocks {
-> 
-> I would hold off on clock bindings. Grant expressed at LPC the desire to
-> re-work the binding.
+diff --git a/include/linux/clkdev.h b/include/linux/clkdev.h
+index 457bcb0..13ffbb8 100644
+--- a/include/linux/clkdev.h
++++ b/include/linux/clkdev.h
+@@ -24,6 +24,13 @@ struct clk_lookup {
+        struct clk              *clk;
+ };
 
-OK, that's fine with me.
++#define CLKDEV_INIT(dev, con, ck)      \
++       {                       \
++               .dev_id = dev,  \
++               .con_id = con,  \
++               .clk = ck,      \
++       }
++
+ struct clk_lookup *clkdev_alloc(struct clk *clk, const char *con_id,
+        const char *dev_fmt, ...);
 
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges;
-> > +
-> > +		pclk: clock@0 {
-> > +			compatible = "fixed-clock";
-> > +			clock-outputs = "bus", "pclk";
-> > +			clock-frequency = <200000000>;
-> > +			ref-clock = <&ref_clk>, "ref";
-> > +		};
-> > +	};
-> > +
-> > +	paxi {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges = <0 0x80000000 0x400000>;
-> > +
-> > +		emac: gem@30000 {
-> 
-> ethernet is the preferred generic name here. See section 2.2.2 of ePAPR.
-> 
-> So it would be "emac: ethernet@30000"
 
-I'll take a closer look at that document, I don't think I've spent much 
-time with it.
+This patchset is based on the following tree
+https://github.com/kgene/linux-samsung.git  branch: for-next
 
-> > +			compatible = "cadence,gem";
-> > +			reg = <0x30000 0x10000>;
-> > +			interrupts = <31>;
-> > +		};
-> > +
-> > +		dmac1: dmac@40000 {
-> > +			compatible = "snps,dw-dmac";
-> > +			reg = <0x40000 0x10000>;
-> > +			interrupts = <25>;
-> > +		};
-> > +
-> > +		dmac2: dmac@50000 {
-> > +			compatible = "snps,dw-dmac";
-> > +			reg = <0x50000 0x10000>;
-> > +			interrupts = <26>;
-> > +		};
-> > +
-> > +		vic0: interrupt-controller@60000 {
-> > +			compatible = "arm,pl192-vic";
-> > +			interrupt-controller;
-> > +			reg = <0x60000 0x1000>;
-> > +			#interrupt-cells = <1>;
-> 
-> No edge/level control/settings for the vic? Needs binding documentation.
+with the following two patches applied
+[PATCH] serial: samsung: Add unified interrupt handler for s3c64xx and later SoC's
+[PATCH] ARM: SAMSUNG: Remove uart irq handling from plaform code
 
-No, there's no configuration for the interrupts.  The binding is 
-documented in the picoxcell bindings, but as there isn't a generic 
-driver yet I thought I'd hold off from doing a separate binding.
+and tested on the following boards.
+SMDK2440, SMDK2416, SMDK6410, SMDK6440, SMDK6450, SMDKC100, SMDKV210, SMDKV310.
 
-> > +		};
-> > +
-> > +		vic1: interrupt-controller@64000 {
-> > +			compatible = "arm,pl192-vic";
-> > +			interrupt-controller;
-> > +			reg = <0x64000 0x1000>;
-> > +			#interrupt-cells = <1>;
-> > +		};
-> > +
-> > +		fuse: picoxcell-fuse@80000 {
-> > +			compatible = "picoxcell,fuse-pc3x2";
-> > +			reg = <0x80000 0x10000>;
-> > +		};
-> > +
-> > +		ssi: picoxcell-spi@90000 {
-> > +			compatible = "picoxcell,spi";
-> > +			reg = <0x90000 0x10000>;
-> > +			interrupt-parent = <&vic0>;
-> > +			interrupts = <10>;
-> > +		};
-> > +
-> > +		ipsec: spacc@100000 {
-> > +			compatible = "picochip,spacc-ipsec";
-> > +			reg = <0x100000 0x10000>;
-> > +			interrupt-parent = <&vic0>;
-> > +			interrupts = <24>;
-> > +			ref-clock = <&pclk>, "ref";
-> > +		};
-> > +
-> > +		srtp: spacc@140000 {
-> > +			compatible = "picochip,spacc-srtp";
-> > +			reg = <0x140000 0x10000>;
-> > +			interrupt-parent = <&vic0>;
-> > +			interrupts = <23>;
-> > +		};
-> > +
-> > +		l2_engine: spacc@180000 {
-> > +			compatible = "picochip,spacc-l2";
-> > +			reg = <0x180000 0x10000>;
-> > +			interrupt-parent = <&vic0>;
-> > +			interrupts = <22>;
-> > +			ref-clock = <&pclk>, "ref";
-> > +		};
-> > +
-> > +		apb {
-> > +			compatible = "simple-bus";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <1>;
-> > +			ranges = <0 0x200000 0x80000>;
-> > +
-> > +			rtc0: rtc@00000 {
-> > +				compatible = "picochip,pc3x2-rtc";
-> > +				clock-freq = <200000000>;
-> > +				reg = <0x00000 0xf>;
-> > +				interrupt-parent = <&vic1>;
-> > +				interrupts = <8>;
-> > +			};
-> > +
-> > +			timer0: timer@10000 {
-> > +				compatible = "picochip,pc3x2-timer";
-> > +				interrupt-parent = <&vic0>;
-> > +				interrupts = <4>;
-> > +				clock-freq = <200000000>;
-> > +				reg = <0x10000 0x14>;
-> > +			};
-> > +
-> > +			timer1: timer@10014 {
-> > +				compatible = "picochip,pc3x2-timer";
-> > +				interrupt-parent = <&vic0>;
-> > +				interrupts = <5>;
-> > +				clock-freq = <200000000>;
-> > +				reg = <0x10014 0x14>;
-> > +			};
-> > +
-> > +			timer2: timer@10028 {
-> > +				compatible = "picochip,pc3x2-timer";
-> > +				interrupt-parent = <&vic0>;
-> > +				interrupts = <6>;
-> > +				clock-freq = <200000000>;
-> > +				reg = <0x10028 0x14>;
-> > +			};
-> > +
-> > +			timer3: timer@1003c {
-> > +				compatible = "picochip,pc3x2-timer";
-> > +				interrupt-parent = <&vic0>;
-> > +				interrupts = <7>;
-> > +				clock-freq = <200000000>;
-> > +				reg = <0x1003c 0x14>;
-> > +			};
-> > +
-> > +			gpio: gpio@20000 {
-> > +				compatible = "snps,dw-apb-gpio";
-> > +				reg = <0x20000 0x1000>;
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				reg-io-width = <4>;
-> > +
-> > +				banka: gpio-controller@0 {
-> > +					compatible = "snps,dw-apb-gpio-bank";
-> > +					gpio-controller;
-> > +					#gpio-cells = <2>;
-> > +					gpio-generic,nr-gpio = <8>;
-> 
-> This seems like Linux creeping into device tree.
 
-Yes, I was trying to come up with a fairly generic binding for the 
-generic-gpio driver.  I can remove this for now if you think appropriate 
-though.
+Thomas Abraham (9):
+  serial: samsung: Keep a copy of the location of platform data in driver's private data
+  serial: samsung: move handling of fclk/n clock to platform code
+  serial: samsung: switch to clkdev based clock lookup
+  serial: samsung: remove struct 's3c24xx_uart_clksrc' and all uses of it
+  serial: samsung: remove all uses of get_clksrc and set_clksrc
+  arm: samsung: register uart clocks to clock lookup list
+  serial: samsung: merge all SoC specific port reset functions
+  serial: samsung: merge probe() function from all SoC specific extensions
+  serial: samsung: add device tree support
 
-> > +
-> > +					regoffset-dat = <0x50>;
-> > +					regoffset-set = <0x00>;
-> > +					regoffset-dirout = <0x04>;
-> > +				};
-> > +
-> > +				bankb: gpio-controller@1 {
-> > +					compatible = "snps,dw-apb-gpio-bank";
-> > +					gpio-controller;
-> > +					#gpio-cells = <2>;
-> > +					gpio-generic,nr-gpio = <8>;
-> > +
-> > +					regoffset-dat = <0x54>;
-> > +					regoffset-set = <0x0c>;
-> > +					regoffset-dirout = <0x10>;
-> > +				};
-> > +			};
-> > +
-> > +			uart0: uart@30000 {
-> 
-> Preferred name is serial@30000
-
-OK.
-
-> > +				compatible = "snps,dw-apb-uart";
-> > +				reg = <0x30000 0x1000>;
-> > +				interrupt-parent = <&vic1>;
-> > +				interrupts = <10>;
-> > +				clock-frequency = <3686400>;
-> > +				reg-shift = <2>;
-> > +				reg-io-width = <4>;
-> > +			};
-> > +
-> > +			uart1: uart@40000 {
-> > +				compatible = "snps,dw-apb-uart";
-> > +				reg = <0x40000 0x1000>;
-> > +				interrupt-parent = <&vic1>;
-> > +				interrupts = <9>;
-> > +				clock-frequency = <3686400>;
-> > +				reg-shift = <2>;
-> > +				reg-io-width = <4>;
-> > +			};
-> > +
-> > +			wdog: watchdog@50000 {
-> > +				compatible = "snps,dw-apb-wdg";
-> > +				reg = <0x50000 0x10000>;
-> > +				interrupt-parent = <&vic0>;
-> > +				interrupts = <11>;
-> > +				bus-clock = <&pclk>, "bus";
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +	rwid-axi {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		compatible = "simple-bus";
-> > +		ranges;
-> > +
-> > +		ebi@50000000 {
-> > +			compatible = "simple-bus";
-> > +			#address-cells = <2>;
-> > +			#size-cells = <1>;
-> > +			ranges = <0 0 0x40000000 0x08000000
-> > +				  1 0 0x48000000 0x08000000
-> > +				  2 0 0x50000000 0x08000000
-> > +				  3 0 0x58000000 0x08000000>;
-> > +		};
-> > +
-> > +		axi2pico@c0000000 {
-> > +			compatible = "picochip,axi2pico-pc3x2";
-> > +			reg = <0xc0000000 0x10000>;
-> > +			interrupts = <13 14 15 16 17 18 19 20 21>;
-> > +		};
-> > +	};
-> > +};
-> > diff --git a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-> 
-> Mostly same comments apply here. All these bindings need documentation.
-
-I followed prima2 as an example here where the device tree lists all of 
-the devices but only the register and interrupt resources even if there 
-aren't full drivers/bindings for them yet.  I could remove the unused 
-peripherals for now if you think appropriate though.
+ arch/arm/mach-exynos4/clock.c                    |  106 +++--
+ arch/arm/mach-exynos4/init.c                     |   21 +-
+ arch/arm/mach-s3c2410/mach-bast.c                |   22 -
+ arch/arm/mach-s3c2410/mach-vr1000.c              |   24 -
+ arch/arm/mach-s3c2410/s3c2410.c                  |    6 +
+ arch/arm/mach-s3c2412/clock.c                    |    7 +
+ arch/arm/mach-s3c2440/clock.c                    |   44 ++
+ arch/arm/mach-s3c2440/mach-anubis.c              |   22 +-
+ arch/arm/mach-s3c2440/mach-at2440evb.c           |   22 +-
+ arch/arm/mach-s3c2440/mach-osiris.c              |   24 +-
+ arch/arm/mach-s3c2440/mach-rx1950.c              |   18 +-
+ arch/arm/mach-s3c2440/mach-rx3715.c              |   19 +-
+ arch/arm/mach-s3c64xx/clock.c                    |   37 +-
+ arch/arm/mach-s5p64x0/clock-s5p6440.c            |   32 +-
+ arch/arm/mach-s5p64x0/clock-s5p6450.c            |   32 +-
+ arch/arm/mach-s5p64x0/init.c                     |   31 -
+ arch/arm/mach-s5pc100/clock.c                    |   33 +-
+ arch/arm/mach-s5pv210/clock.c                    |  107 +++--
+ arch/arm/mach-s5pv210/init.c                     |   19 -
+ arch/arm/plat-s3c24xx/s3c2443-clock.c            |   22 +-
+ arch/arm/plat-samsung/include/plat/regs-serial.h |   45 +-
+ drivers/tty/serial/Kconfig                       |   45 +--
+ drivers/tty/serial/Makefile                      |    5 -
+ drivers/tty/serial/s3c2410.c                     |  115 ----
+ drivers/tty/serial/s3c2412.c                     |  149 -----
+ drivers/tty/serial/s3c2440.c                     |  178 ------
+ drivers/tty/serial/s3c6400.c                     |  149 -----
+ drivers/tty/serial/s5pv210.c                     |  158 ------
+ drivers/tty/serial/samsung.c                     |  639 +++++++++++++---------
+ drivers/tty/serial/samsung.h                     |   32 +-
+ 30 files changed, 737 insertions(+), 1426 deletions(-)
+ delete mode 100644 drivers/tty/serial/s3c2410.c
+ delete mode 100644 drivers/tty/serial/s3c2412.c
+ delete mode 100644 drivers/tty/serial/s3c2440.c
+ delete mode 100644 drivers/tty/serial/s3c6400.c
+ delete mode 100644 drivers/tty/serial/s5pv210.c
