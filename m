@@ -1,54 +1,61 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCHv2 0/3] Initial support for Picochip picoxcell
-Date: Mon, 26 Sep 2011 10:20:08 +0100
-Message-ID: <20110926092008.GC3372@pulham.picochip.com>
-References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 10/11] arm/dts: OMAP4: Add a main ocp entry bound to l3-noc
+ driver
+Date: Mon, 26 Sep 2011 14:13:04 +0200
+Message-ID: <4E806C50.80300@ti.com>
+References: <1316809399-19579-1-git-send-email-b-cousson@ti.com> <1316809399-19579-11-git-send-email-b-cousson@ti.com> <20110923225825.GB6324@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1314196906-20709-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110923225825.GB6324@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "paul@pwsan.com" <paul@pwsan.com>, "Hilman, Kevin" <khilman@ti.com>, "Nayak, Rajendra" <rnayak@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2011 at 03:41:43PM +0100, Jamie Iles wrote:
-> This series adds support for Picochip picoXcell (PC3X2 and PC3X3)
-> ARM1176JZ-S based devices.  This is a device tree only platform and
-> currently supports interrupt controllers and UARTs.
-> 
-> This series is based off of Grant's devicetree/test branch and also uses
-> Russell's io and gpio cleanup patches to remove the definition of
-> IO_SPACE_LIMIT and trivial gpio definitions.
-> 
-> Changes since v1:
-> 
-> 	- Cleanup empty headers
-> 	- Use of_platform_populate() and the default match table
-> 	- Split the VIC's into separate device nodes
-> 
-> Jamie Iles (3):
->   picoxcell: support for Picochip picoxcell devices
->   picoxcell: add the DTS for pc3x2 and pc3x3 devices
->   picoxcell: add the DTS for the PC7302 board
+On 9/24/2011 12:58 AM, Tony Lindgren wrote:
+> * Benoit Cousson<b-cousson@ti.com>  [110923 12:50]:
+>> Used the main OCP node to add bindings with the l3_noc driver.
+>> Remove l3_noc static device creation if DT is populated.
+>> --- a/arch/arm/mach-omap2/devices.c
+>> +++ b/arch/arm/mach-omap2/devices.c
+>> @@ -16,6 +16,7 @@
+>>   #include<linux/clk.h>
+>>   #include<linux/err.h>
+>>   #include<linux/slab.h>
+>> +#include<linux/of.h>
+>>
+>>   #include<mach/hardware.h>
+>>   #include<mach/irqs.h>
+>> @@ -77,6 +78,10 @@ static int __init omap4_l3_init(void)
+>>   	struct platform_device *pdev;
+>>   	char oh_name[L3_MODULES_MAX_LEN];
+>>
+>> +	/* If dtb is there, the devices will be created dynamically */
+>> +	if (of_have_populated_dt())
+>> +		return -ENODEV;
+>> +
+>>   	/*
+>>   	 * To avoid code running on other OMAPs in
+>>   	 * multi-omap builds
+>
+> How about just remove omap3_l3_init and omap4_l3_init completely
+> instead?
+>
+> There should not be any need for the platform glue code if the
+> driver, it's OK for us to require that either DT is passed from
+> the bootloader or as appended DT as soon as the appended DT patches
+> are merged.
 
-Hi Arnd,
+Yeah, but we should still allow the others board files to work in case 
+DT is not passed by the bootloader. Otherwise the DT support need to be 
+added to every other boards, and in that case that generic board become 
+useless. The effort / duplication will be much important if we start 
+hacking every boards with some DT code in them.
 
-Is there likely to be any chance of getting support for picoxcell 
-merged?  This series can now be based on top of Nicolas' static IO 
-mapping patches to remove some more code but I'm not sure what else I 
-can do to make them easier to review!
+Whereas that code is simple and will be removed easily when the DT 
+migration will be completed.
 
-Thanks,
-
-Jamie
+Regards,
+Benoit
