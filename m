@@ -1,69 +1,45 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 03/11] arm/dts: Add support for OMAP4 PandaBoard
-Date: Mon, 26 Sep 2011 14:38:10 +0200
-Message-ID: <4E807232.3060702@ti.com>
-References: <1316809399-19579-1-git-send-email-b-cousson@ti.com> <1316809399-19579-4-git-send-email-b-cousson@ti.com> <20110923232142.GG24631@ponder.secretlab.ca>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv2 0/3] Initial support for Picochip picoxcell
+Date: Mon, 26 Sep 2011 16:42:06 +0200
+Message-ID: <201109261642.06592.arnd@arndb.de>
+References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
+	<20110926092008.GC3372@pulham.picochip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110923232142.GG24631@ponder.secretlab.ca>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "tony@atomide.com" <tony@atomide.com>, "paul@pwsan.com" <paul@pwsan.com>, "Hilman, Kevin" <khilman@ti.com>, "Nayak, Rajendra" <rnayak@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "G, Manjunath Kondaiah" <manjugk@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110926092008.GC3372-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/24/2011 1:21 AM, Grant Likely wrote:
-> On Fri, Sep 23, 2011 at 10:23:11PM +0200, Benoit Cousson wrote:
->> Based on the original omap4-panda.dts file from Manju.
->> http://www.spinics.net/lists/linux-omap/msg55836.html
->>
->> Add memory information and a default bootargs to allow
->> a boot from RAMDISK.
->>
->> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
->> Cc: Grant Likely<grant.likely@secretlab.ca>
->> Cc: G, Manjunath Kondaiah<manjugk@ti.com>
->> ---
->>   arch/arm/boot/dts/omap4-panda.dts |   29 +++++++++++++++++++++++++++++
->>   1 files changed, 29 insertions(+), 0 deletions(-)
->>   create mode 100644 arch/arm/boot/dts/omap4-panda.dts
->>
->> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
->> new file mode 100644
->> index 0000000..c702657
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/omap4-panda.dts
->> @@ -0,0 +1,29 @@
->> +/*
->> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +/dts-v1/;
->> +
->> +/include/ "omap4.dtsi"
->> +
->> +/ {
->> +	model = "TI OMAP4 PandaBoard";
->> +	compatible = "ti,omap4-panda", "ti,omap4430", "ti,omap4";
->> +
->> +	/*
->> +	 * Since the initial device tree board file does not create any
->> +	 * devices (MMC, network...), the only way to boot is to provide a
->> +	 * ramdisk.
->> +	 */
->> +	chosen {
->> +		bootargs = "root=/dev/ram0 rw console=ttyO2,115200n8 initrd=0x81600000,20M ramdisk_size=20480 no_console_suspend debug";
->
-> Generally, we don't want bootargs in the .dts files; we want them
-> added to the .dtb by the boot firmware.  However, we are bootstrapping
-> here, so I'm okay with it in the short term until firmware matures a
-> bit more.
+On Monday 26 September 2011, Jamie Iles wrote:
+> Hi Arnd,
+> 
+> Is there likely to be any chance of getting support for picoxcell 
+> merged?  This series can now be based on top of Nicolas' static IO 
+> mapping patches to remove some more code but I'm not sure what else I 
+> can do to make them easier to review!
+> 
 
-Yeah, I had to to that because an old uboot with appended dtb seems to 
-ignore the original bootargs.
+Hi Jamie,
 
-Benoit
+I think you did everything right, but I haven't gotten to do a proper
+review, which is entirely my fault.
+
+Please send out the current version to the mailing list again and put me
+on Cc, so it shows up in my inbox. In my extremely brief review
+I found no show stoppers, so I'm sure we can find a way to get it into 3.2.
+
+Do you have a git tree that I can pull?
+
+	Arnd
