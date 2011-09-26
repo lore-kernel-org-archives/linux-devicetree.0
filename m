@@ -1,49 +1,80 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 10/11] arm/dts: OMAP4: Add a main ocp entry bound to
- l3-noc driver
-Date: Mon, 26 Sep 2011 14:44:30 -0700
-Message-ID: <20110926214430.GH6324@atomide.com>
-References: <1316809399-19579-1-git-send-email-b-cousson@ti.com>
- <1316809399-19579-11-git-send-email-b-cousson@ti.com>
- <20110923225825.GB6324@atomide.com>
- <4E806C50.80300@ti.com>
+From: Jamie Iles <jamie@jamieiles.com>
+Subject: Re: [PATCH 3/3] ARM: gic: add OF based initialization
+Date: Mon, 26 Sep 2011 23:00:13 +0100
+Message-ID: <20110926220013.GF9194@gallagher>
+References: <1316550244-3655-1-git-send-email-robherring2@gmail.com>
+ <1316550244-3655-4-git-send-email-robherring2@gmail.com>
+ <20110926195704.GD9194@gallagher>
+ <4E80E547.2080004@gmail.com>
+ <20110926211127.GE9194@gallagher>
+ <4E80EF61.2000509@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4E806C50.80300@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "paul@pwsan.com" <paul@pwsan.com>, "Hilman, Kevin" <khilman@ti.com>, "Nayak, Rajendra" <rnayak@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
+In-Reply-To: <4E80EF61.2000509@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, marc.zyngier@arm.com, thomas.abraham@linaro.org, b-cousson@ti.com, shawn.guo@linaro.org, dave.martin@linaro.org, linux@arm.linux.org.uk, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-* Cousson, Benoit <b-cousson@ti.com> [110926 04:39]:
-> On 9/24/2011 12:58 AM, Tony Lindgren wrote:
-> >* Benoit Cousson<b-cousson@ti.com>  [110923 12:50]:
-> >
-> >How about just remove omap3_l3_init and omap4_l3_init completely
-> >instead?
-> >
-> >There should not be any need for the platform glue code if the
-> >driver, it's OK for us to require that either DT is passed from
-> >the bootloader or as appended DT as soon as the appended DT patches
-> >are merged.
-> 
-> Yeah, but we should still allow the others board files to work in
-> case DT is not passed by the bootloader. Otherwise the DT support
-> need to be added to every other boards, and in that case that
-> generic board become useless. The effort / duplication will be much
-> important if we start hacking every boards with some DT code in
-> them.
+On Mon, Sep 26, 2011 at 04:32:17PM -0500, Rob Herring wrote:
+> On 09/26/2011 04:11 PM, Jamie Iles wrote:
+> > On Mon, Sep 26, 2011 at 03:49:11PM -0500, Rob Herring wrote:
+> >> On 09/26/2011 02:57 PM, Jamie Iles wrote:
+> >>> Hi Rob,
+> >>>
+> >>> On Tue, Sep 20, 2011 at 03:24:04PM -0500, Rob Herring wrote:
+> >>> [...]
+> >>>> +int __init gic_of_init(struct device_node *node, struct device_node *parent)
+> >>>> +{
+> >>>> +	void __iomem *cpu_base;
+> >>>> +	void __iomem *dist_base;
+> >>>> +	int irq;
+> >>>> +	struct irq_domain *domain = &gic_data[gic_cnt].domain;
+> >>>> +
+> >>>> +	if (WARN_ON(!node))
+> >>>> +		return -ENODEV;
+> >>>> +
+> >>>> +	dist_base = of_iomap(node, 0);
+> >>>> +	WARN(!dist_base, "unable to map gic dist registers\n");
+> >>>> +
+> >>>> +	cpu_base = of_iomap(node, 1);
+> >>>> +	WARN(!cpu_base, "unable to map gic cpu registers\n");
+> >>>> +
+> >>>> +	domain->nr_irq = gic_irq_count(dist_base);
+> >>>> +	/* subtract off SGIs. Also subtract off PPIs for secondary GICs */
+> >>>> +	if (parent)
+> >>>> +		domain->nr_irq -= 32;
+> >>>> +	else
+> >>>> +		domain->nr_irq -= 16;
+> >>>> +
+> >>>> +	domain->irq_base = irq_alloc_descs(-1, 16, domain->nr_irq, numa_node_id());
+> >>>
+> >>> The way I understand irq_alloc_descs() (probably not very well) is that 
+> >>> having the irq parameter < 0 and the from parameter 16 means that it 
+> >>> needs to find domain->nr_irq descs starting from at least 16.  But if 
+> >>> the base is greater than 16, does this still work with the gic entry 
+> >>> macros as they are?
+> >>
+> >> No, but that would only happen if a platform calls irq_alloc_descs prior
+> >> to this code. The root controller must be initialized first (for other
+> >> reasons as well). There are no calls to irq_alloc_descs in arch/arm.
+> >>
+> >> With the MULTI_IRQ GIC support Marc Z is working on, we could make the
+> >> GIC irq mapping be completely dynamic. Although, there's probably not
+> >> much reason to do so for the root controller.
+> > 
+> > OK, that makes sense.  I think that if you were to do 
+> > irq_alloc_descs(16, 16, domain->nr_irqs, num_node_id()) then that will 
+> > guarantee the descriptors start from 16 (if they are available) which is 
+> > probably nicer.
+> > 
+> That would break secondary GICs though as it would always fail. For
+> secondary GIC, we skip SGIs and PPIs and allocate the first available
+> block of irq_desc's.
 
-OK..
- 
-> Whereas that code is simple and will be removed easily when the DT
-> migration will be completed.
+Ahh, OK that makes sense.  Thanks for the explanation Rob!  That'll 
+hopefully help me with a common VIC binding.
 
-..let's keep it around until we have board-generic booting
-and mounting root.
-
-Regards,
-
-Tony
+Jamie
