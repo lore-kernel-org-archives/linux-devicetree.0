@@ -1,7 +1,7 @@
 From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCHv3 1/4] picoxcell: support for Picochip picoxcell devices
-Date: Mon, 26 Sep 2011 16:24:46 +0100
-Message-ID: <1317050689-16417-2-git-send-email-jamie@jamieiles.com>
+Subject: [PATCHv3 2/4] picoxcell: add the DTS for pc3x2 and pc3x3 devices
+Date: Mon, 26 Sep 2011 16:24:47 +0100
+Message-ID: <1317050689-16417-3-git-send-email-jamie@jamieiles.com>
 References: <1317050689-16417-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,790 +21,646 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-picoXcell is a family of femtocell devices with an ARM application
-processor and picoArray DSP processor array.
+This describes the basic hierarchy of picoxcell pc3x3 devices including
+clocks and bus interconnect.  Some onchip devices are currently omitted
+as there haven't been bindings created for them.
 
-This patch adds support for picoXcell boards to be booted using the
-device tree registering the VIC's, UART's and timers.
-
-v3:	- fixup vic compatible string in binding
-v2:	- cleanup empty mach headers
-	- convert to of_platform_populate()
-	- simplify uncompress.h
+v2:	- change timer compatible strings to be more soc specific
 	- split vic node into 2 devices
-	- add missing __initconst attributes
 
 Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 ---
- .../devicetree/bindings/arm/picoxcell.txt          |   24 ++++
- arch/arm/Kconfig                                   |   18 +++
- arch/arm/Makefile                                  |    1 +
- arch/arm/mach-picoxcell/Makefile                   |    3 +
- arch/arm/mach-picoxcell/Makefile.boot              |    1 +
- arch/arm/mach-picoxcell/common.c                   |   55 ++++++++
- arch/arm/mach-picoxcell/common.h                   |   18 +++
- arch/arm/mach-picoxcell/include/mach/debug-macro.S |   35 +++++
- arch/arm/mach-picoxcell/include/mach/entry-macro.S |   19 +++
- arch/arm/mach-picoxcell/include/mach/gpio.h        |    1 +
- arch/arm/mach-picoxcell/include/mach/hardware.h    |   21 +++
- arch/arm/mach-picoxcell/include/mach/io.h          |   29 +++++
- arch/arm/mach-picoxcell/include/mach/irqs.h        |   25 ++++
- arch/arm/mach-picoxcell/include/mach/map.h         |   25 ++++
- arch/arm/mach-picoxcell/include/mach/memory.h      |    1 +
- .../mach-picoxcell/include/mach/picoxcell_soc.h    |   25 ++++
- arch/arm/mach-picoxcell/include/mach/system.h      |   31 +++++
- arch/arm/mach-picoxcell/include/mach/timex.h       |   25 ++++
- arch/arm/mach-picoxcell/include/mach/uncompress.h  |   21 +++
- arch/arm/mach-picoxcell/include/mach/vmalloc.h     |   18 +++
- arch/arm/mach-picoxcell/io.c                       |   56 ++++++++
- arch/arm/mach-picoxcell/time.c                     |  132 ++++++++++++++++++++
- 22 files changed, 584 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/picoxcell.txt
- create mode 100644 arch/arm/mach-picoxcell/Makefile
- create mode 100644 arch/arm/mach-picoxcell/Makefile.boot
- create mode 100644 arch/arm/mach-picoxcell/common.c
- create mode 100644 arch/arm/mach-picoxcell/common.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/debug-macro.S
- create mode 100644 arch/arm/mach-picoxcell/include/mach/entry-macro.S
- create mode 100644 arch/arm/mach-picoxcell/include/mach/gpio.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/hardware.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/io.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/irqs.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/map.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/memory.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/picoxcell_soc.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/system.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/timex.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/uncompress.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/vmalloc.h
- create mode 100644 arch/arm/mach-picoxcell/io.c
- create mode 100644 arch/arm/mach-picoxcell/time.c
+ arch/arm/boot/dts/picoxcell-pc3x2.dtsi |  249 ++++++++++++++++++++++
+ arch/arm/boot/dts/picoxcell-pc3x3.dtsi |  365 ++++++++++++++++++++++++++++++++
+ 2 files changed, 614 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc3x2.dtsi
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc3x3.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/picoxcell.txt b/Documentation/devicetree/bindings/arm/picoxcell.txt
+diff --git a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
 new file mode 100644
-index 0000000..e75c0ef
+index 0000000..f0a8c20
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/picoxcell.txt
-@@ -0,0 +1,24 @@
-+Picochip picoXcell device tree bindings.
-+========================================
-+
-+Required root node properties:
-+    - compatible:
-+	- "picochip,pc7302-pc3x3" : PC7302 development board with PC3X3 device.
-+	- "picochip,pc7302-pc3x2" : PC7302 development board with PC3X2 device.
-+	- "picochip,pc3x3" : picoXcell PC3X3 device based board.
-+	- "picochip,pc3x2" : picoXcell PC3X2 device based board.
-+
-+Timers required properties:
-+    - compatible = "picochip,pc3x2-timer"
-+    - interrupts : The single IRQ line for the timer.
-+    - clock-freq : The frequency in HZ of the timer.
-+    - reg : The register bank for the timer.
-+
-+Note: two timers are required - one for the scheduler clock and one for the
-+event tick/NOHZ.
-+
-+VIC required properties:
-+    - compatible = "arm,pl192-vic".
-+    - interrupt-controller.
-+    - reg : The register bank for the device.
-+    - #interrupt-cells : Must be 1.
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 5ebc5d9..15fab78 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -608,6 +608,24 @@ config ARCH_TEGRA
- 	  This enables support for NVIDIA Tegra based systems (Tegra APX,
- 	  Tegra 6xx and Tegra 2 series).
- 
-+config ARCH_PICOXCELL
-+	bool "Picochip picoXcell"
-+	select ARCH_REQUIRE_GPIOLIB
-+	select ARM_PATCH_PHYS_VIRT
-+	select ARM_VIC
-+	select CPU_V6K
-+	select DW_APB_TIMER
-+	select GENERIC_CLOCKEVENTS
-+	select GENERIC_GPIO
-+	select HAVE_SCHED_CLOCK
-+	select HAVE_TCM
-+	select NO_IOPORT
-+	select USE_OF
-+	help
-+	  This enables support for systems based on the Picochip picoXcell
-+	  family of Femtocell devices.  The picoxcell support requires device tree
-+	  for all boards.
-+
- config ARCH_PNX4008
- 	bool "Philips Nexperia PNX4008 Mobile"
- 	select CPU_ARM926T
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 70c424e..c941399 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -167,6 +167,7 @@ machine-$(CONFIG_ARCH_OMAP2)		:= omap2
- machine-$(CONFIG_ARCH_OMAP3)		:= omap2
- machine-$(CONFIG_ARCH_OMAP4)		:= omap2
- machine-$(CONFIG_ARCH_ORION5X)		:= orion5x
-+machine-$(CONFIG_ARCH_PICOXCELL)	:= picoxcell
- machine-$(CONFIG_ARCH_PNX4008)		:= pnx4008
- machine-$(CONFIG_ARCH_PRIMA2)		:= prima2
- machine-$(CONFIG_ARCH_PXA)		:= pxa
-diff --git a/arch/arm/mach-picoxcell/Makefile b/arch/arm/mach-picoxcell/Makefile
-new file mode 100644
-index 0000000..c550b63
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/Makefile
-@@ -0,0 +1,3 @@
-+obj-y	:= common.o
-+obj-y	+= time.o
-+obj-y	+= io.o
-diff --git a/arch/arm/mach-picoxcell/Makefile.boot b/arch/arm/mach-picoxcell/Makefile.boot
-new file mode 100644
-index 0000000..b327175
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/Makefile.boot
-@@ -0,0 +1 @@
-+zreladdr-y := 0x00008000
-diff --git a/arch/arm/mach-picoxcell/common.c b/arch/arm/mach-picoxcell/common.c
-new file mode 100644
-index 0000000..34d0834
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/common.c
-@@ -0,0 +1,55 @@
++++ b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
+@@ -0,0 +1,249 @@
 +/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
++ *  Copyright (C) 2011 Picochip, Jamie Iles
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * All enquiries to support-QECmZ7LgVXZWk0Htik3J/w@public.gmane.org
-+ */
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+
-+#include <asm/mach/arch.h>
-+#include <asm/hardware/vic.h>
-+
-+#include <mach/map.h>
-+#include <mach/picoxcell_soc.h>
-+
-+#include "common.h"
-+
-+static void __init picoxcell_init_machine(void)
-+{
-+	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-+}
-+
-+static const char *picoxcell_dt_match[] = {
-+	"picochip,pc3x2",
-+	"picochip,pc3x3",
-+	NULL
-+};
-+
-+static const struct of_device_id vic_of_match[] __initconst = {
-+	{ .compatible = "arm,pl192-vic" },
-+	{ /* Sentinel */ }
-+};
-+
-+static void __init picoxcell_init_irq(void)
-+{
-+	vic_init(IO_ADDRESS(PICOXCELL_VIC0_BASE), 0, ~0, 0);
-+	vic_init(IO_ADDRESS(PICOXCELL_VIC1_BASE), 32, ~0, 0);
-+	irq_domain_generate_simple(vic_of_match, PICOXCELL_VIC0_BASE, 0);
-+	irq_domain_generate_simple(vic_of_match, PICOXCELL_VIC1_BASE, 32);
-+}
-+
-+DT_MACHINE_START(PICOXCELL, "Picochip picoXcell")
-+	.map_io		= picoxcell_map_io,
-+	.nr_irqs	= ARCH_NR_IRQS,
-+	.init_irq	= picoxcell_init_irq,
-+	.timer		= &picoxcell_timer,
-+	.init_machine	= picoxcell_init_machine,
-+	.dt_compat	= picoxcell_dt_match,
-+MACHINE_END
-diff --git a/arch/arm/mach-picoxcell/common.h b/arch/arm/mach-picoxcell/common.h
-new file mode 100644
-index 0000000..5263f0f
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/common.h
-@@ -0,0 +1,18 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * All enquiries to support-QECmZ7LgVXZWk0Htik3J/w@public.gmane.org
-+ */
-+#ifndef __PICOXCELL_COMMON_H__
-+#define __PICOXCELL_COMMON_H__
-+
-+#include <asm/mach/time.h>
-+
-+extern struct sys_timer picoxcell_timer;
-+extern void picoxcell_map_io(void);
-+
-+#endif /* __PICOXCELL_COMMON_H__ */
-diff --git a/arch/arm/mach-picoxcell/include/mach/debug-macro.S b/arch/arm/mach-picoxcell/include/mach/debug-macro.S
-new file mode 100644
-index 0000000..8f2c234
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/debug-macro.S
-@@ -0,0 +1,35 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * Derived from arch/arm/mach-davinci/include/mach/debug-macro.S to use 32-bit
-+ * accesses to the 8250.
-+ */
-+#include <linux/serial_reg.h>
-+#include <mach/hardware.h>
-+#include <mach/map.h>
-+
-+#define UART_SHIFT 2
-+
-+		.macro	addruart, rp, rv
-+		ldr	\rv, =PHYS_TO_IO(PICOXCELL_UART1_BASE)
-+		ldr	\rp, =PICOXCELL_UART1_BASE
-+		.endm
-+
-+		.macro	senduart,rd,rx
-+		str	\rd, [\rx, #UART_TX << UART_SHIFT]
-+		.endm
-+
-+		.macro	busyuart,rd,rx
-+1002:		ldr	\rd, [\rx, #UART_LSR << UART_SHIFT]
-+		and	\rd, \rd, #UART_LSR_TEMT | UART_LSR_THRE
-+		teq	\rd, #UART_LSR_TEMT | UART_LSR_THRE
-+		bne	1002b
-+		.endm
-+
-+		/* The UART's don't have any flow control IO's wired up. */
-+		.macro	waituart,rd,rx
-+		.endm
-diff --git a/arch/arm/mach-picoxcell/include/mach/entry-macro.S b/arch/arm/mach-picoxcell/include/mach/entry-macro.S
-new file mode 100644
-index 0000000..a6b09f7
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/entry-macro.S
-@@ -0,0 +1,19 @@
-+/*
-+ * entry-macro.S
-+ *
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * Low-level IRQ helper macros for picoXcell platforms
-+ *
-+ * This file is licensed under  the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+#include <mach/hardware.h>
-+#include <mach/irqs.h>
-+#include <mach/map.h>
-+
-+#define VA_VIC0		IO_ADDRESS(PICOXCELL_VIC0_BASE)
-+#define VA_VIC1		IO_ADDRESS(PICOXCELL_VIC1_BASE)
-+
-+#include <asm/entry-macro-vic2.S>
-diff --git a/arch/arm/mach-picoxcell/include/mach/gpio.h b/arch/arm/mach-picoxcell/include/mach/gpio.h
-new file mode 100644
-index 0000000..40a8c17
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/gpio.h
-@@ -0,0 +1 @@
-+/* empty */
-diff --git a/arch/arm/mach-picoxcell/include/mach/hardware.h b/arch/arm/mach-picoxcell/include/mach/hardware.h
-new file mode 100644
-index 0000000..70ff581
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/hardware.h
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This file contains the hardware definitions of the picoXcell SoC devices.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
 + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
 + */
-+#ifndef __ASM_ARCH_HARDWARE_H
-+#define __ASM_ARCH_HARDWARE_H
++/include/ "skeleton.dtsi"
++/ {
++	model = "Picochip picoXcell PC3X2";
++	compatible = "picochip,pc3x2";
++	#address-cells = <1>;
++	#size-cells = <1>;
 +
-+#include <mach/picoxcell_soc.h>
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+#endif
-diff --git a/arch/arm/mach-picoxcell/include/mach/io.h b/arch/arm/mach-picoxcell/include/mach/io.h
-new file mode 100644
-index 0000000..a863b0f
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/io.h
-@@ -0,0 +1,29 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __ASM_ARM_ARCH_IO_H
-+#define __ASM_ARM_ARCH_IO_H
-+
-+/* No ioports, but needed for driver compatibility. */
-+#define __io(a)			__typesafe_io(a)
-+/* No PCI possible on picoxcell. */
-+#define __mem_pci(a)		(a)
-+
-+#define __arch_ioremap	picoxcell_ioremap
-+#define __arch_iounmap	picoxcell_iounmap
-+
-+extern void __iomem *picoxcell_ioremap(unsigned long phys, size_t size,
-+				       unsigned int type);
-+extern void picoxcell_iounmap(volatile void __iomem *addr);
-+
-+#endif /* __ASM_ARM_ARCH_IO_H */
-diff --git a/arch/arm/mach-picoxcell/include/mach/irqs.h b/arch/arm/mach-picoxcell/include/mach/irqs.h
-new file mode 100644
-index 0000000..4d13ed9
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/irqs.h
-@@ -0,0 +1,25 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This file contains the hardware definitions of the picoXcell SoC devices.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __MACH_IRQS_H
-+#define __MACH_IRQS_H
-+
-+#define ARCH_NR_IRQS			64
-+#define NR_IRQS				(128 + ARCH_NR_IRQS)
-+
-+#define IRQ_VIC0_BASE			0
-+#define IRQ_VIC1_BASE			32
-+
-+#endif /* __MACH_IRQS_H */
-diff --git a/arch/arm/mach-picoxcell/include/mach/map.h b/arch/arm/mach-picoxcell/include/mach/map.h
-new file mode 100644
-index 0000000..c06afad
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/map.h
-@@ -0,0 +1,25 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __PICOXCELL_MAP_H__
-+#define __PICOXCELL_MAP_H__
-+
-+#define PHYS_TO_IO(x)		(((x) & 0x00ffffff) | 0xfe000000)
-+
-+#ifdef __ASSEMBLY__
-+#define IO_ADDRESS(x)		PHYS_TO_IO((x))
-+#else
-+#define IO_ADDRESS(x)		(void __iomem __force *)(PHYS_TO_IO((x)))
-+#endif
-+
-+#endif /* __PICOXCELL_MAP_H__ */
-diff --git a/arch/arm/mach-picoxcell/include/mach/memory.h b/arch/arm/mach-picoxcell/include/mach/memory.h
-new file mode 100644
-index 0000000..40a8c17
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/memory.h
-@@ -0,0 +1 @@
-+/* empty */
-diff --git a/arch/arm/mach-picoxcell/include/mach/picoxcell_soc.h b/arch/arm/mach-picoxcell/include/mach/picoxcell_soc.h
-new file mode 100644
-index 0000000..5566fc8
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/picoxcell_soc.h
-@@ -0,0 +1,25 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This file contains the hardware definitions of the picoXcell SoC devices.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __PICOXCELL_SOC_H__
-+#define __PICOXCELL_SOC_H__
-+
-+#define PICOXCELL_UART1_BASE		0x80230000
-+#define PICOXCELL_PERIPH_BASE		0x80000000
-+#define PICOXCELL_PERIPH_LENGTH		SZ_4M
-+#define PICOXCELL_VIC0_BASE		0x80060000
-+#define PICOXCELL_VIC1_BASE		0x80064000
-+
-+#endif /* __PICOXCELL_SOC_H__ */
-diff --git a/arch/arm/mach-picoxcell/include/mach/system.h b/arch/arm/mach-picoxcell/include/mach/system.h
-new file mode 100644
-index 0000000..67c589b
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/system.h
-@@ -0,0 +1,31 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __ASM_ARCH_SYSTEM_H
-+#define __ASM_ARCH_SYSTEM_H
-+
-+static inline void arch_idle(void)
-+{
-+	/*
-+	 * This should do all the clock switching and wait for interrupt
-+	 * tricks.
-+	 */
-+	cpu_do_idle();
-+}
-+
-+static inline void arch_reset(int mode, const char *cmd)
-+{
-+	/* Watchdog reset to go here. */
-+}
-+
-+#endif /* __ASM_ARCH_SYSTEM_H */
-diff --git a/arch/arm/mach-picoxcell/include/mach/timex.h b/arch/arm/mach-picoxcell/include/mach/timex.h
-new file mode 100644
-index 0000000..6c540a6
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/timex.h
-@@ -0,0 +1,25 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+ */
-+#ifndef __TIMEX_H__
-+#define __TIMEX_H__
-+
-+/* Bogus value to allow the kernel to compile. */
-+#define CLOCK_TICK_RATE		1000000
-+
-+#endif /* __TIMEX_H__ */
-+
-diff --git a/arch/arm/mach-picoxcell/include/mach/uncompress.h b/arch/arm/mach-picoxcell/include/mach/uncompress.h
-new file mode 100644
-index 0000000..b60b19d
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/uncompress.h
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+ */
-+#define putc(c)
-+#define flush()
-+#define arch_decomp_setup()
-+#define arch_decomp_wdog()
-diff --git a/arch/arm/mach-picoxcell/include/mach/vmalloc.h b/arch/arm/mach-picoxcell/include/mach/vmalloc.h
-new file mode 100644
-index 0000000..62559e3
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/include/mach/vmalloc.h
-@@ -0,0 +1,18 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-+ */
-+#define VMALLOC_END		0xFE000000UL
-diff --git a/arch/arm/mach-picoxcell/io.c b/arch/arm/mach-picoxcell/io.c
-new file mode 100644
-index 0000000..935a2fa
---- /dev/null
-+++ b/arch/arm/mach-picoxcell/io.c
-@@ -0,0 +1,56 @@
-+/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * All enquiries to support-QECmZ7LgVXZWk0Htik3J/w@public.gmane.org
-+ */
-+#include <linux/io.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+
-+#include <asm/mach/map.h>
-+
-+#include <mach/map.h>
-+#include <mach/picoxcell_soc.h>
-+
-+#include "common.h"
-+
-+void __init picoxcell_map_io(void)
-+{
-+	struct map_desc io_map = {
-+		.virtual	= PHYS_TO_IO(PICOXCELL_PERIPH_BASE),
-+		.pfn		= __phys_to_pfn(PICOXCELL_PERIPH_BASE),
-+		.length		= PICOXCELL_PERIPH_LENGTH,
-+		.type		= MT_DEVICE,
++		cpu@0 {
++			compatible = "arm,1176jz-s";
++			clock-frequency = <400000000>;
++			reg = <0>;
++			d-cache-line-size = <32>;
++			d-cache-size = <32768>;
++			i-cache-line-size = <32>;
++			i-cache-size = <32768>;
++		};
 +	};
 +
-+	iotable_init(&io_map, 1);
-+}
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
-+void __iomem *picoxcell_ioremap(unsigned long p, size_t size,
-+				unsigned int type)
-+{
-+	if (unlikely(size == 0))
-+		return NULL;
++		pclk: clock@0 {
++			compatible = "fixed-clock";
++			clock-outputs = "bus", "pclk";
++			clock-frequency = <200000000>;
++			ref-clock = <&ref_clk>, "ref";
++		};
++	};
 +
-+	if (p >= PICOXCELL_PERIPH_BASE &&
-+	    p < PICOXCELL_PERIPH_BASE + PICOXCELL_PERIPH_LENGTH)
-+		return IO_ADDRESS(p);
++	paxi {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x80000000 0x400000>;
 +
-+	return __arm_ioremap_caller(p, size, type,
-+				    __builtin_return_address(0));
-+}
-+EXPORT_SYMBOL_GPL(picoxcell_ioremap);
++		emac: gem@30000 {
++			compatible = "cadence,gem";
++			reg = <0x30000 0x10000>;
++			interrupts = <31>;
++		};
 +
-+void picoxcell_iounmap(volatile void __iomem *addr)
-+{
-+	unsigned long virt = (unsigned long)addr;
++		dmac1: dmac@40000 {
++			compatible = "snps,dw-dmac";
++			reg = <0x40000 0x10000>;
++			interrupts = <25>;
++		};
 +
-+	if (virt >= VMALLOC_START && virt < VMALLOC_END)
-+		__iounmap(addr);
-+}
-+EXPORT_SYMBOL_GPL(picoxcell_iounmap);
-diff --git a/arch/arm/mach-picoxcell/time.c b/arch/arm/mach-picoxcell/time.c
++		dmac2: dmac@50000 {
++			compatible = "snps,dw-dmac";
++			reg = <0x50000 0x10000>;
++			interrupts = <26>;
++		};
++
++		vic0: interrupt-controller@60000 {
++			compatible = "arm,pl192-vic";
++			interrupt-controller;
++			reg = <0x60000 0x1000>;
++			#interrupt-cells = <1>;
++		};
++
++		vic1: interrupt-controller@64000 {
++			compatible = "arm,pl192-vic";
++			interrupt-controller;
++			reg = <0x64000 0x1000>;
++			#interrupt-cells = <1>;
++		};
++
++		fuse: picoxcell-fuse@80000 {
++			compatible = "picoxcell,fuse-pc3x2";
++			reg = <0x80000 0x10000>;
++		};
++
++		ssi: picoxcell-spi@90000 {
++			compatible = "picoxcell,spi";
++			reg = <0x90000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <10>;
++		};
++
++		ipsec: spacc@100000 {
++			compatible = "picochip,spacc-ipsec";
++			reg = <0x100000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <24>;
++			ref-clock = <&pclk>, "ref";
++		};
++
++		srtp: spacc@140000 {
++			compatible = "picochip,spacc-srtp";
++			reg = <0x140000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <23>;
++		};
++
++		l2_engine: spacc@180000 {
++			compatible = "picochip,spacc-l2";
++			reg = <0x180000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <22>;
++			ref-clock = <&pclk>, "ref";
++		};
++
++		apb {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x200000 0x80000>;
++
++			rtc0: rtc@00000 {
++				compatible = "picochip,pc3x2-rtc";
++				clock-freq = <200000000>;
++				reg = <0x00000 0xf>;
++				interrupt-parent = <&vic1>;
++				interrupts = <8>;
++			};
++
++			timer0: timer@10000 {
++				compatible = "picochip,pc3x2-timer";
++				interrupt-parent = <&vic0>;
++				interrupts = <4>;
++				clock-freq = <200000000>;
++				reg = <0x10000 0x14>;
++			};
++
++			timer1: timer@10014 {
++				compatible = "picochip,pc3x2-timer";
++				interrupt-parent = <&vic0>;
++				interrupts = <5>;
++				clock-freq = <200000000>;
++				reg = <0x10014 0x14>;
++			};
++
++			timer2: timer@10028 {
++				compatible = "picochip,pc3x2-timer";
++				interrupt-parent = <&vic0>;
++				interrupts = <6>;
++				clock-freq = <200000000>;
++				reg = <0x10028 0x14>;
++			};
++
++			timer3: timer@1003c {
++				compatible = "picochip,pc3x2-timer";
++				interrupt-parent = <&vic0>;
++				interrupts = <7>;
++				clock-freq = <200000000>;
++				reg = <0x1003c 0x14>;
++			};
++
++			gpio: gpio@20000 {
++				compatible = "snps,dw-apb-gpio";
++				reg = <0x20000 0x1000>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg-io-width = <4>;
++
++				banka: gpio-controller@0 {
++					compatible = "snps,dw-apb-gpio-bank";
++					gpio-controller;
++					#gpio-cells = <2>;
++					gpio-generic,nr-gpio = <8>;
++
++					regoffset-dat = <0x50>;
++					regoffset-set = <0x00>;
++					regoffset-dirout = <0x04>;
++				};
++
++				bankb: gpio-controller@1 {
++					compatible = "snps,dw-apb-gpio-bank";
++					gpio-controller;
++					#gpio-cells = <2>;
++					gpio-generic,nr-gpio = <8>;
++
++					regoffset-dat = <0x54>;
++					regoffset-set = <0x0c>;
++					regoffset-dirout = <0x10>;
++				};
++			};
++
++			uart0: uart@30000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x30000 0x1000>;
++				interrupt-parent = <&vic1>;
++				interrupts = <10>;
++				clock-frequency = <3686400>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++			};
++
++			uart1: uart@40000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x40000 0x1000>;
++				interrupt-parent = <&vic1>;
++				interrupts = <9>;
++				clock-frequency = <3686400>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++			};
++
++			wdog: watchdog@50000 {
++				compatible = "snps,dw-apb-wdg";
++				reg = <0x50000 0x10000>;
++				interrupt-parent = <&vic0>;
++				interrupts = <11>;
++				bus-clock = <&pclk>, "bus";
++			};
++		};
++	};
++
++	rwid-axi {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
++
++		ebi@50000000 {
++			compatible = "simple-bus";
++			#address-cells = <2>;
++			#size-cells = <1>;
++			ranges = <0 0 0x40000000 0x08000000
++				  1 0 0x48000000 0x08000000
++				  2 0 0x50000000 0x08000000
++				  3 0 0x58000000 0x08000000>;
++		};
++
++		axi2pico@c0000000 {
++			compatible = "picochip,axi2pico-pc3x2";
++			reg = <0xc0000000 0x10000>;
++			interrupts = <13 14 15 16 17 18 19 20 21>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
 new file mode 100644
-index 0000000..90a554f
+index 0000000..daa962d
 --- /dev/null
-+++ b/arch/arm/mach-picoxcell/time.c
-@@ -0,0 +1,132 @@
++++ b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
+@@ -0,0 +1,365 @@
 +/*
-+ * Copyright (c) 2011 Picochip Ltd., Jamie Iles
++ *  Copyright (C) 2011 Picochip, Jamie Iles
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
 + *
-+ * All enquiries to support-QECmZ7LgVXZWk0Htik3J/w@public.gmane.org
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
-+#include <linux/dw_apb_timer.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/sched.h>
++/include/ "skeleton.dtsi"
++/ {
++	model = "Picochip picoXcell PC3X3";
++	compatible = "picochip,pc3x3";
++	#address-cells = <1>;
++	#size-cells = <1>;
 +
-+#include <asm/mach/time.h>
-+#include <asm/sched_clock.h>
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+#include "common.h"
++		cpu@0 {
++			compatible = "arm,1176jz-s";
++			cpu-clock = <&arm_clk>, "cpu";
++			reg = <0>;
++			d-cache-line-size = <32>;
++			d-cache-size = <32768>;
++			i-cache-line-size = <32>;
++			i-cache-size = <32768>;
++		};
++	};
 +
-+static void timer_get_base_and_rate(struct device_node *np,
-+				    void __iomem **base, u32 *rate)
-+{
-+	*base = of_iomap(np, 0);
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
-+	if (!*base)
-+		panic("Unable to map regs for %s", np->name);
++		clkgate: clkgate@800a0048 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x800a0048 4>;
++			compatible = "picochip,pc3x3-clk-gate";
 +
-+	if (of_property_read_u32(np, "clock-freq", rate))
-+		panic("No clock-freq property for %s", np->name);
-+}
++			tzprot_clk: clock@0 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <0>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+static void picoxcell_add_clockevent(struct device_node *event_timer)
-+{
-+	void __iomem *iobase;
-+	struct dw_apb_clock_event_device *ced;
-+	u32 irq, rate;
++			spi_clk: clock@1 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <1>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+	irq = irq_of_parse_and_map(event_timer, 0);
-+	if (irq == NO_IRQ)
-+		panic("No IRQ for clock event timer");
++			dmac0_clk: clock@2 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <2>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+	timer_get_base_and_rate(event_timer, &iobase, &rate);
++			dmac1_clk: clock@3 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <3>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+	ced = dw_apb_clockevent_init(0, event_timer->name, 300, iobase, irq,
-+				     rate);
-+	if (!ced)
-+		panic("Unable to initialise clockevent device");
++			ebi_clk: clock@4 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <4>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+	dw_apb_clockevent_register(ced);
-+}
++			ipsec_clk: clock@5 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <5>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+static void picoxcell_add_clocksource(struct device_node *source_timer)
-+{
-+	void __iomem *iobase;
-+	struct dw_apb_clocksource *cs;
-+	u32 rate;
++			l2_clk: clock@6 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <6>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+	timer_get_base_and_rate(source_timer, &iobase, &rate);
++			trng_clk: clock@7 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <7>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+	cs = dw_apb_clocksource_init(300, source_timer->name, iobase, rate);
-+	if (!cs)
-+		panic("Unable to initialise clocksource device");
++			fuse_clk: clock@8 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <8>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
 +
-+	dw_apb_clocksource_start(cs);
-+	dw_apb_clocksource_register(cs);
-+}
++			otp_clk: clock@9 {
++				compatible = "picochip,pc3x3-gated-clk";
++				clock-outputs = "bus";
++				picochip,clk-disable-bit = <9>;
++				clock-frequency = <200000000>;
++				ref-clock = <&ref_clk>, "ref";
++			};
++		};
 +
-+static DEFINE_CLOCK_DATA(cd);
-+static void __iomem *sched_io_base;
++		arm_clk: clock@11 {
++			compatible = "picochip,pc3x3-pll";
++			reg = <0x800a0050 0x8>;
++			picochip,min-freq = <140000000>;
++			picochip,max-freq = <700000000>;
++			ref-clock = <&ref_clk>, "ref";
++			clock-outputs = "cpu";
++		};
 +
-+unsigned long long notrace sched_clock(void)
-+{
-+	cycle_t cyc = sched_io_base ? __raw_readl(sched_io_base) : 0;
++		pclk: clock@12 {
++			compatible = "fixed-clock";
++			clock-outputs = "bus", "pclk";
++			clock-frequency = <200000000>;
++			ref-clock = <&ref_clk>, "ref";
++		};
++	};
 +
-+	return cyc_to_sched_clock(&cd, cyc, (u32)~0);
-+}
++	paxi {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x80000000 0x400000>;
 +
-+static void notrace picoxcell_update_sched_clock(void)
-+{
-+	cycle_t cyc = sched_io_base ? __raw_readl(sched_io_base) : 0;
++		emac: gem@30000 {
++			compatible = "cadence,gem";
++			reg = <0x30000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <31>;
++		};
 +
-+	update_sched_clock(&cd, cyc, (u32)~0);
-+}
++		dmac1: dmac@40000 {
++			compatible = "snps,dw-dmac";
++			reg = <0x40000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <25>;
++		};
 +
-+static const struct of_device_id picoxcell_rtc_ids[] __initconst = {
-+	{ .compatible = "picochip,pc3x2-rtc" },
-+	{ /* Sentinel */ },
-+};
++		dmac2: dmac@50000 {
++			compatible = "snps,dw-dmac";
++			reg = <0x50000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <26>;
++		};
 +
-+static void picoxcell_init_sched_clock(void)
-+{
-+	struct device_node *sched_timer;
-+	u32 rate;
++		vic0: interrupt-controller@60000 {
++			compatible = "arm,pl192-vic";
++			interrupt-controller;
++			reg = <0x60000 0x1000>;
++			#interrupt-cells = <1>;
++		};
 +
-+	sched_timer = of_find_matching_node(NULL, picoxcell_rtc_ids);
-+	if (!sched_timer)
-+		panic("No RTC for sched clock to use");
++		vic1: interrupt-controller@64000 {
++			compatible = "arm,pl192-vic";
++			interrupt-controller;
++			reg = <0x64000 0x1000>;
++			#interrupt-cells = <1>;
++		};
 +
-+	timer_get_base_and_rate(sched_timer, &sched_io_base, &rate);
-+	of_node_put(sched_timer);
++		fuse: picoxcell-fuse@80000 {
++			compatible = "picoxcell,fuse-pc3x3";
++			reg = <0x80000 0x10000>;
++		};
 +
-+	init_sched_clock(&cd, picoxcell_update_sched_clock, 32, rate);
-+}
++		ssi: picoxcell-spi@90000 {
++			compatible = "picoxcell,spi";
++			reg = <0x90000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <10>;
++		};
 +
-+static const struct of_device_id picoxcell_timer_ids[] __initconst = {
-+	{ .compatible = "picochip,pc3x2-timer" },
-+	{},
-+};
++		ipsec: spacc@100000 {
++			compatible = "picochip,spacc-ipsec";
++			reg = <0x100000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <24>;
++			ref-clock = <&ipsec_clk>, "ref";
++		};
 +
-+static void __init picoxcell_timer_init(void)
-+{
-+	struct device_node *event_timer, *source_timer;
++		srtp: spacc@140000 {
++			compatible = "picochip,spacc-srtp";
++			reg = <0x140000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <23>;
++		};
 +
-+	event_timer = of_find_matching_node(NULL, picoxcell_timer_ids);
-+	if (!event_timer)
-+		panic("No timer for clockevent");
-+	picoxcell_add_clockevent(event_timer);
++		l2_engine: spacc@180000 {
++			compatible = "picochip,spacc-l2";
++			reg = <0x180000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <22>;
++			ref-clock = <&l2_clk>, "ref";
++		};
 +
-+	source_timer = of_find_matching_node(event_timer, picoxcell_timer_ids);
-+	if (!source_timer)
-+		panic("No timer for clocksource");
-+	picoxcell_add_clocksource(source_timer);
++		apb {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x200000 0x80000>;
 +
-+	of_node_put(source_timer);
++			rtc0: rtc@00000 {
++				compatible = "picochip,pc3x2-rtc";
++				clock-freq = <200000000>;
++				reg = <0x00000 0xf>;
++				interrupt-parent = <&vic0>;
++				interrupts = <8>;
++			};
 +
-+	picoxcell_init_sched_clock();
-+}
++			timer0: timer@10000 {
++				compatible = "picochip,pc3x2-timer";
++				interrupt-parent = <&vic0>;
++				interrupts = <4>;
++				clock-freq = <200000000>;
++				reg = <0x10000 0x14>;
++			};
 +
-+struct sys_timer picoxcell_timer = {
-+	.init = picoxcell_timer_init,
++			timer1: timer@10014 {
++				compatible = "picochip,pc3x2-timer";
++				interrupt-parent = <&vic0>;
++				interrupts = <5>;
++				clock-freq = <200000000>;
++				reg = <0x10014 0x14>;
++			};
++
++			gpio: gpio@20000 {
++				compatible = "snps,dw-apb-gpio";
++				reg = <0x20000 0x1000>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg-io-width = <4>;
++
++				banka: gpio-controller@0 {
++					compatible = "snps,dw-apb-gpio-bank";
++					gpio-controller;
++					#gpio-cells = <2>;
++					gpio-generic,nr-gpio = <8>;
++
++					regoffset-dat = <0x50>;
++					regoffset-set = <0x00>;
++					regoffset-dirout = <0x04>;
++				};
++
++				bankb: gpio-controller@1 {
++					compatible = "snps,dw-apb-gpio-bank";
++					gpio-controller;
++					#gpio-cells = <2>;
++					gpio-generic,nr-gpio = <16>;
++
++					regoffset-dat = <0x54>;
++					regoffset-set = <0x0c>;
++					regoffset-dirout = <0x10>;
++				};
++
++				bankd: gpio-controller@2 {
++					compatible = "snps,dw-apb-gpio-bank";
++					gpio-controller;
++					#gpio-cells = <2>;
++					gpio-generic,nr-gpio = <30>;
++
++					regoffset-dat = <0x5c>;
++					regoffset-set = <0x24>;
++					regoffset-dirout = <0x28>;
++				};
++			};
++
++			uart0: uart@30000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x30000 0x1000>;
++				interrupt-parent = <&vic1>;
++				interrupts = <10>;
++				clock-frequency = <3686400>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++			};
++
++			uart1: uart@40000 {
++				compatible = "snps,dw-apb-uart";
++				reg = <0x40000 0x1000>;
++				interrupt-parent = <&vic1>;
++				interrupts = <9>;
++				clock-frequency = <3686400>;
++				reg-shift = <2>;
++				reg-io-width = <4>;
++			};
++
++			wdog: watchdog@50000 {
++				compatible = "snps,dw-apb-wdg";
++				reg = <0x50000 0x10000>;
++				interrupt-parent = <&vic0>;
++				interrupts = <11>;
++				bus-clock = <&pclk>, "bus";
++			};
++
++			timer2: timer@60000 {
++				compatible = "picochip,pc3x2-timer";
++				interrupt-parent = <&vic0>;
++				interrupts = <6>;
++				clock-freq = <200000000>;
++				reg = <0x60000 0x14>;
++			};
++
++			timer3: timer@60014 {
++				compatible = "picochip,pc3x2-timer";
++				interrupt-parent = <&vic0>;
++				interrupts = <7>;
++				clock-freq = <200000000>;
++				reg = <0x60014 0x14>;
++			};
++		};
++	};
++
++	rwid-axi {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
++
++		ebi@50000000 {
++			compatible = "simple-bus";
++			#address-cells = <2>;
++			#size-cells = <1>;
++			ranges = <0 0 0x40000000 0x08000000
++				  1 0 0x48000000 0x08000000
++				  2 0 0x50000000 0x08000000
++				  3 0 0x58000000 0x08000000>;
++		};
++
++		axi2pico@c0000000 {
++			compatible = "picochip,axi2pico-pc3x3";
++			reg = <0xc0000000 0x10000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <13 14 15 16 17 18 19 20 21>;
++		};
++
++		otp@ffff8000 {
++			compatible = "picochip,otp-pc3x3";
++			reg = <0xffff8000 0x8000>;
++		};
++	};
 +};
 -- 
 1.7.4.1
