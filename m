@@ -1,14 +1,11 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv2 0/3] Initial support for Picochip picoxcell
-Date: Mon, 26 Sep 2011 16:42:06 +0200
-Message-ID: <201109261642.06592.arnd@arndb.de>
-References: <1314196906-20709-1-git-send-email-jamie@jamieiles.com>
-	<20110926092008.GC3372@pulham.picochip.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: [PATCHv3 0/4] Initial support for Picochip picoXcell
+Date: Mon, 26 Sep 2011 16:24:45 +0100
+Message-ID: <1317050689-16417-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110926092008.GC3372-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,28 +15,77 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 26 September 2011, Jamie Iles wrote:
-> Hi Arnd,
-> 
-> Is there likely to be any chance of getting support for picoxcell 
-> merged?  This series can now be based on top of Nicolas' static IO 
-> mapping patches to remove some more code but I'm not sure what else I 
-> can do to make them easier to review!
-> 
+This is largely a repost of v2, but with a couple of minor changes:
+	- Removed bootargs from board dts files
+	- Fix up the VIC binding documentation
 
-Hi Jamie,
+I've also added a 4th patch which removes the picoxcell specific ioremap
+functionality.  This could either be applied/folded into the first patch
+if Nicolas' vmalloc cleanups go in.
 
-I think you did everything right, but I haven't gotten to do a proper
-review, which is entirely my fault.
+These patches can also be found in a git tree at:
 
-Please send out the current version to the mailing list again and put me
-on Cc, so it shows up in my inbox. In my extremely brief review
-I found no show stoppers, so I'm sure we can find a way to get it into 3.2.
+	git://github.com/jamieiles/linux-2.6-ji.git for-next
 
-Do you have a git tree that I can pull?
+Jamie Iles (4):
+  picoxcell: support for Picochip picoxcell devices
+  picoxcell: add the DTS for pc3x2 and pc3x3 devices
+  picoxcell: add the DTS for the PC7302 board
+  picoxcell: remove custom ioremap implementation
 
-	Arnd
+ .../devicetree/bindings/arm/picoxcell.txt          |   24 ++
+ arch/arm/Kconfig                                   |   18 +
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/picoxcell-pc3x2.dtsi             |  249 +++++++++++++
+ arch/arm/boot/dts/picoxcell-pc3x3.dtsi             |  365 ++++++++++++++++++++
+ arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts       |   86 +++++
+ arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts       |   92 +++++
+ arch/arm/mach-picoxcell/Makefile                   |    3 +
+ arch/arm/mach-picoxcell/Makefile.boot              |    1 +
+ arch/arm/mach-picoxcell/common.c                   |   55 +++
+ arch/arm/mach-picoxcell/common.h                   |   18 +
+ arch/arm/mach-picoxcell/include/mach/debug-macro.S |   35 ++
+ arch/arm/mach-picoxcell/include/mach/entry-macro.S |   19 +
+ arch/arm/mach-picoxcell/include/mach/gpio.h        |    1 +
+ arch/arm/mach-picoxcell/include/mach/hardware.h    |   21 ++
+ arch/arm/mach-picoxcell/include/mach/io.h          |   22 ++
+ arch/arm/mach-picoxcell/include/mach/irqs.h        |   25 ++
+ arch/arm/mach-picoxcell/include/mach/map.h         |   25 ++
+ arch/arm/mach-picoxcell/include/mach/memory.h      |    1 +
+ .../mach-picoxcell/include/mach/picoxcell_soc.h    |   25 ++
+ arch/arm/mach-picoxcell/include/mach/system.h      |   31 ++
+ arch/arm/mach-picoxcell/include/mach/timex.h       |   25 ++
+ arch/arm/mach-picoxcell/include/mach/uncompress.h  |   21 ++
+ arch/arm/mach-picoxcell/io.c                       |   32 ++
+ arch/arm/mach-picoxcell/time.c                     |  132 +++++++
+ 25 files changed, 1327 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/picoxcell.txt
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc3x2.dtsi
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc3x3.dtsi
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts
+ create mode 100644 arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts
+ create mode 100644 arch/arm/mach-picoxcell/Makefile
+ create mode 100644 arch/arm/mach-picoxcell/Makefile.boot
+ create mode 100644 arch/arm/mach-picoxcell/common.c
+ create mode 100644 arch/arm/mach-picoxcell/common.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/debug-macro.S
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/entry-macro.S
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/gpio.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/hardware.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/io.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/irqs.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/map.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/memory.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/picoxcell_soc.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/system.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/timex.h
+ create mode 100644 arch/arm/mach-picoxcell/include/mach/uncompress.h
+ create mode 100644 arch/arm/mach-picoxcell/io.c
+ create mode 100644 arch/arm/mach-picoxcell/time.c
+
+-- 
+1.7.4.1
