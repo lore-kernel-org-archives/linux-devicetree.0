@@ -1,15 +1,14 @@
-From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] dtc: Add support for variable sized cells
-Date: Mon, 26 Sep 2011 10:15:48 -0700
-Message-ID: <CAF6FioU6HmPw4UTHmiWFJPyXJGR5KtZR_4CW3be++S5vSR0GaA@mail.gmail.com>
-References: <1316800974-30129-1-git-send-email-robotboy@chromium.org>
-	<1316800974-30129-4-git-send-email-robotboy@chromium.org>
-	<20110925110454.GP12286@yookeroo.fritz.box>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv3 2/4] picoxcell: add the DTS for pc3x2 and pc3x3 devices
+Date: Mon, 26 Sep 2011 13:04:19 -0500
+Message-ID: <4E80BEA3.1030803@gmail.com>
+References: <1317050689-16417-1-git-send-email-jamie@jamieiles.com>
+	<1317050689-16417-3-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110925110454.GP12286-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-Reply-To: <1317050689-16417-3-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,104 +18,674 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 25, 2011 at 4:04 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Fri, Sep 23, 2011 at 11:02:54AM -0700, Anton Staaf wrote:
->> Cells of size 8, 16, 32, and 64 bits are supported. =A0The new
->> /bits/ syntax was selected so as to not pollute the reserved
->> keyword space with uint8/uint16/... type names.
->>
->> With this patch the following property assignment:
->>
->> =A0 =A0 property =3D /bits/ 16 <0x1234 0x5678 0x0 0xffff>;
->>
->> is equivalent to:
->>
->> =A0 =A0 property =3D <0x12345678 0x0000ffff>;
->>
->> It is now also possible to directly specify a 64 bit literal in a
->> cell list using:
->>
->> =A0 =A0 property =3D /bits/ 64 <0xdeadbeef00000000>;
->>
->> It is an error to attempt to store a literal into a cell that is too
->> small to hold the literal, and the compiler will generate an error
->> when it detects this. =A0For instance:
->>
->> =A0 =A0 property =3D /bits/ 8 <256>;
->>
->> Will fail to compile. =A0It is also an error to attempt to place a
->> reference in a non 32-bit cell.
->
-> So, there's one small but serious error left in the patch, see below.
->
-> Other than that, only two things concern me:
->
-> =A0 =A0 =A0 =A01) Exactly what to call the keyword. =A0/bits/ is better t=
-han
-> /size/, but I'd still like to stew a bit on it to see if we can come
-> up with anything better.
->
-> =A0 =A0 =A0 =A02) In the documentation and internal naming, we're using
-> the term "cell" ambiguously. =A0In the discussion of this extension
-> we've been using "cell" to mean one array element, which is fair
-> enough since it's more-or-less standard CS terminology. =A0However, in
-> previous FDT and OF terminology "cell" refers to an exactly 32-bit
-> quantity [well, to be exact OF old-timers say this isn't strictly
-> right in old OF-ese, but it's close enough to meaning that for most
-> purposes].
-> =A0 =A0 =A0 =A0So, I think we need to find a different name for array cel=
-ls
-> to clarify the terminology. =A0"elements" maybe?
->
-> [snip]
->> + =A0 =A0 | celllistprefix DT_REF
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 {
->> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 $$ =3D eval_literal($1, 0, 32);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 uint64_t val =3D ~0ULL >> (64 =
-- $1.bits);
->> +
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if ($1.bits !=3D 32)
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 print_error("R=
-eferences only allowed in 32-bit"
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 " cell lists");
->> +
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 $$.data =3D data_add_marker($1=
-.data, REF_PHANDLE, $2);
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 $$.data =3D data_append_intege=
-r($$.data, val, $1.bits);
->
-> Uh, so, this is actually worse than what you had before. =A0Remember
-> print_error() just prints an error, without aborting the parse. =A0So
-> now, if bits !=3D 32 it will print the error, then add a phandle marker
-> *and* a bits-sized -1. =A0So later, when we go through and fix up the
-> REF_PHANDLE markers, we'll assume we're replacing 32-bits of data,
-> which could overrun the end of the data if the element size is less
-> than 32.
->
-> So, basically the data_add_marker() needs to be in an else clause.
+Jamie,
 
-Yup, you're right.  I should first ask, I couldn't figure out how to write
-a test that tests parse error cases like this.  The closest I found was the
-check tests.  But they are specific to the check messages.  Is there a
-good example of a parse error test?  Or should I create a new type of test?
+On 09/26/2011 10:24 AM, Jamie Iles wrote:
+> This describes the basic hierarchy of picoxcell pc3x3 devices including
+> clocks and bus interconnect.  Some onchip devices are currently omitted
+> as there haven't been bindings created for them.
+> 
+> v2:	- change timer compatible strings to be more soc specific
+> 	- split vic node into 2 devices
+> 
+> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/picoxcell-pc3x2.dtsi |  249 ++++++++++++++++++++++
+>  arch/arm/boot/dts/picoxcell-pc3x3.dtsi |  365 ++++++++++++++++++++++++++++++++
+>  2 files changed, 614 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/picoxcell-pc3x2.dtsi
+>  create mode 100644 arch/arm/boot/dts/picoxcell-pc3x3.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
+> new file mode 100644
+> index 0000000..f0a8c20
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
+> @@ -0,0 +1,249 @@
+> +/*
+> + *  Copyright (C) 2011 Picochip, Jamie Iles
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +/include/ "skeleton.dtsi"
+> +/ {
+> +	model = "Picochip picoXcell PC3X2";
+> +	compatible = "picochip,pc3x2";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			compatible = "arm,1176jz-s";
+> +			clock-frequency = <400000000>;
+> +			reg = <0>;
+> +			d-cache-line-size = <32>;
+> +			d-cache-size = <32768>;
+> +			i-cache-line-size = <32>;
+> +			i-cache-size = <32768>;
+> +		};
+> +	};
+> +
+> +	clocks {
 
-I'll fix this up today.
+I would hold off on clock bindings. Grant expressed at LPC the desire to
+re-work the binding.
 
-Thanks,
-    Anton
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		pclk: clock@0 {
+> +			compatible = "fixed-clock";
+> +			clock-outputs = "bus", "pclk";
+> +			clock-frequency = <200000000>;
+> +			ref-clock = <&ref_clk>, "ref";
+> +		};
+> +	};
+> +
+> +	paxi {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x80000000 0x400000>;
+> +
+> +		emac: gem@30000 {
 
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
+ethernet is the preferred generic name here. See section 2.2.2 of ePAPR.
+
+So it would be "emac: ethernet@30000"
+
+> +			compatible = "cadence,gem";
+> +			reg = <0x30000 0x10000>;
+> +			interrupts = <31>;
+> +		};
+> +
+> +		dmac1: dmac@40000 {
+> +			compatible = "snps,dw-dmac";
+> +			reg = <0x40000 0x10000>;
+> +			interrupts = <25>;
+> +		};
+> +
+> +		dmac2: dmac@50000 {
+> +			compatible = "snps,dw-dmac";
+> +			reg = <0x50000 0x10000>;
+> +			interrupts = <26>;
+> +		};
+> +
+> +		vic0: interrupt-controller@60000 {
+> +			compatible = "arm,pl192-vic";
+> +			interrupt-controller;
+> +			reg = <0x60000 0x1000>;
+> +			#interrupt-cells = <1>;
+
+No edge/level control/settings for the vic? Needs binding documentation.
+
+> +		};
+> +
+> +		vic1: interrupt-controller@64000 {
+> +			compatible = "arm,pl192-vic";
+> +			interrupt-controller;
+> +			reg = <0x64000 0x1000>;
+> +			#interrupt-cells = <1>;
+> +		};
+> +
+> +		fuse: picoxcell-fuse@80000 {
+> +			compatible = "picoxcell,fuse-pc3x2";
+> +			reg = <0x80000 0x10000>;
+> +		};
+> +
+> +		ssi: picoxcell-spi@90000 {
+> +			compatible = "picoxcell,spi";
+> +			reg = <0x90000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <10>;
+> +		};
+> +
+> +		ipsec: spacc@100000 {
+> +			compatible = "picochip,spacc-ipsec";
+> +			reg = <0x100000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <24>;
+> +			ref-clock = <&pclk>, "ref";
+> +		};
+> +
+> +		srtp: spacc@140000 {
+> +			compatible = "picochip,spacc-srtp";
+> +			reg = <0x140000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <23>;
+> +		};
+> +
+> +		l2_engine: spacc@180000 {
+> +			compatible = "picochip,spacc-l2";
+> +			reg = <0x180000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <22>;
+> +			ref-clock = <&pclk>, "ref";
+> +		};
+> +
+> +		apb {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0x200000 0x80000>;
+> +
+> +			rtc0: rtc@00000 {
+> +				compatible = "picochip,pc3x2-rtc";
+> +				clock-freq = <200000000>;
+> +				reg = <0x00000 0xf>;
+> +				interrupt-parent = <&vic1>;
+> +				interrupts = <8>;
+> +			};
+> +
+> +			timer0: timer@10000 {
+> +				compatible = "picochip,pc3x2-timer";
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <4>;
+> +				clock-freq = <200000000>;
+> +				reg = <0x10000 0x14>;
+> +			};
+> +
+> +			timer1: timer@10014 {
+> +				compatible = "picochip,pc3x2-timer";
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <5>;
+> +				clock-freq = <200000000>;
+> +				reg = <0x10014 0x14>;
+> +			};
+> +
+> +			timer2: timer@10028 {
+> +				compatible = "picochip,pc3x2-timer";
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <6>;
+> +				clock-freq = <200000000>;
+> +				reg = <0x10028 0x14>;
+> +			};
+> +
+> +			timer3: timer@1003c {
+> +				compatible = "picochip,pc3x2-timer";
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <7>;
+> +				clock-freq = <200000000>;
+> +				reg = <0x1003c 0x14>;
+> +			};
+> +
+> +			gpio: gpio@20000 {
+> +				compatible = "snps,dw-apb-gpio";
+> +				reg = <0x20000 0x1000>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg-io-width = <4>;
+> +
+> +				banka: gpio-controller@0 {
+> +					compatible = "snps,dw-apb-gpio-bank";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					gpio-generic,nr-gpio = <8>;
+
+This seems like Linux creeping into device tree.
+
+> +
+> +					regoffset-dat = <0x50>;
+> +					regoffset-set = <0x00>;
+> +					regoffset-dirout = <0x04>;
+> +				};
+> +
+> +				bankb: gpio-controller@1 {
+> +					compatible = "snps,dw-apb-gpio-bank";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					gpio-generic,nr-gpio = <8>;
+> +
+> +					regoffset-dat = <0x54>;
+> +					regoffset-set = <0x0c>;
+> +					regoffset-dirout = <0x10>;
+> +				};
+> +			};
+> +
+> +			uart0: uart@30000 {
+
+Preferred name is serial@30000
+
+> +				compatible = "snps,dw-apb-uart";
+> +				reg = <0x30000 0x1000>;
+> +				interrupt-parent = <&vic1>;
+> +				interrupts = <10>;
+> +				clock-frequency = <3686400>;
+> +				reg-shift = <2>;
+> +				reg-io-width = <4>;
+> +			};
+> +
+> +			uart1: uart@40000 {
+> +				compatible = "snps,dw-apb-uart";
+> +				reg = <0x40000 0x1000>;
+> +				interrupt-parent = <&vic1>;
+> +				interrupts = <9>;
+> +				clock-frequency = <3686400>;
+> +				reg-shift = <2>;
+> +				reg-io-width = <4>;
+> +			};
+> +
+> +			wdog: watchdog@50000 {
+> +				compatible = "snps,dw-apb-wdg";
+> +				reg = <0x50000 0x10000>;
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <11>;
+> +				bus-clock = <&pclk>, "bus";
+> +			};
+> +		};
+> +	};
+> +
+> +	rwid-axi {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		ebi@50000000 {
+> +			compatible = "simple-bus";
+> +			#address-cells = <2>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0 0x40000000 0x08000000
+> +				  1 0 0x48000000 0x08000000
+> +				  2 0 0x50000000 0x08000000
+> +				  3 0 0x58000000 0x08000000>;
+> +		};
+> +
+> +		axi2pico@c0000000 {
+> +			compatible = "picochip,axi2pico-pc3x2";
+> +			reg = <0xc0000000 0x10000>;
+> +			interrupts = <13 14 15 16 17 18 19 20 21>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
+
+Mostly same comments apply here. All these bindings need documentation.
+
+Rob
+
+> new file mode 100644
+> index 0000000..daa962d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
+> @@ -0,0 +1,365 @@
+> +/*
+> + *  Copyright (C) 2011 Picochip, Jamie Iles
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +/include/ "skeleton.dtsi"
+> +/ {
+> +	model = "Picochip picoXcell PC3X3";
+> +	compatible = "picochip,pc3x3";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			compatible = "arm,1176jz-s";
+> +			cpu-clock = <&arm_clk>, "cpu";
+> +			reg = <0>;
+> +			d-cache-line-size = <32>;
+> +			d-cache-size = <32768>;
+> +			i-cache-line-size = <32>;
+> +			i-cache-size = <32768>;
+> +		};
+> +	};
+> +
+> +	clocks {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		clkgate: clkgate@800a0048 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x800a0048 4>;
+> +			compatible = "picochip,pc3x3-clk-gate";
+> +
+> +			tzprot_clk: clock@0 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <0>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			spi_clk: clock@1 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <1>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			dmac0_clk: clock@2 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <2>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			dmac1_clk: clock@3 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <3>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			ebi_clk: clock@4 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <4>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			ipsec_clk: clock@5 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <5>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			l2_clk: clock@6 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <6>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			trng_clk: clock@7 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <7>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			fuse_clk: clock@8 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <8>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +
+> +			otp_clk: clock@9 {
+> +				compatible = "picochip,pc3x3-gated-clk";
+> +				clock-outputs = "bus";
+> +				picochip,clk-disable-bit = <9>;
+> +				clock-frequency = <200000000>;
+> +				ref-clock = <&ref_clk>, "ref";
+> +			};
+> +		};
+> +
+> +		arm_clk: clock@11 {
+> +			compatible = "picochip,pc3x3-pll";
+> +			reg = <0x800a0050 0x8>;
+> +			picochip,min-freq = <140000000>;
+> +			picochip,max-freq = <700000000>;
+> +			ref-clock = <&ref_clk>, "ref";
+> +			clock-outputs = "cpu";
+> +		};
+> +
+> +		pclk: clock@12 {
+> +			compatible = "fixed-clock";
+> +			clock-outputs = "bus", "pclk";
+> +			clock-frequency = <200000000>;
+> +			ref-clock = <&ref_clk>, "ref";
+> +		};
+> +	};
+> +
+> +	paxi {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x80000000 0x400000>;
+> +
+> +		emac: gem@30000 {
+> +			compatible = "cadence,gem";
+> +			reg = <0x30000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <31>;
+> +		};
+> +
+> +		dmac1: dmac@40000 {
+> +			compatible = "snps,dw-dmac";
+> +			reg = <0x40000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <25>;
+> +		};
+> +
+> +		dmac2: dmac@50000 {
+> +			compatible = "snps,dw-dmac";
+> +			reg = <0x50000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <26>;
+> +		};
+> +
+> +		vic0: interrupt-controller@60000 {
+> +			compatible = "arm,pl192-vic";
+> +			interrupt-controller;
+> +			reg = <0x60000 0x1000>;
+> +			#interrupt-cells = <1>;
+> +		};
+> +
+> +		vic1: interrupt-controller@64000 {
+> +			compatible = "arm,pl192-vic";
+> +			interrupt-controller;
+> +			reg = <0x64000 0x1000>;
+> +			#interrupt-cells = <1>;
+> +		};
+> +
+> +		fuse: picoxcell-fuse@80000 {
+> +			compatible = "picoxcell,fuse-pc3x3";
+> +			reg = <0x80000 0x10000>;
+> +		};
+> +
+> +		ssi: picoxcell-spi@90000 {
+> +			compatible = "picoxcell,spi";
+> +			reg = <0x90000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <10>;
+> +		};
+> +
+> +		ipsec: spacc@100000 {
+> +			compatible = "picochip,spacc-ipsec";
+> +			reg = <0x100000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <24>;
+> +			ref-clock = <&ipsec_clk>, "ref";
+> +		};
+> +
+> +		srtp: spacc@140000 {
+> +			compatible = "picochip,spacc-srtp";
+> +			reg = <0x140000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <23>;
+> +		};
+> +
+> +		l2_engine: spacc@180000 {
+> +			compatible = "picochip,spacc-l2";
+> +			reg = <0x180000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <22>;
+> +			ref-clock = <&l2_clk>, "ref";
+> +		};
+> +
+> +		apb {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0x200000 0x80000>;
+> +
+> +			rtc0: rtc@00000 {
+> +				compatible = "picochip,pc3x2-rtc";
+> +				clock-freq = <200000000>;
+> +				reg = <0x00000 0xf>;
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <8>;
+> +			};
+> +
+> +			timer0: timer@10000 {
+> +				compatible = "picochip,pc3x2-timer";
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <4>;
+> +				clock-freq = <200000000>;
+> +				reg = <0x10000 0x14>;
+> +			};
+> +
+> +			timer1: timer@10014 {
+> +				compatible = "picochip,pc3x2-timer";
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <5>;
+> +				clock-freq = <200000000>;
+> +				reg = <0x10014 0x14>;
+> +			};
+> +
+> +			gpio: gpio@20000 {
+> +				compatible = "snps,dw-apb-gpio";
+> +				reg = <0x20000 0x1000>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg-io-width = <4>;
+> +
+> +				banka: gpio-controller@0 {
+> +					compatible = "snps,dw-apb-gpio-bank";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					gpio-generic,nr-gpio = <8>;
+> +
+> +					regoffset-dat = <0x50>;
+> +					regoffset-set = <0x00>;
+> +					regoffset-dirout = <0x04>;
+> +				};
+> +
+> +				bankb: gpio-controller@1 {
+> +					compatible = "snps,dw-apb-gpio-bank";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					gpio-generic,nr-gpio = <16>;
+> +
+> +					regoffset-dat = <0x54>;
+> +					regoffset-set = <0x0c>;
+> +					regoffset-dirout = <0x10>;
+> +				};
+> +
+> +				bankd: gpio-controller@2 {
+> +					compatible = "snps,dw-apb-gpio-bank";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					gpio-generic,nr-gpio = <30>;
+> +
+> +					regoffset-dat = <0x5c>;
+> +					regoffset-set = <0x24>;
+> +					regoffset-dirout = <0x28>;
+> +				};
+> +			};
+> +
+> +			uart0: uart@30000 {
+> +				compatible = "snps,dw-apb-uart";
+> +				reg = <0x30000 0x1000>;
+> +				interrupt-parent = <&vic1>;
+> +				interrupts = <10>;
+> +				clock-frequency = <3686400>;
+> +				reg-shift = <2>;
+> +				reg-io-width = <4>;
+> +			};
+> +
+> +			uart1: uart@40000 {
+> +				compatible = "snps,dw-apb-uart";
+> +				reg = <0x40000 0x1000>;
+> +				interrupt-parent = <&vic1>;
+> +				interrupts = <9>;
+> +				clock-frequency = <3686400>;
+> +				reg-shift = <2>;
+> +				reg-io-width = <4>;
+> +			};
+> +
+> +			wdog: watchdog@50000 {
+> +				compatible = "snps,dw-apb-wdg";
+> +				reg = <0x50000 0x10000>;
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <11>;
+> +				bus-clock = <&pclk>, "bus";
+> +			};
+> +
+> +			timer2: timer@60000 {
+> +				compatible = "picochip,pc3x2-timer";
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <6>;
+> +				clock-freq = <200000000>;
+> +				reg = <0x60000 0x14>;
+> +			};
+> +
+> +			timer3: timer@60014 {
+> +				compatible = "picochip,pc3x2-timer";
+> +				interrupt-parent = <&vic0>;
+> +				interrupts = <7>;
+> +				clock-freq = <200000000>;
+> +				reg = <0x60014 0x14>;
+> +			};
+> +		};
+> +	};
+> +
+> +	rwid-axi {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		ebi@50000000 {
+> +			compatible = "simple-bus";
+> +			#address-cells = <2>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0 0x40000000 0x08000000
+> +				  1 0 0x48000000 0x08000000
+> +				  2 0 0x50000000 0x08000000
+> +				  3 0 0x58000000 0x08000000>;
+> +		};
+> +
+> +		axi2pico@c0000000 {
+> +			compatible = "picochip,axi2pico-pc3x3";
+> +			reg = <0xc0000000 0x10000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <13 14 15 16 17 18 19 20 21>;
+> +		};
+> +
+> +		otp@ffff8000 {
+> +			compatible = "picochip,otp-pc3x3";
+> +			reg = <0xffff8000 0x8000>;
+> +		};
+> +	};
+> +};
