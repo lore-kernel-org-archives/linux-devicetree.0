@@ -1,11 +1,13 @@
 From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCHv3 0/4] Initial support for Picochip picoXcell
-Date: Mon, 26 Sep 2011 16:24:45 +0100
-Message-ID: <1317050689-16417-1-git-send-email-jamie@jamieiles.com>
+Subject: [PATCHv3 4/4] picoxcell: remove custom ioremap implementation
+Date: Mon, 26 Sep 2011 16:24:49 +0100
+Message-ID: <1317050689-16417-5-git-send-email-jamie@jamieiles.com>
+References: <1317050689-16417-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1317050689-16417-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,73 +21,88 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is largely a repost of v2, but with a couple of minor changes:
-	- Removed bootargs from board dts files
-	- Fix up the VIC binding documentation
+Nicolas Pitre's generic ioremap() patch set means that we don't need
+this any more.
 
-I've also added a 4th patch which removes the picoxcell specific ioremap
-functionality.  This could either be applied/folded into the first patch
-if Nicolas' vmalloc cleanups go in.
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+---
+ arch/arm/mach-picoxcell/include/mach/io.h      |    7 -------
+ arch/arm/mach-picoxcell/include/mach/vmalloc.h |   18 ------------------
+ arch/arm/mach-picoxcell/io.c                   |   24 ------------------------
+ 3 files changed, 0 insertions(+), 49 deletions(-)
+ delete mode 100644 arch/arm/mach-picoxcell/include/mach/vmalloc.h
 
-These patches can also be found in a git tree at:
-
-	git://github.com/jamieiles/linux-2.6-ji.git for-next
-
-Jamie Iles (4):
-  picoxcell: support for Picochip picoxcell devices
-  picoxcell: add the DTS for pc3x2 and pc3x3 devices
-  picoxcell: add the DTS for the PC7302 board
-  picoxcell: remove custom ioremap implementation
-
- .../devicetree/bindings/arm/picoxcell.txt          |   24 ++
- arch/arm/Kconfig                                   |   18 +
- arch/arm/Makefile                                  |    1 +
- arch/arm/boot/dts/picoxcell-pc3x2.dtsi             |  249 +++++++++++++
- arch/arm/boot/dts/picoxcell-pc3x3.dtsi             |  365 ++++++++++++++++++++
- arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts       |   86 +++++
- arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts       |   92 +++++
- arch/arm/mach-picoxcell/Makefile                   |    3 +
- arch/arm/mach-picoxcell/Makefile.boot              |    1 +
- arch/arm/mach-picoxcell/common.c                   |   55 +++
- arch/arm/mach-picoxcell/common.h                   |   18 +
- arch/arm/mach-picoxcell/include/mach/debug-macro.S |   35 ++
- arch/arm/mach-picoxcell/include/mach/entry-macro.S |   19 +
- arch/arm/mach-picoxcell/include/mach/gpio.h        |    1 +
- arch/arm/mach-picoxcell/include/mach/hardware.h    |   21 ++
- arch/arm/mach-picoxcell/include/mach/io.h          |   22 ++
- arch/arm/mach-picoxcell/include/mach/irqs.h        |   25 ++
- arch/arm/mach-picoxcell/include/mach/map.h         |   25 ++
- arch/arm/mach-picoxcell/include/mach/memory.h      |    1 +
- .../mach-picoxcell/include/mach/picoxcell_soc.h    |   25 ++
- arch/arm/mach-picoxcell/include/mach/system.h      |   31 ++
- arch/arm/mach-picoxcell/include/mach/timex.h       |   25 ++
- arch/arm/mach-picoxcell/include/mach/uncompress.h  |   21 ++
- arch/arm/mach-picoxcell/io.c                       |   32 ++
- arch/arm/mach-picoxcell/time.c                     |  132 +++++++
- 25 files changed, 1327 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/picoxcell.txt
- create mode 100644 arch/arm/boot/dts/picoxcell-pc3x2.dtsi
- create mode 100644 arch/arm/boot/dts/picoxcell-pc3x3.dtsi
- create mode 100644 arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts
- create mode 100644 arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts
- create mode 100644 arch/arm/mach-picoxcell/Makefile
- create mode 100644 arch/arm/mach-picoxcell/Makefile.boot
- create mode 100644 arch/arm/mach-picoxcell/common.c
- create mode 100644 arch/arm/mach-picoxcell/common.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/debug-macro.S
- create mode 100644 arch/arm/mach-picoxcell/include/mach/entry-macro.S
- create mode 100644 arch/arm/mach-picoxcell/include/mach/gpio.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/hardware.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/io.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/irqs.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/map.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/memory.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/picoxcell_soc.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/system.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/timex.h
- create mode 100644 arch/arm/mach-picoxcell/include/mach/uncompress.h
- create mode 100644 arch/arm/mach-picoxcell/io.c
- create mode 100644 arch/arm/mach-picoxcell/time.c
-
+diff --git a/arch/arm/mach-picoxcell/include/mach/io.h b/arch/arm/mach-picoxcell/include/mach/io.h
+index a863b0f..7573ec7 100644
+--- a/arch/arm/mach-picoxcell/include/mach/io.h
++++ b/arch/arm/mach-picoxcell/include/mach/io.h
+@@ -19,11 +19,4 @@
+ /* No PCI possible on picoxcell. */
+ #define __mem_pci(a)		(a)
+ 
+-#define __arch_ioremap	picoxcell_ioremap
+-#define __arch_iounmap	picoxcell_iounmap
+-
+-extern void __iomem *picoxcell_ioremap(unsigned long phys, size_t size,
+-				       unsigned int type);
+-extern void picoxcell_iounmap(volatile void __iomem *addr);
+-
+ #endif /* __ASM_ARM_ARCH_IO_H */
+diff --git a/arch/arm/mach-picoxcell/include/mach/vmalloc.h b/arch/arm/mach-picoxcell/include/mach/vmalloc.h
+deleted file mode 100644
+index 62559e3..0000000
+--- a/arch/arm/mach-picoxcell/include/mach/vmalloc.h
++++ /dev/null
+@@ -1,18 +0,0 @@
+-/*
+- * Copyright (c) 2011 Picochip Ltd., Jamie Iles
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+- */
+-#define VMALLOC_END		0xFE000000UL
+diff --git a/arch/arm/mach-picoxcell/io.c b/arch/arm/mach-picoxcell/io.c
+index 935a2fa..39e9b9e 100644
+--- a/arch/arm/mach-picoxcell/io.c
++++ b/arch/arm/mach-picoxcell/io.c
+@@ -30,27 +30,3 @@ void __init picoxcell_map_io(void)
+ 
+ 	iotable_init(&io_map, 1);
+ }
+-
+-void __iomem *picoxcell_ioremap(unsigned long p, size_t size,
+-				unsigned int type)
+-{
+-	if (unlikely(size == 0))
+-		return NULL;
+-
+-	if (p >= PICOXCELL_PERIPH_BASE &&
+-	    p < PICOXCELL_PERIPH_BASE + PICOXCELL_PERIPH_LENGTH)
+-		return IO_ADDRESS(p);
+-
+-	return __arm_ioremap_caller(p, size, type,
+-				    __builtin_return_address(0));
+-}
+-EXPORT_SYMBOL_GPL(picoxcell_ioremap);
+-
+-void picoxcell_iounmap(volatile void __iomem *addr)
+-{
+-	unsigned long virt = (unsigned long)addr;
+-
+-	if (virt >= VMALLOC_START && virt < VMALLOC_END)
+-		__iounmap(addr);
+-}
+-EXPORT_SYMBOL_GPL(picoxcell_iounmap);
 -- 
 1.7.4.1
