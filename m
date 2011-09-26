@@ -1,108 +1,122 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: [PATCH 11/13] arm/dts: omap4-sdp: Add twl6030, i2c3 and i2c4 devices
-Date: Mon, 26 Sep 2011 18:50:19 +0200
-Message-ID: <1317055821-20652-12-git-send-email-b-cousson@ti.com>
-References: <1317055821-20652-1-git-send-email-b-cousson@ti.com>
+From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] dtc: Add support for variable sized cells
+Date: Mon, 26 Sep 2011 10:15:48 -0700
+Message-ID: <CAF6FioU6HmPw4UTHmiWFJPyXJGR5KtZR_4CW3be++S5vSR0GaA@mail.gmail.com>
+References: <1316800974-30129-1-git-send-email-robotboy@chromium.org>
+	<1316800974-30129-4-git-send-email-robotboy@chromium.org>
+	<20110925110454.GP12286@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1317055821-20652-1-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, grant.likely@secretlab.ca
-Cc: paul@pwsan.com, khilman@ti.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110925110454.GP12286-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update DTS file with required clock frequencies
-for the i2c client devices existing on sdp4430.
+On Sun, Sep 25, 2011 at 4:04 AM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Fri, Sep 23, 2011 at 11:02:54AM -0700, Anton Staaf wrote:
+>> Cells of size 8, 16, 32, and 64 bits are supported. =A0The new
+>> /bits/ syntax was selected so as to not pollute the reserved
+>> keyword space with uint8/uint16/... type names.
+>>
+>> With this patch the following property assignment:
+>>
+>> =A0 =A0 property =3D /bits/ 16 <0x1234 0x5678 0x0 0xffff>;
+>>
+>> is equivalent to:
+>>
+>> =A0 =A0 property =3D <0x12345678 0x0000ffff>;
+>>
+>> It is now also possible to directly specify a 64 bit literal in a
+>> cell list using:
+>>
+>> =A0 =A0 property =3D /bits/ 64 <0xdeadbeef00000000>;
+>>
+>> It is an error to attempt to store a literal into a cell that is too
+>> small to hold the literal, and the compiler will generate an error
+>> when it detects this. =A0For instance:
+>>
+>> =A0 =A0 property =3D /bits/ 8 <256>;
+>>
+>> Will fail to compile. =A0It is also an error to attempt to place a
+>> reference in a non 32-bit cell.
+>
+> So, there's one small but serious error left in the patch, see below.
+>
+> Other than that, only two things concern me:
+>
+> =A0 =A0 =A0 =A01) Exactly what to call the keyword. =A0/bits/ is better t=
+han
+> /size/, but I'd still like to stew a bit on it to see if we can come
+> up with anything better.
+>
+> =A0 =A0 =A0 =A02) In the documentation and internal naming, we're using
+> the term "cell" ambiguously. =A0In the discussion of this extension
+> we've been using "cell" to mean one array element, which is fair
+> enough since it's more-or-less standard CS terminology. =A0However, in
+> previous FDT and OF terminology "cell" refers to an exactly 32-bit
+> quantity [well, to be exact OF old-timers say this isn't strictly
+> right in old OF-ese, but it's close enough to meaning that for most
+> purposes].
+> =A0 =A0 =A0 =A0So, I think we need to find a different name for array cel=
+ls
+> to clarify the terminology. =A0"elements" maybe?
+>
+> [snip]
+>> + =A0 =A0 | celllistprefix DT_REF
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 {
+>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 $$ =3D eval_literal($1, 0, 32);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 uint64_t val =3D ~0ULL >> (64 =
+- $1.bits);
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 if ($1.bits !=3D 32)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 print_error("R=
+eferences only allowed in 32-bit"
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 " cell lists");
+>> +
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 $$.data =3D data_add_marker($1=
+.data, REF_PHANDLE, $2);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 $$.data =3D data_append_intege=
+r($$.data, val, $1.bits);
+>
+> Uh, so, this is actually worse than what you had before. =A0Remember
+> print_error() just prints an error, without aborting the parse. =A0So
+> now, if bits !=3D 32 it will print the error, then add a phandle marker
+> *and* a bits-sized -1. =A0So later, when we go through and fix up the
+> REF_PHANDLE markers, we'll assume we're replacing 32-bits of data,
+> which could overrun the end of the data if the element size is less
+> than 32.
+>
+> So, basically the data_add_marker() needs to be in an else clause.
 
-Add the twl6030 node inside the i2c1 controller node.
-This is the minimal support needed to boot OMAP4 boards
-without any crash.
-The support for all the features included in this MFD will be
-added later.
+Yup, you're right.  I should first ask, I couldn't figure out how to write
+a test that tests parse error cases like this.  The closest I found was the
+check tests.  But they are specific to the check messages.  Is there a
+good example of a parse error test?  Or should I create a new type of test?
 
-Add the RTC submodule inside the twl node.
+I'll fix this up today.
 
-Add tmp105 temperature sensor in i2c3
-Add bh1780 Ambient Light Sensor in i2c3
-Add hmc5843 3-Axis Digital Compass in i2c4
+Thanks,
+    Anton
 
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
----
- arch/arm/boot/dts/omap4-sdp.dts |   62 +++++++++++++++++++++++++++++++++++++++
- 1 files changed, 62 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 066e28c..2990841 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -27,3 +27,65 @@
- 		reg = <0x80000000 0x40000000>; /* 1 GB */
- 	};
- };
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+
-+	/*
-+	 * Integrated Power Management Chip
-+	 * http://www.ti.com/lit/ds/symlink/twl6030.pdf
-+	 */
-+	twl@48 {
-+		compatible = "ti,twl6030";
-+		reg = <0x48>;
-+		interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		interrupt-parent = <&gic>;
-+
-+		/* twl is a MFD, so it will contain a bunch of sub-ips */
-+		twl_rtc {
-+			compatible = "ti,twl4030-rtc";
-+			interrupts = <11>;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+};
-+
-+&i2c3 {
-+	clock-frequency = <400000>;
-+
-+	/*
-+	 * Temperature Sensor
-+	 * http://www.ti.com/lit/ds/symlink/tmp105.pdf
-+	 */
-+	tmp105@48 {
-+		compatible = "ti,tmp105";
-+		reg = <0x48>;
-+	};
-+
-+	/*
-+	 * Ambient Light Sensor
-+	 * http://www.rohm.com/products/databook/sensor/pdf/bh1780gli-e.pdf
-+	 */
-+	bh1780@29 {
-+		compatible = "rohm,bh1780";
-+		reg = <0x29>;
-+	};
-+};
-+
-+&i2c4 {
-+	clock-frequency = <400000>;
-+
-+	/*
-+	 * 3-Axis Digital Compass
-+	 * http://www.sparkfun.com/datasheets/Sensors/Magneto/HMC5843.pdf
-+	 */
-+	hmc5843@1e {
-+		compatible = "honeywell,hmc5843";
-+		reg = <0x1e>;
-+	};
-+};
--- 
-1.7.0.4
-
+> --
+> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
+baroque, and my code
+> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
+other_
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
+round_!
+> http://www.ozlabs.org/~dgibson
+>
