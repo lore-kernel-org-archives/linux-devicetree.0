@@ -1,153 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] ARM: OMAP2+: Remove custom init_irq for remaining boards
-Date: Mon, 26 Sep 2011 16:18:11 -0700
-Message-ID: <20110926231811.GK6324@atomide.com>
-References: <1316809399-19579-1-git-send-email-b-cousson@ti.com>
- <1316809399-19579-2-git-send-email-b-cousson@ti.com>
- <20110923230049.GC6324@atomide.com>
- <20110926231516.GI6324@atomide.com>
- <20110926231646.GJ6324@atomide.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] dtc: Add support for variable sized cells
+Date: Tue, 27 Sep 2011 10:55:29 +1000
+Message-ID: <20110927005529.GA5361@yookeroo.fritz.box>
+References: <1316800974-30129-1-git-send-email-robotboy@chromium.org>
+	<1316800974-30129-4-git-send-email-robotboy@chromium.org>
+	<20110925110454.GP12286@yookeroo.fritz.box>
+	<CAF6FioU6HmPw4UTHmiWFJPyXJGR5KtZR_4CW3be++S5vSR0GaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20110926231646.GJ6324@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: grant.likely@secretlab.ca, paul@pwsan.com, khilman@ti.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <CAF6FioU6HmPw4UTHmiWFJPyXJGR5KtZR_4CW3be++S5vSR0GaA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With SoC specific timers, board specific init_irq is
-no longer needed. Earlier this was still needed to
-initialize the gptimer12 on Beagle based boards.
+On Mon, Sep 26, 2011 at 10:15:48AM -0700, Anton Staaf wrote:
+> On Sun, Sep 25, 2011 at 4:04 AM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> > On Fri, Sep 23, 2011 at 11:02:54AM -0700, Anton Staaf wrote:
+[snip]
+> > Uh, so, this is actually worse than what you had before. =A0Remember
+> > print_error() just prints an error, without aborting the parse. =A0So
+> > now, if bits !=3D 32 it will print the error, then add a phandle marker
+> > *and* a bits-sized -1. =A0So later, when we go through and fix up the
+> > REF_PHANDLE markers, we'll assume we're replacing 32-bits of data,
+> > which could overrun the end of the data if the element size is less
+> > than 32.
+> >
+> > So, basically the data_add_marker() needs to be in an else clause.
+> =
 
-Also convert board-h4.c to use omap2_init_irq accidentally
-did not get converted earlier.
+> Yup, you're right.  I should first ask, I couldn't figure out how to write
+> a test that tests parse error cases like this.  The closest I found was t=
+he
+> check tests.  But they are specific to the check messages.  Is there a
+> good example of a parse error test?  Or should I create a new type of tes=
+t?
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Yeah, I don't think we really have any tests like this.  In general
+I've been less concerned about testing the error paths than the
+working path, though testing error paths as well is not a bad idea.
 
-diff --git a/arch/arm/mach-omap2/board-devkit8000.c b/arch/arm/mach-omap2/board-devkit8000.c
-index 4b1f6c6..059b74d 100644
---- a/arch/arm/mach-omap2/board-devkit8000.c
-+++ b/arch/arm/mach-omap2/board-devkit8000.c
-@@ -397,11 +397,6 @@ static struct platform_device keys_gpio = {
- 	},
- };
- 
--static void __init devkit8000_init_irq(void)
--{
--	omap3_init_irq();
--}
--
- #define OMAP_DM9000_BASE	0x2c000000
- 
- static struct resource omap_dm9000_resources[] = {
-@@ -665,7 +660,7 @@ MACHINE_START(DEVKIT8000, "OMAP3 Devkit8000")
- 	.reserve	= omap_reserve,
- 	.map_io		= omap3_map_io,
- 	.init_early	= omap35xx_init_early,
--	.init_irq	= devkit8000_init_irq,
-+	.init_irq	= omap3_init_irq,
- 	.init_machine	= devkit8000_init,
- 	.timer		= &omap3_secure_timer,
- MACHINE_END
-diff --git a/arch/arm/mach-omap2/board-h4.c b/arch/arm/mach-omap2/board-h4.c
-index fcc5107..8486142 100644
---- a/arch/arm/mach-omap2/board-h4.c
-+++ b/arch/arm/mach-omap2/board-h4.c
-@@ -290,11 +290,6 @@ static struct omap_board_config_kernel h4_config[] __initdata = {
- 	{ OMAP_TAG_LCD,		&h4_lcd_config },
- };
- 
--static void __init omap_h4_init_irq(void)
--{
--	omap2_init_irq();
--}
--
- static struct at24_platform_data m24c01 = {
- 	.byte_len	= SZ_1K / 8,
- 	.page_size	= 16,
-@@ -375,7 +370,7 @@ MACHINE_START(OMAP_H4, "OMAP2420 H4 board")
- 	.reserve	= omap_reserve,
- 	.map_io		= omap242x_map_io,
- 	.init_early	= omap2420_init_early,
--	.init_irq	= omap_h4_init_irq,
-+	.init_irq	= omap2_init_irq,
- 	.init_machine	= omap_h4_init,
- 	.timer		= &omap2_timer,
- MACHINE_END
-diff --git a/arch/arm/mach-omap2/board-omap3beagle.c b/arch/arm/mach-omap2/board-omap3beagle.c
-index ce3234d..e085371 100644
---- a/arch/arm/mach-omap2/board-omap3beagle.c
-+++ b/arch/arm/mach-omap2/board-omap3beagle.c
-@@ -449,11 +449,6 @@ static void __init omap3_beagle_init_early(void)
- 	omap2_init_common_infrastructure();
- }
- 
--static void __init omap3_beagle_init_irq(void)
--{
--	omap3_init_irq();
--}
--
- static struct platform_device *omap3_beagle_devices[] __initdata = {
- 	&leds_gpio,
- 	&keys_gpio,
-@@ -561,7 +556,7 @@ MACHINE_START(OMAP3_BEAGLE, "OMAP3 Beagle Board")
- 	.reserve	= omap_reserve,
- 	.map_io		= omap3_map_io,
- 	.init_early	= omap3_beagle_init_early,
--	.init_irq	= omap3_beagle_init_irq,
-+	.init_irq	= omap3_init_irq,
- 	.init_machine	= omap3_beagle_init,
- 	.timer		= &omap3_secure_timer,
- MACHINE_END
-diff --git a/arch/arm/mach-omap2/board-omap3stalker.c b/arch/arm/mach-omap2/board-omap3stalker.c
-index 807c274..fa58a0f 100644
---- a/arch/arm/mach-omap2/board-omap3stalker.c
-+++ b/arch/arm/mach-omap2/board-omap3stalker.c
-@@ -428,11 +428,6 @@ static int __init omap3_stalker_i2c_init(void)
- static struct omap_board_config_kernel omap3_stalker_config[] __initdata = {
- };
- 
--static void __init omap3_stalker_init_irq(void)
--{
--	omap3_init_irq();
--}
--
- static struct platform_device *omap3_stalker_devices[] __initdata = {
- 	&keys_gpio,
- };
-@@ -492,7 +487,7 @@ MACHINE_START(SBC3530, "OMAP3 STALKER")
- 	.boot_params		= 0x80000100,
- 	.map_io			= omap3_map_io,
- 	.init_early		= omap35xx_init_early,
--	.init_irq		= omap3_stalker_init_irq,
-+	.init_irq		= omap3_init_irq,
- 	.init_machine		= omap3_stalker_init,
- 	.timer			= &omap3_secure_timer,
- MACHINE_END
-diff --git a/arch/arm/mach-omap2/board-omap3touchbook.c b/arch/arm/mach-omap2/board-omap3touchbook.c
-index f7f1809..05488fb 100644
---- a/arch/arm/mach-omap2/board-omap3touchbook.c
-+++ b/arch/arm/mach-omap2/board-omap3touchbook.c
-@@ -326,11 +326,6 @@ static struct omap_board_mux board_mux[] __initdata = {
- };
- #endif
- 
--static void __init omap3_touchbook_init_irq(void)
--{
--	omap3_init_irq();
--}
--
- static struct platform_device *omap3_touchbook_devices[] __initdata = {
- 	&omap3_touchbook_lcd_device,
- 	&leds_gpio,
-@@ -403,7 +398,7 @@ MACHINE_START(TOUCHBOOK, "OMAP3 touchbook Board")
- 	.reserve	= omap_reserve,
- 	.map_io		= omap3_map_io,
- 	.init_early	= omap3430_init_early,
--	.init_irq	= omap3_touchbook_init_irq,
-+	.init_irq	= omap3_init_irq,
- 	.init_machine	= omap3_touchbook_init,
- 	.timer		= &omap3_secure_timer,
- MACHINE_END
+So feel free to make a new test if you can think up one that makes
+sense.  A simple "doesn't crash" test would be a start, that doesn't
+care about the program's results, as long as it isn't killed by a
+signal.  Actually testing that an error message is generated would
+require more work though.
+
+-- =
+
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
