@@ -1,15 +1,14 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] of/irq: introduce of_irq_init
-Date: Tue, 27 Sep 2011 08:03:51 -0500
-Message-ID: <4E81C9B7.9000004@gmail.com>
-References: <1316744473-13158-1-git-send-email-robherring2@gmail.com>
-	<1317065083-23573-1-git-send-email-robherring2@gmail.com>
-	<20110927015305.GD20588@ponder.secretlab.ca>
+Subject: Re: [PATCH 2/2] ARM: vic: MULTI_IRQ_HANDLER handler
+Date: Tue, 27 Sep 2011 08:25:30 -0500
+Message-ID: <4E81CECA.6050306@gmail.com>
+References: <1317125802-14386-1-git-send-email-jamie@jamieiles.com>
+	<1317125802-14386-2-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110927015305.GD20588-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1317125802-14386-2-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,201 +18,108 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+On 09/27/2011 07:16 AM, Jamie Iles wrote:
+> Add a handler for the VIC that is suitable for MULTI_IRQ_HANDLER
+> platforms.  This only works for platforms with CONFIG_OF=y as we can
+> determine which controllers are the primary controllers (no parent).
 
-On 09/26/2011 08:53 PM, Grant Likely wrote:
-> On Mon, Sep 26, 2011 at 02:24:43PM -0500, Rob Herring wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> of_irq_init will scan the devicetree for matching interrupt controller
->> nodes. Then it calls an initialization function for each found controller
->> in the proper order with parent nodes initialized before child nodes.
->>
->> Based on initial pseudo code from Grant Likely.
->>
->> Changes in v4:
->> - Drop unnecessary empty list check
->> - Be more verbose on errors
->> - Simplify "if (!desc) WARN_ON(1)" to "if (WARN_ON(!desc))"
->>
->> Changes in v3:
->> - add missing kfree's found by Jamie
->> - Implement Grant's comments to simplify the init loop
->> - fix function comments
->>
->> Changes in v2:
->> - Complete re-write of list searching code from Grant Likely
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> 
-> Looks good to me.  Merged.
-> 
-
-I'm dependent on this and things in rmk's tree for initial highbank
-support, so should this series go in thru arm-soc tree? Several others
-are dependent on this as well.
+That's probably not an acceptable limitation. I guess this is hard-wired
+into entry-macro.S files currently? Perhaps adding an "is_root" flag to
+vic_init would fix it for non-DT.
 
 Rob
 
-> g.
 > 
->> ---
->>  drivers/of/irq.c       |  107 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/of_irq.h |    3 +
->>  2 files changed, 110 insertions(+), 0 deletions(-)
->>
->> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
->> index 6a5b5e7..6d3dd39 100644
->> --- a/drivers/of/irq.c
->> +++ b/drivers/of/irq.c
->> @@ -19,10 +19,12 @@
->>   */
->>  
->>  #include <linux/errno.h>
->> +#include <linux/list.h>
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->>  #include <linux/of_irq.h>
->>  #include <linux/string.h>
->> +#include <linux/slab.h>
->>  
->>  /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
->>  #ifndef NO_IRQ
->> @@ -386,3 +388,108 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
->>  
->>  	return i;
->>  }
->> +
->> +struct intc_desc {
->> +	struct list_head	list;
->> +	struct device_node	*dev;
->> +	struct device_node	*interrupt_parent;
->> +};
->> +
->> +/**
->> + * of_irq_init - Scan and init matching interrupt controllers in DT
->> + * @matches: 0 terminated array of nodes to match and init function to call
->> + *
->> + * This function scans the device tree for matching interrupt controller nodes,
->> + * and calls their initialization functions in order with parents first.
->> + */
->> +void __init of_irq_init(const struct of_device_id *matches)
->> +{
->> +	struct device_node *np, *parent = NULL;
->> +	struct intc_desc *desc, *temp_desc;
->> +	struct list_head intc_desc_list, intc_parent_list;
->> +
->> +	INIT_LIST_HEAD(&intc_desc_list);
->> +	INIT_LIST_HEAD(&intc_parent_list);
->> +
->> +	for_each_matching_node(np, matches) {
->> +		if (!of_find_property(np, "interrupt-controller", NULL))
->> +			continue;
->> +		/*
->> +		 * Here, we allocate and populate an intc_desc with the node
->> +		 * pointer, interrupt-parent device_node etc.
->> +		 */
->> +		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
->> +		if (WARN_ON(!desc))
->> +			goto err;
->> +
->> +		desc->dev = np;
->> +		desc->interrupt_parent = of_irq_find_parent(np);
->> +		list_add_tail(&desc->list, &intc_desc_list);
->> +	}
->> +
->> +	/*
->> +	 * The root irq controller is the one without an interrupt-parent.
->> +	 * That one goes first, followed by the controllers that reference it,
->> +	 * followed by the ones that reference the 2nd level controllers, etc.
->> +	 */
->> +	while (!list_empty(&intc_desc_list)) {
->> +		/*
->> +		 * Process all controllers with the current 'parent'.
->> +		 * First pass will be looking for NULL as the parent.
->> +		 * The assumption is that NULL parent means a root controller.
->> +		 */
->> +		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
->> +			const struct of_device_id *match;
->> +			int ret;
->> +			of_irq_init_cb_t irq_init_cb;
->> +
->> +			if (desc->interrupt_parent != parent)
->> +				continue;
->> +
->> +			list_del(&desc->list);
->> +			match = of_match_node(matches, desc->dev);
->> +			if (WARN(!match->data,
->> +			    "of_irq_init: no init function for %s\n",
->> +			    match->compatible)) {
->> +				kfree(desc);
->> +				continue;
->> +			}
->> +
->> +			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
->> +				 match->compatible,
->> +				 desc->dev, desc->interrupt_parent);
->> +			irq_init_cb = match->data;
->> +			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
->> +			if (ret) {
->> +				kfree(desc);
->> +				continue;
->> +			}
->> +
->> +			/*
->> +			 * This one is now set up; add it to the parent list so
->> +			 * its children can get processed in a subsequent pass.
->> +			 */
->> +			list_add_tail(&desc->list, &intc_parent_list);
->> +		}
->> +
->> +		/* Get the next pending parent that might have children */
->> +		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
->> +		if (list_empty(&intc_parent_list) || !desc) {
->> +			pr_err("of_irq_init: children remain, but no parents\n");
->> +			break;
->> +		}
->> +		list_del(&desc->list);
->> +		parent = desc->dev;
->> +		kfree(desc);
->> +	}
->> +
->> +	list_for_each_entry_safe(desc, temp_desc, &intc_parent_list, list) {
->> +		list_del(&desc->list);
->> +		kfree(desc);
->> +	}
->> +err:
->> +	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
->> +		list_del(&desc->list);
->> +		kfree(desc);
->> +	}
->> +}
->> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
->> index cd2e61c..d0307ee 100644
->> --- a/include/linux/of_irq.h
->> +++ b/include/linux/of_irq.h
->> @@ -33,6 +33,8 @@ struct of_irq {
->>  	u32 specifier[OF_MAX_IRQ_SPEC]; /* Specifier copy */
->>  };
->>  
->> +typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
->> +
->>  /*
->>   * Workarounds only applied to 32bit powermac machines
->>   */
->> @@ -73,6 +75,7 @@ extern int of_irq_to_resource_table(struct device_node *dev,
->>  		struct resource *res, int nr_irqs);
->>  extern struct device_node *of_irq_find_parent(struct device_node *child);
->>  
->> +extern void of_irq_init(const struct of_device_id *matches);
->>  
->>  #endif /* CONFIG_OF_IRQ */
->>  #endif /* CONFIG_OF */
->> -- 
->> 1.7.5.4
->>
+> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> ---
+>  arch/arm/common/vic.c               |   48 +++++++++++++++++++++++++++++++++++
+>  arch/arm/include/asm/hardware/vic.h |    1 +
+>  2 files changed, 49 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
+> index 3658579..e9b72d3 100644
+> --- a/arch/arm/common/vic.c
+> +++ b/arch/arm/common/vic.c
+> @@ -63,6 +63,22 @@ static struct vic_device vic_devices[CONFIG_ARM_VIC_NR];
+>  
+>  static int vic_id;
+>  
+> +#if defined(CONFIG_OF) && defined(CONFIG_MULTI_IRQ_HANDLER)
+> +/*
+> + * The root VIC's.  We keep track of these so that we can do the IRQ demuxing
+> + * as we can have more than one root VIC.
+> + */
+> +static struct vic_device *vic_root_devices[CONFIG_ARM_VIC_NR];
+> +static int nr_root_vics;
+> +
+> +static void vic_register_root_controller(struct vic_device *vic)
+> +{
+> +	vic_root_devices[nr_root_vics++] = vic;
+> +}
+> +#else /* CONFIG_OF && CONFIG_MULTI_IRQ_HANDLER */
+> +static inline void vic_register_root_controller(struct vic_device *vic) {}
+> +#endif /* CONFIG_OF && CONFIG_MULTI_IRQ_HANDLER */
+> +
+>  /**
+>   * vic_init2 - common initialisation code
+>   * @base: Base of the VIC.
+> @@ -439,6 +455,9 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
+>  	vic->domain.ops = &vic_irq_domain_ops;
+>  	irq_domain_add(&vic->domain);
+>  
+> +	if (!parent)
+> +		vic_register_root_controller(vic);
+> +
+>  	return 0;
+>  
+>  out_unmap:
+> @@ -447,4 +466,33 @@ out_unmap:
+>  	return -EIO;
+>  }
+>  
+> +#ifdef CONFIG_MULTI_IRQ_HANDLER
+> +static void vic_single_handle_irq(struct vic_device *vic, struct pt_regs *regs)
+> +{
+> +	u32 stat, irq;
+> +	bool handled = false;
+> +
+> +	while (!handled) {
+> +		stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
+> +		if (!stat)
+> +			break;
+> +
+> +		while (stat) {
+> +			irq = fls(stat) - 1;
+> +			handle_IRQ(irq + vic->irq, regs);
+> +			stat &= ~(1 << irq);
+> +			handled = true;
+> +		}
+> +	}
+> +}
+> +
+> +asmlinkage void __exception_irq_entry vic_handle_irq(struct pt_regs *regs)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nr_root_vics; ++i)
+> +		vic_single_handle_irq(vic_root_devices[i], regs);
+> +}
+> +#endif /* CONFIG_MULTI_IRQ_HANDLER */
+> +
+>  #endif /* CONFIG OF */
+> diff --git a/arch/arm/include/asm/hardware/vic.h b/arch/arm/include/asm/hardware/vic.h
+> index df1d895..451788c 100644
+> --- a/arch/arm/include/asm/hardware/vic.h
+> +++ b/arch/arm/include/asm/hardware/vic.h
+> @@ -53,6 +53,7 @@ static inline int vic_of_init(struct device_node *node,
+>  	return -ENOSYS;
+>  }
+>  #endif /* CONFIG_OF */
+> +void vic_handle_irq(struct pt_regs *regs);
+>  #endif /* __ASSEMBLY__ */
+>  
+>  #endif
