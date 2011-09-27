@@ -1,117 +1,87 @@
-From: Daniel Drake <dsd@laptop.org>
-Subject: Re: [PATCH 1/3] mfd: allow mfd_cell association with device tree node
-Date: Tue, 27 Sep 2011 17:44:04 +0100
-Message-ID: <CAMLZHHQU-eMAtvBQJj6+WrMjkWWA+ET=z5NdQCEgXxh=m10d3Q@mail.gmail.com>
-References: <20110921120148.4A81E9D401D@zog.reactivated.net>
-	<20110921124936.GA25620@sirena.org.uk>
-	<CAMLZHHQZnajC4e12MjaK3W8WcAB2ZB+6L=5kS5BBFZF=+YWicQ@mail.gmail.com>
-	<20110921131637.GF4374@opensource.wolfsonmicro.com>
-	<CAMLZHHTJaOddSj00g0-WpFQu6pUTqizKjKaQF9hLrhceEMhY1Q@mail.gmail.com>
-	<20110927150555.GF20588@ponder.secretlab.ca>
+From: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] dtc: Add support for variable sized cells
+Date: Tue, 27 Sep 2011 09:46:17 -0700
+Message-ID: <CAF6FioWr_6FVuy535RmgU3z+BfWr5Nsc_HjAV50BQsU8xnBN-w@mail.gmail.com>
+References: <1316800974-30129-1-git-send-email-robotboy@chromium.org>
+	<1316800974-30129-4-git-send-email-robotboy@chromium.org>
+	<20110925110454.GP12286@yookeroo.fritz.box>
+	<CAF6FioU6HmPw4UTHmiWFJPyXJGR5KtZR_4CW3be++S5vSR0GaA@mail.gmail.com>
+	<20110927005529.GA5361@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary=20cf30050d72c597e604adeefb8d
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20110927150555.GF20588@ponder.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dilinger@queued.net
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110927005529.GA5361-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---20cf30050d72c597e604adeefb8d
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 26, 2011 at 5:55 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Mon, Sep 26, 2011 at 10:15:48AM -0700, Anton Staaf wrote:
+>> On Sun, Sep 25, 2011 at 4:04 AM, David Gibson
+>> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> > On Fri, Sep 23, 2011 at 11:02:54AM -0700, Anton Staaf wrote:
+> [snip]
+>> > Uh, so, this is actually worse than what you had before. =A0Remember
+>> > print_error() just prints an error, without aborting the parse. =A0So
+>> > now, if bits !=3D 32 it will print the error, then add a phandle marker
+>> > *and* a bits-sized -1. =A0So later, when we go through and fix up the
+>> > REF_PHANDLE markers, we'll assume we're replacing 32-bits of data,
+>> > which could overrun the end of the data if the element size is less
+>> > than 32.
+>> >
+>> > So, basically the data_add_marker() needs to be in an else clause.
+>>
+>> Yup, you're right. =A0I should first ask, I couldn't figure out how to w=
+rite
+>> a test that tests parse error cases like this. =A0The closest I found wa=
+s the
+>> check tests. =A0But they are specific to the check messages. =A0Is there=
+ a
+>> good example of a parse error test? =A0Or should I create a new type of =
+test?
+>
+> Yeah, I don't think we really have any tests like this. =A0In general
+> I've been less concerned about testing the error paths than the
+> working path, though testing error paths as well is not a bad idea.
+>
+> So feel free to make a new test if you can think up one that makes
+> sense. =A0A simple "doesn't crash" test would be a start, that doesn't
+> care about the program's results, as long as it isn't killed by a
+> signal. =A0Actually testing that an error message is generated would
+> require more work though.
 
-On Tue, Sep 27, 2011 at 4:05 PM, Grant Likely <grant.likely@secretlab.ca> w=
-rote:
-> What is a hard rule is that the code creating the children needs to
-> know what the binding is and populate the child's of_node
-> appropriately. =A0Similarly, the child driver needs to know something
-> about the kinds of nodes it will be passed (can be tested by the
-> compatible property).
+I was thinking of a "does crash" test.  One that we can use to test that
+incorrectly formatted or semantically incorrect dts files generate the
+appropriate dtc error messages.  I'll look into adding such a test.  But
+I think I'll make that a separate patch set.
 
-Thanks for your input.
-Here is an updated patch which takes account of this hard rule.
+Ahh, I think I just grokked what you want the "doesn't crash" test for.
+It would be used to run a test that hits a syntax error, but ensures
+that the continued execution past that point doesn't cause a segfault
+or other error.  I'll see what I can do about creating a test harness that
+checks both that a specific error was emitted and that the dtc didn't
+crash as a result of the bad input data.
 
-It uses the dynamic mfd cell creation like before. Mark isn't keen on
-this, but its how the driver works already, so I don't think it should
-be a blocker. I don't know how else we can make the mfd framework meet
-Grant's hard rule.
+Thanks,
+    Anton
 
-However, it does take Mark's suggestion into account that the mfd
-should have some clear representation in the device tree. For us it
-already did have (naturally), but this wasn't reflected in my earlier
-patch. It is now - the location of the vx855-gpio node is based on
-finding the mfd node and going from there.
-
-Comments?
-It obviously needs to be tested and split up into individual patches -
-I'll do that shortly if this doesn't get shot down.
-
-cheers
-Daniel
-
---20cf30050d72c597e604adeefb8d
-Content-Type: text/plain; charset=US-ASCII; name="vx855-2.txt"
-Content-Disposition: attachment; filename="vx855-2.txt"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_gt348bga0
-
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvLXZ4ODU1LmMgYi9kcml2ZXJzL2dwaW8vZ3Bp
-by12eDg1NS5jCmluZGV4IGVmNWFhYmQuLjJjMzAwYzkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3Bp
-by9ncGlvLXZ4ODU1LmMKKysrIGIvZHJpdmVycy9ncGlvL2dwaW8tdng4NTUuYwpAQCAtMjAxLDcg
-KzIwMSw4IEBAIHN0YXRpYyBjb25zdCBjaGFyICp2eDg1NWdwaW9fbmFtZXNbTlJfVlg4NTVfR1Bd
-ID0gewogCSJWWDg1NV9HUElPMTIiLCAiVlg4NTVfR1BJTzEzIiwgIlZYODU1X0dQSU8xNCIKIH07
-CiAKLXN0YXRpYyB2b2lkIHZ4ODU1Z3Bpb19ncGlvX3NldHVwKHN0cnVjdCB2eDg1NV9ncGlvICp2
-ZykKK3N0YXRpYyB2b2lkIHZ4ODU1Z3Bpb19ncGlvX3NldHVwKHN0cnVjdCB2eDg1NV9ncGlvICp2
-ZywKKwkJCQkgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIHsKIAlzdHJ1Y3QgZ3Bpb19j
-aGlwICpjID0gJnZnLT5ncGlvOwogCkBAIC0yMTYsNiArMjE3LDEwIEBAIHN0YXRpYyB2b2lkIHZ4
-ODU1Z3Bpb19ncGlvX3NldHVwKHN0cnVjdCB2eDg1NV9ncGlvICp2ZykKIAljLT5uZ3BpbyA9IE5S
-X1ZYODU1X0dQOwogCWMtPmNhbl9zbGVlcCA9IDA7CiAJYy0+bmFtZXMgPSB2eDg1NWdwaW9fbmFt
-ZXM7CisKKyNpZmRlZiBDT05GSUdfT0ZfR1BJTworCWMtPm9mX25vZGUgPSBwZGV2LT5kZXYub2Zf
-bm9kZTsKKyNlbmRpZgogfQogCiAvKiBUaGlzIHBsYXRmb3JtIGRldmljZSBpcyBvcmRpbmFyaWx5
-IHJlZ2lzdGVyZWQgYnkgdGhlIHZ4ODU1IG1mZCBkcml2ZXIgKi8KQEAgLTI2NCw3ICsyNjksNyBA
-QCBzdGF0aWMgX19kZXZpbml0IGludCB2eDg1NWdwaW9fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikKIAllbHNlCiAJCXZnLT5ncG9fcmVzZXJ2ZWQgPSB0cnVlOwogCi0Jdng4NTVn
-cGlvX2dwaW9fc2V0dXAodmcpOworCXZ4ODU1Z3Bpb19ncGlvX3NldHVwKHZnLCBwZGV2KTsKIAog
-CXJldCA9IGdwaW9jaGlwX2FkZCgmdmctPmdwaW8pOwogCWlmIChyZXQpIHsKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbWZkL21mZC1jb3JlLmMgYi9kcml2ZXJzL21mZC9tZmQtY29yZS5jCmluZGV4IDA5
-MDI1MjMuLjdkMjJkY2QgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWZkL21mZC1jb3JlLmMKKysrIGIv
-ZHJpdmVycy9tZmQvbWZkLWNvcmUuYwpAQCAtODcsNiArODcsNyBAQCBzdGF0aWMgaW50IG1mZF9h
-ZGRfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKnBhcmVudCwgaW50IGlkLAogCQlnb3RvIGZhaWxfZGV2
-aWNlOwogCiAJcGRldi0+ZGV2LnBhcmVudCA9IHBhcmVudDsKKwlwZGV2LT5kZXYub2Zfbm9kZSA9
-IGNlbGwtPm9mX25vZGU7CiAKIAlpZiAoY2VsbC0+cGRhdGFfc2l6ZSkgewogCQlyZXQgPSBwbGF0
-Zm9ybV9kZXZpY2VfYWRkX2RhdGEocGRldiwKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3Z4ODU1
-LmMgYi9kcml2ZXJzL21mZC92eDg1NS5jCmluZGV4IGQ2OTg3MDMuLmQyMjM4NDAgMTAwNjQ0Ci0t
-LSBhL2RyaXZlcnMvbWZkL3Z4ODU1LmMKKysrIGIvZHJpdmVycy9tZmQvdng4NTUuYwpAQCAtMzAs
-NiArMzAsNyBAQAogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgogI2luY2x1ZGUg
-PGxpbnV4L3BjaS5oPgogI2luY2x1ZGUgPGxpbnV4L21mZC9jb3JlLmg+CisjaW5jbHVkZSA8bGlu
-dXgvb2YuaD4KIAogLyogb2Zmc2V0IGludG8gcGNpIGNvbmZpZyBzcGFjZSBpbmRpY2F0aW5nIHRo
-ZSAxNmJpdCByZWdpc3RlciBjb250YWluaW5nCiAgKiB0aGUgcG93ZXIgbWFuYWdlbWVudCBJTyBz
-cGFjZSBiYXNlICovCkBAIC03Miw2ICs3MywyNyBAQCBzdGF0aWMgc3RydWN0IG1mZF9jZWxsIHZ4
-ODU1X2NlbGxzW10gPSB7CiAJfSwKIH07CiAKK3N0YXRpYyBfX2RldmluaXQgdm9pZCB2eDg1NV9z
-ZXRfb2Zfbm9kZXMoc3RydWN0IHBjaV9kZXYgKnBkZXYpCit7CisjaWZkZWYgQ09ORklHX09GCisJ
-c3RydWN0IGRldmljZV9ub2RlICppc2Ffbm9kZTsKKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNoaWxk
-OworCisJaXNhX25vZGUgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAidmlh
-LHZ4ODU1LWlzYSIpOworCXBkZXYtPmRldi5vZl9ub2RlID0gaXNhX25vZGU7CisKKwlpZiAoIWlz
-YV9ub2RlKQorCQlyZXR1cm47CisKKwlmb3JfZWFjaF9jaGlsZF9vZl9ub2RlKGlzYV9ub2RlLCBj
-aGlsZCkgeworCQlpZiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUoY2hpbGQsICJ2aWEsdng4NTUt
-Z3BpbyIpKSB7CisJCQl2eDg1NV9jZWxsc1swXS5vZl9ub2RlID0gY2hpbGQ7CisJCQlicmVhazsK
-KwkJfQorCX0KKyNlbmRpZgorfQorCiBzdGF0aWMgX19kZXZpbml0IGludCB2eDg1NV9wcm9iZShz
-dHJ1Y3QgcGNpX2RldiAqcGRldiwKIAkJCQkgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgKmlk
-KQogewpAQCAtOTAsNiArMTEyLDggQEAgc3RhdGljIF9fZGV2aW5pdCBpbnQgdng4NTVfcHJvYmUo
-c3RydWN0IHBjaV9kZXYgKnBkZXYsCiAJCWdvdG8gb3V0OwogCX0KIAorCXZ4ODU1X3NldF9vZl9u
-b2RlcyhwZGV2KTsKKwogCS8qIG1hc2sgb3V0IHRoZSBsb3dlc3Qgc2V2ZW4gYml0cywgYXMgdGhl
-eSBhcmUgYWx3YXlzIHplcm8sIGJ1dAogCSAqIGhhcmR3YXJlIHJldHVybnMgdGhlbSBhcyAweDAx
-ICovCiAJZ3Bpb19pb19vZmZzZXQgJj0gMHhmZjgwOwpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
-eC9tZmQvY29yZS5oIGIvaW5jbHVkZS9saW51eC9tZmQvY29yZS5oCmluZGV4IDRlNzYxNjMuLjli
-ODM2ZjkgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvbWZkL2NvcmUuaAorKysgYi9pbmNsdWRl
-L2xpbnV4L21mZC9jb3JlLmgKQEAgLTE1LDYgKzE1LDcgQEAKICNkZWZpbmUgTUZEX0NPUkVfSAog
-CiAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+CisjaW5jbHVkZSA8bGludXgvb2Yu
-aD4KIAogLyoKICAqIFRoaXMgc3RydWN0IGRlc2NyaWJlcyB0aGUgTUZEIHBhcnQgKCJjZWxsIiku
-CkBAIC0zNyw2ICszOCw5IEBAIHN0cnVjdCBtZmRfY2VsbCB7CiAJdm9pZAkJCSpwbGF0Zm9ybV9k
-YXRhOwogCXNpemVfdAkJCXBkYXRhX3NpemU7CiAKKwkvKiBhc3NvY2lhdGlvbiB3aXRoIGRldmlj
-ZSB0cmVlIG5vZGUgKG9wdGlvbmFsKSAqLworCXN0cnVjdCBkZXZpY2Vfbm9kZQkqb2Zfbm9kZTsK
-KwogCS8qCiAJICogVGhlc2UgcmVzb3VyY2VzIGNhbiBiZSBzcGVjaWZpZWQgcmVsYXRpdmUgdG8g
-dGhlIHBhcmVudCBkZXZpY2UuCiAJICogRm9yIGFjY2Vzc2luZyBoYXJkd2FyZSB5b3Ugc2hvdWxk
-IHVzZSByZXNvdXJjZXMgZnJvbSB0aGUgcGxhdGZvcm0gZGV2Cg==
---20cf30050d72c597e604adeefb8d--
+> --
+> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
+baroque, and my code
+> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
+other_
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
+round_!
+> http://www.ozlabs.org/~dgibson
+>
