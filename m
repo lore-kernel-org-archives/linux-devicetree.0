@@ -1,104 +1,117 @@
-From: Anton Staaf <robotboy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] dtc: Add support for variable sized cells
-Date: Tue, 27 Sep 2011 09:41:48 -0700
-Message-ID: <CAF6FioUFnOm+r-vU_O8J+qbXoN1wE0M=2e7aYYZWDW5=g3f70g@mail.gmail.com>
-References: <1316800974-30129-1-git-send-email-robotboy@chromium.org>
-	<1316800974-30129-4-git-send-email-robotboy@chromium.org>
-	<20110925110454.GP12286@yookeroo.fritz.box>
-	<CAF6FioUGZV4P10Z9A1U65bdue9Tqr5DyAV++z8ZyJDeLMXGWgA@mail.gmail.com>
-	<20110927005821.GB5361@yookeroo.fritz.box>
+From: Daniel Drake <dsd@laptop.org>
+Subject: Re: [PATCH 1/3] mfd: allow mfd_cell association with device tree node
+Date: Tue, 27 Sep 2011 17:44:04 +0100
+Message-ID: <CAMLZHHQU-eMAtvBQJj6+WrMjkWWA+ET=z5NdQCEgXxh=m10d3Q@mail.gmail.com>
+References: <20110921120148.4A81E9D401D@zog.reactivated.net>
+	<20110921124936.GA25620@sirena.org.uk>
+	<CAMLZHHQZnajC4e12MjaK3W8WcAB2ZB+6L=5kS5BBFZF=+YWicQ@mail.gmail.com>
+	<20110921131637.GF4374@opensource.wolfsonmicro.com>
+	<CAMLZHHTJaOddSj00g0-WpFQu6pUTqizKjKaQF9hLrhceEMhY1Q@mail.gmail.com>
+	<20110927150555.GF20588@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110927005821.GB5361-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/mixed; boundary=20cf30050d72c597e604adeefb8d
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20110927150555.GF20588@ponder.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dilinger@queued.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 26, 2011 at 5:58 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Mon, Sep 26, 2011 at 01:48:31PM -0700, Anton Staaf wrote:
->> On Sun, Sep 25, 2011 at 4:04 AM, David Gibson
->> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
->> > On Fri, Sep 23, 2011 at 11:02:54AM -0700, Anton Staaf wrote:
->> > =A0 =A0 =A0 =A01) Exactly what to call the keyword. =A0/bits/ is bette=
-r than
->> > /size/, but I'd still like to stew a bit on it to see if we can come
->> > up with anything better.
->>
->> Sounds good. =A0I have a slight preference for /bits/ over something like
->> /element-bits/ or /elementbits/. =A0But could be convinced if that was
->> preferred.
->
-> I'm certainly leaning towards /bits/ in preference to those
-> alternatives, for the time being at least.
->
->> > =A0 =A0 =A0 =A02) In the documentation and internal naming, we're using
->> > the term "cell" ambiguously. =A0In the discussion of this extension
->> > we've been using "cell" to mean one array element, which is fair
->> > enough since it's more-or-less standard CS terminology. =A0However, in
->> > previous FDT and OF terminology "cell" refers to an exactly 32-bit
->> > quantity [well, to be exact OF old-timers say this isn't strictly
->> > right in old OF-ese, but it's close enough to meaning that for most
->> > purposes].
->> > =A0 =A0 =A0 =A0So, I think we need to find a different name for array =
-cells
->> > to clarify the terminology. =A0"elements" maybe?
->>
->> The documentation all talks about arrays of cells. =A0Where as the sourc=
-e code
->> always calls them lists of cells. =A0I agree that calling them cells onc=
-e they are
->> no longer fixed to 32-bits should be avoided. =A0One solution would be t=
-o rename
->> the non-terminal and semantic variables in the parser from celllistprefi=
-x and
->> celllist to arrayprefix and array respectively. =A0I would also change t=
-he error
->> message about the size not being one of the supported sizes to say "elem=
-ent"
->> instead of "cell".
->
-> That sounds good.
+--20cf30050d72c597e604adeefb8d
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Done.
+On Tue, Sep 27, 2011 at 4:05 PM, Grant Likely <grant.likely@secretlab.ca> w=
+rote:
+> What is a hard rule is that the code creating the children needs to
+> know what the binding is and populate the child's of_node
+> appropriately. =A0Similarly, the child driver needs to know something
+> about the kinds of nodes it will be passed (can be tested by the
+> compatible property).
 
->> I could likewise clean up the documentation so that the only mentions of=
- the
->> cell type were consistent with 32-bit cells. =A0In fact, reading over the
->> documentation, it looks like a lot of the references to "cell array"
->> can be turned
->> into just "array", and the remaining references to "cell" can become "el=
-ement".
->>
->> How does this sound?
->
-> Sounds good. =A0I'd perhaps add a explanatory note in there saying that
-> an array with element size 32-bits is a "list of cells", since many
-> existing bindings describe things in terms of x cells of this, y cells
-> of that and so forth.
+Thanks for your input.
+Here is an updated patch which takes account of this hard rule.
 
-Done.
+It uses the dynamic mfd cell creation like before. Mark isn't keen on
+this, but its how the driver works already, so I don't think it should
+be a blocker. I don't know how else we can make the mfd framework meet
+Grant's hard rule.
 
-Thanks,
-     Anton
+However, it does take Mark's suggestion into account that the mfd
+should have some clear representation in the device tree. For us it
+already did have (naturally), but this wasn't reflected in my earlier
+patch. It is now - the location of the vx855-gpio node is based on
+finding the mfd node and going from there.
 
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
->
+Comments?
+It obviously needs to be tested and split up into individual patches -
+I'll do that shortly if this doesn't get shot down.
+
+cheers
+Daniel
+
+--20cf30050d72c597e604adeefb8d
+Content-Type: text/plain; charset=US-ASCII; name="vx855-2.txt"
+Content-Disposition: attachment; filename="vx855-2.txt"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_gt348bga0
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvLXZ4ODU1LmMgYi9kcml2ZXJzL2dwaW8vZ3Bp
+by12eDg1NS5jCmluZGV4IGVmNWFhYmQuLjJjMzAwYzkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3Bp
+by9ncGlvLXZ4ODU1LmMKKysrIGIvZHJpdmVycy9ncGlvL2dwaW8tdng4NTUuYwpAQCAtMjAxLDcg
+KzIwMSw4IEBAIHN0YXRpYyBjb25zdCBjaGFyICp2eDg1NWdwaW9fbmFtZXNbTlJfVlg4NTVfR1Bd
+ID0gewogCSJWWDg1NV9HUElPMTIiLCAiVlg4NTVfR1BJTzEzIiwgIlZYODU1X0dQSU8xNCIKIH07
+CiAKLXN0YXRpYyB2b2lkIHZ4ODU1Z3Bpb19ncGlvX3NldHVwKHN0cnVjdCB2eDg1NV9ncGlvICp2
+ZykKK3N0YXRpYyB2b2lkIHZ4ODU1Z3Bpb19ncGlvX3NldHVwKHN0cnVjdCB2eDg1NV9ncGlvICp2
+ZywKKwkJCQkgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIHsKIAlzdHJ1Y3QgZ3Bpb19j
+aGlwICpjID0gJnZnLT5ncGlvOwogCkBAIC0yMTYsNiArMjE3LDEwIEBAIHN0YXRpYyB2b2lkIHZ4
+ODU1Z3Bpb19ncGlvX3NldHVwKHN0cnVjdCB2eDg1NV9ncGlvICp2ZykKIAljLT5uZ3BpbyA9IE5S
+X1ZYODU1X0dQOwogCWMtPmNhbl9zbGVlcCA9IDA7CiAJYy0+bmFtZXMgPSB2eDg1NWdwaW9fbmFt
+ZXM7CisKKyNpZmRlZiBDT05GSUdfT0ZfR1BJTworCWMtPm9mX25vZGUgPSBwZGV2LT5kZXYub2Zf
+bm9kZTsKKyNlbmRpZgogfQogCiAvKiBUaGlzIHBsYXRmb3JtIGRldmljZSBpcyBvcmRpbmFyaWx5
+IHJlZ2lzdGVyZWQgYnkgdGhlIHZ4ODU1IG1mZCBkcml2ZXIgKi8KQEAgLTI2NCw3ICsyNjksNyBA
+QCBzdGF0aWMgX19kZXZpbml0IGludCB2eDg1NWdwaW9fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikKIAllbHNlCiAJCXZnLT5ncG9fcmVzZXJ2ZWQgPSB0cnVlOwogCi0Jdng4NTVn
+cGlvX2dwaW9fc2V0dXAodmcpOworCXZ4ODU1Z3Bpb19ncGlvX3NldHVwKHZnLCBwZGV2KTsKIAog
+CXJldCA9IGdwaW9jaGlwX2FkZCgmdmctPmdwaW8pOwogCWlmIChyZXQpIHsKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvbWZkL21mZC1jb3JlLmMgYi9kcml2ZXJzL21mZC9tZmQtY29yZS5jCmluZGV4IDA5
+MDI1MjMuLjdkMjJkY2QgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWZkL21mZC1jb3JlLmMKKysrIGIv
+ZHJpdmVycy9tZmQvbWZkLWNvcmUuYwpAQCAtODcsNiArODcsNyBAQCBzdGF0aWMgaW50IG1mZF9h
+ZGRfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKnBhcmVudCwgaW50IGlkLAogCQlnb3RvIGZhaWxfZGV2
+aWNlOwogCiAJcGRldi0+ZGV2LnBhcmVudCA9IHBhcmVudDsKKwlwZGV2LT5kZXYub2Zfbm9kZSA9
+IGNlbGwtPm9mX25vZGU7CiAKIAlpZiAoY2VsbC0+cGRhdGFfc2l6ZSkgewogCQlyZXQgPSBwbGF0
+Zm9ybV9kZXZpY2VfYWRkX2RhdGEocGRldiwKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3Z4ODU1
+LmMgYi9kcml2ZXJzL21mZC92eDg1NS5jCmluZGV4IGQ2OTg3MDMuLmQyMjM4NDAgMTAwNjQ0Ci0t
+LSBhL2RyaXZlcnMvbWZkL3Z4ODU1LmMKKysrIGIvZHJpdmVycy9tZmQvdng4NTUuYwpAQCAtMzAs
+NiArMzAsNyBAQAogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgogI2luY2x1ZGUg
+PGxpbnV4L3BjaS5oPgogI2luY2x1ZGUgPGxpbnV4L21mZC9jb3JlLmg+CisjaW5jbHVkZSA8bGlu
+dXgvb2YuaD4KIAogLyogb2Zmc2V0IGludG8gcGNpIGNvbmZpZyBzcGFjZSBpbmRpY2F0aW5nIHRo
+ZSAxNmJpdCByZWdpc3RlciBjb250YWluaW5nCiAgKiB0aGUgcG93ZXIgbWFuYWdlbWVudCBJTyBz
+cGFjZSBiYXNlICovCkBAIC03Miw2ICs3MywyNyBAQCBzdGF0aWMgc3RydWN0IG1mZF9jZWxsIHZ4
+ODU1X2NlbGxzW10gPSB7CiAJfSwKIH07CiAKK3N0YXRpYyBfX2RldmluaXQgdm9pZCB2eDg1NV9z
+ZXRfb2Zfbm9kZXMoc3RydWN0IHBjaV9kZXYgKnBkZXYpCit7CisjaWZkZWYgQ09ORklHX09GCisJ
+c3RydWN0IGRldmljZV9ub2RlICppc2Ffbm9kZTsKKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNoaWxk
+OworCisJaXNhX25vZGUgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAidmlh
+LHZ4ODU1LWlzYSIpOworCXBkZXYtPmRldi5vZl9ub2RlID0gaXNhX25vZGU7CisKKwlpZiAoIWlz
+YV9ub2RlKQorCQlyZXR1cm47CisKKwlmb3JfZWFjaF9jaGlsZF9vZl9ub2RlKGlzYV9ub2RlLCBj
+aGlsZCkgeworCQlpZiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUoY2hpbGQsICJ2aWEsdng4NTUt
+Z3BpbyIpKSB7CisJCQl2eDg1NV9jZWxsc1swXS5vZl9ub2RlID0gY2hpbGQ7CisJCQlicmVhazsK
+KwkJfQorCX0KKyNlbmRpZgorfQorCiBzdGF0aWMgX19kZXZpbml0IGludCB2eDg1NV9wcm9iZShz
+dHJ1Y3QgcGNpX2RldiAqcGRldiwKIAkJCQkgY29uc3Qgc3RydWN0IHBjaV9kZXZpY2VfaWQgKmlk
+KQogewpAQCAtOTAsNiArMTEyLDggQEAgc3RhdGljIF9fZGV2aW5pdCBpbnQgdng4NTVfcHJvYmUo
+c3RydWN0IHBjaV9kZXYgKnBkZXYsCiAJCWdvdG8gb3V0OwogCX0KIAorCXZ4ODU1X3NldF9vZl9u
+b2RlcyhwZGV2KTsKKwogCS8qIG1hc2sgb3V0IHRoZSBsb3dlc3Qgc2V2ZW4gYml0cywgYXMgdGhl
+eSBhcmUgYWx3YXlzIHplcm8sIGJ1dAogCSAqIGhhcmR3YXJlIHJldHVybnMgdGhlbSBhcyAweDAx
+ICovCiAJZ3Bpb19pb19vZmZzZXQgJj0gMHhmZjgwOwpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
+eC9tZmQvY29yZS5oIGIvaW5jbHVkZS9saW51eC9tZmQvY29yZS5oCmluZGV4IDRlNzYxNjMuLjli
+ODM2ZjkgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvbWZkL2NvcmUuaAorKysgYi9pbmNsdWRl
+L2xpbnV4L21mZC9jb3JlLmgKQEAgLTE1LDYgKzE1LDcgQEAKICNkZWZpbmUgTUZEX0NPUkVfSAog
+CiAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+CisjaW5jbHVkZSA8bGludXgvb2Yu
+aD4KIAogLyoKICAqIFRoaXMgc3RydWN0IGRlc2NyaWJlcyB0aGUgTUZEIHBhcnQgKCJjZWxsIiku
+CkBAIC0zNyw2ICszOCw5IEBAIHN0cnVjdCBtZmRfY2VsbCB7CiAJdm9pZAkJCSpwbGF0Zm9ybV9k
+YXRhOwogCXNpemVfdAkJCXBkYXRhX3NpemU7CiAKKwkvKiBhc3NvY2lhdGlvbiB3aXRoIGRldmlj
+ZSB0cmVlIG5vZGUgKG9wdGlvbmFsKSAqLworCXN0cnVjdCBkZXZpY2Vfbm9kZQkqb2Zfbm9kZTsK
+KwogCS8qCiAJICogVGhlc2UgcmVzb3VyY2VzIGNhbiBiZSBzcGVjaWZpZWQgcmVsYXRpdmUgdG8g
+dGhlIHBhcmVudCBkZXZpY2UuCiAJICogRm9yIGFjY2Vzc2luZyBoYXJkd2FyZSB5b3Ugc2hvdWxk
+IHVzZSByZXNvdXJjZXMgZnJvbSB0aGUgcGxhdGZvcm0gZGV2Cg==
+--20cf30050d72c597e604adeefb8d--
