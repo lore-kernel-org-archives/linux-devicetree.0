@@ -1,78 +1,89 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 08/13] arm/dts: OMAP4: Add i2c controller nodes
-Date: Tue, 27 Sep 2011 11:12:49 +0530
-Message-ID: <4E816259.4050606@ti.com>
-References: <1317055821-20652-1-git-send-email-b-cousson@ti.com> <1317055821-20652-9-git-send-email-b-cousson@ti.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v3 2/2] input: samsung-keypad: Add device tree support
+Date: Tue, 27 Sep 2011 13:39:58 +0530
+Message-ID: <CAJuYYwTgn2KqNr28MNEPEC7eVkuUA-dzVzJHMTy-MV+GBCn=zA@mail.gmail.com>
+References: <1316427553-5033-1-git-send-email-thomas.abraham@linaro.org>
+	<1316427553-5033-3-git-send-email-thomas.abraham@linaro.org>
+	<20110922174054.GO17168@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1317055821-20652-9-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, grant.likely@secretlab.ca, paul@pwsan.com, khilman@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, "G, Manjunath Kondaiah" <manjugk@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20110922174054.GO17168@ponder.secretlab.ca>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday 26 September 2011 10:20 PM, Benoit Cousson wrote:
-> Add i2c controllers nodes into the main ocp bus.
->
-> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
-> Cc: G, Manjunath Kondaiah<manjugk@ti.com>
-> ---
->   arch/arm/boot/dts/omap4.dtsi |   32 ++++++++++++++++++++++++++++++++
->   1 files changed, 32 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index bb19bca..447f482 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -21,6 +21,10 @@
->   	interrupt-parent =<&gic>;
->
->   	aliases {
-> +		i2c1 =&i2c1;
-> +		i2c2 =&i2c2;
-> +		i2c3 =&i2c3;
-> +		i2c4 =&i2c4;
->   	};
->
->   	cpus {
-> @@ -173,5 +177,33 @@
->   			#gpio-cells =<2>;
->   			gpio-controller;
->   		};
-> +
-> +		i2c1: i2c@1 {
-> +			compatible = "ti,omap3-i2c";
+Hi Grant,
 
-This is a little confusing as omap4.dtsi has
-compatible "ti,omap3-i2c" nodes in it.
+On 22 September 2011 23:10, Grant Likely <grant.likely@secretlab.ca> wr=
+ote:
+> On Mon, Sep 19, 2011 at 03:49:13PM +0530, Thomas Abraham wrote:
+>> Add device tree based discovery support for Samsung's keypad control=
+ler.
+>>
+>> Cc: Joonyoung Shim <jy0922.shim@samsung.com>
+>> Cc: Donghwa Lee <dh09.lee@samsung.com>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>
+> A few things to fix below, but you can add my acked-by when you've
+> addressed them.
 
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
-> +			ti,hwmods = "i2c1";
-> +		};
-> +
-> +		i2c2: i2c@2 {
-> +			compatible = "ti,omap3-i2c";
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
-> +			ti,hwmods = "i2c2";
-> +		};
-> +
-> +		i2c3: i2c@3 {
-> +			compatible = "ti,omap3-i2c";
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
-> +			ti,hwmods = "i2c3";
-> +		};
-> +
-> +		i2c4: i2c@4 {
-> +			compatible = "ti,omap3-i2c";
-> +			#address-cells =<1>;
-> +			#size-cells =<0>;
-> +			ti,hwmods = "i2c4";
-> +		};
->   	};
->   };
+Ok. Thanks for your review. I will fix as per your comments.
 
+[...]
+
+>
+>> diff --git a/drivers/input/keyboard/samsung-keypad.c b/drivers/input=
+/keyboard/samsung-keypad.c
+>> index f689f49..2a477bc 100644
+>> --- a/drivers/input/keyboard/samsung-keypad.c
+>> +++ b/drivers/input/keyboard/samsung-keypad.c
+
+[...]
+
+>> +
+>> + =A0 =A0 of_property_read_u32(np, "samsung,keypad-num-rows", &num_r=
+ows);
+>> + =A0 =A0 of_property_read_u32(np, "samsung,keypad-num-columns", &nu=
+m_cols);
+>
+> property_read doesn't touch the values of num_rows or num_cols on
+> failure. =A0The values need to be initialized if you're going to test
+> the result value.
+
+Ok. num_rows and num_cols variables will be set to zero before the
+property read call.
+
+>
+>> + =A0 =A0 if (!num_rows || !num_cols) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 dev_err(dev, "number of keypad rows/column=
+s not specified\n");
+>> + =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
+>> + =A0 =A0 }
+
+[...]
+
+>>
+>> + =A0 =A0 if (pdev->dev.of_node) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 samsung_keypad_parse_dt_gpio(&pdev->dev, k=
+eypad);
+>> +#ifdef CONFIG_OF
+>> + =A0 =A0 =A0 =A0 =A0 =A0 keypad->type =3D of_device_is_compatible(p=
+dev->dev.of_node,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 "samsung,s5pv210-keypad");
+>> +#endif
+>
+> This still looks odd. =A0If you move the #ifdef up one line, then you
+> can remove the empty version of samsung_keypad_parse_dt_gpio(), and
+> this block won't look so weird.
+>
+
+That would be a better approach. Thanks for the suggestion.
+
+Regards,
+Thomas.
+
+[...]
