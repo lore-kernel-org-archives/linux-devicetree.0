@@ -1,17 +1,15 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] dtc: Add support for variable sized cells
-Date: Tue, 27 Sep 2011 10:58:21 +1000
-Message-ID: <20110927005821.GB5361@yookeroo.fritz.box>
-References: <1316800974-30129-1-git-send-email-robotboy@chromium.org>
-	<1316800974-30129-4-git-send-email-robotboy@chromium.org>
-	<20110925110454.GP12286@yookeroo.fritz.box>
-	<CAF6FioUGZV4P10Z9A1U65bdue9Tqr5DyAV++z8ZyJDeLMXGWgA@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v4] of/irq: introduce of_irq_init
+Date: Mon, 26 Sep 2011 19:53:05 -0600
+Message-ID: <20110927015305.GD20588@ponder.secretlab.ca>
+References: <1316744473-13158-1-git-send-email-robherring2@gmail.com>
+	<1317065083-23573-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAF6FioUGZV4P10Z9A1U65bdue9Tqr5DyAV++z8ZyJDeLMXGWgA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1317065083-23573-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,75 +19,191 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 26, 2011 at 01:48:31PM -0700, Anton Staaf wrote:
-> On Sun, Sep 25, 2011 at 4:04 AM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > On Fri, Sep 23, 2011 at 11:02:54AM -0700, Anton Staaf wrote:
-> > =A0 =A0 =A0 =A01) Exactly what to call the keyword. =A0/bits/ is better=
- than
-> > /size/, but I'd still like to stew a bit on it to see if we can come
-> > up with anything better.
-> =
+On Mon, Sep 26, 2011 at 02:24:43PM -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
+> of_irq_init will scan the devicetree for matching interrupt controller
+> nodes. Then it calls an initialization function for each found controller
+> in the proper order with parent nodes initialized before child nodes.
+> 
+> Based on initial pseudo code from Grant Likely.
+> 
+> Changes in v4:
+> - Drop unnecessary empty list check
+> - Be more verbose on errors
+> - Simplify "if (!desc) WARN_ON(1)" to "if (WARN_ON(!desc))"
+> 
+> Changes in v3:
+> - add missing kfree's found by Jamie
+> - Implement Grant's comments to simplify the init loop
+> - fix function comments
+> 
+> Changes in v2:
+> - Complete re-write of list searching code from Grant Likely
+> 
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-> Sounds good.  I have a slight preference for /bits/ over something like
-> /element-bits/ or /elementbits/.  But could be convinced if that was
-> preferred.
+Looks good to me.  Merged.
 
-I'm certainly leaning towards /bits/ in preference to those
-alternatives, for the time being at least.
+g.
 
-> > =A0 =A0 =A0 =A02) In the documentation and internal naming, we're using
-> > the term "cell" ambiguously. =A0In the discussion of this extension
-> > we've been using "cell" to mean one array element, which is fair
-> > enough since it's more-or-less standard CS terminology. =A0However, in
-> > previous FDT and OF terminology "cell" refers to an exactly 32-bit
-> > quantity [well, to be exact OF old-timers say this isn't strictly
-> > right in old OF-ese, but it's close enough to meaning that for most
-> > purposes].
-> > =A0 =A0 =A0 =A0So, I think we need to find a different name for array c=
-ells
-> > to clarify the terminology. =A0"elements" maybe?
-> =
-
-> The documentation all talks about arrays of cells.  Where as the source c=
-ode
-> always calls them lists of cells.  I agree that calling them cells once t=
-hey are
-> no longer fixed to 32-bits should be avoided.  One solution would be to r=
-ename
-> the non-terminal and semantic variables in the parser from celllistprefix=
- and
-> celllist to arrayprefix and array respectively.  I would also change the =
-error
-> message about the size not being one of the supported sizes to say "eleme=
-nt"
-> instead of "cell".
-
-That sounds good.
-
-> I could likewise clean up the documentation so that the only mentions of =
-the
-> cell type were consistent with 32-bit cells.  In fact, reading over the
-> documentation, it looks like a lot of the references to "cell array"
-> can be turned
-> into just "array", and the remaining references to "cell" can become "ele=
-ment".
-> =
-
-> How does this sound?
-
-Sounds good.  I'd perhaps add a explanatory note in there saying that
-an array with element size 32-bits is a "list of cells", since many
-existing bindings describe things in terms of x cells of this, y cells
-of that and so forth.
-
--- =
-
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+> ---
+>  drivers/of/irq.c       |  107 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_irq.h |    3 +
+>  2 files changed, 110 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 6a5b5e7..6d3dd39 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -19,10 +19,12 @@
+>   */
+>  
+>  #include <linux/errno.h>
+> +#include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/string.h>
+> +#include <linux/slab.h>
+>  
+>  /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
+>  #ifndef NO_IRQ
+> @@ -386,3 +388,108 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+>  
+>  	return i;
+>  }
+> +
+> +struct intc_desc {
+> +	struct list_head	list;
+> +	struct device_node	*dev;
+> +	struct device_node	*interrupt_parent;
+> +};
+> +
+> +/**
+> + * of_irq_init - Scan and init matching interrupt controllers in DT
+> + * @matches: 0 terminated array of nodes to match and init function to call
+> + *
+> + * This function scans the device tree for matching interrupt controller nodes,
+> + * and calls their initialization functions in order with parents first.
+> + */
+> +void __init of_irq_init(const struct of_device_id *matches)
+> +{
+> +	struct device_node *np, *parent = NULL;
+> +	struct intc_desc *desc, *temp_desc;
+> +	struct list_head intc_desc_list, intc_parent_list;
+> +
+> +	INIT_LIST_HEAD(&intc_desc_list);
+> +	INIT_LIST_HEAD(&intc_parent_list);
+> +
+> +	for_each_matching_node(np, matches) {
+> +		if (!of_find_property(np, "interrupt-controller", NULL))
+> +			continue;
+> +		/*
+> +		 * Here, we allocate and populate an intc_desc with the node
+> +		 * pointer, interrupt-parent device_node etc.
+> +		 */
+> +		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+> +		if (WARN_ON(!desc))
+> +			goto err;
+> +
+> +		desc->dev = np;
+> +		desc->interrupt_parent = of_irq_find_parent(np);
+> +		list_add_tail(&desc->list, &intc_desc_list);
+> +	}
+> +
+> +	/*
+> +	 * The root irq controller is the one without an interrupt-parent.
+> +	 * That one goes first, followed by the controllers that reference it,
+> +	 * followed by the ones that reference the 2nd level controllers, etc.
+> +	 */
+> +	while (!list_empty(&intc_desc_list)) {
+> +		/*
+> +		 * Process all controllers with the current 'parent'.
+> +		 * First pass will be looking for NULL as the parent.
+> +		 * The assumption is that NULL parent means a root controller.
+> +		 */
+> +		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
+> +			const struct of_device_id *match;
+> +			int ret;
+> +			of_irq_init_cb_t irq_init_cb;
+> +
+> +			if (desc->interrupt_parent != parent)
+> +				continue;
+> +
+> +			list_del(&desc->list);
+> +			match = of_match_node(matches, desc->dev);
+> +			if (WARN(!match->data,
+> +			    "of_irq_init: no init function for %s\n",
+> +			    match->compatible)) {
+> +				kfree(desc);
+> +				continue;
+> +			}
+> +
+> +			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
+> +				 match->compatible,
+> +				 desc->dev, desc->interrupt_parent);
+> +			irq_init_cb = match->data;
+> +			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
+> +			if (ret) {
+> +				kfree(desc);
+> +				continue;
+> +			}
+> +
+> +			/*
+> +			 * This one is now set up; add it to the parent list so
+> +			 * its children can get processed in a subsequent pass.
+> +			 */
+> +			list_add_tail(&desc->list, &intc_parent_list);
+> +		}
+> +
+> +		/* Get the next pending parent that might have children */
+> +		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
+> +		if (list_empty(&intc_parent_list) || !desc) {
+> +			pr_err("of_irq_init: children remain, but no parents\n");
+> +			break;
+> +		}
+> +		list_del(&desc->list);
+> +		parent = desc->dev;
+> +		kfree(desc);
+> +	}
+> +
+> +	list_for_each_entry_safe(desc, temp_desc, &intc_parent_list, list) {
+> +		list_del(&desc->list);
+> +		kfree(desc);
+> +	}
+> +err:
+> +	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
+> +		list_del(&desc->list);
+> +		kfree(desc);
+> +	}
+> +}
+> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+> index cd2e61c..d0307ee 100644
+> --- a/include/linux/of_irq.h
+> +++ b/include/linux/of_irq.h
+> @@ -33,6 +33,8 @@ struct of_irq {
+>  	u32 specifier[OF_MAX_IRQ_SPEC]; /* Specifier copy */
+>  };
+>  
+> +typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
+> +
+>  /*
+>   * Workarounds only applied to 32bit powermac machines
+>   */
+> @@ -73,6 +75,7 @@ extern int of_irq_to_resource_table(struct device_node *dev,
+>  		struct resource *res, int nr_irqs);
+>  extern struct device_node *of_irq_find_parent(struct device_node *child);
+>  
+> +extern void of_irq_init(const struct of_device_id *matches);
+>  
+>  #endif /* CONFIG_OF_IRQ */
+>  #endif /* CONFIG_OF */
+> -- 
+> 1.7.5.4
+> 
