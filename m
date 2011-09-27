@@ -1,15 +1,14 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4] of/irq: introduce of_irq_init
-Date: Mon, 26 Sep 2011 19:53:05 -0600
-Message-ID: <20110927015305.GD20588@ponder.secretlab.ca>
-References: <1316744473-13158-1-git-send-email-robherring2@gmail.com>
-	<1317065083-23573-1-git-send-email-robherring2@gmail.com>
+From: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 02/13] gpio/omap: Adapt GPIO driver to DT
+Date: Tue, 27 Sep 2011 11:10:23 +0530
+Message-ID: <4E8161C7.7020404@ti.com>
+References: <1317055821-20652-1-git-send-email-b-cousson@ti.com>
+	<1317055821-20652-3-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1317065083-23573-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1317055821-20652-3-git-send-email-b-cousson-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,191 +18,260 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: khilman-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tarun Kanti DebBarma <tarun.kanti-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Charulatha V <charu-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 26, 2011 at 02:24:43PM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> of_irq_init will scan the devicetree for matching interrupt controller
-> nodes. Then it calls an initialization function for each found controller
-> in the proper order with parent nodes initialized before child nodes.
-> 
-> Based on initial pseudo code from Grant Likely.
-> 
-> Changes in v4:
-> - Drop unnecessary empty list check
-> - Be more verbose on errors
-> - Simplify "if (!desc) WARN_ON(1)" to "if (WARN_ON(!desc))"
-> 
-> Changes in v3:
-> - add missing kfree's found by Jamie
-> - Implement Grant's comments to simplify the init loop
-> - fix function comments
-> 
-> Changes in v2:
-> - Complete re-write of list searching code from Grant Likely
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-Looks good to me.  Merged.
-
-g.
-
+On Monday 26 September 2011 10:20 PM, Benoit Cousson wrote:
+> Adapt the GPIO driver to retrieve information from a DT file.
+> Note that since the driver is currently under cleanup, some hacks
+> will have to be removed after.
+>
+> Add documentation for GPIO properties specific to OMAP.
+>
+> Remove an un-needed whitespace.
+>
+> Signed-off-by: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
+> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Charulatha V<charu-l0cyMroinI0@public.gmane.org>
+> Cc: Tarun Kanti DebBarma<tarun.kanti-l0cyMroinI0@public.gmane.org>
 > ---
->  drivers/of/irq.c       |  107 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_irq.h |    3 +
->  2 files changed, 110 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 6a5b5e7..6d3dd39 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -19,10 +19,12 @@
->   */
->  
->  #include <linux/errno.h>
-> +#include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
->  #include <linux/string.h>
-> +#include <linux/slab.h>
->  
->  /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
->  #ifndef NO_IRQ
-> @@ -386,3 +388,108 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
->  
->  	return i;
->  }
+>   .../devicetree/bindings/gpio/gpio-omap.txt         |   33 ++++++
+>   drivers/gpio/gpio-omap.c                           |  108 ++++++++++++++++++--
+>   2 files changed, 132 insertions(+), 9 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+> new file mode 100644
+> index 0000000..bdd63de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+> @@ -0,0 +1,33 @@
+> +OMAP GPIO controller
 > +
-> +struct intc_desc {
-> +	struct list_head	list;
-> +	struct device_node	*dev;
-> +	struct device_node	*interrupt_parent;
+> +Required properties:
+> +- compatible:
+> +  - "ti,omap2-gpio" for OMAP2 and OMAP3 controllers
+
+Would it be more readable to have
+"ti,omap2-gpio" for OMAP2 controllers and
+"ti,omap3-gpio" for OMAP3 controllers?
+
+> +  - "ti,omap4-gpio" for OMAP4 controller
+> +- #gpio-cells : Should be two.
+> +  - first cell is the pin number
+> +  - second cell is used to specify optional parameters (unused)
+> +- gpio-controller : Marks the device node as a GPIO controller.
+> +
+> +OMAP specific properties:
+> +- ti,hwmods: Name of the hwmod associated to the GPIO
+> +- id: 32 bits to identify the id (1 based index)
+> +- bank-width: number of pin supported by the controller (16 or 32)
+> +- debounce: set if the controller support the debouce funtionnality
+> +- bank-count: number of controller support by the SoC. This is a temporary
+> +  hack until the bank_count is removed from the driver.
+
+Is there a general rule to be followed as to when to use
+"ti,<prop-name>" and when to use just "<prop-name>".
+Since all these are OMAP specific properties, shouldn't all
+of them be "ti,<prop-name>"?
+
+> +
+> +
+> +Example:
+> +
+> +gpio4: gpio4 {
+> +    compatible = "ti,omap4-gpio", "ti,omap-gpio";
+> +    ti,hwmods = "gpio4";
+> +    id =<4>;
+> +    bank-width =<32>;
+> +    debounce;
+> +    no_idle_on_suspend;
+> +    #gpio-cells =<2>;
+> +    gpio-controller;
 > +};
 > +
-> +/**
-> + * of_irq_init - Scan and init matching interrupt controllers in DT
-> + * @matches: 0 terminated array of nodes to match and init function to call
-> + *
-> + * This function scans the device tree for matching interrupt controller nodes,
-> + * and calls their initialization functions in order with parents first.
-> + */
-> +void __init of_irq_init(const struct of_device_id *matches)
-> +{
-> +	struct device_node *np, *parent = NULL;
-> +	struct intc_desc *desc, *temp_desc;
-> +	struct list_head intc_desc_list, intc_parent_list;
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index 0599854..f878fa4 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -21,6 +21,8 @@
+>   #include<linux/io.h>
+>   #include<linux/slab.h>
+>   #include<linux/pm_runtime.h>
+> +#include<linux/of.h>
+> +#include<linux/of_device.h>
+>
+>   #include<mach/hardware.h>
+>   #include<asm/irq.h>
+> @@ -521,7 +523,7 @@ static int _set_gpio_wakeup(struct gpio_bank *bank, int gpio, int enable)
+>   	unsigned long flags;
+>
+>   	if (bank->non_wakeup_gpios&  gpio_bit) {
+> -		dev_err(bank->dev,
+> +		dev_err(bank->dev,
+
+Stray change?
+
+>   			"Unable to modify wakeup on non-wakeup GPIO%d\n", gpio);
+>   		return -EINVAL;
+>   	}
+> @@ -1150,6 +1152,8 @@ static void __devinit omap_gpio_chip_init(struct gpio_bank *bank)
+>   	irq_set_handler_data(bank->irq, bank);
+>   }
+>
+> +static const struct of_device_id omap_gpio_match[];
 > +
-> +	INIT_LIST_HEAD(&intc_desc_list);
-> +	INIT_LIST_HEAD(&intc_parent_list);
+>   static int __devinit omap_gpio_probe(struct platform_device *pdev)
+>   {
+>   	static int gpio_init_done;
+> @@ -1157,11 +1161,31 @@ static int __devinit omap_gpio_probe(struct platform_device *pdev)
+>   	struct resource *res;
+>   	int id;
+>   	struct gpio_bank *bank;
+> +	struct device_node *node = pdev->dev.of_node;
+> +	const struct of_device_id *match;
 > +
-> +	for_each_matching_node(np, matches) {
-> +		if (!of_find_property(np, "interrupt-controller", NULL))
-> +			continue;
+> +	match = of_match_device(omap_gpio_match,&pdev->dev);
+> +	if (match) {
+> +		pdata = match->data;
+> +		/* XXX: big hack until the bank_count is removed */
+> +		of_property_read_u32(node, "bank-count",&gpio_bank_count);
+> +		if (of_property_read_u32(node, "id",&id))
+
+id should be u32.
+
+> +			return -EINVAL;
 > +		/*
-> +		 * Here, we allocate and populate an intc_desc with the node
-> +		 * pointer, interrupt-parent device_node etc.
+> +		 * In an ideal world, the id should not be needed, but since
+> +		 * the OMAP TRM consider the multiple GPIO controllers as
+> +		 * multiple banks, the GPIO number is based on the whole set
+> +		 * of banks. Hence the need to provide an id in order to
+> +		 * respect the order and the correct GPIO number.
 > +		 */
-> +		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
-> +		if (WARN_ON(!desc))
-> +			goto err;
-> +
-> +		desc->dev = np;
-> +		desc->interrupt_parent = of_irq_find_parent(np);
-> +		list_add_tail(&desc->list, &intc_desc_list);
+> +		id -= 1;
+> +	} else {
+> +		if (!pdev->dev.platform_data)
+> +			return -EINVAL;
+>
+> -	if (!pdev->dev.platform_data)
+> -		return -EINVAL;
+> -
+> -	pdata = pdev->dev.platform_data;
+> +		pdata = pdev->dev.platform_data;
+> +		id = pdev->id;
 > +	}
-> +
-> +	/*
-> +	 * The root irq controller is the one without an interrupt-parent.
-> +	 * That one goes first, followed by the controllers that reference it,
-> +	 * followed by the ones that reference the 2nd level controllers, etc.
-> +	 */
-> +	while (!list_empty(&intc_desc_list)) {
-> +		/*
-> +		 * Process all controllers with the current 'parent'.
-> +		 * First pass will be looking for NULL as the parent.
-> +		 * The assumption is that NULL parent means a root controller.
-> +		 */
-> +		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
-> +			const struct of_device_id *match;
-> +			int ret;
-> +			of_irq_init_cb_t irq_init_cb;
-> +
-> +			if (desc->interrupt_parent != parent)
-> +				continue;
-> +
-> +			list_del(&desc->list);
-> +			match = of_match_node(matches, desc->dev);
-> +			if (WARN(!match->data,
-> +			    "of_irq_init: no init function for %s\n",
-> +			    match->compatible)) {
-> +				kfree(desc);
-> +				continue;
-> +			}
-> +
-> +			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
-> +				 match->compatible,
-> +				 desc->dev, desc->interrupt_parent);
-> +			irq_init_cb = match->data;
-> +			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
-> +			if (ret) {
-> +				kfree(desc);
-> +				continue;
-> +			}
-> +
-> +			/*
-> +			 * This one is now set up; add it to the parent list so
-> +			 * its children can get processed in a subsequent pass.
-> +			 */
-> +			list_add_tail(&desc->list, &intc_parent_list);
-> +		}
-> +
-> +		/* Get the next pending parent that might have children */
-> +		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
-> +		if (list_empty(&intc_parent_list) || !desc) {
-> +			pr_err("of_irq_init: children remain, but no parents\n");
-> +			break;
-> +		}
-> +		list_del(&desc->list);
-> +		parent = desc->dev;
-> +		kfree(desc);
+>
+>   	if (!gpio_init_done) {
+>   		int ret;
+> @@ -1171,7 +1195,6 @@ static int __devinit omap_gpio_probe(struct platform_device *pdev)
+>   			return ret;
+>   	}
+>
+> -	id = pdev->id;
+>   	bank =&gpio_bank[id];
+>
+>   	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> @@ -1181,12 +1204,19 @@ static int __devinit omap_gpio_probe(struct platform_device *pdev)
+>   	}
+>
+>   	bank->irq = res->start;
+> -	bank->virtual_irq_start = pdata->virtual_irq_start;
+>   	bank->method = pdata->bank_type;
+>   	bank->dev =&pdev->dev;
+> -	bank->dbck_flag = pdata->dbck_flag;
+>   	bank->stride = pdata->bank_stride;
+> -	bank->width = pdata->bank_width;
+> +	if (match) {
+> +		of_property_read_u32(node, "bank-width",&bank->width);
+
+Bank width should be u32.
+
+> +		if (of_get_property(node, "debounce", NULL))
+
+of_find_property() should suffice.
+
+regards,
+Rajendra
+
+> +			bank->dbck_flag = true;
+> +		bank->virtual_irq_start = IH_GPIO_BASE + 32 * id;
+> +	} else {
+> +		bank->width = pdata->bank_width;
+> +		bank->dbck_flag = pdata->dbck_flag;
+> +		bank->virtual_irq_start = pdata->virtual_irq_start;
 > +	}
+>
+>   	bank->regs = pdata->regs;
+>
+> @@ -1559,10 +1589,70 @@ void omap_gpio_restore_context(void)
+>   }
+>   #endif
+>
+> +#if defined(CONFIG_OF)
+> +static struct omap_gpio_reg_offs omap2_gpio_regs = {
+> +	.revision =		OMAP24XX_GPIO_REVISION,
+> +	.direction =		OMAP24XX_GPIO_OE,
+> +	.datain =		OMAP24XX_GPIO_DATAIN,
+> +	.dataout =		OMAP24XX_GPIO_DATAOUT,
+> +	.set_dataout =		OMAP24XX_GPIO_SETDATAOUT,
+> +	.clr_dataout =		OMAP24XX_GPIO_CLEARDATAOUT,
+> +	.irqstatus =		OMAP24XX_GPIO_IRQSTATUS1,
+> +	.irqstatus2 =		OMAP24XX_GPIO_IRQSTATUS2,
+> +	.irqenable =		OMAP24XX_GPIO_IRQENABLE1,
+> +	.set_irqenable =	OMAP24XX_GPIO_SETIRQENABLE1,
+> +	.clr_irqenable =	OMAP24XX_GPIO_CLEARIRQENABLE1,
+> +	.debounce =		OMAP24XX_GPIO_DEBOUNCE_VAL,
+> +	.debounce_en =		OMAP24XX_GPIO_DEBOUNCE_EN,
+> +};
 > +
-> +	list_for_each_entry_safe(desc, temp_desc, &intc_parent_list, list) {
-> +		list_del(&desc->list);
-> +		kfree(desc);
-> +	}
-> +err:
-> +	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
-> +		list_del(&desc->list);
-> +		kfree(desc);
-> +	}
-> +}
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index cd2e61c..d0307ee 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -33,6 +33,8 @@ struct of_irq {
->  	u32 specifier[OF_MAX_IRQ_SPEC]; /* Specifier copy */
->  };
->  
-> +typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
+> +static struct omap_gpio_platform_data omap2_pdata = {
+> +	.bank_type = METHOD_GPIO_24XX,
+> +	.regs =&omap2_gpio_regs,
+> +};
 > +
->  /*
->   * Workarounds only applied to 32bit powermac machines
->   */
-> @@ -73,6 +75,7 @@ extern int of_irq_to_resource_table(struct device_node *dev,
->  		struct resource *res, int nr_irqs);
->  extern struct device_node *of_irq_find_parent(struct device_node *child);
->  
-> +extern void of_irq_init(const struct of_device_id *matches);
->  
->  #endif /* CONFIG_OF_IRQ */
->  #endif /* CONFIG_OF */
-> -- 
-> 1.7.5.4
-> 
+> +static struct omap_gpio_reg_offs omap4_gpio_regs = {
+> +	.revision =		OMAP4_GPIO_REVISION,
+> +	.direction =		OMAP4_GPIO_OE,
+> +	.datain =		OMAP4_GPIO_DATAIN,
+> +	.dataout =		OMAP4_GPIO_DATAOUT,
+> +	.set_dataout =		OMAP4_GPIO_SETDATAOUT,
+> +	.clr_dataout =		OMAP4_GPIO_CLEARDATAOUT,
+> +	.irqstatus =		OMAP4_GPIO_IRQSTATUS1,
+> +	.irqstatus2 =		OMAP4_GPIO_IRQSTATUS2,
+> +	.irqenable =		OMAP4_GPIO_IRQENABLE1,
+> +	.set_irqenable =	OMAP4_GPIO_SETIRQENABLE1,
+> +	.clr_irqenable =	OMAP4_GPIO_CLEARIRQENABLE1,
+> +	.debounce =		OMAP4_GPIO_DEBOUNCINGTIME,
+> +	.debounce_en =		OMAP4_GPIO_DEBOUNCENABLE,
+> +};
+> +
+> +static struct omap_gpio_platform_data omap4_pdata = {
+> +	.bank_type = METHOD_GPIO_44XX,
+> +	.regs =&omap4_gpio_regs,
+> +};
+> +
+> +static const struct of_device_id omap_gpio_match[] = {
+> +	{
+> +		.compatible = "ti,omap4-gpio",
+> +		.data =&omap4_pdata,
+> +	},
+> +	{
+> +		.compatible = "ti,omap2-gpio",
+> +		.data =&omap2_pdata,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, omap_gpio_match);
+> +#else
+> +#define omap_gpio_match NULL
+> +#endif
+> +
+>   static struct platform_driver omap_gpio_driver = {
+>   	.probe		= omap_gpio_probe,
+>   	.driver		= {
+>   		.name	= "omap_gpio",
+> +		.of_match_table = omap_gpio_match,
+>   	},
+>   };
+>
