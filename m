@@ -1,118 +1,38 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCH 2/2] ARM: vic: MULTI_IRQ_HANDLER handler
-Date: Tue, 27 Sep 2011 13:16:42 +0100
-Message-ID: <1317125802-14386-2-git-send-email-jamie@jamieiles.com>
-References: <1317125802-14386-1-git-send-email-jamie@jamieiles.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 8/9] regulator: helper to extract regulator node based on
+ supply name
+Date: Tue, 27 Sep 2011 13:21:55 +0100
+Message-ID: <20110927122155.GE4289@opensource.wolfsonmicro.com>
+References: <1317118372-17052-1-git-send-email-rnayak@ti.com>
+ <1317118372-17052-9-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1317125802-14386-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1317118372-17052-9-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add a handler for the VIC that is suitable for MULTI_IRQ_HANDLER
-platforms.  This only works for platforms with CONFIG_OF=y as we can
-determine which controllers are the primary controllers (no parent).
+On Tue, Sep 27, 2011 at 03:42:51PM +0530, Rajendra Nayak wrote:
 
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
----
- arch/arm/common/vic.c               |   48 +++++++++++++++++++++++++++++++++++
- arch/arm/include/asm/hardware/vic.h |    1 +
- 2 files changed, 49 insertions(+), 0 deletions(-)
+> +	if (!dev)
+> +		return NULL;
 
-diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-index 3658579..e9b72d3 100644
---- a/arch/arm/common/vic.c
-+++ b/arch/arm/common/vic.c
-@@ -63,6 +63,22 @@ static struct vic_device vic_devices[CONFIG_ARM_VIC_NR];
- 
- static int vic_id;
- 
-+#if defined(CONFIG_OF) && defined(CONFIG_MULTI_IRQ_HANDLER)
-+/*
-+ * The root VIC's.  We keep track of these so that we can do the IRQ demuxing
-+ * as we can have more than one root VIC.
-+ */
-+static struct vic_device *vic_root_devices[CONFIG_ARM_VIC_NR];
-+static int nr_root_vics;
-+
-+static void vic_register_root_controller(struct vic_device *vic)
-+{
-+	vic_root_devices[nr_root_vics++] = vic;
-+}
-+#else /* CONFIG_OF && CONFIG_MULTI_IRQ_HANDLER */
-+static inline void vic_register_root_controller(struct vic_device *vic) {}
-+#endif /* CONFIG_OF && CONFIG_MULTI_IRQ_HANDLER */
-+
- /**
-  * vic_init2 - common initialisation code
-  * @base: Base of the VIC.
-@@ -439,6 +455,9 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
- 	vic->domain.ops = &vic_irq_domain_ops;
- 	irq_domain_add(&vic->domain);
- 
-+	if (!parent)
-+		vic_register_root_controller(vic);
-+
- 	return 0;
- 
- out_unmap:
-@@ -447,4 +466,33 @@ out_unmap:
- 	return -EIO;
- }
- 
-+#ifdef CONFIG_MULTI_IRQ_HANDLER
-+static void vic_single_handle_irq(struct vic_device *vic, struct pt_regs *regs)
-+{
-+	u32 stat, irq;
-+	bool handled = false;
-+
-+	while (!handled) {
-+		stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
-+		if (!stat)
-+			break;
-+
-+		while (stat) {
-+			irq = fls(stat) - 1;
-+			handle_IRQ(irq + vic->irq, regs);
-+			stat &= ~(1 << irq);
-+			handled = true;
-+		}
-+	}
-+}
-+
-+asmlinkage void __exception_irq_entry vic_handle_irq(struct pt_regs *regs)
-+{
-+	int i;
-+
-+	for (i = 0; i < nr_root_vics; ++i)
-+		vic_single_handle_irq(vic_root_devices[i], regs);
-+}
-+#endif /* CONFIG_MULTI_IRQ_HANDLER */
-+
- #endif /* CONFIG OF */
-diff --git a/arch/arm/include/asm/hardware/vic.h b/arch/arm/include/asm/hardware/vic.h
-index df1d895..451788c 100644
---- a/arch/arm/include/asm/hardware/vic.h
-+++ b/arch/arm/include/asm/hardware/vic.h
-@@ -53,6 +53,7 @@ static inline int vic_of_init(struct device_node *node,
- 	return -ENOSYS;
- }
- #endif /* CONFIG_OF */
-+void vic_handle_irq(struct pt_regs *regs);
- #endif /* __ASSEMBLY__ */
- 
- #endif
--- 
-1.7.4.1
+So how do we handle CPUs?  cpufreq is one of the most active users of
+regulators...
+
+> +	snprintf(prop_name, 32, "%s-supply", supply);
+> +
+> +	prop = of_get_property(dev->of_node, prop_name, &sz);
+> +	if (!prop || sz < 4)
+> +		return NULL;
+
+sz < 4?  Magic!  :)
+
+> +extern struct device_node *of_get_regulator(struct device *dev,
+> +	const char *supply);
+
+This shouldn't be part of the public API, it should be transparently
+handled within the core.
