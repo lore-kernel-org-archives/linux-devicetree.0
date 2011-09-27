@@ -1,38 +1,219 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 9/9] regulator: map consumer regulator based on device
- tree
-Date: Tue, 27 Sep 2011 13:23:57 +0100
-Message-ID: <20110927122357.GF4289@opensource.wolfsonmicro.com>
-References: <1317118372-17052-1-git-send-email-rnayak@ti.com>
- <1317118372-17052-10-git-send-email-rnayak@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] of/irq: introduce of_irq_init
+Date: Tue, 27 Sep 2011 08:03:51 -0500
+Message-ID: <4E81C9B7.9000004@gmail.com>
+References: <1316744473-13158-1-git-send-email-robherring2@gmail.com>
+	<1317065083-23573-1-git-send-email-robherring2@gmail.com>
+	<20110927015305.GD20588@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1317118372-17052-10-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110927015305.GD20588-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2011 at 03:42:52PM +0530, Rajendra Nayak wrote:
-> Look up the regulator for a given consumer from device tree, during
-> a regulator_get(). If not found fallback and lookup through
-> the regulator_map_list instead.
+Grant,
 
-As with the fixed voltage regulator patch just use the code along with
-adding it, no need to split it just makes it harder to review.
+On 09/26/2011 08:53 PM, Grant Likely wrote:
+> On Mon, Sep 26, 2011 at 02:24:43PM -0500, Rob Herring wrote:
+>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
+>> of_irq_init will scan the devicetree for matching interrupt controller
+>> nodes. Then it calls an initialization function for each found controller
+>> in the proper order with parent nodes initialized before child nodes.
+>>
+>> Based on initial pseudo code from Grant Likely.
+>>
+>> Changes in v4:
+>> - Drop unnecessary empty list check
+>> - Be more verbose on errors
+>> - Simplify "if (!desc) WARN_ON(1)" to "if (WARN_ON(!desc))"
+>>
+>> Changes in v3:
+>> - add missing kfree's found by Jamie
+>> - Implement Grant's comments to simplify the init loop
+>> - fix function comments
+>>
+>> Changes in v2:
+>> - Complete re-write of list searching code from Grant Likely
+>>
+>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> 
+> Looks good to me.  Merged.
+> 
 
-> +	if (dev->of_node) {
-> +		node = of_get_regulator(dev, id);
-> +		if (!node)
-> +			goto retry; /* fallback and chk regulator_map_list */
-> +		list_for_each_entry(rdev, &regulator_list, list)
-> +			if (node == rdev->node)
-> +				goto found;
-> +	}
-> +retry:
+I'm dependent on this and things in rmk's tree for initial highbank
+support, so should this series go in thru arm-soc tree? Several others
+are dependent on this as well.
 
-retry is a confusing name for the target, we don't ever actually retry
-using it.  Given the simplicity of the code I'd be inclined to just
-intert the if (!node) check.
+Rob
+
+> g.
+> 
+>> ---
+>>  drivers/of/irq.c       |  107 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of_irq.h |    3 +
+>>  2 files changed, 110 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+>> index 6a5b5e7..6d3dd39 100644
+>> --- a/drivers/of/irq.c
+>> +++ b/drivers/of/irq.c
+>> @@ -19,10 +19,12 @@
+>>   */
+>>  
+>>  #include <linux/errno.h>
+>> +#include <linux/list.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_irq.h>
+>>  #include <linux/string.h>
+>> +#include <linux/slab.h>
+>>  
+>>  /* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
+>>  #ifndef NO_IRQ
+>> @@ -386,3 +388,108 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+>>  
+>>  	return i;
+>>  }
+>> +
+>> +struct intc_desc {
+>> +	struct list_head	list;
+>> +	struct device_node	*dev;
+>> +	struct device_node	*interrupt_parent;
+>> +};
+>> +
+>> +/**
+>> + * of_irq_init - Scan and init matching interrupt controllers in DT
+>> + * @matches: 0 terminated array of nodes to match and init function to call
+>> + *
+>> + * This function scans the device tree for matching interrupt controller nodes,
+>> + * and calls their initialization functions in order with parents first.
+>> + */
+>> +void __init of_irq_init(const struct of_device_id *matches)
+>> +{
+>> +	struct device_node *np, *parent = NULL;
+>> +	struct intc_desc *desc, *temp_desc;
+>> +	struct list_head intc_desc_list, intc_parent_list;
+>> +
+>> +	INIT_LIST_HEAD(&intc_desc_list);
+>> +	INIT_LIST_HEAD(&intc_parent_list);
+>> +
+>> +	for_each_matching_node(np, matches) {
+>> +		if (!of_find_property(np, "interrupt-controller", NULL))
+>> +			continue;
+>> +		/*
+>> +		 * Here, we allocate and populate an intc_desc with the node
+>> +		 * pointer, interrupt-parent device_node etc.
+>> +		 */
+>> +		desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+>> +		if (WARN_ON(!desc))
+>> +			goto err;
+>> +
+>> +		desc->dev = np;
+>> +		desc->interrupt_parent = of_irq_find_parent(np);
+>> +		list_add_tail(&desc->list, &intc_desc_list);
+>> +	}
+>> +
+>> +	/*
+>> +	 * The root irq controller is the one without an interrupt-parent.
+>> +	 * That one goes first, followed by the controllers that reference it,
+>> +	 * followed by the ones that reference the 2nd level controllers, etc.
+>> +	 */
+>> +	while (!list_empty(&intc_desc_list)) {
+>> +		/*
+>> +		 * Process all controllers with the current 'parent'.
+>> +		 * First pass will be looking for NULL as the parent.
+>> +		 * The assumption is that NULL parent means a root controller.
+>> +		 */
+>> +		list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
+>> +			const struct of_device_id *match;
+>> +			int ret;
+>> +			of_irq_init_cb_t irq_init_cb;
+>> +
+>> +			if (desc->interrupt_parent != parent)
+>> +				continue;
+>> +
+>> +			list_del(&desc->list);
+>> +			match = of_match_node(matches, desc->dev);
+>> +			if (WARN(!match->data,
+>> +			    "of_irq_init: no init function for %s\n",
+>> +			    match->compatible)) {
+>> +				kfree(desc);
+>> +				continue;
+>> +			}
+>> +
+>> +			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
+>> +				 match->compatible,
+>> +				 desc->dev, desc->interrupt_parent);
+>> +			irq_init_cb = match->data;
+>> +			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
+>> +			if (ret) {
+>> +				kfree(desc);
+>> +				continue;
+>> +			}
+>> +
+>> +			/*
+>> +			 * This one is now set up; add it to the parent list so
+>> +			 * its children can get processed in a subsequent pass.
+>> +			 */
+>> +			list_add_tail(&desc->list, &intc_parent_list);
+>> +		}
+>> +
+>> +		/* Get the next pending parent that might have children */
+>> +		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
+>> +		if (list_empty(&intc_parent_list) || !desc) {
+>> +			pr_err("of_irq_init: children remain, but no parents\n");
+>> +			break;
+>> +		}
+>> +		list_del(&desc->list);
+>> +		parent = desc->dev;
+>> +		kfree(desc);
+>> +	}
+>> +
+>> +	list_for_each_entry_safe(desc, temp_desc, &intc_parent_list, list) {
+>> +		list_del(&desc->list);
+>> +		kfree(desc);
+>> +	}
+>> +err:
+>> +	list_for_each_entry_safe(desc, temp_desc, &intc_desc_list, list) {
+>> +		list_del(&desc->list);
+>> +		kfree(desc);
+>> +	}
+>> +}
+>> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+>> index cd2e61c..d0307ee 100644
+>> --- a/include/linux/of_irq.h
+>> +++ b/include/linux/of_irq.h
+>> @@ -33,6 +33,8 @@ struct of_irq {
+>>  	u32 specifier[OF_MAX_IRQ_SPEC]; /* Specifier copy */
+>>  };
+>>  
+>> +typedef int (*of_irq_init_cb_t)(struct device_node *, struct device_node *);
+>> +
+>>  /*
+>>   * Workarounds only applied to 32bit powermac machines
+>>   */
+>> @@ -73,6 +75,7 @@ extern int of_irq_to_resource_table(struct device_node *dev,
+>>  		struct resource *res, int nr_irqs);
+>>  extern struct device_node *of_irq_find_parent(struct device_node *child);
+>>  
+>> +extern void of_irq_init(const struct of_device_id *matches);
+>>  
+>>  #endif /* CONFIG_OF_IRQ */
+>>  #endif /* CONFIG_OF */
+>> -- 
+>> 1.7.5.4
+>>
