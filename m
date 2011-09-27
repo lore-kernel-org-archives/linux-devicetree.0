@@ -1,38 +1,33 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/3] mfd: allow mfd_cell association with device tree node
-Date: Tue, 27 Sep 2011 16:18:51 +0100
-Message-ID: <20110927151850.GN4289@opensource.wolfsonmicro.com>
-References: <20110921120148.4A81E9D401D@zog.reactivated.net>
- <20110921124936.GA25620@sirena.org.uk>
- <CAMLZHHQZnajC4e12MjaK3W8WcAB2ZB+6L=5kS5BBFZF=+YWicQ@mail.gmail.com>
- <20110921131637.GF4374@opensource.wolfsonmicro.com>
- <CAMLZHHTJaOddSj00g0-WpFQu6pUTqizKjKaQF9hLrhceEMhY1Q@mail.gmail.com>
- <20110927150555.GF20588@ponder.secretlab.ca>
+Subject: Re: [PATCH 5/9] regulator: helper routine to extract
+ fixed_voltage_config
+Date: Tue, 27 Sep 2011 17:13:27 +0100
+Message-ID: <20110927161327.GP4289@opensource.wolfsonmicro.com>
+References: <1317118372-17052-1-git-send-email-rnayak@ti.com>
+ <1317118372-17052-6-git-send-email-rnayak@ti.com>
+ <20110927121622.GD4289@opensource.wolfsonmicro.com>
+ <4E81E25C.5080500@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20110927150555.GF20588@ponder.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Daniel Drake <dsd@laptop.org>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dilinger@queued.net
+In-Reply-To: <4E81E25C.5080500@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2011 at 09:05:55AM -0600, Grant Likely wrote:
-> On Tue, Sep 27, 2011 at 03:44:56PM +0100, Daniel Drake wrote:
-> > On Wed, Sep 21, 2011 at 2:16 PM, Mark Brown
+On Tue, Sep 27, 2011 at 08:19:00PM +0530, Rajendra Nayak wrote:
+> On Tuesday 27 September 2011 05:46 PM, Mark Brown wrote:
+> >On Tue, Sep 27, 2011 at 03:42:48PM +0530, Rajendra Nayak wrote:
 
-> > > My suspicion is that for device tree in cases where the MFD really is
-> > > totally independent of the parent we shouldn't need explicit MFD code to
-> > > instantiate the child at all any more in the same way that we should be
-> > > avoiding this for the SoCs.
+> >>+Optional properties:
+> >>+- regulator-fixed-supply: Name of the regulator supply
 
-> Right. MFD seems to be most useful when IP blocks are used in multiple
-> places and can be instantiated by multiple parents.  Sometimes a
-> driver really should just register the interfaces that the device
-> provides without the MFD framework.
+> >This is going to be confusing with respect to the generic regulator
+> >supply property.
 
-Well, if you need a bunch of platform devices it's a good way of
-creating them especially in the current world.  There's also generally
-some core logic, for example routing interrupt lines, that can usefully
-be provided by the MFD part of the driver.
+> Yes, I guess. Any suggestions on how to make it less
+> confusing? :-)
+
+Call it display-name or something?
