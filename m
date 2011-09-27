@@ -1,39 +1,50 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/9] regulator: twl: Remove hardcoded board constraints
- from driver
-Date: Tue, 27 Sep 2011 12:37:19 +0100
-Message-ID: <20110927113719.GH2910@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/9] regulator: helper routine to extract
+ regulator_init_data
+Date: Tue, 27 Sep 2011 13:10:04 +0100
+Message-ID: <20110927121003.GB4289@opensource.wolfsonmicro.com>
 References: <1317118372-17052-1-git-send-email-rnayak@ti.com>
- <1317118372-17052-2-git-send-email-rnayak@ti.com>
+ <1317118372-17052-3-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1317118372-17052-2-git-send-email-rnayak@ti.com>
+In-Reply-To: <1317118372-17052-3-git-send-email-rnayak@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Rajendra Nayak <rnayak@ti.com>
 Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2011 at 03:42:44PM +0530, Rajendra Nayak wrote:
-> Remove the hardcoded .valid_modes_mask and .valid_ops_mask for
-> each regulator from the twl driver and let the boards pass it.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+On Tue, Sep 27, 2011 at 03:42:45PM +0530, Rajendra Nayak wrote:
 
+> +	init_data = devm_kzalloc(dev, sizeof(struct regulator_init_data),
+> +						 GFP_KERNEL);
+> +	if (!init_data)
+> +		return NULL; /* Out of memory? */
 
-> -	/* Constrain board-specific capabilities according to what
-> -	 * this driver and the chip itself can actually do.
-> -	 */
-> -	c = &initdata->constraints;
-> -	c->valid_modes_mask &= REGULATOR_MODE_NORMAL | REGULATOR_MODE_STANDBY;
-> -	c->valid_ops_mask &= REGULATOR_CHANGE_VOLTAGE
-> -				| REGULATOR_CHANGE_MODE
-> -				| REGULATOR_CHANGE_STATUS;
+This means that the init data will be kept around for the entire
+lifetime of the device rather than being discarded.
 
-This isn't actually hard coding constraints, this is restricting the
-constraints passed in further rather than adding new ones.
+> +	init_data->supply_regulator = (char *)of_get_property(dev->of_node,
+> +						"regulator-supplies", NULL);
 
-However should be fine:
+I'd expect that in the device tree world the supply regulator would
+reference the node for that regulator.
 
-Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+>  	/* voltage output range (inclusive) - for voltage control */
+> -	int min_uV;
+> -	int max_uV;
+> +	u32 min_uV;
+> +	u32 max_uV;
+>  
+> -	int uV_offset;
+> +	u32 uV_offset;
+>  
+>  	/* current output range (inclusive) - for current control */
+> -	int min_uA;
+> -	int max_uA;
+> +	u32 min_uA;
+> +	u32 max_uA;
+
+Hrm, I think loosing the signs here is bad karma - negative voltages do
+exist after all.
