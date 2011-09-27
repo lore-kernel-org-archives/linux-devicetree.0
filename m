@@ -1,62 +1,41 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v4] of/irq: introduce of_irq_init
-Date: Tue, 27 Sep 2011 15:24:42 -0600
-Message-ID: <CACxGe6to4e3UjyjOhohNhnMhzQwfA2_2cL2c0ChwnR3_gb+H1g@mail.gmail.com>
-References: <1316744473-13158-1-git-send-email-robherring2@gmail.com>
- <1317065083-23573-1-git-send-email-robherring2@gmail.com> <20110927015305.GD20588@ponder.secretlab.ca>
- <4E81C9B7.9000004@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: David Daney <david.daney@cavium.com>
+Subject: [PATCH v2 0/2] i2c/of: Populate multiplexed i2c busses from the device tree.
+Date: Tue, 27 Sep 2011 16:16:22 -0700
+Message-ID: <1317165384-20390-1-git-send-email-david.daney@cavium.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4E81C9B7.9000004@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, thomas.abraham@linaro.org, jamie@jamieiles.com, b-cousson@ti.com, shawn.guo@linaro.org
+To: khali@linux-fr.org, ben-linux@fluff.org, peter.korsgaard@barco.com, guenter.roeck@ericsson.com, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2011 at 7:03 AM, Rob Herring <robherring2@gmail.com> wr=
-ote:
-> Grant,
->
-> On 09/26/2011 08:53 PM, Grant Likely wrote:
->> On Mon, Sep 26, 2011 at 02:24:43PM -0500, Rob Herring wrote:
->>> From: Rob Herring <rob.herring@calxeda.com>
->>>
->>> of_irq_init will scan the devicetree for matching interrupt control=
-ler
->>> nodes. Then it calls an initialization function for each found cont=
-roller
->>> in the proper order with parent nodes initialized before child node=
-s.
->>>
->>> Based on initial pseudo code from Grant Likely.
->>>
->>> Changes in v4:
->>> - Drop unnecessary empty list check
->>> - Be more verbose on errors
->>> - Simplify "if (!desc) WARN_ON(1)" to "if (WARN_ON(!desc))"
->>>
->>> Changes in v3:
->>> - add missing kfree's found by Jamie
->>> - Implement Grant's comments to simplify the init loop
->>> - fix function comments
->>>
->>> Changes in v2:
->>> - Complete re-write of list searching code from Grant Likely
->>>
->>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
->>> Cc: Grant Likely <grant.likely@secretlab.ca>
->>
->> Looks good to me. =A0Merged.
->>
->
-> I'm dependent on this and things in rmk's tree for initial highbank
-> support, so should this series go in thru arm-soc tree? Several other=
-s
-> are dependent on this as well.
+v2: Update bindings to use "reg" insutead of "cell-index"
 
-Sure, it can go in via arm-soc.  I don't have anything depending on it
-in mine.  Add my acked-by.
+v1:
+Unchanged from the original RFC where I said:
 
-g.
+  We need to populate our I2C devices from the device tree, but some
+  of our systems have multiplexers which currently break this process.
+
+  The basic idea is to have the generic i2c-mux framework propagate
+  the device_node for the child bus into the corresponding
+  i2c_adapter, and then call of_i2c_register_devices().  This means
+  that the device tree bindings for *all* i2c muxes must have some
+  common properties.  I try to document these in mux.txt.
+
+This is now tested against 3.1.0-rc6 and seems to be working well.
+
+David Daney (2):
+  i2c: Add a struct device * parameter to i2c_add_mux_adapter()
+  i2c/of: Automatically populate i2c mux busses from device tree data.
+
+ Documentation/devicetree/bindings/i2c/mux.txt |   60 +++++++++++++++++++++++++
+ drivers/i2c/i2c-mux.c                         |   44 ++++++++++++++----
+ drivers/i2c/muxes/gpio-i2cmux.c               |    3 +-
+ drivers/i2c/muxes/pca9541.c                   |    3 +-
+ drivers/i2c/muxes/pca954x.c                   |    2 +-
+ include/linux/i2c-mux.h                       |    3 +-
+ 6 files changed, 102 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/mux.txt
+
+-- 
+1.7.2.3
