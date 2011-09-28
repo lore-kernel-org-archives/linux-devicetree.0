@@ -1,146 +1,70 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v5 6/6] ARM: EXYNOS4: Limit usage of pl330 device instance to
- non-dt build
-Date: Wed, 28 Sep 2011 14:55:25 +0530
-Message-ID: <1317201925-25148-7-git-send-email-thomas.abraham@linaro.org>
-References: <1317201925-25148-1-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1317201925-25148-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, vinod.koul@intel.com
-Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>
+From: Daniel Drake <dsd@laptop.org>
+Subject: [PATCH 2/3] mfd: link vx855 with device tree
+Date: Wed, 28 Sep 2011 10:08:26 +0100 (BST)
+Message-ID: <20110928090826.B98509D401D__46605.0106952482$1317203419$gmane$org@zog.reactivated.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com, grant.likely@secretlab.ca
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dilinger@queued.net, broonie@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-The pl330 device instances and associated platform data is required only
-for non-device-tree builds. With device tree enabled, the data about the
-platform is obtained from the device tree. For images that include both
-dt and non-dt platforms, an addditional check is added to ensure that
-static amba device registrations is applicable to only non-dt platforms.
+Set the of_node of the mfd device, and use it to assign the of_node
+of the child gpio cell. The child driver will then pass the handle to
+gpiolib, which enables device-tree-probed gpio-leds and more.
 
-Cc: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Signed-off-by: Daniel Drake <dsd@laptop.org>
 ---
- arch/arm/mach-exynos4/Kconfig  |   12 ++++++++++++
- arch/arm/mach-exynos4/Makefile |    3 ++-
- arch/arm/mach-exynos4/dma.c    |    4 ++++
- 3 files changed, 18 insertions(+), 1 deletions(-)
+ drivers/mfd/vx855.c |   24 ++++++++++++++++++++++++
+ 1 files changed, 24 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-exynos4/Kconfig b/arch/arm/mach-exynos4/Kconfig
-index 0c964b7..b013907 100644
---- a/arch/arm/mach-exynos4/Kconfig
-+++ b/arch/arm/mach-exynos4/Kconfig
-@@ -26,6 +26,11 @@ config EXYNOS4_MCT
- 	help
- 	  Use MCT (Multi Core Timer) as kernel timers
- 
-+config EXYNOS4_DEV_DMA
-+	bool
-+	help
-+	  Compile in amba device definitions for DMA controller
-+
- config EXYNOS4_DEV_AHCI
- 	bool
- 	help
-@@ -144,6 +149,7 @@ config MACH_SMDKV310
- 	select EXYNOS4_DEV_PD
- 	select SAMSUNG_DEV_PWM
- 	select EXYNOS4_DEV_SYSMMU
-+	select EXYNOS4_DEV_DMA
- 	select EXYNOS4_SETUP_FIMD0
- 	select EXYNOS4_SETUP_I2C1
- 	select EXYNOS4_SETUP_KEYPAD
-@@ -161,6 +167,7 @@ config MACH_ARMLEX4210
- 	select S3C_DEV_HSMMC3
- 	select EXYNOS4_DEV_AHCI
- 	select EXYNOS4_DEV_SYSMMU
-+	select EXYNOS4_DEV_DMA
- 	select EXYNOS4_SETUP_SDHCI
- 	help
- 	  Machine support for Samsung ARMLEX4210 based on EXYNOS4210
-@@ -185,6 +192,7 @@ config MACH_UNIVERSAL_C210
- 	select S5P_DEV_MFC
- 	select S5P_DEV_ONENAND
- 	select S5P_DEV_TV
-+	select EXYNOS4_DEV_DMA
- 	select EXYNOS4_DEV_PD
- 	select EXYNOS4_SETUP_FIMD0
- 	select EXYNOS4_SETUP_I2C1
-@@ -211,6 +219,7 @@ config MACH_NURI
- 	select S3C_DEV_I2C5
- 	select S5P_DEV_MFC
- 	select S5P_DEV_USB_EHCI
-+	select EXYNOS4_DEV_DMA
- 	select EXYNOS4_DEV_PD
- 	select EXYNOS4_SETUP_FIMD0
- 	select EXYNOS4_SETUP_I2C1
-@@ -237,6 +246,7 @@ config MACH_ORIGEN
- 	select S5P_DEV_I2C_HDMIPHY
- 	select S5P_DEV_TV
- 	select S5P_DEV_USB_EHCI
-+	select EXYNOS4_DEV_DMA
- 	select SAMSUNG_DEV_BACKLIGHT
- 	select SAMSUNG_DEV_PWM
- 	select EXYNOS4_SETUP_SDHCI
-@@ -256,6 +266,7 @@ config MACH_SMDK4212
- 	select S3C_DEV_I2C7
- 	select S3C_DEV_RTC
- 	select S3C_DEV_WDT
-+	select EXYNOS4_DEV_DMA
- 	select SAMSUNG_DEV_BACKLIGHT
- 	select SAMSUNG_DEV_KEYPAD
- 	select SAMSUNG_DEV_PWM
-@@ -271,6 +282,7 @@ config MACH_EXYNOS4_DT
- 	bool "Samsung Exynos4 Machine using device tree"
- 	select CPU_EXYNOS4210
- 	select USE_OF
-+	select ARM_AMBA
- 	help
- 	  Machine support for Samsung Exynos4 machine with device tree enabled.
- 
-diff --git a/arch/arm/mach-exynos4/Makefile b/arch/arm/mach-exynos4/Makefile
-index 9e8b7e5..d0c5706 100644
---- a/arch/arm/mach-exynos4/Makefile
-+++ b/arch/arm/mach-exynos4/Makefile
-@@ -13,7 +13,7 @@ obj-				:=
- # Core support for EXYNOS4 system
- 
- obj-$(CONFIG_ARCH_EXYNOS4)	+= cpu.o init.o clock.o irq-combiner.o
--obj-$(CONFIG_ARCH_EXYNOS4)	+= setup-i2c0.o irq-eint.o dma.o pmu.o
-+obj-$(CONFIG_ARCH_EXYNOS4)	+= setup-i2c0.o irq-eint.o pmu.o
- obj-$(CONFIG_CPU_EXYNOS4210)	+= clock-exynos4210.o
- obj-$(CONFIG_SOC_EXYNOS4212)	+= clock-exynos4212.o
- obj-$(CONFIG_PM)		+= pm.o sleep.o
-@@ -44,6 +44,7 @@ obj-$(CONFIG_EXYNOS4_DEV_AHCI)		+= dev-ahci.o
- obj-$(CONFIG_EXYNOS4_DEV_PD)		+= dev-pd.o
- obj-$(CONFIG_EXYNOS4_DEV_SYSMMU)	+= dev-sysmmu.o
- obj-$(CONFIG_EXYNOS4_DEV_DWMCI)	+= dev-dwmci.o
-+obj-$(CONFIG_EXYNOS4_DEV_DMA)		+= dma.o
- 
- obj-$(CONFIG_EXYNOS4_SETUP_FIMC)	+= setup-fimc.o
- obj-$(CONFIG_EXYNOS4_SETUP_FIMD0)	+= setup-fimd0.o
-diff --git a/arch/arm/mach-exynos4/dma.c b/arch/arm/mach-exynos4/dma.c
-index c3c0d17..921d31d 100644
---- a/arch/arm/mach-exynos4/dma.c
-+++ b/arch/arm/mach-exynos4/dma.c
-@@ -24,6 +24,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/amba/bus.h>
- #include <linux/amba/pl330.h>
+diff --git a/drivers/mfd/vx855.c b/drivers/mfd/vx855.c
+index d698703..d223840 100644
+--- a/drivers/mfd/vx855.c
++++ b/drivers/mfd/vx855.c
+@@ -30,6 +30,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pci.h>
+ #include <linux/mfd/core.h>
 +#include <linux/of.h>
  
- #include <asm/irq.h>
- #include <plat/devs.h>
-@@ -138,6 +139,9 @@ struct amba_device exynos4_device_pdma1 = {
+ /* offset into pci config space indicating the 16bit register containing
+  * the power management IO space base */
+@@ -72,6 +73,27 @@ static struct mfd_cell vx855_cells[] = {
+ 	},
+ };
  
- static int __init exynos4_dma_init(void)
- {
-+	if (of_have_populated_dt())
-+		return 0;
++static __devinit void vx855_set_of_nodes(struct pci_dev *pdev)
++{
++#ifdef CONFIG_OF
++	struct device_node *isa_node;
++	struct device_node *child;
 +
- 	dma_cap_set(DMA_SLAVE, exynos4_pdma0_pdata.cap_mask);
- 	dma_cap_set(DMA_CYCLIC, exynos4_pdma0_pdata.cap_mask);
- 	amba_device_register(&exynos4_device_pdma0, &iomem_resource);
++	isa_node = of_find_compatible_node(NULL, NULL, "via,vx855-isa");
++	pdev->dev.of_node = isa_node;
++
++	if (!isa_node)
++		return;
++
++	for_each_child_of_node(isa_node, child) {
++		if (of_device_is_compatible(child, "via,vx855-gpio")) {
++			vx855_cells[0].of_node = child;
++			break;
++		}
++	}
++#endif
++}
++
+ static __devinit int vx855_probe(struct pci_dev *pdev,
+ 				 const struct pci_device_id *id)
+ {
+@@ -90,6 +112,8 @@ static __devinit int vx855_probe(struct pci_dev *pdev,
+ 		goto out;
+ 	}
+ 
++	vx855_set_of_nodes(pdev);
++
+ 	/* mask out the lowest seven bits, as they are always zero, but
+ 	 * hardware returns them as 0x01 */
+ 	gpio_io_offset &= 0xff80;
 -- 
-1.6.6.rc2
+1.7.6.2
