@@ -1,44 +1,40 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 08/10] ARM: u300: convert to MULTI_IRQ_HANDLER
-Date: Wed, 28 Sep 2011 14:18:14 +0200
-Message-ID: <CACRpkdarydeYAyOV8Cm134TtPeh9_qFSqWPkvpZjUE9yPNNtJA@mail.gmail.com>
-References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
-	<1317206507-18867-9-git-send-email-jamie@jamieiles.com>
-	<CACRpkdYOdWA2vg2zq+nhOPSvPN7zdy9NVsOcqfZ7i9W5Sq5cpw@mail.gmail.com>
-	<20110928120340.GH17204@pulham.picochip.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 8/9] regulator: helper to extract regulator node based on
+ supply name
+Date: Wed, 28 Sep 2011 13:26:28 +0100
+Message-ID: <20110928122628.GF3279@opensource.wolfsonmicro.com>
+References: <1317118372-17052-1-git-send-email-rnayak@ti.com>
+ <1317118372-17052-9-git-send-email-rnayak@ti.com>
+ <20110927122155.GE4289@opensource.wolfsonmicro.com>
+ <4E81E281.505@ti.com>
+ <20110927185913.GU4289@opensource.wolfsonmicro.com>
+ <4E82D63A.7030207@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110928120340.GH17204-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, rubini-9wsNiZum9E8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4E82D63A.7030207@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "Nayak, Rajendra" <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tony@atomide.com" <tony@atomide.com>, "Girdwood, Liam" <lrg@ti.com>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2011 at 2:03 PM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
+On Wed, Sep 28, 2011 at 10:09:30AM +0200, Cousson, Benoit wrote:
+> On 9/27/2011 8:59 PM, Mark Brown wrote:
 
->> vic_single_handle_irq() needs to be modified to handle several
->> ranges or atleast two.
->
-> The platform IRQ handler is actually vic_handle_irq() that internally
-> calls vic_single_handle_irq() for each registered vic (in the order of
-> registration).
+> >I'm not sure how this should work in a device tree world, I'd *hope*
+> >we'd get a device tree node for the CPU and could then just make this a
+> >regular consumer thing but then the cpufreq drivers would need to be
+> >updated to make use of it.  The only reason we allow null devices right
+> >now is the fact that cpufreq doesn't have a struct device it can use.
 
-Ah I get it I'm dead wrong as usual :-)
+> That's why we do have a MPU node in OMAP dts, in order to build an
+> omap_device that will be mainly used for the DVFS on the MPU.
 
-I tried to apply them to test but Iget into dependency trouble with
-the referenced required patches, do you have some handy
-git branch with all stuff applied in order that I can pull in and
-test off?
+> And even before DT migration, we used to build statically some
+> omap_device to represent the various processors in the system (MPU,
+> DSP, CortexM3...).
 
-Yours,
-Linus Walleij
+Yeah, but that's very OMAP specific - we don't have that in general (in
+fact it's the only Linux platform I'm aware of that has a device for the
+CPU).
