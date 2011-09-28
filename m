@@ -1,7 +1,7 @@
 From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCHv2 05/10] ARM: nomadik: convert to MULTI_IRQ_HANDLER
-Date: Wed, 28 Sep 2011 11:41:42 +0100
-Message-ID: <1317206507-18867-6-git-send-email-jamie@jamieiles.com>
+Subject: [PATCHv2 06/10] ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
+Date: Wed, 28 Sep 2011 11:41:43 +0100
+Message-ID: <1317206507-18867-7-git-send-email-jamie@jamieiles.com>
 References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,92 +22,252 @@ Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@
 List-Id: devicetree@vger.kernel.org
 
 Now that there is a generic IRQ handler for multiple VIC devices use it
-for nomadik to help building multi platform kernels.
+for s3c64xx to help building multi platform kernels.
 
-Cc: Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Cc: STEricsson <STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>
+Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 ---
  arch/arm/Kconfig                                 |    1 +
- arch/arm/mach-nomadik/board-nhk8815.c            |    2 +
- arch/arm/mach-nomadik/include/mach/entry-macro.S |   30 ----------------------
- 3 files changed, 3 insertions(+), 30 deletions(-)
+ arch/arm/mach-s3c64xx/include/mach/entry-macro.S |    7 ++++---
+ arch/arm/mach-s3c64xx/mach-anw6410.c             |    2 ++
+ arch/arm/mach-s3c64xx/mach-crag6410.c            |    2 ++
+ arch/arm/mach-s3c64xx/mach-hmt.c                 |    2 ++
+ arch/arm/mach-s3c64xx/mach-mini6410.c            |    2 ++
+ arch/arm/mach-s3c64xx/mach-ncp.c                 |    2 ++
+ arch/arm/mach-s3c64xx/mach-real6410.c            |    2 ++
+ arch/arm/mach-s3c64xx/mach-smartq5.c             |    2 ++
+ arch/arm/mach-s3c64xx/mach-smartq7.c             |    2 ++
+ arch/arm/mach-s3c64xx/mach-smdk6400.c            |    2 ++
+ arch/arm/mach-s3c64xx/mach-smdk6410.c            |    2 ++
+ 12 files changed, 25 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index b7cab06..8d131a2 100644
+index 8d131a2..0b9a984 100644
 --- a/arch/arm/Kconfig
 +++ b/arch/arm/Kconfig
-@@ -859,6 +859,7 @@ config ARCH_NOMADIK
- 	select CLKDEV_LOOKUP
- 	select GENERIC_CLOCKEVENTS
- 	select ARCH_REQUIRE_GPIOLIB
+@@ -734,6 +734,7 @@ config ARCH_S3C64XX
+ 	select SAMSUNG_GPIOLIB_4BIT
+ 	select HAVE_S3C2410_I2C if I2C
+ 	select HAVE_S3C2410_WATCHDOG if WATCHDOG
 +	select MULTI_IRQ_HANDLER
  	help
- 	  Support for the Nomadik platform by ST-Ericsson
+ 	  Samsung S3C64XX series based systems
  
-diff --git a/arch/arm/mach-nomadik/board-nhk8815.c b/arch/arm/mach-nomadik/board-nhk8815.c
-index 1399303..46d9dce 100644
---- a/arch/arm/mach-nomadik/board-nhk8815.c
-+++ b/arch/arm/mach-nomadik/board-nhk8815.c
-@@ -21,6 +21,7 @@
- #include <linux/mtd/onenand.h>
- #include <linux/mtd/partitions.h>
- #include <linux/io.h>
+diff --git a/arch/arm/mach-s3c64xx/include/mach/entry-macro.S b/arch/arm/mach-s3c64xx/include/mach/entry-macro.S
+index dd36260..dc2bc15 100644
+--- a/arch/arm/mach-s3c64xx/include/mach/entry-macro.S
++++ b/arch/arm/mach-s3c64xx/include/mach/entry-macro.S
+@@ -12,7 +12,8 @@
+  * warranty of any kind, whether express or implied.
+ */
+ 
+-#include <mach/map.h>
+-#include <mach/irqs.h>
++		.macro  disable_fiq
++		.endm
+ 
+-#include <asm/entry-macro-vic2.S>
++		.macro  arch_ret_to_user, tmp1, tmp2
++		.endm
+diff --git a/arch/arm/mach-s3c64xx/mach-anw6410.c b/arch/arm/mach-s3c64xx/mach-anw6410.c
+index cb88643..714a8cc 100644
+--- a/arch/arm/mach-s3c64xx/mach-anw6410.c
++++ b/arch/arm/mach-s3c64xx/mach-anw6410.c
+@@ -30,6 +30,7 @@
+ 
+ #include <video/platform_lcd.h>
+ 
 +#include <asm/hardware/vic.h>
- #include <asm/sizes.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ #include <asm/mach/irq.h>
+@@ -236,6 +237,7 @@ MACHINE_START(ANW6410, "A&W6410")
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 
+ 	.init_irq	= s3c6410_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= anw6410_map_io,
+ 	.init_machine	= anw6410_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-crag6410.c b/arch/arm/mach-s3c64xx/mach-crag6410.c
+index af0c2fe..ae74fe1 100644
+--- a/arch/arm/mach-s3c64xx/mach-crag6410.c
++++ b/arch/arm/mach-s3c64xx/mach-crag6410.c
+@@ -37,6 +37,7 @@
+ #include <linux/mfd/wm831x/irq.h>
+ #include <linux/mfd/wm831x/gpio.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach-types.h>
+ 
+@@ -768,6 +769,7 @@ MACHINE_START(WLF_CRAGG_6410, "Wolfson Cragganmore 6410")
+ 	/* Maintainer: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> */
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 	.init_irq	= s3c6410_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= crag6410_map_io,
+ 	.init_machine	= crag6410_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-hmt.c b/arch/arm/mach-s3c64xx/mach-hmt.c
+index b3d93cc..6b60f50 100644
+--- a/arch/arm/mach-s3c64xx/mach-hmt.c
++++ b/arch/arm/mach-s3c64xx/mach-hmt.c
+@@ -29,6 +29,7 @@
+ #include <mach/hardware.h>
+ #include <mach/map.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/irq.h>
+ #include <asm/mach-types.h>
+ 
+@@ -267,6 +268,7 @@ MACHINE_START(HMT, "Airgoo-HMT")
+ 	/* Maintainer: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org> */
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 	.init_irq	= s3c6410_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= hmt_map_io,
+ 	.init_machine	= hmt_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-mini6410.c b/arch/arm/mach-s3c64xx/mach-mini6410.c
+index 527f49b..f23ff04 100644
+--- a/arch/arm/mach-s3c64xx/mach-mini6410.c
++++ b/arch/arm/mach-s3c64xx/mach-mini6410.c
+@@ -24,6 +24,7 @@
+ #include <linux/serial_core.h>
+ #include <linux/types.h>
+ 
++#include <asm/hardware/vic.h>
  #include <asm/mach-types.h>
  #include <asm/mach/arch.h>
-@@ -279,6 +280,7 @@ MACHINE_START(NOMADIK, "NHK8815")
- 	.boot_params	= 0x100,
- 	.map_io		= cpu8815_map_io,
- 	.init_irq	= cpu8815_init_irq,
+ #include <asm/mach/map.h>
+@@ -351,6 +352,7 @@ MACHINE_START(MINI6410, "MINI6410")
+ 	/* Maintainer: Darius Augulis <augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> */
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 	.init_irq	= s3c6410_init_irq,
 +	.handle_irq	= vic_handle_irq,
- 	.timer		= &nomadik_timer,
- 	.init_machine	= nhk8815_platform_init,
- MACHINE_END
-diff --git a/arch/arm/mach-nomadik/include/mach/entry-macro.S b/arch/arm/mach-nomadik/include/mach/entry-macro.S
-index 49f1aa3..98ea1c1 100644
---- a/arch/arm/mach-nomadik/include/mach/entry-macro.S
-+++ b/arch/arm/mach-nomadik/include/mach/entry-macro.S
-@@ -6,38 +6,8 @@
-  * warranty of any kind, whether express or implied.
-  */
+ 	.map_io		= mini6410_map_io,
+ 	.init_machine	= mini6410_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-ncp.c b/arch/arm/mach-s3c64xx/mach-ncp.c
+index 01c6857..8190cd2 100644
+--- a/arch/arm/mach-s3c64xx/mach-ncp.c
++++ b/arch/arm/mach-s3c64xx/mach-ncp.c
+@@ -25,6 +25,7 @@
  
--#include <mach/hardware.h>
--#include <mach/irqs.h>
--
- 	.macro	disable_fiq
- 	.endm
+ #include <video/platform_lcd.h>
  
--	.macro	get_irqnr_preamble, base, tmp
--	ldr	\base, =IO_ADDRESS(NOMADIK_IC_BASE)
--	.endm
--
- 	.macro	arch_ret_to_user, tmp1, tmp2
- 	.endm
--
--	.macro	get_irqnr_and_base, irqnr, irqstat, base, tmp
--
--	/* This stanza gets the irq mask from one of two status registers */
--	mov	\irqnr, #0
--	ldr	\irqstat, [\base, #VIC_REG_IRQSR0]	@ get masked status
--	cmp	\irqstat, #0
--	bne	1001f
--	add	\irqnr, \irqnr, #32
--	ldr	\irqstat, [\base, #VIC_REG_IRQSR1]	@ get masked status
--
--1001:	tst	\irqstat, #15
--	bne	1002f
--	add	\irqnr, \irqnr, #4
--	movs	\irqstat, \irqstat, lsr #4
--	bne	1001b
--1002:	tst	\irqstat, #1
--	bne	1003f
--	add	\irqnr, \irqnr, #1
--	movs	\irqstat, \irqstat, lsr #1
--	bne	1002b
--1003:	/* EQ will be set if no irqs pending */
--	.endm
++#include <asm/hardware/vic.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ #include <asm/mach/irq.h>
+@@ -99,6 +100,7 @@ MACHINE_START(NCP, "NCP")
+ 	/* Maintainer: Samsung Electronics */
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 	.init_irq	= s3c6410_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= ncp_map_io,
+ 	.init_machine	= ncp_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-real6410.c b/arch/arm/mach-s3c64xx/mach-real6410.c
+index 95b04b1..79bbf3c 100644
+--- a/arch/arm/mach-s3c64xx/mach-real6410.c
++++ b/arch/arm/mach-s3c64xx/mach-real6410.c
+@@ -25,6 +25,7 @@
+ #include <linux/serial_core.h>
+ #include <linux/types.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+@@ -332,6 +333,7 @@ MACHINE_START(REAL6410, "REAL6410")
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 
+ 	.init_irq	= s3c6410_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= real6410_map_io,
+ 	.init_machine	= real6410_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-smartq5.c b/arch/arm/mach-s3c64xx/mach-smartq5.c
+index 342e8df..6ea050a 100644
+--- a/arch/arm/mach-s3c64xx/mach-smartq5.c
++++ b/arch/arm/mach-s3c64xx/mach-smartq5.c
+@@ -17,6 +17,7 @@
+ #include <linux/leds.h>
+ #include <linux/platform_device.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ 
+@@ -148,6 +149,7 @@ MACHINE_START(SMARTQ5, "SmartQ 5")
+ 	/* Maintainer: Maurus Cuelenaere <mcuelenaere AT gmail DOT com> */
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 	.init_irq	= s3c6410_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= smartq_map_io,
+ 	.init_machine	= smartq5_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-smartq7.c b/arch/arm/mach-s3c64xx/mach-smartq7.c
+index 5796397..bd3168c 100644
+--- a/arch/arm/mach-s3c64xx/mach-smartq7.c
++++ b/arch/arm/mach-s3c64xx/mach-smartq7.c
+@@ -17,6 +17,7 @@
+ #include <linux/leds.h>
+ #include <linux/platform_device.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ 
+@@ -164,6 +165,7 @@ MACHINE_START(SMARTQ7, "SmartQ 7")
+ 	/* Maintainer: Maurus Cuelenaere <mcuelenaere AT gmail DOT com> */
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 	.init_irq	= s3c6410_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= smartq_map_io,
+ 	.init_machine	= smartq7_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-smdk6400.c b/arch/arm/mach-s3c64xx/mach-smdk6400.c
+index 3cca642..64560b2 100644
+--- a/arch/arm/mach-s3c64xx/mach-smdk6400.c
++++ b/arch/arm/mach-s3c64xx/mach-smdk6400.c
+@@ -22,6 +22,7 @@
+ 
+ #include <asm/mach-types.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ #include <asm/mach/irq.h>
+@@ -88,6 +89,7 @@ MACHINE_START(SMDK6400, "SMDK6400")
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 
+ 	.init_irq	= s3c6400_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= smdk6400_map_io,
+ 	.init_machine	= smdk6400_machine_init,
+ 	.timer		= &s3c24xx_timer,
+diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c b/arch/arm/mach-s3c64xx/mach-smdk6410.c
+index ecbea92..47a835b 100644
+--- a/arch/arm/mach-s3c64xx/mach-smdk6410.c
++++ b/arch/arm/mach-s3c64xx/mach-smdk6410.c
+@@ -43,6 +43,7 @@
+ 
+ #include <video/platform_lcd.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ #include <asm/mach/irq.h>
+@@ -745,6 +746,7 @@ MACHINE_START(SMDK6410, "SMDK6410")
+ 	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+ 
+ 	.init_irq	= s3c6410_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.map_io		= smdk6410_map_io,
+ 	.init_machine	= smdk6410_machine_init,
+ 	.timer		= &s3c24xx_timer,
 -- 
 1.7.4.1
