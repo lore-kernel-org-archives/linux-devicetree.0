@@ -1,14 +1,14 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv2 02/10] ARM: vic: MULTI_IRQ_HANDLER handler
-Date: Wed, 28 Sep 2011 13:09:48 +0200
-Message-ID: <CACRpkdYyurmMSF0LnN3Ut8fmQDkjVC5pNCeUWQ=ik8Ete6UYzg@mail.gmail.com>
+Subject: Re: [PATCHv2 05/10] ARM: nomadik: convert to MULTI_IRQ_HANDLER
+Date: Wed, 28 Sep 2011 13:12:43 +0200
+Message-ID: <CACRpkdYtHQz8dFbN=LLFNak5dQ5rCoLuM3Jg84D=vibFSpptcQ@mail.gmail.com>
 References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
-	<1317206507-18867-3-git-send-email-jamie@jamieiles.com>
+	<1317206507-18867-6-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1317206507-18867-3-git-send-email-jamie@jamieiles.com>
+In-Reply-To: <1317206507-18867-6-git-send-email-jamie@jamieiles.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,40 +24,19 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Sep 28, 2011 at 12:41 PM, Jamie Iles <jamie@jamieiles.com> wrote:
 
-> +static void vic_single_handle_irq(struct vic_device *vic, struct pt_regs=
- *regs)
-> +{
-> + =A0 =A0 =A0 u32 stat, irq;
-> + =A0 =A0 =A0 bool handled =3D false;
-> +
-> + =A0 =A0 =A0 while (!handled) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 stat =3D readl_relaxed(vic->base + VIC_IRQ_=
-STATUS);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!stat)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 while (stat) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 irq =3D fls(stat) - 1;
+> - =A0 =A0 =A0 /* This stanza gets the irq mask from one of two status reg=
+isters */
+> - =A0 =A0 =A0 mov =A0 =A0 \irqnr, #0
+> - =A0 =A0 =A0 ldr =A0 =A0 \irqstat, [\base, #VIC_REG_IRQSR0] =A0 =A0 =A0@=
+ get masked status
+> - =A0 =A0 =A0 cmp =A0 =A0 \irqstat, #0
+> - =A0 =A0 =A0 bne =A0 =A0 1001f
+> - =A0 =A0 =A0 add =A0 =A0 \irqnr, \irqnr, #32
+> - =A0 =A0 =A0 ldr =A0 =A0 \irqstat, [\base, #VIC_REG_IRQSR1] =A0 =A0 =A0@=
+ get masked status
 
-Isn't fls "find last set"?
-
-That means IRQs with higher numbers will be handled first will it not?
-
-For U300 IRQs with lower numbers will be handled first
-by iteratively testing bit 0 and shifting right:
-
--1002:  tst     \irqstat, #1
--       bne     1003f
--       add     \irqnr, \irqnr, #1
--       movs    \irqstat, \irqstat, lsr #1
--       bne     1002b
-
-So I would use ffs() for this to work the same way as before in
-U300.
-
-Since this can have some performance impact, if the platforms differ
-in whether they handle IRQs from low to high or from high to low
-might need to be a flag passed in to vic_init() or so...
+As you can see the Nomadik also has two daisy-chained VICs,
+just like the U300, so this also breaks.
 
 Yours,
 Linus Walleij
