@@ -1,14 +1,14 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv2 05/10] ARM: nomadik: convert to MULTI_IRQ_HANDLER
-Date: Wed, 28 Sep 2011 13:12:43 +0200
-Message-ID: <CACRpkdYtHQz8dFbN=LLFNak5dQ5rCoLuM3Jg84D=vibFSpptcQ@mail.gmail.com>
+Subject: Re: [PATCHv2 03/10] ARM: ep93xx: convert to MULTI_IRQ_HANDLER
+Date: Wed, 28 Sep 2011 13:15:32 +0200
+Message-ID: <CACRpkdatMdg3cbEqwnNpNjKrzf=r_+xi9U0XiyqcRbRuvz8zYQ@mail.gmail.com>
 References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
-	<1317206507-18867-6-git-send-email-jamie@jamieiles.com>
+	<1317206507-18867-4-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1317206507-18867-6-git-send-email-jamie@jamieiles.com>
+In-Reply-To: <1317206507-18867-4-git-send-email-jamie@jamieiles.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,19 +24,24 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Sep 28, 2011 at 12:41 PM, Jamie Iles <jamie@jamieiles.com> wrote:
 
-> - =A0 =A0 =A0 /* This stanza gets the irq mask from one of two status reg=
-isters */
-> - =A0 =A0 =A0 mov =A0 =A0 \irqnr, #0
-> - =A0 =A0 =A0 ldr =A0 =A0 \irqstat, [\base, #VIC_REG_IRQSR0] =A0 =A0 =A0@=
- get masked status
-> - =A0 =A0 =A0 cmp =A0 =A0 \irqstat, #0
-> - =A0 =A0 =A0 bne =A0 =A0 1001f
-> - =A0 =A0 =A0 add =A0 =A0 \irqnr, \irqnr, #32
-> - =A0 =A0 =A0 ldr =A0 =A0 \irqstat, [\base, #VIC_REG_IRQSR1] =A0 =A0 =A0@=
- get masked status
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 .macro =A0get_irqnr_and_base, irqnr, irqsta=
+t, base, tmp
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ldr =A0 =A0 \base, =3D(EP93XX_AHB_VIRT_BASE)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 orr =A0 =A0 \base, \base, #0x000b0000
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 mov =A0 =A0 \irqnr, #0
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ldr =A0 =A0 \irqstat, [\base] =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 @ lower 32 interrupts
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmp =A0 =A0 \irqstat, #0
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 bne =A0 =A0 1001f
+> -
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 eor =A0 =A0 \base, \base, #0x00070000
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ldr =A0 =A0 \irqstat, [\base] =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 @ upper 32 interrupts
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmp =A0 =A0 \irqstat, #0
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 beq =A0 =A0 1002f
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 mov =A0 =A0 \irqnr, #0x20
 
-As you can see the Nomadik also has two daisy-chained VICs,
-just like the U300, so this also breaks.
+Two VIC instances again...
 
 Yours,
 Linus Walleij
