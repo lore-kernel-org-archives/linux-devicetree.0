@@ -1,136 +1,113 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: [PATCHv2 04/10] ARM: netx: convert to MULTI_IRQ_HANDLER
-Date: Wed, 28 Sep 2011 11:41:41 +0100
-Message-ID: <1317206507-18867-5-git-send-email-jamie@jamieiles.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: [PATCHv2 05/10] ARM: nomadik: convert to MULTI_IRQ_HANDLER
+Date: Wed, 28 Sep 2011 11:41:42 +0100
+Message-ID: <1317206507-18867-6-git-send-email-jamie@jamieiles.com>
 References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, marc.zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, STEricsson_nomadik_linux@list.st.com, Jamie Iles <jamie@jamieiles.com>, rubini@unipv.it
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1317206507-18867-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, rubini-9wsNiZum9E8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Now that there is a generic IRQ handler for multiple VIC devices use it
-for netx to help building multi platform kernels.
+for nomadik to help building multi platform kernels.
 
-Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+Cc: Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: STEricsson <STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 ---
- arch/arm/Kconfig                              |    1 +
- arch/arm/mach-netx/include/mach/entry-macro.S |   13 -------------
- arch/arm/mach-netx/nxdb500.c                  |    2 ++
- arch/arm/mach-netx/nxdkn.c                    |    2 ++
- arch/arm/mach-netx/nxeb500hmi.c               |    2 ++
- 5 files changed, 7 insertions(+), 13 deletions(-)
+ arch/arm/Kconfig                                 |    1 +
+ arch/arm/mach-nomadik/board-nhk8815.c            |    2 +
+ arch/arm/mach-nomadik/include/mach/entry-macro.S |   30 ----------------------
+ 3 files changed, 3 insertions(+), 30 deletions(-)
 
 diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 7facb7c..b7cab06 100644
+index b7cab06..8d131a2 100644
 --- a/arch/arm/Kconfig
 +++ b/arch/arm/Kconfig
-@@ -416,6 +416,7 @@ config ARCH_NETX
- 	select CPU_ARM926T
- 	select ARM_VIC
+@@ -859,6 +859,7 @@ config ARCH_NOMADIK
+ 	select CLKDEV_LOOKUP
  	select GENERIC_CLOCKEVENTS
+ 	select ARCH_REQUIRE_GPIOLIB
 +	select MULTI_IRQ_HANDLER
  	help
- 	  This enables support for systems based on the Hilscher NetX Soc
+ 	  Support for the Nomadik platform by ST-Ericsson
  
-diff --git a/arch/arm/mach-netx/include/mach/entry-macro.S b/arch/arm/mach-netx/include/mach/entry-macro.S
-index 844f1f9..6e9f1cb 100644
---- a/arch/arm/mach-netx/include/mach/entry-macro.S
-+++ b/arch/arm/mach-netx/include/mach/entry-macro.S
-@@ -18,22 +18,9 @@
-  * along with this program; if not, write to the Free Software
-  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+diff --git a/arch/arm/mach-nomadik/board-nhk8815.c b/arch/arm/mach-nomadik/board-nhk8815.c
+index 1399303..46d9dce 100644
+--- a/arch/arm/mach-nomadik/board-nhk8815.c
++++ b/arch/arm/mach-nomadik/board-nhk8815.c
+@@ -21,6 +21,7 @@
+ #include <linux/mtd/onenand.h>
+ #include <linux/mtd/partitions.h>
+ #include <linux/io.h>
++#include <asm/hardware/vic.h>
+ #include <asm/sizes.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -279,6 +280,7 @@ MACHINE_START(NOMADIK, "NHK8815")
+ 	.boot_params	= 0x100,
+ 	.map_io		= cpu8815_map_io,
+ 	.init_irq	= cpu8815_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &nomadik_timer,
+ 	.init_machine	= nhk8815_platform_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-nomadik/include/mach/entry-macro.S b/arch/arm/mach-nomadik/include/mach/entry-macro.S
+index 49f1aa3..98ea1c1 100644
+--- a/arch/arm/mach-nomadik/include/mach/entry-macro.S
++++ b/arch/arm/mach-nomadik/include/mach/entry-macro.S
+@@ -6,38 +6,8 @@
+  * warranty of any kind, whether express or implied.
   */
+ 
 -#include <mach/hardware.h>
- 
- 		.macro  disable_fiq
- 		.endm
- 
--		.macro  get_irqnr_preamble, base, tmp
--		ldr	\base, =io_p2v(0x001ff000)
--		.endm
+-#include <mach/irqs.h>
 -
- 		.macro  arch_ret_to_user, tmp1, tmp2
- 		.endm
+ 	.macro	disable_fiq
+ 	.endm
+ 
+-	.macro	get_irqnr_preamble, base, tmp
+-	ldr	\base, =IO_ADDRESS(NOMADIK_IC_BASE)
+-	.endm
 -
--		.macro  get_irqnr_and_base, irqnr, irqstat, base, tmp
--		ldr	\irqstat, [\base, #0]
--		clz	\irqnr, \irqstat
--		rsb     \irqnr, \irqnr, #31
--		cmp	\irqstat, #0
--		.endm
+ 	.macro	arch_ret_to_user, tmp1, tmp2
+ 	.endm
 -
-diff --git a/arch/arm/mach-netx/nxdb500.c b/arch/arm/mach-netx/nxdb500.c
-index ca8b203..e86aea8 100644
---- a/arch/arm/mach-netx/nxdb500.c
-+++ b/arch/arm/mach-netx/nxdb500.c
-@@ -28,6 +28,7 @@
- #include <mach/hardware.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-+#include <asm/hardware/vic.h>
- #include <mach/netx-regs.h>
- #include <mach/eth.h>
- 
-@@ -203,6 +204,7 @@ MACHINE_START(NXDB500, "Hilscher nxdb500")
- 	.boot_params	= 0x80000100,
- 	.map_io		= netx_map_io,
- 	.init_irq	= netx_init_irq,
-+	.handle_irq	= vic_handle_irq,
- 	.timer		= &netx_timer,
- 	.init_machine	= nxdb500_init,
- MACHINE_END
-diff --git a/arch/arm/mach-netx/nxdkn.c b/arch/arm/mach-netx/nxdkn.c
-index d775cbe..b3170da 100644
---- a/arch/arm/mach-netx/nxdkn.c
-+++ b/arch/arm/mach-netx/nxdkn.c
-@@ -28,6 +28,7 @@
- #include <mach/hardware.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-+#include <asm/hardware/vic.h>
- #include <mach/netx-regs.h>
- #include <mach/eth.h>
- 
-@@ -96,6 +97,7 @@ MACHINE_START(NXDKN, "Hilscher nxdkn")
- 	.boot_params	= 0x80000100,
- 	.map_io		= netx_map_io,
- 	.init_irq	= netx_init_irq,
-+	.handle_irq	= vic_handle_irq,
- 	.timer		= &netx_timer,
- 	.init_machine	= nxdkn_init,
- MACHINE_END
-diff --git a/arch/arm/mach-netx/nxeb500hmi.c b/arch/arm/mach-netx/nxeb500hmi.c
-index de369cd..dc6fa77 100644
---- a/arch/arm/mach-netx/nxeb500hmi.c
-+++ b/arch/arm/mach-netx/nxeb500hmi.c
-@@ -28,6 +28,7 @@
- #include <mach/hardware.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-+#include <asm/hardware/vic.h>
- #include <mach/netx-regs.h>
- #include <mach/eth.h>
- 
-@@ -180,6 +181,7 @@ MACHINE_START(NXEB500HMI, "Hilscher nxeb500hmi")
- 	.boot_params	= 0x80000100,
- 	.map_io		= netx_map_io,
- 	.init_irq	= netx_init_irq,
-+	.handle_irq	= vic_handle_irq,
- 	.timer		= &netx_timer,
- 	.init_machine	= nxeb500hmi_init,
- MACHINE_END
+-	.macro	get_irqnr_and_base, irqnr, irqstat, base, tmp
+-
+-	/* This stanza gets the irq mask from one of two status registers */
+-	mov	\irqnr, #0
+-	ldr	\irqstat, [\base, #VIC_REG_IRQSR0]	@ get masked status
+-	cmp	\irqstat, #0
+-	bne	1001f
+-	add	\irqnr, \irqnr, #32
+-	ldr	\irqstat, [\base, #VIC_REG_IRQSR1]	@ get masked status
+-
+-1001:	tst	\irqstat, #15
+-	bne	1002f
+-	add	\irqnr, \irqnr, #4
+-	movs	\irqstat, \irqstat, lsr #4
+-	bne	1001b
+-1002:	tst	\irqstat, #1
+-	bne	1003f
+-	add	\irqnr, \irqnr, #1
+-	movs	\irqstat, \irqstat, lsr #1
+-	bne	1002b
+-1003:	/* EQ will be set if no irqs pending */
+-	.endm
 -- 
 1.7.4.1
