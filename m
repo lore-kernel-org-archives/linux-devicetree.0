@@ -1,51 +1,72 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH 02/13] gpio/omap: Adapt GPIO driver to DT
-Date: Wed, 28 Sep 2011 16:32:47 -0500
-Message-ID: <4E83927F.1060309@freescale.com>
-References: <1317055821-20652-1-git-send-email-b-cousson@ti.com> <1317055821-20652-3-git-send-email-b-cousson@ti.com> <4E8161C7.7020404@ti.com> <4E82D7B3.6080909@ti.com> <4E836612.2010709@freescale.com> <4E838A41.8010408@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 07/24] C6X: devicetree support
+Date: Wed, 28 Sep 2011 18:11:12 -0500
+Message-ID: <20110928231112.GE2838@ponder.secretlab.ca>
+References: <1317155405-26235-1-git-send-email-msalter@redhat.com>
+ <1317155405-26235-8-git-send-email-msalter@redhat.com>
+ <201109281531.36792.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4E838A41.8010408@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "Nayak, Rajendra" <rnayak@ti.com>, "Hilman, Kevin" <khilman@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "DebBarma, Tarun Kanti" <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Varadarajan, Charulatha" <charu@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201109281531.36792.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Salter <msalter@redhat.com>, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2011 03:57 PM, Cousson, Benoit wrote:
-> On 9/28/2011 8:23 PM, Scott Wood wrote:
->> What does "the id" mean, in relation to the actual hardware?
+On Wed, Sep 28, 2011 at 03:31:36PM +0200, Arnd Bergmann wrote:
+> On Tuesday 27 September 2011, Mark Salter wrote:
+> > diff --git a/arch/c6x/boot/install-dtb.c b/arch/c6x/boot/install-dtb.c
+> > new file mode 100644
+> > index 0000000..fa979ce
+> > --- /dev/null
+> > +++ b/arch/c6x/boot/install-dtb.c
+> > @@ -0,0 +1,333 @@
+> > +/*
+> > + * Program to hack in a DTB to an ELF file having a placeholder
+> > + * section named __fst_blob.
+> > + *
+> > + * This allows for building multiple images with builtin DTBs
+> > + * using a single vmlinux image. This is only necessary until
+> > + * bootloader support exists.
+> > + *
+> > + * Copyright 2011 Texas Instruments Incorporated
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License
+> > + * as published by the Free Software Foundation; either version
+> > + * 2 of the License, or (at your option) any later version.
+> > + *
+> > + * Usage: install-dtb <image.dtb> <kernel.elf>
+> > + */
 > 
-> It's true that the description is not super meaningful...
-> This is the HW instance number. We have 6 gpios, named gpio1 to gpio6,
-> but the pin numbering is global, meaning from 1 to 192, sine only the
-> global number is referenced in the pinmuxing control, we have to
-> maintain the order to ensure the right number.
+> Other architectures allow simply appending the device tree to the
+> kernel image file, which is more convenient for users and does
+> not require much kernel support. Have you tried this?
+> 
+> > diff --git a/arch/c6x/platforms/platform.c b/arch/c6x/platforms/platform.c
+> > new file mode 100644
+> > index 0000000..ad4651c
+> > --- /dev/null
+> > +++ b/arch/c6x/platforms/platform.c
+> > @@ -0,0 +1,17 @@
+> > +
+> > +static int __init c6x_device_probe(void)
+> > +{
+> > +       of_platform_bus_probe(NULL, of_default_bus_match_table, NULL);
+> > +       return 0;
+> > +}
+> > +device_initcall(c6x_device_probe);
+> 
+> device_initcall is run rather late. I think it would be more useful
+> to run this as early as possible, in order to make it possible to
+> have more of the core services probed through the device tree.
+> 
+> I also think that for probing the device tree root, you should be
+> using of_platform_populate instead of of_platform_bus_probe
+> nowadays. Maybe Grant can provide more information on this.
 
-I'd either have one node that handles all the banks (with multiple "reg"
-resources in the order that they should be mapped to the numberspace),
-or avoid using that global numberspace and reference things by
-bank/offset (with the bank identified by alias or phandle).
+Yes.  Use of_platform_populate().  It's better.
 
-> I still do not know how to use that with the way gpio binding is
-> working. Because in theory each gpio controller should be referenced
-> with the local number, not the global one. And converting that global
-> number from HW spec to a gpio instance + local number seems to me very
-> error prone.
-
-You could say the same thing about a chip whose manual is written
-assuming a global IRQ numberspace with a certain encoding scheme.
-
-Or in the other direction, Freescale's manuals split up MPIC interrupts
-into external/internal/MSI, while they really just map to different
-regions of the openpic (hardware standard that Freescale's MPIC is an
-instance of) interrupt space.  The device trees use the raw openpic
-interrupt numbers.
-
-There's certainly potential for confusion, but at least the device tree
-representation is internally consistent and doesn't make assumptions
-about the overall system.
-
--Scott
-
+g.
