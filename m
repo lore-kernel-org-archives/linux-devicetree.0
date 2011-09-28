@@ -1,68 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
+From: Mark Salter <msalter@redhat.com>
 Subject: Re: [PATCH v3 07/24] C6X: devicetree support
-Date: Wed, 28 Sep 2011 15:31:36 +0200
-Message-ID: <201109281531.36792.arnd@arndb.de>
-References: <1317155405-26235-1-git-send-email-msalter@redhat.com> <1317155405-26235-8-git-send-email-msalter@redhat.com>
+Date: Wed, 28 Sep 2011 10:44:10 -0400
+Message-ID: <1317221051.2580.76.camel@deneb.redhat.com>
+References: <1317155405-26235-1-git-send-email-msalter@redhat.com>
+	 <1317155405-26235-8-git-send-email-msalter@redhat.com>
+	 <201109281531.36792.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1317155405-26235-8-git-send-email-msalter@redhat.com>
+In-Reply-To: <201109281531.36792.arnd@arndb.de>
 Sender: linux-arch-owner@vger.kernel.org
-To: Mark Salter <msalter@redhat.com>
+To: Arnd Bergmann <arnd@arndb.de>
 Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 27 September 2011, Mark Salter wrote:
-> diff --git a/arch/c6x/boot/install-dtb.c b/arch/c6x/boot/install-dtb.c
-> new file mode 100644
-> index 0000000..fa979ce
-> --- /dev/null
-> +++ b/arch/c6x/boot/install-dtb.c
-> @@ -0,0 +1,333 @@
-> +/*
-> + * Program to hack in a DTB to an ELF file having a placeholder
-> + * section named __fst_blob.
-> + *
-> + * This allows for building multiple images with builtin DTBs
-> + * using a single vmlinux image. This is only necessary until
-> + * bootloader support exists.
-> + *
-> + * Copyright 2011 Texas Instruments Incorporated
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + *
-> + * Usage: install-dtb <image.dtb> <kernel.elf>
-> + */
+On Wed, 2011-09-28 at 15:31 +0200, Arnd Bergmann wrote:
+> On Tuesday 27 September 2011, Mark Salter wrote:
+> > diff --git a/arch/c6x/boot/install-dtb.c b/arch/c6x/boot/install-dtb.c
+> > new file mode 100644
+> > index 0000000..fa979ce
+> > --- /dev/null
+> > +++ b/arch/c6x/boot/install-dtb.c
+> > @@ -0,0 +1,333 @@
+> > +/*
+> > + * Program to hack in a DTB to an ELF file having a placeholder
+> > + * section named __fst_blob.
+> > + *
+> > + * This allows for building multiple images with builtin DTBs
+> > + * using a single vmlinux image. This is only necessary until
+> > + * bootloader support exists.
+> > + *
+> > + * Copyright 2011 Texas Instruments Incorporated
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License
+> > + * as published by the Free Software Foundation; either version
+> > + * 2 of the License, or (at your option) any later version.
+> > + *
+> > + * Usage: install-dtb <image.dtb> <kernel.elf>
+> > + */
+> 
+> Other architectures allow simply appending the device tree to the
+> kernel image file, which is more convenient for users and does
+> not require much kernel support. Have you tried this?
 
-Other architectures allow simply appending the device tree to the
-kernel image file, which is more convenient for users and does
-not require much kernel support. Have you tried this?
+Well, I considered it. My main reason for doing it this way was one of
+debugging convenience. The debugger loads an ELF file and while I was
+making lots of device tree changes in the tree and in the code, it was
+more convenient to have one ELF file to deal with rather than an ELF
+file and a dtb. And the thought was to get rid of it altogether once
+bootloader support comes along. Maybe the thing to do would be to just
+rip it out of the kernel. It can almost as easily be post-processing
+step outside the kernel.
 
-> diff --git a/arch/c6x/platforms/platform.c b/arch/c6x/platforms/platform.c
-> new file mode 100644
-> index 0000000..ad4651c
-> --- /dev/null
-> +++ b/arch/c6x/platforms/platform.c
-> @@ -0,0 +1,17 @@
-> +
-> +static int __init c6x_device_probe(void)
-> +{
-> +       of_platform_bus_probe(NULL, of_default_bus_match_table, NULL);
-> +       return 0;
-> +}
-> +device_initcall(c6x_device_probe);
-
-device_initcall is run rather late. I think it would be more useful
-to run this as early as possible, in order to make it possible to
-have more of the core services probed through the device tree.
-
-I also think that for probing the device tree root, you should be
-using of_platform_populate instead of of_platform_bus_probe
-nowadays. Maybe Grant can provide more information on this.
-
-	Arnd
+--Mark
