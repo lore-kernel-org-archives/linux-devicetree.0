@@ -1,55 +1,115 @@
-From: Daniel Drake <dsd@laptop.org>
-Subject: [PATCH 1/3] mfd: allow mfd_cell association with device tree node
-Date: Wed, 28 Sep 2011 10:08:10 +0100 (BST)
-Message-ID: <20110928090810.6ECC19D401D__18653.1513616957$1317203536$gmane$org@zog.reactivated.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, grant.likely@secretlab.ca
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dilinger@queued.net, broonie@opensource.wolfsonmicro.com
+From: Jamie Iles <jamie@jamieiles.com>
+Subject: [PATCHv2 00/10] VIC DT binding and MULTI_IRQ_HANDLER
+Date: Wed, 28 Sep 2011 11:41:37 +0100
+Message-ID: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, marc.zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, STEricsson_nomadik_linux@list.st.com, Jamie Iles <jamie@jamieiles.com>, rubini@unipv.it
 List-Id: devicetree@vger.kernel.org
 
-This allows a mfd_cell to be linked with a device tree node, which
-then allows child drivers to have easy access to that handle.
+This patch series adds a device tree binding for the VIC and support for
+a generic VIC MULTI_IRQ_HANDLER.  The MULTI_IRQ_HANDLER is a step
+towards a single image kernel, removing the need for mach specific entry
+handlers for platforms using the VIC as the primary interrupt
+controller.
 
-Signed-off-by: Daniel Drake <dsd@laptop.org>
----
- drivers/mfd/mfd-core.c   |    1 +
- include/linux/mfd/core.h |    4 ++++
- 2 files changed, 5 insertions(+), 0 deletions(-)
+This has dependencies on:
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 0902523..7d22dcd 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -87,6 +87,7 @@ static int mfd_add_device(struct device *parent, int id,
- 		goto fail_device;
- 
- 	pdev->dev.parent = parent;
-+	pdev->dev.of_node = cell->of_node;
- 
- 	if (cell->pdata_size) {
- 		ret = platform_device_add_data(pdev,
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index 4e76163..9b836f9 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -15,6 +15,7 @@
- #define MFD_CORE_H
- 
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- 
- /*
-  * This struct describes the MFD part ("cell").
-@@ -37,6 +38,9 @@ struct mfd_cell {
- 	void			*platform_data;
- 	size_t			pdata_size;
- 
-+	/* association with device tree node (optional) */
-+	struct device_node	*of_node;
-+
- 	/*
- 	 * These resources can be specified relative to the parent device.
- 	 * For accessing hardware you should use resources from the platform dev
+	- of/irq: introduce of_irq_init
+	http://lists.infradead.org/pipermail/linux-arm-kernel/2011-September/066844.html
+
+	- irq: add declaration of irq_domain_simple_ops to irqdomain.h
+	https://lkml.org/lkml/2011/9/14/189
+
+from Rob Herring, and
+
+	- ARM: Make global handler and CONFIG_MULTI_IRQ_HANDLER mutually
+	exclusive
+	http://www.spinics.net/lists/arm-kernel/msg141948.html
+
+from Marc Zyngier.
+
+Tested on picoxcell and build tested for all defconfigs.
+
+Jamie Iles (10):
+  ARM: vic: device tree binding
+  ARM: vic: MULTI_IRQ_HANDLER handler
+  ARM: ep93xx: convert to MULTI_IRQ_HANDLER
+  ARM: netx: convert to MULTI_IRQ_HANDLER
+  ARM: nomadik: convert to MULTI_IRQ_HANDLER
+  ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
+  ARM: spear: convert to MULTI_IRQ_HANDLER
+  ARM: u300: convert to MULTI_IRQ_HANDLER
+  ARM: versatile: convert to MULTI_IRQ_HANDLER
+  ARM: samsung: convert to MULTI_IRQ_HANDLER
+
+ Documentation/devicetree/bindings/arm/vic.txt      |   29 ++++
+ arch/arm/Kconfig                                   |   10 ++
+ arch/arm/common/Kconfig                            |    1 +
+ arch/arm/common/vic.c                              |  135 ++++++++++++++++----
+ arch/arm/include/asm/hardware/vic.h                |   14 ++-
+ arch/arm/mach-ep93xx/adssphere.c                   |    2 +
+ arch/arm/mach-ep93xx/edb93xx.c                     |    9 ++
+ arch/arm/mach-ep93xx/gesbc9312.c                   |    2 +
+ arch/arm/mach-ep93xx/include/mach/entry-macro.S    |   42 ------
+ arch/arm/mach-ep93xx/micro9.c                      |    5 +
+ arch/arm/mach-ep93xx/simone.c                      |    2 +
+ arch/arm/mach-ep93xx/snappercl15.c                 |    2 +
+ arch/arm/mach-ep93xx/ts72xx.c                      |    2 +
+ arch/arm/mach-netx/include/mach/entry-macro.S      |   13 --
+ arch/arm/mach-netx/nxdb500.c                       |    2 +
+ arch/arm/mach-netx/nxdkn.c                         |    2 +
+ arch/arm/mach-netx/nxeb500hmi.c                    |    2 +
+ arch/arm/mach-nomadik/board-nhk8815.c              |    2 +
+ arch/arm/mach-nomadik/include/mach/entry-macro.S   |   30 -----
+ arch/arm/mach-s3c64xx/include/mach/entry-macro.S   |    7 +-
+ arch/arm/mach-s3c64xx/mach-anw6410.c               |    2 +
+ arch/arm/mach-s3c64xx/mach-crag6410.c              |    2 +
+ arch/arm/mach-s3c64xx/mach-hmt.c                   |    2 +
+ arch/arm/mach-s3c64xx/mach-mini6410.c              |    2 +
+ arch/arm/mach-s3c64xx/mach-ncp.c                   |    2 +
+ arch/arm/mach-s3c64xx/mach-real6410.c              |    2 +
+ arch/arm/mach-s3c64xx/mach-smartq5.c               |    2 +
+ arch/arm/mach-s3c64xx/mach-smartq7.c               |    2 +
+ arch/arm/mach-s3c64xx/mach-smdk6400.c              |    2 +
+ arch/arm/mach-s3c64xx/mach-smdk6410.c              |    2 +
+ arch/arm/mach-s5p64x0/include/mach/entry-macro.S   |    7 +-
+ arch/arm/mach-s5p64x0/mach-smdk6440.c              |    2 +
+ arch/arm/mach-s5p64x0/mach-smdk6450.c              |    2 +
+ arch/arm/mach-s5pc100/include/mach/entry-macro.S   |   25 ----
+ arch/arm/mach-s5pc100/mach-smdkc100.c              |    2 +
+ arch/arm/mach-s5pv210/include/mach/entry-macro.S   |   37 ------
+ arch/arm/mach-s5pv210/mach-aquila.c                |    2 +
+ arch/arm/mach-s5pv210/mach-goni.c                  |    2 +
+ arch/arm/mach-s5pv210/mach-smdkc110.c              |    2 +
+ arch/arm/mach-s5pv210/mach-smdkv210.c              |    2 +
+ arch/arm/mach-s5pv210/mach-torbreck.c              |    2 +
+ arch/arm/mach-spear3xx/include/mach/entry-macro.S  |   27 ----
+ arch/arm/mach-spear3xx/spear300_evb.c              |    2 +
+ arch/arm/mach-spear3xx/spear310_evb.c              |    2 +
+ arch/arm/mach-spear3xx/spear320_evb.c              |    2 +
+ arch/arm/mach-spear6xx/include/mach/entry-macro.S  |   36 -----
+ arch/arm/mach-spear6xx/spear600_evb.c              |    2 +
+ arch/arm/mach-u300/include/mach/entry-macro.S      |   24 ----
+ arch/arm/mach-u300/u300.c                          |    2 +
+ arch/arm/mach-versatile/include/mach/entry-macro.S |   30 -----
+ arch/arm/mach-versatile/versatile_ab.c             |    2 +
+ arch/arm/mach-versatile/versatile_dt.c             |    2 +
+ arch/arm/mach-versatile/versatile_pb.c             |    2 +
+ 53 files changed, 252 insertions(+), 299 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/vic.txt
+
 -- 
-1.7.6.2
+1.7.4.1
