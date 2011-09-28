@@ -1,93 +1,68 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/3] gpio-vx855: Add device tree binding
-Date: Wed, 28 Sep 2011 10:08:37 +0100 (BST)
-Message-ID: <20110928090837.23EAC9D401E__5195.20223974741$1317201242$gmane$org@zog.reactivated.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dilinger-pFFUokh25LWsTnJN9+BGXg@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v5 0/6] Add device tree support for PL330 dma controller driver
+Date: Wed, 28 Sep 2011 14:55:19 +0530
+Message-ID: <1317201925-25148-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, vinod.koul@intel.com
+Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This is needed to enable the HDD LED on the OLPC XO-1.5 laptop,
-enabled through devicetree and the gpio-leds driver.
+Changes since v4:
+- Rebased with Samsung maintainer's for-next branch which is at linux-3.1-rc7
+  - Modified Patch 6/6 to apply cleanly.
 
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio_vx855.txt        |   20 ++++++++++++++++++++
- drivers/gpio/gpio-vx855.c                          |    9 +++++++--
- 2 files changed, 27 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_vx855.txt
+Changes since v3:
+- In Patch 4/6, a recommendation is added in the pl330 binding documentation
+  for the name of the property which specifies the dma channel in the client
+  device node.
+- In Patch 6/6, dropped #ifdef around of_have_populated_dt.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_vx855.txt b/Documentation/devicetree/bindings/gpio/gpio_vx855.txt
-new file mode 100644
-index 0000000..17285a5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio_vx855.txt
-@@ -0,0 +1,20 @@
-+VIA VX855 GPIO controller
-+
-+Required properties:
-+- compatible : "via,vx855-gpio"
-+- #gpio-cells : Should be two. The first cell is the pin number and the
-+  second cell is used to specify optional parameters:
-+  - bit 0 specifies polarity (0 for normal, 1 for inverted)
-+- gpio-controller : Marks the device node as a GPIO controller.
-+
-+As VIA differentiates between GPI, GPO and GPIO on its 42 available pins,
-+with each pin type restarting numbering at 0, the following numbering scheme
-+is used in the device tree for the pin number:
-+
-+PIN NO		VIA NAME
-+0..13		GPI 0..13
-+14..26		GPO 0..12
-+27..41		GPIO 0..14
-+
-+For example, GPIO 11 (VIA name) is referred to with pin number 38 in the
-+device tree.
-diff --git a/drivers/gpio/gpio-vx855.c b/drivers/gpio/gpio-vx855.c
-index ef5aabd..2c300c9 100644
---- a/drivers/gpio/gpio-vx855.c
-+++ b/drivers/gpio/gpio-vx855.c
-@@ -201,7 +201,8 @@ static const char *vx855gpio_names[NR_VX855_GP] = {
- 	"VX855_GPIO12", "VX855_GPIO13", "VX855_GPIO14"
- };
- 
--static void vx855gpio_gpio_setup(struct vx855_gpio *vg)
-+static void vx855gpio_gpio_setup(struct vx855_gpio *vg,
-+				 struct platform_device *pdev)
- {
- 	struct gpio_chip *c = &vg->gpio;
- 
-@@ -216,6 +217,10 @@ static void vx855gpio_gpio_setup(struct vx855_gpio *vg)
- 	c->ngpio = NR_VX855_GP;
- 	c->can_sleep = 0;
- 	c->names = vx855gpio_names;
-+
-+#ifdef CONFIG_OF_GPIO
-+	c->of_node = pdev->dev.of_node;
-+#endif
- }
- 
- /* This platform device is ordinarily registered by the vx855 mfd driver */
-@@ -264,7 +269,7 @@ static __devinit int vx855gpio_probe(struct platform_device *pdev)
- 	else
- 		vg->gpo_reserved = true;
- 
--	vx855gpio_gpio_setup(vg);
-+	vx855gpio_gpio_setup(vg, pdev);
- 
- 	ret = gpiochip_add(&vg->gpio);
- 	if (ret) {
--- 
-1.7.6.2
+Changes since v2:
+- Only the sixth patch is changed, to make dma platform data conditionally
+  selectable.
+- Tested with v8 version of pl330 dma driver update patches from Boojin Kim.
+
+Changes since v1:
+- Removed "arm,pl330-pdma" and "arm,pl330-mdma" compatible values.
+- Removed "arm,primecell-periphid" and "arm,pl330-peri-reqs"
+  property requirements.
+
+This patchset adds device tree support for PL330 driver and uses it
+to add device tree support for Samsung platforms, specifically Exynos4.
+
+First patch moves the pl330_filter function from Samsung specific wrappers
+to pl330 dma driver and also adds a check to ensure that the filter
+function proceeds only if it the dma channel being investigated belongs
+to pl330 dma controller instance.
+
+Second patch adds support to infer the direction of the dma transfer
+using the direction specified with the transfer request instead of
+including this information in the platform data. This simlifies the
+addition of device tree support. Third patch simplifies the platform
+data for Exynos4 pl330 dma controllers. Similar patches simplifying
+the platform data for other Samsung platforms is under development.
+
+Fourth patch adds device tree support for pl330 dma controller driver.
+A dma channel is represented using a phandle of the dma controller
+node and the channel id within that controller. Client driver request
+a dma channel using the phandle and channel id pair. Correspondingly,
+the pl330 filter function has been modified to lookup a channel based
+on this value.
+
+Fifth patch adds device tree support for Samsung's DMA engine wrappers.
+Client drivers retrive the channel property from their device node and
+pass it to the wrappers. The wrapper functions use the property value
+as the filter function parameter. Sixth patch restricts the usage of
+pl330 device and platform data instances to non-dt platforms.
+
+This patchset is based on Linux 3.1-rc7 and tested tested for both
+device-tree and non-device-tree kernel on smdkv310.
+
+Thomas Abraham (6):
+  DMA: PL330: move filter function into driver
+  DMA: PL330: Infer transfer direction from transfer request instead of platform data
+  ARM: EXYNOS4: Modify platform data for pl330 driver
+  DMA: PL330: Add device tree support
+  ARM: SAMSUNG: Add device tree support for pl330 dma engine wrappers
+  ARM: EXYNOS4: Limit usage of pl330 device instance to non-dt build
