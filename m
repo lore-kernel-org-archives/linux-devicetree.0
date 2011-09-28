@@ -1,72 +1,88 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 07/24] C6X: devicetree support
-Date: Wed, 28 Sep 2011 18:11:12 -0500
-Message-ID: <20110928231112.GE2838@ponder.secretlab.ca>
-References: <1317155405-26235-1-git-send-email-msalter@redhat.com>
- <1317155405-26235-8-git-send-email-msalter@redhat.com>
- <201109281531.36792.arnd@arndb.de>
+Subject: Re: [PATCHv2 02/10] ARM: vic: MULTI_IRQ_HANDLER handler
+Date: Wed, 28 Sep 2011 15:39:05 -0500
+Message-ID: <20110928203905.GB2838@ponder.secretlab.ca>
+References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
+	<1317206507-18867-3-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <201109281531.36792.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Salter <msalter@redhat.com>, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1317206507-18867-3-git-send-email-jamie@jamieiles.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, marc.zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, rob.herring@calxeda.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, STEricsson_nomadik_linux@list.st.com, linux-arm-kernel@lists.infradead.org, rubini@unipv.it
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2011 at 03:31:36PM +0200, Arnd Bergmann wrote:
-> On Tuesday 27 September 2011, Mark Salter wrote:
-> > diff --git a/arch/c6x/boot/install-dtb.c b/arch/c6x/boot/install-dtb.c
-> > new file mode 100644
-> > index 0000000..fa979ce
-> > --- /dev/null
-> > +++ b/arch/c6x/boot/install-dtb.c
-> > @@ -0,0 +1,333 @@
-> > +/*
-> > + * Program to hack in a DTB to an ELF file having a placeholder
-> > + * section named __fst_blob.
-> > + *
-> > + * This allows for building multiple images with builtin DTBs
-> > + * using a single vmlinux image. This is only necessary until
-> > + * bootloader support exists.
-> > + *
-> > + * Copyright 2011 Texas Instruments Incorporated
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> > + * as published by the Free Software Foundation; either version
-> > + * 2 of the License, or (at your option) any later version.
-> > + *
-> > + * Usage: install-dtb <image.dtb> <kernel.elf>
-> > + */
+On Wed, Sep 28, 2011 at 11:41:39AM +0100, Jamie Iles wrote:
+> Add a handler for the VIC that is suitable for MULTI_IRQ_HANDLER
+> platforms.  This can replace the ASM entry macros for platforms that use
+> the VIC.
 > 
-> Other architectures allow simply appending the device tree to the
-> kernel image file, which is more convenient for users and does
-> not require much kernel support. Have you tried this?
+> v2:	- allow the handler be used for !CONFIG_OF
+> 	- use irq_domain_to_irq()
 > 
-> > diff --git a/arch/c6x/platforms/platform.c b/arch/c6x/platforms/platform.c
-> > new file mode 100644
-> > index 0000000..ad4651c
-> > --- /dev/null
-> > +++ b/arch/c6x/platforms/platform.c
-> > @@ -0,0 +1,17 @@
-> > +
-> > +static int __init c6x_device_probe(void)
-> > +{
-> > +       of_platform_bus_probe(NULL, of_default_bus_match_table, NULL);
-> > +       return 0;
-> > +}
-> > +device_initcall(c6x_device_probe);
+> Cc: Rob Herring <robherring2@gmail.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+> ---
+>  arch/arm/common/vic.c               |   29 +++++++++++++++++++++++++++++
+>  arch/arm/include/asm/hardware/vic.h |    4 ++++
+>  2 files changed, 33 insertions(+), 0 deletions(-)
 > 
-> device_initcall is run rather late. I think it would be more useful
-> to run this as early as possible, in order to make it possible to
-> have more of the core services probed through the device tree.
-> 
-> I also think that for probing the device tree root, you should be
-> using of_platform_populate instead of of_platform_bus_probe
-> nowadays. Maybe Grant can provide more information on this.
+> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
+> index 3f9c8f2..71adced 100644
+> --- a/arch/arm/common/vic.c
+> +++ b/arch/arm/common/vic.c
+> @@ -427,3 +427,32 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
+>  	return -EIO;
+>  }
+>  #endif /* CONFIG OF */
+> +
+> +#ifdef CONFIG_MULTI_IRQ_HANDLER
+> +static void vic_single_handle_irq(struct vic_device *vic, struct pt_regs *regs)
+> +{
+> +	u32 stat, irq;
+> +	bool handled = false;
+> +
+> +	while (!handled) {
+> +		stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
+> +		if (!stat)
+> +			break;
+> +
+> +		while (stat) {
+> +			irq = fls(stat) - 1;
+> +			handle_IRQ(irq_domain_to_irq(&vic->domain, irq), regs);
+> +			stat &= ~(1 << irq);
+> +			handled = true;
+> +		}
+> +	}
 
-Yes.  Use of_platform_populate().  It's better.
+I don't follow why this is written this way.  The way I see it, there
+are two conditions:
+1) first read will show no irqs pending (!stat), which will break out
+   of the outer while() loop.
+
+2) or there will be irqs pending, it will enter the second while()
+   loop, which unconditionally sets the handled flag, and causes the
+   outer loop to exit immediately after the inner loop exits.
+
+Why isn't it simply written this way:
+
+	stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
+	while (stat) {
+		irq = fls(stat) - 1;
+		handle_IRQ(irq_domain_to_irq(&vic->domain, irq), regs);
+		stat &= ~(1 << irq);
+	}
 
 g.
