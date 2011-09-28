@@ -1,42 +1,68 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/3] mfd: allow mfd_cell association with device tree node
-Date: Wed, 28 Sep 2011 13:31:55 +0100
-Message-ID: <20110928123154.GG3279@opensource.wolfsonmicro.com>
-References: <20110921131637.GF4374@opensource.wolfsonmicro.com>
- <CAMLZHHTJaOddSj00g0-WpFQu6pUTqizKjKaQF9hLrhceEMhY1Q@mail.gmail.com>
- <20110927150555.GF20588@ponder.secretlab.ca>
- <CAMLZHHQU-eMAtvBQJj6+WrMjkWWA+ET=z5NdQCEgXxh=m10d3Q@mail.gmail.com>
- <20110927181420.GQ4289@opensource.wolfsonmicro.com>
- <CAMLZHHSuoeAJ-AC9daxb83+EANV=YGK-aiYpQ_j2wFiyQa5ytw@mail.gmail.com>
- <20110927182636.GR4289@opensource.wolfsonmicro.com>
- <CAMLZHHR0rMZct2E91X8k+Lhv_y-pY_5+vshZw6dj194o9vSCJQ@mail.gmail.com>
- <20110927183832.GS4289@opensource.wolfsonmicro.com>
- <CAMLZHHRvr-diYGwZ2Kg647Ht7NNb8LEku0pCW8EujRuUeOW5yQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 07/24] C6X: devicetree support
+Date: Wed, 28 Sep 2011 15:31:36 +0200
+Message-ID: <201109281531.36792.arnd@arndb.de>
+References: <1317155405-26235-1-git-send-email-msalter@redhat.com> <1317155405-26235-8-git-send-email-msalter@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMLZHHRvr-diYGwZ2Kg647Ht7NNb8LEku0pCW8EujRuUeOW5yQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Drake <dsd@laptop.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dilinger@queued.net
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1317155405-26235-8-git-send-email-msalter@redhat.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Mark Salter <msalter@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2011 at 10:07:43AM +0100, Daniel Drake wrote:
-> On Tue, Sep 27, 2011 at 7:38 PM, Mark Brown
+On Tuesday 27 September 2011, Mark Salter wrote:
+> diff --git a/arch/c6x/boot/install-dtb.c b/arch/c6x/boot/install-dtb.c
+> new file mode 100644
+> index 0000000..fa979ce
+> --- /dev/null
+> +++ b/arch/c6x/boot/install-dtb.c
+> @@ -0,0 +1,333 @@
+> +/*
+> + * Program to hack in a DTB to an ELF file having a placeholder
+> + * section named __fst_blob.
+> + *
+> + * This allows for building multiple images with builtin DTBs
+> + * using a single vmlinux image. This is only necessary until
+> + * bootloader support exists.
+> + *
+> + * Copyright 2011 Texas Instruments Incorporated
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + *
+> + * Usage: install-dtb <image.dtb> <kernel.elf>
+> + */
 
-> > You're modifying global data which should really be const and is sh=
-ared
-> > between multiple devices in place. =A0Probably you'll not notice an=
-y
-> > practical effects, especially if you don't happen to have multiple
-> > devices in the same system.
+Other architectures allow simply appending the device tree to the
+kernel image file, which is more convenient for users and does
+not require much kernel support. Have you tried this?
 
-> I see. In this case, it would be impossible to have two VX855s in the
-> same system, and if you did, you would have bigger problems. In this
-> context what we're doing is safe.
+> diff --git a/arch/c6x/platforms/platform.c b/arch/c6x/platforms/platform.c
+> new file mode 100644
+> index 0000000..ad4651c
+> --- /dev/null
+> +++ b/arch/c6x/platforms/platform.c
+> @@ -0,0 +1,17 @@
+> +
+> +static int __init c6x_device_probe(void)
+> +{
+> +       of_platform_bus_probe(NULL, of_default_bus_match_table, NULL);
+> +       return 0;
+> +}
+> +device_initcall(c6x_device_probe);
 
-Right, but your modification was to the MFD core so it's going to affec=
-t
-other devices...
+device_initcall is run rather late. I think it would be more useful
+to run this as early as possible, in order to make it possible to
+have more of the core services probed through the device tree.
+
+I also think that for probing the device tree root, you should be
+using of_platform_populate instead of of_platform_bus_probe
+nowadays. Maybe Grant can provide more information on this.
+
+	Arnd
