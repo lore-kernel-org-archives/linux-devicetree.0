@@ -1,47 +1,53 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] dtc: Add support for named integer constants
-Date: Wed, 28 Sep 2011 11:08:02 -0500
-Message-ID: <4E834662.4010907@freescale.com>
-References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>
-	<CAPnjgZ0NzN510XJZ1ONAbMTS3vrrP8qCV8NYHq4_heZL+PizNg@mail.gmail.com>
-	<20110908183211.GM2967@ponder.secretlab.ca>
-	<20110909013433.GC21002@yookeroo.fritz.box>
-	<74CDBE0F657A3D45AFBB94109FB122FF04B732144F@HQMAIL01.nvidia.com>
-	<20110920080409.GL29197@yookeroo.fritz.box>
-	<4E78CEE1.3090403@freescale.com>
-	<20110928002942.GE5361@yookeroo.fritz.box>
+From: David Daney <david.daney@cavium.com>
+Subject: Re: [PATCH v2 2/3] netdev/of/phy: Add MDIO bus multiplexer support.
+Date: Wed, 28 Sep 2011 09:51:52 -0700
+Message-ID: <4E8350A8.7090307@cavium.com>
+References: <1317166015-20714-1-git-send-email-david.daney@cavium.com> <1317166015-20714-3-git-send-email-david.daney@cavium.com> <CAHXqBFLzrkH4AJVozbtT4k7ccgVgfaPoq69J48DeSJKSwEtxHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110928002942.GE5361-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHXqBFLzrkH4AJVozbtT4k7ccgVgfaPoq69J48DeSJKSwEtxHw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirqus@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2011 07:29 PM, David Gibson wrote:
-> On Tue, Sep 20, 2011 at 12:35:29PM -0500, Scott Wood wrote:
->> Another disadvantage of any approach that tries to separate macros from
->> the underlying language is that you can't have anything be conditional
->> on an expression that the macro layer doesn't understand.
-> 
-> That one doesn't follow, actually.  The macro can't implement a
-> conditional itself, but it could expand to a (constant) conditional
-> expression which is evaluated later.
+On 09/28/2011 12:25 AM, Micha=C5=82 Miros=C5=82aw wrote:
+> 2011/9/28 David Daney<david.daney@cavium.com>:
+> [...]
+>> +Example :
+>> +
+>> +       /* The parent MDIO bus. */
+>> +       smi1: mdio@1180000001900 {
+>> +               compatible =3D "cavium,octeon-3860-mdio";
+>> +               #address-cells =3D<1>;
+>> +               #size-cells =3D<0>;
+>> +               reg =3D<0x11800 0x00001900 0x0 0x40>;
+>> +       };
+>> +
+>> +       /*
+>> +          An NXP sn74cbtlv3253 dual 1-of-4 switch controlled by a
+>> +          pair of GPIO lines.  Child busses 2 and 3 populated with =
+4
+>> +          PHYs each.
+>> +        */
+>> +       mdio-mux {
+>> +               compatible =3D "cavium,mdio-mux-sn74cbtlv3253", "cav=
+ium,mdio-mux";
+>> +               gpios =3D<&gpio1 3 0>,<&gpio1 4 0>;
+>> +               mdio-parent-bus =3D<&smi1>;
+>> +               #address-cells =3D<1>;
+>> +               #size-cells =3D<0>;
+>
+> This should probably have 'compatible =3D "nxp,sn74cbtlv3253";' here.
+>
 
-Right, you can always implement conditionals in the underlying language,
-but the macro processor can't directly use the results.  This can be an
-issue if the intended use is to be heavily reliant on macros as a
-substitute for expressiveness in the underlying language.
+No, the sn74cbtlv3253 is a general purpose part that could be used to=20
+multiplex anything (I2C, SPI, random analog signals, etc.).  Only when=20
+it is in the "cavium,mdio-mux-sn74cbtlv3253" configuration is it an MDI=
+O=20
+bus multiplexer.
 
--Scott
+David Daney.
