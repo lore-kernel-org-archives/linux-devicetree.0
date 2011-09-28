@@ -1,82 +1,44 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCHv2 02/10] ARM: vic: MULTI_IRQ_HANDLER handler
-Date: Wed, 28 Sep 2011 13:08:32 +0100
-Message-ID: <20110928120832.GI17204@pulham.picochip.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 08/10] ARM: u300: convert to MULTI_IRQ_HANDLER
+Date: Wed, 28 Sep 2011 14:18:14 +0200
+Message-ID: <CACRpkdarydeYAyOV8Cm134TtPeh9_qFSqWPkvpZjUE9yPNNtJA@mail.gmail.com>
 References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
-	<1317206507-18867-3-git-send-email-jamie@jamieiles.com>
-	<CACRpkdYyurmMSF0LnN3Ut8fmQDkjVC5pNCeUWQ=ik8Ete6UYzg@mail.gmail.com>
+	<1317206507-18867-9-git-send-email-jamie@jamieiles.com>
+	<CACRpkdYOdWA2vg2zq+nhOPSvPN7zdy9NVsOcqfZ7i9W5Sq5cpw@mail.gmail.com>
+	<20110928120340.GH17204@pulham.picochip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYyurmMSF0LnN3Ut8fmQDkjVC5pNCeUWQ=ik8Ete6UYzg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, STEricsson_nomadik_linux@list.st.com, Jamie Iles <jamie@jamieiles.com>, rubini@unipv.it, linux-arm-kernel@lists.infradead.org, rmallon@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110928120340.GH17204-apL1N+EY0C9YtYNIL7UdTEEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, rubini-9wsNiZum9E8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Wed, Sep 28, 2011 at 2:03 PM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
 
-On Wed, Sep 28, 2011 at 01:09:48PM +0200, Linus Walleij wrote:
-> On Wed, Sep 28, 2011 at 12:41 PM, Jamie Iles <jamie@jamieiles.com> wrote:
-> =
+>> vic_single_handle_irq() needs to be modified to handle several
+>> ranges or atleast two.
+>
+> The platform IRQ handler is actually vic_handle_irq() that internally
+> calls vic_single_handle_irq() for each registered vic (in the order of
+> registration).
 
-> > +static void vic_single_handle_irq(struct vic_device *vic, struct pt_re=
-gs *regs)
-> > +{
-> > + =A0 =A0 =A0 u32 stat, irq;
-> > + =A0 =A0 =A0 bool handled =3D false;
-> > +
-> > + =A0 =A0 =A0 while (!handled) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 stat =3D readl_relaxed(vic->base + VIC_IR=
-Q_STATUS);
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!stat)
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
-> > +
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 while (stat) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 irq =3D fls(stat) - 1;
-> =
+Ah I get it I'm dead wrong as usual :-)
 
-> Isn't fls "find last set"?
-> =
+I tried to apply them to test but Iget into dependency trouble with
+the referenced required patches, do you have some handy
+git branch with all stuff applied in order that I can pull in and
+test off?
 
-> That means IRQs with higher numbers will be handled first will it not?
-> =
-
-> For U300 IRQs with lower numbers will be handled first
-> by iteratively testing bit 0 and shifting right:
-> =
-
-> -1002:  tst     \irqstat, #1
-> -       bne     1003f
-> -       add     \irqnr, \irqnr, #1
-> -       movs    \irqstat, \irqstat, lsr #1
-> -       bne     1002b
-> =
-
-> So I would use ffs() for this to work the same way as before in
-> U300.
-> =
-
-> Since this can have some performance impact, if the platforms differ
-> in whether they handle IRQs from low to high or from high to low
-> might need to be a flag passed in to vic_init() or so...
-
-I don't know how important the ordering is, but if it is important then =
-
-we could have vic_handle_irq_msb_first() and vic_handle_irq_lsb_first() =
-
-as the handlers so there isn't any additional indirection/selection in =
-
-the interrupt hot-path.
-
-Jamie
+Yours,
+Linus Walleij
