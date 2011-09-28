@@ -1,34 +1,47 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 07/24] C6X: devicetree support
-Date: Wed, 28 Sep 2011 16:57:34 +0200
-Message-ID: <201109281657.34471.arnd@arndb.de>
-References: <1317155405-26235-1-git-send-email-msalter@redhat.com> <201109281531.36792.arnd@arndb.de> <1317221051.2580.76.camel@deneb.redhat.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2] dtc: Add support for named integer constants
+Date: Wed, 28 Sep 2011 11:08:02 -0500
+Message-ID: <4E834662.4010907@freescale.com>
+References: <1314739818-13904-1-git-send-email-swarren@nvidia.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF04B327A62D@HQMAIL01.nvidia.com>
+	<CAPnjgZ0NzN510XJZ1ONAbMTS3vrrP8qCV8NYHq4_heZL+PizNg@mail.gmail.com>
+	<20110908183211.GM2967@ponder.secretlab.ca>
+	<20110909013433.GC21002@yookeroo.fritz.box>
+	<74CDBE0F657A3D45AFBB94109FB122FF04B732144F@HQMAIL01.nvidia.com>
+	<20110920080409.GL29197@yookeroo.fritz.box>
+	<4E78CEE1.3090403@freescale.com>
+	<20110928002942.GE5361@yookeroo.fritz.box>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1317221051.2580.76.camel@deneb.redhat.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Mark Salter <msalter@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20110928002942.GE5361-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 28 September 2011, Mark Salter wrote:
-> > Other architectures allow simply appending the device tree to the
-> > kernel image file, which is more convenient for users and does
-> > not require much kernel support. Have you tried this?
+On 09/27/2011 07:29 PM, David Gibson wrote:
+> On Tue, Sep 20, 2011 at 12:35:29PM -0500, Scott Wood wrote:
+>> Another disadvantage of any approach that tries to separate macros from
+>> the underlying language is that you can't have anything be conditional
+>> on an expression that the macro layer doesn't understand.
 > 
-> Well, I considered it. My main reason for doing it this way was one of
-> debugging convenience. The debugger loads an ELF file and while I was
-> making lots of device tree changes in the tree and in the code, it was
-> more convenient to have one ELF file to deal with rather than an ELF
-> file and a dtb. And the thought was to get rid of it altogether once
-> bootloader support comes along. Maybe the thing to do would be to just
-> rip it out of the kernel. It can almost as easily be post-processing
-> step outside the kernel.
+> That one doesn't follow, actually.  The macro can't implement a
+> conditional itself, but it could expand to a (constant) conditional
+> expression which is evaluated later.
 
-Ok, if you plan to properly support it in the boot loader anyway,
-that's probably the best option.
+Right, you can always implement conditionals in the underlying language,
+but the macro processor can't directly use the results.  This can be an
+issue if the intended use is to be heavily reliant on macros as a
+substitute for expressiveness in the underlying language.
 
-	Arnd
+-Scott
