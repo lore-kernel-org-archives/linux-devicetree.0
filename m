@@ -1,71 +1,96 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCHv2 02/10] ARM: vic: MULTI_IRQ_HANDLER handler
-Date: Thu, 29 Sep 2011 16:13:02 +0100
-Message-ID: <20110929151302.GR17204@pulham.picochip.com>
-References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
-	<1317206507-18867-3-git-send-email-jamie@jamieiles.com>
-	<CAGVye5O492Ev1Zz_8tTZKo16K+FALZ6Oo3TgyuzPuf7RYVyBzQ@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 12/13] arm/dts: omap3-beagle: Add twl4030 and i2c EEPROM
+Date: Thu, 29 Sep 2011 12:25:29 -0500
+Message-ID: <20110929172529.GE6800@ponder.secretlab.ca>
+References: <1317055821-20652-1-git-send-email-b-cousson@ti.com>
+	<1317055821-20652-13-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGVye5O492Ev1Zz_8tTZKo16K+FALZ6Oo3TgyuzPuf7RYVyBzQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zoltan Devai <zdevai@gmail.com>
-Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, marc.zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, STEricsson_nomadik_linux@list.st.com, Jamie Iles <jamie@jamieiles.com>, rubini@unipv.it, linux-arm-kernel@lists.infradead.org, rmallon@gmail.com
+In-Reply-To: <1317055821-20652-13-git-send-email-b-cousson-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: khilman-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, "G, Manjunath Kondaiah" <manjugk-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 29, 2011 at 05:03:34PM +0200, Zoltan Devai wrote:
-> 2011/9/28 Jamie Iles <jamie@jamieiles.com>:
-> > Add a handler for the VIC that is suitable for MULTI_IRQ_HANDLER
-> > platforms. =A0This can replace the ASM entry macros for platforms that =
-use
-> > the VIC.
-> >
-> > v2: =A0 =A0 - allow the handler be used for !CONFIG_OF
-> > =A0 =A0 =A0 =A0- use irq_domain_to_irq()
-> >
-> > Cc: Rob Herring <robherring2@gmail.com>
-> > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > Signed-off-by: Jamie Iles <jamie@jamieiles.com>
-> > ---
-> > =A0arch/arm/common/vic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 29 +++++++++=
-++++++++++++++++++++
-> > =A0arch/arm/include/asm/hardware/vic.h | =A0 =A04 ++++
-> > =A02 files changed, 33 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-> > index 3f9c8f2..71adced 100644
-> > --- a/arch/arm/common/vic.c
-> > +++ b/arch/arm/common/vic.c
-> =
+On Mon, Sep 26, 2011 at 06:50:20PM +0200, Benoit Cousson wrote:
+> Add required clock frequencies for the i2c client devices existing
+> on beagle board.
+> 
+> Add the twl4030 basic description with only the twl_rtc module.
+> 
+> Add the EEPROM node.
+> 
+> Based on original patch from Manju:
+> http://www.spinics.net/lists/linux-omap/msg55831.html
+> 
+> Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> Cc: G, Manjunath Kondaiah <manjugk-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap3-beagle.dts |   38 ++++++++++++++++++++++++++++++++++++
+>  1 files changed, 38 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+> index 9486be6..a65f39d 100644
+> --- a/arch/arm/boot/dts/omap3-beagle.dts
+> +++ b/arch/arm/boot/dts/omap3-beagle.dts
+> @@ -27,3 +27,41 @@
+>  		reg = <0x80000000 0x20000000>; /* 512 MB */
+>  	};
+>  };
+> +
+> +&i2c1 {
+> +	clock-frequency = <2600000>;
+> +
+> +	/*
+> +	 * Integrated Power Management Chip
+> +	 */
+> +	twl@48 {
+> +		compatible = "ti,twl4030";
+> +		reg = <0x48>;
+> +		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		interrupt-parent = <&intc>;
+> +
+> +		twl_rtc {
 
-> > +asmlinkage void __exception_irq_entry vic_handle_irq(struct pt_regs *r=
-egs)
-> > +{
-> > + =A0 =A0 =A0 int i;
-> > +
-> > + =A0 =A0 =A0 for (i =3D 0; i < vic_id; ++i)
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 vic_single_handle_irq(&vic_devices[i], re=
-gs);
-> > +}
-> > +#endif /* CONFIG_MULTI_IRQ_HANDLER */
-> =
+Nit: use the generic names recommended practise for node names (in
+this case, simply 'rtc' sounds appropriate, and don't use underscores
+(it's not forbidden, just doesn't match the style.
 
-> __exception_irq_entry doesn't compile with CONFIG_FUNCTION_GRAPH_TRACER e=
-nabled.
-> Either this file, or arch/arm/include/asm/system.h needs an #include
-> <linux/ftrace.h>
-
-Thanks Zoltan, I'm just sending a patch now!
-
-Jamie
+> +			compatible = "ti,twl4030-rtc";
+> +			interrupts = <11>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <100000>;
+> +
+> +	/*
+> +	 * Display monitor features are burnt in the EEPROM
+> +	 * as EDID data.
+> +	 */
+> +	eeprom@50 {
+> +		compatible = "ti,eeprom";
+> +		reg = <0x50>;
+> +	};
+> +};
+> -- 
+> 1.7.0.4
+> 
