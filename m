@@ -1,29 +1,106 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/3] netdev/of/phy: MDIO bus multiplexer support.
-Date: Thu, 29 Sep 2011 16:31:12 -0400 (EDT)
-Message-ID: <20110929.163112.1523715692737597332.davem@davemloft.net>
-References: <1317166015-20714-1-git-send-email-david.daney@cavium.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: gic: add irq_domain support
+Date: Thu, 29 Sep 2011 16:02:44 -0500
+Message-ID: <4E84DCF4.4020904@gmail.com>
+References: <1317268436-1613-1-git-send-email-robherring2@gmail.com>
+	<1317268436-1613-2-git-send-email-robherring2@gmail.com>
+	<20110929171540.GC6800@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1317166015-20714-1-git-send-email-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: david.daney@cavium.com
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20110929171540.GC6800@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: b-cousson@ti.com, marc.zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, thomas.abraham@linaro.org, jamie@jamieiles.com, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
-Date: Tue, 27 Sep 2011 16:26:52 -0700
+On 09/29/2011 12:15 PM, Grant Likely wrote:
+> On Wed, Sep 28, 2011 at 10:53:55PM -0500, Rob Herring wrote:
+>> From: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Convert the gic interrupt controller to use irq domains in preparation
+>> for device-tree binding and MULTI_IRQ. This allows for translation between
+>> GIC interrupt IDs and Linux irq numbers.
+>>
+>> The meaning of irq_offset has changed. It now is just the number of skipped
+>> GIC interrupt IDs for the controller. It will be 16 for primary GIC and 32
+>> for secondary GICs.
+> 
+> [...]
+> 
+>>  /*
+>> @@ -81,7 +82,7 @@ static inline unsigned int gic_irq(struct irq_data *d)
+>>   */
+>>  static void gic_mask_irq(struct irq_data *d)
+>>  {
+>> -	u32 mask = 1 << (d->irq % 32);
+>> +	u32 mask = 1 << (gic_irq(d) % 32);
+> 
+> This can probably change simply to d->hwirq if irq_offset is
+> eliminated as I describe below.
+> 
+>>  void __init gic_init(unsigned int gic_nr, unsigned int irq_start,
+>>  	void __iomem *dist_base, void __iomem *cpu_base)
+>>  {
+>>  	struct gic_chip_data *gic;
+>> +	struct irq_domain *domain;
+>> +	int gic_irqs;
+>>  
+>>  	BUG_ON(gic_nr >= MAX_GIC_NR);
+>>  
+>>  	gic = &gic_data[gic_nr];
+>> +	domain = &gic->domain;
+>>  	gic->dist_base = dist_base;
+>>  	gic->cpu_base = cpu_base;
+>> -	gic->irq_offset = (irq_start - 1) & ~31;
+>>  
+>> -	if (gic_nr == 0)
+>> +	/*
+>> +	 * For primary GICs, skip over SGIs.
+>> +	 * For secondary GICs, skip over PPIs, too.
+>> +	 */
+>> +	if (gic_nr == 0) {
+>>  		gic_cpu_base_addr = cpu_base;
+>> +		gic->irq_offset = 16;
+>> +		irq_start = (irq_start & ~31) + 16;
+> 
+> With the switch to irq_domain, there should no longer be any need for
+> a ~31 mask on the irq_start number.  Yes, you'll want to make sure
+> that it doesn't allocate below irq 16, but the driver should
+> completely use the irq_domain to manage the mapping from linux-irq
+> number to hwirq number.  The ~31 mask appears to have been an
+> optimization to quickly calculate hwirq number from the linux one, but
+> that value is now found in irq_data->hwirq.
 
-> v2: Update bindings to use "reg" and "mdio-parent-bus" insutead of
->     "cell-index" and "parent-bus"
+I started out exactly this way removing irq_offset. The problem is the
+core irq domain code assumes that hwirq starts at 0, but for the gic it
+starts at 16 or 32.
 
-Grant, when the final version of this patch set is ready how do
-you want to handle merging it in?
+It could be fixed in the domain core, but that would effectively mean
+moving irq_offset into the core.
 
-I think it would be safe to merge this via your tree, since the
-changes made to existing network driver files are rather trivial and
-thus merge conflict friendly.
+The masking here is mainly to not break exynos. Everyone else passes in
+a value of 16-31 which I could just hardcode to 16. So when exynos gets
+all the interrupts converted over to domains, this can be removed. I
+looked at it briefly and it doesn't look trivial.
 
-Actually, I feel like we've discussed this before :-)
+> 
+> irq_offset could almost be dropped entirely outside of probe because
+> it no longer matters.  Instead, populate the to_irq() hook so that the
+> hwirq value gets set correctly from the outset.
+> 
+> It would be better in general to have a consistent view of what the
+> hwirq number means regardless of if it is a root GIC.
+
+Agreed.
+
+Rob
