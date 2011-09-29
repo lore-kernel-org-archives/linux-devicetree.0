@@ -1,46 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv2 02/10] ARM: vic: MULTI_IRQ_HANDLER handler
-Date: Thu, 29 Sep 2011 08:55:08 +0200
-Message-ID: <CACRpkdZKns-GraGp-YMD6jzOPETkvEpt9bC8HcYUmf3JUyCV3A@mail.gmail.com>
-References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
-	<1317206507-18867-3-git-send-email-jamie@jamieiles.com>
-	<20110928203905.GB2838@ponder.secretlab.ca>
+From: Jamie Iles <jamie@jamieiles.com>
+Subject: Re: [PATCH 0/2] GIC OF bindings
+Date: Thu, 29 Sep 2011 10:21:49 +0100
+Message-ID: <20110929092149.GL17204@pulham.picochip.com>
+References: <1317268436-1613-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20110928203905.GB2838@ponder.secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>, Jamie Iles <jamie@jamieiles.com>
-Cc: kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, STEricsson_nomadik_linux@list.st.com, rubini@unipv.it, linux-arm-kernel@lists.infradead.org, rmallon@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1317268436-1613-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, marc.zyngier@arm.com, thomas.abraham@linaro.org, jamie@jamieiles.com, b-cousson@ti.com, shawn.guo@linaro.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 28, 2011 at 10:39 PM, Grant Likely
-<grant.likely@secretlab.ca> wrote:
+On Wed, Sep 28, 2011 at 10:53:54PM -0500, Rob Herring wrote:
+> From: Rob Herring <rob.herring@calxeda.com>
+> 
+> With recent patches for VIC device tree support and GIC MULTI_IRQ support,
+> it is evident that the irq domain support should be moved into the core GIC
+> code and not be dependent on the DT initialization. So I've split things up
+> into 2 patches separating irq_domain and device-tree code.
+> 
+> This should only change the internals of the GIC code. The binding is
+> unchanged from the previous version. Yeah!
+> 
+> The full series is available here. This includes Russell's devel-stable and
+> for-next branches and Nico's vmalloc branch.
 
-> Why isn't it simply written this way:
->
-> =A0 =A0 =A0 =A0stat =3D readl_relaxed(vic->base + VIC_IRQ_STATUS);
-> =A0 =A0 =A0 =A0while (stat) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0irq =3D fls(stat) - 1;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0handle_IRQ(irq_domain_to_irq(&vic->domain,=
- irq), regs);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0stat &=3D ~(1 << irq);
-> =A0 =A0 =A0 =A0}
+Looks good to me!
 
-That is indeed closer to the assembly loop most platforms have
-implemented.
-
-Jamie can you test this approach? And also use ffs() insteadof
-fls()...
-
-Thanks,
-Linus Walleij
+Reviewed-by: Jamie Iles <jamie@jamieiles.com>
