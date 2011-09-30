@@ -1,39 +1,38 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 8/9] regulator: helper to extract regulator node based
- on supply name
-Date: Fri, 30 Sep 2011 15:04:45 +0530
-Message-ID: <4E858D35.50903@ti.com>
-References: <1317118372-17052-1-git-send-email-rnayak@ti.com> <1317118372-17052-9-git-send-email-rnayak@ti.com> <20110927122155.GE4289@opensource.wolfsonmicro.com> <4E81E281.505@ti.com> <20110927185913.GU4289@opensource.wolfsonmicro.com> <4E82D63A.7030207@ti.com> <20110928122628.GF3279@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/9] regulator: helper routine to extract
+ regulator_init_data
+Date: Fri, 30 Sep 2011 11:28:49 +0100
+Message-ID: <20110930102849.GA4195@opensource.wolfsonmicro.com>
+References: <1317118372-17052-1-git-send-email-rnayak@ti.com>
+ <1317118372-17052-3-git-send-email-rnayak@ti.com>
+ <20110927121003.GB4289@opensource.wolfsonmicro.com>
+ <4E81E224.2070408@ti.com>
+ <20110927150511.GM4289@opensource.wolfsonmicro.com>
+ <4E854532.6080605@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110928122628.GF3279@opensource.wolfsonmicro.com>
+Content-Disposition: inline
+In-Reply-To: <4E854532.6080605@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "tony@atomide.com" <tony@atomide.com>, "Girdwood, Liam" <lrg@ti.com>, "patches@linaro.org" <patches@linaro.org>
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 28 September 2011 05:56 PM, Mark Brown wrote:
-> On Wed, Sep 28, 2011 at 10:09:30AM +0200, Cousson, Benoit wrote:
->> On 9/27/2011 8:59 PM, Mark Brown wrote:
->
->>> I'm not sure how this should work in a device tree world, I'd *hope*
->>> we'd get a device tree node for the CPU and could then just make this a
->>> regular consumer thing but then the cpufreq drivers would need to be
->>> updated to make use of it.  The only reason we allow null devices right
->>> now is the fact that cpufreq doesn't have a struct device it can use.
->
->> That's why we do have a MPU node in OMAP dts, in order to build an
->> omap_device that will be mainly used for the DVFS on the MPU.
->
->> And even before DT migration, we used to build statically some
->> omap_device to represent the various processors in the system (MPU,
->> DSP, CortexM3...).
->
-> Yeah, but that's very OMAP specific - we don't have that in general (in
-> fact it's the only Linux platform I'm aware of that has a device for the
-> CPU).
+On Fri, Sep 30, 2011 at 09:57:30AM +0530, Rajendra Nayak wrote:
 
-But isn't this the right thing to do for everyone else too?
+> Mark, I still seem to be a little confused with this one as to why
+> we would need a phandle *and* a supply-name to reference a parent
+> regulator/supply.
+> The phandle would point to a regulator dt node and that node internally
+> would have just one name associated with it.
 
+To repeat: the supply name is for the consumer.  It is needed so that
+the consumer can tell which supply is provided by which regulator.
+Almost all devices have more than one supply and if the device does
+anything more complicated than just turning on all the supplies when the
+device is active it's going to need to figure out which supply is which.
+
+Also, please do remember to keep linux-kernel in the loop on all
+regulator API discussion - you should always keep the relevant mailing
+lists in the loop for any subsystem you're changing.
