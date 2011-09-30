@@ -1,123 +1,59 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 8/9] regulator: helper to extract regulator node based on
- supply name
-Date: Thu, 29 Sep 2011 19:36:49 -0600
-Message-ID: <20110930013649.GH12606@ponder.secretlab.ca>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 2/9] regulator: helper routine to extract
+	regulator_init_data
+Date: Fri, 30 Sep 2011 09:58:04 +0200
+Message-ID: <4E85768C.6050601@ti.com>
 References: <1317118372-17052-1-git-send-email-rnayak@ti.com>
- <1317118372-17052-9-git-send-email-rnayak@ti.com>
+	<1317118372-17052-3-git-send-email-rnayak@ti.com>
+	<20110927121003.GB4289@opensource.wolfsonmicro.com>
+	<4E81E224.2070408@ti.com>
+	<20110927150511.GM4289@opensource.wolfsonmicro.com>
+	<4E854532.6080605@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1317118372-17052-9-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: broonie@opensource.wolfsonmicro.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4E854532.6080605@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Nayak, Rajendra" <rnayak@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "patches@linaro.org" <patches@linaro.org>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Girdwood, Liam" <lrg@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2011 at 03:42:51PM +0530, Rajendra Nayak wrote:
-> Device nodes in DT can associate themselves with one or more
-> regulators by providing a list of phandles (to regulator nodes)
-> and corresponding supply names.
-> 
-> For Example:
-> 	devicenode: node@0x0 {
-> 		...
-> 		...
-> 		vmmc-supply = <&regulator1>;
-> 		vpll-supply = <&regulator1>;
-> 	};
-> 
-> The driver would then do a regulator_get(dev, "vmmc"); to get
-> regulator1 and do a regulator_get(dev, "vpll"); to get
-> regulator2.
-> 
-> of_get_regulator() extracts the regulator node for a given
-> device, based on the supply name.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
-> ---
->  drivers/regulator/of_regulator.c       |   39 ++++++++++++++++++++++++++++++++
->  include/linux/regulator/of_regulator.h |    7 +++++
->  2 files changed, 46 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-> index 7fa63ff..49dd105 100644
-> --- a/drivers/regulator/of_regulator.c
-> +++ b/drivers/regulator/of_regulator.c
-> @@ -14,6 +14,45 @@
->  #include <linux/of.h>
->  #include <linux/regulator/machine.h>
->  
-> +
-> +/**
-> + * of_get_regulator - get a regulator device node based on supply name
-> + * @dev: Device pointer for the consumer (of regulator) device
-> + * @supply: regulator supply name
-> + *
-> + * Extract the regulator device node corresponding to the supply name.
-> + * retruns the device node corresponding to the regulator if found, else
-> + * returns NULL.
-> + */
-> +struct device_node *of_get_regulator(struct device *dev, const char *supply)
-> +{
-> +	struct device_node *regnode = NULL;
-> +	u32 reghandle;
-> +	char prop_name[32]; /* 32 is max size of property name */
-> +	const void *prop;
-> +	int sz;
-> +
-> +	if (!dev)
-> +		return NULL;
-> +
-> +	dev_dbg(dev, "Looking up %s-supply from device tree\n", supply);
-> +
-> +	snprintf(prop_name, 32, "%s-supply", supply);
-> +
-> +	prop = of_get_property(dev->of_node, prop_name, &sz);
-> +	if (!prop || sz < 4)
-> +		return NULL;
-> +
-> +	reghandle = be32_to_cpup(prop);
-> +	regnode = of_find_node_by_phandle(reghandle);
+On 9/30/2011 6:27 AM, Nayak, Rajendra wrote:
 
-of_parse_phandle()
+[...]
 
-> +	if (!regnode) {
-> +		pr_warn("%s: %s property in node %s references invalid phandle",
-> +			__func__, prop_name, dev->of_node->full_name);
-> +		return NULL;
-> +	}
-> +	return regnode;
-> +}
-> +
->  static void of_get_regulation_constraints(struct device_node *np,
->  					struct regulator_init_data **init_data)
->  {
-> diff --git a/include/linux/regulator/of_regulator.h b/include/linux/regulator/of_regulator.h
-> index 3f63be9..edaba1a 100644
-> --- a/include/linux/regulator/of_regulator.h
-> +++ b/include/linux/regulator/of_regulator.h
-> @@ -9,12 +9,19 @@
->  #if defined(CONFIG_OF_REGULATOR)
->  extern struct regulator_init_data
->  	*of_get_regulator_init_data(struct device *dev);
-> +extern struct device_node *of_get_regulator(struct device *dev,
-> +	const char *supply);
->  #else
->  static inline struct regulator_init_data
->  	*of_get_regulator_init_data(struct device_node *np)
->  {
->  	return NULL;
->  }
-> +static inline struct device_node *of_get_regulator(struct device *dev,
-> +	const char *id)
-> +{
-> +	return NULL;
-> +}
->  #endif /* CONFIG_OF_REGULATOR */
->  
->  #endif /* __LINUX_OF_REG_H */
-> -- 
-> 1.7.1
-> 
+>> They need both.  We need to reference the device that provides the
+>> supply and use a name to say which of the potentially multiple supplies
+>> on the consumer device is which.
+>
+> Mark, I still seem to be a little confused with this one as to why
+> we would need a phandle *and* a supply-name to reference a parent
+> regulator/supply.
+> The phandle would point to a regulator dt node and that node internally
+> would have just one name associated with it.
+
+I think as well that we should avoid considering a regulator with 
+several outputs. I saw the same pattern used for the clock binding in DT 
+as well.
+
+A clock node like a regulator node should output only one signal.
+These nodes should provide atomic functionality. And if extra 
+functionality are needed we might consider adding some intermediate nodes.
+Except for a regulator that will output several lines at the same 
+voltage to spread the current load, assuming it does exist, I'm not sure 
+to understand the need.
+
+Mark,
+What usage do you have in mind for such supply node with several outputs?
+
+Regards,
+Benoit
