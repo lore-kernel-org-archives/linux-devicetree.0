@@ -1,13 +1,11 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: gic: add OF based initialization
-Date: Fri, 30 Sep 2011 14:28:00 -0500
-Message-ID: <1317410880-24828-4-git-send-email-robherring2@gmail.com>
-References: <1317410880-24828-1-git-send-email-robherring2@gmail.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: [GIT PATCH] OMAP: Add initial support for DT on OMAP3 & OMAP4
+Date: Fri, 30 Sep 2011 22:41:50 +0200
+Message-ID: <4E86298E.4080007__31412.4985751279$1317415347$gmane$org@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1317410880-24828-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,192 +15,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Hi Tony,
 
-This adds ARM gic interrupt controller initialization using device tree
-data.
+Please pull the initial OMAP device tree support for  v3.2.
 
-The initialization function is intended to be called by of_irq_init
-function like this:
+Thanks,
+Benoit
 
-const static struct of_device_id irq_match[] = {
-	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
-	{}
-};
 
-static void __init init_irqs(void)
-{
-	of_irq_init(irq_match);
-}
+The following changes since commit 1c3543a34a8ce3e050d7706135bdffd5921c42f5:
+  Tony Lindgren (1):
+        Merge branch 'for_3.2/omap_device-2' of git://github.com/khilman/linux-omap-pm into dt
 
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/gic.txt |   55 ++++++++++++++++++++++
- arch/arm/common/gic.c                         |   61 +++++++++++++++++++++++++
- arch/arm/include/asm/hardware/gic.h           |    1 +
- 3 files changed, 117 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
+are available in the git repository at:
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-new file mode 100644
-index 0000000..52916b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -0,0 +1,55 @@
-+* ARM Generic Interrupt Controller
-+
-+ARM SMP cores are often associated with a GIC, providing per processor
-+interrupts (PPI), shared processor interrupts (SPI) and software
-+generated interrupts (SGI).
-+
-+Primary GIC is attached directly to the CPU and typically has PPIs and SGIs.
-+Secondary GICs are cascaded into the upward interrupt controller and do not
-+have PPIs or SGIs.
-+
-+Main node required properties:
-+
-+- compatible : should be one of:
-+	"arm,cortex-a9-gic"
-+	"arm,arm11mp-gic"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source.  The type shall be a <u32> and the value shall be 3.
-+
-+  The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
-+  interrupts.
-+
-+  The 2nd cell contains the interrupt number for the interrupt type.
-+  SPI interrupts are in the range [0-987].  PPI interrupts are in the
-+  range [0-15].
-+
-+  The 3rd cell is the flags, encoded as follows:
-+	bits[3:0] trigger type and level flags.
-+		1 = low-to-high edge triggered
-+		2 = high-to-low edge triggered
-+		4 = active high level-sensitive
-+		8 = active low level-sensitive
-+	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
-+	the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
-+	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
-+
-+- reg : Specifies base physical address(s) and size of the GIC registers. The
-+  first region is the GIC distributor register base and size. The 2nd region is
-+  the GIC cpu interface register base and size.
-+
-+Optional
-+- interrupts	: Interrupt source of the parent interrupt controller. Only
-+  present on secondary GICs.
-+
-+Example:
-+
-+	intc: interrupt-controller@fff11000 {
-+		compatible = "arm,cortex-a9-gic";
-+		#interrupt-cells = <3>;
-+		#address-cells = <1>;
-+		interrupt-controller;
-+		reg = <0xfff11000 0x1000>,
-+		      <0xfff10100 0x100>;
-+	};
-+
-diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
-index 6fbe1db..3e67970 100644
---- a/arch/arm/common/gic.c
-+++ b/arch/arm/common/gic.c
-@@ -29,6 +29,9 @@
- #include <linux/cpu_pm.h>
- #include <linux/cpumask.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #include <linux/irqdomain.h>
- 
- #include <asm/irq.h>
-@@ -518,7 +521,33 @@ static void __init gic_pm_init(struct gic_chip_data *gic)
- }
- #endif
- 
-+#ifdef CONFIG_OF
-+static int gic_irq_domain_dt_translate(struct irq_domain *d,
-+				       struct device_node *controller,
-+				       const u32 *intspec, unsigned int intsize,
-+				       unsigned long *out_hwirq, unsigned int *out_type)
-+{
-+	if (d->of_node != controller)
-+		return -EINVAL;
-+	if (intsize < 3)
-+		return -EINVAL;
-+
-+	/* Get the interrupt number and add 16 to skip over SGIs */
-+	*out_hwirq = intspec[1] + 16;
-+
-+	/* For SPIs, we need to add 16 more to get the GIC irq ID number */
-+	if (!intspec[0])
-+		*out_hwirq += 16;
-+
-+	*out_type = intspec[2] & IRQ_TYPE_SENSE_MASK;
-+	return 0;
-+}
-+#endif
-+
- const struct irq_domain_ops gic_irq_domain_ops = {
-+#ifdef CONFIG_OF
-+	.dt_translate = gic_irq_domain_dt_translate,
-+#endif
- };
- 
- void __init gic_init(unsigned int gic_nr, unsigned int irq_start,
-@@ -606,3 +635,35 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 	writel_relaxed(map << 16 | irq, gic_data[0].dist_base + GIC_DIST_SOFTINT);
- }
- #endif
-+
-+#ifdef CONFIG_OF
-+static int gic_cnt __initdata = 0;
-+
-+int __init gic_of_init(struct device_node *node, struct device_node *parent)
-+{
-+	void __iomem *cpu_base;
-+	void __iomem *dist_base;
-+	int irq;
-+	struct irq_domain *domain = &gic_data[gic_cnt].domain;
-+
-+	if (WARN_ON(!node))
-+		return -ENODEV;
-+
-+	dist_base = of_iomap(node, 0);
-+	WARN(!dist_base, "unable to map gic dist registers\n");
-+
-+	cpu_base = of_iomap(node, 1);
-+	WARN(!cpu_base, "unable to map gic cpu registers\n");
-+
-+	domain->of_node = of_node_get(node);
-+
-+	gic_init(gic_cnt, 16, dist_base, cpu_base);
-+
-+	if (parent) {
-+		irq = irq_of_parse_and_map(node, 0);
-+		gic_cascade_irq(gic_cnt, irq);
-+	}
-+	gic_cnt++;
-+	return 0;
-+}
-+#endif
-diff --git a/arch/arm/include/asm/hardware/gic.h b/arch/arm/include/asm/hardware/gic.h
-index ade84a4..1a776a1 100644
---- a/arch/arm/include/asm/hardware/gic.h
-+++ b/arch/arm/include/asm/hardware/gic.h
-@@ -39,6 +39,7 @@ extern void __iomem *gic_cpu_base_addr;
- extern struct irq_chip gic_arch_extn;
- 
- void gic_init(unsigned int, unsigned int, void __iomem *, void __iomem *);
-+int gic_of_init(struct device_node *node, struct device_node *parent);
- void gic_secondary_init(unsigned int);
- void gic_cascade_irq(unsigned int gic_nr, unsigned int irq);
- void gic_raise_softirq(const struct cpumask *mask, unsigned int irq);
--- 
-1.7.5.4
+  git://gitorious.org/omap-pm/linux.git for_3.2/3_omap_devicetree
+
+Benoit Cousson (10):
+      arm/dts: Add initial device tree support for OMAP4 SoC
+      arm/dts: Add support for OMAP4 PandaBoard
+      arm/dts: Add support for OMAP4 SDP board
+      arm/dts: Add initial device tree support for OMAP3 SoC
+      arm/dts: Add support for OMAP3 Beagle board
+      OMAP2+: board-generic: Add DT support to generic board
+      OMAP2+: board-generic: Add i2c static init
+      OMAP2+: l3-noc: Add support for device-tree
+      arm/dts: OMAP4: Add a main ocp entry bound to l3-noc driver
+      arm/dts: OMAP3+: Add mpu, dsp and iva nodes
+
+ Documentation/devicetree/bindings/arm/omap/dsp.txt |   14 ++
+ Documentation/devicetree/bindings/arm/omap/iva.txt |   19 +++
+ .../devicetree/bindings/arm/omap/l3-noc.txt        |   19 +++
+ Documentation/devicetree/bindings/arm/omap/mpu.txt |   27 ++++
+ arch/arm/boot/dts/omap3-beagle.dts                 |   29 ++++
+ arch/arm/boot/dts/omap3.dtsi                       |   63 ++++++++
+ arch/arm/boot/dts/omap4-panda.dts                  |   29 ++++
+ arch/arm/boot/dts/omap4-sdp.dts                    |   29 ++++
+ arch/arm/boot/dts/omap4.dtsi                       |  103 +++++++++++++
+ arch/arm/mach-omap2/Kconfig                        |    8 +-
+ arch/arm/mach-omap2/board-generic.c                |  156 +++++++++++++++-----
+ arch/arm/mach-omap2/devices.c                      |    5 +
+ arch/arm/mach-omap2/omap_l3_noc.c                  |   23 +++-
+ arch/arm/mach-omap2/pm.c                           |    3 +-
+ 14 files changed, 480 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/dsp.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/iva.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/l3-noc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/mpu.txt
+ create mode 100644 arch/arm/boot/dts/omap3-beagle.dts
+ create mode 100644 arch/arm/boot/dts/omap3.dtsi
+ create mode 100644 arch/arm/boot/dts/omap4-panda.dts
+ create mode 100644 arch/arm/boot/dts/omap4-sdp.dts
+ create mode 100644 arch/arm/boot/dts/omap4.dtsi
