@@ -1,89 +1,68 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [GIT PATCH] OMAP: Add initial support for DT on OMAP3 & OMAP4
-Date: Fri, 30 Sep 2011 14:16:28 -0700
-Message-ID: <20110930211628.GO6324@atomide.com>
-References: <4E86298E.4080007@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4E86298E.4080007@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: David Daney <david.daney@cavium.com>
+Subject: [RFD PATCH] netdev/phy/of: Augment device tree bindings for PHYs to specify IEEE802.3-2005 Section 45 addressing.
+Date: Fri, 30 Sep 2011 16:09:42 -0700
+Message-ID: <1317424182-29252-1-git-send-email-david.daney@cavium.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net
+Cc: David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-* Cousson, Benoit <b-cousson@ti.com> [110930 13:08]:
-> Hi Tony,
-> 
-> Please pull the initial OMAP device tree support for  v3.2.
+Many 10 gigabit Ethernet PHY devices are interfaced to the MDIO bus
+using a protocol called IEEE802.3-2005 Section 45.  Where as PHYS for
+1G, 100M and 10M usually use IEEE802.3-2005 Section 22.  These two
+protocols can be present on the same MDIO bus.
 
-Great, thanks. And thanks for updating the two patches below
-to say ARM: OMAP2+: in the subject :)
+If we look at the Linux PHY probing code in drivers/of/of_mdio.c and
+drivers/net/phy/phy_device.c, we have the situation where we need to
+read the PHY registers to get the PHY ID out so that we can use this
+to bind to a compatible driver.  However we can only read these
+registers if we know the proper MDIO bus protocol to use.
 
-This is now in dt branch. Will merge into linux-omap master
-branch and send all the dt changes to Arnd within few days.
+My idea is as follows:
 
-Regards,
+o Add an optional property "mdio-clause-45" to the PHY's device tree
+  node to indicate that clause 45 addressing is used.
 
-Tony
+o When calling get_phy_id() we will set MII_ADDR_C45 in the address
+  if we know that clause 45 addressing is required for the PHY.
+  get_phy_id() will then use the proper bus protocol and register
+  numbers to read PHY ID based on MII_ADDR_C45.
 
+o of_mdiobus_register() will signal MII_ADDR_C45 for PHYs tagged with
+  "mdio-clause-45"
 
+o Existing PHYs without "mdio-clause-45" are unaffected.
+
+o If no specific driver for the probed PHY ID is present, we can still
+  communicate with the PHY and perhaps use a generic 10G phy driver.
+  If the MDIO bus protocol were just to depend on the "compatible"
+  property, then we could not use generic drivers for unknown PHY IDs
+
+Comments/other ideas welcome.
+
+Thanks,
+
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ Documentation/devicetree/bindings/net/phy.txt |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index bb8c742..69fd948 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -14,6 +14,11 @@ Required properties:
+  - linux,phandle :  phandle for this node; likely referenced by an
+    ethernet controller node.
  
-> Thanks,
-> Benoit
-> 
-> 
-> The following changes since commit 1c3543a34a8ce3e050d7706135bdffd5921c42f5:
->   Tony Lindgren (1):
->         Merge branch 'for_3.2/omap_device-2' of git://github.com/khilman/linux-omap-pm into dt
-> 
-> are available in the git repository at:
-> 
->   git://gitorious.org/omap-pm/linux.git for_3.2/3_omap_devicetree
-> 
-> Benoit Cousson (10):
->       arm/dts: Add initial device tree support for OMAP4 SoC
->       arm/dts: Add support for OMAP4 PandaBoard
->       arm/dts: Add support for OMAP4 SDP board
->       arm/dts: Add initial device tree support for OMAP3 SoC
->       arm/dts: Add support for OMAP3 Beagle board
->       OMAP2+: board-generic: Add DT support to generic board
->       OMAP2+: board-generic: Add i2c static init
->       OMAP2+: l3-noc: Add support for device-tree
->       arm/dts: OMAP4: Add a main ocp entry bound to l3-noc driver
->       arm/dts: OMAP3+: Add mpu, dsp and iva nodes
-> 
->  Documentation/devicetree/bindings/arm/omap/dsp.txt |   14 ++
->  Documentation/devicetree/bindings/arm/omap/iva.txt |   19 +++
->  .../devicetree/bindings/arm/omap/l3-noc.txt        |   19 +++
->  Documentation/devicetree/bindings/arm/omap/mpu.txt |   27 ++++
->  arch/arm/boot/dts/omap3-beagle.dts                 |   29 ++++
->  arch/arm/boot/dts/omap3.dtsi                       |   63 ++++++++
->  arch/arm/boot/dts/omap4-panda.dts                  |   29 ++++
->  arch/arm/boot/dts/omap4-sdp.dts                    |   29 ++++
->  arch/arm/boot/dts/omap4.dtsi                       |  103 +++++++++++++
->  arch/arm/mach-omap2/Kconfig                        |    8 +-
->  arch/arm/mach-omap2/board-generic.c                |  156 +++++++++++++++-----
->  arch/arm/mach-omap2/devices.c                      |    5 +
->  arch/arm/mach-omap2/omap_l3_noc.c                  |   23 +++-
->  arch/arm/mach-omap2/pm.c                           |    3 +-
->  14 files changed, 480 insertions(+), 47 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/dsp.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/iva.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/l3-noc.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/mpu.txt
->  create mode 100644 arch/arm/boot/dts/omap3-beagle.dts
->  create mode 100644 arch/arm/boot/dts/omap3.dtsi
->  create mode 100644 arch/arm/boot/dts/omap4-panda.dts
->  create mode 100644 arch/arm/boot/dts/omap4-sdp.dts
->  create mode 100644 arch/arm/boot/dts/omap4.dtsi
++Optional properties:
++
++ - mdio-clause-45 : Optional.  If present, IEEE802.3-2005 Section 45
++   protocol is used for register access (usually for 10G PHYs).
++
+ Example:
+ 
+ ethernet-phy@0 {
+-- 
+1.7.2.3
