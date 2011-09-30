@@ -1,40 +1,45 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 0/3] netdev/of/phy: MDIO bus multiplexer support.
-Date: Thu, 29 Sep 2011 18:32:14 -0600
-Message-ID: <20110930003214.GB12606@ponder.secretlab.ca>
-References: <1317166015-20714-1-git-send-email-david.daney@cavium.com>
- <20110929.163112.1523715692737597332.davem@davemloft.net>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH 2/9] regulator: helper routine to extract regulator_init_data
+Date: Fri, 30 Sep 2011 09:57:30 +0530
+Message-ID: <4E854532.6080605@ti.com>
+References: <1317118372-17052-1-git-send-email-rnayak@ti.com> <1317118372-17052-3-git-send-email-rnayak@ti.com> <20110927121003.GB4289@opensource.wolfsonmicro.com> <4E81E224.2070408@ti.com> <20110927150511.GM4289@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20110929.163112.1523715692737597332.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: david.daney@cavium.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110927150511.GM4289@opensource.wolfsonmicro.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 29, 2011 at 04:31:12PM -0400, David Miller wrote:
-> From: David Daney <david.daney@cavium.com>
-> Date: Tue, 27 Sep 2011 16:26:52 -0700
-> 
-> > v2: Update bindings to use "reg" and "mdio-parent-bus" insutead of
-> >     "cell-index" and "parent-bus"
-> 
-> Grant, when the final version of this patch set is ready how do
-> you want to handle merging it in?
-> 
-> I think it would be safe to merge this via your tree, since the
-> changes made to existing network driver files are rather trivial and
-> thus merge conflict friendly.
+[]...
+>
+>>>> +	init_data->supply_regulator = (char *)of_get_property(dev->of_node,
+>>>> +						"regulator-supplies", NULL);
+>
+>>> I'd expect that in the device tree world the supply regulator would
+>>> reference the node for that regulator.
+>
+>> You mean using phandles? Thats what Grant proposed too but
+>> I thought you instead had an inclination towards names? Or maybe
+>> I misunderstood.
+>
+> They need both.  We need to reference the device that provides the
+> supply and use a name to say which of the potentially multiple supplies
+> on the consumer device is which.
 
-Your tree or mine, I'm happy either way.  Even if there were
-conflicts, they would be trivial.
+Mark, I still seem to be a little confused with this one as to why
+we would need a phandle *and* a supply-name to reference a parent
+regulator/supply.
+The phandle would point to a regulator dt node and that node internally
+would have just one name associated with it.
 
-Sure, I'll take care of merging it when I see an ack from you.
+>
+>>> Hrm, I think loosing the signs here is bad karma - negative voltages do
+>>> exist after all.
+>
+>> Oops.. they do? didn't know about that.
+>
+> Yup, ground is just a reference point.
 
-> Actually, I feel like we've discussed this before :-)
-
-:)
-
-g.
