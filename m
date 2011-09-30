@@ -1,131 +1,88 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 1/3] netdev/of/phy: New function: of_mdio_find_bus().
-Date: Thu, 29 Sep 2011 16:41:19 -0500
-Message-ID: <20110929214119.GC10886@ponder.secretlab.ca>
-References: <1317166015-20714-1-git-send-email-david.daney@cavium.com>
- <1317166015-20714-2-git-send-email-david.daney@cavium.com>
+Subject: Re: [PATCH 1/2] ARM: gic: add irq_domain support
+Date: Thu, 29 Sep 2011 18:27:51 -0600
+Message-ID: <20110930002751.GA12606@ponder.secretlab.ca>
+References: <1317268436-1613-1-git-send-email-robherring2@gmail.com>
+ <1317268436-1613-2-git-send-email-robherring2@gmail.com>
+ <20110929171540.GC6800@ponder.secretlab.ca>
+ <4E84DCF4.4020904@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1317166015-20714-2-git-send-email-david.daney@cavium.com>
+In-Reply-To: <4E84DCF4.4020904@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, marc.zyngier@arm.com, thomas.abraham@linaro.org, jamie@jamieiles.com, b-cousson@ti.com, shawn.guo@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 27, 2011 at 04:26:53PM -0700, David Daney wrote:
-> Add of_mdio_find_bus() which allows an mii_bus to be located given its
-> associated the device tree node.
+On Thu, Sep 29, 2011 at 04:02:44PM -0500, Rob Herring wrote:
+> On 09/29/2011 12:15 PM, Grant Likely wrote:
+> > On Wed, Sep 28, 2011 at 10:53:55PM -0500, Rob Herring wrote:
+> >> From: Rob Herring <rob.herring@calxeda.com>
+> >>
+> >> Convert the gic interrupt controller to use irq domains in preparation
+> >> for device-tree binding and MULTI_IRQ. This allows for translation between
+> >> GIC interrupt IDs and Linux irq numbers.
+> >>
+> >> The meaning of irq_offset has changed. It now is just the number of skipped
+> >> GIC interrupt IDs for the controller. It will be 16 for primary GIC and 32
+> >> for secondary GICs.
+> > 
+> > [...]
+> > 
+> >>  /*
+> >> @@ -81,7 +82,7 @@ static inline unsigned int gic_irq(struct irq_data *d)
+> >>   */
+> >>  static void gic_mask_irq(struct irq_data *d)
+> >>  {
+> >> -	u32 mask = 1 << (d->irq % 32);
+> >> +	u32 mask = 1 << (gic_irq(d) % 32);
+> > 
+> > This can probably change simply to d->hwirq if irq_offset is
+> > eliminated as I describe below.
+> > 
+> >>  void __init gic_init(unsigned int gic_nr, unsigned int irq_start,
+> >>  	void __iomem *dist_base, void __iomem *cpu_base)
+> >>  {
+> >>  	struct gic_chip_data *gic;
+> >> +	struct irq_domain *domain;
+> >> +	int gic_irqs;
+> >>  
+> >>  	BUG_ON(gic_nr >= MAX_GIC_NR);
+> >>  
+> >>  	gic = &gic_data[gic_nr];
+> >> +	domain = &gic->domain;
+> >>  	gic->dist_base = dist_base;
+> >>  	gic->cpu_base = cpu_base;
+> >> -	gic->irq_offset = (irq_start - 1) & ~31;
+> >>  
+> >> -	if (gic_nr == 0)
+> >> +	/*
+> >> +	 * For primary GICs, skip over SGIs.
+> >> +	 * For secondary GICs, skip over PPIs, too.
+> >> +	 */
+> >> +	if (gic_nr == 0) {
+> >>  		gic_cpu_base_addr = cpu_base;
+> >> +		gic->irq_offset = 16;
+> >> +		irq_start = (irq_start & ~31) + 16;
+> > 
+> > With the switch to irq_domain, there should no longer be any need for
+> > a ~31 mask on the irq_start number.  Yes, you'll want to make sure
+> > that it doesn't allocate below irq 16, but the driver should
+> > completely use the irq_domain to manage the mapping from linux-irq
+> > number to hwirq number.  The ~31 mask appears to have been an
+> > optimization to quickly calculate hwirq number from the linux one, but
+> > that value is now found in irq_data->hwirq.
 > 
-> This is needed by the follow-on patch to add a driver for MDIO bus
-> multiplexers.
+> I started out exactly this way removing irq_offset. The problem is the
+> core irq domain code assumes that hwirq starts at 0, but for the gic it
+> starts at 16 or 32.
 > 
-> The of_mdiobus_register() function is modified so that the device tree
-> node is recorded in the mii_bus.  Then we can find it again by
-> iterating over all mdio_bus_class devices.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> ---
->  drivers/net/phy/mdio_bus.c |    3 ++-
->  drivers/of/of_mdio.c       |   26 ++++++++++++++++++++++++++
->  include/linux/of_mdio.h    |    2 ++
->  include/linux/phy.h        |    1 +
->  4 files changed, 31 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-> index 6c58da2..227a060 100644
-> --- a/drivers/net/phy/mdio_bus.c
-> +++ b/drivers/net/phy/mdio_bus.c
-> @@ -70,10 +70,11 @@ static void mdiobus_release(struct device *d)
->  	kfree(bus);
->  }
->  
-> -static struct class mdio_bus_class = {
-> +struct class mdio_bus_class = {
->  	.name		= "mdio_bus",
->  	.dev_release	= mdiobus_release,
->  };
-> +EXPORT_SYMBOL(mdio_bus_class);
+> It could be fixed in the domain core, but that would effectively mean
+> moving irq_offset into the core.
 
-Instead of exporting this, move the iterator into this file. Assuming
-Andy and David are okay with it, I don't see any reason to continue to
-keep the MDIO DT support outside of drivers/net/phy.
-
-Bonus points if you craft a patch to move the existing MDIO DT
-support code.
-
-Otherwise, the patch looks good.
+Fix irq_domain.  If it cannot handle this trivial case, then it won't
+be able to handle the complex powerpc use cases.
 
 g.
-
->  
->  /**
->   * mdiobus_register - bring up all the PHYs on a given bus and attach them to bus
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index d35e300..7c28e8c 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -45,6 +45,8 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  		for (i=0; i<PHY_MAX_ADDR; i++)
->  			mdio->irq[i] = PHY_POLL;
->  
-> +	mdio->dev.of_node = np;
-> +
->  	/* Register the MDIO bus */
->  	rc = mdiobus_register(mdio);
->  	if (rc)
-> @@ -189,3 +191,27 @@ struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->  	return IS_ERR(phy) ? NULL : phy;
->  }
->  EXPORT_SYMBOL(of_phy_connect_fixed_link);
-> +
-> +/**
-> + * of_mdio_find_bus - Given an mii_bus node, find the mii_bus.
-> + * @mdio_np: Pointer to the mii_bus.
-> + *
-> + * Returns a pointer to the mii_bus, or NULL if none found.
-> + *
-> + * Because the association of a device_node and mii_bus is made via
-> + * of_mdiobus_register(), the mii_bus cannot be found before it is
-> + * registered with of_mdiobus_register().
-> + *
-> + */
-> +struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
-> +{
-> +	struct device *d;
-> +
-> +	if (!mdio_np)
-> +		return NULL;
-> +
-> +	d = class_find_device(&mdio_bus_class, NULL,  mdio_np, of_phy_match);
-> +
-> +	return d ? to_mii_bus(d) : NULL;
-> +}
-> +EXPORT_SYMBOL(of_mdio_find_bus);
-> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-> index 53b94e0..912c27a 100644
-> --- a/include/linux/of_mdio.h
-> +++ b/include/linux/of_mdio.h
-> @@ -22,4 +22,6 @@ extern struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->  					 void (*hndlr)(struct net_device *),
->  					 phy_interface_t iface);
->  
-> +extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
-> +
->  #endif /* __LINUX_OF_MDIO_H */
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index 54fc413..e4c3844 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -528,4 +528,5 @@ int __init mdio_bus_init(void);
->  void mdio_bus_exit(void);
->  
->  extern struct bus_type mdio_bus_type;
-> +extern struct class mdio_bus_class;
->  #endif /* __PHY_H */
-> -- 
-> 1.7.2.3
-> 
