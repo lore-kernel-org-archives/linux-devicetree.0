@@ -1,195 +1,199 @@
-From: Andy Fleming <afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFD PATCH] netdev/phy/of: Augment device tree bindings for PHYs
-	to specify IEEE802.3-2005 Section 45 addressing.
-Date: Sat, 1 Oct 2011 21:59:23 -0500
-Message-ID: <CAKWjMd43YK=ucBhPkW=JDtM1qUos3OOqxFgUJ2rUWauvQ-=74A@mail.gmail.com>
-References: <1317424182-29252-1-git-send-email-david.daney@cavium.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: [RFC PATCH] tty/serial: atmel_serial: add device tree support
+Date: Mon,  3 Oct 2011 11:51:42 +0200
+Message-ID: <1317635502-9430-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1015257517849240157=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1317424182-29252-1-git-send-email-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, alan@linux.intel.com, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---===============1015257517849240157==
-Content-Type: multipart/alternative; boundary=20cf305b0ec4a4c5ec04ae480b7f
+Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+Hi,
 
---20cf305b0ec4a4c5ec04ae480b7f
-Content-Type: text/plain; charset=ISO-8859-1
-
-On Friday, September 30, 2011, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
-> Many 10 gigabit Ethernet PHY devices are interfaced to the MDIO bus
-> using a protocol called IEEE802.3-2005 Section 45.  Where as PHYS for
-> 1G, 100M and 10M usually use IEEE802.3-2005 Section 22.  These two
-> protocols can be present on the same MDIO bus.
->
-> If we look at the Linux PHY probing code in drivers/of/of_mdio.c and
-> drivers/net/phy/phy_device.c, we have the situation where we need to
-> read the PHY registers to get the PHY ID out so that we can use this
-> to bind to a compatible driver.  However we can only read these
-> registers if we know the proper MDIO bus protocol to use.
->
-> My idea is as follows:
->
-> o Add an optional property "mdio-clause-45" to the PHY's device tree
->  node to indicate that clause 45 addressing is used.
->
-> o When calling get_phy_id() we will set MII_ADDR_C45 in the address
->  if we know that clause 45 addressing is required for the PHY.
->  get_phy_id() will then use the proper bus protocol and register
->  numbers to read PHY ID based on MII_ADDR_C45.
->
-> o of_mdiobus_register() will signal MII_ADDR_C45 for PHYs tagged with
->  "mdio-clause-45"
->
-> o Existing PHYs without "mdio-clause-45" are unaffected.
->
-> o If no specific driver for the probed PHY ID is present, we can still
->  communicate with the PHY and perhaps use a generic 10G phy driver.
->  If the MDIO bus protocol were just to depend on the "compatible"
->  property, then we could not use generic drivers for unknown PHY IDs
->
-> Comments/other ideas welcome.
+Here is a first attempt to add device tree support to atmel_serial driver.
+RS485 data are not handled for the moment. My feeling is that they should be
+added as a generic DT biding set.
 
 
-About a year ago, I  submitted some patches to deal with the Clause 45
-stuff. I'm currently working on updating them and fixing the issues raised
-during the review. My preferred solution is actually to modify all of the
-mdio drivers to support an additional argument which will either be
-MDIO_DEVAD_NONE, or an actual device address. IMHO, it makes the interface
-more communicative.
+ .../devicetree/bindings/tty/serial/atmel-usart.txt |   27 +++++++++
+ drivers/tty/serial/atmel_serial.c                  |   56 +++++++++++++++++---
+ 2 files changed, 75 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
 
-I had a mechanism in place in my patches which, I believe, should have
-properly noted whether a PHY at a given address was operating under clause
-45 rather than clause 22. I also had a generic driver (The last issues
-remaining with my patches are related to how the generic driver operates; my
-original driver was a stub which worked fine for my particular PHY, but
-assumed too much about the PHY state).
-
-However, I think that the idea of a different compatible property for 10g
-PHYs could be useful, anyway.
-
->
-> Thanks,
->
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/phy.txt |    5 +++++
->  1 files changed, 5 insertions(+), 0 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/phy.txt
-b/Documentation/devicetree/bindings/net/phy.txt
-> index bb8c742..69fd948 100644
-> --- a/Documentation/devicetree/bindings/net/phy.txt
-> +++ b/Documentation/devicetree/bindings/net/phy.txt
-> @@ -14,6 +14,11 @@ Required properties:
->  - linux,phandle :  phandle for this node; likely referenced by an
->    ethernet controller node.
->
-> +Optional properties:
-> +
-> + - mdio-clause-45 : Optional.  If present, IEEE802.3-2005 Section 45
-> +   protocol is used for register access (usually for 10G PHYs).
-> +
->  Example:
->
->  ethernet-phy@0 {
-> --
-> 1.7.2.3
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
---20cf305b0ec4a4c5ec04ae480b7f
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<br><br>On Friday, September 30, 2011, David Daney &lt;<a href=3D"mailto:da=
-vid.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org">david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org</a>&gt; wrote:<br>&gt; Many 10=
- gigabit Ethernet PHY devices are interfaced to the MDIO bus<br>&gt; using =
-a protocol called IEEE802.3-2005 Section 45. =A0Where as PHYS for<br>
-&gt; 1G, 100M and 10M usually use IEEE802.3-2005 Section 22. =A0These two<b=
-r>&gt; protocols can be present on the same MDIO bus.<br>&gt;<br>&gt; If we=
- look at the Linux PHY probing code in drivers/of/of_mdio.c and<br>&gt; dri=
-vers/net/phy/phy_device.c, we have the situation where we need to<br>
-&gt; read the PHY registers to get the PHY ID out so that we can use this<b=
-r>&gt; to bind to a compatible driver. =A0However we can only read these<br=
->&gt; registers if we know the proper MDIO bus protocol to use.<br>&gt;<br>
-&gt; My idea is as follows:<br>&gt;<br>&gt; o Add an optional property &quo=
-t;mdio-clause-45&quot; to the PHY&#39;s device tree<br>&gt; =A0node to indi=
-cate that clause 45 addressing is used.<br>&gt;<br>&gt; o When calling get_=
-phy_id() we will set MII_ADDR_C45 in the address<br>
-&gt; =A0if we know that clause 45 addressing is required for the PHY.<br>&g=
-t; =A0get_phy_id() will then use the proper bus protocol and register<br>&g=
-t; =A0numbers to read PHY ID based on MII_ADDR_C45.<br>&gt;<br>&gt; o of_md=
-iobus_register() will signal MII_ADDR_C45 for PHYs tagged with<br>
-&gt; =A0&quot;mdio-clause-45&quot;<br>&gt;<br>&gt; o Existing PHYs without =
-&quot;mdio-clause-45&quot; are unaffected.<br>&gt;<br>&gt; o If no specific=
- driver for the probed PHY ID is present, we can still<br>&gt; =A0communica=
-te with the PHY and perhaps use a generic 10G phy driver.<br>
-&gt; =A0If the MDIO bus protocol were just to depend on the &quot;compatibl=
-e&quot;<br>&gt; =A0property, then we could not use generic drivers for unkn=
-own PHY IDs<br>&gt;<br>&gt; Comments/other ideas welcome.<br><br><br>About =
-a year ago, I =A0submitted some patches to deal with the Clause 45 stuff. I=
-&#39;m currently working on updating them and fixing the issues raised duri=
-ng the review. My preferred solution is actually to modify all of the mdio =
-drivers to support an additional argument which will either be MDIO_DEVAD_N=
-ONE, or an actual device address. IMHO, it makes the interface more communi=
-cative.<br>
-<br>I had a mechanism in place in my patches which, I believe, should have =
-properly noted whether a PHY at a given address was operating under clause =
-45 rather than clause 22. I also had a generic driver (The last issues rema=
-ining with my patches are related to how the generic driver operates; my or=
-iginal driver was a stub which worked fine for my particular PHY, but assum=
-ed too much about the PHY state).<br>
-<br>However, I think that the idea of a different compatible property for 1=
-0g PHYs could be useful, anyway.<br><br>&gt;<br>&gt; Thanks,<br>&gt;<br>&gt=
-; Signed-off-by: David Daney &lt;<a href=3D"mailto:david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org">=
-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org</a>&gt;<br>
-&gt; ---<br>&gt; =A0Documentation/devicetree/bindings/net/phy.txt | =A0 =A0=
-5 +++++<br>&gt; =A01 files changed, 5 insertions(+), 0 deletions(-)<br>&gt;=
-<br>&gt; diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Docum=
-entation/devicetree/bindings/net/phy.txt<br>
-&gt; index bb8c742..69fd948 100644<br>&gt; --- a/Documentation/devicetree/b=
-indings/net/phy.txt<br>&gt; +++ b/Documentation/devicetree/bindings/net/phy=
-.txt<br>&gt; @@ -14,6 +14,11 @@ Required properties:<br>&gt; =A0- linux,pha=
-ndle : =A0phandle for this node; likely referenced by an<br>
-&gt; =A0 =A0ethernet controller node.<br>&gt;<br>&gt; +Optional properties:=
-<br>&gt; +<br>&gt; + - mdio-clause-45 : Optional. =A0If present, IEEE802.3-=
-2005 Section 45<br>&gt; + =A0 protocol is used for register access (usually=
- for 10G PHYs).<br>
-&gt; +<br>&gt; =A0Example:<br>&gt;<br>&gt; =A0ethernet-phy@0 {<br>&gt; --<b=
-r>&gt; 1.7.2.3<br>&gt;<br>&gt; --<br>&gt; To unsubscribe from this list: se=
-nd the line &quot;unsubscribe netdev&quot; in<br>&gt; the body of a message=
- to <a href=3D"mailto:majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org">majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org<=
-/a><br>
-&gt; More majordomo info at =A0<a href=3D"http://vger.kernel.org/majordomo-=
-info.html">http://vger.kernel.org/majordomo-info.html</a><br>&gt;
-
---20cf305b0ec4a4c5ec04ae480b7f--
-
---===============1015257517849240157==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1015257517849240157==--
+diff --git a/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt b/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
+new file mode 100644
+index 0000000..a49d9a1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
+@@ -0,0 +1,27 @@
++* Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
++
++Required properties:
++- compatible: Should be "atmel,<chip>-usart"
++  The compatible <chip> indicated will be the first SoC to support an
++  additional mode or an USART new feature.
++- reg: Should contain registers location and length
++- interrupts: Should contain interrupt
++
++Optional properties:
++- atmel,use-dma-rx: use of PDC or DMA for receiving data
++- atmel,use-dma-tx: use of PDC or DMA for transmitting data
++
++<chip> compatible description:
++- at91rm9200:  legacy USART support
++- at91sam9260: generic USART implementation for SAM9 SoCs
++
++Example:
++
++	usart0: serial@fff8c000 {
++		compatible = "atmel,at91sam9260-usart";
++		reg = <0xfff8c000 0x4000>;
++		interrupts = <7>;
++		atmel,use-dma-rx;
++		atmel,use-dma-tx;
++	};
++
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 453cdb5..65f56c3 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -33,6 +33,8 @@
+ #include <linux/sysrq.h>
+ #include <linux/tty_flip.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/atmel_pdc.h>
+ #include <linux/atmel_serial.h>
+@@ -162,6 +164,16 @@ static struct atmel_uart_port atmel_ports[ATMEL_MAX_UART];
+ static struct console atmel_console;
+ #endif
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id atmel_serial_dt_ids[] = {
++	{ .compatible = "atmel,at91rm9200-usart" },
++	{ .compatible = "atmel,at91sam9260-usart" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, atmel_serial_dt_ids);
++#endif
++
+ static inline struct atmel_uart_port *
+ to_atmel_uart_port(struct uart_port *uart)
+ {
+@@ -1413,14 +1425,31 @@ static struct uart_ops atmel_pops = {
+ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+ 				      struct platform_device *pdev)
+ {
++	struct device_node *np = pdev->dev.of_node;
+ 	struct uart_port *port = &atmel_port->uart;
+ 	struct atmel_uart_data *pdata = pdev->dev.platform_data;
++	int ret;
++
++	if (np) {
++		ret = of_alias_get_id(np, "serial");
++		if (ret >= 0)
++			port->line = ret;
++		if (of_get_property(np, "atmel,use-dma-rx", NULL))
++			atmel_port->use_dma_rx	= 1;
++		if (of_get_property(np, "atmel,use-dma-tx", NULL))
++			atmel_port->use_dma_tx	= 1;
++	} else {
++		port->line = pdata->num;
++
++		atmel_port->use_dma_rx	= pdata->use_dma_rx;
++		atmel_port->use_dma_tx	= pdata->use_dma_tx;
++		atmel_port->rs485	= pdata->rs485;
++	}
+ 
+ 	port->iotype		= UPIO_MEM;
+ 	port->flags		= UPF_BOOT_AUTOCONF;
+ 	port->ops		= &atmel_pops;
+ 	port->fifosize		= 1;
+-	port->line		= pdata->num;
+ 	port->dev		= &pdev->dev;
+ 	port->mapbase	= pdev->resource[0].start;
+ 	port->irq	= pdev->resource[1].start;
+@@ -1430,7 +1459,7 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+ 
+ 	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
+ 
+-	if (pdata->regs) {
++	if (pdata && pdata->regs) {
+ 		/* Already mapped by setup code */
+ 		port->membase = pdata->regs;
+ 	} else {
+@@ -1447,10 +1476,6 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+ 		/* only enable clock when USART is in use */
+ 	}
+ 
+-	atmel_port->use_dma_rx	= pdata->use_dma_rx;
+-	atmel_port->use_dma_tx	= pdata->use_dma_tx;
+-	atmel_port->rs485	= pdata->rs485;
+-
+ 	/* Use TXEMPTY for interrupt when rs485 else TXRDY or ENDTX|TXBUFE */
+ 	if (atmel_port->rs485.flags & SER_RS485_ENABLED)
+ 		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
+@@ -1710,13 +1735,27 @@ static int atmel_serial_resume(struct platform_device *pdev)
+ static int __devinit atmel_serial_probe(struct platform_device *pdev)
+ {
+ 	struct atmel_uart_port *port;
++	struct device_node *np = pdev->dev.of_node;
+ 	struct atmel_uart_data *pdata = pdev->dev.platform_data;
+ 	void *data;
+ 	int ret;
+ 
+ 	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
+ 
+-	port = &atmel_ports[pdata->num];
++	if (np) {
++		ret = of_alias_get_id(np, "serial");
++		if (ret < 0)
++			goto err;
++	} else {
++		if (pdata) {
++			ret = pdata->num;
++		} else {
++			ret = -ENODEV;
++			goto err;
++		}
++	}
++
++	port = &atmel_ports[ret];
+ 	port->backup_imr = 0;
+ 
+ 	atmel_init_port(port, pdev);
+@@ -1763,7 +1802,7 @@ err_alloc_ring:
+ 		clk_put(port->clk);
+ 		port->clk = NULL;
+ 	}
+-
++err:
+ 	return ret;
+ }
+ 
+@@ -1796,6 +1835,7 @@ static struct platform_driver atmel_serial_driver = {
+ 	.driver		= {
+ 		.name	= "atmel_usart",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(atmel_serial_dt_ids),
+ 	},
+ };
+ 
+-- 
+1.7.3
