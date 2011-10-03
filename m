@@ -1,57 +1,37 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH V2] AT91: dt: at91sam9g45 family and board device tree
-	files
-Date: Mon, 3 Oct 2011 09:52:40 +0100
-Message-ID: <20111003085240.GB11710@n2100.arm.linux.org.uk>
-References: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/3] mfd: allow mfd_cell association with device tree
+ node
+Date: Mon, 3 Oct 2011 11:28:47 +0100
+Message-ID: <20111003102846.GA23811@sirena.org.uk>
+References: <20110927150555.GF20588@ponder.secretlab.ca>
+ <CAMLZHHQU-eMAtvBQJj6+WrMjkWWA+ET=z5NdQCEgXxh=m10d3Q@mail.gmail.com>
+ <20110927181420.GQ4289@opensource.wolfsonmicro.com>
+ <CAMLZHHSuoeAJ-AC9daxb83+EANV=YGK-aiYpQ_j2wFiyQa5ytw@mail.gmail.com>
+ <20110927182636.GR4289@opensource.wolfsonmicro.com>
+ <CAMLZHHR0rMZct2E91X8k+Lhv_y-pY_5+vshZw6dj194o9vSCJQ@mail.gmail.com>
+ <20110927183832.GS4289@opensource.wolfsonmicro.com>
+ <CAMLZHHRvr-diYGwZ2Kg647Ht7NNb8LEku0pCW8EujRuUeOW5yQ@mail.gmail.com>
+ <20110928123154.GG3279@opensource.wolfsonmicro.com>
+ <CAMLZHHRFY_MazF_MOzPrS06z-48-ohORTtbANMxUT=mjevXhhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAMLZHHRFY_MazF_MOzPrS06z-48-ohORTtbANMxUT=mjevXhhQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Drake <dsd@laptop.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dilinger@queued.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 03, 2011 at 12:00:56PM +0200, Nicolas Ferre wrote:
-> diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
-> new file mode 100644
-> index 0000000..7bcb9a9
-> --- /dev/null
-> +++ b/arch/arm/mach-at91/board-dt.c
-> @@ -0,0 +1,122 @@
-> +/*
-> + *  Setup code for AT91SAM Evaluation Kits with Device Tree support
-> + *
-> + *  Covers: * AT91SAM9G45-EKES  board
-> + *          * AT91SAM9M10-EKES  board
-> + *          * AT91SAM9M10G45-EK board
-> + *
-> + *  Copyright (C) 2011 Atmel,
-> + *                2011 Nicolas Ferre <nicolas.ferre@atmel.com>
-> + *
-> + * Licensed under GPLv2 or later.
-> + */
-> +
-> +#include <linux/types.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +
-> +#include <mach/hardware.h>
-> +#include <mach/board.h>
-> +#include <mach/gpio.h>
+On Mon, Oct 03, 2011 at 09:40:10AM +0100, Daniel Drake wrote:
+> On Wed, Sep 28, 2011 at 1:31 PM, Mark Brown
+> > Right, but your modification was to the MFD core so it's going to affect
+> > other devices...
 
-Is linux/gpio.h broken for you?
+> But only when they start using the newly added functionality. At this
+> point, it affects nobody except vx855.
+
+I'd really expect that if we're adding stuff to the framework then it
+should be suitable for random drivers to use.  To be honest I don't
+really understand why you're changing the framework at all here, the
+child driver is entirely specific to the parent as far as I can see.
