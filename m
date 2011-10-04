@@ -1,199 +1,61 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH] tty/serial: atmel_serial: add device tree support
-Date: Tue, 04 Oct 2011 08:08:27 -0500
-Message-ID: <4E8B054B.3060506@gmail.com>
-References: <1317635502-9430-1-git-send-email-nicolas.ferre@atmel.com> <4E8A6858.6020700@gmail.com> <4E8AC171.4020706@atmel.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] GIC OF bindings
+Date: Tue, 04 Oct 2011 11:15:05 -0500
+Message-ID: <4E8B3109.2020705@gmail.com>
+References: <1317410880-24828-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <4E8AC171.4020706@atmel.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1317410880-24828-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Nicolas,
+Grant,
 
-On 10/04/2011 03:18 AM, Nicolas Ferre wrote:
-> On 10/04/2011 03:58 AM, Rob Herring :
->> On 10/03/2011 04:51 AM, Nicolas Ferre wrote:
->>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->>> ---
->>> Hi,
->>>
->>> Here is a first attempt to add device tree support to atmel_serial driver.
->>> RS485 data are not handled for the moment. My feeling is that they should be
->>> added as a generic DT biding set.
->>
->> Feel free to propose something. :)
+On 09/30/2011 02:27 PM, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-> Yes, I will have a look and practice my DT understanding on this...
+> Another round of GIC devicetree support.
 > 
->>>  .../devicetree/bindings/tty/serial/atmel-usart.txt |   27 +++++++++
->>>  drivers/tty/serial/atmel_serial.c                  |   56 +++++++++++++++++---
->>>  2 files changed, 75 insertions(+), 8 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt b/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
->>> new file mode 100644
->>> index 0000000..a49d9a1
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
->>> @@ -0,0 +1,27 @@
->>> +* Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
->>> +
->>> +Required properties:
->>> +- compatible: Should be "atmel,<chip>-usart"
->>> +  The compatible <chip> indicated will be the first SoC to support an
->>> +  additional mode or an USART new feature.
->>> +- reg: Should contain registers location and length
->>> +- interrupts: Should contain interrupt
->>> +
->>> +Optional properties:
->>> +- atmel,use-dma-rx: use of PDC or DMA for receiving data
->>> +- atmel,use-dma-tx: use of PDC or DMA for transmitting data
->>
->> Is this an internal DMA or separate DMA controller? If the latter, these
->> should be phandles to a DMA channel/request.
+> This moves the tracking of the starting hwirq number into the irq domain
+> code. Doing this makes hwirq == GIC interrupt ID and simplifies the GIC
+> code removing irq_offset.
 > 
-> Well, for now it relies on PDC (looks like an internal DMA). There is no
-> notion of channel/request so I think it is appropriate to keep it like this.
+> The full series is available here. This includes Russell's devel-stable and
+> for-next branches and Nico's vmalloc branch:
+> 
+> git://git.jdl.com/software/linux-3.0.git gic-v2
+> 
+> Tested on highbank and Realview 11MPCore qemu (2 GICs).
+> 
+> Rob
+> 
+> Rob Herring (3):
+>   irq: support domains with non-zero hwirq base
+>   ARM: gic: add irq_domain support
+>   ARM: gic: add OF based initialization
+> 
+>  Documentation/devicetree/bindings/arm/gic.txt |   55 ++++++++++
+>  arch/arm/common/Kconfig                       |    1 +
+>  arch/arm/common/gic.c                         |  142 +++++++++++++++++++------
+>  arch/arm/include/asm/hardware/gic.h           |    5 +-
+>  include/linux/irqdomain.h                     |   16 +++-
+>  kernel/irq/irqdomain.c                        |   12 +-
+>  6 files changed, 189 insertions(+), 42 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/gic.txt
 > 
 
-Okay. Although, this is a bit of Linux creeping into DT. DT should
-describe the h/w. You should really be describing whether the h/w
-supports DMA or not rather than whether you want to use DMA or not.
-Since DMA support is really tied to the SOC rather than board, you could
-just use the compatible string to distinguish platforms that support DMA
-or not. So what is determining this setting? Is it purely user choice?
-
->>> +<chip> compatible description:
->>> +- at91rm9200:  legacy USART support
->>> +- at91sam9260: generic USART implementation for SAM9 SoCs
->>> +
->>> +Example:
->>> +
->>> +	usart0: serial@fff8c000 {
->>> +		compatible = "atmel,at91sam9260-usart";
->>> +		reg = <0xfff8c000 0x4000>;
->>> +		interrupts = <7>;
->>> +		atmel,use-dma-rx;
->>> +		atmel,use-dma-tx;
->>> +	};
->>> +
->>> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
->>> index 453cdb5..65f56c3 100644
->>> --- a/drivers/tty/serial/atmel_serial.c
->>> +++ b/drivers/tty/serial/atmel_serial.c
->>> @@ -33,6 +33,8 @@
->>>  #include <linux/sysrq.h>
->>>  #include <linux/tty_flip.h>
->>>  #include <linux/platform_device.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_device.h>
->>>  #include <linux/dma-mapping.h>
->>>  #include <linux/atmel_pdc.h>
->>>  #include <linux/atmel_serial.h>
->>> @@ -162,6 +164,16 @@ static struct atmel_uart_port atmel_ports[ATMEL_MAX_UART];
->>>  static struct console atmel_console;
->>>  #endif
->>>  
->>> +#if defined(CONFIG_OF)
->>> +static const struct of_device_id atmel_serial_dt_ids[] = {
->>> +	{ .compatible = "atmel,at91rm9200-usart" },
->>> +	{ .compatible = "atmel,at91sam9260-usart" },
->>> +	{ /* sentinel */ }
->>> +};
->>> +
->>> +MODULE_DEVICE_TABLE(of, atmel_serial_dt_ids);
->>> +#endif
->>
->> This ifdef isn't necessary, but it really depends if long term this
->> driver will be built without OF (and you care about the extra data).
-> 
-> Yes, even in long term, this driver will be built without OF support. It
-> is true though that the extra data is not very big...
-> 
->>>  static inline struct atmel_uart_port *
->>>  to_atmel_uart_port(struct uart_port *uart)
->>>  {
->>> @@ -1413,14 +1425,31 @@ static struct uart_ops atmel_pops = {
->>>  static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
->>>  				      struct platform_device *pdev)
->>>  {
->>> +	struct device_node *np = pdev->dev.of_node;
->>>  	struct uart_port *port = &atmel_port->uart;
->>>  	struct atmel_uart_data *pdata = pdev->dev.platform_data;
->>> +	int ret;
->>> +
->>> +	if (np) {
->>> +		ret = of_alias_get_id(np, "serial");
->>> +		if (ret >= 0)
->>> +			port->line = ret;
->>> +		if (of_get_property(np, "atmel,use-dma-rx", NULL))
->>> +			atmel_port->use_dma_rx	= 1;
->>> +		if (of_get_property(np, "atmel,use-dma-tx", NULL))
->>> +			atmel_port->use_dma_tx	= 1;
->>> +	} else {
->>> +		port->line = pdata->num;
->>> +
->>> +		atmel_port->use_dma_rx	= pdata->use_dma_rx;
->>> +		atmel_port->use_dma_tx	= pdata->use_dma_tx;
->>> +		atmel_port->rs485	= pdata->rs485;
->>> +	}
->>>  
->>>  	port->iotype		= UPIO_MEM;
->>>  	port->flags		= UPF_BOOT_AUTOCONF;
->>>  	port->ops		= &atmel_pops;
->>>  	port->fifosize		= 1;
->>> -	port->line		= pdata->num;
->>>  	port->dev		= &pdev->dev;
->>>  	port->mapbase	= pdev->resource[0].start;
->>>  	port->irq	= pdev->resource[1].start;
->>> @@ -1430,7 +1459,7 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
->>>  
->>>  	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
->>>  
->>> -	if (pdata->regs) {
->>> +	if (pdata && pdata->regs) {
->>>  		/* Already mapped by setup code */
->>>  		port->membase = pdata->regs;
->>>  	} else {
->>> @@ -1447,10 +1476,6 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
->>>  		/* only enable clock when USART is in use */
->>>  	}
->>>  
->>> -	atmel_port->use_dma_rx	= pdata->use_dma_rx;
->>> -	atmel_port->use_dma_tx	= pdata->use_dma_tx;
->>> -	atmel_port->rs485	= pdata->rs485;
->>> -
->>>  	/* Use TXEMPTY for interrupt when rs485 else TXRDY or ENDTX|TXBUFE */
->>>  	if (atmel_port->rs485.flags & SER_RS485_ENABLED)
->>>  		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
->>> @@ -1710,13 +1735,27 @@ static int atmel_serial_resume(struct platform_device *pdev)
->>>  static int __devinit atmel_serial_probe(struct platform_device *pdev)
->>>  {
->>>  	struct atmel_uart_port *port;
->>> +	struct device_node *np = pdev->dev.of_node;
->>>  	struct atmel_uart_data *pdata = pdev->dev.platform_data;
->>>  	void *data;
->>>  	int ret;
->>>  
->>>  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
->>>  
->>> -	port = &atmel_ports[pdata->num];
->>> +	if (np) {
->>> +		ret = of_alias_get_id(np, "serial");
->>
->> I'll defer to Grant on this. There aren't any other drivers using this.
-> 
-> I took the IMX serial driver as an example which is in devicetree/next
-> branch (tty/serial/imx.c).
-> 
-> Is it the proper way to use this?
-> 
-
-Okay, I missed this. It should be fine.
+Ping. Can you please comment on this series.
 
 Rob
