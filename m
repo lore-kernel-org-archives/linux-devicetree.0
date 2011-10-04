@@ -1,51 +1,64 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH] tty/serial: atmel_serial: add device tree support
-Date: Tue, 4 Oct 2011 10:52:26 -0600
-Message-ID: <20111004165226.GA10919@ponder.secretlab.ca>
-References: <1317635502-9430-1-git-send-email-nicolas.ferre@atmel.com>
- <4E8A6858.6020700@gmail.com>
+Subject: Re: [PATCH v2] OMAP2PLUS: DSS: Ensure DSS works correctly if display
+ is enabled in bootloader
+Date: Tue, 4 Oct 2011 12:27:11 -0600
+Message-ID: <20111004182711.GE2870@ponder.secretlab.ca>
+References: <1315811306-11001-1-git-send-email-archit@ti.com>
+ <alpine.DEB.2.00.1110022237171.4611@utopia.booyaka.com>
+ <1317630070.2026.27.camel@deskari>
+ <4E898468.2060508@ti.com>
+ <alpine.DEB.2.00.1110031126090.4611@utopia.booyaka.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4E8A6858.6020700@gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <alpine.DEB.2.00.1110031126090.4611@utopia.booyaka.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, "Taneja, Archit" <archit@ti.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "R, Sricharan" <r.sricharan@ti.com>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 03, 2011 at 08:58:48PM -0500, Rob Herring wrote:
-> On 10/03/2011 04:51 AM, Nicolas Ferre wrote:
-> >  static int __devinit atmel_serial_probe(struct platform_device *pdev)
-> >  {
-> >  	struct atmel_uart_port *port;
-> > +	struct device_node *np = pdev->dev.of_node;
-> >  	struct atmel_uart_data *pdata = pdev->dev.platform_data;
-> >  	void *data;
-> >  	int ret;
-> >  
-> >  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
-> >  
-> > -	port = &atmel_ports[pdata->num];
-> > +	if (np) {
-> > +		ret = of_alias_get_id(np, "serial");
-> > +		if (ret < 0)
-> > +			goto err;
+On Mon, Oct 03, 2011 at 11:34:34AM -0600, Paul Walmsley wrote:
+> + devicetree-discuss, lkml
 > 
-> I'll defer to Grant on this. There aren't any other drivers using this.
+> On Mon, 3 Oct 2011, Cousson, Benoit wrote:
 > 
+> > But at that time, device tree was not there...
+> > Now, the whole dev_attr stuff will be replaced because device tree is able to
+> > provide the driver any kind of custom information that can be retrieved
+> > directly from the driver without having to use a pdata in between. So I'm not
+> > sure it worth spending too much time on that feature stuff.
+> > 
+> > As an example here is the ongoing GPIO DT migration:
+> > http://www.mail-archive.com/linux-omap@vger.kernel.org/msg56505.html
+> > 
+> > 3.2 will have the basic DT support using hwmod as a backend, but the idea is
+> > that for 3.3, we start removing some information from hwmod to rely on device
+> > tree only.
+> 
+> One comment here though -- and I will make this comment on the original 
+> series too -- is that we should avoid adding direct DT dependencies into 
+> the driver.
+> 
+> Specifically, these of_get_property() and of_property*() calls in the 
+> driver aren't right.
+> 
+> We need some way of doing this that is completely independent from the 
+> device data format.  Some way that does not care whether the input data is 
+> coming from DT, platform_data, ACPI, or whatever the new flavor of the 
+> year will be next year.  Or we need to declare that these of_*() calls are 
+> not DT-specific, and define them as hooks that the device data format code 
+> can handle as it pleases.
 
-This is the correct thing to do.
+Generally, I agree.  For example, I've been thinking of either
+modifying or creating bus_type-agnostic variants of the
+platform_get_*() hooks so that the driver can get the data it needs
+without knowing what the data source is.  (Actually, it already works
+that way for platform_devices and DT, but that is only because the DT
+code populates the resource table when the device is created).
 
-One note however; I prefer driver to *not* require an alias to be
-present.  By all means, use an alias if it is available, but the
-driver should auto-enumerate if it is not.  There is a patch that
-makes of_alias_get_id() do this for you, but it hasn't been mainlined
-yet and it is still a bit in flux.  There will be something that takes
-care of this for you, but be aware that the function name may change.
-
-In the mean time, this patch is okay.
-
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+This works best for well understood things like GPIOs, IRQs, memory
+ranges, and the like.  It doesn't really work very well for data
+specific to the device.
 
 g.
