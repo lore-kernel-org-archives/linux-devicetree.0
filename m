@@ -1,84 +1,83 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] ahci: add DT binding for Calxeda AHCI controller
-Date: Mon, 03 Oct 2011 21:30:11 -0500
-Message-ID: <4E8A6FB3.4090909@gmail.com>
-References: <1314976215-23902-1-git-send-email-robherring2@gmail.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH 2/9] regulator: helper routine to extract regulator_init_data
+Date: Tue, 04 Oct 2011 10:58:40 +0530
+Message-ID: <4E8A9988.3080907@ti.com>
+References: <1317118372-17052-1-git-send-email-rnayak@ti.com> <1317118372-17052-3-git-send-email-rnayak@ti.com> <20110927121003.GB4289@opensource.wolfsonmicro.com> <4E81E224.2070408@ti.com> <20110927150511.GM4289@opensource.wolfsonmicro.com> <4E854532.6080605@ti.com> <20110930102849.GA4195@opensource.wolfsonmicro.com> <20110930104820.GE2085@sirena.org.uk> <4E85A34E.9070203@ti.com> <20110930121844.GI5366@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1314976215-23902-1-git-send-email-robherring2@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jeff Garzik <jgarzik@pobox.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20110930121844.GI5366@opensource.wolfsonmicro.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: b-cousson@ti.com, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2011 10:10 AM, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Add devicetree match table to ahci platform driver for Calxeda Highbank
-> AHCI controller.
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Cc: Jeff Garzik <jgarzik@pobox.com>
-> Cc: linux-ide@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> ---
+On Friday 30 September 2011 05:48 PM, Mark Brown wrote:
+> On Fri, Sep 30, 2011 at 04:39:02PM +0530, Rajendra Nayak wrote:
+>
+>> The "regulator-supplies" is used to specific the regulator *parent*.
+>> Same as what was earlier passed by using the
+>> "supply_regulator" field of regulator_init_data structure.
+>> Grant wanted the bindings to support specifying multiple parents
+>> and hence I was thinking of either a list of names *or*
+>> a list of phandles to specify multiple parents to a regulator.
+>
+> So, as I'm fairly sure I said last time these are just standard
+> supplies.  It just happens to be that the consumer is a regulator.  The
+> fact that Linux chooses to have core framework handling for this is an
+> implementation detail of Linux (and indeed many devices ignore this for
+> their on board regulators).
 
-Any comments on this?
+Yes, the implementation details of linux is what is making me using
+these bindings difficult, and maybe you can help me how I can work
+around the framework. The binding themselves, I agree should not care
+if the consumer is a device/IP or a regulator itself.
 
-Rob
+So here's my problem:
 
->  .../devicetree/bindings/ata/calxeda-sata.txt       |   17 +++++++++++++++++
->  drivers/ata/ahci_platform.c                        |    7 +++++++
->  2 files changed, 24 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ata/calxeda-sata.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/calxeda-sata.txt b/Documentation/devicetree/bindings/ata/calxeda-sata.txt
-> new file mode 100644
-> index 0000000..79caa56
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/calxeda-sata.txt
-> @@ -0,0 +1,17 @@
-> +* Calxeda SATA Controller
-> +
-> +SATA nodes are defined to describe on-chip Serial ATA controllers.
-> +Each SATA controller should have its own node.
-> +
-> +Required properties:
-> +- compatible        : compatible list, contains "calxeda,hb-ahci"
-> +- interrupts        : <interrupt mapping for SATA IRQ>
-> +- reg               : <registers mapping>
-> +
-> +Example:
-> +        sata@ffe08000 {
-> +		compatible = "calxeda,hb-ahci";
-> +                reg = <0xffe08000 0x1000>;
-> +                interrupts = <115>;
-> +        };
-> +
-> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-> index 6fef1fa..9bfc970 100644
-> --- a/drivers/ata/ahci_platform.c
-> +++ b/drivers/ata/ahci_platform.c
-> @@ -171,11 +171,18 @@ static int __devexit ahci_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct of_device_id ahci_of_match[] = {
-> +	{ .compatible = "calxeda,hb-ahci", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ahci_of_match);
-> +
->  static struct platform_driver ahci_driver = {
->  	.remove = __devexit_p(ahci_remove),
->  	.driver = {
->  		.name = "ahci",
->  		.owner = THIS_MODULE,
-> +		.of_match_table = ahci_of_match,
->  	},
->  };
->  
+I use the <name-supply> = <&reg_phandle> binding to define
+a device/IP using one/more regulators on one/more rails.
+
+device mmc {
+	...
+	...
+	vmmc-supply = <&vmmc>;
+	vpll-supply = <&vpll>;
+};
+
+The parsing of the "vmmc-supply" or the "vpll-supply" property
+happens only when a mmc drivers makes a call to
+regulator_get() passing the supply-name as "vmmc" or "vpll".
+For ex:
+regulator_get(dev, "vmmc"); or regulator_get(dev, "vpll");
+
+Its easy to just append the "-supply" to a "vmmc" or "vpll"
+and derive a property name like "vmm-supply" or "vpll-supply".
+
+Now lets take the case of a regulator as a consumer:
+
+regulator vmmc {
+	...
+	...
+	vin-supply = <&vin>;
+};
+
+Now I need to parse the "vin-supply" property during a
+regulator_register(), so I could do a set_supply() and
+create the parent/child relationship between a vin and
+vmmc.
+The problem is I don't know if the property in the regulator dt
+node is called "vin-supply" or "vxyz-supply" and hence I
+can parse the property based on a substring alone, which is
+"-supply" because all I know is the property name is expected
+to end with a "-supply".
+
+I can always add a new of_find_property_substr() which finds
+me property based on a substring value passed rather than the
+exact property-name string.
+However I don;t know if this is the best way to handle it.
+Any thoughts?
+
+
 
