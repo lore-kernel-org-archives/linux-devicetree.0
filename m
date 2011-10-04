@@ -1,83 +1,221 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 2/9] regulator: helper routine to extract regulator_init_data
-Date: Tue, 04 Oct 2011 10:58:40 +0530
-Message-ID: <4E8A9988.3080907@ti.com>
-References: <1317118372-17052-1-git-send-email-rnayak@ti.com> <1317118372-17052-3-git-send-email-rnayak@ti.com> <20110927121003.GB4289@opensource.wolfsonmicro.com> <4E81E224.2070408@ti.com> <20110927150511.GM4289@opensource.wolfsonmicro.com> <4E854532.6080605@ti.com> <20110930102849.GA4195@opensource.wolfsonmicro.com> <20110930104820.GE2085@sirena.org.uk> <4E85A34E.9070203@ti.com> <20110930121844.GI5366@opensource.wolfsonmicro.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [RFC PATCH] tty/serial: atmel_serial: add device tree support
+Date: Tue, 04 Oct 2011 10:18:57 +0200
+Message-ID: <4E8AC171.4020706@atmel.com>
+References: <1317635502-9430-1-git-send-email-nicolas.ferre@atmel.com>
+	<4E8A6858.6020700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20110930121844.GI5366@opensource.wolfsonmicro.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: b-cousson@ti.com, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4E8A6858.6020700@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 30 September 2011 05:48 PM, Mark Brown wrote:
-> On Fri, Sep 30, 2011 at 04:39:02PM +0530, Rajendra Nayak wrote:
->
->> The "regulator-supplies" is used to specific the regulator *parent*.
->> Same as what was earlier passed by using the
->> "supply_regulator" field of regulator_init_data structure.
->> Grant wanted the bindings to support specifying multiple parents
->> and hence I was thinking of either a list of names *or*
->> a list of phandles to specify multiple parents to a regulator.
->
-> So, as I'm fairly sure I said last time these are just standard
-> supplies.  It just happens to be that the consumer is a regulator.  The
-> fact that Linux chooses to have core framework handling for this is an
-> implementation detail of Linux (and indeed many devices ignore this for
-> their on board regulators).
+On 10/04/2011 03:58 AM, Rob Herring :
+> On 10/03/2011 04:51 AM, Nicolas Ferre wrote:
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>> ---
+>> Hi,
+>>
+>> Here is a first attempt to add device tree support to atmel_serial driver.
+>> RS485 data are not handled for the moment. My feeling is that they should be
+>> added as a generic DT biding set.
+> 
+> Feel free to propose something. :)
 
-Yes, the implementation details of linux is what is making me using
-these bindings difficult, and maybe you can help me how I can work
-around the framework. The binding themselves, I agree should not care
-if the consumer is a device/IP or a regulator itself.
+Yes, I will have a look and practice my DT understanding on this...
 
-So here's my problem:
+>>  .../devicetree/bindings/tty/serial/atmel-usart.txt |   27 +++++++++
+>>  drivers/tty/serial/atmel_serial.c                  |   56 +++++++++++++++++---
+>>  2 files changed, 75 insertions(+), 8 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt b/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
+>> new file mode 100644
+>> index 0000000..a49d9a1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
+>> @@ -0,0 +1,27 @@
+>> +* Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
+>> +
+>> +Required properties:
+>> +- compatible: Should be "atmel,<chip>-usart"
+>> +  The compatible <chip> indicated will be the first SoC to support an
+>> +  additional mode or an USART new feature.
+>> +- reg: Should contain registers location and length
+>> +- interrupts: Should contain interrupt
+>> +
+>> +Optional properties:
+>> +- atmel,use-dma-rx: use of PDC or DMA for receiving data
+>> +- atmel,use-dma-tx: use of PDC or DMA for transmitting data
+> 
+> Is this an internal DMA or separate DMA controller? If the latter, these
+> should be phandles to a DMA channel/request.
 
-I use the <name-supply> = <&reg_phandle> binding to define
-a device/IP using one/more regulators on one/more rails.
+Well, for now it relies on PDC (looks like an internal DMA). There is no
+notion of channel/request so I think it is appropriate to keep it like this.
 
-device mmc {
-	...
-	...
-	vmmc-supply = <&vmmc>;
-	vpll-supply = <&vpll>;
-};
+>> +<chip> compatible description:
+>> +- at91rm9200:  legacy USART support
+>> +- at91sam9260: generic USART implementation for SAM9 SoCs
+>> +
+>> +Example:
+>> +
+>> +	usart0: serial@fff8c000 {
+>> +		compatible = "atmel,at91sam9260-usart";
+>> +		reg = <0xfff8c000 0x4000>;
+>> +		interrupts = <7>;
+>> +		atmel,use-dma-rx;
+>> +		atmel,use-dma-tx;
+>> +	};
+>> +
+>> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+>> index 453cdb5..65f56c3 100644
+>> --- a/drivers/tty/serial/atmel_serial.c
+>> +++ b/drivers/tty/serial/atmel_serial.c
+>> @@ -33,6 +33,8 @@
+>>  #include <linux/sysrq.h>
+>>  #include <linux/tty_flip.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>  #include <linux/dma-mapping.h>
+>>  #include <linux/atmel_pdc.h>
+>>  #include <linux/atmel_serial.h>
+>> @@ -162,6 +164,16 @@ static struct atmel_uart_port atmel_ports[ATMEL_MAX_UART];
+>>  static struct console atmel_console;
+>>  #endif
+>>  
+>> +#if defined(CONFIG_OF)
+>> +static const struct of_device_id atmel_serial_dt_ids[] = {
+>> +	{ .compatible = "atmel,at91rm9200-usart" },
+>> +	{ .compatible = "atmel,at91sam9260-usart" },
+>> +	{ /* sentinel */ }
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, atmel_serial_dt_ids);
+>> +#endif
+> 
+> This ifdef isn't necessary, but it really depends if long term this
+> driver will be built without OF (and you care about the extra data).
 
-The parsing of the "vmmc-supply" or the "vpll-supply" property
-happens only when a mmc drivers makes a call to
-regulator_get() passing the supply-name as "vmmc" or "vpll".
-For ex:
-regulator_get(dev, "vmmc"); or regulator_get(dev, "vpll");
+Yes, even in long term, this driver will be built without OF support. It
+is true though that the extra data is not very big...
 
-Its easy to just append the "-supply" to a "vmmc" or "vpll"
-and derive a property name like "vmm-supply" or "vpll-supply".
+>>  static inline struct atmel_uart_port *
+>>  to_atmel_uart_port(struct uart_port *uart)
+>>  {
+>> @@ -1413,14 +1425,31 @@ static struct uart_ops atmel_pops = {
+>>  static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+>>  				      struct platform_device *pdev)
+>>  {
+>> +	struct device_node *np = pdev->dev.of_node;
+>>  	struct uart_port *port = &atmel_port->uart;
+>>  	struct atmel_uart_data *pdata = pdev->dev.platform_data;
+>> +	int ret;
+>> +
+>> +	if (np) {
+>> +		ret = of_alias_get_id(np, "serial");
+>> +		if (ret >= 0)
+>> +			port->line = ret;
+>> +		if (of_get_property(np, "atmel,use-dma-rx", NULL))
+>> +			atmel_port->use_dma_rx	= 1;
+>> +		if (of_get_property(np, "atmel,use-dma-tx", NULL))
+>> +			atmel_port->use_dma_tx	= 1;
+>> +	} else {
+>> +		port->line = pdata->num;
+>> +
+>> +		atmel_port->use_dma_rx	= pdata->use_dma_rx;
+>> +		atmel_port->use_dma_tx	= pdata->use_dma_tx;
+>> +		atmel_port->rs485	= pdata->rs485;
+>> +	}
+>>  
+>>  	port->iotype		= UPIO_MEM;
+>>  	port->flags		= UPF_BOOT_AUTOCONF;
+>>  	port->ops		= &atmel_pops;
+>>  	port->fifosize		= 1;
+>> -	port->line		= pdata->num;
+>>  	port->dev		= &pdev->dev;
+>>  	port->mapbase	= pdev->resource[0].start;
+>>  	port->irq	= pdev->resource[1].start;
+>> @@ -1430,7 +1459,7 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+>>  
+>>  	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
+>>  
+>> -	if (pdata->regs) {
+>> +	if (pdata && pdata->regs) {
+>>  		/* Already mapped by setup code */
+>>  		port->membase = pdata->regs;
+>>  	} else {
+>> @@ -1447,10 +1476,6 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+>>  		/* only enable clock when USART is in use */
+>>  	}
+>>  
+>> -	atmel_port->use_dma_rx	= pdata->use_dma_rx;
+>> -	atmel_port->use_dma_tx	= pdata->use_dma_tx;
+>> -	atmel_port->rs485	= pdata->rs485;
+>> -
+>>  	/* Use TXEMPTY for interrupt when rs485 else TXRDY or ENDTX|TXBUFE */
+>>  	if (atmel_port->rs485.flags & SER_RS485_ENABLED)
+>>  		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
+>> @@ -1710,13 +1735,27 @@ static int atmel_serial_resume(struct platform_device *pdev)
+>>  static int __devinit atmel_serial_probe(struct platform_device *pdev)
+>>  {
+>>  	struct atmel_uart_port *port;
+>> +	struct device_node *np = pdev->dev.of_node;
+>>  	struct atmel_uart_data *pdata = pdev->dev.platform_data;
+>>  	void *data;
+>>  	int ret;
+>>  
+>>  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
+>>  
+>> -	port = &atmel_ports[pdata->num];
+>> +	if (np) {
+>> +		ret = of_alias_get_id(np, "serial");
+> 
+> I'll defer to Grant on this. There aren't any other drivers using this.
 
-Now lets take the case of a regulator as a consumer:
+I took the IMX serial driver as an example which is in devicetree/next
+branch (tty/serial/imx.c).
 
-regulator vmmc {
-	...
-	...
-	vin-supply = <&vin>;
-};
+Is it the proper way to use this?
 
-Now I need to parse the "vin-supply" property during a
-regulator_register(), so I could do a set_supply() and
-create the parent/child relationship between a vin and
-vmmc.
-The problem is I don't know if the property in the regulator dt
-node is called "vin-supply" or "vxyz-supply" and hence I
-can parse the property based on a substring alone, which is
-"-supply" because all I know is the property name is expected
-to end with a "-supply".
+>> +		if (ret < 0)
+>> +			goto err;
+>> +	} else {
+>> +		if (pdata) {
+>> +			ret = pdata->num;
+>> +		} else {
+>> +			ret = -ENODEV;
+>> +			goto err;
+>> +		}
+>> +	}
+> 
+> This would a bit more concise:
+> 
+> 	} else if (pdata) {
+> 		ret = pdata->num;
+> 	} else {
+> 		ret = -ENODEV;
+> 		goto err;
+> 	}
 
-I can always add a new of_find_property_substr() which finds
-me property based on a substring value passed rather than the
-exact property-name string.
-However I don;t know if this is the best way to handle it.
-Any thoughts?
+Ok.
 
 
+Thanks for your review Rob.
 
+Best regards,
+-- 
+Nicolas Ferre
