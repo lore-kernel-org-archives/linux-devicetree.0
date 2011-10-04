@@ -1,116 +1,40 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCHv3] dt: add helper to read 64-bit integers
-Date: Tue, 4 Oct 2011 14:46:39 -0600
-Message-ID: <20111004204639.GL2870@ponder.secretlab.ca>
-References: <1316029799-10609-1-git-send-email-jamie@jamieiles.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 2/9] regulator: helper routine to extract
+	regulator_init_data
+Date: Wed, 5 Oct 2011 00:01:27 +0100
+Message-ID: <20111004230127.GB32102@n2100.arm.linux.org.uk>
+References: <1317118372-17052-1-git-send-email-rnayak@ti.com> <1317118372-17052-3-git-send-email-rnayak@ti.com> <20110927121003.GB4289@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1316029799-10609-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <20110927121003.GB4289@opensource.wolfsonmicro.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Rajendra Nayak <rnayak@ti.com>, b-cousson@ti.com, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 14, 2011 at 08:49:59PM +0100, Jamie Iles wrote:
-> Add a helper similar to of_property_read_u32() that handles 64-bit
-> integers.
+On Tue, Sep 27, 2011 at 01:10:04PM +0100, Mark Brown wrote:
+> On Tue, Sep 27, 2011 at 03:42:45PM +0530, Rajendra Nayak wrote:
 > 
-> v2/v3: constify device node and property name parameters.
+> > +	init_data = devm_kzalloc(dev, sizeof(struct regulator_init_data),
+> > +						 GFP_KERNEL);
+> > +	if (!init_data)
+> > +		return NULL; /* Out of memory? */
 > 
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> ---
-> 
-> Just a resend but with Rob's Reviewed-by added since it was a while
-> since last posted.
+> This means that the init data will be kept around for the entire
+> lifetime of the device rather than being discarded.
 
-Merged, thanks.
+May I remind you that devm_* lifetime expires whenever the associated
+driver is unbound, which can be much shorter than the lifetime of the
+struct device.
 
-g.
+It expires when any of the following occurs:
+1. userspace asks the associated driver to be unbound
+2. the driver is removed
+3. any driver probe for this struct device fails
+4. the struct device is unregistered.
 
-> 
->  drivers/of/base.c  |   29 +++++++++++++++++++++++++++++
->  include/linux/of.h |    8 ++++++++
->  2 files changed, 37 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 3ff22e3..9361cfe 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -632,6 +632,35 @@ int of_property_read_u32_array(const struct device_node *np,
->  EXPORT_SYMBOL_GPL(of_property_read_u32_array);
->  
->  /**
-> + * of_property_read_u64 - Find and read a 64 bit integer from a property
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + * @out_value:	pointer to return value, modified only if return value is 0.
-> + *
-> + * Search for a property in a device node and read a 64-bit value from
-> + * it. Returns 0 on success, -EINVAL if the property does not exist,
-> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
-> + * property data isn't large enough.
-> + *
-> + * The out_value is modified only if a valid u64 value can be decoded.
-> + */
-> +int of_property_read_u64(const struct device_node *np, const char *propname,
-> +			 u64 *out_value)
-> +{
-> +	struct property *prop = of_find_property(np, propname, NULL);
-> +
-> +	if (!prop)
-> +		return -EINVAL;
-> +	if (!prop->value)
-> +		return -ENODATA;
-> +	if (sizeof(*out_value) > prop->length)
-> +		return -EOVERFLOW;
-> +	*out_value = of_read_number(prop->value, 2);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_property_read_u64);
-> +
-> +/**
->   * of_property_read_string - Find and read a string from a property
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 9180dc5..dc5995e 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -199,6 +199,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
->  				      const char *propname,
->  				      u32 *out_values,
->  				      size_t sz);
-> +extern int of_property_read_u64(const struct device_node *np,
-> +				const char *propname, u64 *out_value);
->  
->  extern int of_property_read_string(struct device_node *np,
->  				   const char *propname,
-> @@ -263,6 +265,12 @@ static inline const void *of_get_property(const struct device_node *node,
->  	return NULL;
->  }
->  
-> +static inline int of_property_read_u64(const struct device_node *np,
-> +				       const char *propname, u64 *out_value)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
->  #endif /* CONFIG_OF */
->  
->  static inline int of_property_read_u32(const struct device_node *np,
-> -- 
-> 1.7.4.1
-> 
+So: don't use devm_* for anything other than stuff inside a driver being
+associated with the struct device itself.  Other uses are a bug waiting
+to happen.
