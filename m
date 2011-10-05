@@ -1,14 +1,15 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V2] AT91: dt: at91sam9g45 family and board device tree
-	files
-Date: Wed, 05 Oct 2011 08:00:12 -0500
-Message-ID: <4E8C54DC.6040700@gmail.com>
-References: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 2/3] mmc: Add OF bindings support for mmc host controller
+	capabilities
+Date: Wed, 05 Oct 2011 08:29:58 -0500
+Message-ID: <4E8C5BD6.2070709@gmail.com>
+References: <1317809581-28783-1-git-send-email-thomas.abraham@linaro.org>
+	<1317809581-28783-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
+In-Reply-To: <1317809581-28783-3-git-send-email-thomas.abraham@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,411 +19,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Nicolas,
+Thomas,
 
-On 10/03/2011 05:00 AM, Nicolas Ferre wrote:
-> Create a new device tree source file for Atmel at91sam9g45 SoC family.
-> The Evaluation Kit at91sam9m10g45ek includes it.
-> This first basic support will be populated as drivers and boards will be
-> converted to device tree.
-> Contains serial, dma and interrupt controllers.
+On 10/05/2011 05:13 AM, Thomas Abraham wrote:
+> Device nodes representing sd/mmc controllers in a device tree would include
+> mmc host controller capabilities. Add support for parsing of mmc host
+> controller capabilities included in device nodes.
 > 
-> The generic board file still takes advantage of platform data for early serial
-> init. As we need a storage media and the NAND flash driver is not converted to
-> DT yet, we keep old initialization for it.
-> 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 > ---
-> V2: foundation for AT91SAM generic support
-> - device tree focused board file
-> - inclusion of USART DT support
-> - early USART and NAND still using platform data
+>  .../devicetree/bindings/mmc/linux-mmc-host.txt     |   11 +++++++
+>  drivers/mmc/core/host.c                            |   31 ++++++++++++++++++++
+>  include/linux/mmc/host.h                           |    3 ++
+>  3 files changed, 45 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
 > 
->  arch/arm/boot/dts/at91sam9g45.dtsi       |  103 +++++++++++++++++++++++++
->  arch/arm/boot/dts/at91sam9m10g45ek.dts   |   37 +++++++++
->  arch/arm/mach-at91/Kconfig               |   11 +++
->  arch/arm/mach-at91/Makefile              |    3 +
->  arch/arm/mach-at91/Makefile.boot         |    2 +
->  arch/arm/mach-at91/at91sam9g45_devices.c |   24 +++++--
->  arch/arm/mach-at91/board-dt.c            |  122 ++++++++++++++++++++++++++++++
->  7 files changed, 296 insertions(+), 6 deletions(-)
->  create mode 100644 arch/arm/boot/dts/at91sam9g45.dtsi
->  create mode 100644 arch/arm/boot/dts/at91sam9m10g45ek.dts
->  create mode 100644 arch/arm/mach-at91/board-dt.c
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> diff --git a/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt b/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
 > new file mode 100644
-> index 0000000..7d3341f
+> index 0000000..cb43905
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -0,0 +1,103 @@
-> +/*
-> + * at91sam9g45.dtsi - Device Tree Include file for AT91SAM9G45 family SoC
-> + *                    applies to AT91SAM9G45, AT91SAM9M10,
-> + *                    AT91SAM9G46, AT91SAM9M11 SoC
-> + *
-> + *  Copyright (C) 2011 Atmel,
-> + *                2011 Nicolas Ferre <nicolas.ferre@atmel.com>
-> + *
-> + * Licensed under GPLv2 or later.
-> + */
+> +++ b/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
+> @@ -0,0 +1,11 @@
+> +* Linux mmc host capabilities
 > +
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	model = "Atmel AT91SAM9G45 family SoC";
-> +	compatible = "atmel,at91sam9g45";
-> +	interrupt-parent = <&aic>;
-> +
-> +	aliases {
-> +		serial0 = &dbgu;
-> +		serial1 = &usart0;
-> +		serial2 = &usart1;
-> +		serial3 = &usart2;
-> +		serial4 = &usart3;
-> +	};
-> +	cpus {
-> +		cpu@0 {
-> +			compatible = "arm,arm926ejs";
-> +		};
-> +	};
-> +
-> +	memory {
+> +MMC Host Controller capabilities used in linux:
 
-Should be memory@0x70000000
+These aren't really linux properties... Is the capabilities register
+really this broken that all these are needed? If so, perhaps just a
+straight caps register value to override with would be better.
 
-> +		reg = <0x70000000 0x10000000>;
-> +	};
-> +
-> +	ahb {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		apb {
-> +			compatible = "simple-bus";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +
-> +			aic: interrupt-controller@fffff000 {
-> +				#interrupt-cells = <1>;
-> +				compatible = "atmel,at91rm9200-aic";
-> +				interrupt-controller;
+> +- linux,mmc_cap_4_bit_data - host can do 4 bit transfers
+> +- linux,mmc_cap_mmc_highspeed - host can do MMC high-speed timing
+> +- linux,mmc_cap_sd_highspeed - host can do SD high-speed timing
+> +- linux,mmc_cap_needs_poll - host needs polling for card detection
+> +- linux,mmc_cap_8_bit_data - host can do 8 bit transfer
 
-Add "interrupt-parent;" so that the aic is not the parent of itself.
+"sdhci,1-bit-only" already exists as a binding. Perhaps add
+"sdhci,4-bit-only". No property then means can do 8-bit.
 
-> +				reg = <0xfffff000 0x200>;
-> +			};
-> +
-> +			dma: dma-controller@ffffec00 {
-> +				compatible = "atmel,at91sam9g45-hdmac";
-> +				reg = <0xffffec00 0x200>;
-> +				interrupts = <21>;
-> +				atmel,hdmac-nr-channels = <8>;
-> +				atmel,hdmac-cap-memcpy;
-> +				atmel,hdmac-cap-slave;
-> +			};
-> +
-> +			dbgu: serial@ffffee00 {
-> +				compatible = "atmel,at91sam9260-usart";
-> +				reg = <0xffffee00 0x200>;
-> +				interrupts = <1>;
-> +			};
-> +
-> +			usart0: serial@fff8c000 {
-> +				compatible = "atmel,at91sam9260-usart";
-> +				reg = <0xfff8c000 0x4000>;
+> +- linux,mmc_cap_disable - host can be disabled
 
-Is 16K really used? I would set to 4K so your not wasting virtual space
-(probably not an issue yet on Atmel parts).
+What?
 
-> +				interrupts = <7>;
-> +				atmel,use-dma-rx;
-> +				atmel,use-dma-tx;
-> +			};
-> +
-> +			usart1: serial@fff90000 {
-> +				compatible = "atmel,at91sam9260-usart";
-> +				reg = <0xfff90000 0x4000>;
-> +				interrupts = <8>;
-> +				atmel,use-dma-rx;
-> +				atmel,use-dma-tx;
-> +			};
-> +
-> +			usart2: serial@fff94000 {
-> +				compatible = "atmel,at91sam9260-usart";
-> +				reg = <0xfff94000 0x4000>;
-> +				interrupts = <9>;
-> +				atmel,use-dma-rx;
-> +				atmel,use-dma-tx;
-> +			};
-> +
-> +			usart3: serial@fff98000 {
-> +				compatible = "atmel,at91sam9260-usart";
-> +				reg = <0xfff98000 0x4000>;
-> +				interrupts = <10>;
-> +				atmel,use-dma-rx;
-> +				atmel,use-dma-tx;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> new file mode 100644
-> index 0000000..cf743de
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> @@ -0,0 +1,37 @@
-> +/*
-> + * at91sam9m10g45ek.dts - Device Tree file for AT91SAM9M10G45-EK board
-> + *
-> + *  Copyright (C) 2011 Atmel,
-> + *                2011 Nicolas Ferre <nicolas.ferre@atmel.com>
-> + *
-> + * Licensed under GPLv2 or later.
-> + */
-> +/dts-v1/;
-> +/include/ "at91sam9g45.dtsi"
-> +
-> +/ {
-> +	model = "Atmel AT91SAM9M10G45-EK";
-> +	compatible = "atmel,at91sam9m10g45ek", "atmel,at91sam9g45", "atmel,at91sam9";
-> +
-> +	chosen {
-> +		bootargs = "mem=64M console=ttyS0,115200 mtdparts=atmel_nand:4M(bootstrap/uboot/kernel)ro,60M(rootfs),-(data) root=/dev/mtdblock1 rw rootfstype=jffs2";
-> +	};
-> +
-> +	memory {
-> +		reg = <0x70000000 0x4000000>;
-> +	};
-> +
-> +	ahb {
-> +		apb {
-> +			usart0: serial@fff8c000 {
-> +				status = "disabled";
-> +			};
-> +			usart2: serial@fff94000 {
-> +				status = "disabled";
-> +			};
-> +			usart3: serial@fff98000 {
-> +				status = "disabled";
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-> index 2248467..4b59d96 100644
-> --- a/arch/arm/mach-at91/Kconfig
-> +++ b/arch/arm/mach-at91/Kconfig
-> @@ -442,6 +442,17 @@ endif
+> +- linux,mmc_cap_nonremovable - host is connected to nonremovable media
+> +- linux,mmc_cap_erase - host allows erase/trim commands
+
+Isn't TRIM a card property and transparent to the host controller?
+
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index 793d0a0..4ee2e43 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/leds.h>
+>  #include <linux/slab.h>
+>  #include <linux/suspend.h>
+> +#include <linux/of.h>
 >  
->  # ----------------------------------------------------------
->  
-> +comment "Generic Board Type"
-> +
-> +config MACH_AT91SAM_DT
-> +	bool "Atmel AT91SAM Evaluation Kits with device-tree support"
-> +	select USE_OF
-> +	help
-> +	  Select this if you want to experiment device-tree with
-> +	  an Atmel Evaluation Kit.
-> +
-> +# ----------------------------------------------------------
-> +
->  comment "AT91 Board Options"
->  
->  config MTD_AT91_DATAFLASH_CARD
-> diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
-> index bf57e8b..3ff245e 100644
-> --- a/arch/arm/mach-at91/Makefile
-> +++ b/arch/arm/mach-at91/Makefile
-> @@ -74,6 +74,9 @@ obj-$(CONFIG_MACH_SNAPPER_9260)	+= board-snapper9260.o
->  # AT91SAM9G45 board-specific support
->  obj-$(CONFIG_MACH_AT91SAM9M10G45EK) += board-sam9m10g45ek.o
->  
-> +# AT91SAM board with device-tree
-> +obj-$(CONFIG_MACH_AT91SAM_DT) += board-dt.o
-> +
->  # AT91CAP9 board-specific support
->  obj-$(CONFIG_MACH_AT91CAP9ADK)	+= board-cap9adk.o
->  
-> diff --git a/arch/arm/mach-at91/Makefile.boot b/arch/arm/mach-at91/Makefile.boot
-> index 3462b81..d278863 100644
-> --- a/arch/arm/mach-at91/Makefile.boot
-> +++ b/arch/arm/mach-at91/Makefile.boot
-> @@ -16,3 +16,5 @@ else
->  params_phys-y	:= 0x20000100
->  initrd_phys-y	:= 0x20410000
->  endif
-> +
-> +dtb-$(CONFIG_MACH_AT91SAM_DT) += at91sam9m10g45ek.dtb
-> diff --git a/arch/arm/mach-at91/at91sam9g45_devices.c b/arch/arm/mach-at91/at91sam9g45_devices.c
-> index bb84040..27276b8 100644
-> --- a/arch/arm/mach-at91/at91sam9g45_devices.c
-> +++ b/arch/arm/mach-at91/at91sam9g45_devices.c
-> @@ -69,9 +69,16 @@ static struct platform_device at_hdmac_device = {
->  
->  void __init at91_add_device_hdmac(void)
->  {
-> -	dma_cap_set(DMA_MEMCPY, atdma_pdata.cap_mask);
-> -	dma_cap_set(DMA_SLAVE, atdma_pdata.cap_mask);
-> -	platform_device_register(&at_hdmac_device);
-> +	struct device_node *of_node =
-> +		of_find_node_by_name(NULL, "dma-controller");
-
-You should really search by the compatible string.
-
-> +
-> +	if (of_node) {
-> +		of_node_put(of_node);
-> +	} else {
-> +		dma_cap_set(DMA_MEMCPY, atdma_pdata.cap_mask);
-> +		dma_cap_set(DMA_SLAVE, atdma_pdata.cap_mask);
-
-This really should be in the driver.
-
-> +		platform_device_register(&at_hdmac_device);
-> +	}
+>  #include <linux/mmc/host.h>
+>  #include <linux/mmc/card.h>
+> @@ -385,3 +386,33 @@ void mmc_free_host(struct mmc_host *host)
 >  }
->  #else
->  void __init at91_add_device_hdmac(void) {}
-> @@ -1556,10 +1563,15 @@ void __init at91_set_serial_console(unsigned portnr)
->  void __init at91_add_device_serial(void)
->  {
->  	int i;
-> +	struct device_node *of_node = of_find_node_by_name(NULL, "serial");
 >  
-> -	for (i = 0; i < ATMEL_MAX_UART; i++) {
-> -		if (at91_uarts[i])
-> -			platform_device_register(at91_uarts[i]);
-> +	if (of_node) {
-> +		of_node_put(of_node);
-> +	} else {
-> +		for (i = 0; i < ATMEL_MAX_UART; i++) {
-> +			if (at91_uarts[i])
-> +				platform_device_register(at91_uarts[i]);
-> +		}
-
-Why can't you only call these init functions when booting non-DT?
-
->  	}
->  
->  	if (!atmel_default_console_device)
-> diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
-> new file mode 100644
-> index 0000000..7bcb9a9
-> --- /dev/null
-> +++ b/arch/arm/mach-at91/board-dt.c
-> @@ -0,0 +1,122 @@
-> +/*
-> + *  Setup code for AT91SAM Evaluation Kits with Device Tree support
+>  EXPORT_SYMBOL(mmc_free_host);
+> +
+> +#ifdef CONFIG_OF
+> +/**
+> + *	mmc_of_parse_host_caps - parse mmc host capabilities from device node
+> + *	@np: pointer to device node in device tree
+> + *	@caps: pointer to host caps value to be returned
 > + *
-> + *  Covers: * AT91SAM9G45-EKES  board
-> + *          * AT91SAM9M10-EKES  board
-> + *          * AT91SAM9M10G45-EK board
-> + *
-> + *  Copyright (C) 2011 Atmel,
-> + *                2011 Nicolas Ferre <nicolas.ferre@atmel.com>
-> + *
-> + * Licensed under GPLv2 or later.
+> + *	Search the device node in device tree for mmc host capabilities.
 > + */
-> +
-> +#include <linux/types.h>
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +
-> +#include <mach/hardware.h>
-> +#include <mach/board.h>
-> +#include <mach/gpio.h>
-> +#include <mach/system_rev.h>
-> +#include <mach/at91sam9_smc.h>
-> +
-> +#include <asm/setup.h>
-> +#include <asm/irq.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach/map.h>
-> +#include <asm/mach/irq.h>
-> +
-> +#include "sam9_smc.h"
-> +#include "generic.h"
-> +
-> +
-> +static void __init ek_init_early(void)
+> +void mmc_of_parse_host_caps(struct device_node *np, unsigned long *caps)
 > +{
-> +	/* Initialize processor: 12.000 MHz crystal */
-> +	at91_initialize(12000000);
-> +
-> +	/* DGBU on ttyS0. (Rx & Tx only) */
-> +	at91_register_uart(0, 0, 0);
-> +
-> +	/* USART0 not connected on the -EK board */
-> +	/* USART1 on ttyS2. (Rx, Tx, RTS, CTS) */
-> +	at91_register_uart(AT91SAM9G45_ID_US1, 2, ATMEL_UART_CTS | ATMEL_UART_RTS);
-> +
-> +	/* set serial console to ttyS0 (ie, DBGU) */
-> +	at91_set_serial_console(0);
+> +	if (of_find_property(np, "linux,mmc_cap_4_bit_data", NULL))
+> +		*caps |= MMC_CAP_4_BIT_DATA;
+> +	if (of_find_property(np, "linux,mmc_cap_mmc_highspeed", NULL))
+> +		*caps |= MMC_CAP_MMC_HIGHSPEED;
+> +	if (of_find_property(np, "linux,mmc_cap_sd_highspeed", NULL))
+> +		*caps |= MMC_CAP_SD_HIGHSPEED;
+> +	if (of_find_property(np, "linux,mmc_cap_needs_poll", NULL))
+> +		*caps |= MMC_CAP_NEEDS_POLL;
+> +	if (of_find_property(np, "linux,mmc_cap_8_bit_data", NULL))
+> +		*caps |= MMC_CAP_8_BIT_DATA;
+> +	if (of_find_property(np, "linux,mmc_cap_disable", NULL))
+> +		*caps |= MMC_CAP_DISABLE;
+> +	if (of_find_property(np, "linux,mmc_cap_nonremovable", NULL))
+> +		*caps |= MMC_CAP_NONREMOVABLE;
+> +	if (of_find_property(np, "linux,mmc_cap_erase", NULL))
+> +		*caps |= MMC_CAP_ERASE;
 > +}
-> +
-> +/* det_pin is not connected */
-> +static struct atmel_nand_data __initdata ek_nand_data = {
-> +	.ale		= 21,
-> +	.cle		= 22,
-> +	.rdy_pin	= AT91_PIN_PC8,
-> +	.enable_pin	= AT91_PIN_PC14,
-> +};
-> +
-> +static struct sam9_smc_config __initdata ek_nand_smc_config = {
-> +	.ncs_read_setup		= 0,
-> +	.nrd_setup		= 2,
-> +	.ncs_write_setup	= 0,
-> +	.nwe_setup		= 2,
-> +
-> +	.ncs_read_pulse		= 4,
-> +	.nrd_pulse		= 4,
-> +	.ncs_write_pulse	= 4,
-> +	.nwe_pulse		= 4,
-> +
-> +	.read_cycle		= 7,
-> +	.write_cycle		= 7,
-> +
-> +	.mode			= AT91_SMC_READMODE | AT91_SMC_WRITEMODE | AT91_SMC_EXNWMODE_DISABLE,
-> +	.tdf_cycles		= 3,
-> +};
-> +
-> +static void __init ek_add_device_nand(void)
-> +{
-> +	ek_nand_data.bus_width_16 = board_have_nand_16bit();
-> +	/* setup bus-width (8 or 16) */
-> +	if (ek_nand_data.bus_width_16)
-> +		ek_nand_smc_config.mode |= AT91_SMC_DBW_16;
-> +	else
-> +		ek_nand_smc_config.mode |= AT91_SMC_DBW_8;
-> +
-> +	/* configure chip-select 3 (NAND) */
-> +	sam9_smc_configure(3, &ek_nand_smc_config);
-> +
-> +	at91_add_device_nand(&ek_nand_data);
-> +}
-> +
-> +static const struct of_device_id aic_of_match[] __initconst = {
-> +	{ .compatible = "atmel,at91rm9200-aic", },
-> +	{},
-> +};
-> +
-> +static void __init at91_dt_device_init(void)
-> +{
-> +	irq_domain_generate_simple(aic_of_match, 0xfffff000, 0);
+> +EXPORT_SYMBOL(mmc_of_parse_host_caps);
+> +#endif /* CONFIG_OF */
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 1d09562..72b5df2 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -309,6 +309,9 @@ extern struct mmc_host *mmc_alloc_host(int extra, struct device *);
+>  extern int mmc_add_host(struct mmc_host *);
+>  extern void mmc_remove_host(struct mmc_host *);
+>  extern void mmc_free_host(struct mmc_host *);
+> +#ifdef CONFIG_OF
+> +extern void mmc_of_parse_host_caps(struct device_node *np, unsigned long *caps);
+> +#endif
 
-Why is this not in the .init_irq function? I'm surprised your timer
-interrupt even works.
+You don't need a ifdef around this.
 
 Rob
