@@ -1,51 +1,60 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/9] regulator: helper routine to extract
- regulator_init_data
-Date: Tue, 4 Oct 2011 17:48:05 -0600
-Message-ID: <20111004234805.GJ3009@ponder.secretlab.ca>
-References: <1317118372-17052-1-git-send-email-rnayak@ti.com>
- <1317118372-17052-3-git-send-email-rnayak@ti.com>
- <20110927121003.GB4289@opensource.wolfsonmicro.com>
- <20111004230127.GB32102@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111004230127.GB32102@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Rajendra Nayak <rnayak@ti.com>, b-cousson@ti.com, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 1/3] mmc: sdhci-s3c: Keep a copy of platform data and use it
+Date: Wed, 05 Oct 2011 15:42:59 +0530
+Message-ID: <1317809581-28783-2-git-send-email-thomas.abraham@linaro.org>
+References: <1317809581-28783-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1317809581-28783-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 05, 2011 at 12:01:27AM +0100, Russell King - ARM Linux wrote:
-> On Tue, Sep 27, 2011 at 01:10:04PM +0100, Mark Brown wrote:
-> > On Tue, Sep 27, 2011 at 03:42:45PM +0530, Rajendra Nayak wrote:
-> > 
-> > > +	init_data = devm_kzalloc(dev, sizeof(struct regulator_init_data),
-> > > +						 GFP_KERNEL);
-> > > +	if (!init_data)
-> > > +		return NULL; /* Out of memory? */
-> > 
-> > This means that the init data will be kept around for the entire
-> > lifetime of the device rather than being discarded.
-> 
-> May I remind you that devm_* lifetime expires whenever the associated
-> driver is unbound, which can be much shorter than the lifetime of the
-> struct device.
-> 
-> It expires when any of the following occurs:
-> 1. userspace asks the associated driver to be unbound
-> 2. the driver is removed
-> 3. any driver probe for this struct device fails
-> 4. the struct device is unregistered.
-> 
-> So: don't use devm_* for anything other than stuff inside a driver being
-> associated with the struct device itself.  Other uses are a bug waiting
-> to happen.
+The platform data is copied into driver's private data and the copy is
+used for all access to the platform data. This simpifies the addition
+of device tree support for the sdhci-s3c driver.
 
-Yes, Russell is right.  There were a number of places where I
-suggested using devm_* in entirely the wrong places.  Double check
-anyplace where you've added devm_ calls.
+Cc: Ben Dooks <ben-linux@fluff.org>
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+---
+ drivers/mmc/host/sdhci-s3c.c |   11 +++++++++--
+ 1 files changed, 9 insertions(+), 2 deletions(-)
 
-g.
-
+diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
+index 871cf4f..8280af0 100644
+--- a/drivers/mmc/host/sdhci-s3c.c
++++ b/drivers/mmc/host/sdhci-s3c.c
+@@ -424,7 +424,7 @@ static inline struct sdhci_s3c_drv_data *sdhci_s3c_get_driver_data(
+ 
+ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
+ {
+-	struct s3c_sdhci_platdata *pdata = pdev->dev.platform_data;
++	struct s3c_sdhci_platdata *pdata;
+ 	struct sdhci_s3c_drv_data *drv_data;
+ 	struct device *dev = &pdev->dev;
+ 	struct sdhci_host *host;
+@@ -432,7 +432,7 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	int ret, irq, ptr, clks;
+ 
+-	if (!pdata) {
++	if (!pdev->dev.platform_data) {
+ 		dev_err(dev, "no device data specified\n");
+ 		return -ENOENT;
+ 	}
+@@ -455,6 +455,13 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(host);
+ 	}
+ 
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata) {
++		ret = -ENOMEM;
++		goto err_io_clk;
++	}
++	memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
++
+ 	drv_data = sdhci_s3c_get_driver_data(pdev);
+ 	sc = sdhci_priv(host);
+ 
+-- 
+1.6.6.rc2
