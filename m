@@ -1,366 +1,428 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/3] mmc: sdhci-s3c: Add device tree support
-Date: Wed, 05 Oct 2011 15:43:01 +0530
-Message-ID: <1317809581-28783-4-git-send-email-thomas.abraham@linaro.org>
-References: <1317809581-28783-1-git-send-email-thomas.abraham@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH V2] AT91: dt: at91sam9g45 family and board device tree
+	files
+Date: Wed, 05 Oct 2011 08:00:12 -0500
+Message-ID: <4E8C54DC.6040700@gmail.com>
+References: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1317809581-28783-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
-	<mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree based discovery support for Samsung's sdhci controller
+Nicolas,
 
-Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/mmc/samsung-sdhci.txt      |   75 ++++++++++
- drivers/mmc/host/sdhci-s3c.c                       |  150 +++++++++++++++++++-
- 2 files changed, 219 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/samsung-sdhci.txt
+On 10/03/2011 05:00 AM, Nicolas Ferre wrote:
+> Create a new device tree source file for Atmel at91sam9g45 SoC family.
+> The Evaluation Kit at91sam9m10g45ek includes it.
+> This first basic support will be populated as drivers and boards will be
+> converted to device tree.
+> Contains serial, dma and interrupt controllers.
+> 
+> The generic board file still takes advantage of platform data for early serial
+> init. As we need a storage media and the NAND flash driver is not converted to
+> DT yet, we keep old initialization for it.
+> 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+> V2: foundation for AT91SAM generic support
+> - device tree focused board file
+> - inclusion of USART DT support
+> - early USART and NAND still using platform data
+> 
+>  arch/arm/boot/dts/at91sam9g45.dtsi       |  103 +++++++++++++++++++++++++
+>  arch/arm/boot/dts/at91sam9m10g45ek.dts   |   37 +++++++++
+>  arch/arm/mach-at91/Kconfig               |   11 +++
+>  arch/arm/mach-at91/Makefile              |    3 +
+>  arch/arm/mach-at91/Makefile.boot         |    2 +
+>  arch/arm/mach-at91/at91sam9g45_devices.c |   24 +++++--
+>  arch/arm/mach-at91/board-dt.c            |  122 ++++++++++++++++++++++++++++++
+>  7 files changed, 296 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/at91sam9g45.dtsi
+>  create mode 100644 arch/arm/boot/dts/at91sam9m10g45ek.dts
+>  create mode 100644 arch/arm/mach-at91/board-dt.c
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> new file mode 100644
+> index 0000000..7d3341f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> @@ -0,0 +1,103 @@
+> +/*
+> + * at91sam9g45.dtsi - Device Tree Include file for AT91SAM9G45 family SoC
+> + *                    applies to AT91SAM9G45, AT91SAM9M10,
+> + *                    AT91SAM9G46, AT91SAM9M11 SoC
+> + *
+> + *  Copyright (C) 2011 Atmel,
+> + *                2011 Nicolas Ferre <nicolas.ferre@atmel.com>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	model = "Atmel AT91SAM9G45 family SoC";
+> +	compatible = "atmel,at91sam9g45";
+> +	interrupt-parent = <&aic>;
+> +
+> +	aliases {
+> +		serial0 = &dbgu;
+> +		serial1 = &usart0;
+> +		serial2 = &usart1;
+> +		serial3 = &usart2;
+> +		serial4 = &usart3;
+> +	};
+> +	cpus {
+> +		cpu@0 {
+> +			compatible = "arm,arm926ejs";
+> +		};
+> +	};
+> +
+> +	memory {
 
-diff --git a/Documentation/devicetree/bindings/mmc/samsung-sdhci.txt b/Documentation/devicetree/bindings/mmc/samsung-sdhci.txt
-new file mode 100644
-index 0000000..dc94d24
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/samsung-sdhci.txt
-@@ -0,0 +1,75 @@
-+* Samsung's SDHCI Controller device tree bindings
-+
-+Samsung's SDHCI controller is used as a connectivity interface with external
-+MMC, SD and eMMC storage mediums.
-+
-+Required SoC Specific Properties:
-+- compatible: should be one of the following
-+  - "samsung,s3c6410-sdhci": For controllers compatible with s3c6410 sdhci
-+    controller.
-+  - "samsung,exynos4-sdhci": For controller compatible with Exynos4 sdhci
-+    controller.
-+
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+
-+- interrupts: The interrupt number to the cpu. The interrupt specifier format
-+  depends on the interrupt controller.
-+
-+
-+Required Board Specific Properties:
-+- gpios: Should specify the gpios used for clock, command and data lines. The
-+  gpio specifier format depends on the gpio controller. Note: There is no
-+  particular order in which the gpio's have to be listed.
-+
-+
-+Optional Board Specific Properties:
-+- samsung,sdhci-bus-width: Number of data lines connected to the controller.
-+  Note: This excludes the clock,command and card detect lines. If this property
-+  is not specified, default value is 1.
-+
-+- samsung,cd-gpio-invert: If 'samsung,sdhci-cd-gpio' card detect method is
-+  selected, this property can be optionally specified to invert the value of
-+  external card detect gpio line.
-+
-+- One of the following properties for card detect type.
-+  - samsung,sdhci-cd-internal: Card detect line from the card slot  is
-+    connected to the card detect pad of the sdhci controller. A gpio is
-+    used for this connection (with possible pin function settings).
-+  - samsung,sdhci-cd-gpio: A gpio line (with possible pin function settings)
-+    is used a card detect line. This gpio line is not connected to card detect
-+    pad of the sdhci controller.
-+  - samsung,sdhci-cd-none: There is no card detect line. Polling is used to
-+    detect the presence of the card. (DEFAULT, if no card detect property
-+    is specified).
-+  - samsung,sdhci-cd-permanent: There is no card detect line. The card is
-+    permanently connected to the sdhci controller.
-+
-+- gpio-cd: The gpio to be used as card detect line for
-+  'samsung,sdhci-cd-internal' or 'samsung,sdhci-cd-gpio' card detection method.
-+  The gpio specifier format depends on the gpio controller.
-+
-+- One or more of the linux specific mmc host bindings.
-+  See Documentation/devicetree/bindings/mmc/linux-mmc-host.txt for all the
-+  linux mmc host controller specific bindings.
-+
-+Example:
-+	sdhci@12530000 {
-+		compatible = "samsung,exynos4-sdhci";
-+		reg = <0x12530000 0x100>;
-+		interrupts = <139>;
-+		samsung,sdhci-bus-width = <4>;
-+		linux,mmc_cap_4_bit_data;
-+		samsung,sdhci-cd-internal;
-+		gpio-cd = <&gpk2 2 2 3 3>;
-+		gpios = <&gpk2 0 2 0 3>,  /* clock line */
-+			<&gpk2 1 2 0 3>,  /* command line */
-+			<&gpk2 3 2 3 3>,  /* data line 0 */
-+			<&gpk2 4 2 3 3>,  /* data line 1 */
-+			<&gpk2 5 2 3 3>,  /* data line 2 */
-+			<&gpk2 6 2 3 3>;  /* data line 3 */
-+	};
-+
-+	Note: This example shows both SoC specific and board specific properties
-+	in a single device node. The properties can be actually be seperated
-+	into SoC specific node and board specific node.
-diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
-index 8280af0..047c404 100644
---- a/drivers/mmc/host/sdhci-s3c.c
-+++ b/drivers/mmc/host/sdhci-s3c.c
-@@ -20,6 +20,8 @@
- #include <linux/io.h>
- #include <linux/gpio.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- 
- #include <linux/mmc/host.h>
- 
-@@ -29,6 +31,8 @@
- #include "sdhci.h"
- 
- #define MAX_BUS_CLK	(4)
-+/* Number of gpio's used is max data bus width + command and clock lines */
-+#define NUM_GPIOS(x)	(x + 2)
- 
- /**
-  * struct sdhci_s3c - S3C SDHCI instance
-@@ -48,6 +52,7 @@ struct sdhci_s3c {
- 	unsigned int		cur_clk;
- 	int			ext_cd_irq;
- 	int			ext_cd_gpio;
-+	int			*gpios;
- 
- 	struct clk		*clk_io;
- 	struct clk		*clk_bus[MAX_BUS_CLK];
-@@ -415,9 +420,110 @@ static void sdhci_s3c_setup_card_detect_gpio(struct sdhci_s3c *sc)
- 	}
- }
- 
-+#ifdef CONFIG_OF
-+static int __devinit sdhci_s3c_parse_dt(struct device *dev,
-+		struct sdhci_host *host, struct s3c_sdhci_platdata *pdata)
-+{
-+	struct device_node *node = dev->of_node;
-+	struct sdhci_s3c *ourhost = to_s3c(host);
-+	u32 max_width;
-+	int gpio, cnt, ret;
-+
-+	/* if the bus-width property is not specified, assume width as 1 */
-+	if (of_property_read_u32(node, "samsung,sdhci-bus-width",
-+				&max_width))
-+		max_width = 1;
-+	pdata->max_width = max_width;
-+
-+	ourhost->gpios = devm_kzalloc(dev, NUM_GPIOS(pdata->max_width) *
-+				sizeof(int), GFP_KERNEL);
-+	if (!ourhost->gpios)
-+		return -ENOMEM;
-+
-+	mmc_of_parse_host_caps(node, (unsigned long *)&pdata->host_caps);
-+
-+	/* get the card detection method */
-+	if (of_get_property(node, "samsung,sdhci-cd-internal", NULL))
-+		pdata->cd_type = S3C_SDHCI_CD_INTERNAL;
-+	else if (of_get_property(node, "samsung,sdhci-cd-gpio", NULL))
-+		pdata->cd_type = S3C_SDHCI_CD_GPIO;
-+	else if (of_get_property(node, "samsung,sdhci-cd-none", NULL))
-+		pdata->cd_type = S3C_SDHCI_CD_NONE;
-+	else if (of_get_property(node, "samsung,sdhci-cd-permanent", NULL))
-+		pdata->cd_type = S3C_SDHCI_CD_PERMANENT;
-+	else
-+		pdata->cd_type = S3C_SDHCI_CD_NONE;
-+
-+	/* get the gpio used for card detection */
-+	if (pdata->cd_type == S3C_SDHCI_CD_GPIO || S3C_SDHCI_CD_INTERNAL) {
-+		gpio = of_get_named_gpio(node, "gpio-cd", 0);
-+		if (!gpio_is_valid(gpio)) {
-+			dev_err(dev, "invalid card detect gpio specified\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (pdata->cd_type == S3C_SDHCI_CD_GPIO) {
-+		pdata->ext_cd_gpio = gpio;
-+		ourhost->ext_cd_gpio = -1; /* invalid gpio number */
-+		if (of_get_property(node, "samsung,cd-gpio-invert", NULL))
-+			pdata->ext_cd_gpio_invert = 1;
-+	} else if (pdata->cd_type == S3C_SDHCI_CD_INTERNAL) {
-+		ret = gpio_request(gpio, "sdhci-cd");
-+		if (ret) {
-+			dev_err(dev, "card detect gpio request failed\n");
-+			return -EINVAL;
-+		}
-+		ourhost->ext_cd_gpio = gpio;
-+	}
-+
-+	/* get the gpios for command, clock and data lines */
-+	for (cnt = 0; cnt < NUM_GPIOS(pdata->max_width); cnt++) {
-+		gpio = of_get_gpio(node, cnt);
-+		if (!gpio_is_valid(gpio)) {
-+			dev_err(dev, "invalid gpio[%d]\n", cnt);
-+			goto err_free_dt_cd_gpio;
-+		}
-+		ourhost->gpios[cnt] = gpio;
-+	}
-+
-+	for (cnt = 0; cnt < NUM_GPIOS(pdata->max_width); cnt++) {
-+		ret = gpio_request(ourhost->gpios[cnt], "sdhci-gpio");
-+		if (ret) {
-+			dev_err(dev, "gpio[%d] request failed\n", cnt);
-+			goto err_free_dt_gpios;
-+		}
-+	}
-+
-+	return 0;
-+
-+ err_free_dt_gpios:
-+	while (--cnt >= 0)
-+		gpio_free(ourhost->gpios[cnt]);
-+ err_free_dt_cd_gpio:
-+	if (pdata->cd_type == S3C_SDHCI_CD_INTERNAL)
-+		gpio_free(ourhost->ext_cd_gpio);
-+	return -EINVAL;
-+}
-+#else
-+static int __devinit sdhci_s3c_parse_dt(struct device *dev,
-+		struct sdhci_host *host, struct s3c_sdhci_platdata *pdata)
-+{
-+}
-+#endif
-+
-+static const struct of_device_id sdhci_s3c_dt_match[];
-+
- static inline struct sdhci_s3c_drv_data *sdhci_s3c_get_driver_data(
- 			struct platform_device *pdev)
- {
-+#if CONFIG_OF
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(sdhci_s3c_dt_match, pdev->dev.of_node);
-+		return (struct sdhci_s3c_drv_data *)match->data;
-+	}
-+#endif
- 	return (struct sdhci_s3c_drv_data *)
- 			platform_get_device_id(pdev)->driver_data;
- }
-@@ -432,7 +538,7 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	int ret, irq, ptr, clks;
- 
--	if (!pdev->dev.platform_data) {
-+	if (!pdev->dev.platform_data && !pdev->dev.of_node) {
- 		dev_err(dev, "no device data specified\n");
- 		return -ENOENT;
- 	}
-@@ -454,21 +560,28 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
- 		dev_err(dev, "sdhci_alloc_host() failed\n");
- 		return PTR_ERR(host);
- 	}
-+	sc = sdhci_priv(host);
- 
- 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata) {
- 		ret = -ENOMEM;
--		goto err_io_clk;
-+		goto err_pdata;
-+	}
-+
-+	if (pdev->dev.of_node) {
-+		ret = sdhci_s3c_parse_dt(&pdev->dev, host, pdata);
-+		if (ret)
-+			goto err_pdata;
-+	} else {
-+		memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
-+		sc->ext_cd_gpio = -1; /* invalid gpio number */
- 	}
--	memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
- 
- 	drv_data = sdhci_s3c_get_driver_data(pdev);
--	sc = sdhci_priv(host);
- 
- 	sc->host = host;
- 	sc->pdev = pdev;
- 	sc->pdata = pdata;
--	sc->ext_cd_gpio = -1; /* invalid gpio number */
- 
- 	platform_set_drvdata(pdev, host);
- 
-@@ -625,6 +738,12 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
- 	clk_put(sc->clk_io);
- 
-  err_io_clk:
-+	for (ptr = 0; ptr < NUM_GPIOS(sc->pdata->max_width); ptr++)
-+		gpio_free(sc->gpios[ptr]);
-+	if (pdata->cd_type == S3C_SDHCI_CD_INTERNAL)
-+		gpio_free(sc->ext_cd_gpio);
-+
-+ err_pdata:
- 	sdhci_free_host(host);
- 
- 	return ret;
-@@ -632,9 +751,9 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
- 
- static int __devexit sdhci_s3c_remove(struct platform_device *pdev)
- {
--	struct s3c_sdhci_platdata *pdata = pdev->dev.platform_data;
- 	struct sdhci_host *host =  platform_get_drvdata(pdev);
- 	struct sdhci_s3c *sc = sdhci_priv(host);
-+	struct s3c_sdhci_platdata *pdata = sc->pdata;
- 	int ptr;
- 
- 	if (pdata->cd_type == S3C_SDHCI_CD_EXTERNAL && pdata->ext_cd_cleanup)
-@@ -661,6 +780,11 @@ static int __devexit sdhci_s3c_remove(struct platform_device *pdev)
- 	release_resource(sc->ioarea);
- 	kfree(sc->ioarea);
- 
-+	if (pdev->dev.of_node) {
-+		for (ptr = 0; ptr < NUM_GPIOS(sc->pdata->max_width); ptr++)
-+			gpio_free(sc->gpios[ptr]);
-+	}
-+
- 	sdhci_free_host(host);
- 	platform_set_drvdata(pdev, NULL);
- 
-@@ -706,9 +830,22 @@ static struct platform_device_id sdhci_s3c_driver_ids[] = {
- 		.name		= "exynos4-sdhci",
- 		.driver_data	= EXYNOS4_SDHCI_DRV_DATA,
- 	},
-+	{},
- };
- MODULE_DEVICE_TABLE(platform, sdhci_s3c_driver_ids);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id sdhci_s3c_dt_match[] = {
-+	{ .compatible = "samsung,s3c6410-sdhci", },
-+	{ .compatible = "samsung,exynos4-sdhci",
-+		.data = &exynos4_sdhci_drv_data },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
-+#else
-+#define sdhci_s3c_dt_match NULL
-+#endif
-+
- static struct platform_driver sdhci_s3c_driver = {
- 	.probe		= sdhci_s3c_probe,
- 	.remove		= __devexit_p(sdhci_s3c_remove),
-@@ -718,6 +855,7 @@ static struct platform_driver sdhci_s3c_driver = {
- 	.driver		= {
- 		.owner	= THIS_MODULE,
- 		.name	= "s3c-sdhci",
-+		.of_match_table = sdhci_s3c_dt_match,
- 	},
- };
- 
--- 
-1.6.6.rc2
+Should be memory@0x70000000
+
+> +		reg = <0x70000000 0x10000000>;
+> +	};
+> +
+> +	ahb {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		apb {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			aic: interrupt-controller@fffff000 {
+> +				#interrupt-cells = <1>;
+> +				compatible = "atmel,at91rm9200-aic";
+> +				interrupt-controller;
+
+Add "interrupt-parent;" so that the aic is not the parent of itself.
+
+> +				reg = <0xfffff000 0x200>;
+> +			};
+> +
+> +			dma: dma-controller@ffffec00 {
+> +				compatible = "atmel,at91sam9g45-hdmac";
+> +				reg = <0xffffec00 0x200>;
+> +				interrupts = <21>;
+> +				atmel,hdmac-nr-channels = <8>;
+> +				atmel,hdmac-cap-memcpy;
+> +				atmel,hdmac-cap-slave;
+> +			};
+> +
+> +			dbgu: serial@ffffee00 {
+> +				compatible = "atmel,at91sam9260-usart";
+> +				reg = <0xffffee00 0x200>;
+> +				interrupts = <1>;
+> +			};
+> +
+> +			usart0: serial@fff8c000 {
+> +				compatible = "atmel,at91sam9260-usart";
+> +				reg = <0xfff8c000 0x4000>;
+
+Is 16K really used? I would set to 4K so your not wasting virtual space
+(probably not an issue yet on Atmel parts).
+
+> +				interrupts = <7>;
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +			};
+> +
+> +			usart1: serial@fff90000 {
+> +				compatible = "atmel,at91sam9260-usart";
+> +				reg = <0xfff90000 0x4000>;
+> +				interrupts = <8>;
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +			};
+> +
+> +			usart2: serial@fff94000 {
+> +				compatible = "atmel,at91sam9260-usart";
+> +				reg = <0xfff94000 0x4000>;
+> +				interrupts = <9>;
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +			};
+> +
+> +			usart3: serial@fff98000 {
+> +				compatible = "atmel,at91sam9260-usart";
+> +				reg = <0xfff98000 0x4000>;
+> +				interrupts = <10>;
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> new file mode 100644
+> index 0000000..cf743de
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+> @@ -0,0 +1,37 @@
+> +/*
+> + * at91sam9m10g45ek.dts - Device Tree file for AT91SAM9M10G45-EK board
+> + *
+> + *  Copyright (C) 2011 Atmel,
+> + *                2011 Nicolas Ferre <nicolas.ferre@atmel.com>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +/dts-v1/;
+> +/include/ "at91sam9g45.dtsi"
+> +
+> +/ {
+> +	model = "Atmel AT91SAM9M10G45-EK";
+> +	compatible = "atmel,at91sam9m10g45ek", "atmel,at91sam9g45", "atmel,at91sam9";
+> +
+> +	chosen {
+> +		bootargs = "mem=64M console=ttyS0,115200 mtdparts=atmel_nand:4M(bootstrap/uboot/kernel)ro,60M(rootfs),-(data) root=/dev/mtdblock1 rw rootfstype=jffs2";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x70000000 0x4000000>;
+> +	};
+> +
+> +	ahb {
+> +		apb {
+> +			usart0: serial@fff8c000 {
+> +				status = "disabled";
+> +			};
+> +			usart2: serial@fff94000 {
+> +				status = "disabled";
+> +			};
+> +			usart3: serial@fff98000 {
+> +				status = "disabled";
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
+> index 2248467..4b59d96 100644
+> --- a/arch/arm/mach-at91/Kconfig
+> +++ b/arch/arm/mach-at91/Kconfig
+> @@ -442,6 +442,17 @@ endif
+>  
+>  # ----------------------------------------------------------
+>  
+> +comment "Generic Board Type"
+> +
+> +config MACH_AT91SAM_DT
+> +	bool "Atmel AT91SAM Evaluation Kits with device-tree support"
+> +	select USE_OF
+> +	help
+> +	  Select this if you want to experiment device-tree with
+> +	  an Atmel Evaluation Kit.
+> +
+> +# ----------------------------------------------------------
+> +
+>  comment "AT91 Board Options"
+>  
+>  config MTD_AT91_DATAFLASH_CARD
+> diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
+> index bf57e8b..3ff245e 100644
+> --- a/arch/arm/mach-at91/Makefile
+> +++ b/arch/arm/mach-at91/Makefile
+> @@ -74,6 +74,9 @@ obj-$(CONFIG_MACH_SNAPPER_9260)	+= board-snapper9260.o
+>  # AT91SAM9G45 board-specific support
+>  obj-$(CONFIG_MACH_AT91SAM9M10G45EK) += board-sam9m10g45ek.o
+>  
+> +# AT91SAM board with device-tree
+> +obj-$(CONFIG_MACH_AT91SAM_DT) += board-dt.o
+> +
+>  # AT91CAP9 board-specific support
+>  obj-$(CONFIG_MACH_AT91CAP9ADK)	+= board-cap9adk.o
+>  
+> diff --git a/arch/arm/mach-at91/Makefile.boot b/arch/arm/mach-at91/Makefile.boot
+> index 3462b81..d278863 100644
+> --- a/arch/arm/mach-at91/Makefile.boot
+> +++ b/arch/arm/mach-at91/Makefile.boot
+> @@ -16,3 +16,5 @@ else
+>  params_phys-y	:= 0x20000100
+>  initrd_phys-y	:= 0x20410000
+>  endif
+> +
+> +dtb-$(CONFIG_MACH_AT91SAM_DT) += at91sam9m10g45ek.dtb
+> diff --git a/arch/arm/mach-at91/at91sam9g45_devices.c b/arch/arm/mach-at91/at91sam9g45_devices.c
+> index bb84040..27276b8 100644
+> --- a/arch/arm/mach-at91/at91sam9g45_devices.c
+> +++ b/arch/arm/mach-at91/at91sam9g45_devices.c
+> @@ -69,9 +69,16 @@ static struct platform_device at_hdmac_device = {
+>  
+>  void __init at91_add_device_hdmac(void)
+>  {
+> -	dma_cap_set(DMA_MEMCPY, atdma_pdata.cap_mask);
+> -	dma_cap_set(DMA_SLAVE, atdma_pdata.cap_mask);
+> -	platform_device_register(&at_hdmac_device);
+> +	struct device_node *of_node =
+> +		of_find_node_by_name(NULL, "dma-controller");
+
+You should really search by the compatible string.
+
+> +
+> +	if (of_node) {
+> +		of_node_put(of_node);
+> +	} else {
+> +		dma_cap_set(DMA_MEMCPY, atdma_pdata.cap_mask);
+> +		dma_cap_set(DMA_SLAVE, atdma_pdata.cap_mask);
+
+This really should be in the driver.
+
+> +		platform_device_register(&at_hdmac_device);
+> +	}
+>  }
+>  #else
+>  void __init at91_add_device_hdmac(void) {}
+> @@ -1556,10 +1563,15 @@ void __init at91_set_serial_console(unsigned portnr)
+>  void __init at91_add_device_serial(void)
+>  {
+>  	int i;
+> +	struct device_node *of_node = of_find_node_by_name(NULL, "serial");
+>  
+> -	for (i = 0; i < ATMEL_MAX_UART; i++) {
+> -		if (at91_uarts[i])
+> -			platform_device_register(at91_uarts[i]);
+> +	if (of_node) {
+> +		of_node_put(of_node);
+> +	} else {
+> +		for (i = 0; i < ATMEL_MAX_UART; i++) {
+> +			if (at91_uarts[i])
+> +				platform_device_register(at91_uarts[i]);
+> +		}
+
+Why can't you only call these init functions when booting non-DT?
+
+>  	}
+>  
+>  	if (!atmel_default_console_device)
+> diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
+> new file mode 100644
+> index 0000000..7bcb9a9
+> --- /dev/null
+> +++ b/arch/arm/mach-at91/board-dt.c
+> @@ -0,0 +1,122 @@
+> +/*
+> + *  Setup code for AT91SAM Evaluation Kits with Device Tree support
+> + *
+> + *  Covers: * AT91SAM9G45-EKES  board
+> + *          * AT91SAM9M10-EKES  board
+> + *          * AT91SAM9M10G45-EK board
+> + *
+> + *  Copyright (C) 2011 Atmel,
+> + *                2011 Nicolas Ferre <nicolas.ferre@atmel.com>
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +
+> +#include <linux/types.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +
+> +#include <mach/hardware.h>
+> +#include <mach/board.h>
+> +#include <mach/gpio.h>
+> +#include <mach/system_rev.h>
+> +#include <mach/at91sam9_smc.h>
+> +
+> +#include <asm/setup.h>
+> +#include <asm/irq.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/map.h>
+> +#include <asm/mach/irq.h>
+> +
+> +#include "sam9_smc.h"
+> +#include "generic.h"
+> +
+> +
+> +static void __init ek_init_early(void)
+> +{
+> +	/* Initialize processor: 12.000 MHz crystal */
+> +	at91_initialize(12000000);
+> +
+> +	/* DGBU on ttyS0. (Rx & Tx only) */
+> +	at91_register_uart(0, 0, 0);
+> +
+> +	/* USART0 not connected on the -EK board */
+> +	/* USART1 on ttyS2. (Rx, Tx, RTS, CTS) */
+> +	at91_register_uart(AT91SAM9G45_ID_US1, 2, ATMEL_UART_CTS | ATMEL_UART_RTS);
+> +
+> +	/* set serial console to ttyS0 (ie, DBGU) */
+> +	at91_set_serial_console(0);
+> +}
+> +
+> +/* det_pin is not connected */
+> +static struct atmel_nand_data __initdata ek_nand_data = {
+> +	.ale		= 21,
+> +	.cle		= 22,
+> +	.rdy_pin	= AT91_PIN_PC8,
+> +	.enable_pin	= AT91_PIN_PC14,
+> +};
+> +
+> +static struct sam9_smc_config __initdata ek_nand_smc_config = {
+> +	.ncs_read_setup		= 0,
+> +	.nrd_setup		= 2,
+> +	.ncs_write_setup	= 0,
+> +	.nwe_setup		= 2,
+> +
+> +	.ncs_read_pulse		= 4,
+> +	.nrd_pulse		= 4,
+> +	.ncs_write_pulse	= 4,
+> +	.nwe_pulse		= 4,
+> +
+> +	.read_cycle		= 7,
+> +	.write_cycle		= 7,
+> +
+> +	.mode			= AT91_SMC_READMODE | AT91_SMC_WRITEMODE | AT91_SMC_EXNWMODE_DISABLE,
+> +	.tdf_cycles		= 3,
+> +};
+> +
+> +static void __init ek_add_device_nand(void)
+> +{
+> +	ek_nand_data.bus_width_16 = board_have_nand_16bit();
+> +	/* setup bus-width (8 or 16) */
+> +	if (ek_nand_data.bus_width_16)
+> +		ek_nand_smc_config.mode |= AT91_SMC_DBW_16;
+> +	else
+> +		ek_nand_smc_config.mode |= AT91_SMC_DBW_8;
+> +
+> +	/* configure chip-select 3 (NAND) */
+> +	sam9_smc_configure(3, &ek_nand_smc_config);
+> +
+> +	at91_add_device_nand(&ek_nand_data);
+> +}
+> +
+> +static const struct of_device_id aic_of_match[] __initconst = {
+> +	{ .compatible = "atmel,at91rm9200-aic", },
+> +	{},
+> +};
+> +
+> +static void __init at91_dt_device_init(void)
+> +{
+> +	irq_domain_generate_simple(aic_of_match, 0xfffff000, 0);
+
+Why is this not in the .init_irq function? I'm surprised your timer
+interrupt even works.
+
+Rob
