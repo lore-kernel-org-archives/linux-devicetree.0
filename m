@@ -1,45 +1,41 @@
-From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: [PATCH] of: include errno.h
-Date: Thu, 06 Oct 2011 15:40:44 +0300
-Message-ID: <20111006124044.1066.7111.stgit@localhost6.localdomain6>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 0/2] arm: samsung: add device tree support for gic and
+ interrupt combiner
+Date: Fri, 07 Oct 2011 02:41:41 +0530
+Message-ID: <1317935503-11756-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-When compiling ath6kl for beagleboard (omap2plus_defconfig plus
-CONFIG_ATH6KL, CONFIG_OF disable) with current linux-next compilation
-fails:
+This patchset adds device tree support for GIC and Interrupt Combiner
+controllers in the Exynos4 SoC.
 
-include/linux/of.h:269: error: 'ENOSYS' undeclared (first use in this function)
-include/linux/of.h:276: error: 'ENOSYS' undeclared (first use in this function)
-include/linux/of.h:289: error: 'ENOSYS' undeclared (first use in this function)
+Patch 1 moves the statically mapped timer irqs 11 to 15 to the end of the
+statically mapped linux irq space for all s5p platforms. This was required
+because, device tree support for gic is based on Rob Herring's "GIC OF
+bindings" patchset and that patchset requires hardware irq number to be
+equal to GIC interrupt ID. Since GIC interrupt ID starts from zero, the
+timer irqs 11 to 15 is moved to the end of the irq space and hardware irqs
+are statically mapped to start from zero. I am not sure if statically
+mapping hardware irqs starting from zero would be a problem.
 
-Fix this by including errno.h from of.h.
+Patch 2 adds device tree support for GIC and Interrupt Combiner controllers
+on Exynos4. For GIC controller, this patch is based on Rob Herring's,
+"[PATCH 0/3] GIC OF bindings" patchset. The concept of irq domain for
+interrupt combiner controller is based on Grant's 'simple' irq converter
 
-Signed-off-by: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
----
- include/linux/of.h |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+Thomas Abraham (2):
+  arm: samsung: move timer irq numbers to end of linux irq space
+  arm: exynos4: add support for dt irq specifier to linux virq conversion
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 9180dc5..219c29d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -17,6 +17,7 @@
-  */
- #include <linux/types.h>
- #include <linux/bitops.h>
-+#include <linux/errno.h>
- #include <linux/kref.h>
- #include <linux/mod_devicetable.h>
- #include <linux/spinlock.h>
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/mach-exynos4/cpu.c                      |   20 +++++++++-
+ arch/arm/mach-exynos4/include/mach/entry-macro.S |    1 -
+ arch/arm/mach-exynos4/include/mach/irqs.h        |    3 +-
+ arch/arm/mach-exynos4/irq-combiner.c             |   44 ++++++++++++++++++++++
+ arch/arm/mach-s5p64x0/include/mach/irqs.h        |    4 +-
+ arch/arm/mach-s5pc100/include/mach/irqs.h        |    3 +-
+ arch/arm/mach-s5pv210/include/mach/irqs.h        |    3 +-
+ arch/arm/plat-samsung/include/plat/irqs.h        |    7 ++-
+ 8 files changed, 72 insertions(+), 13 deletions(-)
