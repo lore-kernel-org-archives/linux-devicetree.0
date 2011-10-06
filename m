@@ -1,48 +1,45 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH] devicetree: fix build error on
- drivers/tty/serial/altera_jtaguart.c
-Date: Wed, 05 Oct 2011 11:23:16 -0600
-Message-ID: <20111005172223.2949.66623.stgit@ponder>
+From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: [PATCH] of: include errno.h
+Date: Thu, 06 Oct 2011 15:40:44 +0300
+Message-ID: <20111006124044.1066.7111.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: Tobias Klauser <tklauser@distanz.ch>, Ben Dooks <ben-linux@fluff.org>, Alan Cox <alan@linux.intel.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the following build error caused by commit
-85888069cf5d ("tty: use of_match_ptr() for of_match_table entry").
-The problem was a missing #include <linux/of.h> which is where
-of_match_ptr() is defined.
+When compiling ath6kl for beagleboard (omap2plus_defconfig plus
+CONFIG_ATH6KL, CONFIG_OF disable) with current linux-next compilation
+fails:
 
-drivers/tty/serial/altera_jtaguart.c:483:3: error: implicit declaration of function 'of_match_ptr' [-Werror=implicit-function-declaration]
-drivers/tty/serial/altera_jtaguart.c:483:34: error: 'altera_jtaguart_match' undeclared here (not in a function)
+include/linux/of.h:269: error: 'ENOSYS' undeclared (first use in this function)
+include/linux/of.h:276: error: 'ENOSYS' undeclared (first use in this function)
+include/linux/of.h:289: error: 'ENOSYS' undeclared (first use in this function)
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Ben Dooks <ben-linux@fluff.org>
-Cc: Tobias Klauser <tklauser@distanz.ch> (maintainer:ALTERA UART/JTAG...)
-Cc: Alan Cox <alan@linux.intel.com> (maintainer:SERIAL DRIVERS)
+Fix this by including errno.h from of.h.
+
+Signed-off-by: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
 ---
-
-This fixes a problem in the devicetree/next branch and I've already
-committed the change.  I posting it to the list for completeness.
-
-g.
-
- drivers/tty/serial/altera_jtaguart.c |    1 +
+ include/linux/of.h |    1 +
  1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/tty/serial/altera_jtaguart.c b/drivers/tty/serial/altera_jtaguart.c
-index 2075200..af46c56 100644
---- a/drivers/tty/serial/altera_jtaguart.c
-+++ b/drivers/tty/serial/altera_jtaguart.c
-@@ -18,6 +18,7 @@
- #include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/console.h>
-+#include <linux/of.h>
- #include <linux/tty.h>
- #include <linux/tty_flip.h>
- #include <linux/serial.h>
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 9180dc5..219c29d 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -17,6 +17,7 @@
+  */
+ #include <linux/types.h>
+ #include <linux/bitops.h>
++#include <linux/errno.h>
+ #include <linux/kref.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/spinlock.h>
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
