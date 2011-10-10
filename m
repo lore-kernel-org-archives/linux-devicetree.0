@@ -1,69 +1,71 @@
 From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH 2/3] mmc: Add OF bindings support for mmc host controller capabilities
-Date: Sun, 9 Oct 2011 12:28:15 +0530
-Message-ID: <CAJuYYwSOZsqKObmt4MeaJa+aPmktwLsFocfmpjbJbOYyvmuwLQ@mail.gmail.com>
-References: <1317809581-28783-1-git-send-email-thomas.abraham@linaro.org>
-	<1317809581-28783-3-git-send-email-thomas.abraham@linaro.org>
-	<4E8C5BD6.2070709@gmail.com>
-	<CAJuYYwS_NeE6OG9X2p2rkjgo4OqO-ijeVwr1sLGkUuLJOxMw2g@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF173A2C7245@HQMAIL01.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Subject: [PATCH 0/3] ARM: Samsung: Add device tree support for GIC and
+ Interrupt Combiner
+Date: Mon, 10 Oct 2011 13:41:26 +0530
+Message-ID: <1318234289-22041-1-git-send-email-thomas.abraham@linaro.org>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF173A2C7245@HQMAIL01.nvidia.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Chris Ball <cjb@laptop.org>
-Cc: "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 October 2011 21:25, Stephen Warren <swarren@nvidia.com> wrote:
-> Thomas Abraham wrote at Wednesday, October 05, 2011 8:28 AM:
->> On 5 October 2011 18:59, Rob Herring <robherring2@gmail.com> wrote:
->> > On 10/05/2011 05:13 AM, Thomas Abraham wrote:
->> >> Device nodes representing sd/mmc controllers in a device tree would include
->> >> mmc host controller capabilities. Add support for parsing of mmc host
->> >> controller capabilities included in device nodes.
-> ...
->> >> +- linux,mmc_cap_4_bit_data - host can do 4 bit transfers
->> >> +- linux,mmc_cap_mmc_highspeed - host can do MMC high-speed timing
->> >> +- linux,mmc_cap_sd_highspeed - host can do SD high-speed timing
->> >> +- linux,mmc_cap_needs_poll - host needs polling for card detection
->> >> +- linux,mmc_cap_8_bit_data - host can do 8 bit transfer
->> >
->> > "sdhci,1-bit-only" already exists as a binding. Perhaps add
->> > "sdhci,4-bit-only". No property then means can do 8-bit.
->>
->> Ok. But that would remain just as sdhci host controller capability and
->> will not be applicable to other types of host controllers.
->
-> Just as an FYI, NVIDIA's SDHCI controller bindings use property
-> "support-8bit" to indicate 8-bit support. A similar property could be
-> used for 4-bit support too.
+This patchset adds device tree support for GIC and Interrupt Combiner modules
+in Exynos4 SoC.
+
+Patch 1 moves the statically mapped timer irqs 11 to 15 to the end of the
+statically mapped linux irq space for all s5p platforms. This patch is
+applicable for s5p64x0, s5pc100, s5pv210 and exynos4.
+
+For all these platforms, the five hardware timer irqs are connected to GIC/VIC
+at some hardware irq number (in exynos it is GIC_ID 69 to 73 for five timers).
+When any of these hardware interrupt occurs, its interrupt handler calls
+generic_handle_irq() with linux irq number 11/12/13/14/15 for timer 0/1/2/3/4
+as the parameter. The code that needs to be notified about the timer interrupts
+would have already registered its handler for either of the interrupts 11 to 15.
+
+Instead of using linux irq number 11 to 15 to which consumers of timer interrupt
+attach their handler, this interrupt range is moved to the end of linux irq
+space used. So there will be no interrupts statically mapped between 0 to 31.
+
+The GIC/VIC hardware interrupts, which were previously statically mapped to
+start from linux irq 32 are now moved to start from linux irq 0. In case of
+exynos, GIC_ID[0] (which is SGI[0]) which was previously at linux irq 32, will
+not be at linux irq 0. This was required to use Rob Herring's GIC OF bindings
+patches for Exynos4.
+
+Patch 2 adds a interceptor for all ioremap calls targeted towards any of the
+statically remapped memory region. This was required because the GIC OF
+binding's patchset ioremaps the GIC memory-mapped regions in the gic_of_init()
+function. Without this patch, there would be two separate remap for GIC
+controller, one statically remapped and the other dynamically remapped by the
+gic_of_init() function.
+
+Patch 3 adds device tree support for GIC and Interrupt Combiner controllers on
+Exynos4. For GIC controller, this patch is based on Rob Herring's,
+"[PATCH 0/3] GIC OF bindings" patchset. The concept of irq domain for interrupt
+combiner controller is based on Grant's 'simple' irq converter
+
+This patchset is based on the following tree:
+https://github.com/kgene/linux-samsung.git   branch: for-next
+
+Patch 1 is tested on smdk6450, smdkc100, smdkv210.
+Patch 1 to 3 are tested on smdkv310.
 
 
-In this case, the binding would be applicable only to nVidia's SDHCI
-controller. And this binding would select MMC_CAP_8_BIT_DATA in the
-sdhci-tegra driver. There are sdhci drivers that can accept host
-capabilities via platform data.
+Thomas Abraham (3):
+  arm: samsung: move timer irq numbers to end of linux irq space
+  ARM: Exynos4: Add ioremap interceptor for statically remapped regions
+  ARM: Exynos4: Add support for dt irq specifier to linux virq conversion
 
-The MMC_CAP_XXX macros in linux/mmc/host.h file are usuable across
-host controllers and some of them are supplied as platform data for
-non-device tree platforms.
-
-So, bindings for MMC_CAP_XXX macros can be defined which any host
-controller supporting device tree could use. Host controllers could
-use the mmc_of_parse_host_caps() helper function (listed in this
-patch) to parse all the bindings for MMC_CAP_XXX  available in the
-device node.
-
-I would like to retain this patch in this series but if there is a
-definite no, then I will drop it. Please let me know your opinion.
-
-Thanks,
-Thomas.
-
->
-> --
-> nvpublic
->
->
+ .../devicetree/bindings/irq/samsung-combiner.txt   |   24 ++++++++++
+ arch/arm/mach-exynos4/cpu.c                        |   36 +++++++++++++++-
+ arch/arm/mach-exynos4/include/mach/entry-macro.S   |    1 -
+ arch/arm/mach-exynos4/include/mach/io.h            |    4 ++
+ arch/arm/mach-exynos4/include/mach/irqs.h          |    3 +-
+ arch/arm/mach-exynos4/irq-combiner.c               |   45 ++++++++++++++++++++
+ arch/arm/mach-s5p64x0/include/mach/irqs.h          |    4 +-
+ arch/arm/mach-s5pc100/include/mach/irqs.h          |    3 +-
+ arch/arm/mach-s5pv210/include/mach/irqs.h          |    3 +-
+ arch/arm/plat-samsung/include/plat/irqs.h          |    7 ++-
+ 10 files changed, 117 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/irq/samsung-combiner.txt
