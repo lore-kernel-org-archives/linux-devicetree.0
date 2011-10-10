@@ -1,65 +1,63 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: [PATCH 01/13] hwspinlock: OMAP4: Add spinlock support in DT
-Date: Mon, 10 Oct 2011 14:49:14 +0200
-Message-ID: <CAK=WgbYBDPRsknBWiXP_z36bu2U_Y6GLqtCyLuj94YqJNA37mA@mail.gmail.com>
-References: <1317055821-20652-1-git-send-email-b-cousson@ti.com> <1317055821-20652-2-git-send-email-b-cousson@ti.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: [PATCH v2 2/5] dt: add empty dt helpers for non-dt build
+Date: Mon, 10 Oct 2011 21:49:35 +0530
+Message-ID: <1318263578-7407-3-git-send-email-rnayak@ti.com>
+References: <1318263578-7407-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1317055821-20652-2-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, grant.likely@secretlab.ca, paul@pwsan.com, khilman@ti.com, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1318263578-7407-1-git-send-email-rnayak@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca
+Cc: b-cousson@ti.com, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Rajendra Nayak <rnayak@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+Add empty of_device_is_compatible(), of_find_property()
+and of_parse_phandle() for non-dt builds to work.
 
-On Mon, Sep 26, 2011 at 7:50 PM, Benoit Cousson <b-cousson@ti.com> wrot=
-e:
-> +++ b/Documentation/devicetree/bindings/hwspinlock/omap-spinlock.txt
-> @@ -0,0 +1,5 @@
-> +* HW spinlock on OMAP4 platform:
-> +
-> +Required properties:
-> +- compatible : Must be "ti,omap4-spinlock";
-> +- ti,hwmods : "spinlock"
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.d=
-tsi
-> index 4c61c82..7a7f31e 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -99,5 +99,10 @@
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0reg =3D <0x48241000 0x=
-1000>,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<0x4824010=
-0 0x0100>;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 spinlock {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,omap=
-4-spinlock";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,hwmods =3D "spinlock=
-";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+---
+ include/linux/of.h |   19 +++++++++++++++++++
+ 1 files changed, 19 insertions(+), 0 deletions(-)
 
-I think it'd be nice to add the 'baseid' property as we discussed for
-dynamic allocation of hwspinlocks.
-
-The patch that adds the hwspinlock groundwork for this is in
-linux-next and will hopefully get into 3.2 if everything works out
-well:
-
-https://lkml.org/lkml/2011/9/12/194
-
-Of course, as we discussed with Arnd, we will use phandles to the
-hwspinlock controller when we'll get to static allocations of
-hwspinlock instances.
-
-Thanks,
-Ohad.
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 9180dc5..47ce461 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -263,6 +263,25 @@ static inline const void *of_get_property(const struct device_node *node,
+ 	return NULL;
+ }
+ 
++static inline int of_device_is_compatible(const struct device_node *device,
++				   const char *name)
++{
++	return 0;
++}
++
++static inline struct property *of_find_property(const struct device_node *np,
++					 const char *name,
++					 int *lenp)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_parse_phandle(struct device_node *np,
++					    const char *phandle_name,
++					    int index)
++{
++	return NULL;
++}
+ #endif /* CONFIG_OF */
+ 
+ static inline int of_property_read_u32(const struct device_node *np,
+-- 
+1.7.1
