@@ -1,39 +1,63 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] dtc: Add support for variable sized elements
-Date: Tue, 11 Oct 2011 10:22:34 -0500
-Message-ID: <E1RDeA6-0008Ma-R1@jdl.com>
-References: <1317147098-11550-1-git-send-email-robotboy@chromium.org>
- <1317147098-11550-4-git-send-email-robotboy@chromium.org>
- <20111011144413.GJ4849@truffala.fritz.box>
- <CAF6FioXceJM=aKdbP=czrKWUG_-rVWgVr=1F5MeqDggF7=nZFA@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] gpio: exynos4: Add device tree support
+Date: Tue, 11 Oct 2011 10:30:17 -0500
+Message-ID: <4E946109.2000305@gmail.com>
+References: <1318320974-9879-1-git-send-email-thomas.abraham@linaro.org> <4E945C90.1050601@gmail.com> <CAJuYYwRwBxkAo2fMfVV9wtQ40XeROAnc-cGJK+cssjuh9px=qQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <CAF6FioXceJM=aKdbP=czrKWUG_-rVWgVr=1F5MeqDggF7=nZFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJuYYwRwBxkAo2fMfVV9wtQ40XeROAnc-cGJK+cssjuh9px=qQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-> >>
-> >> Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >
-> > What the hell, I think I've convinced myself that /bits/ is good
-> > enough.
+On 10/11/2011 10:19 AM, Thomas Abraham wrote:
+> Hi Rob,
 > 
-> Thanks David, I haven't thought of anything more appropriate either.
-> I'm looking forward to getting this landed.  :)
+> On 11 October 2011 20:41, Rob Herring <robherring2@gmail.com> wrote:
+>> Thomas,
+>>
+>> On 10/11/2011 03:16 AM, Thomas Abraham wrote:
+>>> As gpio chips get registered, a device tree node which represents the
+>>> gpio chip is searched and attached to it. A translate function is also
+>>> provided to convert the gpio specifier into actual platform settings
+>>> for pin function selection, pull up/down and driver strength settings.
+>>>
+>>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>>> ---
+>>> This patch is based on the latest consolidated Samsung GPIO driver available
+>>> in the following tree:
+>>>   https://github.com/kgene/linux-samsung.git  branch: for-next
+>>>
+>>>  .../devicetree/bindings/gpio/gpio-samsung.txt      |   30 +++++++++++
+>>>  drivers/gpio/gpio-samsung.c                        |   53 ++++++++++++++++++++
+>>>  2 files changed, 83 insertions(+), 0 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+>>> new file mode 100644
+>>> index 0000000..883faeb
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+>>> @@ -0,0 +1,30 @@
+>>> +Samsung Exynos4 GPIO Controller
+>>> +
+>>> +Required properties:
+>>> +- compatible: Format of compatible property value should be
+>>> +  "samsung,exynos4-gpio-<controller_name>". Example: For GPA0 controller, the
+>>> +  compatible property value should be "samsung,exynos4-gpio-gpa0".
+>>
+>> Isn't gpa0 an instance of the h/w, not a version?
+> 
+> GPA0 is a instance of the gpio controller. There are several such
+> instances and there could be differences in those instances such as
+> the number of GPIO lines managed by that gpio controller instance.
+> 
 
-To facilitate that, could you post current patch set again?
+That doesn't seem like a reason to have different compatible strings.
+Does that affect the programming model of the controller? Unused lines
+whether at the board level or SOC level shouldn't really matter.
 
-Thanks,
-jdl
+Rob
