@@ -1,117 +1,39 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 3/4] ARM: at91/dma: remove platform data from DMA
-	controller
-Date: Tue, 11 Oct 2011 19:55:41 +0530
-Message-ID: <1318343141.1546.353.camel@vkoul-udesk3>
-References: <1314075338.22120.3.camel@vkoul-udesk3>
-	<9723283e7097730f568bf7c2f3a93ae42c6bc5ca.1318264339.git.nicolas.ferre@atmel.com>
-	<2b6ff9c8a28c955849f13b90c5ef258ceea19eaa.1318264339.git.nicolas.ferre@atmel.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] libfdt: Add fdt16_to_cpu utility function
+Date: Wed, 12 Oct 2011 01:43:14 +1100
+Message-ID: <20111011144314.GH4849@truffala.fritz.box>
+References: <1317147098-11550-1-git-send-email-robotboy@chromium.org>
+ <1317147098-11550-2-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2b6ff9c8a28c955849f13b90c5ef258ceea19eaa.1318264339.git.nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1317147098-11550-2-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2011-10-10 at 18:37 +0200, Nicolas Ferre wrote:
-> DMA controller can deduce its configuration data from
-> the platform. Remove the platform data and match device
-> types with the compatible ones.
-This looks like remove, you should fix the changelog of patch 1 then.
+On Tue, Sep 27, 2011 at 11:11:36AM -0700, Anton Staaf wrote:
+> This utility routine will be used in the variable size cell literal
+> append code.  It is a straightforward adaptation of the fdt32_to_cpu
+> function.
 > 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
->  arch/arm/mach-at91/at91sam9g45_devices.c |    9 +--------
->  arch/arm/mach-at91/at91sam9rl_devices.c  |    8 +-------
->  2 files changed, 2 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/arm/mach-at91/at91sam9g45_devices.c b/arch/arm/mach-at91/at91sam9g45_devices.c
-> index 600bffb..c9b897f 100644
-> --- a/arch/arm/mach-at91/at91sam9g45_devices.c
-> +++ b/arch/arm/mach-at91/at91sam9g45_devices.c
-> @@ -38,10 +38,6 @@
->  #if defined(CONFIG_AT_HDMAC) || defined(CONFIG_AT_HDMAC_MODULE)
->  static u64 hdmac_dmamask = DMA_BIT_MASK(32);
->  
-> -static struct at_dma_platform_data atdma_pdata = {
-> -	.nr_channels	= 8,
-> -};
-> -
->  static struct resource hdmac_resources[] = {
->  	[0] = {
->  		.start	= AT91_BASE_SYS + AT91_DMA,
-> @@ -56,12 +52,11 @@ static struct resource hdmac_resources[] = {
->  };
->  
->  static struct platform_device at_hdmac_device = {
-> -	.name		= "at_hdmac",
-> +	.name		= "at91sam9g45_dma",
->  	.id		= -1,
->  	.dev		= {
->  				.dma_mask		= &hdmac_dmamask,
->  				.coherent_dma_mask	= DMA_BIT_MASK(32),
-> -				.platform_data		= &atdma_pdata,
->  	},
->  	.resource	= hdmac_resources,
->  	.num_resources	= ARRAY_SIZE(hdmac_resources),
-> @@ -69,8 +64,6 @@ static struct platform_device at_hdmac_device = {
->  
->  void __init at91_add_device_hdmac(void)
->  {
-> -	dma_cap_set(DMA_MEMCPY, atdma_pdata.cap_mask);
-> -	dma_cap_set(DMA_SLAVE, atdma_pdata.cap_mask);
->  	platform_device_register(&at_hdmac_device);
->  }
->  #else
-> diff --git a/arch/arm/mach-at91/at91sam9rl_devices.c b/arch/arm/mach-at91/at91sam9rl_devices.c
-> index aacb19d..81954f7 100644
-> --- a/arch/arm/mach-at91/at91sam9rl_devices.c
-> +++ b/arch/arm/mach-at91/at91sam9rl_devices.c
-> @@ -33,10 +33,6 @@
->  #if defined(CONFIG_AT_HDMAC) || defined(CONFIG_AT_HDMAC_MODULE)
->  static u64 hdmac_dmamask = DMA_BIT_MASK(32);
->  
-> -static struct at_dma_platform_data atdma_pdata = {
-> -	.nr_channels	= 2,
-> -};
-> -
->  static struct resource hdmac_resources[] = {
->  	[0] = {
->  		.start	= AT91_BASE_SYS + AT91_DMA,
-> @@ -51,12 +47,11 @@ static struct resource hdmac_resources[] = {
->  };
->  
->  static struct platform_device at_hdmac_device = {
-> -	.name		= "at_hdmac",
-> +	.name		= "at91sam9rl_dma",
->  	.id		= -1,
->  	.dev		= {
->  				.dma_mask		= &hdmac_dmamask,
->  				.coherent_dma_mask	= DMA_BIT_MASK(32),
-> -				.platform_data		= &atdma_pdata,
->  	},
->  	.resource	= hdmac_resources,
->  	.num_resources	= ARRAY_SIZE(hdmac_resources),
-> @@ -64,7 +59,6 @@ static struct platform_device at_hdmac_device = {
->  
->  void __init at91_add_device_hdmac(void)
->  {
-> -	dma_cap_set(DMA_MEMCPY, atdma_pdata.cap_mask);
->  	platform_device_register(&at_hdmac_device);
->  }
->  #else
+> Signed-off-by: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
 -- 
-~Vinod
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
