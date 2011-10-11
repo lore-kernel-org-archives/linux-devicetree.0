@@ -1,46 +1,79 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [RFC PATCH] tty/serial: RS485 bindings for device tree
-Date: Tue, 11 Oct 2011 19:28:06 +0200
-Message-ID: <4E947CA6.9010703@atmel.com>
-References: <1318353208-24422-1-git-send-email-nicolas.ferre@atmel.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] Variable sized array element support
+Date: Tue, 11 Oct 2011 13:01:37 -0500
+Message-ID: <E1RDge1-00015M-D3@jdl.com>
+References: <1318353749-24513-1-git-send-email-robotboy@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1318353208-24422-1-git-send-email-nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, claudio@evidence.eu.com, jesper.nilsson@axis.com, alan@lxorguk.ukuu.org.uk
-Cc: grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1318353749-24513-1-git-send-email-robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Anton Staaf <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I can also add this new property (support for it already in linux-next):
+> This patch set adds, tests, and documents support for variable sized elements in
+> arrays (known as cell lists when they could only support 32-bit entries).  The
+> new syntax is:
+> 
+>     property = /bits/ [8|16|32|64] <0x00 .... 0x12>;
+> 
+> So arrays of 8, 16, 32, or 64-bit elements can now be created.  No padding is
+> done on the resulting array.  So if three 8-bit elements are specified the
+> resulting property will contain three bytes.
+> 
+> Changes in v2:
+> - sized_data renamed to celllist
+> - celllist definition moved to dtc-parser.y
+> - celllist non-terminal renamed to celllistprefix
+> - references always appended as -1 masked to the size of the cell
+> - smaller test values derived from TEST_VALUE_1
+> - data_append_literal renamed to data_append_integer
+> - be_ removed from values in data_append_integer
+> - len renamed to bits in data_append_integer
+> 
+> Changes in v3:
+> - Renamed size to bits in docs, parser, commit messages, and celllist struct
+> - Remove die on overflow from data_append_integer
+> - Rewrite data_append_cell|addr in terms of data_append_integer
+> - Minor cosmetic change to property names in test case (added 'b' to last two)
+> 
+> Changes in v4:
+> - Only add phandle reference marker when element size is 32-bits
+> - Rename non-terminal celllistprefix to arrayprefix
+> - Rename semantic variable celllist to array
+> - Update documentation to use array and element instead of cell list and cell
+> 
+> Anton Staaf (3):
+>   libfdt: Add fdt16_to_cpu utility function
+>   dtc: Add data_append_integer function
+>   dtc: Add support for variable sized elements
+> 
+>  Documentation/dts-format.txt |   34 +++++++++++-----
+>  data.c                       |   39 ++++++++++++++++---
+>  dtc-lexer.l                  |    6 +++
+>  dtc-parser.y                 |   70 ++++++++++++++++++++++++-----------
+>  dtc.h                        |    1 +
+>  libfdt/libfdt_env.h          |    6 +++
+>  tests/.gitignore             |    1 +
+>  tests/Makefile.tests         |    1 +
+>  tests/run_tests.sh           |    3 +
+>  tests/sized_cells.c          |   84 ++++++++++++++++++++++++++++++++++++++++++
+>  tests/sized_cells.dts        |   11 +++++
+>  11 files changed, 216 insertions(+), 40 deletions(-)
+>  create mode 100644 tests/sized_cells.c
+>  create mode 100644 tests/sized_cells.dts
 
-On 10/11/2011 07:13 PM, Nicolas Ferre :
-> Generic bindings for RS485 feature included in some UARTs.
-> Those bindings have to be used withing an UART device tree node.
-> Documentation updated to link to the bindings definition.
+Series applied.
 
-[..]
-
-> +Optional properties:
-> +- linux,rs485-enabled-at-boot-time: empty property telling to enable the rs485
-> +  feature at boot time. It can be disabled later with proper ioctl.
-
-+- linux,rs485-rx-during-tx: empty property that enable the receiving of data
-+  even whilst sending data.
-
-> +- linux,rs485-rts-delay: prop-encoded-array <a b> where:
-
-[..]
-
-Best regards,
--- 
-Nicolas Ferre
+Thanks,
+jdl
