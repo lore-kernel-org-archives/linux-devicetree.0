@@ -1,306 +1,47 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v7 09/10] ARM: S5PC100: Modify platform data for pl330 driver
-Date: Wed, 12 Oct 2011 17:21:44 +0530
-Message-ID: <1318420304-27725-1-git-send-email-thomas.abraham@linaro.org>
-References: <1318270538-30450-10-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1318270538-30450-10-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, vinod.koul@intel.com
-Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [RFC PATCH] tty/serial: RS485 bindings for device tree
+Date: Wed, 12 Oct 2011 14:02:38 +0200
+Message-ID: <4E9581DE.20702@atmel.com>
+References: <1318353208-24422-1-git-send-email-nicolas.ferre@atmel.com>
+	<4E947CA6.9010703@atmel.com> <3289709.mzRgbAUyPT@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3289709.mzRgbAUyPT@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: jesper.nilsson@axis.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, claudio@evidence.eu.com, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, alan@lxorguk.ukuu.org.uk
 List-Id: devicetree@vger.kernel.org
 
-With the 'struct dma_pl330_peri' removed, the platfrom data for dma
-driver can be simplified to a simple list of peripheral request ids.
+On 10/11/2011 08:41 PM, Arnd Bergmann :
+> On Tuesday 11 October 2011 19:28:06 Nicolas Ferre wrote:
+>>
+>>> +Optional properties:
+>>> +- linux,rs485-enabled-at-boot-time: empty property telling to enable the rs485
+>>> +  feature at boot time. It can be disabled later with proper ioctl.
+>>
+>> +- linux,rs485-rx-during-tx: empty property that enable the receiving of data
+>> +  even whilst sending data.
+> 
+> This does not sound too linux specific. If it's a hardware property, don't
+> use the 'linux,' prefix and just make it 'rs484-full-duplex' or such.
 
-Cc: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Boojin Kim <boojin.kim@samsung.com>
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-Acked-by: Boojin Kim <boojin.kim@samsung.com>
----
- arch/arm/mach-s5pc100/dma.c |  247 ++++++++++++-------------------------------
- 1 files changed, 69 insertions(+), 178 deletions(-)
+Ok, I understand. Your remark may also apply to linux,rs485-rts-delay.
+So we may end-up with:
 
-diff --git a/arch/arm/mach-s5pc100/dma.c b/arch/arm/mach-s5pc100/dma.c
-index 065a087..c841f4d 100644
---- a/arch/arm/mach-s5pc100/dma.c
-+++ b/arch/arm/mach-s5pc100/dma.c
-@@ -35,100 +35,42 @@
- 
- static u64 dma_dmamask = DMA_BIT_MASK(32);
- 
--struct dma_pl330_peri pdma0_peri[30] = {
--	{
--		.peri_id = (u8)DMACH_UART0_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_UART0_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_UART1_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_UART1_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_UART2_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_UART2_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_UART3_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_UART3_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = DMACH_IRDA,
--	}, {
--		.peri_id = (u8)DMACH_I2S0_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_I2S0_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_I2S0S_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_I2S1_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_I2S1_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_I2S2_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_I2S2_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_SPI0_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_SPI0_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_SPI1_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_SPI1_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_SPI2_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_SPI2_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_AC97_MICIN,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_AC97_PCMIN,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_AC97_PCMOUT,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_EXTERNAL,
--	}, {
--		.peri_id = (u8)DMACH_PWM,
--	}, {
--		.peri_id = (u8)DMACH_SPDIF,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_HSI_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_HSI_TX,
--		.rqtype = MEMTODEV,
--	},
-+u8 pdma0_peri[] = {
-+	DMACH_UART0_RX,
-+	DMACH_UART0_TX,
-+	DMACH_UART1_RX,
-+	DMACH_UART1_TX,
-+	DMACH_UART2_RX,
-+	DMACH_UART2_TX,
-+	DMACH_UART3_RX,
-+	DMACH_UART3_TX,
-+	DMACH_IRDA,
-+	DMACH_I2S0_RX,
-+	DMACH_I2S0_TX,
-+	DMACH_I2S0S_TX,
-+	DMACH_I2S1_RX,
-+	DMACH_I2S1_TX,
-+	DMACH_I2S2_RX,
-+	DMACH_I2S2_TX,
-+	DMACH_SPI0_RX,
-+	DMACH_SPI0_TX,
-+	DMACH_SPI1_RX,
-+	DMACH_SPI1_TX,
-+	DMACH_SPI2_RX,
-+	DMACH_SPI2_TX,
-+	DMACH_AC97_MICIN,
-+	DMACH_AC97_PCMIN,
-+	DMACH_AC97_PCMOUT,
-+	DMACH_EXTERNAL,
-+	DMACH_PWM,
-+	DMACH_SPDIF,
-+	DMACH_HSI_RX,
-+	DMACH_HSI_TX,
- };
- 
- struct dma_pl330_platdata s5pc100_pdma0_pdata = {
- 	.nr_valid_peri = ARRAY_SIZE(pdma0_peri),
--	.peri = pdma0_peri,
-+	.peri_id = pdma0_peri,
- };
- 
- struct amba_device s5pc100_device_pdma0 = {
-@@ -147,98 +89,42 @@ struct amba_device s5pc100_device_pdma0 = {
- 	.periphid = 0x00041330,
- };
- 
--struct dma_pl330_peri pdma1_peri[30] = {
--	{
--		.peri_id = (u8)DMACH_UART0_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_UART0_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_UART1_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_UART1_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_UART2_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_UART2_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_UART3_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_UART3_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = DMACH_IRDA,
--	}, {
--		.peri_id = (u8)DMACH_I2S0_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_I2S0_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_I2S0S_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_I2S1_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_I2S1_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_I2S2_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_I2S2_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_SPI0_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_SPI0_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_SPI1_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_SPI1_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_SPI2_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_SPI2_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_PCM0_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_PCM1_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_PCM1_RX,
--		.rqtype = DEVTOMEM,
--	}, {
--		.peri_id = (u8)DMACH_PCM1_TX,
--		.rqtype = MEMTODEV,
--	}, {
--		.peri_id = (u8)DMACH_MSM_REQ0,
--	}, {
--		.peri_id = (u8)DMACH_MSM_REQ1,
--	}, {
--		.peri_id = (u8)DMACH_MSM_REQ2,
--	}, {
--		.peri_id = (u8)DMACH_MSM_REQ3,
--	},
-+u8 pdma1_peri[] = {
-+	DMACH_UART0_RX,
-+	DMACH_UART0_TX,
-+	DMACH_UART1_RX,
-+	DMACH_UART1_TX,
-+	DMACH_UART2_RX,
-+	DMACH_UART2_TX,
-+	DMACH_UART3_RX,
-+	DMACH_UART3_TX,
-+	DMACH_IRDA,
-+	DMACH_I2S0_RX,
-+	DMACH_I2S0_TX,
-+	DMACH_I2S0S_TX,
-+	DMACH_I2S1_RX,
-+	DMACH_I2S1_TX,
-+	DMACH_I2S2_RX,
-+	DMACH_I2S2_TX,
-+	DMACH_SPI0_RX,
-+	DMACH_SPI0_TX,
-+	DMACH_SPI1_RX,
-+	DMACH_SPI1_TX,
-+	DMACH_SPI2_RX,
-+	DMACH_SPI2_TX,
-+	DMACH_PCM0_RX,
-+	DMACH_PCM0_TX,
-+	DMACH_PCM1_RX,
-+	DMACH_PCM1_TX,
-+	DMACH_MSM_REQ0,
-+	DMACH_MSM_REQ1,
-+	DMACH_MSM_REQ2,
-+	DMACH_MSM_REQ3,
- };
- 
- struct dma_pl330_platdata s5pc100_pdma1_pdata = {
- 	.nr_valid_peri = ARRAY_SIZE(pdma1_peri),
--	.peri = pdma1_peri,
-+	.peri_id = pdma1_peri,
- };
- 
- struct amba_device s5pc100_device_pdma1 = {
-@@ -259,7 +145,12 @@ struct amba_device s5pc100_device_pdma1 = {
- 
- static int __init s5pc100_dma_init(void)
- {
-+	dma_cap_set(DMA_SLAVE, s5pc100_pdma0_pdata.cap_mask);
-+	dma_cap_set(DMA_CYCLIC, s5pc100_pdma0_pdata.cap_mask);
- 	amba_device_register(&s5pc100_device_pdma0, &iomem_resource);
-+
-+	dma_cap_set(DMA_SLAVE, s5pc100_pdma1_pdata.cap_mask);
-+	dma_cap_set(DMA_CYCLIC, s5pc100_pdma1_pdata.cap_mask);
- 	amba_device_register(&s5pc100_device_pdma1, &iomem_resource);
- 
- 	return 0;
+- linux,rs485-enabled-at-boot-time
+- rs485-rx-during-tx
+- rs485-rts-delay
+
+Best regards,
 -- 
-1.6.6.rc2
+Nicolas Ferre
