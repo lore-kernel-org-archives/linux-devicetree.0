@@ -1,55 +1,286 @@
-From: Kumar Gala <kumar.gala-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] [v3] powerpc/85xx: clean up FPGA device tree nodes for
- Freecsale QorIQ boards
-Date: Tue, 11 Oct 2011 23:53:15 -0500
-Message-ID: <A52503AA-0708-4314-B8A1-3168EF963252@freescale.com>
-References: <1316109853-6665-1-git-send-email-timur@freescale.com>
-Mime-Version: 1.0 (Apple Message framework v1244.3)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1316109853-6665-1-git-send-email-timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v7 03/10] ARM: EXYNOS4: Modify platform data for pl330 driver
+Date: Wed, 12 Oct 2011 17:16:08 +0530
+Message-ID: <1318419968-27632-1-git-send-email-thomas.abraham@linaro.org>
+References: <1318270538-30450-4-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1318270538-30450-4-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, vinod.koul@intel.com
+Cc: grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, robherring2@gmail.com, patches@linaro.org, jassisinghbrar@gmail.com, boojin.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+With the 'struct dma_pl330_peri' removed, the platfrom data for dma
+driver can be simplified to a simple list of peripheral request ids.
 
-On Sep 15, 2011, at 1:04 PM, Timur Tabi wrote:
+Cc: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Boojin Kim <boojin.kim@samsung.com>
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Acked-by: Boojin Kim <boojin.kim@samsung.com>
+---
+ arch/arm/mach-exynos4/dma.c |  225 ++++++++++++-------------------------------
+ 1 files changed, 64 insertions(+), 161 deletions(-)
 
-> Standarize and document the FPGA nodes used on Freescale QorIQ reference
-> boards.  There are different kinds of FPGAs used on the boards, but
-> only two are currently standard: "pixis", "ngpixis", and "qixis".  Although
-> there are minor differences among the boards that have one kind of FPGA, most
-> of the functionality is the same, so it makes sense to create common
-> compatibility strings.
-> 
-> We also need to update the P1022DS platform file, because the compatible
-> string for its PIXIS node has changed.  This means that older kernels are
-> not compatible with newer device trees.  This is not a real problem, however,
-> since that particular function doesn't work anyway.  When the DIU is active,
-> the PIXIS is in "indirect mode", and so cannot be accessed as a memory-mapped
-> device.
-> 
-> Signed-off-by: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> 
-> v3: added "ngpixis" to list
-> 
-> v2: removed references to the CPLD
-> 
-> This patch only adds "ngpixis" nodes, because that's the easiest.  The
-> P3060QDS device tree already has a qixis node.  Support for older boards
-> with the old "pixis" will be added later.
-
-applied
-
-- k
+diff --git a/arch/arm/mach-exynos4/dma.c b/arch/arm/mach-exynos4/dma.c
+index 9667c61..141093d 100644
+--- a/arch/arm/mach-exynos4/dma.c
++++ b/arch/arm/mach-exynos4/dma.c
+@@ -35,95 +35,42 @@
+ 
+ static u64 dma_dmamask = DMA_BIT_MASK(32);
+ 
+-struct dma_pl330_peri pdma0_peri[28] = {
+-	{
+-		.peri_id = (u8)DMACH_PCM0_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_PCM0_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_PCM2_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_PCM2_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_MSM_REQ0,
+-	}, {
+-		.peri_id = (u8)DMACH_MSM_REQ2,
+-	}, {
+-		.peri_id = (u8)DMACH_SPI0_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SPI0_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_SPI2_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SPI2_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_I2S0S_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_I2S0_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_I2S0_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_UART0_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_UART0_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_UART2_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_UART2_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_UART4_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_UART4_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS0_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS0_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS2_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS2_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS4_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS4_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_AC97_MICIN,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_AC97_PCMIN,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_AC97_PCMOUT,
+-		.rqtype = MEMTODEV,
+-	},
++u8 pdma0_peri[] = {
++	DMACH_PCM0_RX,
++	DMACH_PCM0_TX,
++	DMACH_PCM2_RX,
++	DMACH_PCM2_TX,
++	DMACH_MSM_REQ0,
++	DMACH_MSM_REQ2,
++	DMACH_SPI0_RX,
++	DMACH_SPI0_TX,
++	DMACH_SPI2_RX,
++	DMACH_SPI2_TX,
++	DMACH_I2S0S_TX,
++	DMACH_I2S0_RX,
++	DMACH_I2S0_TX,
++	DMACH_I2S2_RX,
++	DMACH_I2S2_TX,
++	DMACH_UART0_RX,
++	DMACH_UART0_TX,
++	DMACH_UART2_RX,
++	DMACH_UART2_TX,
++	DMACH_UART4_RX,
++	DMACH_UART4_TX,
++	DMACH_SLIMBUS0_RX,
++	DMACH_SLIMBUS0_TX,
++	DMACH_SLIMBUS2_RX,
++	DMACH_SLIMBUS2_TX,
++	DMACH_SLIMBUS4_RX,
++	DMACH_SLIMBUS4_TX,
++	DMACH_AC97_MICIN,
++	DMACH_AC97_PCMIN,
++	DMACH_AC97_PCMOUT,
+ };
+ 
+ struct dma_pl330_platdata exynos4_pdma0_pdata = {
+ 	.nr_valid_peri = ARRAY_SIZE(pdma0_peri),
+-	.peri = pdma0_peri,
++	.peri_id = pdma0_peri,
+ };
+ 
+ struct amba_device exynos4_device_pdma0 = {
+@@ -142,86 +89,37 @@ struct amba_device exynos4_device_pdma0 = {
+ 	.periphid = 0x00041330,
+ };
+ 
+-struct dma_pl330_peri pdma1_peri[25] = {
+-	{
+-		.peri_id = (u8)DMACH_PCM0_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_PCM0_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_PCM1_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_PCM1_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_MSM_REQ1,
+-	}, {
+-		.peri_id = (u8)DMACH_MSM_REQ3,
+-	}, {
+-		.peri_id = (u8)DMACH_SPI1_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SPI1_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_I2S0S_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_I2S0_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_I2S0_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_I2S1_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_I2S1_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_UART0_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_UART0_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_UART1_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_UART1_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_UART3_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_UART3_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS1_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS1_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS3_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS3_TX,
+-		.rqtype = MEMTODEV,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS5_RX,
+-		.rqtype = DEVTOMEM,
+-	}, {
+-		.peri_id = (u8)DMACH_SLIMBUS5_TX,
+-		.rqtype = MEMTODEV,
+-	},
++u8 pdma1_peri[] = {
++	DMACH_PCM0_RX,
++	DMACH_PCM0_TX,
++	DMACH_PCM1_RX,
++	DMACH_PCM1_TX,
++	DMACH_MSM_REQ1,
++	DMACH_MSM_REQ3,
++	DMACH_SPI1_RX,
++	DMACH_SPI1_TX,
++	DMACH_I2S0S_TX,
++	DMACH_I2S0_RX,
++	DMACH_I2S0_TX,
++	DMACH_I2S1_RX,
++	DMACH_I2S1_TX,
++	DMACH_UART0_RX,
++	DMACH_UART0_TX,
++	DMACH_UART1_RX,
++	DMACH_UART1_TX,
++	DMACH_UART3_RX,
++	DMACH_UART3_TX,
++	DMACH_SLIMBUS1_RX,
++	DMACH_SLIMBUS1_TX,
++	DMACH_SLIMBUS3_RX,
++	DMACH_SLIMBUS3_TX,
++	DMACH_SLIMBUS5_RX,
++	DMACH_SLIMBUS5_TX,
+ };
+ 
+ struct dma_pl330_platdata exynos4_pdma1_pdata = {
+ 	.nr_valid_peri = ARRAY_SIZE(pdma1_peri),
+-	.peri = pdma1_peri,
++	.peri_id = pdma1_peri,
+ };
+ 
+ struct amba_device exynos4_device_pdma1 = {
+@@ -242,7 +140,12 @@ struct amba_device exynos4_device_pdma1 = {
+ 
+ static int __init exynos4_dma_init(void)
+ {
++	dma_cap_set(DMA_SLAVE, exynos4_pdma0_pdata.cap_mask);
++	dma_cap_set(DMA_CYCLIC, exynos4_pdma0_pdata.cap_mask);
+ 	amba_device_register(&exynos4_device_pdma0, &iomem_resource);
++
++	dma_cap_set(DMA_SLAVE, exynos4_pdma1_pdata.cap_mask);
++	dma_cap_set(DMA_CYCLIC, exynos4_pdma1_pdata.cap_mask);
+ 	amba_device_register(&exynos4_device_pdma1, &iomem_resource);
+ 
+ 	return 0;
+-- 
+1.6.6.rc2
