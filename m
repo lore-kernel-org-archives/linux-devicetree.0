@@ -1,142 +1,197 @@
 From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] gpio: exynos4: Add device tree support
-Date: Wed, 12 Oct 2011 21:45:25 +0530
-Message-ID: <CAJuYYwRsM_aGkeG9v97jdsJgSQeokViuLGdF5TvqEkNZCAgFVA@mail.gmail.com>
-References: <1318320974-9879-1-git-send-email-thomas.abraham@linaro.org>
-	<4E945C90.1050601@gmail.com>
-	<CAJuYYwRwBxkAo2fMfVV9wtQ40XeROAnc-cGJK+cssjuh9px=qQ@mail.gmail.com>
-	<4E946109.2000305@gmail.com>
-	<CAJuYYwQWUjVf9Z5Rdw4fTK70=B1aw-5x_wjYm_fq+zHyQAWJvg@mail.gmail.com>
-	<4E95AE26.8080702@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: Samsung: Move timer irq numbers to end of linux
+ irq space
+Date: Wed, 12 Oct 2011 21:59:00 +0530
+Message-ID: <CAJuYYwR3ncPygrYj-x4a5+axxp_zVFGmuWtmMDkwR9aVTGuL-Q@mail.gmail.com>
+References: <1318234289-22041-1-git-send-email-thomas.abraham@linaro.org>
+	<1318234289-22041-2-git-send-email-thomas.abraham@linaro.org>
+	<4E95BC01.8090805@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4E95AE26.8080702@gmail.com>
+In-Reply-To: <4E95BC01.8090805@gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 October 2011 20:41, Rob Herring <robherring2@gmail.com> wrote:
-> On 10/11/2011 11:06 AM, Thomas Abraham wrote:
->> On 11 October 2011 21:00, Rob Herring <robherring2@gmail.com> wrote:
->>> On 10/11/2011 10:19 AM, Thomas Abraham wrote:
->>>> Hi Rob,
->>>>
->>>> On 11 October 2011 20:41, Rob Herring <robherring2@gmail.com> wrot=
-e:
->>>>> Thomas,
->>>>>
->>>>> On 10/11/2011 03:16 AM, Thomas Abraham wrote:
->>>>>> As gpio chips get registered, a device tree node which represent=
-s the
->>>>>> gpio chip is searched and attached to it. A translate function i=
-s also
->>>>>> provided to convert the gpio specifier into actual platform sett=
-ings
->>>>>> for pin function selection, pull up/down and driver strength set=
-tings.
->>>>>>
->>>>>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->>>>>> ---
->>>>>> This patch is based on the latest consolidated Samsung GPIO driv=
-er available
->>>>>> in the following tree:
->>>>>> =A0 https://github.com/kgene/linux-samsung.git =A0branch: for-ne=
-xt
->>>>>>
->>>>>> =A0.../devicetree/bindings/gpio/gpio-samsung.txt =A0 =A0 =A0| =A0=
- 30 +++++++++++
->>>>>> =A0drivers/gpio/gpio-samsung.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0| =A0 53 ++++++++++++++++++++
->>>>>> =A02 files changed, 83 insertions(+), 0 deletions(-)
->>>>>> =A0create mode 100644 Documentation/devicetree/bindings/gpio/gpi=
-o-samsung.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung=
-=2Etxt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..883faeb
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
->>>>>> @@ -0,0 +1,30 @@
->>>>>> +Samsung Exynos4 GPIO Controller
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible: Format of compatible property value should be
->>>>>> + =A0"samsung,exynos4-gpio-<controller_name>". Example: For GPA0=
- controller, the
->>>>>> + =A0compatible property value should be "samsung,exynos4-gpio-g=
-pa0".
->>>>>
->>>>> Isn't gpa0 an instance of the h/w, not a version?
->>>>
->>>> GPA0 is a instance of the gpio controller. There are several such
->>>> instances and there could be differences in those instances such a=
-s
->>>> the number of GPIO lines managed by that gpio controller instance.
->>>>
->>>
->>> That doesn't seem like a reason to have different compatible string=
-s.
->>> Does that affect the programming model of the controller? Unused li=
-nes
->>> whether at the board level or SOC level shouldn't really matter.
+On 12 October 2011 21:40, Rob Herring <robherring2@gmail.com> wrote:
+> On 10/10/2011 03:11 AM, Thomas Abraham wrote:
+>> All of Samsung's s5p platforms have timer irqs statically mapped fro=
+m linux
+>> irq numbers 11 to 15. These timer irqs are moved to end of the stati=
+cally
+>> mapped linux irq space and the hardware irqs, which were statically =
+mapped
+>> starting from 32 is moved to start from 0. The NR_IRQS macro is cons=
+olidated
+>> for all the s5p platforms in this process.
 >>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>> =A0arch/arm/mach-exynos4/include/mach/entry-macro.S | =A0 =A01 -
+>> =A0arch/arm/mach-exynos4/include/mach/irqs.h =A0 =A0 =A0 =A0| =A0 =A0=
+3 +--
+>> =A0arch/arm/mach-s5p64x0/include/mach/irqs.h =A0 =A0 =A0 =A0| =A0 =A0=
+4 +---
+>> =A0arch/arm/mach-s5pc100/include/mach/irqs.h =A0 =A0 =A0 =A0| =A0 =A0=
+3 +--
+>> =A0arch/arm/mach-s5pv210/include/mach/irqs.h =A0 =A0 =A0 =A0| =A0 =A0=
+3 +--
+>> =A0arch/arm/plat-samsung/include/plat/irqs.h =A0 =A0 =A0 =A0| =A0 =A0=
+7 +++++--
+>> =A06 files changed, 9 insertions(+), 12 deletions(-)
 >>
->> No, that does not affect the programming of the controller. The reas=
-on
->> for the instance name extension in compatible string is to match the
->> gpio_chip with a gpio controller node. When matched, the of_node
->> pointer of the gpio_chip is set to point to that controller node.
->>
->> This might not be the best possible implementation but the device tr=
-ee
->> support code in this patch is dictated by the structure of the
->> existing gpio driver code. As you suggested previously, I will look =
-at
->> reworking the gpio driver a little later but for now, there was a ne=
-ed
->> for working gpio dt solution to make progress on dt support for othe=
-r
->> controllers.
+>> diff --git a/arch/arm/mach-exynos4/include/mach/entry-macro.S b/arch=
+/arm/mach-exynos4/include/mach/entry-macro.S
+>> index 4c9adbd..5c4fbcc 100644
+>> --- a/arch/arm/mach-exynos4/include/mach/entry-macro.S
+>> +++ b/arch/arm/mach-exynos4/include/mach/entry-macro.S
+>> @@ -72,7 +72,6 @@
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmpcc =A0 \irqnr, \irqnr
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmpne =A0 \irqnr, \tmp
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 cmpcs =A0 \irqnr, \irqnr
+>> - =A0 =A0 =A0 =A0 =A0 =A0 addne =A0 \irqnr, \irqnr, #32
 >
-> Linux should provide clues about what's needed in a binding, but the
-> binding should not be defined based on current Linux code. Doing the
-> binding one way and changing it later is not a good plan.
+>
+> With this change, can't you now use the common entry-macro-gic.S?
 
-Ok. When starting on this, two compatible values where used for the
-gpio controllers, one was "samsung,exynos4-gpio" and another was
-"samsung,exynos4-gpio-<ctrl_name>". And when the gpio dt support would
-mature, the second compatible value could be dropped. Non-linux
-platforms could always use the generic "samsung,exynos4-gpio"
-compatible value to match. I moved to using only
-"samsung,exynos4-gpio-<ctrl_name>" just before sending this patch
-because I was not sure of the right approach.
+
+The get_irqnr_preamble macro is quite different from that in
+entry-macro-gic.S file. Maybe it is possible to use the common
+entry-macro-gic.S file with some rework of exynos machine code.
+
 
 >
-> I think you need to convert all users of gpio over as well so you can
-> move to dynamic gpio_chip creation and gpio numbering. Or maybe you c=
-an
-> match based on base address? This is going to be a common problem as
-> gpio is converted over to DT. Perhaps Grant or others have suggestion=
-s
-> on the approach to use.
+>
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 .endm
+>>
+>> diff --git a/arch/arm/mach-exynos4/include/mach/irqs.h b/arch/arm/ma=
+ch-exynos4/include/mach/irqs.h
+>> index dfd4b7e..43087c3 100644
+>> --- a/arch/arm/mach-exynos4/include/mach/irqs.h
+>> +++ b/arch/arm/mach-exynos4/include/mach/irqs.h
+>> @@ -163,7 +163,6 @@
+>> =A0#define IRQ_GPIO2_NR_GROUPS =A09
+>> =A0#define IRQ_GPIO_END =A0 =A0 =A0 =A0 (S5P_GPIOINT_BASE + S5P_GPIO=
+INT_COUNT)
+>>
+>> -/* Set the default NR_IRQS */
+>> -#define NR_IRQS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0(IRQ_GPI=
+O_END + 64)
+>> +#define IRQ_TIMER_BASE =A0 =A0 =A0 =A0 =A0 =A0 =A0 (IRQ_GPIO_END + =
+64)
+>>
+>> =A0#endif /* __ASM_ARCH_IRQS_H */
+>> diff --git a/arch/arm/mach-s5p64x0/include/mach/irqs.h b/arch/arm/ma=
+ch-s5p64x0/include/mach/irqs.h
+>> index 53982db..bea73cc 100644
+>> --- a/arch/arm/mach-s5p64x0/include/mach/irqs.h
+>> +++ b/arch/arm/mach-s5p64x0/include/mach/irqs.h
+>> @@ -141,8 +141,6 @@
+>>
+>> =A0#define IRQ_EINT_GROUP(grp, x) =A0 =A0 =A0 (IRQ_EINT_GROUP##grp##=
+_BASE + (x))
+>>
+>> -/* Set the default NR_IRQS */
+>> -
+>> -#define NR_IRQS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0(IRQ_EIN=
+T_GROUP8_BASE + IRQ_EINT_GROUP8_NR + 1)
+>> +#define IRQ_TIMER_BASE =A0 =A0 =A0 =A0 =A0 =A0 =A0 (IRQ_EINT_GROUP8=
+_BASE + IRQ_EINT_GROUP8_NR + 1)
+>>
+>> =A0#endif /* __ASM_ARCH_IRQS_H */
+>> diff --git a/arch/arm/mach-s5pc100/include/mach/irqs.h b/arch/arm/ma=
+ch-s5pc100/include/mach/irqs.h
+>> index d2eb475..3a9d300 100644
+>> --- a/arch/arm/mach-s5pc100/include/mach/irqs.h
+>> +++ b/arch/arm/mach-s5pc100/include/mach/irqs.h
+>> @@ -104,8 +104,7 @@
+>> =A0#define S5P_GPIOINT_BASE =A0 =A0 (IRQ_EINT(31) + 1)
+>> =A0#define S5P_GPIOINT_GROUP_MAXNR =A0 =A0 =A021
+>>
+>> -/* Set the default NR_IRQS */
+>> -#define NR_IRQS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0(IRQ_EIN=
+T(31) + S5P_GPIOINT_COUNT + 1)
+>> +#define IRQ_TIMER_BASE =A0 =A0 =A0 =A0 =A0 =A0 =A0 (IRQ_EINT(31) + =
+S5P_GPIOINT_COUNT + 1)
+>>
+>> =A0/* Compatibility */
+>> =A0#define IRQ_LCD_FIFO =A0 =A0 =A0 =A0 IRQ_LCD0
+>> diff --git a/arch/arm/mach-s5pv210/include/mach/irqs.h b/arch/arm/ma=
+ch-s5pv210/include/mach/irqs.h
+>> index 5e0de3a..df3173a 100644
+>> --- a/arch/arm/mach-s5pv210/include/mach/irqs.h
+>> +++ b/arch/arm/mach-s5pv210/include/mach/irqs.h
+>> @@ -125,8 +125,7 @@
+>> =A0#define S5P_GPIOINT_BASE =A0 =A0 (IRQ_EINT(31) + 1)
+>> =A0#define S5P_GPIOINT_GROUP_MAXNR =A0 =A0 =A022
+>>
+>> -/* Set the default NR_IRQS */
+>> -#define NR_IRQS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0(IRQ_EIN=
+T(31) + S5P_GPIOINT_COUNT + 1)
+>> +#define IRQ_TIMER_BASE =A0 =A0 =A0 =A0 =A0 =A0 =A0 (IRQ_EINT(31) + =
+S5P_GPIOINT_COUNT + 1)
+>>
+>> =A0/* Compatibility */
+>> =A0#define IRQ_LCD_FIFO =A0 =A0 =A0 =A0 IRQ_LCD0
+>> diff --git a/arch/arm/plat-samsung/include/plat/irqs.h b/arch/arm/pl=
+at-samsung/include/plat/irqs.h
+>> index 08d1a7e..b8918b3 100644
+>> --- a/arch/arm/plat-samsung/include/plat/irqs.h
+>> +++ b/arch/arm/plat-samsung/include/plat/irqs.h
+>> @@ -22,7 +22,7 @@
+>> =A0 * mulitple of 32 to allow the common code to work
+>> =A0 */
+>>
+>> -#define S5P_IRQ_OFFSET =A0 =A0 =A0 =A0 =A0 =A0 =A0 (32)
+>> +#define S5P_IRQ_OFFSET =A0 =A0 =A0 =A0 =A0 =A0 =A0 (0)
+>
+> Just remove this.
 
-Yes, I agree with you about the dynamic gpio_chip creation and gpio
-numbering. Probably, I should have focussed more on this before moving
-to dt support for other controllers.
+Ok.
 
-But matching based on base address is still an option if that is
-better than matching with compatible values as defined currently. The
-'struct samsung_gpio_chip' which encapsulates 'struct gpio_chip' has
-information about the base address of the gpio controller. The match
-of gpio device node with 'struct gpio_chip' can be quickly moved over
-to base address matching. Would this be better than the current
-approach?
+>
+>>
+>> =A0#define S5P_IRQ(x) =A0 =A0 =A0 =A0 =A0 ((x) + S5P_IRQ_OFFSET)
+>>
+>> @@ -44,13 +44,14 @@
+>> =A0#define S5P_IRQ_VIC2(x) =A0 =A0 =A0 =A0 =A0 =A0 =A0(S5P_VIC2_BASE=
+ + (x))
+>> =A0#define S5P_IRQ_VIC3(x) =A0 =A0 =A0 =A0 =A0 =A0 =A0(S5P_VIC3_BASE=
+ + (x))
+>>
+>> -#define S5P_TIMER_IRQ(x) =A0 =A0 (11 + (x))
+>> +#define S5P_TIMER_IRQ(x) =A0 =A0 (IRQ_TIMER_BASE + (x))
+>>
+>> =A0#define IRQ_TIMER0 =A0 =A0 =A0 =A0 =A0 S5P_TIMER_IRQ(0)
+>> =A0#define IRQ_TIMER1 =A0 =A0 =A0 =A0 =A0 S5P_TIMER_IRQ(1)
+>> =A0#define IRQ_TIMER2 =A0 =A0 =A0 =A0 =A0 S5P_TIMER_IRQ(2)
+>> =A0#define IRQ_TIMER3 =A0 =A0 =A0 =A0 =A0 S5P_TIMER_IRQ(3)
+>> =A0#define IRQ_TIMER4 =A0 =A0 =A0 =A0 =A0 S5P_TIMER_IRQ(4)
+>> +#define IRQ_TIMER_COUNT =A0 =A0 =A0 =A0 =A0 =A0 =A0(5)
+>>
+>> =A0#define IRQ_EINT(x) =A0 =A0 =A0 =A0 =A0((x) < 16 ? ((x) + S5P_EIN=
+T_BASE1) \
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 : ((x) - 16 + S5P_EINT_BASE2))
+>> @@ -77,4 +78,6 @@
+>> =A0#define S5P_IRQ_TYPE_EDGE_RISING =A0 =A0 (0x03)
+>> =A0#define S5P_IRQ_TYPE_EDGE_BOTH =A0 =A0 =A0 =A0 =A0 =A0 =A0 (0x04)
+>>
+>> +#define NR_IRQS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0(IRQ_TIM=
+ER_BASE + IRQ_TIMER_COUNT)
+>> +
+>> =A0#endif /* __PLAT_SAMSUNG_IRQS_H */
+>
+> Really these timer irqs should be converted to irq domains and be
+> dynamically allocated in the linux irq space, but this is at least a
+> step in the right direction.
 
-Thank you for your comments Rob.
+Ok.
+
+Thanks for your comments.
 
 Regards,
 Thomas.
