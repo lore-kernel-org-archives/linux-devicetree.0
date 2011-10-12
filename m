@@ -1,16 +1,11 @@
 From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] dmaengine: at_hdmac: platform data move to use
- .id_table
-Date: Wed, 12 Oct 2011 18:52:50 +0200
-Message-ID: <4E95C5E2.4020607@atmel.com>
-References: <1314075338.22120.3.camel@vkoul-udesk3>
- <9723283e7097730f568bf7c2f3a93ae42c6bc5ca.1318264339.git.nicolas.ferre@atmel.com>
- <1318342612.1546.352.camel@vkoul-udesk3> <4E95C1AF.5080803@atmel.com>
+Subject: [PATCH v3 0/4] dmaengine: Device Tree support for Atmel DMA
+Date: Wed, 12 Oct 2011 18:57:10 +0200
+Message-ID: <1318438634-11826-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4E95C1AF.5080803-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,23 +15,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/2011 06:34 PM, Nicolas Ferre :
-> On 10/11/2011 04:16 PM, Vinod Koul :
+This series add the device tree support to Atmel DMA controller driver:
+at_hdmac.
+The removal of platform data ease the conversion to device tree. It also have
+the additional benefit of being simpler and cleaner.
 
-[..]
+Nicolas Ferre (4):
+      dmaengine: at_hdmac: platform data move to use .id_table
+      dmaengine: at_hdmac: add device tree support
+      ARM: at91/dma: remove platform data from DMA controller
+      ARM: at91/dma: DMA controller registering with DT support
 
->> Little confused at this, where is the remove of existing platfrom data
->> per the changelog?
-> 
-> Well, yes, it is the use of platform data that is removed, not the
-> structure it self. I change the log message in my v2 patch series.
+ .../devicetree/bindings/dma/atmel-dma.txt          |   14 ++++
+ arch/arm/mach-at91/at91sam9g45_devices.c           |   17 ++---
+ arch/arm/mach-at91/at91sam9rl_devices.c            |    8 +--
+ arch/arm/mach-at91/include/mach/at_hdmac.h         |   10 ---
+ drivers/dma/at_hdmac.c                             |   76 +++++++++++++++++---
+ drivers/dma/at_hdmac_regs.h                        |    8 ++
+ 6 files changed, 97 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/atmel-dma.txt
 
-v3 actually...
-
-Bye,
+Best regards,
 -- 
 Nicolas Ferre
