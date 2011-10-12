@@ -1,88 +1,69 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] gpio: exynos4: Add device tree support
-Date: Wed, 12 Oct 2011 10:11:34 -0500
-Message-ID: <4E95AE26.8080702@gmail.com>
-References: <1318320974-9879-1-git-send-email-thomas.abraham@linaro.org> <4E945C90.1050601@gmail.com> <CAJuYYwRwBxkAo2fMfVV9wtQ40XeROAnc-cGJK+cssjuh9px=qQ@mail.gmail.com> <4E946109.2000305@gmail.com> <CAJuYYwQWUjVf9Z5Rdw4fTK70=B1aw-5x_wjYm_fq+zHyQAWJvg@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [RFC PATCH] tty/serial: atmel_serial: add device tree support
+Date: Wed, 12 Oct 2011 17:35:06 +0200
+Message-ID: <4E95B3AA.9040603@atmel.com>
+References: <1317635502-9430-1-git-send-email-nicolas.ferre@atmel.com>
+	<4E8A6858.6020700@gmail.com>
+	<20111004165226.GA10919@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwQWUjVf9Z5Rdw4fTK70=B1aw-5x_wjYm_fq+zHyQAWJvg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111004165226.GA10919@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2011 11:06 AM, Thomas Abraham wrote:
-> On 11 October 2011 21:00, Rob Herring <robherring2@gmail.com> wrote:
->> On 10/11/2011 10:19 AM, Thomas Abraham wrote:
->>> Hi Rob,
->>>
->>> On 11 October 2011 20:41, Rob Herring <robherring2@gmail.com> wrote:
->>>> Thomas,
->>>>
->>>> On 10/11/2011 03:16 AM, Thomas Abraham wrote:
->>>>> As gpio chips get registered, a device tree node which represents the
->>>>> gpio chip is searched and attached to it. A translate function is also
->>>>> provided to convert the gpio specifier into actual platform settings
->>>>> for pin function selection, pull up/down and driver strength settings.
->>>>>
->>>>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->>>>> ---
->>>>> This patch is based on the latest consolidated Samsung GPIO driver available
->>>>> in the following tree:
->>>>>   https://github.com/kgene/linux-samsung.git  branch: for-next
->>>>>
->>>>>  .../devicetree/bindings/gpio/gpio-samsung.txt      |   30 +++++++++++
->>>>>  drivers/gpio/gpio-samsung.c                        |   53 ++++++++++++++++++++
->>>>>  2 files changed, 83 insertions(+), 0 deletions(-)
->>>>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-samsung.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
->>>>> new file mode 100644
->>>>> index 0000000..883faeb
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
->>>>> @@ -0,0 +1,30 @@
->>>>> +Samsung Exynos4 GPIO Controller
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible: Format of compatible property value should be
->>>>> +  "samsung,exynos4-gpio-<controller_name>". Example: For GPA0 controller, the
->>>>> +  compatible property value should be "samsung,exynos4-gpio-gpa0".
->>>>
->>>> Isn't gpa0 an instance of the h/w, not a version?
->>>
->>> GPA0 is a instance of the gpio controller. There are several such
->>> instances and there could be differences in those instances such as
->>> the number of GPIO lines managed by that gpio controller instance.
->>>
+On 10/04/2011 06:52 PM, Grant Likely :
+> On Mon, Oct 03, 2011 at 08:58:48PM -0500, Rob Herring wrote:
+>> On 10/03/2011 04:51 AM, Nicolas Ferre wrote:
+>>>  static int __devinit atmel_serial_probe(struct platform_device *pdev)
+>>>  {
+>>>  	struct atmel_uart_port *port;
+>>> +	struct device_node *np = pdev->dev.of_node;
+>>>  	struct atmel_uart_data *pdata = pdev->dev.platform_data;
+>>>  	void *data;
+>>>  	int ret;
+>>>  
+>>>  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
+>>>  
+>>> -	port = &atmel_ports[pdata->num];
+>>> +	if (np) {
+>>> +		ret = of_alias_get_id(np, "serial");
+>>> +		if (ret < 0)
+>>> +			goto err;
 >>
->> That doesn't seem like a reason to have different compatible strings.
->> Does that affect the programming model of the controller? Unused lines
->> whether at the board level or SOC level shouldn't really matter.
+>> I'll defer to Grant on this. There aren't any other drivers using this.
+>>
 > 
+> This is the correct thing to do.
 > 
-> No, that does not affect the programming of the controller. The reason
-> for the instance name extension in compatible string is to match the
-> gpio_chip with a gpio controller node. When matched, the of_node
-> pointer of the gpio_chip is set to point to that controller node.
+> One note however; I prefer driver to *not* require an alias to be
+> present.  By all means, use an alias if it is available, but the
+> driver should auto-enumerate if it is not.  There is a patch that
+> makes of_alias_get_id() do this for you, but it hasn't been mainlined
+> yet and it is still a bit in flux.  There will be something that takes
+> care of this for you, but be aware that the function name may change.
 > 
-> This might not be the best possible implementation but the device tree
-> support code in this patch is dictated by the structure of the
-> existing gpio driver code. As you suggested previously, I will look at
-> reworking the gpio driver a little later but for now, there was a need
-> for working gpio dt solution to make progress on dt support for other
-> controllers.
+> In the mean time, this patch is okay.
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-Linux should provide clues about what's needed in a binding, but the
-binding should not be defined based on current Linux code. Doing the
-binding one way and changing it later is not a good plan.
+Grant,
 
-I think you need to convert all users of gpio over as well so you can
-move to dynamic gpio_chip creation and gpio numbering. Or maybe you can
-match based on base address? This is going to be a common problem as
-gpio is converted over to DT. Perhaps Grant or others have suggestions
-on the approach to use.
+I have reworked this atmel_serial device tree support so I did not add
+your "Acked-by" to this new series. I repost it right now.
+I hope this new implementation will be even better though ;-)
 
-Rob
+Bye,
+-- 
+Nicolas Ferre
