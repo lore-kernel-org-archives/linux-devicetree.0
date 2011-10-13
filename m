@@ -1,135 +1,67 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] tty/serial: RS485 bindings for device tree
-Date: Wed, 12 Oct 2011 19:02:28 -0600
-Message-ID: <20111013010228.GM14042@ponder.secretlab.ca>
-References: <1318435620-7481-1-git-send-email-nicolas.ferre@atmel.com>
- <37a19e194d02144aecd24f284f5e43979643a3c3.1318433947.git.nicolas.ferre@atmel.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/3] netdev/phy: Handle IEEE802.3 clause 45 Ethernet PHYs
+Date: Wed, 12 Oct 2011 18:21:11 -0600
+Message-ID: <20111013002111.GA14042@ponder.secretlab.ca>
+References: <1318442783-29058-1-git-send-email-david.daney@cavium.com>
+ <1318442783-29058-2-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <37a19e194d02144aecd24f284f5e43979643a3c3.1318433947.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, claudio-YOzL5CV4y4YG1A2ADO40+w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org
+In-Reply-To: <1318442783-29058-2-git-send-email-david.daney@cavium.com>
+Sender: netdev-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, afleming@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2011 at 06:06:56PM +0200, Nicolas Ferre wrote:
-> Generic bindings for RS485 feature included in some UARTs.
-> Those bindings have to be used withing an UART device tree node.
-> Documentation updated to link to the bindings definition.
+On Wed, Oct 12, 2011 at 11:06:21AM -0700, David Daney wrote:
+> The IEEE802.3 clause 45 MDIO bus protocol allows for directly
+> addressing PHY registers using a 21 bit address, and is used by many
+> 10G Ethernet PHYS.  Already existing is the ability of MDIO bus
+> drivers to use clause 45, with the MII_ADDR_C45 flag.  Here we add
+> some support in the PHY and device tree infrastructure to use these
+> PHYs.
 > 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-> ---
->  Documentation/devicetree/bindings/serial/rs485.txt |   31 ++++++++++++++++++++
->  .../devicetree/bindings/tty/serial/atmel-usart.txt |   27 +++++++++++++++++
->  Documentation/serial/serial-rs485.txt              |    5 +++
->  3 files changed, 63 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/rs485.txt
->  create mode 100644 Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
+> Normally the MII_ADDR_C45 flag is ORed with the register address to
+> indicate a clause 45 transaction.  Here we also use this flag in the
+> *device* address passed to get_phy_id() and get_phy_device() to
+> indicate that probing should be done with clause 45 transactions.  If
+> a PHY is successfully probed with MII_ADDR_C45, the new struct
+> phy_device is_c45 flag is set for the PHY.
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/rs485.txt b/Documentation/devicetree/bindings/serial/rs485.txt
-> new file mode 100644
-> index 0000000..1e753c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/rs485.txt
-> @@ -0,0 +1,31 @@
-> +* RS485 serial communications
-> +
-> +The RTS signal is capable of automatically controlling line direction for
-> +the built-in half-duplex mode.
-> +The properties described hereafter shall be given to a half-duplex capable
-> +UART node.
-> +
-> +Required properties:
-> +- rs485-rts-delay: prop-encoded-array <a b> where:
-> +  * a is the delay beteween rts signal and beginning of data sent in milliseconds.
-> +      it corresponds to the delay before sending data.
-> +  * b is the delay between end of data sent and rts signal in milliseconds
-> +      it corresponds to the delay after sending data and actual release of the line.
-> +
-> +Optional properties:
-> +- linux,rs485-enabled-at-boot-time: empty property telling to enable the rs485
-> +  feature at boot time. It can be disabled later with proper ioctl.
-> +- rs485-rx-during-tx: empty property that enables the receiving of data even
-> +  whilst sending data.
-> +
-> +RS485 example for Atmel USART:
-> +	usart0: serial@fff8c000 {
-> +		compatible = "atmel,at91sam9260-usart";
-> +		reg = <0xfff8c000 0x4000>;
-> +		interrupts = <7>;
-> +		atmel,use-dma-rx;
-> +		atmel,use-dma-tx;
-> +		linux,rs485-enabled-at-boot-time;
-> +		rs485-rts-delay = <0 200>;		// in milliseconds
-> +	};
-> +
-> diff --git a/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt b/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
-> new file mode 100644
-> index 0000000..a49d9a1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/tty/serial/atmel-usart.txt
-> @@ -0,0 +1,27 @@
-> +* Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
-> +
-> +Required properties:
-> +- compatible: Should be "atmel,<chip>-usart"
-> +  The compatible <chip> indicated will be the first SoC to support an
-> +  additional mode or an USART new feature.
-> +- reg: Should contain registers location and length
-> +- interrupts: Should contain interrupt
-> +
-> +Optional properties:
-> +- atmel,use-dma-rx: use of PDC or DMA for receiving data
-> +- atmel,use-dma-tx: use of PDC or DMA for transmitting data
-> +
-> +<chip> compatible description:
-> +- at91rm9200:  legacy USART support
-> +- at91sam9260: generic USART implementation for SAM9 SoCs
-> +
-> +Example:
-> +
-> +	usart0: serial@fff8c000 {
-> +		compatible = "atmel,at91sam9260-usart";
-> +		reg = <0xfff8c000 0x4000>;
-> +		interrupts = <7>;
-> +		atmel,use-dma-rx;
-> +		atmel,use-dma-tx;
-> +	};
-> +
-> diff --git a/Documentation/serial/serial-rs485.txt b/Documentation/serial/serial-rs485.txt
-> index c8878f8..079cb3d 100644
-> --- a/Documentation/serial/serial-rs485.txt
-> +++ b/Documentation/serial/serial-rs485.txt
-> @@ -28,6 +28,10 @@
->     RS485 communications. This data structure is used to set and configure RS485
->     parameters in the platform data and in ioctls.
+> Signed-off-by: David Daney <david.daney@cavium.com>
+
+Minor comment below, but otherwise,
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index e4c3844..0a25e2c 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -246,6 +246,7 @@ struct sk_buff;
+>   * phy_id: UID for this device found during discovery
+>   * state: state of the PHY for management purposes
+>   * dev_flags: Device-specific flags used by the PHY driver.
+> + * is_c45:  Set to 1 if this phy uses clause 45 addressing.
+
+"Set to true if ..."
+
+>   * addr: Bus address of PHY
+>   * link_timeout: The number of timer firings to wait before the
+>   * giving up on the current attempt at acquiring a link
+> @@ -283,6 +284,8 @@ struct phy_device {
 >  
-> +   The device tree can also provide RS485 boot time parameters (see [2]
-> +   for bindings). The driver is in charge of filling this data structure from
-> +   the values given by the device tree.
+>  	u32 dev_flags;
+>  
+> +	unsigned int is_c45:1;
 > +
->     Any driver for devices capable of working both as RS232 and RS485 should
->     provide at least the following ioctls:
+
+bool
+
+>  	phy_interface_t interface;
 >  
-> @@ -121,3 +125,4 @@
->  5. REFERENCES
->  
->   [1]	include/linux/serial.h
-> + [2]	Documentation/devicetree/bindings/serial/rs485.txt
+>  	/* Bus address of the PHY (0-31) */
 > -- 
-> 1.7.5.4
+> 1.7.2.3
 > 
