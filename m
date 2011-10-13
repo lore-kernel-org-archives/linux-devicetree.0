@@ -1,88 +1,132 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 3/3] netdev/phy: Add driver for Broadcom BCM8706 10G
- Ethernet PHY
-Date: Wed, 12 Oct 2011 18:31:29 -0600
-Message-ID: <20111013003129.GC14042@ponder.secretlab.ca>
-References: <1318442783-29058-1-git-send-email-david.daney@cavium.com>
- <1318442783-29058-4-git-send-email-david.daney@cavium.com>
+Subject: Re: [PATCH v3 2/4] dmaengine: at_hdmac: add device tree support
+Date: Wed, 12 Oct 2011 18:34:22 -0600
+Message-ID: <20111013003422.GE14042@ponder.secretlab.ca>
+References: <f91f267b82ac0f0459c11a7bdf3ab0ea8758656a.1318438197.git.nicolas.ferre@atmel.com>
+ <6a7ec87c53609bbb517b199a9b48a5322a625aa1.1318438197.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1318442783-29058-4-git-send-email-david.daney@cavium.com>
+In-Reply-To: <6a7ec87c53609bbb517b199a9b48a5322a625aa1.1318438197.git.nicolas.ferre@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, afleming@gmail.com
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, robherring2@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2011 at 11:06:23AM -0700, David Daney wrote:
-> Add a driver and PHY_ID number for said device.  This is a 10Gig PHY
-> which uses MII_ADDR_C45 addressing, it is always 10G full duplex, so
-> there is no autonegotiation.  All we do is report link state and send
-> interrupts when it changes.
+On Wed, Oct 12, 2011 at 06:57:12PM +0200, Nicolas Ferre wrote:
+> Add device tree probe support for atmel at_hdmac DMA driver.
+> Bindings are added to specify DMA controller configuration.
 > 
-> If the PHY has a device tree of_node associated with it, the
-> "broadcom,c45-reg-init" property is used to supply register
-> initialization values when config_init() is called.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 > ---
->  .../devicetree/bindings/net/broadcom-bcm8706.txt   |   28 +++
->  drivers/net/phy/Kconfig                            |    5 +
->  drivers/net/phy/Makefile                           |    1 +
->  drivers/net/phy/bcm8706.c                          |  212 ++++++++++++++++++++
->  include/linux/brcmphy.h                            |    1 +
->  5 files changed, 247 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/broadcom-bcm8706.txt
->  create mode 100644 drivers/net/phy/bcm8706.c
+>  .../devicetree/bindings/dma/atmel-dma.txt          |   14 +++++++++
+>  drivers/dma/at_hdmac.c                             |   30 +++++++++++++++++++-
+>  2 files changed, 43 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-dma.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/net/broadcom-bcm8706.txt b/Documentation/devicetree/bindings/net/broadcom-bcm8706.txt
+> diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
 > new file mode 100644
-> index 0000000..d58bea9
+> index 0000000..3c046ee
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/broadcom-bcm8706.txt
-> @@ -0,0 +1,28 @@
-> +The Broadcom BCM8706 is a 10G Ethernet PHY.  It has these bindings in
-> +addition to the standard PHY bindings.
+> +++ b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+> @@ -0,0 +1,14 @@
+> +* Atmel Direct Memory Access Controller (DMA)
 > +
-> +Compatible: Should contain "broadcom,bcm8706" and
-> +            "ethernet-phy-ieee802.3-c45"
+> +Required properties:
+> +- compatible: Should be "atmel,<chip>-dma"
+> +- reg: Should contain DMA registers location and length
+> +- interrupts: Should contain DMA interrupt
 > +
-> +Optional Properties:
+> +Examples:
 > +
-> +- broadcom,c45-reg-init : one of more sets of 4 cells.  The first cell
-> +  is the device type, the second a register address, the third cell
-> +  contains a mask to be ANDed with the existing register value, and
-> +  the fourth cell is ORed with he result to yield the new register
-> +  value.
-
-... a mask value of '0' should also guarantee that the driver does not do a read before the write.
-
-What have we got so far in this regard for other phys and devices?  I
-don't think it necessary to put 'c45' in the property name.  reg-init
-should be sufficient.  I'd like to hear from others if it would be
-valuable to have a 'reg-init-sequence' property of the above format.
-
-What does the device type cell indicate?  Wouldn't the driver
-naturally have the device id from the address of the cell?
-
-> +static int __init bcm8706_init(void)
+> +dma@ffffec00 {
+> +	compatible = "atmel,at91sam9g45-dma";
+> +	reg = <0xffffec00 0x200>;
+> +	interrupts = <21>;
+> +};
+> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+> index d1869c5..42bd64c 100644
+> --- a/drivers/dma/at_hdmac.c
+> +++ b/drivers/dma/at_hdmac.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #include "at_hdmac_regs.h"
+>  
+> @@ -1175,6 +1177,20 @@ static void atc_free_chan_resources(struct dma_chan *chan)
+>  
+>  /*--  Module Management  -----------------------------------------------*/
+>  
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id atmel_dma_dt_ids[] = {
+> +	{
+> +		.compatible = "atmel,at91sam9rl-dma",
+> +		.data = (void *)ATDMA_DEVTYPE_SAM9RL
+> +	}, {
+> +		.compatible = "atmel,at91sam9g45-dma",
+> +		.data = (void *)ATDMA_DEVTYPE_SAM9G45
+> +	}, { /* sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, atmel_dma_dt_ids);
+> +#endif
+> +
+>  static struct platform_device_id atdma_devtypes[] = {
+>  	{
+>  		.name = "at91sam9rl_dma",
+> @@ -1187,6 +1203,17 @@ static struct platform_device_id atdma_devtypes[] = {
+>  	}
+>  };
+>  
+> +static inline enum atdma_devtype __init at_dma_get_driver_data(
+> +					struct platform_device *pdev)
 > +{
-> +	int ret;
-> +
-> +	ret = phy_driver_register(&bcm8706_driver);
-> +
-> +	return ret;
-> +}
-> +module_init(bcm8706_init);
+> +	if (pdev->dev.of_node) {
+> +		const struct of_device_id *match;
+> +		match = of_match_node(atmel_dma_dt_ids, pdev->dev.of_node);
 
-or simply:
-static int __init bcm8706_init(void)
-{
-	return phy_driver_register(&bcm8706_driver);
-}
-module_init(bcm8706_init);
+You'll need to check the return value.  It is possible (though
+unlikely) to have a device with an of_node but still happens to get
+bound via the platform_driver id_table.  In which case match would be
+NULL here.
 
-Otherwise the driver code seems to be fine.
+Otherwise, you can add my a-b after fixing that bug.
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
 g.
+
+
+> +		return (enum atdma_devtype)match->data;
+> +	}
+> +	return platform_get_device_id(pdev)->driver_data;
+> +}
+> +
+>  /**
+>   * at_dma_off - disable DMA controller
+>   * @atdma: the Atmel HDAMC device
+> @@ -1218,7 +1245,7 @@ static int __init at_dma_probe(struct platform_device *pdev)
+>  	dma_cap_set(DMA_MEMCPY, cap_mask);
+>  
+>  	/* get DMA parameters from controller type */
+> -	atdmatype = platform_get_device_id(pdev)->driver_data;
+> +	atdmatype = at_dma_get_driver_data(pdev);
+>  
+>  	switch (atdmatype) {
+>  	case ATDMA_DEVTYPE_SAM9RL:
+> @@ -1526,6 +1553,7 @@ static struct platform_driver at_dma_driver = {
+>  	.driver = {
+>  		.name	= "at_hdmac",
+>  		.pm	= &at_dma_dev_pm_ops,
+> +		.of_match_table	= of_match_ptr(atmel_dma_dt_ids),
+>  	},
+>  };
+>  
+> -- 
+> 1.7.5.4
+> 
