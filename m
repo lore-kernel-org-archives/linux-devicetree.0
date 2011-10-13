@@ -1,126 +1,204 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 4/5] tty/serial: atmel_serial: auto-enumerate ports
-Date: Wed, 12 Oct 2011 19:03:18 -0600
-Message-ID: <20111013010318.GO14042@ponder.secretlab.ca>
-References: <37a19e194d02144aecd24f284f5e43979643a3c3.1318433947.git.nicolas.ferre@atmel.com>
- <ecef50a9b874d08bb46c0a12d1e4ad01e641d3d5.1318433947.git.nicolas.ferre@atmel.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: Exynos4: Add support for dt irq specifier to
+ linux virq conversion
+Date: Wed, 12 Oct 2011 18:54:12 -0600
+Message-ID: <20111013005412.GI14042@ponder.secretlab.ca>
+References: <1318234289-22041-1-git-send-email-thomas.abraham@linaro.org>
+ <1318234289-22041-4-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <ecef50a9b874d08bb46c0a12d1e4ad01e641d3d5.1318433947.git.nicolas.ferre@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, claudio@evidence.eu.com, jesper.nilsson@axis.com, alan@lxorguk.ukuu.org.uk, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+In-Reply-To: <1318234289-22041-4-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2011 at 06:06:59PM +0200, Nicolas Ferre wrote:
-> If no platform data provided to enumerate ports, use a bit field
-> to choose port number and check if port is already initialized.
-> Use this mechanism for both console and plain serial ports.
+On Mon, Oct 10, 2011 at 01:41:29PM +0530, Thomas Abraham wrote:
+> Add support for conversion of device tree interrupt specifier to linux
+> virq domain for GIC and Interrupt combiner controllers.
 > 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-
+> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/tty/serial/atmel_serial.c |   44 ++++++++++++++++++++++++++++++------
->  1 files changed, 36 insertions(+), 8 deletions(-)
+>  .../devicetree/bindings/irq/samsung-combiner.txt   |   24 ++++++++++
+>  arch/arm/mach-exynos4/cpu.c                        |   20 ++++++++-
+>  arch/arm/mach-exynos4/irq-combiner.c               |   45 ++++++++++++++++++++
+>  3 files changed, 88 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/irq/samsung-combiner.txt
 > 
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index bb72354..1074329 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -157,6 +157,7 @@ struct atmel_uart_port {
->  };
->  
->  static struct atmel_uart_port atmel_ports[ATMEL_MAX_UART];
-> +static unsigned long atmel_ports_in_use;
->  
->  #ifdef SUPPORT_SYSRQ
->  static struct console atmel_console;
-> @@ -1423,7 +1424,6 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
->  	port->flags		= UPF_BOOT_AUTOCONF;
->  	port->ops		= &atmel_pops;
->  	port->fifosize		= 1;
-> -	port->line		= pdata->num;
->  	port->dev		= &pdev->dev;
->  	port->mapbase	= pdev->resource[0].start;
->  	port->irq	= pdev->resource[1].start;
-> @@ -1613,10 +1613,15 @@ static struct console atmel_console = {
->  static int __init atmel_console_init(void)
->  {
->  	if (atmel_default_console_device) {
-> -		add_preferred_console(ATMEL_DEVICENAME,
-> -				      atmel_default_console_device->id, NULL);
-> -		atmel_init_port(&atmel_ports[atmel_default_console_device->id],
-> -				atmel_default_console_device);
-> +		int id = atmel_default_console_device->id;
-> +		struct atmel_uart_port *port = &atmel_ports[id];
+> diff --git a/Documentation/devicetree/bindings/irq/samsung-combiner.txt b/Documentation/devicetree/bindings/irq/samsung-combiner.txt
+> new file mode 100644
+> index 0000000..b7d5c30
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/irq/samsung-combiner.txt
+> @@ -0,0 +1,24 @@
+> +* Exynos4 Interrupt Combiner Controller
 > +
-> +		set_bit(id, &atmel_ports_in_use);
-> +		port->backup_imr = 0;
-> +		port->uart.line = id;
+> +Samsung's Exynos4 architecture includes a interrupt combiner which
+> +can combine interrupt sources as a group and provide a single
+> +interrupt request for the group. The interrupt request from each
+> +group are connected to a parent interrupt controller, which is GIC
+> +in case of Exynos4.
 > +
-> +		add_preferred_console(ATMEL_DEVICENAME, id, NULL);
-> +		atmel_init_port(port, atmel_default_console_device);
->  		register_console(&atmel_console);
->  	}
->  
-> @@ -1715,12 +1720,33 @@ static int __devinit atmel_serial_probe(struct platform_device *pdev)
->  	struct atmel_uart_port *port;
->  	struct atmel_uart_data *pdata = pdev->dev.platform_data;
->  	void *data;
-> -	int ret;
-> +	int ret = -ENODEV;
->  
->  	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
->  
-> -	port = &atmel_ports[pdata->num];
-> +	if (pdata)
-> +		ret = pdata->num;
+> +Required properties:
+> +- compatible: should be "samsung,exynos4-combiner".
+> +- interrupt-cells: should be <2>. The meaning of the cells are
+> +    * First Cell: Combiner Group Number.
+> +    * Second Cell: Interrupt within the group.
+> +- reg: Base address and size of interrupt combiner registers.
+> +- interrupt-controller: Identifies the node as an interrupt controller.
 > +
-> +	if (ret < 0)
-> +		/* port id not found in platform data:
-> +		 * auto-enumerate it */
-> +		ret = find_first_zero_bit(&atmel_ports_in_use,
-> +				sizeof(atmel_ports_in_use));
+> +Example:
 > +
-> +	if (ret > ATMEL_MAX_UART) {
-> +		ret = -ENODEV;
-> +		goto err;
-> +	}
-> +
-> +	if (test_and_set_bit(ret, &atmel_ports_in_use)) {
-> +		/* port already in use */
-> +		ret = -EBUSY;
-> +		goto err;
-> +	}
-> +
-> +	port = &atmel_ports[ret];
->  	port->backup_imr = 0;
-> +	port->uart.line = ret;
+> +	combiner: interrupt-controller@10440000 {
+> +		compatible = "samsung,exynos4-combiner";
+> +		#interrupt-cells = <2>;
+> +		interrupt-controller;
+> +		reg = <0x10440000 0x200>;
+> +	};
+> diff --git a/arch/arm/mach-exynos4/cpu.c b/arch/arm/mach-exynos4/cpu.c
+> index 358624d..776e8d4 100644
+> --- a/arch/arm/mach-exynos4/cpu.c
+> +++ b/arch/arm/mach-exynos4/cpu.c
+> @@ -10,6 +10,8 @@
 >  
->  	atmel_init_port(port, pdev);
+>  #include <linux/sched.h>
+>  #include <linux/sysdev.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
 >  
-> @@ -1766,7 +1792,7 @@ err_alloc_ring:
->  		clk_put(port->clk);
->  		port->clk = NULL;
->  	}
-> -
-> +err:
->  	return ret;
+>  #include <asm/mach/map.h>
+>  #include <asm/mach/irq.h>
+> @@ -38,6 +40,8 @@ unsigned int gic_bank_offset __read_mostly;
+>  extern int combiner_init(unsigned int combiner_nr, void __iomem *base,
+>  			 unsigned int irq_start);
+>  extern void combiner_cascade_irq(unsigned int combiner_nr, unsigned int irq);
+> +extern void combiner_init_dt(struct device_node *node,
+> +				struct device_node *parent);
+>  
+>  /* Initial IO mappings */
+>  static struct map_desc exynos4_iodesc[] __initdata = {
+> @@ -229,13 +233,27 @@ static void exynos4_gic_irq_fix_base(struct irq_data *d)
+>  			    (gic_bank_offset * smp_processor_id());
 >  }
 >  
-> @@ -1786,6 +1812,8 @@ static int __devexit atmel_serial_remove(struct platform_device *pdev)
->  
->  	/* "port" is allocated statically, so we shouldn't free it */
->  
-> +	clear_bit(port->line, &atmel_ports_in_use);
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id exynos4_dt_irq_match[] = {
+> +	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
+> +	{ .compatible = "samsung,exynos4-combiner", .data = combiner_init_dt, },
+> +	{},
+> +};
+> +#endif
 > +
->  	clk_put(atmel_port->clk);
+>  void __init exynos4_init_irq(void)
+>  {
+>  	int irq;
 >  
->  	return ret;
-> -- 
-> 1.7.5.4
-> 
+>  	gic_bank_offset = soc_is_exynos4412() ? 0x4000 : 0x8000;
+>  
+> -	gic_init(0, IRQ_PPI(0), S5P_VA_GIC_DIST, S5P_VA_GIC_CPU);
+> +#ifdef CONFIG_OF
+> +	if (of_have_populated_dt())
+> +		of_irq_init(exynos4_dt_irq_match);
+> +	else
+> +#endif
+
+With the proper empty implementations of of_have_populated_dt() and
+of_irq_init(), the #ifdef block here should probably be removed.
+
+> +		gic_init(0, IRQ_PPI(0), S5P_VA_GIC_DIST, S5P_VA_GIC_CPU);
+> +
+>  	gic_arch_extn.irq_eoi = exynos4_gic_irq_fix_base;
+>  	gic_arch_extn.irq_unmask = exynos4_gic_irq_fix_base;
+>  	gic_arch_extn.irq_mask = exynos4_gic_irq_fix_base;
+> diff --git a/arch/arm/mach-exynos4/irq-combiner.c b/arch/arm/mach-exynos4/irq-combiner.c
+> index 5a2758a..198bd0d 100644
+> --- a/arch/arm/mach-exynos4/irq-combiner.c
+> +++ b/arch/arm/mach-exynos4/irq-combiner.c
+> @@ -12,7 +12,12 @@
+>   * published by the Free Software Foundation.
+>  */
+>  
+> +#include <linux/errno.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/slab.h>
+>  
+>  #include <asm/mach/irq.h>
+>  
+> @@ -122,3 +127,43 @@ void __init combiner_init(unsigned int combiner_nr, void __iomem *base,
+>  		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
+>  	}
+>  }
+> +
+> +#ifdef CONFIG_OF
+> +/* Translate dt irq specifier to linux virq for interrupt combiner controller */
+> +static int exynos4_irq_domain_combiner_dt_translate(struct irq_domain *d,
+> +			struct device_node *controller,
+> +			const u32 *intspec, unsigned int intsize,
+> +			unsigned long *out_hwirq, unsigned int *out_type)
+> +{
+> +	if (d->of_node != controller)
+> +		return -EINVAL;
+> +	if (intsize < 2)
+> +		return -EINVAL;
+> +
+> +	*out_hwirq = COMBINER_IRQ(intspec[0], intspec[1]);
+> +	*out_type = IRQ_TYPE_NONE;
+> +	return 0;
+> +}
+> +
+> +static struct irq_domain_ops exynos4_irq_domain_combiner_ops = {
+> +	.dt_translate = exynos4_irq_domain_combiner_dt_translate,
+> +};
+> +
+> +void __init combiner_init_dt(struct device_node *node,
+> +					struct device_node *parent)
+> +{
+> +	struct irq_domain *domain;
+> +
+> +	if (WARN(!node, "combiner_init_dt: invalid node in parameter\n"))
+> +		return;
+> +
+> +	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
+> +	if (domain) {
+> +		domain->of_node = node;
+> +		domain->ops = &exynos4_irq_domain_combiner_ops;
+> +		irq_domain_add(domain);
+> +	} else {
+> +		WARN_ON(1);
+> +	}
+
+I would normally expect this order for error handling :
+
+	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
+	if (!domain) {
+		WARN_ON(1);
+		return;
+	}
+
+	domain->of_node = node;
+	domain->ops = &exynos4_irq_domain_combiner_ops;
+	irq_domain_add(domain);
+
+But having said that, I don't think this is the right approach.
+combiner_init_dt I would expect to call combiner_init(), and the
+irq_domain should become part of the combiner_chip_data structure so
+that it can be used for mapping back and forth from linux and hqirq
+numbers.  (irq_data->hwirq and the mapping function).  Rolling the
+irq_domain into the irq controller private data structure is what was
+done for the GIC too.
+
+g.
