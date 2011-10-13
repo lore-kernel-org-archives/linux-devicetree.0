@@ -1,124 +1,90 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v3 2/4] dmaengine: at_hdmac: add device tree support
-Date: Thu, 13 Oct 2011 13:54:09 +0200
-Message-ID: <4E96D161.8050602@atmel.com>
-References: <f91f267b82ac0f0459c11a7bdf3ab0ea8758656a.1318438197.git.nicolas.ferre@atmel.com>
-	<6a7ec87c53609bbb517b199a9b48a5322a625aa1.1318438197.git.nicolas.ferre@atmel.com>
-	<20111013003422.GE14042@ponder.secretlab.ca>
+From: Ben Hutchings <bhutchings@solarflare.com>
+Subject: Re: [PATCH 1/3] netdev/phy: Handle IEEE802.3 clause 45 Ethernet
+ PHYs
+Date: Thu, 13 Oct 2011 17:27:16 +0100
+Message-ID: <1318523236.2745.29.camel@bwh-desktop>
+References: <1318442783-29058-1-git-send-email-david.daney@cavium.com>
+	 <1318442783-29058-2-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111013003422.GE14042@ponder.secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1318442783-29058-2-git-send-email-david.daney@cavium.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, afleming@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/13/2011 02:34 AM, Grant Likely :
-> On Wed, Oct 12, 2011 at 06:57:12PM +0200, Nicolas Ferre wrote:
->> Add device tree probe support for atmel at_hdmac DMA driver.
->> Bindings are added to specify DMA controller configuration.
->>
->> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->> ---
->>  .../devicetree/bindings/dma/atmel-dma.txt          |   14 +++++++++
->>  drivers/dma/at_hdmac.c                             |   30 +++++++++++++++++++-
->>  2 files changed, 43 insertions(+), 1 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-dma.txt
->>
->> diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
->> new file mode 100644
->> index 0000000..3c046ee
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/atmel-dma.txt
->> @@ -0,0 +1,14 @@
->> +* Atmel Direct Memory Access Controller (DMA)
->> +
->> +Required properties:
->> +- compatible: Should be "atmel,<chip>-dma"
->> +- reg: Should contain DMA registers location and length
->> +- interrupts: Should contain DMA interrupt
->> +
->> +Examples:
->> +
->> +dma@ffffec00 {
->> +	compatible = "atmel,at91sam9g45-dma";
->> +	reg = <0xffffec00 0x200>;
->> +	interrupts = <21>;
->> +};
->> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
->> index d1869c5..42bd64c 100644
->> --- a/drivers/dma/at_hdmac.c
->> +++ b/drivers/dma/at_hdmac.c
->> @@ -23,6 +23,8 @@
->>  #include <linux/module.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/slab.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->>  
->>  #include "at_hdmac_regs.h"
->>  
->> @@ -1175,6 +1177,20 @@ static void atc_free_chan_resources(struct dma_chan *chan)
->>  
->>  /*--  Module Management  -----------------------------------------------*/
->>  
->> +#if defined(CONFIG_OF)
->> +static const struct of_device_id atmel_dma_dt_ids[] = {
->> +	{
->> +		.compatible = "atmel,at91sam9rl-dma",
->> +		.data = (void *)ATDMA_DEVTYPE_SAM9RL
->> +	}, {
->> +		.compatible = "atmel,at91sam9g45-dma",
->> +		.data = (void *)ATDMA_DEVTYPE_SAM9G45
->> +	}, { /* sentinel */ }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, atmel_dma_dt_ids);
->> +#endif
->> +
->>  static struct platform_device_id atdma_devtypes[] = {
->>  	{
->>  		.name = "at91sam9rl_dma",
->> @@ -1187,6 +1203,17 @@ static struct platform_device_id atdma_devtypes[] = {
->>  	}
->>  };
->>  
->> +static inline enum atdma_devtype __init at_dma_get_driver_data(
->> +					struct platform_device *pdev)
->> +{
->> +	if (pdev->dev.of_node) {
->> +		const struct of_device_id *match;
->> +		match = of_match_node(atmel_dma_dt_ids, pdev->dev.of_node);
+On Wed, 2011-10-12 at 11:06 -0700, David Daney wrote:
+> The IEEE802.3 clause 45 MDIO bus protocol allows for directly
+> addressing PHY registers using a 21 bit address, and is used by many
+> 10G Ethernet PHYS.  Already existing is the ability of MDIO bus
+> drivers to use clause 45, with the MII_ADDR_C45 flag.  Here we add
+> some support in the PHY and device tree infrastructure to use these
+> PHYs.
 > 
-> You'll need to check the return value.  It is possible (though
-> unlikely) to have a device with an of_node but still happens to get
-> bound via the platform_driver id_table.  In which case match would be
-> NULL here.
+> Normally the MII_ADDR_C45 flag is ORed with the register address to
+> indicate a clause 45 transaction.  Here we also use this flag in the
+> *device* address passed to get_phy_id() and get_phy_device() to
+> indicate that probing should be done with clause 45 transactions.  If
+> a PHY is successfully probed with MII_ADDR_C45, the new struct
+> phy_device is_c45 flag is set for the PHY.
 
-Ok, I add:
+That deserves a comment next to the definition of the macro.
 
-                if (match == NULL)
-                        return ATDMA_DEVTYPE_UNDEFINED;
-
-Which will take care about this case.
-
-
-> Otherwise, you can add my a-b after fixing that bug.
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  drivers/net/phy/phy_device.c |   25 ++++++++++++++++++++++---
+>  include/linux/phy.h          |    3 +++
+>  2 files changed, 25 insertions(+), 3 deletions(-)
 > 
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index 83a5a5a..7e4d61b 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -171,6 +171,8 @@ static struct phy_device* phy_device_create(struct mii_bus *bus,
+>  
+>  	dev->autoneg = AUTONEG_ENABLE;
+>  
+> +	dev->is_c45 = (addr & MII_ADDR_C45) != 0;
+> +	addr &= ~MII_ADDR_C45;
+>  	dev->addr = addr;
+>  	dev->phy_id = phy_id;
+>  	dev->bus = bus;
+> @@ -205,15 +207,24 @@ static struct phy_device* phy_device_create(struct mii_bus *bus,
+>   * @phy_id: where to store the ID retrieved.
+>   *
+>   * Description: Reads the ID registers of the PHY at @addr on the
+> - *   @bus, stores it in @phy_id and returns zero on success.
+> + *   @bus, stores it in @phy_id and returns zero on success.  If the
+> + *   @addr has been ORed with MII_ADDR_C45, mdio clause 45 data
+> + *   transfer is used to read ID from the PHY device, otherwise the
+> + *   standard protocol (clause 22) is used.
+>   */
+>  int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id)
+>  {
+>  	int phy_reg;
+> +	u32 c45_reg_base = 0;
+>  
+> +	if (addr & MII_ADDR_C45) {
+> +		addr &= ~MII_ADDR_C45;
+> +		/* Access the PHY's PHY XS registers with C45 mode. */
+> +		c45_reg_base = MII_ADDR_C45 | 0x40000;
+> +	}
+[...]
 
-Thanks a lot for your reviews Grant,
+I'm not sure it's a safe assumption that every PHY has a PHY XS block.
+That said, I've not seen any that don't.  mdio45_probe() should work out
+which blocks are there, if you can set up an mdio_if_info for it.
 
-Bye,
+It would be nice if someone would try to improve integration between
+mdio/mii and phylib rather than duplicating logic and interfaces.  I'm
+afraid I'm not going to be spending time on MDIO, though, since we've
+putting PHY drivers in firmware rather than on the host now.
+
+Ben.
+
 -- 
-Nicolas Ferre
+Ben Hutchings, Staff Engineer, Solarflare
+Not speaking for my employer; that's the marketing department's job.
+They asked us to note that Solarflare product names are trademarked.
