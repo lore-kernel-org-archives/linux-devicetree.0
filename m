@@ -1,45 +1,33 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v4 3/4] gpio/tegra: Convert to a platform device
-Date: Thu, 13 Oct 2011 09:36:51 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173BE1A08D@HQMAIL01.nvidia.com>
-References: <1318371375-4083-1-git-send-email-swarren@nvidia.com>
- <1318371375-4083-3-git-send-email-swarren@nvidia.com>
- <20111012224131.GD25128@quad.lixom.net>
- <CACxGe6tf0Ly8AC-6xUeoMrVj3y0KHkrcgj87SerAaCAnNhfNqA@mail.gmail.com>
- <20111012231910.GA13960@quad.lixom.net>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] regulator: map consumer regulator based on device
+ tree
+Date: Thu, 13 Oct 2011 17:52:15 +0100
+Message-ID: <20111013165214.GP5193@opensource.wolfsonmicro.com>
+References: <1318263578-7407-1-git-send-email-rnayak@ti.com>
+ <1318263578-7407-6-git-send-email-rnayak@ti.com>
+ <20111010173506.GH3607@opensource.wolfsonmicro.com>
+ <CACYZBRFmLEY_f1UwJa5U9uj8+NVA-WfUVkiuW1yKrpwnrA_00A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20111012231910.GA13960-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACYZBRFmLEY_f1UwJa5U9uj8+NVA-WfUVkiuW1yKrpwnrA_00A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "Nayak, Rajendra" <rnayak-l0cyMroinI0@public.gmane.org>
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Wednesday, October 12, 2011 5:19 PM:
-> On Wed, Oct 12, 2011 at 05:03:24PM -0600, Grant Likely wrote:
-> > On Wed, Oct 12, 2011 at 4:41 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> > > On Tue, Oct 11, 2011 at 04:16:14PM -0600, Stephen Warren wrote:
-...
-> > > Otherwise, patch looks good. Due to dependencies between this, the rest
-> > > of this patch series and the pinmux changes, I'll hold off on it until
-> > > the dependencies land (i.e. target it for 3.3). We're cutting it very close
-> > > to the merge window as it is, I'll start for-3.3 branches shortly.
-> >
-> > Actually, see if you can get it in via the same tree as the pinmux
-> > changes.  Dependencies is not a reason to hold off from getting it
-> > into linux-next.
-> 
-> Ok, the fixup is minimal, should be trivial to spot at git merge time.
-> 
-> Stephen, do you want to respin yourself or should I do the __devinit
-> change when I apply?
+On Tue, Oct 11, 2011 at 12:38:53PM +0530, Nayak, Rajendra wrote:
 
-I'm happy for you to fix that up when you apply if you're happy doing that.
+> How about this updated patch?
 
-The same fixup applies to the pinmux patches too.
-
--- 
-nvpublic
+Yes, I think that looks broadly sensible.
