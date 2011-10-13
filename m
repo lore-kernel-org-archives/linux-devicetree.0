@@ -1,125 +1,124 @@
-From: David Daney <david.s.daney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] netdev/phy: Add driver for Broadcom BCM8706 10G
- Ethernet PHY
-Date: Wed, 12 Oct 2011 21:45:43 -0700
-Message-ID: <4E966CF7.7060901@gmail.com>
-References: <1318442783-29058-1-git-send-email-david.daney@cavium.com>
- <1318442783-29058-4-git-send-email-david.daney@cavium.com>
- <20111013003129.GC14042@ponder.secretlab.ca>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v3 2/4] dmaengine: at_hdmac: add device tree support
+Date: Thu, 13 Oct 2011 13:54:09 +0200
+Message-ID: <4E96D161.8050602@atmel.com>
+References: <f91f267b82ac0f0459c11a7bdf3ab0ea8758656a.1318438197.git.nicolas.ferre@atmel.com>
+	<6a7ec87c53609bbb517b199a9b48a5322a625aa1.1318438197.git.nicolas.ferre@atmel.com>
+	<20111013003422.GE14042@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111013003129.GC14042-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111013003422.GE14042@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/12/2011 05:31 PM, Grant Likely wrote:
-> On Wed, Oct 12, 2011 at 11:06:23AM -0700, David Daney wrote:
->> Add a driver and PHY_ID number for said device.  This is a 10Gig PHY
->> which uses MII_ADDR_C45 addressing, it is always 10G full duplex, so
->> there is no autonegotiation.  All we do is report link state and send
->> interrupts when it changes.
+On 10/13/2011 02:34 AM, Grant Likely :
+> On Wed, Oct 12, 2011 at 06:57:12PM +0200, Nicolas Ferre wrote:
+>> Add device tree probe support for atmel at_hdmac DMA driver.
+>> Bindings are added to specify DMA controller configuration.
 >>
->> If the PHY has a device tree of_node associated with it, the
->> "broadcom,c45-reg-init" property is used to supply register
->> initialization values when config_init() is called.
->>
->> Signed-off-by: David Daney<david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 >> ---
+>>  .../devicetree/bindings/dma/atmel-dma.txt          |   14 +++++++++
+>>  drivers/dma/at_hdmac.c                             |   30 +++++++++++++++++++-
+>>  2 files changed, 43 insertions(+), 1 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-dma.txt
 >>
-[...]
->> +The Broadcom BCM8706 is a 10G Ethernet PHY.  It has these bindings in
->> +addition to the standard PHY bindings.
+>> diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+>> new file mode 100644
+>> index 0000000..3c046ee
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+>> @@ -0,0 +1,14 @@
+>> +* Atmel Direct Memory Access Controller (DMA)
 >> +
->> +Compatible: Should contain "broadcom,bcm8706" and
->> +            "ethernet-phy-ieee802.3-c45"
+>> +Required properties:
+>> +- compatible: Should be "atmel,<chip>-dma"
+>> +- reg: Should contain DMA registers location and length
+>> +- interrupts: Should contain DMA interrupt
 >> +
->> +Optional Properties:
+>> +Examples:
 >> +
->> +- broadcom,c45-reg-init : one of more sets of 4 cells.  The first cell
->> +  is the device type, the second a register address, the third cell
->> +  contains a mask to be ANDed with the existing register value, and
->> +  the fourth cell is ORed with he result to yield the new register
->> +  value.
-> ... a mask value of '0' should also guarantee that the driver does not do a read before the write.
-
-The implementation does that, I will update the binding text to reflect 
-this.
-
-> What have we got so far in this regard for other phys and devices?
-
-http://devicetree.org/Compatible%3Dmarvell,88e1149r
-
-This is basically the same thing adapted for the page select register 
-specific to Marvell PHYs.
-
->    I
-> don't think it necessary to put 'c45' in the property name.  reg-init
-> should be sufficient.
-
-10M/100M/1G PHYs from different manufacturers and even within a single 
-manufacturer have a wide variety of ways to multiplex many registers 
-into the 5 bit addressing scheme allowed by clause 22.  The Marvell 
-scheme already implemented doesn't work for Broadcom.
-
-For clause 45, there are more address bits...
-
->    I'd like to hear from others if it would be
-> valuable to have a 'reg-init-sequence' property of the above format.
-
-A clause 45 specific property might work for *all* 10G PHYs, the same 
-cannot be said for clause 22, hence my idea to put 'c45' in the name
-
-> What does the device type cell indicate?  Wouldn't the driver
-> naturally have the device id from the address of the cell?
->
-
-There are three portions to a clause 45 address:
-
-phy_id:  Denoted by the "reg" property is a 5-bit value that identifies 
-a particular PHY on the MDIO bus.
-
-device id: Really a sub-device within a given PHY, another 5-bit value 
-contained in the first cell of the proposed register init sequence.  
-Clause 45 defines several different standard device ids.
-
-register id: a 16-bit address that identifies a particular 16-bit 
-register within the 'device' (or sub-device if you will.
-
-Does that answer your question?
-
-In theory we could compose the 5-bit device id and 16-bit register 
-address into a single 32-bit cell in the init sequence property, but I 
-chose to have them separate.
-
->> +static int __init bcm8706_init(void)
+>> +dma@ffffec00 {
+>> +	compatible = "atmel,at91sam9g45-dma";
+>> +	reg = <0xffffec00 0x200>;
+>> +	interrupts = <21>;
+>> +};
+>> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+>> index d1869c5..42bd64c 100644
+>> --- a/drivers/dma/at_hdmac.c
+>> +++ b/drivers/dma/at_hdmac.c
+>> @@ -23,6 +23,8 @@
+>>  #include <linux/module.h>
+>>  #include <linux/platform_device.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>  
+>>  #include "at_hdmac_regs.h"
+>>  
+>> @@ -1175,6 +1177,20 @@ static void atc_free_chan_resources(struct dma_chan *chan)
+>>  
+>>  /*--  Module Management  -----------------------------------------------*/
+>>  
+>> +#if defined(CONFIG_OF)
+>> +static const struct of_device_id atmel_dma_dt_ids[] = {
+>> +	{
+>> +		.compatible = "atmel,at91sam9rl-dma",
+>> +		.data = (void *)ATDMA_DEVTYPE_SAM9RL
+>> +	}, {
+>> +		.compatible = "atmel,at91sam9g45-dma",
+>> +		.data = (void *)ATDMA_DEVTYPE_SAM9G45
+>> +	}, { /* sentinel */ }
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, atmel_dma_dt_ids);
+>> +#endif
+>> +
+>>  static struct platform_device_id atdma_devtypes[] = {
+>>  	{
+>>  		.name = "at91sam9rl_dma",
+>> @@ -1187,6 +1203,17 @@ static struct platform_device_id atdma_devtypes[] = {
+>>  	}
+>>  };
+>>  
+>> +static inline enum atdma_devtype __init at_dma_get_driver_data(
+>> +					struct platform_device *pdev)
 >> +{
->> +	int ret;
->> +
->> +	ret = phy_driver_register(&bcm8706_driver);
->> +
->> +	return ret;
->> +}
->> +module_init(bcm8706_init);
-> or simply:
-> static int __init bcm8706_init(void)
-> {
-> 	return phy_driver_register(&bcm8706_driver);
-> }
-> module_init(bcm8706_init);
->
+>> +	if (pdev->dev.of_node) {
+>> +		const struct of_device_id *match;
+>> +		match = of_match_node(atmel_dma_dt_ids, pdev->dev.of_node);
+> 
+> You'll need to check the return value.  It is possible (though
+> unlikely) to have a device with an of_node but still happens to get
+> bound via the platform_driver id_table.  In which case match would be
+> NULL here.
 
-Yes, I will make that change.
+Ok, I add:
 
-David Daney
+                if (match == NULL)
+                        return ATDMA_DEVTYPE_UNDEFINED;
+
+Which will take care about this case.
+
+
+> Otherwise, you can add my a-b after fixing that bug.
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+
+Thanks a lot for your reviews Grant,
+
+Bye,
+-- 
+Nicolas Ferre
