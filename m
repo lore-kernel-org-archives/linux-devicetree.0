@@ -1,154 +1,88 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] gpio: exynos4: Add device tree support
-Date: Wed, 12 Oct 2011 19:01:01 -0600
-Message-ID: <20111013010101.GK14042@ponder.secretlab.ca>
-References: <1318320974-9879-1-git-send-email-thomas.abraham@linaro.org>
- <4E945C90.1050601@gmail.com>
- <CAJuYYwRwBxkAo2fMfVV9wtQ40XeROAnc-cGJK+cssjuh9px=qQ@mail.gmail.com>
- <4E946109.2000305@gmail.com>
- <CAJuYYwQWUjVf9Z5Rdw4fTK70=B1aw-5x_wjYm_fq+zHyQAWJvg@mail.gmail.com>
- <4E95AE26.8080702@gmail.com>
- <CAJuYYwRsM_aGkeG9v97jdsJgSQeokViuLGdF5TvqEkNZCAgFVA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] netdev/phy: Add driver for Broadcom BCM8706 10G
+ Ethernet PHY
+Date: Wed, 12 Oct 2011 18:31:29 -0600
+Message-ID: <20111013003129.GC14042@ponder.secretlab.ca>
+References: <1318442783-29058-1-git-send-email-david.daney@cavium.com>
+ <1318442783-29058-4-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJuYYwRsM_aGkeG9v97jdsJgSQeokViuLGdF5TvqEkNZCAgFVA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+In-Reply-To: <1318442783-29058-4-git-send-email-david.daney@cavium.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, afleming@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2011 at 09:45:25PM +0530, Thomas Abraham wrote:
-> On 12 October 2011 20:41, Rob Herring <robherring2@gmail.com> wrote:
-> > On 10/11/2011 11:06 AM, Thomas Abraham wrote:
-> >> On 11 October 2011 21:00, Rob Herring <robherring2@gmail.com> wrot=
-e:
-> >>> On 10/11/2011 10:19 AM, Thomas Abraham wrote:
-> >>>> Hi Rob,
-> >>>>
-> >>>> On 11 October 2011 20:41, Rob Herring <robherring2@gmail.com> wr=
-ote:
-> >>>>> Thomas,
-> >>>>>
-> >>>>> On 10/11/2011 03:16 AM, Thomas Abraham wrote:
-> >>>>>> As gpio chips get registered, a device tree node which represe=
-nts the
-> >>>>>> gpio chip is searched and attached to it. A translate function=
- is also
-> >>>>>> provided to convert the gpio specifier into actual platform se=
-ttings
-> >>>>>> for pin function selection, pull up/down and driver strength s=
-ettings.
-> >>>>>>
-> >>>>>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> >>>>>> ---
-> >>>>>> This patch is based on the latest consolidated Samsung GPIO dr=
-iver available
-> >>>>>> in the following tree:
-> >>>>>> =A0 https://github.com/kgene/linux-samsung.git =A0branch: for-=
-next
-> >>>>>>
-> >>>>>> =A0.../devicetree/bindings/gpio/gpio-samsung.txt =A0 =A0 =A0| =
-=A0 30 +++++++++++
-> >>>>>> =A0drivers/gpio/gpio-samsung.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0| =A0 53 ++++++++++++++++++++
-> >>>>>> =A02 files changed, 83 insertions(+), 0 deletions(-)
-> >>>>>> =A0create mode 100644 Documentation/devicetree/bindings/gpio/g=
-pio-samsung.txt
-> >>>>>>
-> >>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsu=
-ng.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-> >>>>>> new file mode 100644
-> >>>>>> index 0000000..883faeb
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-> >>>>>> @@ -0,0 +1,30 @@
-> >>>>>> +Samsung Exynos4 GPIO Controller
-> >>>>>> +
-> >>>>>> +Required properties:
-> >>>>>> +- compatible: Format of compatible property value should be
-> >>>>>> + =A0"samsung,exynos4-gpio-<controller_name>". Example: For GP=
-A0 controller, the
-> >>>>>> + =A0compatible property value should be "samsung,exynos4-gpio=
--gpa0".
-> >>>>>
-> >>>>> Isn't gpa0 an instance of the h/w, not a version?
-> >>>>
-> >>>> GPA0 is a instance of the gpio controller. There are several suc=
-h
-> >>>> instances and there could be differences in those instances such=
- as
-> >>>> the number of GPIO lines managed by that gpio controller instanc=
-e.
-> >>>>
-> >>>
-> >>> That doesn't seem like a reason to have different compatible stri=
-ngs.
-> >>> Does that affect the programming model of the controller? Unused =
-lines
-> >>> whether at the board level or SOC level shouldn't really matter.
-> >>
-> >>
-> >> No, that does not affect the programming of the controller. The re=
-ason
-> >> for the instance name extension in compatible string is to match t=
-he
-> >> gpio_chip with a gpio controller node. When matched, the of_node
-> >> pointer of the gpio_chip is set to point to that controller node.
-> >>
-> >> This might not be the best possible implementation but the device =
-tree
-> >> support code in this patch is dictated by the structure of the
-> >> existing gpio driver code. As you suggested previously, I will loo=
-k at
-> >> reworking the gpio driver a little later but for now, there was a =
-need
-> >> for working gpio dt solution to make progress on dt support for ot=
-her
-> >> controllers.
-> >
-> > Linux should provide clues about what's needed in a binding, but th=
-e
-> > binding should not be defined based on current Linux code. Doing th=
-e
-> > binding one way and changing it later is not a good plan.
->=20
-> Ok. When starting on this, two compatible values where used for the
-> gpio controllers, one was "samsung,exynos4-gpio" and another was
-> "samsung,exynos4-gpio-<ctrl_name>". And when the gpio dt support woul=
-d
-> mature, the second compatible value could be dropped. Non-linux
-> platforms could always use the generic "samsung,exynos4-gpio"
-> compatible value to match. I moved to using only
-> "samsung,exynos4-gpio-<ctrl_name>" just before sending this patch
-> because I was not sure of the right approach.
->=20
-> >
-> > I think you need to convert all users of gpio over as well so you c=
-an
-> > move to dynamic gpio_chip creation and gpio numbering. Or maybe you=
- can
-> > match based on base address? This is going to be a common problem a=
-s
-> > gpio is converted over to DT. Perhaps Grant or others have suggesti=
-ons
-> > on the approach to use.
->=20
-> Yes, I agree with you about the dynamic gpio_chip creation and gpio
-> numbering. Probably, I should have focussed more on this before movin=
-g
-> to dt support for other controllers.
->=20
-> But matching based on base address is still an option if that is
-> better than matching with compatible values as defined currently. The
-> 'struct samsung_gpio_chip' which encapsulates 'struct gpio_chip' has
-> information about the base address of the gpio controller. The match
-> of gpio device node with 'struct gpio_chip' can be quickly moved over
-> to base address matching. Would this be better than the current
-> approach?
+On Wed, Oct 12, 2011 at 11:06:23AM -0700, David Daney wrote:
+> Add a driver and PHY_ID number for said device.  This is a 10Gig PHY
+> which uses MII_ADDR_C45 addressing, it is always 10G full duplex, so
+> there is no autonegotiation.  All we do is report link state and send
+> interrupts when it changes.
+> 
+> If the PHY has a device tree of_node associated with it, the
+> "broadcom,c45-reg-init" property is used to supply register
+> initialization values when config_init() is called.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  .../devicetree/bindings/net/broadcom-bcm8706.txt   |   28 +++
+>  drivers/net/phy/Kconfig                            |    5 +
+>  drivers/net/phy/Makefile                           |    1 +
+>  drivers/net/phy/bcm8706.c                          |  212 ++++++++++++++++++++
+>  include/linux/brcmphy.h                            |    1 +
+>  5 files changed, 247 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/broadcom-bcm8706.txt
+>  create mode 100644 drivers/net/phy/bcm8706.c
+> 
+> diff --git a/Documentation/devicetree/bindings/net/broadcom-bcm8706.txt b/Documentation/devicetree/bindings/net/broadcom-bcm8706.txt
+> new file mode 100644
+> index 0000000..d58bea9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/broadcom-bcm8706.txt
+> @@ -0,0 +1,28 @@
+> +The Broadcom BCM8706 is a 10G Ethernet PHY.  It has these bindings in
+> +addition to the standard PHY bindings.
+> +
+> +Compatible: Should contain "broadcom,bcm8706" and
+> +            "ethernet-phy-ieee802.3-c45"
+> +
+> +Optional Properties:
+> +
+> +- broadcom,c45-reg-init : one of more sets of 4 cells.  The first cell
+> +  is the device type, the second a register address, the third cell
+> +  contains a mask to be ANDed with the existing register value, and
+> +  the fourth cell is ORed with he result to yield the new register
+> +  value.
 
-That's what I would do.
+... a mask value of '0' should also guarantee that the driver does not do a read before the write.
+
+What have we got so far in this regard for other phys and devices?  I
+don't think it necessary to put 'c45' in the property name.  reg-init
+should be sufficient.  I'd like to hear from others if it would be
+valuable to have a 'reg-init-sequence' property of the above format.
+
+What does the device type cell indicate?  Wouldn't the driver
+naturally have the device id from the address of the cell?
+
+> +static int __init bcm8706_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = phy_driver_register(&bcm8706_driver);
+> +
+> +	return ret;
+> +}
+> +module_init(bcm8706_init);
+
+or simply:
+static int __init bcm8706_init(void)
+{
+	return phy_driver_register(&bcm8706_driver);
+}
+module_init(bcm8706_init);
+
+Otherwise the driver code seems to be fine.
 
 g.
