@@ -1,17 +1,16 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: Samsung: Move timer irq numbers to end of linux
- irq space
-Date: Wed, 12 Oct 2011 18:41:02 -0600
-Message-ID: <20111013004102.GH14042@ponder.secretlab.ca>
-References: <1318234289-22041-1-git-send-email-thomas.abraham@linaro.org>
- <1318234289-22041-2-git-send-email-thomas.abraham@linaro.org>
- <4E95BC01.8090805@gmail.com>
+Subject: Re: [PATCH v2 2/5] tty/serial: atmel_serial: change platform_data
+ variable name
+Date: Wed, 12 Oct 2011 19:01:34 -0600
+Message-ID: <20111013010134.GL14042@ponder.secretlab.ca>
+References: <37a19e194d02144aecd24f284f5e43979643a3c3.1318433947.git.nicolas.ferre@atmel.com>
+ <58d65421a85737b7a25b967da09c3f564fc49be7.1318433947.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4E95BC01.8090805-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <58d65421a85737b7a25b967da09c3f564fc49be7.1318433947.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,112 +20,66 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, claudio-YOzL5CV4y4YG1A2ADO40+w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2011 at 11:10:41AM -0500, Rob Herring wrote:
-> On 10/10/2011 03:11 AM, Thomas Abraham wrote:
-> > All of Samsung's s5p platforms have timer irqs statically mapped from linux
-> > irq numbers 11 to 15. These timer irqs are moved to end of the statically
-> > mapped linux irq space and the hardware irqs, which were statically mapped
-> > starting from 32 is moved to start from 0. The NR_IRQS macro is consolidated
-> > for all the s5p platforms in this process.
-> > 
-> > Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/arm/mach-exynos4/include/mach/entry-macro.S |    1 -
-> >  arch/arm/mach-exynos4/include/mach/irqs.h        |    3 +--
-> >  arch/arm/mach-s5p64x0/include/mach/irqs.h        |    4 +---
-> >  arch/arm/mach-s5pc100/include/mach/irqs.h        |    3 +--
-> >  arch/arm/mach-s5pv210/include/mach/irqs.h        |    3 +--
-> >  arch/arm/plat-samsung/include/plat/irqs.h        |    7 +++++--
-> >  6 files changed, 9 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/arch/arm/mach-exynos4/include/mach/entry-macro.S b/arch/arm/mach-exynos4/include/mach/entry-macro.S
-> > index 4c9adbd..5c4fbcc 100644
-> > --- a/arch/arm/mach-exynos4/include/mach/entry-macro.S
-> > +++ b/arch/arm/mach-exynos4/include/mach/entry-macro.S
-> > @@ -72,7 +72,6 @@
-> >  		cmpcc	\irqnr, \irqnr
-> >  		cmpne	\irqnr, \tmp
-> >  		cmpcs	\irqnr, \irqnr
-> > -		addne	\irqnr, \irqnr, #32
+On Wed, Oct 12, 2011 at 06:06:57PM +0200, Nicolas Ferre wrote:
+> Easier to follow if platform_data name is pdata.
 > 
-> 
-> With this change, can't you now use the common entry-macro-gic.S?
-> 
-> 
-> >  		.endm
-> >  
-> > diff --git a/arch/arm/mach-exynos4/include/mach/irqs.h b/arch/arm/mach-exynos4/include/mach/irqs.h
-> > index dfd4b7e..43087c3 100644
-> > --- a/arch/arm/mach-exynos4/include/mach/irqs.h
-> > +++ b/arch/arm/mach-exynos4/include/mach/irqs.h
-> > @@ -163,7 +163,6 @@
-> >  #define IRQ_GPIO2_NR_GROUPS	9
-> >  #define IRQ_GPIO_END		(S5P_GPIOINT_BASE + S5P_GPIOINT_COUNT)
-> >  
-> > -/* Set the default NR_IRQS */
-> > -#define NR_IRQS			(IRQ_GPIO_END + 64)
-> > +#define IRQ_TIMER_BASE		(IRQ_GPIO_END + 64)
-> >  
-> >  #endif /* __ASM_ARCH_IRQS_H */
-> > diff --git a/arch/arm/mach-s5p64x0/include/mach/irqs.h b/arch/arm/mach-s5p64x0/include/mach/irqs.h
-> > index 53982db..bea73cc 100644
-> > --- a/arch/arm/mach-s5p64x0/include/mach/irqs.h
-> > +++ b/arch/arm/mach-s5p64x0/include/mach/irqs.h
-> > @@ -141,8 +141,6 @@
-> >  
-> >  #define IRQ_EINT_GROUP(grp, x)	(IRQ_EINT_GROUP##grp##_BASE + (x))
-> >  
-> > -/* Set the default NR_IRQS */
-> > -
-> > -#define NR_IRQS			(IRQ_EINT_GROUP8_BASE + IRQ_EINT_GROUP8_NR + 1)
-> > +#define IRQ_TIMER_BASE		(IRQ_EINT_GROUP8_BASE + IRQ_EINT_GROUP8_NR + 1)
-> >  
-> >  #endif /* __ASM_ARCH_IRQS_H */
-> > diff --git a/arch/arm/mach-s5pc100/include/mach/irqs.h b/arch/arm/mach-s5pc100/include/mach/irqs.h
-> > index d2eb475..3a9d300 100644
-> > --- a/arch/arm/mach-s5pc100/include/mach/irqs.h
-> > +++ b/arch/arm/mach-s5pc100/include/mach/irqs.h
-> > @@ -104,8 +104,7 @@
-> >  #define S5P_GPIOINT_BASE	(IRQ_EINT(31) + 1)
-> >  #define S5P_GPIOINT_GROUP_MAXNR	21
-> >  
-> > -/* Set the default NR_IRQS */
-> > -#define NR_IRQS			(IRQ_EINT(31) + S5P_GPIOINT_COUNT + 1)
-> > +#define IRQ_TIMER_BASE		(IRQ_EINT(31) + S5P_GPIOINT_COUNT + 1)
-> >  
-> >  /* Compatibility */
-> >  #define IRQ_LCD_FIFO		IRQ_LCD0
-> > diff --git a/arch/arm/mach-s5pv210/include/mach/irqs.h b/arch/arm/mach-s5pv210/include/mach/irqs.h
-> > index 5e0de3a..df3173a 100644
-> > --- a/arch/arm/mach-s5pv210/include/mach/irqs.h
-> > +++ b/arch/arm/mach-s5pv210/include/mach/irqs.h
-> > @@ -125,8 +125,7 @@
-> >  #define S5P_GPIOINT_BASE	(IRQ_EINT(31) + 1)
-> >  #define S5P_GPIOINT_GROUP_MAXNR	22
-> >  
-> > -/* Set the default NR_IRQS */
-> > -#define NR_IRQS			(IRQ_EINT(31) + S5P_GPIOINT_COUNT + 1)
-> > +#define IRQ_TIMER_BASE		(IRQ_EINT(31) + S5P_GPIOINT_COUNT + 1)
-> >  
-> >  /* Compatibility */
-> >  #define IRQ_LCD_FIFO		IRQ_LCD0
-> > diff --git a/arch/arm/plat-samsung/include/plat/irqs.h b/arch/arm/plat-samsung/include/plat/irqs.h
-> > index 08d1a7e..b8918b3 100644
-> > --- a/arch/arm/plat-samsung/include/plat/irqs.h
-> > +++ b/arch/arm/plat-samsung/include/plat/irqs.h
-> > @@ -22,7 +22,7 @@
-> >   * mulitple of 32 to allow the common code to work
-> >   */
-> >  
-> > -#define S5P_IRQ_OFFSET		(32)
-> > +#define S5P_IRQ_OFFSET		(0)
-> 
-> Just remove this.
+> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-One comment on this; Make sure irqs mapping does *not* start at 0. 0 is not supposed to be used.
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-g.
+> ---
+>  drivers/tty/serial/atmel_serial.c |   14 +++++++-------
+>  1 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index c7232a9..a507daa 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -1417,13 +1417,13 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+>  				      struct platform_device *pdev)
+>  {
+>  	struct uart_port *port = &atmel_port->uart;
+> -	struct atmel_uart_data *data = pdev->dev.platform_data;
+> +	struct atmel_uart_data *pdata = pdev->dev.platform_data;
+>  
+>  	port->iotype		= UPIO_MEM;
+>  	port->flags		= UPF_BOOT_AUTOCONF;
+>  	port->ops		= &atmel_pops;
+>  	port->fifosize		= 1;
+> -	port->line		= data->num;
+> +	port->line		= pdata->num;
+>  	port->dev		= &pdev->dev;
+>  	port->mapbase	= pdev->resource[0].start;
+>  	port->irq	= pdev->resource[1].start;
+> @@ -1433,9 +1433,9 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+>  
+>  	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
+>  
+> -	if (data->regs)
+> +	if (pdata->regs)
+>  		/* Already mapped by setup code */
+> -		port->membase = data->regs;
+> +		port->membase = pdata->regs;
+>  	else {
+>  		port->flags	|= UPF_IOREMAP;
+>  		port->membase	= NULL;
+> @@ -1450,9 +1450,9 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
+>  		/* only enable clock when USART is in use */
+>  	}
+>  
+> -	atmel_port->use_dma_rx = data->use_dma_rx;
+> -	atmel_port->use_dma_tx = data->use_dma_tx;
+> -	atmel_port->rs485	= data->rs485;
+> +	atmel_port->use_dma_rx = pdata->use_dma_rx;
+> +	atmel_port->use_dma_tx = pdata->use_dma_tx;
+> +	atmel_port->rs485	= pdata->rs485;
+>  	/* Use TXEMPTY for interrupt when rs485 else TXRDY or ENDTX|TXBUFE */
+>  	if (atmel_port->rs485.flags & SER_RS485_ENABLED)
+>  		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
+> -- 
+> 1.7.5.4
+> 
