@@ -1,90 +1,45 @@
-From: Ben Hutchings <bhutchings@solarflare.com>
-Subject: Re: [PATCH 1/3] netdev/phy: Handle IEEE802.3 clause 45 Ethernet
- PHYs
-Date: Thu, 13 Oct 2011 17:27:16 +0100
-Message-ID: <1318523236.2745.29.camel@bwh-desktop>
-References: <1318442783-29058-1-git-send-email-david.daney@cavium.com>
-	 <1318442783-29058-2-git-send-email-david.daney@cavium.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v4 3/4] gpio/tegra: Convert to a platform device
+Date: Thu, 13 Oct 2011 09:36:51 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173BE1A08D@HQMAIL01.nvidia.com>
+References: <1318371375-4083-1-git-send-email-swarren@nvidia.com>
+ <1318371375-4083-3-git-send-email-swarren@nvidia.com>
+ <20111012224131.GD25128@quad.lixom.net>
+ <CACxGe6tf0Ly8AC-6xUeoMrVj3y0KHkrcgj87SerAaCAnNhfNqA@mail.gmail.com>
+ <20111012231910.GA13960@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1318442783-29058-2-git-send-email-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, afleming@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20111012231910.GA13960-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2011-10-12 at 11:06 -0700, David Daney wrote:
-> The IEEE802.3 clause 45 MDIO bus protocol allows for directly
-> addressing PHY registers using a 21 bit address, and is used by many
-> 10G Ethernet PHYS.  Already existing is the ability of MDIO bus
-> drivers to use clause 45, with the MII_ADDR_C45 flag.  Here we add
-> some support in the PHY and device tree infrastructure to use these
-> PHYs.
+Olof Johansson wrote at Wednesday, October 12, 2011 5:19 PM:
+> On Wed, Oct 12, 2011 at 05:03:24PM -0600, Grant Likely wrote:
+> > On Wed, Oct 12, 2011 at 4:41 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> > > On Tue, Oct 11, 2011 at 04:16:14PM -0600, Stephen Warren wrote:
+...
+> > > Otherwise, patch looks good. Due to dependencies between this, the rest
+> > > of this patch series and the pinmux changes, I'll hold off on it until
+> > > the dependencies land (i.e. target it for 3.3). We're cutting it very close
+> > > to the merge window as it is, I'll start for-3.3 branches shortly.
+> >
+> > Actually, see if you can get it in via the same tree as the pinmux
+> > changes.  Dependencies is not a reason to hold off from getting it
+> > into linux-next.
 > 
-> Normally the MII_ADDR_C45 flag is ORed with the register address to
-> indicate a clause 45 transaction.  Here we also use this flag in the
-> *device* address passed to get_phy_id() and get_phy_device() to
-> indicate that probing should be done with clause 45 transactions.  If
-> a PHY is successfully probed with MII_ADDR_C45, the new struct
-> phy_device is_c45 flag is set for the PHY.
-
-That deserves a comment next to the definition of the macro.
-
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
->  drivers/net/phy/phy_device.c |   25 ++++++++++++++++++++++---
->  include/linux/phy.h          |    3 +++
->  2 files changed, 25 insertions(+), 3 deletions(-)
+> Ok, the fixup is minimal, should be trivial to spot at git merge time.
 > 
-> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-> index 83a5a5a..7e4d61b 100644
-> --- a/drivers/net/phy/phy_device.c
-> +++ b/drivers/net/phy/phy_device.c
-> @@ -171,6 +171,8 @@ static struct phy_device* phy_device_create(struct mii_bus *bus,
->  
->  	dev->autoneg = AUTONEG_ENABLE;
->  
-> +	dev->is_c45 = (addr & MII_ADDR_C45) != 0;
-> +	addr &= ~MII_ADDR_C45;
->  	dev->addr = addr;
->  	dev->phy_id = phy_id;
->  	dev->bus = bus;
-> @@ -205,15 +207,24 @@ static struct phy_device* phy_device_create(struct mii_bus *bus,
->   * @phy_id: where to store the ID retrieved.
->   *
->   * Description: Reads the ID registers of the PHY at @addr on the
-> - *   @bus, stores it in @phy_id and returns zero on success.
-> + *   @bus, stores it in @phy_id and returns zero on success.  If the
-> + *   @addr has been ORed with MII_ADDR_C45, mdio clause 45 data
-> + *   transfer is used to read ID from the PHY device, otherwise the
-> + *   standard protocol (clause 22) is used.
->   */
->  int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id)
->  {
->  	int phy_reg;
-> +	u32 c45_reg_base = 0;
->  
-> +	if (addr & MII_ADDR_C45) {
-> +		addr &= ~MII_ADDR_C45;
-> +		/* Access the PHY's PHY XS registers with C45 mode. */
-> +		c45_reg_base = MII_ADDR_C45 | 0x40000;
-> +	}
-[...]
+> Stephen, do you want to respin yourself or should I do the __devinit
+> change when I apply?
 
-I'm not sure it's a safe assumption that every PHY has a PHY XS block.
-That said, I've not seen any that don't.  mdio45_probe() should work out
-which blocks are there, if you can set up an mdio_if_info for it.
+I'm happy for you to fix that up when you apply if you're happy doing that.
 
-It would be nice if someone would try to improve integration between
-mdio/mii and phylib rather than duplicating logic and interfaces.  I'm
-afraid I'm not going to be spending time on MDIO, though, since we've
-putting PHY drivers in firmware rather than on the host now.
-
-Ben.
+The same fixup applies to the pinmux patches too.
 
 -- 
-Ben Hutchings, Staff Engineer, Solarflare
-Not speaking for my employer; that's the marketing department's job.
-They asked us to note that Solarflare product names are trademarked.
+nvpublic
