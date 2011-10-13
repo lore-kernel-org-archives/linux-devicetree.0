@@ -1,59 +1,154 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 3/5] tty/serial: atmel_serial: whitespace and braces
- modifications
-Date: Wed, 12 Oct 2011 19:02:48 -0600
-Message-ID: <20111013010248.GN14042@ponder.secretlab.ca>
-References: <37a19e194d02144aecd24f284f5e43979643a3c3.1318433947.git.nicolas.ferre@atmel.com>
- <e4c59e6f5ee33c1be57085ac0840b53322526367.1318433947.git.nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] gpio: exynos4: Add device tree support
+Date: Wed, 12 Oct 2011 19:01:01 -0600
+Message-ID: <20111013010101.GK14042@ponder.secretlab.ca>
+References: <1318320974-9879-1-git-send-email-thomas.abraham@linaro.org>
+ <4E945C90.1050601@gmail.com>
+ <CAJuYYwRwBxkAo2fMfVV9wtQ40XeROAnc-cGJK+cssjuh9px=qQ@mail.gmail.com>
+ <4E946109.2000305@gmail.com>
+ <CAJuYYwQWUjVf9Z5Rdw4fTK70=B1aw-5x_wjYm_fq+zHyQAWJvg@mail.gmail.com>
+ <4E95AE26.8080702@gmail.com>
+ <CAJuYYwRsM_aGkeG9v97jdsJgSQeokViuLGdF5TvqEkNZCAgFVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e4c59e6f5ee33c1be57085ac0840b53322526367.1318433947.git.nicolas.ferre@atmel.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, claudio@evidence.eu.com, jesper.nilsson@axis.com, alan@lxorguk.ukuu.org.uk, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+In-Reply-To: <CAJuYYwRsM_aGkeG9v97jdsJgSQeokViuLGdF5TvqEkNZCAgFVA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 12, 2011 at 06:06:58PM +0200, Nicolas Ferre wrote:
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+On Wed, Oct 12, 2011 at 09:45:25PM +0530, Thomas Abraham wrote:
+> On 12 October 2011 20:41, Rob Herring <robherring2@gmail.com> wrote:
+> > On 10/11/2011 11:06 AM, Thomas Abraham wrote:
+> >> On 11 October 2011 21:00, Rob Herring <robherring2@gmail.com> wrot=
+e:
+> >>> On 10/11/2011 10:19 AM, Thomas Abraham wrote:
+> >>>> Hi Rob,
+> >>>>
+> >>>> On 11 October 2011 20:41, Rob Herring <robherring2@gmail.com> wr=
+ote:
+> >>>>> Thomas,
+> >>>>>
+> >>>>> On 10/11/2011 03:16 AM, Thomas Abraham wrote:
+> >>>>>> As gpio chips get registered, a device tree node which represe=
+nts the
+> >>>>>> gpio chip is searched and attached to it. A translate function=
+ is also
+> >>>>>> provided to convert the gpio specifier into actual platform se=
+ttings
+> >>>>>> for pin function selection, pull up/down and driver strength s=
+ettings.
+> >>>>>>
+> >>>>>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> >>>>>> ---
+> >>>>>> This patch is based on the latest consolidated Samsung GPIO dr=
+iver available
+> >>>>>> in the following tree:
+> >>>>>> =A0 https://github.com/kgene/linux-samsung.git =A0branch: for-=
+next
+> >>>>>>
+> >>>>>> =A0.../devicetree/bindings/gpio/gpio-samsung.txt =A0 =A0 =A0| =
+=A0 30 +++++++++++
+> >>>>>> =A0drivers/gpio/gpio-samsung.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0| =A0 53 ++++++++++++++++++++
+> >>>>>> =A02 files changed, 83 insertions(+), 0 deletions(-)
+> >>>>>> =A0create mode 100644 Documentation/devicetree/bindings/gpio/g=
+pio-samsung.txt
+> >>>>>>
+> >>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsu=
+ng.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+> >>>>>> new file mode 100644
+> >>>>>> index 0000000..883faeb
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+> >>>>>> @@ -0,0 +1,30 @@
+> >>>>>> +Samsung Exynos4 GPIO Controller
+> >>>>>> +
+> >>>>>> +Required properties:
+> >>>>>> +- compatible: Format of compatible property value should be
+> >>>>>> + =A0"samsung,exynos4-gpio-<controller_name>". Example: For GP=
+A0 controller, the
+> >>>>>> + =A0compatible property value should be "samsung,exynos4-gpio=
+-gpa0".
+> >>>>>
+> >>>>> Isn't gpa0 an instance of the h/w, not a version?
+> >>>>
+> >>>> GPA0 is a instance of the gpio controller. There are several suc=
+h
+> >>>> instances and there could be differences in those instances such=
+ as
+> >>>> the number of GPIO lines managed by that gpio controller instanc=
+e.
+> >>>>
+> >>>
+> >>> That doesn't seem like a reason to have different compatible stri=
+ngs.
+> >>> Does that affect the programming model of the controller? Unused =
+lines
+> >>> whether at the board level or SOC level shouldn't really matter.
+> >>
+> >>
+> >> No, that does not affect the programming of the controller. The re=
+ason
+> >> for the instance name extension in compatible string is to match t=
+he
+> >> gpio_chip with a gpio controller node. When matched, the of_node
+> >> pointer of the gpio_chip is set to point to that controller node.
+> >>
+> >> This might not be the best possible implementation but the device =
+tree
+> >> support code in this patch is dictated by the structure of the
+> >> existing gpio driver code. As you suggested previously, I will loo=
+k at
+> >> reworking the gpio driver a little later but for now, there was a =
+need
+> >> for working gpio dt solution to make progress on dt support for ot=
+her
+> >> controllers.
+> >
+> > Linux should provide clues about what's needed in a binding, but th=
+e
+> > binding should not be defined based on current Linux code. Doing th=
+e
+> > binding one way and changing it later is not a good plan.
+>=20
+> Ok. When starting on this, two compatible values where used for the
+> gpio controllers, one was "samsung,exynos4-gpio" and another was
+> "samsung,exynos4-gpio-<ctrl_name>". And when the gpio dt support woul=
+d
+> mature, the second compatible value could be dropped. Non-linux
+> platforms could always use the generic "samsung,exynos4-gpio"
+> compatible value to match. I moved to using only
+> "samsung,exynos4-gpio-<ctrl_name>" just before sending this patch
+> because I was not sure of the right approach.
+>=20
+> >
+> > I think you need to convert all users of gpio over as well so you c=
+an
+> > move to dynamic gpio_chip creation and gpio numbering. Or maybe you=
+ can
+> > match based on base address? This is going to be a common problem a=
+s
+> > gpio is converted over to DT. Perhaps Grant or others have suggesti=
+ons
+> > on the approach to use.
+>=20
+> Yes, I agree with you about the dynamic gpio_chip creation and gpio
+> numbering. Probably, I should have focussed more on this before movin=
+g
+> to dt support for other controllers.
+>=20
+> But matching based on base address is still an option if that is
+> better than matching with compatible values as defined currently. The
+> 'struct samsung_gpio_chip' which encapsulates 'struct gpio_chip' has
+> information about the base address of the gpio controller. The match
+> of gpio device node with 'struct gpio_chip' can be quickly moved over
+> to base address matching. Would this be better than the current
+> approach?
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+That's what I would do.
 
-> ---
->  drivers/tty/serial/atmel_serial.c |    9 +++++----
->  1 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index a507daa..bb72354 100644
-> --- a/drivers/tty/serial/atmel_serial.c
-> +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -1433,10 +1433,10 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
->  
->  	memset(&atmel_port->rx_ring, 0, sizeof(atmel_port->rx_ring));
->  
-> -	if (pdata->regs)
-> +	if (pdata->regs) {
->  		/* Already mapped by setup code */
->  		port->membase = pdata->regs;
-> -	else {
-> +	} else {
->  		port->flags	|= UPF_IOREMAP;
->  		port->membase	= NULL;
->  	}
-> @@ -1450,9 +1450,10 @@ static void __devinit atmel_init_port(struct atmel_uart_port *atmel_port,
->  		/* only enable clock when USART is in use */
->  	}
->  
-> -	atmel_port->use_dma_rx = pdata->use_dma_rx;
-> -	atmel_port->use_dma_tx = pdata->use_dma_tx;
-> +	atmel_port->use_dma_rx	= pdata->use_dma_rx;
-> +	atmel_port->use_dma_tx	= pdata->use_dma_tx;
->  	atmel_port->rs485	= pdata->rs485;
-> +
->  	/* Use TXEMPTY for interrupt when rs485 else TXRDY or ENDTX|TXBUFE */
->  	if (atmel_port->rs485.flags & SER_RS485_ENABLED)
->  		atmel_port->tx_done_mask = ATMEL_US_TXEMPTY;
-> -- 
-> 1.7.5.4
-> 
+g.
