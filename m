@@ -1,179 +1,107 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: Re: [PATCH v5] power: bq20z75: devicetree init support
-Date: Fri, 14 Oct 2011 12:03:56 -0700
-Message-ID: <1318619036.12510.1.camel@rklein-linux2>
-References: <1316031547-18281-1-git-send-email-rklein@nvidia.com>
+From: "Robert Sciuk" <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
+Subject: P4080 device tree problems with fsl dpaa ...
+Date: Fri, 14 Oct 2011 17:26:34 -0400
+Message-ID: <2DD52030B5146141BEB762A11AE97C4CF6E0E6@SPQCEXC05.exfo.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1316031547-18281-1-git-send-email-rklein@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-class: urn:content-classes:message
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2011-09-14 at 13:19 -0700, Rhyland Klein wrote:
-> Adding support to generate platform data when kernel is configured
-> through device tree.
-> 
-> Also adding the binding for the TI bq20z75 fuel gadge and the
-> bq20z75 driver.
-> 
-> v2: Fixed typo in binding description.
-> v3: Changed to use "ti," properties
->     Changed to use single gpio property for battery detect info
->     Removed unnecessary call to of_match_device
-> v4: Squashed Binding and driver changes together.
->     Fixed case where CONFIG_OF is not selected, return existing pdata pointer
-> v5: Fixed MODULE_DEVICE_TABLE to be i2c instead of platform
-> 
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
-> Signed-off-by: Rhyland Klein <rklein@nvidia.com>
-> ---
->  .../bindings/power_supply/ti_bq20z75.txt           |   23 ++++++
->  drivers/power/bq20z75.c                            |   75 ++++++++++++++++++++
->  2 files changed, 98 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-> new file mode 100644
-> index 0000000..7571294
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
-> @@ -0,0 +1,23 @@
-> +TI bq20z75
-> +~~~~~~~~~~
-> +
-> +Required properties :
-> + - compatible : "ti,bq20z75"
-> +
-> +Optional properties :
-> + - ti,i2c-retry-count : The number of times to retry i2c transactions on i2c
-> +   IO failure.
-> + - ti,poll-retry-count : The number of times to try looking for new status
-> +   after an external change notification.
-> + - ti,battery-detect-gpios : The gpio which signals battery detection and
-> +   a flag specifying its polarity.
-> +
-> +Example:
-> +
-> +	bq20z75@b {
-> +		compatible = "ti,bq20z75";
-> +		reg = < 0xb >;
-> +		ti,i2c-retry-count = <2>;
-> +		ti,poll-retry-count = <10>;
-> +		ti,battery-detect-gpios = <&gpio-controller 122 1>;
-> +	}
-> diff --git a/drivers/power/bq20z75.c b/drivers/power/bq20z75.c
-> index 9c5e5be..4014a2c 100644
-> --- a/drivers/power/bq20z75.c
-> +++ b/drivers/power/bq20z75.c
-> @@ -613,6 +613,78 @@ static void bq20z75_delayed_work(struct work_struct *work)
->  	}
->  }
->  
-> +#if defined(CONFIG_OF)
-> +#include <linux/of_device.h>
-> +static const struct of_device_id bq20z75_dt_ids[] = {
-> +	{ .compatible = "ti,bq20z75" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, bq20z75_dt_ids);
-> +
-> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-> +	struct i2c_client *client)
-> +{
-> +	const struct of_device_id *dtid;
-> +	struct device_node *of_node = client->dev.of_node;
-> +	struct bq20z75_platform_data *pdata = client->dev.platform_data;
-> +	enum of_gpio_flags gpio_flags;
-> +	int rc;
-> +	u32 prop;
-> +
-> +	/* verify this driver matches this device */
-> +	if (!of_node)
-> +		return NULL;
-> +
-> +	/* if platform data is set, honor it */
-> +	if (pdata)
-> +		return pdata;
-> +
-> +	/* first make sure at least one property is set, otherwise
-> +	 * it won't change behavior from running without pdata.
-> +	 */
-> +	if (!of_get_property(of_node, "ti,i2c-retry-count", NULL) &&
-> +		!of_get_property(of_node, "ti,poll-retry-count", NULL) &&
-> +		!of_get_property(of_node, "ti,battery-detect-gpios", NULL))
-> +		goto of_out;
-> +
-> +	pdata = devm_kzalloc(&client->dev, sizeof(struct bq20z75_platform_data),
-> +				GFP_KERNEL);
-> +	if (!pdata)
-> +		goto of_out;
-> +
-> +	rc = of_property_read_u32(of_node, "ti,i2c-retry-count", &prop);
-> +	if (!rc)
-> +		pdata->i2c_retry_count = prop;
-> +
-> +	rc = of_property_read_u32(of_node, "ti,poll-retry-count", &prop);
-> +	if (!rc)
-> +		pdata->poll_retry_count = prop;
-> +
-> +	if (!of_get_property(of_node, "ti,battery-detect-gpios", NULL)) {
-> +		pdata->battery_detect = -1;
-> +		goto of_out;
-> +	}
-> +
-> +	pdata->battery_detect = of_get_named_gpio_flags(of_node,
-> +			"ti,battery-detect-gpios", 0, &gpio_flags);
-> +
-> +	if (gpio_flags & OF_GPIO_ACTIVE_LOW)
-> +		pdata->battery_detect_present = 0;
-> +	else
-> +		pdata->battery_detect_present = 1;
-> +
-> +of_out:
-> +	return pdata;
-> +}
-> +#else
-> +#define bq20z75_dt_ids NULL
-> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-> +	struct i2c_client *client)
-> +{
-> +	return client->dev.platform_data;
-> +}
-> +#endif
-> +
->  static int __devinit bq20z75_probe(struct i2c_client *client,
->  	const struct i2c_device_id *id)
->  {
-> @@ -642,6 +714,8 @@ static int __devinit bq20z75_probe(struct i2c_client *client,
->  	bq20z75_device->power_supply.external_power_changed =
->  		bq20z75_external_power_changed;
->  
-> +	pdata = bq20z75_of_populate_pdata(client);
-> +
->  	if (pdata) {
->  		bq20z75_device->gpio_detect =
->  			gpio_is_valid(pdata->battery_detect);
-> @@ -775,6 +849,7 @@ static struct i2c_driver bq20z75_battery_driver = {
->  	.id_table	= bq20z75_id,
->  	.driver = {
->  		.name	= "bq20z75-battery",
-> +		.of_match_table = bq20z75_dt_ids,
->  	},
->  };
->  
+I've just joined the list, and I hope that this is not an inappropriate
+question, but I'm looking for some direction with respect to device
+trees, and the fsl, dpaa Ethernet drivers.
 
-Anton, could you take a look at this patch?
+I'm wondering if anyone has had any experience with the FreeScale DPAA
+drivers for the 1g dtsec interface.  We are getting interfaces defined,
+and the tx count increases, but we are not seeing packets on the "wire".
 
--rhyland
+...
+[    0.911592] Freescale FM module (Oct 13 2011:14:41:07)
+[    0.916745] cpu6/6: fsl_mac: FSL FMan MAC API based driver ()
+[    0.923077] cpu6/6: fsl_mac: ffe4e0000.ethernet: FMan dTSEC version:
+0x08240101
+[    0.930403] cpu6/6: fsl_mac: ffe4e0000.ethernet: FMan MAC address:
+00:a0:a9:be:ef:10
+...
+[    1.015863] cpu6/6: fsl_dpa: FSL DPAA Ethernet driver ()
+[    1.021446] cpu6/6: fsl_dpa: ethernet.23:
+dpaa_eth.c:1684:dpa_bp_create() eth%d: Using private BM buffer pools
+[    1.032263] cpu6/6: Using dynamic RX QM frame queues
+[    1.037242] cpu6/6: Using dynamic TX QM frame queues
+[    1.042263] cpu6/6: > WARNING (FM)
+[/export2/rd2/dev/robsci1/Work/gold/wr4linux-layer/obj/hotwire1/hotwire1
+/build/linux/drivers/n
+et/dpa/NetCommSw/Peripherals/FM/fm.c:911 FmGetSetPortParams]:
+[    1.059138] cpu6/6: FIFO size enlarged to 11008
+[    1.063670] cpu6/6:
+[    1.066672] cpu6/6: fsl_dpa: ethernet.23:
+dpaa_eth.c:2327:dpaa_oh_probe() no OH port bindings on node
+/fsl,dpaa/ethernet@0
+[    1.077806] cpu6/6: fsl_dpa: ethernet.24:
+dpaa_eth.c:1684:dpa_bp_create() eth%d: Using private BM buffer pools
+[    1.087826] cpu6/6: Using dynamic RX QM frame queues
+[    1.092798] cpu6/6: Using dynamic TX QM frame queues
+...
+
+Our device tree defines the top level Ethernet as:
+ethernet@0 {
+ compatible = "fsl,p4080?dpa?ethernet", "fsl,dpa?ethernet";
+ fsl,qman?channel = <0x13>; 
+ fsl,fman?mac = <0x50>;
+};
+
+And the mac and phys are defined as follows:
+
+ethernet@e0000 {
+ cell?index = <0x0>;
+ compatible = "fsl,p4080?fman?1g?mac", "fsl,fman?1g?mac";
+ reg = <0xe0000 0x1000>;
+ fsl,port?handles = <0x22 0x23>;
+ tbi?handle = <0x24>;
+ phy?handle = <0x25>;
+ phy?connection?type = "sgmii";
+ ptimer?handle = <0x26>;
+ linux,phandle = <0x50>;
+};
+mdio@e1120 {
+ #address?cells = <0x1>;
+ #size?cells = <0x0>;
+ compatible = "fsl,fman?mdio";
+ reg = <0xe1120 0xee0>;
+ interrupts = <0x64 0x1 0x0 0x0>;
+ gpios = <0x27 0x0 0x0 0x27 0x1 0x0>;
+ linux,phandle = <0x28>;
+ tbi?phy@8 {
+  reg = <0x8>;
+  device_type = "tbi?phy";
+  linux,phandle = <0x24>;
+ };
+ phy0: ethernet?phy@0 {
+  device_type="ethernet?phy";
+  compatible="broadcom,BCM5482";
+  reg = <0>;
+  linux,phandle = <0x25>;
+ };
+};
+
+
+I have no idea what an OH binding is, what it might look like, and what
+it entails, but I think that it might be a significant factor in our not
+seeing a working interface.  Has anyone any experience with dpaa device
+trees, and configuration?  Any pointers?  Any docs? Shots in the dark? 
+
+Robert Sciuk
+Senior Designer, R&D.
+905.738.3741 xt 22621
