@@ -1,43 +1,179 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCHv6] mtd: gpio-nand: add device tree bindings
-Date: Fri, 14 Oct 2011 15:43:37 +0100
-Message-ID: <20111014144337.GB25079@totoro>
-References: <1318374618-26573-1-git-send-email-jamie@jamieiles.com>
- <1318600108.12351.130.camel@sauron> <20111014142149.GA25079@totoro>
- <1318602329.12351.143.camel@sauron>
+From: Rhyland Klein <rklein@nvidia.com>
+Subject: Re: [PATCH v5] power: bq20z75: devicetree init support
+Date: Fri, 14 Oct 2011 12:03:56 -0700
+Message-ID: <1318619036.12510.1.camel@rklein-linux2>
+References: <1316031547-18281-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1318602329.12351.143.camel@sauron>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1316031547-18281-1-git-send-email-rklein@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 14, 2011 at 05:25:21PM +0300, Artem Bityutskiy wrote:
-> On Fri, 2011-10-14 at 15:21 +0100, Jamie Iles wrote:
-> > > the top of my head, it is logical when things go like this: I have a
-> > > kernel with working platform data, but I can change that dynamically by
-> > > feeding it a device tree configuration. Hmm?
-> > 
-> > I think in general platform data and device tree should be mutually 
-> > exclusive.
+On Wed, 2011-09-14 at 13:19 -0700, Rhyland Klein wrote:
+> Adding support to generate platform data when kernel is configured
+> through device tree.
 > 
-> OK, but would you please confirm this by pointing to some docs or
-> discussions, or may be people from devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> could confirm that?
+> Also adding the binding for the TI bq20z75 fuel gadge and the
+> bq20z75 driver.
+> 
+> v2: Fixed typo in binding description.
+> v3: Changed to use "ti," properties
+>     Changed to use single gpio property for battery detect info
+>     Removed unnecessary call to of_match_device
+> v4: Squashed Binding and driver changes together.
+>     Fixed case where CONFIG_OF is not selected, return existing pdata pointer
+> v5: Fixed MODULE_DEVICE_TABLE to be i2c instead of platform
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Rhyland Klein <rklein@nvidia.com>
+> ---
+>  .../bindings/power_supply/ti_bq20z75.txt           |   23 ++++++
+>  drivers/power/bq20z75.c                            |   75 ++++++++++++++++++++
+>  2 files changed, 98 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+> new file mode 100644
+> index 0000000..7571294
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power_supply/ti_bq20z75.txt
+> @@ -0,0 +1,23 @@
+> +TI bq20z75
+> +~~~~~~~~~~
+> +
+> +Required properties :
+> + - compatible : "ti,bq20z75"
+> +
+> +Optional properties :
+> + - ti,i2c-retry-count : The number of times to retry i2c transactions on i2c
+> +   IO failure.
+> + - ti,poll-retry-count : The number of times to try looking for new status
+> +   after an external change notification.
+> + - ti,battery-detect-gpios : The gpio which signals battery detection and
+> +   a flag specifying its polarity.
+> +
+> +Example:
+> +
+> +	bq20z75@b {
+> +		compatible = "ti,bq20z75";
+> +		reg = < 0xb >;
+> +		ti,i2c-retry-count = <2>;
+> +		ti,poll-retry-count = <10>;
+> +		ti,battery-detect-gpios = <&gpio-controller 122 1>;
+> +	}
+> diff --git a/drivers/power/bq20z75.c b/drivers/power/bq20z75.c
+> index 9c5e5be..4014a2c 100644
+> --- a/drivers/power/bq20z75.c
+> +++ b/drivers/power/bq20z75.c
+> @@ -613,6 +613,78 @@ static void bq20z75_delayed_work(struct work_struct *work)
+>  	}
+>  }
+>  
+> +#if defined(CONFIG_OF)
+> +#include <linux/of_device.h>
+> +static const struct of_device_id bq20z75_dt_ids[] = {
+> +	{ .compatible = "ti,bq20z75" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, bq20z75_dt_ids);
+> +
+> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
+> +	struct i2c_client *client)
+> +{
+> +	const struct of_device_id *dtid;
+> +	struct device_node *of_node = client->dev.of_node;
+> +	struct bq20z75_platform_data *pdata = client->dev.platform_data;
+> +	enum of_gpio_flags gpio_flags;
+> +	int rc;
+> +	u32 prop;
+> +
+> +	/* verify this driver matches this device */
+> +	if (!of_node)
+> +		return NULL;
+> +
+> +	/* if platform data is set, honor it */
+> +	if (pdata)
+> +		return pdata;
+> +
+> +	/* first make sure at least one property is set, otherwise
+> +	 * it won't change behavior from running without pdata.
+> +	 */
+> +	if (!of_get_property(of_node, "ti,i2c-retry-count", NULL) &&
+> +		!of_get_property(of_node, "ti,poll-retry-count", NULL) &&
+> +		!of_get_property(of_node, "ti,battery-detect-gpios", NULL))
+> +		goto of_out;
+> +
+> +	pdata = devm_kzalloc(&client->dev, sizeof(struct bq20z75_platform_data),
+> +				GFP_KERNEL);
+> +	if (!pdata)
+> +		goto of_out;
+> +
+> +	rc = of_property_read_u32(of_node, "ti,i2c-retry-count", &prop);
+> +	if (!rc)
+> +		pdata->i2c_retry_count = prop;
+> +
+> +	rc = of_property_read_u32(of_node, "ti,poll-retry-count", &prop);
+> +	if (!rc)
+> +		pdata->poll_retry_count = prop;
+> +
+> +	if (!of_get_property(of_node, "ti,battery-detect-gpios", NULL)) {
+> +		pdata->battery_detect = -1;
+> +		goto of_out;
+> +	}
+> +
+> +	pdata->battery_detect = of_get_named_gpio_flags(of_node,
+> +			"ti,battery-detect-gpios", 0, &gpio_flags);
+> +
+> +	if (gpio_flags & OF_GPIO_ACTIVE_LOW)
+> +		pdata->battery_detect_present = 0;
+> +	else
+> +		pdata->battery_detect_present = 1;
+> +
+> +of_out:
+> +	return pdata;
+> +}
+> +#else
+> +#define bq20z75_dt_ids NULL
+> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
+> +	struct i2c_client *client)
+> +{
+> +	return client->dev.platform_data;
+> +}
+> +#endif
+> +
+>  static int __devinit bq20z75_probe(struct i2c_client *client,
+>  	const struct i2c_device_id *id)
+>  {
+> @@ -642,6 +714,8 @@ static int __devinit bq20z75_probe(struct i2c_client *client,
+>  	bq20z75_device->power_supply.external_power_changed =
+>  		bq20z75_external_power_changed;
+>  
+> +	pdata = bq20z75_of_populate_pdata(client);
+> +
+>  	if (pdata) {
+>  		bq20z75_device->gpio_detect =
+>  			gpio_is_valid(pdata->battery_detect);
+> @@ -775,6 +849,7 @@ static struct i2c_driver bq20z75_battery_driver = {
+>  	.id_table	= bq20z75_id,
+>  	.driver = {
+>  		.name	= "bq20z75-battery",
+> +		.of_match_table = bq20z75_dt_ids,
+>  	},
+>  };
+>  
 
-I found https://lwn.net/Articles/449058/ from Grant that I think covers 
-it, but that's the best I could find written down!
+Anton, could you take a look at this patch?
 
-Jamie
+-rhyland
