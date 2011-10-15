@@ -1,15 +1,15 @@
-From: "Robert Sciuk" <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
-Subject: RE: P4080 device tree problems with fsl dpaa ...
-Date: Fri, 14 Oct 2011 17:53:10 -0400
-Message-ID: <2DD52030B5146141BEB762A11AE97C4CF6E0EC@SPQCEXC05.exfo.com>
-References: <2DD52030B5146141BEB762A11AE97C4CF6E0E6@SPQCEXC05.exfo.com>
- <CACxGe6t7pRFKKc=0_=PrrMq4twVGELoPwqQf2u2HmJaQO0LLiA@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCHv6] mtd: gpio-nand: add device tree bindings
+Date: Fri, 14 Oct 2011 21:04:15 -0600
+Message-ID: <20111015030415.GA8274@ponder.secretlab.ca>
+References: <1318374618-26573-1-git-send-email-jamie@jamieiles.com>
+ <1318600108.12351.130.camel@sauron> <20111014142149.GA25079@totoro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-In-reply-to: <CACxGe6t7pRFKKc=0_=PrrMq4twVGELoPwqQf2u2HmJaQO0LLiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111014142149.GA25079@totoro>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,156 +19,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of
-> Grant Likely
-> Sent: Friday, October 14, 2011 5:49 PM
-> To: Robert Sciuk
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: P4080 device tree problems with fsl dpaa ...
-> =
-
-> On Fri, Oct 14, 2011 at 3:26 PM, Robert Sciuk <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
-> wrote:
-> > I've just joined the list, and I hope that this is not an
-> inappropriate
-> > question, but I'm looking for some direction with respect to device
-> > trees, and the fsl, dpaa Ethernet drivers.
-> >
-> > I'm wondering if anyone has had any experience with the FreeScale
-> DPAA
-> > drivers for the 1g dtsec interface. =A0We are getting interfaces
-> defined,
-> > and the tx count increases, but we are not seeing packets on the
-> "wire".
-> =
-
-> Hi Robert,
-> =
-
-> You should send your question to the linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> mailing list.  This is more of a powerpc device driver question than
-> it is a device tree question, so you're more likely to get a helpful
-> answer there.
-> =
-
-> g.
-> =
-
-
-Thanks Grant.  Will do.
-
-Rob.
-
-
-
-> =
-
-> >
+On Fri, Oct 14, 2011 at 03:21:49PM +0100, Jamie Iles wrote:
+> Hi Artem,
+> 
+> On Fri, Oct 14, 2011 at 04:48:20PM +0300, Artem Bityutskiy wrote:
+> > On Wed, 2011-10-12 at 00:10 +0100, Jamie Iles wrote:
+> > > +#ifdef CONFIG_OF
+> > > +static const struct of_device_id gpio_nand_id_table[] = {
+> > > +	{ .compatible = "gpio-control-nand" },
+> > > +	{}
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, gpio_nand_id_table);
 > > ...
-> > [ =A0 =A00.911592] Freescale FM module (Oct 13 2011:14:41:07)
-> > [ =A0 =A00.916745] cpu6/6: fsl_mac: FSL FMan MAC API based driver ()
-> > [ =A0 =A00.923077] cpu6/6: fsl_mac: ffe4e0000.ethernet: FMan dTSEC
-> version:
-> > 0x08240101
-> > [ =A0 =A00.930403] cpu6/6: fsl_mac: ffe4e0000.ethernet: FMan MAC addres=
-s:
-> > 00:a0:a9:be:ef:10
+> > > +#else /* CONFIG_OF */
 > > ...
-> > [ =A0 =A01.015863] cpu6/6: fsl_dpa: FSL DPAA Ethernet driver ()
-> > [ =A0 =A01.021446] cpu6/6: fsl_dpa: ethernet.23:
-> > dpaa_eth.c:1684:dpa_bp_create() eth%d: Using private BM buffer pools
-> > [ =A0 =A01.032263] cpu6/6: Using dynamic RX QM frame queues
-> > [ =A0 =A01.037242] cpu6/6: Using dynamic TX QM frame queues
-> > [ =A0 =A01.042263] cpu6/6: > WARNING (FM)
-> > [/export2/rd2/dev/robsci1/Work/gold/wr4linux-
-> layer/obj/hotwire1/hotwire1
-> > /build/linux/drivers/n
-> > et/dpa/NetCommSw/Peripherals/FM/fm.c:911 FmGetSetPortParams]:
-> > [ =A0 =A01.059138] cpu6/6: FIFO size enlarged to 11008
-> > [ =A0 =A01.063670] cpu6/6:
-> > [ =A0 =A01.066672] cpu6/6: fsl_dpa: ethernet.23:
-> > dpaa_eth.c:2327:dpaa_oh_probe() no OH port bindings on node
-> > /fsl,dpaa/ethernet@0
-> > [ =A0 =A01.077806] cpu6/6: fsl_dpa: ethernet.24:
-> > dpaa_eth.c:1684:dpa_bp_create() eth%d: Using private BM buffer pools
-> > [ =A0 =A01.087826] cpu6/6: Using dynamic RX QM frame queues
-> > [ =A0 =A01.092798] cpu6/6: Using dynamic TX QM frame queues
-> > ...
-> >
-> > Our device tree defines the top level Ethernet as:
-> > ethernet@0 {
-> > =A0compatible =3D "fsl,p4080?dpa?ethernet", "fsl,dpa?ethernet";
-> > =A0fsl,qman?channel =3D <0x13>;
-> > =A0fsl,fman?mac =3D <0x50>;
-> > };
-> >
-> > And the mac and phys are defined as follows:
-> >
-> > ethernet@e0000 {
-> > =A0cell?index =3D <0x0>;
-> > =A0compatible =3D "fsl,p4080?fman?1g?mac", "fsl,fman?1g?mac";
-> > =A0reg =3D <0xe0000 0x1000>;
-> > =A0fsl,port?handles =3D <0x22 0x23>;
-> > =A0tbi?handle =3D <0x24>;
-> > =A0phy?handle =3D <0x25>;
-> > =A0phy?connection?type =3D "sgmii";
-> > =A0ptimer?handle =3D <0x26>;
-> > =A0linux,phandle =3D <0x50>;
-> > };
-> > mdio@e1120 {
-> > =A0#address?cells =3D <0x1>;
-> > =A0#size?cells =3D <0x0>;
-> > =A0compatible =3D "fsl,fman?mdio";
-> > =A0reg =3D <0xe1120 0xee0>;
-> > =A0interrupts =3D <0x64 0x1 0x0 0x0>;
-> > =A0gpios =3D <0x27 0x0 0x0 0x27 0x1 0x0>;
-> > =A0linux,phandle =3D <0x28>;
-> > =A0tbi?phy@8 {
-> > =A0reg =3D <0x8>;
-> > =A0device_type =3D "tbi?phy";
-> > =A0linux,phandle =3D <0x24>;
-> > =A0};
-> > =A0phy0: ethernet?phy@0 {
-> > =A0device_type=3D"ethernet?phy";
-> > =A0compatible=3D"broadcom,BCM5482";
-> > =A0reg =3D <0>;
-> > =A0linux,phandle =3D <0x25>;
-> > =A0};
-> > };
-> >
-> >
-> > I have no idea what an OH binding is, what it might look like, and
-> what
-> > it entails, but I think that it might be a significant factor in our
-> not
-> > seeing a working interface. =A0Has anyone any experience with dpaa
-> device
-> > trees, and configuration? =A0Any pointers? =A0Any docs? Shots in the
-> dark?
-> >
-> > Robert Sciuk
-> > Senior Designer, R&D.
-> > 905.738.3741=A0xt 22621
-> >
-> >
-> > _______________________________________________
-> > devicetree-discuss mailing list
-> > devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > https://lists.ozlabs.org/listinfo/devicetree-discuss
-> >
-> =
+> > > +#endif /* CONFIG_OF */
+> > 
+> > I wonder, why it is either OF of platform data? What if I want my kernel
+> > to fall-back to platform data if device tree data is absent? What is the
+> > general policy? Sorry, I am not very well aware of the DT stuff. But off
+> 
+> I think the general policy is that for device tree everything should be 
+> in the device tree.  There is a mechanism for device tree platforms to 
+> pass platform data too, but I believe this is more as a tool for 
+> migrating existing platforms to device tree.
+> 
+> Also, the device tree binding should be well documented - if the device 
+> is present in the tree it should have all of the required properties.  
+> If the device isn't there at all then it won't get registered.
+> 
+> > the top of my head, it is logical when things go like this: I have a
+> > kernel with working platform data, but I can change that dynamically by
+> > feeding it a device tree configuration. Hmm?
+> 
+> I think in general platform data and device tree should be mutually 
+> exclusive.
 
-> =
+No, Artem is correct.  It is *not* okay to break platform_data support
+simply by turning on CONFIG_OF.  The driver must be able to support
+both, and to choose its data source at runtime.
 
-> =
+Essentially, turning on CONFIG_OF adds the ability to boot with a
+device tree while still being able to boot on legacy platforms.
 
-> --
-> Grant Likely, B.Sc., P.Eng.
-> Secret Lab Technologies Ltd.
+g.
