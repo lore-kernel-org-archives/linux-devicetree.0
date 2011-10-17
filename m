@@ -1,64 +1,38 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [RFC] clocktree representation in the devicetree
-Date: Mon, 17 Oct 2011 21:12:51 +0200
-Message-ID: <20111017191251.GE18141@pengutronix.de>
-References: <20111017102921.GA18141@pengutronix.de>
-	<201110171702.05319.arnd@arndb.de>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH] devicetree: Document Wolfson prefix
+Date: Mon, 17 Oct 2011 22:59:48 +0100
+Message-ID: <1318888788-6562-1-git-send-email-broonie@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201110171702.05319.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Richard Zhao <richard.zhao@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2011 at 05:02:05PM +0200, Arnd Bergmann wrote:
-> On Monday 17 October 2011, Sascha Hauer wrote:
-> > The following is an attempt to represent the clocktree of a i.MX53 in
-> > the devicetree. I created this to see how it would look like and to
-> > start a discussion whether we want to move in this direction or not.
-> 
-> Very good, thanks for getting this started!
-> 
-> > Some things to consider:
-> > 
-> > - It seems to be very flexible. A board can customize the clock tree
-> >   by just adding some clk-parent=<phandle> properties to the muxers.
-> > - clocks can easily be associated with devices.
-> > 
-> > but:
-> > 
-> > - The following example registers 127 new platform devices and it's
-> >   not even complete. This adds significant overhead to initialization.
-> 
-> I don't understand enough about the clock trees to understand if the
-> dts representation is good, but it I don't see a reason to represent
-> it as lots of platform devices in linux. We can have lots of device_nodes
-> in the device tree that are not a platform_device but we can still
-> access them through the of_*() functions. Ideally, we would encapsulate
-> all the clock tree parsing in the clk subsystem and provide high-level
-> interfaces to clkdev drivers from there.
+Signed-off-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-Still we have to parse the compatible stuff and have to match a clock
-entry to the corresponding driver. If we don't use platform devices here
-I think we have to be careful to not create something which resembles
-the platform devices with similar overhead.
-
-Sascha
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index e855278..2c1b2cb 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -37,4 +37,5 @@ simtek
+ sirf	SiRF Technology, Inc.
+ stericsson	ST-Ericsson
+ ti	Texas Instruments
++wlf	Wolfson Microelectronics
+ xlnx	Xilinx
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.6.3
