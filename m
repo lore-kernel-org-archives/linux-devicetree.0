@@ -1,39 +1,36 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
 Subject: Re: [RFC] clocktree representation in the devicetree
-Date: Mon, 17 Oct 2011 20:43:58 +0200
-Message-ID: <20111017184358.GD18141@pengutronix.de>
+Date: Mon, 17 Oct 2011 21:12:51 +0200
+Message-ID: <20111017191251.GE18141@pengutronix.de>
 References: <20111017102921.GA18141@pengutronix.de>
- <4E9C5F71.5070608@gmail.com>
+	<201110171702.05319.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <4E9C5F71.5070608-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <201110171702.05319.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Richard Zhao <richard.zhao@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2011 at 12:01:37PM -0500, Rob Herring wrote:
-> Sascha,
-> 
-> On 10/17/2011 05:29 AM, Sascha Hauer wrote:
-> > 
-> > Hi All,
-> > 
+On Mon, Oct 17, 2011 at 05:02:05PM +0200, Arnd Bergmann wrote:
+> On Monday 17 October 2011, Sascha Hauer wrote:
 > > The following is an attempt to represent the clocktree of a i.MX53 in
 > > the devicetree. I created this to see how it would look like and to
 > > start a discussion whether we want to move in this direction or not.
-> > 
+> 
+> Very good, thanks for getting this started!
+> 
 > > Some things to consider:
 > > 
 > > - It seems to be very flexible. A board can customize the clock tree
@@ -44,73 +41,19 @@ On Mon, Oct 17, 2011 at 12:01:37PM -0500, Rob Herring wrote:
 > > 
 > > - The following example registers 127 new platform devices and it's
 > >   not even complete. This adds significant overhead to initialization.
-> > 
 > 
-> Why? You should only get platform devices if you declare the clocks
-> block as a simple bus.
-> 
-> I like the clk tree hierarchy reflected in the DT hierarchy. This would
-> make init ordering easier. However, there is one major problem I see.
-> You can only describe 1 configuration of the clock tree. How do you show
-> all possible muxing options for clocks? We need to describe what the mux
-> options are, but not what the current selection is as that is
-> discoverable already.
+> I don't understand enough about the clock trees to understand if the
+> dts representation is good, but it I don't see a reason to represent
+> it as lots of platform devices in linux. We can have lots of device_nodes
+> in the device tree that are not a platform_device but we can still
+> access them through the of_*() functions. Ideally, we would encapsulate
+> all the clock tree parsing in the clk subsystem and provide high-level
+> interfaces to clkdev drivers from there.
 
-The way I did it only dividers and gates are child nodes of their
-parents. The muxes instead are located at the base of the clock tree and
-have a parent property which describes all possible parents. A board
-could then add a current-parent = <phandle> property in its board dts
-(similar to the status = enabled property). Something like this:
-
-imx53.dtsi:
-
-...
-		periph_apm: clkmux-periph_apm@0x53fd4018 {
-			reg = <0x53fd4018 0x0>;
-			shift = <0x00000000>;
-			width = <0x00000002>;
-			parent = <&pll1 &pll3 &lp_apm 0>;
-			compatible = "fsl,imx51-clk-mux";
-		};
-...
-
-imx53-qsb.dts:
-
-		periph_apm: clkmux-periph_apm@0x53fd4018 {
-			current_parent = <&pll3>
-		};
-
-
-So the entry in imx53-qsb.dts is used to describe what a board wants
-and not what the current status is.
-
-> 
-> Will clocks ever become generic enough that it makes sense to describe
-> clocks in DT at the level of muxes, dividers, gates, etc.?
-
-I think yes. On i.MX processors you only need dividers, gates, muxes and
-plls. On other SoCs there may be table based dividers, power-of-2
-dividers or similar stuff, but overall there should be a quite limited
-set of features to be described.
-
-> Perhaps it
-> makes more sense to just describe the clock controller to device
-> connections and any board level clocks in the DT.
-
-Describing the clock tree in the device tree also makes it possible for
-a board to customize the divider/PLL/mux settings.
-Consider a SoC with a PLL where several different devices can derive its
-clock from.  One board may want to move all other devices away from this
-PLL and use it exclusively for sound to get an exact rate. Another might
-use it for the pixel clock and a third one selects a good compromise
-between an exact sound clock and the pixel clock. Not describing this in
-the device tree means that we need board specific code with
-clk_get/clk_get_parent/clk_set_rate orgies. 
-I gave up on creating clock code that magically tries to do everything
-right based on clk_* functions. With the example above how should the
-clock code know how to adjust the mentioned PLL? If you managed to get
-it right for one SoC the next totally different SoC will already be in
-the pipeline.
+Still we have to parse the compatible stuff and have to match a clock
+entry to the corresponding driver. If we don't use platform devices here
+I think we have to be careful to not create something which resembles
+the platform devices with similar overhead.
 
 Sascha
 
