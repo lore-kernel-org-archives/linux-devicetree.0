@@ -1,15 +1,13 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/9] ARM: SPMP8000: Add machine base files
-Date: Mon, 17 Oct 2011 13:44:24 +0200
-Message-ID: <201110171344.24697.arnd@arndb.de>
-References: <1318178172-7965-1-git-send-email-zoss@devai.org>
-	<201110162259.19960.arnd@arndb.de>
-	<20111016205221.GL1459@game.jcrosoft.org>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v3 0/4] dmaengine: Device Tree support for Atmel DMA
+Date: Mon, 17 Oct 2011 14:54:37 +0200
+Message-ID: <4E9C258D.3030509@atmel.com>
+References: <1318438634-11826-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111016205221.GL1459@game.jcrosoft.org>
+In-Reply-To: <1318438634-11826-1-git-send-email-nicolas.ferre@atmel.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,34 +17,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org, Zoltan Devai <zdevai@gmail.com>
+To: vinod.koul@intel.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 16 October 2011, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 22:59 Sun 16 Oct     , Arnd Bergmann wrote:
-> > On Sunday 16 October 2011, Zoltan Devai wrote:
-> >> BTW, the static mappings are only needed to be able to set up the
-> >> clk stuff in init_early. That in turn is only needed for the timer code to
-> >> determinate its input clock.
-> >> If I would hard-code the timer clock rate in its driver (the bootloader is
-> >> very unlikely to change), then I could init the clk driver from
-> >> machine_init and get rid of these mappings.
-> >> How about that ?
-> > 
-> > Maybe you can just pass the clock rate in the device tree then. If the boot
-> > loader changes it, it can still pass the correct rate and you don't
-> > need the early mappings for functional reasons any more.
->
-> please don't update the DT from the bootloader, I'll recommand you to limit
-> your bootloader to just update the strict minimun (same as ATAG) and touch
-> noting else
+On 10/12/2011 06:57 PM, Nicolas Ferre :
+> This series add the device tree support to Atmel DMA controller driver:
+> at_hdmac.
+> The removal of platform data ease the conversion to device tree. It also have
+> the additional benefit of being simpler and cleaner.
+> 
+> Nicolas Ferre (4):
+>       dmaengine: at_hdmac: platform data move to use .id_table
+>       dmaengine: at_hdmac: add device tree support
+>       ARM: at91/dma: remove platform data from DMA controller
+>       ARM: at91/dma: DMA controller registering with DT support
+> 
+>  .../devicetree/bindings/dma/atmel-dma.txt          |   14 ++++
+>  arch/arm/mach-at91/at91sam9g45_devices.c           |   17 ++---
+>  arch/arm/mach-at91/at91sam9rl_devices.c            |    8 +--
+>  arch/arm/mach-at91/include/mach/at_hdmac.h         |   10 ---
+>  drivers/dma/at_hdmac.c                             |   76 +++++++++++++++++---
+>  drivers/dma/at_hdmac_regs.h                        |    8 ++
+>  6 files changed, 97 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-dma.txt
 
-Why? Do you think it's better to hardcode it and have no way to update it?
-Note that the more likely scenario even with clock rate in the device tree
-would be that the value is hardcoded in the board's file and would not
-be touched by the boot loader. Only if the boot loader actually changes
-the physical clock rate (which Zoltan described as very unlikely), it
-would also have to go the full length and update the device tree as well.
+Vinod,
 
-	Arnd
+I have just rebased the dmaengine at_hdmac driver patches on top of your
+"next" branch as a "v4" series. I send it to you with Grant's "Acked-by"
+right now.
+
+Best regards,
+-- 
+Nicolas Ferre
