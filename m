@@ -1,56 +1,50 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] netdev/of/phy: MDIO bus multiplexer support.
-Date: Mon, 17 Oct 2011 09:48:47 -0500
-Message-ID: <C81814FF-4E56-4B28-8043-F874EE1D6B51@kernel.crashing.org>
-References: <1317166015-20714-1-git-send-email-david.daney@cavium.com>
- <20110929.163112.1523715692737597332.davem@davemloft.net>
- <20110930003214.GB12606@ponder.secretlab.ca>
-Mime-Version: 1.0 (Apple Message framework v1251.1)
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC] clocktree representation in the devicetree
+Date: Mon, 17 Oct 2011 17:02:05 +0200
+Message-ID: <201110171702.05319.arnd@arndb.de>
+References: <20111017102921.GA18141@pengutronix.de>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110930003214.GB12606-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111017102921.GA18141@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Richard Zhao <richard.zhao@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 17 October 2011, Sascha Hauer wrote:
+> The following is an attempt to represent the clocktree of a i.MX53 in
+> the devicetree. I created this to see how it would look like and to
+> start a discussion whether we want to move in this direction or not.
 
-On Sep 29, 2011, at 7:32 PM, Grant Likely wrote:
+Very good, thanks for getting this started!
 
-> On Thu, Sep 29, 2011 at 04:31:12PM -0400, David Miller wrote:
->> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> Date: Tue, 27 Sep 2011 16:26:52 -0700
->> 
->>> v2: Update bindings to use "reg" and "mdio-parent-bus" insutead of
->>>    "cell-index" and "parent-bus"
->> 
->> Grant, when the final version of this patch set is ready how do
->> you want to handle merging it in?
->> 
->> I think it would be safe to merge this via your tree, since the
->> changes made to existing network driver files are rather trivial and
->> thus merge conflict friendly.
+> Some things to consider:
 > 
-> Your tree or mine, I'm happy either way.  Even if there were
-> conflicts, they would be trivial.
+> - It seems to be very flexible. A board can customize the clock tree
+>   by just adding some clk-parent=<phandle> properties to the muxers.
+> - clocks can easily be associated with devices.
 > 
-> Sure, I'll take care of merging it when I see an ack from you.
+> but:
 > 
->> Actually, I feel like we've discussed this before :-)
-> 
-> :)
-> 
-> g.
+> - The following example registers 127 new platform devices and it's
+>   not even complete. This adds significant overhead to initialization.
 
-Any updates to these patches?
+I don't understand enough about the clock trees to understand if the
+dts representation is good, but it I don't see a reason to represent
+it as lots of platform devices in linux. We can have lots of device_nodes
+in the device tree that are not a platform_device but we can still
+access them through the of_*() functions. Ideally, we would encapsulate
+all the clock tree parsing in the clk subsystem and provide high-level
+interfaces to clkdev drivers from there.
 
-- k
+	Arnd
