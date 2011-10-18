@@ -1,200 +1,155 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC] clocktree representation in the devicetree
-Date: Tue, 18 Oct 2011 09:16:18 +0200
-Message-ID: <20111018071618.GI18141@pengutronix.de>
-References: <20111017102921.GA18141@pengutronix.de>
- <4E9C5F71.5070608@gmail.com>
- <20111017184358.GD18141@pengutronix.de>
- <4E9CB63C.1000200@gmail.com>
+From: Changhwan Youn <chaos.youn@samsung.com>
+Subject: RE: [PATCH 1/3] ARM: Samsung: Move timer irq numbers to end of linux
+ irq	space
+Date: Tue, 18 Oct 2011 17:10:12 +0900
+Message-ID: <001001cc8d6d$5c48fa60$14daef20$%youn@samsung.com>
+References: <1318234289-22041-1-git-send-email-thomas.abraham@linaro.org>
+ <1318234289-22041-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=Windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4E9CB63C.1000200-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1318234289-22041-2-git-send-email-thomas.abraham@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Cc: grant.likely@secretlab.ca, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, rob.herring@calxeda.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 17, 2011 at 06:11:56PM -0500, Rob Herring wrote:
-> On 10/17/2011 01:43 PM, Sascha Hauer wrote:
-> > On Mon, Oct 17, 2011 at 12:01:37PM -0500, Rob Herring wrote:
-> >> Sascha,
-> >>
-> >> On 10/17/2011 05:29 AM, Sascha Hauer wrote:
-> >>>
-> >>> Hi All,
-> >>>
-> >>> The following is an attempt to represent the clocktree of a i.MX53 in
-> >>> the devicetree. I created this to see how it would look like and to
-> >>> start a discussion whether we want to move in this direction or not.
-> >>>
-> >>> Some things to consider:
-> >>>
-> >>> - It seems to be very flexible. A board can customize the clock tree
-> >>>   by just adding some clk-parent=<phandle> properties to the muxers.
-> >>> - clocks can easily be associated with devices.
-> >>>
-> >>> but:
-> >>>
-> >>> - The following example registers 127 new platform devices and it's
-> >>>   not even complete. This adds significant overhead to initialization.
-> >>>
-> >>
-> >> Why? You should only get platform devices if you declare the clocks
-> >> block as a simple bus.
-> >>
-> >> I like the clk tree hierarchy reflected in the DT hierarchy. This would
-> >> make init ordering easier. However, there is one major problem I see.
-> >> You can only describe 1 configuration of the clock tree. How do you show
-> >> all possible muxing options for clocks? We need to describe what the mux
-> >> options are, but not what the current selection is as that is
-> >> discoverable already.
-> > 
-> > The way I did it only dividers and gates are child nodes of their
-> > parents. The muxes instead are located at the base of the clock tree and
-> > have a parent property which describes all possible parents. A board
-> > could then add a current-parent = <phandle> property in its board dts
-> > (similar to the status = enabled property). Something like this:
-> > 
-> > imx53.dtsi:
-> > 
-> > ...
-> > 		periph_apm: clkmux-periph_apm@0x53fd4018 {
-> > 			reg = <0x53fd4018 0x0>;
-> > 			shift = <0x00000000>;
-> > 			width = <0x00000002>;
-> > 			parent = <&pll1 &pll3 &lp_apm 0>;
-> > 			compatible = "fsl,imx51-clk-mux";
-> > 		};
-> > ...
-> > 
-> > imx53-qsb.dts:
-> > 
-> > 		periph_apm: clkmux-periph_apm@0x53fd4018 {
-> > 			current_parent = <&pll3>
-> > 		};
-> > 
+Hi Thomas,
+
+All UART_IRQ_RXD, TXD, ERR of Samsung's platforms are also statically
+mapped to linux irq numbers 16 to 31. These interrupts also need proper handling.
+
+Best regards,
+Changhwan Youn
+
+On 10/10/2011 03:11 AM, Thomas Abraham wrote:
+> All of Samsung's s5p platforms have timer irqs statically mapped from linux
+> irq numbers 11 to 15. These timer irqs are moved to end of the statically
+> mapped linux irq space and the hardware irqs, which were statically mapped
+> starting from 32 is moved to start from 0. The NR_IRQS macro is consolidated
+> for all the s5p platforms in this process.
 > 
-> Okay. Missed that not going far enough down into the dts...
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  arch/arm/mach-exynos4/include/mach/entry-macro.S |    1 -
+>  arch/arm/mach-exynos4/include/mach/irqs.h        |    3 +--
+>  arch/arm/mach-s5p64x0/include/mach/irqs.h        |    4 +---
+>  arch/arm/mach-s5pc100/include/mach/irqs.h        |    3 +--
+>  arch/arm/mach-s5pv210/include/mach/irqs.h        |    3 +--
+>  arch/arm/plat-samsung/include/plat/irqs.h        |    7 +++++--
+>  6 files changed, 9 insertions(+), 12 deletions(-)
 > 
-> So either a clock can have an explicit parent (or list) or can inherit
-> from the parent node. That aligns pretty well with how interrupts are done.
+> diff --git a/arch/arm/mach-exynos4/include/mach/entry-macro.S b/arch/arm/mach-
+> exynos4/include/mach/entry-macro.S
+> index 4c9adbd..5c4fbcc 100644
+> --- a/arch/arm/mach-exynos4/include/mach/entry-macro.S
+> +++ b/arch/arm/mach-exynos4/include/mach/entry-macro.S
+> @@ -72,7 +72,6 @@
+>  		cmpcc	\irqnr, \irqnr
+>  		cmpne	\irqnr, \tmp
+>  		cmpcs	\irqnr, \irqnr
+> -		addne	\irqnr, \irqnr, #32
 > 
-> Perhaps it should be "clock-parent" rather than just parent.
-
-Yes. Also we should make the difference clear between the possible
-parents of a mux and the one the user wants to select. So maybe
-
-'clock-parent' for the possible parents of a mux
-
-and
-
-'selected-clock-parent' for the one the user wants to have.
-
+>  		.endm
 > 
-> > 
-> > So the entry in imx53-qsb.dts is used to describe what a board wants
-> > and not what the current status is.
-> > 
-> I worry that that could result in a lot of combinations of DT's that
-> won't boot. If it's all generic code, how do you ensure things are done
-> in the right order. There's lots of gotchas ensuring clocks stay in the
-> right ranges and ratios when you change them. I don't think the clock
-> hierarchy alone is enough information. As a simple example, what is the
-> maximum frequency of internal bus clocks. That is one of the primary
-> differences between MX51 and MX53 clocks.
-
-If a user selects higher rates than allowed for a SoC he's doomed, just
-like he's doomed when he screws up the devicetree in other ways
-nowadays.
-
-I agree that there will be problems when critical bus timings should be
-changed via the devicetree. This would either need special handling in
-the kernel or simply should be dissallowed.
-
+> diff --git a/arch/arm/mach-exynos4/include/mach/irqs.h b/arch/arm/mach-exynos4/include/mach/irqs.h
+> index dfd4b7e..43087c3 100644
+> --- a/arch/arm/mach-exynos4/include/mach/irqs.h
+> +++ b/arch/arm/mach-exynos4/include/mach/irqs.h
+> @@ -163,7 +163,6 @@
+>  #define IRQ_GPIO2_NR_GROUPS	9
+>  #define IRQ_GPIO_END		(S5P_GPIOINT_BASE + S5P_GPIOINT_COUNT)
 > 
-> Granted this problem exists already, but is it just making it easier to
-> hang yourself?
+> -/* Set the default NR_IRQS */
+> -#define NR_IRQS			(IRQ_GPIO_END + 64)
+> +#define IRQ_TIMER_BASE		(IRQ_GPIO_END + 64)
 > 
-> >>
-> >> Will clocks ever become generic enough that it makes sense to describe
-> >> clocks in DT at the level of muxes, dividers, gates, etc.?
-> > 
-> > I think yes. On i.MX processors you only need dividers, gates, muxes and
-> > plls. On other SoCs there may be table based dividers, power-of-2
-> > dividers or similar stuff, but overall there should be a quite limited
-> > set of features to be described.
-> > 
+>  #endif /* __ASM_ARCH_IRQS_H */
+> diff --git a/arch/arm/mach-s5p64x0/include/mach/irqs.h b/arch/arm/mach-s5p64x0/include/mach/irqs.h
+> index 53982db..bea73cc 100644
+> --- a/arch/arm/mach-s5p64x0/include/mach/irqs.h
+> +++ b/arch/arm/mach-s5p64x0/include/mach/irqs.h
+> @@ -141,8 +141,6 @@
 > 
-> So how do you bind a "fsl,imx51-clk-mux" to yet to be written generic
-> clock mux code?
-
-Well my first thought was to use normal (of-)platform devices, but as
-mentioned this may have some unwanted overhead. In case of the mux
-a generic mux could be used, so maybe compatible = "fsl,imx51-clk-mux",
-"clk-mux" should do it. In case of a gate we'll probably need a i.MX5
-specific variant as these SoCs use two bits for a single gate.
-
-> More importantly, are the properties exposed sufficient?
-
-No :)
-
-At least there should be a propagates flag, but there may be more.
-
+>  #define IRQ_EINT_GROUP(grp, x)	(IRQ_EINT_GROUP##grp##_BASE + (x))
 > 
-> While we may ultimately want the compatible strings to be SOC specific,
-> it would be good to start by generically defining bindings for dividers,
-> muxes, and gates and ensure we have something that works for all SOCs.
+> -/* Set the default NR_IRQS */
+> -
+> -#define NR_IRQS			(IRQ_EINT_GROUP8_BASE + IRQ_EINT_GROUP8_NR + 1)
+> +#define IRQ_TIMER_BASE		(IRQ_EINT_GROUP8_BASE + IRQ_EINT_GROUP8_NR + 1)
 > 
-> >> Perhaps it
-> >> makes more sense to just describe the clock controller to device
-> >> connections and any board level clocks in the DT.
-> > 
-> > Describing the clock tree in the device tree also makes it possible for
-> > a board to customize the divider/PLL/mux settings.
-> > Consider a SoC with a PLL where several different devices can derive its
-> > clock from.  One board may want to move all other devices away from this
-> > PLL and use it exclusively for sound to get an exact rate. Another might
-> > use it for the pixel clock and a third one selects a good compromise
-> > between an exact sound clock and the pixel clock. Not describing this in
-> > the device tree means that we need board specific code with
-> > clk_get/clk_get_parent/clk_set_rate orgies. 
-> > I gave up on creating clock code that magically tries to do everything
-> > right based on clk_* functions. With the example above how should the
-> > clock code know how to adjust the mentioned PLL? If you managed to get
-> > it right for one SoC the next totally different SoC will already be in
-> > the pipeline.
-> > 
-> Good point. I guess the board specifics can go all the way back up the
-> clock tree.
+>  #endif /* __ASM_ARCH_IRQS_H */
+> diff --git a/arch/arm/mach-s5pc100/include/mach/irqs.h b/arch/arm/mach-s5pc100/include/mach/irqs.h
+> index d2eb475..3a9d300 100644
+> --- a/arch/arm/mach-s5pc100/include/mach/irqs.h
+> +++ b/arch/arm/mach-s5pc100/include/mach/irqs.h
+> @@ -104,8 +104,7 @@
+>  #define S5P_GPIOINT_BASE	(IRQ_EINT(31) + 1)
+>  #define S5P_GPIOINT_GROUP_MAXNR	21
 > 
-> It's good to see a real example. but it would be nice to see some
-> documentation to update this:
+> -/* Set the default NR_IRQS */
+> -#define NR_IRQS			(IRQ_EINT(31) + S5P_GPIOINT_COUNT + 1)
+> +#define IRQ_TIMER_BASE		(IRQ_EINT(31) + S5P_GPIOINT_COUNT + 1)
 > 
-> http://www.devicetree.org/ClockBindings
+>  /* Compatibility */
+>  #define IRQ_LCD_FIFO		IRQ_LCD0
+> diff --git a/arch/arm/mach-s5pv210/include/mach/irqs.h b/arch/arm/mach-s5pv210/include/mach/irqs.h
+> index 5e0de3a..df3173a 100644
+> --- a/arch/arm/mach-s5pv210/include/mach/irqs.h
+> +++ b/arch/arm/mach-s5pv210/include/mach/irqs.h
+> @@ -125,8 +125,7 @@
+>  #define S5P_GPIOINT_BASE	(IRQ_EINT(31) + 1)
+>  #define S5P_GPIOINT_GROUP_MAXNR	22
 > 
-> Do you have any code using this? I've updated the OF clock support based
-> on Mike's latest common clk code that I need to send out. But it's based
-> on the above clock binding.
-
-I wasn't aware of this page. As I see it I could rewrite my suggestion
-so that it extends these clock bindings without really changing them.
-I have no code working yet, I first wanted to see how the reactions are.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> -/* Set the default NR_IRQS */
+> -#define NR_IRQS			(IRQ_EINT(31) + S5P_GPIOINT_COUNT + 1)
+> +#define IRQ_TIMER_BASE		(IRQ_EINT(31) + S5P_GPIOINT_COUNT + 1)
+> 
+>  /* Compatibility */
+>  #define IRQ_LCD_FIFO		IRQ_LCD0
+> diff --git a/arch/arm/plat-samsung/include/plat/irqs.h b/arch/arm/plat-samsung/include/plat/irqs.h
+> index 08d1a7e..b8918b3 100644
+> --- a/arch/arm/plat-samsung/include/plat/irqs.h
+> +++ b/arch/arm/plat-samsung/include/plat/irqs.h
+> @@ -22,7 +22,7 @@
+>   * mulitple of 32 to allow the common code to work
+>   */
+> 
+> -#define S5P_IRQ_OFFSET		(32)
+> +#define S5P_IRQ_OFFSET		(0)
+> 
+>  #define S5P_IRQ(x)		((x) + S5P_IRQ_OFFSET)
+> 
+> @@ -44,13 +44,14 @@
+>  #define S5P_IRQ_VIC2(x)		(S5P_VIC2_BASE + (x))
+>  #define S5P_IRQ_VIC3(x)		(S5P_VIC3_BASE + (x))
+> 
+> -#define S5P_TIMER_IRQ(x)	(11 + (x))
+> +#define S5P_TIMER_IRQ(x)	(IRQ_TIMER_BASE + (x))
+> 
+>  #define IRQ_TIMER0		S5P_TIMER_IRQ(0)
+>  #define IRQ_TIMER1		S5P_TIMER_IRQ(1)
+>  #define IRQ_TIMER2		S5P_TIMER_IRQ(2)
+>  #define IRQ_TIMER3		S5P_TIMER_IRQ(3)
+>  #define IRQ_TIMER4		S5P_TIMER_IRQ(4)
+> +#define IRQ_TIMER_COUNT		(5)
+> 
+>  #define IRQ_EINT(x)		((x) < 16 ? ((x) + S5P_EINT_BASE1) \
+>  					: ((x) - 16 + S5P_EINT_BASE2))
+> @@ -77,4 +78,6 @@
+>  #define S5P_IRQ_TYPE_EDGE_RISING	(0x03)
+>  #define S5P_IRQ_TYPE_EDGE_BOTH		(0x04)
+> 
+> +#define NR_IRQS			(IRQ_TIMER_BASE + IRQ_TIMER_COUNT)
+> +
+>  #endif /* __PLAT_SAMSUNG_IRQS_H */
+> --
+> 1.6.6.rc2
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
