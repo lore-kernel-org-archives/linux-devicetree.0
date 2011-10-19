@@ -1,81 +1,198 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RFC] [PATCH] ARM: tegra: emc: device tree bindings
-Date: Wed, 19 Oct 2011 08:19:53 -0700
-Message-ID: <CAOesGMiz+u4s2e-XBTrz2ssFEtug_ZRXUTXfx9gYG9_rN=a86w@mail.gmail.com>
-References: <1318873976-25335-1-git-send-email-olof@lixom.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CBFB@HQMAIL01.nvidia.com>
-	<CAOesGMh387Oghyd_TobnTOja6tU2uU5kt-86_HwQe7nFiL+svw@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CC18@HQMAIL01.nvidia.com>
-	<CAOesGMghu6Bn3RrFKEUBKkUNS_K8Y0ho3Y2uFZh_LXbfT80hFw@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CCA9@HQMAIL01.nvidia.com>
-	<4E9E3801.6080707@gmail.com>
-	<CAOesGMj8TREZ94RFhE3Qy=eaytOuB0YKBWw6--HAERoMB9m7Qg@mail.gmail.com>
-	<4E9EE07A.20301@gmail.com>
-	<CAOesGMhfAxrG4pMQ86XFzmBnHwBgrD=45eTvmA0-G2gTjaSL6Q@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF173D51BDEB@HQMAIL01.nvidia.com>
+From: Zoltan Devai <zoss@devai.org>
+Subject: [PATCH v2 4/5] ARM: SPMP8000: Add SPMP8000 SoC and Letcool board dts
+	descriptions
+Date: Wed, 19 Oct 2011 18:01:57 +0200
+Message-ID: <1319040118-29773-5-git-send-email-zoss@devai.org>
+References: <1318178172-7965-1-git-send-email-zoss@devai.org>
+	<1319040118-29773-1-git-send-email-zoss@devai.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF173D51BDEB-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1319040118-29773-1-git-send-email-zoss@devai.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2011 at 8:11 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wr=
-ote:
-> Olof Johansson wrote at Wednesday, October 19, 2011 9:07 AM:
->> On Wed, Oct 19, 2011 at 7:36 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>=
- wrote:
-> ...
->> > Using the frequency as was previously proposed would work assuming=
- that
->> > is unique.
->>
->> Someone suggested (off-list) to just use dummy addressing like cpu
->> nodes do. Sounds reasonable to me.
->>
->> So:
->>
->> emc {
->> =A0 compatible =3D "tegra20-emc";
->> =A0 nvidia,use-ram-code;
->> =A0 emc-tables@<ram-code> {
->> =A0 =A0 =A0nvidia,ram-code =3D < <ram-code> >;
->> =A0 =A0 =A0emc-table@<dummy enumerator> {
->> =A0 =A0 =A0 =A0 compatible =3D "tegra20-emc-table";
->> =A0 =A0 =A0 =A0 clock-frequency =3D < >;
->> =A0 =A0 =A0 =A0 nvidia,emc-regs =3D < >;
->> =A0 =A0 =A0}
->> =A0 }
->>
->> This also avoids having to handle 2-dimensional dummy numbering (i.e=
-=2E
->> <ramcode,table-number>) by breaking it in two levels:
->>
->> Where nvidia,use-ram-code is missing in the emc node, the immediate
->> child nodes will be scanned for the compatible nodes
->> Where nvidia,use-ram-code is present, first scan will be of all chil=
-d
->> nodes containing an nvidia,ram-code property, then from there treat =
-it
->> the same as the first case.
->>
->> In the above, none of the names have meaning, so they can be changed
->> as needed (but these seem like a reasonably generic and descriptive
->> name to me).
->
-> OK, I'm good with that general structure.
->
-> But, as Rob suggests, you may as well use the frequency instead of th=
-e
-> <dummy enumerator> for the unit address of the final tables, right?
-> The search algorithm might not care, but it'll be easier for humans
-> to read the resulting dts file.
+This adds the DT description of the SPMP8000 SoC, the Letcool
+N350JP board and documentation of required bindings
 
-Sure, anything can probably be used so that's fine with me -- it won't
-change the table walking code.
+Cc: Grant Likely <grant.likely@secretlab.ca>
+CC: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Zoltan Devai <zoss@devai.org>
+---
+ Documentation/devicetree/bindings/arm/spmp8000.txt |   25 +++++
+ arch/arm/boot/dts/spmp8000-letcool.dts             |   20 ++++
+ arch/arm/boot/dts/spmp8000.dtsi                    |   93 ++++++++++++++++++++
+ 3 files changed, 138 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/spmp8000.txt
+ create mode 100644 arch/arm/boot/dts/spmp8000-letcool.dts
+ create mode 100644 arch/arm/boot/dts/spmp8000.dtsi
 
-
--Olof
+diff --git a/Documentation/devicetree/bindings/arm/spmp8000.txt b/Documentation/devicetree/bindings/arm/spmp8000.txt
+new file mode 100644
+index 0000000..c392b09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/spmp8000.txt
+@@ -0,0 +1,25 @@
++Sunplus SPMP8000 device tree bindings
++=====================================
++
++Required root node properties:
++	- compatible:
++		- "gameware,letcool" : Letcool N350JO handheld game console board
++		- "sunplus,spmp8000" : A board based on the SPMP8000 SoC
++
++Timer required properties:
++	- compatible = "sunplus,spmp8000-timer"
++	- interrupt-parent : The interrupt controller node this timer belongs to
++	- interrupts : IRQs of the timer
++	- clock-freq : The frequency in HZ of the timer.
++	- reg : The register bank for the timer.
++
++Watchdog required properties:
++	- compatible = "sunplus,spmp8000-watchdof"
++	- interrupt-parent : The interrupt controller node this timer belongs to
++	- interrupts : IRQs of the watchdog
++	- reg : The register bank for the watchdog controller
++
++SCU required properties:
++	- compatible: "sunplus,spmp8000-scua" or "sunplus,spmp8000-scuab" or
++		      "sunplus,spmp8000-scuc"
++	- reg: The register bank of the System Control Unit
+diff --git a/arch/arm/boot/dts/spmp8000-letcool.dts b/arch/arm/boot/dts/spmp8000-letcool.dts
+new file mode 100644
+index 0000000..424f2aa
+--- /dev/null
++++ b/arch/arm/boot/dts/spmp8000-letcool.dts
+@@ -0,0 +1,20 @@
++/dts-v1/;
++/include/ "spmp8000.dtsi"
++/ {
++	model = "Letcool N350JP handheld game console";
++	compatible = "gameware,letcool", "sunplus,spmp8000";
++
++	memory {
++		reg = <0x00000000 0x02000000>;
++	};
++
++	chosen {
++		linux,stdout-path = &uart0;
++	};
++
++	armapb {
++		timer@90000000 {
++			clock-freq = <15187500>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/spmp8000.dtsi b/arch/arm/boot/dts/spmp8000.dtsi
+new file mode 100644
+index 0000000..15b25fa
+--- /dev/null
++++ b/arch/arm/boot/dts/spmp8000.dtsi
+@@ -0,0 +1,93 @@
++/ {
++	compatible = "sunplus,spmp8000";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	armapb {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x90000000 0x10000>;
++
++		timer@90000000 {
++			compatible = "sunplus,spmp8000-timer";
++			reg = <0x0 0x1000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <7 8 9>;
++		};
++
++		watchdog@90001000 {
++			compatible = "sunplus,spmp8000-wdt";
++			reg = <0x1000 0x1000>;
++			interrupt-parent = <&vic0>;
++			interrupts = <10 11 12>;
++		};
++
++		scu-b@90005000 {
++			compatible = "sunplus,spmp8000-scub";
++			reg = <0x5000 0x1000>;
++		};
++	};
++
++	armahb {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x90010000 0x20000>;
++
++		vic0: interrupt-controller@90010000 {
++			compatible = "arm,pl192";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			reg = <0x0 0x1000>;
++		};
++
++		vic1: interrupt-controller@900020000 {
++			compatible = "arm,pl192";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			reg = <0x10000 0x1000>;
++		};
++	};
++
++	plat {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x92000000 0x1000000>;
++
++		scu-c@92005000 {
++			compatible = "sunplus,spmp8000-scuc";
++			reg = <0x5000 0x1000>;
++		};
++
++		plat-apb {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0xB00000 0x10000>;
++
++			uart0: uart-c0@92B04000 {
++				compatible = "ns16550a";
++				reg = <0x4000 0x1000>;
++				clock-frequency = <2076923>;
++				interrupt-parent = <&vic1>;
++				interrupts = <24>;
++				current-speed = <115200>;
++				reg-shift = <2>;
++			};
++		};
++	};
++
++	axi {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x93000000 0x20000>;
++
++		scu-a@93007000 {
++			compatible = "sunplus,spmp8000-scua";
++			reg = <0x7000 0x1000>;
++		};
++	};
++};
+-- 
+1.7.4.1
