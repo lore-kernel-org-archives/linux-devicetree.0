@@ -1,48 +1,133 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
- regulator_init_data
-Date: Wed, 19 Oct 2011 13:33:55 +0800
-Message-ID: <20111019053354.GB31162@S2100-06.ap.freescale.net>
-References: <1318263578-7407-1-git-send-email-rnayak@ti.com>
- <1318263578-7407-4-git-send-email-rnayak@ti.com>
- <20111016145536.GA29885@S2100-06.ap.freescale.net>
- <4E9BAC4D.3010402@ti.com>
- <20111018115836.GC30703@S2100-06.ap.freescale.net>
- <20111018160046.GD28501@opensource.wolfsonmicro.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH V2] AT91: dt: at91sam9g45 family and board device tree
+	files
+Date: Wed, 19 Oct 2011 10:03:16 +0200
+Message-ID: <4E9E8444.3070603@atmel.com>
+References: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
+	<4E8C54DC.6040700@gmail.com> <4E8EF6F4.4030905@atmel.com>
+	<4E9D4FD5.8080802@atmel.com> <4E9DE51A.7070900@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111018160046.GD28501@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Rajendra Nayak <rnayak@ti.com>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4E9DE51A.7070900@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2011 at 05:00:46PM +0100, Mark Brown wrote:
-> On Tue, Oct 18, 2011 at 07:58:37PM +0800, Shawn Guo wrote:
+On 10/18/2011 10:44 PM, Rob Herring :
+> Nicolas,
 > 
-> > I understand that ideally device tree is supposed to describe pure
-> > hardware configurations.  But practically, when migrating a driver
-> > to device tree probe, we are trying to move the configurations
-> > described by platform_data into device tree to save the use of
-> > platform_data for device tree probe.  Then some of the configuration
-> > may not be so purely hardware related.  But I do not see this is a
-> > critical problem.
+> On 10/18/2011 05:07 AM, Nicolas Ferre wrote:
+>> On 10/07/2011 02:56 PM, Nicolas Ferre :
+>>> On 10/05/2011 03:00 PM, Rob Herring :
+>>>> Nicolas,
+>>>>
+>>>> On 10/03/2011 05:00 AM, Nicolas Ferre wrote:
+>>>>> Create a new device tree source file for Atmel at91sam9g45 SoC family.
+>>>>> The Evaluation Kit at91sam9m10g45ek includes it.
+>>>>> This first basic support will be populated as drivers and boards will be
+>>>>> converted to device tree.
+>>>>> Contains serial, dma and interrupt controllers.
+>>>>>
+>>>>> The generic board file still takes advantage of platform data for early serial
+>>>>> init. As we need a storage media and the NAND flash driver is not converted to
+>>>>> DT yet, we keep old initialization for it.
+>>>>>
+>>>>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>>
+>> [..]
+>>
+>>>>> diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
+>>>>> new file mode 100644
+>>>>> index 0000000..7bcb9a9
+>>>>> --- /dev/null
+>>>>> +++ b/arch/arm/mach-at91/board-dt.c
+>>>>> @@ -0,0 +1,122 @@
+>>>>> +/*
+>>>>> + *  Setup code for AT91SAM Evaluation Kits with Device Tree support
+>>>>> + *
+>>>>> + *  Covers: * AT91SAM9G45-EKES  board
+>>>>> + *          * AT91SAM9M10-EKES  board
+>>>>> + *          * AT91SAM9M10G45-EK board
+>>>>> + *
+>>>>> + *  Copyright (C) 2011 Atmel,
+>>>>> + *                2011 Nicolas Ferre <nicolas.ferre@atmel.com>
+>>>>> + *
+>>>>> + * Licensed under GPLv2 or later.
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/types.h>
+>>>>> +#include <linux/init.h>
+>>>>> +#include <linux/module.h>
+>>>>> +#include <linux/irqdomain.h>
+>>>>> +#include <linux/of_irq.h>
+>>>>> +#include <linux/of_platform.h>
+>>>>> +
+>>>>> +#include <mach/hardware.h>
+>>>>> +#include <mach/board.h>
+>>>>> +#include <mach/gpio.h>
+>>>>> +#include <mach/system_rev.h>
+>>>>> +#include <mach/at91sam9_smc.h>
+>>>>> +
+>>>>> +#include <asm/setup.h>
+>>>>> +#include <asm/irq.h>
+>>>>> +#include <asm/mach/arch.h>
+>>>>> +#include <asm/mach/map.h>
+>>>>> +#include <asm/mach/irq.h>
+>>>>> +
+>>>>> +#include "sam9_smc.h"
+>>>>> +#include "generic.h"
+>>
+>> As found by Jean-Christophe, it seems that some clock lookup data are missing here. Something like:
+>>
+>> +/*
+>> + * Lookup table for attaching a specific name and platform_data pointer to
+>> + * devices as they get created by of_platform_populate(). Ideally this table
+>> + * would not exist, but the current clock implementation depends on some devices
+>> + * having a specific name.
+>> + /
+>> +static const struct of_dev_auxdata at91_auxdata_lookup[] __initconst = {
+>> + / at91sam9260/ at91sam9g20 /
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffff200, "atmel_usart.0", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb0000, "atmel_usart.1", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb4000, "atmel_usart.2", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb8000, "atmel_usart.3", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd0000, "atmel_usart.4", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd4000, "atmel_usart.5", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd8000, "atmel_usart.6", NULL),
+>> + / at91sam9g45*/
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xffffee00, "atmel_usart.0", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff8c000, "atmel_usart.1", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff90000, "atmel_usart.2", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff94000, "atmel_usart.3", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff98000, "atmel_usart.4", NULL),
+>> + { /* sentinel */ }
+>> +};
+>>
+>> With a change here:
+>>   of_platform_populate(NULL, of_default_bus_match_table, at91_auxdata_lookup, NULL);
+>>
+>> I know that it is a temporary usage of auxdata. Does it sound the right thing to do for the moment?
+>>
 > 
-> It's not just Linux-specific stuff, some of this is even specific to
-> what current Linux drivers can do - updating the kernel could mean a
-> different set of constraints.
-> 
-Well, from what I see, the 'struct regulation_constraints' is defined
-in machine.h and meant to be the regulator machine/board interface.
-With the example I'm looking at, mc13892, the regulation_constraints
-configuration is fully passed from machine/board file.  If there is
-something specific to what drivers can do, it probably should be encoded
-in regulator driver rather than staying in regulation_constraints.
+> If clk lookups are the only thing needed, can't you jusst add the
+> lookups for DT?
 
-So how do you think we should proceed here?
+You mean this code surrounded by #ifdef CONFIG_OF?
 
+This board file is dedicated to device tree support and selects
+CONFIG_USE_OF in Kconfig... So I thought it was not necessary to add it.
+
+Cheers,
 -- 
-Regards,
-Shawn
+Nicolas Ferre
