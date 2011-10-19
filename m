@@ -1,40 +1,48 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RFC] [PATCH] ARM: tegra: emc: device tree bindings
-Date: Tue, 18 Oct 2011 20:28:55 -0700
-Message-ID: <CAOesGMj8TREZ94RFhE3Qy=eaytOuB0YKBWw6--HAERoMB9m7Qg@mail.gmail.com>
-References: <1318873976-25335-1-git-send-email-olof@lixom.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CBFB@HQMAIL01.nvidia.com>
-	<CAOesGMh387Oghyd_TobnTOja6tU2uU5kt-86_HwQe7nFiL+svw@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CC18@HQMAIL01.nvidia.com>
-	<CAOesGMghu6Bn3RrFKEUBKkUNS_K8Y0ho3Y2uFZh_LXbfT80hFw@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CCA9@HQMAIL01.nvidia.com>
-	<4E9E3801.6080707@gmail.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
+ regulator_init_data
+Date: Wed, 19 Oct 2011 13:33:55 +0800
+Message-ID: <20111019053354.GB31162@S2100-06.ap.freescale.net>
+References: <1318263578-7407-1-git-send-email-rnayak@ti.com>
+ <1318263578-7407-4-git-send-email-rnayak@ti.com>
+ <20111016145536.GA29885@S2100-06.ap.freescale.net>
+ <4E9BAC4D.3010402@ti.com>
+ <20111018115836.GC30703@S2100-06.ap.freescale.net>
+ <20111018160046.GD28501@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4E9E3801.6080707-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111018160046.GD28501@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Rajendra Nayak <rnayak@ti.com>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 18, 2011 at 7:37 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 10/18/2011 04:01 PM, Stephen Warren wrote:
->> I only suggested the well-known-named sub-nodes in order to eliminate
->> the need for a compatible property.
->>
->> My inclination is that if we use compatible to distinguish the tables
->> from anything else, there's little point having the extra level of nodes;
->> we may as well lay it out as in your original patch, just with an explicit
->> nvidia,ram-code property in each table (or omitted/ignored when not using
->> it) instead of reg?
->
-> Node names should be generic like serial or ethernet. Compatible is used
-> to specify the specific model.
+On Tue, Oct 18, 2011 at 05:00:46PM +0100, Mark Brown wrote:
+> On Tue, Oct 18, 2011 at 07:58:37PM +0800, Shawn Guo wrote:
+> 
+> > I understand that ideally device tree is supposed to describe pure
+> > hardware configurations.  But practically, when migrating a driver
+> > to device tree probe, we are trying to move the configurations
+> > described by platform_data into device tree to save the use of
+> > platform_data for device tree probe.  Then some of the configuration
+> > may not be so purely hardware related.  But I do not see this is a
+> > critical problem.
+> 
+> It's not just Linux-specific stuff, some of this is even specific to
+> what current Linux drivers can do - updating the kernel could mean a
+> different set of constraints.
+> 
+Well, from what I see, the 'struct regulation_constraints' is defined
+in machine.h and meant to be the regulator machine/board interface.
+With the example I'm looking at, mc13892, the regulation_constraints
+configuration is fully passed from machine/board file.  If there is
+something specific to what drivers can do, it probably should be encoded
+in regulator driver rather than staying in regulation_constraints.
 
-In cases where unit addresses can be used to separate out identical
-entries, yes. For something like this, there's no logical addressing
-of the tables so something else must be used to distinguish them.
+So how do you think we should proceed here?
 
-
--Olof
+-- 
+Regards,
+Shawn
