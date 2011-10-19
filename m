@@ -1,42 +1,70 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
- regulator_init_data
-Date: Wed, 19 Oct 2011 16:10:32 +0100
-Message-ID: <20111019151031.GA4275@opensource.wolfsonmicro.com>
-References: <1318263578-7407-1-git-send-email-rnayak@ti.com>
- <1318263578-7407-4-git-send-email-rnayak@ti.com>
- <20111016145536.GA29885@S2100-06.ap.freescale.net>
- <4E9BAC4D.3010402@ti.com>
- <20111018115836.GC30703@S2100-06.ap.freescale.net>
- <20111018160046.GD28501@opensource.wolfsonmicro.com>
- <20111019053354.GB31162@S2100-06.ap.freescale.net>
- <20111019144734.GI18713@sirena.org.uk>
- <20111019150448.GB32007@S2100-06.ap.freescale.net>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC] [PATCH] ARM: tegra: emc: device tree bindings
+Date: Wed, 19 Oct 2011 08:11:33 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173D51BDEB@HQMAIL01.nvidia.com>
+References: <1318873976-25335-1-git-send-email-olof@lixom.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CBFB@HQMAIL01.nvidia.com>
+	<CAOesGMh387Oghyd_TobnTOja6tU2uU5kt-86_HwQe7nFiL+svw@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CC18@HQMAIL01.nvidia.com>
+	<CAOesGMghu6Bn3RrFKEUBKkUNS_K8Y0ho3Y2uFZh_LXbfT80hFw@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CCA9@HQMAIL01.nvidia.com>
+	<4E9E3801.6080707@gmail.com>
+	<CAOesGMj8TREZ94RFhE3Qy=eaytOuB0YKBWw6--HAERoMB9m7Qg@mail.gmail.com>
+	<4E9EE07A.20301@gmail.com>
+ <CAOesGMhfAxrG4pMQ86XFzmBnHwBgrD=45eTvmA0-G2gTjaSL6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111019150448.GB32007@S2100-06.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Rajendra Nayak <rnayak@ti.com>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMhfAxrG4pMQ86XFzmBnHwBgrD=45eTvmA0-G2gTjaSL6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2011 at 11:04:49PM +0800, Shawn Guo wrote:
-> On Wed, Oct 19, 2011 at 03:47:34PM +0100, Mark Brown wrote:
+Olof Johansson wrote at Wednesday, October 19, 2011 9:07 AM:
+> On Wed, Oct 19, 2011 at 7:36 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+...
+> > Using the frequency as was previously proposed would work assuming that
+> > is unique.
+> 
+> Someone suggested (off-list) to just use dummy addressing like cpu
+> nodes do. Sounds reasonable to me.
+> 
+> So:
+> 
+> emc {
+>   compatible = "tegra20-emc";
+>   nvidia,use-ram-code;
+>   emc-tables@<ram-code> {
+>      nvidia,ram-code = < <ram-code> >;
+>      emc-table@<dummy enumerator> {
+>         compatible = "tegra20-emc-table";
+>         clock-frequency = < >;
+>         nvidia,emc-regs = < >;
+>      }
+>   }
+> 
+> This also avoids having to handle 2-dimensional dummy numbering (i.e.
+> <ramcode,table-number>) by breaking it in two levels:
+> 
+> Where nvidia,use-ram-code is missing in the emc node, the immediate
+> child nodes will be scanned for the compatible nodes
+> Where nvidia,use-ram-code is present, first scan will be of all child
+> nodes containing an nvidia,ram-code property, then from there treat it
+> the same as the first case.
+> 
+> In the above, none of the names have meaning, so they can be changed
+> as needed (but these seem like a reasonably generic and descriptive
+> name to me).
 
-> > Only the board can come to a final decision.
+OK, I'm good with that general structure.
 
-> The dts is very capable and suitable to describe the board's decision.
-> But you disagree that we put all constraints description into DT.  I'm
-> a pretty confused here.  So again, what is your suggestion to this
-> 'problem'?
+But, as Rob suggests, you may as well use the frequency instead of the
+<dummy enumerator> for the unit address of the final tables, right?
+The search algorithm might not care, but it'll be easier for humans
+to read the resulting dts file.
 
-The problem is that the DT is supposed to be separate to the kernel and
-the decisions can depend on what the kernel is currently capable of.
-When the data is embedded in the kernel it's not an issue as the data is
-attached to the rest of the code, when the data becomes detatched from
-the kernel it becomes an issue.
-
-I don't see any issue with leaving some things out of the DT bindings;
-you were the one raising that as a concern.
+-- 
+nvpublic
