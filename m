@@ -1,118 +1,25 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3] i2c-designware: add OF binding support
-Date: Thu, 20 Oct 2011 13:29:50 -0500
-Message-ID: <1319135390-11131-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
+	regulator_init_data
+Date: Thu, 20 Oct 2011 20:56:38 +0100
+Message-ID: <20111020195638.GA17384@opensource.wolfsonmicro.com>
+References: <20111018160046.GD28501@opensource.wolfsonmicro.com> <20111019053354.GB31162@S2100-06.ap.freescale.net> <20111019144734.GI18713@sirena.org.uk> <20111019150448.GB32007@S2100-06.ap.freescale.net> <20111019151031.GA4275@opensource.wolfsonmicro.com> <4E9F9892.9070007@ti.com> <20111020094140.GK18713@sirena.org.uk> <20111020162743.GB31337@atomide.com> <20111020164006.GA10155@sirena.org.uk> <20111020170534.GC31337@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111020170534.GC31337@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Thu, Oct 20, 2011 at 10:05:34AM -0700, Tony Lindgren wrote:
 
-Add of_match_table and DT style i2c registration to designware i2c
-driver.
+> Right, but in addition the board specific integration variables still
+> need to be passed somehow to the driver.
 
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-Ben,
-
-Please apply. I've dropped moving of i2c functions into i2c core and
-reverted back to my original patch and addressed your's and Grant's
-comments:
-
-- use of_match_ptr()
-- always call i2c_add_numbered_adapter and drop ifdef
-
-Rob
-
- Documentation/devicetree/bindings/i2c/dw-i2c.txt |   23 ++++++++++++++++++++++
- drivers/i2c/busses/i2c-designware.c              |   12 +++++++++++
- 2 files changed, 35 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/dw-i2c.txt
-
-diff --git a/Documentation/devicetree/bindings/i2c/dw-i2c.txt b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
-new file mode 100644
-index 0000000..cbcb404
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/dw-i2c.txt
-@@ -0,0 +1,23 @@
-+* Synopsys DesignWare I2C
-+
-+Required properties :
-+
-+ - compatible : should be "snps,designware-i2c"
-+ - reg : Offset and length of the register set for the device
-+ - interrupts : <IRQ> where IRQ is the interrupt number.
-+
-+Recommended properties :
-+
-+ - clock-frequency : desired I2C bus clock frequency in Hz.
-+
-+Example :
-+
-+	i2c@f0000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,designware-i2c";
-+		reg = <0xf0000 0x1000>;
-+		interrupts = <11>;
-+		clock-frequency = <400000>;
-+	};
-+
-diff --git a/drivers/i2c/busses/i2c-designware.c b/drivers/i2c/busses/i2c-designware.c
-index b7a51c4..9047bfd 100644
---- a/drivers/i2c/busses/i2c-designware.c
-+++ b/drivers/i2c/busses/i2c-designware.c
-@@ -34,6 +34,7 @@
- #include <linux/sched.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-+#include <linux/of_i2c.h>
- #include <linux/platform_device.h>
- #include <linux/io.h>
- #include <linux/slab.h>
-@@ -769,6 +770,7 @@ static int __devinit dw_i2c_probe(struct platform_device *pdev)
- 			sizeof(adap->name));
- 	adap->algo = &i2c_dw_algo;
- 	adap->dev.parent = &pdev->dev;
-+	adap->dev.of_node = pdev->dev.of_node;
- 
- 	adap->nr = pdev->id;
- 	r = i2c_add_numbered_adapter(adap);
-@@ -776,6 +778,7 @@ static int __devinit dw_i2c_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "failure adding adapter\n");
- 		goto err_free_irq;
- 	}
-+	of_i2c_register_devices(adap);
- 
- 	return 0;
- 
-@@ -819,6 +822,14 @@ static int __devexit dw_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id dw_i2c_of_match[] = {
-+	{ .compatible = "snps,designware-i2c", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
-+#endif
-+
- /* work with hotplug and coldplug */
- MODULE_ALIAS("platform:i2c_designware");
- 
-@@ -827,6 +838,7 @@ static struct platform_driver dw_i2c_driver = {
- 	.driver		= {
- 		.name	= "i2c_designware",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(dw_i2c_of_match),
- 	},
- };
- 
--- 
-1.7.5.4
+I'm not sure you're aware of what the regulator bindings that are being
+discussed are - they're entirely board specific.  The discussion was
+about how to handle certain parts of the feature set Linux currently
+has.
