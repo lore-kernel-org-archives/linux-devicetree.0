@@ -1,59 +1,257 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
- regulator_init_data
-Date: Thu, 20 Oct 2011 14:14:09 +0800
-Message-ID: <20111020061408.GE32007@S2100-06.ap.freescale.net>
-References: <1318263578-7407-1-git-send-email-rnayak@ti.com>
- <1318263578-7407-4-git-send-email-rnayak@ti.com>
- <20111018132032.GD30703@S2100-06.ap.freescale.net>
- <4E9EB61C.1040207@ti.com>
- <20111019144215.GA32007@S2100-06.ap.freescale.net>
- <4E9FAF42.5060200@ti.com>
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: [RFC][PATCH 1/2] powerpc/85xx: create dts components to build up an
+ SoC
+Date: Thu, 20 Oct 2011 02:24:25 -0500
+Message-ID: <1319095467-6229-1-git-send-email-galak@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4E9FAF42.5060200@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2011 at 10:48:58AM +0530, Rajendra Nayak wrote:
-> >Let's look at mc13892-regulator driver.  There are 23 regulators defined
-> >in array mc13892_regulators.  Needless to say, there is a dev behind
-> >mc13892-regulator driver.  And when getting probed, this driver will
-> >call regulator_register() to register those 23 regulators individually.
-> >That said, for non-dt world, we have 1 + 23 'dev' with that 1 as the
-> >parent of all other 23 'dev' (wrapped by regulator_dev).  But with the
-> >current DT implementation, we will have at least 1 + 23 * 2 'dev'.
-> >These extra 23 'dev' is totally new with DT.
-> >
-> 
-> but thats only because the mc13892-regulator driver is implemeted in
-> such a way that all the regulators on the platform are bundled in as
-> *one* device.
+Introduce some common components that we can utilize to build up the
+various PQ3/85xx device trees.
 
-I did not look into too many regulator drivers, but I expect this is
-way that most regulator drivers are implemented in.  Having
-mc13892-regulator being probed 23 times to register these 23 regulators
-just makes less sense to me.
+Signed-off-by: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+---
+ arch/powerpc/boot/dts/fsl/pq3-dma-0.dtsi    |   32 +++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/pq3-duart-0.dtsi  |    8 ++++++
+ arch/powerpc/boot/dts/fsl/pq3-duart-1.dtsi  |    8 ++++++
+ arch/powerpc/boot/dts/fsl/pq3-etsec2-0.dtsi |   32 +++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/pq3-etsec2-1.dtsi |   32 +++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/pq3-etsec2-2.dtsi |   32 +++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/pq3-i2c-0.dtsi    |    9 +++++++
+ arch/powerpc/boot/dts/fsl/pq3-i2c-1.dtsi    |    9 +++++++
+ 8 files changed, 162 insertions(+), 0 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-dma-0.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-duart-0.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-duart-1.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-etsec2-0.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-etsec2-1.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-etsec2-2.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-i2c-0.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/pq3-i2c-1.dtsi
 
-> It would again depend on how you would pass these from
-> the DT, if you indeed stick to the same way of bundling all regulators
-> as one device from DT, the mc13892-regulator probe would just get called
-> once and there would be one device associated, no?
-> 
-Yes, I indeed would stick to the same way of bundling the registration
-of all regulators with mc13892-regulator being probed once.  The problem
-I have with the current regulator core DT implementation is that it
-assumes the device_node of rdev->dev (dev wrapped in regulator_dev) is
-being attached to rdev->dev.parent rather than itself.  Back to
-mc13892-regulator example, that said, it requires the dev of
-mc13892-regulator have the device_node of individual regulator attached
-to.  IOW, the current implementation forces mc13892-regulator to be
-probed 23 times to register those 23 regulators.  This is wrong to me.
-
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/pq3-dma-0.dtsi
+new file mode 100644
+index 0000000..60aa877
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-dma-0.dtsi
+@@ -0,0 +1,32 @@
++&dma0 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "fsl,eloplus-dma";
++	reg = <0x21300 0x4>;
++	ranges = <0x0 0x21100 0x200>;
++	cell-index = <0>;
++	dma-channel@0 {
++		compatible = "fsl,eloplus-dma-channel";
++		reg = <0x0 0x80>;
++		cell-index = <0>;
++		interrupts = <20 2 0 0>;
++	};
++	dma-channel@80 {
++		compatible = "fsl,eloplus-dma-channel";
++		reg = <0x80 0x80>;
++		cell-index = <1>;
++		interrupts = <21 2 0 0>;
++	};
++	dma-channel@100 {
++		compatible = "fsl,eloplus-dma-channel";
++		reg = <0x100 0x80>;
++		cell-index = <2>;
++		interrupts = <22 2 0 0>;
++	};
++	dma-channel@180 {
++		compatible = "fsl,eloplus-dma-channel";
++		reg = <0x180 0x80>;
++		cell-index = <3>;
++		interrupts = <23 2 0 0>;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-duart-0.dtsi b/arch/powerpc/boot/dts/fsl/pq3-duart-0.dtsi
+new file mode 100644
+index 0000000..bac1f0d
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-duart-0.dtsi
+@@ -0,0 +1,8 @@
++&serial0 {
++	cell-index = <0>;
++	device_type = "serial";
++	compatible = "ns16550";
++	reg = <0x4500 0x100>;
++	clock-frequency = <0>;
++	interrupts = <42 2 0 0>;
++};
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-duart-1.dtsi b/arch/powerpc/boot/dts/fsl/pq3-duart-1.dtsi
+new file mode 100644
+index 0000000..97bbacb
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-duart-1.dtsi
+@@ -0,0 +1,8 @@
++&serial1 {
++	cell-index = <1>;
++	device_type = "serial";
++	compatible = "ns16550";
++	reg = <0x4600 0x100>;
++	clock-frequency = <0>;
++	interrupts = <42 2 0 0>;
++};
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-etsec2-0.dtsi b/arch/powerpc/boot/dts/fsl/pq3-etsec2-0.dtsi
+new file mode 100644
+index 0000000..73fff36
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-etsec2-0.dtsi
+@@ -0,0 +1,32 @@
++&mdio0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "fsl,etsec2-mdio";
++	reg = <0x24000 0x1000 0xb0030 0x4>;
++};
++
++&enet0 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	device_type = "network";
++	model = "eTSEC";
++	compatible = "fsl,etsec2";
++	fsl,num_rx_queues = <0x8>;
++	fsl,num_tx_queues = <0x8>;
++	fsl,magic-packet;
++	local-mac-address = [ 00 00 00 00 00 00 ];
++
++	queue-group@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0xb0000 0x1000>;
++		interrupts = <29 2 0 0 30 2 0 0 34 2 0 0>;
++	};
++
++	queue-group@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0xb4000 0x1000>;
++		interrupts = <17 2 0 0 18 2 0 0 24 2 0 0>;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-etsec2-1.dtsi b/arch/powerpc/boot/dts/fsl/pq3-etsec2-1.dtsi
+new file mode 100644
+index 0000000..7ec73c4
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-etsec2-1.dtsi
+@@ -0,0 +1,32 @@
++&mdio1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "fsl,etsec2-tbi";
++	reg = <0x25000 0x1000 0xb1030 0x4>;
++};
++
++&enet1 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	device_type = "network";
++	model = "eTSEC";
++	compatible = "fsl,etsec2";
++	fsl,num_rx_queues = <0x8>;
++	fsl,num_tx_queues = <0x8>;
++	fsl,magic-packet;
++	local-mac-address = [ 00 00 00 00 00 00 ];
++
++	queue-group@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0xb1000 0x1000>;
++		interrupts = <35 2 0 0 36 2 0 0 40 2 0 0>;
++	};
++
++	queue-group@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0xb5000 0x1000>;
++		interrupts = <51 2 0 0 52 2 0 0 67 2 0 0>;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-etsec2-2.dtsi b/arch/powerpc/boot/dts/fsl/pq3-etsec2-2.dtsi
+new file mode 100644
+index 0000000..50a078a
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-etsec2-2.dtsi
+@@ -0,0 +1,32 @@
++&mdio2 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "fsl,etsec2-tbi";
++	reg = <0x26000 0x1000 0xb1030 0x4>;
++};
++
++&enet2 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	device_type = "network";
++	model = "eTSEC";
++	compatible = "fsl,etsec2";
++	fsl,num_rx_queues = <0x8>;
++	fsl,num_tx_queues = <0x8>;
++	fsl,magic-packet;
++	local-mac-address = [ 00 00 00 00 00 00 ];
++
++	queue-group@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0xb2000 0x1000>;
++		interrupts = <31 2 0 0 32 2 0 0 33 2 0 0>;
++	};
++
++	queue-group@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0xb6000 0x1000>;
++		interrupts = <25 2 0 0 26 2 0 0 27 2 0 0>;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-i2c-0.dtsi b/arch/powerpc/boot/dts/fsl/pq3-i2c-0.dtsi
+new file mode 100644
+index 0000000..ef75cca
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-i2c-0.dtsi
+@@ -0,0 +1,9 @@
++&i2c0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	cell-index = <0>;
++	compatible = "fsl-i2c";
++	reg = <0x3000 0x100>;
++	interrupts = <43 2 0 0>;
++	dfsrr;
++};
+diff --git a/arch/powerpc/boot/dts/fsl/pq3-i2c-1.dtsi b/arch/powerpc/boot/dts/fsl/pq3-i2c-1.dtsi
+new file mode 100644
+index 0000000..e24043a
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/pq3-i2c-1.dtsi
+@@ -0,0 +1,9 @@
++&i2c1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	cell-index = <1>;
++	compatible = "fsl-i2c";
++	reg = <0x3100 0x100>;
++	interrupts = <43 2 0 0>;
++	dfsrr;
++};
 -- 
-Regards,
-Shawn
+1.7.3.4
