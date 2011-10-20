@@ -1,49 +1,144 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [RFC][PATCH 1/2] powerpc/85xx: create dts components to build up
- an SoC
-Date: Thu, 20 Oct 2011 15:44:11 -0500
-Message-ID: <A54F7698-A96F-4EE1-89DB-B6A7C5A071FB@kernel.crashing.org>
-References: <1319095467-6229-1-git-send-email-galak@kernel.crashing.org>
- <CAOZdJXWtnBB5=DahG8LGQpeP7or0VZv78duhtPiORk3WOir8gQ@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1251.1)
-Content-Type: text/plain; charset="us-ascii"
+From: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] i2c-designware: add OF binding support
+Date: Thu, 20 Oct 2011 13:55:27 -0700
+Message-ID: <4EA08ABF.9030400@gmail.com>
+References: <1319135390-11131-1-git-send-email-robherring2@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOZdJXWtnBB5=DahG8LGQpeP7or0VZv78duhtPiORk3WOir8gQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1319135390-11131-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 10/20/2011 11:29 AM, Rob Herring wrote:
+> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>
+> Add of_match_table and DT style i2c registration to designware i2c
+> driver.
+>
+> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Ben Dooks<ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> Ben,
+>
+> Please apply. I've dropped moving of i2c functions into i2c core and
+> reverted back to my original patch and addressed your's and Grant's
+> comments:
+>
+> - use of_match_ptr()
+> - always call i2c_add_numbered_adapter and drop ifdef
+>
+> Rob
+>
 
-On Oct 20, 2011, at 11:42 AM, Tabi Timur-B04825 wrote:
+This patch moves Rob's changes to apply on top of my patch series to split the 
+designware i2c driver into core, platform and PCI parts.
 
-> Ok, your other patch makes more sense now.
-> 
-> On Thu, Oct 20, 2011 at 2:24 AM, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> 
->> +++ b/arch/powerpc/boot/dts/fsl/pq3-duart-0.dtsi
->> @@ -0,0 +1,8 @@
->> +&serial0 {
->> +       cell-index = <0>;
->> +       device_type = "serial";
->> +       compatible = "ns16550";
->> +       reg = <0x4500 0x100>;
->> +       clock-frequency = <0>;
->> +       interrupts = <42 2 0 0>;
->> +};
-> 
-> How about we put all serial devices into one pq3-duart.dtsi file, and
-> let the parent dtsi file reference just the ones that it needs?
+LKML thread: https://lkml.org/lkml/2011/10/6/287
 
-there isn't an option to do that w/dtc
+The only changes to Rob's patch is the file names changed.
+------ SNIP SNIP -----
 
-- k
+i2c-designware: Add devicetree i2c registration
+
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+Add of_match_table and DT style i2c registration to designware i2c
+driver.
+
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+  .../devicetree/bindings/i2c/i2c-designware.txt     |   23 ++++++++++++++++++++
+  drivers/i2c/busses/i2c-designware-platdrv.c        |   12 ++++++++++
+  2 files changed, 35 insertions(+), 0 deletions(-)
+  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-designware.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt 
+b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+new file mode 100644
+index 0000000..cbcb404
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+@@ -0,0 +1,23 @@
++* Synopsys DesignWare I2C
++
++Required properties :
++
++ - compatible : should be "snps,designware-i2c"
++ - reg : Offset and length of the register set for the device
++ - interrupts : <IRQ> where IRQ is the interrupt number.
++
++Recommended properties :
++
++ - clock-frequency : desired I2C bus clock frequency in Hz.
++
++Example :
++
++	i2c@f0000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,designware-i2c";
++		reg = <0xf0000 0x1000>;
++		interrupts = <11>;
++		clock-frequency = <400000>;
++	};
++
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c 
+b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 2d3657a..5244c47 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -34,6 +34,7 @@
+  #include <linux/sched.h>
+  #include <linux/err.h>
+  #include <linux/interrupt.h>
++#include <linux/of_i2c.h>
+  #include <linux/platform_device.h>
+  #include <linux/io.h>
+  #include <linux/slab.h>
+@@ -137,6 +138,7 @@ static int __devinit dw_i2c_probe(struct platform_device *pdev)
+  			sizeof(adap->name));
+  	adap->algo = &i2c_dw_algo;
+  	adap->dev.parent = &pdev->dev;
++	adap->dev.of_node = pdev->dev.of_node;
+
+  	adap->nr = pdev->id;
+  	r = i2c_add_numbered_adapter(adap);
+@@ -144,6 +146,7 @@ static int __devinit dw_i2c_probe(struct platform_device *pdev)
+  		dev_err(&pdev->dev, "failure adding adapter\n");
+  		goto err_free_irq;
+  	}
++	of_i2c_register_devices(adap);
+
+  	return 0;
+
+@@ -187,6 +190,14 @@ static int __devexit dw_i2c_remove(struct platform_device 
+*pdev)
+  	return 0;
+  }
+
++#ifdef CONFIG_OF
++static const struct of_device_id dw_i2c_of_match[] = {
++	{ .compatible = "snps,designware-i2c", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
++#endif
++
+  /* work with hotplug and coldplug */
+  MODULE_ALIAS("platform:i2c_designware");
+
+@@ -195,6 +206,7 @@ static struct platform_driver dw_i2c_driver = {
+  	.driver		= {
+  		.name	= "i2c_designware",
+  		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(dw_i2c_of_match),
+  	},
+  };
