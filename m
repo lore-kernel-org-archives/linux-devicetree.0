@@ -1,51 +1,140 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RFC] [PATCH] ARM: tegra: emc: device tree bindings
-Date: Wed, 19 Oct 2011 13:17:44 -0700
-Message-ID: <CAOesGMjqpaf41V6PaTCsJYtUcFT-SRezOQN7e4xfAWBaU5eO4A@mail.gmail.com>
-References: <1318873976-25335-1-git-send-email-olof@lixom.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CBFB@HQMAIL01.nvidia.com>
-	<CAOesGMh387Oghyd_TobnTOja6tU2uU5kt-86_HwQe7nFiL+svw@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CC18@HQMAIL01.nvidia.com>
-	<CAOesGMghu6Bn3RrFKEUBKkUNS_K8Y0ho3Y2uFZh_LXbfT80hFw@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF173CA2CCA9@HQMAIL01.nvidia.com>
-	<4E9E3801.6080707@gmail.com>
-	<CAOesGMj8TREZ94RFhE3Qy=eaytOuB0YKBWw6--HAERoMB9m7Qg@mail.gmail.com>
-	<4E9EE07A.20301@gmail.com>
-	<CAOesGMhfAxrG4pMQ86XFzmBnHwBgrD=45eTvmA0-G2gTjaSL6Q@mail.gmail.com>
-	<E8310825-036A-4541-9D8F-6DCED9CA88AA@kernel.crashing.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2] AT91: dt: at91sam9g45 family and board device tree
+ files
+Date: Wed, 19 Oct 2011 21:06:30 -0500
+Message-ID: <4E9F8226.4030503@gmail.com>
+References: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
+ <4E8C54DC.6040700@gmail.com> <4E8EF6F4.4030905@atmel.com>
+ <4E9D4FD5.8080802@atmel.com> <4E9DE51A.7070900@gmail.com>
+ <4E9E8444.3070603@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E8310825-036A-4541-9D8F-6DCED9CA88AA-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4E9E8444.3070603-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 19, 2011 at 1:13 PM, Segher Boessenkool
-<segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->> emc {
->> =A0compatible =3D "tegra20-emc";
->> =A0nvidia,use-ram-code;
->> =A0emc-tables@<ram-code> {
->> =A0 =A0 nvidia,ram-code =3D < <ram-code> >;
->> =A0 =A0 emc-table@<dummy enumerator> {
->> =A0 =A0 =A0 =A0compatible =3D "tegra20-emc-table";
->> =A0 =A0 =A0 =A0clock-frequency =3D < >;
->> =A0 =A0 =A0 =A0nvidia,emc-regs =3D < >;
->> =A0 =A0 }
->> =A0}
->
-> You need to have a reg in the emc-table node, and #address-cells #siz=
-e-cells
-> in its parent node.
+On 10/19/2011 03:03 AM, Nicolas Ferre wrote:
+> On 10/18/2011 10:44 PM, Rob Herring :
+>> Nicolas,
+>>
+>> On 10/18/2011 05:07 AM, Nicolas Ferre wrote:
+>>> On 10/07/2011 02:56 PM, Nicolas Ferre :
+>>>> On 10/05/2011 03:00 PM, Rob Herring :
+>>>>> Nicolas,
+>>>>>
+>>>>> On 10/03/2011 05:00 AM, Nicolas Ferre wrote:
+>>>>>> Create a new device tree source file for Atmel at91sam9g45 SoC family.
+>>>>>> The Evaluation Kit at91sam9m10g45ek includes it.
+>>>>>> This first basic support will be populated as drivers and boards will be
+>>>>>> converted to device tree.
+>>>>>> Contains serial, dma and interrupt controllers.
+>>>>>>
+>>>>>> The generic board file still takes advantage of platform data for early serial
+>>>>>> init. As we need a storage media and the NAND flash driver is not converted to
+>>>>>> DT yet, we keep old initialization for it.
+>>>>>>
+>>>>>> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>
+>>> [..]
+>>>
+>>>>>> diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
+>>>>>> new file mode 100644
+>>>>>> index 0000000..7bcb9a9
+>>>>>> --- /dev/null
+>>>>>> +++ b/arch/arm/mach-at91/board-dt.c
+>>>>>> @@ -0,0 +1,122 @@
+>>>>>> +/*
+>>>>>> + *  Setup code for AT91SAM Evaluation Kits with Device Tree support
+>>>>>> + *
+>>>>>> + *  Covers: * AT91SAM9G45-EKES  board
+>>>>>> + *          * AT91SAM9M10-EKES  board
+>>>>>> + *          * AT91SAM9M10G45-EK board
+>>>>>> + *
+>>>>>> + *  Copyright (C) 2011 Atmel,
+>>>>>> + *                2011 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>>>> + *
+>>>>>> + * Licensed under GPLv2 or later.
+>>>>>> + */
+>>>>>> +
+>>>>>> +#include <linux/types.h>
+>>>>>> +#include <linux/init.h>
+>>>>>> +#include <linux/module.h>
+>>>>>> +#include <linux/irqdomain.h>
+>>>>>> +#include <linux/of_irq.h>
+>>>>>> +#include <linux/of_platform.h>
+>>>>>> +
+>>>>>> +#include <mach/hardware.h>
+>>>>>> +#include <mach/board.h>
+>>>>>> +#include <mach/gpio.h>
+>>>>>> +#include <mach/system_rev.h>
+>>>>>> +#include <mach/at91sam9_smc.h>
+>>>>>> +
+>>>>>> +#include <asm/setup.h>
+>>>>>> +#include <asm/irq.h>
+>>>>>> +#include <asm/mach/arch.h>
+>>>>>> +#include <asm/mach/map.h>
+>>>>>> +#include <asm/mach/irq.h>
+>>>>>> +
+>>>>>> +#include "sam9_smc.h"
+>>>>>> +#include "generic.h"
+>>>
+>>> As found by Jean-Christophe, it seems that some clock lookup data are missing here. Something like:
+>>>
+>>> +/*
+>>> + * Lookup table for attaching a specific name and platform_data pointer to
+>>> + * devices as they get created by of_platform_populate(). Ideally this table
+>>> + * would not exist, but the current clock implementation depends on some devices
+>>> + * having a specific name.
+>>> + /
+>>> +static const struct of_dev_auxdata at91_auxdata_lookup[] __initconst = {
+>>> + / at91sam9260/ at91sam9g20 /
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffff200, "atmel_usart.0", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb0000, "atmel_usart.1", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb4000, "atmel_usart.2", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb8000, "atmel_usart.3", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd0000, "atmel_usart.4", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd4000, "atmel_usart.5", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd8000, "atmel_usart.6", NULL),
+>>> + / at91sam9g45*/
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xffffee00, "atmel_usart.0", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff8c000, "atmel_usart.1", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff90000, "atmel_usart.2", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff94000, "atmel_usart.3", NULL),
+>>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff98000, "atmel_usart.4", NULL),
+>>> + { /* sentinel */ }
+>>> +};
+>>>
+>>> With a change here:
+>>>   of_platform_populate(NULL, of_default_bus_match_table, at91_auxdata_lookup, NULL);
+>>>
+>>> I know that it is a temporary usage of auxdata. Does it sound the right thing to do for the moment?
+>>>
+>>
+>> If clk lookups are the only thing needed, can't you jusst add the
+>> lookups for DT?
+> 
+> You mean this code surrounded by #ifdef CONFIG_OF?
+> 
+> This board file is dedicated to device tree support and selects
+> CONFIG_USE_OF in Kconfig... So I thought it was not necessary to add it.
+> 
 
-Ah, yes, I left that out for brevity. It'll be there in the patch.
+No, I mean you already have a clkdev lookup table with atmel_usart.0 for
+example. Can't you just add to that table a clkdev lookup entry for
+atmel_usart.ffffee000. You can ifdef it if you're concerned about size,
+but it doesn't have to be. There shouldn't be any issue having 2 entries
+for 2 different device names.
 
-(And apologies about the comment about the suggestion from you being
-off-list when it wasn't. -- I read it on my phone and for some reason
-it wasn't showing me the list of cc:s).
-
-
--Olof
+Rob
