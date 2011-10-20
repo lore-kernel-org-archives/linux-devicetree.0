@@ -1,54 +1,49 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
- regulator_init_data
-Date: Thu, 20 Oct 2011 13:10:55 -0700
-Message-ID: <20111020201054.GN3842@atomide.com>
-References: <20111019144734.GI18713@sirena.org.uk>
- <20111019150448.GB32007@S2100-06.ap.freescale.net>
- <20111019151031.GA4275@opensource.wolfsonmicro.com>
- <4E9F9892.9070007@ti.com>
- <20111020094140.GK18713@sirena.org.uk>
- <20111020162743.GB31337@atomide.com>
- <20111020164006.GA10155@sirena.org.uk>
- <20111020170534.GC31337@atomide.com>
- <20111020172218.GE31337@atomide.com>
- <20111020195734.GB17384@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111020195734.GB17384@opensource.wolfsonmicro.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC][PATCH 1/2] powerpc/85xx: create dts components to build up
+ an SoC
+Date: Thu, 20 Oct 2011 15:44:11 -0500
+Message-ID: <A54F7698-A96F-4EE1-89DB-B6A7C5A071FB@kernel.crashing.org>
+References: <1319095467-6229-1-git-send-email-galak@kernel.crashing.org>
+ <CAOZdJXWtnBB5=DahG8LGQpeP7or0VZv78duhtPiORk3WOir8gQ@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1251.1)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOZdJXWtnBB5=DahG8LGQpeP7or0VZv78duhtPiORk3WOir8gQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Mark Brown <broonie@opensource.wolfsonmicro.com> [111020 12:23]:
-> On Thu, Oct 20, 2011 at 10:22:19AM -0700, Tony Lindgren wrote:
+
+On Oct 20, 2011, at 11:42 AM, Tabi Timur-B04825 wrote:
+
+> Ok, your other patch makes more sense now.
 > 
-> > Hmm, actually, can't we just pass the board specific configuration in
-> > the board specific .dts file and then it gets merged in with the
-> > arch independent DT node?
+> On Thu, Oct 20, 2011 at 2:24 AM, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
 > 
-> I don't understand what an "arch independent DT node" would be?
+>> +++ b/arch/powerpc/boot/dts/fsl/pq3-duart-0.dtsi
+>> @@ -0,0 +1,8 @@
+>> +&serial0 {
+>> +       cell-index = <0>;
+>> +       device_type = "serial";
+>> +       compatible = "ns16550";
+>> +       reg = <0x4500 0x100>;
+>> +       clock-frequency = <0>;
+>> +       interrupts = <42 2 0 0>;
+>> +};
+> 
+> How about we put all serial devices into one pq3-duart.dtsi file, and
+> let the parent dtsi file reference just the ones that it needs?
 
-Well that's the standard non-Linux specific parts. Basically what's
-in the $Subject patch minus what you commented on earlier:
+there isn't an option to do that w/dtc
 
-> +- regulator-change-voltage: boolean, Output voltage can be changed by software
-> +- regulator-change-current: boolean, Output current can be chnaged by software
-> +- regulator-change-mode: boolean, Operating mode can be changed by software
-> +- regulator-change-status: boolean, Enable/Disable control for regulator exists
-> +- regulator-change-drms: boolean, Dynamic regulator mode switching is enabled
-> +- regulator-mode-fast: boolean, allow/set fast mode for the regulator
-> +- regulator-mode-normal: boolean, allow/set normal mode for the regulator
-> +- regulator-mode-idle: boolean, allow/set idle mode for the regulator
-> +- regulator-mode-standby: boolean, allow/set standby mode for the regulator
-> +- regulator-input-uV: Input voltage for regulator when supplied by another regulator
-> +- regulator-always-on: boolean, regulator should never be disabled
-
-We still need to figure out how to get the above board specific
-data to the device driver probe in a way where we can avoid having
-platform glue code. Any thoughts on that?
-
-Tony
+- k
