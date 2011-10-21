@@ -1,312 +1,206 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] arm/tegra: Don't create duplicate gpio and pinmux devices
-Date: Fri, 21 Oct 2011 11:35:50 -0600
-Message-ID: <1319218550-26002-1-git-send-email-swarren@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/3] ARM: Samsung: Move timer irq numbers to end of linux
+ irq	space
+Date: Fri, 21 Oct 2011 13:45:17 -0600
+Message-ID: <20111021194517.GA3722@ponder.secretlab.ca>
+References: <1318234289-22041-1-git-send-email-thomas.abraham@linaro.org>
+ <1318234289-22041-2-git-send-email-thomas.abraham@linaro.org>
+ <001001cc8d6d$5c48fa60$14daef20$%youn@samsung.com>
+ <017001cc8fd7$c27e4ee0$477aeca0$%kim@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <017001cc8fd7$c27e4ee0$477aeca0$%kim@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: 'Changhwan Youn' <chaos.youn@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rob.herring@calxeda.com, patches@linaro.org, 'Nicolas Pitre' <nicolas.pitre@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-*_pinmux_init() register the GPIO and pinmux devices so that they're ready
-before any other device needs them.
+On Fri, Oct 21, 2011 at 06:56:52PM +0900, Kukjin Kim wrote:
+> Changhwan Youn wrote:
+> > 
+> > Hi Thomas,
+> > 
+> > All UART_IRQ_RXD, TXD, ERR of Samsung's platforms are also statically
+> > mapped to linux irq numbers 16 to 31. These interrupts also need proper
+> handling.
+> > 
+> > Best regards,
+> > Changhwan Youn
+> > 
+> 
+> Hi all,
+> 
+> Hmm, I'd like to apply Thomas' device tree series for EXYNOS4 and Samsung
+> stuff for upcoming merge window but there are still some comments on some
+> stuff and that should be fixed before applying. In addition I need to keep
+> the ordering to apply them to avoid conflicts. But as you know, v3.1 is now
+> close at hand and we don't have enough time for it now :(
+> 
+> I will leave tomorrow morning (KST) for KS. I will talk to Grant Likely
+> about this in Prague :)
 
-*_pinmux_init() are also called by board-dt.c in order to set up the GPIO
-and pinmux configurations. In this case, if we register the devices, they
-end up being probed once due to this registration, and a second time due
-to a device-tree node (or vice-versa). The second probe fails since the
-memory regions are already requested. Besides, we don't actually want the
-duplicated devices.
+One of the goals I have for the hacking summit is to get as much of
+the outstanding DT patches queued up and into linux-next.
 
-To avoid this duplicate registration, pass a parameter into *_pinmux_init()
-indicating whether they should register the device or not. Set this true
-for non-DT boards, and false otherwise.
+g.
 
-Finally, modify board-dt.c to call the *_pinmux_init() after all devices have
-been instantiated from device-tree. This allows the GPIO and pinmux devices
-to be instantiated and initialized before calling functions to configure the
-hardware.
-
-This has one disadvantage: The pinmux and GPIO initialization now happens
-after /all/ devices are instantiated, rather than after just gpio and
-pinmux, but before anything else. So the correct HW configuration is not
-in place when e.g. the SD/MMC device is probed. Long-term, this should be
-solved by doing both:
-
-a) Initializing the HW state from DT nodes during GPIO and pinmux device
-   probe.
-b) Using the deferred driver probe mechanism, so that drivers can defer
-   their probe until after the gpio and pinmux drivers have probed.
-
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Grant, Olof, Colin,
-
-What are your thoughts here? Both with and without the patch there are
-disadvantages. I'm not sure which one is better...
-
- arch/arm/mach-tegra/board-dt.c               |   23 ++++++++++++-----------
- arch/arm/mach-tegra/board-harmony-pinmux.c   |    6 ++++--
- arch/arm/mach-tegra/board-harmony.c          |    2 +-
- arch/arm/mach-tegra/board-harmony.h          |    2 +-
- arch/arm/mach-tegra/board-paz00-pinmux.c     |    6 ++++--
- arch/arm/mach-tegra/board-paz00.c            |    2 +-
- arch/arm/mach-tegra/board-paz00.h            |    2 +-
- arch/arm/mach-tegra/board-seaboard-pinmux.c  |   14 ++++++++------
- arch/arm/mach-tegra/board-seaboard.c         |    2 +-
- arch/arm/mach-tegra/board-seaboard.h         |    2 +-
- arch/arm/mach-tegra/board-trimslice-pinmux.c |    6 ++++--
- arch/arm/mach-tegra/board-trimslice.c        |    2 +-
- arch/arm/mach-tegra/board-trimslice.h        |    2 +-
- 13 files changed, 40 insertions(+), 31 deletions(-)
-
-diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/board-dt.c
-index d368f8d..0d22212 100644
---- a/arch/arm/mach-tegra/board-dt.c
-+++ b/arch/arm/mach-tegra/board-dt.c
-@@ -45,9 +45,9 @@
- #include "clock.h"
- #include "devices.h"
- 
--void harmony_pinmux_init(void);
--void seaboard_pinmux_init(void);
--void ventana_pinmux_init(void);
-+void harmony_pinmux_init(int is_dt);
-+void seaboard_pinmux_init(int is_dt);
-+void ventana_pinmux_init(int is_dt);
- 
- struct of_dev_auxdata tegra20_auxdata_lookup[] __initdata = {
- 	OF_DEV_AUXDATA("nvidia,tegra20-sdhci", TEGRA_SDMMC1_BASE, "sdhci-tegra.0", NULL),
-@@ -82,7 +82,7 @@ static struct of_device_id tegra_dt_gic_match[] __initdata = {
- 
- static struct {
- 	char *machine;
--	void (*init)(void);
-+	void (*init)(int is_dt);
- } pinmux_configs[] = {
- 	{ "nvidia,harmony", harmony_pinmux_init },
- 	{ "nvidia,seaboard", seaboard_pinmux_init },
-@@ -101,21 +101,22 @@ static void __init tegra_dt_init(void)
- 
- 	tegra_clk_init_from_table(tegra_dt_clk_init_table);
- 
-+	/*
-+	 * Finished with the static registrations now; fill in the missing
-+	 * devices
-+	 */
-+	of_platform_populate(NULL, tegra_dt_match_table,
-+				tegra20_auxdata_lookup, NULL);
-+
- 	for (i = 0; i < ARRAY_SIZE(pinmux_configs); i++) {
- 		if (of_machine_is_compatible(pinmux_configs[i].machine)) {
--			pinmux_configs[i].init();
-+			pinmux_configs[i].init(1);
- 			break;
- 		}
- 	}
- 
- 	WARN(i == ARRAY_SIZE(pinmux_configs),
- 		"Unknown platform! Pinmuxing not initialized\n");
--
--	/*
--	 * Finished with the static registrations now; fill in the missing
--	 * devices
--	 */
--	of_platform_populate(NULL, tegra_dt_match_table, tegra20_auxdata_lookup, NULL);
- }
- 
- static const char * tegra_dt_board_compat[] = {
-diff --git a/arch/arm/mach-tegra/board-harmony-pinmux.c b/arch/arm/mach-tegra/board-harmony-pinmux.c
-index e99b456..c1f58dd 100644
---- a/arch/arm/mach-tegra/board-harmony-pinmux.c
-+++ b/arch/arm/mach-tegra/board-harmony-pinmux.c
-@@ -159,9 +159,11 @@ static struct tegra_gpio_table gpio_table[] = {
- 	{ .gpio = TEGRA_GPIO_EXT_MIC_EN,	.enable = true	},
- };
- 
--void harmony_pinmux_init(void)
-+void harmony_pinmux_init(int is_dt)
- {
--	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
-+	if (!is_dt)
-+		platform_add_devices(pinmux_devices,
-+					ARRAY_SIZE(pinmux_devices));
- 
- 	tegra_pinmux_config_table(harmony_pinmux, ARRAY_SIZE(harmony_pinmux));
- 
-diff --git a/arch/arm/mach-tegra/board-harmony.c b/arch/arm/mach-tegra/board-harmony.c
-index f0bdc5e..e595901 100644
---- a/arch/arm/mach-tegra/board-harmony.c
-+++ b/arch/arm/mach-tegra/board-harmony.c
-@@ -170,7 +170,7 @@ static void __init tegra_harmony_init(void)
- {
- 	tegra_clk_init_from_table(harmony_clk_init_table);
- 
--	harmony_pinmux_init();
-+	harmony_pinmux_init(0);
- 
- 	tegra_sdhci_device1.dev.platform_data = &sdhci_pdata1;
- 	tegra_sdhci_device2.dev.platform_data = &sdhci_pdata2;
-diff --git a/arch/arm/mach-tegra/board-harmony.h b/arch/arm/mach-tegra/board-harmony.h
-index 139d96c..c194ec5 100644
---- a/arch/arm/mach-tegra/board-harmony.h
-+++ b/arch/arm/mach-tegra/board-harmony.h
-@@ -35,7 +35,7 @@
- #define TEGRA_GPIO_EXT_MIC_EN		TEGRA_GPIO_PX1
- #define TEGRA_GPIO_EN_VDD_1V05_GPIO	HARMONY_GPIO_TPS6586X(2)
- 
--void harmony_pinmux_init(void);
-+void harmony_pinmux_init(int is_dt);
- int harmony_regulator_init(void);
- 
- #endif
-diff --git a/arch/arm/mach-tegra/board-paz00-pinmux.c b/arch/arm/mach-tegra/board-paz00-pinmux.c
-index fb20894..c8301fd 100644
---- a/arch/arm/mach-tegra/board-paz00-pinmux.c
-+++ b/arch/arm/mach-tegra/board-paz00-pinmux.c
-@@ -156,9 +156,11 @@ static struct tegra_gpio_table gpio_table[] = {
- 	{ .gpio = TEGRA_WIFI_LED,	.enable = true },
- };
- 
--void paz00_pinmux_init(void)
-+void paz00_pinmux_init(int is_dt)
- {
--	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
-+	if (!is_dt)
-+		platform_add_devices(pinmux_devices,
-+					ARRAY_SIZE(pinmux_devices));
- 
- 	tegra_pinmux_config_table(paz00_pinmux, ARRAY_SIZE(paz00_pinmux));
- 
-diff --git a/arch/arm/mach-tegra/board-paz00.c b/arch/arm/mach-tegra/board-paz00.c
-index 602f8dd..1709e5e 100644
---- a/arch/arm/mach-tegra/board-paz00.c
-+++ b/arch/arm/mach-tegra/board-paz00.c
-@@ -173,7 +173,7 @@ static void __init tegra_paz00_init(void)
- {
- 	tegra_clk_init_from_table(paz00_clk_init_table);
- 
--	paz00_pinmux_init();
-+	paz00_pinmux_init(0);
- 
- 	tegra_sdhci_device1.dev.platform_data = &sdhci_pdata1;
- 	tegra_sdhci_device4.dev.platform_data = &sdhci_pdata4;
-diff --git a/arch/arm/mach-tegra/board-paz00.h b/arch/arm/mach-tegra/board-paz00.h
-index 2dc1899..8695518 100644
---- a/arch/arm/mach-tegra/board-paz00.h
-+++ b/arch/arm/mach-tegra/board-paz00.h
-@@ -32,6 +32,6 @@
- #define TEGRA_WIFI_RST		TEGRA_GPIO_PD1
- #define TEGRA_WIFI_LED		TEGRA_GPIO_PD0
- 
--void paz00_pinmux_init(void);
-+void paz00_pinmux_init(int is_dt);
- 
- #endif
-diff --git a/arch/arm/mach-tegra/board-seaboard-pinmux.c b/arch/arm/mach-tegra/board-seaboard-pinmux.c
-index fbce31d..a63bc0e 100644
---- a/arch/arm/mach-tegra/board-seaboard-pinmux.c
-+++ b/arch/arm/mach-tegra/board-seaboard-pinmux.c
-@@ -216,9 +216,11 @@ static void __init update_pinmux(struct tegra_pingroup_config *newtbl, int size)
- 	}
- }
- 
--void __init seaboard_common_pinmux_init(void)
-+void __init seaboard_common_pinmux_init(int is_dt)
- {
--	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
-+	if (!is_dt)
-+		platform_add_devices(pinmux_devices,
-+					ARRAY_SIZE(pinmux_devices));
- 
- 	tegra_pinmux_config_table(seaboard_pinmux, ARRAY_SIZE(seaboard_pinmux));
- 
-@@ -228,14 +230,14 @@ void __init seaboard_common_pinmux_init(void)
- 	tegra_gpio_config(common_gpio_table, ARRAY_SIZE(common_gpio_table));
- }
- 
--void __init seaboard_pinmux_init(void)
-+void __init seaboard_pinmux_init(int is_dt)
- {
--	seaboard_common_pinmux_init();
-+	seaboard_common_pinmux_init(is_dt);
- }
- 
--void __init ventana_pinmux_init(void)
-+void __init ventana_pinmux_init(int is_dt)
- {
- 	update_pinmux(ventana_pinmux, ARRAY_SIZE(ventana_pinmux));
--	seaboard_common_pinmux_init();
-+	seaboard_common_pinmux_init(is_dt);
- }
- 
-diff --git a/arch/arm/mach-tegra/board-seaboard.c b/arch/arm/mach-tegra/board-seaboard.c
-index bf13ea3..c41e01a 100644
---- a/arch/arm/mach-tegra/board-seaboard.c
-+++ b/arch/arm/mach-tegra/board-seaboard.c
-@@ -226,7 +226,7 @@ static void __init seaboard_i2c_init(void)
- 
- static void __init seaboard_common_init(void)
- {
--	seaboard_pinmux_init();
-+	seaboard_pinmux_init(0);
- 
- 	tegra_clk_init_from_table(seaboard_clk_init_table);
- 
-diff --git a/arch/arm/mach-tegra/board-seaboard.h b/arch/arm/mach-tegra/board-seaboard.h
-index 4c45d4c..d4460c3 100644
---- a/arch/arm/mach-tegra/board-seaboard.h
-+++ b/arch/arm/mach-tegra/board-seaboard.h
-@@ -42,6 +42,6 @@
- #define TEGRA_GPIO_HP_DET		TEGRA_GPIO_PX1
- #define TEGRA_GPIO_KAEN_HP_MUTE		TEGRA_GPIO_PA5
- 
--void seaboard_pinmux_init(void);
-+void seaboard_pinmux_init(int is_dt);
- 
- #endif
-diff --git a/arch/arm/mach-tegra/board-trimslice-pinmux.c b/arch/arm/mach-tegra/board-trimslice-pinmux.c
-index 4969dd2..3aa05f9 100644
---- a/arch/arm/mach-tegra/board-trimslice-pinmux.c
-+++ b/arch/arm/mach-tegra/board-trimslice-pinmux.c
-@@ -155,9 +155,11 @@ static struct tegra_gpio_table gpio_table[] = {
- 	{ .gpio = TRIMSLICE_GPIO_USB2_RST,  .enable = true }, /* USB2 PHY rst */
- };
- 
--void __init trimslice_pinmux_init(void)
-+void __init trimslice_pinmux_init(int is_dt)
- {
--	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
-+	if (!is_dt)
-+		platform_add_devices(pinmux_devices,
-+					ARRAY_SIZE(pinmux_devices));
- 	tegra_pinmux_config_table(trimslice_pinmux, ARRAY_SIZE(trimslice_pinmux));
- 	tegra_gpio_config(gpio_table, ARRAY_SIZE(gpio_table));
- }
-diff --git a/arch/arm/mach-tegra/board-trimslice.c b/arch/arm/mach-tegra/board-trimslice.c
-index e008c0e..2b2f262 100644
---- a/arch/arm/mach-tegra/board-trimslice.c
-+++ b/arch/arm/mach-tegra/board-trimslice.c
-@@ -160,7 +160,7 @@ static void __init tegra_trimslice_init(void)
- {
- 	tegra_clk_init_from_table(trimslice_clk_init_table);
- 
--	trimslice_pinmux_init();
-+	trimslice_pinmux_init(0);
- 
- 	tegra_sdhci_device1.dev.platform_data = &sdhci_pdata1;
- 	tegra_sdhci_device4.dev.platform_data = &sdhci_pdata4;
-diff --git a/arch/arm/mach-tegra/board-trimslice.h b/arch/arm/mach-tegra/board-trimslice.h
-index 50f128d..4d19a11 100644
---- a/arch/arm/mach-tegra/board-trimslice.h
-+++ b/arch/arm/mach-tegra/board-trimslice.h
-@@ -25,6 +25,6 @@
- #define TRIMSLICE_GPIO_USB1_MODE	TEGRA_GPIO_PV2 /* USB1 mode */
- #define TRIMSLICE_GPIO_USB2_RST		TEGRA_GPIO_PV0 /* USB2 PHY reset */
- 
--void trimslice_pinmux_init(void);
-+void trimslice_pinmux_init(int is_dt);
- 
- #endif
--- 
-1.7.0.4
+> 
+> Thanks.
+> 
+> Best regards,
+> Kgene.
+> --
+> Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+> SW Solution Development Team, Samsung Electronics Co., Ltd.
+> 
+> > On 10/10/2011 03:11 AM, Thomas Abraham wrote:
+> > > All of Samsung's s5p platforms have timer irqs statically mapped from
+> linux
+> > > irq numbers 11 to 15. These timer irqs are moved to end of the
+> statically
+> > > mapped linux irq space and the hardware irqs, which were statically
+> mapped
+> > > starting from 32 is moved to start from 0. The NR_IRQS macro is
+> consolidated
+> > > for all the s5p platforms in this process.
+> > >
+> > > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> > > ---
+> > >  arch/arm/mach-exynos4/include/mach/entry-macro.S |    1 -
+> > >  arch/arm/mach-exynos4/include/mach/irqs.h        |    3 +--
+> > >  arch/arm/mach-s5p64x0/include/mach/irqs.h        |    4 +---
+> > >  arch/arm/mach-s5pc100/include/mach/irqs.h        |    3 +--
+> > >  arch/arm/mach-s5pv210/include/mach/irqs.h        |    3 +--
+> > >  arch/arm/plat-samsung/include/plat/irqs.h        |    7 +++++--
+> > >  6 files changed, 9 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/arch/arm/mach-exynos4/include/mach/entry-macro.S
+> b/arch/arm/mach-
+> > > exynos4/include/mach/entry-macro.S
+> > > index 4c9adbd..5c4fbcc 100644
+> > > --- a/arch/arm/mach-exynos4/include/mach/entry-macro.S
+> > > +++ b/arch/arm/mach-exynos4/include/mach/entry-macro.S
+> > > @@ -72,7 +72,6 @@
+> > >  		cmpcc	\irqnr, \irqnr
+> > >  		cmpne	\irqnr, \tmp
+> > >  		cmpcs	\irqnr, \irqnr
+> > > -		addne	\irqnr, \irqnr, #32
+> > >
+> > >  		.endm
+> > >
+> > > diff --git a/arch/arm/mach-exynos4/include/mach/irqs.h b/arch/arm/mach-
+> > exynos4/include/mach/irqs.h
+> > > index dfd4b7e..43087c3 100644
+> > > --- a/arch/arm/mach-exynos4/include/mach/irqs.h
+> > > +++ b/arch/arm/mach-exynos4/include/mach/irqs.h
+> > > @@ -163,7 +163,6 @@
+> > >  #define IRQ_GPIO2_NR_GROUPS	9
+> > >  #define IRQ_GPIO_END		(S5P_GPIOINT_BASE +
+> > S5P_GPIOINT_COUNT)
+> > >
+> > > -/* Set the default NR_IRQS */
+> > > -#define NR_IRQS			(IRQ_GPIO_END + 64)
+> > > +#define IRQ_TIMER_BASE		(IRQ_GPIO_END + 64)
+> > >
+> > >  #endif /* __ASM_ARCH_IRQS_H */
+> > > diff --git a/arch/arm/mach-s5p64x0/include/mach/irqs.h b/arch/arm/mach-
+> > s5p64x0/include/mach/irqs.h
+> > > index 53982db..bea73cc 100644
+> > > --- a/arch/arm/mach-s5p64x0/include/mach/irqs.h
+> > > +++ b/arch/arm/mach-s5p64x0/include/mach/irqs.h
+> > > @@ -141,8 +141,6 @@
+> > >
+> > >  #define IRQ_EINT_GROUP(grp, x)	(IRQ_EINT_GROUP##grp##_BASE +
+> > (x))
+> > >
+> > > -/* Set the default NR_IRQS */
+> > > -
+> > > -#define NR_IRQS			(IRQ_EINT_GROUP8_BASE +
+> > IRQ_EINT_GROUP8_NR + 1)
+> > > +#define IRQ_TIMER_BASE		(IRQ_EINT_GROUP8_BASE +
+> > IRQ_EINT_GROUP8_NR + 1)
+> > >
+> > >  #endif /* __ASM_ARCH_IRQS_H */
+> > > diff --git a/arch/arm/mach-s5pc100/include/mach/irqs.h b/arch/arm/mach-
+> > s5pc100/include/mach/irqs.h
+> > > index d2eb475..3a9d300 100644
+> > > --- a/arch/arm/mach-s5pc100/include/mach/irqs.h
+> > > +++ b/arch/arm/mach-s5pc100/include/mach/irqs.h
+> > > @@ -104,8 +104,7 @@
+> > >  #define S5P_GPIOINT_BASE	(IRQ_EINT(31) + 1)
+> > >  #define S5P_GPIOINT_GROUP_MAXNR	21
+> > >
+> > > -/* Set the default NR_IRQS */
+> > > -#define NR_IRQS			(IRQ_EINT(31) +
+> > S5P_GPIOINT_COUNT + 1)
+> > > +#define IRQ_TIMER_BASE		(IRQ_EINT(31) +
+> > S5P_GPIOINT_COUNT + 1)
+> > >
+> > >  /* Compatibility */
+> > >  #define IRQ_LCD_FIFO		IRQ_LCD0
+> > > diff --git a/arch/arm/mach-s5pv210/include/mach/irqs.h b/arch/arm/mach-
+> > s5pv210/include/mach/irqs.h
+> > > index 5e0de3a..df3173a 100644
+> > > --- a/arch/arm/mach-s5pv210/include/mach/irqs.h
+> > > +++ b/arch/arm/mach-s5pv210/include/mach/irqs.h
+> > > @@ -125,8 +125,7 @@
+> > >  #define S5P_GPIOINT_BASE	(IRQ_EINT(31) + 1)
+> > >  #define S5P_GPIOINT_GROUP_MAXNR	22
+> > >
+> > > -/* Set the default NR_IRQS */
+> > > -#define NR_IRQS			(IRQ_EINT(31) +
+> > S5P_GPIOINT_COUNT + 1)
+> > > +#define IRQ_TIMER_BASE		(IRQ_EINT(31) +
+> > S5P_GPIOINT_COUNT + 1)
+> > >
+> > >  /* Compatibility */
+> > >  #define IRQ_LCD_FIFO		IRQ_LCD0
+> > > diff --git a/arch/arm/plat-samsung/include/plat/irqs.h b/arch/arm/plat-
+> > samsung/include/plat/irqs.h
+> > > index 08d1a7e..b8918b3 100644
+> > > --- a/arch/arm/plat-samsung/include/plat/irqs.h
+> > > +++ b/arch/arm/plat-samsung/include/plat/irqs.h
+> > > @@ -22,7 +22,7 @@
+> > >   * mulitple of 32 to allow the common code to work
+> > >   */
+> > >
+> > > -#define S5P_IRQ_OFFSET		(32)
+> > > +#define S5P_IRQ_OFFSET		(0)
+> > >
+> > >  #define S5P_IRQ(x)		((x) + S5P_IRQ_OFFSET)
+> > >
+> > > @@ -44,13 +44,14 @@
+> > >  #define S5P_IRQ_VIC2(x)		(S5P_VIC2_BASE + (x))
+> > >  #define S5P_IRQ_VIC3(x)		(S5P_VIC3_BASE + (x))
+> > >
+> > > -#define S5P_TIMER_IRQ(x)	(11 + (x))
+> > > +#define S5P_TIMER_IRQ(x)	(IRQ_TIMER_BASE + (x))
+> > >
+> > >  #define IRQ_TIMER0		S5P_TIMER_IRQ(0)
+> > >  #define IRQ_TIMER1		S5P_TIMER_IRQ(1)
+> > >  #define IRQ_TIMER2		S5P_TIMER_IRQ(2)
+> > >  #define IRQ_TIMER3		S5P_TIMER_IRQ(3)
+> > >  #define IRQ_TIMER4		S5P_TIMER_IRQ(4)
+> > > +#define IRQ_TIMER_COUNT		(5)
+> > >
+> > >  #define IRQ_EINT(x)		((x) < 16 ? ((x) + S5P_EINT_BASE1) \
+> > >  					: ((x) - 16 + S5P_EINT_BASE2))
+> > > @@ -77,4 +78,6 @@
+> > >  #define S5P_IRQ_TYPE_EDGE_RISING	(0x03)
+> > >  #define S5P_IRQ_TYPE_EDGE_BOTH		(0x04)
+> > >
+> > > +#define NR_IRQS			(IRQ_TIMER_BASE +
+> > IRQ_TIMER_COUNT)
+> > > +
+> > >  #endif /* __PLAT_SAMSUNG_IRQS_H */
+> > > --
+> > > 1.6.6.rc2
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
