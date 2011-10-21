@@ -1,206 +1,58 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/3] ARM: Samsung: Move timer irq numbers to end of linux
- irq	space
-Date: Fri, 21 Oct 2011 13:45:17 -0600
-Message-ID: <20111021194517.GA3722@ponder.secretlab.ca>
-References: <1318234289-22041-1-git-send-email-thomas.abraham@linaro.org>
- <1318234289-22041-2-git-send-email-thomas.abraham@linaro.org>
- <001001cc8d6d$5c48fa60$14daef20$%youn@samsung.com>
- <017001cc8fd7$c27e4ee0$477aeca0$%kim@samsung.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] of/flattree: Early "find node by alias" function
+Date: Fri, 21 Oct 2011 14:04:51 -0600
+Message-ID: <20111021200451.GB3722@ponder.secretlab.ca>
+References: <1319210219-10707-1-git-send-email-pawel.moll@arm.com>
+ <4EA1A1A9.2090403@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <017001cc8fd7$c27e4ee0$477aeca0$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Changhwan Youn' <chaos.youn@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rob.herring@calxeda.com, patches@linaro.org, 'Nicolas Pitre' <nicolas.pitre@linaro.org>
+In-Reply-To: <4EA1A1A9.2090403-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2011 at 06:56:52PM +0900, Kukjin Kim wrote:
-> Changhwan Youn wrote:
-> > 
-> > Hi Thomas,
-> > 
-> > All UART_IRQ_RXD, TXD, ERR of Samsung's platforms are also statically
-> > mapped to linux irq numbers 16 to 31. These interrupts also need proper
-> handling.
-> > 
-> > Best regards,
-> > Changhwan Youn
-> > 
+On Fri, Oct 21, 2011 at 09:45:29AM -0700, David Daney wrote:
+> On 10/21/2011 08:16 AM, Pawel Moll wrote:
+> >This patch adds a function for finding a node in flat tree
+> >based on an alias name. It can be used in early boot code.
+> >
+> >Typical use case is a situation when early code needs data
+> >from a arbitrary tree node, eg. base address of "serial0" to
+> >initialise debug output or some sort of ID register to
+> >probe hardware.
+> >
+> >The tree source could look like that:
+> >
+> >/ {
+> >	aliases {
+> >		serial0 =&uart0;
+> >	};
+> >
+> >	uart0: uart@f0001000 {
+> >		reg =<0xf0001000 0x1000>;
+> >	};
+> >}
+> >
+> >Signed-off-by: Pawel Moll<pawel.moll-5wv7dgnIgG8@public.gmane.org>
 > 
-> Hi all,
+> How is this patch different/better than:
 > 
-> Hmm, I'd like to apply Thomas' device tree series for EXYNOS4 and Samsung
-> stuff for upcoming merge window but there are still some comments on some
-> stuff and that should be fixed before applying. In addition I need to keep
-> the ordering to apply them to avoid conflicts. But as you know, v3.1 is now
-> close at hand and we don't have enough time for it now :(
 > 
-> I will leave tomorrow morning (KST) for KS. I will talk to Grant Likely
-> about this in Prague :)
+> http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-June/005819.html
 
-One of the goals I have for the hacking summit is to get as much of
-the outstanding DT patches queued up and into linux-next.
+This patch operates on the flat tree; your patch operates on the
+unflattened tree.
 
 g.
-
-> 
-> Thanks.
-> 
-> Best regards,
-> Kgene.
-> --
-> Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-> SW Solution Development Team, Samsung Electronics Co., Ltd.
-> 
-> > On 10/10/2011 03:11 AM, Thomas Abraham wrote:
-> > > All of Samsung's s5p platforms have timer irqs statically mapped from
-> linux
-> > > irq numbers 11 to 15. These timer irqs are moved to end of the
-> statically
-> > > mapped linux irq space and the hardware irqs, which were statically
-> mapped
-> > > starting from 32 is moved to start from 0. The NR_IRQS macro is
-> consolidated
-> > > for all the s5p platforms in this process.
-> > >
-> > > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> > > ---
-> > >  arch/arm/mach-exynos4/include/mach/entry-macro.S |    1 -
-> > >  arch/arm/mach-exynos4/include/mach/irqs.h        |    3 +--
-> > >  arch/arm/mach-s5p64x0/include/mach/irqs.h        |    4 +---
-> > >  arch/arm/mach-s5pc100/include/mach/irqs.h        |    3 +--
-> > >  arch/arm/mach-s5pv210/include/mach/irqs.h        |    3 +--
-> > >  arch/arm/plat-samsung/include/plat/irqs.h        |    7 +++++--
-> > >  6 files changed, 9 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/arch/arm/mach-exynos4/include/mach/entry-macro.S
-> b/arch/arm/mach-
-> > > exynos4/include/mach/entry-macro.S
-> > > index 4c9adbd..5c4fbcc 100644
-> > > --- a/arch/arm/mach-exynos4/include/mach/entry-macro.S
-> > > +++ b/arch/arm/mach-exynos4/include/mach/entry-macro.S
-> > > @@ -72,7 +72,6 @@
-> > >  		cmpcc	\irqnr, \irqnr
-> > >  		cmpne	\irqnr, \tmp
-> > >  		cmpcs	\irqnr, \irqnr
-> > > -		addne	\irqnr, \irqnr, #32
-> > >
-> > >  		.endm
-> > >
-> > > diff --git a/arch/arm/mach-exynos4/include/mach/irqs.h b/arch/arm/mach-
-> > exynos4/include/mach/irqs.h
-> > > index dfd4b7e..43087c3 100644
-> > > --- a/arch/arm/mach-exynos4/include/mach/irqs.h
-> > > +++ b/arch/arm/mach-exynos4/include/mach/irqs.h
-> > > @@ -163,7 +163,6 @@
-> > >  #define IRQ_GPIO2_NR_GROUPS	9
-> > >  #define IRQ_GPIO_END		(S5P_GPIOINT_BASE +
-> > S5P_GPIOINT_COUNT)
-> > >
-> > > -/* Set the default NR_IRQS */
-> > > -#define NR_IRQS			(IRQ_GPIO_END + 64)
-> > > +#define IRQ_TIMER_BASE		(IRQ_GPIO_END + 64)
-> > >
-> > >  #endif /* __ASM_ARCH_IRQS_H */
-> > > diff --git a/arch/arm/mach-s5p64x0/include/mach/irqs.h b/arch/arm/mach-
-> > s5p64x0/include/mach/irqs.h
-> > > index 53982db..bea73cc 100644
-> > > --- a/arch/arm/mach-s5p64x0/include/mach/irqs.h
-> > > +++ b/arch/arm/mach-s5p64x0/include/mach/irqs.h
-> > > @@ -141,8 +141,6 @@
-> > >
-> > >  #define IRQ_EINT_GROUP(grp, x)	(IRQ_EINT_GROUP##grp##_BASE +
-> > (x))
-> > >
-> > > -/* Set the default NR_IRQS */
-> > > -
-> > > -#define NR_IRQS			(IRQ_EINT_GROUP8_BASE +
-> > IRQ_EINT_GROUP8_NR + 1)
-> > > +#define IRQ_TIMER_BASE		(IRQ_EINT_GROUP8_BASE +
-> > IRQ_EINT_GROUP8_NR + 1)
-> > >
-> > >  #endif /* __ASM_ARCH_IRQS_H */
-> > > diff --git a/arch/arm/mach-s5pc100/include/mach/irqs.h b/arch/arm/mach-
-> > s5pc100/include/mach/irqs.h
-> > > index d2eb475..3a9d300 100644
-> > > --- a/arch/arm/mach-s5pc100/include/mach/irqs.h
-> > > +++ b/arch/arm/mach-s5pc100/include/mach/irqs.h
-> > > @@ -104,8 +104,7 @@
-> > >  #define S5P_GPIOINT_BASE	(IRQ_EINT(31) + 1)
-> > >  #define S5P_GPIOINT_GROUP_MAXNR	21
-> > >
-> > > -/* Set the default NR_IRQS */
-> > > -#define NR_IRQS			(IRQ_EINT(31) +
-> > S5P_GPIOINT_COUNT + 1)
-> > > +#define IRQ_TIMER_BASE		(IRQ_EINT(31) +
-> > S5P_GPIOINT_COUNT + 1)
-> > >
-> > >  /* Compatibility */
-> > >  #define IRQ_LCD_FIFO		IRQ_LCD0
-> > > diff --git a/arch/arm/mach-s5pv210/include/mach/irqs.h b/arch/arm/mach-
-> > s5pv210/include/mach/irqs.h
-> > > index 5e0de3a..df3173a 100644
-> > > --- a/arch/arm/mach-s5pv210/include/mach/irqs.h
-> > > +++ b/arch/arm/mach-s5pv210/include/mach/irqs.h
-> > > @@ -125,8 +125,7 @@
-> > >  #define S5P_GPIOINT_BASE	(IRQ_EINT(31) + 1)
-> > >  #define S5P_GPIOINT_GROUP_MAXNR	22
-> > >
-> > > -/* Set the default NR_IRQS */
-> > > -#define NR_IRQS			(IRQ_EINT(31) +
-> > S5P_GPIOINT_COUNT + 1)
-> > > +#define IRQ_TIMER_BASE		(IRQ_EINT(31) +
-> > S5P_GPIOINT_COUNT + 1)
-> > >
-> > >  /* Compatibility */
-> > >  #define IRQ_LCD_FIFO		IRQ_LCD0
-> > > diff --git a/arch/arm/plat-samsung/include/plat/irqs.h b/arch/arm/plat-
-> > samsung/include/plat/irqs.h
-> > > index 08d1a7e..b8918b3 100644
-> > > --- a/arch/arm/plat-samsung/include/plat/irqs.h
-> > > +++ b/arch/arm/plat-samsung/include/plat/irqs.h
-> > > @@ -22,7 +22,7 @@
-> > >   * mulitple of 32 to allow the common code to work
-> > >   */
-> > >
-> > > -#define S5P_IRQ_OFFSET		(32)
-> > > +#define S5P_IRQ_OFFSET		(0)
-> > >
-> > >  #define S5P_IRQ(x)		((x) + S5P_IRQ_OFFSET)
-> > >
-> > > @@ -44,13 +44,14 @@
-> > >  #define S5P_IRQ_VIC2(x)		(S5P_VIC2_BASE + (x))
-> > >  #define S5P_IRQ_VIC3(x)		(S5P_VIC3_BASE + (x))
-> > >
-> > > -#define S5P_TIMER_IRQ(x)	(11 + (x))
-> > > +#define S5P_TIMER_IRQ(x)	(IRQ_TIMER_BASE + (x))
-> > >
-> > >  #define IRQ_TIMER0		S5P_TIMER_IRQ(0)
-> > >  #define IRQ_TIMER1		S5P_TIMER_IRQ(1)
-> > >  #define IRQ_TIMER2		S5P_TIMER_IRQ(2)
-> > >  #define IRQ_TIMER3		S5P_TIMER_IRQ(3)
-> > >  #define IRQ_TIMER4		S5P_TIMER_IRQ(4)
-> > > +#define IRQ_TIMER_COUNT		(5)
-> > >
-> > >  #define IRQ_EINT(x)		((x) < 16 ? ((x) + S5P_EINT_BASE1) \
-> > >  					: ((x) - 16 + S5P_EINT_BASE2))
-> > > @@ -77,4 +78,6 @@
-> > >  #define S5P_IRQ_TYPE_EDGE_RISING	(0x03)
-> > >  #define S5P_IRQ_TYPE_EDGE_BOTH		(0x04)
-> > >
-> > > +#define NR_IRQS			(IRQ_TIMER_BASE +
-> > IRQ_TIMER_COUNT)
-> > > +
-> > >  #endif /* __PLAT_SAMSUNG_IRQS_H */
-> > > --
-> > > 1.6.6.rc2
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
