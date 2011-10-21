@@ -1,56 +1,41 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
- regulator_init_data
-Date: Thu, 20 Oct 2011 15:09:14 -0700
-Message-ID: <20111020220914.GP3842@atomide.com>
-References: <20111019151031.GA4275@opensource.wolfsonmicro.com>
- <4E9F9892.9070007@ti.com>
- <20111020094140.GK18713@sirena.org.uk>
- <20111020162743.GB31337@atomide.com>
- <20111020164006.GA10155@sirena.org.uk>
- <20111020170534.GC31337@atomide.com>
- <20111020172218.GE31337@atomide.com>
- <20111020195734.GB17384@opensource.wolfsonmicro.com>
- <20111020201054.GN3842@atomide.com>
- <20111020214225.GB22709@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111020214225.GB22709@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC][PATCH 1/2] powerpc/85xx: create dts components to build up
+ an SoC
+Date: Thu, 20 Oct 2011 22:03:26 -0500
+Message-ID: <06FA8EE7-85F8-42C6-A030-08E0A32763CB@kernel.crashing.org>
+References: <1319095467-6229-1-git-send-email-galak@kernel.crashing.org>
+ <CAOZdJXWtnBB5=DahG8LGQpeP7or0VZv78duhtPiORk3WOir8gQ@mail.gmail.com>
+ <A54F7698-A96F-4EE1-89DB-B6A7C5A071FB@kernel.crashing.org>
+ <4EA08D20.7010405@freescale.com>
+Mime-Version: 1.0 (Apple Message framework v1251.1)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4EA08D20.7010405-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Mark Brown <broonie@opensource.wolfsonmicro.com> [111020 14:08]:
-> On Thu, Oct 20, 2011 at 01:10:55PM -0700, Tony Lindgren wrote:
+
+On Oct 20, 2011, at 4:05 PM, Timur Tabi wrote:
+
+> Kumar Gala wrote:
+>>>> How about we put all serial devices into one pq3-duart.dtsi file, and
+>>>> let the parent dtsi file reference just the ones that it needs?
+>> there isn't an option to do that w/dtc
 > 
-> > We still need to figure out how to get the above board specific
-> > data to the device driver probe in a way where we can avoid having
-> > platform glue code. Any thoughts on that?
-> 
-> I think we should just not bother with most of the above and see if
-> anyone notices, with the exception of always on and status changes it's
-> vanishingly rare for anyone to actually do anything constructive with
-> them.  
+> What about making all the nodes disabled by default, and then the soc.dtsi
+> or si.dtsi file can re-enable them?
 
-OK
+Its still a bit problematic in that I don't want nodes to exist that aren't in the SoC.
 
-> Neither of the two I mentioned are Linux specific either, they mean
-> somehing useful for any OS it's just that the decision is policy which
-> is going to depend on the OS version.  Status changes we can probably
-> allow people to enable, it'll just mean that older device trees won't
-> get good power use out of newer kernels and if you move to an older
-> kernel things will start exploding as drivers loose regulator support.
-> Always on we can probably live without, it's a combination of
-> overspecification and interaction with _has_full_constraints() which
-> isn't represented in this binding anyway.
-
-Yeah, lot of these are "how the regulator using driver is using
-the regulator" or "how the operating system is using the regulator"
-type policies.
-
-Regards,
-
-Tony
+- k
