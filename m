@@ -1,37 +1,48 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
- regulator_init_data
-Date: Mon, 24 Oct 2011 11:39:27 +0200
-Message-ID: <20111024093925.GB6148@opensource.wolfsonmicro.com>
-References: <1318263578-7407-1-git-send-email-rnayak@ti.com>
- <1318263578-7407-4-git-send-email-rnayak@ti.com>
- <20111018132032.GD30703@S2100-06.ap.freescale.net>
- <4E9EB61C.1040207@ti.com>
- <20111019144215.GA32007@S2100-06.ap.freescale.net>
- <4E9FAF42.5060200@ti.com>
- <20111020061408.GE32007@S2100-06.ap.freescale.net>
- <4EA00F7C.1080005@ti.com>
- <20111021082309.GA337@S2100-06.ap.freescale.net>
- <20111024092411.GE8708@ponder.secretlab.ca>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: [PATCH] dt: Add empty of_match_node() macro
+Date: Mon, 24 Oct 2011 11:53:32 +0200
+Message-ID: <1319450012-13033-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111024092411.GE8708@ponder.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Shawn Guo <shawn.guo@freescale.com>, Rajendra Nayak <rnayak@ti.com>, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robherring2@gmail.com, grant.likely@secretlab.ca
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2011 at 11:24:11AM +0200, Grant Likely wrote:
+Add an empty macro for of_match_node() that will save
+some '#ifdef CONFIG_OF' for non-dt builds.
 
-> To follow up from my earlier comment, this .dts structure looks fine
-> and reasonable to me, and it would also be fine for the mc13892 driver
-> to use for_each_child_of_node() to find all the children of the
-> regulators node.  Even finding the 'regulators' node by name from the
-> mc13892 driver is perfectly fine provided for_each_child_of_node is
-> used to find it.  All of this is okay because it is under the umbrella
-> of the "fsl,mc13892" binding.
+I have chosen to use a macro instead of a function to
+be able to avoid defining the first parameter.
+In fact, this "struct of_device_id *" first parameter
+is usualy not defined as well on non-dt builds.
 
-Yes, a search of children of the device node that the driver is probing
-off seems like a sensible approach.
+Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+ include/linux/of.h |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 736b747..92c40a1 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -303,6 +303,7 @@ static inline struct device_node *of_parse_phandle(struct device_node *np,
+ }
+ 
+ #define of_match_ptr(_ptr)	NULL
++#define of_match_node(_matches, _node)	NULL
+ #endif /* CONFIG_OF */
+ 
+ static inline int of_property_read_u32(const struct device_node *np,
+-- 
+1.7.5.4
