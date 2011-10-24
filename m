@@ -1,94 +1,49 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] ahci: add DT binding for Calxeda AHCI controller
-Date: Mon, 24 Oct 2011 09:20:07 -0500
-Message-ID: <4EA57417.8060709@gmail.com>
-References: <1314976215-23902-1-git-send-email-robherring2@gmail.com> <4E8A6FB3.4090909@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] dt: Add empty of_match_node() macro
+Date: Mon, 24 Oct 2011 16:25:20 +0200
+Message-ID: <20111024142520.GY8708@ponder.secretlab.ca>
+References: <1319450012-13033-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <4E8A6FB3.4090909@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jeff Garzik <jgarzik@pobox.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1319450012-13033-1-git-send-email-nicolas.ferre@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: robherring2@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Jeff,
-
-On 10/03/2011 09:30 PM, Rob Herring wrote:
-> On 09/02/2011 10:10 AM, Rob Herring wrote:
->> From: Rob Herring <rob.herring@calxeda.com>
->>
->> Add devicetree match table to ahci platform driver for Calxeda Highbank
->> AHCI controller.
->>
->> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
->> Cc: Jeff Garzik <jgarzik@pobox.com>
->> Cc: linux-ide@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: devicetree-discuss@lists.ozlabs.org
->> ---
+On Mon, Oct 24, 2011 at 11:53:32AM +0200, Nicolas Ferre wrote:
+> Add an empty macro for of_match_node() that will save
+> some '#ifdef CONFIG_OF' for non-dt builds.
 > 
-> Any comments on this?
+> I have chosen to use a macro instead of a function to
+> be able to avoid defining the first parameter.
+> In fact, this "struct of_device_id *" first parameter
+> is usualy not defined as well on non-dt builds.
 > 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-Ping.
+After private discussion, yes this is okay.  I've picked it up.
 
-Can you please apply this for 3.2.
+g.
 
-Regards,
-Rob
-
->>  .../devicetree/bindings/ata/calxeda-sata.txt       |   17 +++++++++++++++++
->>  drivers/ata/ahci_platform.c                        |    7 +++++++
->>  2 files changed, 24 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/ata/calxeda-sata.txt
->>
->> diff --git a/Documentation/devicetree/bindings/ata/calxeda-sata.txt b/Documentation/devicetree/bindings/ata/calxeda-sata.txt
->> new file mode 100644
->> index 0000000..79caa56
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ata/calxeda-sata.txt
->> @@ -0,0 +1,17 @@
->> +* Calxeda SATA Controller
->> +
->> +SATA nodes are defined to describe on-chip Serial ATA controllers.
->> +Each SATA controller should have its own node.
->> +
->> +Required properties:
->> +- compatible        : compatible list, contains "calxeda,hb-ahci"
->> +- interrupts        : <interrupt mapping for SATA IRQ>
->> +- reg               : <registers mapping>
->> +
->> +Example:
->> +        sata@ffe08000 {
->> +		compatible = "calxeda,hb-ahci";
->> +                reg = <0xffe08000 0x1000>;
->> +                interrupts = <115>;
->> +        };
->> +
->> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
->> index 6fef1fa..9bfc970 100644
->> --- a/drivers/ata/ahci_platform.c
->> +++ b/drivers/ata/ahci_platform.c
->> @@ -171,11 +171,18 @@ static int __devexit ahci_remove(struct platform_device *pdev)
->>  	return 0;
->>  }
->>  
->> +static const struct of_device_id ahci_of_match[] = {
->> +	{ .compatible = "calxeda,hb-ahci", },
->> +	{},
->> +};
->> +MODULE_DEVICE_TABLE(of, ahci_of_match);
->> +
->>  static struct platform_driver ahci_driver = {
->>  	.remove = __devexit_p(ahci_remove),
->>  	.driver = {
->>  		.name = "ahci",
->>  		.owner = THIS_MODULE,
->> +		.of_match_table = ahci_of_match,
->>  	},
->>  };
->>  
+> ---
+>  include/linux/of.h |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 > 
-
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 736b747..92c40a1 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -303,6 +303,7 @@ static inline struct device_node *of_parse_phandle(struct device_node *np,
+>  }
+>  
+>  #define of_match_ptr(_ptr)	NULL
+> +#define of_match_node(_matches, _node)	NULL
+>  #endif /* CONFIG_OF */
+>  
+>  static inline int of_property_read_u32(const struct device_node *np,
+> -- 
+> 1.7.5.4
+> 
