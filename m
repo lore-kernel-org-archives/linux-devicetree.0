@@ -1,28 +1,61 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V3 2/2] ARM: at91: add at91sam9g20 and Calao USB A9G20
- DT support
-Date: Mon, 24 Oct 2011 09:49:01 -0500
-Message-ID: <4EA57ADD.6000608@gmail.com>
-References: <4E9F8226.4030503@gmail.com> <15ab652499e7f6f8a26724bfd90643a8f3f96ad9.1319464310.git.nicolas.ferre@atmel.com> <d139db89b4e9830e813abf1329ce1ac499653f2c.1319464310.git.nicolas.ferre@atmel.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
+ regulator_init_data
+Date: Mon, 24 Oct 2011 16:56:31 +0200
+Message-ID: <20111024145631.GB8708@ponder.secretlab.ca>
+References: <4E9FAF42.5060200@ti.com>
+ <20111020061408.GE32007@S2100-06.ap.freescale.net>
+ <4EA00F7C.1080005@ti.com>
+ <20111021082309.GA337@S2100-06.ap.freescale.net>
+ <20111024092411.GE8708@ponder.secretlab.ca>
+ <20111024130429.GD1755@S2100-06.ap.freescale.net>
+ <20111024130636.GB26033@opensource.wolfsonmicro.com>
+ <20111024134025.GE1755@S2100-06.ap.freescale.net>
+ <20111024135950.GV8708@ponder.secretlab.ca>
+ <20111024145139.GH1755@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d139db89b4e9830e813abf1329ce1ac499653f2c.1319464310.git.nicolas.ferre@atmel.com>
+Content-Disposition: inline
+In-Reply-To: <20111024145139.GH1755@S2100-06.ap.freescale.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, plagnioj@jcrosoft.com
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Rajendra Nayak <rnayak@ti.com>, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2011 09:05 AM, Nicolas Ferre wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
+On Mon, Oct 24, 2011 at 10:51:40PM +0800, Shawn Guo wrote:
+> On Mon, Oct 24, 2011 at 03:59:50PM +0200, Grant Likely wrote:
+> > On Mon, Oct 24, 2011 at 09:40:26PM +0800, Shawn Guo wrote:
+> > > diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+> > > index 8fe132d..29dcf90 100644
+> > > --- a/drivers/regulator/core.c
+> > > +++ b/drivers/regulator/core.c
+> > > @@ -2673,7 +2673,8 @@ struct regulator_dev *regulator_register(struct regulator_desc *regulator_desc,
+> > >         BLOCKING_INIT_NOTIFIER_HEAD(&rdev->notifier);
+> > > 
+> > >         /* find device_node and attach it */
+> > > -       rdev->dev.of_node = of_find_node_by_name(NULL, regulator_desc->name);
+> > > +       rdev->dev.of_node = of_find_node_by_name(dev->parent->of_node,
+> > > +                                                regulator_desc->name);
+> > 
+> > of_find_node_by_name() doesn't work that way.  The first argument is a
+> > starting point, but it doesn't restrict the search to children of a
+> > node.
+> > 
+> > for_each_child_of_node() is what you want to use when iterating over
+> > the children which unfortunately changes the structure of this
+> > function.
+> > 
+> The dev->parent->of_node is meant to point to node 'pmic: mc13892@0'.
+> And the intention here is not to iterate over the children, but to
+> start a search from a reasonable point rather than the top root node.
 
-Looks good.
+It is always better to attach the of_node at struct device
+registration time instead of searching the tree in common code.  The
+of_node should already be assigned by the time regulator_register() is
+called.  The caller should already have access to all that information
+before the call anyway, especially since it is not strictly manditory
+for all regulators to use the common binding.  It is entirely
+conceivable that the proposed binding won't work for some regulators.
 
-Reviewed-by: Rob Herring <rob.herring@calxeda.com>
-
-Rob
+g.
