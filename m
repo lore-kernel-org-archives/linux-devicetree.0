@@ -1,64 +1,94 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH V3 1/2] ARM: at91: dt: at91sam9g45 family and board
-	device tree files
-Date: Mon, 24 Oct 2011 16:12:54 +0200
-Message-ID: <20111024141253.GF26649@sapphire.tkos.co.il>
-References: <4E9F8226.4030503@gmail.com>
-	<15ab652499e7f6f8a26724bfd90643a8f3f96ad9.1319464310.git.nicolas.ferre@atmel.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] ahci: add DT binding for Calxeda AHCI controller
+Date: Mon, 24 Oct 2011 09:20:07 -0500
+Message-ID: <4EA57417.8060709@gmail.com>
+References: <1314976215-23902-1-git-send-email-robherring2@gmail.com> <4E8A6FB3.4090909@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <15ab652499e7f6f8a26724bfd90643a8f3f96ad9.1319464310.git.nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <4E8A6FB3.4090909@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Jeff Garzik <jgarzik@pobox.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+Jeff,
 
-On Mon, Oct 24, 2011 at 04:05:00PM +0200, Nicolas Ferre wrote:
-> Create a new device tree source file for Atmel at91sam9g45 SoC family.
-> The Evaluation Kit at91sam9m10g45ek includes it.
-> This first basic support will be populated as drivers and boards will be
-> converted to device tree.
-> Contains serial, dma and interrupt controllers.
+On 10/03/2011 09:30 PM, Rob Herring wrote:
+> On 09/02/2011 10:10 AM, Rob Herring wrote:
+>> From: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Add devicetree match table to ahci platform driver for Calxeda Highbank
+>> AHCI controller.
+>>
+>> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+>> Cc: Jeff Garzik <jgarzik@pobox.com>
+>> Cc: linux-ide@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: devicetree-discuss@lists.ozlabs.org
+>> ---
 > 
-> The generic board file still takes advantage of platform data for early serial
-> init. As we need a storage media and the NAND flash driver is not converted to
-> DT yet, we keep old initialization for it.
+> Any comments on this?
 > 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
 
-[snip]
+Ping.
 
-> +DT_MACHINE_START(at91sam9m10g45ek_dt, "Atmel AT91SAM (Device Tree)")
+Can you please apply this for 3.2.
 
-Since this is a generic AT91 machine descriptor, won't "at91sam_dt" be a more 
-appropriate name?
+Regards,
+Rob
 
-> +	/* Maintainer: Atmel */
-> +	.timer		= &at91sam926x_timer,
-> +	.map_io		= at91_map_io,
-> +	.init_early	= ek_init_early,
-> +	.init_irq	= at91_dt_init_irq,
-> +	.init_machine	= at91_dt_device_init,
-> +	.dt_compat	= at91_dt_board_compat,
-> +MACHINE_END
+>>  .../devicetree/bindings/ata/calxeda-sata.txt       |   17 +++++++++++++++++
+>>  drivers/ata/ahci_platform.c                        |    7 +++++++
+>>  2 files changed, 24 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/ata/calxeda-sata.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/ata/calxeda-sata.txt b/Documentation/devicetree/bindings/ata/calxeda-sata.txt
+>> new file mode 100644
+>> index 0000000..79caa56
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/ata/calxeda-sata.txt
+>> @@ -0,0 +1,17 @@
+>> +* Calxeda SATA Controller
+>> +
+>> +SATA nodes are defined to describe on-chip Serial ATA controllers.
+>> +Each SATA controller should have its own node.
+>> +
+>> +Required properties:
+>> +- compatible        : compatible list, contains "calxeda,hb-ahci"
+>> +- interrupts        : <interrupt mapping for SATA IRQ>
+>> +- reg               : <registers mapping>
+>> +
+>> +Example:
+>> +        sata@ffe08000 {
+>> +		compatible = "calxeda,hb-ahci";
+>> +                reg = <0xffe08000 0x1000>;
+>> +                interrupts = <115>;
+>> +        };
+>> +
+>> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+>> index 6fef1fa..9bfc970 100644
+>> --- a/drivers/ata/ahci_platform.c
+>> +++ b/drivers/ata/ahci_platform.c
+>> @@ -171,11 +171,18 @@ static int __devexit ahci_remove(struct platform_device *pdev)
+>>  	return 0;
+>>  }
+>>  
+>> +static const struct of_device_id ahci_of_match[] = {
+>> +	{ .compatible = "calxeda,hb-ahci", },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ahci_of_match);
+>> +
+>>  static struct platform_driver ahci_driver = {
+>>  	.remove = __devexit_p(ahci_remove),
+>>  	.driver = {
+>>  		.name = "ahci",
+>>  		.owner = THIS_MODULE,
+>> +		.of_match_table = ahci_of_match,
+>>  	},
+>>  };
+>>  
+> 
 
-baruch
-
--- 
-                                                     ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
