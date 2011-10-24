@@ -1,133 +1,212 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 9/9] serial: samsung: add device tree support
-Date: Mon, 24 Oct 2011 13:38:16 +0200
-Message-ID: <20111024113816.GJ8708@ponder.secretlab.ca>
-References: <1318241285-23568-1-git-send-email-thomas.abraham@linaro.org>
- <1318241285-23568-10-git-send-email-thomas.abraham@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 4/5] ARM: SPMP8000: Add SPMP8000 SoC and Letcool board
+	dts descriptions
+Date: Mon, 24 Oct 2011 07:47:09 -0500
+Message-ID: <4EA55E4D.3000106@gmail.com>
+References: <1318178172-7965-1-git-send-email-zoss@devai.org>
+	<1319040118-29773-1-git-send-email-zoss@devai.org>
+	<1319040118-29773-5-git-send-email-zoss@devai.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1318241285-23568-10-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alan@linux.intel.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1319040118-29773-5-git-send-email-zoss@devai.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zoltan Devai <zoss@devai.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 10, 2011 at 03:38:05PM +0530, Thomas Abraham wrote:
-> Add device tree based discovery support for Samsung's uart controller.
+On 10/19/2011 11:01 AM, Zoltan Devai wrote:
+> This adds the DT description of the SPMP8000 SoC, the Letcool
+> N350JP board and documentation of required bindings
 > 
-> Cc: Ben Dooks <ben-linux@fluff.org>
 > Cc: Grant Likely <grant.likely@secretlab.ca>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-
+> CC: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Zoltan Devai <zoss@devai.org>
 > ---
->  .../devicetree/bindings/serial/samsung_uart.txt    |   14 ++++++++
->  drivers/tty/serial/samsung.c                       |   36 ++++++++++++++++++-
->  2 files changed, 48 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.txt
+
+Only a couple of minor things below. Otherwise looks good.
+
+Acked-by: Rob Herring <rob.herring@calxeda.com>
+
+>  Documentation/devicetree/bindings/arm/spmp8000.txt |   25 +++++
+>  arch/arm/boot/dts/spmp8000-letcool.dts             |   20 ++++
+>  arch/arm/boot/dts/spmp8000.dtsi                    |   93 ++++++++++++++++++++
+>  3 files changed, 138 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/spmp8000.txt
+>  create mode 100644 arch/arm/boot/dts/spmp8000-letcool.dts
+>  create mode 100644 arch/arm/boot/dts/spmp8000.dtsi
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.txt b/Documentation/devicetree/bindings/serial/samsung_uart.txt
+> diff --git a/Documentation/devicetree/bindings/arm/spmp8000.txt b/Documentation/devicetree/bindings/arm/spmp8000.txt
 > new file mode 100644
-> index 0000000..2c8a17c
+> index 0000000..c392b09
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.txt
-> @@ -0,0 +1,14 @@
-> +* Samsung's UART Controller
+> +++ b/Documentation/devicetree/bindings/arm/spmp8000.txt
+> @@ -0,0 +1,25 @@
+> +Sunplus SPMP8000 device tree bindings
+> +=====================================
 > +
-> +The Samsung's UART controller is used for interfacing SoC with serial communicaion
-> +devices.
+> +Required root node properties:
+> +	- compatible:
+> +		- "gameware,letcool" : Letcool N350JO handheld game console board
+> +		- "sunplus,spmp8000" : A board based on the SPMP8000 SoC
 > +
-> +Required properties:
-> +- compatible: should be
-> +  - "samsung,exynos4210-uart", for UART's compatible with Exynos4210 uart ports.
+> +Timer required properties:
+> +	- compatible = "sunplus,spmp8000-timer"
+> +	- interrupt-parent : The interrupt controller node this timer belongs to
+> +	- interrupts : IRQs of the timer
+> +	- clock-freq : The frequency in HZ of the timer.
+
+"clock-frequency" is what is commonly used.
+
+> +	- reg : The register bank for the timer.
 > +
-> +- reg: base physical address of the controller and length of memory mapped
-> +  region.
+> +Watchdog required properties:
+> +	- compatible = "sunplus,spmp8000-watchdof"
+
+s/watchdof/watchdog/
+
+> +	- interrupt-parent : The interrupt controller node this timer belongs to
+> +	- interrupts : IRQs of the watchdog
+> +	- reg : The register bank for the watchdog controller
 > +
-> +- interrupts: interrupt number to the cpu. The interrupt specifier format depends
-> +  on the interrupt controller parent.
-> diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
-> index c89987b..efe3756 100644
-> --- a/drivers/tty/serial/samsung.c
-> +++ b/drivers/tty/serial/samsung.c
-> @@ -42,6 +42,7 @@
->  #include <linux/delay.h>
->  #include <linux/clk.h>
->  #include <linux/cpufreq.h>
-> +#include <linux/of.h>
->  
->  #include <asm/irq.h>
->  
-> @@ -1163,10 +1164,26 @@ static ssize_t s3c24xx_serial_show_clksrc(struct device *dev,
->  
->  static DEVICE_ATTR(clock_source, S_IRUGO, s3c24xx_serial_show_clksrc, NULL);
->  
+> +SCU required properties:
+> +	- compatible: "sunplus,spmp8000-scua" or "sunplus,spmp8000-scuab" or
+> +		      "sunplus,spmp8000-scuc"
+> +	- reg: The register bank of the System Control Unit
+> diff --git a/arch/arm/boot/dts/spmp8000-letcool.dts b/arch/arm/boot/dts/spmp8000-letcool.dts
+> new file mode 100644
+> index 0000000..424f2aa
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/spmp8000-letcool.dts
+> @@ -0,0 +1,20 @@
+> +/dts-v1/;
+> +/include/ "spmp8000.dtsi"
+> +/ {
+> +	model = "Letcool N350JP handheld game console";
+> +	compatible = "gameware,letcool", "sunplus,spmp8000";
 > +
->  /* Device driver serial port probe */
->  
-> +static const struct of_device_id s3c24xx_uart_dt_match[];
->  static int probe_index;
->  
-> +static inline struct s3c24xx_serial_drv_data *s3c24xx_get_driver_data(
-> +			struct platform_device *pdev)
-> +{
-> +#ifdef CONFIG_OF
-> +	if (pdev->dev.of_node) {
-> +		const struct of_device_id *match;
-> +		match = of_match_node(s3c24xx_uart_dt_match, pdev->dev.of_node);
-> +		return (struct s3c24xx_serial_drv_data *)match->data;
-> +	}
-> +#endif
-> +	return (struct s3c24xx_serial_drv_data *)
-> +			platform_get_device_id(pdev)->driver_data;
-> +}
+> +	memory {
+> +		reg = <0x00000000 0x02000000>;
+> +	};
 > +
->  static int s3c24xx_serial_probe(struct platform_device *pdev)
->  {
->  	struct s3c24xx_uart_port *ourport;
-> @@ -1176,8 +1193,11 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
->  
->  	ourport = &s3c24xx_serial_ports[probe_index];
->  
-> -	ourport->drv_data = (struct s3c24xx_serial_drv_data *)
-> -			platform_get_device_id(pdev)->driver_data;
-> +	ourport->drv_data = s3c24xx_get_driver_data(pdev);
-> +	if (!ourport->drv_data) {
-> +		dev_err(&pdev->dev, "could not find driver data\n");
-> +		return -ENODEV;
-> +	}
->  
->  	ourport->info = ourport->drv_data->info;
->  	ourport->cfg = (pdev->dev.platform_data) ?
-> @@ -1626,6 +1646,17 @@ static struct platform_device_id s3c24xx_serial_driver_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(platform, s3c24xx_serial_driver_ids);
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id s3c24xx_uart_dt_match[] = {
-> +	{ .compatible = "samsung,exynos4210-uart",
-> +		.data = &exynos4210_serial_drv_data },
-> +	{},
+> +	chosen {
+> +		linux,stdout-path = &uart0;
+> +	};
+> +
+> +	armapb {
+> +		timer@90000000 {
+> +			clock-freq = <15187500>;
+> +		};
+> +	};
 > +};
-> +MODULE_DEVICE_TABLE(of, s3c24xx_uart_dt_match);
-> +#else
-> +#define s3c24xx_uart_dt_match NULL
-> +#endif
+> diff --git a/arch/arm/boot/dts/spmp8000.dtsi b/arch/arm/boot/dts/spmp8000.dtsi
+> new file mode 100644
+> index 0000000..15b25fa
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/spmp8000.dtsi
+> @@ -0,0 +1,93 @@
+> +/ {
+> +	compatible = "sunplus,spmp8000";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
 > +
->  static struct platform_driver samsung_serial_driver = {
->  	.probe		= s3c24xx_serial_probe,
->  	.remove		= __devexit_p(s3c24xx_serial_remove),
-> @@ -1634,6 +1665,7 @@ static struct platform_driver samsung_serial_driver = {
->  		.name	= "samsung-uart",
->  		.owner	= THIS_MODULE,
->  		.pm	= SERIAL_SAMSUNG_PM_OPS,
-> +		.of_match_table	= s3c24xx_uart_dt_match,
->  	},
->  };
->  
-> -- 
-> 1.6.6.rc2
-> 
+> +	armapb {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x90000000 0x10000>;
+> +
+> +		timer@90000000 {
+> +			compatible = "sunplus,spmp8000-timer";
+> +			reg = <0x0 0x1000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <7 8 9>;
+> +		};
+> +
+> +		watchdog@90001000 {
+> +			compatible = "sunplus,spmp8000-wdt";
+> +			reg = <0x1000 0x1000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <10 11 12>;
+> +		};
+> +
+> +		scu-b@90005000 {
+> +			compatible = "sunplus,spmp8000-scub";
+> +			reg = <0x5000 0x1000>;
+> +		};
+> +	};
+> +
+> +	armahb {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x90010000 0x20000>;
+> +
+> +		vic0: interrupt-controller@90010000 {
+> +			compatible = "arm,pl192";
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +			reg = <0x0 0x1000>;
+> +		};
+> +
+> +		vic1: interrupt-controller@900020000 {
+> +			compatible = "arm,pl192";
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +			reg = <0x10000 0x1000>;
+> +		};
+> +	};
+> +
+> +	plat {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x92000000 0x1000000>;
+> +
+> +		scu-c@92005000 {
+> +			compatible = "sunplus,spmp8000-scuc";
+> +			reg = <0x5000 0x1000>;
+> +		};
+> +
+> +		plat-apb {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0xB00000 0x10000>;
+
+lower case for hex is preferred.
+
+> +
+> +			uart0: uart-c0@92B04000 {
+> +				compatible = "ns16550a";
+> +				reg = <0x4000 0x1000>;
+> +				clock-frequency = <2076923>;
+> +				interrupt-parent = <&vic1>;
+> +				interrupts = <24>;
+> +				current-speed = <115200>;
+> +				reg-shift = <2>;
+> +			};
+> +		};
+> +	};
+> +
+> +	axi {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x93000000 0x20000>;
+> +
+> +		scu-a@93007000 {
+> +			compatible = "sunplus,spmp8000-scua";
+> +			reg = <0x7000 0x1000>;
+> +		};
+> +	};
+> +};
