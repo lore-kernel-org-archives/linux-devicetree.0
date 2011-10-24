@@ -1,61 +1,44 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH 0/2] ARM: Samsung: Add basic device tree support for Exynos4
- boards
-Date: Mon, 24 Oct 2011 15:02:44 +0200
-Message-ID: <4EA561F4.5010606@samsung.com>
-References: <1318342396-26178-1-git-send-email-thomas.abraham@linaro.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
+ regulator_init_data
+Date: Mon, 24 Oct 2011 15:06:37 +0200
+Message-ID: <20111024130636.GB26033@opensource.wolfsonmicro.com>
+References: <1318263578-7407-4-git-send-email-rnayak@ti.com>
+ <20111018132032.GD30703@S2100-06.ap.freescale.net>
+ <4E9EB61C.1040207@ti.com>
+ <20111019144215.GA32007@S2100-06.ap.freescale.net>
+ <4E9FAF42.5060200@ti.com>
+ <20111020061408.GE32007@S2100-06.ap.freescale.net>
+ <4EA00F7C.1080005@ti.com>
+ <20111021082309.GA337@S2100-06.ap.freescale.net>
+ <20111024092411.GE8708@ponder.secretlab.ca>
+ <20111024130429.GD1755@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1318342396-26178-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, patches@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111024130429.GD1755@S2100-06.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rajendra Nayak <rnayak@ti.com>, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/11 16:13, Thomas Abraham wrote:
-> This patchset adds a new basic device tree enabled machine/board file which is
-> based on the Samsung's Exynos4 family of SoC's. Also included in this patchset is the
-> dts file for Exynos4210 SoC, Samsung's SMDKV310 board and Insignal's Origen board.
->
-> The Exynos4210 dts file includes support for IRQ, GPIO, WDT, RTC, UART, SDHCI, Keypad,
-> DMA and I2C controllers. As device tree coverage for Exynos4210 increases, additional
-> device nodes to represent the controllers should be added.
->
-> The device tree enabled machine file enables boot on two boards based on the
-> Exynos4210 SoC. This provides a starting point to add additional device tree support
-> on these boards, migrate other existing Exynos4 based boards to use device tree
-> and enable device tree based boot on new upcoming boards.
->
-> This patchset has been tested on the following tree:
->    https://github.com/kgene/linux-samsung.git   branch: for-next
->
-> Thomas Abraham (2):
->    ARM: Samsung: Add Exynos4 device tree enabled board file
->    ARM: dts: Add intial dts file for Exynos4210 SoC, SMDKV310 and Origen board
->
->   .../devicetree/bindings/arm/insignal-boards.txt    |    8 +
->   .../devicetree/bindings/arm/samsung-boards.txt     |    8 +
->   arch/arm/boot/dts/exynos4210-origen.dts            |  137 +++++++
->   arch/arm/boot/dts/exynos4210-smdkv310.dts          |  182 +++++++++
->   arch/arm/boot/dts/exynos4210.dtsi                  |  403 ++++++++++++++++++++
->   arch/arm/mach-exynos4/Kconfig                      |   14 +
->   arch/arm/mach-exynos4/Makefile                     |    2 +
->   arch/arm/mach-exynos4/mach-exynos4-dt.c            |   85 ++++
->   8 files changed, 839 insertions(+), 0 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/insignal-boards.txt
->   create mode 100644 Documentation/devicetree/bindings/arm/samsung-boards.txt
->   create mode 100644 arch/arm/boot/dts/exynos4210-origen.dts
->   create mode 100644 arch/arm/boot/dts/exynos4210-smdkv310.dts
->   create mode 100644 arch/arm/boot/dts/exynos4210.dtsi
->   create mode 100644 arch/arm/mach-exynos4/mach-exynos4-dt.c
+On Mon, Oct 24, 2011 at 09:04:31PM +0800, Shawn Guo wrote:
 
-Applied.
-Thanks.
+> If we can attach the device_node of 'regulators' node to dev->of_node
+> when calling regulator_register(regulator_desc, dev, ...) from
+> regulator driver, the regulator core will be able to find all nodes under
+> 'regulators' using for_each_child_of_node(dev->of_node, child).
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+Please provide concrete examples of the bindings you're talking about,
+the really important thing here is how sane the bindings look and I've
+really got no idea what any of what you're talking about will look like
+or if they make sense.
+
+> hesitate to hack this into mfd_add_devices(), so I would like to add
+> compatible string "fsl,mc13892-regulators" to node 'regulators' and
+> find the node using of_find_compatible_node(dev->parent, NULL,
+> "fsl,mc13892-regulators").
+
+It's not immediately obvious to me that having a binding for the
+regulators separately makes sense, it's not a usefully distinct device.
