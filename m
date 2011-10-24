@@ -1,53 +1,48 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] dt: Add empty of_match_node() macro
-Date: Mon, 24 Oct 2011 12:06:05 +0200
-Message-ID: <CACxGe6txWcZYvym411Xat0S8UJX=3MWwSLq-GPQn=ERwV00KjA@mail.gmail.com>
-References: <1319450012-13033-1-git-send-email-nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
+ regulator_init_data
+Date: Mon, 24 Oct 2011 13:35:37 +0200
+Message-ID: <20111024113537.GH8708@ponder.secretlab.ca>
+References: <20111020061408.GE32007@S2100-06.ap.freescale.net>
+ <4EA00F7C.1080005@ti.com>
+ <20111021082309.GA337@S2100-06.ap.freescale.net>
+ <4EA13053.7080306@ti.com>
+ <20111021115809.GB337@S2100-06.ap.freescale.net>
+ <4EA4FF6B.2080906@ti.com>
+ <20111024081706.GC8708@ponder.secretlab.ca>
+ <20111024090228.GA1755@S2100-06.ap.freescale.net>
+ <4EA52851.8000203@ti.com>
+ <20111024091158.GB1755@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1319450012-13033-1-git-send-email-nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111024091158.GB1755@S2100-06.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Rajendra Nayak <rnayak@ti.com>, broonie@opensource.wolfsonmicro.com, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2011 at 11:53 AM, Nicolas Ferre <nicolas.ferre@atmel.com> w=
-rote:
-> Add an empty macro for of_match_node() that will save
-> some '#ifdef CONFIG_OF' for non-dt builds.
->
-> I have chosen to use a macro instead of a function to
-> be able to avoid defining the first parameter.
-> In fact, this "struct of_device_id *" first parameter
-> is usualy not defined as well on non-dt builds.
->
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
-> =A0include/linux/of.h | =A0 =A01 +
-> =A01 files changed, 1 insertions(+), 0 deletions(-)
->
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 736b747..92c40a1 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -303,6 +303,7 @@ static inline struct device_node *of_parse_phandle(st=
-ruct device_node *np,
-> =A0}
->
-> =A0#define of_match_ptr(_ptr) =A0 =A0 NULL
-> +#define of_match_node(_matches, _node) NULL
+On Mon, Oct 24, 2011 at 05:11:58PM +0800, Shawn Guo wrote:
+> On Mon, Oct 24, 2011 at 02:26:49PM +0530, Rajendra Nayak wrote:
+> > On Monday 24 October 2011 02:32 PM, Shawn Guo wrote:
+> > >Okay, it's wrong then since so many people say it's wrong :)  I guess
+> > >a quick fix would be adding one property in device tree node for
+> > >matching some unique field in regulator_desc, id, maybe?  Mark, any
+> > >suggestion?
+> > 
+> > Thats basically what the DT compatible property is for :)
+> 
+> But adding compatible property will get DT core create 'struct dev'
+> for each regulator node, while we are trying to avoid that since
+> regulator core has been doing this.
 
-Where possible, I prefer to code to be written in C, not PP.  :-)
-static inline please.
+By design, of_platform_populate() will only go one level deep except
+if it matches the passed in list of bus compatible properties.  Having
+a compatible property does not necessarily create a struct dev.
+
+That said, I agree with you that a compatible property isn't really
+needed in the child nodes **if it is defined as part of the parent
+node's binding**.
 
 g.
