@@ -1,64 +1,137 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
-	regulator_init_data
-Date: Mon, 24 Oct 2011 22:47:17 +0800
-Message-ID: <20111024144716.GG1755@S2100-06.ap.freescale.net>
-References: <20111019144215.GA32007@S2100-06.ap.freescale.net>
-	<4E9FAF42.5060200@ti.com>
-	<20111020061408.GE32007@S2100-06.ap.freescale.net>
-	<4EA00F7C.1080005@ti.com>
-	<20111021082309.GA337@S2100-06.ap.freescale.net>
-	<20111024092411.GE8708@ponder.secretlab.ca>
-	<20111024130429.GD1755@S2100-06.ap.freescale.net>
-	<20111024130636.GB26033@opensource.wolfsonmicro.com>
-	<20111024134025.GE1755@S2100-06.ap.freescale.net>
-	<20111024134930.GD26033@opensource.wolfsonmicro.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2] AT91: dt: at91sam9g45 family and board device tree
+ files
+Date: Mon, 24 Oct 2011 16:42:39 +0200
+Message-ID: <4EA5795F.7090101@atmel.com>
+References: <1317636056-9537-1-git-send-email-nicolas.ferre@atmel.com>
+ <4E8C54DC.6040700@gmail.com> <4E8EF6F4.4030905@atmel.com>
+ <4E9D4FD5.8080802@atmel.com> <20111024143451.GA8708@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20111024134930.GD26033@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Rajendra Nayak <rnayak@ti.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111024143451.GA8708-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2011 at 03:49:30PM +0200, Mark Brown wrote:
-> On Mon, Oct 24, 2011 at 09:40:26PM +0800, Shawn Guo wrote:
+On 10/24/2011 04:34 PM, Grant Likely :
+> On Tue, Oct 18, 2011 at 12:07:17PM +0200, Nicolas Ferre wrote:
+>> On 10/07/2011 02:56 PM, Nicolas Ferre :
+>>> On 10/05/2011 03:00 PM, Rob Herring :
+>>>> Nicolas,
+>>>>
+>>>> On 10/03/2011 05:00 AM, Nicolas Ferre wrote:
+>>>>> Create a new device tree source file for Atmel at91sam9g45 SoC family.
+>>>>> The Evaluation Kit at91sam9m10g45ek includes it.
+>>>>> This first basic support will be populated as drivers and boards will be
+>>>>> converted to device tree.
+>>>>> Contains serial, dma and interrupt controllers.
+>>>>>
+>>>>> The generic board file still takes advantage of platform data for early serial
+>>>>> init. As we need a storage media and the NAND flash driver is not converted to
+>>>>> DT yet, we keep old initialization for it.
+>>>>>
+>>>>> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>
+>> [..]
+>>
+>>>>> diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
+>>>>> new file mode 100644
+>>>>> index 0000000..7bcb9a9
+>>>>> --- /dev/null
+>>>>> +++ b/arch/arm/mach-at91/board-dt.c
+>>>>> @@ -0,0 +1,122 @@
+>>>>> +/*
+>>>>> + *  Setup code for AT91SAM Evaluation Kits with Device Tree support
+>>>>> + *
+>>>>> + *  Covers: * AT91SAM9G45-EKES  board
+>>>>> + *          * AT91SAM9M10-EKES  board
+>>>>> + *          * AT91SAM9M10G45-EK board
+>>>>> + *
+>>>>> + *  Copyright (C) 2011 Atmel,
+>>>>> + *                2011 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>>> + *
+>>>>> + * Licensed under GPLv2 or later.
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/types.h>
+>>>>> +#include <linux/init.h>
+>>>>> +#include <linux/module.h>
+>>>>> +#include <linux/irqdomain.h>
+>>>>> +#include <linux/of_irq.h>
+>>>>> +#include <linux/of_platform.h>
+>>>>> +
+>>>>> +#include <mach/hardware.h>
+>>>>> +#include <mach/board.h>
+>>>>> +#include <mach/gpio.h>
+>>>>> +#include <mach/system_rev.h>
+>>>>> +#include <mach/at91sam9_smc.h>
+>>>>> +
+>>>>> +#include <asm/setup.h>
+>>>>> +#include <asm/irq.h>
+>>>>> +#include <asm/mach/arch.h>
+>>>>> +#include <asm/mach/map.h>
+>>>>> +#include <asm/mach/irq.h>
+>>>>> +
+>>>>> +#include "sam9_smc.h"
+>>>>> +#include "generic.h"
+>>
+>> As found by Jean-Christophe, it seems that some clock lookup data are missing here. Something like:
+>>
+>> +/*
+>> + * Lookup table for attaching a specific name and platform_data pointer to
+>> + * devices as they get created by of_platform_populate(). Ideally this table
+>> + * would not exist, but the current clock implementation depends on some devices
+>> + * having a specific name.
+>> + /
+>> +static const struct of_dev_auxdata at91_auxdata_lookup[] __initconst = {
+>> + / at91sam9260/ at91sam9g20 /
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffff200, "atmel_usart.0", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb0000, "atmel_usart.1", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb4000, "atmel_usart.2", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffb8000, "atmel_usart.3", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd0000, "atmel_usart.4", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd4000, "atmel_usart.5", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfffd8000, "atmel_usart.6", NULL),
+>> + / at91sam9g45*/
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xffffee00, "atmel_usart.0", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff8c000, "atmel_usart.1", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff90000, "atmel_usart.2", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff94000, "atmel_usart.3", NULL),
+>> + OF_DEV_AUXDATA("atmel,at91sam9260-usart", 0xfff98000, "atmel_usart.4", NULL),
+>> + { /* sentinel */ }
+>> +};
+>>
+>> With a change here:
+>>   of_platform_populate(NULL, of_default_bus_match_table, at91_auxdata_lookup, NULL);
+>>
+>> I know that it is a temporary usage of auxdata. Does it sound the right thing to do for the moment?
 > 
-> > +++ b/drivers/regulator/core.c
-> > @@ -2673,7 +2673,8 @@ struct regulator_dev *regulator_register(struct regulator_desc *regulator_desc,
-> >         BLOCKING_INIT_NOTIFIER_HEAD(&rdev->notifier);
-> > 
-> >         /* find device_node and attach it */
-> > -       rdev->dev.of_node = of_find_node_by_name(NULL, regulator_desc->name);
-> > +       rdev->dev.of_node = of_find_node_by_name(dev->parent->of_node,
-> > +                                                regulator_desc->name);
-> > 
-> 
-> Is that going to do the right thing if you've got a MFD which does
-> register each regulator as a separate device?
+> yes.
 
-Based on my understanding, 1:1 is just a special case of N:1.  I
-failed to see any problem having it work with registering each
-regulator as a separate device.
+Grant,
 
-> Might be best to just
-> search within dev and get drivers to pass the "real" device in when
-> registering the regulator rather than the virtual device.
-> 
-It should also work, but it will also change the API slightly for
-non-dt users.  I'm not sure it's something we want.
+It seems that Rob has had another idea. He advices me (on a Oct. 20th
+email) that I should add some clock lookup entries.
+That is what I did in a couple of patches that I have just sent some
+minutes ago... I tend to like the clock lookup adding more as it prevent
+the adding of big amount of code into the board-dt.c file.
 
+What is the preferred option? Are you fine with patches that I have just
+sent?
+
+Thanks,
+
+Best regards,
 -- 
-Regards,
-Shawn
+Nicolas Ferre
