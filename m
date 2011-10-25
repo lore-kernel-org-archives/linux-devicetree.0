@@ -1,50 +1,40 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH] arm/tegra: Don't create duplicate gpio and pinmux
- devices
-Date: Mon, 24 Oct 2011 20:45:01 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173E1B416D@HQMAIL01.nvidia.com>
-References: <1319218550-26002-1-git-send-email-swarren@nvidia.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
+Date: Tue, 25 Oct 2011 06:49:27 +0200
+Message-ID: <20111025044927.GA798@ponder.secretlab.ca>
+References: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
+ <20111024221916.GF4394@ponder.secretlab.ca>
+ <4EA5ED35.7000806@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1319218550-26002-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4EA5ED35.7000806@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote at Friday, October 21, 2011 11:36 AM:
-...
-> To avoid this duplicate registration, pass a parameter into *_pinmux_init()
-> indicating whether they should register the device or not. Set this true
-> for non-DT boards, and false otherwise.
+On Tue, Oct 25, 2011 at 12:56:53AM +0200, Cousson, Benoit wrote:
+> On 10/25/2011 12:19 AM, Grant Likely wrote:
+> >In general, I'm inclined to accept this patch as we talked about at
+> >plumbers.  However, this particular hunk gives me pause as there is
+> >still the objection that Russell raised about the (ab)use of r->name
+> >for insert the resource name.
+> >
+> >So, no I won't reject this patch, but I first what to have some idea
+> >of what the plan is to migrate away from using r->name.  Perhaps we
+> >can talk about this tomorrow.
+> 
+> OK, sure, let's discuss about that.
+> But I still think that Russell's concern is not related at all with
+> this patch. That means that it should be fixed separately if needed.
+> It can be done before or after, but this is somehow orthogonal to
+> the DT reg-names support problem.
 
-Olof,
+Right, but this patch does add more infrastructure code manuipulating
+that field, so I'd like to have a plan for fixing the problem before
+committing this.
 
-You'd asked if the same effect could be achieved simply setting up AUXDATA
-entries so the DT and non-DT devices end up getting named the same, and
-thus avoiding the duplicate registrations.
+g.
 
-The answer is: this sort-of works, but apparently only by accident:
-
-The static registration/probe through board-*-pinmux.c works as expected.
-
-Then, when instantiating devs from DT, the AUXDATA /only/ sets the dev
-name of the devs (and pdata if AUXDATA specificed it), but doesn't do
-anything more; an attempt to register the dev from DT is still made, even
-though a dev was already registered with that name. The first check that
-catches this is a failure to create a sysfs entry for the dev, since the
-name is the same. This is a WARN, or something with a very noisy backtrace.
-
-That doesn't seem ideal; I think on balance I'd rather go with the original
-patch. Hacking the DT code to check for already-existing names might be
-an option, but since it's a temporary measure, I think hiding this in Tegra
-code is better? Finally, for the upcoming T30 support, we really do want to
-probe the pinmux from DT rather than ignoring the instantiation from DT, so
-that the dev's OF node is available, and the driver can use a of_device_id
-table to know which SoC version's data tables to use.
-
--- 
-nvpublic
