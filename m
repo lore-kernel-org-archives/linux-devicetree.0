@@ -1,78 +1,31 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
-	regulator_init_data
-Date: Tue, 25 Oct 2011 15:42:46 +0800
-Message-ID: <20111025074245.GH2119@S2100-06.ap.freescale.net>
-References: <20111024090228.GA1755@S2100-06.ap.freescale.net>
-	<4EA52851.8000203@ti.com>
-	<20111024091158.GB1755@S2100-06.ap.freescale.net>
-	<4EA52C56.3080908@ti.com>
-	<20111024134727.GF1755@S2100-06.ap.freescale.net>
-	<4EA65073.7050205@ti.com>
-	<20111025065216.GD2119@S2100-06.ap.freescale.net>
-	<4EA65D81.6030109@ti.com>
-	<20111025072003.GF2119@S2100-06.ap.freescale.net>
-	<4EA661B3.6010006@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
+Date: Tue, 25 Oct 2011 10:26:33 +0200
+Message-ID: <20111025082632.GJ4429@atomide.com>
+References: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4EA661B3.6010006@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2011 at 12:43:55PM +0530, Rajendra Nayak wrote:
-> On Tuesday 25 October 2011 12:50 PM, Shawn Guo wrote:
-> >On Tue, Oct 25, 2011 at 12:26:01PM +0530, Rajendra Nayak wrote:
-> >>On Tuesday 25 October 2011 12:22 PM, Shawn Guo wrote:
-> >>>On Tue, Oct 25, 2011 at 11:30:19AM +0530, Rajendra Nayak wrote:
-> >[...]
-> >>>>Thats what we did for OMAP, and hence we always have the of_node
-> >>>>populated when the regulator devices are probed.
-> >>>>See this patch from Benoit on how thats done for twl devices..
-> >>>>http://marc.info/?l=linux-omap&m=131489864814428&w=2
-> >>>>
-> >>>OMAP is "Case 1", and we are talking about "Case 2".
-> >>
-> >>I don't see why it wouldn't work for "Case 2".
-> >
-> >I did not say it wouldn't work for "Case 2".  I meant they work in
-> >different way.
-> >
-> >>The only difference
-> >>is in case of "Case 1", the dev->of_node would already point to
-> >>the right regulator node, like 'reg1', 'reg2' above.
-> >>In case of "Case 2", the dev->of_node would point to the 'regulators'
-> >>node instead, and the driver could then do a for_each_child_of_node()
-> >>to iterate over all its children to get 'reg1', 'reg2' etc.
-> >>
-> >Yes, that's the difference.  So you will need to distinguish these
-> >two cases in regulator_register()?  How?
-> 
-> You don't need to distinguish these cases in regulator_register().
-> The driver knows if its handling "Case 1" devices or "Case 2" devices
-> and it needs to handle things accordingly and pass the right of_node
-> which regulator_register() can then attach to regulator_dev->dev.
-> 
-Ah, you are thinking about (for Case 2) calling for_each_child_of_node()
-in regulator driver and passing the of_node found for each regulator to
-regulator core as a new parameter of regulator_register().  Yes, that
-would work, though my thought is to put the device_node discovery in
-regulator core and hide it from regulator driver.
+* Benoit Cousson <b-cousson@ti.com> [111024 17:20]:
+> +		compatible = "ti,mcasp";
+> +		reg = <0 0x10 0x10>, <0 0x20 0x10>,
+> +		      <1 0x10 0x10>, <1 0x20 0x10>;
+> +		reg-names = "mpu", "dat",
+> +			    "dma", "dma_dat";
 
-Okay, I'm good with this solution.  Grant, Mark, what about you?
+Hmm for some systems looks like this can also solve how to pass the
+mux signal names cleanly from DT.
 
--- 
-Regards,
-Shawn
+For some systems we may also need reg-bits in addition to reg-names
+to describe the signal names. Or do we already have something for
+that?
+
+Tony
+
