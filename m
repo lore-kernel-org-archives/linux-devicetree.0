@@ -1,60 +1,50 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: dec behavior question
-Date: Tue, 25 Oct 2011 10:15:29 +1100
-Message-ID: <20111024231529.GE4191@truffala.fritz.box>
-References: <9942C069-D8EC-4133-B436-1DC5F62C502E@kernel.crashing.org>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH] arm/tegra: Don't create duplicate gpio and pinmux
+ devices
+Date: Mon, 24 Oct 2011 20:45:01 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173E1B416D@HQMAIL01.nvidia.com>
+References: <1319218550-26002-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <9942C069-D8EC-4133-B436-1DC5F62C502E-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1319218550-26002-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 24, 2011 at 09:01:49AM -0500, Kumar Gala wrote:
-> If I have something like:
-> 
-> ---------------------------------------
-> spi.dtsi:
-> 
-> &spi0 {
->         #address-cells = <1>;
->         #size-cells = <0>;
->         compatible = "fsl,mpc8536-espi";
->         reg = <0x7000 0x1000>;
->         interrupts = <59 0x2 0 0>;
-> };
-> ---------------------------------------
-> 
-> foo.dts:
-> 
-> spi0: spi@f00bar {
-> 	compatible = "FOOBAR";
-> };
-> 
-> /include/ "spi.dtsi"
-> 
-> ---------------------------------------
-> 
-> What do you expect the resulting dtb to look like w/regards to the
-> compatible node?
+Stephen Warren wrote at Friday, October 21, 2011 11:36 AM:
+...
+> To avoid this duplicate registration, pass a parameter into *_pinmux_init()
+> indicating whether they should register the device or not. Set this true
+> for non-DT boards, and false otherwise.
 
-It's always last tree wins.  So it will end up with compatible =
-"FOOBAR".
+Olof,
+
+You'd asked if the same effect could be achieved simply setting up AUXDATA
+entries so the DT and non-DT devices end up getting named the same, and
+thus avoiding the duplicate registrations.
+
+The answer is: this sort-of works, but apparently only by accident:
+
+The static registration/probe through board-*-pinmux.c works as expected.
+
+Then, when instantiating devs from DT, the AUXDATA /only/ sets the dev
+name of the devs (and pdata if AUXDATA specificed it), but doesn't do
+anything more; an attempt to register the dev from DT is still made, even
+though a dev was already registered with that name. The first check that
+catches this is a failure to create a sysfs entry for the dev, since the
+name is the same. This is a WARN, or something with a very noisy backtrace.
+
+That doesn't seem ideal; I think on balance I'd rather go with the original
+patch. Hacking the DT code to check for already-existing names might be
+an option, but since it's a temporary measure, I think hiding this in Tegra
+code is better? Finally, for the upcoming T30 support, we really do want to
+probe the pinmux from DT rather than ignoring the instantiation from DT, so
+that the dev's OF node is available, and the driver can use a of_device_id
+table to know which SoC version's data tables to use.
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+nvpublic
