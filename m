@@ -1,52 +1,139 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm/dt: tegra: add dts file for paz00
-Date: Tue, 25 Oct 2011 14:51:40 -0500
-Message-ID: <4EA7134C.3050102@gmail.com>
-References: <cover.1319313019.git.marvin24@gmx.de> <90ee88bcde84141e0280ffa4ccbd288462489eba.1319313020.git.marvin24@gmx.de> <74CDBE0F657A3D45AFBB94109FB122FF173E1B4189@HQMAIL01.nvidia.com>
+From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] fdtdump: rename from ftdump
+Date: Tue, 25 Oct 2011 17:29:24 -0400
+Message-ID: <1319578164-30823-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF173E1B4189-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2011 12:16 AM, Stephen Warren wrote:
-> Marc Dietrich wrote at Saturday, October 22, 2011 2:17 PM:
->> * NOT FOR COMMIT *
->>
->> This just adds the dts for paz00. I like to add it to board-dt as
->> well as soon as I find out which tree to base it on.
-> ...
->> +++ b/arch/arm/boot/dts/tegra-paz00.dts
-> 
-> One thing that cross my mind when writing the TrimSlice support and I
-> forgot to mention: Should these files be named ${soc}-${board}.dts or
-> ${vendor}-${board}.dts (tegra-paz00.dts or toshiba-paz00.dts or
-> compal-paz00.dts). I'm OK either way; just want to follow any outside
-> expectations.
-> 
->> @@ -0,0 +1,51 @@
->> +/dts-v1/;
->> +
->> +/memreserve/ 0x1c000000 0x04000000;
->> +/include/ "tegra20.dtsi"
->> +
->> +/ {
->> +	model = "Toshiba AC100 / Dynabook AZ";
->> +	compatible = "compal,paz00", "nvidia,tegra20";
->> +
->> +	chosen {
->> +		bootargs = "console=ttyS0,115200n8 root=/dev/mmcblk1p1";
->> +	};
->> +
->> +	memory@0 {
-> 
-> The other boards just have "memory" here; which is wrong?
-> 
+The freetype package already installs a binary named "ftdump", so the dtc
+package conflicts with that.  So rename the newer dtc tool to "fdtdump".
+This even makes a bit more sense:
+	ftdump: [F]lat device [T]ree [dump]
+	fdtdump: [F]lat [D]evice [T]ree [dump]
 
-Both... I believe it should be "memory@<base address>".
+Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+---
+ .gitignore               |    2 +-
+ Documentation/manual.txt |   10 +++++-----
+ Makefile                 |    6 +++---
+ Makefile.utils           |    6 +++---
+ ftdump.c => fdtdump.c    |    2 +-
+ 5 files changed, 13 insertions(+), 13 deletions(-)
+ rename ftdump.c => fdtdump.c (97%)
 
-Rob
+diff --git a/.gitignore b/.gitignore
+index ae7a46a..74714cd 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,6 +7,6 @@
+ lex.yy.c
+ *.lex.c
+ /dtc
+-/ftdump
++/fdtdump
+ /convert-dtsv0
+ /version_gen.h
+diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+index f8a8a7b..14508f3 100644
+--- a/Documentation/manual.txt
++++ b/Documentation/manual.txt
+@@ -21,7 +21,7 @@ III - libfdt
+ 
+ IV - Utility Tools
+     1) convert-dtsv0 -- Conversion to Version 1
+-    1) ftdump
++    1) fdtdump
+ 
+ 
+ I - "dtc", the device tree compiler
+@@ -643,10 +643,10 @@ a new file with a "v1" appended the filename.
+ Comments, empty lines, etc. are preserved.
+ 
+ 
+-2) ftdump -- Flat Tree dumping utility
++2) fdtdump -- Flat Device Tree dumping utility
+ 
+-The ftdump program prints a readable version of a flat device tree file.
++The fdtdump program prints a readable version of a flat device tree file.
+ 
+-The syntax of the ftdump command line is:
++The syntax of the fdtdump command line is:
+ 
+-    ftdump <DTB-file-name>
++    fdtdump <DTB-file-name>
+diff --git a/Makefile b/Makefile
+index b32409b..4582f5d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -109,7 +109,7 @@ include Makefile.utils
+ 
+ BIN += convert-dtsv0
+ BIN += dtc
+-BIN += ftdump
++BIN += fdtdump
+ 
+ SCRIPTS = dtdiff
+ 
+@@ -119,7 +119,7 @@ all: $(BIN) libfdt
+ ifneq ($(DEPTARGETS),)
+ -include $(DTC_OBJS:%.o=%.d)
+ -include $(CONVERT_OBJS:%.o=%.d)
+--include $(FTDUMP_OBJS:%.o=%.d)
++-include $(FDTDUMP_OBJS:%.o=%.d)
+ endif
+ 
+ 
+@@ -178,7 +178,7 @@ convert-dtsv0: $(CONVERT_OBJS)
+ 	@$(VECHO) LD $@
+ 	$(LINK.c) -o $@ $^
+ 
+-ftdump:	$(FTDUMP_OBJS)
++fdtdump:	$(FDTDUMP_OBJS)
+ 
+ 
+ #
+diff --git a/Makefile.utils b/Makefile.utils
+index 0ed9297..fae5b00 100644
+--- a/Makefile.utils
++++ b/Makefile.utils
+@@ -3,8 +3,8 @@
+ # be easily embeddable into other systems of Makefiles.
+ #
+ 
+-FTDUMP_SRCS = \
+-	ftdump.c \
++FDTDUMP_SRCS = \
++	fdtdump.c \
+ 	util.c
+ 
+-FTDUMP_OBJS = $(FTDUMP_SRCS:%.c=%.o)
++FDTDUMP_OBJS = $(FDTDUMP_SRCS:%.c=%.o)
+diff --git a/ftdump.c b/fdtdump.c
+similarity index 97%
+rename from ftdump.c
+rename to fdtdump.c
+index cc55fe2..207a46d 100644
+--- a/ftdump.c
++++ b/fdtdump.c
+@@ -1,5 +1,5 @@
+ /*
+- * ftdump.c - Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
++ * fdtdump.c - Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
+  */
+ 
+ #include <stdint.h>
+-- 
+1.7.6.1
