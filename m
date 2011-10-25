@@ -1,65 +1,80 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
-Date: Tue, 25 Oct 2011 18:10:48 +0200
-Message-ID: <4EA6DF88.2080704@ti.com>
-References: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
-	<20111025082632.GJ4429@atomide.com>
-	<440786C5-FA1C-4750-9990-0BA5AABC2190@kernel.crashing.org>
-	<4EA6BC54.7030007@ti.com>
-	<BC60AF8F-C329-44B9-BEC9-EA5821725E1B@kernel.crashing.org>
+From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm/dt: tegra: add dts file for paz00
+Date: Tue, 25 Oct 2011 21:05:08 +0200
+Message-ID: <2821699.TeokzqUUds@ax5200p>
+References: <cover.1319313019.git.marvin24@gmx.de> <90ee88bcde84141e0280ffa4ccbd288462489eba.1319313020.git.marvin24@gmx.de> <74CDBE0F657A3D45AFBB94109FB122FF173E1B4189@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <BC60AF8F-C329-44B9-BEC9-EA5821725E1B@kernel.crashing.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF173E1B4189-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2011 4:17 PM, Segher Boessenkool wrote:
->>> What problem does any of this solve?  The device binding for the
->>> "mcasp" device will have to describe the possible "reg-names", and
->>> what those mean; but the binding already has to describe its "reg"
->>> property anyway.
->>
->> What this solve is the ability to use the
->> platform_get_resource_byname directly to retrieve the proper
->> register base address.
->
-> You do not have to put it in the device tree for that, the device
-> driver can implement this itself if it cares.
+On Monday 24 October 2011 22:16:15 Stephen Warren wrote:
+> Marc Dietrich wrote at Saturday, October 22, 2011 2:17 PM:
+> > * NOT FOR COMMIT *
+> > 
+> > This just adds the dts for paz00. I like to add it to board-dt as
+> > well as soon as I find out which tree to base it on.
+> 
+> ...
+> 
+> > +++ b/arch/arm/boot/dts/tegra-paz00.dts
+> 
+> One thing that cross my mind when writing the TrimSlice support and I
+> forgot to mention: Should these files be named ${soc}-${board}.dts or
+> ${vendor}-${board}.dts (tegra-paz00.dts or toshiba-paz00.dts or
+> compal-paz00.dts). I'm OK either way; just want to follow any outside
+> expectations.
 
-???
+I also don't know. I prefer compal for paz00 because Toshiba's code name was 
+procyon (I think) and I don't want to change all the naming. Also Toshiba 
+showed no interest in helping us, so I don't see why they should get the fame.
 
-The driver is the user of that name, so it has to be populated before 
-into the resource during device creation.
+> > @@ -0,0 +1,51 @@
+> > +/dts-v1/;
+> > +
+> > +/memreserve/ 0x1c000000 0x04000000;
+> > +/include/ "tegra20.dtsi"
+> > +
+> > +/ {
+> > +	model = "Toshiba AC100 / Dynabook AZ";
+> > +	compatible = "compal,paz00", "nvidia,tegra20";
+> > +
+> > +	chosen {
+> > +		bootargs = "console=ttyS0,115200n8 root=/dev/mmcblk1p1";
+> > +	};
+> > +
+> > +	memory@0 {
+> 
+> The other boards just have "memory" here; which is wrong?
 
->> The binding is just a text description that the driver will not be
->> able to use directly. It will have to get the resource using an
->> abstract index.
->
-> Your reg-names are abstract identifiers just as well.
+I just copy-pasted from harmony, I guess it doesn't matter.
 
-This is the name used in the HW documentation.
-Ordering them to get a number is purely arbitrary. That's why using the 
-name will allow the driver to get the resource the way it is represented 
-in the documentation and thus avoid some intermediate number.
+> 
+> ...
+> 
+> > +	i2c@7000c500 {
+> > +		clock-frequency = <80000>;
+> 
+> That's a pretty odd I2C frequency...
 
->> It thus removes a level of indirection that is error prone and
->> useless most of the time.
->
-> It *adds* a level of indirection.  I doubt it helps prevent errors
-> either, but who knows.
+no, 80000 is even ;-) Seriously, it just reflects the fact that the embedded 
+controller bus runs at 80kHz. Even more seriously, reading "booting-without-
+of.txt" in the Documentation/devicetree dir,
 
-Well, if that does not bring anything to you, you can just not use it.
+      | o PowerPC,970@0
+      |   |- name = "PowerPC,970"
+      |   |- device_type = "cpu"
+      |   |- reg = <0>
+      |   |- clock-frequency = <5f5e1000>
+      |   |- 64-bit
+      |   |- linux,phandle = <2>
 
-Benoit
+ it looks like all clock-frequency values are hexadecimal. In this case even 
+<400000> would be wrong (or the docu is --- ok, the docu is wrong).
+
+Marc
