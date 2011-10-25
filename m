@@ -1,14 +1,20 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: libfdt queries
-Date: Tue, 25 Oct 2011 17:47:23 +1100
-Message-ID: <20111025064723.GA5513@truffala.fritz.box>
-References: <4EA6501B.3030907@nvidia.com>
+From: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
+ regulator_init_data
+Date: Tue, 25 Oct 2011 12:26:01 +0530
+Message-ID: <4EA65D81.6030109@ti.com>
+References: <4EA13053.7080306@ti.com>
+ <20111021115809.GB337@S2100-06.ap.freescale.net> <4EA4FF6B.2080906@ti.com>
+ <20111024081706.GC8708@ponder.secretlab.ca>
+ <20111024090228.GA1755@S2100-06.ap.freescale.net> <4EA52851.8000203@ti.com>
+ <20111024091158.GB1755@S2100-06.ap.freescale.net> <4EA52C56.3080908@ti.com>
+ <20111024134727.GF1755@S2100-06.ap.freescale.net> <4EA65073.7050205@ti.com>
+ <20111025065216.GD2119@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4EA6501B.3030907-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20111025065216.GD2119-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,57 +24,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2011 at 11:28:51AM +0530, Varun Wadekar wrote:
-> Hi,
-> 
-> I am using libfdt v1.3.0 for modifying the dtb file from the bootloader
-> (not U-Boot). I have a .dtb file whose bootargs have to be modified
-> before passing over to the kernel. This is the sequence that I am following:
-> 
-> <snip>
-> 
-> newlen = fdt_totalsize(blob) + 512;
-> fdt_open_into(blob, blob, newlen)
-> 
-> node = fdt_path_offset(blob, "/chosen");
-> if (node < 0)
->     <error handling code>
-> 
-> fdt_setprop_string(blob, node, "bootargs", cmdline)
-> 
-> <snip>
-> 
-> Now with the above code the serial console on my board does not come up
-> with the default bootargs that are present in the .dts file. If I
-> manipulate the bootargs string in the .dts file with some additional
-> garbage characters and then run the above code then I see that the
-> serial console comes up. I suspect that the dtb is not getting updated
-> properly with the above apis.
+On Tuesday 25 October 2011 12:22 PM, Shawn Guo wrote:
+> On Tue, Oct 25, 2011 at 11:30:19AM +0530, Rajendra Nayak wrote:
+>> On Monday 24 October 2011 07:17 PM, Shawn Guo wrote:
+>>> On Mon, Oct 24, 2011 at 02:43:58PM +0530, Rajendra Nayak wrote:
+>>>> Case 2:
+>>>> One device for all regulators:
+>>>>
+>>>> DT nodes look something like this
+>>>>
+>>>> regulators {
+>>>> 	reg1: reg@1 {
+>>>> 			...
+>>>> 			...
+>>>> 	};
+>>>>
+>>>> 	reg2: reg@2 {
+>>>> 			...
+>>>> 			...
+>>>> 	};
+>>>> };
+>>>>
+>>>> The regulator driver probes only one device and the dev->of_node
+>>>> points to the "regulators" node above.
+>>>
+>>> The mc13892 example I put in the reply to Grant demonstrates that
+>>> for some case, dev->of_node is NULL (devices are created by mfd core).
+>>
+>> In that case should you not be first converting the mfd driver to
+>> register regulator devices using DT?
+>
+> The mc13892 mfd driver calls mfd_add_devices() to add device for
+> mc13892 regulator driver.  Are you suggesting that I should hack
+> mfd_add_devices() to have device_node of 'regulators' attached?
+> The mfd is not a bus like i2c and spi, so I'm not sure this is the
+> right thing to do.
+>
+>> Thats what we did for OMAP, and hence we always have the of_node
+>> populated when the regulator devices are probed.
+>> See this patch from Benoit on how thats done for twl devices..
+>> http://marc.info/?l=linux-omap&m=131489864814428&w=2
+>>
+> OMAP is "Case 1", and we are talking about "Case 2".
 
-That seems a bit unlikely, but maybe.  Is there any way you can dump
-out the dtb after processing by your bootloader?
+I don't see why it wouldn't work for "Case 2". The only difference
+is in case of "Case 1", the dev->of_node would already point to
+the right regulator node, like 'reg1', 'reg2' above.
+In case of "Case 2", the dev->of_node would point to the 'regulators'
+node instead, and the driver could then do a for_each_child_of_node()
+to iterate over all its children to get 'reg1', 'reg2' etc.
 
-> Somehow the dtb contents are getting
-> overwritten and the serial console info is getting overwritten I think.
-> 
-> If I add a partial command line to my dts, then modifying the bootargs
-> from fastboot does not corrupt the dtb file and I can see the kernel
-> console come up.
-> 
-> Any pointers or ideas where I might have screwed up?
-
-First thing would be to check if fdt_setprop_string() is returning an
-error code.
-
-Also, is that the only dtb manipulation you do, or do you make other
-changes to the dtb?
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+>
