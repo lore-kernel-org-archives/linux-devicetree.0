@@ -1,15 +1,16 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: dec behavior question
-Date: Tue, 25 Oct 2011 08:41:55 -0500
-Message-ID: <0F565319-C054-4B46-8548-7BF4227BD237@kernel.crashing.org>
-References: <9942C069-D8EC-4133-B436-1DC5F62C502E@kernel.crashing.org>
- <20111024231529.GE4191@truffala.fritz.box>
- <9F6FE96B71CF29479FF1CDC8046E1503253081@039-SN1MPN1-004.039d.mgd.msft.net>
-Mime-Version: 1.0 (Apple Message framework v1251.1)
-Content-Type: text/plain; charset="us-ascii"
+From: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
+Date: Tue, 25 Oct 2011 16:17:15 +0200
+Message-ID: <BC60AF8F-C329-44B9-BEC9-EA5821725E1B@kernel.crashing.org>
+References: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
+ <20111025082632.GJ4429@atomide.com>
+ <440786C5-FA1C-4750-9990-0BA5AABC2190@kernel.crashing.org>
+ <4EA6BC54.7030007@ti.com>
+Mime-Version: 1.0 (Apple Message framework v753.1)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <9F6FE96B71CF29479FF1CDC8046E1503253081-TcFNo7jSaXM0vywKSws3iq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <4EA6BC54.7030007-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,59 +20,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+>> What problem does any of this solve?  The device binding for the
+>> "mcasp" device will have to describe the possible "reg-names", and
+>> what those mean; but the binding already has to describe its "reg"
+>> property anyway.
+>
+> What this solve is the ability to use the  
+> platform_get_resource_byname directly to retrieve the proper  
+> register base address.
 
-On Oct 25, 2011, at 7:18 AM, Yoder Stuart-B08248 wrote:
+You do not have to put it in the device tree for that, the device
+driver can implement this itself if it cares.
 
-> 
-> 
->> -----Original Message-----
->> From: devicetree-discuss-bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> [mailto:devicetree-discuss-bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of
->> David Gibson
->> Sent: Monday, October 24, 2011 6:15 PM
->> To: Kumar Gala
->> Cc: devicetree-discuss
->> Subject: Re: dec behavior question
->> 
->> On Mon, Oct 24, 2011 at 09:01:49AM -0500, Kumar Gala wrote:
->>> If I have something like:
->>> 
->>> ---------------------------------------
->>> spi.dtsi:
->>> 
->>> &spi0 {
->>>        #address-cells = <1>;
->>>        #size-cells = <0>;
->>>        compatible = "fsl,mpc8536-espi";
->>>        reg = <0x7000 0x1000>;
->>>        interrupts = <59 0x2 0 0>;
->>> };
->>> ---------------------------------------
->>> 
->>> foo.dts:
->>> 
->>> spi0: spi@f00bar {
->>> 	compatible = "FOOBAR";
->>> };
->>> 
->>> /include/ "spi.dtsi"
->>> 
->>> ---------------------------------------
->>> 
->>> What do you expect the resulting dtb to look like w/regards to the
->>> compatible node?
->> 
->> It's always last tree wins.  So it will end up with compatible = "FOOBAR".
-> 
-> If last wins, then it would be the included file
-> (compatible = "fsl,mpc8536-espi"), no?
-> 
-> Stuart
+> The binding is just a text description that the driver will not be  
+> able to use directly. It will have to get the resource using an  
+> abstract index.
 
-I don't believe so because the include of spi.dtsi doesn't actually instantiate a node.  This is a little different than use of 'include' for merging of nodes.
+Your reg-names are abstract identifiers just as well.
 
-- k
+> It thus removes a level of indirection that is error prone and  
+> useless most of the time.
+
+It *adds* a level of indirection.  I doubt it helps prevent errors
+either, but who knows.
+
+
+Segher
