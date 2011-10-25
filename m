@@ -1,45 +1,57 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 02/17] of_mdio: Don't phy_scan_fixups() twice
-Date: Tue, 25 Oct 2011 06:56:02 +0200
-Message-ID: <20111025045602.GB798@ponder.secretlab.ca>
-References: <1319144425-15547-1-git-send-email-Kyle.D.Moffett@boeing.com>
- <1319144425-15547-3-git-send-email-Kyle.D.Moffett@boeing.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 3/3] arm/dt: tegra: add dts file for paz00
+Date: Mon, 24 Oct 2011 22:16:15 -0700
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173E1B4189@HQMAIL01.nvidia.com>
+References: <cover.1319313019.git.marvin24@gmx.de>
+ <90ee88bcde84141e0280ffa4ccbd288462489eba.1319313020.git.marvin24@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1319144425-15547-3-git-send-email-Kyle.D.Moffett@boeing.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kyle Moffett <Kyle.D.Moffett@boeing.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <90ee88bcde84141e0280ffa4ccbd288462489eba.1319313020.git.marvin24-Mmb7MZpHnFY@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 20, 2011 at 05:00:09PM -0400, Kyle Moffett wrote:
-> The "phy_device_register()" call 5 lines down already calls
-> phy_scan_fixups(), there's no need to do it a second time.
+Marc Dietrich wrote at Saturday, October 22, 2011 2:17 PM:
+> * NOT FOR COMMIT *
 > 
-> Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
+> This just adds the dts for paz00. I like to add it to board-dt as
+> well as soon as I find out which tree to base it on.
+...
+> +++ b/arch/arm/boot/dts/tegra-paz00.dts
 
-Applied, thanks.
+One thing that cross my mind when writing the TrimSlice support and I
+forgot to mention: Should these files be named ${soc}-${board}.dts or
+${vendor}-${board}.dts (tegra-paz00.dts or toshiba-paz00.dts or
+compal-paz00.dts). I'm OK either way; just want to follow any outside
+expectations.
 
-g.
+> @@ -0,0 +1,51 @@
+> +/dts-v1/;
+> +
+> +/memreserve/ 0x1c000000 0x04000000;
+> +/include/ "tegra20.dtsi"
+> +
+> +/ {
+> +	model = "Toshiba AC100 / Dynabook AZ";
+> +	compatible = "compal,paz00", "nvidia,tegra20";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 root=/dev/mmcblk1p1";
+> +	};
+> +
+> +	memory@0 {
 
-> ---
->  drivers/of/of_mdio.c |    1 -
->  1 files changed, 0 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index d35e300..980c079 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -83,7 +83,6 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  				addr);
->  			continue;
->  		}
-> -		phy_scan_fixups(phy);
->  
->  		/* Associate the OF node with the device structure so it
->  		 * can be looked up later */
-> -- 
-> 1.7.2.5
-> 
+The other boards just have "memory" here; which is wrong?
+
+...
+> +	i2c@7000c500 {
+> +		clock-frequency = <80000>;
+
+That's a pretty odd I2C frequency...
+
+-- 
+nvpublic
