@@ -1,57 +1,76 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 3/3] arm/dt: tegra: add dts file for paz00
-Date: Mon, 24 Oct 2011 22:16:15 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173E1B4189@HQMAIL01.nvidia.com>
-References: <cover.1319313019.git.marvin24@gmx.de>
- <90ee88bcde84141e0280ffa4ccbd288462489eba.1319313020.git.marvin24@gmx.de>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
+	regulator_init_data
+Date: Tue, 25 Oct 2011 11:30:19 +0530
+Message-ID: <4EA65073.7050205@ti.com>
+References: <4EA00F7C.1080005@ti.com>
+	<20111021082309.GA337@S2100-06.ap.freescale.net>
+	<4EA13053.7080306@ti.com>
+	<20111021115809.GB337@S2100-06.ap.freescale.net>
+	<4EA4FF6B.2080906@ti.com>
+	<20111024081706.GC8708@ponder.secretlab.ca>
+	<20111024090228.GA1755@S2100-06.ap.freescale.net>
+	<4EA52851.8000203@ti.com>
+	<20111024091158.GB1755@S2100-06.ap.freescale.net>
+	<4EA52C56.3080908@ti.com>
+	<20111024134727.GF1755@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <90ee88bcde84141e0280ffa4ccbd288462489eba.1319313020.git.marvin24-Mmb7MZpHnFY@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111024134727.GF1755@S2100-06.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Marc Dietrich wrote at Saturday, October 22, 2011 2:17 PM:
-> * NOT FOR COMMIT *
-> 
-> This just adds the dts for paz00. I like to add it to board-dt as
-> well as soon as I find out which tree to base it on.
-...
-> +++ b/arch/arm/boot/dts/tegra-paz00.dts
+On Monday 24 October 2011 07:17 PM, Shawn Guo wrote:
+> On Mon, Oct 24, 2011 at 02:43:58PM +0530, Rajendra Nayak wrote:
+>> Case 2:
+>> One device for all regulators:
+>>
+>> DT nodes look something like this
+>>
+>> regulators {
+>> 	reg1: reg@1 {
+>> 			...
+>> 			...
+>> 	};
+>>
+>> 	reg2: reg@2 {
+>> 			...
+>> 			...
+>> 	};
+>> };
+>>
+>> The regulator driver probes only one device and the dev->of_node
+>> points to the "regulators" node above.
+>
+> The mc13892 example I put in the reply to Grant demonstrates that
+> for some case, dev->of_node is NULL (devices are created by mfd core).
 
-One thing that cross my mind when writing the TrimSlice support and I
-forgot to mention: Should these files be named ${soc}-${board}.dts or
-${vendor}-${board}.dts (tegra-paz00.dts or toshiba-paz00.dts or
-compal-paz00.dts). I'm OK either way; just want to follow any outside
-expectations.
+In that case should you not be first converting the mfd driver to
+register regulator devices using DT?
+Thats what we did for OMAP, and hence we always have the of_node
+populated when the regulator devices are probed.
+See this patch from Benoit on how thats done for twl devices..
+http://marc.info/?l=linux-omap&m=131489864814428&w=2
 
-> @@ -0,0 +1,51 @@
-> +/dts-v1/;
-> +
-> +/memreserve/ 0x1c000000 0x04000000;
-> +/include/ "tegra20.dtsi"
-> +
-> +/ {
-> +	model = "Toshiba AC100 / Dynabook AZ";
-> +	compatible = "compal,paz00", "nvidia,tegra20";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200n8 root=/dev/mmcblk1p1";
-> +	};
-> +
-> +	memory@0 {
-
-The other boards just have "memory" here; which is wrong?
-
-...
-> +	i2c@7000c500 {
-> +		clock-frequency = <80000>;
-
-That's a pretty odd I2C frequency...
-
--- 
-nvpublic
+>
+>> The regulator driver then based on compatible property extracts
+>> and registers all the child nodes of "regulators" (for ex: reg1, reg2
+>> above) with each call to regulator_register and passes the child nodes
+>> as of_node to be associated with the regulator device.
+>>
+> I still think the discovery of all the child nodes of "regulators" does
+> not necessarily need to be done in regulator driver.  Instead, it can
+> be done in regulator core.
+>
