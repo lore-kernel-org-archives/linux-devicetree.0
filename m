@@ -1,67 +1,65 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] arm/tegra: Don't create duplicate gpio and
- pinmux devices
-Date: Tue, 25 Oct 2011 16:30:09 +0200
-Message-ID: <20111025143009.GA14945@dhcp-172-17-9-83.mtv.corp.google.com>
-References: <1319544088-25946-1-git-send-email-swarren@nvidia.com>
- <1319544088-25946-2-git-send-email-swarren@nvidia.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
+Date: Tue, 25 Oct 2011 18:10:48 +0200
+Message-ID: <4EA6DF88.2080704@ti.com>
+References: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
+	<20111025082632.GJ4429@atomide.com>
+	<440786C5-FA1C-4750-9990-0BA5AABC2190@kernel.crashing.org>
+	<4EA6BC54.7030007@ti.com>
+	<BC60AF8F-C329-44B9-BEC9-EA5821725E1B@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1319544088-25946-2-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <BC60AF8F-C329-44B9-BEC9-EA5821725E1B@kernel.crashing.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2011 at 02:01:27PM +0200, Stephen Warren wrote:
-> *_pinmux_init() register the GPIO and pinmux devices so that they're ready
-> before any other device needs them.
-> 
-> *_pinmux_init() are also called by board-dt.c in order to set up the GPIO
-> and pinmux configurations. In this case, if we register the devices, they
-> end up being probed once due to this registration, and a second time due
-> to a device-tree node (or vice-versa). The second probe fails since the
-> memory regions are already requested. Besides, we don't actually want the
-> duplicated devices.
-> 
-> To avoid this duplicate registration, modify *_pinmux_init() to check
-> whether it's running on a DT machine. If not, register the pinmux devices.
-> If so, don't register them.
-> 
-> Finally, modify board-dt.c to call the *_pinmux_init() after all devices have
-> been instantiated from device-tree. This allows the GPIO and pinmux devices
-> to be instantiated and initialized before calling functions to configure the
-> hardware.
-> 
-> This has one disadvantage: The pinmux and GPIO initialization now happens
-> after /all/ devices are instantiated, rather than after just gpio and
-> pinmux but before anything else. So the correct HW configuration is not
-> in place when e.g. the SD/MMC device is probed. Long-term, this should be
-> solved by doing both:
-> 
-> a) Initializing the HW state from DT nodes during GPIO and pinmux device
->    probe.
-> b) Using the deferred driver probe mechanism, so that drivers can defer
->    their probe until after the gpio and pinmux drivers have probed.
-> 
-> v2: s/int is_dt/bool is_dt/
-> v3: Use of_machine_is_compatible inside *_pinmux_init() rather than passing
-> an explicit parameter into the function from outside.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/mach-tegra/board-dt.c               |   13 +++++++------
->  arch/arm/mach-tegra/board-harmony-pinmux.c   |    6 +++++-
->  arch/arm/mach-tegra/board-paz00-pinmux.c     |    6 +++++-
->  arch/arm/mach-tegra/board-seaboard-pinmux.c  |    5 ++++-
->  arch/arm/mach-tegra/board-trimslice-pinmux.c |    5 ++++-
->  5 files changed, 25 insertions(+), 10 deletions(-)
+On 10/25/2011 4:17 PM, Segher Boessenkool wrote:
+>>> What problem does any of this solve?  The device binding for the
+>>> "mcasp" device will have to describe the possible "reg-names", and
+>>> what those mean; but the binding already has to describe its "reg"
+>>> property anyway.
+>>
+>> What this solve is the ability to use the
+>> platform_get_resource_byname directly to retrieve the proper
+>> register base address.
+>
+> You do not have to put it in the device tree for that, the device
+> driver can implement this itself if it cares.
 
-This looks pretty good. Given the fact that current behavior is buggy,
-merging it for 3.2 makes sense. Grant, you OK with that for the
-prerequisite OF patch?
+???
 
+The driver is the user of that name, so it has to be populated before 
+into the resource during device creation.
 
--Olof
+>> The binding is just a text description that the driver will not be
+>> able to use directly. It will have to get the resource using an
+>> abstract index.
+>
+> Your reg-names are abstract identifiers just as well.
+
+This is the name used in the HW documentation.
+Ordering them to get a number is purely arbitrary. That's why using the 
+name will allow the driver to get the resource the way it is represented 
+in the documentation and thus avoid some intermediate number.
+
+>> It thus removes a level of indirection that is error prone and
+>> useless most of the time.
+>
+> It *adds* a level of indirection.  I doubt it helps prevent errors
+> either, but who knows.
+
+Well, if that does not bring anything to you, you can just not use it.
+
+Benoit
