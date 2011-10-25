@@ -1,61 +1,60 @@
-From: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: libfdt queries
-Date: Tue, 25 Oct 2011 11:28:51 +0530
-Message-ID: <4EA6501B.3030907@nvidia.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract regulator_init_data
+Date: Tue, 25 Oct 2011 11:40:34 +0530
+Message-ID: <4EA652DA.5050901@ti.com>
+References: <20111020061408.GE32007@S2100-06.ap.freescale.net> <4EA00F7C.1080005@ti.com> <20111021082309.GA337@S2100-06.ap.freescale.net> <20111024092411.GE8708@ponder.secretlab.ca> <20111024130429.GD1755@S2100-06.ap.freescale.net> <20111024130636.GB26033@opensource.wolfsonmicro.com> <20111024134025.GE1755@S2100-06.ap.freescale.net> <20111024135950.GV8708@ponder.secretlab.ca> <20111024145139.GH1755@S2100-06.ap.freescale.net> <20111024145631.GB8708@ponder.secretlab.ca> <20111024155132.GI1755@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20111024155132.GI1755@S2100-06.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday 24 October 2011 09:21 PM, Shawn Guo wrote:
+> On Mon, Oct 24, 2011 at 04:56:31PM +0200, Grant Likely wrote:
+>> On Mon, Oct 24, 2011 at 10:51:40PM +0800, Shawn Guo wrote:
+>>> On Mon, Oct 24, 2011 at 03:59:50PM +0200, Grant Likely wrote:
+>>>> On Mon, Oct 24, 2011 at 09:40:26PM +0800, Shawn Guo wrote:
+>>>>> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+>>>>> index 8fe132d..29dcf90 100644
+>>>>> --- a/drivers/regulator/core.c
+>>>>> +++ b/drivers/regulator/core.c
+>>>>> @@ -2673,7 +2673,8 @@ struct regulator_dev *regulator_register(struct regulator_desc *regulator_desc,
+>>>>>          BLOCKING_INIT_NOTIFIER_HEAD(&rdev->notifier);
+>>>>>
+>>>>>          /* find device_node and attach it */
+>>>>> -       rdev->dev.of_node = of_find_node_by_name(NULL, regulator_desc->name);
+>>>>> +       rdev->dev.of_node = of_find_node_by_name(dev->parent->of_node,
+>>>>> +                                                regulator_desc->name);
+>>>>
+>>>> of_find_node_by_name() doesn't work that way.  The first argument is a
+>>>> starting point, but it doesn't restrict the search to children of a
+>>>> node.
+>>>>
+>>>> for_each_child_of_node() is what you want to use when iterating over
+>>>> the children which unfortunately changes the structure of this
+>>>> function.
+>>>>
+>>> The dev->parent->of_node is meant to point to node 'pmic: mc13892@0'.
+>>> And the intention here is not to iterate over the children, but to
+>>> start a search from a reasonable point rather than the top root node.
+>>
+>> It is always better to attach the of_node at struct device
+>> registration time instead of searching the tree in common code.  The
+>> of_node should already be assigned by the time regulator_register() is
+>> called.
+>
+> That's the problem we have.  There is no 'struct dev' to attach of_node
+> for each regulator by the time regulator_register() is called, because
+> the 'struct dev' for each regulator is created inside
+> regulator_register() as wrapped by 'struct regulator_dev'.
 
-I am using libfdt v1.3.0 for modifying the dtb file from the bootloader
-(not U-Boot). I have a .dtb file whose bootargs have to be modified
-before passing over to the kernel. This is the sequence that I am following:
+The root of your problem seems to be that your pmic driver isn't
+registering regulator devices from DT, and if it did, you wouldn't
+need to do a search in dev->parent->of_node and instead the driver
+would have the right dev->of_node populated.
 
-<snip>
-
-newlen = fdt_totalsize(blob) + 512;
-fdt_open_into(blob, blob, newlen)
-
-node = fdt_path_offset(blob, "/chosen");
-if (node < 0)
-    <error handling code>
-
-fdt_setprop_string(blob, node, "bootargs", cmdline)
-
-<snip>
-
-Now with the above code the serial console on my board does not come up
-with the default bootargs that are present in the .dts file. If I
-manipulate the bootargs string in the .dts file with some additional
-garbage characters and then run the above code then I see that the
-serial console comes up. I suspect that the dtb is not getting updated
-properly with the above apis. Somehow the dtb contents are getting
-overwritten and the serial console info is getting overwritten I think.
-
-If I add a partial command line to my dts, then modifying the bootargs
-from fastboot does not corrupt the dtb file and I can see the kernel
-console come up.
-
-Any pointers or ideas where I might have screwed up?
-
-
-
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+>
