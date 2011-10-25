@@ -1,53 +1,63 @@
-From: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: libfdt queries
-Date: Tue, 25 Oct 2011 12:38:24 +0530
-Message-ID: <4EA66068.4020501@nvidia.com>
-References: <4EA6501B.3030907@nvidia.com>
- <20111025064723.GA5513@truffala.fritz.box>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v2 3/5] regulator: helper routine to extract
+	regulator_init_data
+Date: Tue, 25 Oct 2011 15:20:04 +0800
+Message-ID: <20111025072003.GF2119@S2100-06.ap.freescale.net>
+References: <4EA4FF6B.2080906@ti.com>
+	<20111024081706.GC8708@ponder.secretlab.ca>
+	<20111024090228.GA1755@S2100-06.ap.freescale.net>
+	<4EA52851.8000203@ti.com>
+	<20111024091158.GB1755@S2100-06.ap.freescale.net>
+	<4EA52C56.3080908@ti.com>
+	<20111024134727.GF1755@S2100-06.ap.freescale.net>
+	<4EA65073.7050205@ti.com>
+	<20111025065216.GD2119@S2100-06.ap.freescale.net>
+	<4EA65D81.6030109@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111025064723.GA5513-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <4EA65D81.6030109@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Oct 25, 2011 at 12:26:01PM +0530, Rajendra Nayak wrote:
+> On Tuesday 25 October 2011 12:22 PM, Shawn Guo wrote:
+> >On Tue, Oct 25, 2011 at 11:30:19AM +0530, Rajendra Nayak wrote:
+[...]
+> >>Thats what we did for OMAP, and hence we always have the of_node
+> >>populated when the regulator devices are probed.
+> >>See this patch from Benoit on how thats done for twl devices..
+> >>http://marc.info/?l=linux-omap&m=131489864814428&w=2
+> >>
+> >OMAP is "Case 1", and we are talking about "Case 2".
+> 
+> I don't see why it wouldn't work for "Case 2".
 
-> That seems a bit unlikely, but maybe.  Is there any way you can dump
-> out the dtb after processing by your bootloader?
->
+I did not say it wouldn't work for "Case 2".  I meant they work in
+different way.
 
-I will try to get a dump.
+> The only difference
+> is in case of "Case 1", the dev->of_node would already point to
+> the right regulator node, like 'reg1', 'reg2' above.
+> In case of "Case 2", the dev->of_node would point to the 'regulators'
+> node instead, and the driver could then do a for_each_child_of_node()
+> to iterate over all its children to get 'reg1', 'reg2' etc.
+> 
+Yes, that's the difference.  So you will need to distinguish these
+two cases in regulator_register()?  How?
 
-> First thing would be to check if fdt_setprop_string() is returning an
-> error code.
-
-fdt_setprop_string() returns success.
-> Also, is that the only dtb manipulation you do, or do you make other
-> changes to the dtb?
-
-That's the only dtb manipulation I do.
-
-I tried hacking vprintk() to use early_printk() instead and I see that
-the kernel boots up. So it seems that only the "serial@xxxxxxxx" node
-contents are getting messed up. (Incidentally it also lies after the
-"chosen" node. I am just saying.)
-
-
-
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+-- 
+Regards,
+Shawn
