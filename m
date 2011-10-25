@@ -1,61 +1,39 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: dec behavior question
-Date: Tue, 25 Oct 2011 08:23:08 -0500
-Message-ID: <81832128-4BB5-4C78-95EB-864AC7B57CA0@kernel.crashing.org>
-References: <9942C069-D8EC-4133-B436-1DC5F62C502E@kernel.crashing.org>
- <20111024231529.GE4191@truffala.fritz.box>
-Mime-Version: 1.0 (Apple Message framework v1251.1)
-Content-Type: text/plain; charset="us-ascii"
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
+Date: Tue, 25 Oct 2011 15:40:36 +0200
+Message-ID: <4EA6BC54.7030007@ti.com>
+References: <1319471697-8970-1-git-send-email-b-cousson@ti.com> <20111025082632.GJ4429@atomide.com> <440786C5-FA1C-4750-9990-0BA5AABC2190@kernel.crashing.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111024231529.GE4191-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <440786C5-FA1C-4750-9990-0BA5AABC2190@kernel.crashing.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
+On 10/25/2011 12:29 PM, Segher Boessenkool wrote:
+>>> +		compatible = "ti,mcasp";
+>>> +		reg =<0 0x10 0x10>,<0 0x20 0x10>,
+>>> +		<1 0x10 0x10>,<1 0x20 0x10>;
+>>> +		reg-names = "mpu", "dat",
+>>> +			    "dma", "dma_dat";
+>>
+>> Hmm for some systems looks like this can also solve how to pass the
+>> mux signal names cleanly from DT.
+>
+> What problem does any of this solve?  The device binding for the
+> "mcasp" device will have to describe the possible "reg-names", and
+> what those mean; but the binding already has to describe its "reg"
+> property anyway.
 
-On Oct 24, 2011, at 6:15 PM, David Gibson wrote:
+What this solve is the ability to use the platform_get_resource_byname 
+directly to retrieve the proper register base address. The binding is 
+just a text description that the driver will not be able to use 
+directly. It will have to get the resource using an abstract index.
+It thus removes a level of indirection that is error prone and useless 
+most of the time.
 
-> On Mon, Oct 24, 2011 at 09:01:49AM -0500, Kumar Gala wrote:
->> If I have something like:
->> 
->> ---------------------------------------
->> spi.dtsi:
->> 
->> &spi0 {
->>        #address-cells = <1>;
->>        #size-cells = <0>;
->>        compatible = "fsl,mpc8536-espi";
->>        reg = <0x7000 0x1000>;
->>        interrupts = <59 0x2 0 0>;
->> };
->> ---------------------------------------
->> 
->> foo.dts:
->> 
->> spi0: spi@f00bar {
->> 	compatible = "FOOBAR";
->> };
->> 
->> /include/ "spi.dtsi"
->> 
->> ---------------------------------------
->> 
->> What do you expect the resulting dtb to look like w/regards to the
->> compatible node?
-> 
-> It's always last tree wins.  So it will end up with compatible =
-> "FOOBAR".
+Benoit
 
-Than I think we have a bug in current dtc.
-
-- k
