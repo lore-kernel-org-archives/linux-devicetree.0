@@ -1,11 +1,17 @@
-From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] fdtdump: rename from ftdump
-Date: Tue, 25 Oct 2011 17:29:24 -0400
-Message-ID: <1319578164-30823-1-git-send-email-vapier@gentoo.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: dec behavior question
+Date: Wed, 26 Oct 2011 10:36:43 +1100
+Message-ID: <20111025233643.GA5760@truffala.fritz.box>
+References: <9942C069-D8EC-4133-B436-1DC5F62C502E@kernel.crashing.org>
+ <20111024231529.GE4191@truffala.fritz.box>
+ <9F6FE96B71CF29479FF1CDC8046E1503253081@039-SN1MPN1-004.039d.mgd.msft.net>
+ <0F565319-C054-4B46-8548-7BF4227BD237@kernel.crashing.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0F565319-C054-4B46-8548-7BF4227BD237-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,125 +21,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Yoder Stuart-B08248 <B08248-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The freetype package already installs a binary named "ftdump", so the dtc
-package conflicts with that.  So rename the newer dtc tool to "fdtdump".
-This even makes a bit more sense:
-	ftdump: [F]lat device [T]ree [dump]
-	fdtdump: [F]lat [D]evice [T]ree [dump]
+On Tue, Oct 25, 2011 at 08:41:55AM -0500, Kumar Gala wrote:
+> 
+> On Oct 25, 2011, at 7:18 AM, Yoder Stuart-B08248 wrote:
+> 
+> > 
+> > 
+> >> -----Original Message-----
+> >> From: devicetree-discuss-bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> >> [mailto:devicetree-discuss-bounces+stuart.yoder=freescale.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of
+> >> David Gibson
+> >> Sent: Monday, October 24, 2011 6:15 PM
+> >> To: Kumar Gala
+> >> Cc: devicetree-discuss
+> >> Subject: Re: dec behavior question
+> >> 
+> >> On Mon, Oct 24, 2011 at 09:01:49AM -0500, Kumar Gala wrote:
+> >>> If I have something like:
+> >>> 
+> >>> ---------------------------------------
+> >>> spi.dtsi:
+> >>> 
+> >>> &spi0 {
+> >>>        #address-cells = <1>;
+> >>>        #size-cells = <0>;
+> >>>        compatible = "fsl,mpc8536-espi";
+> >>>        reg = <0x7000 0x1000>;
+> >>>        interrupts = <59 0x2 0 0>;
+> >>> };
+> >>> ---------------------------------------
+> >>> 
+> >>> foo.dts:
+> >>> 
+> >>> spi0: spi@f00bar {
+> >>> 	compatible = "FOOBAR";
+> >>> };
+> >>> 
+> >>> /include/ "spi.dtsi"
+> >>> 
+> >>> ---------------------------------------
+> >>> 
+> >>> What do you expect the resulting dtb to look like w/regards to the
+> >>> compatible node?
+> >> 
+> >> It's always last tree wins.  So it will end up with compatible = "FOOBAR".
+> > 
+> > If last wins, then it would be the included file
+> > (compatible = "fsl,mpc8536-espi"), no?
 
-Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
----
- .gitignore               |    2 +-
- Documentation/manual.txt |   10 +++++-----
- Makefile                 |    6 +++---
- Makefile.utils           |    6 +++---
- ftdump.c => fdtdump.c    |    2 +-
- 5 files changed, 13 insertions(+), 13 deletions(-)
- rename ftdump.c => fdtdump.c (97%)
+Uh, yes, sorry.  I misread and assumed the /include/ came first.
 
-diff --git a/.gitignore b/.gitignore
-index ae7a46a..74714cd 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -7,6 +7,6 @@
- lex.yy.c
- *.lex.c
- /dtc
--/ftdump
-+/fdtdump
- /convert-dtsv0
- /version_gen.h
-diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-index f8a8a7b..14508f3 100644
---- a/Documentation/manual.txt
-+++ b/Documentation/manual.txt
-@@ -21,7 +21,7 @@ III - libfdt
- 
- IV - Utility Tools
-     1) convert-dtsv0 -- Conversion to Version 1
--    1) ftdump
-+    1) fdtdump
- 
- 
- I - "dtc", the device tree compiler
-@@ -643,10 +643,10 @@ a new file with a "v1" appended the filename.
- Comments, empty lines, etc. are preserved.
- 
- 
--2) ftdump -- Flat Tree dumping utility
-+2) fdtdump -- Flat Device Tree dumping utility
- 
--The ftdump program prints a readable version of a flat device tree file.
-+The fdtdump program prints a readable version of a flat device tree file.
- 
--The syntax of the ftdump command line is:
-+The syntax of the fdtdump command line is:
- 
--    ftdump <DTB-file-name>
-+    fdtdump <DTB-file-name>
-diff --git a/Makefile b/Makefile
-index b32409b..4582f5d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -109,7 +109,7 @@ include Makefile.utils
- 
- BIN += convert-dtsv0
- BIN += dtc
--BIN += ftdump
-+BIN += fdtdump
- 
- SCRIPTS = dtdiff
- 
-@@ -119,7 +119,7 @@ all: $(BIN) libfdt
- ifneq ($(DEPTARGETS),)
- -include $(DTC_OBJS:%.o=%.d)
- -include $(CONVERT_OBJS:%.o=%.d)
---include $(FTDUMP_OBJS:%.o=%.d)
-+-include $(FDTDUMP_OBJS:%.o=%.d)
- endif
- 
- 
-@@ -178,7 +178,7 @@ convert-dtsv0: $(CONVERT_OBJS)
- 	@$(VECHO) LD $@
- 	$(LINK.c) -o $@ $^
- 
--ftdump:	$(FTDUMP_OBJS)
-+fdtdump:	$(FDTDUMP_OBJS)
- 
- 
- #
-diff --git a/Makefile.utils b/Makefile.utils
-index 0ed9297..fae5b00 100644
---- a/Makefile.utils
-+++ b/Makefile.utils
-@@ -3,8 +3,8 @@
- # be easily embeddable into other systems of Makefiles.
- #
- 
--FTDUMP_SRCS = \
--	ftdump.c \
-+FDTDUMP_SRCS = \
-+	fdtdump.c \
- 	util.c
- 
--FTDUMP_OBJS = $(FTDUMP_SRCS:%.c=%.o)
-+FDTDUMP_OBJS = $(FDTDUMP_SRCS:%.c=%.o)
-diff --git a/ftdump.c b/fdtdump.c
-similarity index 97%
-rename from ftdump.c
-rename to fdtdump.c
-index cc55fe2..207a46d 100644
---- a/ftdump.c
-+++ b/fdtdump.c
-@@ -1,5 +1,5 @@
- /*
-- * ftdump.c - Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
-+ * fdtdump.c - Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
-  */
- 
- #include <stdint.h>
+> I don't believe so because the include of spi.dtsi doesn't actually
+> instantiate a node.  This is a little different than use of
+> 'include' for merging of nodes.
+
+No, it really isn't.  /include/ is just a textual include.  If a node
+is defined multiple times, properties in the last definition always
+win.
+
 -- 
-1.7.6.1
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
