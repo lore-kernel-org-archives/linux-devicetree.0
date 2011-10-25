@@ -1,66 +1,43 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] arm/tegra: Don't create duplicate gpio and pinmux
- devices
-Date: Tue, 25 Oct 2011 11:39:30 +0200
-Message-ID: <20111025093653.GA13409@dhcp-172-17-9-83.mtv.corp.google.com>
-References: <1319218550-26002-1-git-send-email-swarren@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1319218550-26002-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Segher Boessenkool <segher@kernel.crashing.org>
+Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
+Date: Tue, 25 Oct 2011 12:29:45 +0200
+Message-ID: <440786C5-FA1C-4750-9990-0BA5AABC2190@kernel.crashing.org>
+References: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
+	<20111025082632.GJ4429@atomide.com>
+Mime-Version: 1.0 (Apple Message framework v753.1)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111025082632.GJ4429@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, rob.herring@calxeda.com, Benoit Cousson <b-cousson@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2011 at 11:35:50AM -0600, Stephen Warren wrote:
-> *_pinmux_init() register the GPIO and pinmux devices so that they're ready
-> before any other device needs them.
-> 
-> *_pinmux_init() are also called by board-dt.c in order to set up the GPIO
-> and pinmux configurations. In this case, if we register the devices, they
-> end up being probed once due to this registration, and a second time due
-> to a device-tree node (or vice-versa). The second probe fails since the
-> memory regions are already requested. Besides, we don't actually want the
-> duplicated devices.
-> 
-> To avoid this duplicate registration, pass a parameter into *_pinmux_init()
-> indicating whether they should register the device or not. Set this true
-> for non-DT boards, and false otherwise.
-> 
-> Finally, modify board-dt.c to call the *_pinmux_init() after all devices have
-> been instantiated from device-tree. This allows the GPIO and pinmux devices
-> to be instantiated and initialized before calling functions to configure the
-> hardware.
-> 
-> This has one disadvantage: The pinmux and GPIO initialization now happens
-> after /all/ devices are instantiated, rather than after just gpio and
-> pinmux, but before anything else. So the correct HW configuration is not
-> in place when e.g. the SD/MMC device is probed. Long-term, this should be
-> solved by doing both:
-> 
-> a) Initializing the HW state from DT nodes during GPIO and pinmux device
->    probe.
-> b) Using the deferred driver probe mechanism, so that drivers can defer
->    their probe until after the gpio and pinmux drivers have probed.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Grant, Olof, Colin,
-> 
-> What are your thoughts here? Both with and without the patch there are
-> disadvantages. I'm not sure which one is better...
+>> +		compatible = "ti,mcasp";
+>> +		reg = <0 0x10 0x10>, <0 0x20 0x10>,
+>> +		      <1 0x10 0x10>, <1 0x20 0x10>;
+>> +		reg-names = "mpu", "dat",
+>> +			    "dma", "dma_dat";
+>
+> Hmm for some systems looks like this can also solve how to pass the
+> mux signal names cleanly from DT.
 
-I'm not a fan of the added argument. Since it's really just a check
-whether you are running on a device-tree probed machine or not, adding
-a machine_is_{harmony,paz00,seaboard}() check in the same place as the
-!is_dt check now will accomplish the same thing.
+What problem does any of this solve?  The device binding for the
+"mcasp" device will have to describe the possible "reg-names", and
+what those mean; but the binding already has to describe its "reg"
+property anyway.
 
-It would be nice to check for of_machine_is_compatible() instead of the
-machine_is_.*() tests, but then you need to ifdef it since it doesn't
-evaluate to 0 on CONFIG_OF=n -- for extra bonus, do it that way and add
-the empty of_machine_is_compatible() function to include/linux/of.h.
+The example looks like something that should be more properly done
+with subdevices, not sure.
 
 
--Olof
+Segher
