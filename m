@@ -1,40 +1,45 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
-Date: Tue, 25 Oct 2011 06:49:27 +0200
-Message-ID: <20111025044927.GA798@ponder.secretlab.ca>
-References: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
- <20111024221916.GF4394@ponder.secretlab.ca>
- <4EA5ED35.7000806@ti.com>
+Subject: Re: [RFC PATCH 02/17] of_mdio: Don't phy_scan_fixups() twice
+Date: Tue, 25 Oct 2011 06:56:02 +0200
+Message-ID: <20111025045602.GB798@ponder.secretlab.ca>
+References: <1319144425-15547-1-git-send-email-Kyle.D.Moffett@boeing.com>
+ <1319144425-15547-3-git-send-email-Kyle.D.Moffett@boeing.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4EA5ED35.7000806@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+In-Reply-To: <1319144425-15547-3-git-send-email-Kyle.D.Moffett@boeing.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kyle Moffett <Kyle.D.Moffett@boeing.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 25, 2011 at 12:56:53AM +0200, Cousson, Benoit wrote:
-> On 10/25/2011 12:19 AM, Grant Likely wrote:
-> >In general, I'm inclined to accept this patch as we talked about at
-> >plumbers.  However, this particular hunk gives me pause as there is
-> >still the objection that Russell raised about the (ab)use of r->name
-> >for insert the resource name.
-> >
-> >So, no I won't reject this patch, but I first what to have some idea
-> >of what the plan is to migrate away from using r->name.  Perhaps we
-> >can talk about this tomorrow.
+On Thu, Oct 20, 2011 at 05:00:09PM -0400, Kyle Moffett wrote:
+> The "phy_device_register()" call 5 lines down already calls
+> phy_scan_fixups(), there's no need to do it a second time.
 > 
-> OK, sure, let's discuss about that.
-> But I still think that Russell's concern is not related at all with
-> this patch. That means that it should be fixed separately if needed.
-> It can be done before or after, but this is somehow orthogonal to
-> the DT reg-names support problem.
+> Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
 
-Right, but this patch does add more infrastructure code manuipulating
-that field, so I'd like to have a plan for fixing the problem before
-committing this.
+Applied, thanks.
 
 g.
 
+> ---
+>  drivers/of/of_mdio.c |    1 -
+>  1 files changed, 0 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index d35e300..980c079 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -83,7 +83,6 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  				addr);
+>  			continue;
+>  		}
+> -		phy_scan_fixups(phy);
+>  
+>  		/* Associate the OF node with the device structure so it
+>  		 * can be looked up later */
+> -- 
+> 1.7.2.5
+> 
