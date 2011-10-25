@@ -1,63 +1,182 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH V3 1/2] ARM: at91: dt: at91sam9g45 family and board device
-	tree files
-Date: Tue, 25 Oct 2011 13:06:36 +0200
-Message-ID: <4EA6983C.5080303@atmel.com>
-References: <4E9F8226.4030503@gmail.com>
-	<15ab652499e7f6f8a26724bfd90643a8f3f96ad9.1319464310.git.nicolas.ferre@atmel.com>
-	<4EA579E7.7000002@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4EA579E7.7000002@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, plagnioj@jcrosoft.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 2/3] arm/tegra: Don't create duplicate gpio and pinmux devices
+Date: Tue, 25 Oct 2011 14:01:27 +0200
+Message-ID: <1319544088-25946-2-git-send-email-swarren@nvidia.com>
+References: <1319544088-25946-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1319544088-25946-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2011 04:44 PM, Rob Herring :
-> On 10/24/2011 09:05 AM, Nicolas Ferre wrote:
->> Create a new device tree source file for Atmel at91sam9g45 SoC family.
->> The Evaluation Kit at91sam9m10g45ek includes it.
->> This first basic support will be populated as drivers and boards will be
->> converted to device tree.
->> Contains serial, dma and interrupt controllers.
->>
->> The generic board file still takes advantage of platform data for early serial
->> init. As we need a storage media and the NAND flash driver is not converted to
->> DT yet, we keep old initialization for it.
->>
-> 
-> This comment is out of date for serial.
+*_pinmux_init() register the GPIO and pinmux devices so that they're ready
+before any other device needs them.
 
-Well, not for early serial actually.
+*_pinmux_init() are also called by board-dt.c in order to set up the GPIO
+and pinmux configurations. In this case, if we register the devices, they
+end up being probed once due to this registration, and a second time due
+to a device-tree node (or vice-versa). The second probe fails since the
+memory regions are already requested. Besides, we don't actually want the
+duplicated devices.
 
->> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->> ---
->> V3:
->> - additional clock lookup for device tree handling
->> - devices disabled in dtsi file so that only useful devices are
->>   enabled in dts files
->>
->> V2: foundation for AT91SAM generic support
->> - device tree focused board file
->> - inclusion of USART DT support
->> - early USART and NAND still using platform data
->>
-> 
-> Reviewed-by: Rob Herring <rob.herring@calxeda.com>
+To avoid this duplicate registration, modify *_pinmux_init() to check
+whether it's running on a DT machine. If not, register the pinmux devices.
+If so, don't register them.
 
-Thanks Rob for your review. I send a pull request to Arnd on this material.
+Finally, modify board-dt.c to call the *_pinmux_init() after all devices have
+been instantiated from device-tree. This allows the GPIO and pinmux devices
+to be instantiated and initialized before calling functions to configure the
+hardware.
 
-Best regards,
+This has one disadvantage: The pinmux and GPIO initialization now happens
+after /all/ devices are instantiated, rather than after just gpio and
+pinmux but before anything else. So the correct HW configuration is not
+in place when e.g. the SD/MMC device is probed. Long-term, this should be
+solved by doing both:
+
+a) Initializing the HW state from DT nodes during GPIO and pinmux device
+   probe.
+b) Using the deferred driver probe mechanism, so that drivers can defer
+   their probe until after the gpio and pinmux drivers have probed.
+
+v2: s/int is_dt/bool is_dt/
+v3: Use of_machine_is_compatible inside *_pinmux_init() rather than passing
+an explicit parameter into the function from outside.
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/mach-tegra/board-dt.c               |   13 +++++++------
+ arch/arm/mach-tegra/board-harmony-pinmux.c   |    6 +++++-
+ arch/arm/mach-tegra/board-paz00-pinmux.c     |    6 +++++-
+ arch/arm/mach-tegra/board-seaboard-pinmux.c  |    5 ++++-
+ arch/arm/mach-tegra/board-trimslice-pinmux.c |    5 ++++-
+ 5 files changed, 25 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/board-dt.c
+index d368f8d..74743ad 100644
+--- a/arch/arm/mach-tegra/board-dt.c
++++ b/arch/arm/mach-tegra/board-dt.c
+@@ -101,6 +101,13 @@ static void __init tegra_dt_init(void)
+ 
+ 	tegra_clk_init_from_table(tegra_dt_clk_init_table);
+ 
++	/*
++	 * Finished with the static registrations now; fill in the missing
++	 * devices
++	 */
++	of_platform_populate(NULL, tegra_dt_match_table,
++				tegra20_auxdata_lookup, NULL);
++
+ 	for (i = 0; i < ARRAY_SIZE(pinmux_configs); i++) {
+ 		if (of_machine_is_compatible(pinmux_configs[i].machine)) {
+ 			pinmux_configs[i].init();
+@@ -110,12 +117,6 @@ static void __init tegra_dt_init(void)
+ 
+ 	WARN(i == ARRAY_SIZE(pinmux_configs),
+ 		"Unknown platform! Pinmuxing not initialized\n");
+-
+-	/*
+-	 * Finished with the static registrations now; fill in the missing
+-	 * devices
+-	 */
+-	of_platform_populate(NULL, tegra_dt_match_table, tegra20_auxdata_lookup, NULL);
+ }
+ 
+ static const char * tegra_dt_board_compat[] = {
+diff --git a/arch/arm/mach-tegra/board-harmony-pinmux.c b/arch/arm/mach-tegra/board-harmony-pinmux.c
+index e99b456..7a4a26d 100644
+--- a/arch/arm/mach-tegra/board-harmony-pinmux.c
++++ b/arch/arm/mach-tegra/board-harmony-pinmux.c
+@@ -16,6 +16,8 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
++
+ #include <mach/pinmux.h>
+ 
+ #include "gpio-names.h"
+@@ -161,7 +163,9 @@ static struct tegra_gpio_table gpio_table[] = {
+ 
+ void harmony_pinmux_init(void)
+ {
+-	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
++	if (!of_machine_is_compatible("nvidia,tegra20"))
++		platform_add_devices(pinmux_devices,
++					ARRAY_SIZE(pinmux_devices));
+ 
+ 	tegra_pinmux_config_table(harmony_pinmux, ARRAY_SIZE(harmony_pinmux));
+ 
+diff --git a/arch/arm/mach-tegra/board-paz00-pinmux.c b/arch/arm/mach-tegra/board-paz00-pinmux.c
+index fb20894..be30e21 100644
+--- a/arch/arm/mach-tegra/board-paz00-pinmux.c
++++ b/arch/arm/mach-tegra/board-paz00-pinmux.c
+@@ -16,6 +16,8 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
++
+ #include <mach/pinmux.h>
+ 
+ #include "gpio-names.h"
+@@ -158,7 +160,9 @@ static struct tegra_gpio_table gpio_table[] = {
+ 
+ void paz00_pinmux_init(void)
+ {
+-	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
++	if (!of_machine_is_compatible("nvidia,tegra20"))
++		platform_add_devices(pinmux_devices,
++					ARRAY_SIZE(pinmux_devices));
+ 
+ 	tegra_pinmux_config_table(paz00_pinmux, ARRAY_SIZE(paz00_pinmux));
+ 
+diff --git a/arch/arm/mach-tegra/board-seaboard-pinmux.c b/arch/arm/mach-tegra/board-seaboard-pinmux.c
+index fbce31d..eb5991d 100644
+--- a/arch/arm/mach-tegra/board-seaboard-pinmux.c
++++ b/arch/arm/mach-tegra/board-seaboard-pinmux.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
+ 
+ #include <mach/pinmux.h>
+ #include <mach/pinmux-t2.h>
+@@ -218,7 +219,9 @@ static void __init update_pinmux(struct tegra_pingroup_config *newtbl, int size)
+ 
+ void __init seaboard_common_pinmux_init(void)
+ {
+-	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
++	if (!of_machine_is_compatible("nvidia,tegra20"))
++		platform_add_devices(pinmux_devices,
++					ARRAY_SIZE(pinmux_devices));
+ 
+ 	tegra_pinmux_config_table(seaboard_pinmux, ARRAY_SIZE(seaboard_pinmux));
+ 
+diff --git a/arch/arm/mach-tegra/board-trimslice-pinmux.c b/arch/arm/mach-tegra/board-trimslice-pinmux.c
+index 4969dd2..7ab719d 100644
+--- a/arch/arm/mach-tegra/board-trimslice-pinmux.c
++++ b/arch/arm/mach-tegra/board-trimslice-pinmux.c
+@@ -16,6 +16,7 @@
+ #include <linux/gpio.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/of.h>
+ 
+ #include <mach/pinmux.h>
+ 
+@@ -157,7 +158,9 @@ static struct tegra_gpio_table gpio_table[] = {
+ 
+ void __init trimslice_pinmux_init(void)
+ {
+-	platform_add_devices(pinmux_devices, ARRAY_SIZE(pinmux_devices));
++	if (!of_machine_is_compatible("nvidia,tegra20"))
++		platform_add_devices(pinmux_devices,
++					ARRAY_SIZE(pinmux_devices));
+ 	tegra_pinmux_config_table(trimslice_pinmux, ARRAY_SIZE(trimslice_pinmux));
+ 	tegra_gpio_config(gpio_table, ARRAY_SIZE(gpio_table));
+ }
 -- 
-Nicolas Ferre
+1.7.4.1
