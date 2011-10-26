@@ -1,74 +1,62 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/flattree: Early "find node by alias" function
-Date: Wed, 26 Oct 2011 10:29:37 +0100
-Message-ID: <20111026092937.GA2042@localhost.localdomain>
-References: <1319210219-10707-1-git-send-email-pawel.moll@arm.com>
- <4EA1A1A9.2090403@cavium.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] of: Add a reg-names property to name reg entries
+Date: Wed, 26 Oct 2011 14:23:32 +0200
+Message-ID: <20111026122332.GM4429@atomide.com>
+References: <1319471697-8970-1-git-send-email-b-cousson@ti.com>
+ <20111025082632.GJ4429@atomide.com>
+ <440786C5-FA1C-4750-9990-0BA5AABC2190@kernel.crashing.org>
+ <4EA6BC54.7030007@ti.com>
+ <BC60AF8F-C329-44B9-BEC9-EA5821725E1B@kernel.crashing.org>
+ <4EA6DF88.2080704@ti.com>
+ <FD4B90D7-4B26-42C2-8CF9-7AA9971BCBEB@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4EA1A1A9.2090403-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <FD4B90D7-4B26-42C2-8CF9-7AA9971BCBEB@kernel.crashing.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 21, 2011 at 09:45:29AM -0700, David Daney wrote:
-> On 10/21/2011 08:16 AM, Pawel Moll wrote:
-> >This patch adds a function for finding a node in flat tree
-> >based on an alias name. It can be used in early boot code.
+* Segher Boessenkool <segher@kernel.crashing.org> [111026 05:22]:
+> >>>>What problem does any of this solve?  The device binding for the
+> >>>>"mcasp" device will have to describe the possible "reg-names", and
+> >>>>what those mean; but the binding already has to describe its "reg"
+> >>>>property anyway.
+> >>>
+> >>>What this solve is the ability to use the
+> >>>platform_get_resource_byname directly to retrieve the proper
+> >>>register base address.
+> >>
+> >>You do not have to put it in the device tree for that, the device
+> >>driver can implement this itself if it cares.
 > >
-> >Typical use case is a situation when early code needs data
-> >from a arbitrary tree node, eg. base address of "serial0" to
-> >initialise debug output or some sort of ID register to
-> >probe hardware.
+> >???
 > >
-> >The tree source could look like that:
-> >
-> >/ {
-> >	aliases {
-> >		serial0 =&uart0;
-> >	};
-> >
-> >	uart0: uart@f0001000 {
-> >		reg =<0xf0001000 0x1000>;
-> >	};
-> >}
-> >
-> >Signed-off-by: Pawel Moll<pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> >The driver is the user of that name, so it has to be populated
+> >before into the resource during device creation.
 > 
-> How is this patch different/better than:
+> It can be as simple as
 > 
+> #define FOO_REG_INDEX 0
+> #define BAR_REG_INDEX 1
 > 
-> http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-June/005819.html
+> but you can use C strings if you want to.
 
-Note that unless we have reasonably standard alias names, finding nodes
-by alias may recreate the same problem that it attempts to solve.
+Fox pin muxing, we really want to use the actual signal names in
+the drivers. The define example above would means mapping the defines
+multiple times depending which packaging you're using.
 
-For example, how do I know which alias among serial0, serial1 etc.
-should be used as the debug UART?
+There can be several packages for each SoC, where the pins wired up
+whichever way. For example, for a serial driver to use UART RX pin,
+the driver can just request a signal called "uart_tx", which is the
+actual hardware name for the signal inside the SoC.
 
-It feels like we either need well-defined conventions, or proper
-symbolic names for aliases.  Or alternatively, the meanings of aliases
-need to be documented somewhere just like the real bindings.
+Using the signal names also makes it easier to make drivers to support
+the same device IP blocks across multiple SoC as the signal name most
+likely is the same as what the device IP block is using.
 
-Of course, some alises can have board-specific meanings, but if all
-alises are board-specific they become less useful.  If some alises are
-board-specific and some are not, then we really need some namespacing
-convention, just as for the real bindings.
+Regards,
 
-Of course, this may all have been discussed before and dismissed as
-overkill...
-
-Cheers
----Dave
+Tony 
