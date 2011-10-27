@@ -1,24 +1,55 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/3] omap4: sdp: Pass regulator data from dt
-Date: Thu, 27 Oct 2011 09:58:36 +0100
-Message-ID: <20111027085835.GB6641@opensource.wolfsonmicro.com>
-References: <1319702674-16304-1-git-send-email-rnayak@ti.com> <1319702674-16304-3-git-send-email-rnayak@ti.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: [PATCH] dt: add empty of_alias_get_id() for non-dt builds
+Date: Thu, 27 Oct 2011 11:07:28 +0200
+Message-ID: <1319706448-1664-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1319702674-16304-3-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robherring2@gmail.com, grant.likely@secretlab.ca
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2011 at 01:34:33PM +0530, Rajendra Nayak wrote:
+Add function of_alias_get_id() reporting -ENOSYS
+for non-dt builds, so that drivers migrating to dt
+can save some '#ifdef CONFIG_OF'.
 
-> Also add documentation for TWL regulator specific bindings.
+Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+Hi Grant,
 
-This should've been in the previous patch.
+Another empty function for non-dt builds. Can we consider
+queuing it for 3.1?
 
-> +For twl6030 regulators/LDO's
+Best regards,
 
-LDOs.
+ include/linux/of.h |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 92c40a1..34d8338 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -302,6 +302,11 @@ static inline struct device_node *of_parse_phandle(struct device_node *np,
+ 	return NULL;
+ }
+ 
++static inline int of_alias_get_id(struct device_node *np, const char *stem)
++{
++	return -ENOSYS;
++}
++
+ #define of_match_ptr(_ptr)	NULL
+ #define of_match_node(_matches, _node)	NULL
+ #endif /* CONFIG_OF */
+-- 
+1.7.5.4
