@@ -1,46 +1,154 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH v3 1/4] regulator: helper routine to extract
-	regulator_init_data
-Date: Thu, 27 Oct 2011 18:57:20 +0530
-Message-ID: <4EA95C38.2020804@ti.com>
-References: <1319702185-16108-1-git-send-email-rnayak@ti.com>
-	<1319702185-16108-2-git-send-email-rnayak@ti.com>
-	<20111027080953.GB18360@opensource.wolfsonmicro.com>
-	<CACYZBRG+_mm1O7Qg+ENCcLBX72iEWWyJohD_9EpAaT+Pb54cEA@mail.gmail.com>
-	<20111027114935.GA7384@opensource.wolfsonmicro.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: RFC: option to toggle dtc checks on and off
+Date: Fri, 28 Oct 2011 16:15:25 +1100
+Message-ID: <20111028051525.GA7215@truffala.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111027114935.GA7384@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: b-cousson@ti.com, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, shawn.guo@freescale.com, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: jdl-CYoMK+44s/E@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 27 October 2011 05:19 PM, Mark Brown wrote:
-> On Thu, Oct 27, 2011 at 04:13:08PM +0530, Nayak, Rajendra wrote:
->
->> okay, here's an updated patch which does that. I also added a binding to
->> specify a descriptive name to the regulator outputs as you suggested in
->> the other thread.
->
-> Looks good!  I guess we may run into issues with the status change thing
-> but I think we need to gather some experience to figure that out and
-> since it's implicit hopefully that won't have any compatibility issues
-> if it does happen.
->
-> Acked-by: Mark Brown<broonie@opensource.wolfsonmicro.com>
->
-> I guess it might be useful to resend without this bit at the top to make
-> it easier for Liam to apply.
+Here is a draft patch which adds a -C option to dtc, allowing
+individual semantic checks to be turned on and off.  It also allows
+indivudual checks to be set as triggering either warnings or errors.
 
-Thanks Mark, just resent the patch with your Ack included.
+I have a couple of concerns about it in its present form.  First, the
+current syntax is that "-C -checkname" disables a check, "-C
+checkname" turns a check on as a warning and "-C +checkname" turns it
+on as an error.  I'm not convinced this is a great syntax.
+
+Second, turning on a check will force on all prerequisite checks for
+it.  Turning a check off will disable all checks for which it is a
+prerequisite.  This seems necessary, since a check can't safely be
+executed without having first checked its prereqs, but this could have
+some very non-obvious effects from the command line.
+
+Index: dtc/checks.c
+===================================================================
+--- dtc.orig/checks.c	2011-04-11 13:47:41.000000000 +1000
++++ dtc/checks.c	2011-10-28 14:42:31.846917479 +1100
+@@ -644,6 +644,69 @@ static struct check *check_table[] = {
+ 	&obsolete_chosen_interrupt_controller,
+ };
+ 
++static void set_check_level(struct check *c, int level)
++{
++	int i;
++
++	fprintf(stderr, "Setting '%s' check level to %d\n",
++		c->name, level);
++
++	if (level > c->level) {
++		/* Raising level, also raise it for prereqs */
++		for (i = 0; i < c->num_prereqs; i++)
++			set_check_level(c->prereq[i], level);
++	}
++
++	if (level < c->level) {
++		/* Lowering level, also lower it for things this is
++		 * the prereq for */
++		for (i = 0; i < ARRAY_SIZE(check_table); i++) {
++			struct check *cc = check_table[i];
++			int j;
++
++			for (j = 0; j < cc->num_prereqs; j++)
++				if (cc->prereq[j] == c)
++					set_check_level(cc, level);
++		}
++	}
++
++	c->level = level;
++}
++
++void parse_checks_option(const char *optarg)
++{
++	int i;
++	const char *name;
++	int level;
++
++	switch (optarg[0]) {
++	case '-':
++		level = IGNORE;
++		name = optarg + 1;
++		break;
++
++	case '+':
++		level = ERROR;
++		name = optarg + 1;
++		break;
++
++	default:
++		level = WARN;
++		name = optarg;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(check_table); i++) {
++		struct check *c = check_table[i];
++
++		if (streq(c->name, name)) {
++			set_check_level(c, level);
++			return;
++		}
++	}
++
++	die("Unrecognized check name \"%s\"\n", name);
++}
++
+ void process_checks(int force, struct boot_info *bi)
+ {
+ 	struct node *dt = bi->dt;
+Index: dtc/dtc.c
+===================================================================
+--- dtc.orig/dtc.c	2011-07-18 09:20:15.000000000 +1000
++++ dtc/dtc.c	2011-10-28 14:43:34.743229363 +1100
+@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
+ 	minsize    = 0;
+ 	padsize    = 0;
+ 
+-	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:s")) != EOF) {
++	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:sC:")) != EOF) {
+ 		switch (opt) {
+ 		case 'I':
+ 			inform = optarg;
+@@ -162,6 +162,10 @@ int main(int argc, char *argv[])
+ 			sort = 1;
+ 			break;
+ 
++		case 'C':
++			parse_checks_option(optarg);
++			break;
++
+ 		case 'h':
+ 		default:
+ 			usage();
+Index: dtc/dtc.h
+===================================================================
+--- dtc.orig/dtc.h	2011-10-12 09:56:55.000000000 +1100
++++ dtc/dtc.h	2011-10-28 14:42:31.846917479 +1100
+@@ -225,6 +225,7 @@ void sort_tree(struct boot_info *bi);
+ 
+ /* Checks */
+ 
++void parse_checks_option(const char *optarg);
+ void process_checks(int force, struct boot_info *bi);
+ 
+ /* Flattened trees */
+
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
