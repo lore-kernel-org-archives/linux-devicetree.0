@@ -1,38 +1,59 @@
-From: Greg KH <gregkh@suse.de>
-Subject: Re: [PATCH] tty/serial: atmel_serial: fix compilation
-Date: Fri, 28 Oct 2011 15:18:11 +0200
-Message-ID: <20111028131811.GA25743@suse.de>
-References: <1319801631-14654-1-git-send-email-svens@stackframe.org>
- <4EAAA231.1020601@atmel.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] dt: add empty of_alias_get_id() for non-dt builds
+Date: Fri, 28 Oct 2011 08:19:50 -0500
+Message-ID: <4EAAABF6.50803@gmail.com>
+References: <1319706448-1664-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4EAAA231.1020601@atmel.com>
-Sender: linux-serial-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1319706448-1664-1-git-send-email-nicolas.ferre@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Sven Schnelle <svens@stackframe.org>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 28, 2011 at 02:38:09PM +0200, Nicolas Ferre wrote:
-> On 10/28/2011 01:33 PM, Sven Schnelle :
-> > If CONFIG_OF is disabled, compilation fails with:
-> > 
-> > drivers/tty/serial/atmel_serial.c: In function 'atmel_serial_probe':
-> > drivers/tty/serial/atmel_serial.c:1788: error: implicit declaration of function 'of_alias_get_id'
-> > 
-> > Fix this by adding the proper CONFIG_OF checks.
+On 10/27/2011 04:07 AM, Nicolas Ferre wrote:
+> Add function of_alias_get_id() reporting -ENOSYS
+> for non-dt builds, so that drivers migrating to dt
+> can save some '#ifdef CONFIG_OF'.
 > 
-> Yes, but I would like to avoid this and I have made a patch to address
-> this issue. I have sent it to the device tree guys yesterday:
-> "[PATCH] dt: add empty of_alias_get_id() for non-dt builds"
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+Acked-by: Rob Herring <rob.herring@calxeda.com>
+
+> ---
+> Hi Grant,
 > 
-> Maybe we can wait a little and see if it reaches Linus' tree on time. If
-> it is not, I will make sure that such a fix make it to mainline.
-
-I agree, the other dt: patch is the correct way to fix this, not this
-driver-only #ifdef hack.
-
-thanks,
-
-greg k-h
+> Another empty function for non-dt builds. Can we consider
+> queuing it for 3.1?
+> 
+> Best regards,
+> 
+>  include/linux/of.h |    5 +++++
+>  1 files changed, 5 insertions(+), 0 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 92c40a1..34d8338 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -302,6 +302,11 @@ static inline struct device_node *of_parse_phandle(struct device_node *np,
+>  	return NULL;
+>  }
+>  
+> +static inline int of_alias_get_id(struct device_node *np, const char *stem)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+>  #define of_match_ptr(_ptr)	NULL
+>  #define of_match_node(_matches, _node)	NULL
+>  #endif /* CONFIG_OF */
