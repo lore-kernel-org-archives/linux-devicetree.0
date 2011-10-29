@@ -1,59 +1,70 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] dt: add empty of_alias_get_id() for non-dt builds
-Date: Fri, 28 Oct 2011 08:19:50 -0500
-Message-ID: <4EAAABF6.50803@gmail.com>
-References: <1319706448-1664-1-git-send-email-nicolas.ferre@atmel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] of: include errno.h
+Date: Sat, 29 Oct 2011 10:38:16 +0200
+Message-ID: <CAMuHMdX-V6FqSZ_mmPm5aW_bTUNMk4sz5cADryX3Xyk627wRdg@mail.gmail.com>
+References: <20111006124044.1066.7111.stgit@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1319706448-1664-1-git-send-email-nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20111006124044.1066.7111.stgit@localhost6.localdomain6>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kalle Valo <kvalo@qca.qualcomm.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/27/2011 04:07 AM, Nicolas Ferre wrote:
-> Add function of_alias_get_id() reporting -ENOSYS
-> for non-dt builds, so that drivers migrating to dt
-> can save some '#ifdef CONFIG_OF'.
-> 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+On Thu, Oct 6, 2011 at 14:40, Kalle Valo <kvalo@qca.qualcomm.com> wrote=
+:
+> When compiling ath6kl for beagleboard (omap2plus_defconfig plus
+> CONFIG_ATH6KL, CONFIG_OF disable) with current linux-next compilation
+> fails:
+>
+> include/linux/of.h:269: error: 'ENOSYS' undeclared (first use in this=
+ function)
+> include/linux/of.h:276: error: 'ENOSYS' undeclared (first use in this=
+ function)
+> include/linux/of.h:289: error: 'ENOSYS' undeclared (first use in this=
+ function)
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+And now this build failure (also on m68k) has hit Linus' tree, more
+than 3 weeks after
+its detection in -next...
+
+> Fix this by including errno.h from of.h.
+>
+> Signed-off-by: Kalle Valo <kvalo@qca.qualcomm.com>
+
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 > ---
-> Hi Grant,
-> 
-> Another empty function for non-dt builds. Can we consider
-> queuing it for 3.1?
-> 
-> Best regards,
-> 
->  include/linux/of.h |    5 +++++
->  1 files changed, 5 insertions(+), 0 deletions(-)
-> 
+> =C2=A0include/linux/of.h | =C2=A0 =C2=A01 +
+> =C2=A01 files changed, 1 insertions(+), 0 deletions(-)
+>
 > diff --git a/include/linux/of.h b/include/linux/of.h
-> index 92c40a1..34d8338 100644
+> index 9180dc5..219c29d 100644
 > --- a/include/linux/of.h
 > +++ b/include/linux/of.h
-> @@ -302,6 +302,11 @@ static inline struct device_node *of_parse_phandle(struct device_node *np,
->  	return NULL;
->  }
->  
-> +static inline int of_alias_get_id(struct device_node *np, const char *stem)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
->  #define of_match_ptr(_ptr)	NULL
->  #define of_match_node(_matches, _node)	NULL
->  #endif /* CONFIG_OF */
+> @@ -17,6 +17,7 @@
+> =C2=A0*/
+> =C2=A0#include <linux/types.h>
+> =C2=A0#include <linux/bitops.h>
+> +#include <linux/errno.h>
+> =C2=A0#include <linux/kref.h>
+> =C2=A0#include <linux/mod_devicetable.h>
+> =C2=A0#include <linux/spinlock.h>
+
+Gr{oetje,eeting}s,
+
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 =C2=A0=C2=A0 -- Linus Torvalds
