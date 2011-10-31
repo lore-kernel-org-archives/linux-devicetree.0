@@ -1,42 +1,97 @@
-From: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: libfdt queries
-Date: Mon, 31 Oct 2011 17:15:56 +0530
-Message-ID: <4EAE8A74.9020301@nvidia.com>
-References: <4EA6501B.3030907@nvidia.com>
- <20111025064723.GA5513@truffala.fritz.box>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111025064723.GA5513-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Kyle Moffett <Kyle.D.Moffett@boeing.com>
+Subject: [RFC PATCH 03/10] powerpc/mpic: Assume a device-node was passed in mpic_alloc()
+Date: Mon, 31 Oct 2011 17:10:04 -0400
+Message-ID: <1320095411-20667-4-git-send-email-Kyle.D.Moffett@boeing.com>
+References: <1320095411-20667-1-git-send-email-Kyle.D.Moffett@boeing.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1320095411-20667-1-git-send-email-Kyle.D.Moffett@boeing.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: Kyle Moffett <Kyle.D.Moffett@boeing.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Milton Miller <miltonm@bga.com>, Kumar Gala <galak@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+All of the existing callers of mpic_alloc() pass in a non-NULL
+device-node pointer, so the checks for a NULL device-node may be
+removed.
 
-> That seems a bit unlikely, but maybe.  Is there any way you can dump
-> out the dtb after processing by your bootloader?
->
+Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
+---
+ arch/powerpc/sysdev/mpic.c |   50 ++++++++++++++++++-------------------------
+ 1 files changed, 21 insertions(+), 29 deletions(-)
 
-Found out the root cause. My bootloader was not manipulating the dtb
-blob size properly and hence the final dtb was messed up. This resulted
-in the kernel not finding proper fields inside the dtb.
-
-Sorry for the false alarm. Issue closed.
-
-
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
+index d6ef4d9..f7de33e 100644
+--- a/arch/powerpc/sysdev/mpic.c
++++ b/arch/powerpc/sysdev/mpic.c
+@@ -1139,19 +1139,17 @@ struct mpic * __init mpic_alloc(struct device_node *node,
+ 				unsigned int irq_count,
+ 				const char *name)
+ {
+-	struct mpic	*mpic;
+-	u32		greg_feature;
+-	const char	*vers;
+-	int		i;
+-	int		intvec_top;
++	int i, psize, intvec_top;
++	struct mpic *mpic;
++	u32 greg_feature;
++	const char *vers;
++	const u32 *psrc;
+ 
+-	/*
+-	 * If no phyiscal address was specified then all of the phyiscal
+-	 * addressing parameters must come from the device-tree.
+-	 */
+-	if (!phys_addr) {
+-		BUG_ON(!node);
++	/* This code assumes that a non-NULL device node is passed in */
++	BUG_ON(!node);
+ 
++	/* Pick the physical address from the device tree if unspecified */
++	if (!phys_addr) {
+ 		/* Check if it is DCR-based */
+ 		if (of_get_property(node, "dcr-reg")) {
+ 			flags |= MPIC_USES_DCR;
+@@ -1218,28 +1216,22 @@ struct mpic * __init mpic_alloc(struct device_node *node,
+ 	mpic->spurious_vec  = intvec_top;
+ 
+ 	/* Check for "big-endian" in device-tree */
+-	if (node && of_get_property(node, "big-endian", NULL) != NULL)
++	if (of_get_property(node, "big-endian", NULL) != NULL)
+ 		mpic->flags |= MPIC_BIG_ENDIAN;
+-	if (node && of_device_is_compatible(node, "fsl,mpic"))
++	if (of_device_is_compatible(node, "fsl,mpic"))
+ 		mpic->flags |= MPIC_FSL;
+ 
+ 	/* Look for protected sources */
+-	if (node) {
+-		int psize;
+-		unsigned int bits, mapsize;
+-		const u32 *psrc =
+-			of_get_property(node, "protected-sources", &psize);
+-		if (psrc) {
+-			psize /= 4;
+-			bits = intvec_top + 1;
+-			mapsize = BITS_TO_LONGS(bits) * sizeof(unsigned long);
+-			mpic->protected = kzalloc(mapsize, GFP_KERNEL);
+-			BUG_ON(mpic->protected == NULL);
+-			for (i = 0; i < psize; i++) {
+-				if (psrc[i] > intvec_top)
+-					continue;
+-				__set_bit(psrc[i], mpic->protected);
+-			}
++	psrc = of_get_property(node, "protected-sources", &psize);
++	if (psrc) {
++		/* Allocate a bitmap with one bit per interrupt */
++		unsigned int mapsize = BITS_TO_LONGS(intvec_top + 1);
++		mpic->protected = kzalloc(mapsize*sizeof(long), GFP_KERNEL);
++		BUG_ON(mpic->protected == NULL);
++		for (i = 0; i < psize/sizeof(u32); i++) {
++			if (psrc[i] > intvec_top)
++				continue;
++			__set_bit(psrc[i], mpic->protected);
+ 		}
+ 	}
+ 
+-- 
+1.7.2.5
