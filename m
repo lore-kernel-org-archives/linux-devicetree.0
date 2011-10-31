@@ -1,65 +1,42 @@
-From: saeed bishara <saeed.bishara@gmail.com>
-Subject: Re: [PATCH v2] net: add calxeda xgmac ethernet driver
-Date: Mon, 31 Oct 2011 09:58:05 +0200
-Message-ID: <CAMAG_ecUe3UNYE4pUYA3_NNcK5znotBDvMPfb_BgHmx4ZmgcWQ@mail.gmail.com>
-References: <1320010217-17322-1-git-send-email-robherring2@gmail.com>
+From: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: libfdt queries
+Date: Mon, 31 Oct 2011 17:15:56 +0530
+Message-ID: <4EAE8A74.9020301@nvidia.com>
+References: <4EA6501B.3030907@nvidia.com>
+ <20111025064723.GA5513@truffala.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1320010217-17322-1-git-send-email-robherring2@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: joe@perches.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111025064723.GA5513-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 30, 2011 at 11:30 PM, Rob Herring <robherring2@gmail.com> w=
-rote:
-> From: Rob Herring <rob.herring@calxeda.com>
-Hi Rob, one more comment
+
+> That seems a bit unlikely, but maybe.  Is there any way you can dump
+> out the dtb after processing by your bootloader?
 >
 
+Found out the root cause. My bootloader was not manipulating the dtb
+blob size properly and hence the final dtb was messed up. This resulted
+in the kernel not finding proper fields inside the dtb.
 
-> +static void xgmac_tx_complete(struct xgmac_priv *priv)
-> +{
-> + =C2=A0 =C2=A0 =C2=A0 void __iomem *ioaddr =3D priv->base;
-> +
-> +
-> + =C2=A0 =C2=A0 =C2=A0 writel(DMA_STATUS_TU | DMA_STATUS_NIS, ioaddr =
-+ XGMAC_DMA_STATUS);
-> +
-> + =C2=A0 =C2=A0 =C2=A0 while (dma_ring_cnt(priv->tx_head, priv->tx_ta=
-il, DMA_TX_RING_SZ)) {
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 unsigned int entry=
- =3D priv->tx_tail;
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct sk_buff *sk=
-b =3D priv->tx_skbuff[entry];
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct xgmac_dma_d=
-esc *p =3D priv->dma_tx + entry;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* Check if the de=
-scriptor is owned by the DMA. */
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (desc_get_owner=
-(p))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 break;
-> +
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* Verify tx error=
- by looking at the last segment */
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (desc_get_tx_ls=
-(p))
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 desc_get_tx_status(priv, p);
-> +
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 netdev_dbg(priv->d=
-ev, "tx ring: curr %d, dirty %d\n",
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 priv->tx_head, priv->tx_tail);
-> +
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dma_unmap_single(p=
-riv->device, desc_get_buf_addr(p),
-> + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0desc_get_buf_len(p), DMA_TO_D=
-EVICE);
-I think you missed to do dma_unmap_page for the skp frags page.
-saeed
+Sorry for the false alarm. Issue closed.
+
+
+-----------------------------------------------------------------------------------
+This email message is for the sole use of the intended recipient(s) and may contain
+confidential information.  Any unauthorized review, use, disclosure or distribution
+is prohibited.  If you are not the intended recipient, please contact the sender by
+reply email and destroy all copies of the original message.
+-----------------------------------------------------------------------------------
