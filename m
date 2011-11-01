@@ -1,151 +1,184 @@
-From: Kyle Moffett <Kyle.D.Moffett@boeing.com>
-Subject: [RFC PATCH 09/10] powerpc/mpic: Cache the device-tree node in "struct mpic"
-Date: Mon, 31 Oct 2011 17:10:10 -0400
-Message-ID: <1320095411-20667-10-git-send-email-Kyle.D.Moffett@boeing.com>
-References: <1320095411-20667-1-git-send-email-Kyle.D.Moffett@boeing.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1320095411-20667-1-git-send-email-Kyle.D.Moffett@boeing.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: Kyle Moffett <Kyle.D.Moffett@boeing.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Kumar Gala <galak@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Dave Liu <daveliu@freescale.com>, Milton Miller <miltonm@bga.com>, devicetree-discuss@lists.ozlabs.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v2] gpio/samsung: Add device tree support for Exynos4
+Date: Tue,  1 Nov 2011 06:13:47 +0530
+Message-ID: <1320108227-2693-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, Thomas Abraham <thomas.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Store the node pointer in the MPIC during initialization so that all of
-the later operational code can just reuse the cached pointer.
+As gpio chips get registered, a device tree node which represents the
+gpio chip is searched and attached to it. A translate function is also
+provided to convert the gpio specifier into actual platform settings
+for pin function selection, pull up/down and driver strength settings.
 
-Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 ---
- arch/powerpc/include/asm/mpic.h |    3 +++
- arch/powerpc/sysdev/mpic.c      |   32 ++++++++++++++++----------------
- 2 files changed, 19 insertions(+), 16 deletions(-)
+Changes since v1:
+- As suggested by Rob and Grant, the gpio controller node lookup is based
+  on the base address of the gpio controller instead of the unique
+  per-controller compatible property value.
 
-diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
-index a241076..db78b89 100644
---- a/arch/powerpc/include/asm/mpic.h
-+++ b/arch/powerpc/include/asm/mpic.h
-@@ -251,6 +251,9 @@ struct mpic_irq_save {
- /* The instance data of a given MPIC */
- struct mpic
- {
-+	/* The OpenFirmware dt node for this MPIC */
-+	struct device_node *node;
+This patch is based on the following tree and branch.
+git://git.linaro.org/git/people/arnd/arm-soc.git  branch: for-next
+
+ .../devicetree/bindings/gpio/gpio-samsung.txt      |   40 ++++++++++++
+ drivers/gpio/gpio-samsung.c                        |   66 ++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+new file mode 100644
+index 0000000..c143058
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+@@ -0,0 +1,40 @@
++Samsung Exynos4 GPIO Controller
 +
- 	/* The remapper for this MPIC */
- 	struct irq_host		*irqhost;
++Required properties:
++- compatible: Compatible property value should be "samsung,exynos4-gpio>".
++
++- reg: Physical base address of the controller and length of memory mapped
++  region.
++
++- #gpio-cells: Should be 4. The syntax of the gpio specifier used by client nodes
++  should be the following with values derived from the SoC user manual.
++     <[phandle of the gpio controller node]
++      [pin number within the gpio controller]
++      [mux function]
++      [pull up/down]
++      [drive strength]>
++
++  Values for gpio specifier:
++  - Pin number: is a value between 0 to 7.
++  - Pull Up/Down: 0 - Pull Up/Down Disabled.
++                  1 - Pull Down Enabled.
++                  3 - Pull Up Enabled.
++  - Drive Strength: 0 - 1x,
++                    1 - 3x,
++                    2 - 2x,
++                    3 - 4x
++
++- gpio-controller: Specifies that the node is a gpio controller.
++- #address-cells: should be 1.
++- #size-cells: should be 1. 
++
++Example:
++
++	gpa0: gpio-controller@11400000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "samsung,exynos4-gpio";
++		reg = <0x11400000 0x20>;
++		#gpio-cells = <4>;
++		gpio-controller;
++	};
+diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
+index 8662518..0140756 100644
+--- a/drivers/gpio/gpio-samsung.c
++++ b/drivers/gpio/gpio-samsung.c
+@@ -24,6 +24,9 @@
+ #include <linux/interrupt.h>
+ #include <linux/sysdev.h>
+ #include <linux/ioport.h>
++#include <linux/of.h>
++#include <linux/slab.h>
++#include <linux/of_address.h>
  
-diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
-index 8b4f022..1826dae 100644
---- a/arch/powerpc/sysdev/mpic.c
-+++ b/arch/powerpc/sysdev/mpic.c
-@@ -315,26 +315,25 @@ static void _mpic_map_mmio(struct mpic *mpic, phys_addr_t phys_addr,
- }
+ #include <asm/irq.h>
  
- #ifdef CONFIG_PPC_DCR
--static void _mpic_map_dcr(struct mpic *mpic, struct device_node *node,
--			  struct mpic_reg_bank *rb,
-+static void _mpic_map_dcr(struct mpic *mpic, struct mpic_reg_bank *rb,
- 			  unsigned int offset, unsigned int size)
+@@ -2374,6 +2377,63 @@ static struct samsung_gpio_chip exynos4_gpios_3[] = {
+ #endif
+ };
+ 
++#if defined(CONFIG_ARCH_EXYNOS4) && defined(CONFIG_OF)
++int exynos4_gpio_xlate(struct gpio_chip *gc, struct device_node *np,
++			 const void *gpio_spec, u32 *flags)
++{
++	const __be32 *gpio = gpio_spec;
++	const u32 n = be32_to_cpup(gpio);
++	unsigned int pin = gc->base + be32_to_cpu(gpio[0]);
++
++	if (gc->of_gpio_n_cells < 4) {
++		WARN_ON(1);
++		return -EINVAL;
++	}
++
++	if (n > gc->ngpio)
++		return -EINVAL;
++
++	s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(be32_to_cpu(gpio[1])));
++	s3c_gpio_setpull(pin, be32_to_cpu(gpio[2]));
++	s5p_gpio_set_drvstr(pin, be32_to_cpu(gpio[3]));
++	return n;
++}
++
++static const struct of_device_id exynos4_gpio_dt_match[] __initdata = {
++	{ .compatible = "samsung,exynos4-gpio", },
++	{}
++};
++
++static __init void exynos4_gpiolib_attach_ofnode(struct samsung_gpio_chip *chip,
++						u64 base, u64 offset)
++{
++	struct gpio_chip *gc =  &chip->chip;
++	u64 address;
++
++	if (!of_have_populated_dt())
++		return;
++
++	address = (chip->base) ? (base + ((u32)chip->base & 0xfff)) :
++			(base + offset);
++
++	gc->of_node = of_find_matching_node_by_address(NULL,
++			exynos4_gpio_dt_match, address);
++	if (!gc->of_node) {
++		pr_info("gpio: device tree node not found for gpio controller"
++			" with base address %08llx\n", address);
++		return;
++	}
++	gc->of_gpio_n_cells = 4;
++	gc->of_xlate = exynos4_gpio_xlate;
++}
++#else
++static __init void exynos4_gpiolib_attach_ofnode(struct samsung_gpio_chip *chip,
++						u64 base, u64 offset)
++{
++	return;
++}
++#endif /* defined(CONFIG_ARCH_EXYNOS4) && defined(CONFIG_OF) */
++
+ /* TODO: cleanup soc_is_* */
+ static __init int samsung_gpiolib_init(void)
  {
--	phys_addr_t phys_addr = dcr_resource_start(node);
-+	phys_addr_t phys_addr = dcr_resource_start(mpic->node);
- 	rb->dhost = dcr_map(mpic->node, phys_addr + offset, size);
- 	BUG_ON(!DCR_MAP_OK(rb->dhost));
- }
+@@ -2455,6 +2515,8 @@ static __init int samsung_gpiolib_init(void)
+ 				chip->config = &exynos4_gpio_cfg;
+ 				chip->group = group++;
+ 			}
++			exynos4_gpiolib_attach_ofnode(chip,
++					EXYNOS4_PA_GPIO1, i * 0x20);
+ 		}
+ 		samsung_gpiolib_add_4bit_chips(exynos4_gpios_1, nr_chips, S5P_VA_GPIO1);
  
--static inline void mpic_map(struct mpic *mpic, struct device_node *node,
-+static inline void mpic_map(struct mpic *mpic,
- 			    phys_addr_t phys_addr, struct mpic_reg_bank *rb,
- 			    unsigned int offset, unsigned int size)
- {
- 	if (mpic->flags & MPIC_USES_DCR)
--		_mpic_map_dcr(mpic, node, rb, offset, size);
-+		_mpic_map_dcr(mpic, rb, offset, size);
- 	else
- 		_mpic_map_mmio(mpic, phys_addr, rb, offset, size);
- }
- #else /* CONFIG_PPC_DCR */
--#define mpic_map(m,n,p,b,o,s)	_mpic_map_mmio(m,p,b,o,s)
-+#define mpic_map(m,p,b,o,s)	_mpic_map_mmio(m,p,b,o,s)
- #endif /* !CONFIG_PPC_DCR */
+@@ -2467,6 +2529,8 @@ static __init int samsung_gpiolib_init(void)
+ 				chip->config = &exynos4_gpio_cfg;
+ 				chip->group = group++;
+ 			}
++			exynos4_gpiolib_attach_ofnode(chip,
++					EXYNOS4_PA_GPIO2, i * 0x20);
+ 		}
+ 		samsung_gpiolib_add_4bit_chips(exynos4_gpios_2, nr_chips, S5P_VA_GPIO2);
  
- 
-@@ -1178,6 +1177,7 @@ struct mpic * __init mpic_alloc(struct device_node *node,
- 		return NULL;
- 
- 	mpic->name = name;
-+	mpic->node = node;
- 	mpic->paddr = phys_addr;
- 
- 	mpic->hc_irq = mpic_irq_chip;
-@@ -1224,13 +1224,13 @@ struct mpic * __init mpic_alloc(struct device_node *node,
- 	mpic->spurious_vec  = intvec_top;
- 
- 	/* Check for "big-endian" in device-tree */
--	if (of_get_property(node, "big-endian", NULL) != NULL)
-+	if (of_get_property(mpic->node, "big-endian", NULL) != NULL)
- 		mpic->flags |= MPIC_BIG_ENDIAN;
--	if (of_device_is_compatible(node, "fsl,mpic"))
-+	if (of_device_is_compatible(mpic->node, "fsl,mpic"))
- 		mpic->flags |= MPIC_FSL;
- 
- 	/* Look for protected sources */
--	psrc = of_get_property(node, "protected-sources", &psize);
-+	psrc = of_get_property(mpic->node, "protected-sources", &psize);
- 	if (psrc) {
- 		/* Allocate a bitmap with one bit per interrupt */
- 		unsigned int mapsize = BITS_TO_LONGS(intvec_top + 1);
-@@ -1256,15 +1256,15 @@ struct mpic * __init mpic_alloc(struct device_node *node,
- 		mpic->reg_type = mpic_access_mmio_le;
- 
- 	/* Map the global registers */
--	mpic_map(mpic, node, mpic->paddr, &mpic->gregs, MPIC_INFO(GREG_BASE), 0x1000);
--	mpic_map(mpic, node, mpic->paddr, &mpic->tmregs, MPIC_INFO(TIMER_BASE), 0x1000);
-+	mpic_map(mpic, mpic->paddr, &mpic->gregs, MPIC_INFO(GREG_BASE), 0x1000);
-+	mpic_map(mpic, mpic->paddr, &mpic->tmregs, MPIC_INFO(TIMER_BASE), 0x1000);
- 
- 	/* Reset */
- 
- 	/* When using a device-node, reset requests are only honored if the MPIC
- 	 * is allowed to reset.
- 	 */
--	if (of_get_property(node, "pic-no-reset", NULL))
-+	if (of_get_property(mpic->node, "pic-no-reset", NULL))
- 		mpic->flags |= MPIC_NO_RESET;
- 
- 	if ((flags & MPIC_WANTS_RESET) && !(mpic->flags & MPIC_NO_RESET)) {
-@@ -1306,7 +1306,7 @@ struct mpic * __init mpic_alloc(struct device_node *node,
- 
- 	/* Map the per-CPU registers */
- 	for (i = 0; i < mpic->num_cpus; i++) {
--		mpic_map(mpic, node, mpic->paddr, &mpic->cpuregs[i],
-+		mpic_map(mpic, mpic->paddr, &mpic->cpuregs[i],
- 			 MPIC_INFO(CPU_BASE) + i * MPIC_INFO(CPU_STRIDE),
- 			 0x1000);
- 	}
-@@ -1314,13 +1314,13 @@ struct mpic * __init mpic_alloc(struct device_node *node,
- 	/* Initialize main ISU if none provided */
- 	if (mpic->isu_size == 0) {
- 		mpic->isu_size = mpic->num_sources;
--		mpic_map(mpic, node, mpic->paddr, &mpic->isus[0],
-+		mpic_map(mpic, mpic->paddr, &mpic->isus[0],
- 			 MPIC_INFO(IRQ_BASE), MPIC_INFO(IRQ_STRIDE) * mpic->isu_size);
- 	}
- 	mpic->isu_shift = 1 + __ilog2(mpic->isu_size - 1);
- 	mpic->isu_mask = (1 << mpic->isu_shift) - 1;
- 
--	mpic->irqhost = irq_alloc_host(node, IRQ_HOST_MAP_LINEAR,
-+	mpic->irqhost = irq_alloc_host(mpic->node, IRQ_HOST_MAP_LINEAR,
- 				       isu_size ? isu_size : mpic->num_sources,
- 				       &mpic_host_ops,
- 				       flags & MPIC_LARGE_VECTORS ? 2048 : 256);
-@@ -1368,7 +1368,7 @@ void __init mpic_assign_isu(struct mpic *mpic, unsigned int isu_num,
- 
- 	BUG_ON(isu_num >= MPIC_MAX_ISU);
- 
--	mpic_map(mpic, mpic->irqhost->of_node,
-+	mpic_map(mpic,
- 		 paddr, &mpic->isus[isu_num], 0,
- 		 MPIC_INFO(IRQ_STRIDE) * mpic->isu_size);
+@@ -2479,6 +2543,8 @@ static __init int samsung_gpiolib_init(void)
+ 				chip->config = &exynos4_gpio_cfg;
+ 				chip->group = group++;
+ 			}
++			exynos4_gpiolib_attach_ofnode(chip,
++					EXYNOS4_PA_GPIO3, i * 0x20);
+ 		}
+ 		samsung_gpiolib_add_4bit_chips(exynos4_gpios_3, nr_chips, S5P_VA_GPIO3);
  
 -- 
-1.7.2.5
+1.7.4.4
