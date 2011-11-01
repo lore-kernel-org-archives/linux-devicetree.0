@@ -1,45 +1,50 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: libfdt queries
-Date: Tue, 1 Nov 2011 11:55:16 +1100
-Message-ID: <20111101005516.GD6895@truffala.fritz.box>
-References: <4EA6501B.3030907@nvidia.com>
- <20111025064723.GA5513@truffala.fritz.box>
- <4EAE8A74.9020301@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4EAE8A74.9020301-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v2 0/2] ARM: Samsung: Add basic device tree support for Exynos4 boards
+Date: Tue,  1 Nov 2011 06:36:51 +0530
+Message-ID: <1320109613-2811-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 31, 2011 at 05:15:56PM +0530, Varun Wadekar wrote:
-> 
-> > That seems a bit unlikely, but maybe.  Is there any way you can dump
-> > out the dtb after processing by your bootloader?
-> >
-> 
-> Found out the root cause. My bootloader was not manipulating the dtb
-> blob size properly and hence the final dtb was messed up. This resulted
-> in the kernel not finding proper fields inside the dtb.
+Changes since v1:
+- Removed unique per-controller compatible string value from gpio controller nodes
+  to align with the updated device tree support for exynos4 gpio controller.
+- Removed the interrupt combiner controller node.
 
-Ok.  You mean you were truncating the blob?  Or you were manually
-(without libfdt) manipulating the size property somehow and messing
-that up?
+This patchset adds a new basic device tree enabled machine/board file which is
+based on the Samsung's Exynos4 family of SoC's. Also included in this patchset is the
+dts file for Exynos4210 SoC, Samsung's SMDKV310 board and Insignal's Origen board.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+The Exynos4210 dts file includes support for IRQ, GPIO, WDT, RTC, UART, SDHCI, Keypad,
+DMA and I2C controllers. As device tree coverage for Exynos4210 increases, additional
+device nodes to represent the controllers should be added.
+
+The device tree enabled machine file enables boot on two boards based on the
+Exynos4210 SoC. This provides a starting point to add additional device tree support
+on these boards, migrate other existing Exynos4 based boards to use device tree
+and enable device tree based boot on new upcoming boards.
+
+This patchset has been tested on the following tree:
+git://git.linaro.org/git/people/arnd/arm-soc.git  branch: for-next
+
+Thomas Abraham (2):
+  ARM: Samsung: Add Exynos4 device tree enabled board file
+  ARM: dts: Add intial dts file for Exynos4210 SoC, SMDKV310 and Origen board
+
+ .../devicetree/bindings/arm/insignal-boards.txt    |    8 +
+ .../devicetree/bindings/arm/samsung-boards.txt     |    8 +
+ arch/arm/boot/dts/exynos4210-origen.dts            |  137 +++++++
+ arch/arm/boot/dts/exynos4210-smdkv310.dts          |  182 +++++++++
+ arch/arm/boot/dts/exynos4210.dtsi                  |  397 ++++++++++++++++++++
+ arch/arm/mach-exynos4/Kconfig                      |   14 +
+ arch/arm/mach-exynos4/Makefile                     |    2 +
+ arch/arm/mach-exynos4/mach-exynos4-dt.c            |   85 +++++
+ 8 files changed, 833 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/insignal-boards.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung-boards.txt
+ create mode 100644 arch/arm/boot/dts/exynos4210-origen.dts
+ create mode 100644 arch/arm/boot/dts/exynos4210-smdkv310.dts
+ create mode 100644 arch/arm/boot/dts/exynos4210.dtsi
+ create mode 100644 arch/arm/mach-exynos4/mach-exynos4-dt.c
