@@ -1,50 +1,180 @@
-From: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: libfdt queries
-Date: Tue, 1 Nov 2011 09:47:08 +0530
-Message-ID: <4EAF72C4.5080503@nvidia.com>
-References: <4EA6501B.3030907@nvidia.com>
- <20111025064723.GA5513@truffala.fritz.box> <4EAE8A74.9020301@nvidia.com>
- <20111101005516.GD6895@truffala.fritz.box>
+From: Sylwester Nawrocki <snjw23@gmail.com>
+Subject: Re: [PATCH v2] gpio/samsung: Add device tree support for Exynos4
+Date: Tue, 01 Nov 2011 09:22:26 +0100
+Message-ID: <4EAFAC42.5080607@gmail.com>
+References: <1320108227-2693-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111101005516.GD6895-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1320108227-2693-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Thomas,
 
->> Found out the root cause. My bootloader was not manipulating the dtb
->> blob size properly and hence the final dtb was messed up. This resulted
->> in the kernel not finding proper fields inside the dtb.
-> Ok.  You mean you were truncating the blob?
+thanks for your work on this.
 
-There is an internal function which actually copies the .dtb from a
-partition on the eMMC to SDRAM before handing control to the kernel. I
-forgot to set the proper size to be used after manipulating the command
-line (since the command line size changed the copy routine should now
-copy the updated size and should discard the old size).
->   Or you were manually
-> (without libfdt) manipulating the size property somehow and messing
-> that up?
->
+On 11/01/2011 01:43 AM, Thomas Abraham wrote:
+> As gpio chips get registered, a device tree node which represents the
+> gpio chip is searched and attached to it. A translate function is also
+> provided to convert the gpio specifier into actual platform settings
+> for pin function selection, pull up/down and driver strength settings.
+> 
+> Signed-off-by: Thomas Abraham<thomas.abraham@linaro.org>
+> Acked-by: Grant Likely<grant.likely@secretlab.ca>
+> ---
+> Changes since v1:
+> - As suggested by Rob and Grant, the gpio controller node lookup is based
+>    on the base address of the gpio controller instead of the unique
+>    per-controller compatible property value.
+> 
+> This patch is based on the following tree and branch.
+> git://git.linaro.org/git/people/arnd/arm-soc.git  branch: for-next
+> 
+>   .../devicetree/bindings/gpio/gpio-samsung.txt      |   40 ++++++++++++
+>   drivers/gpio/gpio-samsung.c                        |   66 ++++++++++++++++++++
+>   2 files changed, 106 insertions(+), 0 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+> new file mode 100644
+> index 0000000..c143058
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+> @@ -0,0 +1,40 @@
+> +Samsung Exynos4 GPIO Controller
+> +
+> +Required properties:
+> +- compatible: Compatible property value should be "samsung,exynos4-gpio>".
+> +
+> +- reg: Physical base address of the controller and length of memory mapped
+> +  region.
+> +
+> +- #gpio-cells: Should be 4. The syntax of the gpio specifier used by client nodes
+> +  should be the following with values derived from the SoC user manual.
+> +<[phandle of the gpio controller node]
+> +      [pin number within the gpio controller]
+> +      [mux function]
+> +      [pull up/down]
+> +      [drive strength]>
+> +
+> +  Values for gpio specifier:
+> +  - Pin number: is a value between 0 to 7.
+> +  - Pull Up/Down: 0 - Pull Up/Down Disabled.
+> +                  1 - Pull Down Enabled.
+> +                  3 - Pull Up Enabled.
+> +  - Drive Strength: 0 - 1x,
+> +                    1 - 3x,
+> +                    2 - 2x,
+> +                    3 - 4x
 
-libfdt was properly changing the size inside the blob, but I did not use
-the updated size while copying the blob from eMMC to SDRAM.
+I wonder whether it's worth to have more regular mapping, i.e.
+*)	0 - 1x, 
+	1 - 2x, 
+	2 - 3x, 
+	3 - 4x
 
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+It doesn't give as much advantage, and introduces an overhead of doing 
+an additional remapping. However I find current mapping of the DT specifier
+values to real driver strength slightly confusing. 
+Perhaps unlikely, the future SoCs could have different meaning of the
+register values.
+
+> +
+> +- gpio-controller: Specifies that the node is a gpio controller.
+> +- #address-cells: should be 1.
+> +- #size-cells: should be 1.
+> +
+> +Example:
+> +
+> +	gpa0: gpio-controller@11400000 {
+> +		#address-cells =<1>;
+> +		#size-cells =<1>;
+> +		compatible = "samsung,exynos4-gpio";
+> +		reg =<0x11400000 0x20>;
+> +		#gpio-cells =<4>;
+> +		gpio-controller;
+> +	};
+> diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
+> index 8662518..0140756 100644
+> --- a/drivers/gpio/gpio-samsung.c
+> +++ b/drivers/gpio/gpio-samsung.c
+> @@ -24,6 +24,9 @@
+>   #include<linux/interrupt.h>
+>   #include<linux/sysdev.h>
+>   #include<linux/ioport.h>
+> +#include<linux/of.h>
+> +#include<linux/slab.h>
+> +#include<linux/of_address.h>
+> 
+>   #include<asm/irq.h>
+> 
+> @@ -2374,6 +2377,63 @@ static struct samsung_gpio_chip exynos4_gpios_3[] = {
+>   #endif
+>   };
+> 
+> +#if defined(CONFIG_ARCH_EXYNOS4)&&  defined(CONFIG_OF)
+> +int exynos4_gpio_xlate(struct gpio_chip *gc, struct device_node *np,
+> +			 const void *gpio_spec, u32 *flags)
+> +{
+> +	const __be32 *gpio = gpio_spec;
+> +	const u32 n = be32_to_cpup(gpio);
+> +	unsigned int pin = gc->base + be32_to_cpu(gpio[0]);
+> +
+> +	if (gc->of_gpio_n_cells<  4) {
+> +		WARN_ON(1);
+> +		return -EINVAL;
+> +	}
+
+nit: Could be simplified to:
+
+	if (WARN_ON(gc->of_gpio_n_cells < 4))
+		return -EINVAL;
+
+> +
+> +	if (n>  gc->ngpio)
+> +		return -EINVAL;
+> +
+> +	s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(be32_to_cpu(gpio[1])));
+> +	s3c_gpio_setpull(pin, be32_to_cpu(gpio[2]));
+> +	s5p_gpio_set_drvstr(pin, be32_to_cpu(gpio[3]));
+
+The above functions can fail and IMHO ignoring the return value here
+makes the system harder to debug. 
+
+Assuming GPIO drive strength specifier mapping *) the following code could
+do the remapping (not tested):
+
+	unsigned int tmp = be32_to_cpu(gpio[3]);
+	u32 drvstr = ((tmp >> 1) ^ tmp) & 1 ? ~tmp & 3 : tmp;
+	
+	s5p_gpio_set_drvstr(pin, drvstr);
+
+> +	return n;
+> +}
+> +
+> +static const struct of_device_id exynos4_gpio_dt_match[] __initdata = {
+> +	{ .compatible = "samsung,exynos4-gpio", },
+> +	{}
+> +};
+> +
+> +static __init void exynos4_gpiolib_attach_ofnode(struct samsung_gpio_chip *chip,
+> +						u64 base, u64 offset)
+> +{
+> +	struct gpio_chip *gc =&chip->chip;
+> +	u64 address;
+> +
+> +	if (!of_have_populated_dt())
+> +		return;
+> +
+> +	address = (chip->base) ? (base + ((u32)chip->base&  0xfff)) :
+> +			(base + offset);
+
+Could the extra parentheses be dropped ?
+
+--
+Regards,
+Sylwester
