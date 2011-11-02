@@ -1,100 +1,131 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCHv2 02/10] ARM: vic: MULTI_IRQ_HANDLER handler
-Date: Wed, 2 Nov 2011 14:08:11 +0000
-Message-ID: <20111102140811.GA22491@totoro>
-References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
-	<1317206507-18867-3-git-send-email-jamie@jamieiles.com>
-	<20110928203905.GB2838@ponder.secretlab.ca>
-	<CACRpkdZKns-GraGp-YMD6jzOPETkvEpt9bC8HcYUmf3JUyCV3A@mail.gmail.com>
-	<20110929093009.GM17204@pulham.picochip.com>
-	<20111102134024.GE19187@n2100.arm.linux.org.uk>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2] gpio/samsung: Add device tree support for Exynos4
+Date: Wed, 02 Nov 2011 15:31:06 +0100
+Message-ID: <4EB1542A.4030609@samsung.com>
+References: <1320108227-2693-1-git-send-email-thomas.abraham@linaro.org>
+ <4EAFAC42.5080607@gmail.com>
+ <CAJuYYwSfjg04gaJUgNkUzFNgs5d_7PL9nio-1RwrPizyShTxGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20111102134024.GE19187@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: kgene.kim@samsung.com, linus.walleij@stericsson.com, Linus Walleij <linus.walleij@linaro.org>, rob.herring@calxeda.com, Grant Likely <grant.likely@secretlab.ca>, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, STEricsson_nomadik_linux@list.st.com, Jamie Iles <jamie@jamieiles.com>, rubini@unipv.it, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, rmallon@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwSfjg04gaJUgNkUzFNgs5d_7PL9nio-1RwrPizyShTxGQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: Sylwester Nawrocki <snjw23@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, arnd@arndb.de, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 02, 2011 at 01:40:24PM +0000, Russell King - ARM Linux wrote:
-> On Thu, Sep 29, 2011 at 10:30:09AM +0100, Jamie Iles wrote:
-> > +#ifdef CONFIG_MULTI_IRQ_HANDLER
-> > +static void vic_single_handle_irq(struct vic_device *vic, struct pt_regs *regs)
-> > +{
-> > +	u32 stat, irq;
-> > +
-> > +	stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
-> > +	while (stat) {
-> > +		irq = ffs(stat) - 1;
-> > +		handle_IRQ(irq_domain_to_irq(&vic->domain, irq), regs);
-> > +		stat &= ~(1 << irq);
-> > +	}
-> > +}
-> > +
-> > +asmlinkage void __exception_irq_entry vic_handle_irq(struct pt_regs *regs)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i = 0; i < vic_id; ++i)
-> > +		vic_single_handle_irq(&vic_devices[i], regs);
-> > +}
+On 11/02/2011 02:05 PM, Thomas Abraham wrote:
+> On 1 November 2011 13:52, Sylwester Nawrocki <snjw23@gmail.com> wrote:
+>> On 11/01/2011 01:43 AM, Thomas Abraham wrote:
+>>> As gpio chips get registered, a device tree node which represents the
+>>> gpio chip is searched and attached to it. A translate function is also
+>>> provided to convert the gpio specifier into actual platform settings
+>>> for pin function selection, pull up/down and driver strength settings.
+>>>
+>>> Signed-off-by: Thomas Abraham<thomas.abraham@linaro.org>
+>>> Acked-by: Grant Likely<grant.likely@secretlab.ca>
+>>> ---
+>>> Changes since v1:
+>>> - As suggested by Rob and Grant, the gpio controller node lookup is based
+>>>    on the base address of the gpio controller instead of the unique
+>>>    per-controller compatible property value.
+>>>
+>>> This patch is based on the following tree and branch.
+>>> git://git.linaro.org/git/people/arnd/arm-soc.git  branch: for-next
+>>>
+>>>   .../devicetree/bindings/gpio/gpio-samsung.txt      |   40 ++++++++++++
+>>>   drivers/gpio/gpio-samsung.c                        |   66 ++++++++++++++++++++
+>>>   2 files changed, 106 insertions(+), 0 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+>>> new file mode 100644
+>>> index 0000000..c143058
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
+>>> @@ -0,0 +1,40 @@
+>>> +Samsung Exynos4 GPIO Controller
+>>> +
+>>> +Required properties:
+>>> +- compatible: Compatible property value should be "samsung,exynos4-gpio>".
+>>> +
+>>> +- reg: Physical base address of the controller and length of memory mapped
+>>> +  region.
+>>> +
+>>> +- #gpio-cells: Should be 4. The syntax of the gpio specifier used by client nodes
+>>> +  should be the following with values derived from the SoC user manual.
+>>> +<[phandle of the gpio controller node]
+>>> +      [pin number within the gpio controller]
+>>> +      [mux function]
+>>> +      [pull up/down]
+>>> +      [drive strength]>
+>>> +
+>>> +  Values for gpio specifier:
+>>> +  - Pin number: is a value between 0 to 7.
+>>> +  - Pull Up/Down: 0 - Pull Up/Down Disabled.
+>>> +                  1 - Pull Down Enabled.
+>>> +                  3 - Pull Up Enabled.
+>>> +  - Drive Strength: 0 - 1x,
+>>> +                    1 - 3x,
+>>> +                    2 - 2x,
+>>> +                    3 - 4x
+>>
+>> I wonder whether it's worth to have more regular mapping, i.e.
+>> *)      0 - 1x,
+>>        1 - 2x,
+>>        2 - 3x,
+>>        3 - 4x
+>>
+>> It doesn't give as much advantage, and introduces an overhead of doing
+>> an additional remapping. However I find current mapping of the DT specifier
+>> values to real driver strength slightly confusing.
+>> Perhaps unlikely, the future SoCs could have different meaning of the
+>> register values.
 > 
-> And if we receive another interrupt after the read of the register, we'll
-> have to exit all the way back (possibly to userspace) before re-entering
-> the IRQ handling paths back to this point to process it.
+> The dts file describes the hardware and the drive strength values
+> listed above are as per the Exynos4 SoC user manual. I would prefer to
+> do it the way you suggested, but that would mean dts is not exactly
+> matching the hardware manual.
 
-OK, so how about something like this instead:
+Sorry, I somehow missed these bindings are for Exynos4 only.
 
-static int vic_single_handle_irq(struct vic_device *vic,
-				 struct pt_regs *regs)
-{
-	u32 stat, irq;
-	int handled = 0;
+Anyway, there is rather little chance to have uniform drive strength
+representation across all Samsung SoC. It's sometimes expressed in mA,
+sometimes has no units. Perhaps it's best to stick with HW reg. values,
+however it is some times confusing as hell...
 
-	stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
-	while (stat) {
-		irq = ffs(stat) - 1;
-		handle_IRQ(irq_domain_to_irq(&vic->domain, irq), regs);
-		stat &= ~(1 << irq);
-		handled = 1;
-	}
 
-	return handled;
-}
+For instance, for exynos4 we have:
 
-asmlinkage void __exception_irq_entry vic_handle_irq(struct pt_regs *regs)
-{
-	int i, handled;
+driver strength | 1x   | 2x   | 3x   | 4x
+---------------------------------------------
+register value  | 0x00 | 0x2  | 0x01 | 0x03
 
-	do {
-		handled = 0;
-		for (i = 0; i < vic_id; ++i)
-			if (vic_single_handle_irq(&vic_devices[i], regs))
-				handled = 1;
-	} while (handled);
-}
 
-which I think should keep handling IRQ's until no VIC has them pending 
-(or as best can be determined).
+for s3c6410:
 
-> Is there any particular reason folk are destroying the built-in efficiency
-> of the IRQ handling which is common-place in the existing assembly
-> approach?
+driver strength | 2mA  | 4mA  | 7 mA | 9 mA
+---------------------------------------------
+register value  | 0x00 | 0x2  | 0x01 | 0x03
 
-Well this approach makes a single image kernel a bit easier.  The other 
-thing is that it plays a lot nicer with dynamic irq_desc assignment.  
-Grant's IRQ domain patches make this quite easy here, but I can't see an 
-obvious way to do that with the assembly method.
 
-Jamie
+Nevertheless, I think, for exynos4 the effort to have actual drive strength
+directly expressed in DT description, rather than using not entirely sane
+HW values, is rather small.
+And it could save a bit of frustration for all these poor engineers trying
+to use the API..
+
+...
+
+> 
+> Can I postpone these changes for now so that this patch gets merged in
+> next-samsung-dt branch. I believe these are required changes but could
+> be done a little later.
+
+Sure, that's understood. It's fine for me to get those things fixed any time
+for 3.2 stable release.
+
+--
+Regards,
+Sylwester
