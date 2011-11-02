@@ -1,37 +1,47 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2] gpio/samsung: Add device tree support for Exynos4
-Date: Wed, 2 Nov 2011 13:11:12 +0000
-Message-ID: <20111102131112.GD27100@sirena.org.uk>
-References: <1320108227-2693-1-git-send-email-thomas.abraham@linaro.org>
- <4EAFAC42.5080607@gmail.com>
- <CAJuYYwSfjg04gaJUgNkUzFNgs5d_7PL9nio-1RwrPizyShTxGQ@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] dt: add empty of_alias_get_id() for non-dt builds
+Date: Wed, 2 Nov 2011 09:20:11 -0400
+Message-ID: <CACxGe6vepsvk=7DK0-4O=TD3g4qKT_TGZV_iUGLEBX6XV8Y6fw@mail.gmail.com>
+References: <1319706448-1664-1-git-send-email-nicolas.ferre@atmel.com>
+ <4EAAABF6.50803@gmail.com> <20111029114905.GA22592@ponder.secretlab.ca> <20111102070042.GA7136@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJuYYwSfjg04gaJUgNkUzFNgs5d_7PL9nio-1RwrPizyShTxGQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Sylwester Nawrocki <snjw23@gmail.com>, kgene.kim@samsung.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20111102070042.GA7136@game.jcrosoft.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 02, 2011 at 06:35:05PM +0530, Thomas Abraham wrote:
-> On 1 November 2011 13:52, Sylwester Nawrocki <snjw23@gmail.com> wrote:
+On Wed, Nov 2, 2011 at 3:00 AM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj@jcrosoft.com> wrote:
+> On 13:49 Sat 29 Oct =A0 =A0 , Grant Likely wrote:
+>> On Fri, Oct 28, 2011 at 08:19:50AM -0500, Rob Herring wrote:
+>> > On 10/27/2011 04:07 AM, Nicolas Ferre wrote:
+>> > > Add function of_alias_get_id() reporting -ENOSYS
+>> > > for non-dt builds, so that drivers migrating to dt
+>> > > can save some '#ifdef CONFIG_OF'.
+>> > >
+>> > > Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>> >
+>> > Acked-by: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Merged, thanks
+>>
+>> Rob, for stuff like this, please do pick it up into your git tree an=
+d
+>> reply saying that you've done so. =A0Then I know I can ignore it bec=
+ause
+>> I'll be receiving a pull req from you in short order.
+>>
+>> Similarly, I reply whenever I pick up a patch, so you'll know if I'v=
+e
+>> already delt with it.
+> this is still missing in the mainline kernel
+>
+> the at91 ends broken can one of you send a pull with it to Linus
 
-> > It doesn't give as much advantage, and introduces an overhead of doing
-> > an additional remapping. However I find current mapping of the DT specifier
-> > values to real driver strength slightly confusing.
-> > Perhaps unlikely, the future SoCs could have different meaning of the
-> > register values.
+The pull req will be going out soon.
 
-> The dts file describes the hardware and the drive strength values
-> listed above are as per the Exynos4 SoC user manual. I would prefer to
-> do it the way you suggested, but that would mean dts is not exactly
-> matching the hardware manual.
-
-On the other hand it does mean that the user can directly read the
-values - there's nothing that obviously tells the user that the binding
-is using datasheet register values rather than the actual driver
-strength numbers and given that software is supposed to provide an
-abstraction to make things easier it seems reasonably natural to assume
-the latter.
+g.
