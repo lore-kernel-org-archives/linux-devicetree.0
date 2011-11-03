@@ -1,57 +1,39 @@
-From: Jason <linux_arm@lakedaemon.net>
-Subject: memory map in fdt was: Re: orion/kirkwood and device tree
-Date: Thu, 3 Nov 2011 14:15:25 -0400
-Message-ID: <20111103181525.GV32165@titan.lakedaemon.net>
-References: <20111031105740.GC29402@lunn.ch>
-	<201110312350.28475.michael@walle.cc>
-	<20111102165057.GU32165@titan.lakedaemon.net>
-	<201111022303.04957.michael@walle.cc>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Segher Boessenkool <segher@kernel.crashing.org>
+Subject: Re: fpga driver on custom PPC target platform (P4080) ...
+Date: Thu, 3 Nov 2011 22:22:13 +0100
+Message-ID: <E084F63F-C294-471C-AEFB-EBF5F8CCA89E@kernel.crashing.org>
+References: <2DD52030B5146141BEB762A11AE97C4C0100C4AA@SPQCEXC05.exfo.com>
+Mime-Version: 1.0 (Apple Message framework v753.1)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201111022303.04957.michael@walle.cc>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Walle <michael@walle.cc>
-Cc: Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <2DD52030B5146141BEB762A11AE97C4C0100C4AA@SPQCEXC05.exfo.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Robert Sciuk <robert.sciuk@exfo.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Michael,
+> 	- How does one specify in the device tree an FPGA which uses
+> both I2c bus and localbus for programming?
 
-I've added the devicetree ml to the CC:.  Hopefully someone there can
-provide some insight...
+You have two device nodes, one on the localbus and one on the IIC bus.
+One of the nodes points to the other, or both do; you point to another
+node by having a property containing the phandle of that other node.
 
-On Wed, Nov 02, 2011 at 11:03:04PM +0100, Michael Walle wrote:
-> Am Dienstag 01 November 2011, 07:25:23 schrieben Andrew:
-> > 
-> > We could maybe put this table into DT?
-> 
-> I don't know if these informations belong to the DT or to generic kirkwood 
-> arch support (eg. mach-kirkwood/board-dt.c).
-> 
-> In both cases there needs to be some functions to retrieve these properties 
-> (instead of passing a pointer to some structure around). But i don't know if 
-> this fits the linux device drivers concept, eg. to be independent from any 
-> architecture.
-> 
-> So if any kernel hacker is reading this, i'm happy for every hint :) The 
-> problem is that most kirkwood/orion SoC devices needs a memory map to set up 
-> its internal memory windows for DMA access. Actually it only uses one window, 
-> which addresses the main memory. The arch-{kirkwood,orion} code stores the 
-> needed informations within a static *_mbus_dram_info variable, which is then 
-> passed as a pointer within platform_data to the device driver.
-> 
-> Is there a best practice for doing such things with device tree aware drivers?
+It's probably easiest to make the IIC node point to the localbus node,
+because you will most likely always have exactly one of those, and you
+could have multiple IIC nodes on your FPGA, or none at all.  But this
+is something you'll have to put in the device binding for your device,
+and it doesn't really matter what you choose -- it will work either way,
+some choices are more convenient than others though.
 
-thx,
 
-Jason.
+Segher
