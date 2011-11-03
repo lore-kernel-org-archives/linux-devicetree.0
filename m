@@ -1,85 +1,49 @@
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] dt/platform: minor cleanup
-Date: Thu, 03 Nov 2011 08:23:09 -0500
-Message-ID: <4EB295BD.3090501@calxeda.com>
-References: <1320296849-27726-1-git-send-email-olof@lixom.net>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCHv2 02/10] ARM: vic: MULTI_IRQ_HANDLER handler
+Date: Thu, 3 Nov 2011 09:49:55 -0400 (EDT)
+Message-ID: <alpine.LFD.2.02.1111030935060.3307@xanadu.home>
+References: <1317206507-18867-1-git-send-email-jamie@jamieiles.com>
+	<1317206507-18867-3-git-send-email-jamie@jamieiles.com>
+	<20110928203905.GB2838@ponder.secretlab.ca>
+	<CACRpkdZKns-GraGp-YMD6jzOPETkvEpt9bC8HcYUmf3JUyCV3A@mail.gmail.com>
+	<20110929093009.GM17204@pulham.picochip.com>
+	<20111102134024.GE19187@n2100.arm.linux.org.uk>
+	<20111102140811.GA22491@totoro>
+	<CACRpkdY+EBkHfupO5T4SYKPxzX2L2kr8fLVMJK=JctNeYAzn2g@mail.gmail.com>
+	<20111103125136.GL12913@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1320296849-27726-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111103125136.GL12913@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: kgene.kim@samsung.com, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, rob.herring@calxeda.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, STEricsson_nomadik_linux@list.st.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, rubini@unipv.it
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/2011 12:07 AM, Olof Johansson wrote:
-> * Correct description of of_platform_bus_create to match implementation
-> * Remove a level of indentation in of_dev_lookup
-> 
-> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> ---
+On Thu, 3 Nov 2011, Russell King - ARM Linux wrote:
 
-Applied.
+> 	stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
+> 	while (stat) {
+> 		while (stat) {
+> 			irq = ffs(stat) - 1;
+> 			stat &= ~(1 << irq);
+> 			handle_irq(irq);
+> 		}
+> 		stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
+> 	}
 
-Rob
+The inner loop could be a do { } while() construct to avoid evaluating 
+stat twice on each outer loop itteration.  Maybe gcc is smart enough to 
+notice though, maybe not.
 
->  drivers/of/platform.c |   28 ++++++++++++++++------------
->  1 files changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index ed5a6d3..cbd5d70 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -310,18 +310,21 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
->  				 struct device_node *np)
->  {
->  	struct resource res;
-> -	if (lookup) {
-> -		for(; lookup->name != NULL; lookup++) {
-> -			if (!of_device_is_compatible(np, lookup->compatible))
-> -				continue;
-> -			if (of_address_to_resource(np, 0, &res))
-> -				continue;
-> -			if (res.start != lookup->phys_addr)
-> -				continue;
-> -			pr_debug("%s: devname=%s\n", np->full_name, lookup->name);
-> -			return lookup;
-> -		}
-> +
-> +	if (!lookup)
-> +		return NULL;
-> +
-> +	for(; lookup->name != NULL; lookup++) {
-> +		if (!of_device_is_compatible(np, lookup->compatible))
-> +			continue;
-> +		if (of_address_to_resource(np, 0, &res))
-> +			continue;
-> +		if (res.start != lookup->phys_addr)
-> +			continue;
-> +		pr_debug("%s: devname=%s\n", np->full_name, lookup->name);
-> +		return lookup;
->  	}
-> +
->  	return NULL;
->  }
->  
-> @@ -329,8 +332,9 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
->   * of_platform_bus_create() - Create a device for a node and its children.
->   * @bus: device node of the bus to instantiate
->   * @matches: match table for bus nodes
-> - * disallow recursive creation of child buses
-> + * @lookup: auxdata table for matching id and platform_data with device nodes
->   * @parent: parent for new device, or NULL for top level.
-> + * @strict: require compatible property
->   *
->   * Creates a platform_device for the provided device_node, and optionally
->   * recursively create devices for all the child nodes.
+
+Nicolas
