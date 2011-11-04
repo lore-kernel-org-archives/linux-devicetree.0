@@ -1,7 +1,7 @@
 From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCHv4 02/13] ARM: vic: device tree binding
-Date: Fri,  4 Nov 2011 01:09:59 +0000
-Message-ID: <1320369010-23428-3-git-send-email-jamie@jamieiles.com>
+Subject: [PATCHv4 04/13] ARM: ep93xx: convert to MULTI_IRQ_HANDLER
+Date: Fri,  4 Nov 2011 01:10:01 +0000
+Message-ID: <1320369010-23428-5-git-send-email-jamie@jamieiles.com>
 References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,294 +21,311 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, rubini-9wsNiZum9E8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a device tree binding for the VIC based on the of_irq_init()
-support.  This adds an irqdomain to the vic and always registers all
-vics in the static vic array rather than for pm only to keep track of
-the irq domain.  struct irq_data::hwirq is used where appropriate rather
-than runtime masking.
+Now that there is a generic IRQ handler for multiple VIC devices use it
+for ep93xx to help building multi platform kernels.
 
-v2:	- use irq_domain_simple_ops
-	- remove stub implementation of vic_of_init for !CONFIG_OF
-	- Make VIC select IRQ_DOMAIN
-
-Reviewed-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>
+Cc: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/vic.txt |   29 +++++++
- arch/arm/common/Kconfig                       |    1 +
- arch/arm/common/vic.c                         |  106 ++++++++++++++++++-------
- arch/arm/include/asm/hardware/vic.h           |    7 ++-
- 4 files changed, 114 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/vic.txt
+ arch/arm/Kconfig                                |    1 +
+ arch/arm/mach-ep93xx/adssphere.c                |    2 +
+ arch/arm/mach-ep93xx/edb93xx.c                  |    9 +++++
+ arch/arm/mach-ep93xx/gesbc9312.c                |    2 +
+ arch/arm/mach-ep93xx/include/mach/entry-macro.S |   42 -----------------------
+ arch/arm/mach-ep93xx/micro9.c                   |    5 +++
+ arch/arm/mach-ep93xx/simone.c                   |    2 +
+ arch/arm/mach-ep93xx/snappercl15.c              |    2 +
+ arch/arm/mach-ep93xx/ts72xx.c                   |    2 +
+ 9 files changed, 25 insertions(+), 42 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/vic.txt b/Documentation/devicetree/bindings/arm/vic.txt
-new file mode 100644
-index 0000000..266716b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/vic.txt
-@@ -0,0 +1,29 @@
-+* ARM Vectored Interrupt Controller
-+
-+One or more Vectored Interrupt Controllers (VIC's) can be connected in an ARM
-+system for interrupt routing.  For multiple controllers they can either be
-+nested or have the outputs wire-OR'd together.
-+
-+Required properties:
-+
-+- compatible : should be one of
-+	"arm,pl190-vic"
-+	"arm,pl192-vic"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : The number of cells to define the interrupts.  Must be 1 as
-+  the VIC has no configuration options for interrupt sources.  The cell is a u32
-+  and defines the interrupt number.
-+- reg : The register bank for the VIC.
-+
-+Optional properties:
-+
-+- interrupts : Interrupt source for parent controllers if the VIC is nested.
-+
-+Example:
-+
-+	vic0: interrupt-controller@60000 {
-+		compatible = "arm,pl192-vic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = <0x60000 0x1000>;
-+	};
-diff --git a/arch/arm/common/Kconfig b/arch/arm/common/Kconfig
-index 74df9ca..e91ee7d 100644
---- a/arch/arm/common/Kconfig
-+++ b/arch/arm/common/Kconfig
-@@ -3,6 +3,7 @@ config ARM_GIC
- 	bool
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index fe6b052..3618567 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -409,6 +409,7 @@ config ARCH_EP93XX
+ 	select ARCH_HAS_HOLES_MEMORYMODEL
+ 	select ARCH_USES_GETTIMEOFFSET
+ 	select NEED_MACH_MEMORY_H
++	select MULTI_IRQ_HANDLER
+ 	help
+ 	  This enables support for the Cirrus EP93xx series of CPUs.
  
- config ARM_VIC
-+	select IRQ_DOMAIN
- 	bool
+diff --git a/arch/arm/mach-ep93xx/adssphere.c b/arch/arm/mach-ep93xx/adssphere.c
+index 0713448..d9b0ea2 100644
+--- a/arch/arm/mach-ep93xx/adssphere.c
++++ b/arch/arm/mach-ep93xx/adssphere.c
+@@ -16,6 +16,7 @@
  
- config ARM_VIC_NR
-diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-index 01f18a4..e689975 100644
---- a/arch/arm/common/vic.c
-+++ b/arch/arm/common/vic.c
-@@ -22,6 +22,10 @@
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/io.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #include <linux/syscore_ops.h>
- #include <linux/device.h>
- #include <linux/amba/bus.h>
-@@ -29,7 +33,6 @@
- #include <asm/mach/irq.h>
- #include <asm/hardware/vic.h>
+ #include <mach/hardware.h>
  
--#ifdef CONFIG_PM
- /**
-  * struct vic_device - VIC PM device
-  * @irq: The IRQ number for the base of the VIC.
-@@ -40,6 +43,7 @@
-  * @int_enable: Save for VIC_INT_ENABLE.
-  * @soft_int: Save for VIC_INT_SOFT.
-  * @protect: Save for VIC_PROTECT.
-+ * @domain: The IRQ domain for the VIC.
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ 
+@@ -36,6 +37,7 @@ MACHINE_START(ADSSPHERE, "ADS Sphere board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= adssphere_init_machine,
+ MACHINE_END
+diff --git a/arch/arm/mach-ep93xx/edb93xx.c b/arch/arm/mach-ep93xx/edb93xx.c
+index 70ef8c5..9bbae08 100644
+--- a/arch/arm/mach-ep93xx/edb93xx.c
++++ b/arch/arm/mach-ep93xx/edb93xx.c
+@@ -39,6 +39,7 @@
+ #include <mach/ep93xx_spi.h>
+ #include <mach/gpio-ep93xx.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ 
+@@ -250,6 +251,7 @@ MACHINE_START(EDB9301, "Cirrus Logic EDB9301 Evaluation Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= edb93xx_init_machine,
+ MACHINE_END
+@@ -261,6 +263,7 @@ MACHINE_START(EDB9302, "Cirrus Logic EDB9302 Evaluation Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= edb93xx_init_machine,
+ MACHINE_END
+@@ -272,6 +275,7 @@ MACHINE_START(EDB9302A, "Cirrus Logic EDB9302A Evaluation Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= edb93xx_init_machine,
+ MACHINE_END
+@@ -283,6 +287,7 @@ MACHINE_START(EDB9307, "Cirrus Logic EDB9307 Evaluation Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= edb93xx_init_machine,
+ MACHINE_END
+@@ -294,6 +299,7 @@ MACHINE_START(EDB9307A, "Cirrus Logic EDB9307A Evaluation Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= edb93xx_init_machine,
+ MACHINE_END
+@@ -305,6 +311,7 @@ MACHINE_START(EDB9312, "Cirrus Logic EDB9312 Evaluation Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= edb93xx_init_machine,
+ MACHINE_END
+@@ -316,6 +323,7 @@ MACHINE_START(EDB9315, "Cirrus Logic EDB9315 Evaluation Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= edb93xx_init_machine,
+ MACHINE_END
+@@ -327,6 +335,7 @@ MACHINE_START(EDB9315A, "Cirrus Logic EDB9315A Evaluation Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= edb93xx_init_machine,
+ MACHINE_END
+diff --git a/arch/arm/mach-ep93xx/gesbc9312.c b/arch/arm/mach-ep93xx/gesbc9312.c
+index 45ee205..1dd32a7 100644
+--- a/arch/arm/mach-ep93xx/gesbc9312.c
++++ b/arch/arm/mach-ep93xx/gesbc9312.c
+@@ -16,6 +16,7 @@
+ 
+ #include <mach/hardware.h>
+ 
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ 
+@@ -36,6 +37,7 @@ MACHINE_START(GESBC9312, "Glomation GESBC-9312-sx")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= gesbc9312_init_machine,
+ MACHINE_END
+diff --git a/arch/arm/mach-ep93xx/include/mach/entry-macro.S b/arch/arm/mach-ep93xx/include/mach/entry-macro.S
+index 96b85e2..9be6edc 100644
+--- a/arch/arm/mach-ep93xx/include/mach/entry-macro.S
++++ b/arch/arm/mach-ep93xx/include/mach/entry-macro.S
+@@ -9,51 +9,9 @@
+  * the Free Software Foundation; either version 2 of the License, or (at
+  * your option) any later version.
   */
- struct vic_device {
- 	void __iomem	*base;
-@@ -50,13 +54,13 @@ struct vic_device {
- 	u32		int_enable;
- 	u32		soft_int;
- 	u32		protect;
-+	struct irq_domain domain;
- };
+-#include <mach/ep93xx-regs.h>
  
- /* we cannot allocate memory when VICs are initially registered */
- static struct vic_device vic_devices[CONFIG_ARM_VIC_NR];
+ 		.macro	disable_fiq
+ 		.endm
  
- static int vic_id;
--#endif /* CONFIG_PM */
+-		.macro  get_irqnr_preamble, base, tmp
+-		.endm
+-
+ 		.macro  arch_ret_to_user, tmp1, tmp2
+ 		.endm
+-
+-		.macro	get_irqnr_and_base, irqnr, irqstat, base, tmp
+-		ldr	\base, =(EP93XX_AHB_VIRT_BASE)
+-		orr	\base, \base, #0x000b0000
+-		mov	\irqnr, #0
+-		ldr	\irqstat, [\base]		@ lower 32 interrupts
+-		cmp	\irqstat, #0
+-		bne	1001f
+-
+-		eor	\base, \base, #0x00070000
+-		ldr	\irqstat, [\base]		@ upper 32 interrupts
+-		cmp	\irqstat, #0
+-		beq	1002f
+-		mov	\irqnr, #0x20
+-
+-1001:
+-		movs	\tmp, \irqstat, lsl #16
+-		movne	\irqstat, \tmp
+-		addeq	\irqnr, \irqnr, #16
+-
+-		movs	\tmp, \irqstat, lsl #8
+-		movne	\irqstat, \tmp
+-		addeq	\irqnr, \irqnr, #8
+-
+-		movs	\tmp, \irqstat, lsl #4
+-		movne	\irqstat, \tmp
+-		addeq	\irqnr, \irqnr, #4
+-
+-		movs	\tmp, \irqstat, lsl #2
+-		movne	\irqstat, \tmp
+-		addeq	\irqnr, \irqnr, #2
+-
+-		movs	\tmp, \irqstat, lsl #1
+-		addeq	\irqnr, \irqnr, #1
+-		orrs	\base, \base, #1
+-
+-1002:
+-		.endm
+diff --git a/arch/arm/mach-ep93xx/micro9.c b/arch/arm/mach-ep93xx/micro9.c
+index e72f736..a6dae6c 100644
+--- a/arch/arm/mach-ep93xx/micro9.c
++++ b/arch/arm/mach-ep93xx/micro9.c
+@@ -18,6 +18,7 @@
  
- /**
-  * vic_init2 - common initialisation code
-@@ -156,39 +160,50 @@ static int __init vic_pm_init(void)
- 	return 0;
- }
- late_initcall(vic_pm_init);
-+#endif /* CONFIG_PM */
+ #include <mach/hardware.h>
  
- /**
-- * vic_pm_register - Register a VIC for later power management control
-+ * vic_register() - Register a VIC.
-  * @base: The base address of the VIC.
-  * @irq: The base IRQ for the VIC.
-  * @resume_sources: bitmask of interrupts allowed for resume sources.
-+ * @node: The device tree node associated with the VIC.
-  *
-  * Register the VIC with the system device tree so that it can be notified
-  * of suspend and resume requests and ensure that the correct actions are
-  * taken to re-instate the settings on resume.
-+ *
-+ * This also configures the IRQ domain for the VIC.
-  */
--static void __init vic_pm_register(void __iomem *base, unsigned int irq, u32 resume_sources)
-+static void __init vic_register(void __iomem *base, unsigned int irq,
-+				u32 resume_sources, struct device_node *node)
- {
- 	struct vic_device *v;
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
  
--	if (vic_id >= ARRAY_SIZE(vic_devices))
-+	if (vic_id >= ARRAY_SIZE(vic_devices)) {
- 		printk(KERN_ERR "%s: too few VICs, increase CONFIG_ARM_VIC_NR\n", __func__);
--	else {
--		v = &vic_devices[vic_id];
--		v->base = base;
--		v->resume_sources = resume_sources;
--		v->irq = irq;
--		vic_id++;
-+		return;
- 	}
-+
-+	v = &vic_devices[vic_id];
-+	v->base = base;
-+	v->resume_sources = resume_sources;
-+	v->irq = irq;
-+	vic_id++;
-+
-+	v->domain.irq_base = irq;
-+	v->domain.nr_irq = 32;
-+#ifdef CONFIG_OF_IRQ
-+	v->domain.of_node = of_node_get(node);
-+	v->domain.ops = &irq_domain_simple_ops;
-+#endif /* CONFIG_OF */
-+	irq_domain_add(&v->domain);
- }
--#else
--static inline void vic_pm_register(void __iomem *base, unsigned int irq, u32 arg1) { }
--#endif /* CONFIG_PM */
+@@ -80,6 +81,7 @@ MACHINE_START(MICRO9, "Contec Micro9-High")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= micro9_init_machine,
+ MACHINE_END
+@@ -91,6 +93,7 @@ MACHINE_START(MICRO9M, "Contec Micro9-Mid")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= micro9_init_machine,
+ MACHINE_END
+@@ -102,6 +105,7 @@ MACHINE_START(MICRO9L, "Contec Micro9-Lite")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= micro9_init_machine,
+ MACHINE_END
+@@ -113,6 +117,7 @@ MACHINE_START(MICRO9S, "Contec Micro9-Slim")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= micro9_init_machine,
+ MACHINE_END
+diff --git a/arch/arm/mach-ep93xx/simone.c b/arch/arm/mach-ep93xx/simone.c
+index 52e090d..40121ba 100644
+--- a/arch/arm/mach-ep93xx/simone.c
++++ b/arch/arm/mach-ep93xx/simone.c
+@@ -25,6 +25,7 @@
+ #include <mach/fb.h>
+ #include <mach/gpio-ep93xx.h>
  
- static void vic_ack_irq(struct irq_data *d)
- {
- 	void __iomem *base = irq_data_get_irq_chip_data(d);
--	unsigned int irq = d->irq & 31;
-+	unsigned int irq = d->hwirq;
- 	writel(1 << irq, base + VIC_INT_ENABLE_CLEAR);
- 	/* moreover, clear the soft-triggered, in case it was the reason */
- 	writel(1 << irq, base + VIC_INT_SOFT_CLEAR);
-@@ -197,14 +212,14 @@ static void vic_ack_irq(struct irq_data *d)
- static void vic_mask_irq(struct irq_data *d)
- {
- 	void __iomem *base = irq_data_get_irq_chip_data(d);
--	unsigned int irq = d->irq & 31;
-+	unsigned int irq = d->hwirq;
- 	writel(1 << irq, base + VIC_INT_ENABLE_CLEAR);
- }
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
  
- static void vic_unmask_irq(struct irq_data *d)
- {
- 	void __iomem *base = irq_data_get_irq_chip_data(d);
--	unsigned int irq = d->irq & 31;
-+	unsigned int irq = d->hwirq;
- 	writel(1 << irq, base + VIC_INT_ENABLE);
- }
+@@ -80,6 +81,7 @@ MACHINE_START(SIM_ONE, "Simplemachines Sim.One Board")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= simone_init_machine,
+ MACHINE_END
+diff --git a/arch/arm/mach-ep93xx/snappercl15.c b/arch/arm/mach-ep93xx/snappercl15.c
+index 8121e3a..ec7c63f 100644
+--- a/arch/arm/mach-ep93xx/snappercl15.c
++++ b/arch/arm/mach-ep93xx/snappercl15.c
+@@ -31,6 +31,7 @@
+ #include <mach/fb.h>
+ #include <mach/gpio-ep93xx.h>
  
-@@ -226,7 +241,7 @@ static struct vic_device *vic_from_irq(unsigned int irq)
- static int vic_set_wake(struct irq_data *d, unsigned int on)
- {
- 	struct vic_device *v = vic_from_irq(d->irq);
--	unsigned int off = d->irq & 31;
-+	unsigned int off = d->hwirq;
- 	u32 bit = 1 << off;
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
  
- 	if (!v)
-@@ -330,15 +345,9 @@ static void __init vic_init_st(void __iomem *base, unsigned int irq_start,
- 	vic_set_irq_sources(base, irq_start, vic_sources);
- }
+@@ -177,6 +178,7 @@ MACHINE_START(SNAPPER_CL15, "Bluewater Systems Snapper CL15")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ep93xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer 		= &ep93xx_timer,
+ 	.init_machine	= snappercl15_init_machine,
+ MACHINE_END
+diff --git a/arch/arm/mach-ep93xx/ts72xx.c b/arch/arm/mach-ep93xx/ts72xx.c
+index 1ade3c3..50de4ae 100644
+--- a/arch/arm/mach-ep93xx/ts72xx.c
++++ b/arch/arm/mach-ep93xx/ts72xx.c
+@@ -23,6 +23,7 @@
+ #include <mach/hardware.h>
+ #include <mach/ts72xx.h>
  
--/**
-- * vic_init - initialise a vectored interrupt controller
-- * @base: iomem base address
-- * @irq_start: starting interrupt number, must be muliple of 32
-- * @vic_sources: bitmask of interrupt sources to allow
-- * @resume_sources: bitmask of interrupt sources to allow for resume
-- */
--void __init vic_init(void __iomem *base, unsigned int irq_start,
--		     u32 vic_sources, u32 resume_sources)
-+static void __init __vic_init(void __iomem *base, unsigned int irq_start,
-+			      u32 vic_sources, u32 resume_sources,
-+			      struct device_node *node)
- {
- 	unsigned int i;
- 	u32 cellid = 0;
-@@ -375,5 +384,46 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
- 
- 	vic_set_irq_sources(base, irq_start, vic_sources);
- 
--	vic_pm_register(base, irq_start, resume_sources);
-+	vic_register(base, irq_start, resume_sources, node);
-+}
-+
-+/**
-+ * vic_init() - initialise a vectored interrupt controller
-+ * @base: iomem base address
-+ * @irq_start: starting interrupt number, must be muliple of 32
-+ * @vic_sources: bitmask of interrupt sources to allow
-+ * @resume_sources: bitmask of interrupt sources to allow for resume
-+ */
-+void __init vic_init(void __iomem *base, unsigned int irq_start,
-+		     u32 vic_sources, u32 resume_sources)
-+{
-+	__vic_init(base, irq_start, vic_sources, resume_sources, NULL);
-+}
-+
-+#ifdef CONFIG_OF
-+int __init vic_of_init(struct device_node *node, struct device_node *parent)
-+{
-+	void __iomem *regs;
-+	int irq_base;
-+
-+	if (WARN(parent, "non-root VICs are not supported"))
-+		return -EINVAL;
-+
-+	regs = of_iomap(node, 0);
-+	if (WARN_ON(!regs))
-+		return -EIO;
-+
-+	irq_base = irq_alloc_descs(-1, 0, 32, numa_node_id());
-+	if (WARN_ON(irq_base < 0))
-+		goto out_unmap;
-+
-+	__vic_init(regs, irq_base, ~0, ~0, node);
-+
-+	return 0;
-+
-+ out_unmap:
-+	iounmap(regs);
-+
-+	return -EIO;
- }
-+#endif /* CONFIG OF */
-diff --git a/arch/arm/include/asm/hardware/vic.h b/arch/arm/include/asm/hardware/vic.h
-index 5d72550..b348a54 100644
---- a/arch/arm/include/asm/hardware/vic.h
-+++ b/arch/arm/include/asm/hardware/vic.h
-@@ -41,7 +41,12 @@
- #define VIC_PL192_VECT_ADDR		0xF00
- 
- #ifndef __ASSEMBLY__
-+#include <linux/compiler.h>
-+#include <linux/types.h>
-+
-+struct device_node;
- void vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources, u32 resume_sources);
--#endif
-+int vic_of_init(struct device_node *node, struct device_node *parent);
- 
-+#endif /* __ASSEMBLY__ */
- #endif
++#include <asm/hardware/vic.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/map.h>
+ #include <asm/mach/arch.h>
+@@ -260,6 +261,7 @@ MACHINE_START(TS72XX, "Technologic Systems TS-72xx SBC")
+ 	.atag_offset	= 0x100,
+ 	.map_io		= ts72xx_map_io,
+ 	.init_irq	= ep93xx_init_irq,
++	.handle_irq	= vic_handle_irq,
+ 	.timer		= &ep93xx_timer,
+ 	.init_machine	= ts72xx_init_machine,
+ MACHINE_END
 -- 
 1.7.5.4
