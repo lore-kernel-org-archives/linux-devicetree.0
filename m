@@ -1,36 +1,63 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] arm/dt: add basic usb nodes to tegra device trees
-Date: Fri, 4 Nov 2011 12:27:42 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173F9A4E02@HQMAIL01.nvidia.com>
-References: <1320433960-18173-1-git-send-email-olof@lixom.net>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 5/6] mmc: Add OF bindings support for mmc host controller
+ capabilities
+Date: Fri, 4 Nov 2011 12:57:17 -0700
+Message-ID: <20111104195717.GA3045@quad.lixom.net>
+References: <1320266163-15292-1-git-send-email-thomas.abraham@linaro.org>
+ <1320266163-15292-6-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1320433960-18173-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1320266163-15292-6-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Friday, November 04, 2011 1:13 PM:
-> For now they are a minimal binding. It needs to be amended with
-> vendor-specific settings for phy setup and link tuning, etc.
+On Thu, Nov 03, 2011 at 02:06:02AM +0530, Thomas Abraham wrote:
+> Device nodes representing sd/mmc controllers in a device tree would include
+> mmc host controller capabilities. Add support for parsing of mmc host
+> controller capabilities included in device nodes.
 > 
-> v2: Added bindings specification and phy_type properties
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  .../devicetree/bindings/mmc/linux-mmc-host.txt     |   13 ++++++++
+>  drivers/mmc/core/host.c                            |   31 ++++++++++++++++++++
+>  include/linux/mmc/host.h                           |    1 +
+>  3 files changed, 45 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
 > 
-> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt b/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
+> new file mode 100644
+> index 0000000..714b2b1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
+> @@ -0,0 +1,13 @@
+> +* Linux MMC Host Controller Capabilities
+> +
+> +The following bindings can be used in a device node to specify any board
+> +specific mmc host controller capabilities.
+> +
+> +- linux,mmc_cap_4_bit_data - Host can do 4-bit transfers
+> +- linux,mmc_cap_mmc_highspeed - Host can do MMC high-speed timing
+> +- linux,mmc_cap_sd_highspeed - Host can do SD high-speed timing
+> +- linux,mmc_cap_needs_poll - Host needs polling for card detection
+> +- linux,mmc_cap_8_bit_data - Host can do 8-bit transfer
+> +- linux,mmc_cap_disable - Host can be disabled and re-enabled to save power
+> +- linux,mmc_cap_nonremovable - Host is connected to nonremovable media
+> +- linux,mmc_cap_erase - Host allows erase/trim commands
 
-Both patches:
+linux-prefixed properties are a big red flag. The device tree should describe
+the hardware, not what linux does with the hardware.
 
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+See previous comments about "support-8bit" for encoding exactly the same
+hardware capability in a linux-agnostic way. What the sdhci driver chooses to
+do with it is up to the driver, and in some cases it means it will set the
+capabilities flag.
 
--- 
-nvpublic
+Same goes for the other properties. It should not go in as it is
+implemented in this patch, it needs to be fixed up.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-Olof
