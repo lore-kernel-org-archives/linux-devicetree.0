@@ -1,52 +1,55 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] regulator: helper routine to extract
- regulator_init_data
-Date: Fri, 4 Nov 2011 21:14:48 +0000
-Message-ID: <20111104211447.GC2541@opensource.wolfsonmicro.com>
-References: <1319721864-30067-1-git-send-email-rnayak@ti.com>
- <20111104202905.GA3918@quad.lixom.net>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v3 2/4] regulator: adapt fixed regulator driver to dt
+Date: Fri, 4 Nov 2011 14:18:24 -0700
+Message-ID: <20111104211824.GA5608@quad.lixom.net>
+References: <1319702185-16108-1-git-send-email-rnayak@ti.com>
+	<1319702185-16108-3-git-send-email-rnayak@ti.com>
+	<20111104203422.GB3918@quad.lixom.net>
+	<20111104210151.GA2541@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20111104202905.GA3918-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20111104210151.GA2541@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Rajendra Nayak <rnayak@ti.com>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 04, 2011 at 01:29:05PM -0700, Olof Johansson wrote:
-> On Thu, Oct 27, 2011 at 06:54:24PM +0530, Rajendra Nayak wrote:
+On Fri, Nov 04, 2011 at 09:01:52PM +0000, Mark Brown wrote:
+> On Fri, Nov 04, 2011 at 01:34:22PM -0700, Olof Johansson wrote:
+> 
+> > Shouldn't a fixed regulator just be a subset of a fixed one? If so, should the
+> > binding be merged with that one?
+> 
+> No, the fixed voltage regultor is a superset of a general regulator - it
+> has additional information like the voltage it supplies and the optional
+> enable GPIO.
 
-> > @@ -0,0 +1,33 @@
-> > +Voltage/Current Regulators
+Still, seems like it could be merged into one regulator binding.
 
-> There should be a mandatory compatible field here, right? I.e. a topmost
-> generic one, "regulator" or similar.
+> > > +- regulator-fixed-enabled-at-boot: 1 = yes, 0 = no
+> 
+> > Same here, you can drop the prefix. Also, the regular regulators use
+> > "regulator-name" for the supply name, it would make sense to reuse the same
+> > naming here, right?
+> 
+> I'm having a hard time associating your second comment with the property
+> being discussed - could you clarify please?
 
-It's not really useful for the regulator subsystem to directly bind to
-the device as something needs to actually control it, the idea is that
-this binding is included by reference in the bindings for specific
-devices.
+It was the first comment I wrote on the whole block and later interspersed
+other comments above, so I don't blame you for not understanding. The
+second comment was related to the "regulator-fixed-supply" property at
+the top of the block.
 
-> Also, lower-caps is common instead of V and A.
 
-On the other hand the case is pretty important for SI units
-
-> > +- <name>-supply: phandle to the parent supply/regulator node
-
-> Having a fixed name here instead of a free form string would probably be a good
-> idea?
-
-The name will be fixed by the individual device bindings, this is
-specifying the general form of a supply property.  Each device binding
-will define the set of supplies that the device can use.
+-Olof
