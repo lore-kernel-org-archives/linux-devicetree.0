@@ -1,61 +1,38 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 2/2] USB: ehci-tegra: add probing through device tree
-Date: Fri, 4 Nov 2011 08:37:56 -0700
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF173F9A4CBC@HQMAIL01.nvidia.com>
-References: <1320377174-28047-1-git-send-email-olof@lixom.net>
- <1320377174-28047-2-git-send-email-olof@lixom.net>
+From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Subject: Re: USB support for device tree
+Date: Fri, 4 Nov 2011 08:43:56 -0700
+Message-ID: <20111104154356.GA30439@kroah.com>
+References: <4EB3A165.8060300@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1320377174-28047-2-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4EB3A165.8060300-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavan Kondeti <pkondeti-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Thursday, November 03, 2011 9:26 PM:
-> Rely on platform_data being passed through auxdata for now; more elaborate
-> bindings for phy config and tunings to be added.
-...
-> diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/board-dt.c
-...
->  static __initdata struct tegra_clk_init_table tegra_dt_clk_init_table[] = {
->  	/* name		parent		rate		enabled */
->  	{ "uartd",	"pll_p",	216000000,	true },
-> +	{ "usbd",	"clk_m",	12000000,	false },
-> +	{ "usb3",	"clk_m",	12000000,	false },
->  	{ NULL,		NULL,		0,		0},
->  };
-
-As woglinde mentioned on IRC, I think you do want to add "usb2" to the
-table here; it's in board-paz00.c at least. It shouldn't hurt other boards.
-
-> diff --git a/drivers/usb/host/ehci-tegra.c b/drivers/usb/host/ehci-tegra.c
-...
-> @@ -590,6 +617,13 @@ static int tegra_ehci_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
+On Fri, Nov 04, 2011 at 01:55:09PM +0530, Pavan Kondeti wrote:
+> Hi
 > 
-> +	if (!pdev->dev.dma_mask)
-> +		pdev->dev.dma_mask = &tegra_ehci_dma_mask;
+> I am working on adding USB device tree support for MSM platform.  One of
+> our chip set has 2 hsusb cores. The first core is configured as otg and
+> the other core is configured in host only mode (EHCI compliant). Are the
+> below device node names Okay? Please suggest.
 
-Should this come from DT, or is it some more system-level/internal thing
-that doesn't make sense to represent there?
+Why do you need to name the speed of the device and the host?  That
+doesn't really matter if you plug a low-speed device into that super
+speed host controller, right?
 
-> +
-> +	vbus_gpio = of_get_named_gpio(pdev->dev.of_node, "nvidia,vbus-gpio", 0);
+I'm not familiar with device tree naming conventions, but is this
+something you do for network devices?  If not, I'd not recommend it for
+USB controllers either.
 
-of_get_named_gpio() does check for NULL node pointer in practice, but is
-it defined to? I wonder if this needs to be conditional of of_node!=NULL
-or not?
+thanks,
 
-> +	if (vbus_gpio > 0)
-
-Should that use gpio_is_valid()?
-
-> +		setup_vbus_gpio(pdev, vbus_gpio);
-
--- 
-nvpublic
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
