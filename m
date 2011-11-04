@@ -1,74 +1,51 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: USB support for device tree
-Date: Fri, 4 Nov 2011 12:45:04 -0400
-Message-ID: <CACxGe6vMCHdB+J8hX1EPW3m35UaKC-FAZULUA4G11J0FUK6tNQ@mail.gmail.com>
-References: <4EB3A165.8060300@codeaurora.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] net: add calxeda xgmac ethernet driver
+Date: Fri, 4 Nov 2011 12:57:09 -0400
+Message-ID: <CACxGe6sAFUwQc5Nk=gGLC+si-_C32AWu=E14vBkSm7YCFhazFg@mail.gmail.com>
+References: <1319684206-473-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4EB3A165.8060300-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavan Kondeti <pkondeti-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1319684206-473-1-git-send-email-robherring2@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 4, 2011 at 4:25 AM, Pavan Kondeti <pkondeti-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>=
- wrote:
-> Hi
+On Wed, Oct 26, 2011 at 10:56 PM, Rob Herring <robherring2@gmail.com> w=
+rote:
+> From: Rob Herring <rob.herring@calxeda.com>
 >
-> I am working on adding USB device tree support for MSM platform. =A0O=
-ne of
-> our chip set has 2 hsusb cores. The first core is configured as otg a=
-nd
-> the other core is configured in host only mode (EHCI compliant). Are =
-the
-> below device node names Okay? Please suggest.
+> Add support for the XGMAC 10Gb ethernet device in the Calxeda Highban=
+k
+> SOC.
 >
-> hsusb0-otg: usb@0xa6000000 {
-> =A0 =A0 =A0 =A0compatible =3D "qcom,hsusb-otg";
-> =A0 =A0 =A0 =A0---
-> };
->
-> hsusb0-device: usb@0xa6000000 {
-> =A0 =A0 =A0 =A0compatible =3D "qcom,hsusb-device";
-> =A0 =A0 =A0 =A0---
-> };
->
-> hsusb0-host: usb@0xa6000000 {
-> =A0 =A0 =A0 =A0compatible =3D "qcom,hsusb-host", "usb-ehci";
-> =A0 =A0 =A0 =A0---
-> };
->
-> hsusb1-host: usb@0xa6000000 {
-> =A0 =A0 =A0 =A0compatible =3D "qcom,hsusb-host", "usb-ehci";
-> =A0 =A0 =A0 =A0---
-> };
->
-> /* super speed support
->
-> ssusb0-device: usb@0xa6000000 {
-> =A0 =A0 =A0 =A0compatible =3D "qcom,ssusb-device";
-> };
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 
+Sinker question: is this a driver for an entirely new GMAC device
+(designed from scratch) or is it based on an existing IP block?
 
-The host controller node names as "usb@<adddr>" as you have here is
-exactly right.  The driver doesn't care and will only look at the
-compatible list.  OTG controllers can also use "usb@" as the prefix.
+> +/**
+> + * xgmac_init - Entry point for the driver
+> + * Description: This function is the entry point for the driver.
+> + */
+> +static int __init xgmac_init(void)
+> +{
+> + =A0 =A0 =A0 return platform_driver_register(&xgmac_driver);
+> +}
+> +module_init(xgmac_init);
+> +
+> +/**
+> + * xgmac_cleanup_module - Cleanup routine for the driver
+> + * Description: This function is the cleanup routine for the driver.
+> + */
+> +static void __exit xgmac_exit(void)
+> +{
+> + =A0 =A0 =A0 platform_driver_unregister(&xgmac_driver);
+> +}
+> +module_exit(xgmac_exit);
 
-Controllers that are only in device mode should probably be called
-something like "usb-gadget@<addr>" or similar, because "usb@" is used
-for host controllers.
-
-The label names (hsusb*-host, hsusb*-device) are completely irrelevant
-since Linux never sees them.  Use whatever you want for the label
-names.
-
-Also, the form of the node name is: "usb@a6000000" (without '0x' in
-the address).
+You can drop some boilerplate with module_platform_driver() now.
 
 g.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
