@@ -1,54 +1,48 @@
-From: Pavan Kondeti <pkondeti@codeaurora.org>
-Subject: USB support for device tree
-Date: Fri, 04 Nov 2011 13:55:09 +0530
-Message-ID: <4EB3A165.8060300@codeaurora.org>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: [PATCH 1/4] mmc: Add additional binding for mmc host controller
+Date: Fri, 4 Nov 2011 17:20:38 +0530
+Message-ID: <1320407441-29697-2-git-send-email-rnayak@ti.com>
+References: <1320407441-29697-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1320407441-29697-1-git-send-email-rnayak@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, balajitk@ti.com, cjb@laptop.org, tony@atomide.com, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Add mmc host controller capability binding to support
+'MMC_CAP_POWER_OFF_CARD' powering off of the card after boot.
 
-I am working on adding USB device tree support for MSM platform.  One of
-our chip set has 2 hsusb cores. The first core is configured as otg and
-the other core is configured in host only mode (EHCI compliant). Are the
-below device node names Okay? Please suggest.
+Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+---
+ .../devicetree/bindings/mmc/linux-mmc-host.txt     |    1 +
+ drivers/mmc/core/host.c                            |    2 ++
+ 2 files changed, 3 insertions(+), 0 deletions(-)
 
-hsusb0-otg: usb@0xa6000000 {
-	compatible = "qcom,hsusb-otg";
-        ---
-};
-
-hsusb0-device: usb@0xa6000000 {
-	compatible = "qcom,hsusb-device";
-        ---
-};
-
-hsusb0-host: usb@0xa6000000 {
-	compatible = "qcom,hsusb-host", "usb-ehci";
-        ---
-};
-
-hsusb1-host: usb@0xa6000000 {
-	compatible = "qcom,hsusb-host", "usb-ehci";
-        ---
-};
-
-/* super speed support
-
-ssusb0-device: usb@0xa6000000 {
-	compatible = "qcom,ssusb-device";
-};
-
-*/
-
-Thanks,
-Pavan
-
+diff --git a/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt b/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
+index 714b2b1..cf893ed 100644
+--- a/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
++++ b/Documentation/devicetree/bindings/mmc/linux-mmc-host.txt
+@@ -11,3 +11,4 @@ specific mmc host controller capabilities.
+ - linux,mmc_cap_disable - Host can be disabled and re-enabled to save power
+ - linux,mmc_cap_nonremovable - Host is connected to nonremovable media
+ - linux,mmc_cap_erase - Host allows erase/trim commands
++- linux,mmc_cap_power_off_card - Host can power off the card after boot
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 4ee2e43..822337a 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -413,6 +413,8 @@ void mmc_of_parse_host_caps(struct device_node *np, unsigned long *caps)
+ 		*caps |= MMC_CAP_NONREMOVABLE;
+ 	if (of_find_property(np, "linux,mmc_cap_erase", NULL))
+ 		*caps |= MMC_CAP_ERASE;
++	if (of_find_property(np, "linux,mmc_cap_power_off_card", NULL))
++		*caps |= MMC_CAP_POWER_OFF_CARD;
+ }
+ EXPORT_SYMBOL(mmc_of_parse_host_caps);
+ #endif /* CONFIG_OF */
 -- 
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+1.7.1
+
