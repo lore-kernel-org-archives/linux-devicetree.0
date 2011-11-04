@@ -1,135 +1,66 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3 2/4] regulator: adapt fixed regulator driver to dt
-Date: Fri, 4 Nov 2011 13:34:22 -0700
-Message-ID: <20111104203422.GB3918@quad.lixom.net>
-References: <1319702185-16108-1-git-send-email-rnayak@ti.com>
- <1319702185-16108-3-git-send-email-rnayak@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] net: add calxeda xgmac ethernet driver
+Date: Fri, 04 Nov 2011 15:52:01 -0500
+Message-ID: <4EB45071.8000406@gmail.com>
+References: <1319684206-473-1-git-send-email-robherring2@gmail.com>
+ <CACxGe6sAFUwQc5Nk=gGLC+si-_C32AWu=E14vBkSm7YCFhazFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1319702185-16108-3-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6sAFUwQc5Nk=gGLC+si-_C32AWu=E14vBkSm7YCFhazFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 27, 2011 at 01:26:23PM +0530, Rajendra Nayak wrote:
-> The fixed regulator driver uses of_get_fixed_voltage_config()
-> to extract fixed_voltage_config structure contents from device tree.
+Grant,
+
+On 11/04/2011 11:57 AM, Grant Likely wrote:
+> On Wed, Oct 26, 2011 at 10:56 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Add support for the XGMAC 10Gb ethernet device in the Calxeda Highbank
+>> SOC.
+>>
+>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-> Also add documenation for additional bindings for fixed
-> regulators that can be passed through dt.
+> Sinker question: is this a driver for an entirely new GMAC device
+> (designed from scratch) or is it based on an existing IP block?
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
 
-Shouldn't a fixed regulator just be a subset of a fixed one? If so, should the
-binding be merged with that one?
+Of course I'd rather use a existing driver. It is a new IP block.
 
-> ---
->  .../bindings/regulator/fixed-regulator.txt         |   25 +++++++++
->  drivers/regulator/fixed.c                          |   57 ++++++++++++++++++++
->  2 files changed, 82 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+>> +/**
+>> + * xgmac_init - Entry point for the driver
+>> + * Description: This function is the entry point for the driver.
+>> + */
+>> +static int __init xgmac_init(void)
+>> +{
+>> +       return platform_driver_register(&xgmac_driver);
+>> +}
+>> +module_init(xgmac_init);
+>> +
+>> +/**
+>> + * xgmac_cleanup_module - Cleanup routine for the driver
+>> + * Description: This function is the cleanup routine for the driver.
+>> + */
+>> +static void __exit xgmac_exit(void)
+>> +{
+>> +       platform_driver_unregister(&xgmac_driver);
+>> +}
+>> +module_exit(xgmac_exit);
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-> new file mode 100644
-> index 0000000..049df3d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-> @@ -0,0 +1,25 @@
-> +Fixed Voltage regulators
-> +
-> +Required properties:
-> +- compatible: Must be "regulator-fixed";
-> +
-> +Optional properties:
-> +- regulator-fixed-supply: Name of the regulator supply
-> +- regulator-fixed-microvolts: Output voltage of regulator
+> You can drop some boilerplate with module_platform_driver() now.
 
-Other regulator binding usese uV, here it's microvolts. Pick one, microvolts
-has the benefit of not needing caps. :)
+Okay.
 
-> +- regulator-fixed-gpio: gpio to use for enable control
-> +- regulator-fixed-startup-delay: startup time in microseconds
-
-startup-delay-ms ?
-
-> +- regulator-fixed-enable-high: Polarity of enable GPIO,
-> +  1 = Active High, 0 = Active low
-
-Some gpio specifiers allow you to specify active high or low flags, but either
-way something like "enable-active-low" as a property (with active high as
-default if property is missing) is a more devicetreey convention.
-
-> +- regulator-fixed-enabled-at-boot: 1 = yes, 0 = no
-
-Same here, you can drop the prefix. Also, the regular regulators use
-"regulator-name" for the supply name, it would make sense to reuse the same
-naming here, right?
-
-> +
-> +Example:
-> +
-> +	abc: fixedregulator@0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-fixed-supply = "fixed-supply";
-> +		regulator-fixed-microvolts = <1800000>;
-> +		regulator-fixed-gpio = <43>;
-
-This is not a valid gpio specifier.
-
-> +		regulator-fixed-startup-delay = <70000>;
-> +		regulator-fixed-enable-high;
-> +		regulator-fixed-enabled-at-boot;
-> +	};
-> diff --git a/drivers/regulator/fixed.c b/drivers/regulator/fixed.c
-> index 2fe9d99..9851b42 100644
-> --- a/drivers/regulator/fixed.c
-> +++ b/drivers/regulator/fixed.c
-> @@ -26,6 +26,9 @@
->  #include <linux/gpio.h>
->  #include <linux/delay.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/regulator/of_regulator.h>
-> +#include <linux/regulator/machine.h>
->  
->  struct fixed_voltage_data {
->  	struct regulator_desc desc;
-> @@ -37,6 +40,46 @@ struct fixed_voltage_data {
->  	bool is_enabled;
->  };
->  
-> +
-> +/**
-> + * of_get_fixed_voltage_config - extract fixed_voltage_config structure info
-> + * @dev: device requesting for fixed_voltage_config
-> + *
-> + * Populates fixed_voltage_config structure by extracting data from device
-> + * tree node, returns a pointer to the populated structure of NULL if memory
-> + * alloc fails.
-> + */
-> +struct fixed_voltage_config *of_get_fixed_voltage_config(struct device *dev)
-> +{
-> +	struct fixed_voltage_config *config;
-> +	struct device_node *np = dev->of_node;
-> +	const __be32 *microvolts, *gpio, *delay;
-> +
-> +	config = devm_kzalloc(dev, sizeof(struct fixed_voltage_config), GFP_KERNEL);
-> +	if (!config)
-> +		return NULL;
-> +
-> +	config->supply_name = of_get_property(np, "regulator-fixed-supply", NULL);
-> +	microvolts = of_get_property(np, "regulator-fixed-microvolts", NULL);
-> +	if (microvolts)
-> +		config->microvolts = be32_to_cpu(*microvolts);
-> +	gpio = of_get_property(np, "regulator-fixed-gpio", NULL);
-> +	if (gpio)
-> +		config->gpio = be32_to_cpu(*gpio);
-
-This needs to be fixed to parse a gpio properly instead.
-
-
-
--Olof
+Rob
