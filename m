@@ -1,8 +1,7 @@
 From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCHv4 01/13] ARM: Make global handler and CONFIG_MULTI_IRQ_HANDLER
- mutually exclusive
-Date: Fri,  4 Nov 2011 01:09:58 +0000
-Message-ID: <1320369010-23428-2-git-send-email-jamie@jamieiles.com>
+Subject: [PATCHv4 03/13] ARM: vic: MULTI_IRQ_HANDLER handler
+Date: Fri,  4 Nov 2011 01:10:00 +0000
+Message-ID: <1320369010-23428-4-git-send-email-jamie@jamieiles.com>
 References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,121 +18,97 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rubini-9wsNiZum9E8@public.gmane.org
+Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, rubini-9wsNiZum9E8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Add a handler for the VIC that is suitable for MULTI_IRQ_HANDLER
+platforms.  This can replace the ASM entry macros for platforms that use
+the VIC.
 
-Even when CONFIG_MULTI_IRQ_HANDLER is selected, the core code
-requires the arch_irq_handler_default macro to be defined as
-a fallback.
+v4:	- rebase ontop of move __exception and friends to
+	  asm/exception.h
+	- rework polling loop to handle as many irqs as possible in one go
+v3:	- simplify irq handling loop as suggested by Grant
+	- service interrupts from msb->lsb order
+v2:	- allow the handler be used for !CONFIG_OF
+	- use irq_domain_to_irq()
 
-It turns out nobody is using that particular feature as both PXA
-and shmobile have all their machine descriptors populated with
-the interrupt handler, leaving unused code (or empty macros) in
-their entry-macro.S file just to be able to compile entry-armv.S.
-
-Make CONFIG_MULTI_IRQ_HANDLER exclusive wrt arch_irq_handler_default,
-which allows to remove one test from the hot path. Also cleanup both
-PXA and shmobile entry-macro.S.
-
-Cc: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 ---
- arch/arm/kernel/entry-armv.S                      |    7 ++--
- arch/arm/mach-pxa/include/mach/entry-macro.S      |   36 ---------------------
- arch/arm/mach-shmobile/include/mach/entry-macro.S |    9 -----
- 3 files changed, 3 insertions(+), 49 deletions(-)
+ arch/arm/common/vic.c               |   38 +++++++++++++++++++++++++++++++++++
+ arch/arm/include/asm/hardware/vic.h |    3 ++
+ 2 files changed, 41 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/kernel/entry-armv.S b/arch/arm/kernel/entry-armv.S
-index 9ad50c4..bd49a6a 100644
---- a/arch/arm/kernel/entry-armv.S
-+++ b/arch/arm/kernel/entry-armv.S
-@@ -36,12 +36,11 @@
- #ifdef CONFIG_MULTI_IRQ_HANDLER
- 	ldr	r1, =handle_arch_irq
- 	mov	r0, sp
--	ldr	r1, [r1]
- 	adr	lr, BSYM(9997f)
--	teq	r1, #0
--	movne	pc, r1
--#endif
-+	ldr	pc, [r1]
-+#else
- 	arch_irq_handler_default
-+#endif
- 9997:
- 	.endm
+diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
+index e689975..a82e3e0 100644
+--- a/arch/arm/common/vic.c
++++ b/arch/arm/common/vic.c
+@@ -30,6 +30,7 @@
+ #include <linux/device.h>
+ #include <linux/amba/bus.h>
  
-diff --git a/arch/arm/mach-pxa/include/mach/entry-macro.S b/arch/arm/mach-pxa/include/mach/entry-macro.S
-index a73bc86..260c0c1 100644
---- a/arch/arm/mach-pxa/include/mach/entry-macro.S
-+++ b/arch/arm/mach-pxa/include/mach/entry-macro.S
-@@ -7,45 +7,9 @@
-  * License version 2. This program is licensed "as is" without any
-  * warranty of any kind, whether express or implied.
-  */
--#include <mach/hardware.h>
--#include <mach/irqs.h>
++#include <asm/exception.h>
+ #include <asm/mach/irq.h>
+ #include <asm/hardware/vic.h>
  
- 		.macro	disable_fiq
- 		.endm
+@@ -427,3 +428,40 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
+ 	return -EIO;
+ }
+ #endif /* CONFIG OF */
++
++#ifdef CONFIG_MULTI_IRQ_HANDLER
++/*
++ * Handle each interrupt in a single VIC.  Returns non-zero if we've
++ * handled at least one interrupt.  This does a single read of the
++ * status register and handles all interrupts in order from LSB first.
++ */
++static int handle_one_vic(struct vic_device *vic, struct pt_regs *regs)
++{
++	u32 stat, irq;
++	int handled = 0;
++
++	stat = readl_relaxed(vic->base + VIC_IRQ_STATUS);
++	while (stat) {
++		irq = ffs(stat) - 1;
++		handle_IRQ(irq_domain_to_irq(&vic->domain, irq), regs);
++		stat &= ~(1 << irq);
++		handled = 1;
++	}
++
++	return handled;
++}
++
++/*
++ * Keep iterating over all registered VIC's until there are no pending
++ * interrupts.
++ */
++asmlinkage void __exception_irq_entry vic_handle_irq(struct pt_regs *regs)
++{
++	int i, handled;
++
++	do {
++		for (i = 0, handled = 0; i < vic_id; ++i)
++			handled |= handle_one_vic(&vic_devices[i], regs);
++	} while (handled);
++}
++#endif /* CONFIG_MULTI_IRQ_HANDLER */
+diff --git a/arch/arm/include/asm/hardware/vic.h b/arch/arm/include/asm/hardware/vic.h
+index b348a54..f42ebd6 100644
+--- a/arch/arm/include/asm/hardware/vic.h
++++ b/arch/arm/include/asm/hardware/vic.h
+@@ -45,8 +45,11 @@
+ #include <linux/types.h>
  
--		.macro  get_irqnr_preamble, base, tmp
--		.endm
--
- 		.macro  arch_ret_to_user, tmp1, tmp2
- 		.endm
--
--		.macro	get_irqnr_and_base, irqnr, irqstat, base, tmp
--		mrc	p15, 0, \tmp, c0, c0, 0		@ CPUID
--		mov	\tmp, \tmp, lsr #13
--		and	\tmp, \tmp, #0x7		@ Core G
--		cmp	\tmp, #1
--		bhi	1002f
--
--		@ Core Generation 1 (PXA25x)
--		mov	\base, #io_p2v(0x40000000)	@ IIR Ctl = 0x40d00000
--		add	\base, \base, #0x00d00000
--		ldr	\irqstat, [\base, #0]		@ ICIP
--		ldr	\irqnr, [\base, #4]		@ ICMR
--
--		ands	\irqnr, \irqstat, \irqnr
--		beq	1001f
--		rsb	\irqstat, \irqnr, #0
--		and	\irqstat, \irqstat, \irqnr
--		clz	\irqnr, \irqstat
--		rsb	\irqnr, \irqnr, #(31 + PXA_IRQ(0))
--		b	1001f
--1002:
--		@ Core Generation 2 (PXA27x) or Core Generation 3 (PXA3xx)
--		mrc	p6, 0, \irqstat, c5, c0, 0	@ ICHP
--		tst	\irqstat, #0x80000000
--		beq	1001f
--		bic	\irqstat, \irqstat, #0x80000000
--		mov	\irqnr, \irqstat, lsr #16
--		add	\irqnr, \irqnr, #(PXA_IRQ(0))
--1001:
--		.endm
-diff --git a/arch/arm/mach-shmobile/include/mach/entry-macro.S b/arch/arm/mach-shmobile/include/mach/entry-macro.S
-index 8d4a416..2a57b29 100644
---- a/arch/arm/mach-shmobile/include/mach/entry-macro.S
-+++ b/arch/arm/mach-shmobile/include/mach/entry-macro.S
-@@ -18,14 +18,5 @@
- 	.macro  disable_fiq
- 	.endm
+ struct device_node;
++struct pt_regs;
++
+ void vic_init(void __iomem *base, unsigned int irq_start, u32 vic_sources, u32 resume_sources);
+ int vic_of_init(struct device_node *node, struct device_node *parent);
++void vic_handle_irq(struct pt_regs *regs);
  
--	.macro  get_irqnr_preamble, base, tmp
--	.endm
--
--	.macro  get_irqnr_and_base, irqnr, irqstat, base, tmp
--	.endm
--
--	.macro  test_for_ipi, irqnr, irqstat, base, tmp
--	.endm
--
- 	.macro  arch_ret_to_user, tmp1, tmp2
- 	.endm
+ #endif /* __ASSEMBLY__ */
+ #endif
 -- 
 1.7.5.4
