@@ -1,50 +1,74 @@
-From: "Robert Sciuk" <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
-Subject: RE: fpga driver on custom PPC target platform (P4080) ...
-Date: Fri, 4 Nov 2011 12:42:48 -0400
-Message-ID: <2DD52030B5146141BEB762A11AE97C4C0100C86F@SPQCEXC05.exfo.com>
-References: <2DD52030B5146141BEB762A11AE97C4C0100C735@SPQCEXC05.exfo.com>
- <CAOZdJXWjS4t9cOKRB3rxy0iCFAYRyEgg6kfQwvydUQSyO1ttoA@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: USB support for device tree
+Date: Fri, 4 Nov 2011 12:45:04 -0400
+Message-ID: <CACxGe6vMCHdB+J8hX1EPW3m35UaKC-FAZULUA4G11J0FUK6tNQ@mail.gmail.com>
+References: <4EB3A165.8060300@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-In-reply-to: <CAOZdJXWjS4t9cOKRB3rxy0iCFAYRyEgg6kfQwvydUQSyO1ttoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4EB3A165.8060300-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavan Kondeti <pkondeti-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 4, 2011 at 4:25 AM, Pavan Kondeti <pkondeti-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>=
+ wrote:
+> Hi
+>
+> I am working on adding USB device tree support for MSM platform. =A0O=
+ne of
+> our chip set has 2 hsusb cores. The first core is configured as otg a=
+nd
+> the other core is configured in host only mode (EHCI compliant). Are =
+the
+> below device node names Okay? Please suggest.
+>
+> hsusb0-otg: usb@0xa6000000 {
+> =A0 =A0 =A0 =A0compatible =3D "qcom,hsusb-otg";
+> =A0 =A0 =A0 =A0---
+> };
+>
+> hsusb0-device: usb@0xa6000000 {
+> =A0 =A0 =A0 =A0compatible =3D "qcom,hsusb-device";
+> =A0 =A0 =A0 =A0---
+> };
+>
+> hsusb0-host: usb@0xa6000000 {
+> =A0 =A0 =A0 =A0compatible =3D "qcom,hsusb-host", "usb-ehci";
+> =A0 =A0 =A0 =A0---
+> };
+>
+> hsusb1-host: usb@0xa6000000 {
+> =A0 =A0 =A0 =A0compatible =3D "qcom,hsusb-host", "usb-ehci";
+> =A0 =A0 =A0 =A0---
+> };
+>
+> /* super speed support
+>
+> ssusb0-device: usb@0xa6000000 {
+> =A0 =A0 =A0 =A0compatible =3D "qcom,ssusb-device";
+> };
 
 
-> > It appears that I'm not correctly creating the pca9539 nodes as of
-> yet (I'll be adding the phandles shortly). =A0Any pointers for pca9539
-> driver nodes would be appreciated, as I took these from a similar tree,
-> but not the 95xx driver. =A0I'll match them up with the code in the
-> morning ...
-> =
+The host controller node names as "usb@<adddr>" as you have here is
+exactly right.  The driver doesn't care and will only look at the
+compatible list.  OTG controllers can also use "usb@" as the prefix.
 
-> I *believe* you are not supposed to create separate nodes for reading
-> and writing.  I know that's how I2C works, but I think the I2C layer
-> takes care of that for you.
-> =
+Controllers that are only in device mode should probably be called
+something like "usb-gadget@<addr>" or similar, because "usb@" is used
+for host controllers.
 
-> If you look at other device trees, you'll see they only have one node
-> for any particular I2C device.
-> =
+The label names (hsusb*-host, hsusb*-device) are completely irrelevant
+since Linux never sees them.  Use whatever you want for the label
+names.
 
-> --
-> Timur Tabi
-> Linux kernel developer at Freescale
+Also, the form of the node name is: "usb@a6000000" (without '0x' in
+the address).
 
-
-Thanks, Timur ... I've fixed the tree, and I'm tracking down the problems w=
-ith addressing the nodes ...
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
