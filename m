@@ -1,51 +1,71 @@
-From: Pavan Kondeti <pkondeti@codeaurora.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: USB support for device tree
-Date: Fri, 04 Nov 2011 23:21:00 +0530
-Message-ID: <4EB42604.3030701@codeaurora.org>
-References: <4EB3A165.8060300@codeaurora.org> <20111104154356.GA30439@kroah.com>
+Date: Fri, 4 Nov 2011 14:12:06 -0400
+Message-ID: <CACxGe6sYkCSnFvybGcjrkh4cNvtjS=t6fr456be4KFDc3Gre2w@mail.gmail.com>
+References: <4EB3A165.8060300@codeaurora.org> <CACxGe6vMCHdB+J8hX1EPW3m35UaKC-FAZULUA4G11J0FUK6tNQ@mail.gmail.com>
+ <4EB424DD.4090609@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20111104154356.GA30439@kroah.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Greg KH <greg@kroah.com>
-Cc: devicetree-discuss@lists.ozlabs.org, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4EB424DD.4090609-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavan Kondeti <pkondeti-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
-
-On 11/4/2011 9:13 PM, Greg KH wrote:
-> On Fri, Nov 04, 2011 at 01:55:09PM +0530, Pavan Kondeti wrote:
->> Hi
+On Fri, Nov 4, 2011 at 1:46 PM, Pavan Kondeti <pkondeti-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>=
+ wrote:
+> On 11/4/2011 10:15 PM, Grant Likely wrote:
+>> The host controller node names as "usb@<adddr>" as you have here is
+>> exactly right. =A0The driver doesn't care and will only look at the
+>> compatible list. =A0OTG controllers can also use "usb@" as the prefi=
+x.
 >>
->> I am working on adding USB device tree support for MSM platform.  One of
->> our chip set has 2 hsusb cores. The first core is configured as otg and
->> the other core is configured in host only mode (EHCI compliant). Are the
->> below device node names Okay? Please suggest.
-> 
-> Why do you need to name the speed of the device and the host?  That
-> doesn't really matter if you plug a low-speed device into that super
-> speed host controller, right?
-> 
+>> Controllers that are only in device mode should probably be called
+>> something like "usb-gadget@<addr>" or similar, because "usb@" is use=
+d
+>> for host controllers.
+>>
+>
+> In our case OTG, gadget and host controllers are part of a single cor=
+e
+> i.e they all share the same register address space.
+>
+> If I use usb@addr for OTG controller, then host and OTG device node
+> names becomes same. Is that okay? Can two devices have the same devic=
+e
+> node name in device tree source file?
 
-Right :-)
+It is not legal for two device nodes to have overlapping 'reg' regions
+(unless one is a child of the other), so by extension it is not okay
+for two nodes to have the same 'name@addr'.  However, it is perfectly
+acceptable and encouraged for two nodes at different addresses to
+start with the same value for 'name@'.  This is called the generic
+names recommended practice, and it can also be found in the ePAPR
+documentation on node names.
 
-> I'm not familiar with device tree naming conventions, but is this
-> something you do for network devices?  If not, I'd not recommend it for
-> USB controllers either.
-> 
+If you want to have both host and device drivers bound to a single
+device for OTG mode, then you should use a wrapper driver in Linux
+that binds to the single node and instantiates each of the interfaces
+as a child device.  For an example take a look at
+drivers/usb/host/fsl-mph-dr-of.c.
 
-I am also not sure about the label names. The reason I would like to
-have them in device tree source file is just for readability. One can
-easily correlates the device node properties with the label. Say if I
-want to change the IRQ number or some property value of 1st instance
-HSUSB device controller (while porting a different board), I look for
-hsusb0-device.
+>
+>> The label names (hsusb*-host, hsusb*-device) are completely irreleva=
+nt
+>> since Linux never sees them. =A0Use whatever you want for the label
+>> names.
+>>
+> Is it a good practice to give label names? I thought, it improves a b=
+it
+> readability of device tree source file.
 
-Thanks,
-Pavan
+Yes, label names are important; the kernel just never sees them so I
+don't care much.
 
--- 
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
