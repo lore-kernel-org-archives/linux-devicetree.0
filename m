@@ -1,39 +1,88 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] net: add calxeda xgmac ethernet driver
-Date: Fri, 4 Nov 2011 12:57:38 -0400
-Message-ID: <CACxGe6shx0V1tGd1NGgt4tfd3AsKk6+RgPQg=aNRKh-DGERWhg@mail.gmail.com>
-References: <1319684206-473-1-git-send-email-robherring2@gmail.com>
- <CACxGe6sAFUwQc5Nk=gGLC+si-_C32AWu=E14vBkSm7YCFhazFg@mail.gmail.com>
+From: Pavan Kondeti <pkondeti@codeaurora.org>
+Subject: Re: USB support for device tree
+Date: Fri, 04 Nov 2011 23:16:05 +0530
+Message-ID: <4EB424DD.4090609@codeaurora.org>
+References: <4EB3A165.8060300@codeaurora.org> <CACxGe6vMCHdB+J8hX1EPW3m35UaKC-FAZULUA4G11J0FUK6tNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6sAFUwQc5Nk=gGLC+si-_C32AWu=E14vBkSm7YCFhazFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vMCHdB+J8hX1EPW3m35UaKC-FAZULUA4G11J0FUK6tNQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 4, 2011 at 12:57 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Wed, Oct 26, 2011 at 10:56 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> Add support for the XGMAC 10Gb ethernet device in the Calxeda Highbank
->> SOC.
->>
->> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->
-> Sinker question: is this a driver for an entirely new GMAC device
-> (designed from scratch) or is it based on an existing IP block?
+Hi
 
-s/sinker/stinker/
+On 11/4/2011 10:15 PM, Grant Likely wrote:
+> On Fri, Nov 4, 2011 at 4:25 AM, Pavan Kondeti <pkondeti@codeaurora.org> wrote:
+>> Hi
+>>
+>> I am working on adding USB device tree support for MSM platform.  One of
+>> our chip set has 2 hsusb cores. The first core is configured as otg and
+>> the other core is configured in host only mode (EHCI compliant). Are the
+>> below device node names Okay? Please suggest.
+>>
+>> hsusb0-otg: usb@0xa6000000 {
+>>        compatible = "qcom,hsusb-otg";
+>>        ---
+>> };
+>>
+>> hsusb0-device: usb@0xa6000000 {
+>>        compatible = "qcom,hsusb-device";
+>>        ---
+>> };
+>>
+>> hsusb0-host: usb@0xa6000000 {
+>>        compatible = "qcom,hsusb-host", "usb-ehci";
+>>        ---
+>> };
+>>
+>> hsusb1-host: usb@0xa6000000 {
+>>        compatible = "qcom,hsusb-host", "usb-ehci";
+>>        ---
+>> };
+>>
+>> /* super speed support
+>>
+>> ssusb0-device: usb@0xa6000000 {
+>>        compatible = "qcom,ssusb-device";
+>> };
+> 
+> 
+> The host controller node names as "usb@<adddr>" as you have here is
+> exactly right.  The driver doesn't care and will only look at the
+> compatible list.  OTG controllers can also use "usb@" as the prefix.
+> 
+> Controllers that are only in device mode should probably be called
+> something like "usb-gadget@<addr>" or similar, because "usb@" is used
+> for host controllers.
+> 
 
-g.
+In our case OTG, gadget and host controllers are part of a single core
+i.e they all share the same register address space.
+
+If I use usb@addr for OTG controller, then host and OTG device node
+names becomes same. Is that okay? Can two devices have the same device
+node name in device tree source file?
+
+> The label names (hsusb*-host, hsusb*-device) are completely irrelevant
+> since Linux never sees them.  Use whatever you want for the label
+> names.
+> 
+Is it a good practice to give label names? I thought, it improves a bit
+readability of device tree source file.
+
+> Also, the form of the node name is: "usb@a6000000" (without '0x' in
+> the address).
+> 
+Thanks for the correction.
+
+Thanks,
+Pavan
+
+
+-- 
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
