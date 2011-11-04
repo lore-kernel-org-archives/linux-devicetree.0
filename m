@@ -1,51 +1,39 @@
-From: "Robert Sciuk" <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
-Subject: RE: fpga driver on custom PPC target platform (P4080) ...
-Date: Fri, 4 Nov 2011 14:19:36 -0400
-Message-ID: <2DD52030B5146141BEB762A11AE97C4C0100C8C1@SPQCEXC05.exfo.com>
-References: <2DD52030B5146141BEB762A11AE97C4C0100C735@SPQCEXC05.exfo.com>
- <CAOZdJXWjS4t9cOKRB3rxy0iCFAYRyEgg6kfQwvydUQSyO1ttoA@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm/dt: add basic usb nodes to tegra device trees
+Date: Fri, 4 Nov 2011 14:20:05 -0400
+Message-ID: <CACxGe6u5UJLwE+-iS_GzQxE5wkJ1RH_c9MFdrHfa__Wju-SuHg@mail.gmail.com>
+References: <1320377174-28047-1-git-send-email-olof@lixom.net> <74CDBE0F657A3D45AFBB94109FB122FF173F9A4CAC@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Robert Sciuk <robert.sciuk-AJFDzwRlY/g@public.gmane.org>, Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF173F9A4CAC-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >
-> > I *believe* you are not supposed to create separate nodes for reading
-> > and writing.  I know that's how I2C works, but I think the I2C layer
-> > takes care of that for you.
-> >
-> > If you look at other device trees, you'll see they only have one node
-> > for any particular I2C device.
-> >
-> > --
-> > Timur Tabi
-> > Linux kernel developer at Freescale
-> 
-> 
-> Thanks, Timur ... I've fixed the tree, and I'm tracking down the
-> problems with addressing the nodes ...
+On Fri, Nov 4, 2011 at 11:27 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wr=
+ote:
+> Olof Johansson wrote at Thursday, November 03, 2011 9:26 PM:
+>> For now they are a minimal binding. It needs to be amended with
+>> vendor-specific settings for phy setup and link tuning, etc.
+> ...
+>> diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dt=
+s/tegra-seaboard.dts
+> ...
+>> + =A0 =A0 usb@c5000000 {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 nvidia,vbus-gpio =3D <&gpio 24 0>; /* PD0 =
+*/
+>> + =A0 =A0 };
+>
+> Given that's a custom property, don't we need bindings documentation =
+in
+> Documentation/devictree/bindings/usb/? Even if the binding is pretty =
+self-
+> explanatory.
 
-Ah,  my compatible attribute was wrong:
+Yes, you're right.  Please add a binding, but you can leave my ack in
+place when reposted.
 
-	Compatible = "nxp,pca9539";
-
-	Should have been:
-
-	Compatible = "nxp,pca953x";
-
-The tree now seems to bind the i2c gpio drivers properly ... on to the localbus mappings!
-
-Rob.
+g.
