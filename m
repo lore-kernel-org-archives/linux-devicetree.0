@@ -1,49 +1,77 @@
-From: Dirk Behme <dirk.behme@googlemail.com>
-Subject: [PATCH] distclean: Remove generated .dtb files
-Date: Sat,  5 Nov 2011 07:19:15 +0100
-Message-ID: <1320473955-4500-1-git-send-email-dirk.behme@de.bosch.com>
+From: Pavan Kondeti <pkondeti@codeaurora.org>
+Subject: Re: USB support for device tree
+Date: Sat, 05 Nov 2011 13:42:46 +0530
+Message-ID: <4EB4EFFE.8070308@codeaurora.org>
+References: <4EB3A165.8060300@codeaurora.org>	<CACxGe6vMCHdB+J8hX1EPW3m35UaKC-FAZULUA4G11J0FUK6tNQ@mail.gmail.com>	<4EB424DD.4090609@codeaurora.org>	<CACxGe6sYkCSnFvybGcjrkh4cNvtjS=t6fr456be4KFDc3Gre2w@mail.gmail.com>	<4EB4A897.8020305@codeaurora.org> <CACxGe6tgXc0kWnHM1FrbnJO3NU1xdzPaZ2x2ZXCgoG1crEwxcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
-	<mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, rob.herring@calxeda.com, grant.likely@linaro.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Dirk Behme <dirk.behme@de.bosch.com>, Jason Liu <jason.hui@linaro.org>, Shawn Guo <shawn.guo@freescale.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6tgXc0kWnHM1FrbnJO3NU1xdzPaZ2x2ZXCgoG1crEwxcA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-The patch 'arm/dt: Add dtb make rule' adds support to
-create a .dtb file. But this is never removed afterwards.
-Remove the generated .dtb file if 'distclean' is called.
+Hi
 
-Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-CC: Rob Herring <rob.herring@calxeda.com>
-CC: Shawn Guo <shawn.guo@freescale.com>
-CC: Jason Liu <jason.hui@linaro.org>
-CC: Grant Likely <grant.likely@secretlab.ca>
----
- arch/arm/boot/Makefile |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+On 11/5/2011 9:22 AM, Grant Likely wrote:
+> On Nov 4, 2011 11:08 PM, "Pavan Kondeti" <pkondeti@codeaurora.org> wrote:
+>>
+>> Hi
+>>
+>> On 11/4/2011 11:42 PM, Grant Likely wrote:
+>>> It is not legal for two device nodes to have overlapping 'reg' regions
+>>> (unless one is a child of the other), so by extension it is not okay
+>>> for two nodes to have the same 'name@addr'.  However, it is perfectly
+>>> acceptable and encouraged for two nodes at different addresses to
+>>> start with the same value for 'name@'.  This is called the generic
+>>> names recommended practice, and it can also be found in the ePAPR
+>>> documentation on node names.
+>>>
+>>> If you want to have both host and device drivers bound to a single
+>>> device for OTG mode, then you should use a wrapper driver in Linux
+>>> that binds to the single node and instantiates each of the interfaces
+>>> as a child device.  For an example take a look at
+>>> drivers/usb/host/fsl-mph-dr-of.c.
+>>
+>> Currently we have two platform devices one for OTG and one for host,
+>> corresponding drivers for them. If I would like to keep it this way, the
+>> device tree becomes something like below
+>>
+>> hsusb0-otg: usb-otg@0xa6000000 {
+>>        compatible = "qcom,hsusb-otg";
+>>        ---
+>> };
+>>
+>> hsusb0-device: usb-gadget@0xa6000000 {
+>>        compatible = "qcom,hsusb-device";
+>>        ---
+>> };
+>>
+>> hsusb0-host: usb@0xa6000000 {
+>>        compatible = "qcom,hsusb-host", "usb-ehci";
+>>        ---
+>> };
+> 
+> No, you don't need three nodes. Only one node for the whole thing since
+> from the hardware perspective it is still a single device. The driver for
+> that node should create the child otg and gadget platform_devices so that
+> you can preserve the existing driver structure.
+>
 
-diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
-index 1cd9b0a..08f0d35 100644
---- a/arch/arm/boot/Makefile
-+++ b/arch/arm/boot/Makefile
-@@ -71,6 +71,8 @@ $(obj)/%.dtb: $(src)/dts/%.dts
- 
- $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
- 
-+clean-files := *.dtb
-+
- quiet_cmd_uimage = UIMAGE  $@
-       cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
- 		   -C none -a $(LOADADDR) -e $(STARTADDR) \
+Okay. I got it. Thanks for pointing me to
+drivers/usb/host/fsl-mph-dr-of.c. I can have one device node for otg and
+create host and/or gadget based on the operational mode.
+
+> There does not need to be a device tree node for every struct device in the
+> kernel.
+> 
+
+Agreed.
+
+Thanks,
+Pavan
 -- 
-1.7.0.4
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
