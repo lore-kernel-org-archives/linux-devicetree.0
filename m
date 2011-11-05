@@ -1,61 +1,60 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: fpga driver on custom PPC target platform (P4080) ...
-Date: Sat, 5 Nov 2011 11:40:50 +1100
-Message-ID: <20111105004050.GA1384@truffala.fritz.box>
-References: <2DD52030B5146141BEB762A11AE97C4C0100C735@SPQCEXC05.exfo.com>
- <CAOZdJXWjS4t9cOKRB3rxy0iCFAYRyEgg6kfQwvydUQSyO1ttoA@mail.gmail.com>
- <2DD52030B5146141BEB762A11AE97C4C0100C8C1@SPQCEXC05.exfo.com>
+From: Pavan Kondeti <pkondeti-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: USB support for device tree
+Date: Sat, 05 Nov 2011 08:38:07 +0530
+Message-ID: <4EB4A897.8020305@codeaurora.org>
+References: <4EB3A165.8060300@codeaurora.org> <CACxGe6vMCHdB+J8hX1EPW3m35UaKC-FAZULUA4G11J0FUK6tNQ@mail.gmail.com> <4EB424DD.4090609@codeaurora.org> <CACxGe6sYkCSnFvybGcjrkh4cNvtjS=t6fr456be4KFDc3Gre2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2DD52030B5146141BEB762A11AE97C4C0100C8C1-OMuKRxKQdmAsN9D57aW0LdBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Robert Sciuk <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6sYkCSnFvybGcjrkh4cNvtjS=t6fr456be4KFDc3Gre2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 04, 2011 at 02:19:36PM -0400, Robert Sciuk wrote:
-> > >
-> > > I *believe* you are not supposed to create separate nodes for reading
-> > > and writing.  I know that's how I2C works, but I think the I2C layer
-> > > takes care of that for you.
-> > >
-> > > If you look at other device trees, you'll see they only have one node
-> > > for any particular I2C device.
-> > >
-> > 
-> > 
-> > Thanks, Timur ... I've fixed the tree, and I'm tracking down the
-> > problems with addressing the nodes ...
-> 
-> Ah,  my compatible attribute was wrong:
-> 
-> 	Compatible = "nxp,pca9539";
-> 
-> 	Should have been:
-> 
-> 	Compatible = "nxp,pca953x";
-> 
-> The tree now seems to bind the i2c gpio drivers properly ... on to
-> the localbus mappings!
+Hi
 
-Ah.  In that case the drivers should probably be extended to recognize
-the first compatible.  "wildcard" compatible strings are a bad idea,
-unfortunately there are some already in the wild, as you've seen.  We
-should try to phase them out though.
+On 11/4/2011 11:42 PM, Grant Likely wrote:
+> It is not legal for two device nodes to have overlapping 'reg' regions
+> (unless one is a child of the other), so by extension it is not okay
+> for two nodes to have the same 'name@addr'.  However, it is perfectly
+> acceptable and encouraged for two nodes at different addresses to
+> start with the same value for 'name@'.  This is called the generic
+> names recommended practice, and it can also be found in the ePAPR
+> documentation on node names.
+> 
+> If you want to have both host and device drivers bound to a single
+> device for OTG mode, then you should use a wrapper driver in Linux
+> that binds to the single node and instantiates each of the interfaces
+> as a child device.  For an example take a look at
+> drivers/usb/host/fsl-mph-dr-of.c.
+
+Currently we have two platform devices one for OTG and one for host,
+corresponding drivers for them. If I would like to keep it this way, the
+device tree becomes something like below
+
+hsusb0-otg: usb-otg@0xa6000000 {
+	compatible = "qcom,hsusb-otg";
+        ---
+};
+
+hsusb0-device: usb-gadget@0xa6000000 {
+	compatible = "qcom,hsusb-device";
+        ---
+};
+
+hsusb0-host: usb@0xa6000000 {
+	compatible = "qcom,hsusb-host", "usb-ehci";
+        ---
+};
+
+Are you okay with above naming convention?
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
