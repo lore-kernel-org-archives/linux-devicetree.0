@@ -1,77 +1,57 @@
-From: Pavan Kondeti <pkondeti@codeaurora.org>
-Subject: Re: USB support for device tree
-Date: Sat, 05 Nov 2011 13:42:46 +0530
-Message-ID: <4EB4EFFE.8070308@codeaurora.org>
-References: <4EB3A165.8060300@codeaurora.org>	<CACxGe6vMCHdB+J8hX1EPW3m35UaKC-FAZULUA4G11J0FUK6tNQ@mail.gmail.com>	<4EB424DD.4090609@codeaurora.org>	<CACxGe6sYkCSnFvybGcjrkh4cNvtjS=t6fr456be4KFDc3Gre2w@mail.gmail.com>	<4EB4A897.8020305@codeaurora.org> <CACxGe6tgXc0kWnHM1FrbnJO3NU1xdzPaZ2x2ZXCgoG1crEwxcA@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] distclean: Remove generated .dtb files
+Date: Sun, 6 Nov 2011 11:38:02 -0700
+Message-ID: <20111106183802.GB2546@ponder.secretlab.ca>
+References: <1320473955-4500-1-git-send-email-dirk.behme@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6tgXc0kWnHM1FrbnJO3NU1xdzPaZ2x2ZXCgoG1crEwxcA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1320473955-4500-1-git-send-email-dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dirk Behme <dirk.behme-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On 11/5/2011 9:22 AM, Grant Likely wrote:
-> On Nov 4, 2011 11:08 PM, "Pavan Kondeti" <pkondeti@codeaurora.org> wrote:
->>
->> Hi
->>
->> On 11/4/2011 11:42 PM, Grant Likely wrote:
->>> It is not legal for two device nodes to have overlapping 'reg' regions
->>> (unless one is a child of the other), so by extension it is not okay
->>> for two nodes to have the same 'name@addr'.  However, it is perfectly
->>> acceptable and encouraged for two nodes at different addresses to
->>> start with the same value for 'name@'.  This is called the generic
->>> names recommended practice, and it can also be found in the ePAPR
->>> documentation on node names.
->>>
->>> If you want to have both host and device drivers bound to a single
->>> device for OTG mode, then you should use a wrapper driver in Linux
->>> that binds to the single node and instantiates each of the interfaces
->>> as a child device.  For an example take a look at
->>> drivers/usb/host/fsl-mph-dr-of.c.
->>
->> Currently we have two platform devices one for OTG and one for host,
->> corresponding drivers for them. If I would like to keep it this way, the
->> device tree becomes something like below
->>
->> hsusb0-otg: usb-otg@0xa6000000 {
->>        compatible = "qcom,hsusb-otg";
->>        ---
->> };
->>
->> hsusb0-device: usb-gadget@0xa6000000 {
->>        compatible = "qcom,hsusb-device";
->>        ---
->> };
->>
->> hsusb0-host: usb@0xa6000000 {
->>        compatible = "qcom,hsusb-host", "usb-ehci";
->>        ---
->> };
+On Sat, Nov 05, 2011 at 07:19:15AM +0100, Dirk Behme wrote:
+> The patch 'arm/dt: Add dtb make rule' adds support to
+> create a .dtb file. But this is never removed afterwards.
+> Remove the generated .dtb file if 'distclean' is called.
 > 
-> No, you don't need three nodes. Only one node for the whole thing since
-> from the hardware perspective it is still a single device. The driver for
-> that node should create the child otg and gadget platform_devices so that
-> you can preserve the existing driver structure.
->
+> Signed-off-by: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+> CC: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> CC: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> CC: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Okay. I got it. Thanks for pointing me to
-drivers/usb/host/fsl-mph-dr-of.c. I can have one device node for otg and
-create host and/or gadget based on the operational mode.
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-> There does not need to be a device tree node for every struct device in the
-> kernel.
+> ---
+>  arch/arm/boot/Makefile |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 > 
-
-Agreed.
-
-Thanks,
-Pavan
--- 
-Sent by a consultant of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
+> index 1cd9b0a..08f0d35 100644
+> --- a/arch/arm/boot/Makefile
+> +++ b/arch/arm/boot/Makefile
+> @@ -71,6 +71,8 @@ $(obj)/%.dtb: $(src)/dts/%.dts
+>  
+>  $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
+>  
+> +clean-files := *.dtb
+> +
+>  quiet_cmd_uimage = UIMAGE  $@
+>        cmd_uimage = $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux -T kernel \
+>  		   -C none -a $(LOADADDR) -e $(STARTADDR) \
+> -- 
+> 1.7.0.4
+> 
