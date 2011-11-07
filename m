@@ -1,37 +1,98 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 6/6] mmc: sdhci-s3c: Add device tree support
-Date: Mon, 7 Nov 2011 14:17:26 -0700
-Message-ID: <20111107211726.GC28491@ponder.secretlab.ca>
-References: <1320266163-15292-1-git-send-email-thomas.abraham@linaro.org>
- <1320266163-15292-7-git-send-email-thomas.abraham@linaro.org>
+From: Mitch Bradley <wmb@firmworks.com>
+Subject: Re: fpga driver on custom PPC target platform (P4080) ...
+Date: Mon, 07 Nov 2011 11:31:16 -1000
+Message-ID: <4EB84E24.9000000@firmworks.com>
+References: <2DD52030B5146141BEB762A11AE97C4C0100C735@SPQCEXC05.exfo.com>
+ <CAOZdJXWjS4t9cOKRB3rxy0iCFAYRyEgg6kfQwvydUQSyO1ttoA@mail.gmail.com>
+ <2DD52030B5146141BEB762A11AE97C4C0100C8C1@SPQCEXC05.exfo.com>
+ <20111105004050.GA1384@truffala.fritz.box>
+ <2DD52030B5146141BEB762A11AE97C4C0100CB3D@SPQCEXC05.exfo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1320266163-15292-7-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <2DD52030B5146141BEB762A11AE97C4C0100CB3D@SPQCEXC05.exfo.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: Robert Sciuk <robert.sciuk@exfo.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 03, 2011 at 02:06:03AM +0530, Thomas Abraham wrote:
-> Add device tree based discovery support for Samsung's sdhci controller
-> 
-> Cc: Ben Dooks <ben-linux@fluff.org>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
-> +Example:
-> +	sdhci@12530000 {
-> +		compatible = "samsung,exynos4210-sdhci";
-> +		reg = <0x12530000 0x100>;
-> +		interrupts = <139>;
-> +		samsung,sdhci-bus-width = <4>;
-> +		linux,mmc_cap_4_bit_data;
+On 11/7/2011 10:09 AM, Robert Sciuk wrote:
+> In my continuing saga of dev/tree driver development, I have a problem which might be obvious to those who have more experience in such matters.
+>
+> I'm a bit perplexed on the tree nodes for the localbus/simplebus nodes for my FPGA.  CS0 is reserved for booting (from NOR flash as required by our design), CS1 is tied to an FPGA which will always be present.  CS2 actually is tied to both of two (optional) fpga's, which have been previously mapped by U-Boot (BRn/ORn configuration).  Should I specify a ranges command as follows?  This seems somehow wrong, to me, and I'm wondering if there is an alternative representation which would work better in this case.  If you recall, the programming control lines are handled on the I2C bus, via a gpio controller.  In an ideal world, the optional FPE1 and FPE2 fpgas will have the identical .bts stream, and should support the option to program both simultaneously, or each individually, but I'm at a 
+ loss as how to best represent this in the tree.
 
-Following on from my reply on patch 5, this is an example of exactly
-what I'm talking about.  This node both sets bus-width to '4', and
-sets the 4_bit_data flag.  Don't you think that the driver would be
-smart enough to set the 4_bit_data flag when the bus width was set to
-4?
+I would be tempted to add another level of hierarchy as a container for 
+the two FPEs on CS2.
 
-g.
+>
+> 	        localbus@ffe124000 {
+>                  compatible = "fsl,p4080-elbc", "fsl,elbc", "simple-bus";
+>                  reg =<0xf 0xfe124000 0 0x1000>;
+>                  interrupts =<25 2 0 0>;
+>                  interrupt-parent =<&mpic>;
+>                  #address-cells =<2>;
+>                  #size-cells =<1>;
+>
+>                  /* Local bus region mappings */
+>                  ranges =<0 0 0xf 0xe8000000 0x08000000         /* CS0: Boot flash */
+>                            1 0 0xf 0xd0000000 0x7fff             /* CS1: FPGA0 -  LIM */
+>                            2 0 0xf 0xd1000000 0x7fff             /* CS2: FPGA1 -  FPE1 */
+>                            2 0 0xf 0xd2000000 0x7fff>;          /* CS2: FPGA2 -  FPE2 */
+>
+>                  flash@0,0 {
+>                          compatible = "cfi-flash";
+>                          reg =<0 0 0x08000000>;
+>                          bank-width =<2>;
+>                          device-width =<2>;
+>                          #size-cells =<1>;
+>                          #address-cells =<1>;
+>
+>                          partition@0 {
+>                                  label = "rcw";
+>                                  reg =<0x0 0x20000>;
+>                                  read-only;
+>                          };
+>                          partition@40000 {
+>                                  label = "saveenv";
+>                                  reg =<0x40000 0x20000>;
+>                          };
+>                          partition@7000000 {
+>                                  label = "fman-firmware";
+>                                  reg =<0x7000000 0x20000>;
+>                                  read-only;
+>                          };
+>                          partition@7f80000 {
+>                                  label = "u-boot";
+>                                  reg =<0x7f80000 0x80000>;
+>                                  read-only;
+>                          };
+>                  };
+>
+>                  lim: fpga@1, {
+>                  }
+>
+>                  fpe1: fpga@2, {
+>                  }
+>
+>                  fpe2: fpga@2, {
+> 	}
+>
+> Again, any pointers here would be greatly appreciated ...
+>
+> Cheers,
+> Rob Sciuk
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
