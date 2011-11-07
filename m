@@ -1,76 +1,55 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] distclean: Remove generated .dtb files
-Date: Sun, 6 Nov 2011 11:42:54 -0700
-Message-ID: <CACxGe6vK24j=L_WQWf5eqmdKXf0gCD=waAbJj4eq9d63O8mbvA@mail.gmail.com>
-References: <1320473955-4500-1-git-send-email-dirk.behme@de.bosch.com>
- <20111106183802.GB2546@ponder.secretlab.ca>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH 2/4] mmc: omap: adapt the hsmmc driver to device tree
+Date: Mon, 07 Nov 2011 11:44:43 +0530
+Message-ID: <4EB77753.8040606@ti.com>
+References: <1320407441-29697-1-git-send-email-rnayak@ti.com> <1320407441-29697-3-git-send-email-rnayak@ti.com> <20111104200415.GC3045@quad.lixom.net> <4EB45844.5000603@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111106183802.GB2546-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dirk Behme <dirk.behme-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <4EB45844.5000603@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Olof Johansson <olof@lixom.net>, cjb@laptop.org, balajitk@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 6, 2011 at 11:38 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
-rote:
-> On Sat, Nov 05, 2011 at 07:19:15AM +0100, Dirk Behme wrote:
->> The patch 'arm/dt: Add dtb make rule' adds support to
->> create a .dtb file. But this is never removed afterwards.
->> Remove the generated .dtb file if 'distclean' is called.
+On Saturday 05 November 2011 02:55 AM, Cousson, Benoit wrote:
+>>> +Required properties:
+>>> +- compatible: Should be "ti,omap-hsmmc<n>", "ti,omap2-hsmmc";
+>>> +n is controller instance starting 0, for OMAP2/3 controllers
 >>
->> Signed-off-by: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
->> CC: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> CC: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> CC: Jason Liu <jason.hui-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> No, no, no. You should not have to specify the unit-address in the
+>> compatible
+>> field. They are all programmed the same way, right?
 >
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-... although why are only the .dtb files needed in the clean list?
-How are the other built files cleaned?  'make clean' does remove the
-other images, but I don't know what the mechanism is.
-
-g.
-
+> AFAIR, 2 instances contain a DMA engine, but that should anyway be
+> detected using a "ti,had-dma-engine" extra property and not like that.
 >
->> ---
->> =A0arch/arm/boot/Makefile | =A0 =A02 ++
->> =A01 files changed, 2 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
->> index 1cd9b0a..08f0d35 100644
->> --- a/arch/arm/boot/Makefile
->> +++ b/arch/arm/boot/Makefile
->> @@ -71,6 +71,8 @@ $(obj)/%.dtb: $(src)/dts/%.dts
->>
->> =A0$(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
->>
->> +clean-files :=3D *.dtb
->> +
->> =A0quiet_cmd_uimage =3D UIMAGE =A0$@
->> =A0 =A0 =A0 =A0cmd_uimage =3D $(CONFIG_SHELL) $(MKIMAGE) -A arm -O linux=
- -T kernel \
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0-C none -a $(LOADADDR) -e $(STARTADDR=
-) \
->> --
->> 1.7.0.4
->>
+> Checking the code in #2, it is used to get the instance of the MMC.
 >
+> +static unsigned int of_get_hsmmc_instance(struct device_node *np)
+> +{
+> +    int i;
+> +    char comp[32];
+> +
+> +    for (; i < OMAP_MMC_DEV_MAX; i++) {
+> +        snprintf(comp, 32, "ti,omap-hsmmc%d", i);
+> +        if (of_device_is_compatible(np, comp))
+> +            break;
+> +    }
+> +    return i;
+> +}
+>
+> Which does not seems to be a good usage of the compatible property anyway.
+> For a similar issue someone on the list suggested using the "cell-index"
+> property. But the definition I found in some binding documentation seems
+> to reserve that to: "enumerate logical devices within an IP core."
+> Ideally the driver should probably get rid of the need for an index.
+> I didn't check the original driver, but that should be needed for some
+> legacy reason.
 
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+yes, there are a bunch of things done inside the driver based on the
+instance id which seem wrong, but I agree, encoding the instance
+in the compatible property seems really bad and non-scalable.
+Will look at how some of this legacy code in the driver can be
+removed/cleaned up.
