@@ -1,43 +1,66 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] of: Add Silicon Image vendor prefix
-Date: Tue,  8 Nov 2011 11:35:20 +0000
-Message-ID: <1320752120-27344-1-git-send-email-pawel.moll@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+From: Andy Whitcroft <apw@canonical.com>
+Subject: [PATCH 1/1] of: define NO_IRQ globally when not supplied by the architecture
+Date: Tue,  8 Nov 2011 11:44:26 +0000
+Message-ID: <1320752666-15553-1-git-send-email-apw@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Linux Torvalds <torvalds@linux-foundation.org>, Andy Whitcroft <apw@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-"sil" is the most commonly used abbreviation for Silicon
-Image products.
+Since the application of the commit below the PATA OF platform driver
+may now be built on x86 systems:
 
-Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+  ata: Make pata_of_platform.c compile again and work on non-PPC platforms
+
+This leads to the following build failure on 32bit x86 builds:
+
+  .../drivers/ata/pata_of_platform.c: In function 'pata_of_platform_probe':
+  .../drivers/ata/pata_of_platform.c:55: error: 'NO_IRQ' undeclared
+					(first use in this function)
+
+This occurs because x86 does not supply a definition for NO_IRQ.
+However if we examine drivers/of/irq.c we already supply a default value
+for NO_IRQ where not specified by the architecture.  Fix the build failure
+by pulling this default value up to include/linux/of_irq.h.
+
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
 ---
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ drivers/of/irq.c       |    5 -----
+ include/linux/of_irq.h |    5 +++++
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index e855278..874921e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -33,6 +33,7 @@ qcom	Qualcomm, Inc.
- ramtron	Ramtron International
- samsung	Samsung Semiconductor
- schindler	Schindler
-+sil	Silicon Image
- simtek
- sirf	SiRF Technology, Inc.
- stericsson	ST-Ericsson
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 6d3dd39..0208e27 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -26,11 +26,6 @@
+ #include <linux/string.h>
+ #include <linux/slab.h>
+ 
+-/* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
+-#ifndef NO_IRQ
+-#define NO_IRQ 0
+-#endif
+-
+ /**
+  * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
+  * @device: Device node of the device whose interrupt is to be mapped
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index d0307ee..8b2369f 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -77,6 +77,11 @@ extern struct device_node *of_irq_find_parent(struct device_node *child);
+ 
+ extern void of_irq_init(const struct of_device_id *matches);
+ 
++/* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
++#ifndef NO_IRQ
++#define NO_IRQ 0
++#endif
++
+ #endif /* CONFIG_OF_IRQ */
+ #endif /* CONFIG_OF */
+ #endif /* __OF_IRQ_H */
 -- 
-1.6.3.3
+1.7.5.4
