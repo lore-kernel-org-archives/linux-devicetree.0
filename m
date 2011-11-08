@@ -1,66 +1,52 @@
-From: Andy Whitcroft <apw@canonical.com>
-Subject: [PATCH 1/1] of: define NO_IRQ globally when not supplied by the architecture
-Date: Tue,  8 Nov 2011 11:44:26 +0000
-Message-ID: <1320752666-15553-1-git-send-email-apw@canonical.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, Linux Torvalds <torvalds@linux-foundation.org>, Andy Whitcroft <apw@canonical.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] of/flattree: Early "find node by alias" function
+Date: Tue, 08 Nov 2011 11:57:54 +0000
+Message-ID: <1320753474.3259.4.camel@hornet.cambridge.arm.com>
+References: <1319210219-10707-1-git-send-email-pawel.moll@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1319210219-10707-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Since the application of the commit below the PATA OF platform driver
-may now be built on x86 systems:
+Hello again,
 
-  ata: Make pata_of_platform.c compile again and work on non-PPC platforms
+On Fri, 2011-10-21 at 16:16 +0100, Pawel Moll wrote:
+> This patch adds a function for finding a node in flat tree
+> based on an alias name. It can be used in early boot code.
+> 
+> Typical use case is a situation when early code needs data
+> from a arbitrary tree node, eg. base address of "serial0" to
+> initialise debug output or some sort of ID register to
+> probe hardware.
+> 
+> The tree source could look like that:
+> 
+> / {
+> 	aliases {
+> 		serial0 = &uart0;
+> 	};
+> 
+> 	uart0: uart@f0001000 {
+> 		reg = <0xf0001000 0x1000>;
+> 	};
+> }
+> 
+> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 
-This leads to the following build failure on 32bit x86 builds:
+Any further comments? Makes sense? Not at all? ;-)
 
-  .../drivers/ata/pata_of_platform.c: In function 'pata_of_platform_probe':
-  .../drivers/ata/pata_of_platform.c:55: error: 'NO_IRQ' undeclared
-					(first use in this function)
+Cheers!
 
-This occurs because x86 does not supply a definition for NO_IRQ.
-However if we examine drivers/of/irq.c we already supply a default value
-for NO_IRQ where not specified by the architecture.  Fix the build failure
-by pulling this default value up to include/linux/of_irq.h.
-
-Signed-off-by: Andy Whitcroft <apw@canonical.com>
----
- drivers/of/irq.c       |    5 -----
- include/linux/of_irq.h |    5 +++++
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 6d3dd39..0208e27 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -26,11 +26,6 @@
- #include <linux/string.h>
- #include <linux/slab.h>
- 
--/* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
--#ifndef NO_IRQ
--#define NO_IRQ 0
--#endif
--
- /**
-  * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
-  * @device: Device node of the device whose interrupt is to be mapped
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index d0307ee..8b2369f 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -77,6 +77,11 @@ extern struct device_node *of_irq_find_parent(struct device_node *child);
- 
- extern void of_irq_init(const struct of_device_id *matches);
- 
-+/* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
-+#ifndef NO_IRQ
-+#define NO_IRQ 0
-+#endif
-+
- #endif /* CONFIG_OF_IRQ */
- #endif /* CONFIG_OF */
- #endif /* __OF_IRQ_H */
--- 
-1.7.5.4
+Pawel
