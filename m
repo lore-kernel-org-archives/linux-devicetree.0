@@ -1,7 +1,7 @@
 From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC 2/6] ARM: vexpress: Remove platform SMP functions from ct_desc
-Date: Tue,  8 Nov 2011 13:16:05 +0000
-Message-ID: <1320758169-22668-3-git-send-email-pawel.moll@arm.com>
+Subject: [RFC 3/6] ARM: vexpress: Add DT support in v2m
+Date: Tue,  8 Nov 2011 13:16:06 +0000
+Message-ID: <1320758169-22668-4-git-send-email-pawel.moll@arm.com>
 References: <1320758169-22668-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,157 +21,161 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch removes platform SMP callbacks from ct_desc struct
-and replaces them with global symbols in preparation for
-DT-based support code.
-
-This is a temporary measure till "SoC descriptors" code
-gets into the main line.
+This patch provides hooks for DT-based tile machine implementations.
 
 Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/mach-vexpress/core.h                     |    6 +++
- arch/arm/mach-vexpress/ct-ca9x4.c                 |   50 +++++++++-----------
- arch/arm/mach-vexpress/include/mach/motherboard.h |    4 --
- arch/arm/mach-vexpress/platsmp.c                  |    7 ++-
- 4 files changed, 34 insertions(+), 33 deletions(-)
+ arch/arm/mach-vexpress/Kconfig |    8 ++++
+ arch/arm/mach-vexpress/core.h  |   13 +++++++
+ arch/arm/mach-vexpress/v2m.c   |   79 +++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 99 insertions(+), 1 deletions(-)
 
+diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfig
+index 9311484..9370f5b 100644
+--- a/arch/arm/mach-vexpress/Kconfig
++++ b/arch/arm/mach-vexpress/Kconfig
+@@ -1,6 +1,9 @@
+ menu "Versatile Express platform type"
+ 	depends on ARCH_VEXPRESS
+ 
++config ARCH_VEXPRESS_LEGACY
++	bool
++
+ config ARCH_VEXPRESS_CA9X4
+ 	bool "Versatile Express Cortex-A9x4 tile"
+ 	select CPU_V7
+@@ -8,5 +11,10 @@ config ARCH_VEXPRESS_CA9X4
+ 	select ARM_ERRATA_720789
+ 	select ARM_ERRATA_751472
+ 	select ARM_ERRATA_753970
++	select ARCH_VEXPRESS_LEGACY
++
++config ARCH_VEXPRESS_DT
++	bool
++	select OF
+ 
+ endmenu
 diff --git a/arch/arm/mach-vexpress/core.h b/arch/arm/mach-vexpress/core.h
-index 711c9a0..7a3ce7a 100644
+index 7a3ce7a..0ea502a 100644
 --- a/arch/arm/mach-vexpress/core.h
 +++ b/arch/arm/mach-vexpress/core.h
-@@ -21,3 +21,9 @@ struct amba_device name##_device = {		\
- #define V2TILE_PERIPH 0xf8200000
- #define V2TILE_PERIPH_P2V(offset) ((void __iomem *)(V2TILE_PERIPH | (offset)))
+@@ -27,3 +27,16 @@ extern void (*vexpress_init_cpu_map)(void);
+ extern void (*vexpress_smp_enable)(unsigned int);
+ #endif
  
-+/* Will disappear once SoC descriptor gets in */
-+#if defined(CONFIG_SMP)
-+extern void (*vexpress_init_cpu_map)(void);
-+extern void (*vexpress_smp_enable)(unsigned int);
-+#endif
++extern struct sys_timer v2m_timer;
 +
-diff --git a/arch/arm/mach-vexpress/ct-ca9x4.c b/arch/arm/mach-vexpress/ct-ca9x4.c
-index 567a6aa..f0d9f9a 100644
---- a/arch/arm/mach-vexpress/ct-ca9x4.c
-+++ b/arch/arm/mach-vexpress/ct-ca9x4.c
-@@ -39,9 +39,32 @@ static struct map_desc ct_ca9x4_io_desc[] __initdata = {
- 	},
++#if defined(CONFIG_ARCH_VEXPRESS_DT)
++
++enum v2m_memory_map {
++	v2m_memory_map_legacy,
++};
++
++void __init v2m_dt_map_io(enum v2m_memory_map map);
++void __init v2m_dt_init_early(void);
++struct of_dev_auxdata * __init v2m_dt_get_auxdata(enum v2m_memory_map map);
++
++#endif
+diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
+index 2f44425..39900c4 100644
+--- a/arch/arm/mach-vexpress/v2m.c
++++ b/arch/arm/mach-vexpress/v2m.c
+@@ -6,6 +6,9 @@
+ #include <linux/amba/mmci.h>
+ #include <linux/io.h>
+ #include <linux/init.h>
++#include <linux/irqdomain.h>
++#include <linux/of_fdt.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/ata_platform.h>
+ #include <linux/smsc911x.h>
+@@ -70,7 +73,8 @@ static void __init v2m_timer_init(void)
+ 		"v2m-timer0");
+ }
+ 
+-static struct sys_timer v2m_timer = {
++/* May be used by DT-powered machines */
++struct sys_timer v2m_timer = {
+ 	.init	= v2m_timer_init,
  };
  
-+#ifdef CONFIG_SMP
-+static void ct_ca9x4_init_cpu_map(void)
+@@ -468,3 +472,76 @@ MACHINE_START(VEXPRESS, "ARM-Versatile Express")
+ 	.timer		= &v2m_timer,
+ 	.init_machine	= v2m_init,
+ MACHINE_END
++
++
++
++#if defined(CONFIG_ARCH_VEXPRESS_DT)
++
++static unsigned long __init v2m_dt_periph_offset(const char *alias)
 +{
-+	int i, ncores;
-+	ncores = scu_get_core_count(V2TILE_PERIPH_P2V(A9_MPCORE_SCU));
++	unsigned long node;
++	__be32 *reg;
++	unsigned long len;
 +
-+	for (i = 0; i < ncores; ++i)
-+		set_cpu_possible(i, true);
++	if (of_flat_dt_find_node_by_alias(alias, &node) != 0)
++		panic("%s: Can't get offset for '%s'!\n", __func__, alias);
 +
-+	set_smp_cross_call(gic_raise_softirq);
++	reg = of_get_flat_dt_prop(node, "reg", &len);
++	if (!reg)
++		panic("%s: Can't get reg property for '%s'!\n",
++				__func__, alias);
++
++	return be32_to_cpup(reg);
 +}
 +
-+static void ct_ca9x4_smp_enable(unsigned int max_cpus)
++void __init v2m_dt_map_io(enum v2m_memory_map map)
 +{
-+	scu_enable(V2TILE_PERIPH_P2V(A9_MPCORE_SCU));
++	switch (map) {
++	case v2m_memory_map_legacy:
++		iotable_init(v2m_io_desc, ARRAY_SIZE(v2m_io_desc));
++		break;
++	default:
++		panic("%s: Unknown memory map requested!\n", __func__);
++		break;
++	}
++
++	/* Will become nice ioremap()-s once allowed */
++	v2m_sysreg_base = V2M_PERIPH_P2V(v2m_dt_periph_offset("sysreg"));
++	v2m_sysctl_base = V2M_PERIPH_P2V(v2m_dt_periph_offset("sysctl"));
++	v2m_timer01_base = V2M_PERIPH_P2V(v2m_dt_periph_offset("timer01"));
 +}
-+#endif
 +
- static void __init ct_ca9x4_map_io(void)
- {
- 	iotable_init(ct_ca9x4_io_desc, ARRAY_SIZE(ct_ca9x4_io_desc));
-+#ifdef CONFIG_SMP
-+	/* Will be gone once the SoC descriptors are in */
-+	vexpress_init_cpu_map = ct_ca9x4_init_cpu_map;
-+	vexpress_smp_enable = ct_ca9x4_smp_enable;
-+#endif
- }
- 
- static void __init ct_ca9x4_init_irq(void)
-@@ -188,29 +211,6 @@ static void __init ct_ca9x4_init(void)
- 	platform_device_register(&pmu_device);
- }
- 
--#ifdef CONFIG_SMP
--static void ct_ca9x4_init_cpu_map(void)
--{
--	int i, ncores = scu_get_core_count(V2TILE_PERIPH_P2V(A9_MPCORE_SCU));
--
--	if (ncores > nr_cpu_ids) {
--		pr_warn("SMP: %u cores greater than maximum (%u), clipping\n",
--			ncores, nr_cpu_ids);
--		ncores = nr_cpu_ids;
--	}
--
--	for (i = 0; i < ncores; ++i)
--		set_cpu_possible(i, true);
--
--	set_smp_cross_call(gic_raise_softirq);
--}
--
--static void ct_ca9x4_smp_enable(unsigned int max_cpus)
--{
--	scu_enable(V2TILE_PERIPH_P2V(A9_MPCORE_SCU));
--}
--#endif
--
- struct ct_desc ct_ca9x4_desc __initdata = {
- 	.id		= V2M_CT_ID_CA9,
- 	.name		= "CA9x4",
-@@ -218,8 +218,4 @@ struct ct_desc ct_ca9x4_desc __initdata = {
- 	.init_early	= ct_ca9x4_init_early,
- 	.init_irq	= ct_ca9x4_init_irq,
- 	.init_tile	= ct_ca9x4_init,
--#ifdef CONFIG_SMP
--	.init_cpu_map	= ct_ca9x4_init_cpu_map,
--	.smp_enable	= ct_ca9x4_smp_enable,
--#endif
- };
-diff --git a/arch/arm/mach-vexpress/include/mach/motherboard.h b/arch/arm/mach-vexpress/include/mach/motherboard.h
-index da9ac29..848353b 100644
---- a/arch/arm/mach-vexpress/include/mach/motherboard.h
-+++ b/arch/arm/mach-vexpress/include/mach/motherboard.h
-@@ -129,10 +129,6 @@ struct ct_desc {
- 	void			(*init_early)(void);
- 	void			(*init_irq)(void);
- 	void			(*init_tile)(void);
--#ifdef CONFIG_SMP
--	void			(*init_cpu_map)(void);
--	void			(*smp_enable)(unsigned int);
--#endif
- };
- 
- extern struct ct_desc *ct_desc;
-diff --git a/arch/arm/mach-vexpress/platsmp.c b/arch/arm/mach-vexpress/platsmp.c
-index e8be99d..b41e4e8 100644
---- a/arch/arm/mach-vexpress/platsmp.c
-+++ b/arch/arm/mach-vexpress/platsmp.c
-@@ -20,6 +20,9 @@
- 
- #include "core.h"
- 
-+void (*vexpress_init_cpu_map)(void);
-+void (*vexpress_smp_enable)(unsigned int);
++void __init v2m_dt_init_early(void)
++{
++	clkdev_add_table(v2m_lookups, ARRAY_SIZE(v2m_lookups));
++	versatile_sched_clock_init(v2m_sysreg_base + V2M_SYS_24MHZ, 24000000);
++	pm_power_off = v2m_power_off;
++	arm_pm_restart = v2m_restart;
++}
 +
- extern void versatile_secondary_startup(void);
- 
- /*
-@@ -28,7 +31,7 @@ extern void versatile_secondary_startup(void);
-  */
- void __init smp_init_cpus(void)
- {
--	ct_desc->init_cpu_map();
-+	vexpress_init_cpu_map();
- }
- 
- void __init platform_smp_prepare_cpus(unsigned int max_cpus)
-@@ -37,7 +40,7 @@ void __init platform_smp_prepare_cpus(unsigned int max_cpus)
- 	 * Initialise the present map, which describes the set of CPUs
- 	 * actually populated at the present time.
- 	 */
--	ct_desc->smp_enable(max_cpus);
-+	vexpress_smp_enable(max_cpus);
- 
- 	/*
- 	 * Write the address of secondary startup into the
++static struct of_dev_auxdata v2m_legacy_dt_auxdata_lookup[] __initdata = {
++	OF_DEV_AUXDATA("arm,vexpress-flash", V2M_NOR0, "physmap-flash",
++			&v2m_flash_data),
++	OF_DEV_AUXDATA("arm,primecell", V2M_WDT, "mb:wdt", NULL),
++	OF_DEV_AUXDATA("arm,primecell", V2M_MMCI, "mb:mmci", &v2m_mmci_data),
++	OF_DEV_AUXDATA("arm,primecell", V2M_KMI0, "mb:kmi0", NULL),
++	OF_DEV_AUXDATA("arm,primecell", V2M_KMI1, "mb:kmi1", NULL),
++	OF_DEV_AUXDATA("arm,primecell", V2M_UART0, "mb:uart0", NULL),
++	OF_DEV_AUXDATA("arm,primecell", V2M_UART1, "mb:uart1", NULL),
++	OF_DEV_AUXDATA("arm,primecell", V2M_UART2, "mb:uart2", NULL),
++	OF_DEV_AUXDATA("arm,primecell", V2M_UART3, "mb:uart3", NULL),
++	{}
++};
++
++struct of_dev_auxdata * __init v2m_dt_get_auxdata(enum v2m_memory_map map)
++{
++	switch (map) {
++	case v2m_memory_map_legacy:
++		return v2m_legacy_dt_auxdata_lookup;
++	default:
++		panic("%s: Unknown memory map requested!\n", __func__);
++		return NULL;
++	}
++}
++
++#endif
 -- 
 1.6.3.3
