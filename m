@@ -1,84 +1,75 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCHv4 07/13] ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
-Date: Wed, 9 Nov 2011 14:55:37 +0000
-Message-ID: <20111109145537.GF4253@totoro>
-References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
- <1320369010-23428-8-git-send-email-jamie@jamieiles.com>
- <CAJuYYwRPoFDUhtcVLT_rj4c9whJWVXyQ7tcaK3O_G3X9SYf-cw@mail.gmail.com>
- <20111109115406.GB4253@totoro>
- <4EBA9339.5010407@gmail.com>
+From: "Robert Sciuk" <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
+Subject: i2c bus gpio expander ...
+Date: Wed, 9 Nov 2011 12:39:39 -0500
+Message-ID: <2DD52030B5146141BEB762A11AE97C4C01059014@SPQCEXC05.exfo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4EBA9339.5010407@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Jamie Iles <jamie@jamieiles.com>, Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, viresh.kumar@st.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, rubini@unipv.it, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-class: urn:content-classes:message
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 09, 2011 at 08:50:33AM -0600, Rob Herring wrote:
-> On 11/09/2011 05:54 AM, Jamie Iles wrote:
-> > On Wed, Nov 09, 2011 at 04:55:06PM +0530, Thomas Abraham wrote:
-> >> Hi Jamie,
-> >>
-> >> On 4 November 2011 06:40, Jamie Iles <jamie@jamieiles.com> wrote:
-> >>> Now that there is a generic IRQ handler for multiple VIC devices use it
-> >>> for s3c64xx to help building multi platform kernels.
-> >>>
-> >>> Cc: Ben Dooks <ben-linux@fluff.org>
-> >>> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
-> >>> ---
-> >>>  arch/arm/Kconfig                                 |    1 +
-> >>>  arch/arm/mach-s3c64xx/include/mach/entry-macro.S |    7 ++++---
-> >>>  arch/arm/mach-s3c64xx/mach-anw6410.c             |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-crag6410.c            |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-hmt.c                 |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-mini6410.c            |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-ncp.c                 |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-real6410.c            |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-smartq5.c             |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-smartq7.c             |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-smdk6400.c            |    2 ++
-> >>>  arch/arm/mach-s3c64xx/mach-smdk6410.c            |    2 ++
-> >>>  12 files changed, 25 insertions(+), 3 deletions(-)
-> >>>
-> >>
-> >> I have tested this patch series on smdk6410 board (s3c64xx) using the
-> >> following repositorty and branch
-> >>
-> >> https://github.com/jamieiles/linux-2.6-ji.git  branch: vic-dt
-> >>
-> >> There is a crash while booting. Am I using the right tree and branch?
-> >> The following is the boot log. Is there any other config option to be
-> >> enabled?
-> > 
-> > Hmm, could you please try with the patch below applied?
-> > 
-> > Rob, I'm not sure if this is the best fix.  The alternatives I can think 
-> > of would be to always export irq_domain_simple_ops even if 
-> > !CONFIG_OF_IRQ but not set .dt_translate or provide a generic 
-> > irq_domain_null_ops.
-> > 
-> > Jamie
-> 
-> There is a simple fix:
-> 
-> @@ -74,7 +76,7 @@ struct irq_domain {
->  static inline unsigned int irq_domain_to_irq(struct irq_domain *d,
->                                              unsigned long hwirq)
->  {
-> -       if (d->ops->to_irq)
-> +       if (d->ops && d->ops->to_irq)
->                 return d->ops->to_irq(d, hwirq);
->         if (WARN_ON(hwirq < d->hwirq_base))
->                 return 0;
-> 
-> I'll prepare a patch and send to tglx.
+My problem seems to be evolving, and the localbus issue now seems less
+important than correctly mapping the gpio's on the i2c bus.
 
-I did wonder about that, but that means we do it differently for 
-ops->dt_translate (though that really should be there if it's required).
+I have a pca9539 16 pin gpio expander on an i2c bus, and I'm wondering
+what the correct way to map each of the pins on the expander might be?
+In this case, I am programming FPGAs, and the connections look like
+this:
 
-It works for me though!
+	Pca9539
+	Port 0
+		0	-> done	FPGA1
+		1	-> init
+		2	-> cs
+		3	-> program
 
-Jamie
+	Port 1
+		0	-> done	FPGA2
+		1	-> init
+		2	-> cs
+		3	-> program
+
+
+                i2c@119000 {
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        cell-index = <2>;
+                        compatible = "fsl-i2c";
+                        reg = <0x119000 0x100>;
+                        interrupts = <39 2 0 0>;
+                        interrupt-parent = <&mpic>;
+                        dfsrr;
+
+                        fpga_ctrl: gpio@ea {
+                                compatible = "nxp,pca953x";
+                                reg = <0xea>;
+                                #gpio-cells = <2>;
+                                gpio-controller;
+                                polarity = <0x00>;
+                        };
+
+                };
+
+My question is, how might one correctly map the gpio pins?  Are they a
+subnode of the gpio node, or would each of the two ports on the 9539
+constitute a subnode of the gpio, and then the pins be labeled as
+subnodes of the port?  How might one represent pins which are not
+connected or are only the used pins actually mapped?. Any pointers would
+be appreciated.
+
+
+
+Robert Sciuk
+Senior Designer, R&D.
+905.738.3741 xt 22621
