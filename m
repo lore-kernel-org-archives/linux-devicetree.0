@@ -1,73 +1,271 @@
-From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC 6/8] of: add clock providers
-Date: Wed, 9 Nov 2011 12:23:25 +0100
-Message-ID: <4EBA62AD.3000407@ti.com>
-References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
- <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
- <20111109091328.GY16886@pengutronix.de>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCHv4 07/13] ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
+Date: Wed, 9 Nov 2011 16:55:06 +0530
+Message-ID: <CAJuYYwRPoFDUhtcVLT_rj4c9whJWVXyQ7tcaK3O_G3X9SYf-cw@mail.gmail.com>
+References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
+	<1320369010-23428-8-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111109091328.GY16886-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1320369010-23428-8-git-send-email-jamie@jamieiles.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: linux-arm-kernel@lists.infradead.org, viresh.kumar@st.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, rob.herring@calxeda.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, rubini@unipv.it, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/9/2011 10:13 AM, Sascha Hauer wrote:
-> On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
+Hi Jamie,
+
+On 4 November 2011 06:40, Jamie Iles <jamie@jamieiles.com> wrote:
+> Now that there is a generic IRQ handler for multiple VIC devices use =
+it
+> for s3c64xx to help building multi platform kernels.
+>
+> Cc: Ben Dooks <ben-linux@fluff.org>
+> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+> ---
+> =A0arch/arm/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 | =A0 =A01 +
+> =A0arch/arm/mach-s3c64xx/include/mach/entry-macro.S | =A0 =A07 ++++--=
+-
+> =A0arch/arm/mach-s3c64xx/mach-anw6410.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
+ =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-crag6410.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-hmt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |=
+ =A0 =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-mini6410.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-ncp.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |=
+ =A0 =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-real6410.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-smartq5.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
+ =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-smartq7.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
+ =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-smdk6400.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ =A02 ++
+> =A0arch/arm/mach-s3c64xx/mach-smdk6410.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
+ =A02 ++
+> =A012 files changed, 25 insertions(+), 3 deletions(-)
+>
+
+I have tested this patch series on smdk6410 board (s3c64xx) using the
+following repositorty and branch
+
+https://github.com/jamieiles/linux-2.6-ji.git  branch: vic-dt
+
+There is a crash while booting. Am I using the right tree and branch?
+The following is the boot log. Is there any other config option to be
+enabled?
+
+By hard resetting to commit id
+'f7bf800e2c0c2947e9b5839f7d2702a36ddfb71a' (ARM: omap2plus: convert to
+CONFIG_MULTI_IRQ_HANDLER), the board boots up fine.
+
+Thanks,
+Thomas.
+
+
+U-Boot 1.3.4-00009-g9da84bd (Jun  8 2010 - 09:46:01) for SMDK6410
+
+
+CPU:     S3C6410@532MHz
+         Fclk =3D 532MHz, Hclk =3D 133MHz, Pclk =3D 66MHz, Serial =3D C=
+LKUART
+(SYNC Mode)
+Board:   SMDK6410
+DRAM:    128 MB
+=46lash:   0 kB
+SD/MMC:  SD/MMC channel0 is selected for booting device.
+1886MB
+NAND:    0 MB
+do not support this address : 57e7c008
+In:      serial
+Out:     serial
+Err:     serial
+Net:     smc911x
+Hit any key to stop autoboot:  0
+SMDK6410 #
+SMDK6410 #
+SMDK6410 #
+SMDK6410 # setenv bootargs; setenv serverip 192.168.0.1; tftp 51000000
+small_root_v3.6.cramfs; tftp 50008000 zImage; bootm
+smc911x: initializing
+smc911x: detected LAN9115 controller
+smc911x: phy initialized
+smc911x: MAC 00:40:5c:26:0a:5b
+Using smc911x device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.20
+=46ilename 'small_root_v3.6.cramfs'.
+Load address: 0x51000000
+Loading: T ############################################################=
+#####
+         ##############################################################=
+###
+         ##############################################################=
+##
+done
+Bytes transferred =3D 2842624 (0x2b6000)
+smc911x: initializing
+smc911x: detected LAN9115 controller
+smc911x: phy initialized
+smc911x: MAC 00:40:5c:26:0a:5b
+Using smc911x device
+TFTP from server 192.168.0.1; our IP address is 192.168.0.20
+=46ilename 'zImage'.
+Load address: 0x50008000
+Loading: T ############################################################=
+#####
+         ########################################
+done
+Bytes transferred =3D 1534176 (0x1768e0)
+Boot with zImage
+do not support this address : 50008000
+
+Starting kernel ...
+
+Uncompressing Linux... done, booting the kernel.
+<5>Linux version 3.2.0-rc1-00031-gcbd9857-dirty
+(thomas@localhost.localdomain) (gcc version 4.4.1 (Sourcery G++ Lite
+2009q3-67) ) #7 Wed Nov 9 16:35:12 IST 2011
+CPU: ARMv6-compatible processor [410fb766] revision 6 (ARMv7), cr=3D00c=
+5387f
+CPU: PIPT / VIPT nonaliasing data cache, VIPT nonaliasing instruction c=
+ache
+Machine: SMDK6410
+<4>Ignoring unrecognised tag 0x41001099
+Memory policy: ECC disabled, Data cache writeback
+CPU S3C6410 (id 0x36410100)
+<7>s3c6410_init_clocks: initialising clocks
+<6>S3C24XX Clocks, Copyright 2004 Simtec Electronics
+<3>camera: no parent clock specified
+<7>s3c6400_setup_clocks: registering clocks
+<7>s3c6400_setup_clocks: clkdiv0 =3D 01043310
+<7>s3c6400_setup_clocks: xtal is 12000000
+<6>S3C64XX: PLL settings, A=3D532000000, M=3D532000000, E=3D24000000
+<6>S3C64XX: HCLK2=3D266000000, HCLK=3D133000000, PCLK=3D66500000
+<6>mout_apll: source is fout_apll (1), rate is 532000000
+<6>mout_epll: source is epll (1), rate is 24000000
+<6>mout_mpll: source is mpll (1), rate is 532000000
+<7>s3c64xx_clk_doutmpll_get_rate: parent is 532000000
+<6>mmc_bus: source is dout_mpll (1), rate is 24181818
+<6>mmc_bus: source is mout_epll (0), rate is 24000000
+<6>mmc_bus: source is mout_epll (0), rate is 24000000
+<6>usb-bus-host: source is clk_48m (0), rate is 48000000
+<7>s3c64xx_clk_doutmpll_get_rate: parent is 532000000
+<6>uclk1: source is dout_mpll (1), rate is 66500000
+<6>spi-bus: source is mout_epll (0), rate is 24000000
+<6>spi-bus: source is mout_epll (0), rate is 24000000
+<6>audio-bus: source is mout_epll (0), rate is 24000000
+<6>audio-bus: source is mout_epll (0), rate is 24000000
+<6>audio-bus: source is mout_epll (0), rate is 24000000
+<6>irda-bus: source is mout_epll (0), rate is 24000000
+<3>camera: no parent clock specified
+<7>On node 0 totalpages: 8192
+<7>free_area_init_node: node 0, pgdat c02ce184, node_mem_map c0300000
+<7>  Normal zone: 64 pages used for memmap
+<7>  Normal zone: 0 pages reserved
+<7>  Normal zone: 8128 pages, LIFO batch:0
+<6>CPU: found DTCM0 8k @ 0c002000, enabled
+<6>CPU: moved DTCM0 8k to fffe8000, enabled
+<6>CPU: found DTCM1 8k @ 0c004000, enabled
+<6>CPU: moved DTCM1 8k to fffea000, enabled
+<6>CPU: found ITCM0 8k @ 00000000, not enabled
+<6>CPU: moved ITCM0 8k to fffe0000, enabled
+<6>CPU: found ITCM1 8k @ 00000000, not enabled
+<6>CPU: moved ITCM1 8k to fffe2000, enabled
+<7>pcpu-alloc: s0 r0 d32768 u32768 alloc=3D1*32768
+<7>pcpu-alloc: [0] 0
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 81=
+28
+<5>Kernel command line: root=3D/dev/ram0 rw ramdisk=3D8192
+initrd=3D0x51000000,8M console=3DttySAC0,115200 init=3D/linuxrc mem=3D3=
+2M
+<6>PID hash table entries: 128 (order: -3, 512 bytes)
+<6>Dentry cache hash table entries: 4096 (order: 2, 16384 bytes)
+<6>Inode-cache hash table entries: 2048 (order: 1, 8192 bytes)
+<6>Memory: 32MB =3D 32MB total
+<5>Memory: 21164k/21164k available, 11604k reserved, 0K highmem
+<5>Virtual kernel memory layout:
+    vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+    DTCM    : 0xfffe8000 - 0xfffec000   (  16 kB)
+    ITCM    : 0xfffe0000 - 0xfffe4000   (  16 kB)
+    fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+    vmalloc : 0xc2800000 - 0xf6000000   ( 824 MB)
+    lowmem  : 0xc0000000 - 0xc2000000   (  32 MB)
+    modules : 0xbf000000 - 0xc0000000   (  16 MB)
+      .text : 0xc0008000 - 0xc028c9a8   (2579 kB)
+      .init : 0xc028d000 - 0xc02a9000   ( 112 kB)
+      .data : 0xc02aa000 - 0xc02ce7e0   ( 146 kB)
+       .bss : 0xc02cf024 - 0xc02ff68c   ( 194 kB)
+<6>SLUB: Genslabs=3D13, HWalign=3D32, Order=3D0-3, MinObjects=3D0, CPUs=
+=3D1, Nodes=3D1
+<6>NR_IRQS:246
+<7>s3c64xx_init_irq: initialising interrupts
+<6>VIC @f6000000: id 0x00041192, vendor 0x41
+<1>Unable to handle kernel NULL pointer dereference at virtual address =
+00000000
+<1>pgd =3D c0004000
+<1>[00000000] *pgd=3D00000000
+<0>Internal error: Oops: 5 [#1]
+<d>Modules linked in:
+CPU: 0    Not tainted  (3.2.0-rc1-00031-gcbd9857-dirty #7)
+PC is at irq_domain_add+0x10/0x158
+LR is at s3c64xx_init_irq+0x2c/0x60
+pc : [<c005aa10>]    lr : [<c0293660>]    psr: 800001d3
+sp : c02abfa8  ip : ffffffff  fp : 00000000
+r10: 502a3620  r9 : 410fb766  r8 : 50004008
+r7 : 00000000  r6 : 8fffffff  r5 : ffffff7f  r4 : c02cf284
+r3 : 00000000  r2 : 00000000  r1 : c02cf260  r0 : c02cf284
+=46lags: Nzcv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment kernel
+Control: 00c5387f  Table: 50004008  DAC: 00000017
+<0>Process swapper (pid: 0, stack limit =3D 0xc02aa268)
+<0>Stack: (0xc02abfa8 to 0xc02ac000)
+<0>bfa0:                   ffffffff ffffff7f 8fffffff c02ae77c 50004008=
+ c0293660
+<0>bfc0: c02cf040 c02a4afc 8fffffff c028ff74 00000c00 c028d660 c028d2c0=
+ 00000000
+<0>bfe0: 00000000 c02a4afc 00c5387d c02ac084 c02a4af8 50008040 00000000=
+ 00000000
+[<c005aa10>] (irq_domain_add+0x10/0x158) from [<c0293660>]
+(s3c64xx_init_irq+0x2c/0x60)
+[<c0293660>] (s3c64xx_init_irq+0x2c/0x60) from [<c028ff74>] (init_IRQ+0=
+x14/0x1c)
+[<c028ff74>] (init_IRQ+0x14/0x1c) from [<c028d660>] (start_kernel+0x15c=
+/0x2c0)
+[<c028d660>] (start_kernel+0x15c/0x2c0) from [<50008040>] (0x50008040)
+<0>Code: e92d41f0 e1a04000 e5903014 e5907010 (e5933000)
+<4>---[ end trace 1b75b31a2719ed1c ]---
+<0>Kernel panic - not syncing: Attempted to kill the idle task!
+[<c0014978>] (unwind_backtrace+0x0/0xf4) from [<c01e9780>] (panic+0x58/=
+0x188)
+[<c01e9780>] (panic+0x58/0x188) from [<c00297a0>] (do_exit+0x664/0x694)
+[<c00297a0>] (do_exit+0x664/0x694) from [<c0012728>] (die+0x11c/0x1d4)
+[<c0012728>] (die+0x11c/0x1d4) from [<c00161dc>] (__do_kernel_fault+0x6=
+4/0x84)
+[<c00161dc>] (__do_kernel_fault+0x64/0x84) from [<c0016340>]
+(do_page_fault+0x144/0x1e8)
+[<c0016340>] (do_page_fault+0x144/0x1e8) from [<c00084a0>]
+(do_DataAbort+0x34/0x98)
+[<c00084a0>] (do_DataAbort+0x34/0x98) from [<c000e6f8>] (__dabt_svc+0x3=
+8/0x60)
+Exception stack(0xc02abf60 to 0xc02abfa8)
+bf60: c02cf284 c02cf260 00000000 00000000 c02cf284 ffffff7f 8fffffff 00=
+000000
+bf80: 50004008 410fb766 502a3620 00000000 ffffffff c02abfa8 c0293660 c0=
+05aa10
+bfa0: 800001d3 ffffffff
+[<c000e6f8>] (__dabt_svc+0x38/0x60) from [<c005aa10>]
+(irq_domain_add+0x10/0x158)
+[<c005aa10>] (irq_domain_add+0x10/0x158) from [<c0293660>]
+(s3c64xx_init_irq+0x2c/0x60)
+[<c0293660>] (s3c64xx_init_irq+0x2c/0x60) from [<c028ff74>] (init_IRQ+0=
+x14/0x1c)
+[<c028ff74>] (init_IRQ+0x14/0x1c) from [<c028d660>] (start_kernel+0x15c=
+/0x2c0)
+[<c028d660>] (start_kernel+0x15c/0x2c0) from [<50008040>] (0x50008040)
+
 
 [...]
-
->> +Sources of clock signal can be represented by any node in the device
->> +tree.  Those nodes are designated as clock providers.  Clock consumer
->> +nodes use a phandle and clock specifier pair to connect clock provider
->> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
->> +specifier is an array of one more more cells identifying the clock
->> +output on a device.  The length of a clock specifier is defined by the
->> +value of a #clock-cells property in the clock provider node.
->> +
->> +[1] http://patchwork.ozlabs.org/patch/31551/
->> +
->> +==Clock providers==
->> +
->> +Required properties:
->> +#clock-cells:	   Number of cells in a clock specifier; typically will be
->> +		   set to 1
->> +
->> +Optional properties:
->> +clock-output-name: Recommended to be a list of strings of clock output signal
->> +		   names indexed by the first cell in the clock specifier.
->> +		   However, the meaning of clock-output-names is domain
->> +		   specific to the clock provider, and is only provided to
->> +		   encourage using the same meaning for the majority of clock
->> +		   providers.  This format may not work for clock providers
->> +		   using a complex clock specifier format.  In those cases it
->> +		   is recommended to omit this property and create a binding
->> +		   specific names property.
->
-> If the clock-output-name property is omitted, does this mean a clock
-> provider only has a single output or does it mean that it's not known
-> how many clock outputs a provider actually has?
-
-Allowing several outputs for a single clock node might lead to a lot of 
-confusion. What will be the meaning of a clock rate if you have several 
-outputs at different frequency?
-I think it will be better to define a clock node as a single source of 
-clock. If several outputs are needed, then we should define several 
-clock nodes.
-If we let a clock node be any kind of big clock blob, we will never be 
-able to define some generic reusable clock node API. Everybody will 
-define its own custom clock blobs.
-
-Regards,
-Benoit
