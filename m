@@ -1,75 +1,77 @@
-From: "Robert Sciuk" <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
-Subject: i2c bus gpio expander ...
-Date: Wed, 9 Nov 2011 12:39:39 -0500
-Message-ID: <2DD52030B5146141BEB762A11AE97C4C01059014@SPQCEXC05.exfo.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC 6/8] of: add clock providers
+Date: Wed, 9 Nov 2011 10:39:45 -0800
+Message-ID: <20111109183945.GL31337@atomide.com>
+References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
+ <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-My problem seems to be evolving, and the localbus issue now seems less
-important than correctly mapping the gpio's on the i2c bus.
+* Grant Likely <grant.likely@secretlab.ca> [111108 16:51]:
+> +
+> +    /* external oscillator */
+> +    osc: oscillator {
+> +        compatible = "fixed-clock";
+> +        #clock-cells = <1>;
+> +        frequency  = <32678>;
+> +        clock-output-name = "osc";
+> +    };
+> +
+> +    /* phase-locked-loop device, generates a higher frequency clock
+> +     * from the external oscillator reference */
+> +    pll: pll {
+> +        compatible = "some-pll-interface"
+> +        #clock-cells = <1>;
+> +        clock-input = <&osc 0>;
+> +        clock-input-name = "ref";
+> +        reg = <0x4c000 0x1000>;
+> +        clock-output-name = "pll", "pll-switched";
+> +    };
 
-I have a pca9539 16 pin gpio expander on an i2c bus, and I'm wondering
-what the correct way to map each of the pins on the expander might be?
-In this case, I am programming FPGAs, and the connections look like
-this:
+I think for the clocks we need something describing which bits
+in the clock register the "pll" and "pll-switched" belong to.
 
-	Pca9539
-	Port 0
-		0	-> done	FPGA1
-		1	-> init
-		2	-> cs
-		3	-> program
+Otherwise we'll end up having to map all that data in the clock
+driver for various SoC variants.
 
-	Port 1
-		0	-> done	FPGA2
-		1	-> init
-		2	-> cs
-		3	-> program
+> +    /* UART, using the low frequency oscillator for the baud clock,
+> +     * and the high frequency switched PLL output for register
+> +     * clocking */
+> +    uart {
+> +        compatible = "fsl,imx-uart";
+> +        reg = <0xa000 0x1000>;
+> +        interrupts = <33>;
+> +        clock-input = <&osc 0>, <&pll 1>;
+> +        clock-input-name = "baud", "register";
+> +    };
+> +
 
+Here I think we need a better solution for finding the
+clocks by name. Doing clock-input = <&osc 0>, <&pll 1> means
+that we have redefine the uart for similar SoC many times.
 
-                i2c@119000 {
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-                        cell-index = <2>;
-                        compatible = "fsl-i2c";
-                        reg = <0x119000 0x100>;
-                        interrupts = <39 2 0 0>;
-                        interrupt-parent = <&mpic>;
-                        dfsrr;
+How about using source + option in the name instead:
 
-                        fpga_ctrl: gpio@ea {
-                                compatible = "nxp,pca953x";
-                                reg = <0xea>;
-                                #gpio-cells = <2>;
-                                gpio-controller;
-                                polarity = <0x00>;
-                        };
+	   clock-source-name = "osc.osc", "pll.pll-switched";
 
-                };
+This same solution would also work for the pinctrl names:
 
-My question is, how might one correctly map the gpio pins?  Are they a
-subnode of the gpio node, or would each of the two ports on the 9539
-constitute a subnode of the gpio, and then the pins be labeled as
-subnodes of the port?  How might one represent pins which are not
-connected or are only the used pins actually mapped?. Any pointers would
-be appreciated.
+	   pinctrl-source-name = "uart1_rx.uart1_rx", "dss_data7.uart1_tx";
 
+The reason I'm worried here is that just for omap2/3/4 we already
+have 3 options for uart1 clock and 19 options for uart1_rx pin!
 
+Using the signal names for both clocks and pinctrl would
+allow defining the uart entry for for each reg address instead
+of for each clock and pinctrl option.
 
-Robert Sciuk
-Senior Designer, R&D.
-905.738.3741 xt 22621
+Regards,
+
+Tony
