@@ -1,34 +1,73 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCHv4 10/13] ARM: versatile: convert to MULTI_IRQ_HANDLER
-Date: Wed, 09 Nov 2011 10:25:01 +0000
-Message-ID: <4EBA54FD.2010403@arm.com>
-References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
- <1320369010-23428-11-git-send-email-jamie@jamieiles.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC 6/8] of: add clock providers
+Date: Wed, 9 Nov 2011 12:23:25 +0100
+Message-ID: <4EBA62AD.3000407@ti.com>
+References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
+ <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
+ <20111109091328.GY16886@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1320369010-23428-11-git-send-email-jamie@jamieiles.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jamie Iles <jamie@jamieiles.com>
-Cc: "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rmallon@gmail.com" <rmallon@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "hsweeten@visionengravers.com" <hsweeten@visionengravers.com>, "rajeev-dlh.kumar@st.com" <rajeev-dlh.kumar@st.com>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rubini@unipv.it" <rubini@unipv.it>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111109091328.GY16886-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/11 01:10, Jamie Iles wrote:
-> Now that there is a generic IRQ handler for multiple VIC devices use it
-> for versatile to help building multi platform kernels.
-> 
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+On 11/9/2011 10:13 AM, Sascha Hauer wrote:
+> On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
 
-Tested-by: Marc Zyngier <marc.zyngier@arm.com>
--- 
-Jazz is not dead. It just smells funny...
+[...]
+
+>> +Sources of clock signal can be represented by any node in the device
+>> +tree.  Those nodes are designated as clock providers.  Clock consumer
+>> +nodes use a phandle and clock specifier pair to connect clock provider
+>> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
+>> +specifier is an array of one more more cells identifying the clock
+>> +output on a device.  The length of a clock specifier is defined by the
+>> +value of a #clock-cells property in the clock provider node.
+>> +
+>> +[1] http://patchwork.ozlabs.org/patch/31551/
+>> +
+>> +==Clock providers==
+>> +
+>> +Required properties:
+>> +#clock-cells:	   Number of cells in a clock specifier; typically will be
+>> +		   set to 1
+>> +
+>> +Optional properties:
+>> +clock-output-name: Recommended to be a list of strings of clock output signal
+>> +		   names indexed by the first cell in the clock specifier.
+>> +		   However, the meaning of clock-output-names is domain
+>> +		   specific to the clock provider, and is only provided to
+>> +		   encourage using the same meaning for the majority of clock
+>> +		   providers.  This format may not work for clock providers
+>> +		   using a complex clock specifier format.  In those cases it
+>> +		   is recommended to omit this property and create a binding
+>> +		   specific names property.
+>
+> If the clock-output-name property is omitted, does this mean a clock
+> provider only has a single output or does it mean that it's not known
+> how many clock outputs a provider actually has?
+
+Allowing several outputs for a single clock node might lead to a lot of 
+confusion. What will be the meaning of a clock rate if you have several 
+outputs at different frequency?
+I think it will be better to define a clock node as a single source of 
+clock. If several outputs are needed, then we should define several 
+clock nodes.
+If we let a clock node be any kind of big clock blob, we will never be 
+able to define some generic reusable clock node API. Everybody will 
+define its own custom clock blobs.
+
+Regards,
+Benoit
