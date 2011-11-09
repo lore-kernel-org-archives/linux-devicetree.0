@@ -1,15 +1,14 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC 8/8] dt/arm: versatile add clock parsing
-Date: Wed, 9 Nov 2011 10:31:47 +0100
-Message-ID: <20111109093147.GZ16886@pengutronix.de>
-References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
- <1320801583-12774-9-git-send-email-grant.likely@secretlab.ca>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCHv4 00/13] VIC DT binding and MULTI_IRQ_HANDLER
+Date: Wed, 9 Nov 2011 10:01:44 +0000
+Message-ID: <20111109100144.GA4253@totoro>
+References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1320801583-12774-9-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+In-Reply-To: <1320369010-23428-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,96 +18,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rubini-9wsNiZum9E8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2011 at 06:19:43PM -0700, Grant Likely wrote:
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/versatile-ab.dts     |   37 ++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/versatile-pb.dts     |    2 +
->  arch/arm/mach-versatile/core.c         |   37 +------------------------------
->  arch/arm/mach-versatile/versatile_dt.c |   33 ++++++++++++++++++++++++++++
->  4 files changed, 74 insertions(+), 35 deletions(-)
+On Fri, Nov 04, 2011 at 01:09:57AM +0000, Jamie Iles wrote:
+> Since the last revision I've updated the handling loop as suggested by
+> Linus and Russell, added a patch for picoxcell and added a final patch
+> to remove the non MULTI_IRQ_HANDLER support for VIC.  The final patch
+> assumes that all VIC users will be converted to MULTI_IRQ_HANDLER which
+> I would hope would be the case but this could be dropped if not.
 > 
-> diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-> index 0b32925..cb8a49e 100644
-> --- a/arch/arm/boot/dts/versatile-ab.dts
-> +++ b/arch/arm/boot/dts/versatile-ab.dts
-> @@ -19,6 +19,35 @@
->  		reg = <0x0 0x08000000>;
->  	};
->  
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ref24_clk: clock0 {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <1>;
-> +			clock-frequency = <24000000>;
-> +			clock-output-names = "ref";
-> +		};
-> +
-> +		sp804_clk: clock1 {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <1>;
-> +			clock-frequency = <1000000>;
-> +			clock-output-names = "ref";
-> +		};
-> +
-> +		osc4_clk: clock3 {
-> +			compatible = "ics,icst307";
-> +			#clock-cells = <1>;
-> +			ref = <24000>;
-> +			vco-max = <200000>;
-> +			vd-range = <12 519>;
-> +			rd-range = <3 129>;
-> +			clock-output-names = "osc4";
-> +		};
+> I've also included Marc's patch for reference as the mach patches are
+> dependent on it.
+> 
+> Jamie Iles (12):
+>   ARM: vic: device tree binding
+>   ARM: vic: MULTI_IRQ_HANDLER handler
+>   ARM: ep93xx: convert to MULTI_IRQ_HANDLER
+>   ARM: netx: convert to MULTI_IRQ_HANDLER
+>   ARM: nomadik: convert to MULTI_IRQ_HANDLER
+>   ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
+>   ARM: spear: convert to MULTI_IRQ_HANDLER
+>   ARM: u300: convert to MULTI_IRQ_HANDLER
+>   ARM: versatile: convert to MULTI_IRQ_HANDLER
+>   ARM: samsung: convert to MULTI_IRQ_HANDLER
+>   ARM: picoxcell: convert to MULTI_IRQ_HANDLER
+>   ARM: VIC: remove non MULTI_IRQ_HANDLER support
 
-The registers needed to access osc4 are missing here. This probably
-means that osc4 cannot be specified in the clocks node but has to
-be sorted into the bus structure of the SoC.
+Marc has kindly offered to take these with his GIC patches so I'd like 
+to send him a pull request tomorrow.  Some Acked-by/Tested-by's for the 
+other platforms would be much appreciated!
 
-> +
->  static void __init versatile_dt_init(void)
->  {
-> +	struct device_node *node;
-> +	struct clk *clk;
-> +	int rc;
-> +
-> +	for_each_compatible_node(node, NULL, "fixed-clock") {
-> +		u32 rate;
-> +		if (of_property_read_u32(node, "clock-frequency", &rate))
-> +			continue;
-> +
-> +		clk = kzalloc(sizeof(*clk), GFP_KERNEL);
-> +		if (!clk)
-> +			panic("out of memory\n");
-> +		clk->rate = rate;
-> +
-> +		rc = of_clk_add_provider(node, versatile_dt_clk_get, clk);
-> +		if (rc) {
-> +			kfree(clk);
-> +			pr_err("error adding fixed clk %s\n", node->name);
-> +		}
-> +	}
-> +
+Thanks,
 
-Well this is obviously just a quick hack to get something working. I
-just want to add the note here that Mikes current patches require to
-register the clock tree top-down. This may be hard to archieve as the
-clocks are somewhere in the devicetree (sorted by bus topology and not
-by clock topology). So we either need more thinking in the clock
-framework to overcome the top-down registration or more thinking here
-in the registration of the clocks.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Jamie
