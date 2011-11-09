@@ -1,94 +1,102 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 6/8] of: add clock providers
-Date: Wed, 09 Nov 2011 07:59:17 -0600
-Message-ID: <4EBA8735.902@gmail.com>
-References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
- <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
- <20111109091328.GY16886@pengutronix.de> <4EBA62AD.3000407@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCHv4 07/13] ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
+Date: Wed, 09 Nov 2011 08:50:33 -0600
+Message-ID: <4EBA9339.5010407@gmail.com>
+References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com> <1320369010-23428-8-git-send-email-jamie@jamieiles.com> <CAJuYYwRPoFDUhtcVLT_rj4c9whJWVXyQ7tcaK3O_G3X9SYf-cw@mail.gmail.com> <20111109115406.GB4253@totoro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4EBA62AD.3000407-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20111109115406.GB4253@totoro>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, viresh.kumar@st.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, rubini@unipv.it, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2011 05:23 AM, Cousson, Benoit wrote:
-> On 11/9/2011 10:13 AM, Sascha Hauer wrote:
->> On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
-> 
-> [...]
-> 
->>> +Sources of clock signal can be represented by any node in the device
->>> +tree.  Those nodes are designated as clock providers.  Clock consumer
->>> +nodes use a phandle and clock specifier pair to connect clock provider
->>> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
->>> +specifier is an array of one more more cells identifying the clock
->>> +output on a device.  The length of a clock specifier is defined by the
->>> +value of a #clock-cells property in the clock provider node.
->>> +
->>> +[1] http://patchwork.ozlabs.org/patch/31551/
->>> +
->>> +==Clock providers==
->>> +
->>> +Required properties:
->>> +#clock-cells:       Number of cells in a clock specifier; typically
->>> will be
->>> +           set to 1
->>> +
->>> +Optional properties:
->>> +clock-output-name: Recommended to be a list of strings of clock
->>> output signal
->>> +           names indexed by the first cell in the clock specifier.
->>> +           However, the meaning of clock-output-names is domain
->>> +           specific to the clock provider, and is only provided to
->>> +           encourage using the same meaning for the majority of clock
->>> +           providers.  This format may not work for clock providers
->>> +           using a complex clock specifier format.  In those cases it
->>> +           is recommended to omit this property and create a binding
->>> +           specific names property.
+On 11/09/2011 05:54 AM, Jamie Iles wrote:
+> On Wed, Nov 09, 2011 at 04:55:06PM +0530, Thomas Abraham wrote:
+>> Hi Jamie,
 >>
->> If the clock-output-name property is omitted, does this mean a clock
->> provider only has a single output or does it mean that it's not known
->> how many clock outputs a provider actually has?
+>> On 4 November 2011 06:40, Jamie Iles <jamie@jamieiles.com> wrote:
+>>> Now that there is a generic IRQ handler for multiple VIC devices use it
+>>> for s3c64xx to help building multi platform kernels.
+>>>
+>>> Cc: Ben Dooks <ben-linux@fluff.org>
+>>> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+>>> ---
+>>>  arch/arm/Kconfig                                 |    1 +
+>>>  arch/arm/mach-s3c64xx/include/mach/entry-macro.S |    7 ++++---
+>>>  arch/arm/mach-s3c64xx/mach-anw6410.c             |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-crag6410.c            |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-hmt.c                 |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-mini6410.c            |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-ncp.c                 |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-real6410.c            |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-smartq5.c             |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-smartq7.c             |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-smdk6400.c            |    2 ++
+>>>  arch/arm/mach-s3c64xx/mach-smdk6410.c            |    2 ++
+>>>  12 files changed, 25 insertions(+), 3 deletions(-)
+>>>
+>>
+>> I have tested this patch series on smdk6410 board (s3c64xx) using the
+>> following repositorty and branch
+>>
+>> https://github.com/jamieiles/linux-2.6-ji.git  branch: vic-dt
+>>
+>> There is a crash while booting. Am I using the right tree and branch?
+>> The following is the boot log. Is there any other config option to be
+>> enabled?
 > 
-> Allowing several outputs for a single clock node might lead to a lot of
-> confusion. What will be the meaning of a clock rate if you have several
-> outputs at different frequency?
-
-You typically only have a frequency property for fixed clocks.
-
-However, we should think about how to set frequency for programmable
-clocks. Perhaps this is just making clock-frequency an array of
-values in the same order as the outputs.
-
-> I think it will be better to define a clock node as a single source of
-> clock. If several outputs are needed, then we should define several
-> clock nodes.
-> If we let a clock node be any kind of big clock blob, we will never be
-> able to define some generic reusable clock node API. Everybody will
-> define its own custom clock blobs.
+> Hmm, could you please try with the patch below applied?
 > 
+> Rob, I'm not sure if this is the best fix.  The alternatives I can think 
+> of would be to always export irq_domain_simple_ops even if 
+> !CONFIG_OF_IRQ but not set .dt_translate or provide a generic 
+> irq_domain_null_ops.
+> 
+> Jamie
 
-Whether you decide to implement a blob or every single mux, divider, and
-gate is independent from whether you use generic clock code or not. You
-could simply define a clock controller node with lots of outputs yet
-still use generic code to implement clock support in Linux. The reality
-is you will probably have a mixture of generic and SOC-specific clocks.
+There is a simple fix:
 
-What is our goal here? I'm skeptical we will ever get to the point that
-we can fully describe the clock tree for a new SOC without any code
-changes. Perhaps our goal is simply that clock differences across all
-boards for an SOC can be described in DT.
+@@ -74,7 +76,7 @@ struct irq_domain {
+ static inline unsigned int irq_domain_to_irq(struct irq_domain *d,
+                                             unsigned long hwirq)
+ {
+-       if (d->ops->to_irq)
++       if (d->ops && d->ops->to_irq)
+                return d->ops->to_irq(d, hwirq);
+        if (WARN_ON(hwirq < d->hwirq_base))
+                return 0;
+
+I'll prepare a patch and send to tglx.
 
 Rob
+
+> 
+> 8<----
+> 
+> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
+> index 8c5f4b0..9a5fb9e 100644
+> --- a/arch/arm/common/vic.c
+> +++ b/arch/arm/common/vic.c
+> @@ -163,6 +163,10 @@ static int __init vic_pm_init(void)
+>  late_initcall(vic_pm_init);
+>  #endif /* CONFIG_PM */
+>  
+> +#ifndef CONFIG_OF_IRQ
+> +static const struct irq_domain_ops vic_domain_null_ops;
+> +#endif /* !CONFIG_OF_IRQ */
+> +
+>  /**
+>   * vic_register() - Register a VIC.
+>   * @base: The base address of the VIC.
+> @@ -197,6 +201,8 @@ static void __init vic_register(void __iomem *base, unsigned int irq,
+>  #ifdef CONFIG_OF_IRQ
+>  	v->domain.of_node = of_node_get(node);
+>  	v->domain.ops = &irq_domain_simple_ops;
+> +#else /* CONFIG_OF_IRQ */
+> +	v->domain.ops = &vic_domain_null_ops;
+>  #endif /* CONFIG_OF */
+>  	irq_domain_add(&v->domain);
+>  }
