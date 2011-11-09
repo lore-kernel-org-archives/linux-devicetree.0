@@ -1,112 +1,87 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCHv4 07/13] ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
-Date: Wed, 9 Nov 2011 18:00:20 +0530
-Message-ID: <CAJuYYwQK-V0AYcayUdXy+SCAyTYbH6vJrn=+m5LGy6PSxP0Vzg@mail.gmail.com>
-References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
-	<1320369010-23428-8-git-send-email-jamie@jamieiles.com>
-	<CAJuYYwRPoFDUhtcVLT_rj4c9whJWVXyQ7tcaK3O_G3X9SYf-cw@mail.gmail.com>
-	<20111109115406.GB4253@totoro>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC 6/8] of: add clock providers
+Date: Wed, 09 Nov 2011 07:31:24 -0600
+Message-ID: <4EBA80AC.30604@gmail.com>
+References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca> <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca> <20111109091328.GY16886@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20111109115406.GB4253@totoro>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jamie Iles <jamie@jamieiles.com>
-Cc: Rob Herring <robherring2@gmail.com>, linux-arm-kernel@lists.infradead.org, viresh.kumar@st.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, rubini@unipv.it, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20111109091328.GY16886@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 November 2011 17:24, Jamie Iles <jamie@jamieiles.com> wrote:
-> On Wed, Nov 09, 2011 at 04:55:06PM +0530, Thomas Abraham wrote:
->> Hi Jamie,
+On 11/09/2011 03:13 AM, Sascha Hauer wrote:
+> On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
+>> Based on work by Ben Herrenschmidt and Jeremy Kerr, this patch adds an
+>> of_clk_get function to allow platforms to retrieve clock data from the
+>> device tree.
 >>
->> On 4 November 2011 06:40, Jamie Iles <jamie@jamieiles.com> wrote:
->> > Now that there is a generic IRQ handler for multiple VIC devices u=
-se it
->> > for s3c64xx to help building multi platform kernels.
->> >
->> > Cc: Ben Dooks <ben-linux@fluff.org>
->> > Signed-off-by: Jamie Iles <jamie@jamieiles.com>
->> > ---
->> > =A0arch/arm/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 | =A0 =A01 +
->> > =A0arch/arm/mach-s3c64xx/include/mach/entry-macro.S | =A0 =A07 +++=
-+---
->> > =A0arch/arm/mach-s3c64xx/mach-anw6410.c =A0 =A0 =A0 =A0 =A0 =A0 | =
-=A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-crag6410.c =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-hmt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-mini6410.c =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-ncp.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-real6410.c =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-smartq5.c =A0 =A0 =A0 =A0 =A0 =A0 | =
-=A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-smartq7.c =A0 =A0 =A0 =A0 =A0 =A0 | =
-=A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-smdk6400.c =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 =A02 ++
->> > =A0arch/arm/mach-s3c64xx/mach-smdk6410.c =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 =A02 ++
->> > =A012 files changed, 25 insertions(+), 3 deletions(-)
->> >
+>> Platform register a provider through of_clk_add_provider, which will be
+>> called when a device references the provider's OF node for a clock
+>> reference.
 >>
->> I have tested this patch series on smdk6410 board (s3c64xx) using th=
-e
->> following repositorty and branch
+>> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+>> ---
+>>  .../devicetree/bindings/clock/clock-bindings.txt   |  109 +++++++++++++++++
+>>  drivers/of/Kconfig                                 |    6 +
+>>  drivers/of/Makefile                                |    1 +
+>>  drivers/of/clock.c                                 |  129 ++++++++++++++++++++
+>>  include/linux/of_clk.h                             |   37 ++++++
+>>  5 files changed, 282 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>  create mode 100644 drivers/of/clock.c
+>>  create mode 100644 include/linux/of_clk.h
 >>
->> https://github.com/jamieiles/linux-2.6-ji.git =A0branch: vic-dt
->>
->> There is a crash while booting. Am I using the right tree and branch=
-?
->> The following is the boot log. Is there any other config option to b=
-e
->> enabled?
->
-> Hmm, could you please try with the patch below applied?
->
-> Rob, I'm not sure if this is the best fix. =A0The alternatives I can =
-think
-> of would be to always export irq_domain_simple_ops even if
-> !CONFIG_OF_IRQ but not set .dt_translate or provide a generic
-> irq_domain_null_ops.
->
-> Jamie
->
-> 8<----
->
-> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-> index 8c5f4b0..9a5fb9e 100644
-> --- a/arch/arm/common/vic.c
-> +++ b/arch/arm/common/vic.c
-> @@ -163,6 +163,10 @@ static int __init vic_pm_init(void)
-> =A0late_initcall(vic_pm_init);
-> =A0#endif /* CONFIG_PM */
->
-> +#ifndef CONFIG_OF_IRQ
-> +static const struct irq_domain_ops vic_domain_null_ops;
-> +#endif /* !CONFIG_OF_IRQ */
-> +
-> =A0/**
-> =A0* vic_register() - Register a VIC.
-> =A0* @base: The base address of the VIC.
-> @@ -197,6 +201,8 @@ static void __init vic_register(void __iomem *bas=
-e, unsigned int irq,
-> =A0#ifdef CONFIG_OF_IRQ
-> =A0 =A0 =A0 =A0v->domain.of_node =3D of_node_get(node);
-> =A0 =A0 =A0 =A0v->domain.ops =3D &irq_domain_simple_ops;
-> +#else /* CONFIG_OF_IRQ */
-> + =A0 =A0 =A0 v->domain.ops =3D &vic_domain_null_ops;
-> =A0#endif /* CONFIG_OF */
-> =A0 =A0 =A0 =A0irq_domain_add(&v->domain);
-> =A0}
->
+>> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> new file mode 100644
+>> index 0000000..4770c7e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> @@ -0,0 +1,109 @@
+>> +This binding is a work-in-progress, and are based on some experimental
+>> +work by benh[1].
+>> +
+>> +Sources of clock signal can be represented by any node in the device
+>> +tree.  Those nodes are designated as clock providers.  Clock consumer
+>> +nodes use a phandle and clock specifier pair to connect clock provider
+>> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
+>> +specifier is an array of one more more cells identifying the clock
+>> +output on a device.  The length of a clock specifier is defined by the
+>> +value of a #clock-cells property in the clock provider node.
+>> +
+>> +[1] http://patchwork.ozlabs.org/patch/31551/
+>> +
+>> +==Clock providers==
+>> +
+>> +Required properties:
+>> +#clock-cells:	   Number of cells in a clock specifier; typically will be
+>> +		   set to 1
+>> +
+>> +Optional properties:
+>> +clock-output-name: Recommended to be a list of strings of clock output signal
+>> +		   names indexed by the first cell in the clock specifier.
+>> +		   However, the meaning of clock-output-names is domain
+>> +		   specific to the clock provider, and is only provided to
+>> +		   encourage using the same meaning for the majority of clock
+>> +		   providers.  This format may not work for clock providers
+>> +		   using a complex clock specifier format.  In those cases it
+>> +		   is recommended to omit this property and create a binding
+>> +		   specific names property.
+> 
+> If the clock-output-name property is omitted, does this mean a clock
+> provider only has a single output or does it mean that it's not known
+> how many clock outputs a provider actually has?
 
-This patch solves the issue and both smdk6410 and smdkv210 works fine.
+Neither. It's similar to how interrupt bindings work. For a clock
+consumer, you have a phandle to the parent and some number of cells to
+describe the connection. Often this is just the index or local interrupt
+number. Obviously, interrupt numbers make more sense than clock numbers,
+so having names is more useful in the clocks case if you have many outputs.
 
-Thanks,
-Thomas.
+The name strings are just additional information. Keep in mind that the
+clock node name can also be used if you need to attach a name to a clock.
+
+Rob
