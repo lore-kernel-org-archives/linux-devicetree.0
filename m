@@ -1,15 +1,15 @@
-From: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] microblaze: Added fdt chosen capability for timer
-Date: Fri, 11 Nov 2011 00:21:50 +1000
-Message-ID: <CACPZLaU4gEwFbW6God5hz3Xb9XdDmGNwj8zVd2D8hGu0oC1CVA@mail.gmail.com>
-References: <1320930623-15060-1-git-send-email-monstr@monstr.eu>
- <1320930623-15060-2-git-send-email-monstr@monstr.eu>
- <1320930623-15060-3-git-send-email-monstr@monstr.eu>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCHv4 02/13] ARM: vic: device tree binding
+Date: Thu, 10 Nov 2011 14:46:48 +0000
+Message-ID: <20111110144648.GC16018@totoro>
+References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
+ <1320369010-23428-3-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1320930623-15060-3-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1320369010-23428-3-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,66 +19,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rubini-9wsNiZum9E8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2011 at 11:10 PM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> From: "Peter A. G. Crosthwaite" <peter.crosthwaite-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
->
-> This lets a dts author flag a particular timer in the system as the syste=
-m timer.
-> If the chosen node contains a "system-timer=3D<&foo>" entry than that han=
-dle will
-> be used to determine the system timer. In no such entry exists then the f=
-irst
-> found timer will be used (current behaviour).
->
-> Signed-off-by: Peter A. G. Crosthwaite <peter.crosthwaite-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
-> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+On Fri, Nov 04, 2011 at 01:09:59AM +0000, Jamie Iles wrote:
+> This adds a device tree binding for the VIC based on the of_irq_init()
+> support.  This adds an irqdomain to the vic and always registers all
+> vics in the static vic array rather than for pm only to keep track of
+> the irq domain.  struct irq_data::hwirq is used where appropriate rather
+> than runtime masking.
+> 
+> v2:	- use irq_domain_simple_ops
+> 	- remove stub implementation of vic_of_init for !CONFIG_OF
+> 	- Make VIC select IRQ_DOMAIN
+> 
+> Reviewed-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 > ---
-> =A0arch/microblaze/kernel/timer.c | =A0 12 ++++++++----
-> =A01 files changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/microblaze/kernel/timer.c b/arch/microblaze/kernel/time=
-r.c
-> index 91804cd..c289412 100644
-> --- a/arch/microblaze/kernel/timer.c
-> +++ b/arch/microblaze/kernel/timer.c
-> @@ -267,11 +267,15 @@ void __init time_init(void)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0NULL
-> =A0 =A0 =A0 =A0};
->
-> - =A0 =A0 =A0 for (i =3D 0; timer_list[i] !=3D NULL; i++) {
-> + =A0 =A0 =A0 prop =3D of_get_property(of_chosen, "system-timer", NULL);
-> + =A0 =A0 =A0 if (prop)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 timer =3D of_find_node_by_phandle(be32_to_c=
-pup(prop));
-
-Suggest expanding this code to check that the chosen timer meets the
-kernel requirements - IRQ connected, dual channel etc.
-
-If it fails, then perhaps fall through to finding the first suitable
-one, or panic()?
-
-> + =A0 =A0 =A0 else
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 printk(KERN_INFO "No chosen timer found, us=
-ing default\n");
+>  Documentation/devicetree/bindings/arm/vic.txt |   29 +++++++
+>  arch/arm/common/Kconfig                       |    1 +
+>  arch/arm/common/vic.c                         |  106 ++++++++++++++++++-------
+>  arch/arm/include/asm/hardware/vic.h           |    7 ++-
+>  4 files changed, 114 insertions(+), 29 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/vic.txt
+> 
+> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
+> index 01f18a4..e689975 100644
+> --- a/arch/arm/common/vic.c
+> +++ b/arch/arm/common/vic.c
+> @@ -22,6 +22,10 @@
+[...]
+> +#ifdef CONFIG_OF
+> +int __init vic_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	void __iomem *regs;
+> +	int irq_base;
 > +
-> + =A0 =A0 =A0 for (i =3D 0; timer_list[i] !=3D NULL && !timer; i++)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0timer =3D of_find_compatible_node(NULL, NU=
-LL, timer_list[i]);
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (timer)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 break;
+> +	if (WARN(parent, "non-root VICs are not supported"))
+> +		return -EINVAL;
+> +
+> +	regs = of_iomap(node, 0);
+> +	if (WARN_ON(!regs))
+> +		return -EIO;
+> +
+> +	irq_base = irq_alloc_descs(-1, 0, 32, numa_node_id());
+> +	if (WARN_ON(irq_base < 0))
+> +		goto out_unmap;
 
-There is another issue I think - can we somehow mark the system timer
-instance as 'taken' so it can't be bound by another driver that might
-be compatible (esp. generic-uio for example).
+Hmm, this appears to need linux/export.h for THIS_MODULE now.  
+linux/irq.h has a comment saying it uses a macro to avoid needing an 
+include of export.h there so I guess it needs to go in here instead.
 
-Currently if you mark the timer as generic-uio then a UIO app can mess
-with it - not good.
-
-John
---
-PetaLogix - Linux Solutions for a Reconfigurable World
-w: www.petalogix.com=A0=A0p: +61-7-30090663=A0 f: +61-7-30090663
+Jamie
