@@ -1,83 +1,86 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCHv4 07/13] ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
-Date: Thu, 10 Nov 2011 14:53:18 +0000
-Message-ID: <20111110145318.GD16018@totoro>
-References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
- <1320369010-23428-8-git-send-email-jamie@jamieiles.com>
- <CAJuYYwRPoFDUhtcVLT_rj4c9whJWVXyQ7tcaK3O_G3X9SYf-cw@mail.gmail.com>
- <20111109115406.GB4253@totoro>
- <CAJuYYwQK-V0AYcayUdXy+SCAyTYbH6vJrn=+m5LGy6PSxP0Vzg@mail.gmail.com>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: [PATCH] ata: Fix build error in pata_of_platform (NO_IRQ usage)
+Date: Thu, 10 Nov 2011 19:18:52 +0400
+Message-ID: <20111110151852.GA7465@oksana.dev.rtsoft.ru>
+References: <20111011201127.455df266dcbffb1d621f8576@canb.auug.org.au>
+ <4E94A920.40503@xenotime.net>
+ <4E987829.3080104@xenotime.net>
+ <20111110135703.GA23609@elte.hu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-next-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJuYYwQK-V0AYcayUdXy+SCAyTYbH6vJrn=+m5LGy6PSxP0Vzg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Jamie Iles <jamie@jamieiles.com>, Rob Herring <robherring2@gmail.com>, linux-arm-kernel@lists.infradead.org, viresh.kumar@st.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, rubini@unipv.it, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+In-Reply-To: <20111110135703.GA23609@elte.hu>
+Sender: linux-next-owner@vger.kernel.org
+To: Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Randy Dunlap <rdunlap@xenotime.net>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 09, 2011 at 06:00:20PM +0530, Thomas Abraham wrote:
-> On 9 November 2011 17:24, Jamie Iles <jamie@jamieiles.com> wrote:
-> > On Wed, Nov 09, 2011 at 04:55:06PM +0530, Thomas Abraham wrote:
-> >> Hi Jamie,
-> >>
-> >> On 4 November 2011 06:40, Jamie Iles <jamie@jamieiles.com> wrote:
-> >> > Now that there is a generic IRQ handler for multiple VIC devices=
- use it
-> >> > for s3c64xx to help building multi platform kernels.
-> >> >
-> >> > Cc: Ben Dooks <ben-linux@fluff.org>
-> >> > Signed-off-by: Jamie Iles <jamie@jamieiles.com>
-> >> > ---
-> >> > =A0arch/arm/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 =A0 | =A0 =A01 +
-> >> > =A0arch/arm/mach-s3c64xx/include/mach/entry-macro.S | =A0 =A07 +=
-+++---
-> >> > =A0arch/arm/mach-s3c64xx/mach-anw6410.c =A0 =A0 =A0 =A0 =A0 =A0 =
-| =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-crag6410.c =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-hmt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 | =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-mini6410.c =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-ncp.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 | =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-real6410.c =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-smartq5.c =A0 =A0 =A0 =A0 =A0 =A0 =
-| =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-smartq7.c =A0 =A0 =A0 =A0 =A0 =A0 =
-| =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-smdk6400.c =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A02 ++
-> >> > =A0arch/arm/mach-s3c64xx/mach-smdk6410.c =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A02 ++
-> >> > =A012 files changed, 25 insertions(+), 3 deletions(-)
-> >> >
-> >>
-> >> I have tested this patch series on smdk6410 board (s3c64xx) using =
-the
-> >> following repositorty and branch
-> >>
-> >> https://github.com/jamieiles/linux-2.6-ji.git =A0branch: vic-dt
-> >>
-> >> There is a crash while booting. Am I using the right tree and bran=
-ch?
-> >> The following is the boot log. Is there any other config option to=
- be
-> >> enabled?
-> >
-> > Hmm, could you please try with the patch below applied?
+This patch makes a band-aid fix the following build failure:
+
+  CC      drivers/ata/pata_of_platform.o
+drivers/ata/pata_of_platform.c: In function 'pata_of_platform_probe':
+drivers/ata/pata_of_platform.c:55:13: error: 'NO_IRQ' undeclared (first use in this function)
+drivers/ata/pata_of_platform.c:55:13: note: each undeclared identifier is reported only once for each function it appears in
+
+The proper fix (stop OF code from returning NO_IRQ values) is pending.
+
+Signed-off-by: Anton Vorontsov <cbouatmailru@gmail.com>
+---
+
+On Thu, Nov 10, 2011 at 02:57:03PM +0100, Ingo Molnar wrote:
 [...]
->=20
-> This patch solves the issue and both smdk6410 and smdkv210 works fine=
-=2E
+> > > drivers/ata/pata_of_platform.c:55:13: error: 'NO_IRQ' undeclared (first use in this function)
+> > 
+> > [adding Author: Anton]
+> > 
+> > Build error still present in linux-next of 20111014.
+> 
+> This build failure regression report was ignored twice and then 
+> pushed upstream and is still unfixed a month after the initial 
+> report. Upstream now fails to build on like 25% of x86 configs.
+> 
+> What's going on with this bug guys?
 
-Brilliant, thanks Thomas.  Mind if I add a Tested-by from you providing=
-=20
-the fixup patch is applied first?
+Here is the story:
 
-Jamie
+- NO_IRQ is evil[1], AFAIR the trend is to remove its usage completely;
+- Sane arches (x86) don't use it at all, or have it defined to 0
+  (PPC32/64).
+- On another arches it is either -1 or whatever random value;
+- The NO_IRQ disease spreads despite our willingness, even within
+  the new OF code.
+
+The new irq domain stuff (that is used on ARM) always returns 0
+in 'no irq' case, so we may easily remove it.
+
+So the proper fix would be two-fold: for OF and for that driver.
+But this is for 3.3 kernels. I'll send the two patches as follow-ups.
+
+In the meantime, the band-aid (for 3.2) is down below.
+
+[1]
+http://lkml.org/lkml/2005/11/22/159
+http://lkml.org/lkml/2005/11/22/227
+
+ drivers/ata/pata_of_platform.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/ata/pata_of_platform.c b/drivers/ata/pata_of_platform.c
+index a72ab0d..f99e17b 100644
+--- a/drivers/ata/pata_of_platform.c
++++ b/drivers/ata/pata_of_platform.c
+@@ -16,6 +16,11 @@
+ #include <linux/of_platform.h>
+ #include <linux/ata_platform.h>
+ 
++/* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
++#ifndef NO_IRQ
++#define NO_IRQ 0
++#endif
++
+ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
+ {
+ 	int ret;
+-- 
+1.7.5.3
