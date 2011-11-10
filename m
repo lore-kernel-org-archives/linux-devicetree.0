@@ -1,75 +1,83 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCHv4 02/13] ARM: vic: device tree binding
-Date: Thu, 10 Nov 2011 14:46:48 +0000
-Message-ID: <20111110144648.GC16018@totoro>
+From: Jamie Iles <jamie@jamieiles.com>
+Subject: Re: [PATCHv4 07/13] ARM: s3c64xx: convert to MULTI_IRQ_HANDLER
+Date: Thu, 10 Nov 2011 14:53:18 +0000
+Message-ID: <20111110145318.GD16018@totoro>
 References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
- <1320369010-23428-3-git-send-email-jamie@jamieiles.com>
+ <1320369010-23428-8-git-send-email-jamie@jamieiles.com>
+ <CAJuYYwRPoFDUhtcVLT_rj4c9whJWVXyQ7tcaK3O_G3X9SYf-cw@mail.gmail.com>
+ <20111109115406.GB4253@totoro>
+ <CAJuYYwQK-V0AYcayUdXy+SCAyTYbH6vJrn=+m5LGy6PSxP0Vzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1320369010-23428-3-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: viresh.kumar-qxv4g6HH51o@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rubini-9wsNiZum9E8@public.gmane.org
+In-Reply-To: <CAJuYYwQK-V0AYcayUdXy+SCAyTYbH6vJrn=+m5LGy6PSxP0Vzg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: Jamie Iles <jamie@jamieiles.com>, Rob Herring <robherring2@gmail.com>, linux-arm-kernel@lists.infradead.org, viresh.kumar@st.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org, rmallon@gmail.com, hsweeten@visionengravers.com, rajeev-dlh.kumar@st.com, ben-linux@fluff.org, rubini@unipv.it, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 04, 2011 at 01:09:59AM +0000, Jamie Iles wrote:
-> This adds a device tree binding for the VIC based on the of_irq_init()
-> support.  This adds an irqdomain to the vic and always registers all
-> vics in the static vic array rather than for pm only to keep track of
-> the irq domain.  struct irq_data::hwirq is used where appropriate rather
-> than runtime masking.
-> 
-> v2:	- use irq_domain_simple_ops
-> 	- remove stub implementation of vic_of_init for !CONFIG_OF
-> 	- Make VIC select IRQ_DOMAIN
-> 
-> Reviewed-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/vic.txt |   29 +++++++
->  arch/arm/common/Kconfig                       |    1 +
->  arch/arm/common/vic.c                         |  106 ++++++++++++++++++-------
->  arch/arm/include/asm/hardware/vic.h           |    7 ++-
->  4 files changed, 114 insertions(+), 29 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/vic.txt
-> 
-> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-> index 01f18a4..e689975 100644
-> --- a/arch/arm/common/vic.c
-> +++ b/arch/arm/common/vic.c
-> @@ -22,6 +22,10 @@
+On Wed, Nov 09, 2011 at 06:00:20PM +0530, Thomas Abraham wrote:
+> On 9 November 2011 17:24, Jamie Iles <jamie@jamieiles.com> wrote:
+> > On Wed, Nov 09, 2011 at 04:55:06PM +0530, Thomas Abraham wrote:
+> >> Hi Jamie,
+> >>
+> >> On 4 November 2011 06:40, Jamie Iles <jamie@jamieiles.com> wrote:
+> >> > Now that there is a generic IRQ handler for multiple VIC devices=
+ use it
+> >> > for s3c64xx to help building multi platform kernels.
+> >> >
+> >> > Cc: Ben Dooks <ben-linux@fluff.org>
+> >> > Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+> >> > ---
+> >> > =A0arch/arm/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 =A0 | =A0 =A01 +
+> >> > =A0arch/arm/mach-s3c64xx/include/mach/entry-macro.S | =A0 =A07 +=
++++---
+> >> > =A0arch/arm/mach-s3c64xx/mach-anw6410.c =A0 =A0 =A0 =A0 =A0 =A0 =
+| =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-crag6410.c =A0 =A0 =A0 =A0 =A0 =A0=
+| =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-hmt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-mini6410.c =A0 =A0 =A0 =A0 =A0 =A0=
+| =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-ncp.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-real6410.c =A0 =A0 =A0 =A0 =A0 =A0=
+| =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-smartq5.c =A0 =A0 =A0 =A0 =A0 =A0 =
+| =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-smartq7.c =A0 =A0 =A0 =A0 =A0 =A0 =
+| =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-smdk6400.c =A0 =A0 =A0 =A0 =A0 =A0=
+| =A0 =A02 ++
+> >> > =A0arch/arm/mach-s3c64xx/mach-smdk6410.c =A0 =A0 =A0 =A0 =A0 =A0=
+| =A0 =A02 ++
+> >> > =A012 files changed, 25 insertions(+), 3 deletions(-)
+> >> >
+> >>
+> >> I have tested this patch series on smdk6410 board (s3c64xx) using =
+the
+> >> following repositorty and branch
+> >>
+> >> https://github.com/jamieiles/linux-2.6-ji.git =A0branch: vic-dt
+> >>
+> >> There is a crash while booting. Am I using the right tree and bran=
+ch?
+> >> The following is the boot log. Is there any other config option to=
+ be
+> >> enabled?
+> >
+> > Hmm, could you please try with the patch below applied?
 [...]
-> +#ifdef CONFIG_OF
-> +int __init vic_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	void __iomem *regs;
-> +	int irq_base;
-> +
-> +	if (WARN(parent, "non-root VICs are not supported"))
-> +		return -EINVAL;
-> +
-> +	regs = of_iomap(node, 0);
-> +	if (WARN_ON(!regs))
-> +		return -EIO;
-> +
-> +	irq_base = irq_alloc_descs(-1, 0, 32, numa_node_id());
-> +	if (WARN_ON(irq_base < 0))
-> +		goto out_unmap;
+>=20
+> This patch solves the issue and both smdk6410 and smdkv210 works fine=
+=2E
 
-Hmm, this appears to need linux/export.h for THIS_MODULE now.  
-linux/irq.h has a comment saying it uses a macro to avoid needing an 
-include of export.h there so I guess it needs to go in here instead.
+Brilliant, thanks Thomas.  Mind if I add a Tested-by from you providing=
+=20
+the fixup patch is applied first?
 
 Jamie
