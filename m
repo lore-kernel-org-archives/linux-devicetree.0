@@ -1,84 +1,101 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCHv4 02/13] ARM: vic: device tree binding
-Date: Thu, 10 Nov 2011 15:20:51 +0000
-Message-ID: <4EBBEBD3.8090001@arm.com>
-References: <1320369010-23428-1-git-send-email-jamie@jamieiles.com>
- <1320369010-23428-3-git-send-email-jamie@jamieiles.com>
- <20111110144648.GC16018@totoro>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: [PATCH 1/2] of/irq: Get rid of NO_IRQ usage
+Date: Thu, 10 Nov 2011 19:25:41 +0400
+Message-ID: <20111110152541.GA3207@oksana.dev.rtsoft.ru>
+References: <20111110151852.GA7465@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111110144648.GC16018@totoro>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jamie Iles <jamie@jamieiles.com>
-Cc: "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rmallon@gmail.com" <rmallon@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "hsweeten@visionengravers.com" <hsweeten@visionengravers.com>, "rajeev-dlh.kumar@st.com" <rajeev-dlh.kumar@st.com>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rubini@unipv.it" <rubini@unipv.it>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-next-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111110151852.GA7465@oksana.dev.rtsoft.ru>
+Sender: linux-next-owner@vger.kernel.org
+To: Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Randy Dunlap <rdunlap@xenotime.net>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, Alan Cox <alan@lxorguk.ukuu.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/11 14:46, Jamie Iles wrote:
-> On Fri, Nov 04, 2011 at 01:09:59AM +0000, Jamie Iles wrote:
->> This adds a device tree binding for the VIC based on the of_irq_init()
->> support.  This adds an irqdomain to the vic and always registers all
->> vics in the static vic array rather than for pm only to keep track of
->> the irq domain.  struct irq_data::hwirq is used where appropriate rather
->> than runtime masking.
->>
->> v2:	- use irq_domain_simple_ops
->> 	- remove stub implementation of vic_of_init for !CONFIG_OF
->> 	- Make VIC select IRQ_DOMAIN
->>
->> Reviewed-by: Rob Herring <robherring2@gmail.com>
->> Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
->> Signed-off-by: Jamie Iles <jamie@jamieiles.com>
->> ---
->>  Documentation/devicetree/bindings/arm/vic.txt |   29 +++++++
->>  arch/arm/common/Kconfig                       |    1 +
->>  arch/arm/common/vic.c                         |  106 ++++++++++++++++++-------
->>  arch/arm/include/asm/hardware/vic.h           |    7 ++-
->>  4 files changed, 114 insertions(+), 29 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/vic.txt
->>
->> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
->> index 01f18a4..e689975 100644
->> --- a/arch/arm/common/vic.c
->> +++ b/arch/arm/common/vic.c
->> @@ -22,6 +22,10 @@
-> [...]
->> +#ifdef CONFIG_OF
->> +int __init vic_of_init(struct device_node *node, struct device_node *parent)
->> +{
->> +	void __iomem *regs;
->> +	int irq_base;
->> +
->> +	if (WARN(parent, "non-root VICs are not supported"))
->> +		return -EINVAL;
->> +
->> +	regs = of_iomap(node, 0);
->> +	if (WARN_ON(!regs))
->> +		return -EIO;
->> +
->> +	irq_base = irq_alloc_descs(-1, 0, 32, numa_node_id());
->> +	if (WARN_ON(irq_base < 0))
->> +		goto out_unmap;
-> 
-> Hmm, this appears to need linux/export.h for THIS_MODULE now.  
-> linux/irq.h has a comment saying it uses a macro to avoid needing an 
-> include of export.h there so I guess it needs to go in here instead.
+PPC32/64 defines NO_IRQ to zero, so no problems expected.
+ARM defines NO_IRQ to -1, but OF code relies on IRQ domains support,
+which returns correct ('0') value in 'no irq' case. So everything
+should be fine.
 
-Yes, I had to hack it when I tested this series on PB1176 (and of course
-forgot to send the patch around...).
+Other arches might break if some of their OF drivers rely on NO_IRQ
+being not 0. If so, the drivers must be fixed, finally.
 
-It seems a bit backward to impose including linux/export.h while this
-file doesn't use any of it directly.
+Signed-off-by: Anton Vorontsov <cbouatmailru@gmail.com>
+---
+ drivers/of/irq.c |   30 ++++++++++++++++++------------
+ 1 files changed, 18 insertions(+), 12 deletions(-)
 
-	M.
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 6d3dd39..2dd4937 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -26,11 +26,6 @@
+ #include <linux/string.h>
+ #include <linux/slab.h>
+ 
+-/* For archs that don't support NO_IRQ (such as x86), provide a dummy value */
+-#ifndef NO_IRQ
+-#define NO_IRQ 0
+-#endif
+-
+ /**
+  * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
+  * @device: Device node of the device whose interrupt is to be mapped
+@@ -42,12 +37,23 @@
+ unsigned int irq_of_parse_and_map(struct device_node *dev, int index)
+ {
+ 	struct of_irq oirq;
++	int ret = 0;
+ 
+ 	if (of_irq_map_one(dev, index, &oirq))
+-		return NO_IRQ;
+-
+-	return irq_create_of_mapping(oirq.controller, oirq.specifier,
+-				     oirq.size);
++		goto no_irq;
++
++	ret = irq_create_of_mapping(oirq.controller, oirq.specifier,
++				    oirq.size);
++no_irq:
++#ifdef NO_IRQ
++#if NO_IRQ != 0
++	if (ret == NO_IRQ)
++		pr_warn("Hit NO_IRQ case for your arch. Drivers might expect "
++			"NO_IRQ, but we return 0. If anything breaks, driver "
++			"have to be fixed.\n");
++#endif
++#endif
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
+ 
+@@ -345,7 +351,7 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+ 
+ 	/* Only dereference the resource if both the
+ 	 * resource and the irq are valid. */
+-	if (r && irq != NO_IRQ) {
++	if (r && irq) {
+ 		r->start = r->end = irq;
+ 		r->flags = IORESOURCE_IRQ;
+ 		r->name = dev->full_name;
+@@ -363,7 +369,7 @@ int of_irq_count(struct device_node *dev)
+ {
+ 	int nr = 0;
+ 
+-	while (of_irq_to_resource(dev, nr, NULL) != NO_IRQ)
++	while (of_irq_to_resource(dev, nr, NULL))
+ 		nr++;
+ 
+ 	return nr;
+@@ -383,7 +389,7 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+ 	int i;
+ 
+ 	for (i = 0; i < nr_irqs; i++, res++)
+-		if (of_irq_to_resource(dev, i, res) == NO_IRQ)
++		if (!of_irq_to_resource(dev, i, res))
+ 			break;
+ 
+ 	return i;
 -- 
-Jazz is not dead. It just smells funny...
+1.7.5.3
