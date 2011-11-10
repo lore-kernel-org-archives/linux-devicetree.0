@@ -1,95 +1,57 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 3/4] dts/omap3: split omap3.dtsi
-Date: Thu, 10 Nov 2011 19:07:23 +0100
-Message-ID: <4EBC12DB.2040307@ti.com>
-References: <1320797568-11169-1-git-send-email-yanok@emcraft.com> <1320797568-11169-4-git-send-email-yanok@emcraft.com> <4EBBC10B.6070206@compulab.co.il> <4EBC0534.4020306@ti.com> <4EBC094C.8060504@compulab.co.il>
+From: Jeff Garzik <jeff@garzik.org>
+Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
+Date: Thu, 10 Nov 2011 15:34:30 -0500
+Message-ID: <4EBC3556.5000000@garzik.org>
+References: <20111110151852.GA7465@oksana.dev.rtsoft.ru> <20111110152606.GB3207@oksana.dev.rtsoft.ru> <20111110153816.239af1d7@lxorguk.ukuu.org.uk> <20111110162859.GA7088@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EBC094C.8060504@compulab.co.il>
-Sender: linux-omap-owner@vger.kernel.org
-To: Igor Grinberg <grinberg@compulab.co.il>
-Cc: Ilya Yanok <yanok@emcraft.com>, linux-omap@vger.kernel.org, wd@denx.de, dzu@denx.de, sasha_d@emcraft.com, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
+Sender: linux-next-owner@vger.kernel.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@xenotime.net>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Igor,
-
-On 11/10/2011 6:26 PM, Igor Grinberg wrote:
-> On 11/10/11 19:09, Cousson, Benoit wrote:
->> + devicetree ml
+On 11/10/2011 11:28 AM, Anton Vorontsov wrote:
+> Drivers should not use NO_IRQ; moreover, some architectures don't
+> have it nowadays. '0' is the 'no irq' case.
+>
+> Signed-off-by: Anton Vorontsov<cbouatmailru@gmail.com>
+> Acked-by: Alan Cox<alan@linux.intel.com>
+> ---
+>
+> On Thu, Nov 10, 2011 at 03:38:16PM +0000, Alan Cox wrote:
+>> On Thu, 10 Nov 2011 19:26:06 +0400
+>> Anton Vorontsov<cbouatmailru@gmail.com>  wrote:
 >>
->> On 11/10/2011 1:18 PM, Igor Grinberg wrote:
->>> Hi Ilya,
+>>> Drivers should not use NO_IRQ; moreover, some architectures don't
+>>> have it nowadays. '0' is the 'no irq' case.
 >>>
->>> On 11/09/11 02:12, Ilya Yanok wrote:
->>>> Split omap3.dtsi file into common part, OM3xxx specific part and
->>>> AM35xx specific part. For now the only difference is missing IVA node on
->>>> AM35xx.
->>>>
->>>> Signed-off-by: Ilya Yanok<yanok@emcraft.com>
->>>> ---
->>>>    arch/arm/boot/dts/am35xx.dtsi      |   15 +++++++++++++++
->>>>    arch/arm/boot/dts/om3xxx.dtsi      |   28 ++++++++++++++++++++++++++++
->>>>    arch/arm/boot/dts/omap3-beagle.dts |    2 +-
->>>>    arch/arm/boot/dts/omap3.dtsi       |    9 ---------
->>>>    4 files changed, 44 insertions(+), 10 deletions(-)
->>>>    create mode 100644 arch/arm/boot/dts/am35xx.dtsi
->>>>    create mode 100644 arch/arm/boot/dts/om3xxx.dtsi
->>>
->>> om3xxx name is confusing - I haven't seen this name
->>> in any documentation/code before...
->>> Am I missing something?
->>>
->>> What do you think of omap3-iva.dtsi or omap3-dsp.dtsi?
+>>> Signed-off-by: Anton Vorontsov<cbouatmailru@gmail.com>
 >>
->> Cannot we avoid at all hacking the original file and use instead the status = "disabled" field for any variant that will not have the functionality?
+>> Acked-by: Alan Cox<alan@linux.intel.com>
 >
-> This might be an option.
+> In case if we don't want a "band-aid fix" for 3.2, here is the patch
+> that just does the proper fix (w/ a risk to break minor architectures).
 >
-> What I thought of is splitting the original file into "atomic"
-> (none splittable) parts and each OMAP variant will include
-> the ones it has.
-> This way you have all the features available and can make any
-> mixture of them (which, probably will reflect the hardware best ;-))
-
-Yeah, but it will be less readable for my point of view. You will add 
-another level of include hierarchy. The point is that each time some new 
-variants will come with less and less feature, we will keep 
-de-populating the original file.
-
-My other concern is that all these variants are handled by different 
-people for different products. So by having dedicated file for each 
-variant, each owner can handle its own stuff without messing up the 
-original file.
-Considering that this omap3.dtsi file is under construction, we can 
-expect a bunch a dirty merge conflicts if different people from 
-different organization start adding / removing nodes at the same time.
-
-We already faced that kind of nightmare for our existing clock / hwmod 
-static data files. So if we can avoid it with DT files, it will be cool.
-
->> It will be a nightmare for us to maintain a consistent OMAP3 file if every variants force us to change the original file.
+>   drivers/ata/pata_of_platform.c |    2 +-
+>   1 files changed, 1 insertions(+), 1 deletions(-)
 >
-> it will be a nightmare anyway ;-)
+> diff --git a/drivers/ata/pata_of_platform.c b/drivers/ata/pata_of_platform.c
+> index a72ab0d..2a472c5 100644
+> --- a/drivers/ata/pata_of_platform.c
+> +++ b/drivers/ata/pata_of_platform.c
+> @@ -52,7 +52,7 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
+>   	}
+>
+>   	ret = of_irq_to_resource(dn, 0,&irq_res);
+> -	if (ret == NO_IRQ)
+> +	if (!ret)
+>   		irq_res.start = irq_res.end = 0;
+>   	else
+>   		irq_res.flags = 0;
 
-Indeed, the best is to avoid any variant :-)
+Unless someone screams, that is what I'll push upstream.
 
-> I don't really know what can make it a less scary nightmare.
-
-For my point of view, since I will have to keep hacking on that 
-omap3.dtsi, having some separate variant files that does not have to 
-touch this file will be much better.
-
-If all these variants were already there and well defined, we might have 
-then decided to re-organized that by starting from a common subset.
-But since everything is moving at the same time and with an unknown 
-target, we should minimize hacking any common file under construction.
-
-Regards,
-Benoit
-
-
-
-
-
+	Jeff
