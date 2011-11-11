@@ -1,57 +1,59 @@
-From: Jeff Garzik <jeff@garzik.org>
-Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
-Date: Thu, 10 Nov 2011 15:34:30 -0500
-Message-ID: <4EBC3556.5000000@garzik.org>
-References: <20111110151852.GA7465@oksana.dev.rtsoft.ru> <20111110152606.GB3207@oksana.dev.rtsoft.ru> <20111110153816.239af1d7@lxorguk.ukuu.org.uk> <20111110162859.GA7088@oksana.dev.rtsoft.ru>
+From: ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 0/2] of: Allow scripts/dtc/libfdt to be used from kernel code
+ and more...
+Date: Thu, 10 Nov 2011 17:11:27 -0800
+Message-ID: <1320973889-30079-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
-Sender: linux-next-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@xenotime.net>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/2011 11:28 AM, Anton Vorontsov wrote:
-> Drivers should not use NO_IRQ; moreover, some architectures don't
-> have it nowadays. '0' is the 'no irq' case.
->
-> Signed-off-by: Anton Vorontsov<cbouatmailru@gmail.com>
-> Acked-by: Alan Cox<alan@linux.intel.com>
-> ---
->
-> On Thu, Nov 10, 2011 at 03:38:16PM +0000, Alan Cox wrote:
->> On Thu, 10 Nov 2011 19:26:06 +0400
->> Anton Vorontsov<cbouatmailru@gmail.com>  wrote:
->>
->>> Drivers should not use NO_IRQ; moreover, some architectures don't
->>> have it nowadays. '0' is the 'no irq' case.
->>>
->>> Signed-off-by: Anton Vorontsov<cbouatmailru@gmail.com>
->>
->> Acked-by: Alan Cox<alan@linux.intel.com>
->
-> In case if we don't want a "band-aid fix" for 3.2, here is the patch
-> that just does the proper fix (w/ a risk to break minor architectures).
->
->   drivers/ata/pata_of_platform.c |    2 +-
->   1 files changed, 1 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/ata/pata_of_platform.c b/drivers/ata/pata_of_platform.c
-> index a72ab0d..2a472c5 100644
-> --- a/drivers/ata/pata_of_platform.c
-> +++ b/drivers/ata/pata_of_platform.c
-> @@ -52,7 +52,7 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
->   	}
->
->   	ret = of_irq_to_resource(dn, 0,&irq_res);
-> -	if (ret == NO_IRQ)
-> +	if (!ret)
->   		irq_res.start = irq_res.end = 0;
->   	else
->   		irq_res.flags = 0;
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Unless someone screams, that is what I'll push upstream.
+My next patch set for OCTEON device tree support relies on these two
+patches.  I split these out as they are architecture independent.
 
-	Jeff
+I iterated on these several times under the guise of an RFC, this is
+their first appearance as a request to be merged.
+
+Thanks,
+
+David Daney (2):
+  of/lib: Allow scripts/dtc/libfdt to be used from kernel code
+  of: Make of_find_node_by_path() traverse /aliases for relative paths.
+
+ drivers/of/base.c          |   65 +++++++++++++++++++++++++++++++++++++++++--
+ include/linux/libfdt.h     |    8 +++++
+ include/linux/libfdt_env.h |   13 +++++++++
+ lib/Kconfig                |    6 ++++
+ lib/Makefile               |    5 +++
+ lib/fdt.c                  |    2 +
+ lib/fdt_ro.c               |    2 +
+ lib/fdt_rw.c               |    2 +
+ lib/fdt_strerror.c         |    2 +
+ lib/fdt_sw.c               |    2 +
+ lib/fdt_wip.c              |    2 +
+ 11 files changed, 106 insertions(+), 3 deletions(-)
+ create mode 100644 include/linux/libfdt.h
+ create mode 100644 include/linux/libfdt_env.h
+ create mode 100644 lib/fdt.c
+ create mode 100644 lib/fdt_ro.c
+ create mode 100644 lib/fdt_rw.c
+ create mode 100644 lib/fdt_strerror.c
+ create mode 100644 lib/fdt_sw.c
+ create mode 100644 lib/fdt_wip.c
+
+-- 
+1.7.2.3
