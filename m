@@ -1,7 +1,7 @@
 From: ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 6/8] netdev: mdio-octeon.c: Convert to use device tree.
-Date: Thu, 10 Nov 2011 18:22:02 -0800
-Message-ID: <1320978124-13042-7-git-send-email-ddaney.cavm@gmail.com>
+Subject: [PATCH 4/8] MIPS: Octeon: Initialize and fixup device tree.
+Date: Thu, 10 Nov 2011 18:22:00 -0800
+Message-ID: <1320978124-13042-5-git-send-email-ddaney.cavm@gmail.com>
 References: <1320978124-13042-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,261 +18,656 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-Get the MDIO bus controller addresses from the device tree.
-
-Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 ---
- arch/mips/cavium-octeon/octeon-platform.c |   30 ----------
- drivers/net/phy/mdio-octeon.c             |   89 +++++++++++++++++++----------
- 2 files changed, 58 insertions(+), 61 deletions(-)
+ arch/mips/Kconfig                         |    1 +
+ arch/mips/cavium-octeon/Makefile          |    3 +
+ arch/mips/cavium-octeon/octeon-platform.c |  523 ++++++++++++++++++++++++++++-
+ arch/mips/cavium-octeon/setup.c           |   45 +++
+ 4 files changed, 571 insertions(+), 1 deletions(-)
 
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index d46f1da..7b6b7ba 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1404,6 +1404,7 @@ config CPU_CAVIUM_OCTEON
+ 	select WEAK_ORDERING
+ 	select CPU_SUPPORTS_HIGHMEM
+ 	select CPU_SUPPORTS_HUGEPAGES
++	select LIBFDT
+ 	help
+ 	  The Cavium Octeon processor is a highly integrated chip containing
+ 	  many ethernet hardware widgets for networking tasks. The processor
+diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+index 5e25dce..17e3710 100644
+--- a/arch/mips/cavium-octeon/Makefile
++++ b/arch/mips/cavium-octeon/Makefile
+@@ -9,6 +9,9 @@
+ # Copyright (C) 2005-2009 Cavium Networks
+ #
+ 
++CFLAGS_octeon-platform.o = -I$(src)/../../../scripts/dtc/libfdt
++CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
++
+ obj-y := cpu.o setup.o serial.o octeon-platform.o octeon-irq.o csrc-octeon.o
+ obj-y += dma-octeon.o flash_setup.o
+ obj-y += octeon-memcpy.o
 diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
-index f62a40f..66cabc2 100644
+index cd61d72..2754bc2 100644
 --- a/arch/mips/cavium-octeon/octeon-platform.c
 +++ b/arch/mips/cavium-octeon/octeon-platform.c
-@@ -168,36 +168,6 @@ out:
- }
- device_initcall(octeon_rng_device_init);
- 
--/* Octeon SMI/MDIO interface.  */
--static int __init octeon_mdiobus_device_init(void)
--{
--	struct platform_device *pd;
--	int ret = 0;
--
--	if (octeon_is_simulation())
--		return 0; /* No mdio in the simulator. */
--
--	/* The bus number is the platform_device id.  */
--	pd = platform_device_alloc("mdio-octeon", 0);
--	if (!pd) {
--		ret = -ENOMEM;
--		goto out;
--	}
--
--	ret = platform_device_add(pd);
--	if (ret)
--		goto fail;
--
--	return ret;
--fail:
--	platform_device_put(pd);
--
--out:
--	return ret;
--
--}
--device_initcall(octeon_mdiobus_device_init);
--
- /* Octeon mgmt port Ethernet interface.  */
- static int __init octeon_mgmt_device_init(void)
- {
-diff --git a/drivers/net/phy/mdio-octeon.c b/drivers/net/phy/mdio-octeon.c
-index bd12ba9..b18b8c5 100644
---- a/drivers/net/phy/mdio-octeon.c
-+++ b/drivers/net/phy/mdio-octeon.c
-@@ -3,14 +3,17 @@
+@@ -3,7 +3,7 @@
   * License.  See the file "COPYING" in the main directory of this archive
   * for more details.
   *
-- * Copyright (C) 2009 Cavium Networks
-+ * Copyright (C) 2009, 2010, 2011 Cavium Networks
+- * Copyright (C) 2004-2010 Cavium Networks
++ * Copyright (C) 2004-2011 Cavium Networks
+  * Copyright (C) 2008 Wind River Systems
   */
  
--#include <linux/gfp.h>
--#include <linux/init.h>
--#include <linux/module.h>
+@@ -13,10 +13,16 @@
+ #include <linux/usb.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/module.h>
++#include <linux/slab.h>
  #include <linux/platform_device.h>
-+#include <linux/of_mdio.h>
-+#include <linux/delay.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/gfp.h>
- #include <linux/phy.h>
-+#include <linux/io.h>
++#include <linux/of_platform.h>
++#include <linux/of_fdt.h>
++#include <linux/libfdt.h>
  
  #include <asm/octeon/octeon.h>
- #include <asm/octeon/cvmx-smix-defs.h>
-@@ -18,9 +21,17 @@
- #define DRV_VERSION "1.0"
- #define DRV_DESCRIPTION "Cavium Networks Octeon SMI/MDIO driver"
+ #include <asm/octeon/cvmx-rnm-defs.h>
++#include <asm/octeon/cvmx-helper.h>
++#include <asm/octeon/cvmx-helper-board.h>
  
-+#define SMI_CMD		0x0
-+#define SMI_WR_DAT	0x8
-+#define SMI_RD_DAT	0x10
-+#define SMI_CLK		0x18
-+#define SMI_EN		0x20
-+
- struct octeon_mdiobus {
- 	struct mii_bus *mii_bus;
--	int unit;
-+	u64 register_base;
-+	resource_size_t mdio_phys;
-+	resource_size_t regsize;
- 	int phy_irq[PHY_MAX_ADDR];
- };
+ static struct octeon_cf_data octeon_cf_data;
  
-@@ -35,15 +46,15 @@ static int octeon_mdiobus_read(struct mii_bus *bus, int phy_id, int regnum)
- 	smi_cmd.s.phy_op = 1; /* MDIO_CLAUSE_22_READ */
- 	smi_cmd.s.phy_adr = phy_id;
- 	smi_cmd.s.reg_adr = regnum;
--	cvmx_write_csr(CVMX_SMIX_CMD(p->unit), smi_cmd.u64);
-+	cvmx_write_csr(p->register_base + SMI_CMD, smi_cmd.u64);
+@@ -440,6 +446,521 @@ device_initcall(octeon_ohci_device_init);
  
- 	do {
- 		/*
- 		 * Wait 1000 clocks so we don't saturate the RSL bus
- 		 * doing reads.
- 		 */
--		cvmx_wait(1000);
--		smi_rd.u64 = cvmx_read_csr(CVMX_SMIX_RD_DAT(p->unit));
-+		__delay(1000);
-+		smi_rd.u64 = cvmx_read_csr(p->register_base + SMI_RD_DAT);
- 	} while (smi_rd.s.pending && --timeout);
+ #endif /* CONFIG_USB */
  
- 	if (smi_rd.s.val)
-@@ -62,21 +73,21 @@ static int octeon_mdiobus_write(struct mii_bus *bus, int phy_id,
- 
- 	smi_wr.u64 = 0;
- 	smi_wr.s.dat = val;
--	cvmx_write_csr(CVMX_SMIX_WR_DAT(p->unit), smi_wr.u64);
-+	cvmx_write_csr(p->register_base + SMI_WR_DAT, smi_wr.u64);
- 
- 	smi_cmd.u64 = 0;
- 	smi_cmd.s.phy_op = 0; /* MDIO_CLAUSE_22_WRITE */
- 	smi_cmd.s.phy_adr = phy_id;
- 	smi_cmd.s.reg_adr = regnum;
--	cvmx_write_csr(CVMX_SMIX_CMD(p->unit), smi_cmd.u64);
-+	cvmx_write_csr(p->register_base + SMI_CMD, smi_cmd.u64);
- 
- 	do {
- 		/*
- 		 * Wait 1000 clocks so we don't saturate the RSL bus
- 		 * doing reads.
- 		 */
--		cvmx_wait(1000);
--		smi_wr.u64 = cvmx_read_csr(CVMX_SMIX_WR_DAT(p->unit));
-+		__delay(1000);
-+		smi_wr.u64 = cvmx_read_csr(p->register_base + SMI_WR_DAT);
- 	} while (smi_wr.s.pending && --timeout);
- 
- 	if (timeout <= 0)
-@@ -88,8 +99,8 @@ static int octeon_mdiobus_write(struct mii_bus *bus, int phy_id,
- static int __devinit octeon_mdiobus_probe(struct platform_device *pdev)
- {
- 	struct octeon_mdiobus *bus;
-+	struct resource *res_mem;
- 	union cvmx_smix_en smi_en;
--	int i;
- 	int err = -ENOENT;
- 
- 	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
-@@ -97,28 +108,37 @@ static int __devinit octeon_mdiobus_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	/* The platform_device id is our unit number.  */
--	bus->unit = pdev->id;
-+	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+
-+	if (res_mem == NULL) {
-+		dev_err(&pdev->dev, "found no memory resource\n");
-+		err = -ENXIO;
-+		goto fail;
-+	}
-+	bus->mdio_phys = res_mem->start;
-+	bus->regsize = resource_size(res_mem);
-+	if (!devm_request_mem_region(&pdev->dev, bus->mdio_phys, bus->regsize,
-+				     res_mem->name)) {
-+		dev_err(&pdev->dev, "request_mem_region failed\n");
-+		goto fail;
-+	}
-+	bus->register_base =
-+		(u64)devm_ioremap(&pdev->dev, bus->mdio_phys, bus->regsize);
- 
- 	bus->mii_bus = mdiobus_alloc();
- 
- 	if (!bus->mii_bus)
--		goto err;
-+		goto fail;
- 
- 	smi_en.u64 = 0;
- 	smi_en.s.en = 1;
--	cvmx_write_csr(CVMX_SMIX_EN(bus->unit), smi_en.u64);
-+	cvmx_write_csr(bus->register_base + SMI_EN, smi_en.u64);
- 
--	/*
--	 * Standard Octeon evaluation boards don't support phy
--	 * interrupts, we need to poll.
--	 */
--	for (i = 0; i < PHY_MAX_ADDR; i++)
--		bus->phy_irq[i] = PHY_POLL;
- 
- 	bus->mii_bus->priv = bus;
- 	bus->mii_bus->irq = bus->phy_irq;
- 	bus->mii_bus->name = "mdio-octeon";
--	snprintf(bus->mii_bus->id, MII_BUS_ID_SIZE, "%x", bus->unit);
-+	snprintf(bus->mii_bus->id, MII_BUS_ID_SIZE, "%llx", bus->register_base);
- 	bus->mii_bus->parent = &pdev->dev;
- 
- 	bus->mii_bus->read = octeon_mdiobus_read;
-@@ -126,20 +146,18 @@ static int __devinit octeon_mdiobus_probe(struct platform_device *pdev)
- 
- 	dev_set_drvdata(&pdev->dev, bus);
- 
--	err = mdiobus_register(bus->mii_bus);
-+	err = of_mdiobus_register(bus->mii_bus, pdev->dev.of_node);
- 	if (err)
--		goto err_register;
-+		goto fail_register;
- 
- 	dev_info(&pdev->dev, "Version " DRV_VERSION "\n");
- 
- 	return 0;
--err_register:
-+fail_register:
- 	mdiobus_free(bus->mii_bus);
--
--err:
--	devm_kfree(&pdev->dev, bus);
-+fail:
- 	smi_en.u64 = 0;
--	cvmx_write_csr(CVMX_SMIX_EN(bus->unit), smi_en.u64);
-+	cvmx_write_csr(bus->register_base + SMI_EN, smi_en.u64);
- 	return err;
- }
- 
-@@ -153,14 +171,23 @@ static int __devexit octeon_mdiobus_remove(struct platform_device *pdev)
- 	mdiobus_unregister(bus->mii_bus);
- 	mdiobus_free(bus->mii_bus);
- 	smi_en.u64 = 0;
--	cvmx_write_csr(CVMX_SMIX_EN(bus->unit), smi_en.u64);
-+	cvmx_write_csr(bus->register_base + SMI_EN, smi_en.u64);
- 	return 0;
- }
- 
-+static struct of_device_id octeon_mdiobus_match[] = {
-+	{
-+		.compatible = "cavium,octeon-3860-mdio",
-+	},
++static struct of_device_id __initdata octeon_ids[] = {
++	{ .compatible = "simple-bus", },
++	{ .compatible = "cavium,octeon-6335-uctl", },
++	{ .compatible = "cavium,octeon-3860-bootbus", },
++	{ .compatible = "cavium,mdio-mux", },
++	{ .compatible = "gpio-leds", },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(of, octeon_mdiobus_match);
 +
- static struct platform_driver octeon_mdiobus_driver = {
- 	.driver = {
- 		.name		= "mdio-octeon",
- 		.owner		= THIS_MODULE,
-+		.of_match_table = octeon_mdiobus_match,
- 	},
- 	.probe		= octeon_mdiobus_probe,
- 	.remove		= __devexit_p(octeon_mdiobus_remove),
++static bool __init octeon_has_88e1145(void)
++{
++	return !OCTEON_IS_MODEL(OCTEON_CN52XX) &&
++	       !OCTEON_IS_MODEL(OCTEON_CN6XXX) &&
++	       !OCTEON_IS_MODEL(OCTEON_CN56XX);
++}
++
++static void __init octeon_fdt_set_phy(int eth, int phy_addr)
++{
++	const __be32 *phy_handle;
++	const __be32 *alt_phy_handle;
++	const __be32 *reg;
++	u32 phandle;
++	int phy;
++	int alt_phy;
++	const char *p;
++	int current_len;
++	char new_name[20];
++
++	phy_handle = fdt_getprop(initial_boot_params, eth, "phy-handle", NULL);
++	if (!phy_handle)
++		return;
++
++	phandle = be32_to_cpup(phy_handle);
++	phy = fdt_node_offset_by_phandle(initial_boot_params, phandle);
++
++	alt_phy_handle = fdt_getprop(initial_boot_params, eth, "cavium,alt-phy-handle", NULL);
++	if (alt_phy_handle) {
++		u32 alt_phandle = be32_to_cpup(alt_phy_handle);
++		alt_phy = fdt_node_offset_by_phandle(initial_boot_params, alt_phandle);
++	} else {
++		alt_phy = -1;
++	}
++
++	if (phy_addr < 0 || phy < 0) {
++		/* Delete the PHY things */
++		fdt_nop_property(initial_boot_params, eth, "phy-handle");
++		/* This one may fail */
++		fdt_nop_property(initial_boot_params, eth, "cavium,alt-phy-handle");
++		if (phy >= 0)
++			fdt_nop_node(initial_boot_params, phy);
++		if (alt_phy >= 0)
++			fdt_nop_node(initial_boot_params, alt_phy);
++		return;
++	}
++
++	if (phy_addr >= 256 && alt_phy > 0) {
++		const struct fdt_property *phy_prop;
++		struct fdt_property *alt_prop;
++		u32 phy_handle_name;
++
++		/* Use the alt phy node instead.*/
++		phy_prop = fdt_get_property(initial_boot_params, eth, "phy-handle", NULL);
++		phy_handle_name = phy_prop->nameoff;
++		fdt_nop_node(initial_boot_params, phy);
++		fdt_nop_property(initial_boot_params, eth, "phy-handle");
++		alt_prop = fdt_get_property_w(initial_boot_params, eth, "cavium,alt-phy-handle", NULL);
++		alt_prop->nameoff = phy_handle_name;
++		phy = alt_phy;
++	}
++
++	phy_addr &= 0xff;
++
++	if (octeon_has_88e1145()) {
++		fdt_nop_property(initial_boot_params, phy, "marvell,reg-init");
++		memset(new_name, 0, sizeof(new_name));
++		strcpy(new_name, "marvell,88e1145");
++		p = fdt_getprop(initial_boot_params, phy, "compatible",
++				&current_len);
++		if (p && current_len >= strlen(new_name))
++			fdt_setprop_inplace(initial_boot_params, phy,
++					"compatible", new_name, current_len);
++	}
++
++	reg = fdt_getprop(initial_boot_params, phy, "reg", NULL);
++	if (phy_addr == be32_to_cpup(reg))
++		return;
++
++	fdt_setprop_inplace_cell(initial_boot_params, phy, "reg", phy_addr);
++
++	snprintf(new_name, sizeof(new_name), "ethernet-phy@%x", phy_addr);
++
++	p = fdt_get_name(initial_boot_params, phy, &current_len);
++	if (p && current_len == strlen(new_name))
++		fdt_set_name(initial_boot_params, phy, new_name);
++	else
++		pr_err("Error: could not rename ethernet phy: <%s>", p);
++}
++
++static void __init octeon_fdt_set_mac_addr(int n, u64 *pmac)
++{
++	u8 new_mac[6];
++	u64 mac = *pmac;
++	int r;
++
++	new_mac[0] = (mac >> 40) & 0xff;
++	new_mac[1] = (mac >> 32) & 0xff;
++	new_mac[2] = (mac >> 24) & 0xff;
++	new_mac[3] = (mac >> 16) & 0xff;
++	new_mac[4] = (mac >> 8) & 0xff;
++	new_mac[5] = mac & 0xff;
++
++	r = fdt_setprop_inplace(initial_boot_params, n, "local-mac-address",
++				new_mac, sizeof(new_mac));
++
++	if (r) {
++		pr_err("Setting \"local-mac-address\" failed %d", r);
++		return;
++	}
++	*pmac = mac + 1;
++}
++
++static void __init octeon_fdt_rm_ethernet(int node)
++{
++	const __be32 *phy_handle;
++
++	phy_handle = fdt_getprop(initial_boot_params, node, "phy-handle", NULL);
++	if (phy_handle) {
++		u32 ph = be32_to_cpup(phy_handle);
++		int p = fdt_node_offset_by_phandle(initial_boot_params, ph);
++		if (p >= 0)
++			fdt_nop_node(initial_boot_params, p);
++	}
++	fdt_nop_node(initial_boot_params, node);
++}
++
++static void __init octeon_fdt_pip_port(int iface, int i, int p, int max, u64 *pmac)
++{
++	char name_buffer[20];
++	int eth;
++	int phy_addr;
++	int ipd_port;
++
++	snprintf(name_buffer, sizeof(name_buffer), "ethernet@%x", p);
++	eth = fdt_subnode_offset(initial_boot_params, iface, name_buffer);
++	if (eth < 0)
++		return;
++	if (p > max) {
++		pr_debug("Deleting port %x:%x\n", i, p);
++		octeon_fdt_rm_ethernet(eth);
++		return;
++	}
++	if (OCTEON_IS_MODEL(OCTEON_CN68XX))
++		ipd_port = (0x100 * i) + (0x10 * p) + 0x800;
++	else
++		ipd_port = 16 * i + p;
++
++	phy_addr = cvmx_helper_board_get_mii_address(ipd_port);
++	octeon_fdt_set_phy(eth, phy_addr);
++	octeon_fdt_set_mac_addr(eth, pmac);
++}
++
++static void __init octeon_fdt_pip_iface(int pip, int idx, u64 *pmac)
++{
++	char name_buffer[20];
++	int iface;
++	int p;
++	int count;
++
++	count = cvmx_helper_interface_enumerate(idx);
++
++	snprintf(name_buffer, sizeof(name_buffer), "interface@%d", idx);
++	iface = fdt_subnode_offset(initial_boot_params, pip, name_buffer);
++	if (iface < 0)
++		return;
++
++	for (p = 0; p < 16; p++)
++		octeon_fdt_pip_port(iface, idx, p, count - 1, pmac);
++}
++
++int __init octeon_prune_device_tree(void)
++{
++	int i, max_port, uart_mask;
++	const char *pip_path;
++	const char *alias_prop;
++	char name_buffer[20];
++	int aliases;
++	u64 mac_addr_base;
++
++	if (fdt_check_header(initial_boot_params))
++		panic("Corrupt Device Tree.");
++
++	aliases = fdt_path_offset(initial_boot_params, "/aliases");
++	if (aliases < 0) {
++		pr_err("Error: No /aliases node in device tree.");
++		return -EINVAL;
++	}
++
++
++	mac_addr_base =
++		((octeon_bootinfo->mac_addr_base[0] & 0xffull)) << 40 |
++		((octeon_bootinfo->mac_addr_base[1] & 0xffull)) << 32 |
++		((octeon_bootinfo->mac_addr_base[2] & 0xffull)) << 24 |
++		((octeon_bootinfo->mac_addr_base[3] & 0xffull)) << 16 |
++		((octeon_bootinfo->mac_addr_base[4] & 0xffull)) << 8 |
++		(octeon_bootinfo->mac_addr_base[5] & 0xffull);
++
++	if (OCTEON_IS_MODEL(OCTEON_CN52XX) || OCTEON_IS_MODEL(OCTEON_CN63XX))
++		max_port = 2;
++	else if (OCTEON_IS_MODEL(OCTEON_CN56XX) || OCTEON_IS_MODEL(OCTEON_CN68XX))
++		max_port = 1;
++	else
++		max_port = 0;
++
++	if (octeon_bootinfo->board_type == CVMX_BOARD_TYPE_NIC10E)
++		max_port = 0;
++
++	for (i = 0; i < 2; i++) {
++		int mgmt;
++		snprintf(name_buffer, sizeof(name_buffer),
++			 "mix%d", i);
++		alias_prop = fdt_getprop(initial_boot_params, aliases,
++					name_buffer, NULL);
++		if (alias_prop) {
++			mgmt = fdt_path_offset(initial_boot_params, alias_prop);
++			if (mgmt < 0)
++				continue;
++			if (i >= max_port) {
++				pr_debug("Deleting mix%d\n", i);
++				octeon_fdt_rm_ethernet(mgmt);
++				fdt_nop_property(initial_boot_params, aliases,
++						 name_buffer);
++			} else {
++				int phy_addr = cvmx_helper_board_get_mii_address(CVMX_HELPER_BOARD_MGMT_IPD_PORT + i);
++				octeon_fdt_set_phy(mgmt, phy_addr);
++				octeon_fdt_set_mac_addr(mgmt, &mac_addr_base);
++			}
++		}
++	}
++
++	pip_path = fdt_getprop(initial_boot_params, aliases, "pip", NULL);
++	if (pip_path) {
++		int pip = fdt_path_offset(initial_boot_params, pip_path);
++		if (pip  >= 0)
++			for (i = 0; i <= 4; i++)
++				octeon_fdt_pip_iface(pip, i, &mac_addr_base);
++	}
++
++	/* I2C */
++	if (OCTEON_IS_MODEL(OCTEON_CN52XX) ||
++	    OCTEON_IS_MODEL(OCTEON_CN63XX) ||
++	    OCTEON_IS_MODEL(OCTEON_CN68XX) ||
++	    OCTEON_IS_MODEL(OCTEON_CN56XX))
++		max_port = 2;
++	else
++		max_port = 1;
++
++	for (i = 0; i < 2; i++) {
++		int i2c;
++		snprintf(name_buffer, sizeof(name_buffer),
++			 "twsi%d", i);
++		alias_prop = fdt_getprop(initial_boot_params, aliases,
++					name_buffer, NULL);
++
++		if (alias_prop) {
++			i2c = fdt_path_offset(initial_boot_params, alias_prop);
++			if (i2c < 0)
++				continue;
++			if (i >= max_port) {
++				pr_debug("Deleting twsi%d\n", i);
++				fdt_nop_node(initial_boot_params, i2c);
++				fdt_nop_property(initial_boot_params, aliases,
++						 name_buffer);
++			}
++		}
++	}
++
++	/* SMI/MDIO */
++	if (OCTEON_IS_MODEL(OCTEON_CN68XX))
++		max_port = 4;
++	else if (OCTEON_IS_MODEL(OCTEON_CN52XX) ||
++		 OCTEON_IS_MODEL(OCTEON_CN63XX) ||
++		 OCTEON_IS_MODEL(OCTEON_CN56XX))
++		max_port = 2;
++	else
++		max_port = 1;
++
++	for (i = 0; i < 2; i++) {
++		int i2c;
++		snprintf(name_buffer, sizeof(name_buffer),
++			 "smi%d", i);
++		alias_prop = fdt_getprop(initial_boot_params, aliases,
++					name_buffer, NULL);
++
++		if (alias_prop) {
++			i2c = fdt_path_offset(initial_boot_params, alias_prop);
++			if (i2c < 0)
++				continue;
++			if (i >= max_port) {
++				pr_debug("Deleting smi%d\n", i);
++				fdt_nop_node(initial_boot_params, i2c);
++				fdt_nop_property(initial_boot_params, aliases,
++						 name_buffer);
++			}
++		}
++	}
++
++	/* Serial */
++	uart_mask = 3;
++
++	/* Right now CN52XX is the only chip with a third uart */
++	if (OCTEON_IS_MODEL(OCTEON_CN52XX))
++		uart_mask |= 4; /* uart2 */
++
++	for (i = 0; i < 3; i++) {
++		int uart;
++		snprintf(name_buffer, sizeof(name_buffer),
++			 "uart%d", i);
++		alias_prop = fdt_getprop(initial_boot_params, aliases,
++					name_buffer, NULL);
++
++		if (alias_prop) {
++			uart = fdt_path_offset(initial_boot_params, alias_prop);
++			if (uart_mask & (1 << i))
++				continue;
++			pr_debug("Deleting uart%d\n", i);
++			fdt_nop_node(initial_boot_params, uart);
++			fdt_nop_property(initial_boot_params, aliases,
++					 name_buffer);
++		}
++	}
++
++	/* Compact Flash */
++	alias_prop = fdt_getprop(initial_boot_params, aliases,
++				 "cf0", NULL);
++	if (alias_prop) {
++		union cvmx_mio_boot_reg_cfgx mio_boot_reg_cfg;
++		unsigned long base_ptr, region_base, region_size;
++		unsigned long region1_base = 0;
++		unsigned long region1_size = 0;
++		int cs, bootbus;
++		bool is_16bit = false;
++		bool is_true_ide = false;
++		__be32 new_reg[6];
++		__be32 *ranges;
++		int len;
++
++		int cf = fdt_path_offset(initial_boot_params, alias_prop);
++		base_ptr = 0;
++		if (octeon_bootinfo->major_version == 1
++			&& octeon_bootinfo->minor_version >= 1) {
++			if (octeon_bootinfo->compact_flash_common_base_addr)
++				base_ptr = octeon_bootinfo->compact_flash_common_base_addr;
++		} else {
++			base_ptr = 0x1d000800;
++		}
++
++		if (!base_ptr)
++			goto no_cf;
++
++		/* Find CS0 region. */
++		for (cs = 0; cs < 8; cs++) {
++			mio_boot_reg_cfg.u64 = cvmx_read_csr(CVMX_MIO_BOOT_REG_CFGX(cs));
++			region_base = mio_boot_reg_cfg.s.base << 16;
++			region_size = (mio_boot_reg_cfg.s.size + 1) << 16;
++			if (mio_boot_reg_cfg.s.en && base_ptr >= region_base
++				&& base_ptr < region_base + region_size) {
++				is_16bit = mio_boot_reg_cfg.s.width;
++				break;
++			}
++		}
++		if (cs >= 7) {
++			/* cs and cs + 1 are CS0 and CS1, both must be less than 8. */
++			goto no_cf;
++		}
++
++		if (!(base_ptr & 0xfffful)) {
++			/*
++			 * Boot loader signals availability of DMA (true_ide
++			 * mode) by setting low order bits of base_ptr to
++			 * zero.
++			 */
++
++			/* Asume that CS1 immediately follows. */
++			mio_boot_reg_cfg.u64 =
++				cvmx_read_csr(CVMX_MIO_BOOT_REG_CFGX(cs + 1));
++			region1_base = mio_boot_reg_cfg.s.base << 16;
++			region1_size = (mio_boot_reg_cfg.s.size + 1) << 16;
++			if (!mio_boot_reg_cfg.s.en)
++				goto no_cf;
++			is_true_ide = true;
++
++		} else {
++			fdt_nop_property(initial_boot_params, cf, "cavium,true-ide");
++			fdt_nop_property(initial_boot_params, cf, "cavium,dma-engine-handle");
++			if (!is_16bit) {
++				__be32 width = cpu_to_be32(8);
++				fdt_setprop_inplace(initial_boot_params, cf,
++						"cavium,bus-width", &width, sizeof(width));
++			}
++		}
++		new_reg[0] = cpu_to_be32(cs);
++		new_reg[1] = cpu_to_be32(0);
++		new_reg[2] = cpu_to_be32(0x10000);
++		new_reg[3] = cpu_to_be32(cs + 1);
++		new_reg[4] = cpu_to_be32(0);
++		new_reg[5] = cpu_to_be32(0x10000);
++		fdt_setprop_inplace(initial_boot_params, cf,
++				    "reg",  new_reg, sizeof(new_reg));
++
++		bootbus = fdt_parent_offset(initial_boot_params, cf);
++		if (bootbus < 0)
++			goto no_cf;
++		ranges = fdt_getprop_w(initial_boot_params, bootbus, "ranges", &len);
++		if (!ranges || len < (5 * 8 * sizeof(__be32)))
++			goto no_cf;
++
++		ranges[(cs * 5) + 2] = cpu_to_be32(region_base >> 32);
++		ranges[(cs * 5) + 3] = cpu_to_be32(region_base & 0xffffffff);
++		ranges[(cs * 5) + 4] = cpu_to_be32(region_size);
++		if (is_true_ide) {
++			cs++;
++			ranges[(cs * 5) + 2] = cpu_to_be32(region1_base >> 32);
++			ranges[(cs * 5) + 3] = cpu_to_be32(region1_base & 0xffffffff);
++			ranges[(cs * 5) + 4] = cpu_to_be32(region1_size);
++		}
++		goto end_cf;
++no_cf:
++		fdt_nop_node(initial_boot_params, cf);
++
++end_cf:
++		;
++	}
++
++	/* 8 char LED */
++	alias_prop = fdt_getprop(initial_boot_params, aliases,
++				 "led0", NULL);
++	if (alias_prop) {
++		union cvmx_mio_boot_reg_cfgx mio_boot_reg_cfg;
++		unsigned long base_ptr, region_base, region_size;
++		int cs, bootbus;
++		__be32 new_reg[6];
++		__be32 *ranges;
++		int len;
++		int led = fdt_path_offset(initial_boot_params, alias_prop);
++
++		base_ptr = octeon_bootinfo->led_display_base_addr;
++		if (base_ptr == 0)
++			goto no_led;
++		/* Find CS0 region. */
++		for (cs = 0; cs < 8; cs++) {
++			mio_boot_reg_cfg.u64 = cvmx_read_csr(CVMX_MIO_BOOT_REG_CFGX(cs));
++			region_base = mio_boot_reg_cfg.s.base << 16;
++			region_size = (mio_boot_reg_cfg.s.size + 1) << 16;
++			if (mio_boot_reg_cfg.s.en && base_ptr >= region_base
++				&& base_ptr < region_base + region_size)
++				break;
++		}
++
++		if (cs > 7)
++			goto no_led;
++
++		new_reg[0] = cpu_to_be32(cs);
++		new_reg[1] = cpu_to_be32(0x20);
++		new_reg[2] = cpu_to_be32(0x20);
++		new_reg[3] = cpu_to_be32(cs);
++		new_reg[4] = cpu_to_be32(0);
++		new_reg[5] = cpu_to_be32(0x20);
++		fdt_setprop_inplace(initial_boot_params, led,
++				    "reg",  new_reg, sizeof(new_reg));
++
++		bootbus = fdt_parent_offset(initial_boot_params, led);
++		if (bootbus < 0)
++			goto no_led;
++		ranges = fdt_getprop_w(initial_boot_params, bootbus, "ranges", &len);
++		if (!ranges || len < (5 * 8 * sizeof(__be32)))
++			goto no_led;
++
++		ranges[(cs * 5) + 2] = cpu_to_be32(region_base >> 32);
++		ranges[(cs * 5) + 3] = cpu_to_be32(region_base & 0xffffffff);
++		ranges[(cs * 5) + 4] = cpu_to_be32(region_size);
++		goto end_led;
++
++no_led:
++		fdt_nop_node(initial_boot_params, led);
++end_led:
++		;
++	}
++
++	/* OHCI/UHCI USB */
++	alias_prop = fdt_getprop(initial_boot_params, aliases,
++				 "uctl", NULL);
++	if (alias_prop) {
++		int uctl = fdt_path_offset(initial_boot_params, alias_prop);
++
++		if (uctl >= 0 && (!OCTEON_IS_MODEL(OCTEON_CN6XXX) ||
++				  octeon_bootinfo->board_type == CVMX_BOARD_TYPE_NIC2E)) {
++			pr_debug("Deleting uctl\n");
++			fdt_nop_node(initial_boot_params, uctl);
++			fdt_nop_property(initial_boot_params, aliases, "uctl");
++		} else if (octeon_bootinfo->board_type == CVMX_BOARD_TYPE_NIC10E ||
++			   octeon_bootinfo->board_type == CVMX_BOARD_TYPE_NIC4E) {
++			/* Missing "refclk-type" defaults to crystal. */
++			fdt_nop_property(initial_boot_params, uctl, "refclk-type");
++		}
++	}
++
++	return 0;
++}
++
++static int __init octeon_publish_devices(void)
++{
++	return of_platform_bus_probe(NULL, octeon_ids, NULL);
++}
++device_initcall(octeon_publish_devices);
++
+ MODULE_AUTHOR("David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Platform driver for Octeon SOC");
+diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+index 36221b3..d9f20c4 100644
+--- a/arch/mips/cavium-octeon/setup.c
++++ b/arch/mips/cavium-octeon/setup.c
+@@ -20,6 +20,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/serial_core.h>
+ #include <linux/serial_8250.h>
++#include <linux/of_fdt.h>
++#include <linux/libfdt.h>
+ #ifdef CONFIG_BLK_DEV_INITRD
+ #include <linux/initrd.h>
+ #endif
+@@ -797,3 +799,46 @@ void prom_free_prom_memory(void)
+ 	}
+ #endif
+ }
++
++int octeon_prune_device_tree(void);
++
++extern const char __dtb_octeon_3xxx_begin;
++extern const char __dtb_octeon_3xxx_end;
++extern const char __dtb_octeon_68xx_begin;
++extern const char __dtb_octeon_68xx_end;
++void __init device_tree_init(void)
++{
++	int dt_size;
++	struct boot_param_header *fdt;
++	bool do_prune;
++
++	if (octeon_bootinfo->minor_version >= 3 && octeon_bootinfo->fdt_addr) {
++		fdt = phys_to_virt(octeon_bootinfo->fdt_addr);
++		if (fdt_check_header(fdt))
++			panic("Corrupt Device Tree passed to kernel.");
++		dt_size = be32_to_cpu(fdt->totalsize);
++		do_prune = false;
++	} else if (OCTEON_IS_MODEL(OCTEON_CN68XX)) {
++		fdt = (struct boot_param_header *)&__dtb_octeon_68xx_begin;
++		dt_size = &__dtb_octeon_68xx_end - &__dtb_octeon_68xx_begin;
++		do_prune = true;
++	} else {
++		fdt = (struct boot_param_header *)&__dtb_octeon_3xxx_begin;
++		dt_size = &__dtb_octeon_3xxx_end - &__dtb_octeon_3xxx_begin;
++		do_prune = true;
++	}
++
++	/* Copy the default tree from init memory. */
++	initial_boot_params = early_init_dt_alloc_memory_arch(dt_size, 8);
++	if (initial_boot_params == NULL)
++		panic("Could not allocate initial_boot_params\n");
++	memcpy(initial_boot_params, fdt, dt_size);
++
++	if (do_prune) {
++		octeon_prune_device_tree();
++		pr_info("Using internal Device Tree.\n");
++	} else {
++		pr_info("Using passed Device Tree.\n");
++	}
++	unflatten_device_tree();
++}
 -- 
 1.7.2.3
