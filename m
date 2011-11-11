@@ -1,43 +1,86 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mach-ux500: add devicetree compat nodes
-Date: Fri, 11 Nov 2011 18:00:10 +0100
-Message-ID: <CACRpkdb6n2mRWohGrv1d0VFLRsTMDPDzow7UY6jw=9rdt-ZkqA@mail.gmail.com>
-References: <1321023902-18870-1-git-send-email-niklas.hernaeus@linaro.org>
- <4EBD3C85.1010508@gmail.com>
- <CACRpkda-9OVP8E1qO3Nc5znw_v7cKFiv8T5HHwTCnY2C9Fg7iA@mail.gmail.com>
- <4EBD49A6.2020306@gmail.com>
- <CACRpkdZrWW2jUYC0P7yY322YMdn9+4_NaGPhKtpGwR+e=F6+0A@mail.gmail.com>
- <4EBD4F79.90302@gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: [PATCH 0/5] Versatile Express DT support, take 2
+Date: Fri, 11 Nov 2011 18:27:01 +0000
+Message-ID: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4EBD4F79.90302-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Nicolas.Pitre.nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant.Likely.grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 11, 2011 at 5:38 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> [Me]
->> In that case we should hold this patch off and only keep it for
->> internal testing until all necessary drivers are ready and patched
->> so we can replace all board files with a single DT-based one,
->> instead of this compromise solution.
->>
-> I would not hold off. You only need to have a minimal set that's enough
-> to boot.
+Hello again,
 
-In our case UART, I2C and MMC is necessary to boot, so then we
-anyway need to wait for these to be patched first. So we'd better hold
-it back for now I think.
+I've manage to clean up the VE DT patches.
 
-Linus Walleij
+Changes since RFC:
+
+* I think I did all the changes suggested by Rob (including
+  using "custom" clock lookups instead of auxdata - do
+  comment, please ;-)
+
+* Merged CA5s and CA9 code into one file.
+
+* Added documentation for the vexpress bindings.
+
+* Reorganized the tree so the "flat aliases search" patch
+  is not longer necessary.
+
+* Moved the alias node from motherboard's to tile's DTS,
+  as this is the place to decide about serial port ordering,
+  timers being used etc.
+
+* Got the SMSC working (my fault, obviously ;-)
+
+As usual - feedback more than welcome (my tests suggest
+that the "ATAG version" still works, so feel free to test
+at least that ;-)
+
+Cheers!
+
+Pawel
+
+
+
+Pawel Moll (5):
+  ARM: vexpress: Get rid of MMIO_P2V
+  ARM: vexpress: Remove platform SMP functions from ct_desc
+  ARM: vexpress: Add DT support in v2m
+  ARM: vexpress: Initial RS1 memory map support
+  ARM: vexpress: DT-based support for CoreTiles Express A5x2 and A9x4
+
+ Documentation/devicetree/bindings/arm/vexpress    |   92 ++++++++
+ arch/arm/boot/dts/vexpress-v2m-legacy.dtsi        |  190 ++++++++++++++++
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi           |  190 ++++++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca5s.dts           |  132 +++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts            |  146 ++++++++++++
+ arch/arm/include/asm/hardware/arm_timer.h         |    5 +
+ arch/arm/mach-vexpress/Kconfig                    |   28 +++
+ arch/arm/mach-vexpress/Makefile                   |    1 +
+ arch/arm/mach-vexpress/Makefile.boot              |    6 +-
+ arch/arm/mach-vexpress/core.h                     |   27 ++-
+ arch/arm/mach-vexpress/ct-ca9x4.c                 |   96 +++------
+ arch/arm/mach-vexpress/include/mach/ct-ca9x4.h    |   13 +-
+ arch/arm/mach-vexpress/include/mach/debug-macro.S |   37 +++-
+ arch/arm/mach-vexpress/include/mach/motherboard.h |   65 +++---
+ arch/arm/mach-vexpress/include/mach/uncompress.h  |   13 +-
+ arch/arm/mach-vexpress/platsmp.c                  |   11 +-
+ arch/arm/mach-vexpress/v2m.c                      |  250 +++++++++++++++++++--
+ arch/arm/mach-vexpress/v2p-ca5s_ca9.c             |  103 +++++++++
+ 18 files changed, 1263 insertions(+), 142 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/vexpress
+ create mode 100644 arch/arm/boot/dts/vexpress-v2m-legacy.dtsi
+ create mode 100644 arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+ create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+ create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca9.dts
+ create mode 100644 arch/arm/mach-vexpress/v2p-ca5s_ca9.c
