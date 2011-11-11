@@ -1,423 +1,177 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: [PATCH 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Fri, 11 Nov 2011 18:27:05 +0000
-Message-ID: <1321036026-23411-5-git-send-email-pawel.moll@arm.com>
-References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/8] MIPS: Octeon: Add irq_create_of_mapping() and GPIO
+ interrupts.
+Date: Fri, 11 Nov 2011 11:49:49 -0800
+Message-ID: <4EBD7C5D.7080606@gmail.com>
+References: <1320978124-13042-1-git-send-email-ddaney.cavm@gmail.com>
+ <1320978124-13042-4-git-send-email-ddaney.cavm@gmail.com>
+ <4EBD4868.7040809@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Cc: Pawel Moll <pawel.moll@arm.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4EBD4868.7040809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for RS1 memory map based Versatile Express
-motherboard. As the RAM location has changed, the ZRE values and
-PLAT_PHYS_OFFSET defaults are changed to the new address (all
-future tiles will use RS1 map) and enforces AUTO_ZRELADD and
-ARM_PATCH_PHYS_VIRT when legacy devices are being used.
+On 11/11/2011 08:08 AM, Rob Herring wrote:
+> On 11/10/2011 08:21 PM, ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: David Daney<david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>
+>> This is needed for Octeon to use the Device Tree.
+>>
+>> The GPIO interrupts are configured based on Device Tree properties
+>>
+>> Signed-off-by: David Daney<david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/mips/cavium-octeon/octeon-irq.c |  188 +++++++++++++++++++++++++++++++++-
+>>   1 files changed, 187 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
+>> index ffd4ae6..bb10546 100644
+>> --- a/arch/mips/cavium-octeon/octeon-irq.c
+>> +++ b/arch/mips/cavium-octeon/octeon-irq.c
+>> @@ -8,11 +8,14 @@
+>>
+>>   #include<linux/interrupt.h>
+>>   #include<linux/bitops.h>
+>> +#include<linux/module.h>
+>>   #include<linux/percpu.h>
+>> +#include<linux/of_irq.h>
+>>   #include<linux/irq.h>
+>>   #include<linux/smp.h>
+>>
+>>   #include<asm/octeon/octeon.h>
+>> +#include<asm/octeon/cvmx-gpio-defs.h>
+>>
+>>   static DEFINE_RAW_SPINLOCK(octeon_irq_ciu0_lock);
+>>   static DEFINE_RAW_SPINLOCK(octeon_irq_ciu1_lock);
+>> @@ -58,6 +61,95 @@ static void __init octeon_irq_set_ciu_mapping(int irq, int line, int bit,
+>>   	octeon_irq_ciu_to_irq[line][bit] = irq;
+>>   }
+>>
+>> +static unsigned int octeon_irq_gpio_mapping(struct device_node *controller,
+>> +					    const u32 *intspec,
+>> +					    unsigned int intsize)
+>> +{
+>> +	struct of_irq oirq;
+>> +	int i;
+>> +	unsigned int irq = 0;
+>> +	unsigned int type;
+>> +	unsigned int ciu = 0, bit = 0;
+>> +	unsigned int pin = be32_to_cpup(intspec);
+>> +	unsigned int trigger = be32_to_cpup(intspec + 1);
+>> +	bool set_edge_handler = false;
+>> +
+>> +	if (pin>= 16)
+>> +		goto err;
+>> +	i = of_irq_map_one(controller, 0,&oirq);
+>> +	if (i)
+>> +		goto err;
+>> +	if (oirq.size != 2)
+>> +		goto err_put;
+>> +
+>> +	ciu = oirq.specifier[0];
+>> +	bit = oirq.specifier[1] + pin;
+>> +
+>> +	if (ciu>= 8 || bit>= 64)
+>> +		goto err_put;
+>> +
+>> +	irq = octeon_irq_ciu_to_irq[ciu][bit];
+>> +	if (!irq)
+>> +		goto err_put;
+>> +
+>> +	switch (trigger&  0xf) {
+>> +	case 1:
+>> +		type = IRQ_TYPE_EDGE_RISING;
+>> +		set_edge_handler = true;
+>> +		break;
+>> +	case 2:
+>> +		type = IRQ_TYPE_EDGE_FALLING;
+>> +		set_edge_handler = true;
+>> +		break;
+>> +	case 4:
+>> +		type = IRQ_TYPE_LEVEL_HIGH;
+>> +		break;
+>> +	case 8:
+>> +		type = IRQ_TYPE_LEVEL_LOW;
+>> +		break;
+>> +	default:
+>> +		pr_err("Error: Invalid irq trigger specification: %x\n",
+>> +		       trigger);
+>> +		type = IRQ_TYPE_LEVEL_LOW;
+>> +		break;
+>> +	}
+>> +
+>> +	irq_set_irq_type(irq, type);
+>> +
+>> +	if (set_edge_handler)
+>> +		__irq_set_handler(irq, handle_edge_irq, 0, NULL);
+>> +
+>> +err_put:
+>> +	of_node_put(oirq.controller);
+>> +err:
+>> +	return irq;
+>> +}
+>> +
+>> +/*
+>> + * irq_create_of_mapping - Hook to resolve OF irq specifier into a Linux irq#
+>> + *
+>> + * Octeon irq maps are a pair of indexes.  The first selects either
+>> + * ciu0 or ciu1, the second is the bit within the ciu register.
+>> + */
+>> +unsigned int irq_create_of_mapping(struct device_node *controller,
+>> +				   const u32 *intspec, unsigned int intsize)
+>> +{
+>> +	unsigned int irq = 0;
+>> +	unsigned int ciu, bit;
+>> +
+>> +	if (of_device_is_compatible(controller, "cavium,octeon-3860-gpio"))
+>> +		return octeon_irq_gpio_mapping(controller, intspec, intsize);
+>> +
+>> +	ciu = be32_to_cpup(intspec);
+>> +	bit = be32_to_cpup(intspec + 1);
+>> +
+>> +	if (ciu<  8&&  bit<  64)
+>> +		irq = octeon_irq_ciu_to_irq[ciu][bit];
+>> +
+>> +	return irq;
+>> +}
+>> +EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+>
+> Have you looked at irq_domains (kernel/irq/irqdomain.c)? That is what
+> you should be using for your (gpio) interrupt controller and then use
+> the common irq_create_of_mapping.
+>
 
-Signed-off-by: Pawel Moll <pawel.moll@arm.com>
----
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi           |  190 +++++++++++++++++++++
- arch/arm/mach-vexpress/Kconfig                    |    9 +
- arch/arm/mach-vexpress/Makefile.boot              |    6 +-
- arch/arm/mach-vexpress/include/mach/debug-macro.S |   37 ++++-
- arch/arm/mach-vexpress/include/mach/uncompress.h  |   13 ++-
- arch/arm/mach-vexpress/v2m.c                      |   46 +++++
- 6 files changed, 293 insertions(+), 8 deletions(-)
- create mode 100644 arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+Unfortunatly, although a good idea, kernel/irq/irqdomain.c makes a bunch 
+of assumptions that don't hold for Octeon.  We may be able to improve it 
+so that it flexible enough to suit us.
 
-diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-new file mode 100644
-index 0000000..6f9a822
---- /dev/null
-+++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-@@ -0,0 +1,190 @@
-+/*
-+ * ARM Ltd. Versatile Express
-+ *
-+ * Motherboard Express uATX
-+ * V2M-P1
-+ *
-+ * HBI-0190D
-+ *
-+ * RS1 memory map (a.k.a. ARM Cortex-A Series memory map)
-+ *
-+ * WARNING! The hardware described in this file is independent from the
-+ * legacy variant (vexpress-v2m-legacy.dtsi), but there is a strong
-+ * correspondence between the two configurations.
-+ *
-+ * TAKE CARE WHEN MAINTAINING THIS FILE TO PROPAGATE ANY RELEVANT
-+ * CHANGES TO vexpress-v2m-legacy.dtsi!
-+ */
-+
-+/ {
-+	motherboard {
-+		compatible = "simple-bus";
-+		#address-cells = <2>; /* SMB chipselect number and offset */
-+		#size-cells = <1>;
-+		#interrupt-cells = <1>;
-+
-+		flash@0,00000000 {
-+			compatible = "arm,vexpress-flash", "cfi-flash";
-+			reg = <0 0x00000000 0x04000000>,
-+			      <4 0x00000000 0x04000000>;
-+			bank-width = <4>;
-+		};
-+
-+		psram@1,00000000 {
-+			compatible = "mtd-ram";
-+			reg = <1 0x00000000 0x02000000>;
-+			bank-width = <4>;
-+		};
-+
-+		ethernet@2,02000000 {
-+			compatible = "smsc,lan9118", "smsc,lan9115";
-+			reg = <2 0x02000000 0x10000>;
-+			interrupts = <15>;
-+			phy-mode = "mii";
-+			reg-io-width = <4>;
-+			smsc,irq-active-high;
-+			smsc,irq-push-pull;
-+		};
-+
-+		usb@2,03000000 {
-+			compatible = "nxp,usb-isp1761";
-+			reg = <2 0x03000000 0x20000>;
-+			interrupts = <16>;
-+			port1-otg;
-+		};
-+
-+		iofpga@3,00000000 {
-+			compatible = "arm,amba-bus", "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 3 0 0x200000>;
-+
-+			sysreg@010000 {
-+				compatible = "arm,vexpress-sysreg";
-+				reg = <0x010000 0x1000>;
-+			};
-+
-+			sysctl@020000 {
-+				compatible = "arm,sp810", "arm,primecell";
-+				reg = <0x020000 0x1000>;
-+			};
-+
-+			/* PCI-E I2C bus */
-+			mb_i2c_pcie: i2c@030000 {
-+				compatible = "arm,versatile-i2c";
-+				reg = <0x030000 0x1000>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				pcie-switch@60 {
-+					compatible = "idt,89hpes32h8";
-+					reg = <0x60>;
-+				};
-+			};
-+
-+			aaci@040000 {
-+				compatible = "arm,pl041", "arm,primecell";
-+				reg = <0x040000 0x1000>;
-+				interrupts = <11>;
-+			};
-+
-+			mmci@050000 {
-+				compatible = "arm,pl180", "arm,primecell";
-+				reg = <0x050000 0x1000>;
-+				interrupts = <9 10>;
-+			};
-+
-+			kmi@060000 {
-+				compatible = "arm,pl050", "arm,primecell";
-+				reg = <0x060000 0x1000>;
-+				interrupts = <12>;
-+			};
-+
-+			kmi@070000 {
-+				compatible = "arm,pl050", "arm,primecell";
-+				reg = <0x070000 0x1000>;
-+				interrupts = <13>;
-+			};
-+
-+			mb_serial0: uart@090000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x090000 0x1000>;
-+				interrupts = <5>;
-+			};
-+
-+			mb_serial1: uart@0a0000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x0a0000 0x1000>;
-+				interrupts = <6>;
-+			};
-+
-+			mb_serial2: uart@0b0000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x0b0000 0x1000>;
-+				interrupts = <7>;
-+			};
-+
-+			mb_serial3: uart@0c0000 {
-+				compatible = "arm,pl011", "arm,primecell";
-+				reg = <0x0c0000 0x1000>;
-+				interrupts = <8>;
-+			};
-+
-+			wdt@0f0000 {
-+				compatible = "arm,sp805", "arm,primecell";
-+				reg = <0x0f0000 0x1000>;
-+				interrupts = <0>;
-+			};
-+
-+			mb_timer01: timer@110000 {
-+				compatible = "arm,sp804", "arm,primecell";
-+				reg = <0x110000 0x1000>;
-+				interrupts = <2>;
-+			};
-+
-+			mb_timer23: timer@120000 {
-+				compatible = "arm,sp804", "arm,primecell";
-+				reg = <0x120000 0x1000>;
-+			};
-+
-+			/* DVI I2C bus */
-+			mb_i2c_dvi: i2c@160000 {
-+				compatible = "arm,versatile-i2c";
-+				reg = <0x160000 0x1000>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				dvi-transmitter@39 {
-+					compatible = "sil,sii9022-tpi", "sil,sii9022";
-+					reg = <0x39>;
-+				};
-+
-+				dvi-transmitter@60 {
-+					compatible = "sil,sii9022-cpi", "sil,sii9022";
-+					reg = <0x60>;
-+				};
-+			};
-+
-+			rtc@170000 {
-+				compatible = "arm,pl031", "arm,primecell";
-+				reg = <0x170000 0x1000>;
-+				interrupts = <4>;
-+			};
-+
-+			compact-flash@1a0000 {
-+				compatible = "ata-generic";
-+				reg = <0x1a0000 0x100
-+				       0x1a0100 0xf00>;
-+				reg-shift = <2>;
-+			};
-+
-+			clcd@1f0000 {
-+				compatible = "arm,pl111", "arm,primecell";
-+				reg = <0x1f0000 0x1000>;
-+				interrupts = <14>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfig
-index 4c11e90..d1b0f35 100644
---- a/arch/arm/mach-vexpress/Kconfig
-+++ b/arch/arm/mach-vexpress/Kconfig
-@@ -1,6 +1,14 @@
- menu "Versatile Express platform type"
- 	depends on ARCH_VEXPRESS
- 
-+config ARCH_VEXPRESS_LEGACY
-+	bool
-+	select AUTO_ZRELADDR
-+	select ARM_PATCH_PHYS_VIRT
-+
-+config ARCH_VEXPRESS_RS1
-+	bool
-+
- config ARCH_VEXPRESS_CA9X4
- 	bool "Versatile Express Cortex-A9x4 tile"
- 	select CPU_V7
-@@ -8,6 +16,7 @@ config ARCH_VEXPRESS_CA9X4
- 	select ARM_ERRATA_720789
- 	select ARM_ERRATA_751472
- 	select ARM_ERRATA_753970
-+	select ARCH_VEXPRESS_LEGACY
- 
- config ARCH_VEXPRESS_DT
- 	bool
-diff --git a/arch/arm/mach-vexpress/Makefile.boot b/arch/arm/mach-vexpress/Makefile.boot
-index 8630b3d..3278615 100644
---- a/arch/arm/mach-vexpress/Makefile.boot
-+++ b/arch/arm/mach-vexpress/Makefile.boot
-@@ -1,3 +1,3 @@
--   zreladdr-y	+= 0x60008000
--params_phys-y	:= 0x60000100
--initrd_phys-y	:= 0x60800000
-+   zreladdr-y	+= 0x80008000
-+params_phys-y	:= 0x80000100
-+initrd_phys-y	:= 0x80800000
-diff --git a/arch/arm/mach-vexpress/include/mach/debug-macro.S b/arch/arm/mach-vexpress/include/mach/debug-macro.S
-index fd9e6c7..adc94ce 100644
---- a/arch/arm/mach-vexpress/include/mach/debug-macro.S
-+++ b/arch/arm/mach-vexpress/include/mach/debug-macro.S
-@@ -10,12 +10,41 @@
-  * published by the Free Software Foundation.
-  */
- 
--#define DEBUG_LL_UART_OFFSET	0x00009000
-+#define VEXPRESS_PHYS_BASE_LEGACY	0x10000000
-+#define VEXPRESS_UART_OFFSET_LEGACY	0x00009000
-+
-+#define VEXPRESS_PHYS_BASE_RS1		0x1c000000
-+#define VEXPRESS_UART_OFFSET_RS1	0x00090000
-+
-+#define VEXPRESS_VIRT_BASE		0xf8000000
- 
- 		.macro	addruart,rp,rv,tmp
--		mov	\rp, #DEBUG_LL_UART_OFFSET
--		orr	\rv, \rp, #0xf8000000	@ virtual base
--		orr	\rp, \rp, #0x10000000	@ physical base
-+
-+		@ Check the MMU state
-+#if defined(CONFIG_MMU)
-+		mrc	p15, 0, \tmp, c1, c0	@ SCTRL
-+		tst	\tmp, #1		@ MMU enabled?
-+		moveq	\tmp, #VEXPRESS_PHYS_BASE_LEGACY
-+		movne	\tmp, #VEXPRESS_VIRT_BASE
-+#else
-+		mov	\tmp, #VEXPRESS_PHYS_BASE_LEGACY
-+#endif
-+
-+		@ PL011 present in "legacy place"?
-+		orr	\tmp, \tmp, #VEXPRESS_UART_OFFSET_LEGACY
-+		ldr	\tmp, [\tmp, #0xfe0]	@ PeriphID0
-+		teq	\tmp, #0x11		@ PL011
-+
-+		@ Legacy memory map
-+		moveq	\rp, #VEXPRESS_UART_OFFSET_LEGACY
-+		orreq	\rv, \rp, #VEXPRESS_VIRT_BASE
-+		orreq	\rp, \rp, #VEXPRESS_PHYS_BASE_LEGACY
-+
-+		@ RS1 memory map
-+		movne	\rp, #VEXPRESS_UART_OFFSET_RS1
-+		orrne	\rv, \rp, #VEXPRESS_VIRT_BASE
-+		orrne	\rp, \rp, #VEXPRESS_PHYS_BASE_RS1
-+
- 		.endm
- 
- #include <asm/hardware/debug-pl01x.S>
-diff --git a/arch/arm/mach-vexpress/include/mach/uncompress.h b/arch/arm/mach-vexpress/include/mach/uncompress.h
-index 7972c57..0ac6ba5 100644
---- a/arch/arm/mach-vexpress/include/mach/uncompress.h
-+++ b/arch/arm/mach-vexpress/include/mach/uncompress.h
-@@ -22,7 +22,18 @@
- #define AMBA_UART_CR(base)	(*(volatile unsigned char *)((base) + 0x30))
- #define AMBA_UART_FR(base)	(*(volatile unsigned char *)((base) + 0x18))
- 
--#define get_uart_base()	(0x10000000 + 0x00009000)
-+#define AMBA_PERIPH_ID0(base)	(*(volatile unsigned char *)((base) + 0xfe0))
-+
-+#define UART_BASE_LEGACY	0x10009000
-+#define UART_BASE_RS1		0x1c090000
-+
-+static unsigned long get_uart_base(void)
-+{
-+	if (AMBA_PERIPH_ID0(UART_BASE_LEGACY) == 0x11)
-+		return UART_BASE_LEGACY;
-+	else
-+		return UART_BASE_RS1;
-+}
- 
- /*
-  * This does not append a newline
-diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
-index 9ad772d..d96bde1 100644
---- a/arch/arm/mach-vexpress/v2m.c
-+++ b/arch/arm/mach-vexpress/v2m.c
-@@ -513,8 +513,21 @@ MACHINE_END
- 
- #if defined(CONFIG_ARCH_VEXPRESS_DT)
- 
-+static struct map_desc v2m_rs1_io_desc[] __initdata = {
-+	{
-+		.virtual	= V2M_PERIPH,
-+		.pfn		= __phys_to_pfn(0x1c000000),
-+		.length		= SZ_2M,
-+		.type		= MT_DEVICE,
-+	},
-+};
-+
- void __init v2m_dt_map_io(void)
- {
-+	if (of_flat_dt_is_compatible(of_get_flat_dt_root(),
-+			"arm,vexpress-legacy"))
-+		iotable_init(v2m_io_desc, ARRAY_SIZE(v2m_io_desc));
-+	else
- 		iotable_init(v2m_rs1_io_desc, ARRAY_SIZE(v2m_rs1_io_desc));
- }
- 
-@@ -560,6 +573,35 @@ static struct clk_lookup v2m_dt_lookups[] = {
- 		.dev_id		= "1001f000.clcd",
- 		.clk		= &osc1_clk,
- 	},
-+	/* RS1 memory map */
-+	{	/* PL180 MMCI */
-+		.dev_id		= "mb:mmci", /* 1c050000.mmci */
-+		.clk		= &osc2_clk,
-+	}, {	/* PL050 KMI0 */
-+		.dev_id		= "1c060000.kmi",
-+		.clk		= &osc2_clk,
-+	}, {	/* PL050 KMI1 */
-+		.dev_id		= "1c070000.kmi",
-+		.clk		= &osc2_clk,
-+	}, {	/* PL011 UART0 */
-+		.dev_id		= "1c090000.uart",
-+		.clk		= &osc2_clk,
-+	}, {	/* PL011 UART1 */
-+		.dev_id		= "1c0a0000.uart",
-+		.clk		= &osc2_clk,
-+	}, {	/* PL011 UART2 */
-+		.dev_id		= "1c0b0000.uart",
-+		.clk		= &osc2_clk,
-+	}, {	/* PL011 UART3 */
-+		.dev_id		= "1c0c0000.uart",
-+		.clk		= &osc2_clk,
-+	}, {	/* SP805 WDT */
-+		.dev_id		= "1c0f0000.wdt",
-+		.clk		= &v2m_ref_clk,
-+	}, {	/* PL111 CLCD */
-+		.dev_id		= "1c1f0000.clcd",
-+		.clk		= &osc1_clk,
-+	},
- };
- 
- void __init v2m_dt_init_early(void)
-@@ -601,6 +643,10 @@ static struct of_dev_auxdata v2m_dt_auxdata_lookup[] __initdata = {
- 	OF_DEV_AUXDATA("arm,vexpress-flash", V2M_NOR0, "physmap-flash",
- 			&v2m_flash_data),
- 	OF_DEV_AUXDATA("arm,primecell", V2M_MMCI, "mb:mmci", &v2m_mmci_data),
-+	/* RS1 memory map */
-+	OF_DEV_AUXDATA("arm,vexpress-flash", 0x08000000, "physmap-flash",
-+			&v2m_flash_data),
-+	OF_DEV_AUXDATA("arm,primecell", 0x1c050000, "mb:mmci", &v2m_mmci_data),
- 	{}
- };
- 
--- 
-1.6.3.3
+
+Here are the problems I see:
+
+1) It is assumed that there is some sort of linear correspondence 
+between 'hwirq' and 'irq', and that the range of valid values is contiguous.
+
+2) It is assumed that the concepts of nr_irq, irq_base and hwirq_base 
+have easy to determin values and you can do iteration over their ranges 
+by adding indexes to the bases.
+
+I think we can fix this by adding iteration helper functions to struct 
+irq_domain.  If these are present, we would just ignore the irq_base, 
+nr_irq and hwirq_base elements of the structure. 
+irq_domain_for_each_hwirq() and irq_domain_for_each_irq() would be 
+modified to use the iteration helper functions.
+
+David Daney
