@@ -1,16 +1,16 @@
-From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC 6/8] of: add clock providers
-Date: Fri, 11 Nov 2011 20:57:59 +0100
-Message-ID: <4EBD7E47.8010502@ti.com>
-References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
- <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
- <20111109091328.GY16886@pengutronix.de> <4EBA62AD.3000407@ti.com>
- <20111109114936.GL16886@pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/8] MIPS: Octeon: Add irq_create_of_mapping() and GPIO
+ interrupts.
+Date: Fri, 11 Nov 2011 14:41:11 -0600
+Message-ID: <4EBD8867.30205@gmail.com>
+References: <1320978124-13042-1-git-send-email-ddaney.cavm@gmail.com>
+ <1320978124-13042-4-git-send-email-ddaney.cavm@gmail.com>
+ <4EBD4868.7040809@gmail.com> <4EBD7C5D.7080606@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111109114936.GL16886-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <4EBD7C5D.7080606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,77 +20,181 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/9/2011 12:49 PM, Sascha Hauer wrote:
-> On Wed, Nov 09, 2011 at 12:23:25PM +0100, Cousson, Benoit wrote:
->> On 11/9/2011 10:13 AM, Sascha Hauer wrote:
->>> On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
->>
->> [...]
->>
->>>> +Sources of clock signal can be represented by any node in the device
->>>> +tree.  Those nodes are designated as clock providers.  Clock consumer
->>>> +nodes use a phandle and clock specifier pair to connect clock provider
->>>> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
->>>> +specifier is an array of one more more cells identifying the clock
->>>> +output on a device.  The length of a clock specifier is defined by the
->>>> +value of a #clock-cells property in the clock provider node.
->>>> +
->>>> +[1] http://patchwork.ozlabs.org/patch/31551/
->>>> +
->>>> +==Clock providers==
->>>> +
->>>> +Required properties:
->>>> +#clock-cells:	   Number of cells in a clock specifier; typically will be
->>>> +		   set to 1
->>>> +
->>>> +Optional properties:
->>>> +clock-output-name: Recommended to be a list of strings of clock output signal
->>>> +		   names indexed by the first cell in the clock specifier.
->>>> +		   However, the meaning of clock-output-names is domain
->>>> +		   specific to the clock provider, and is only provided to
->>>> +		   encourage using the same meaning for the majority of clock
->>>> +		   providers.  This format may not work for clock providers
->>>> +		   using a complex clock specifier format.  In those cases it
->>>> +		   is recommended to omit this property and create a binding
->>>> +		   specific names property.
+David,
+
+On 11/11/2011 01:49 PM, David Daney wrote:
+> On 11/11/2011 08:08 AM, Rob Herring wrote:
+>> On 11/10/2011 08:21 PM, ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>> From: David Daney<david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 >>>
->>> If the clock-output-name property is omitted, does this mean a clock
->>> provider only has a single output or does it mean that it's not known
->>> how many clock outputs a provider actually has?
+>>> This is needed for Octeon to use the Device Tree.
+>>>
+>>> The GPIO interrupts are configured based on Device Tree properties
+>>>
+>>> Signed-off-by: David Daney<david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>   arch/mips/cavium-octeon/octeon-irq.c |  188
+>>> +++++++++++++++++++++++++++++++++-
+>>>   1 files changed, 187 insertions(+), 1 deletions(-)
+>>>
+>>> diff --git a/arch/mips/cavium-octeon/octeon-irq.c
+>>> b/arch/mips/cavium-octeon/octeon-irq.c
+>>> index ffd4ae6..bb10546 100644
+>>> --- a/arch/mips/cavium-octeon/octeon-irq.c
+>>> +++ b/arch/mips/cavium-octeon/octeon-irq.c
+>>> @@ -8,11 +8,14 @@
+>>>
+>>>   #include<linux/interrupt.h>
+>>>   #include<linux/bitops.h>
+>>> +#include<linux/module.h>
+>>>   #include<linux/percpu.h>
+>>> +#include<linux/of_irq.h>
+>>>   #include<linux/irq.h>
+>>>   #include<linux/smp.h>
+>>>
+>>>   #include<asm/octeon/octeon.h>
+>>> +#include<asm/octeon/cvmx-gpio-defs.h>
+>>>
+>>>   static DEFINE_RAW_SPINLOCK(octeon_irq_ciu0_lock);
+>>>   static DEFINE_RAW_SPINLOCK(octeon_irq_ciu1_lock);
+>>> @@ -58,6 +61,95 @@ static void __init octeon_irq_set_ciu_mapping(int
+>>> irq, int line, int bit,
+>>>       octeon_irq_ciu_to_irq[line][bit] = irq;
+>>>   }
+>>>
+>>> +static unsigned int octeon_irq_gpio_mapping(struct device_node
+>>> *controller,
+>>> +                        const u32 *intspec,
+>>> +                        unsigned int intsize)
+>>> +{
+>>> +    struct of_irq oirq;
+>>> +    int i;
+>>> +    unsigned int irq = 0;
+>>> +    unsigned int type;
+>>> +    unsigned int ciu = 0, bit = 0;
+>>> +    unsigned int pin = be32_to_cpup(intspec);
+>>> +    unsigned int trigger = be32_to_cpup(intspec + 1);
+>>> +    bool set_edge_handler = false;
+>>> +
+>>> +    if (pin>= 16)
+>>> +        goto err;
+>>> +    i = of_irq_map_one(controller, 0,&oirq);
+>>> +    if (i)
+>>> +        goto err;
+>>> +    if (oirq.size != 2)
+>>> +        goto err_put;
+>>> +
+>>> +    ciu = oirq.specifier[0];
+>>> +    bit = oirq.specifier[1] + pin;
+>>> +
+>>> +    if (ciu>= 8 || bit>= 64)
+>>> +        goto err_put;
+>>> +
+>>> +    irq = octeon_irq_ciu_to_irq[ciu][bit];
+>>> +    if (!irq)
+>>> +        goto err_put;
+>>> +
+>>> +    switch (trigger&  0xf) {
+>>> +    case 1:
+>>> +        type = IRQ_TYPE_EDGE_RISING;
+>>> +        set_edge_handler = true;
+>>> +        break;
+>>> +    case 2:
+>>> +        type = IRQ_TYPE_EDGE_FALLING;
+>>> +        set_edge_handler = true;
+>>> +        break;
+>>> +    case 4:
+>>> +        type = IRQ_TYPE_LEVEL_HIGH;
+>>> +        break;
+>>> +    case 8:
+>>> +        type = IRQ_TYPE_LEVEL_LOW;
+>>> +        break;
+>>> +    default:
+>>> +        pr_err("Error: Invalid irq trigger specification: %x\n",
+>>> +               trigger);
+>>> +        type = IRQ_TYPE_LEVEL_LOW;
+>>> +        break;
+>>> +    }
+>>> +
+>>> +    irq_set_irq_type(irq, type);
+>>> +
+>>> +    if (set_edge_handler)
+>>> +        __irq_set_handler(irq, handle_edge_irq, 0, NULL);
+>>> +
+>>> +err_put:
+>>> +    of_node_put(oirq.controller);
+>>> +err:
+>>> +    return irq;
+>>> +}
+>>> +
+>>> +/*
+>>> + * irq_create_of_mapping - Hook to resolve OF irq specifier into a
+>>> Linux irq#
+>>> + *
+>>> + * Octeon irq maps are a pair of indexes.  The first selects either
+>>> + * ciu0 or ciu1, the second is the bit within the ciu register.
+>>> + */
+>>> +unsigned int irq_create_of_mapping(struct device_node *controller,
+>>> +                   const u32 *intspec, unsigned int intsize)
+>>> +{
+>>> +    unsigned int irq = 0;
+>>> +    unsigned int ciu, bit;
+>>> +
+>>> +    if (of_device_is_compatible(controller, "cavium,octeon-3860-gpio"))
+>>> +        return octeon_irq_gpio_mapping(controller, intspec, intsize);
+>>> +
+>>> +    ciu = be32_to_cpup(intspec);
+>>> +    bit = be32_to_cpup(intspec + 1);
+>>> +
+>>> +    if (ciu<  8&&  bit<  64)
+>>> +        irq = octeon_irq_ciu_to_irq[ciu][bit];
+>>> +
+>>> +    return irq;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(irq_create_of_mapping);
 >>
->> Allowing several outputs for a single clock node might lead to a lot
->> of confusion. What will be the meaning of a clock rate if you have
->> several outputs at different frequency?
->> I think it will be better to define a clock node as a single source
->> of clock. If several outputs are needed, then we should define
->> several clock nodes.
->> If we let a clock node be any kind of big clock blob, we will never
->> be able to define some generic reusable clock node API. Everybody
->> will define its own custom clock blobs.
->
-> Generally +1. I asked myself the same question whether it's a good thing
-> to allow a node to have multiple clocks. For i.MX I can say that I don't
-> need this and that I do not intend to use this feature. Grants concerns
-> about this are that the clock part of the device tree might explode when
-> we put each and every clock into the devicetree, so he wants to allow
-> bigger blobs of multiple clocks.
+>> Have you looked at irq_domains (kernel/irq/irqdomain.c)? That is what
+>> you should be using for your (gpio) interrupt controller and then use
+>> the common irq_create_of_mapping.
+>>
+> 
+> Unfortunatly, although a good idea, kernel/irq/irqdomain.c makes a bunch
+> of assumptions that don't hold for Octeon.  We may be able to improve it
+> so that it flexible enough to suit us.
+> 
+> 
+> Here are the problems I see:
+> 
+> 1) It is assumed that there is some sort of linear correspondence
+> between 'hwirq' and 'irq', and that the range of valid values is
+> contiguous.
 
-I can clearly understand this concern, because in the case of OMAP4, we 
-will have to add ~250 nodes if we want to define the current clock tree.
+That's not true if you implement .to_irq for your domain.
 
-> My impression gets more and more that we either put the clock tree in the
-> devicetree or we do not do it, but there's not much room in between.
+> 2) It is assumed that the concepts of nr_irq, irq_base and hwirq_base
+> have easy to determin values and you can do iteration over their ranges
+> by adding indexes to the bases.
 
-If we are not ready to accept 4k lines of clock data inside the 
-devicetree, which is indeed huge and mostly useless, then I think we 
-should just expose the leaf clocks. But then they will depend on parent 
-that will not be in DT but in static files, which might be weird.
+That's true for hwirq numbering, but not for Linux irq numbering.
+irq_base is only used if you don't provide .to_irq. hwirq_base is just
+to allow a linear range that doesn't start with 0.
 
-I'm not sure what the right answer is :-(
+> I think we can fix this by adding iteration helper functions to struct
+> irq_domain.  If these are present, we would just ignore the irq_base,
+> nr_irq and hwirq_base elements of the structure.
+> irq_domain_for_each_hwirq() and irq_domain_for_each_irq() would be
+> modified to use the iteration helper functions.
 
-Regards,
-Benoit
+Expanding irqdomain is certainly the intention and right direction.
+
+It seems to me you just need something different than an irq. controller
+with a linear range of irq lines. Perhaps sparsely allocated hwirq's?
+Can you describe the h/w?
+
+Also, you could have a different domain per irqdesc if you really needed to.
+
+Rob
