@@ -1,82 +1,47 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 2/4] mmc: omap: adapt the hsmmc driver to device tree
-Date: Tue, 15 Nov 2011 09:45:19 +0530
-Message-ID: <4EC1E757.2000308@ti.com>
-References: <1320407441-29697-1-git-send-email-rnayak@ti.com> <1320407441-29697-3-git-send-email-rnayak@ti.com> <20111114213026.GP31337@atomide.com>
+From: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v1] dts: tegra-ventana: use proper root instead of /dev/ram
+Date: Tue, 15 Nov 2011 11:51:27 +0530
+Message-ID: <1321338087-3662-1-git-send-email-vwadekar@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20111114213026.GP31337@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: cjb@laptop.org, balajitk@ti.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, thomas.abraham@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 15 November 2011 03:00 AM, Tony Lindgren wrote:
-> * Rajendra Nayak<rnayak@ti.com>  [111104 04:16]:
->> @@ -1869,6 +1957,14 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
->>   	struct omap_hsmmc_host *host = NULL;
->>   	struct resource *res;
->>   	int ret, irq;
->> +	const struct of_device_id *match;
->> +
->> +	match = of_match_device(omap_mmc_of_match,&pdev->dev);
->> +	if (match) {
->> +		pdata = of_get_hsmmc_pdata(&pdev->dev);
->> +		if (match->data)
->> +			pdata->reg_offset = *(u16 *)match->data;
->> +	}
->
-> So this is now using both DT and pdata?
->
-> We want to use DT only, and get rid of pdata. Other than the
-> deferred probe, is there some other dependency remaining to
-> having to use the pdata also?
+From: Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-We are using pdata today mainly for the platform function pointers
-that get passed for MMC, which can never be passed from DT.
+The root file system on ventana resides on /dev/mmcblk0p1.
+Update the dts file to use the proper root instead of /dev/ram.
 
-The  omap_mmc_platform_data structure today has '17' function pointers.
-Most might be sparingly used, nevertheless, its an awfully large number.
+Signed-off-by: Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra-ventana.dts |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Here's the list...
----------
-int (*switch_slot)(struct device *dev, int slot);
-int (*init)(struct device *dev);
-void (*cleanup)(struct device *dev);
-void (*shutdown)(struct device *dev);
-int (*suspend)(struct device *dev, int slot);
-int (*resume)(struct device *dev, int slot);
-int (*get_context_loss_count)(struct device *dev);
-
-per-slot functions
-
-int (*set_bus_mode)(struct device *dev, int slot, int bus_mode);
-int (*set_power)(struct device *dev, int slot,
-                                  int power_on, int vdd);
-int (*get_ro)(struct device *dev, int slot);
-int (*set_sleep)(struct device *dev, int slot, int sleep,
-                                  int vdd, int cardsleep);
-void (*remux)(struct device *dev, int slot, int power_on);
-void (*before_set_reg)(struct device *dev, int slot,
-                                        int power_on, int vdd);
-void (*after_set_reg)(struct device *dev, int slot,
-                                       int power_on, int vdd);
-void (*init_card)(struct mmc_card *card);
-int (*get_cover_state)(struct device *dev, int slot);
-int (*card_detect)(struct device *dev, int slot);
----------
-
-regards,
-Rajendra
-
-> Regards,
->
-> Tony
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+diff --git a/arch/arm/boot/dts/tegra-ventana.dts b/arch/arm/boot/dts/tegra-ventana.dts
+index 9b29a62..5f7fe74 100644
+--- a/arch/arm/boot/dts/tegra-ventana.dts
++++ b/arch/arm/boot/dts/tegra-ventana.dts
+@@ -8,7 +8,7 @@
+ 	compatible = "nvidia,ventana", "nvidia,tegra20";
+ 
+ 	chosen {
+-		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/ram rdinit=/sbin/init";
++		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk0p1 rw rootwait";
+ 	};
+ 
+ 	memory {
+-- 
+1.7.1
