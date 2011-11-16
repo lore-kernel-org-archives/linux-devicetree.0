@@ -1,87 +1,120 @@
-From: Pawel Moll <pawel.moll@arm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Wed, 16 Nov 2011 16:37:38 +0000
-Message-ID: <1321461458.3137.374.camel@hornet.cambridge.arm.com>
+Date: Wed, 16 Nov 2011 10:59:24 -0600
+Message-ID: <4EC3EBEC.3020601@gmail.com>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
  <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
- <20111116154402.GE2073@localhost.localdomain>  <4EC3E446.4030608@gmail.com>
+ <20111116154402.GE2073@localhost.localdomain> <4EC3E446.4030608@gmail.com>
+ <1321461458.3137.374.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4EC3E446.4030608@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Dave Martin <dave.martin@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1321461458.3137.374.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDExLTExLTE2IGF0IDE2OjI2ICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBP
-biAxMS8xNi8yMDExIDA5OjQ0IEFNLCBEYXZlIE1hcnRpbiB3cm90ZToKPiA+IE9uIEZyaSwgTm92
-IDExLCAyMDExIGF0IDA2OjI3OjA0UE0gKzAwMDAsIFBhd2VsIE1vbGwgd3JvdGU6Cj4gPj4gVGhp
-cyBwYXRjaCBwcm92aWRlcyBob29rcyBmb3IgRFQtYmFzZWQgdGlsZSBtYWNoaW5lIGltcGxlbWVu
-dGF0aW9ucwo+ID4+IGFuZCBhZGRzIERldmljZSBUcmVlIGRlc2NyaXB0aW9uIGZvciB0aGUgbW90
-aGVyYm9hcmQuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBQYXdlbCBNb2xsIDxwYXdlbC5tb2xs
-QGFybS5jb20+Cj4gPj4gLS0tCj4gPj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9hcm0vdmV4cHJlc3MgICAgfCAgIDkyICsrKysrKysrKysKPiA+PiAgYXJjaC9hcm0vYm9vdC9k
-dHMvdmV4cHJlc3MtdjJtLWxlZ2FjeS5kdHNpICAgICAgICB8ICAxOTAgKysrKysrKysrKysrKysr
-KysrKysrCj4gPj4gIGFyY2gvYXJtL21hY2gtdmV4cHJlc3MvS2NvbmZpZyAgICAgICAgICAgICAg
-ICAgICAgfCAgICA0ICsKPiA+PiAgYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9jb3JlLmggICAgICAg
-ICAgICAgICAgICAgICB8ICAgIDkgKwo+ID4+ICBhcmNoL2FybS9tYWNoLXZleHByZXNzL2luY2x1
-ZGUvbWFjaC9tb3RoZXJib2FyZC5oIHwgICAgOCArCj4gPj4gIGFyY2gvYXJtL21hY2gtdmV4cHJl
-c3MvdjJtLmMgICAgICAgICAgICAgICAgICAgICAgfCAgMTQwICsrKysrKysrKysrKysrKy0KPiA+
-PiAgNiBmaWxlcyBjaGFuZ2VkLCA0NDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMoLSkKPiA+
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
-cm0vdmV4cHJlc3MKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3Zl
-eHByZXNzLXYybS1sZWdhY3kuZHRzaQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vdmV4cHJlc3MgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvYXJtL3ZleHByZXNzCj4gPiAKPiA+IFsuLi5dCj4gPiAKPiA+PiArUmVx
-dWlyZWQgcHJvcGVydGllcyBpbiB0aGUgcm9vdCBub2RlOgo+ID4+ICstIGNvbXBhdGlibGUgdmFs
-dWU6Cj4gPj4gKyAgLSBmb3IgbW90aGVyYm9hcmQgaW4gImxlZ2FjeSIgbW9kZToKPiA+PiArCWNv
-bXBhdGlibGUgPSAiYXJtLHZleHByZXNzLTxtb2RlbD4iLCAiYXJtLHZleHByZXNzLWxlZ2FjeSIs
-ICJhcm0tdmV4cHJlc3MiOwo+ID4+ICsgIC0gZm9yIG1vdGhlcmJvYXJkIGluICJSUzEiIG1vZGU6
-Cj4gPj4gKwljb21wYXRpYmxlID0gImFybSx2ZXhwcmVzcy08bW9kZWw+IiwgImFybS12ZXhwcmVz
-cyI7Cj4gPiAKPiA+IFNvLCB3ZSBoYXZlOgo+ID4gCj4gPiBhcm0sdmV4cHJlc3MtKiBpbXBsaWVz
-IGFybSx2ZXhwcmVzcwo+ID4gYXJtLHZleHByZXNzLSogbWF5IGltcGx5IGFybSx2ZXhwcmVzcy1s
-ZWdhY3kKPiA+IGFybSx2ZXhwcmVzcy1sZWdhY3kgaW1wbGllcyBhcm0sdmV4cHJlc3MKPiA+IAo+
-ID4gVGhpcyBtZWFucyB3ZSBoYXZlIG5vIGJvdW5kZWQgdGVzdCBmb3IgUlMxLW9ubHkgZmVhdHVy
-ZXM6Cj4gPiB0aGUgbmVlZGVkIHRlc3QgaXMKPiA+ICJjb21wYXRpYmxlKG5vZGUsICJhcm0sdmV4
-cHJlc3MiKSAmJiAhY29tcGF0aWJsZShub2RlLCAiYXJtLHZleHByZXNzLWxlZ2FjeSIpCj4gPiAK
-PiA+IFVuZm9ydHVuYXRlbHksIGlmIHRoZXJlIGlzIHNvbWVkYXkgYW4gInJzMiIgbWVtb3J5IG1h
-cCwgdGhhdCB3aWxsIGFsc28gbWF0Y2gKPiA+IHRoZSBhYm92ZS4gIFVzaW5nICJpbnZlcnNlIGNv
-bXBhdGliaWxpdHkiIGluIHRoaXMgd2F5IGZlZWxzIGRhbmdlcm91cywKPiA+IGJlY2F1c2UgdGhl
-IGNvbmRpdGlvbiB3aWxsIHBhc3MgZm9yIGFuIGFyYml0cmFyeSBzZXQgb2YgZnV0dXJlIGNvbmRp
-dGlvbnMKPiA+IHRoYXQgd2UgaGF2ZW4ndCBpbWFnaW5lZCB5ZXQuCj4gPiAKPiA+IFRoaXMgbWVh
-bnMgaXQncywgaW1wb3NzaWJsZSBldmVuIGluIHByaW5jaXBsZSB0byBwYW5pYyB0aGUga2VybmVs
-IGNsZWFubHkgaWYKPiA+IHByZXNlbnRlZCB3aXRoIGEgZGV2aWNlIHRyZWUgZm9yIGEgcGxhdGZv
-cm0gdmFyaWFudCB3aGljaCBpcyB0b28gbmV3IGZvciB0aGUKPiA+IGtlcm5lbCB0byBzdXBwb3J0
-Lgo+ID4gCj4gPiAKPiA+IENhbiB3ZSBpbnN0ZWFkIGhhdmUgYSBzcGVjaWZpYyAiYXJtLHZleHBy
-ZXNzLXJzMSI/Cj4gPiAKPiA+IAljb21wYXRpYmxlID0gImFybSx2ZXhwcmVzcy08bW9kZWw+Iiwg
-ImFybS12ZXhwcmVzcy1yczEiLCAiYXJtLXZleHByZXNzIjsKPiA+IAo+ID4gVGhlbiwgd2UgY2Fu
-IGJlIGV4YWN0IGFib3V0IGNvbXBhdGliaWxpdHk6IHVuaXZlcnNhbCBmZWF0dXJlcyBhcmUgY29t
-cGF0aWJsZQo+ID4gd2l0aCAiYXJtLHZleHByZXNzIjsgbWVtb3J5LW1hcC1zcGVjaWZpYyBmZWF0
-dXJlcyBhcmUgY29tcGF0aWJsZSB3aXRoIGVpdGhlcgo+ID4gImFybSx2ZXhwcmVzcy1sZWdhY3ki
-IG9yICJhcm0sdmV4cHJlc3MtcnMxIi4KPgo+IFJlYWxseSwgbGVnYWN5IGlzIGEgYmFkIG5hbWUu
-IAoKaHR0cDovL2VuLndpa2lwZWRpYS5vcmcvd2lraS9EZV9ndXN0aWJ1c19ub25fZXN0X2Rpc3B1
-dGFuZHVtIDstKQoKVGhpcyBpcyBkZS1mYWN0byBuYW1lIHdlIHVzZSBpbiBBUk0uIFNlZToKaHR0
-cDovL2luZm9jZW50ZXIuYXJtLmNvbS9oZWxwL3RvcGljL2NvbS5hcm0uZG9jLmR1aTA0NDdlL2No
-MDRzMDJzMDEuaHRtbAoKPiBJZiB5b3UgZGVmaW5lZCB0aGUgcHJvcGVydHkgd2hlbiB0aGUKPiBv
-cmlnaW5hbCB2ZXhwcmVzcyB3YXMgZGVzaWduZWQsIGl0IG5ldmVyIHdvdWxkIGhhdmUgaGFkIGxl
-Z2FjeSBpbiB0aGUKPiBuYW1lLiBHZW5lcmFsbHkgc3BlYWtpbmcgeW91IG5ldmVyIGNoYW5nZSBi
-aW5kaW5ncyBvbiBvbGQgcGxhdGZvcm1zLgo+IAo+IFNvIEkgd291bGQgaGF2ZSAiYXJtLHZleHBy
-ZXNzIiBtZWFuIGxlZ2FjeSBhbmQgImFybSx2ZXhwcmVzcy1yczEiIGJlIHRoZQo+IG5ldyBtZW1v
-cnkgbWFwLgoKSSdkIHJhdGhlciBzZWNvbmQgRGF2ZSdzIGlkZWEgb2YgaGF2aW5nCgo+ID4gCWNv
-bXBhdGlibGUgPSAiYXJtLHZleHByZXNzLTxtb2RlbD4iLCAiYXJtLXZleHByZXNzLXJzMSIsICJh
-cm0tdmV4cHJlc3MiOwoKYW5kCgo+PiArCWNvbXBhdGlibGUgPSAiYXJtLHZleHByZXNzLTxtb2Rl
-bD4iLCAiYXJtLHZleHByZXNzLWxlZ2FjeSIsICJhcm0tdmV4cHJlc3MiOwoKQ2hlZXJzIQoKUGF3
-ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On 11/16/2011 10:37 AM, Pawel Moll wrote:
+> On Wed, 2011-11-16 at 16:26 +0000, Rob Herring wrote:
+>> On 11/16/2011 09:44 AM, Dave Martin wrote:
+>>> On Fri, Nov 11, 2011 at 06:27:04PM +0000, Pawel Moll wrote:
+>>>> This patch provides hooks for DT-based tile machine implementations
+>>>> and adds Device Tree description for the motherboard.
+>>>>
+>>>> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/arm/vexpress    |   92 ++++++++++
+>>>>  arch/arm/boot/dts/vexpress-v2m-legacy.dtsi        |  190 +++++++++++++++++++++
+>>>>  arch/arm/mach-vexpress/Kconfig                    |    4 +
+>>>>  arch/arm/mach-vexpress/core.h                     |    9 +
+>>>>  arch/arm/mach-vexpress/include/mach/motherboard.h |    8 +
+>>>>  arch/arm/mach-vexpress/v2m.c                      |  140 +++++++++++++++-
+>>>>  6 files changed, 442 insertions(+), 1 deletions(-)
+>>>>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress
+>>>>  create mode 100644 arch/arm/boot/dts/vexpress-v2m-legacy.dtsi
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/vexpress b/Documentation/devicetree/bindings/arm/vexpress
+>>>
+>>> [...]
+>>>
+>>>> +Required properties in the root node:
+>>>> +- compatible value:
+>>>> +  - for motherboard in "legacy" mode:
+>>>> +	compatible = "arm,vexpress-<model>", "arm,vexpress-legacy", "arm-vexpress";
+>>>> +  - for motherboard in "RS1" mode:
+>>>> +	compatible = "arm,vexpress-<model>", "arm-vexpress";
+>>>
+>>> So, we have:
+>>>
+>>> arm,vexpress-* implies arm,vexpress
+>>> arm,vexpress-* may imply arm,vexpress-legacy
+>>> arm,vexpress-legacy implies arm,vexpress
+>>>
+>>> This means we have no bounded test for RS1-only features:
+>>> the needed test is
+>>> "compatible(node, "arm,vexpress") && !compatible(node, "arm,vexpress-legacy")
+>>>
+>>> Unfortunately, if there is someday an "rs2" memory map, that will also match
+>>> the above.  Using "inverse compatibility" in this way feels dangerous,
+>>> because the condition will pass for an arbitrary set of future conditions
+>>> that we haven't imagined yet.
+>>>
+>>> This means it's, impossible even in principle to panic the kernel cleanly if
+>>> presented with a device tree for a platform variant which is too new for the
+>>> kernel to support.
+>>>
+>>>
+>>> Can we instead have a specific "arm,vexpress-rs1"?
+>>>
+>>> 	compatible = "arm,vexpress-<model>", "arm-vexpress-rs1", "arm-vexpress";
+>>>
+>>> Then, we can be exact about compatibility: universal features are compatible
+>>> with "arm,vexpress"; memory-map-specific features are compatible with either
+>>> "arm,vexpress-legacy" or "arm,vexpress-rs1".
+>>
+>> Really, legacy is a bad name. 
+> 
+> http://en.wikipedia.org/wiki/De_gustibus_non_est_disputandum ;-)
+> 
+> This is de-facto name we use in ARM. See:
+> http://infocenter.arm.com/help/topic/com.arm.doc.dui0447e/ch04s02s01.html
+> 
+
+It has nothing to do with taste and obviously documentation changes over
+time. I'm going to start naming everything with legacy because someday
+it all will be...
+
+It's about how you create compatible strings. They should not be
+generic, but specific to particular hardware version. If you happen to
+be compatible with older h/w then you can claim compatibility with that
+older h/w.
+
+>> If you defined the property when the
+>> original vexpress was designed, it never would have had legacy in the
+>> name. Generally speaking you never change bindings on old platforms.
+>>
+>> So I would have "arm,vexpress" mean legacy and "arm,vexpress-rs1" be the
+>> new memory map.
+> 
+> I'd rather second Dave's idea of having
+> 
+>>> 	compatible = "arm,vexpress-<model>", "arm-vexpress-rs1", "arm-vexpress";
+> 
+> and
+> 
+>>> +	compatible = "arm,vexpress-<model>", "arm,vexpress-legacy", "arm-vexpress";
+
+If arm,vexpress-ca9 is the only legacy platform, then just drop
+arm,vexpress-legacy altogether.
+
+Rob
