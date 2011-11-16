@@ -1,21 +1,14 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Wed, 16 Nov 2011 19:14:35 +0000
-Message-ID: <20111116191435.GL2073@localhost.localdomain>
-References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
- <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
- <20111116154402.GE2073@localhost.localdomain>
- <4EC3E446.4030608@gmail.com>
- <1321461458.3137.374.camel@hornet.cambridge.arm.com>
- <4EC3EBEC.3020601@gmail.com>
- <1321463271.3137.380.camel@hornet.cambridge.arm.com>
- <1321465054.3137.386.camel@hornet.cambridge.arm.com>
+From: "Robert Sciuk" <robert.sciuk-AJFDzwRlY/g@public.gmane.org>
+Subject: P4080: attempting to use the uio_pdrv to attach FPGA on localbus ...
+Date: Wed, 16 Nov 2011 16:19:51 -0500
+Message-ID: <2DD52030B5146141BEB762A11AE97C4C010A0519@SPQCEXC05.exfo.com>
+References: <mailman.2323.1320874671.15294.devicetree-discuss@lists.ozlabs.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1321465054.3137.386.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+Content-class: urn:content-classes:message
+In-reply-to: <mailman.2323.1320874671.15294.devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,84 +18,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 16, 2011 at 05:37:34PM +0000, Pawel Moll wrote:
-> On Wed, 2011-11-16 at 17:07 +0000, Pawel Moll wrote:
-> > > > I'd rather second Dave's idea of having
-> > > > 
-> > > >>> 	compatible = "arm,vexpress-<model>", "arm-vexpress-rs1", "arm-vexpress";
-> > > > 
-> > > > and
-> > > > 
-> > > >>> +	compatible = "arm,vexpress-<model>", "arm,vexpress-legacy", "arm-vexpress";
-> > > 
-> > > If arm,vexpress-ca9 is the only legacy platform, then just drop
-> > > arm,vexpress-legacy altogether.
-> > 
-> > It's not. There is additional one, which is not publicly available, but
-> > is using the motherboard in legacy mode.
-> 
-> Alternatively, I could add motherboard node property, something like:
-> 
-> / {
->         motherboard {
-> 		arm,v2m-memory-map = "legacy";
-> 
-> and
-> 
-> / {
->         motherboard {
-> 		arm,v2m-memory-map = "rs1";
-> 
-> That way the "legacies" and "rses" will disappear from the main
-> compatible value:
-> 
-> 	compatible = "arm,vexpress-<model>", "arm-vexpress";
-> 
-> and everyone will be happy :-) There will be a bit more hassle with
-> getting this property in v2m.c, but not too much. Does it make any
-> sense?
+I have succeeded in using the i2c bus with GPIO expander to access the programming pins of my FPGA devices, but the data port uses the localbus.  I had initially thought that the uio platform driver would be the ideal approach to creating a device which would allow configuration from userland via the /dev/uio[0|1] device interface, but apparently the device binding is not being accomplished as expected.  
 
-Yes, I think this will work.
+	localbus@ffe124000 {
+		compatible = "fsl,p4080-elbc", "fsl,elbc", "simple-bus";
+		reg = <0xf 0xfe124000 0 0x1000>;
+		interrupts = <25 2 0 0>;
+		interrupt-parent = <&mpic>;
+		#address-cells = <2>;
+		#size-cells = <1>;
 
-Because this value is not used for driver binding etc., there's no need
-for it to be a compatible string: a property is just fine.  So, actually
-it may be better.
+                /* Local bus region mappings */
+                ranges = <0 0 0xf 0xe8000000 0x08000000 	/* CS0: Boot flash */
+                          1 0 0xf 0xd0000000 0x8000 		/* CS1: FPGA0 */
+                          2 0 0xf 0xd1000000 0x8000 >; 	/* CS2: FPGA1 */
 
+		flash@0,0 {
+		  ........
+            }; 
 
-Because this is a new binding, we can also describe _exactly_ the meaning
-of this property being absent.  In other words, we can say that if the
-am,v2m-memory-map property is absent, the memory map is the legacy
-memory map.  If the property is present with value "rs1", we have the
-rs1 memory map.  We can easily add extra values in the future as needed,
-without any risk of incompatibility with the legacy case.
+		lim: fpga@1,0 {
+			compatible = "uio_pdrv";
+			pin-handle=<&lim_ctrl>;
+		}; 
 
-So how about:
+		nitro: fpga@2,0 {
+			compatible = "uio_pdrv";
+			pin-handle=<&fpe0_ctrl &fpe1_ctrl>;
+		}; 
+	};
 
-// Legacy case
-/ {
-	motherboard {
-		// arm,v2m-memory-map absent
+I have aliases pointing to the localbus nodes lim and nitro, but it appears that the uio_pdrv driver does not bind to the device based upon the compatible property of the tree.  I'm hoping to be able to mmap the localbus port memory (0xf_d000_0000 and 0xf_d100_0000) respectively when I open /dev/uio[0|1].  Is there additional driver registration needed in order to use the uio_pdrv driver?  What am I missing??
 
+Any pointers would be appreciated.
 
-// RS1 case
-/ {
-	motherboard {
-		arm,v2m-memory-map = "rs1";
-
-If you prefer an explicit = "legacy" for the legacy case though,
-I'm fine with that too.
-
-
-When we remove compatible strings from the compatible set on the other
-hand, the device described by the node just becomes more and more
-general which isn't what we want: legacy is not a generalisation of rs1,
-nor vice versa; they are just plain different.  Because properties
-don't have these implies generalisation/specialisation semantics, we
-don't have this problem when using a property.
-
-Cheers
----Dave
+Cheers,
+Rob
