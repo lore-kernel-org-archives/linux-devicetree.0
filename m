@@ -1,120 +1,58 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Pawel Moll <pawel.moll@arm.com>
 Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Wed, 16 Nov 2011 10:59:24 -0600
-Message-ID: <4EC3EBEC.3020601@gmail.com>
+Date: Wed, 16 Nov 2011 17:07:51 +0000
+Message-ID: <1321463271.3137.380.camel@hornet.cambridge.arm.com>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
  <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
- <20111116154402.GE2073@localhost.localdomain> <4EC3E446.4030608@gmail.com>
+ <20111116154402.GE2073@localhost.localdomain>  <4EC3E446.4030608@gmail.com>
  <1321461458.3137.374.camel@hornet.cambridge.arm.com>
+ <4EC3EBEC.3020601@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1321461458.3137.374.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4EC3EBEC.3020601@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Dave Martin <dave.martin@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2011 10:37 AM, Pawel Moll wrote:
-> On Wed, 2011-11-16 at 16:26 +0000, Rob Herring wrote:
->> On 11/16/2011 09:44 AM, Dave Martin wrote:
->>> On Fri, Nov 11, 2011 at 06:27:04PM +0000, Pawel Moll wrote:
->>>> This patch provides hooks for DT-based tile machine implementations
->>>> and adds Device Tree description for the motherboard.
->>>>
->>>> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/arm/vexpress    |   92 ++++++++++
->>>>  arch/arm/boot/dts/vexpress-v2m-legacy.dtsi        |  190 +++++++++++++++++++++
->>>>  arch/arm/mach-vexpress/Kconfig                    |    4 +
->>>>  arch/arm/mach-vexpress/core.h                     |    9 +
->>>>  arch/arm/mach-vexpress/include/mach/motherboard.h |    8 +
->>>>  arch/arm/mach-vexpress/v2m.c                      |  140 +++++++++++++++-
->>>>  6 files changed, 442 insertions(+), 1 deletions(-)
->>>>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress
->>>>  create mode 100644 arch/arm/boot/dts/vexpress-v2m-legacy.dtsi
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/vexpress b/Documentation/devicetree/bindings/arm/vexpress
->>>
->>> [...]
->>>
->>>> +Required properties in the root node:
->>>> +- compatible value:
->>>> +  - for motherboard in "legacy" mode:
->>>> +	compatible = "arm,vexpress-<model>", "arm,vexpress-legacy", "arm-vexpress";
->>>> +  - for motherboard in "RS1" mode:
->>>> +	compatible = "arm,vexpress-<model>", "arm-vexpress";
->>>
->>> So, we have:
->>>
->>> arm,vexpress-* implies arm,vexpress
->>> arm,vexpress-* may imply arm,vexpress-legacy
->>> arm,vexpress-legacy implies arm,vexpress
->>>
->>> This means we have no bounded test for RS1-only features:
->>> the needed test is
->>> "compatible(node, "arm,vexpress") && !compatible(node, "arm,vexpress-legacy")
->>>
->>> Unfortunately, if there is someday an "rs2" memory map, that will also match
->>> the above.  Using "inverse compatibility" in this way feels dangerous,
->>> because the condition will pass for an arbitrary set of future conditions
->>> that we haven't imagined yet.
->>>
->>> This means it's, impossible even in principle to panic the kernel cleanly if
->>> presented with a device tree for a platform variant which is too new for the
->>> kernel to support.
->>>
->>>
->>> Can we instead have a specific "arm,vexpress-rs1"?
->>>
->>> 	compatible = "arm,vexpress-<model>", "arm-vexpress-rs1", "arm-vexpress";
->>>
->>> Then, we can be exact about compatibility: universal features are compatible
->>> with "arm,vexpress"; memory-map-specific features are compatible with either
->>> "arm,vexpress-legacy" or "arm,vexpress-rs1".
->>
->> Really, legacy is a bad name. 
-> 
-> http://en.wikipedia.org/wiki/De_gustibus_non_est_disputandum ;-)
-> 
-> This is de-facto name we use in ARM. See:
-> http://infocenter.arm.com/help/topic/com.arm.doc.dui0447e/ch04s02s01.html
-> 
-
-It has nothing to do with taste and obviously documentation changes over
-time. I'm going to start naming everything with legacy because someday
-it all will be...
-
-It's about how you create compatible strings. They should not be
-generic, but specific to particular hardware version. If you happen to
-be compatible with older h/w then you can claim compatibility with that
-older h/w.
-
->> If you defined the property when the
->> original vexpress was designed, it never would have had legacy in the
->> name. Generally speaking you never change bindings on old platforms.
->>
->> So I would have "arm,vexpress" mean legacy and "arm,vexpress-rs1" be the
->> new memory map.
-> 
-> I'd rather second Dave's idea of having
-> 
->>> 	compatible = "arm,vexpress-<model>", "arm-vexpress-rs1", "arm-vexpress";
-> 
-> and
-> 
->>> +	compatible = "arm,vexpress-<model>", "arm,vexpress-legacy", "arm-vexpress";
-
-If arm,vexpress-ca9 is the only legacy platform, then just drop
-arm,vexpress-legacy altogether.
-
-Rob
+T24gV2VkLCAyMDExLTExLTE2IGF0IDE2OjU5ICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBJ
+dCBoYXMgbm90aGluZyB0byBkbyB3aXRoIHRhc3RlIGFuZCBvYnZpb3VzbHkgZG9jdW1lbnRhdGlv
+biBjaGFuZ2VzIG92ZXIKPiB0aW1lLiBJJ20gZ29pbmcgdG8gc3RhcnQgbmFtaW5nIGV2ZXJ5dGhp
+bmcgd2l0aCBsZWdhY3kgYmVjYXVzZSBzb21lZGF5Cj4gaXQgYWxsIHdpbGwgYmUuLi4KPiAKPiBJ
+dCdzIGFib3V0IGhvdyB5b3UgY3JlYXRlIGNvbXBhdGlibGUgc3RyaW5ncy4gVGhleSBzaG91bGQg
+bm90IGJlCj4gZ2VuZXJpYywgYnV0IHNwZWNpZmljIHRvIHBhcnRpY3VsYXIgaGFyZHdhcmUgdmVy
+c2lvbi4gSWYgeW91IGhhcHBlbiB0bwo+IGJlIGNvbXBhdGlibGUgd2l0aCBvbGRlciBoL3cgdGhl
+biB5b3UgY2FuIGNsYWltIGNvbXBhdGliaWxpdHkgd2l0aCB0aGF0Cj4gb2xkZXIgaC93LgoKTm90
+aWNlIHRoYXQgaXQncyBub3Q6CgoJY29tcGF0aWJsZT1sZWdhY3kKCm5vdCBldmVuOgoKCWNvbXBh
+dGlibGU9YXJtLGxlZ2FjeQoKSXQnczoKCQoJY29tcGF0aWJsZT1hcm0sdmV4cHJlc3MtbGVnYWN5
+CgpBIHNwZWNpZmljIHZhcmlhbnQgb2YgVmVyc2F0aWxlIEV4cHJlc3MgaGFyZHdhcmUuIEl0J3Mg
+anVzdCB0aGF0IHRoZQoibGVnYWN5IiB3b3JkIGNhcnJpZXMgc29tZSBtZWFuaW5nLiBXb3VsZCBp
+dCBsb29rZWQgYmV0dGVyIGlmIGl0IHdhcwpjYWxsZWQ6CgoJY29tcGF0aWJsZT1hcm0sdmV4cHJl
+c3MtbmFsYXRlbnNrYXAKCj8gKHRoYW5rcywgZ29vZ2xlIHRyYW5zbGF0ZSA7LSkKCj4gPj4gSWYg
+eW91IGRlZmluZWQgdGhlIHByb3BlcnR5IHdoZW4gdGhlCj4gPj4gb3JpZ2luYWwgdmV4cHJlc3Mg
+d2FzIGRlc2lnbmVkLCBpdCBuZXZlciB3b3VsZCBoYXZlIGhhZCBsZWdhY3kgaW4gdGhlCj4gPj4g
+bmFtZS4gR2VuZXJhbGx5IHNwZWFraW5nIHlvdSBuZXZlciBjaGFuZ2UgYmluZGluZ3Mgb24gb2xk
+IHBsYXRmb3Jtcy4KPiA+Pgo+ID4+IFNvIEkgd291bGQgaGF2ZSAiYXJtLHZleHByZXNzIiBtZWFu
+IGxlZ2FjeSBhbmQgImFybSx2ZXhwcmVzcy1yczEiIGJlIHRoZQo+ID4+IG5ldyBtZW1vcnkgbWFw
+Lgo+ID4gCj4gPiBJJ2QgcmF0aGVyIHNlY29uZCBEYXZlJ3MgaWRlYSBvZiBoYXZpbmcKPiA+IAo+
+ID4+PiAJY29tcGF0aWJsZSA9ICJhcm0sdmV4cHJlc3MtPG1vZGVsPiIsICJhcm0tdmV4cHJlc3Mt
+cnMxIiwgImFybS12ZXhwcmVzcyI7Cj4gPiAKPiA+IGFuZAo+ID4gCj4gPj4+ICsJY29tcGF0aWJs
+ZSA9ICJhcm0sdmV4cHJlc3MtPG1vZGVsPiIsICJhcm0sdmV4cHJlc3MtbGVnYWN5IiwgImFybS12
+ZXhwcmVzcyI7Cj4gCj4gSWYgYXJtLHZleHByZXNzLWNhOSBpcyB0aGUgb25seSBsZWdhY3kgcGxh
+dGZvcm0sIHRoZW4ganVzdCBkcm9wCj4gYXJtLHZleHByZXNzLWxlZ2FjeSBhbHRvZ2V0aGVyLgoK
+SXQncyBub3QuIFRoZXJlIGlzIGFkZGl0aW9uYWwgb25lLCB3aGljaCBpcyBub3QgcHVibGljbHkg
+YXZhaWxhYmxlLCBidXQKaXMgdXNpbmcgdGhlIG1vdGhlcmJvYXJkIGluIGxlZ2FjeSBtb2RlLgoK
+Q2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
