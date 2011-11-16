@@ -1,7 +1,7 @@
 From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Wed, 16 Nov 2011 17:39:45 +0000
-Message-ID: <20111116173945.GG2073@localhost.localdomain>
+Date: Wed, 16 Nov 2011 17:50:50 +0000
+Message-ID: <20111116175050.GH2073@localhost.localdomain>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
  <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
  <20111116154402.GE2073@localhost.localdomain>
@@ -9,12 +9,13 @@ References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
  <1321461458.3137.374.camel@hornet.cambridge.arm.com>
  <4EC3EBEC.3020601@gmail.com>
  <1321463271.3137.380.camel@hornet.cambridge.arm.com>
+ <20111116173945.GG2073@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1321463271.3137.380.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+In-Reply-To: <20111116173945.GG2073-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -28,44 +29,90 @@ To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBOb3YgMTYsIDIwMTEgYXQgMDU6MDc6NTFQTSArMDAwMCwgUGF3ZWwgTW9sbCB3cm90
-ZToKPiBPbiBXZWQsIDIwMTEtMTEtMTYgYXQgMTY6NTkgKzAwMDAsIFJvYiBIZXJyaW5nIHdyb3Rl
-Ogo+ID4gSXQgaGFzIG5vdGhpbmcgdG8gZG8gd2l0aCB0YXN0ZSBhbmQgb2J2aW91c2x5IGRvY3Vt
-ZW50YXRpb24gY2hhbmdlcyBvdmVyCj4gPiB0aW1lLiBJJ20gZ29pbmcgdG8gc3RhcnQgbmFtaW5n
-IGV2ZXJ5dGhpbmcgd2l0aCBsZWdhY3kgYmVjYXVzZSBzb21lZGF5Cj4gPiBpdCBhbGwgd2lsbCBi
-ZS4uLgo+ID4gCj4gPiBJdCdzIGFib3V0IGhvdyB5b3UgY3JlYXRlIGNvbXBhdGlibGUgc3RyaW5n
-cy4gVGhleSBzaG91bGQgbm90IGJlCj4gPiBnZW5lcmljLCBidXQgc3BlY2lmaWMgdG8gcGFydGlj
-dWxhciBoYXJkd2FyZSB2ZXJzaW9uLiBJZiB5b3UgaGFwcGVuIHRvCj4gPiBiZSBjb21wYXRpYmxl
-IHdpdGggb2xkZXIgaC93IHRoZW4geW91IGNhbiBjbGFpbSBjb21wYXRpYmlsaXR5IHdpdGggdGhh
-dAo+ID4gb2xkZXIgaC93Lgo+IAo+IE5vdGljZSB0aGF0IGl0J3Mgbm90Ogo+IAo+IAljb21wYXRp
-YmxlPWxlZ2FjeQo+IAo+IG5vdCBldmVuOgo+IAo+IAljb21wYXRpYmxlPWFybSxsZWdhY3kKPiAK
-PiBJdCdzOgo+IAkKPiAJY29tcGF0aWJsZT1hcm0sdmV4cHJlc3MtbGVnYWN5Cj4gCj4gQSBzcGVj
-aWZpYyB2YXJpYW50IG9mIFZlcnNhdGlsZSBFeHByZXNzIGhhcmR3YXJlLiBJdCdzIGp1c3QgdGhh
-dCB0aGUKPiAibGVnYWN5IiB3b3JkIGNhcnJpZXMgc29tZSBtZWFuaW5nLiBXb3VsZCBpdCBsb29r
-ZWQgYmV0dGVyIGlmIGl0IHdhcwo+IGNhbGxlZDoKPiAKPiAJY29tcGF0aWJsZT1hcm0sdmV4cHJl
-c3MtbmFsYXRlbnNrYXAKPiAKPiA/ICh0aGFua3MsIGdvb2dsZSB0cmFuc2xhdGUgOy0pCgpDb21l
-IHRvIHRoaW5rIG9mIGl0LCBpcyB0aGUgcHJvYmxlbSBoZXJlIHRoYXQgd2UncmUgdHJ5aW5nIHRv
-IGRlc2NyaWJlCnRoZSBfbW90aGVyYm9hcmRfIHVzaW5nIHRoZSBjb21wYXRpYmxlIHByb3BlcnR5
-IG9uIHRoZSByb290IG5vZGUuClRoaXMgaXMgd2h5IEkgdGFsa2VkIGFib3V0IHVuaXZlcnNhbC9n
-ZW5lcmljIGZlYXR1cmVzIC0tIHRoZSBzZXQgb2YKZmVhdHVyZXMgY29tbW9uIHRvIGFsbCBwbGF0
-Zm9ybXMgc2hhcmluZyBhIHNpbmdsZSBtb3RoZXJib2FyZApjb25maWd1cmF0aW9uLgoKQXJndWFi
-bHkgdGhhdCdzIHdyb25nLCBhbmQgdGhhdCBjb21wYXRpYmxlIHByb3BlcnR5IGJlbG9uZ3Mgb24g
-dGhlCm1vdGhlcmJvYXJkIG5vZGUgaXRzZWxmLCBzbzoKCi8gewoJY29tcGF0aWJsZSA9ICJhcm0s
-dmV4cHJlc3MtY2E5eDQiCgoKPiAKPiA+ID4+IElmIHlvdSBkZWZpbmVkIHRoZSBwcm9wZXJ0eSB3
-aGVuIHRoZQo+ID4gPj4gb3JpZ2luYWwgdmV4cHJlc3Mgd2FzIGRlc2lnbmVkLCBpdCBuZXZlciB3
-b3VsZCBoYXZlIGhhZCBsZWdhY3kgaW4gdGhlCj4gPiA+PiBuYW1lLiBHZW5lcmFsbHkgc3BlYWtp
-bmcgeW91IG5ldmVyIGNoYW5nZSBiaW5kaW5ncyBvbiBvbGQgcGxhdGZvcm1zLgo+ID4gPj4KPiA+
-ID4+IFNvIEkgd291bGQgaGF2ZSAiYXJtLHZleHByZXNzIiBtZWFuIGxlZ2FjeSBhbmQgImFybSx2
-ZXhwcmVzcy1yczEiIGJlIHRoZQo+ID4gPj4gbmV3IG1lbW9yeSBtYXAuCj4gPiA+IAo+ID4gPiBJ
-J2QgcmF0aGVyIHNlY29uZCBEYXZlJ3MgaWRlYSBvZiBoYXZpbmcKPiA+ID4gCj4gPiA+Pj4gCWNv
-bXBhdGlibGUgPSAiYXJtLHZleHByZXNzLTxtb2RlbD4iLCAiYXJtLXZleHByZXNzLXJzMSIsICJh
-cm0tdmV4cHJlc3MiOwo+ID4gPiAKPiA+ID4gYW5kCj4gPiA+IAo+ID4gPj4+ICsJY29tcGF0aWJs
-ZSA9ICJhcm0sdmV4cHJlc3MtPG1vZGVsPiIsICJhcm0sdmV4cHJlc3MtbGVnYWN5IiwgImFybS12
-ZXhwcmVzcyI7Cj4gPiAKPiA+IElmIGFybSx2ZXhwcmVzcy1jYTkgaXMgdGhlIG9ubHkgbGVnYWN5
-IHBsYXRmb3JtLCB0aGVuIGp1c3QgZHJvcAo+ID4gYXJtLHZleHByZXNzLWxlZ2FjeSBhbHRvZ2V0
-aGVyLgo+IAo+IEl0J3Mgbm90LiBUaGVyZSBpcyBhZGRpdGlvbmFsIG9uZSwgd2hpY2ggaXMgbm90
-IHB1YmxpY2x5IGF2YWlsYWJsZSwgYnV0Cj4gaXMgdXNpbmcgdGhlIG1vdGhlcmJvYXJkIGluIGxl
-Z2FjeSBtb2RlLgo+IAo+IENoZWVycyEKPiAKPiBQYXdlxYIKPiAKPiAKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxp
-bmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
-Lm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Wed, Nov 16, 2011 at 05:07:51PM +0000, Pawel Moll wrote:
+> On Wed, 2011-11-16 at 16:59 +0000, Rob Herring wrote:
+> > It has nothing to do with taste and obviously documentation changes over
+> > time. I'm going to start naming everything with legacy because someday
+> > it all will be...
+> > 
+> > It's about how you create compatible strings. They should not be
+> > generic, but specific to particular hardware version. If you happen to
+> > be compatible with older h/w then you can claim compatibility with that
+> > older h/w.
+> 
+> Notice that it's not:
+> 
+> 	compatible=legacy
+> 
+> not even:
+> 
+> 	compatible=arm,legacy
+> 
+> It's:
+> 	
+> 	compatible=arm,vexpress-legacy
+> 
+> A specific variant of Versatile Express hardware. It's just that the
+> "legacy" word carries some meaning. Would it looked better if it was
+> called:
+>
+>	compatible=arm,vexpress-nalatenskap
+>
+> ? (thanks, google translate ;-)
+
+(excuse the previous, half-written mail...)
+
+Come to think of it, is the problem here that we're trying to describe
+the _motherboard_ using the compatible property on the root node.
+This is why I talked about universal/generic features -- the set of
+features common to all platforms sharing a single motherboard
+configuration.
+
+Arguably that's wrong, and that compatible property belongs on the
+motherboard node itself, so (excuse the random syntax):
+
+/ {
+	compatible = "arm,vexpress-v2p-ca9", "arm,vexpress";
+
+	motherboard {
+		compatible = "arm,vexpress-v2m-legacy", "simple-bus";
+	};
+};
+
+
+I'm not commenting on the "legacy" name here -- it is, for better
+or worse, the official name for the old memory map.  I don't feel
+that calling that "arm,vexpress" is correct either, however.  There
+is no such thing as a vanilla vexpress board, because the board
+is not fully specified at all without _something_ in the IOFPGA.
+Nor are there any prior upstream DT bindings for this platform which
+we would be referring back to.
+
+The motherboard node, including the compatible property would be defined
+once per memory map, in the relevant .dtsi file.
+
+
+If we don't have a generic compatible string "arm,vexpress", then we'd
+start having to list every possible "arm,vexpress-v2p-*" in the
+compatible lists in the code.  I'm not clear on whether that's right
+or wrong, but it could certainly get cumbersome.
+
+
+Thoughts?
+
+> > > 
+> > > and
+> > > 
+> > >>> +	compatible = "arm,vexpress-<model>", "arm,vexpress-legacy", "arm-vexpress";
+> > 
+> > If arm,vexpress-ca9 is the only legacy platform, then just drop
+> > arm,vexpress-legacy altogether.
+> 
+> It's not. There is additional one, which is not publicly available, but
+> is using the motherboard in legacy mode.
+
+If putting a suitable compatible property on the motherboard node is
+feasible, it should work for this case.
+
+Cheers
+---Dave
