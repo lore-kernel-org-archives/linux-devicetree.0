@@ -1,97 +1,62 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 1/3] ARM: omap_device: handle first time activation of
- console device
-Date: Wed, 16 Nov 2011 16:14:40 +0100
-Message-ID: <4EC3D360.8000800@ti.com>
-References: <1321441346-19591-1-git-send-email-rnayak@ti.com> <1321441346-19591-2-git-send-email-rnayak@ti.com> <4EC3CDC4.7000108@gmail.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5] Versatile Express DT support, take 2
+Date: Wed, 16 Nov 2011 15:33:05 +0000
+Message-ID: <20111116153305.GA2073@localhost.localdomain>
+References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EC3CDC4.7000108@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rajendra Nayak <rnayak@ti.com>, khilman@ti.com, linaro-dev@lists.linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, govindraj.raja@ti.com, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1321036026-23411-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Fri, Nov 11, 2011 at 06:27:01PM +0000, Pawel Moll wrote:
+> Hello again,
+> 
+> I've manage to clean up the VE DT patches.
+> 
+> Changes since RFC:
+> 
+> * I think I did all the changes suggested by Rob (including
+>   using "custom" clock lookups instead of auxdata - do
+>   comment, please ;-)
+> 
+> * Merged CA5s and CA9 code into one file.
+> 
+> * Added documentation for the vexpress bindings.
+> 
+> * Reorganized the tree so the "flat aliases search" patch
+>   is not longer necessary.
+> 
+> * Moved the alias node from motherboard's to tile's DTS,
+>   as this is the place to decide about serial port ordering,
+>   timers being used etc.
+> 
+> * Got the SMSC working (my fault, obviously ;-)
+> 
+> As usual - feedback more than welcome (my tests suggest
+> that the "ATAG version" still works, so feel free to test
+> at least that ;-)
 
-On 11/16/2011 3:50 PM, Rob Herring wrote:
-> On 11/16/2011 05:02 AM, Rajendra Nayak wrote:
->> console device on OMAP is never reset or idled by hwmod post
->> initial setup, early during boot, for obvious reasons not to
->> break early debug prints thrown on console.
->> This leaves the console device enabled at boot and the first activation
->> of it using hwmod needs to be handled in such a way that a disable is
->> called followed by an enable of the hwmod, the subsequent activations
->> can then use the default activation technique.
->>
->> To handle this add a new binding to identify a hwmod which is used as
->> the console device.
->>
->> This patch is based on the what is done in serial.c for non-DT builds.
->>
->> Signed-off-by: Rajendra Nayak<rnayak@ti.com>
->> ---
->>   .../devicetree/bindings/arm/omap/omap.txt          |    1 +
->>   arch/arm/plat-omap/omap_device.c                   |   33 +++++++++++++++++++-
->>   2 files changed, 33 insertions(+), 1 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
->> index dbdab40..46ffd41 100644
->> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
->> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
->> @@ -21,6 +21,7 @@ Required properties:
->>   Optional properties:
->>   - ti,no_idle_on_suspend: When present, it prevents the PM to idle the module
->>     during suspend.
->> +- ti,console_hwmod: boolean, identifies the hwmod used as console device
->>
->
-> This doesn't seem right. Which console is not a h/w property. Why can't
-> you use aliases like other platforms are doing?
->
-> Also, it's not clear in the documentation where this (and
-> ti,no_idle_on_suspend) should go in the DT. Both seem like they should
-> be kernel cmdline params.
+I haven't actually tried this code out yet, but I'm broadly in
+agreement.
 
-That raise the question about using DT to pass linux specific parameter.
-We already discuss that on the mailing list, but never get a clear answer.
-It seems that DT is already used to provide some OS specific information 
-using the "linux," prefix for example.
+I'm happy for this series to replace my previously posted
+series, since it builds on common changes.
 
-There are clearly a couple of parameters that can be provided by the 
-bootloader, but that does not reflect a HW property.
+I have a few comments on the detail -- see separate mails.
 
-So what is the guideline for that, should we stick to cmdline params for 
-that?
-
-Quoting Grant's documentation, runtime configuration is supported:
-
-"Runtime configuration
-
-In most cases, a DT will be the sole method of communicating data from 
-firmware to the kernel, so also gets used to pass in runtime and 
-configuration data like the kernel parameters string and the location of 
-an initrd image.
-
-Most of this data is contained in the /chosen node, and when booting 
-Linux it will look something like this:
-
-	chosen {
-		bootargs = "console=ttyS0,115200 loglevel=8";
-		initrd-start = <0xc8000000>;
-		initrd-end = <0xc8200000>;
-	};
-
-The bootargs property contains the kernel arguments, and the initrd-* 
-properties define the address and size of an initrd blob. The chosen 
-node may also optionally contain an arbitrary number of additional 
-properties for platform-specific configuration data."
-
-
-Does that mean that this is supported only if the bootloader does not 
-support cmdline?
-
-Thanks,
-Benoit
+Cheers
+---Dave
