@@ -1,90 +1,96 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Wed, 16 Nov 2011 10:26:46 -0600
-Message-ID: <4EC3E446.4030608@gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH 4/5] ARM: vexpress: Initial RS1 memory map support
+Date: Wed, 16 Nov 2011 16:28:17 +0000
+Message-ID: <1321460897.3137.364.camel@hornet.cambridge.arm.com>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
- <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
- <20111116154402.GE2073@localhost.localdomain>
+ <1321036026-23411-5-git-send-email-pawel.moll@arm.com>
+ <20111116154230.GD2073@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111116154402.GE2073-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111116154230.GD2073@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2011 09:44 AM, Dave Martin wrote:
-> On Fri, Nov 11, 2011 at 06:27:04PM +0000, Pawel Moll wrote:
->> This patch provides hooks for DT-based tile machine implementations
->> and adds Device Tree description for the motherboard.
->>
->> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/vexpress    |   92 ++++++++++
->>  arch/arm/boot/dts/vexpress-v2m-legacy.dtsi        |  190 +++++++++++++++++++++
->>  arch/arm/mach-vexpress/Kconfig                    |    4 +
->>  arch/arm/mach-vexpress/core.h                     |    9 +
->>  arch/arm/mach-vexpress/include/mach/motherboard.h |    8 +
->>  arch/arm/mach-vexpress/v2m.c                      |  140 +++++++++++++++-
->>  6 files changed, 442 insertions(+), 1 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress
->>  create mode 100644 arch/arm/boot/dts/vexpress-v2m-legacy.dtsi
->>
->> diff --git a/Documentation/devicetree/bindings/arm/vexpress b/Documentation/devicetree/bindings/arm/vexpress
-> 
-> [...]
-> 
->> +Required properties in the root node:
->> +- compatible value:
->> +  - for motherboard in "legacy" mode:
->> +	compatible = "arm,vexpress-<model>", "arm,vexpress-legacy", "arm-vexpress";
->> +  - for motherboard in "RS1" mode:
->> +	compatible = "arm,vexpress-<model>", "arm-vexpress";
-> 
-> So, we have:
-> 
-> arm,vexpress-* implies arm,vexpress
-> arm,vexpress-* may imply arm,vexpress-legacy
-> arm,vexpress-legacy implies arm,vexpress
-> 
-> This means we have no bounded test for RS1-only features:
-> the needed test is
-> "compatible(node, "arm,vexpress") && !compatible(node, "arm,vexpress-legacy")
-> 
-> Unfortunately, if there is someday an "rs2" memory map, that will also match
-> the above.  Using "inverse compatibility" in this way feels dangerous,
-> because the condition will pass for an arbitrary set of future conditions
-> that we haven't imagined yet.
-> 
-> This means it's, impossible even in principle to panic the kernel cleanly if
-> presented with a device tree for a platform variant which is too new for the
-> kernel to support.
-> 
-> 
-> Can we instead have a specific "arm,vexpress-rs1"?
-> 
-> 	compatible = "arm,vexpress-<model>", "arm-vexpress-rs1", "arm-vexpress";
-> 
-> Then, we can be exact about compatibility: universal features are compatible
-> with "arm,vexpress"; memory-map-specific features are compatible with either
-> "arm,vexpress-legacy" or "arm,vexpress-rs1".
-> 
-
-Really, legacy is a bad name. If you defined the property when the
-original vexpress was designed, it never would have had legacy in the
-name. Generally speaking you never change bindings on old platforms.
-
-So I would have "arm,vexpress" mean legacy and "arm,vexpress-rs1" be the
-new memory map.
-
-Rob
+T24gV2VkLCAyMDExLTExLTE2IGF0IDE1OjQyICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiA+
+ICtjb25maWcgQVJDSF9WRVhQUkVTU19MRUdBQ1kKPiBCcmllZiBjb21tZW50IGV4cGxhaW5pbmcg
+d2hhdCB0aGlzIGlzPwo+ID4gK2NvbmZpZyBBUkNIX1ZFWFBSRVNTX1JTMQo+IERpdHRvCgpPay4K
+Cj4gPiArCWJvb2wKPiA+ICsKPiA+ICBjb25maWcgQVJDSF9WRVhQUkVTU19DQTlYNAo+ID4gIAli
+b29sICJWZXJzYXRpbGUgRXhwcmVzcyBDb3J0ZXgtQTl4NCB0aWxlIgo+ID4gIAlzZWxlY3QgQ1BV
+X1Y3Cj4gPiBAQCAtOCw2ICsxNiw3IEBAIGNvbmZpZyBBUkNIX1ZFWFBSRVNTX0NBOVg0Cj4gPiAg
+CXNlbGVjdCBBUk1fRVJSQVRBXzcyMDc4OQo+ID4gIAlzZWxlY3QgQVJNX0VSUkFUQV83NTE0NzIK
+PiA+ICAJc2VsZWN0IEFSTV9FUlJBVEFfNzUzOTcwCj4gPiArCXNlbGVjdCBBUkNIX1ZFWFBSRVNT
+X0xFR0FDWQo+IAo+IFdlIHNob3VsZCBhZGQgYSBicmllZiBub3RlIHRvIHRoZSBoZWxwIHRleHQg
+ZXhwbGFpbmluZyB0aGUgZXhpc3RlbmNlCj4gb2YgdGhlIG5ldyBjb21iaW5lZCBBOXg0L0E1eDIg
+RFQgYmFzZWQgc3VwcG9ydCwgaWYgd2VyZSBwbGFubmluZyB0bwo+IGtlZXAgYm90aCB2YXJpYW50
+cy4gIChQcm9iYWJseSB3aXNlIGZvciBub3csIHNpbmNlIHBlb3BsZSBtYXkgYmUKPiB0ZW1wb3Jh
+cmlseSBzdHVjayBvbGQgYm9vdGxvYWRlcnMgZXRjLikKPiAKPiBJZiB0aGVyZSBpcyBubyBoZWxw
+IHRleHQgeWV0LCB3ZSBzaG91bGQgYWRkIHNvbWUsIGJ1dCBpdCBzaG91bGQgYmUKPiBrZXB0IGJy
+aWVmLgoKTm8gcHJvYnMuIEFsbCBzdWdnZXN0aW9ucyBhbmQgInRlbXBsYXRlcyIgd2VsY29tZWQg
+Oi0pCgo+IAo+IFsuLi5dCj4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC12ZXhwcmVz
+cy9pbmNsdWRlL21hY2gvZGVidWctbWFjcm8uUyBiL2FyY2gvYXJtL21hY2gtdmV4cHJlc3MvaW5j
+bHVkZS9tYWNoL2RlYnVnLW1hY3JvLlMKPiA+IGluZGV4IGZkOWU2YzcuLmFkYzk0Y2UgMTAwNjQ0
+Cj4gPiAtLS0gYS9hcmNoL2FybS9tYWNoLXZleHByZXNzL2luY2x1ZGUvbWFjaC9kZWJ1Zy1tYWNy
+by5TCj4gPiArKysgYi9hcmNoL2FybS9tYWNoLXZleHByZXNzL2luY2x1ZGUvbWFjaC9kZWJ1Zy1t
+YWNyby5TCj4gPiBAQCAtMTAsMTIgKzEwLDQxIEBACj4gPiAgICogcHVibGlzaGVkIGJ5IHRoZSBG
+cmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uCj4gPiAgICovCj4gPiAgCj4gPiAtI2RlZmluZSBERUJV
+R19MTF9VQVJUX09GRlNFVAkweDAwMDA5MDAwCj4gPiArI2RlZmluZSBWRVhQUkVTU19QSFlTX0JB
+U0VfTEVHQUNZCTB4MTAwMDAwMDAKPiA+ICsjZGVmaW5lIFZFWFBSRVNTX1VBUlRfT0ZGU0VUX0xF
+R0FDWQkweDAwMDA5MDAwCj4gPiArCj4gPiArI2RlZmluZSBWRVhQUkVTU19QSFlTX0JBU0VfUlMx
+CQkweDFjMDAwMDAwCj4gPiArI2RlZmluZSBWRVhQUkVTU19VQVJUX09GRlNFVF9SUzEJMHgwMDA5
+MDAwMAo+ID4gKwo+ID4gKyNkZWZpbmUgVkVYUFJFU1NfVklSVF9CQVNFCQkweGY4MDAwMDAwCj4g
+PiAgCj4gPiAgCQkubWFjcm8JYWRkcnVhcnQscnAscnYsdG1wCj4gPiAtCQltb3YJXHJwLCAjREVC
+VUdfTExfVUFSVF9PRkZTRVQKPiA+IC0JCW9ycglccnYsIFxycCwgIzB4ZjgwMDAwMDAJQCB2aXJ0
+dWFsIGJhc2UKPiA+IC0JCW9ycglccnAsIFxycCwgIzB4MTAwMDAwMDAJQCBwaHlzaWNhbCBiYXNl
+Cj4gPiArCj4gPiArCQlAIENoZWNrIHRoZSBNTVUgc3RhdGUKPiA+ICsjaWYgZGVmaW5lZChDT05G
+SUdfTU1VKQo+ID4gKwkJbXJjCXAxNSwgMCwgXHRtcCwgYzEsIGMwCUAgU0NUUkwKPiA+ICsJCXRz
+dAlcdG1wLCAjMQkJQCBNTVUgZW5hYmxlZD8KPiA+ICsJCW1vdmVxCVx0bXAsICNWRVhQUkVTU19Q
+SFlTX0JBU0VfTEVHQUNZCj4gPiArCQltb3ZuZQlcdG1wLCAjVkVYUFJFU1NfVklSVF9CQVNFCj4g
+PiArI2Vsc2UKPiA+ICsJCW1vdglcdG1wLCAjVkVYUFJFU1NfUEhZU19CQVNFX0xFR0FDWQo+ID4g
+KyNlbmRpZgo+ID4gKwo+ID4gKwkJQCBQTDAxMSBwcmVzZW50IGluICJsZWdhY3kgcGxhY2UiPwo+
+ID4gKwkJb3JyCVx0bXAsIFx0bXAsICNWRVhQUkVTU19VQVJUX09GRlNFVF9MRUdBQ1kKPiA+ICsJ
+CWxkcglcdG1wLCBbXHRtcCwgIzB4ZmUwXQlAIFBlcmlwaElEMAo+ID4gKwkJdGVxCVx0bXAsICMw
+eDExCQlAIFBMMDExCj4gPiArCj4gPiArCQlAIExlZ2FjeSBtZW1vcnkgbWFwCj4gPiArCQltb3Zl
+cQlccnAsICNWRVhQUkVTU19VQVJUX09GRlNFVF9MRUdBQ1kKPiA+ICsJCW9ycmVxCVxydiwgXHJw
+LCAjVkVYUFJFU1NfVklSVF9CQVNFCj4gPiArCQlvcnJlcQlccnAsIFxycCwgI1ZFWFBSRVNTX1BI
+WVNfQkFTRV9MRUdBQ1kKPiA+ICsKPiA+ICsJCUAgUlMxIG1lbW9yeSBtYXAKPiA+ICsJCW1vdm5l
+CVxycCwgI1ZFWFBSRVNTX1VBUlRfT0ZGU0VUX1JTMQo+ID4gKwkJb3JybmUJXHJ2LCBccnAsICNW
+RVhQUkVTU19WSVJUX0JBU0UKPiA+ICsJCW9ycm5lCVxycCwgXHJwLCAjVkVYUFJFU1NfUEhZU19C
+QVNFX1JTMQo+IAo+IEkgd2lsbCBhc3N1bWUgdGhhdCB0aGlzIHdvcmtzIDopCgpJdCBkb2VzLCB0
+ZXN0ZWQgOi0pIFRoZSBwcm9iaW5nIG9yZGVyICJsZWdhY3ktdGhlbi1SUzEiIGlzIGNhcmVmdWxs
+eQpzZWxlY3RlZCAtIGl0IGRvZXNuJ3Qgd29yayB0aGUgb3RoZXIgd2F5IHJvdW5kLgoKPiBXaXRo
+b3V0IGdyb2traW5nIHRoZSBkZXRhaWwsIGl0IGxvb2tzIGZhaXJseSByZWFzb25hYmxlLgoKSSB3
+YXMgY29uc2lkZXJpbmcgc29tZXRoaW5nIHNpbWlsYXIgdG8KImFyY2gvYXJtL21hY2gtb21hcDIv
+aW5jbHVkZS9tYWNoL2RlYnVnLW1hY3JvLlMiLCBidXQgaXQgbWFkZSB0aGUgY29kZQpldmVuIG1v
+cmUgb2JzY3VyZS4KCj4gWy4uLl0KPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLXZl
+eHByZXNzL3YybS5jIGIvYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYwo+IAo+IFsuLi5dCj4g
+Cj4gPiAgdm9pZCBfX2luaXQgdjJtX2R0X2luaXRfZWFybHkodm9pZCkKPiA+IEBAIC02MDEsNiAr
+NjQzLDEwIEBAIHN0YXRpYyBzdHJ1Y3Qgb2ZfZGV2X2F1eGRhdGEgdjJtX2R0X2F1eGRhdGFfbG9v
+a3VwW10gX19pbml0ZGF0YSA9IHsKPiA+ICAJT0ZfREVWX0FVWERBVEEoImFybSx2ZXhwcmVzcy1m
+bGFzaCIsIFYyTV9OT1IwLCAicGh5c21hcC1mbGFzaCIsCj4gPiAgCQkJJnYybV9mbGFzaF9kYXRh
+KSwKPiA+ICAJT0ZfREVWX0FVWERBVEEoImFybSxwcmltZWNlbGwiLCBWMk1fTU1DSSwgIm1iOm1t
+Y2kiLCAmdjJtX21tY2lfZGF0YSksCj4gPiArCS8qIFJTMSBtZW1vcnkgbWFwICovCj4gPiArCU9G
+X0RFVl9BVVhEQVRBKCJhcm0sdmV4cHJlc3MtZmxhc2giLCAweDA4MDAwMDAwLCAicGh5c21hcC1m
+bGFzaCIsCj4gPiArCQkJJnYybV9mbGFzaF9kYXRhKSwKPiA+ICsJT0ZfREVWX0FVWERBVEEoImFy
+bSxwcmltZWNlbGwiLCAweDFjMDUwMDAwLCAibWI6bW1jaSIsICZ2Mm1fbW1jaV9kYXRhKSwKPiAK
+PiBDYW4gd2UgaGF2ZSBtYWNyb3MgaW5zdGVhZCBvZiB0aGUgbWFnaWMgbnVtYmVycyBoZXJlPwoK
+SSBkb24ndCBzZWUgYW55IHBvaW50OgoxLiBUaGVzZSB2YWx1ZSBhcmUgdXNlZCBvbmx5IGFuZCBv
+bmx5IGhlcmUsIHNvICNkZWZpbmluZyB0aGVtIHdvdWxkIGp1c3QKYWRkIGV4dHJhIGxpbmVzIG9m
+IHRyYWZmaWMuCjIuIFRoZXkgY29ycmVzcG9uZCB0byBudW1iZXJzIChhcyBpbjogbnVtYmVycykg
+aW4gRFRTLgozLiBUaGV5IHdpbGwgZGlzYXBwZWFyIG9uY2UgSSdtIGRvbmUgd2l0aCBNTUNJIGFu
+ZCBzeXNyZWcgYmluZGluZ3MuIFNvCnByb2JhYmx5IGxvbmcgYmVmb3JlIHRoaXMgc2VyaWVzIGlz
+IGFjdHVhbGx5IG1lcmdlZC4uLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
+aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
