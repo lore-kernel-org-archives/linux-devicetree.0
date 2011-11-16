@@ -1,49 +1,131 @@
-From: Pawel Moll <pawel.moll@arm.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Wed, 16 Nov 2011 17:55:06 +0000
-Message-ID: <1321466106.3137.397.camel@hornet.cambridge.arm.com>
+Date: Wed, 16 Nov 2011 17:57:58 +0000
+Message-ID: <20111116175757.GI2073@localhost.localdomain>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
  <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
- <20111116154402.GE2073@localhost.localdomain> <4EC3E446.4030608@gmail.com>
- <1321461458.3137.374.camel@hornet.cambridge.arm.com>
- <4EC3EBEC.3020601@gmail.com>
- <1321463271.3137.380.camel@hornet.cambridge.arm.com>
- <20111116173945.GG2073@localhost.localdomain>
- <20111116175050.GH2073@localhost.localdomain>
+ <20111116154402.GE2073@localhost.localdomain>
+ <1321461315.3137.371.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111116175050.GH2073@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1321461315.3137.371.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDExLTExLTE2IGF0IDE3OjUwICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBD
-b21lIHRvIHRoaW5rIG9mIGl0LCBpcyB0aGUgcHJvYmxlbSBoZXJlIHRoYXQgd2UncmUgdHJ5aW5n
-IHRvIGRlc2NyaWJlCj4gdGhlIF9tb3RoZXJib2FyZF8gdXNpbmcgdGhlIGNvbXBhdGlibGUgcHJv
-cGVydHkgb24gdGhlIHJvb3Qgbm9kZS4KPiBUaGlzIGlzIHdoeSBJIHRhbGtlZCBhYm91dCB1bml2
-ZXJzYWwvZ2VuZXJpYyBmZWF0dXJlcyAtLSB0aGUgc2V0IG9mCj4gZmVhdHVyZXMgY29tbW9uIHRv
-IGFsbCBwbGF0Zm9ybXMgc2hhcmluZyBhIHNpbmdsZSBtb3RoZXJib2FyZAo+IGNvbmZpZ3VyYXRp
-b24uCj4gCj4gQXJndWFibHkgdGhhdCdzIHdyb25nLCBhbmQgdGhhdCBjb21wYXRpYmxlIHByb3Bl
-cnR5IGJlbG9uZ3Mgb24gdGhlCj4gbW90aGVyYm9hcmQgbm9kZSBpdHNlbGYsIHNvIChleGN1c2Ug
-dGhlIHJhbmRvbSBzeW50YXgpOgo+IAo+IC8gewo+IAljb21wYXRpYmxlID0gImFybSx2ZXhwcmVz
-cy12MnAtY2E5IiwgImFybSx2ZXhwcmVzcyI7Cj4gCj4gCW1vdGhlcmJvYXJkIHsKPiAJCWNvbXBh
-dGlibGUgPSAiYXJtLHZleHByZXNzLXYybS1sZWdhY3kiLCAic2ltcGxlLWJ1cyI7Cj4gCX07Cj4g
-fTsKCj4gSWYgcHV0dGluZyBhIHN1aXRhYmxlIGNvbXBhdGlibGUgcHJvcGVydHkgb24gdGhlIG1v
-dGhlcmJvYXJkIG5vZGUgaXMKPiBmZWFzaWJsZSwgaXQgc2hvdWxkIHdvcmsgZm9yIHRoaXMgY2Fz
-ZS4KClllcCwgdGhhdCB3b3JrcyBmb3IgbWUgOi0pIFByb2JhYmx5IGV2ZW4gZWFzaWVyIHRvIGlt
-cGxlbWVudCB0aGFuIGN1c3RvbQpwcm9wZXJ0eS4KCkknbGwgZ2V0IGl0IGludG8gdGhlIGNvZGUg
-dG9tb3Jyb3cuCgpDaGVlcnMhCgpQYXdlxYIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Wed, Nov 16, 2011 at 04:35:15PM +0000, Pawel Moll wrote:
+
+[...]
+
+> > > +  - for Coretile Express A5x2 (V2P-CA5s):
+> > > +	compatible = "arm,vexpress-v2p-ca5s", "arm-vexpress";
+> > > +  - Coretile Express A9x4 (V2P-CA9):
+> > > +	comaptible = "arm,vexpress-v2p-ca9", "arm,vexpress-legacy", "arm-vexpress";
+> > > +
+> > > +Current Linux implementation requires a "timer" alias pointing
+> > > +at a SP804 timer block to be used when tile is not using local
+> > > +timer source.
+> > 
+> > We should specify a list of all the "standard" aliases used by the
+> > generic motherboard code here, since these are part of the contract
+> > between each board-specific device tree and the motherboard code.
+> > 
+> > Is "timer" the only one, or are there others?
+> 
+> One and only. There were more, but I got rid of them.
+
+Are the other alises still used?  If not, we should perhaps get rid of
+them, or keep them on an as-needed basis only?
+
+Since alises are by definition a point of standardisation (otherwise
+there's no need for an alias) I think they need to be documented alongside
+bindings wherever we have them.
+
+> > > diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfig
+> > > index 9311484..4c11e90 100644
+> > > --- a/arch/arm/mach-vexpress/Kconfig
+> > > +++ b/arch/arm/mach-vexpress/Kconfig
+> > > @@ -9,4 +9,8 @@ config ARCH_VEXPRESS_CA9X4
+> > >  	select ARM_ERRATA_751472
+> > >  	select ARM_ERRATA_753970
+> > >  
+> > 
+> > For "non-interactive" config items, can we still please have comments
+> > indicating what the item means and how it should be used?
+> > 
+> > Such comments can be very brief, but having at least something makes the
+> > configs easier to understand and maintain, in my view.
+> 
+> Em, what bits do you refer to? The lines you quoted are not changed...
+
+Hmmm, editing snafu there.
+
+I think I was referring to the ARCH_VEXPRESS_DT item, which is defined
+just after the lines I quoted.
+
+> 
+> > > diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
+> > 
+> > [...]
+> > 
+> > > +void __init v2m_dt_init_early(void)
+> > > +{
+> > > +	struct device_node *node;
+> > > +	const __be32 *reg;
+> > > +	u32 dt_hbi;
+> > > +
+> > > +	node = of_find_compatible_node(NULL, NULL, "arm,vexpress-sysreg");
+> > > +	BUG_ON(!node);
+> > > +	/* The following will become of_iomap() when possible */
+> > > +	reg = of_get_property(node, "reg", NULL);
+> > > +	BUG_ON(!reg);
+> > > +	v2m_sysreg_base = V2M_PERIPH_P2V(be32_to_cpup(reg));
+> > > +
+> > > +	/* Confirm board type against DT property, if available */
+> > > +	if (of_property_read_u32(allnodes, "arm,hbi", &dt_hbi) == 0) {
+> > > +		u32 misc = readl(v2m_sysreg_base + V2M_SYS_MISC);
+> > > +		u32 id = readl(v2m_sysreg_base + (misc & SYS_MISC_MASTERSITE ?
+> > > +				V2M_SYS_PROCID1 : V2M_SYS_PROCID0));
+> > > +		u32 hbi = id & SYS_PROCIDx_HBI_MASK;
+> > > +
+> > > +		if (WARN_ON(dt_hbi != hbi))
+> > > +			pr_warning("vexpress: DT HBI (%x) is not matching "
+> > > +					"hardware (%x)!\n", dt_hbi, hbi);
+> > 
+> > Once this code is mature enough, should we panic the kernel here
+> > instead?
+> 
+> I'm not convinced. Actually the first version I wrote was panicking. But
+> then I thought that if it works, it works - why should I prevent this?
+> The use case is simple - FPGA implementations, being
+> mostly-exact-equivalents of the core tiles, will have the logic tile HBI
+> here. And to use them you would have to modify the DTS if this code
+> panicked. With WARN_ON you'll see the message, but if you know what are
+> you doing, that's fine...
+> 
+> Don't know, really. Any strong feelings about it?
+
+I don't have a strong feeling about it.  Printing a warning is certainly
+helpful; by definition we don't really know what to do beyond this
+point.
+
+So, the choices are: try to do something reasonable, or panic.
+
+There's no right answer.  "Try to do something reasonable" seems as good
+as any other option ... and there's always the possibility that it might
+work.
+
+Cheers
+---Dave
