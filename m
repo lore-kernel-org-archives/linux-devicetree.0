@@ -1,155 +1,83 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Wed, 16 Nov 2011 15:44:02 +0000
-Message-ID: <20111116154402.GE2073@localhost.localdomain>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH 1/5] ARM: vexpress: Get rid of MMIO_P2V
+Date: Wed, 16 Nov 2011 16:16:45 +0000
+Message-ID: <1321460205.3137.352.camel@hornet.cambridge.arm.com>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
- <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
+ <1321036026-23411-2-git-send-email-pawel.moll@arm.com>
+ <20111116153516.GB2073@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1321036026-23411-4-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111116153516.GB2073@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 11, 2011 at 06:27:04PM +0000, Pawel Moll wrote:
-> This patch provides hooks for DT-based tile machine implementations
-> and adds Device Tree description for the motherboard.
-> 
-> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/vexpress    |   92 ++++++++++
->  arch/arm/boot/dts/vexpress-v2m-legacy.dtsi        |  190 +++++++++++++++++++++
->  arch/arm/mach-vexpress/Kconfig                    |    4 +
->  arch/arm/mach-vexpress/core.h                     |    9 +
->  arch/arm/mach-vexpress/include/mach/motherboard.h |    8 +
->  arch/arm/mach-vexpress/v2m.c                      |  140 +++++++++++++++-
->  6 files changed, 442 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/vexpress
->  create mode 100644 arch/arm/boot/dts/vexpress-v2m-legacy.dtsi
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/vexpress b/Documentation/devicetree/bindings/arm/vexpress
-
-[...]
-
-> +Required properties in the root node:
-> +- compatible value:
-> +  - for motherboard in "legacy" mode:
-> +	compatible = "arm,vexpress-<model>", "arm,vexpress-legacy", "arm-vexpress";
-> +  - for motherboard in "RS1" mode:
-> +	compatible = "arm,vexpress-<model>", "arm-vexpress";
-
-So, we have:
-
-arm,vexpress-* implies arm,vexpress
-arm,vexpress-* may imply arm,vexpress-legacy
-arm,vexpress-legacy implies arm,vexpress
-
-This means we have no bounded test for RS1-only features:
-the needed test is
-"compatible(node, "arm,vexpress") && !compatible(node, "arm,vexpress-legacy")
-
-Unfortunately, if there is someday an "rs2" memory map, that will also match
-the above.  Using "inverse compatibility" in this way feels dangerous,
-because the condition will pass for an arbitrary set of future conditions
-that we haven't imagined yet.
-
-This means it's, impossible even in principle to panic the kernel cleanly if
-presented with a device tree for a platform variant which is too new for the
-kernel to support.
-
-
-Can we instead have a specific "arm,vexpress-rs1"?
-
-	compatible = "arm,vexpress-<model>", "arm-vexpress-rs1", "arm-vexpress";
-
-Then, we can be exact about compatibility: universal features are compatible
-with "arm,vexpress"; memory-map-specific features are compatible with either
-"arm,vexpress-legacy" or "arm,vexpress-rs1".
-
-
-> +  where <model> is the the model, eg:
-
-Two "the"s.
-
-What "model" means isn't obvious to the uninitiated -- how about
-something like "where <model> is the full platform model name" ?
-
-> +  - for Coretile Express A5x2 (V2P-CA5s):
-> +	compatible = "arm,vexpress-v2p-ca5s", "arm-vexpress";
-> +  - Coretile Express A9x4 (V2P-CA9):
-> +	comaptible = "arm,vexpress-v2p-ca9", "arm,vexpress-legacy", "arm-vexpress";
-> +
-> +Current Linux implementation requires a "timer" alias pointing
-> +at a SP804 timer block to be used when tile is not using local
-> +timer source.
-
-We should specify a list of all the "standard" aliases used by the
-generic motherboard code here, since these are part of the contract
-between each board-specific device tree and the motherboard code.
-
-Is "timer" the only one, or are there others?
-
-[...]
-
-> diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfig
-> index 9311484..4c11e90 100644
-> --- a/arch/arm/mach-vexpress/Kconfig
-> +++ b/arch/arm/mach-vexpress/Kconfig
-> @@ -9,4 +9,8 @@ config ARCH_VEXPRESS_CA9X4
->  	select ARM_ERRATA_751472
->  	select ARM_ERRATA_753970
->  
-
-For "non-interactive" config items, can we still please have comments
-indicating what the item means and how it should be used?
-
-Such comments can be very brief, but having at least something makes the
-configs easier to understand and maintain, in my view.
-
-[...]
-
-> diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
-
-[...]
-
-> +void __init v2m_dt_init_early(void)
-> +{
-> +	struct device_node *node;
-> +	const __be32 *reg;
-> +	u32 dt_hbi;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "arm,vexpress-sysreg");
-> +	BUG_ON(!node);
-> +	/* The following will become of_iomap() when possible */
-> +	reg = of_get_property(node, "reg", NULL);
-> +	BUG_ON(!reg);
-> +	v2m_sysreg_base = V2M_PERIPH_P2V(be32_to_cpup(reg));
-> +
-> +	/* Confirm board type against DT property, if available */
-> +	if (of_property_read_u32(allnodes, "arm,hbi", &dt_hbi) == 0) {
-> +		u32 misc = readl(v2m_sysreg_base + V2M_SYS_MISC);
-> +		u32 id = readl(v2m_sysreg_base + (misc & SYS_MISC_MASTERSITE ?
-> +				V2M_SYS_PROCID1 : V2M_SYS_PROCID0));
-> +		u32 hbi = id & SYS_PROCIDx_HBI_MASK;
-> +
-> +		if (WARN_ON(dt_hbi != hbi))
-> +			pr_warning("vexpress: DT HBI (%x) is not matching "
-> +					"hardware (%x)!\n", dt_hbi, hbi);
-
-Once this code is mature enough, should we panic the kernel here
-instead?
-
-Cheers
----Dave
+T24gV2VkLCAyMDExLTExLTE2IGF0IDE1OjM1ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBP
+biBGcmksIE5vdiAxMSwgMjAxMSBhdCAwNjoyNzowMlBNICswMDAwLCBQYXdlbCBNb2xsIHdyb3Rl
+Ogo+ID4gVGhpcyBwYXRjaCBnZXRzIHJpZCBvZiB0aGUgTU1JT19QMlYgYW5kIF9fTU1QSU9fUDJW
+IG1hY3JvcywKPiA+IGRlZmluaW5nIGNvbnN0YW50IHZpcnR1YWwgYmFzZSBmb3IgbW90aGVyYm9h
+cmQgYW5kIHRpbGUKPiA+IHBlcmlwaGVyYWxzIGluc3RlYWQuCj4gPiAKPiA+IEFkZGl0aW9uYWxs
+eSwgaW4gcHJlcGFyYXRpb24gZm9yIHRoZSBuZXcgbW90aGVyYm9hcmQgbWVtb3J5Cj4gPiBtYXAs
+IHRoZSBtb3RoZXJib2FyZCBwZXJpcGhlcmFscyBhcmUgdXNpbmcgYmFzZSBwb2ludGVycwo+ID4g
+Y2FsY3VsYXRlZCBpbiBydW50aW1lLCBpbnN0ZWFkIG9mIGNvbXBpbGUtdGltZSBjYWxjdWxhdGVk
+Cj4gPiB2YWx1ZXMuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFBhd2VsIE1vbGwgPHBhd2VsLm1v
+bGxAYXJtLmNvbT4KPiA+IC0tLQo+ID4gIGFyY2gvYXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2Fy
+bV90aW1lci5oICAgICAgICAgfCAgICA1ICsrCj4gPiAgYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9j
+b3JlLmggICAgICAgICAgICAgICAgICAgICB8ICAgMTIgKysrLQo+ID4gIGFyY2gvYXJtL21hY2gt
+dmV4cHJlc3MvY3QtY2E5eDQuYyAgICAgICAgICAgICAgICAgfCAgIDUyICsrKystLS0tLS0tLS0t
+LS0tCj4gPiAgYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9pbmNsdWRlL21hY2gvY3QtY2E5eDQuaCAg
+ICB8ICAgMTMgKystLS0KPiA+ICBhcmNoL2FybS9tYWNoLXZleHByZXNzL2luY2x1ZGUvbWFjaC9t
+b3RoZXJib2FyZC5oIHwgICA1MyArKysrKysrKy0tLS0tLS0tLQo+ID4gIGFyY2gvYXJtL21hY2gt
+dmV4cHJlc3MvcGxhdHNtcC5jICAgICAgICAgICAgICAgICAgfCAgICA0ICstCj4gPiAgYXJjaC9h
+cm0vbWFjaC12ZXhwcmVzcy92Mm0uYyAgICAgICAgICAgICAgICAgICAgICB8ICAgNjQgKysrKysr
+KysrKysrKystLS0tLS0tCj4gPiAgNyBmaWxlcyBjaGFuZ2VkLCAxMDAgaW5zZXJ0aW9ucygrKSwg
+MTAzIGRlbGV0aW9ucygtKQo+IAo+IFsuLi5dCj4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+bWFjaC12ZXhwcmVzcy9jdC1jYTl4NC5jIGIvYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9jdC1jYTl4
+NC5jCj4gPiBpbmRleCAyYjFlODM2Li40N2MwNzMzIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0v
+bWFjaC12ZXhwcmVzcy9jdC1jYTl4NC5jCj4gPiArKysgYi9hcmNoL2FybS9tYWNoLXZleHByZXNz
+L2N0LWNhOXg0LmMKPiA+IEBAIC0zMCw1NyArMzAsMjYgQEAKPiA+ICAKPiA+ICAjaW5jbHVkZSA8
+cGxhdC9jbGNkLmg+Cj4gPiAgCj4gPiAtI2RlZmluZSBWMk1fUEFfQ1M3CTB4MTAwMDAwMDAKPiA+
+IC0KPiA+ICBzdGF0aWMgc3RydWN0IG1hcF9kZXNjIGN0X2NhOXg0X2lvX2Rlc2NbXSBfX2luaXRk
+YXRhID0gewo+ID4gIAl7Cj4gPiAtCQkudmlydHVhbAk9IF9fTU1JT19QMlYoQ1RfQ0E5WDRfTVBJ
+QyksCj4gPiAtCQkucGZuCQk9IF9fcGh5c190b19wZm4oQ1RfQ0E5WDRfTVBJQyksCj4gPiAtCQku
+bGVuZ3RoCQk9IFNaXzE2SywKPiA+IC0JCS50eXBlCQk9IE1UX0RFVklDRSwKPiA+ICsJCS52aXJ0
+dWFsICAgICAgICA9IFYyVF9QRVJJUEgsCj4gPiArCQkucGZuICAgICAgICAgICAgPSBfX3BoeXNf
+dG9fcGZuKENUX0NBOVg0X01QSUMpLAo+ID4gKwkJLmxlbmd0aCAgICAgICAgID0gU1pfOEssCj4K
+PiBDYW4geW91IGV4cGxhaW4gdGhlIHNpemUgY2hhbmdlPwoKVGhlIFNDVSdzICJQcml2YXRlIG1l
+bW9yeSByZWdpb24iIGlzIDhLIGJpZywgbm90IDE2OgoKaHR0cDovL2luZm9jZW50ZXIuYXJtLmNv
+bS9oZWxwL3RvcGljL2NvbS5hcm0uZG9jLmRkaTA0MDdnL0NBQ0NKRkNKLmh0bWwKaHR0cDovL2lu
+Zm9jZW50ZXIuYXJtLmNvbS9oZWxwL3RvcGljL2NvbS5hcm0uZG9jLmR1aTA0NDhlL0NIRENCSkNC
+Lmh0bWwKCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYyBiL2Fy
+Y2gvYXJtL21hY2gtdmV4cHJlc3MvdjJtLmMKPiA+IGluZGV4IDFmYWZjMzIuLmI4NGZhNDUgMTAw
+NjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9tYWNoLXZleHByZXNzL3YybS5jCj4gPiArKysgYi9hcmNo
+L2FybS9tYWNoLXZleHByZXNzL3YybS5jCj4gCj4gWy4uLl0KPiAKPiA+IEBAIC00MTMsNiArNDMx
+LDEwIEBAIHN0YXRpYyB2b2lkIF9faW5pdCB2Mm1fcG9wdWxhdGVfY3RfZGVzYyh2b2lkKQo+ID4g
+IHN0YXRpYyB2b2lkIF9faW5pdCB2Mm1fbWFwX2lvKHZvaWQpCj4gPiAgewo+ID4gIAlpb3RhYmxl
+X2luaXQodjJtX2lvX2Rlc2MsIEFSUkFZX1NJWkUodjJtX2lvX2Rlc2MpKTsKPiA+ICsKPiA+ICsJ
+LyogV2lsbCBiZWNvbWUgYW4gaW9yZW1hcCgpIHdoZW4gcG9zc2libGUgKi8KPiA+ICsJdjJtX3N5
+c3JlZ19iYXNlID0gVjJNX1BFUklQSF9QMlYoVjJNX1NZU1JFR1MpOwo+IAo+IGxpbnV4L29mX2Zk
+dC5oIGhhcyBmdW5jdGlvbnMgZm9yIG1hbmlwdWxhdGluZyB0aGUgZmxhdHRlbmVkIGRldmljZSB0
+cmVlCj4gYmxvYi4KPiAKPiBDb3VsZCB0aGF0IHNvbHZlIG91ciBwcm9ibGVtPyAgV2UganVzdCBu
+ZWVkIHRvIGdldCB0aGUgcm9vdCBub2RlIGNvbXBhdGlibGUKPiBwcm9wZXJ0eSBvdXQuCgpXaGF0
+IGRvIHlvdSBleGFjbHR5IG1lYW4/IFRoaXMgZnVuY3Rpb24gaXMgbm9uLURUIHJlbGF0ZWQuIEl0
+J3Mgbm90IHVzZWQKYnkgRFQgcGxhdGZvcm0gYXQgYWxsLi4uCgo+IElzIHRoZXJlIGFueXRoaW5n
+IGVsc2UgYmxvY2tpbmcgdGhlIGJ1aWxkaW5nIG9mIGxlZ2FjeSBhbmQgUlMxIG1lbW9yeQo+IG1h
+cHMgaW50byBhIHNpbmdsZSBrZXJuZWw/Cj4gKEknbSBzdGlsbCBoYXp5IG9uIGhvdyBhbGwgdGhl
+IHJlbWFwcGluZyBzdHVmZiB3b3JrcywgbXlzZWxmLikKClRoaXMgd29ya3Mgbm93IC0gSSBoYXZl
+IGEgc2luZ2xlIGJpbmFyeSBrZXJuZWwgdGhhdCB3b3JrcyBvbiBib3RoIEE5IGFuZApBNSBjb3Jl
+dGlsZXMuIE9mIGNvdXJzZSB0aGUgQVRBRy1iYXNlZCBzdXBwb3J0IHdvcmtzIHdpdGggQTkgb25s
+eS4KClBhd2XFggoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
