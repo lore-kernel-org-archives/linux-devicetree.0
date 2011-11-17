@@ -1,158 +1,44 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: omap: pass minimal SoC/board data for UART from
- dt
-Date: Wed, 16 Nov 2011 19:04:27 -0600
-Message-ID: <4EC45D9B.5020006@gmail.com>
-References: <1321441346-19591-1-git-send-email-rnayak@ti.com> <1321441346-19591-4-git-send-email-rnayak@ti.com>
+From: Ryan Harkin <ryan.harkin@linaro.org>
+Subject: Re: [PATCH 1/5] ARM: vexpress: Get rid of MMIO_P2V
+Date: Thu, 17 Nov 2011 07:02:36 +0000
+Message-ID: <1321513356.2638.1.camel@vaio.config>
+References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
+ <1321036026-23411-2-git-send-email-pawel.moll@arm.com>
+ <20111116153516.GB2073@localhost.localdomain>
+ <1321460205.3137.352.camel@hornet.cambridge.arm.com>
+ <20111116172815.GF2073@localhost.localdomain>
+ <1321464634.3137.382.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1321441346-19591-4-git-send-email-rnayak@ti.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, linaro-dev@lists.linaro.org, tony@atomide.com, govindraj.raja@ti.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1321464634.3137.382.camel@hornet.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Dave Martin <dave.martin@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2011 05:02 AM, Rajendra Nayak wrote:
-> Pass minimal data needed for console boot, from dt, for
-> OMAP4 panda/sdp and OMAP3 beagle boards, and get rid of the
-> static initialization from generic board file.
+On Wed, 2011-11-16 at 17:30 +0000, Pawel Moll wrote:
+> On Wed, 2011-11-16 at 17:28 +0000, Dave Martin wrote:
+> > > > Is there anything else blocking the building of legacy and RS1 memory
+> > > > maps into a single kernel?
+> > > > (I'm still hazy on how all the remapping stuff works, myself.)
+> > > 
+> > > This works now - I have a single binary kernel that works on both A9 and
+> > > A5 coretiles. Of course the ATAG-based support works with A9 only.
+> > 
+> > Cool -- we should get Ryan and Tixy to try it out, if they haven't already.
+> > I don't have an A5 handy...
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
-> ---
->  arch/arm/boot/dts/omap3-beagle.dts  |   17 +++++++++++++++++
->  arch/arm/boot/dts/omap3.dtsi        |   27 +++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap4-panda.dts   |   17 +++++++++++++++++
->  arch/arm/boot/dts/omap4-sdp.dts     |   17 +++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi        |   24 ++++++++++++++++++++++++
->  arch/arm/mach-omap2/board-generic.c |    1 -
->  6 files changed, 102 insertions(+), 1 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-> index 9486be6..4c8f11e 100644
-> --- a/arch/arm/boot/dts/omap3-beagle.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle.dts
-> @@ -27,3 +27,20 @@
->  		reg = <0x80000000 0x20000000>; /* 512 MB */
->  	};
->  };
-> +
-> +&uart1 {
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart2 {
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart3 {
-> +	ti,console_hwmod;
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart4 {
-> +	clock-frequency = <48000000>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index d202bb5..ea591c5 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -13,6 +13,13 @@
->  / {
->  	compatible = "ti,omap3430", "ti,omap3";
->  
-> +	aliases {
-> +		uart1 = &uart1;
-> +		uart2 = &uart2;
-> +		uart3 = &uart3;
-> +		uart4 = &uart4;
-> +	};
-> +
->  	cpus {
->  		cpu@0 {
->  			compatible = "arm,cortex-a8";
-> @@ -59,5 +66,25 @@
->  			interrupt-controller;
->  			#interrupt-cells = <1>;
->  		};
-> +
-> +		uart1: uart@1 {
+> Good idea. I'll send them instructions how to boot "DT-enabled" kernel
+> using Boot Monitor tomorrow and ask to try the series.
 
-Use the generic name serial and the address: uart1: serial@1234abcd
-
-> +			compatible = "ti,omap-uart";
-> +			ti,hwmods = "uart1";
-> +		};
-> +
-> +		uart2: uart@2 {
-> +			compatible = "ti,omap-uart";
-> +			ti,hwmods = "uart2";
-> +		};
-> +
-> +		uart3: uart@3 {
-> +			compatible = "ti,omap-uart";
-> +			ti,hwmods = "uart3";
-> +		};
-> +
-> +		uart4: uart@4 {
-> +			compatible = "ti,omap-uart";
-> +			ti,hwmods = "uart4";
-> +		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-> index c702657..aa65449 100644
-> --- a/arch/arm/boot/dts/omap4-panda.dts
-> +++ b/arch/arm/boot/dts/omap4-panda.dts
-> @@ -27,3 +27,20 @@
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
->  	};
->  };
-> +
-> +&uart1 {
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart2 {
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart3 {
-> +	ti,console_hwmod;
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart4 {
-> +	clock-frequency = <48000000>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-> index 066e28c..524f5bf 100644
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -27,3 +27,20 @@
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
->  	};
->  };
-> +
-> +&uart1 {
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart2 {
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart3 {
-> +	ti,console_hwmod;
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +&uart4 {
-> +	clock-frequency = <48000000>;
-
-It doesn't seem that this frequency ever varies and is likely to be
-replaced with clock bindings, so maybe just put it in the dtsi files.
-
-Rob
-
+I have both boards here waiting your command.
