@@ -1,62 +1,76 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Thu, 17 Nov 2011 13:50:13 +0000
-Message-ID: <1321537813.3137.475.camel@hornet.cambridge.arm.com>
-References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
- <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
- <20111116154402.GE2073@localhost.localdomain>
- <1321461315.3137.371.camel@hornet.cambridge.arm.com>
- <20111116175757.GI2073@localhost.localdomain>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
+Date: Thu, 17 Nov 2011 14:57:12 +0100
+Message-ID: <CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
+References: <1321274409-24643-1-git-send-email-rnayak@ti.com>
+	<1321274409-24643-2-git-send-email-rnayak@ti.com>
+	<20111114172312.GI31337@atomide.com>
+	<4EC1EB9D.1000503@ti.com>
+	<CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
+	<CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111116175757.GI2073@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: Rajendra Nayak <rnayak@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, linus.walleij@stericsson.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDExLTExLTE2IGF0IDE3OjU3ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiA+
-ID4gV2Ugc2hvdWxkIHNwZWNpZnkgYSBsaXN0IG9mIGFsbCB0aGUgInN0YW5kYXJkIiBhbGlhc2Vz
-IHVzZWQgYnkgdGhlCj4gPiA+IGdlbmVyaWMgbW90aGVyYm9hcmQgY29kZSBoZXJlLCBzaW5jZSB0
-aGVzZSBhcmUgcGFydCBvZiB0aGUgY29udHJhY3QKPiA+ID4gYmV0d2VlbiBlYWNoIGJvYXJkLXNw
-ZWNpZmljIGRldmljZSB0cmVlIGFuZCB0aGUgbW90aGVyYm9hcmQgY29kZS4KPiA+ID4gCj4gPiA+
-IElzICJ0aW1lciIgdGhlIG9ubHkgb25lLCBvciBhcmUgdGhlcmUgb3RoZXJzPwo+ID4gCj4gPiBP
-bmUgYW5kIG9ubHkuIFRoZXJlIHdlcmUgbW9yZSwgYnV0IEkgZ290IHJpZCBvZiB0aGVtLgo+IAo+
-IEFyZSB0aGUgb3RoZXIgYWxpc2VzIHN0aWxsIHVzZWQ/ICBJZiBub3QsIHdlIHNob3VsZCBwZXJo
-YXBzIGdldCByaWQgb2YKPiB0aGVtLCBvciBrZWVwIHRoZW0gb24gYW4gYXMtbmVlZGVkIGJhc2lz
-IG9ubHk/CgpJJ3ZlIGluY2x1ZGVkIHRoZSBzZXJpYWxYIGFuZCBpMmNYIGFsaWFzZXMgcHVyZWx5
-IGJlY2F1c2UgdGhlIG90aGVyCmJvYXJkcyBkbyAoaW5jbHVkaW5nIEdyYW50J3MgdmVyc2F0aWxl
-IGR0cykuCgo+IFNpbmNlIGFsaXNlcyBhcmUgYnkgZGVmaW5pdGlvbiBhIHBvaW50IG9mIHN0YW5k
-YXJkaXNhdGlvbiAob3RoZXJ3aXNlCj4gdGhlcmUncyBubyBuZWVkIGZvciBhbiBhbGlhcykgSSB0
-aGluayB0aGV5IG5lZWQgdG8gYmUgZG9jdW1lbnRlZCBhbG9uZ3NpZGUKPiBiaW5kaW5ncyB3aGVy
-ZXZlciB3ZSBoYXZlIHRoZW0uCgpZb3UgYXJlIHJpZ2h0LCBidXQgSSB0aGluayB0aGlzIGlzIG91
-dCBvZiB0aGUgdmV4cHJlc3Mgc2NvcGUuIFRoZQpzZXJpYWxYIGFsaWFzZXMsIGZvciBleGFtcGxl
-LCBhcmUgYWxyZWFkeSB1c2VkIGJ5IHNvbWUgZHJpdmVyczoKCiAgIDQgICAxNzg4ICBkcml2ZXJz
-L3R0eS9zZXJpYWwvYXRtZWxfc2VyaWFsLmMgPDxhdG1lbF9zZXJpYWxfcHJvYmU+PgogICAgICAg
-ICAgICAgcmV0ID0gb2ZfYWxpYXNfZ2V0X2lkKG5wLCAic2VyaWFsIik7CiAgIDUgICAxMzAxICBk
-cml2ZXJzL3R0eS9zZXJpYWwvaW14LmMgPDxzZXJpYWxfaW14X3Byb2JlX2R0Pj4KICAgICAgICAg
-ICAgIHJldCA9IG9mX2FsaWFzX2dldF9pZChucCwgInNlcmlhbCIpOwoKc28gaXQgc291bmRzIGxp
-a2UgYSBnZW5lcmljIHBvbGljeS10by1iZS1tYWRlLgoKPiA+ID4gRm9yICJub24taW50ZXJhY3Rp
-dmUiIGNvbmZpZyBpdGVtcywgY2FuIHdlIHN0aWxsIHBsZWFzZSBoYXZlIGNvbW1lbnRzCj4gPiA+
-IGluZGljYXRpbmcgd2hhdCB0aGUgaXRlbSBtZWFucyBhbmQgaG93IGl0IHNob3VsZCBiZSB1c2Vk
-Pwo+ID4gPiAKPiA+ID4gU3VjaCBjb21tZW50cyBjYW4gYmUgdmVyeSBicmllZiwgYnV0IGhhdmlu
-ZyBhdCBsZWFzdCBzb21ldGhpbmcgbWFrZXMgdGhlCj4gPiA+IGNvbmZpZ3MgZWFzaWVyIHRvIHVu
-ZGVyc3RhbmQgYW5kIG1haW50YWluLCBpbiBteSB2aWV3Lgo+ID4gCj4gPiBFbSwgd2hhdCBiaXRz
-IGRvIHlvdSByZWZlciB0bz8gVGhlIGxpbmVzIHlvdSBxdW90ZWQgYXJlIG5vdCBjaGFuZ2VkLi4u
-Cj4gCj4gSG1tbSwgZWRpdGluZyBzbmFmdSB0aGVyZS4KPiAKPiBJIHRoaW5rIEkgd2FzIHJlZmVy
-cmluZyB0byB0aGUgQVJDSF9WRVhQUkVTU19EVCBpdGVtLCB3aGljaCBpcyBkZWZpbmVkCj4ganVz
-dCBhZnRlciB0aGUgbGluZXMgSSBxdW90ZWQuCgpPaywgd2lsbCBkby4KCkNoZWVycyEKClBhd2XF
-ggoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+On Thu, Nov 17, 2011 at 12:26 PM, Thomas Abraham
+<thomas.abraham@linaro.org> wrote:
+
+> For now, the Samsung GPIO, Pinconfig and Pinmux information is
+> represented in device tree as listed below.
+
+Does this mean that the understanding of this format is merged into
+the mainline kernel drivers or is it keps out-of-tree?
+
+> i2c@1C004000 {
+> =A0 =A0 =A0 =A0 =A0compatible =3D "...";
+> =A0 =A0 =A0 =A0 =A0reg =3D <0x... 0x..>;
+> =A0 =A0 =A0 =A0 =A0 gpios =3D <&gpa0 2 2 3 0>,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<&gpa0 3 2 3 0>;
+> =A0 =A0 =A0 =A0 =A0...
+> };
+>
+> The format of the gpio specifier is
+> <[Pad Controller phandle] [pin number within the controller] [Pin Mux
+> Function] [Pull Up/Down] [Drive Strength]>
+>
+> From a perspective of writing a 'gpios' property for a device node,
+> this is quite simple. Looking up the hardware manual of the SoC can
+> provide all the values that should be used in the gpio specifier.
+
+That may not be as simple as it seems if all you have is the
+device tree and no manual, but I get the picture.
+
+> The GPIO/PinCtrl driver can provide a translate function that picks u=
+p
+> the values for the gpio specifier and writes the same value to the
+> pad-controller registers. But, this a deviation from the existing
+> pinctrl subsystem code which mainly relies on name of the pin-group
+> and pin-function.
+>
+> Does this seem to be a feasible option for specifying
+> gpio/pinconfig/pinmux dt bindings?
+
+I would prefer the above to use the nice generic enums from the
+pin control subsystem's pinmux and pinconf properties in the
+end so the device tree on its own is understandable without
+any manual whatsoever, but we'll see about that.
+
+Maybe I'm mistaken about the device tree ambitions, but
+I was sort of hoping that it would not contain too much
+custom magic numbers that need to be cross-referenced
+elsewhere ... or rather - the more understandable the device
+tree is, the more we win.
+
+Thanks,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
