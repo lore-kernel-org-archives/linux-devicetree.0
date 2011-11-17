@@ -1,15 +1,15 @@
 From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Thu, 17 Nov 2011 15:36:24 +0000
-Message-ID: <20111117153624.GR9581@n2100.arm.linux.org.uk>
+Subject: Re: [PATCH 1/5] ARM: vexpress: Get rid of MMIO_P2V
+Date: Thu, 17 Nov 2011 15:43:09 +0000
+Message-ID: <20111117154308.GS9581@n2100.arm.linux.org.uk>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
- <1321036026-23411-5-git-send-email-pawel.moll@arm.com>
+ <1321036026-23411-2-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1321036026-23411-5-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1321036026-23411-2-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,51 +23,70 @@ To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 11, 2011 at 06:27:05PM +0000, Pawel Moll wrote:
-> diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfig
-> index 4c11e90..d1b0f35 100644
-> --- a/arch/arm/mach-vexpress/Kconfig
-> +++ b/arch/arm/mach-vexpress/Kconfig
-> @@ -1,6 +1,14 @@
->  menu "Versatile Express platform type"
->  	depends on ARCH_VEXPRESS
->  
-> +config ARCH_VEXPRESS_LEGACY
-> +	bool
-> +	select AUTO_ZRELADDR
-> +	select ARM_PATCH_PHYS_VIRT
+On Fri, Nov 11, 2011 at 06:27:02PM +0000, Pawel Moll wrote:
+> @@ -17,3 +14,12 @@ struct amba_device name##_device = {		\
+>  	.irq		= IRQ_##base,		\
+>  	/* .dma		= DMA_##base,*/		\
+>  }
 > +
-> +config ARCH_VEXPRESS_RS1
-> +	bool
+> +/* 2MB large area for motherboard's peripherals static mapping */
+> +#define V2M_PERIPH 0xf8000000
+> +#define V2M_PERIPH_P2V(offset) ((void __iomem *)(V2M_PERIPH | (offset)))
 > +
->  config ARCH_VEXPRESS_CA9X4
->  	bool "Versatile Express Cortex-A9x4 tile"
->  	select CPU_V7
-> @@ -8,6 +16,7 @@ config ARCH_VEXPRESS_CA9X4
->  	select ARM_ERRATA_720789
->  	select ARM_ERRATA_751472
->  	select ARM_ERRATA_753970
-> +	select ARCH_VEXPRESS_LEGACY
+> +/* Tile's peripherals static mappings should start here */
+> +#define V2T_PERIPH 0xf8200000
+> +#define V2T_PERIPH_P2V(offset) ((void __iomem *)(V2T_PERIPH | (offset)))
+> +
 
-This doesn't make sense.  Why should CA9x4 be forced to use the P2V stuff
-and the AUTO_ZRELADDR stuff?  Hint: it works fine today without.
+Please get rid of these blank lines at the end of files.
 
+> diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
+> index 1fafc32..b84fa45 100644
+> --- a/arch/arm/mach-vexpress/v2m.c
+> +++ b/arch/arm/mach-vexpress/v2m.c
+> @@ -39,29 +39,41 @@
 >  
->  config ARCH_VEXPRESS_DT
->  	bool
-> diff --git a/arch/arm/mach-vexpress/Makefile.boot b/arch/arm/mach-vexpress/Makefile.boot
-> index 8630b3d..3278615 100644
-> --- a/arch/arm/mach-vexpress/Makefile.boot
-> +++ b/arch/arm/mach-vexpress/Makefile.boot
-> @@ -1,3 +1,3 @@
-> -   zreladdr-y	+= 0x60008000
-> -params_phys-y	:= 0x60000100
-> -initrd_phys-y	:= 0x60800000
-> +   zreladdr-y	+= 0x80008000
-> +params_phys-y	:= 0x80000100
-> +initrd_phys-y	:= 0x80800000
+>  static struct map_desc v2m_io_desc[] __initdata = {
+>  	{
+> -		.virtual	= __MMIO_P2V(V2M_PA_CS7),
+> +		.virtual	= V2M_PERIPH,
+>  		.pfn		= __phys_to_pfn(V2M_PA_CS7),
+>  		.length		= SZ_128K,
+>  		.type		= MT_DEVICE,
+>  	},
+>  };
+>  
+> +static void __iomem *v2m_sysreg_base;
+> +
+> +
+> +
 
-So is this the reason - you don't want to turn this into a config, so you
-want to force all the automatic zreladdr stuff on?  You do know that this
-will probably cause uboot to load the uImage at 0x80008000 instead of
-0x60008000, and therefore we'll lose half the RAM on this board?
+More useless blank lines.
+
+>  static void __init v2m_timer_init(void)
+>  {
+> +	void *sysctl_base;
+> +	void *timer01_base;
+
+Do you not use sparse?  __iomem.
+
+> +	unsigned int timer01_irq;
+>  	u32 scctrl;
+>  
+> +		sysctl_base = ioremap(V2M_SYSCTL, SZ_4K);
+> +		BUG_ON(!sysctl_base);
+> +		timer01_base = ioremap(V2M_TIMER01, SZ_4K);
+> +		BUG_ON(!timer01_base);
+> +		timer01_irq = IRQ_V2M_TIMER0;
+
+What's going on with the indentation here?
+
+> @@ -413,6 +431,10 @@ static void __init v2m_populate_ct_desc(void)
+>  static void __init v2m_map_io(void)
+>  {
+>  	iotable_init(v2m_io_desc, ARRAY_SIZE(v2m_io_desc));
+> +
+> +	/* Will become an ioremap() when possible */
+> +	v2m_sysreg_base = V2M_PERIPH_P2V(V2M_SYSREGS);
+
+It won't if it stays here.
