@@ -1,80 +1,116 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 04/10] arm/tegra: prepare early init for multiple tegra
-	variants
-Date: Thu, 17 Nov 2011 16:55:51 +0000
-Message-ID: <20111117165551.GV9581@n2100.arm.linux.org.uk>
-References: <1321546766-26770-1-git-send-email-pdeschrijver@nvidia.com> <1321546766-26770-5-git-send-email-pdeschrijver@nvidia.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Best practice for compatible strings?
+Date: Thu, 17 Nov 2011 18:25:43 +0000
+Message-ID: <20111117182543.GD3044@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1321546766-26770-5-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2011 at 06:19:18PM +0200, Peter De Schrijver wrote:
-> This patch splits the early init code in a common and a tegra20 specific part.
-> L2 cache initialization is generalized and discovers the cache associativity
-> at runtime. Also use arm_pm_restart instead of arm_arch_reset and reset the
-> the system using the PMC reset feature rather then the CAR system reset.
+Hi Grant,
 
-I'm already carrying this, and the follow-on patch to remove the
-arch_reset() from tegra entirely.
+There seems to be some confusion about how to define and use compatible
+strings in the device tree.  The ePAPR specification doesn't seem to
+spell this out.  If, as is probable, this discussion has happened
+already then feel free to point me to the conclusions.  I don't mean
+to imply that everyone is confused, but I am.
 
-8<===
-ARM: restart: tegra: use new restart hook
+Anyway, my uncertainty boils down to how to know when do define/use more
+specific names, and when to define/use more general names.
 
-Hook these platforms restart code into the arm_pm_restart hook rather
-than using arch_reset().
+[Apologies for verboseness -- as you will see, I was having a hard
+time pinning down what the question is, never mind the answer...]
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- arch/arm/mach-tegra/common.c              |    5 ++---
- arch/arm/mach-tegra/include/mach/system.h |    6 +++---
- 2 files changed, 5 insertions(+), 6 deletions(-)
+For example, since the initial Verstaile Express upstream support will
+almost certainly not support all variants from a single machine
+definition, it's unclear whether we should have a "arm,vexpress"
+compatible string at all.  Logically, such a string would be generic
+such that it encompassed not only all versatile express based platforms
+which exist now, but all those which will ever exist in the future.
+Generic strings are attempts to foretell the future, and may turn out to
+be misguided.  However, without this string in device trees, if there
+are eventually hundreds of vexpress based platforms, then the relevant
+board support and drivers in the kernel would have to list all of them
+in their compatible lists.
 
-diff --git a/arch/arm/mach-tegra/common.c b/arch/arm/mach-tegra/common.c
-index 690b888..1374d10 100644
---- a/arch/arm/mach-tegra/common.c
-+++ b/arch/arm/mach-tegra/common.c
-@@ -31,9 +31,7 @@
- #include "clock.h"
- #include "fuse.h"
- 
--void (*arch_reset)(char mode, const char *cmd) = tegra_assert_system_reset;
--
--void tegra_assert_system_reset(char mode, const char *cmd)
-+static void tegra_assert_system_reset(char mode, const char *cmd)
- {
- 	void __iomem *reset = IO_ADDRESS(TEGRA_CLK_RESET_BASE + 0x04);
- 	u32 reg;
-@@ -76,6 +74,7 @@ static void __init tegra_init_cache(void)
- 
- void __init tegra_init_early(void)
- {
-+	arm_pm_restart = tegra_assert_system_reset;
- 	tegra_init_fuse();
- 	tegra_init_clock();
- 	tegra_clk_init_from_table(common_clk_init_table);
-diff --git a/arch/arm/mach-tegra/include/mach/system.h b/arch/arm/mach-tegra/include/mach/system.h
-index 027c421..b87b8a4 100644
---- a/arch/arm/mach-tegra/include/mach/system.h
-+++ b/arch/arm/mach-tegra/include/mach/system.h
-@@ -21,9 +21,9 @@
- #ifndef __MACH_TEGRA_SYSTEM_H
- #define __MACH_TEGRA_SYSTEM_H
- 
--#include <mach/iomap.h>
--
--extern void (*arch_reset)(char mode, const char *cmd);
-+static inline void arch_reset(char mode, const char *cmd)
-+{
-+}
- 
- static inline void arch_idle(void)
- {
--- 
-1.7.4.4
+So, is there a rule for distinguishing between generic compatible
+strings which capture something meaningful (which are probably a good
+idea) and those which do not (i.e., a bad idea).
 
+Finally, is there a convention for what common prefixes should mean?
+It sort of looks like there ought to be, but this can be problematic:
+
+Logically, I might suppose that:
+
+  1) "arm,vexpress" is more general than "arm,vexpress-v2p-ca9".
+  2) "arm,vexpress-v2p-ca9" is not more general than
+"arm,vexpress-v2p-ca5s", nor vice versa.  However, they may have some
+common features which could be possibly described by any common prefix
+of the two strings (such as "arm,vexpress" or "arm,vexpress-v2p" or
+whatever.
+
+However, apart from the vendor prefix convention there does not seem to
+be any formal convention about the anatomy of compatible strings.
+"arm,vexpress-1" might have no connection whatever with "arm,vexpress"
+(except that they come from the same vendor).  Nonetheless, the visual
+similarity may tempt people to believe that there is a deeper
+connection even if there isn't.
+
+(1) causes a particular problem: if an initial attempt to define a
+generic compatible string fails because a future device doesn't fit the
+meaning of the initial generic compatible string, then a new, different
+string is required which does not just append a suffix.  It is desirable
+in such a case to define a _new_ super-generic string to encompass all
+the cases (including the new ones we didn't originally foresee) -- but
+it becomes impossible for that new generic string to be a common prefix
+of all the specific strings it encompasses, so that although the generic
+string can be logically generic, it will not look generic...
+
+Suppose in the future we have some crazy thing like
+"arm,vexpress-v2p-ca25", but it isn't compatible with the original
+definition of "arm,vexpress".  People reading the strings will naturally
+assume compatibility, since the strings look similar.  If we want a new
+super-generic string (we probably do, since we would want to consolidate
+the kernel support), it would have to be something like
+"arm,brand-spanking-new-vexpress", since calling the new string
+"arm,vexpress-*" would give a misleading (reversed) impression of
+compatibility.  But the relationship between that and any of the other
+compatible strings is non-obvious.  The tempting alternative,
+redefinition of "arm,vexpress" to encompass the new platform is
+presumably not an option, because it would mean that new device trees
+would be misinterpreted/mishandled by old kernels and vice versa.
+
+Part of the problem is that in this situation, the actual definition of
+"arm,vexpress" is likely never to be properly clarified -- it is assumed
+initially to be obvious, and an undocumented de facto meaning arises
+from the way this string gets baked into the code.  Because this
+definition may end up distributed around various bits of code and may
+not match what was originally intended, it may be nearly impossible to
+construct a sensible meaning post-hoc which does not conflict with the
+implementation at some or all points in time.
+
+This seems to imply that compatible strings with generic meanings need
+to be very carefully thought out and precisely specified if they are not
+to be useless.  Unfortunately, instinct tends to suggest that those
+levels of care or recision are not needed for generic things, resulting
+in compatible strings which are vague instead of being generic in a
+precise way.
+
+Possibly I've answered my own question here, but I'd be interested
+in your view on it...
+
+Cheers
+---Dave
