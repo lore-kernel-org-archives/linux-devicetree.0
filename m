@@ -1,168 +1,89 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 3/3] ARM: omap: pass minimal SoC/board data for UART from
- dt
-Date: Thu, 17 Nov 2011 14:12:22 +0530
-Message-ID: <4EC4C8EE.30701@ti.com>
-References: <1321441346-19591-1-git-send-email-rnayak@ti.com> <1321441346-19591-4-git-send-email-rnayak@ti.com> <4EC45D9B.5020006@gmail.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 1/3] ARM: omap_device: handle first time activation of
+ console device
+Date: Thu, 17 Nov 2011 10:52:44 +0100
+Message-ID: <4EC4D96C.9050804@ti.com>
+References: <1321441346-19591-1-git-send-email-rnayak@ti.com> <1321441346-19591-2-git-send-email-rnayak@ti.com> <4EC3D037.6020901@ti.com> <4EC4B56F.2040504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <4EC45D9B.5020006@gmail.com>
+In-Reply-To: <4EC4B56F.2040504@ti.com>
 Sender: linux-serial-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, linaro-dev@lists.linaro.org, tony@atomide.com, govindraj.raja@ti.com, linux-arm-kernel@lists.infradead.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, khilman@ti.com, govindraj.raja@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 November 2011 06:34 AM, Rob Herring wrote:
-> On 11/16/2011 05:02 AM, Rajendra Nayak wrote:
->> Pass minimal data needed for console boot, from dt, for
->> OMAP4 panda/sdp and OMAP3 beagle boards, and get rid of the
->> static initialization from generic board file.
+Hi Rajendra,
+
+On 11/17/2011 8:19 AM, Rajendra Nayak wrote:
+> [...]
+>>> +static int omap_console_hwmod_enable(struct omap_device *od)
+>>> +{
+>>> + console_lock();
+>>> + /*
+>>> + * For early console we prevented hwmod reset and idle
 >>
->> Signed-off-by: Rajendra Nayak<rnayak@ti.com>
->> ---
->>   arch/arm/boot/dts/omap3-beagle.dts  |   17 +++++++++++++++++
->>   arch/arm/boot/dts/omap3.dtsi        |   27 +++++++++++++++++++++++++++
->>   arch/arm/boot/dts/omap4-panda.dts   |   17 +++++++++++++++++
->>   arch/arm/boot/dts/omap4-sdp.dts     |   17 +++++++++++++++++
->>   arch/arm/boot/dts/omap4.dtsi        |   24 ++++++++++++++++++++++++
->>   arch/arm/mach-omap2/board-generic.c |    1 -
->>   6 files changed, 102 insertions(+), 1 deletions(-)
+>> A period is missing. Or maybe it should a comma with not capital letter.
 >>
->> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
->> index 9486be6..4c8f11e 100644
->> --- a/arch/arm/boot/dts/omap3-beagle.dts
->> +++ b/arch/arm/boot/dts/omap3-beagle.dts
->> @@ -27,3 +27,20 @@
->>   		reg =<0x80000000 0x20000000>; /* 512 MB */
->>   	};
->>   };
->> +
->> +&uart1 {
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart2 {
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart3 {
->> +	ti,console_hwmod;
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart4 {
->> +	clock-frequency =<48000000>;
->> +};
->> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
->> index d202bb5..ea591c5 100644
->> --- a/arch/arm/boot/dts/omap3.dtsi
->> +++ b/arch/arm/boot/dts/omap3.dtsi
->> @@ -13,6 +13,13 @@
->>   / {
->>   	compatible = "ti,omap3430", "ti,omap3";
+>>> + * So before we enable the uart clocks idle the console
+>>> + * uart clocks, then enable back the console uart hwmod.
+>>> + */
+>>> + omap_hwmod_idle(od->hwmods[0]);
+>>> + omap_hwmod_enable(od->hwmods[0]);
 >>
->> +	aliases {
->> +		uart1 =&uart1;
->> +		uart2 =&uart2;
->> +		uart3 =&uart3;
->> +		uart4 =&uart4;
->> +	};
->> +
->>   	cpus {
->>   		cpu@0 {
->>   			compatible = "arm,cortex-a8";
->> @@ -59,5 +66,25 @@
->>   			interrupt-controller;
->>   			#interrupt-cells =<1>;
->>   		};
->> +
->> +		uart1: uart@1 {
+>> Why do we have to idle -> enable? The module is already enabled, isn't
+>> it?
+>> The comment is not super clear for me :-)
+>> Is the goal is to reset the IP?
 >
-> Use the generic name serial and the address: uart1: serial@1234abcd
+> Yes, now that I read it, it does sound confusing. I should have at-least
+> read it once before I picked it from serial.c
+>
+> But anyway, here's what the problem is.
+>
+> I feel its partly to do with the inability of hwmod to handle some
+> modules which are left enabled post a setup, due to the
+> 'HWMOD_INIT_NO_IDLE' flag set.
+> Such modules end up with a hwmod state as '_HWMOD_STATE_ENABLED' post
+> a setup. Now when a driver for such devices/modules tries to enable the
+> module the first time, hwmod throws up a big WARN stating the hwmod is
+> already in an enabled state.
 
-ok.
+OK, now, that makes sense :-)
+We have hwmod in ENABLE state whereas the omap_device is still in IDLE 
+or even DISABLE.
 
+> [uart used as console is one such module, which cannot be idled post a
+> setup by hwmod]
 >
->> +			compatible = "ti,omap-uart";
->> +			ti,hwmods = "uart1";
->> +		};
->> +
->> +		uart2: uart@2 {
->> +			compatible = "ti,omap-uart";
->> +			ti,hwmods = "uart2";
->> +		};
->> +
->> +		uart3: uart@3 {
->> +			compatible = "ti,omap-uart";
->> +			ti,hwmods = "uart3";
->> +		};
->> +
->> +		uart4: uart@4 {
->> +			compatible = "ti,omap-uart";
->> +			ti,hwmods = "uart4";
->> +		};
->>   	};
->>   };
->> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
->> index c702657..aa65449 100644
->> --- a/arch/arm/boot/dts/omap4-panda.dts
->> +++ b/arch/arm/boot/dts/omap4-panda.dts
->> @@ -27,3 +27,20 @@
->>   		reg =<0x80000000 0x40000000>; /* 1 GB */
->>   	};
->>   };
->> +
->> +&uart1 {
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart2 {
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart3 {
->> +	ti,console_hwmod;
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart4 {
->> +	clock-frequency =<48000000>;
->> +};
->> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
->> index 066e28c..524f5bf 100644
->> --- a/arch/arm/boot/dts/omap4-sdp.dts
->> +++ b/arch/arm/boot/dts/omap4-sdp.dts
->> @@ -27,3 +27,20 @@
->>   		reg =<0x80000000 0x40000000>; /* 1 GB */
->>   	};
->>   };
->> +
->> +&uart1 {
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart2 {
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart3 {
->> +	ti,console_hwmod;
->> +	clock-frequency =<48000000>;
->> +};
->> +
->> +&uart4 {
->> +	clock-frequency =<48000000>;
->
-> It doesn't seem that this frequency ever varies and is likely to be
-> replaced with clock bindings, so maybe just put it in the dtsi files.
+> If hwmod could be made in some way intelligent enough to know that the
+> module is in enabled state because of the 'HWMOD_INIT_NO_IDLE' itself,
+> a lot of this hackery might not be needed at all.
 
-sure, will do.
+Fully agree, the fmwk should handle that.
 
-regards,
-Rajendra
->
-> Rob
->
+> Simplest way to do it could be to just add another intermediate state,
+> something like '_HWMOD_STATE_ENABLED_AT_INIT'.
+> I will post a patch for this, see if you like it being handled that way.
+
+That seems to be good. I'm just wondering if we need to introduce a new 
+state for that or use a dedicated flag.
+My concern is just that we will have two flavors of HWMOD_STATE_ENABLED 
+that we will have to check in various places in the hwmod core code.
+
+Maybe that's not such a big deal. Go ahead, and we will see how it looks 
+like.
+
+> The other part of the problem is also with the inability to hook up
+> 'custom' omap_device_pm_latency for omap devices created from DT.
+> Maybe a lot of such cases which need custom activate/deactivate
+> functions might have to be handled in some way in the framework
+> itself like the one above.
+
+For the moment, it looks like only the serial is requiring such custom 
+stuff, but anyway, we should have a mechanism to allow that...
+
+Thanks,
+Benoit
 
