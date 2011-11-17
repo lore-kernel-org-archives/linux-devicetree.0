@@ -1,149 +1,36 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 04/15] ARM: smp_twd: add device tree support
-Date: Thu, 12 Jan 2012 17:58:30 +0000
-Message-ID: <4F0F1F46.6060804@arm.com>
-References: <1326287334-1905-1-git-send-email-marc.zyngier@arm.com>
- <1326287334-1905-5-git-send-email-marc.zyngier@arm.com>
- <4F0DF9B3.3080804@gmail.com> <4F0EEFEA.1020305@arm.com>
- <4F0EFF79.8060606@gmail.com> <4F0F03B5.5040300@arm.com>
- <4F0F09E9.3040101@gmail.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 00/10] Add support for tegra30 and cardhu
+Date: Thu, 17 Nov 2011 18:49:41 +0200
+Message-ID: <20111117164941.GU19069__31882.3441434235$1326393583$gmane$org@tbergstrom-lnx.Nvidia.com>
+References: <1321546766-26770-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F0F09E9.3040101@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1321546766-26770-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/12 16:27, Rob Herring wrote:
-> Adding devicetree-discuss since we are talking bindings...
+On Thu, Nov 17, 2011 at 05:19:14PM +0100, Peter De Schrijver wrote:
+> This patchset adds support for the tegra30 SoC and the cardhu development
+> board.
 > 
-> On 01/12/2012 10:00 AM, Marc Zyngier wrote:
->> On 12/01/12 15:42, Rob Herring wrote:
->>> On 01/12/2012 08:36 AM, Marc Zyngier wrote:
->>>> Hi Rob,
->>>>
->>>> On 11/01/12 21:05, Rob Herring wrote:
->>>>> On 01/11/2012 07:08 AM, Marc Zyngier wrote:
->>>>>> Add bindings to support DT discovery of the ARM Timer Watchdog
->>>>>> (aka TWD). Only the timer side is converted by this patch.
->>>>>>
->>>>>> Cc: Rob Herring <rob.herring@calxeda.com>
->>>>>> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/arm/twd.txt |   29 +++++++++++
->>>>>>  arch/arm/include/asm/smp_twd.h                |    1 +
->>>>>>  arch/arm/kernel/smp_twd.c                     |   68 ++++++++++++++++++++-----
->>>>>>  3 files changed, 85 insertions(+), 13 deletions(-)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/arm/twd.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/arm/twd.txt b/Documentation/devicetree/bindings/arm/twd.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..a9d5587
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/arm/twd.txt
->>>>>> @@ -0,0 +1,29 @@
->>>>>> +* ARM Timer Watchdog
->>>>>> +
->>>>>> +ARM 11MP, Cortex-A5 and Cortex-A9 are often associated with a per-core
->>>>>> +Timer-Watchdog (aka TWD), which provides both a per-cpu local timer
->>>>>> +and watchdog.
->>>>>> +
->>>>>> +The TWD is usually attached to a GIC to deliver its two per-processor
->>>>>> +interrupts.
->>>>>> +
->>>>>> +Main node required properties:
->>>>>> +
->>>>>> +- compatible : Should be one of:
->>>>>> +	"arm,cortex-a9-twd"
->>>>>> +	"arm,cortex-a5-twd"
->>>>>> +	"arm,arm11mp-twd"
->>>>>> +	"arm,smp-twd"
->>>>>> +
->>>>>> +- interrupts : Two interrupts to each core, the first one for the
->>>>>> +  timer, the second one for the watchdog.
->>>>>> +
->>>>>> +- reg : Specify the base address and the size of the TWD.
->>>>>> +
->>>>>> +Example:
->>>>>> +
->>>>>> +	twd@2c000600 {
->>>>>> +		compatible = "arm,arm11mp-twd", "arm,smp-twd";
->>>>>> +		reg = <0x2c000600 0x100>;
->>>>>> +		interrupts = <1 13 0xf01 1 14 0xf01>;
->>>>>> +	};
->>>>>
->>>>> Why not split the watchdog and timer into 2 nodes? It may not matter
->>>>> since there is no driver for the timer. If there was, we would have a
->>>>> problem as you can't match 2 drivers to 1 node.
->>>>
->>>> Don't we hit the opposite problem - two nodes with the same address?
->>>
->>> No, because the timer is at 0x600-0x61f and the watchdog is at
->>> 0x620-0x63f. There's no DT requirement on address range start or size.
->>>
->>> However, the current watchdog driver includes 0x20 in its register
->>> offsets, so changing the base address would require a change to the
->>> driver (but that shouldn't really influence the decision).
->>
->> Well, that's what triggered my question. On the other hand, I do not see
->> any in-tree user of the mpcore_wdt driver, so I suppose we could change
->> this register offset without too much harm.
->>
->> How about something like:
->>
->> 	twd-timer@2c000600 {
->> 		compatible = "arm,arm11mp-twd", "arm,smp-twd";
->> 		reg = <0x2c000600 0x20>;
->> 		interrupts = <1 13 0xf01>;
->> 	};
->>
->> 	twd-watchdog@2c000620 {
->> 		compatible = "arm,arm11mp-wd", "arm,smp-wd";
->> 		reg = <0x2c000620 0x20>;
->> 		interrupts = <1 14 0xf01>;
+> Pathset is on top of Will Deacon's ARM reset work, my patch to convert tegra20
+> to GIC devicetree binding and my patch to make clk_get not fatal.
 > 
-> BTW, are these really edge triggered?
 
-Yes (on the 11MPcore):
-http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0360f/CCHFHDJH.html
+I just noticed the clk_get not fatal patch is already in linux-next.
 
-Other cores may be configured differently (A9 has some PPIs configured
-as level-low, and others configured edge-rising):
-http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0407g/CCHEIGIC.html
+Cheers,
 
-All that is probably very SoC specific anyway.
-
-> 
->> 	};
->>
->> I'm not sure about the compatible strings for the watchdog though. Any
->> better idea?
-> 
-> Some reason I did arm,smp-twd and arm-cortex-a9-wdt for highbank.dts
-> which wasn't very consistent.
-> 
-> How about *-twd-timer and *-twd-wdt?
-
-Fine by me.
-
-> Probably we should drop the generic "arm-smp-*" versions.
-
-Agreed. I'll respin this patch series and add the necessary updates to
-the affected platforms' DTS.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Peter.
