@@ -1,76 +1,80 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
-Date: Thu, 17 Nov 2011 14:57:12 +0100
-Message-ID: <CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
-References: <1321274409-24643-1-git-send-email-rnayak@ti.com>
-	<1321274409-24643-2-git-send-email-rnayak@ti.com>
-	<20111114172312.GI31337@atomide.com>
-	<4EC1EB9D.1000503@ti.com>
-	<CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
-	<CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
+Date: Thu, 17 Nov 2011 14:41:16 +0000
+Message-ID: <20111117144116.GC3044@localhost.localdomain>
+References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
+ <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
+ <20111116154402.GE2073@localhost.localdomain>
+ <1321461315.3137.371.camel@hornet.cambridge.arm.com>
+ <20111116175757.GI2073@localhost.localdomain>
+ <1321537813.3137.475.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Rajendra Nayak <rnayak@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, linus.walleij@stericsson.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1321537813.3137.475.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2011 at 12:26 PM, Thomas Abraham
-<thomas.abraham@linaro.org> wrote:
+On Thu, Nov 17, 2011 at 01:50:13PM +0000, Pawel Moll wrote:
+> On Wed, 2011-11-16 at 17:57 +0000, Dave Martin wrote:
+> > > > We should specify a list of all the "standard" aliases used by the
+> > > > generic motherboard code here, since these are part of the contract
+> > > > between each board-specific device tree and the motherboard code.
+> > > > 
+> > > > Is "timer" the only one, or are there others?
+> > > 
+> > > One and only. There were more, but I got rid of them.
+> > 
+> > Are the other alises still used?  If not, we should perhaps get rid of
+> > them, or keep them on an as-needed basis only?
+> 
+> I've included the serialX and i2cX aliases purely because the other
+> boards do (including Grant's versatile dts).
+> 
+> > Since alises are by definition a point of standardisation (otherwise
+> > there's no need for an alias) I think they need to be documented alongside
+> > bindings wherever we have them.
+> 
+> You are right, but I think this is out of the vexpress scope. The
+> serialX aliases, for example, are already used by some drivers:
+> 
+>    4   1788  drivers/tty/serial/atmel_serial.c <<atmel_serial_probe>>
+>              ret = of_alias_get_id(np, "serial");
+>    5   1301  drivers/tty/serial/imx.c <<serial_imx_probe_dt>>
+>              ret = of_alias_get_id(np, "serial");
+> 
+> so it sounds like a generic policy-to-be-made.
 
-> For now, the Samsung GPIO, Pinconfig and Pinmux information is
-> represented in device tree as listed below.
+OK, it makes sense to follow other boards in that case.  This could be
+a topic for separate discussion, but I agree it's probably out of scope
+here.
 
-Does this mean that the understanding of this format is merged into
-the mainline kernel drivers or is it keps out-of-tree?
+> > > > For "non-interactive" config items, can we still please have comments
+> > > > indicating what the item means and how it should be used?
+> > > > 
+> > > > Such comments can be very brief, but having at least something makes the
+> > > > configs easier to understand and maintain, in my view.
+> > > 
+> > > Em, what bits do you refer to? The lines you quoted are not changed...
+> > 
+> > Hmmm, editing snafu there.
+> > 
+> > I think I was referring to the ARCH_VEXPRESS_DT item, which is defined
+> > just after the lines I quoted.
+> 
+> Ok, will do.
 
-> i2c@1C004000 {
-> =A0 =A0 =A0 =A0 =A0compatible =3D "...";
-> =A0 =A0 =A0 =A0 =A0reg =3D <0x... 0x..>;
-> =A0 =A0 =A0 =A0 =A0 gpios =3D <&gpa0 2 2 3 0>,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<&gpa0 3 2 3 0>;
-> =A0 =A0 =A0 =A0 =A0...
-> };
->
-> The format of the gpio specifier is
-> <[Pad Controller phandle] [pin number within the controller] [Pin Mux
-> Function] [Pull Up/Down] [Drive Strength]>
->
-> From a perspective of writing a 'gpios' property for a device node,
-> this is quite simple. Looking up the hardware manual of the SoC can
-> provide all the values that should be used in the gpio specifier.
-
-That may not be as simple as it seems if all you have is the
-device tree and no manual, but I get the picture.
-
-> The GPIO/PinCtrl driver can provide a translate function that picks u=
-p
-> the values for the gpio specifier and writes the same value to the
-> pad-controller registers. But, this a deviation from the existing
-> pinctrl subsystem code which mainly relies on name of the pin-group
-> and pin-function.
->
-> Does this seem to be a feasible option for specifying
-> gpio/pinconfig/pinmux dt bindings?
-
-I would prefer the above to use the nice generic enums from the
-pin control subsystem's pinmux and pinconf properties in the
-end so the device tree on its own is understandable without
-any manual whatsoever, but we'll see about that.
-
-Maybe I'm mistaken about the device tree ambitions, but
-I was sort of hoping that it would not contain too much
-custom magic numbers that need to be cross-referenced
-elsewhere ... or rather - the more understandable the device
-tree is, the more we win.
-
-Thanks,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers
+---Dave
