@@ -1,19 +1,15 @@
 From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
-Date: Thu, 17 Nov 2011 15:53:34 +0000
-Message-ID: <20111117155334.GT9581@n2100.arm.linux.org.uk>
+Date: Thu, 17 Nov 2011 16:05:37 +0000
+Message-ID: <20111117160536.GU9581@n2100.arm.linux.org.uk>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
  <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
- <20111116154402.GE2073@localhost.localdomain> <4EC3E446.4030608@gmail.com>
- <1321461458.3137.374.camel@hornet.cambridge.arm.com>
- <4EC3EBEC.3020601@gmail.com>
- <1321463271.3137.380.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1321463271.3137.380.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+In-Reply-To: <1321036026-23411-4-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,67 +20,65 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 16, 2011 at 05:07:51PM +0000, Pawel Moll wrote:
-> On Wed, 2011-11-16 at 16:59 +0000, Rob Herring wrote:
-> > It has nothing to do with taste and obviously documentation changes over
-> > time. I'm going to start naming everything with legacy because someday
-> > it all will be...
-> > 
-> > It's about how you create compatible strings. They should not be
-> > generic, but specific to particular hardware version. If you happen to
-> > be compatible with older h/w then you can claim compatibility with that
-> > older h/w.
-> 
-> Notice that it's not:
-> 
-> 	compatible=legacy
-> 
-> not even:
-> 
-> 	compatible=arm,legacy
-> 
-> It's:
-> 	
-> 	compatible=arm,vexpress-legacy
-> 
-> A specific variant of Versatile Express hardware. It's just that the
-> "legacy" word carries some meaning. Would it looked better if it was
-> called:
-> 
-> 	compatible=arm,vexpress-nalatenskap
-> 
-> ? (thanks, google translate ;-)
+On Fri, Nov 11, 2011 at 06:27:04PM +0000, Pawel Moll wrote:
+> +#if defined(CONFIG_ARCH_VEXPRESS_DT)
+> +		int err;
+> +		const char *path;
+> +		struct device_node *node;
+> +
+> +		node = of_find_compatible_node(NULL, NULL, "arm,sp810");
+> +		BUG_ON(!node);
+> +		sysctl_base = of_iomap(node, 0);
+> +		BUG_ON(!sysctl_base);
+> +
+> +		err = of_property_read_string(of_aliases, "timer", &path);
+> +		BUG_ON(err);
+> +		node = of_find_node_by_path(path);
+> +		BUG_ON(!node);
+> +		timer01_base = of_iomap(node, 0);
+> +		BUG_ON(!timer01_base);
+> +		timer01_irq = irq_of_parse_and_map(node, 0);
 
-You're totally failing to understand the point.
+Are you sure you have enough BUG_ON()s there?  It's well worth reading
+Linus' various messages on the use of BUG(), which can be found:
 
-The point is that when Versatile Express first came out, it had a memory
-map.  At this point in time, there was nothing 'legacy' about it, it was
-the latest and greatest thing.
+	http://yarchive.net/comp/linux/BUG.html
 
-If DT support was created at this point, it would have been called
-something without 'legacy' in its name.
+The lack of the timer and sysctl registers are really a 'report and maybe
+we could get a message out' kind of scenario rather than a 'oops, kill
+the machine'.
 
-A year or so on, it's been superseded by something else, and is now called
-legacy.  The way DT works, you don't go around renaming stuff because it's
-become legacy.  So, the original DT support still stands using whatever
-named properties would have been invented at the time.
+> +#endif
+> +	} else {
+>  		sysctl_base = ioremap(V2M_SYSCTL, SZ_4K);
+>  		BUG_ON(!sysctl_base);
+>  		timer01_base = ioremap(V2M_TIMER01, SZ_4K);
+>  		BUG_ON(!timer01_base);
+>  		timer01_irq = IRQ_V2M_TIMER0;
+> +	}
 
-So, when we create support for it *now*, we should not be creating a DT
-file with properties named as 'legacy'.  The fact that it has become
-legacy _today_ is irrelevant to DT.
+And in any case, both these paths have a common set of BUG_ON()s:
+	BUG_ON(!sysctl_base);
+	BUG_ON(!timer01_base);
 
-If we follow through the argument that we _should_ name things legacy,
-then it follows that we need to constantly patch DT files to rename stuff
-to 'legacy' when it's no longer the latest and greatest - and then you
-need the right DT file corresponding to the right kernel version.
+So do we really need them having this independently?
 
-Again, this is _not_ how DT is supposed to work.  DT is about describing
-the hardware, not describing the state of something.  A DT description
-of a hardware system created 10 years ago should still work _today_ even
-though the hardware system may now be 'legacy'.
+> @@ -383,11 +412,18 @@ static struct clk_lookup v2m_lookups[] = {
+>  	},
+>  };
+>  
+> +static void __init v2m_system_id(void)
+> +{
+> +	if (!system_rev)
+> +		system_rev = readl(v2m_sysreg_base + V2M_SYS_ID);
 
-So, get rid of that 'legacy' crap in DT naming.  It doesn't belong.  Or
-we'll start talling the Cortex-A5 stuff 'legacy' right now as well.
+You do understand that system_rev is for the system _revision_ not for
+some kind of system ID.  For example, it's to identify whether we're on
+a revision 4, 5 or 6 system.
+
+However, with DT the differences in system revision should be encoded
+into the DT itself, and the kernel should not be making choices about
+the hardware off this.
