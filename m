@@ -1,44 +1,63 @@
-From: Ryan Harkin <ryan.harkin@linaro.org>
-Subject: Re: [PATCH 1/5] ARM: vexpress: Get rid of MMIO_P2V
-Date: Thu, 17 Nov 2011 07:02:36 +0000
-Message-ID: <1321513356.2638.1.camel@vaio.config>
-References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
- <1321036026-23411-2-git-send-email-pawel.moll@arm.com>
- <20111116153516.GB2073@localhost.localdomain>
- <1321460205.3137.352.camel@hornet.cambridge.arm.com>
- <20111116172815.GF2073@localhost.localdomain>
- <1321464634.3137.382.camel@hornet.cambridge.arm.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH 1/3] ARM: omap_device: handle first time activation of
+ console device
+Date: Thu, 17 Nov 2011 12:49:11 +0530
+Message-ID: <4EC4B56F.2040504@ti.com>
+References: <1321441346-19591-1-git-send-email-rnayak@ti.com> <1321441346-19591-2-git-send-email-rnayak@ti.com> <4EC3D037.6020901@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1321464634.3137.382.camel@hornet.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Dave Martin <dave.martin@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <4EC3D037.6020901@ti.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, khilman@ti.com, govindraj.raja@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2011-11-16 at 17:30 +0000, Pawel Moll wrote:
-> On Wed, 2011-11-16 at 17:28 +0000, Dave Martin wrote:
-> > > > Is there anything else blocking the building of legacy and RS1 memory
-> > > > maps into a single kernel?
-> > > > (I'm still hazy on how all the remapping stuff works, myself.)
-> > > 
-> > > This works now - I have a single binary kernel that works on both A9 and
-> > > A5 coretiles. Of course the ATAG-based support works with A9 only.
-> > 
-> > Cool -- we should get Ryan and Tixy to try it out, if they haven't already.
-> > I don't have an A5 handy...
-> 
-> Good idea. I'll send them instructions how to boot "DT-enabled" kernel
-> using Boot Monitor tomorrow and ask to try the series.
+[...]
+>> +static int omap_console_hwmod_enable(struct omap_device *od)
+>> +{
+>> +	console_lock();
+>> +	/*
+>> +	 * For early console we prevented hwmod reset and idle
+>
+> A period is missing. Or maybe it should a comma with not capital letter.
+>
+>> +	 * So before we enable the uart clocks idle the console
+>> +	 * uart clocks, then enable back the console uart hwmod.
+>> +	 */
+>> +	omap_hwmod_idle(od->hwmods[0]);
+>> +	omap_hwmod_enable(od->hwmods[0]);
+>
+> Why do we have to idle ->  enable? The module is already enabled, isn't it?
+> The comment is not super clear for me :-)
+> Is the goal is to reset the IP?
 
-I have both boards here waiting your command.
+Yes, now that I read it, it does sound confusing. I should have at-least
+read it once before I picked it from serial.c
+
+But anyway, here's what the problem is.
+
+I feel its partly to do with the inability of hwmod to handle some
+modules which are left enabled post a setup, due to the
+'HWMOD_INIT_NO_IDLE' flag set.
+Such modules end up with a hwmod state as '_HWMOD_STATE_ENABLED' post
+a setup. Now when a driver for such devices/modules tries to enable the
+module the first time, hwmod throws up a big WARN stating the hwmod is
+already in an enabled state.
+[uart used as console is one such module, which cannot be idled post a
+setup by hwmod]
+
+If hwmod could be made in some way intelligent enough to know that the
+module is in enabled state because of the 'HWMOD_INIT_NO_IDLE' itself,
+a lot of this hackery might not be needed at all.
+Simplest way to do it could be to just add another intermediate state,
+something like  '_HWMOD_STATE_ENABLED_AT_INIT'.
+I will post a patch for this, see if you like it being handled that way.
+
+The other part of the problem is also with the inability to hook up
+'custom' omap_device_pm_latency for omap devices created from DT.
+Maybe a lot of such cases which need custom activate/deactivate
+functions might have to be handled in some way in the framework
+itself like the one above.
+
