@@ -1,55 +1,45 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Fri, 18 Nov 2011 17:56:41 +0000
-Message-ID: <20111118175641.GJ9581@n2100.arm.linux.org.uk>
-References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
- <1321036026-23411-5-git-send-email-pawel.moll@arm.com>
- <20111117153624.GR9581@n2100.arm.linux.org.uk>
- <1321618850.24216.324.camel@hornet.cambridge.arm.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 01/10] arm/tegra: initial device tree for tegra30
+Date: Fri, 18 Nov 2011 10:49:42 -0800
+Message-ID: <20111118184942.GA31678@quad.lixom.net>
+References: <1321546766-26770-1-git-send-email-pdeschrijver@nvidia.com>
+ <1321546766-26770-2-git-send-email-pdeschrijver@nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1740D74C46@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1321618850.24216.324.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1740D74C46@HQMAIL01.nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Colin Cross <ccross@android.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 18, 2011 at 12:20:50PM +0000, Pawel Moll wrote:
-> On Thu, 2011-11-17 at 15:36 +0000, Russell King - ARM Linux wrote:
-> >  You do know that this
-> > will probably cause uboot to load the uImage at 0x80008000 instead of
-> > 0x60008000, and therefore we'll lose half the RAM on this board?
+On Thu, Nov 17, 2011 at 11:39:14AM -0800, Stephen Warren wrote:
+> Peter De Schrijver wrote at Thursday, November 17, 2011 9:19 AM:
+> > This patch adds the initial device tree for tegra30
 > 
-> I missed that - I don't use uboot, so I don't build uImages.
+> > diff --git a/Documentation/devicetree/bindings/arm/tegra.txt
+> ...
+> > +* harmony: tegra20 based development board
+> > +Required root node properties:
+> > + - compatible = "nvidia,harmony", "nvidia,tegra20";
+> > +
+> > +* seaboard: tegra20 based clamshell reference design
+> > +Required root node properties:
+> > + - compatible = "nvidia,seaboard", "nvidia,tegra20";
 > 
-> As the ARCH_VEXPRESS_LEGACY will be no more (see my other response) I'll
-> revert the order, so the _RS1 will enforce P2V, AUTO_ZRELADDR and change
-> the zrealaddr-y & friends (as in: 0x6* when no _RS1, 0x8* when _RS1=y).
-> Is there any other way of having single binary kernel booting from both
-> 0x60008000 and 0x80008000?
+> Do we really want to list all the board names here? In the future, there
+> could be tens or hundreds. I would argue that we should just document
+> nvidia,tegra20 and nvidia,tegra30.
 
-Not with uboot - uboot has been broken for many years in regard of
-being able to load kernel images inteligently - it has to be told
-explicitly where to load the image in system memory, so if the uImage
-is built for 0x80008000, uboot will load it at that address no matter
-if there's RAM there or not.
+Agreed.
 
-That interacts with the P2V stuff and makes PHYS_OFFSET be 0x80000000
-rather than 0x60000000 - and my guess is that it'll still pass in
-memory information describing the RAM at 0x60000000 which may result
-in the kernel failing to boot.
+> At a later point, we should fix board-dt.c to solely look for those
+> compatible values, although this will have to wait until the pinmux DT
+> bindings are present. Then, the kernel won't care about the board names.
 
-There's no way around this with uboot at the moment, and I don't
-expect the uboots in the field already on devices to be updated to
-solve this.
+Exactly.
+
+
+-Olof
