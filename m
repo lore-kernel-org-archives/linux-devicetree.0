@@ -1,73 +1,66 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 01/10] arm/tegra: initial device tree for tegra30
-Date: Fri, 18 Nov 2011 16:03:43 -0600
-Message-ID: <4EC6D63F.8030207@gmail.com>
-References: <1321546766-26770-1-git-send-email-pdeschrijver@nvidia.com> <1321546766-26770-2-git-send-email-pdeschrijver@nvidia.com> <74CDBE0F657A3D45AFBB94109FB122FF1740D74C46@HQMAIL01.nvidia.com> <20111118184942.GA31678@quad.lixom.net> <4EC6B25D.70708@gmail.com> <CAOesGMhRQN2apJMQz7Fcp4-TnXYS6i30GLXOEckJG6kvPVatvw@mail.gmail.com>
+From: Rob Herring <rob.herring@calxeda.com>
+Subject: Re: [PATCH] of/platform: Allow missing address for dev name lookup
+Date: Fri, 18 Nov 2011 16:12:43 -0600
+Message-ID: <4EC6D85B.6020005@calxeda.com>
+References: <1321628948.21392.37.camel@zalecze.wat.corp.google.com> <4EC6838F.8020705@calxeda.com> <CAC0oEedK1E4K9mSS_pOKz_xvHtXy576kCe9oG+D3aHz14tW=WA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMhRQN2apJMQz7Fcp4-TnXYS6i30GLXOEckJG6kvPVatvw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Colin Cross <ccross@android.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAC0oEedK1E4K9mSS_pOKz_xvHtXy576kCe9oG+D3aHz14tW=WA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wojciech Baranowski <baranowski@google.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2011 03:48 PM, Olof Johansson wrote:
-> On Fri, Nov 18, 2011 at 11:30 AM, Rob Herring <robherring2@gmail.com> wrote:
->> On 11/18/2011 12:49 PM, Olof Johansson wrote:
->>> On Thu, Nov 17, 2011 at 11:39:14AM -0800, Stephen Warren wrote:
->>>> Peter De Schrijver wrote at Thursday, November 17, 2011 9:19 AM:
->>>>> This patch adds the initial device tree for tegra30
->>>>
->>>>> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt
->>>> ...
->>>>> +* harmony: tegra20 based development board
->>>>> +Required root node properties:
->>>>> + - compatible = "nvidia,harmony", "nvidia,tegra20";
->>>>> +
->>>>> +* seaboard: tegra20 based clamshell reference design
->>>>> +Required root node properties:
->>>>> + - compatible = "nvidia,seaboard", "nvidia,tegra20";
->>>>
->>>> Do we really want to list all the board names here? In the future, there
->>>> could be tens or hundreds. I would argue that we should just document
->>>> nvidia,tegra20 and nvidia,tegra30.
+On 11/18/2011 10:45 AM, Wojciech Baranowski wrote:
+> On Fri, Nov 18, 2011 at 11:10 AM, Rob Herring <rob.herring@calxeda.com> wrote:
+>> On 11/18/2011 09:09 AM, Wojciech Baranowski wrote:
+>>> While looking up linux name for platform device, check the address only if it
+>>> has been supplied in lookup table.
 >>>
->>> Agreed.
->>
->> It's not really any different than mach-types which does have every
->> board in it.
+>> And the reason you want to do this is?
 > 
-> Yeah, and the whole idea of having device trees is to not have to do
-> code changes when introducing a new derivative board. So enumerating
-> all supported boards in the documentation means we're back to an
-> equivalence to having to add machine ids.
-> 
->> I think if a board requires a new dts, then it needs a unique name.
-> 
-> Sure, that's fine. But the idea is to be able to do it without
-> changing code for many cases, just provide a new dts that configures
-> the devices in question.
+> Name lookup table is used to provide names for platform devices on the
+> board I'm working on. I'm adding /sound node without address for audio
+> subsystem and don't want to break that convention.
 
-You can always claim backwards compatibility with any prior board that's
-already supported. You may never need to do any more than that. You
-don't want new kernels to require a new DTB if in fact you do have to
-make code changes.
+auxdata is really meant to be a temporary solution to plug platform_data.
+
+All platform devices do not necessarily go into the DT. The DT should
+describe the h/w. For sound I would expect this to be all the h/w blocks
+like i2s, dma, codec and then information on how they are connected. Can
+you show what your sound binding looks like.
 
 Rob
 
->>>> At a later point, we should fix board-dt.c to solely look for those
->>>> compatible values, although this will have to wait until the pinmux DT
->>>> bindings are present. Then, the kernel won't care about the board names.
+> 
+>>> Signed-off-by: Wojciech Baranowski <baranowski@chromium.org>
+>>> ---
+>>>  drivers/of/platform.c |    8 +++++---
+>>>  1 files changed, 5 insertions(+), 3 deletions(-)
 >>>
->>> Exactly.
+>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>> index cbd5d70..94763c0 100644
+>>> --- a/drivers/of/platform.c
+>>> +++ b/drivers/of/platform.c
+>>> @@ -314,12 +314,14 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
+>>>       if (!lookup)
+>>>               return NULL;
+>>>
+>>> -     for(; lookup->name != NULL; lookup++) {
+>>> +     for (; lookup->name != NULL; lookup++) {
+>>>               if (!of_device_is_compatible(np, lookup->compatible))
+>>>                       continue;
+>>> -             if (of_address_to_resource(np, 0, &res))
+>>> +             if (lookup->phys_addr &&
+>>> +                             of_address_to_resource(np, 0, &res))
+>>>                       continue;
+>>> -             if (res.start != lookup->phys_addr)
+>>> +             if (lookup->phys_addr &&
+>>> +                             res.start != lookup->phys_addr)
+>>>                       continue;
+>>>               pr_debug("%s: devname=%s\n", np->full_name, lookup->name);
+>>>               return lookup;
 >>
->> That is perfectly acceptable, but you should still have the option to do
->> something specific for any given board.
-> 
-> Of course. That's not what we're objecting to here.
-> 
-> 
-> -Olof
-
+>>
