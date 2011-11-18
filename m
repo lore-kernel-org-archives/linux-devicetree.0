@@ -1,45 +1,88 @@
 From: Wojciech Baranowski <baranowski@chromium.org>
-Subject: [PATCH] of/platform: Allow missing address for dev name lookup
-Date: Fri, 18 Nov 2011 10:09:08 -0500
-Message-ID: <1321628948.21392.37.camel@zalecze.wat.corp.google.com>
+Subject: [PATCH] of/device: Obtain platform dev name and id from bus_id
+Date: Fri, 18 Nov 2011 10:30:33 -0500
+Message-ID: <1321630233.21392.43.camel@zalecze.wat.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-While looking up linux name for platform device, check the address only if it
-has been supplied in lookup table.
+When adding new platform device, parse platform_device.dev.bus_id (used as
+device name) to get platform_device.name and platform_device.id before
+calling device_add. If bus_id cannot be split into name and id, fallback to
+the old way.
+
+Currently the name is being set to bus_id and id is being set to -1, even
+when bus_id is in the form "some_name.some_number". This might lead to
+problems with device-driver matching and index out of bounds error. It is
+also not consistent with how the bus_id is generated from name and id.
 
 Signed-off-by: Wojciech Baranowski <baranowski@chromium.org>
 ---
- drivers/of/platform.c |    8 +++++---
- 1 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/of/device.c |   43 +++++++++++++++++++++++++++++++++++++++----
+ 1 files changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index cbd5d70..94763c0 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -314,12 +314,14 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
- 	if (!lookup)
- 		return NULL;
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 62b4b32..8758c3f 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -47,14 +47,49 @@ void of_dev_put(struct platform_device *dev)
+ }
+ EXPORT_SYMBOL(of_dev_put);
  
--	for(; lookup->name != NULL; lookup++) {
-+	for (; lookup->name != NULL; lookup++) {
- 		if (!of_device_is_compatible(np, lookup->compatible))
- 			continue;
--		if (of_address_to_resource(np, 0, &res))
-+		if (lookup->phys_addr &&
-+				of_address_to_resource(np, 0, &res))
- 			continue;
--		if (res.start != lookup->phys_addr)
-+		if (lookup->phys_addr &&
-+				res.start != lookup->phys_addr)
- 			continue;
- 		pr_debug("%s: devname=%s\n", np->full_name, lookup->name);
- 		return lookup;
++static int of_dev_parse_devname(struct platform_device *ofdev)
++{
++	const char *name;
++	const char *dot_pos;
++	char *short_name;
++
++	name = dev_name(&ofdev->dev);
++	if (!name)
++		goto std_out;
++
++	dot_pos = strrchr(name, '.');
++	if (!dot_pos)
++		goto std_out;
++
++	short_name = kmalloc(dot_pos - name + 1, GFP_KERNEL);
++	if (!short_name)
++		return -ENOMEM;
++
++	strlcpy(short_name, name, dot_pos - name + 1);
++	ofdev->name = short_name;
++
++	if (kstrtoint(dot_pos + 1, 10, &ofdev->id))
++		goto kfree_out;
++
++	return 0;
++
++kfree_out:
++	kfree(short_name);
++std_out:
++	ofdev->name = name;
++	ofdev->id = -1;
++	return 0;
++}
++
+ int of_device_add(struct platform_device *ofdev)
+ {
++	int ret;
++
+ 	BUG_ON(ofdev->dev.of_node == NULL);
+ 
+-	/* name and id have to be set so that the platform bus doesn't get
+-	 * confused on matching */
+-	ofdev->name = dev_name(&ofdev->dev);
+-	ofdev->id = -1;
++	ret = of_dev_parse_devname(ofdev);
++	if (ret)
++		return ret;
+ 
+ 	/* device_add will assume that this device is on the same node as
+ 	 * the parent. If there is no parent defined, set the node
 -- 
 1.7.3.1
