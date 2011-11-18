@@ -1,63 +1,103 @@
-From: Wojciech Baranowski <baranowski@google.com>
-Subject: Re: [PATCH] of/platform: Allow missing address for dev name lookup
-Date: Fri, 18 Nov 2011 11:45:00 -0500
-Message-ID: <CAC0oEedK1E4K9mSS_pOKz_xvHtXy576kCe9oG+D3aHz14tW=WA@mail.gmail.com>
-References: <1321628948.21392.37.camel@zalecze.wat.corp.google.com>
-	<4EC6838F.8020705@calxeda.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: vexpress: Get rid of MMIO_P2V
+Date: Fri, 18 Nov 2011 17:44:20 +0000
+Message-ID: <20111118174420.GG9581@n2100.arm.linux.org.uk>
+References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
+ <1321036026-23411-2-git-send-email-pawel.moll@arm.com>
+ <20111117154308.GS9581@n2100.arm.linux.org.uk>
+ <1321618848.24216.322.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4EC6838F.8020705@calxeda.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1321618848.24216.322.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 18, 2011 at 11:10 AM, Rob Herring <rob.herring@calxeda.com>=
- wrote:
-> On 11/18/2011 09:09 AM, Wojciech Baranowski wrote:
->> While looking up linux name for platform device, check the address o=
-nly if it
->> has been supplied in lookup table.
->>
-> And the reason you want to do this is?
+On Fri, Nov 18, 2011 at 12:20:48PM +0000, Pawel Moll wrote:
+> On Thu, 2011-11-17 at 15:43 +0000, Russell King - ARM Linux wrote:
+> > > +/* Tile's peripherals static mappings should start here */
+> > > +#define V2T_PERIPH 0xf8200000
+> > > +#define V2T_PERIPH_P2V(offset) ((void __iomem *)(V2T_PERIPH | (offset)))
+> > > +
+> > 
+> > Please get rid of these blank lines at the end of files.
+> 
+> Patch splitting leftover. Will fix.
+> 
+> > > +static void __iomem *v2m_sysreg_base;
+> > > +
+> > > +
+> > > +
+> > 
+> > More useless blank lines.
+> 
+> Ok, will change that. I just like the way that the data are visually
+> separated from the code like here:
+> 
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000  68)         .init   = v2m_timer_init,
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000  69) };
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000  70) 
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000  71) 
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000  72) static DEFINE_SPINLOCK(v2m_cfg_lock);
+> 
+> or here:
+> 
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000 289)         &rtc_device,
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000 290) };
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000 291) 
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000 292) 
+> ceade897 (Russell King 2010-02-11 21:44:53 +0000 293) static long v2m_osc_round(struct clk *clk, unsigned long rate)
 
-Name lookup table is used to provide names for platform devices on the
-board I'm working on. I'm adding /sound node without address for audio
-subsystem and don't want to break that convention.
+Note the difference in the number.  Two is acceptable to split sections
+of code.  Three is getting excessive.
 
->> Signed-off-by: Wojciech Baranowski <baranowski@chromium.org>
->> ---
->> =A0drivers/of/platform.c | =A0 =A08 +++++---
->> =A01 files changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index cbd5d70..94763c0 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -314,12 +314,14 @@ static const struct of_dev_auxdata *of_dev_loo=
-kup(const struct of_dev_auxdata *l
->> =A0 =A0 =A0 if (!lookup)
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
->>
->> - =A0 =A0 for(; lookup->name !=3D NULL; lookup++) {
->> + =A0 =A0 for (; lookup->name !=3D NULL; lookup++) {
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (!of_device_is_compatible(np, lookup-=
->compatible))
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
->> - =A0 =A0 =A0 =A0 =A0 =A0 if (of_address_to_resource(np, 0, &res))
->> + =A0 =A0 =A0 =A0 =A0 =A0 if (lookup->phys_addr &&
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 of_address=
-_to_resource(np, 0, &res))
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
->> - =A0 =A0 =A0 =A0 =A0 =A0 if (res.start !=3D lookup->phys_addr)
->> + =A0 =A0 =A0 =A0 =A0 =A0 if (lookup->phys_addr &&
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 res.start =
-!=3D lookup->phys_addr)
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 continue;
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 pr_debug("%s: devname=3D%s\n", np->full_=
-name, lookup->name);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 return lookup;
->
->
+> 
+> > >  static void __init v2m_timer_init(void)
+> > >  {
+> > > +	void *sysctl_base;
+> > > +	void *timer01_base;
+> > 
+> > Do you not use sparse?  __iomem.
+> 
+> Ok.
+> 
+> > > +	unsigned int timer01_irq;
+> > >  	u32 scctrl;
+> > >  
+> > > +		sysctl_base = ioremap(V2M_SYSCTL, SZ_4K);
+> > > +		BUG_ON(!sysctl_base);
+> > > +		timer01_base = ioremap(V2M_TIMER01, SZ_4K);
+> > > +		BUG_ON(!timer01_base);
+> > > +		timer01_irq = IRQ_V2M_TIMER0;
+> > 
+> > What's going on with the indentation here?
+> 
+> Patch-splitting artefact again, will fix.
+> 
+> > > @@ -413,6 +431,10 @@ static void __init v2m_populate_ct_desc(void)
+> > >  static void __init v2m_map_io(void)
+> > >  {
+> > >  	iotable_init(v2m_io_desc, ARRAY_SIZE(v2m_io_desc));
+> > > +
+> > > +	/* Will become an ioremap() when possible */
+> > > +	v2m_sysreg_base = V2M_PERIPH_P2V(V2M_SYSREGS);
+> > 
+> > It won't if it stays here.
+> 
+> Excuse my inferior English language capabilities, but what do you
+> suggest here?
+
+What I'm saying is your comment is wrong.  ioremap() will never be
+possible in the map_io function.
