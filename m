@@ -1,16 +1,19 @@
 From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH 2/5] ARM: vexpress: Remove platform SMP functions from
- ct_desc
-Date: Fri, 18 Nov 2011 12:20:47 +0000
-Message-ID: <1321618847.24216.321.camel@hornet.cambridge.arm.com>
+Subject: Re: [PATCH 3/5] ARM: vexpress: Add DT support in v2m
+Date: Fri, 18 Nov 2011 12:20:49 +0000
+Message-ID: <1321618849.24216.323.camel@hornet.cambridge.arm.com>
 References: <1321036026-23411-1-git-send-email-pawel.moll@arm.com>
- <1321036026-23411-3-git-send-email-pawel.moll@arm.com>
- <20111117153102.GQ9581@n2100.arm.linux.org.uk>
+ <1321036026-23411-4-git-send-email-pawel.moll@arm.com>
+ <20111116154402.GE2073@localhost.localdomain> <4EC3E446.4030608@gmail.com>
+ <1321461458.3137.374.camel@hornet.cambridge.arm.com>
+ <4EC3EBEC.3020601@gmail.com>
+ <1321463271.3137.380.camel@hornet.cambridge.arm.com>
+ <20111117155334.GT9581@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111117153102.GQ9581@n2100.arm.linux.org.uk>
+In-Reply-To: <20111117155334.GT9581@n2100.arm.linux.org.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,83 +24,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Dave Martin <dave.martin@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2011-11-17 at 15:31 +0000, Russell King - ARM Linux wrote:
-> On Fri, Nov 11, 2011 at 06:27:03PM +0000, Pawel Moll wrote:
-> > This patch removes platform SMP callbacks from ct_desc struct
-> > and replaces them with global symbols in preparation for
-> > DT-based support code.
-> 
-> Will and myself discussed how to do this, and we came up with the
-> ct_desc solution.  Now you're doing something different.  It seems to
-> me like there's a disconnect between various different parts of ARM Ltd
-> between people who have different ideas about how problems are to be
-> solved.
+On Thu, 2011-11-17 at 15:53 +0000, Russell King - ARM Linux wrote:
+> You're totally failing to understand the point.
 
-There are gaps (about 50-100m) between the buildings here indeed. And
-you have to cross a road... Thankfully we have some network cables
-underneath it. 
+That's your opinion, I think otherwise, won't try to convince you.
 
-> So, what's the technical reason for this change?
+> The point is that when Versatile Express first came out, it had a memory
+> map.  At this point in time, there was nothing 'legacy' about it, it was
+> the latest and greatest thing.
 
-I was remember when Will was adding the tile-detection code. That seemed
-the best solution at the time (and spared us getting new mach type
-number for every new tile), with no DT at the horizon. Situation changed
-since and the tiles are just separate DT-only machine descriptions, as
-your original implementation. There will be no more users of the
-ct_desc.
+That's right. And then when the new variant was created *hardware
+designers* decided to call the previous one "legacy". I couldn't care
+less what word was it, could be even "bublebee" from my point of view.
 
-> I can't see how this improves anything. 
+> Again, this is _not_ how DT is supposed to work.  DT is about describing
+> the hardware, not describing the state of something.  
 
-It's not a improvement, just a workaround because that:
+And that's exactly what I was trying to do. Describe the hardware, using
+terminology *used by the hardware designers* - fact that you have chosen
+to ignore, fair enough.
 
- void __init smp_init_cpus(void)
- {
--       ct_desc->init_cpu_map();
- }
+> So, get rid of that 'legacy' crap in DT naming.  It doesn't belong.  Or
+> we'll start talling the Cortex-A5 stuff 'legacy' right now as well.
 
-implies existence of the ct_desc. But fair enough, I'll simply create
-fake ones for the DT cases so this code won't have to be changed. As
-soon as the platform SMP calls are abstracted, which as I understand is
-one of steps on the mythical "single binary kernel" way, the problem
-will disappear.
+As the compatible values will be limited to the tile name and the
+information about the motherboard "mode" will be passed through private
+node property, I will follow Dave's suggestion of using "empty value"
+for legacy/original/whatever variant. Hopefully this will end this topic
+which is already too long.
 
->  In fact, this patch reintroduces
-> a bug which have been previously fixed:
-> 
-> > +static void ct_ca9x4_init_cpu_map(void)
-> > +{
-> > +	int i, ncores;
-> > +	ncores = scu_get_core_count(V2T_PERIPH_P2V(A9_MPCORE_SCU));
-> > +
-> > +	for (i = 0; i < ncores; ++i)
-> > +		set_cpu_possible(i, true);
-> > +
-> > +	set_smp_cross_call(gic_raise_softirq);
-> > +}
-> vs
-> > -static void ct_ca9x4_init_cpu_map(void)
-> > -{
-> > -	int i, ncores = scu_get_core_count(V2TILE_PERIPH_P2V(A9_MPCORE_SCU));
-> > -
-> > -	if (ncores > nr_cpu_ids) {
-> > -		pr_warn("SMP: %u cores greater than maximum (%u), clipping\n",
-> > -			ncores, nr_cpu_ids);
-> > -		ncores = nr_cpu_ids;
-> > -	}
-> > -
-> > -	for (i = 0; i < ncores; ++i)
-> > -		set_cpu_possible(i, true);
-> > -
-> > -	set_smp_cross_call(gic_raise_softirq);
-> > -}
-> 
-> When you rebase, please pay better attention to the conflicts.
-
-Thanks for spotting that, fixed.
-
-All comments appreciated as always, thanks!
+Thanks for all comments!
 
 Pawel
