@@ -1,52 +1,28 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 01/10] arm/tegra: initial device tree for tegra30
-Date: Fri, 18 Nov 2011 13:30:37 -0600
-Message-ID: <4EC6B25D.70708@gmail.com>
-References: <1321546766-26770-1-git-send-email-pdeschrijver@nvidia.com> <1321546766-26770-2-git-send-email-pdeschrijver@nvidia.com> <74CDBE0F657A3D45AFBB94109FB122FF1740D74C46@HQMAIL01.nvidia.com> <20111118184942.GA31678@quad.lixom.net>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] net: add calxeda xgmac ethernet driver
+Date: Fri, 18 Nov 2011 14:54:12 -0500 (EST)
+Message-ID: <20111118.145412.1098612279209409802.davem@davemloft.net>
+References: <1321411611-28839-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20111118184942.GA31678@quad.lixom.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Colin Cross <ccross@android.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1321411611-28839-1-git-send-email-robherring2@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: robherring2@gmail.com
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, joe@perches.com, saeed.bishara@gmail.com, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/18/2011 12:49 PM, Olof Johansson wrote:
-> On Thu, Nov 17, 2011 at 11:39:14AM -0800, Stephen Warren wrote:
->> Peter De Schrijver wrote at Thursday, November 17, 2011 9:19 AM:
->>> This patch adds the initial device tree for tegra30
->>
->>> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt
->> ...
->>> +* harmony: tegra20 based development board
->>> +Required root node properties:
->>> + - compatible = "nvidia,harmony", "nvidia,tegra20";
->>> +
->>> +* seaboard: tegra20 based clamshell reference design
->>> +Required root node properties:
->>> + - compatible = "nvidia,seaboard", "nvidia,tegra20";
->>
->> Do we really want to list all the board names here? In the future, there
->> could be tens or hundreds. I would argue that we should just document
->> nvidia,tegra20 and nvidia,tegra30.
+From: Rob Herring <robherring2@gmail.com>
+Date: Tue, 15 Nov 2011 20:46:51 -0600
+
+> From: Rob Herring <rob.herring@calxeda.com>
 > 
-> Agreed.
-
-It's not really any different than mach-types which does have every
-board in it.
-
-I think if a board requires a new dts, then it needs a unique name.
-
+> Add support for the XGMAC 10Gb ethernet device in the Calxeda Highbank
+> SOC.
 > 
->> At a later point, we should fix board-dt.c to solely look for those
->> compatible values, although this will have to wait until the pinmux DT
->> bindings are present. Then, the kernel won't care about the board names.
-> 
-> Exactly.
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 
-That is perfectly acceptable, but you should still have the option to do
-something specific for any given board.
-
-Rob
+Doesn't build, because you reference SK_8K which is a define not
+available on all platforms.  Only architectures which make use of
+asm-generic/sizes.h will be able to see that definition.
