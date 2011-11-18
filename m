@@ -1,74 +1,97 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Best practice for compatible strings?
-Date: Fri, 18 Nov 2011 10:23:44 +0000
-Message-ID: <20111118102320.GA2071@localhost.localdomain>
-References: <20111117182543.GD3044@localhost.localdomain>
- <4EC5566C.4030508@firmworks.com>
+From: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v5 0/4] Device tree support for regulators
+Date: Fri, 18 Nov 2011 16:47:16 +0530
+Message-ID: <1321615040-13257-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4EC5566C.4030508-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 17, 2011 at 08:46:04AM -1000, Mitch Bradley wrote:
-> As the original instigator of the generic names scheme, I can tell
-> you what I had in mind.  That may not be the way things have
-> evolved, but at least it's a data point.
-> 
-> The idea is that there are devices for which there are preexisting
-> drivers.  Hardware designers often design new hardware that is
-> compatible with older hardware so that the old driver can be used.
-> The new hardware often has additional features that can be used with
-> new drivers, but at least the device is basically functional with
-> the old driver.
-> 
-> The point of a non-specific fallback entry in a compatible property
-> is to match an old driver that is known to be present in some
-> important extant version of an OS.
-> 
-> In the absence of a preexisting legacy programming model and the
-> corresponding old driver, there isn't much point in trying to
-> "invent" a non-specific name.  I suppose that, theoretically, it
-> might be possible to come up with a least-common-denominator
-> programming model across a family of newly-designed devices, but
-> that's not the way it usually works in practice, except in the case
-> of a programming model defined by a standards committee.  More
-> typically, a particular device gets some traction in the market, and
-> then people copy that.
-> 
-> This model of driver evolution is more compelling for operating
-> systems with a different development and distribution model than
-> Linux's.  In the Linux world, it is hard to point to a specific
-> shipping version and say "we must be compatible with that because it
-> is what is already out there".
-> 
-> The bottom line:  In my opinion, if there is no preexisting driver
-> that you can't change, there is little need for a non-specific name
-> in the compatible list.
+v5 is based on 3.2-rc2 and has the following changes
+-1- Used microvolt/microamp in bindings instead of uV/uA
+-2- Added more documentation surrounding regulator-consumer
+mapping in the core bindings
+-3- Dropped CONFIG_OF_REGULATOR and use just CONFIG_OF
+-4- Reused core regulator bindings on Fixed regulator bindings
+-5- Corrected the gpio binding for Fixed regulator
 
-I think that answers my question -- in the absence of preexisting
-drivers, a DT node would list the one compatible string exactly
-identifying the device, and drivers list the compatible strings for
-the devices they are known to support.
+The patches can be found here:
+git://gitorious.org/omap-pm/linux.git for-dt/regulator
 
-More generic compatible strings may be useful sometimes, but we
-probably shouldn't have them by default when defining new bindings,
-unless there's a compelling reason for it.
+For the first 2 patches (1/4 and 2/4) I have dropped
+Acks from Mark, since they have changed to some extent
+from the last post and retained the Acks recieved on the
+last 2 patches (3/4 and 4/4) as they remain unchanged.
 
-Does anyone feel uncomfortable with that?
+regards,
+Rajendra
 
-Cheers
----Dave
+Rajendra Nayak (4):
+  regulator: helper routine to extract regulator_init_data
+  regulator: adapt fixed regulator driver to dt
+  regulator: pass additional of_node to regulator_register()
+  regulator: map consumer regulator based on device tree
+
+ .../bindings/regulator/fixed-regulator.txt         |   29 +++++++
+ .../devicetree/bindings/regulator/regulator.txt    |   54 +++++++++++++
+ drivers/regulator/88pm8607.c                       |    2 +-
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/aat2870-regulator.c              |    2 +-
+ drivers/regulator/ab3100.c                         |    2 +-
+ drivers/regulator/ab8500.c                         |    2 +-
+ drivers/regulator/ad5398.c                         |    2 +-
+ drivers/regulator/bq24022.c                        |    2 +-
+ drivers/regulator/core.c                           |   82 ++++++++++++++++---
+ drivers/regulator/da903x.c                         |    2 +-
+ drivers/regulator/db8500-prcmu.c                   |    2 +-
+ drivers/regulator/dummy.c                          |    2 +-
+ drivers/regulator/fixed.c                          |   62 +++++++++++++++-
+ drivers/regulator/isl6271a-regulator.c             |    2 +-
+ drivers/regulator/lp3971.c                         |    2 +-
+ drivers/regulator/lp3972.c                         |    2 +-
+ drivers/regulator/max1586.c                        |    2 +-
+ drivers/regulator/max8649.c                        |    2 +-
+ drivers/regulator/max8660.c                        |    2 +-
+ drivers/regulator/max8925-regulator.c              |    2 +-
+ drivers/regulator/max8952.c                        |    2 +-
+ drivers/regulator/max8997.c                        |    2 +-
+ drivers/regulator/max8998.c                        |    2 +-
+ drivers/regulator/mc13783-regulator.c              |    2 +-
+ drivers/regulator/mc13892-regulator.c              |    2 +-
+ drivers/regulator/of_regulator.c                   |   81 +++++++++++++++++++
+ drivers/regulator/pcap-regulator.c                 |    2 +-
+ drivers/regulator/pcf50633-regulator.c             |    2 +-
+ drivers/regulator/tps6105x-regulator.c             |    3 +-
+ drivers/regulator/tps65023-regulator.c             |    2 +-
+ drivers/regulator/tps6507x-regulator.c             |    2 +-
+ drivers/regulator/tps6524x-regulator.c             |    2 +-
+ drivers/regulator/tps6586x-regulator.c             |    2 +-
+ drivers/regulator/tps65910-regulator.c             |    2 +-
+ drivers/regulator/tps65912-regulator.c             |    2 +-
+ drivers/regulator/twl-regulator.c                  |    2 +-
+ drivers/regulator/wm831x-dcdc.c                    |    8 +-
+ drivers/regulator/wm831x-isink.c                   |    2 +-
+ drivers/regulator/wm831x-ldo.c                     |    6 +-
+ drivers/regulator/wm8350-regulator.c               |    2 +-
+ drivers/regulator/wm8400-regulator.c               |    2 +-
+ drivers/regulator/wm8994-regulator.c               |    2 +-
+ include/linux/regulator/driver.h                   |    4 +-
+ include/linux/regulator/of_regulator.h             |   20 +++++
+ sound/soc/codecs/sgtl5000.c                        |    2 +-
+ 46 files changed, 362 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/regulator.txt
+ create mode 100644 drivers/regulator/of_regulator.c
+ create mode 100644 include/linux/regulator/of_regulator.h
