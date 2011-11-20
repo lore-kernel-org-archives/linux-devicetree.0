@@ -1,87 +1,130 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/4] mmc: omap: adapt the hsmmc driver to device tree
-Date: Fri, 18 Nov 2011 16:21:40 -0800
-Message-ID: <20111119002140.GX31337@atomide.com>
-References: <1320407441-29697-1-git-send-email-rnayak@ti.com>
- <1320407441-29697-3-git-send-email-rnayak@ti.com>
- <20111114213026.GP31337@atomide.com>
- <4EC1E757.2000308@ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/1] net/macb: add DT support
+Date: Sun, 20 Nov 2011 17:47:40 +0100
+Message-ID: <20111120164740.GC21480@game.jcrosoft.org>
+References: <1321626565-11261-1-git-send-email-plagnioj@jcrosoft.com>
+ <20111118155824.GA9981@totoro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4EC1E757.2000308@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: cjb@laptop.org, balajitk@ti.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, thomas.abraham@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20111118155824.GA9981@totoro>
+Sender: netdev-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: devicetree-discuss@ozlabs.org, netdev@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-* Rajendra Nayak <rnayak@ti.com> [111114 19:40]:
-> On Tuesday 15 November 2011 03:00 AM, Tony Lindgren wrote:
-> >* Rajendra Nayak<rnayak@ti.com>  [111104 04:16]:
-> >>@@ -1869,6 +1957,14 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
-> >>  	struct omap_hsmmc_host *host = NULL;
-> >>  	struct resource *res;
-> >>  	int ret, irq;
-> >>+	const struct of_device_id *match;
-> >>+
-> >>+	match = of_match_device(omap_mmc_of_match,&pdev->dev);
-> >>+	if (match) {
-> >>+		pdata = of_get_hsmmc_pdata(&pdev->dev);
-> >>+		if (match->data)
-> >>+			pdata->reg_offset = *(u16 *)match->data;
-> >>+	}
-> >
-> >So this is now using both DT and pdata?
-> >
-> >We want to use DT only, and get rid of pdata. Other than the
-> >deferred probe, is there some other dependency remaining to
-> >having to use the pdata also?
+On 15:58 Fri 18 Nov     , Jamie Iles wrote:
+> Hi Jean-Christophe,
 > 
-> We are using pdata today mainly for the platform function pointers
-> that get passed for MMC, which can never be passed from DT.
+> On Fri, Nov 18, 2011 at 03:29:25PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > allow the DT to pass the mac address and the phy mode
+> > 
+> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> > Cc: Jamie Iles <jamie@jamieiles.com>
+> > Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
 > 
-> The  omap_mmc_platform_data structure today has '17' function pointers.
-> Most might be sparingly used, nevertheless, its an awfully large number.
-
-Yeah OK.
- 
-> Here's the list...
-> ---------
-> int (*switch_slot)(struct device *dev, int slot);
-> int (*init)(struct device *dev);
-> void (*cleanup)(struct device *dev);
-> void (*shutdown)(struct device *dev);
-> int (*suspend)(struct device *dev, int slot);
-> int (*resume)(struct device *dev, int slot);
-> int (*get_context_loss_count)(struct device *dev);
+> This looks OK to me in principle.  I can't easily test this at the 
+> moment, but as I don't have a DT platform that has the clk framework up 
+> and running.  A couple of nits/questions inline, but thanks for doing 
+> this!
 > 
-> per-slot functions
+> Jamie
 > 
-> int (*set_bus_mode)(struct device *dev, int slot, int bus_mode);
-> int (*set_power)(struct device *dev, int slot,
->                                  int power_on, int vdd);
-> int (*get_ro)(struct device *dev, int slot);
-> int (*set_sleep)(struct device *dev, int slot, int sleep,
->                                  int vdd, int cardsleep);
-> void (*remux)(struct device *dev, int slot, int power_on);
-> void (*before_set_reg)(struct device *dev, int slot,
->                                        int power_on, int vdd);
-> void (*after_set_reg)(struct device *dev, int slot,
->                                       int power_on, int vdd);
-> void (*init_card)(struct mmc_card *card);
-> int (*get_cover_state)(struct device *dev, int slot);
-> int (*card_detect)(struct device *dev, int slot);
-> ---------
+> > ---
+> >  Documentation/devicetree/bindings/net/macb.txt |   22 ++++++++
+> >  drivers/net/ethernet/cadence/macb.c            |   65 +++++++++++++++++++++---
+> >  drivers/net/ethernet/cadence/macb.h            |    2 +
+> >  3 files changed, 81 insertions(+), 8 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/net/macb.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+> > new file mode 100644
+> > index 0000000..2b727ec
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/macb.txt
+> > @@ -0,0 +1,22 @@
+> > +* Cadence EMACB
+> > +
+> > +Implemeted on Atmel AT91 & AVR32 SoC
+> 
+> I think something along the lines of "Binding for the Cadence MACB 
+> Ethernet controller" rather than listing specific parts might be 
+> clearer.
+I prefer as we will have implementation detail in the binding
+> 
+> > +
+> > +Required properties:
+> > +- compatible : Should be "atmel,macb" for Atmel
+> > +- reg : Address and length of the register set for the device
+> > +- interrupts : Should contain macb interrupt
+> > +- phy-mode : String, operation mode of the PHY interface.
+> > +  Supported values are: "mii", "rmii",
+> > +
+> > +Optional properties:
+> > +- local-mac-address : 6 bytes, mac address
+> > +
+> > +Examples:
+> > +
+> > +	macb0: macb@fffc4000 {
+> 
+> Rob pointed out to me a little while ago that the preferred naming from 
+> the ePAPR document would be:
+> 
+> 	macb0: ethernet@fffc4000
+> 
+> so it might be worth being consistent here.
+ok
+> 
+> > +		compatible = "atmel,macb";
+> 
+> This should be "cdns,macb" as it isn't Atmel specific.  I believe cdns 
+> is the correct stock ticker symbol for Cadence.
+here I put "atmel,macb" on purpose to specify the difference of the IP between
+the soc, in fact it should have been atmel-at91,macb
 
-To me it seems we should move these into drivers/mmc/host/omap_hsmmc.c
-and set them based on DT compatible (or some other) property.
+> 
+> > +		reg = <oxfffc4000 0x4000>;
+> > +		interrupts = <21>;
+> > +		phy-mode = "mii";
+> > +	};
+> > diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+> > index a437b46..2c345bc 100644
+> > --- a/drivers/net/ethernet/cadence/macb.c
+> > +++ b/drivers/net/ethernet/cadence/macb.c
+> > @@ -20,6 +20,9 @@
+> >  #include <linux/etherdevice.h>
+> >  #include <linux/dma-mapping.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of_net.h>
+> >  #include <linux/phy.h>
+> >  
+> >  #include <mach/board.h>
+> > @@ -81,6 +84,20 @@ static void __init macb_get_hwaddr(struct macb *bp)
+> >  	addr[4] = top & 0xff;
+> >  	addr[5] = (top >> 8) & 0xff;
+> >  
+> > +#ifdef CONFIG_OF
+> > +	/*
+> > +	 * 2) from device tree data
+> > +	 */
+> > +	if (!is_valid_ether_addr(addr)) {
+> > +		struct device_node *np = bp->pdev->dev.of_node;
+> > +		if (np) {
+> > +			const char *mac = of_get_mac_address(np);
+> > +			if (mac)
+> > +				memcpy(addr, mac, sizeof(addr));
+> > +		}
+> > +	}
+> > +#endif
+> 
+> I'm a bit conflicted here.  I think we should always use the MAC address 
+> from the device tree if it is present even if the current MAC address is 
+> valid.
+if the mac is already programmed in the register we just keep it
+I prefer this way if the bootloader set it we keep it
 
-If these functions tinker with some internal registers, then we need
-to fix those too to use regulator/gpio API.
-
-This way we don't need the platform_data any longer.
-
-Regards,
-
-Tony
+Best Regards,
+J.
