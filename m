@@ -1,15 +1,15 @@
 From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: sa1100: refactor sa1100 serial driver
-Date: Mon, 21 Nov 2011 14:43:33 +0000
-Message-ID: <20111121144333.GA25627@totoro>
-References: <1321821127-32231-1-git-send-email-jochen@scram.de>
- <1321822068.17619.3.camel@Joe-Laptop> <4ECA6235.4030108@scram.de>
+Subject: Re: [PATCH] Initial DT support for SIMpad devices.
+Date: Mon, 21 Nov 2011 14:47:46 +0000
+Message-ID: <20111121144746.GB25627@totoro>
+References: <1321821470-32396-1-git-send-email-jochen@scram.de>
+ <20111121095020.GA7314@totoro> <4ECA6118.1050806@scram.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4ECA6235.4030108-NIgtFMG+Po8@public.gmane.org>
+In-Reply-To: <4ECA6118.1050806-NIgtFMG+Po8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,29 +20,62 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>
-Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 21, 2011 at 03:37:41PM +0100, Jochen Friedrich wrote:
-> Hi Joe,
-> 
-> >trivia:
-> >
-> >>diff --git a/arch/arm/mach-sa1100/generic.c b/arch/arm/mach-sa1100/generic.c
-> >[]
-> >>@@ -166,7 +166,7 @@ static struct platform_device sa11x0udc_device = {
-> >>  static struct resource sa11x0uart1_resources[] = {
-> >>  	[0] = {
-> >>  		.start	= __PREG(Ser1UTCR0),
-> >>-		.end	= __PREG(Ser1UTCR0) + 0xffff,
-> >>+		.end	= __PREG(Ser1UTCR0) + 0x24,
-> >
-> >#define for 0x24? or is it really 0x23?
-> >(start + size - 1)
-> 
-> Thanks, I'll fix this.
+Hi Jochen,
 
-It may even be worth looking at the DEFINE_RES_MEM() type macros in 
-include/linux/ioport.h, but I'm not sure that's essential!
+On Mon, Nov 21, 2011 at 03:32:56PM +0100, Jochen Friedrich wrote:
+> >>+	localbus {
+> >>+		compatible = "intel,sa1110-localbus";
+> >
+> >Could this claim compatibility with simple-bus?
+> 
+> I wasn't sure about this. I took a look in the powerpc DTS files for reference and they used
+> some kind of <chip>-localbus compatible entries. So I took the same approach here.
+
+Hmm, I haven't seen any of the ARM platforms doing this, and unless the 
+sa1110 bus has some extra knobs that need tweaking, then simple-bus 
+should be fine.
+
+> >>+		uart2: serial@0x80050000 {
+> >>+			compatible = "intel,sa1100-uart";
+> >>+			reg =<0x80050000 0x24>;
+> >>+			interrupts =<17>;
+> >>+			status = "disabled";
+> >
+> >Hmm, I couldn't see status defined in the UART binding or where it was
+> >used...  Is this required?
+> 
+> status is a global property and it's being used in drivers/of/base.c, of_device_is_available().
+> It is used in other dtsi files like e.g. at91sam9g45.dtsi as well to define optional nodes.
+
+Ahh, I wasn't aware of that one - thanks!
+
+> >>+/ {
+> >>+	model = "SIEMENS, SIMpad";
+> >>+	compatible = "siemens,simpad";
+> >
+> >It may be worth adding the SoC compatible string after the board one for
+> >completeness.
+> 
+> Do you mean something like this?
+> 
+> 	compatible = "siemens,simpad", "intel,sa1100";
+
+Yup, that looks about right.
+
+> >>+	chosen {
+> >>+		bootargs = "console=ttySA0";
+> >
+> >It is preferred for the bootloader to set these up rather than having
+> >them statically in the DTS if at all possible.
+> 
+> Yes, my boot loader does this, but simpad support is not in official U-BOOT yet.
+> This allows testing with a different boot loader like the hh.org one and a Linux
+> binary with DTB appended.
+
+OK, I guess that's fair enough, though I certainly shouldn't be 
+considered an authoritative source on this!
 
 Jamie
