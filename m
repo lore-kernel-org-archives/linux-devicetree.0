@@ -1,15 +1,15 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] Initial DT support for SIMpad devices.
-Date: Mon, 21 Nov 2011 14:47:46 +0000
-Message-ID: <20111121144746.GB25627@totoro>
-References: <1321821470-32396-1-git-send-email-jochen@scram.de>
- <20111121095020.GA7314@totoro> <4ECA6118.1050806@scram.de>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC 6/8] of: add clock providers
+Date: Mon, 21 Nov 2011 23:37:18 +0800
+Message-ID: <20111121153716.GA16417@S2100-06.ap.freescale.net>
+References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
+ <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4ECA6118.1050806-NIgtFMG+Po8@public.gmane.org>
+In-Reply-To: <1320801583-12774-7-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,63 +19,148 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jochen,
-
-On Mon, Nov 21, 2011 at 03:32:56PM +0100, Jochen Friedrich wrote:
-> >>+	localbus {
-> >>+		compatible = "intel,sa1110-localbus";
-> >
-> >Could this claim compatibility with simple-bus?
+On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
+> Based on work by Ben Herrenschmidt and Jeremy Kerr, this patch adds an
+> of_clk_get function to allow platforms to retrieve clock data from the
+> device tree.
 > 
-> I wasn't sure about this. I took a look in the powerpc DTS files for reference and they used
-> some kind of <chip>-localbus compatible entries. So I took the same approach here.
-
-Hmm, I haven't seen any of the ARM platforms doing this, and unless the 
-sa1110 bus has some extra knobs that need tweaking, then simple-bus 
-should be fine.
-
-> >>+		uart2: serial@0x80050000 {
-> >>+			compatible = "intel,sa1100-uart";
-> >>+			reg =<0x80050000 0x24>;
-> >>+			interrupts =<17>;
-> >>+			status = "disabled";
-> >
-> >Hmm, I couldn't see status defined in the UART binding or where it was
-> >used...  Is this required?
+> Platform register a provider through of_clk_add_provider, which will be
+> called when a device references the provider's OF node for a clock
+> reference.
 > 
-> status is a global property and it's being used in drivers/of/base.c, of_device_is_available().
-> It is used in other dtsi files like e.g. at91sam9g45.dtsi as well to define optional nodes.
-
-Ahh, I wasn't aware of that one - thanks!
-
-> >>+/ {
-> >>+	model = "SIEMENS, SIMpad";
-> >>+	compatible = "siemens,simpad";
-> >
-> >It may be worth adding the SoC compatible string after the board one for
-> >completeness.
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/clock-bindings.txt   |  109 +++++++++++++++++
+>  drivers/of/Kconfig                                 |    6 +
+>  drivers/of/Makefile                                |    1 +
+>  drivers/of/clock.c                                 |  129 ++++++++++++++++++++
+>  include/linux/of_clk.h                             |   37 ++++++
+>  5 files changed, 282 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/clock-bindings.txt
+>  create mode 100644 drivers/of/clock.c
+>  create mode 100644 include/linux/of_clk.h
 > 
-> Do you mean something like this?
-> 
-> 	compatible = "siemens,simpad", "intel,sa1100";
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> new file mode 100644
+> index 0000000..4770c7e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -0,0 +1,109 @@
+> +This binding is a work-in-progress, and are based on some experimental
+> +work by benh[1].
+> +
+> +Sources of clock signal can be represented by any node in the device
+> +tree.  Those nodes are designated as clock providers.  Clock consumer
+> +nodes use a phandle and clock specifier pair to connect clock provider
+> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
+> +specifier is an array of one more more cells identifying the clock
+> +output on a device.  The length of a clock specifier is defined by the
+> +value of a #clock-cells property in the clock provider node.
+> +
+> +[1] http://patchwork.ozlabs.org/patch/31551/
+> +
+> +==Clock providers==
+> +
+> +Required properties:
+> +#clock-cells:	   Number of cells in a clock specifier; typically will be
+> +		   set to 1
+> +
+> +Optional properties:
+> +clock-output-name: Recommended to be a list of strings of clock output signal
+> +		   names indexed by the first cell in the clock specifier.
+> +		   However, the meaning of clock-output-names is domain
 
-Yup, that looks about right.
+s/clock-output-names/clock-output-name?
 
-> >>+	chosen {
-> >>+		bootargs = "console=ttySA0";
-> >
-> >It is preferred for the bootloader to set these up rather than having
-> >them statically in the DTS if at all possible.
-> 
-> Yes, my boot loader does this, but simpad support is not in official U-BOOT yet.
-> This allows testing with a different boot loader like the hh.org one and a Linux
-> binary with DTB appended.
+> +		   specific to the clock provider, and is only provided to
+> +		   encourage using the same meaning for the majority of clock
+> +		   providers.  This format may not work for clock providers
+> +		   using a complex clock specifier format.  In those cases it
+> +		   is recommended to omit this property and create a binding
+> +		   specific names property.
+> +
+> +		   Clock consumer nodes must never directly reference
+> +		   the provider's clock-output-names property.
 
-OK, I guess that's fair enough, though I certainly shouldn't be 
-considered an authoritative source on this!
+s/clock-output-names/clock-output-name?
 
-Jamie
+> +
+> +For example:
+> +
+> +    oscillator {
+> +        #clock-cells = <1>;
+> +        clock-output-name = "ckil", "ckih";
+> +    };
+> +
+> +- this node defines a device with two clock outputs, the first named
+> +  "ckil" and the second named "ckih".  Consumer nodes always reference
+> +  clocks by index. The names should reflect the clock output signal
+> +  names for the device.
+> +
+> +==Clock consumers==
+> +
+> +Required properties:
+> +clock-input:	List of phandle and clock specifier pairs, one pair
+> +		for each clock input to the device.
+> +clock-input-name: List of clock input name strings sorted in the same
+> +		order as the clock-input property.  Consumers drivers
+> +		will use clock-input-name to match clock input names
+> +		with clock-input specifiers.
+> +
+> +For example:
+> +
+> +    uart {
+> +        clock-input = <&osc 1> <&ref 0>;
+				 ^
+Comma is missed?
+
+> +        clock-input-name = "baud", "register";
+> +    };
+
+[...]
+
+> +struct clk *of_clk_get(struct device_node *np, int index)
+> +{
+> +	struct of_phandle_args clkspec;
+> +	struct clk *clk;
+> +	int rc;
+> +
+> +	if (index < 0)
+> +		return NULL;
+> +
+> +	rc = of_parse_phandle_with_args(np, "clock", "#clock-cells", index,
+
+According to binding document above, s/clock/clock-input?
+
+> +					&clkspec);
+> +	if (rc)
+> +		return NULL;
+> +
+> +	clk = __of_clk_get_from_provider(&clkspec);
+> +	of_node_put(clkspec.np);
+> +	return clk;
+> +}
+> +
+> +struct clk *of_clk_get_by_name(struct device_node *np, const char *name)
+> +{
+> +	int index = 0;
+> +
+> +	if (name)
+> +		index = of_property_match_string(np, "clock-input-names", name);
+
+If it fails to match name, we may want to force 'index' back to 0.
+
+Also according to binding document above,
+s/clock-input-names/clock-input-name?  Hope you do not want to
+change binding document to get them aligned.  I have written code
+per binding document :)
+
+Regards,
+Shawn
+
+> +	return of_clk_get(np, index);
+> +}
