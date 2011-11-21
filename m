@@ -1,214 +1,36 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [RFC 3/8] of: create of_phandle_args to simplify return of
- phandle parsing data
-Date: Mon, 21 Nov 2011 23:50:42 +0800
-Message-ID: <20111121155042.GB16417@S2100-06.ap.freescale.net>
-References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
- <1320801583-12774-4-git-send-email-grant.likely@secretlab.ca>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v1] dts: tegra-ventana: use proper root instead of
+ /dev/ram
+Date: Mon, 21 Nov 2011 08:56:46 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174F08C0B8@HQMAIL01.nvidia.com>
+References: <1321338087-3662-1-git-send-email-vwadekar@nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1740805E1B@HQMAIL01.nvidia.com>
+ <20111121004930.GA17338@quad.lixom.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1320801583-12774-4-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20111121004930.GA17338-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2011 at 06:19:38PM -0700, Grant Likely wrote:
-[...]
->  /**
-> - * of_parse_phandles_with_args - Find a node pointed by phandle in a list
-> + * of_parse_phandle_with_args - Find a node pointed by phandle in a list
->   * @np:		pointer to a device tree node containing a list
->   * @list_name:	property name that contains a list
->   * @cells_name:	property name that specifies phandles' arguments count
->   * @index:	index of a phandle to parse out
-> - * @out_node:	optional pointer to device_node struct pointer (will be filled)
-> - * @out_args:	optional pointer to arguments pointer (will be filled)
-> + * @out_args:	optional pointer to output arguments structure (will be filled)
->   *
->   * This function is useful to parse lists of phandles and their arguments.
-> - * Returns 0 on success and fills out_node and out_args, on error returns
-> - * appropriate errno value.
-> + * Returns 0 on success and fills out_args, on error returns appropriate
-> + * errno value.
->   *
->   * Example:
->   *
-> @@ -851,94 +850,105 @@ EXPORT_SYMBOL(of_parse_phandle);
->   * }
->   *
->   * To get a device_node of the `node2' node you may call this:
-> - * of_parse_phandles_with_args(node3, "list", "#list-cells", 2, &node2, &args);
-> + * of_parse_phandle_with_args(node3, "list", "#list-cells", 2, &args);
+Olof Johansson wrote at Sunday, November 20, 2011 5:50 PM:
+> On Tue, Nov 15, 2011 at 11:16:51AM -0800, Stephen Warren wrote:
+> > Varun Wadekar wrote at Monday, November 14, 2011 11:21 PM:
+> > > From: Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > >
+> > > The root file system on ventana resides on /dev/mmcblk0p1.
+...
+> Actually, removing the default root path is probably a better idea, since it
+> will vary from installation to installation and doesn't make sense to hard
+> code.
+...
+> So, I would rather see a patch removing the root= argument alltogether.
 
-Not introduced by this patch, but if I read the code correctly,
-the fourth parameter should be 1?
-
->   */
-> -int of_parse_phandles_with_args(struct device_node *np, const char *list_name,
-> +int of_parse_phandle_with_args(struct device_node *np, const char *list_name,
->  				const char *cells_name, int index,
-> -				struct device_node **out_node,
-> -				const void **out_args)
-> +				struct of_phandle_args *out_args)
->  {
->  	int ret = -EINVAL;
-> -	const __be32 *list;
-> -	const __be32 *list_end;
-> -	int size;
-> -	int cur_index = 0;
-> +	const __be32 *list, *list_end;
-> +	int size, cur_index = 0;
-> +	uint32_t count = 0;
->  	struct device_node *node = NULL;
-> -	const void *args = NULL;
-> +	phandle phandle;
->  
-> +	/* Retrieve the phandle list property */
->  	list = of_get_property(np, list_name, &size);
-> -	if (!list) {
-> -		ret = -ENOENT;
-> +	if (!list)
->  		goto err0;
-> -	}
->  	list_end = list + size / sizeof(*list);
->  
-> +	/*
-> +	 * Loop over all the entries in the list, parsing the #cells property
-> +	 * for each one to determine how long each argument list is
-> +	 */
->  	while (list < list_end) {
-> -		const __be32 *cells;
-> -		phandle phandle;
-> +		count = 0;
->  
-> +		/*
-> +		 * If phandle is null, then it is an empty entry with no args,
-> +		 * skip forward to the next entry
-> +		 */
->  		phandle = be32_to_cpup(list++);
-> -		args = list;
-> -
-> -		/* one cell hole in the list = <>; */
-> -		if (!phandle)
-> -			goto next;
-> -
-> -		node = of_find_node_by_phandle(phandle);
-> -		if (!node) {
-> -			pr_debug("%s: could not find phandle\n",
-> -				 np->full_name);
-> -			goto err0;
-> -		}
-> +		if (phandle) {
-> +			/*
-> +			 * Find the provider node and parse the #*-cells
-> +			 * property to determine how long the arguements are
-> +			 */
-> +			node = of_find_node_by_phandle(phandle);
-> +			if (!node) {
-> +				pr_debug("%s: could not find phandle\n",
-> +					 np->full_name);
-> +				ret = -EINVAL;
-> +				goto err0;
-> +			}
-> +			if (of_property_read_u32(node, cells_name, &count)) {
-> +				pr_debug("%s: could not get %s for %s\n",
-> +					 np->full_name, cells_name,
-> +					 node->full_name);
-> +				ret = -EINVAL;
-> +				goto err1;
-> +			}
->  
-> -		cells = of_get_property(node, cells_name, &size);
-> -		if (!cells || size != sizeof(*cells)) {
-> -			pr_debug("%s: could not get %s for %s\n",
-> -				 np->full_name, cells_name, node->full_name);
-> -			goto err1;
-> +			/*
-> +			 * Make sure that the arguments actually fit in the
-> +			 * remaining property data length
-> +			 */
-> +			if (list + count > list_end) {
-> +				pr_debug("%s: insufficient arguments length\n",
-> +					 np->full_name);
-> +				goto err1;
-> +			}
->  		}
->  
-> -		list += be32_to_cpup(cells);
-> -		if (list > list_end) {
-> -			pr_debug("%s: insufficient arguments length\n",
-> -				 np->full_name);
-> -			goto err1;
-> -		}
-> -next:
-> -		if (cur_index == index)
-> +		/*
-> +		 * All of the error cases in the loop bail out to the err
-> +		 * labels, so at this point, the parsing was successful, but
-> +		 * it might be an empty entry
-> +		 */
-> +		if (cur_index == index) {
-> +			ret = phandle ? 0 : -ENOENT;
-
-We have some return code here ...
-
->  			break;
-> +		}
->  
->  		of_node_put(node);
->  		node = NULL;
-> -		args = NULL;
-> +		list += count;
->  		cur_index++;
->  	}
->  
-> -	if (!node) {
-> -		/*
-> -		 * args w/o node indicates that the loop above has stopped at
-> -		 * the 'hole' cell. Report this differently.
-> -		 */
-> -		if (args)
-> -			ret = -EEXIST;
-> -		else
-> -			ret = -ENOENT;
-> +	if (!node)
->  		goto err0;
-> -	}
-> -
-> -	if (out_node)
-> -		*out_node = node;
-> -	if (out_args)
-> -		*out_args = args;
->  
-> +	if (out_args) {
-> +		int i;
-> +		if (WARN_ON(count > MAX_PHANDLE_ARGS))
-> +			count = MAX_PHANDLE_ARGS;
-> +		out_args->np = node;
-> +		out_args->args_count = count;
-> +		for (i = 0; i < count; i++)
-> +			out_args->args[i] = be32_to_cpup(list++);
-> +	}
->  	return 0;
-
-... should this be "return ret"?
-
-> -err1:
-> +
-> + err1:
->  	of_node_put(node);
-> -err0:
-> + err0:
->  	pr_debug("%s failed with status %d\n", __func__, ret);
->  	return ret;
->  }
-> -EXPORT_SYMBOL(of_parse_phandles_with_args);
-> +EXPORT_SYMBOL(of_parse_phandle_with_args);
->  
+OK, I'll whip up a patch for that along with a few other minor DTS fixes.
 
 -- 
-Regards,
-Shawn
+nvpublic
