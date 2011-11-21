@@ -1,166 +1,214 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC 6/8] of: add clock providers
-Date: Mon, 21 Nov 2011 23:37:18 +0800
-Message-ID: <20111121153716.GA16417@S2100-06.ap.freescale.net>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [RFC 3/8] of: create of_phandle_args to simplify return of
+ phandle parsing data
+Date: Mon, 21 Nov 2011 23:50:42 +0800
+Message-ID: <20111121155042.GB16417@S2100-06.ap.freescale.net>
 References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
- <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
+ <1320801583-12774-4-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1320801583-12774-7-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1320801583-12774-4-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
-> Based on work by Ben Herrenschmidt and Jeremy Kerr, this patch adds an
-> of_clk_get function to allow platforms to retrieve clock data from the
-> device tree.
-> 
-> Platform register a provider through of_clk_add_provider, which will be
-> called when a device references the provider's OF node for a clock
-> reference.
-> 
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/clock-bindings.txt   |  109 +++++++++++++++++
->  drivers/of/Kconfig                                 |    6 +
->  drivers/of/Makefile                                |    1 +
->  drivers/of/clock.c                                 |  129 ++++++++++++++++++++
->  include/linux/of_clk.h                             |   37 ++++++
->  5 files changed, 282 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/clock-bindings.txt
->  create mode 100644 drivers/of/clock.c
->  create mode 100644 include/linux/of_clk.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> new file mode 100644
-> index 0000000..4770c7e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -0,0 +1,109 @@
-> +This binding is a work-in-progress, and are based on some experimental
-> +work by benh[1].
-> +
-> +Sources of clock signal can be represented by any node in the device
-> +tree.  Those nodes are designated as clock providers.  Clock consumer
-> +nodes use a phandle and clock specifier pair to connect clock provider
-> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
-> +specifier is an array of one more more cells identifying the clock
-> +output on a device.  The length of a clock specifier is defined by the
-> +value of a #clock-cells property in the clock provider node.
-> +
-> +[1] http://patchwork.ozlabs.org/patch/31551/
-> +
-> +==Clock providers==
-> +
-> +Required properties:
-> +#clock-cells:	   Number of cells in a clock specifier; typically will be
-> +		   set to 1
-> +
-> +Optional properties:
-> +clock-output-name: Recommended to be a list of strings of clock output signal
-> +		   names indexed by the first cell in the clock specifier.
-> +		   However, the meaning of clock-output-names is domain
-
-s/clock-output-names/clock-output-name?
-
-> +		   specific to the clock provider, and is only provided to
-> +		   encourage using the same meaning for the majority of clock
-> +		   providers.  This format may not work for clock providers
-> +		   using a complex clock specifier format.  In those cases it
-> +		   is recommended to omit this property and create a binding
-> +		   specific names property.
-> +
-> +		   Clock consumer nodes must never directly reference
-> +		   the provider's clock-output-names property.
-
-s/clock-output-names/clock-output-name?
-
-> +
-> +For example:
-> +
-> +    oscillator {
-> +        #clock-cells = <1>;
-> +        clock-output-name = "ckil", "ckih";
-> +    };
-> +
-> +- this node defines a device with two clock outputs, the first named
-> +  "ckil" and the second named "ckih".  Consumer nodes always reference
-> +  clocks by index. The names should reflect the clock output signal
-> +  names for the device.
-> +
-> +==Clock consumers==
-> +
-> +Required properties:
-> +clock-input:	List of phandle and clock specifier pairs, one pair
-> +		for each clock input to the device.
-> +clock-input-name: List of clock input name strings sorted in the same
-> +		order as the clock-input property.  Consumers drivers
-> +		will use clock-input-name to match clock input names
-> +		with clock-input specifiers.
-> +
-> +For example:
-> +
-> +    uart {
-> +        clock-input = <&osc 1> <&ref 0>;
-				 ^
-Comma is missed?
-
-> +        clock-input-name = "baud", "register";
-> +    };
-
+On Tue, Nov 08, 2011 at 06:19:38PM -0700, Grant Likely wrote:
 [...]
+>  /**
+> - * of_parse_phandles_with_args - Find a node pointed by phandle in a list
+> + * of_parse_phandle_with_args - Find a node pointed by phandle in a list
+>   * @np:		pointer to a device tree node containing a list
+>   * @list_name:	property name that contains a list
+>   * @cells_name:	property name that specifies phandles' arguments count
+>   * @index:	index of a phandle to parse out
+> - * @out_node:	optional pointer to device_node struct pointer (will be filled)
+> - * @out_args:	optional pointer to arguments pointer (will be filled)
+> + * @out_args:	optional pointer to output arguments structure (will be filled)
+>   *
+>   * This function is useful to parse lists of phandles and their arguments.
+> - * Returns 0 on success and fills out_node and out_args, on error returns
+> - * appropriate errno value.
+> + * Returns 0 on success and fills out_args, on error returns appropriate
+> + * errno value.
+>   *
+>   * Example:
+>   *
+> @@ -851,94 +850,105 @@ EXPORT_SYMBOL(of_parse_phandle);
+>   * }
+>   *
+>   * To get a device_node of the `node2' node you may call this:
+> - * of_parse_phandles_with_args(node3, "list", "#list-cells", 2, &node2, &args);
+> + * of_parse_phandle_with_args(node3, "list", "#list-cells", 2, &args);
 
-> +struct clk *of_clk_get(struct device_node *np, int index)
-> +{
-> +	struct of_phandle_args clkspec;
-> +	struct clk *clk;
-> +	int rc;
+Not introduced by this patch, but if I read the code correctly,
+the fourth parameter should be 1?
+
+>   */
+> -int of_parse_phandles_with_args(struct device_node *np, const char *list_name,
+> +int of_parse_phandle_with_args(struct device_node *np, const char *list_name,
+>  				const char *cells_name, int index,
+> -				struct device_node **out_node,
+> -				const void **out_args)
+> +				struct of_phandle_args *out_args)
+>  {
+>  	int ret = -EINVAL;
+> -	const __be32 *list;
+> -	const __be32 *list_end;
+> -	int size;
+> -	int cur_index = 0;
+> +	const __be32 *list, *list_end;
+> +	int size, cur_index = 0;
+> +	uint32_t count = 0;
+>  	struct device_node *node = NULL;
+> -	const void *args = NULL;
+> +	phandle phandle;
+>  
+> +	/* Retrieve the phandle list property */
+>  	list = of_get_property(np, list_name, &size);
+> -	if (!list) {
+> -		ret = -ENOENT;
+> +	if (!list)
+>  		goto err0;
+> -	}
+>  	list_end = list + size / sizeof(*list);
+>  
+> +	/*
+> +	 * Loop over all the entries in the list, parsing the #cells property
+> +	 * for each one to determine how long each argument list is
+> +	 */
+>  	while (list < list_end) {
+> -		const __be32 *cells;
+> -		phandle phandle;
+> +		count = 0;
+>  
+> +		/*
+> +		 * If phandle is null, then it is an empty entry with no args,
+> +		 * skip forward to the next entry
+> +		 */
+>  		phandle = be32_to_cpup(list++);
+> -		args = list;
+> -
+> -		/* one cell hole in the list = <>; */
+> -		if (!phandle)
+> -			goto next;
+> -
+> -		node = of_find_node_by_phandle(phandle);
+> -		if (!node) {
+> -			pr_debug("%s: could not find phandle\n",
+> -				 np->full_name);
+> -			goto err0;
+> -		}
+> +		if (phandle) {
+> +			/*
+> +			 * Find the provider node and parse the #*-cells
+> +			 * property to determine how long the arguements are
+> +			 */
+> +			node = of_find_node_by_phandle(phandle);
+> +			if (!node) {
+> +				pr_debug("%s: could not find phandle\n",
+> +					 np->full_name);
+> +				ret = -EINVAL;
+> +				goto err0;
+> +			}
+> +			if (of_property_read_u32(node, cells_name, &count)) {
+> +				pr_debug("%s: could not get %s for %s\n",
+> +					 np->full_name, cells_name,
+> +					 node->full_name);
+> +				ret = -EINVAL;
+> +				goto err1;
+> +			}
+>  
+> -		cells = of_get_property(node, cells_name, &size);
+> -		if (!cells || size != sizeof(*cells)) {
+> -			pr_debug("%s: could not get %s for %s\n",
+> -				 np->full_name, cells_name, node->full_name);
+> -			goto err1;
+> +			/*
+> +			 * Make sure that the arguments actually fit in the
+> +			 * remaining property data length
+> +			 */
+> +			if (list + count > list_end) {
+> +				pr_debug("%s: insufficient arguments length\n",
+> +					 np->full_name);
+> +				goto err1;
+> +			}
+>  		}
+>  
+> -		list += be32_to_cpup(cells);
+> -		if (list > list_end) {
+> -			pr_debug("%s: insufficient arguments length\n",
+> -				 np->full_name);
+> -			goto err1;
+> -		}
+> -next:
+> -		if (cur_index == index)
+> +		/*
+> +		 * All of the error cases in the loop bail out to the err
+> +		 * labels, so at this point, the parsing was successful, but
+> +		 * it might be an empty entry
+> +		 */
+> +		if (cur_index == index) {
+> +			ret = phandle ? 0 : -ENOENT;
+
+We have some return code here ...
+
+>  			break;
+> +		}
+>  
+>  		of_node_put(node);
+>  		node = NULL;
+> -		args = NULL;
+> +		list += count;
+>  		cur_index++;
+>  	}
+>  
+> -	if (!node) {
+> -		/*
+> -		 * args w/o node indicates that the loop above has stopped at
+> -		 * the 'hole' cell. Report this differently.
+> -		 */
+> -		if (args)
+> -			ret = -EEXIST;
+> -		else
+> -			ret = -ENOENT;
+> +	if (!node)
+>  		goto err0;
+> -	}
+> -
+> -	if (out_node)
+> -		*out_node = node;
+> -	if (out_args)
+> -		*out_args = args;
+>  
+> +	if (out_args) {
+> +		int i;
+> +		if (WARN_ON(count > MAX_PHANDLE_ARGS))
+> +			count = MAX_PHANDLE_ARGS;
+> +		out_args->np = node;
+> +		out_args->args_count = count;
+> +		for (i = 0; i < count; i++)
+> +			out_args->args[i] = be32_to_cpup(list++);
+> +	}
+>  	return 0;
+
+... should this be "return ret"?
+
+> -err1:
 > +
-> +	if (index < 0)
-> +		return NULL;
-> +
-> +	rc = of_parse_phandle_with_args(np, "clock", "#clock-cells", index,
+> + err1:
+>  	of_node_put(node);
+> -err0:
+> + err0:
+>  	pr_debug("%s failed with status %d\n", __func__, ret);
+>  	return ret;
+>  }
+> -EXPORT_SYMBOL(of_parse_phandles_with_args);
+> +EXPORT_SYMBOL(of_parse_phandle_with_args);
+>  
 
-According to binding document above, s/clock/clock-input?
-
-> +					&clkspec);
-> +	if (rc)
-> +		return NULL;
-> +
-> +	clk = __of_clk_get_from_provider(&clkspec);
-> +	of_node_put(clkspec.np);
-> +	return clk;
-> +}
-> +
-> +struct clk *of_clk_get_by_name(struct device_node *np, const char *name)
-> +{
-> +	int index = 0;
-> +
-> +	if (name)
-> +		index = of_property_match_string(np, "clock-input-names", name);
-
-If it fails to match name, we may want to force 'index' back to 0.
-
-Also according to binding document above,
-s/clock-input-names/clock-input-name?  Hope you do not want to
-change binding document to get them aligned.  I have written code
-per binding document :)
-
+-- 
 Regards,
 Shawn
-
-> +	return of_clk_get(np, index);
-> +}
