@@ -1,66 +1,59 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] ARM: sa1100: refactor sa1100 serial driver
-Date: Sun, 20 Nov 2011 12:47:48 -0800
-Message-ID: <1321822068.17619.3.camel@Joe-Laptop>
-References: <1321821127-32231-1-git-send-email-jochen@scram.de>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v1] dts: tegra-ventana: use proper root instead of
+ /dev/ram
+Date: Sun, 20 Nov 2011 16:49:30 -0800
+Message-ID: <20111121004930.GA17338@quad.lixom.net>
+References: <1321338087-3662-1-git-send-email-vwadekar@nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1740805E1B@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1321821127-32231-1-git-send-email-jochen@scram.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jochen Friedrich <jochen@scram.de>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1740805E1B-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2011-11-20 at 21:32 +0100, Jochen Friedrich wrote:
-> - move pin initialization into board files
-> - make use of resources in platform device
->   rather than hardcoding them in the driver
-> - add DT support
+On Tue, Nov 15, 2011 at 11:16:51AM -0800, Stephen Warren wrote:
+> Varun Wadekar wrote at Monday, November 14, 2011 11:21 PM:
+> > From: Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > 
+> > The root file system on ventana resides on /dev/mmcblk0p1.
+> 
+> Well, that's entirely up to however the user set up their system, although
+> I admit mmcblk0p1 is likely to be the common case; I certainly carry
+> basically this patch locally for many boards.
+> 
+> > Update the dts file to use the proper root instead of /dev/ram.
+> > 
+> > Signed-off-by: Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Of course, perhaps an even better solution is to just remove /chosen from
+> all the board .dts files, and stop using CONFIG_APPENDED_DTB since U-boot
+> supports FDT, and will update the cmdline with whatever the user chose.
+> Still, I think this is probably OK for now.
 
-trivia:
+Actually, removing the default root path is probably a better idea, since it
+will vary from installation to installation and doesn't make sense to hard
+code.
 
-> diff --git a/arch/arm/mach-sa1100/generic.c b/arch/arm/mach-sa1100/generic.c
-[]
-> @@ -166,7 +166,7 @@ static struct platform_device sa11x0udc_device = {
->  static struct resource sa11x0uart1_resources[] = {
->  	[0] = {
->  		.start	= __PREG(Ser1UTCR0),
-> -		.end	= __PREG(Ser1UTCR0) + 0xffff,
-> +		.end	= __PREG(Ser1UTCR0) + 0x24,
+There's two ways to solve this with u-boot:
 
-#define for 0x24? or is it really 0x23?
-(start + size - 1)
+* Boot with an u-boot that knows how to pass a device tree (and add the
+  bootargs to it before launching the kernel, and do so by either booting
+  a fitImage or by loading the device tree explicitly.
 
-> @@ -178,15 +178,35 @@ static struct resource sa11x0uart1_resources[] = {
-[]
-> +static struct resource sa11x0uart2_resources[] = {
-> +	[0] = {
-> +		.start	= __PREG(Ser2UTCR0),
-> +		.end	= __PREG(Ser2UTCR0) + 0x24,
+* Use the appended-dtb kernel format, and select the ARM_ATAG_DTB_COMPAT
+  option. That will mean that the bootargs passed in from atags are moved over
+  to the device tree.
 
-here too
+So, I would rather see a patch removing the root= argument alltogether.
 
-> +static struct platform_device sa11x0uart2_device = {
-> +	.name		= "sa11x0-uart",
-> +	.id		= -1,
-> +	.num_resources	= ARRAY_SIZE(sa11x0uart2_resources),
-> +	.resource	= sa11x0uart2_resources,
-> +};
-> +
->  static struct resource sa11x0uart3_resources[] = {
->  	[0] = {
->  		.start	= __PREG(Ser3UTCR0),
-> -		.end	= __PREG(Ser3UTCR0) + 0xffff,
-> +		.end	= __PREG(Ser3UTCR0) + 0x24,
 
-etc
+Thanks!
+
+-Olof
