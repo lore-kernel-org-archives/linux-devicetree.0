@@ -1,311 +1,141 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] Initial DT support for SIMpad devices.
-Date: Mon, 21 Nov 2011 09:50:20 +0000
-Message-ID: <20111121095020.GA7314@totoro>
-References: <1321821470-32396-1-git-send-email-jochen@scram.de>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 1/1] net/macb: add DT support
+Date: Mon, 21 Nov 2011 11:08:41 +0100
+Message-ID: <4ECA2329.1000405@atmel.com>
+References: <1321626565-11261-1-git-send-email-plagnioj@jcrosoft.com> <20111118155824.GA9981@totoro> <20111120164740.GC21480@game.jcrosoft.org> <20111120171123.GA7845@gallagher>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1321821470-32396-1-git-send-email-jochen-NIgtFMG+Po8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20111120171123.GA7845@gallagher>
+Sender: netdev-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: devicetree-discuss@ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jochen,
-
-Just a couple of nits inline, otherwise looks nice to me!
-
-Jamie
-
-On Sun, Nov 20, 2011 at 09:37:50PM +0100, Jochen Friedrich wrote:
-> Signed-off-by: Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  arch/arm/boot/dts/sa1110.dtsi                      |   72 ++++++++++++++++++++
->  arch/arm/boot/dts/simpad.dts                       |   49 +++++++++++++
->  arch/arm/mach-sa1100/Kconfig                       |   13 ++++
->  arch/arm/mach-sa1100/Makefile.boot                 |    1 +
->  arch/arm/mach-sa1100/simpad.c                      |   29 ++++++++-
->  6 files changed, 164 insertions(+), 1 deletions(-)
->  create mode 100644 arch/arm/boot/dts/sa1110.dtsi
->  create mode 100644 arch/arm/boot/dts/simpad.dts
+On 11/20/2011 06:11 PM, Jamie Iles :
+> On Sun, Nov 20, 2011 at 05:47:40PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>> On 15:58 Fri 18 Nov     , Jamie Iles wrote:
+>>> Hi Jean-Christophe,
+>>>
+>>> On Fri, Nov 18, 2011 at 03:29:25PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>> allow the DT to pass the mac address and the phy mode
+>>>>
+>>>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+>>>> Cc: Jamie Iles <jamie@jamieiles.com>
+>>>> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+>>>
+>>> This looks OK to me in principle.  I can't easily test this at the 
+>>> moment, but as I don't have a DT platform that has the clk framework up 
+>>> and running.  A couple of nits/questions inline, but thanks for doing 
+>>> this!
+>>>
+>>> Jamie
+>>>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/net/macb.txt |   22 ++++++++
+>>>>  drivers/net/ethernet/cadence/macb.c            |   65 +++++++++++++++++++++---
+>>>>  drivers/net/ethernet/cadence/macb.h            |    2 +
+>>>>  3 files changed, 81 insertions(+), 8 deletions(-)
+>>>>  create mode 100644 Documentation/devicetree/bindings/net/macb.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+>>>> new file mode 100644
+>>>> index 0000000..2b727ec
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/net/macb.txt
+>>>> @@ -0,0 +1,22 @@
+>>>> +* Cadence EMACB
+>>>> +
+>>>> +Implemeted on Atmel AT91 & AVR32 SoC
+>>>
+>>> I think something along the lines of "Binding for the Cadence MACB 
+>>> Ethernet controller" rather than listing specific parts might be 
+>>> clearer.
+>> I prefer as we will have implementation detail in the binding
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 5b14518..cbe7046 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -34,6 +34,7 @@ qcom	Qualcomm, Inc.
->  ramtron	Ramtron International
->  samsung	Samsung Semiconductor
->  schindler	Schindler
-> +siemens	SIEMENS
->  simtek
->  sirf	SiRF Technology, Inc.
->  stericsson	ST-Ericsson
-> diff --git a/arch/arm/boot/dts/sa1110.dtsi b/arch/arm/boot/dts/sa1110.dtsi
-> new file mode 100644
-> index 0000000..e1ca379
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sa1110.dtsi
-> @@ -0,0 +1,72 @@
-> +/*
-> + * sa1110.dtsi - Device Tree Include file for Intel SA1110 SoC
-> + *
-> + *  Copyright (C) 2011 Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>
-> + *
-> + * Licensed under GPLv2 or later.
-> + */
-> +
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	model = "Intel SA1110 SoC";
-> +	compatible = "intel,sa1110";
-> +	interrupt-parent = <&aic>;
-> +
-> +	cpus {
-> +		cpu@0 {
-> +			compatible = "intel,sa1110";
-> +		};
-> +	};
-> +
-> +	localbus {
-> +		compatible = "intel,sa1110-localbus";
+> I can't see any Atmel specific implementation detail here though so lets 
+> keep it generic for now.  There isn't a benefit to keeping a list of 
+> SoC's that the device is implemented in here as it'll only become out of 
+> date.  We need to make it easy for other vendors to reuse the binding + 
+> driver.
 
-Could this claim compatibility with simple-bus?
+Yes, now that Jamie has made the driver generic, we should not advertise
+for specific SoC...
 
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +
-> +		ranges = <
-> +			0x0 0x0 0x00000000 0x08000000
-> +			0x1 0x0 0x08000000 0x08000000
-> +			0x2 0x0 0x10000000 0x08000000
-> +			0x3 0x0 0x18000000 0x08000000
-> +			0x4 0x0 0x40000000 0x08000000
-> +			0x5 0x0 0x48000000 0x08000000
-> +		>;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		uart0: serial@0x80010000 {
-> +			compatible = "intel,sa1100-uart";
-> +			reg = <0x80010000 0x24>;
-> +			interrupts = <15>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@0x80030000 {
-> +			compatible = "intel,sa1100-uart";
-> +			reg = <0x80030000 0x24>;
-> +			interrupts = <16>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@0x80050000 {
-> +			compatible = "intel,sa1100-uart";
-> +			reg = <0x80050000 0x24>;
-> +			interrupts = <17>;
-> +			status = "disabled";
+>>>> +		compatible = "atmel,macb";
+>>>
+>>> This should be "cdns,macb" as it isn't Atmel specific.  I believe cdns 
+>>> is the correct stock ticker symbol for Cadence.
+>> here I put "atmel,macb" on purpose to specify the difference of the IP between
+>> the soc, in fact it should have been atmel-at91,macb
 
-Hmm, I couldn't see status defined in the UART binding or where it was 
-used...  Is this required?
+No, before comma means "manufacturer".
 
-> +		};
-> +
-> +		aic: interrupt-controller@0x90050000 {
-> +			compatible = "intel,sa1110-icr";
-> +			reg = <0x90050000 0x24>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-controller;
-> +			interrupt-parent;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/simpad.dts b/arch/arm/boot/dts/simpad.dts
-> new file mode 100644
-> index 0000000..fdd7969
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/simpad.dts
-> @@ -0,0 +1,49 @@
-> +/dts-v1/;
-> +/include/ "sa1110.dtsi"
-> +
-> +/ {
-> +	model = "SIEMENS, SIMpad";
-> +	compatible = "siemens,simpad";
-
-It may be worth adding the SoC compatible string after the board one for 
-completeness.
-
-> +
-> +	aliases {
-> +		serial0 = &uart2;
-> +		serial1 = &uart0;
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x0 0x08000000>;
-> +	};
-> +
-> +	chosen {
-> +		bootargs = "console=ttySA0";
-
-It is preferred for the bootloader to set these up rather than having 
-them statically in the DTS if at all possible.
-
-> +	};
-> +
-> +	localbus {
-> +		flash@0,0 {
-> +			compatible = "cfi-flash";
-> +			reg = <0 0 0x08000000>;
-> +			bank-width = <1>;
-> +			#size-cells = <1>;
-> +			#address-cells = <1>;
-> +		};
-> +
-> +		flash@1,0 {
-> +			compatible = "cfi-flash";
-> +			reg = <1 0 0x08000000>;
-> +			bank-width = <1>;
-> +			#size-cells = <1>;
-> +			#address-cells = <1>;
-> +		};
-> +	};
-> +
-> +	soc {
-> +		uart0: serial@0x80010000 {
-> +			status = "okay";
-
-And here.
-
-> +		};
-> +
-> +		uart2: serial@0x80050000 {
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/mach-sa1100/Kconfig b/arch/arm/mach-sa1100/Kconfig
-> index 42625e4..31238c3 100644
-> --- a/arch/arm/mach-sa1100/Kconfig
-> +++ b/arch/arm/mach-sa1100/Kconfig
-> @@ -157,6 +157,19 @@ config SA1100_SIMPAD
->  	  like CL4 in additional it has a PCMCIA-Slot. For more information
->  	  visit <http://www.usa.siemens.com/> or <http://www.siemens.ch/>.
->  
-> +config SA1100_SIMPAD_DT
-> +	bool "Simpad with device tree support"
-> +	select CPU_FREQ_SA1110
-> +	select SA1100_SIMPAD
-> +	select USE_OF
-> +	help
-> +	  The SIEMENS webpad SIMpad is based on the StrongARM 1110. There
-> +	  are two different versions CL4 and SL4. CL4 has 32MB RAM and 16MB
-> +	  FLASH. The SL4 version got 64 MB RAM and 32 MB FLASH and a
-> +	  PCMCIA-Slot. The version for the Germany Telecom (DTAG) is the same
-> +	  like CL4 in additional it has a PCMCIA-Slot. For more information
-> +	  visit <http://www.usa.siemens.com/> or <http://www.siemens.ch/>.
-> +
->  config SA1100_SSP
->  	tristate "Generic PIO SSP"
->  	help
-> diff --git a/arch/arm/mach-sa1100/Makefile.boot b/arch/arm/mach-sa1100/Makefile.boot
-> index 5a616f6..1d17767 100644
-> --- a/arch/arm/mach-sa1100/Makefile.boot
-> +++ b/arch/arm/mach-sa1100/Makefile.boot
-> @@ -6,3 +6,4 @@ endif
->  params_phys-y	:= 0xc0000100
->  initrd_phys-y	:= 0xc0800000
->  
-> +dtb-$(CONFIG_SA1100_SIMPAD_DT)		+= simpad.dtb
-> diff --git a/arch/arm/mach-sa1100/simpad.c b/arch/arm/mach-sa1100/simpad.c
-> index d3c9d2b..9d6f663 100644
-> --- a/arch/arm/mach-sa1100/simpad.c
-> +++ b/arch/arm/mach-sa1100/simpad.c
-> @@ -10,6 +10,7 @@
->  #include <linux/string.h> 
->  #include <linux/pm.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of_platform.h>
->  #include <linux/mtd/mtd.h>
->  #include <linux/mtd/partitions.h>
->  #include <linux/io.h>
-> @@ -211,8 +212,9 @@ static void __init simpad_map_io(void)
->  
->  	sa1100_register_uart_fns(&simpad_port_fns);
->  	sa1100_register_uart(0, 3);  /* serial interface */
-> +#ifndef CONFIG_OF
->  	sa1100_register_uart(1, 1);  /* DECT             */
-> -
-> +#endif
->  	// Reassign UART 1 pins
->  	GAFR |= GPIO_UART_TXD | GPIO_UART_RXD;
->  	GPDR |= GPIO_UART_TXD | GPIO_LDD13 | GPIO_LDD15;
-> @@ -392,6 +394,31 @@ static int __init simpad_init(void)
->  
->  arch_initcall(simpad_init);
->  
-> +#ifdef CONFIG_OF
-> +const struct of_device_id simpad_bus_match_table[] = {
-> +	{ .compatible = "simple-bus", },
-> +	{ .compatible = "intel,sa1110-localbus", },
-> +	{} /* Empty terminated list */
-> +};
-> +
-> +static void __init simpad_dt_device_init(void)
-> +{
-> +	of_platform_populate(NULL, simpad_bus_match_table, NULL, NULL);
-> +}
-
-If the localbus was compatible with simple-bus then you could do:
-
-	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-
-and remove simpad_bus_match_table.
-
-> +
-> +static const char *simpad_dt_board_compat[] __initdata = {
-
-I think this should be __initconst.
-
-> +	"siemens,simpad",
-> +	NULL
-> +};
-> +
-> +DT_MACHINE_START(simpad_dt, "SIMpad")
-> +	.timer		= &sa1100_timer,
-> +	.map_io		= simpad_map_io,
-> +	.init_irq	= sa1100_init_irq,
-> +	.init_machine	= simpad_dt_device_init,
-> +	.dt_compat	= simpad_dt_board_compat,
-> +MACHINE_END
-> +#endif
->  
->  MACHINE_START(SIMPAD, "Simpad")
->  	/* Maintainer: Holger Freyther */
-> -- 
-> 1.7.7.3
+> Well if we really can't detect the difference from the revision register 
+> then we should have "cdns,macb" *and* "atmel,at91-macb" at least then 
+> where platforms could claim compatibility as:
 > 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 	compatible = "atmel,at91-macb", "cdns,macb";
+> 
+> If we consider that another vendor integrates the Cadence IP, then it 
+> makes much more sense to claim compatibility with a Cadence string 
+> rather than an Atmel one...
+
+Yes, it seems that you manage to use the revision register to identify
+the IP. So here again, maybe the generic compatible string is enough...
+
+
+>>>
+>>>> +		reg = <oxfffc4000 0x4000>;
+>>>> +		interrupts = <21>;
+>>>> +		phy-mode = "mii";
+>>>> +	};
+>>>> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+>>>> index a437b46..2c345bc 100644
+>>>> --- a/drivers/net/ethernet/cadence/macb.c
+>>>> +++ b/drivers/net/ethernet/cadence/macb.c
+>>>> @@ -20,6 +20,9 @@
+>>>>  #include <linux/etherdevice.h>
+>>>>  #include <linux/dma-mapping.h>
+>>>>  #include <linux/platform_device.h>
+>>>> +#include <linux/of.h>
+>>>> +#include <linux/of_device.h>
+>>>> +#include <linux/of_net.h>
+>>>>  #include <linux/phy.h>
+>>>>  
+>>>>  #include <mach/board.h>
+>>>> @@ -81,6 +84,20 @@ static void __init macb_get_hwaddr(struct macb *bp)
+>>>>  	addr[4] = top & 0xff;
+>>>>  	addr[5] = (top >> 8) & 0xff;
+>>>>  
+>>>> +#ifdef CONFIG_OF
+>>>> +	/*
+>>>> +	 * 2) from device tree data
+>>>> +	 */
+>>>> +	if (!is_valid_ether_addr(addr)) {
+>>>> +		struct device_node *np = bp->pdev->dev.of_node;
+>>>> +		if (np) {
+>>>> +			const char *mac = of_get_mac_address(np);
+>>>> +			if (mac)
+>>>> +				memcpy(addr, mac, sizeof(addr));
+>>>> +		}
+>>>> +	}
+>>>> +#endif
+>>>
+>>> I'm a bit conflicted here.  I think we should always use the MAC address 
+>>> from the device tree if it is present even if the current MAC address is 
+>>> valid.
+>> if the mac is already programmed in the register we just keep it
+>> I prefer this way if the bootloader set it we keep it
+> 
+> But I don't think that makes sense - if there is a MAC address in the 
+> DT, which is an optional property then the DT author must want to set 
+> the MAC address from the DT.  We should really prefer an explicit 
+> assignment over an implicit one.
+
+Yes, that seems sensible.
+
+Best regards,
+-- 
+Nicolas Ferre
