@@ -1,15 +1,14 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] arm/imx6: describe clocks in device tree source
-Date: Tue, 22 Nov 2011 09:56:49 +0100
-Message-ID: <20111122085649.GC27267@pengutronix.de>
-References: <1321926536-671-1-git-send-email-shawn.guo@linaro.org>
- <1321926536-671-2-git-send-email-shawn.guo@linaro.org>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCHv2] Initial DT support for SIMpad devices.
+Date: Tue, 22 Nov 2011 09:40:37 +0000
+Message-ID: <20111122094036.GA8872@totoro>
+References: <1321909114-25355-1-git-send-email-jochen@scram.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1321926536-671-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1321909114-25355-1-git-send-email-jochen-NIgtFMG+Po8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,158 +18,11 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 09:48:54AM +0800, Shawn Guo wrote:
-> It adds document for imx clock device tree bindings and then describes
-> imx6 clocks in dts.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/clock-imx.txt        |  124 +++
->  arch/arm/boot/dts/imx6q.dtsi                       |  943 +++++++++++++++++++-
->  2 files changed, 1058 insertions(+), 9 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/clock-imx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/clock-imx.txt b/Documentation/devicetree/bindings/clock/clock-imx.txt
-> new file mode 100644
-> index 0000000..5c597d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/clock-imx.txt
-> @@ -0,0 +1,124 @@
-> +* Device Tree Bindings for Freescale i.MX Clock
-> +
-> +== Clock Gate ==
-> +
-> +Required properties:
-> +- imx,clock-gate:  It's a two 32-bit integers array.  The first
-> +  integer specifies the offset of the gate register, and the second
-> +  one specifies the bit mask of the gate for this clock.
+On Mon, Nov 21, 2011 at 09:58:33PM +0100, Jochen Friedrich wrote:
+> Signed-off-by: Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>
 
-On i.MX53 we have two bit gates:
-
-00b disable
-01b disable in stop mode, enable in run mode
-10b reserved
-11b enable
-
-I can't find this description in my i.MX6RM, but I suppose it's the same
-here. Do you have plans for these? Currently only disable and enable
-seem to be handled.
-
-
-> +
-> +		pll2_pfd_clk: pll2-pfd {
-> +			compatible = "fsl,imx6q-pfd";
-> +			#clock-cells = <3>;
-> +			imx,clock-gate = <0x100 0x80>,
-> +					 <0x100 0x8000>,
-> +					 <0x100 0x800000>;
-> +			imx,clock-divider = <0x100 0 0 0 6>,
-> +					    <0x100 0 0 8 6>,
-> +					    <0x100 0 0 16 6>;
-> +			clock-input = <&pll_bus_clk 0>;
-> +			clock-input-name = "pll2-bus";
-> +			clock-output-name = "pll2-pfd-352m",
-> +					    "pll2-pfd-594m",
-> +					    "pll2-pfd-400m";
-> +		};
-
-Does this pll simultaneously have three different output frequencies?
-I'm not familiar with the i.MX6 yet.
-
-> +
-> +		can_root_clk: can-root {
-> +			compatible = "fsl,imx6q-clock";
-> +			#clock-cells = <1>;
-> +			imx,clock-divider = <0x20 0 0 2 6>;
-> +			clock-input = <&pll_usb_clk 0 0>;
-> +			clock-input-name = "pll3-usb-otg";
-> +			clock-output-name = "can-root";
-> +		};
-> +
-> +		can_clk: can {
-> +			compatible = "fsl,imx6q-clock";
-> +			#clock-cells = <4>;
-> +			imx,clock-gate = <0x68 0xc000>,
-> +					 <0x68 0x30000>,
-> +					 <0x68 0xc0000>,
-> +					 <0x68 0x300000>;
-> +			clock-input = <&can_root_clk 0>;
-> +			clock-input-name = "can-root";
-> +			clock-output-name = "can1",
-> +					    "can1-serial",
-> +					    "can2",
-> +					    "can2-serial";
-> +		};
-> +
-> +		ecspi_root_clk: ecspi-root {
-> +			compatible = "fsl,imx6q-clock";
-> +			#clock-cells = <1>;
-> +			imx,clock-divider = <0x38 0 0 19 6>;
-> +			clock-input = <&pll3_div_clk 2 0 0>;
-> +			clock-input-name = "pll3-60m";
-> +			clock-output-name = "ecspi-root";
-> +		};
-
-I'm not sure you do yourself a favour if you skip all the muxes and
-assume reset default for them. The ecspi-root parent is a mux The mux
-seems to be missing in the can clock, uart and probably others.
-
-> +
-> +		ecspi_clk: ecspi {
-> +			compatible = "fsl,imx6q-clock";
-> +			#clock-cells = <5>;
-> +			imx,clock-gate = <0x6c 0x3>,
-> +					 <0x6c 0xc>,
-> +					 <0x6c 0x30>,
-> +					 <0x6c 0xc0>,
-> +					 <0x6c 0x300>;
-> +			clock-input = <&ecspi_root_clk 0>;
-> +			clock-input-name = "ecspi-root";
-> +			clock-output-name = "ecspi1",
-> +					    "ecspi2",
-> +					    "ecspi3",
-> +					    "ecspi4",
-> +					    "ecspi5";
-> +		};
-> +
-
-[...]
-
-> +
-> +		uart_clk: uart {
-> +			compatible = "fsl,imx6q-clock";
-> +			#clock-cells = <2>;
-> +			imx,clock-gate = <0x7c 0x3000000>,
-> +					 <0x7c 0xc000000>;
-> +			imx,clock-divider = <0x24 0 0 0 6>,
-> +					    <0x24 0 0 0 6>;
-> +			clock-input = <&pll3_div_clk 1 0 0>;
-> +			clock-input-name = "pll3-80m";
-> +			clock-output-name = "uart",
-> +					    "uart-serial";
-> +		};
-
-This seems wrong. The UARTs have two clocks, the register clock and the
-baud clock. parent of the baud clock is uart-root (the mux is missing
-here) and parent of the register clock is the ipg clock. This node only
-has one parent.
-
-> +
-> +		usboh3_clk: usboh3 {
-> +			compatible = "fsl,imx6q-clock";
-> +			#clock-cells = <1>;
-> +			imx,clock-gate = <0x80 0x3>;
-> +			clock-input = <&ipg_clk 0>;
-> +			clock-input-name = "ipg";
-> +			clock-output-name = "usboh3";
-> +		};
-> +
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Reviewed-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
