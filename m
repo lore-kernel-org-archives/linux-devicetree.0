@@ -1,43 +1,38 @@
-From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm/dt: tegra: Remove /memreserve/ from device-treefiles
-Date: Tue, 22 Nov 2011 22:36:34 +0100
-Message-ID: <6361589.UezRydQy0p@ax5200p>
-References: <1321911851-10091-1-git-send-email-swarren@nvidia.com> <2308525.meomQFtUnY@ax5200p> <74CDBE0F657A3D45AFBB94109FB122FF174F08C3BC@HQMAIL01.nvidia.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Please revert commit dc9372808412edbc653a675a526c2ee6c0c14a91
+Date: Wed, 23 Nov 2011 09:11:50 +1100
+Message-ID: <1321999910.14573.11.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174F08C3BC-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 November 2011 08:25:03 Stephen Warren wrote:
-> Marc Dietrich wrote at Tuesday, November 22, 2011 3:42 AM:
-> > On Monday 21 November 2011 14:44:07 Stephen Warren wrote:
-> > > There are no drivers in the kernel at present which can make use of
-> > > the
-> > > memory reserved by /memreserve/, so there is no point reserving it.
-> > > Remove /memreserve/ to allow the user more memory. It's also
-> > > unclear whether any future driver would actually require
-> > > /memreserve/, or allocate memory through some other mechanism.
-> > 
-> > while this gives 512 MB of usable memory on my AC100, it causes some
-> > funny pictures on the screen ;-) I guess our bootloader (fastboot)
-> > already setups the frambuffer there (and enables the backlight). I
-> > guess it shouldn't be harmful as nothing else writes to this memory
-> > area. Otherwise you may add that the bootloader (or the kernel cmdline
-> > supplied by the bootloader) is now responsible for the reservation to
-> > the description.
-> 
-> Ah yes, I guess that would happen. I'm only testing with mainline U-Boot...
-> 
-> I'd suggest this is acceptable fallout for now; I don't believe it will
-> cause any active problems, and as you say, you can get the bootloader to
-> set a command-line that excludes the frame-buffer if you want to solve
-> this. Do you agree?
+Hi Linus !
 
-Ok. Hopefully we can also use u-Boot soon.
+Please, revert commit dc9372808412edbc653a675a526c2ee6c0c14a91
 
-Marc
+"of/irq: of_irq_find_parent: check for parent equal to child"
+
+This breaks some powerpc platforms at least. The practice of having a
+node provide an explicit "interrupt-parent" property pointing to itself
+is an old trick that we've used in the past to allow a device-node to
+have interrupts routed to different controllers.
+
+In that case, the node also contains an interrupt-map, so the node is
+its own parent, the interrupt resolution hits the map, which then can
+route each individual interrupt to a different parent.
+
+Cheers,
+Ben.
