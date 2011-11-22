@@ -1,66 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
-Date: Tue, 22 Nov 2011 13:05:43 +0100
-Message-ID: <CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
-References: <1321274409-24643-1-git-send-email-rnayak@ti.com>
-	<1321274409-24643-2-git-send-email-rnayak@ti.com>
-	<20111114172312.GI31337@atomide.com>
-	<4EC1EB9D.1000503@ti.com>
-	<CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
-	<CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
-	<CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
-	<CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: [PATCH v2 2/4] omap-serial: Use default clock speed (48Mhz) if not specified
+Date: Tue, 22 Nov 2011 19:14:14 +0530
+Message-ID: <1321969456-24266-3-git-send-email-rnayak@ti.com>
+References: <1321969456-24266-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Rajendra Nayak <rnayak@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, linus.walleij@stericsson.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1321969456-24266-1-git-send-email-rnayak@ti.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: tony@atomide.com, khilman@ti.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 12:09 PM, Thomas Abraham
-<thomas.abraham@linaro.org> wrote:
-> On 17 November 2011 19:27, Linus Walleij <linus.walleij@linaro.org> wrote:
->>
->> Maybe I'm mistaken about the device tree ambitions, but
->> I was sort of hoping that it would not contain too much
->> custom magic numbers that need to be cross-referenced
->> elsewhere ... or rather - the more understandable the device
->> tree is, the more we win.
->
-> Device tree is expected to describe the hardware. So to
-> cross-reference the hardware manual to understand device tree should
-> be fine I guess. For instance, GPIO numbers in dts would be written as
-> a numeric number and not a enum or other format. And by looking up the
-> manual, we understand the actual details of the GPIO pin.
->
-> If dt-compiler had a option to support #define like in C, the numbers
-> could have been made more easier to understand. Like, 3 to mean
-> GPIO_PULL_UP in Exynos dts file.
+Use a default clock speed of 48Mhz, instead of ending up with 0,
+if platforms fail to specify a valid clock speed.
 
-OK I think I get it now, so DT bindings shall really NOT be read
-by any of the pinctrl core, it is *supposed* to be all driver-specific.
-Then it makes perfect sense to have it as it is.
+Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+---
+ drivers/tty/serial/omap-serial.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-So for example in the pinctrl-coh901xxx.c example driver I have
-locally defined registers presets like:
+diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+index a02cc9f..f14b9c5 100644
+--- a/drivers/tty/serial/omap-serial.c
++++ b/drivers/tty/serial/omap-serial.c
+@@ -43,6 +43,8 @@
+ #include <plat/dmtimer.h>
+ #include <plat/omap-serial.h>
+ 
++#define DEFAULT_CLK_SPEED 48000000 /* 48Mhz*/
++
+ static struct uart_omap_port *ui[OMAP_MAX_HSUART_PORTS];
+ 
+ /* Forward declaration of functions */
+@@ -1386,6 +1388,11 @@ static int serial_omap_probe(struct platform_device *pdev)
+ 
+ 	up->port.flags = omap_up_info->flags;
+ 	up->port.uartclk = omap_up_info->uartclk;
++	if (!up->port.uartclk) {
++		up->port.uartclk = DEFAULT_CLK_SPEED;
++		dev_warn(&pdev->dev, "No clock speed specified: using default:"
++						"%d\n", DEFAULT_CLK_SPEED);
++	}
+ 	up->uart_dma.uart_base = mem->start;
+ 	up->errata = omap_up_info->errata;
+ 
+-- 
+1.7.1
 
-#define U300_FLOATING_INPUT { \
-        .bias_mode = PIN_CONFIG_BIAS_HIGH_IMPEDANCE, \
-        .output = false, \
-}
-
-#define U300_PULL_UP_INPUT { \
-        .bias_mode = PIN_CONFIG_BIAS_PULL_UP, \
-        .output = false, \
-}
-
-Then this type of stuff shall keep its custom format in the device
-tree, and the driver for coh901xxx reads that out.
-
-Thanks for helping me understand this crucial assumption of how
-it works...
-
-Yours,
-Linus Walleij
