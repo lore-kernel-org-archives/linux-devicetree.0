@@ -1,58 +1,119 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm/dt: tegra: Fix SDHCI nodes to match board files
-Date: Tue, 22 Nov 2011 17:23:38 +0100
-Message-ID: <20111122162338.GN21480@game.jcrosoft.org>
-References: <1321911851-10091-1-git-send-email-swarren@nvidia.com>
- <1321911851-10091-5-git-send-email-swarren@nvidia.com>
- <20111122083802.GK21480@game.jcrosoft.org>
- <74CDBE0F657A3D45AFBB94109FB122FF174F08C3AF@HQMAIL01.nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
+Date: Tue, 22 Nov 2011 09:54:09 -0800
+Message-ID: <20111122175409.GE31337@atomide.com>
+References: <1321274409-24643-1-git-send-email-rnayak@ti.com>
+ <1321274409-24643-2-git-send-email-rnayak@ti.com>
+ <20111114172312.GI31337@atomide.com>
+ <4EC1EB9D.1000503@ti.com>
+ <CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
+ <CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
+ <CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
+ <CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
+ <CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174F08C3AF-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, Rajendra Nayak <rnayak@ti.com>, linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, linus.walleij@stericsson.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 08:12 Tue 22 Nov     , Stephen Warren wrote:
-> Jean-Christophe PLAGNIOL-VILLARD wrote at Tuesday, November 22, 2011 1:38 AM:
-> > On 14:44 Mon 21 Nov     , Stephen Warren wrote:
-> > > Mark any SDHCI controllers that aren't registered by the board files as
-> > > disabled in the device-tree files.
-> > >
-> > > In practice, these controllers:
-> > >
-> > > * Have nothing hooked up to them at all, or
-> > > * For ports intended for SDIO usage, the drivers for anything that might
-> > >   be attached are not in the device-tree yet. If/when drivers appear, the
-> > >   SD/MMC port can be re-enabled.
-> > >
-> > > The only possible exception is TrimSlice's mico SD slot, but that wasn't
-> > > enabled in the board files before anyway, and doesn't work when all the
-> > > SDHCI controllers are enabled anyway.
-> > it will be better to invert the logic
-> > 
-> > just enable what you are supposed too
+* Linus Walleij <linus.walleij@linaro.org> [111122 03:30]:
+> On Tue, Nov 22, 2011 at 12:09 PM, Thomas Abraham
+> <thomas.abraham@linaro.org> wrote:
+> > On 17 November 2011 19:27, Linus Walleij <linus.walleij@linaro.org> wrote:
+> >>
+> >> Maybe I'm mistaken about the device tree ambitions, but
+> >> I was sort of hoping that it would not contain too much
+> >> custom magic numbers that need to be cross-referenced
+> >> elsewhere ... or rather - the more understandable the device
+> >> tree is, the more we win.
+> >
+> > Device tree is expected to describe the hardware. So to
+> > cross-reference the hardware manual to understand device tree should
+> > be fine I guess. For instance, GPIO numbers in dts would be written as
+> > a numeric number and not a enum or other format. And by looking up the
+> > manual, we understand the actual details of the GPIO pin.
+> >
+> > If dt-compiler had a option to support #define like in C, the numbers
+> > could have been made more easier to understand. Like, 3 to mean
+> > GPIO_PULL_UP in Exynos dts file.
 > 
-> It used to be that way when the files were first added, but they got
-> switched around this way to match standard practice.
-this is a bad practice because you can enable stuff that a hardware is not
-supposed to use
+> OK I think I get it now, so DT bindings shall really NOT be read
+> by any of the pinctrl core, it is *supposed* to be all driver-specific.
+> Then it makes perfect sense to have it as it is.
 
-and this silenty without anyone notice until you test the hardware
+Yes the driver nodes should describe in DT which pins to use:
 
-and you add more line and changeset
+        serial@12340000 {
+                compatible = "8250";
+                reg = <0x12340000 0x40>;
+                reg-shift = <2>;
+                interrupts = < 10 >;
+		pins = "uart1_rx", "uart1_tx";
+        };
 
-Best Regrds,
-J.
+Note that we should use the actual signal names, not package specific
+pad names. This way they have a high likelyhood to work for new packages
+too by just mapping the signals to the new package.
+
+> So for example in the pinctrl-coh901xxx.c example driver I have
+> locally defined registers presets like:
+> 
+> #define U300_FLOATING_INPUT { \
+>         .bias_mode = PIN_CONFIG_BIAS_HIGH_IMPEDANCE, \
+>         .output = false, \
+> }
+> 
+> #define U300_PULL_UP_INPUT { \
+>         .bias_mode = PIN_CONFIG_BIAS_PULL_UP, \
+>         .output = false, \
+> }
+
+I think things like above should also be set in the node for the
+driver because it is board specific. For example, if you have an
+external pull on the board for some line, then the internal pull
+needs to be disabled.
+
+I don't know how we should describe the driver set values though,
+maybe something like:
+
+        serial@12340000 {
+                compatible = "8250";
+                reg = <0x12340000 0x40>;
+                reg-shift = <2>;
+                interrupts = < 10 >;
+		pins = "uart1_rx", "uart1_tx";
+		pin-values = < 0x7 0x7 >;
+	};
+
+Note that with device tree things get simpler for muxing as we can
+get rid of the hardcoded grouping of pins in mux drivers. Instead of
+hardcoded pingroups, the groups can be created dynamically based on
+what the driver DT entries have.
+
+The reason why we want to avoid hardcoded pin groups is because trying
+to map all the pad combinations in the pinmux driver is not a scalable
+way to go. And it's not even possible at least on omaps because of the
+huge number of combinations with alternative pins and multiple packages.
+
+> Then this type of stuff shall keep its custom format in the device
+> tree, and the driver for coh901xxx reads that out.
+> 
+> Thanks for helping me understand this crucial assumption of how
+> it works...
+
+FYI I'm playing with a DT based pinmux-simple.c driver that should
+be pretty generic and work for all kinds of hardware hopefully.
+
+It will be few days before I can post anything though, there are
+some pinctrl fwk issues to deal with first. Like the hardcoded
+pinmux_maps that assumes that dev entries are static. This means
+that multiple instances of pinmux drivers won't work..
+
+Cheers,
+
+Tony
