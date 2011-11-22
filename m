@@ -1,46 +1,45 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] Convert imx6 clock to device tree
-Date: Tue, 22 Nov 2011 09:23:14 +0100
-Message-ID: <20111122082314.GB27267@pengutronix.de>
-References: <1321926536-671-1-git-send-email-shawn.guo@linaro.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 5/5] arm/dt: tegra: Fix SDHCI nodes to match board files
+Date: Tue, 22 Nov 2011 09:38:02 +0100
+Message-ID: <20111122083802.GK21480@game.jcrosoft.org>
+References: <1321911851-10091-1-git-send-email-swarren@nvidia.com>
+ <1321911851-10091-5-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1321926536-671-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1321911851-10091-5-git-send-email-swarren@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Marc Dietrich <marvin24@gmx.de>, linux-tegra@vger.kernel.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 09:48:53AM +0800, Shawn Guo wrote:
-> As I promised to Arnd, I will convert imx6 clock code to common clock
-> framework and in turn device tree at the earliest time.  Here it is.
+On 14:44 Mon 21 Nov     , Stephen Warren wrote:
+> Mark any SDHCI controllers that aren't registered by the board files as
+> disabled in the device-tree files.
+> 
+> In practice, these controllers:
+> 
+> * Have nothing hooked up to them at all, or
+> * For ports intended for SDIO usage, the drivers for anything that might
+>   be attached are not in the device-tree yet. If/when drivers appear, the
+>   SD/MMC port can be re-enabled.
+> 
+> The only possible exception is TrimSlice's mico SD slot, but that wasn't
+> enabled in the board files before anyway, and doesn't work when all the
+> SDHCI controllers are enabled anyway.
+it will be better to invert the logic
 
-Very nice ;) I like the patches.
+just enable what you are supposed too
 
-Is there a way to improve the way how the entities find their base
-addresses? Currently the C code figures out the base addresses based
-on compatible. Maybe we could put the crm clocks and anatop clocks into
-two different nodes instead of putting them all directly under clocks{}.
-
-Could you split the last patch into two, one adding new device tree
-clock support in a new file and another removing the old clock support?
-This would help reviewing.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best Regards,
+J.
