@@ -1,52 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Please revert commit dc9372808412edbc653a675a526c2ee6c0c14a91
-Date: Tue, 22 Nov 2011 17:36:41 -0600
-Message-ID: <4ECC3209.9080106@gmail.com>
-References: <1321999910.14573.11.camel@pasglop>
- <CACxGe6tydq8yGnEMea-cL2Et_vWEBrmpE_Xn9U-rb1nZskxztQ@mail.gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
+Date: Tue, 22 Nov 2011 16:28:35 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174F08C5B3@HQMAIL01.nvidia.com>
+References: <1321274409-24643-1-git-send-email-rnayak@ti.com>
+ <1321274409-24643-2-git-send-email-rnayak@ti.com>
+ <20111114172312.GI31337@atomide.com> <4EC1EB9D.1000503@ti.com>
+ <CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
+ <CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
+ <CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
+ <CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
+ <CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
+ <20111122175409.GE31337@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6tydq8yGnEMea-cL2Et_vWEBrmpE_Xn9U-rb1nZskxztQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20111122175409.GE31337@atomide.com>
+Content-Language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2011 04:43 PM, Grant Likely wrote:
-> On Tue, Nov 22, 2011 at 3:11 PM, Benjamin Herrenschmidt
-> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->> Hi Linus !
->>
->> Please, revert commit dc9372808412edbc653a675a526c2ee6c0c14a91
->>
->> "of/irq: of_irq_find_parent: check for parent equal to child"
->>
->> This breaks some powerpc platforms at least. The practice of having a
->> node provide an explicit "interrupt-parent" property pointing to itself
->> is an old trick that we've used in the past to allow a device-node to
->> have interrupts routed to different controllers.
->>
->> In that case, the node also contains an interrupt-map, so the node is
->> its own parent, the interrupt resolution hits the map, which then can
->> route each individual interrupt to a different parent.
+Tony Lindgren wrote at Tuesday, November 22, 2011 10:54 AM:
+> * Linus Walleij <linus.walleij@linaro.org> [111122 03:30]:
+> > On Tue, Nov 22, 2011 at 12:09 PM, Thomas Abraham
+> > <thomas.abraham@linaro.org> wrote:
+> > > On 17 November 2011 19:27, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > >>
+> > >> Maybe I'm mistaken about the device tree ambitions, but
+> > >> I was sort of hoping that it would not contain too much
+> > >> custom magic numbers that need to be cross-referenced
+> > >> elsewhere ... or rather - the more understandable the device
+> > >> tree is, the more we win.
+> > >
+> > > Device tree is expected to describe the hardware. So to
+> > > cross-reference the hardware manual to understand device tree should
+> > > be fine I guess. For instance, GPIO numbers in dts would be written as
+> > > a numeric number and not a enum or other format. And by looking up the
+> > > manual, we understand the actual details of the GPIO pin.
+> > >
+> > > If dt-compiler had a option to support #define like in C, the numbers
+> > > could have been made more easier to understand. Like, 3 to mean
+> > > GPIO_PULL_UP in Exynos dts file.
+> >
+> > OK I think I get it now, so DT bindings shall really NOT be read
+> > by any of the pinctrl core, it is *supposed* to be all driver-specific.
+> > Then it makes perfect sense to have it as it is.
 > 
-> Ah, nuts, yes that is broken then.  Yes, please revert the commit and
-> Rob & I will come up with a better solution.
+> Yes the driver nodes should describe in DT which pins to use:
 > 
-> Rob, I think it can be done by explicitly checking for np ==
-> desc->interrupt_parent in of_irq_init() instead of relying on
-> of_irq_find_parent() returning NULL.
+>         serial@12340000 {
+>                 compatible = "8250";
+>                 reg = <0x12340000 0x40>;
+>                 reg-shift = <2>;
+>                 interrupts = < 10 >;
+> 		pins = "uart1_rx", "uart1_tx";
+>         };
 
-Okay. I'll prepare a patch to do that.
+Sorry to jump in late here, but I wasn't aware of this thread.
 
-Rob
+I don't necessarily agree with that. Describing the HW doesn't necessarily
+mean that each device needs to describe what pinmux pins it uses; one
+could quite easily have the pinmux describe what settings the various
+pins should have and which drivers will use those pins. That would map
+very well to the pinctrl subsystem's mapping table, and at least Tegra's
+existing pinmux tables, which are both just a big array of settings which
+end up getting provided to drivers.
+
+I'll try and track down the rest of this thread and catch up though...
+
+-- 
+nvpublic
