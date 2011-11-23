@@ -1,74 +1,50 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
-Date: Tue, 22 Nov 2011 16:28:35 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174F08C5B3@HQMAIL01.nvidia.com>
-References: <1321274409-24643-1-git-send-email-rnayak@ti.com>
- <1321274409-24643-2-git-send-email-rnayak@ti.com>
- <20111114172312.GI31337@atomide.com> <4EC1EB9D.1000503@ti.com>
- <CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
- <CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
- <CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
- <CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
- <CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
- <20111122175409.GE31337@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20111122175409.GE31337@atomide.com>
-Content-Language: en-US
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 01/17] arm/tegra: board-dt: audio: Enable clocks, fix AUXDATA
+Date: Tue, 22 Nov 2011 18:21:09 -0700
+Message-ID: <1322011285-4002-2-git-send-email-swarren@nvidia.com>
+References: <1322011285-4002-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1322011285-4002-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Rapoport <mike-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Lartey <ian-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Dimitris Papastamos <dp-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony Lindgren wrote at Tuesday, November 22, 2011 10:54 AM:
-> * Linus Walleij <linus.walleij@linaro.org> [111122 03:30]:
-> > On Tue, Nov 22, 2011 at 12:09 PM, Thomas Abraham
-> > <thomas.abraham@linaro.org> wrote:
-> > > On 17 November 2011 19:27, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > >>
-> > >> Maybe I'm mistaken about the device tree ambitions, but
-> > >> I was sort of hoping that it would not contain too much
-> > >> custom magic numbers that need to be cross-referenced
-> > >> elsewhere ... or rather - the more understandable the device
-> > >> tree is, the more we win.
-> > >
-> > > Device tree is expected to describe the hardware. So to
-> > > cross-reference the hardware manual to understand device tree should
-> > > be fine I guess. For instance, GPIO numbers in dts would be written as
-> > > a numeric number and not a enum or other format. And by looking up the
-> > > manual, we understand the actual details of the GPIO pin.
-> > >
-> > > If dt-compiler had a option to support #define like in C, the numbers
-> > > could have been made more easier to understand. Like, 3 to mean
-> > > GPIO_PULL_UP in Exynos dts file.
-> >
-> > OK I think I get it now, so DT bindings shall really NOT be read
-> > by any of the pinctrl core, it is *supposed* to be all driver-specific.
-> > Then it makes perfect sense to have it as it is.
-> 
-> Yes the driver nodes should describe in DT which pins to use:
-> 
->         serial@12340000 {
->                 compatible = "8250";
->                 reg = <0x12340000 0x40>;
->                 reg-shift = <2>;
->                 interrupts = < 10 >;
-> 		pins = "uart1_rx", "uart1_tx";
->         };
+Certain clocks are required for core audio functionality. Set up the
+appropriate parenting relationships, and enable clocks that must be
+on permanently.
 
-Sorry to jump in late here, but I wasn't aware of this thread.
+Fix the address of the I2S2 controller in the AUXDATA table.
 
-I don't necessarily agree with that. Describing the HW doesn't necessarily
-mean that each device needs to describe what pinmux pins it uses; one
-could quite easily have the pinmux describe what settings the various
-pins should have and which drivers will use those pins. That would map
-very well to the pinctrl subsystem's mapping table, and at least Tegra's
-existing pinmux tables, which are both just a big array of settings which
-end up getting provided to drivers.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/mach-tegra/board-dt.c |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
 
-I'll try and track down the rest of this thread and catch up though...
-
+diff --git a/arch/arm/mach-tegra/board-dt.c b/arch/arm/mach-tegra/board-dt.c
+index efb308e..343469c 100644
+--- a/arch/arm/mach-tegra/board-dt.c
++++ b/arch/arm/mach-tegra/board-dt.c
+@@ -62,7 +62,7 @@ struct of_dev_auxdata tegra20_auxdata_lookup[] __initdata = {
+ 	OF_DEV_AUXDATA("nvidia,tegra20-i2c", TEGRA_I2C3_BASE, "tegra-i2c.2", NULL),
+ 	OF_DEV_AUXDATA("nvidia,tegra20-i2c", TEGRA_DVC_BASE, "tegra-i2c.3", NULL),
+ 	OF_DEV_AUXDATA("nvidia,tegra20-i2s", TEGRA_I2S1_BASE, "tegra-i2s.0", NULL),
+-	OF_DEV_AUXDATA("nvidia,tegra20-i2s", TEGRA_I2S1_BASE, "tegra-i2s.1", NULL),
++	OF_DEV_AUXDATA("nvidia,tegra20-i2s", TEGRA_I2S2_BASE, "tegra-i2s.1", NULL),
+ 	OF_DEV_AUXDATA("nvidia,tegra20-das", TEGRA_APB_MISC_DAS_BASE, "tegra-das", NULL),
+ 	OF_DEV_AUXDATA("nvidia,tegra20-ehci", TEGRA_USB_BASE, "tegra-ehci.0",
+ 		       &tegra_ehci1_device.dev.platform_data),
+@@ -79,6 +79,11 @@ static __initdata struct tegra_clk_init_table tegra_dt_clk_init_table[] = {
+ 	{ "usbd",	"clk_m",	12000000,	false },
+ 	{ "usb2",	"clk_m",	12000000,	false },
+ 	{ "usb3",	"clk_m",	12000000,	false },
++	{ "pll_a",      "pll_p_out1",   56448000,       true },
++	{ "pll_a_out0", "pll_a",        11289600,       true },
++	{ "cdev1",      NULL,           0,              true },
++	{ "i2s1",       "pll_a_out0",   11289600,       false},
++	{ "i2s2",       "pll_a_out0",   11289600,       false},
+ 	{ NULL,		NULL,		0,		0},
+ };
+ 
 -- 
-nvpublic
+1.7.0.4
