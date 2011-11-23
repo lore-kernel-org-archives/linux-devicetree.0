@@ -1,42 +1,45 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 03/17] arm/dt: Tegra: Enable audio on WM8903 boards,
- disable others
-Date: Wed, 23 Nov 2011 08:50:16 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174F08C6C3@HQMAIL01.nvidia.com>
-References: <1322011285-4002-1-git-send-email-swarren@nvidia.com>
- <1322011285-4002-4-git-send-email-swarren@nvidia.com>
+Subject: RE: [PATCH] arm/tegra: convert tegra20 to GIC devicetree binding
+Date: Wed, 23 Nov 2011 09:25:36 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174F08C6F0@HQMAIL01.nvidia.com>
+References: <1321542430-17971-1-git-send-email-pdeschrijver@nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1740D74C1E@HQMAIL01.nvidia.com>
+ <20111118120352.GZ19069@tbergstrom-lnx.Nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1740D74E63@HQMAIL01.nvidia.com>
+ <20111121122212.GL19069@tbergstrom-lnx.Nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF174F08C0E5@HQMAIL01.nvidia.com>
+ <20111123050012.GS19069@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1322011285-4002-4-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111123050012.GS19069-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
 Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mike Rapoport <mike-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Lartey <ian-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Dimitris Papastamos <dp-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote at Tuesday, November 22, 2011 6:21 PM:
-> Add complete bindings to instantiate and configure the codec and
-> top-level audio complex on all currently supported boards using the
-> Tegra+WM8903 audio driver.
+Peter De Schrijver wrote at Tuesday, November 22, 2011 10:00 PM:
 ...
-> diff --git a/arch/arm/boot/dts/tegra-harmony.dts b/arch/arm/boot/dts/tegra-harmony.dts
-...
-> +	sound {
-> +		compatible = "nvidia,tegra-audio-wm8903-harmony",
-> +                             "nvidia,tegra-audio-wm8903";
+> I think we need to model the GPIO IRQs as a seperate interrupt controller.
+> That way the WM8903 node can refer to the GPIO IRQ as an IRQ without
+> hardcoding the global interrupt number, similar to the way we specify the
+> SPI number in the device nodes and not the global interrupt number.
 
-Thinking about that more, I'd like to change this from nvidia,tegra-audio*
-to nvidia,tegra20-audio*. That's because the current ASoC machine driver,
-which is what matches that compatible flag, is slightly Tegra20-specific
-because it makes calls to the Tegra20-specific DAS driver. On Tegra30, this
-is replaced by a Tegra30 (and later?) AHUB driver. To avoid the
-Tegra+WM8903 ASoC machine driver module depending on both the Tegra20 DAS
-module and the Tegra30 AHUB module, I'd like to create separate ASoC
-machine drivers for the two Tegra chips, which parameterize a core machine
-driver (e.g. by passing an ops/vtable). This requires versioned compatible
-flags so that different drivers can be instantiated.
+Yes, you're right.
+
+I'd originally thought that the GPIO IRQs fed directly into the GIC, but
+now that I read the docs, I see that the GPIO controller really is an
+interrupt aggregator/controller.
 
 -- 
 nvpublic
