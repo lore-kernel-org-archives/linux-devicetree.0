@@ -1,85 +1,94 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 17/17] ASoC: Tegra+WM8903 machine: Add device tree binding
-Date: Wed, 23 Nov 2011 08:15:28 +0100
-Message-ID: <20111123071528.GA12558@avionic-0098.adnet.avionic-design.de>
-References: <1322011285-4002-1-git-send-email-swarren@nvidia.com>
- <1322011285-4002-18-git-send-email-swarren@nvidia.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
+Date: Wed, 23 Nov 2011 11:14:32 +0100
+Message-ID: <20111123101432.GA14404@game.jcrosoft.org>
+References: <1321274409-24643-2-git-send-email-rnayak@ti.com>
+ <20111114172312.GI31337@atomide.com>
+ <4EC1EB9D.1000503@ti.com>
+ <CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
+ <CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
+ <CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
+ <CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
+ <CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
+ <20111122175409.GE31337@atomide.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF174F08C5B3@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1322011285-4002-18-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Rapoport <mike-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Lartey <ian-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Dimitris Papastamos <dp-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174F08C5B3@HQMAIL01.nvidia.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 16:28 Tue 22 Nov     , Stephen Warren wrote:
+> Tony Lindgren wrote at Tuesday, November 22, 2011 10:54 AM:
+> > * Linus Walleij <linus.walleij@linaro.org> [111122 03:30]:
+> > > On Tue, Nov 22, 2011 at 12:09 PM, Thomas Abraham
+> > > <thomas.abraham@linaro.org> wrote:
+> > > > On 17 November 2011 19:27, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > >>
+> > > >> Maybe I'm mistaken about the device tree ambitions, but
+> > > >> I was sort of hoping that it would not contain too much
+> > > >> custom magic numbers that need to be cross-referenced
+> > > >> elsewhere ... or rather - the more understandable the device
+> > > >> tree is, the more we win.
+> > > >
+> > > > Device tree is expected to describe the hardware. So to
+> > > > cross-reference the hardware manual to understand device tree should
+> > > > be fine I guess. For instance, GPIO numbers in dts would be written as
+> > > > a numeric number and not a enum or other format. And by looking up the
+> > > > manual, we understand the actual details of the GPIO pin.
+> > > >
+> > > > If dt-compiler had a option to support #define like in C, the numbers
+> > > > could have been made more easier to understand. Like, 3 to mean
+> > > > GPIO_PULL_UP in Exynos dts file.
+> > >
+> > > OK I think I get it now, so DT bindings shall really NOT be read
+> > > by any of the pinctrl core, it is *supposed* to be all driver-specific.
+> > > Then it makes perfect sense to have it as it is.
+> > 
+> > Yes the driver nodes should describe in DT which pins to use:
+> > 
+> >         serial@12340000 {
+> >                 compatible = "8250";
+> >                 reg = <0x12340000 0x40>;
+> >                 reg-shift = <2>;
+> >                 interrupts = < 10 >;
+> > 		pins = "uart1_rx", "uart1_tx";
+> >         };
+> 
+> Sorry to jump in late here, but I wasn't aware of this thread.
+> 
+> I don't necessarily agree with that. Describing the HW doesn't necessarily
+> mean that each device needs to describe what pinmux pins it uses; one
+> could quite easily have the pinmux describe what settings the various
+> pins should have and which drivers will use those pins. That would map
+> very well to the pinctrl subsystem's mapping table, and at least Tegra's
+> existing pinmux tables, which are both just a big array of settings which
+> end up getting provided to drivers.
+> 
+> I'll try and track down the rest of this thread and catch up though...
+I agreee here
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-* Stephen Warren wrote:
-> From: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->=20
-> This driver is parameterized in two ways:
->=20
-> a) Platform data, which supplies a set of GPIOs used by the driver.
->    These GPIOs can now be parsed out of device tree.
->=20
-> b) Machine-specific DAPM route arrays embedded into the ASoC machine
->    driver itself. The driver picks the appropriate array to use using
->    machine_is_*(). This array can now be parsed straight out of device
->    tree, allowing the machine driver to be completely machine agnostic.
->=20
-> swarren applied the following modifications:
-> * Moved all pdata and DT parsing into one place.
-> * Added DAPM route parsing from DT.
-> * Added tegra_pcm device registration.
-> * Documented DT binding.
->=20
-> Signed-off-by: John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/sound/tegra-audio-wm8903.txt          |   63 +++++++++
->  sound/soc/tegra/tegra_wm8903.c                     |  133 ++++++++++++++=
-++----
->  2 files changed, 171 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/tegra-audio-w=
-m8903.txt
-[...]
-> diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm890=
-3.c
-[...]
-> @@ -262,6 +266,83 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runt=
-ime *rtd)
->  		return ret;
->  	}
-> =20
-> +	pdata =3D &machine->pdata;
-> +	np =3D card->dev->of_node;
-> +
-> +	if (card->dev->platform_data) {
-> +		*pdata =3D *(struct tegra_wm8903_platform_data *)
-> +						card->dev->platform_data;
-[...]
+as example on at91 I try to found a good way to let the macb driver to ask the
+pin configuration
 
-Minor nit: perhaps this should use memcpy() instead?
+so in my mind i do not need put all pins in each board but in the dtsi and
+then in the drivers just said
+	pins = "mii";
+	or
+	pins = "rmii";
+	or if I want to use the alternative config
 
-Thierry
+	pins = "mii_alt";
+	or
+	pins = "rmii_alt";
 
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature
+and then in the dtsi I describe the  pin used for those configs
+which is soc specifific not board
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk7MnZAACgkQZ+BJyKLjJp9dxgCdFtePtwAxEtmChH93TisJ0WSQ
-E9AAn2rVxl3HtxQmL2r+fPm5h/MqGeuX
-=Tvy/
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
+Best Regards,
+J.
