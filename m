@@ -1,31 +1,68 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 11/17] ASoC: Tegra I2S: Add device tree binding
-Date: Wed, 23 Nov 2011 11:27:36 +0000
-Message-ID: <20111123112736.GJ21073@opensource.wolfsonmicro.com>
-References: <1322011285-4002-1-git-send-email-swarren@nvidia.com>
- <1322011285-4002-12-git-send-email-swarren@nvidia.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: [PATCH v2 0/4] Versatile Express DT support
+Date: Wed, 23 Nov 2011 15:01:44 +0000
+Message-ID: <1322060508-11298-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1322011285-4002-12-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Rapoport <mike-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ian Lartey <ian-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Dimitris Papastamos <dp-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 22, 2011 at 06:21:19PM -0700, Stephen Warren wrote:
+Hello again,
 
-> +		/*
-> +		 * FIXME: Perhaps there should be a standard binding for this
-> +		 * that ends up creating the IORESOURCE_DMA resource for us.
-> +		 */
-> +		if (of_property_read_u32(pdev->dev.of_node,
-> +					 "nvidia,dma-channels",
-> +					 &dma_ch) < 0) {
-> +			dev_err(&pdev->dev, "No DMA resource\n");
-> +			ret = -ENODEV;
-> +			goto err_clk_put;
-> +		}
+This version of the series (hopefully) addresses all the suggestions
+made by Dave, Rob and Russell.
 
-I'll hold off on this patch for discussion of this FIXME.
+The compatible values are specific for the tiles now and the memory
+map variant is defined as a custom property in the motherboard node.
+
+Tested on V2P-CA9 coretile both with ATAGs and DT and V2P-CA5s with DT.
+
+All comments, as always, welcomed!
+
+Pawel
+
+
+
+Pawel Moll (4):
+  ARM: vexpress: Get rid of MMIO_P2V
+  ARM: vexpress: Add DT support in v2m
+  ARM: vexpress: Initial RS1 memory map support
+  ARM: vexpress: DT-based support for CoreTiles Express A5x2 and A9x4
+
+ Documentation/devicetree/bindings/arm/vexpress    |  101 ++++++++
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi           |  192 +++++++++++++++
+ arch/arm/boot/dts/vexpress-v2m.dtsi               |  191 +++++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca5s.dts           |  132 ++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts            |  146 +++++++++++
+ arch/arm/include/asm/hardware/arm_timer.h         |    5 +
+ arch/arm/mach-vexpress/Kconfig                    |   35 +++
+ arch/arm/mach-vexpress/Makefile                   |    1 +
+ arch/arm/mach-vexpress/Makefile.boot              |    6 +
+ arch/arm/mach-vexpress/core.h                     |   21 ++-
+ arch/arm/mach-vexpress/ct-ca9x4.c                 |   52 +---
+ arch/arm/mach-vexpress/include/mach/ct-ca9x4.h    |   13 +-
+ arch/arm/mach-vexpress/include/mach/debug-macro.S |   37 +++-
+ arch/arm/mach-vexpress/include/mach/motherboard.h |   58 +++--
+ arch/arm/mach-vexpress/include/mach/uncompress.h  |   13 +-
+ arch/arm/mach-vexpress/platsmp.c                  |    4 +-
+ arch/arm/mach-vexpress/v2m.c                      |  265 ++++++++++++++++++---
+ arch/arm/mach-vexpress/v2p-ca5s_ca9.c             |  115 +++++++++
+ 18 files changed, 1272 insertions(+), 115 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/vexpress
+ create mode 100644 arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+ create mode 100644 arch/arm/boot/dts/vexpress-v2m.dtsi
+ create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+ create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca9.dts
+ create mode 100644 arch/arm/mach-vexpress/v2p-ca5s_ca9.c
