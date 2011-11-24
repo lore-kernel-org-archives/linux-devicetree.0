@@ -1,73 +1,65 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH 06/14] tegra: fdt: Add device tree file for Tegra2
-	Seaboard
-Date: Wed, 23 Nov 2011 19:54:48 -0800
-Message-ID: <1322106896-23054-7-git-send-email-sjg@chromium.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 14/14] tegra: fdt: Enable FDT support for Seaboard
+Date: Wed, 23 Nov 2011 19:54:56 -0800
+Message-ID: <1322106896-23054-15-git-send-email-sjg@chromium.org>
 References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1322106896-23054-2-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Albert ARIBAUD <albert.u.boot@aribaud.net>, Tom Warren <twarren@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1322106896-23054-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This was taken from commit 1ea6b8f at:
-git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
+This switches Seaboard over to use FDT for run-time config instead of
+CONFIG options. USB is the only user at present.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- board/nvidia/dts/tegra2-seaboard.dts |   32 ++++++++++++++++++++++++++++++++
- 1 files changed, 32 insertions(+), 0 deletions(-)
- create mode 100644 board/nvidia/dts/tegra2-seaboard.dts
+ include/configs/seaboard.h |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
-diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
-new file mode 100644
-index 0000000..7d0869a
---- /dev/null
-+++ b/board/nvidia/dts/tegra2-seaboard.dts
-@@ -0,0 +1,32 @@
-+/dts-v1/;
+diff --git a/include/configs/seaboard.h b/include/configs/seaboard.h
+index df1b44a..03e9824 100644
+--- a/include/configs/seaboard.h
++++ b/include/configs/seaboard.h
+@@ -27,6 +27,11 @@
+ #include <asm/sizes.h>
+ #include "tegra2-common.h"
+ 
++/* Enable fdt support for Seaboard. Flash the image in u-boot-dtb.bin */
++#define CONFIG_DEFAULT_DEVICE_TREE	tegra2-seaboard
++#define CONFIG_OF_CONTROL
++#define CONFIG_OF_SEPARATE
 +
-+/memreserve/ 0x1c000000 0x04000000;
-+/include/ ARCH_CPU_DTS
+ /* High-level configuration options */
+ #define TEGRA2_SYSMEM		"mem=384M@0M nvmem=128M@384M mem=512M@512M"
+ #define V_PROMPT		"Tegra2 (SeaBoard) # "
+@@ -79,6 +84,8 @@
+ #define CONFIG_USB_STORAGE
+ #define CONFIG_CMD_USB
+ 
++#ifndef CONFIG_OF_CONTROL
 +
-+/ {
-+	model = "NVIDIA Seaboard";
-+	compatible = "nvidia,seaboard", "nvidia,tegra20";
+ /* Select the order in which U-Boot sees USB ports */
+ #define CONFIG_TEGRA_USB0	TEGRA_USB3_BASE
+ #define CONFIG_TEGRA_USB1	TEGRA_USB1_BASE
+@@ -86,4 +93,6 @@
+ /* Put USB1 in host mode */
+ #define CONFIG_TEGRA_USB1_HOST
+ 
++#endif
 +
-+	chosen {
-+		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk1p3 rw rootwait";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = < 0x00000000 0x40000000 >;
-+	};
-+
-+	serial@70006300 {
-+		clock-frequency = < 216000000 >;
-+	};
-+
-+	sdhci@c8000400 {
-+		cd-gpios = <&gpio 69 0>; /* gpio PI5 */
-+		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
-+		power-gpios = <&gpio 70 0>; /* gpio PI6 */
-+	};
-+
-+	sdhci@c8000600 {
-+		support-8bit;
-+	};
-+};
+ #endif /* __CONFIG_H */
 -- 
 1.7.3.1
