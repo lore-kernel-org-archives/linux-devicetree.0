@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 02/14] fdt: Add functions to access phandles, arrays and bools
-Date: Wed, 23 Nov 2011 19:54:44 -0800
-Message-ID: <1322106896-23054-3-git-send-email-sjg@chromium.org>
+Subject: [PATCH 05/14] tegra: fdt: Add Tegra2x device tree file
+Date: Wed, 23 Nov 2011 19:54:47 -0800
+Message-ID: <1322106896-23054-6-git-send-email-sjg@chromium.org>
 References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,153 +21,183 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a function to lookup a property which is a phandle in a node, and
-another to read a fixed-length integer array from an fdt property.
-Also add a function to read boolean properties.
+This was taken from commit 1ea6b8f at:
+git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
+
+config.mk is updated to provide this file to boards through the
+built-in mechanism:
+
+/include/ ARCH_CPU_DTS
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- include/fdtdec.h |   40 ++++++++++++++++++++++++++
- lib/fdtdec.c     |   82 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 122 insertions(+), 0 deletions(-)
+ arch/arm/cpu/armv7/tegra2/config.mk |    2 +
+ arch/arm/dts/tegra20.dtsi           |  147 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 149 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/dts/tegra20.dtsi
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index 9018181..9ecb6ab 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -126,3 +126,43 @@ int fdtdec_get_is_enabled(const void *blob, int node);
-  * if not.
-  */
- int fdtdec_check_fdt(void);
+diff --git a/arch/arm/cpu/armv7/tegra2/config.mk b/arch/arm/cpu/armv7/tegra2/config.mk
+index 2303dba..fe9ef5b 100644
+--- a/arch/arm/cpu/armv7/tegra2/config.mk
++++ b/arch/arm/cpu/armv7/tegra2/config.mk
+@@ -31,3 +31,5 @@ CFLAGS_arch/arm/lib/board.o += -march=armv4t
+ endif
+ 
+ USE_PRIVATE_LIBGCC = yes
 +
-+/**
-+ * Look up a phandle and follow it to its node. Then return the offset
-+ * of that node.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @return node offset if found, -ve error code on error
-+ */
-+int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name);
++CONFIG_ARCH_DEVICE_TREE := tegra20
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+new file mode 100644
+index 0000000..65d7e6a
+--- /dev/null
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -0,0 +1,147 @@
++/include/ "skeleton.dtsi"
 +
-+/**
-+ * Look up a property in a node and return its contents in an integer
-+ * array of given length. The property must have at least enough data for
-+ * the array (4*count bytes). It may have more, but this will be ignored.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @param array		array to fill with data
-+ * @param count		number of array elements
-+ * @return 0 if ok, or -FDT_ERR_NOTFOUND if the property is not found,
-+ *		or -FDT_ERR_BADLAYOUT if not enough data
-+ */
-+int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
-+		int *array, int count);
++/ {
++	compatible = "nvidia,tegra20";
++	interrupt-parent = <&intc>;
 +
-+/**
-+ * Look up a boolean property in a node and return it.
-+ *
-+ * A boolean properly is true if present in the device tree and false if not
-+ * present, or present with a 0 value.
-+ *
-+ * @param blob	FDT blob
-+ * @param node	node to examine
-+ * @param prop_name	name of property to find
-+ * @return 1 if the properly is present; 0 if it isn't present or is 0
-+ */
-+int fdtdec_get_bool(const void *blob, int node, const char *prop_name);
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index d1321a8..613547a 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -146,3 +146,85 @@ int fdtdec_check_fdt(void)
- 			"binary or define CONFIG_OF_EMBED\n");
- 	return 0;
- }
++	intc: interrupt-controller@50041000 {
++		compatible = "nvidia,tegra20-gic";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		reg = < 0x50041000 0x1000 >,
++		      < 0x50040100 0x0100 >;
++	};
 +
-+int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name)
-+{
-+	const u32 *phandle;
-+	int lookup;
++	i2c@7000c000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nvidia,tegra20-i2c";
++		reg = <0x7000C000 0x100>;
++		interrupts = < 70 >;
++	};
 +
-+	phandle = fdt_getprop(blob, node, prop_name, NULL);
-+	if (!phandle)
-+		return -FDT_ERR_NOTFOUND;
++	i2c@7000c400 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nvidia,tegra20-i2c";
++		reg = <0x7000C400 0x100>;
++		interrupts = < 116 >;
++	};
 +
-+	lookup = fdt_node_offset_by_phandle(blob, fdt32_to_cpu(*phandle));
-+	return lookup;
-+}
++	i2c@7000c500 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nvidia,tegra20-i2c";
++		reg = <0x7000C500 0x100>;
++		interrupts = < 124 >;
++	};
 +
-+/**
-+ * Look up a property in a node and check that it has a minimum length.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @param min_len	minimum property length in bytes
-+ * @param err		0 if ok, or -FDT_ERR_NOTFOUND if the property is not
-+			found, or -FDT_ERR_BADLAYOUT if not enough data
-+ * @return pointer to cell, which is only valid if err == 0
-+ */
-+static const void *get_prop_len(const void *blob, int node,
-+		const char *prop_name, int min_len, int *err)
-+{
-+	const void *cell;
-+	int len;
++	i2c@7000d000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nvidia,tegra20-i2c";
++		reg = <0x7000D000 0x200>;
++		interrupts = < 85 >;
++	};
 +
-+	debug("%s: %s\n", __func__, prop_name);
-+	cell = fdt_getprop(blob, node, prop_name, &len);
-+	if (!cell)
-+		*err = -FDT_ERR_NOTFOUND;
-+	else if (len < min_len)
-+		*err = -FDT_ERR_BADLAYOUT;
-+	else
-+		*err = 0;
-+	return cell;
-+}
++	i2s@70002800 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nvidia,tegra20-i2s";
++		reg = <0x70002800 0x200>;
++		interrupts = < 45 >;
++		dma-channel = < 2 >;
++	};
 +
-+int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
-+		int *array, int count)
-+{
-+	const s32 *cell;
-+	int i, err = 0;
++	i2s@70002a00 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nvidia,tegra20-i2s";
++		reg = <0x70002a00 0x200>;
++		interrupts = < 35 >;
++		dma-channel = < 1 >;
++	};
 +
-+	debug("%s: %s\n", __func__, prop_name);
-+	cell = get_prop_len(blob, node, prop_name, sizeof(s32) * count, &err);
-+	if (!err) {
-+		for (i = 0; i < count; i++)
-+			array[i] = fdt32_to_cpu(cell[i]);
-+	}
-+	return err;
-+}
++	das@70000c00 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nvidia,tegra20-das";
++		reg = <0x70000c00 0x80>;
++	};
 +
-+/**
-+ * Look up a boolean property in a node and return it.
-+ *
-+ * A boolean properly is true if present in the device tree and false if not
-+ * present, or present with a 0 value.
-+ *
-+ * @param blob	FDT blob
-+ * @param node	node to examine
-+ * @param prop_name	name of property to find
-+ * @return 1 if the properly is present; 0 if it isn't present or is 0
-+ */
-+int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
-+{
-+	const s32 *cell;
-+	int len;
++	gpio: gpio@6000d000 {
++		compatible = "nvidia,tegra20-gpio";
++		reg = < 0x6000d000 0x1000 >;
++		interrupts = < 64 65 66 67 87 119 121 >;
++		#gpio-cells = <2>;
++		gpio-controller;
++	};
 +
-+	debug("%s: %s\n", __func__, prop_name);
-+	cell = fdt_getprop(blob, node, prop_name, &len);
-+	if (!cell)
-+		return 0;
-+	if (len >= sizeof(u32) && *cell == 0)
-+		return 0;
++	pinmux: pinmux@70000000 {
++		compatible = "nvidia,tegra20-pinmux";
++		reg = < 0x70000014 0x10    /* Tri-state registers */
++			0x70000080 0x20    /* Mux registers */
++			0x700000a0 0x14    /* Pull-up/down registers */
++			0x70000868 0xa8 >; /* Pad control registers */
++	};
 +
-+	return 1;
-+}
++	serial@70006000 {
++		compatible = "nvidia,tegra20-uart";
++		reg = <0x70006000 0x40>;
++		reg-shift = <2>;
++		interrupts = < 68 >;
++	};
++
++	serial@70006040 {
++		compatible = "nvidia,tegra20-uart";
++		reg = <0x70006040 0x40>;
++		reg-shift = <2>;
++		interrupts = < 69 >;
++	};
++
++	serial@70006200 {
++		compatible = "nvidia,tegra20-uart";
++		reg = <0x70006200 0x100>;
++		reg-shift = <2>;
++		interrupts = < 78 >;
++	};
++
++	serial@70006300 {
++		compatible = "nvidia,tegra20-uart";
++		reg = <0x70006300 0x100>;
++		reg-shift = <2>;
++		interrupts = < 122 >;
++	};
++
++	serial@70006400 {
++		compatible = "nvidia,tegra20-uart";
++		reg = <0x70006400 0x100>;
++		reg-shift = <2>;
++		interrupts = < 123 >;
++	};
++
++	sdhci@c8000000 {
++		compatible = "nvidia,tegra20-sdhci";
++		reg = <0xc8000000 0x200>;
++		interrupts = < 46 >;
++	};
++
++	sdhci@c8000200 {
++		compatible = "nvidia,tegra20-sdhci";
++		reg = <0xc8000200 0x200>;
++		interrupts = < 47 >;
++	};
++
++	sdhci@c8000400 {
++		compatible = "nvidia,tegra20-sdhci";
++		reg = <0xc8000400 0x200>;
++		interrupts = < 51 >;
++	};
++
++	sdhci@c8000600 {
++		compatible = "nvidia,tegra20-sdhci";
++		reg = <0xc8000600 0x200>;
++		interrupts = < 63 >;
++	};
++};
++
 -- 
 1.7.3.1
