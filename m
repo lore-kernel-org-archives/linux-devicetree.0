@@ -1,7 +1,7 @@
 From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: at91/board-dt: remove AIC irq domain from board file
-Date: Thu, 24 Nov 2011 22:56:29 +0100
-Message-ID: <7c73fc61e1dfd855368a052fd62cf94dd8c8bdf6.1322171620.git.nicolas.ferre@atmel.com>
+Subject: [PATCH 2/3] ARM: at91/gpio: add irqdomain to gpio interrupts
+Date: Thu, 24 Nov 2011 22:56:28 +0100
+Message-ID: <edeb4da00527914f0e1038461539843c46ab0b50.1322171620.git.nicolas.ferre@atmel.com>
 References: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,53 +23,62 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robherri
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding of irqdomain in AIC code make the specification
-of the irq domain in board file useless.
-
 Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/mach-at91/board-dt.c |   15 +--------------
- 1 files changed, 1 insertions(+), 14 deletions(-)
+ arch/arm/mach-at91/gpio.c |   19 +++++++++++++++++++
+ 1 files changed, 19 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
-index bb6b434..119eda6 100644
---- a/arch/arm/mach-at91/board-dt.c
-+++ b/arch/arm/mach-at91/board-dt.c
-@@ -15,8 +15,6 @@
- #include <linux/init.h>
+diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
+index 74d6783..45a39d0 100644
+--- a/arch/arm/mach-at91/gpio.c
++++ b/arch/arm/mach-at91/gpio.c
+@@ -20,6 +20,7 @@
+ #include <linux/list.h>
  #include <linux/module.h>
- #include <linux/gpio.h>
--#include <linux/irqdomain.h>
--#include <linux/of_irq.h>
- #include <linux/of_platform.h>
+ #include <linux/io.h>
++#include <linux/irqdomain.h>
  
  #include <mach/hardware.h>
-@@ -88,17 +86,6 @@ static void __init ek_add_device_nand(void)
- 	at91_add_device_nand(&ek_nand_data);
- }
+ #include <mach/at91_pio.h>
+@@ -32,6 +33,7 @@ struct at91_gpio_chip {
+ 	int			id;		/* ID of register bank */
+ 	void __iomem		*regbase;	/* Base of register bank */
+ 	struct clk		*clock;		/* associated clock */
++	struct irq_domain	domain;		/* associated irq domain */
+ };
  
--static const struct of_device_id aic_of_match[] __initconst = {
--	{ .compatible = "atmel,at91rm9200-aic", },
--	{},
--};
--
--static void __init at91_dt_init_irq(void)
--{
--	irq_domain_generate_simple(aic_of_match, 0xfffff000, 0);
--	at91_init_irq_default();
--}
--
- static void __init at91_dt_device_init(void)
- {
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-@@ -118,7 +105,7 @@ DT_MACHINE_START(at91sam_dt, "Atmel AT91SAM (Device Tree)")
- 	.timer		= &at91sam926x_timer,
- 	.map_io		= at91_map_io,
- 	.init_early	= ek_init_early,
--	.init_irq	= at91_dt_init_irq,
-+	.init_irq	= at91_init_irq_default,
- 	.init_machine	= at91_dt_device_init,
- 	.dt_compat	= at91_dt_board_compat,
- MACHINE_END
+ #define to_at91_gpio_chip(c) container_of(c, struct at91_gpio_chip, chip)
+@@ -483,6 +485,20 @@ postcore_initcall(at91_gpio_debugfs_init);
+ /*--------------------------------------------------------------------------*/
+ 
+ /*
++ * irqdomain initialization: pile up irqdomains on top of AIC range
++ */
++static void __init at91_gpio_irqdomain(struct at91_gpio_chip *at91_gpio)
++{
++	struct irq_domain	*gpio_irq_d = &at91_gpio->domain;
++
++	gpio_irq_d->irq_base =
++		gpio_irq_d->hwirq_base = gpio_to_irq(at91_gpio->chip.base);
++	gpio_irq_d->nr_irq = at91_gpio->chip.ngpio;
++	gpio_irq_d->ops = &irq_domain_simple_ops;
++	irq_domain_add(gpio_irq_d);
++}
++
++/*
+  * This lock class tells lockdep that GPIO irqs are in a different
+  * category than their parents, so it won't report false recursion.
+  */
+@@ -517,6 +533,9 @@ void __init at91_gpio_irq_setup(void)
+ 			set_irq_flags(irq, IRQF_VALID);
+ 		}
+ 
++		/* setup irq domain for this GPIO controller */
++		at91_gpio_irqdomain(this);
++
+ 		/* The toplevel handler handles one bank of GPIOs, except
+ 		 * AT91SAM9263_ID_PIOCDE handles three... PIOC is first in
+ 		 * the list, so we only set up that handler.
 -- 
 1.7.5.4
