@@ -1,117 +1,58 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] Convert imx6 clock to device tree
-Date: Thu, 24 Nov 2011 09:49:23 +0100
-Message-ID: <20111124084923.GW27267@pengutronix.de>
-References: <1321926536-671-1-git-send-email-shawn.guo@linaro.org>
- <20111122082314.GB27267@pengutronix.de>
- <20111124025902.GB17979@S2100-06.ap.freescale.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
+Date: Thu, 24 Nov 2011 11:04:39 +0100
+Message-ID: <CACRpkdaStA_+SiqwnA-=jCi4XusHqcwgVzUUWyDg7byTPq1_JA@mail.gmail.com>
+References: <1321274409-24643-1-git-send-email-rnayak@ti.com>
+	<1321274409-24643-2-git-send-email-rnayak@ti.com>
+	<20111114172312.GI31337@atomide.com>
+	<4EC1EB9D.1000503@ti.com>
+	<CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
+	<CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
+	<CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
+	<CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
+	<CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
+	<20111122175409.GE31337@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111124025902.GB17979-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20111122175409.GE31337@atomide.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, Rajendra Nayak <rnayak@ti.com>, linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, linus.walleij@stericsson.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 24, 2011 at 10:59:03AM +0800, Shawn Guo wrote:
-> On Tue, Nov 22, 2011 at 09:23:14AM +0100, Sascha Hauer wrote:
-> > On Tue, Nov 22, 2011 at 09:48:53AM +0800, Shawn Guo wrote:
-> > > As I promised to Arnd, I will convert imx6 clock code to common clock
-> > > framework and in turn device tree at the earliest time.  Here it is.
-> > 
-> > Very nice ;) I like the patches.
-> > 
-> > Is there a way to improve the way how the entities find their base
-> > addresses? Currently the C code figures out the base addresses based
-> > on compatible.
-> 
-> May I understand the problem with doing that?
-> 
-> > Maybe we could put the crm clocks and anatop clocks into
-> > two different nodes instead of putting them all directly under clocks{}.
-> > 
-> I do not quite understand this.  Are you suggesting we keep using the
-> static base address definition in C code for ccm and anatop rather than
-> retrieving them from device tree?  No, we do not want to do this.  So
-> if we need to get the addresses from device tree anyhow, using
-> compatible to find the correct node is the best way to me.
+On Tue, Nov 22, 2011 at 6:54 PM, Tony Lindgren <tony@atomide.com> wrote:
 
-What I meant is that currently there are many clock nodes which do have
-a register offset associated with them, but the base address has to be
-guessed in C code, like this:
+> Note that with device tree things get simpler for muxing as we can
+> get rid of the hardcoded grouping of pins in mux drivers. Instead of
+> hardcoded pingroups, the groups can be created dynamically based on
+> what the driver DT entries have.
 
->	if (of_device_is_compatible(np, "fsl,imx6q-pll-sys")) {
->		base = anatop_base;
->		ops = &pll_sys_ops;
->	} else if (of_device_is_compatible(np, "fsl,imx6q-pll-usb")) {
->		base = anatop_base;
->		ops = &pll_ops;
->		powerup_set_bit = true;
->	} else if (of_device_is_compatible(np, "fsl,imx6q-pll-av")) {
->		base = anatop_base;
->		ops = &pll_av_ops;
->	} else if (of_device_is_compatible(np, "fsl,imx6q-pll-enet")) {
->		base = anatop_base;
->		ops = &pll_enet_ops;
->	} else if (of_device_is_compatible(np, "fsl,imx6q-pll")) {
->		base = anatop_base;
->		ops = &pll_ops;
->	} else if (of_device_is_compatible(np, "fsl,imx6q-pfd")) {
->		base = anatop_base;
->		ops = &pfd_ops;
->		gate_set_bit = true;
->	} else if (of_device_is_compatible(np, "fsl,imx6q-ldb-di-clock")) {
->		base = ccm_base;
->		ops = &ldb_di_clk_ops;
->	}
+Yes, I know too little about DT to figure out how these should
+come in.
 
-Wouldn't it be possible to arrange the devicetree like this:
+> The reason why we want to avoid hardcoded pin groups is because trying
+> to map all the pad combinations in the pinmux driver is not a scalable
+> way to go. And it's not even possible at least on omaps because of the
+> huge number of combinations with alternative pins and multiple packages.
 
-	ccm@020c4000 {
-		compatible = "fsl,imx6q-ccm";
-		reg = <0x020c4000 0x4000>;
-		interrupts = <0 87 0x04 0 88 0x04>;
-		clocks {
-			/* put ccm clocks here */
-		}
-	}
+Yes, that's a solid case!
 
-	anatop@020c8000 {
-		compatible = "fsl,imx6q-anatop";
-		reg = <0x020c8000 0x1000>;
-		interrupts = <0 49 0x04 0 54 0x04 0 127 0x04>;
-		clocks {
-			/* put anatop clocks here */
-		}
-	}
+> FYI I'm playing with a DT based pinmux-simple.c driver that should
+> be pretty generic and work for all kinds of hardware hopefully.
 
-Of course this has a high cost on indention levels.
+I love it.
 
-On i.MX6 we only seem to have two base addresses relevant for clocks,
-but on i.MX5 there are multiple identical PLLs with different base
-addresses, so guessing the base address would not be possible based
-on of_device_is_compatible(), we would also have to match the name or
-some other identification property:
+> It will be few days before I can post anything though, there are
+> some pinctrl fwk issues to deal with first. Like the hardcoded
+> pinmux_maps that assumes that dev entries are static. This means
+> that multiple instances of pinmux drivers won't work..
 
-	if (is_compatible(np, "fsl,imx5-pll") && np->name == "pll1")
-		base = pll1_base;
-	else if ...
+I'm not following, but I guess I will understand when I see the
+patches. The idea behind the current map concept is that you
+get either a string or struct device * to identify the pin controller
+and mapped device, that's as far as I thought it out, sorry for
+any inherent limitations, they're not intentional...
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Linus Walleij
