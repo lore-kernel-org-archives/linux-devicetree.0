@@ -1,7 +1,8 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 05/14] tegra: fdt: Add Tegra2x device tree file
-Date: Wed, 23 Nov 2011 19:54:47 -0800
-Message-ID: <1322106896-23054-6-git-send-email-sjg@chromium.org>
+Subject: [PATCH 07/14] tegra: fdt: Add initial device tree definitions for USB
+ ports
+Date: Wed, 23 Nov 2011 19:54:49 -0800
+Message-ID: <1322106896-23054-8-git-send-email-sjg@chromium.org>
 References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,183 +22,103 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This was taken from commit 1ea6b8f at:
-git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
-
-config.mk is updated to provide this file to boards through the
-built-in mechanism:
-
-/include/ ARCH_CPU_DTS
+This is not available in kernel-land yet, but this initial
+set of definitions provides the info we need.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/cpu/armv7/tegra2/config.mk |    2 +
- arch/arm/dts/tegra20.dtsi           |  147 +++++++++++++++++++++++++++++++++++
- 2 files changed, 149 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/dts/tegra20.dtsi
+ arch/arm/dts/tegra20.dtsi |   80 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 80 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/cpu/armv7/tegra2/config.mk b/arch/arm/cpu/armv7/tegra2/config.mk
-index 2303dba..fe9ef5b 100644
---- a/arch/arm/cpu/armv7/tegra2/config.mk
-+++ b/arch/arm/cpu/armv7/tegra2/config.mk
-@@ -31,3 +31,5 @@ CFLAGS_arch/arm/lib/board.o += -march=armv4t
- endif
- 
- USE_PRIVATE_LIBGCC = yes
-+
-+CONFIG_ARCH_DEVICE_TREE := tegra20
 diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-new file mode 100644
-index 0000000..65d7e6a
---- /dev/null
+index 65d7e6a..28d23da 100644
+--- a/arch/arm/dts/tegra20.dtsi
 +++ b/arch/arm/dts/tegra20.dtsi
-@@ -0,0 +1,147 @@
-+/include/ "skeleton.dtsi"
+@@ -143,5 +143,85 @@
+ 		reg = <0xc8000600 0x200>;
+ 		interrupts = < 63 >;
+ 	};
 +
-+/ {
-+	compatible = "nvidia,tegra20";
-+	interrupt-parent = <&intc>;
-+
-+	intc: interrupt-controller@50041000 {
-+		compatible = "nvidia,tegra20-gic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = < 0x50041000 0x1000 >,
-+		      < 0x50040100 0x0100 >;
++/* This table has USB timing parameters for each Oscillator frequency we
++ * support. There are four sets of values:
++ *
++ * 1. PLLU configuration information (reference clock is osc/clk_m and
++ * PLLU-FOs are fixed at 12MHz/60MHz/480MHz).
++ *
++ *  Reference frequency     13.0MHz      19.2MHz      12.0MHz      26.0MHz
++ *  ----------------------------------------------------------------------
++ *      DIVN                960 (0x3c0)  200 (0c8)    960 (3c0h)   960 (3c0)
++ *      DIVM                13 (0d)      4 (04)       12 (0c)      26 (1a)
++ * Filter frequency (MHz)   1            4.8          6            2
++ * CPCON                    1100b        0011b        1100b        1100b
++ * LFCON0                   0            0            0            0
++ *
++ * 2. PLL CONFIGURATION & PARAMETERS for different clock generators:
++ *
++ * Reference frequency     13.0MHz         19.2MHz         12.0MHz     26.0MHz
++ * ---------------------------------------------------------------------------
++ * PLLU_ENABLE_DLY_COUNT   02 (0x02)       03 (03)         02 (02)     04 (04)
++ * PLLU_STABLE_COUNT       51 (33)         75 (4B)         47 (2F)    102 (66)
++ * PLL_ACTIVE_DLY_COUNT    05 (05)         06 (06)         04 (04)     09 (09)
++ * XTAL_FREQ_COUNT        127 (7F)        187 (BB)        118 (76)    254 (FE)
++ *
++ * 3. Debounce values IdDig, Avalid, Bvalid, VbusValid, VbusWakeUp, and
++ * SessEnd. Each of these signals have their own debouncer and for each of
++ * those one out of two debouncing times can be chosen (BIAS_DEBOUNCE_A or
++ * BIAS_DEBOUNCE_B).
++ *
++ * The values of DEBOUNCE_A and DEBOUNCE_B are calculated as follows:
++ *    0xffff -> No debouncing at all
++ *    <n> ms = <n> *1000 / (1/19.2MHz) / 4
++ *
++ * So to program a 1 ms debounce for BIAS_DEBOUNCE_A, we have:
++ * BIAS_DEBOUNCE_A[15:0] = 1000 * 19.2 / 4  = 4800 = 0x12c0
++ *
++ * We need to use only DebounceA for BOOTROM. We don't need the DebounceB
++ * values, so we can keep those to default.
++ *
++ * a4. The 20 microsecond delay after bias cell operation.
++ *  Reference frequency     13.0MHz      19.2MHz      12.0MHz      26.0MHz
++ */
++	usbparams@0 {
++		compatible = "nvidia,tegra20-usbparams";
++		osc-frequency = <13000000>;
++		/* DivN, DivM, DivP, CPCON, LFCON, Delays      Debounce, Bias */
++		params = <0x3c0 0x0d 0x00 0xc 0  0x02 0x33 0x05 0x7f  0x7ef4 5>;
 +	};
 +
-+	i2c@7000c000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000C000 0x100>;
-+		interrupts = < 70 >;
++	usbparams@1 {
++		compatible = "nvidia,tegra20-usbparams";
++		osc-frequency = <19200000>;
++		params = <0x0c8 0x04 0x00 0x3 0  0x03 0x4b 0x06 0xbb  0xbb80 7>;
 +	};
 +
-+	i2c@7000c400 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000C400 0x100>;
-+		interrupts = < 116 >;
++	usbparams@2 {
++		compatible = "nvidia,tegra20-usbparams";
++		osc-frequency = <12000000>;
++		params = <0x3c0 0x0c 0x00 0xc 0  0x02 0x2f 0x04 0x76  0x7530 5>;
 +	};
 +
-+	i2c@7000c500 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000C500 0x100>;
-+		interrupts = < 124 >;
++	usbparams@3 {
++		compatible = "nvidia,tegra20-usbparams";
++		osc-frequency = <26000000>;
++		params = <0x3c0 0x1a 0x00 0xc 0  0x04 0x66 0x09 0xfe  0xfde8 9>;
 +	};
 +
-+	i2c@7000d000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000D000 0x200>;
-+		interrupts = < 85 >;
++	usb@0xc5008000 {
++		compatible = "nvidia,tegra20-usb";
++		reg = <0xc5008000 0x8000>;
++		periph-id = <59>;	// PERIPH_ID_USB3
++		status = "disabled";
 +	};
 +
-+	i2s@70002800 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2s";
-+		reg = <0x70002800 0x200>;
-+		interrupts = < 45 >;
-+		dma-channel = < 2 >;
++	usb@0xc5000000 {
++		compatible = "nvidia,tegra20-usb";
++		reg = <0xc5000000 0x8000>;
++		periph-id = <22>;	// PERIPH_ID_USBD
++		status = "disabled";
 +	};
-+
-+	i2s@70002a00 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2s";
-+		reg = <0x70002a00 0x200>;
-+		interrupts = < 35 >;
-+		dma-channel = < 1 >;
-+	};
-+
-+	das@70000c00 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-das";
-+		reg = <0x70000c00 0x80>;
-+	};
-+
-+	gpio: gpio@6000d000 {
-+		compatible = "nvidia,tegra20-gpio";
-+		reg = < 0x6000d000 0x1000 >;
-+		interrupts = < 64 65 66 67 87 119 121 >;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+	};
-+
-+	pinmux: pinmux@70000000 {
-+		compatible = "nvidia,tegra20-pinmux";
-+		reg = < 0x70000014 0x10    /* Tri-state registers */
-+			0x70000080 0x20    /* Mux registers */
-+			0x700000a0 0x14    /* Pull-up/down registers */
-+			0x70000868 0xa8 >; /* Pad control registers */
-+	};
-+
-+	serial@70006000 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006000 0x40>;
-+		reg-shift = <2>;
-+		interrupts = < 68 >;
-+	};
-+
-+	serial@70006040 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006040 0x40>;
-+		reg-shift = <2>;
-+		interrupts = < 69 >;
-+	};
-+
-+	serial@70006200 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006200 0x100>;
-+		reg-shift = <2>;
-+		interrupts = < 78 >;
-+	};
-+
-+	serial@70006300 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006300 0x100>;
-+		reg-shift = <2>;
-+		interrupts = < 122 >;
-+	};
-+
-+	serial@70006400 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006400 0x100>;
-+		reg-shift = <2>;
-+		interrupts = < 123 >;
-+	};
-+
-+	sdhci@c8000000 {
-+		compatible = "nvidia,tegra20-sdhci";
-+		reg = <0xc8000000 0x200>;
-+		interrupts = < 46 >;
-+	};
-+
-+	sdhci@c8000200 {
-+		compatible = "nvidia,tegra20-sdhci";
-+		reg = <0xc8000200 0x200>;
-+		interrupts = < 47 >;
-+	};
-+
-+	sdhci@c8000400 {
-+		compatible = "nvidia,tegra20-sdhci";
-+		reg = <0xc8000400 0x200>;
-+		interrupts = < 51 >;
-+	};
-+
-+	sdhci@c8000600 {
-+		compatible = "nvidia,tegra20-sdhci";
-+		reg = <0xc8000600 0x200>;
-+		interrupts = < 63 >;
-+	};
-+};
-+
+ };
+ 
 -- 
 1.7.3.1
