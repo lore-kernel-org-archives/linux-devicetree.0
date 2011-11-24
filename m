@@ -1,84 +1,75 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
-Date: Thu, 24 Nov 2011 11:54:53 -0800
-Message-ID: <20111124195452.GG13928@atomide.com>
-References: <1321274409-24643-2-git-send-email-rnayak@ti.com>
- <20111114172312.GI31337@atomide.com>
- <4EC1EB9D.1000503@ti.com>
- <CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
- <CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
- <CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
- <CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
- <CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
- <20111122175409.GE31337@atomide.com>
- <CACRpkdaStA_+SiqwnA-=jCi4XusHqcwgVzUUWyDg7byTPq1_JA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/3] ARM: at91/board-dt: remove AIC irq domain from board file
+Date: Thu, 24 Nov 2011 22:56:29 +0100
+Message-ID: <7c73fc61e1dfd855368a052fd62cf94dd8c8bdf6.1322171620.git.nicolas.ferre@atmel.com>
+References: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaStA_+SiqwnA-=jCi4XusHqcwgVzUUWyDg7byTPq1_JA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, Rajendra Nayak <rnayak@ti.com>, linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, linus.walleij@stericsson.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+References: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Adding of irqdomain in AIC code make the specification
+of the irq domain in board file useless.
 
-* Linus Walleij <linus.walleij@linaro.org> [111124 01:29]:
-> On Tue, Nov 22, 2011 at 6:54 PM, Tony Lindgren <tony@atomide.com> wrote:
-> 
-> > Note that with device tree things get simpler for muxing as we can
-> > get rid of the hardcoded grouping of pins in mux drivers. Instead of
-> > hardcoded pingroups, the groups can be created dynamically based on
-> > what the driver DT entries have.
-> 
-> Yes, I know too little about DT to figure out how these should
-> come in.
-> 
-> > The reason why we want to avoid hardcoded pin groups is because trying
-> > to map all the pad combinations in the pinmux driver is not a scalable
-> > way to go. And it's not even possible at least on omaps because of the
-> > huge number of combinations with alternative pins and multiple packages.
-> 
-> Yes, that's a solid case!
+Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/mach-at91/board-dt.c |   15 +--------------
+ 1 files changed, 1 insertions(+), 14 deletions(-)
 
-So far it seems that device tree simplifies things here quite a bit in at
-least two ways:
-
-- We by default have automatically generated 1:1 mapping of devices to
-  groups (of course others can be added too)
-
-- We should be able to support new SoC packages with different pin on
-  existing kernels, like distro kernels, just by modifying the the device
-  tree data ;)
+diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
+index bb6b434..119eda6 100644
+--- a/arch/arm/mach-at91/board-dt.c
++++ b/arch/arm/mach-at91/board-dt.c
+@@ -15,8 +15,6 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/gpio.h>
+-#include <linux/irqdomain.h>
+-#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
  
-> > FYI I'm playing with a DT based pinmux-simple.c driver that should
-> > be pretty generic and work for all kinds of hardware hopefully.
-> 
-> I love it.
-
-Still need few more days with these patches..
+ #include <mach/hardware.h>
+@@ -88,17 +86,6 @@ static void __init ek_add_device_nand(void)
+ 	at91_add_device_nand(&ek_nand_data);
+ }
  
-> > It will be few days before I can post anything though, there are
-> > some pinctrl fwk issues to deal with first. Like the hardcoded
-> > pinmux_maps that assumes that dev entries are static. This means
-> > that multiple instances of pinmux drivers won't work..
-> 
-> I'm not following, but I guess I will understand when I see the
-> patches. The idea behind the current map concept is that you
-> get either a string or struct device * to identify the pin controller
-> and mapped device, that's as far as I thought it out, sorry for
-> any inherent limitations, they're not intentional...
-
-Yeah we can sort those out afterwards. We should probably pass over
-the static board specific mapping as platform_data to the pinmux device
-and make it be part of struct pinctrl_dev. Then new driver instances
-can have their own pctldev->mapping and we can support both platform_data
-and device tree based drivers on the same system. Anyways, I'll try to
-get the initial patches working with just one instance to start with
-so we have something to play
-with.
-
-Regards,
-
-Tony
+-static const struct of_device_id aic_of_match[] __initconst = {
+-	{ .compatible = "atmel,at91rm9200-aic", },
+-	{},
+-};
+-
+-static void __init at91_dt_init_irq(void)
+-{
+-	irq_domain_generate_simple(aic_of_match, 0xfffff000, 0);
+-	at91_init_irq_default();
+-}
+-
+ static void __init at91_dt_device_init(void)
+ {
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+@@ -118,7 +105,7 @@ DT_MACHINE_START(at91sam_dt, "Atmel AT91SAM (Device Tree)")
+ 	.timer		= &at91sam926x_timer,
+ 	.map_io		= at91_map_io,
+ 	.init_early	= ek_init_early,
+-	.init_irq	= at91_dt_init_irq,
++	.init_irq	= at91_init_irq_default,
+ 	.init_machine	= at91_dt_device_init,
+ 	.dt_compat	= at91_dt_board_compat,
+ MACHINE_END
+-- 
+1.7.5.4
