@@ -1,111 +1,68 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] Convert imx6 clock to device tree
-Date: Thu, 24 Nov 2011 20:21:55 +0800
-Message-ID: <20111124122153.GC18060@S2100-06.ap.freescale.net>
-References: <1321926536-671-1-git-send-email-shawn.guo@linaro.org>
- <20111122082314.GB27267@pengutronix.de>
- <20111124025902.GB17979@S2100-06.ap.freescale.net>
- <20111124084923.GW27267@pengutronix.de>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [PATCH v5] power: bq20z75: devicetree init support
+Date: Thu, 24 Nov 2011 22:42:15 +0400
+Message-ID: <20111124184215.GA29135@oksana.dev.rtsoft.ru>
+References: <1316031547-18281-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20111124084923.GW27267-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1316031547-18281-1-git-send-email-rklein@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rhyland Klein <rklein@nvidia.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 24, 2011 at 09:49:23AM +0100, Sascha Hauer wrote:
-> On Thu, Nov 24, 2011 at 10:59:03AM +0800, Shawn Guo wrote:
-> > On Tue, Nov 22, 2011 at 09:23:14AM +0100, Sascha Hauer wrote:
-> > > On Tue, Nov 22, 2011 at 09:48:53AM +0800, Shawn Guo wrote:
-> > > > As I promised to Arnd, I will convert imx6 clock code to common clock
-> > > > framework and in turn device tree at the earliest time.  Here it is.
-> > > 
-> > > Very nice ;) I like the patches.
-> > > 
-> > > Is there a way to improve the way how the entities find their base
-> > > addresses? Currently the C code figures out the base addresses based
-> > > on compatible.
-> > 
-> > May I understand the problem with doing that?
-> > 
-> > > Maybe we could put the crm clocks and anatop clocks into
-> > > two different nodes instead of putting them all directly under clocks{}.
-> > > 
-> > I do not quite understand this.  Are you suggesting we keep using the
-> > static base address definition in C code for ccm and anatop rather than
-> > retrieving them from device tree?  No, we do not want to do this.  So
-> > if we need to get the addresses from device tree anyhow, using
-> > compatible to find the correct node is the best way to me.
-> 
-> What I meant is that currently there are many clock nodes which do have
-> a register offset associated with them, but the base address has to be
-> guessed in C code, like this:
-> 
-> >	if (of_device_is_compatible(np, "fsl,imx6q-pll-sys")) {
-> >		base = anatop_base;
-> >		ops = &pll_sys_ops;
-> >	} else if (of_device_is_compatible(np, "fsl,imx6q-pll-usb")) {
-> >		base = anatop_base;
-> >		ops = &pll_ops;
-> >		powerup_set_bit = true;
-> >	} else if (of_device_is_compatible(np, "fsl,imx6q-pll-av")) {
-> >		base = anatop_base;
-> >		ops = &pll_av_ops;
-> >	} else if (of_device_is_compatible(np, "fsl,imx6q-pll-enet")) {
-> >		base = anatop_base;
-> >		ops = &pll_enet_ops;
-> >	} else if (of_device_is_compatible(np, "fsl,imx6q-pll")) {
-> >		base = anatop_base;
-> >		ops = &pll_ops;
-> >	} else if (of_device_is_compatible(np, "fsl,imx6q-pfd")) {
-> >		base = anatop_base;
-> >		ops = &pfd_ops;
-> >		gate_set_bit = true;
-> >	} else if (of_device_is_compatible(np, "fsl,imx6q-ldb-di-clock")) {
-> >		base = ccm_base;
-> >		ops = &ldb_di_clk_ops;
-> >	}
-> 
-> Wouldn't it be possible to arrange the devicetree like this:
+Hello Rhyland,
 
-Yes, it is possible and actually better.  Thanks for the suggestion.
+Got this:
 
-> 
-> 	ccm@020c4000 {
-> 		compatible = "fsl,imx6q-ccm";
-> 		reg = <0x020c4000 0x4000>;
-> 		interrupts = <0 87 0x04 0 88 0x04>;
-> 		clocks {
-> 			/* put ccm clocks here */
-> 		}
-> 	}
-> 
-> 	anatop@020c8000 {
-> 		compatible = "fsl,imx6q-anatop";
-> 		reg = <0x020c8000 0x1000>;
-> 		interrupts = <0 49 0x04 0 54 0x04 0 127 0x04>;
-> 		clocks {
-> 			/* put anatop clocks here */
-> 		}
-> 	}
-> 
-> Of course this has a high cost on indention levels.
-> 
-I think I will drop node 'clocks' and list those clock nodes directly
-under ccm and anatop nodes to save one level indention.
+  CC [M]  drivers/power/bq20z75.o
+drivers/power/bq20z75.c: In function =E2=80=98bq20z75_of_populate_pdata=
+=E2=80=99:
+drivers/power/bq20z75.c:630:21: error: storage size of =E2=80=98gpio_fl=
+ags=E2=80=99 isn=E2=80=99t known
+drivers/power/bq20z75.c:668:2: error: implicit declaration of function =
+=E2=80=98of_get_named_gpio_flags=E2=80=99 [-Werror=3Dimplicit-function-=
+declaration]
+drivers/power/bq20z75.c:671:19: error: =E2=80=98OF_GPIO_ACTIVE_LOW=E2=80=
+=99 undeclared (first use in this function)
+drivers/power/bq20z75.c:671:19: note: each undeclared identifier is rep=
+orted only once for each function it appears in
+drivers/power/bq20z75.c:630:21: warning: unused variable =E2=80=98gpio_=
+flags=E2=80=99 [-Wunused-variable]
+drivers/power/bq20z75.c:627:29: warning: unused variable =E2=80=98dtid=E2=
+=80=99 [-Wunused-variable]
 
--- 
-Regards,
-Shawn
+I fixed this by...
+
+On Wed, Sep 14, 2011 at 01:19:07PM -0700, Rhyland Klein wrote:
+
+> +#if defined(CONFIG_OF)
+> +#include <linux/of_device.h>
+
+Adding linux/of_gpio.h
+
+> +static const struct of_device_id bq20z75_dt_ids[] =3D {
+> +	{ .compatible =3D "ti,bq20z75" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, bq20z75_dt_ids);
+> +
+> +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
+> +	struct i2c_client *client)
+> +{
+> +	const struct of_device_id *dtid;
+
+And deleting that line.
+
+
+Applied to battery-2.6.git, but please double check if everything
+is OK.
+
+Thanks,
+
+--=20
+Anton Vorontsov
+Email: cbouatmailru@gmail.com
