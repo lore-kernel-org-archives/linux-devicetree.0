@@ -1,79 +1,57 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: DT DMA channel binding for Tegra I2S
-Date: Wed, 23 Nov 2011 15:26:12 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174F08C881@HQMAIL01.nvidia.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF174F08C803@HQMAIL01.nvidia.com>
- <4ECD6BA4.1010607@gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] Convert imx6 clock to device tree
+Date: Thu, 24 Nov 2011 10:59:03 +0800
+Message-ID: <20111124025902.GB17979@S2100-06.ap.freescale.net>
+References: <1321926536-671-1-git-send-email-shawn.guo@linaro.org>
+ <20111122082314.GB27267@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4ECD6BA4.1010607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mark Brown (broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org)" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111122082314.GB27267-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote at Wednesday, November 23, 2011 2:55 PM:
-> On 11/23/2011 03:25 PM, Stephen Warren wrote:
-> > Rob, Grant,
-> >
-> > Re: http://www.spinics.net/lists/arm-kernel/msg148899.html
-> >
-> > Background: Tegra's DMA controller needs to be told which DMA "request
-> > select" to use for each transfer. The identifies which peripheral to
-> > transfer to/from.
-> >
-> > The Tegra I2S driver needs to know its own "request select" value to
-> > pass to the audio driver DMA path. The board files typically provide
-> > this to the driver as an IORESOURCE_DMA. I don't think there's any
-> > standard binding that creates such a resource when instantiating a
-> > platform device from device tree, and the discussions I found when
-> > looking for one didn't seem to reach conclusion that there should be
-> > one. So, I proposed the following property in the I2S driver's DT
-> > binding for this:
+On Tue, Nov 22, 2011 at 09:23:14AM +0100, Sascha Hauer wrote:
+> On Tue, Nov 22, 2011 at 09:48:53AM +0800, Shawn Guo wrote:
+> > As I promised to Arnd, I will convert imx6 clock code to common clock
+> > framework and in turn device tree at the earliest time.  Here it is.
 > 
-> I think this is a case of every platform being different and
-> IORESOURCE_DMA is not too widely used. Even on PPC, there's not a
-> standard way.
+> Very nice ;) I like the patches.
 > 
-> > Doc:
-> >
-> > - dma-channel : The Tegra DMA controller's channel ID for this I2S controller
-> >
-> > Example:
-> >
-> > i2s@70002800 {
-> > 	compatible = "nvidia,tegra20-i2s";
-> > 	reg = <0x70002800 0x200>;
-> > 	interrupts = < 45 >;
-> > 	dma-channel = < 2 >;
-> > };
-> >
-> > Does that look reasonable? Or, should I pursue some more standardized
-> > solution?
+> Is there a way to improve the way how the entities find their base
+> addresses? Currently the C code figures out the base addresses based
+> on compatible.
+
+May I understand the problem with doing that?
+
+> Maybe we could put the crm clocks and anatop clocks into
+> two different nodes instead of putting them all directly under clocks{}.
 > 
-> I had some discussion with Thomas Abraham about this for the pl330 dma:
+I do not quite understand this.  Are you suggesting we keep using the
+static base address definition in C code for ccm and anatop rather than
+retrieving them from device tree?  No, we do not want to do this.  So
+if we need to get the addresses from device tree anyhow, using
+compatible to find the correct node is the best way to me.
+
+> Could you split the last patch into two, one adding new device tree
+> clock support in a new file and another removing the old clock support?
+> This would help reviewing.
 > 
-> http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-September/008269.html
-> 
-> So I would just add a phandle to the dma controller here.
-
-So you mean just modify the binding as follows:
-
-apbdma: dma@NNNNN { ... };
-
-i2s@70002800 {
-	dma-channel = < &apbdma, 2 >;
-};
-
-... and leave the code I quoted as-is?
-
-I /think/ the rest of the patch you linked isn't really relevant to Tegra
-at present, since it isn't ported to the DMA engine (yet?).
-
-Thanks.
+Yes, will do.  I would also rename the new file back to clock-imx6q.c
+in the last patch, because I want to keep using that file name.
 
 -- 
-nvpublic
+Regards,
+Shawn
