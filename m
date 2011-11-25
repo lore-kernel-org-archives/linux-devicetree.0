@@ -1,116 +1,103 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCH 1/3] ARM: at91/aic: add device tree support for AIC
-Date: Fri, 25 Nov 2011 15:28:17 +0000
-Message-ID: <20111125152817.GA8866@totoro>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: at91/gpio: add irqdomain to gpio interrupts
+Date: Fri, 25 Nov 2011 09:36:36 -0600
+Message-ID: <CAL_JsqLnNtou2gPzEJ4U3_m=RB5FZx3HLoNU5WFAGZBAWSj1tw@mail.gmail.com>
 References: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
- <20111124222601.GA28582@gallagher>
- <20111125135106.GN15531@game.jcrosoft.org>
+ <edeb4da00527914f0e1038461539843c46ab0b50.1322171620.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111125135106.GN15531@game.jcrosoft.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Jamie Iles <jamie@jamieiles.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <edeb4da00527914f0e1038461539843c46ab0b50.1322171620.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 25, 2011 at 02:51:06PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 22:26 Thu 24 Nov     , Jamie Iles wrote:
-> > Hi Nicolas,
-> > On Thu, Nov 24, 2011 at 10:56:27PM +0100, Nicolas Ferre wrote:
-[...]
-> > > +#if defined(CONFIG_OF)
-> > > +static struct of_device_id aic_ids[]  = {
-> > > +	{ .compatible = "atmel,at91rm9200-aic" },
-> > > +	{ /*sentinel*/ }
-> > > +};
-> > > +
-> > > +static int __init at91_aic_of_init(void)
-> > > +{
-> > > +	struct device_node *np;
-> > > +
-> > > +	np = of_find_matching_node(NULL, aic_ids);
-> > > +	if (np == NULL)
-> > > +		return -ENODEV;
-> > > +
-> > > +	at91_aic_base = of_iomap(np, 0);
-> > > +	at91_aic_domain.of_node = np;
-> > 
-> > I think this needs to be:
-> > 
-> > 	at91_aic_domain.of_node = of_node_get(np);
-> > 
-> > to keep the reference count.
-> > 
-> > > +	/* Keep refcount of the node */
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +#else
-> > > +static int __init at91_aic_of_init(void)
-> > > +{
-> > > +	return -ENOSYS;
-> > > +}
-> > > +#endif
-> > 
-> > I think it's preferred if you use of_irq_init() here as it can handle 
-> > the ordering of IRQ controllers.  There are GIC and VIC bindings in 
-> > -next that use this and provide a way for non-DT platforms to still use 
-> > the drivers.
-> which is the case here as if the of_init fail we failback to the non-dt init
-> 
-> and this IP is AT91 only
+On Thu, Nov 24, 2011 at 3:56 PM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wr=
+ote:
+> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> ---
+> =A0arch/arm/mach-at91/gpio.c | =A0 19 +++++++++++++++++++
+> =A01 files changed, 19 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
+> index 74d6783..45a39d0 100644
+> --- a/arch/arm/mach-at91/gpio.c
+> +++ b/arch/arm/mach-at91/gpio.c
+> @@ -20,6 +20,7 @@
+> =A0#include <linux/list.h>
+> =A0#include <linux/module.h>
+> =A0#include <linux/io.h>
+> +#include <linux/irqdomain.h>
+>
+> =A0#include <mach/hardware.h>
+> =A0#include <mach/at91_pio.h>
+> @@ -32,6 +33,7 @@ struct at91_gpio_chip {
+> =A0 =A0 =A0 =A0int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 id; =A0 =A0 =
+=A0 =A0 =A0 =A0 /* ID of register bank */
+> =A0 =A0 =A0 =A0void __iomem =A0 =A0 =A0 =A0 =A0 =A0*regbase; =A0 =A0 =A0 =
+/* Base of register bank */
+> =A0 =A0 =A0 =A0struct clk =A0 =A0 =A0 =A0 =A0 =A0 =A0*clock; =A0 =A0 =A0 =
+=A0 /* associated clock */
+> + =A0 =A0 =A0 struct irq_domain =A0 =A0 =A0 domain; =A0 =A0 =A0 =A0 /* as=
+sociated irq domain */
+> =A0};
+>
+> =A0#define to_at91_gpio_chip(c) container_of(c, struct at91_gpio_chip, ch=
+ip)
+> @@ -483,6 +485,20 @@ postcore_initcall(at91_gpio_debugfs_init);
+> =A0/*--------------------------------------------------------------------=
+------*/
+>
+> =A0/*
+> + * irqdomain initialization: pile up irqdomains on top of AIC range
+> + */
+> +static void __init at91_gpio_irqdomain(struct at91_gpio_chip *at91_gpio)
+> +{
+> + =A0 =A0 =A0 struct irq_domain =A0 =A0 =A0 *gpio_irq_d =3D &at91_gpio->d=
+omain;
+> +
+> + =A0 =A0 =A0 gpio_irq_d->irq_base =3D
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpio_irq_d->hwirq_base =3D gpio_to_irq(at91=
+_gpio->chip.base);
 
-Right, but it's not using the of_irq_init() interface which is the 
-standard way of registering interrupt controllers and will correctly 
-dependencies for you.
+This is wrong. hwirq_base is the first irq number relative to the
+irq_chip and is generally 0.
 
-So if you could have something like:
+irq_base should come from the platform if you need it hardcoded.
+Otherwise, it should come from irq_alloc_descs.
 
-void __init __at91_aic_init(unsigned int priority[NR_AIC_IRQS],
-			    void __iomem *regs,
-			    struct device_node *np)
-{
-	/*
-	 * Do all of the writes to the AIC itself and configure 
-	 * the IRQ domain.
-	 */
-}
+> + =A0 =A0 =A0 gpio_irq_d->nr_irq =3D at91_gpio->chip.ngpio;
+> + =A0 =A0 =A0 gpio_irq_d->ops =3D &irq_domain_simple_ops;
+> + =A0 =A0 =A0 irq_domain_add(gpio_irq_d);
+> +}
+> +
+> +/*
+> =A0* This lock class tells lockdep that GPIO irqs are in a different
+> =A0* category than their parents, so it won't report false recursion.
+> =A0*/
+> @@ -517,6 +533,9 @@ void __init at91_gpio_irq_setup(void)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0set_irq_flags(irq, IRQF_VA=
+LID);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
+>
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* setup irq domain for this GPIO controlle=
+r */
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 at91_gpio_irqdomain(this);
 
-void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
-{
-	void __iomem *base = ioremap(AT91_AIC, 512);
+I would just inline this code.
 
-	__at91_aic_init(priority, base, NULL);
-}
+Can you use the generic irqchip here? I'm working on a patch to add
+irqdomain support to that.
 
-int __init at91_aic_of_init(struct device_node *node,
-			    struct device_node *parent)
-{
-	void __iomem *regs = of_iomap(node, 0);
-
-	/*
-	 * Get priorities from the DT.  If this was an array of cells 
-	 * then that should be okay.
-	 */
-	__at91_aic_init(dt_priorities, regs, node);
-}
-
-Then the DT based board initialisation can do:
-
-static const struct of_device_id at91_irq_of_match[] __initconst = {
-	{ .compatible = "atmel,at91-aic", .data = at91_aic_of_init },
-	{}
-};
-
-static void __init at91_of_irq_init(void)
-{
-	of_irq_init(at91_of_irq_init);
-}
-
-Which is consistent with other platforms.  However this does require 
-that the priorities are encoded in the device-tree, but I guess that's a 
-good thing anyway isn't it?
-
-Jamie
+Rob
