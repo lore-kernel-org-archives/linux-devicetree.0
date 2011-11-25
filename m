@@ -1,87 +1,144 @@
-From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: RFC of_boardconfig
-Date: Fri, 25 Nov 2011 14:52:40 +0100
-Message-ID: <4ECF9DA8.8000504@openwrt.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/3] ARM: at91/aic: add device tree support for AIC
+Date: Fri, 25 Nov 2011 14:51:06 +0100
+Message-ID: <20111125135106.GN15531@game.jcrosoft.org>
+References: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
+ <20111124222601.GA28582@gallagher>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20111124222601.GA28582@gallagher>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+On 22:26 Thu 24 Nov     , Jamie Iles wrote:
+> Hi Nicolas,
+> 
+> On Thu, Nov 24, 2011 at 10:56:27PM +0100, Nicolas Ferre wrote:
+> > Ioremap registers from DT specification and adding
+> > of a simple irq domain for AIC interrupts.
+> > 
+> > Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> > Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> > ---
+> 
+> Apologies if I've missed it somewhere but I think this needs to be 
+> documented in Documentation/devicetree.
+> 
+> [...]
+> > diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
+> > index be6b639..80783b0 100644
+> > --- a/arch/arm/mach-at91/irq.c
+> > +++ b/arch/arm/mach-at91/irq.c
+> > @@ -24,6 +24,8 @@
+> >  #include <linux/module.h>
+> >  #include <linux/mm.h>
+> >  #include <linux/types.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/irqdomain.h>
+> >  
+> >  #include <mach/hardware.h>
+> >  #include <asm/irq.h>
+> > @@ -34,6 +36,7 @@
+> >  #include <asm/mach/map.h>
+> >  
+> >  void __iomem *at91_aic_base;
+> > +static struct irq_domain at91_aic_domain;
+> >  
+> >  static void at91_aic_mask_irq(struct irq_data *d)
+> >  {
+> > @@ -127,14 +130,44 @@ static struct irq_chip at91_aic_chip = {
+> >  	.irq_set_wake	= at91_aic_set_wake,
+> >  };
+> >  
+> > +#if defined(CONFIG_OF)
+> > +static struct of_device_id aic_ids[]  = {
+> > +	{ .compatible = "atmel,at91rm9200-aic" },
+> > +	{ /*sentinel*/ }
+> > +};
+> > +
+> > +static int __init at91_aic_of_init(void)
+> > +{
+> > +	struct device_node *np;
+> > +
+> > +	np = of_find_matching_node(NULL, aic_ids);
+> > +	if (np == NULL)
+> > +		return -ENODEV;
+> > +
+> > +	at91_aic_base = of_iomap(np, 0);
+> > +	at91_aic_domain.of_node = np;
+> 
+> I think this needs to be:
+> 
+> 	at91_aic_domain.of_node = of_node_get(np);
+> 
+> to keep the reference count.
+> 
+> > +	/* Keep refcount of the node */
+> > +
+> > +	return 0;
+> > +}
+> > +#else
+> > +static int __init at91_aic_of_init(void)
+> > +{
+> > +	return -ENOSYS;
+> > +}
+> > +#endif
+> 
+> I think it's preferred if you use of_irq_init() here as it can handle 
+> the ordering of IRQ controllers.  There are GIC and VIC bindings in 
+> -next that use this and provide a way for non-DT platforms to still use 
+> the drivers.
+which is the case here as if the of_init fail we failback to the non-dt init
 
-before starting to implement the following proposed wrappers, i wanted
-to get some more views on the feasibility of these wrappers.
+and this IP is AT91 only
 
-On most routers that OpenWRT supports, we will find a sector within a
-MTD device that holds the board specific info like MAC, wifi calibration
-data ...
+Best Regards,
+J.
+> 
+> >  /*
+> >   * Initialize the AIC interrupt controller.
+> >   */
+> >  void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
+> >  {
+> >  	unsigned int i;
+> > +	int ret;
+> >  
+> > -	at91_aic_base = ioremap(AT91_AIC, 512);
+> > +	ret = at91_aic_of_init();
+> > +	if (ret < 0)
+> > +		at91_aic_base = ioremap(AT91_AIC, 512);
+> >  
+> >  	if (!at91_aic_base)
+> >  		panic("Impossible to ioremap AT91_AIC\n");
+> > @@ -169,4 +202,10 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
+> >  	/* Disable and clear all interrupts initially */
+> >  	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
+> >  	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
+> > +
+> > +	/* Add irq domain for AIC */
+> > +	at91_aic_domain.irq_base = at91_aic_domain.hwirq_base = 0;
+> > +	at91_aic_domain.nr_irq = NR_AIC_IRQS;
+> > +	at91_aic_domain.ops = &irq_domain_simple_ops;
+> 
+> irq_domain_simple_ops is only exported when CONFIG_OF_IRQ=y, so this 
+> probably won't work for !CONFIG_USE_OF.
+so we need to use 
+	if (IS_BUILT_IN(CONFIG_USE_OF)) {
+	}
 
-These wrappers try to provide a generic representation of these board
-configuration sectors.
 
-Thank you,
-John
-
-
-
-Documentation/devicetree/bindings/boardconfig.txt -->
-
-The boardconfig master node requires the following properties:
-- compatible    - should be set to "boardconfig"
-- partition     - the partition that the data is stored in
-                        "<&partition offset size>"
-
-boardconfig slave nodes require the following properties:
-- label         - the name that the config element gets exported by
-- data          - information describing the actual data
-                        "<offset size validator>"
-
-both node types allow to set the following optional properties
-- magic         - check for magic sequence at correct offset
-                        <offset byte1 byte2 ... byteN>
-- no-export     - if this property is set the data will *not* be
-		  exported via sysfs
-
-It is possible to define N of these sections within the device tree.
-
-Boardconfig example for a device with 2 macs and a wmac eeprom:
-        eep: boardconfig {
-                compatible = "boarconfig";
-                partition = <&boardconfpart 0x0 0x100>;
-                magic = <0x0 0x11 0x22>;
-                lanmac {
-                        label = "LAN";
-                        data = <0x100 0x6>;
-                };
-
-                wanmac {
-                        label = "WAN";
-                        data = <0x106 0x6>;
-                };
-
-                ath9keeprom {
-                        label = "eeprom";
-                        partition = <0x200 0x200>;
-                        magic = <0x0 0x55 0xaa 0xaa 0x55>;
-                        no-export;
-                };
-        };
-
-you can are then able to reference these properties from other nodes:
-        ethernet {
-                compatible = "ethernet";
-                phy-mode = "mii";
-                //mac-address = [ 00 11 22 33 44 55 ];
-                mac-boardconf = <&eep lanmac>;
-        };
+Best Regards,
+J.
