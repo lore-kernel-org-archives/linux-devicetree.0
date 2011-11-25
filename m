@@ -1,130 +1,39 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCH 1/3] ARM: at91/aic: add device tree support for AIC
-Date: Thu, 24 Nov 2011 22:26:01 +0000
-Message-ID: <20111124222601.GA28582@gallagher>
-References: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC 1/3] pinctrl: add a driver for the OMAP pinmux
+Date: Fri, 25 Nov 2011 09:53:45 +0100
+Message-ID: <CACRpkdabC1Tf=bf-LV4_2XSOrWqU7sr_rrjXFaqv3GnKM54UGA@mail.gmail.com>
+References: <1321274409-24643-2-git-send-email-rnayak@ti.com>
+	<20111114172312.GI31337@atomide.com>
+	<4EC1EB9D.1000503@ti.com>
+	<CACRpkdYuw+AfVtgfsbpkd=uvfWd8yE-n25EC0FDffhiGUS2MBw@mail.gmail.com>
+	<CAJuYYwSgzkDed5-R=PaBR_F6ssj_EhxLDfCREXUA=UaynkgZyg@mail.gmail.com>
+	<CACRpkdbBQoOU8hyew6tXth3Ohrg5_rN7M+tbVsYFcOjgq73aCw@mail.gmail.com>
+	<CAJuYYwT_useS-8cH+qfDu5t7wh73yUuJAVXMjP5CXBS2VM3bag@mail.gmail.com>
+	<CACRpkdax0GK=mNNao7FPc6JG0RwVywSEzGJPC_u73iJ_eOTgqQ@mail.gmail.com>
+	<20111122175409.GE31337@atomide.com>
+	<CACRpkdaStA_+SiqwnA-=jCi4XusHqcwgVzUUWyDg7byTPq1_JA@mail.gmail.com>
+	<20111124195452.GG13928@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, robherring2@gmail.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20111124195452.GG13928@atomide.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, Rajendra Nayak <rnayak@ti.com>, linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, linus.walleij@stericsson.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On Thu, Nov 24, 2011 at 8:54 PM, Tony Lindgren <tony@atomide.com> wrote:
 
-On Thu, Nov 24, 2011 at 10:56:27PM +0100, Nicolas Ferre wrote:
-> Ioremap registers from DT specification and adding
-> of a simple irq domain for AIC interrupts.
-> 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> ---
+> We should probably pass over
+> the static board specific mapping as platform_data to the pinmux device
+> and make it be part of struct pinctrl_dev. Then new driver instances
+> can have their own pctldev->mapping and we can support both platform_data
+> and device tree based drivers on the same system.
 
-Apologies if I've missed it somewhere but I think this needs to be 
-documented in Documentation/devicetree.
+That sounds like a real good idea and I think it'll work fine.
 
-[...]
-> diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
-> index be6b639..80783b0 100644
-> --- a/arch/arm/mach-at91/irq.c
-> +++ b/arch/arm/mach-at91/irq.c
-> @@ -24,6 +24,8 @@
->  #include <linux/module.h>
->  #include <linux/mm.h>
->  #include <linux/types.h>
-> +#include <linux/of_address.h>
-> +#include <linux/irqdomain.h>
->  
->  #include <mach/hardware.h>
->  #include <asm/irq.h>
-> @@ -34,6 +36,7 @@
->  #include <asm/mach/map.h>
->  
->  void __iomem *at91_aic_base;
-> +static struct irq_domain at91_aic_domain;
->  
->  static void at91_aic_mask_irq(struct irq_data *d)
->  {
-> @@ -127,14 +130,44 @@ static struct irq_chip at91_aic_chip = {
->  	.irq_set_wake	= at91_aic_set_wake,
->  };
->  
-> +#if defined(CONFIG_OF)
-> +static struct of_device_id aic_ids[]  = {
-> +	{ .compatible = "atmel,at91rm9200-aic" },
-> +	{ /*sentinel*/ }
-> +};
-> +
-> +static int __init at91_aic_of_init(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	np = of_find_matching_node(NULL, aic_ids);
-> +	if (np == NULL)
-> +		return -ENODEV;
-> +
-> +	at91_aic_base = of_iomap(np, 0);
-> +	at91_aic_domain.of_node = np;
+You can use the map in mach-u300/core.c as guinea pig for refactoring if you
+like. I think that's the only map that's in-tree ftm.
 
-I think this needs to be:
-
-	at91_aic_domain.of_node = of_node_get(np);
-
-to keep the reference count.
-
-> +	/* Keep refcount of the node */
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int __init at91_aic_of_init(void)
-> +{
-> +	return -ENOSYS;
-> +}
-> +#endif
-
-I think it's preferred if you use of_irq_init() here as it can handle 
-the ordering of IRQ controllers.  There are GIC and VIC bindings in 
--next that use this and provide a way for non-DT platforms to still use 
-the drivers.
-
->  /*
->   * Initialize the AIC interrupt controller.
->   */
->  void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
->  {
->  	unsigned int i;
-> +	int ret;
->  
-> -	at91_aic_base = ioremap(AT91_AIC, 512);
-> +	ret = at91_aic_of_init();
-> +	if (ret < 0)
-> +		at91_aic_base = ioremap(AT91_AIC, 512);
->  
->  	if (!at91_aic_base)
->  		panic("Impossible to ioremap AT91_AIC\n");
-> @@ -169,4 +202,10 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
->  	/* Disable and clear all interrupts initially */
->  	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
->  	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
-> +
-> +	/* Add irq domain for AIC */
-> +	at91_aic_domain.irq_base = at91_aic_domain.hwirq_base = 0;
-> +	at91_aic_domain.nr_irq = NR_AIC_IRQS;
-> +	at91_aic_domain.ops = &irq_domain_simple_ops;
-
-irq_domain_simple_ops is only exported when CONFIG_OF_IRQ=y, so this 
-probably won't work for !CONFIG_USE_OF.
-
-> +	irq_domain_add(&at91_aic_domain);
->  }
-> -- 
-> 1.7.5.4
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Thanks,
+Linus Walleij
