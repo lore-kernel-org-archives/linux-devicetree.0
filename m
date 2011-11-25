@@ -1,91 +1,87 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: GPIO/IRQ expander cannot map interrupt
-Date: Fri, 25 Nov 2011 11:45:11 +0100
-Message-ID: <20111125104511.GA16748@avionic-0098.adnet.avionic-design.de>
+From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: RFC of_boardconfig
+Date: Fri, 25 Nov 2011 14:52:40 +0100
+Message-ID: <4ECF9DA8.8000504@openwrt.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi All,
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+before starting to implement the following proposed wrappers, i wanted
+to get some more views on the feasibility of these wrappers.
 
-Hi,
+On most routers that OpenWRT supports, we will find a sector within a
+MTD device that holds the board specific info like MAC, wifi calibration
+data ...
 
-The following is an extract from a device tree of a Tegra2-based board I'm
-working on:
+These wrappers try to provide a generic representation of these board
+configuration sectors.
 
-	i2c@7000c000 {
-		clock-frequency = <400000>;
+Thank you,
+John
 
-		keypad1: sx8634@2b {
-			compatible = "sx8634";
-			reg = <0x2b>;
-			interrupt-parent = <&gpioext>;
-			interrupts = <2>;
-		};
 
-		gpioext: gpio-ad8p@41 {
-			compatible = "gpio-ad8p";
-			reg = <0x41>;
-			interrupts = <320>; /* gpio PU0 */
 
-			gpio-controller;
-			#gpio-cells = <2>;
+Documentation/devicetree/bindings/boardconfig.txt -->
 
-			interrupt-controller;
-			#interrupt-cells = <1>;
-		};
-	};
+The boardconfig master node requires the following properties:
+- compatible    - should be set to "boardconfig"
+- partition     - the partition that the data is stored in
+                        "<&partition offset size>"
 
-	i2c@7000c400 {
-		clock-frequency = <400000>;
+boardconfig slave nodes require the following properties:
+- label         - the name that the config element gets exported by
+- data          - information describing the actual data
+                        "<offset size validator>"
 
-		keypad2: sx8634@2b {
-			compatible = "sx8634";
-			reg = <0x2b>;
-			interrupt-parent = <&gpioext>;
-			interrupts = <3>;
-		};
-	};
+both node types allow to set the following optional properties
+- magic         - check for magic sequence at correct offset
+                        <offset byte1 byte2 ... byteN>
+- no-export     - if this property is set the data will *not* be
+		  exported via sysfs
 
-So basically I have a GPIO/IRQ expander on the first I2C bus (gpioext) to
-which the two keypad (sx8634) chips are connected. They use GPIOs 2 and 3 of
-the expander as interrupts.
+It is possible to define N of these sections within the device tree.
 
-This all seems to work partially: the gpioext is properly detected as parent
-for both keypad controllers during I2C device registration. Within the
-gpio-ad8p driver I register an IRQ domain (using irq_domain_add_simple()) in
-order to allow the OF code to properly map the IRQs for the controller's
-children.
+Boardconfig example for a device with 2 macs and a wmac eeprom:
+        eep: boardconfig {
+                compatible = "boarconfig";
+                partition = <&boardconfpart 0x0 0x100>;
+                magic = <0x0 0x11 0x22>;
+                lanmac {
+                        label = "LAN";
+                        data = <0x100 0x6>;
+                };
 
-The problem, however, is that the keypad I2C devices are registered before the
-gpioext device is probed, which results in a situation where the IRQs cannot
-be mapped because the gpioext device hasn't had a chance to register the IRQ
-domain yet.
+                wanmac {
+                        label = "WAN";
+                        data = <0x106 0x6>;
+                };
 
-Is there anything I can do to make this work? Perhaps the OF code needs to be
-patched to ensure that devices which have the gpio-/interrupt-controller
-properties are always probed before other devices are registered?
+                ath9keeprom {
+                        label = "eeprom";
+                        partition = <0x200 0x200>;
+                        magic = <0x0 0x55 0xaa 0xaa 0x55>;
+                        no-export;
+                };
+        };
 
-Thierry
-
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk7PcbcACgkQZ+BJyKLjJp8dlACfUg0vcFqATN5FiAzTyJphmFpO
-/mQAnRHSjeSDNkyWq48pY7m8OHmmysKK
-=GD9P
------END PGP SIGNATURE-----
-
---SLDf9lqlvOQaIe6s--
+you can are then able to reference these properties from other nodes:
+        ethernet {
+                compatible = "ethernet";
+                phy-mode = "mii";
+                //mac-address = [ 00 11 22 33 44 55 ];
+                mac-boardconf = <&eep lanmac>;
+        };
