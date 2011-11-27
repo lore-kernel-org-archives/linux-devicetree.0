@@ -1,88 +1,51 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: of_irq_init() stopped working in 3.2-rc3
-Date: Sat, 26 Nov 2011 10:05:21 -0600
-Message-ID: <CAL_JsqLs3WAod3nuPV7cqYN-PmmbUwQzJHoMe6cXLMeg1XPGYA@mail.gmail.com>
-References: <1322244534.22757.7.camel@hornet.cambridge.arm.com>
+Subject: Re: DT DMA channel binding for Tegra I2S
+Date: Sat, 26 Nov 2011 22:07:01 -0600
+Message-ID: <4ED1B765.9070107@gmail.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF174F08C803@HQMAIL01.nvidia.com> <4ECD6BA4.1010607@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF174F08C881@HQMAIL01.nvidia.com> <CAL_JsqLk=ExaPoy9f3CqEthjZsu7CVmAwcckpk5PyJA-NhMGVA@mail.gmail.com> <20111125160908.GF5315@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8483456670863466768=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1322244534.22757.7.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20111125160908.GF5315-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============8483456670863466768==
-Content-Type: multipart/alternative; boundary=e89a8f64738dcaa11504b2a56f9e
+Mark,
 
---e89a8f64738dcaa11504b2a56f9e
-Content-Type: text/plain; charset=ISO-8859-1
+On 11/25/2011 10:09 AM, Mark Brown wrote:
+> On Fri, Nov 25, 2011 at 09:55:23AM -0600, Rob Herring wrote:
+> 
+>> Although, I think you are possibly missing some other properties for
+>> i2s mode like word size and master/slave mode. I think the ideal case
+>> is that a single ASoC platform driver for DT could handle multiple
+>> SoCs.
+> 
+> No.  You're not going to be able to get a single binding which handles
+> the setup for all systems based off a given SoC let alone multiple SoCs.
+> It is possible to come up with some subsets which work over multiple
+> boards but that's going to be outside the binding for the I2S controller
+> and in a board audio hardware binding for the subset.
 
-On Nov 25, 2011 12:08 PM, "Pawel Moll" <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
->
-> Hi Rob,
->
-> Because your dc9372808412edbc653a675a526c2ee6c0c14a91 "of/irq:
-> of_irq_find_parent: check for parent equal to child" got reverted in
-> 3.2-rc3, the of_irq_init() doesn't work, as...
->
+I never said a single binding. Part of device tree is describing how
+devices are connected together which is a large part of the audio
+configuration. Whether there's one common driver or not doesn't really
+matter. The important part right now is to define the bindings and do so
+in a common way where possible.
 
-Snip...
+My original point really was that when defining a binding, it should be
+as complete as possible rather than done incrementally over time. You
+are describing the h/w, and that's not changing. For an i2s block, only
+having a dma channel is definitely not complete.
 
-> ... the desc->interrupt_parent is not NULL for the root interrupt
-controller
-> any more...
->
-> I've temporarily worked the problem around by re-applying the
-> of_irq_find_parent() change.
->
-You can also add "interrupt-parent;" to your gic DT node. I plan to send a
-fix soon.
+> This has been discussed repeatedly, we really need to work out how to
+> educate device tree people about this stuff, it gets *very* repetitive
+> having the discussion over and over again.
+
+As you might guess, audio is not an area I have been spending time on
+recently. Perhaps seeing a complete binding with all the pieces (codec,
+i2s, misc gpio's, etc.) would help educate us.
 
 Rob
-
---e89a8f64738dcaa11504b2a56f9e
-Content-Type: text/html; charset=ISO-8859-1
-
-<p><br>
-On Nov 25, 2011 12:08 PM, &quot;Pawel Moll&quot; &lt;<a href="mailto:pawel.moll-5wv7dgnIgG8@public.gmane.org">pawel.moll-5wv7dgnIgG8@public.gmane.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; Hi Rob,<br>
-&gt;<br>
-&gt; Because your dc9372808412edbc653a675a526c2ee6c0c14a91 &quot;of/irq:<br>
-&gt; of_irq_find_parent: check for parent equal to child&quot; got reverted in<br>
-&gt; 3.2-rc3, the of_irq_init() doesn&#39;t work, as...<br>
-&gt;</p>
-<p>Snip...</p>
-<p>&gt; ... the desc-&gt;interrupt_parent is not NULL for the root interrupt controller<br>
-&gt; any more...<br>
-&gt;<br>
-&gt; I&#39;ve temporarily worked the problem around by re-applying the<br>
-&gt; of_irq_find_parent() change.<br>
-&gt;<br>
-You can also add &quot;interrupt-parent;&quot; to your gic DT node. I plan to send a fix soon.</p>
-<p>Rob<br>
-</p>
-
---e89a8f64738dcaa11504b2a56f9e--
-
---===============8483456670863466768==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8483456670863466768==--
