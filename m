@@ -1,31 +1,33 @@
 From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH 8/8] staging: octeon_ethernet: Convert to use device tree.
-Date: Sat, 26 Nov 2011 18:04:44 -0800
-Message-ID: <20111127020444.GA32071@kroah.com>
-References: <1320978124-13042-1-git-send-email-ddaney.cavm@gmail.com>
- <1320978124-13042-9-git-send-email-ddaney.cavm@gmail.com>
+Subject: Re: [PATCH v2 0/4] OMAP serial device tree support
+Date: Sat, 26 Nov 2011 19:36:42 -0800
+Message-ID: <20111127033642.GA28378@kroah.com>
+References: <1321969456-24266-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1320978124-13042-9-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ddaney.cavm@gmail.com
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>, devel@driverdev.osuosl.org
+In-Reply-To: <1321969456-24266-1-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, khilman@ti.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 10, 2011 at 06:22:04PM -0800, ddaney.cavm@gmail.com wrote:
-> From: David Daney <david.daney@cavium.com>
+On Tue, Nov 22, 2011 at 07:14:12PM +0530, Rajendra Nayak wrote:
+> v2 is based on the latest omap-serial runtime patches, which
+> can be found here[1]
 > 
-> Get MAC address and PHY connection from the device tree.
+> The series passes minimal data that allows serial console
+> boot, with UART's initialised from device tree.
+> However some of low power support for UART and remote
+> wakeup needs more work.
+> Boot tested on OMAP4 panda and OMAP4 sdp boards.
 > 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@suse.de>
+> Patches can be found here..
+> git://gitorious.org/omap-pm/linux.git for-dt/serial
 
-Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
-
-This usually goes through the MIPS tree, so I'll let Ralf take it.
+What tree are these going to go through, some device tree one, or do you
+want me to take the serial driver patches?
 
 thanks,
 
