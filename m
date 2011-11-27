@@ -1,51 +1,32 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DT DMA channel binding for Tegra I2S
-Date: Sat, 26 Nov 2011 22:07:01 -0600
-Message-ID: <4ED1B765.9070107@gmail.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF174F08C803@HQMAIL01.nvidia.com> <4ECD6BA4.1010607@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF174F08C881@HQMAIL01.nvidia.com> <CAL_JsqLk=ExaPoy9f3CqEthjZsu7CVmAwcckpk5PyJA-NhMGVA@mail.gmail.com> <20111125160908.GF5315@opensource.wolfsonmicro.com>
+From: Greg KH <greg@kroah.com>
+Subject: Re: [PATCH 8/8] staging: octeon_ethernet: Convert to use device tree.
+Date: Sat, 26 Nov 2011 18:04:44 -0800
+Message-ID: <20111127020444.GA32071@kroah.com>
+References: <1320978124-13042-1-git-send-email-ddaney.cavm@gmail.com>
+ <1320978124-13042-9-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20111125160908.GF5315-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1320978124-13042-9-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ddaney.cavm@gmail.com
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@suse.de>, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-Mark,
-
-On 11/25/2011 10:09 AM, Mark Brown wrote:
-> On Fri, Nov 25, 2011 at 09:55:23AM -0600, Rob Herring wrote:
+On Thu, Nov 10, 2011 at 06:22:04PM -0800, ddaney.cavm@gmail.com wrote:
+> From: David Daney <david.daney@cavium.com>
 > 
->> Although, I think you are possibly missing some other properties for
->> i2s mode like word size and master/slave mode. I think the ideal case
->> is that a single ASoC platform driver for DT could handle multiple
->> SoCs.
+> Get MAC address and PHY connection from the device tree.
 > 
-> No.  You're not going to be able to get a single binding which handles
-> the setup for all systems based off a given SoC let alone multiple SoCs.
-> It is possible to come up with some subsets which work over multiple
-> boards but that's going to be outside the binding for the I2S controller
-> and in a board audio hardware binding for the subset.
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@suse.de>
 
-I never said a single binding. Part of device tree is describing how
-devices are connected together which is a large part of the audio
-configuration. Whether there's one common driver or not doesn't really
-matter. The important part right now is to define the bindings and do so
-in a common way where possible.
+Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
 
-My original point really was that when defining a binding, it should be
-as complete as possible rather than done incrementally over time. You
-are describing the h/w, and that's not changing. For an i2s block, only
-having a dma channel is definitely not complete.
+This usually goes through the MIPS tree, so I'll let Ralf take it.
 
-> This has been discussed repeatedly, we really need to work out how to
-> educate device tree people about this stuff, it gets *very* repetitive
-> having the discussion over and over again.
+thanks,
 
-As you might guess, audio is not an area I have been spending time on
-recently. Perhaps seeing a complete binding with all the pieces (codec,
-i2s, misc gpio's, etc.) would help educate us.
-
-Rob
+greg k-h
