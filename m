@@ -1,70 +1,111 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: DT DMA channel binding for Tegra I2S
-Date: Sun, 27 Nov 2011 12:02:02 +0000
-Message-ID: <20111127120202.GI2896@opensource.wolfsonmicro.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF174F08C803@HQMAIL01.nvidia.com>
- <4ECD6BA4.1010607@gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174F08C881@HQMAIL01.nvidia.com>
- <CAL_JsqLk=ExaPoy9f3CqEthjZsu7CVmAwcckpk5PyJA-NhMGVA@mail.gmail.com>
- <20111125160908.GF5315@opensource.wolfsonmicro.com>
- <4ED1B765.9070107@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] irq: fix possible null-pointer deref irq_domain_to_irq
+Date: Sun, 27 Nov 2011 09:11:01 -0600
+Message-ID: <4ED25305.8080605@gmail.com>
+References: <1320922383-15312-1-git-send-email-jamie@jamieiles.com>
+ <20111110111446.GB16018@totoro> <4EBBD39C.9000400@gmail.com>
+ <20111123122308.GA7382@totoro> <20111125153553.GB8866@totoro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4ED1B765.9070107-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111125153553.GB8866@totoro>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 26, 2011 at 10:07:01PM -0600, Rob Herring wrote:
-> On 11/25/2011 10:09 AM, Mark Brown wrote:
-> > On Fri, Nov 25, 2011 at 09:55:23AM -0600, Rob Herring wrote:
+Jamie,
 
-> >> Although, I think you are possibly missing some other properties for
-> >> i2s mode like word size and master/slave mode. I think the ideal case
-> >> is that a single ASoC platform driver for DT could handle multiple
-> >> SoCs.
+On 11/25/2011 09:35 AM, Jamie Iles wrote:
+> Hi Rob,
+> 
+> On Wed, Nov 23, 2011 at 12:23:08PM +0000, Jamie Iles wrote:
+>> On Thu, Nov 10, 2011 at 07:37:32AM -0600, Rob Herring wrote:
+>>> On 11/10/2011 05:14 AM, Jamie Iles wrote:
+>>>> On Thu, Nov 10, 2011 at 10:53:03AM +0000, Jamie Iles wrote:
+>>>>> It is optional for an irqdomain to have a to_irq() method, and for
+>>>>> simple domains they often don't require any operations at all - just
+>>>>> hwirq to Linux irq translation.  Check we have valid ops before
+>>>>> dereferencing them.
+>>>>>
+>>>>> Patch originally by Rob Herring.
+>>>>>
+>>>>> Suggested-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>> Naturally git send-email doesn't know how to convert this into a CC, so 
+>>>> Rob is now CC'd!
+>>>>
+>>>> Jamie
+>>>>
+>>>>> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+>>>>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>>>>> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+>>>>> ---
+>>>>>
+>>>>> Rob, I can't see that you've already posted this but I didn't want to
+>>>>> hold Marc's GIC patches up.
+>>>
+>>> Thanks. I didn't get around to it yesterday.
+>>>
+>>> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
+>> I've just noticed in kernel/irq/irqdomain.c, that the kerneldoc for 
+>> irq_domain_add() says that a valid ops structure is required, so perhaps 
+>> this fix isn't right and we should just have an empty ops structure for 
+>> simple controllers...
+> 
+> I wonder if this might make more sense instead.  I'll post a proper 
+> patch if you think so.
+> 
+> Regards,
+> 
+> Jamie
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 200ce83..92c3484 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -143,11 +143,6 @@ int irq_domain_simple_dt_translate(struct irq_domain *d,
+>  	return 0;
+>  }
+>  
+> -struct irq_domain_ops irq_domain_simple_ops = {
+> -	.dt_translate = irq_domain_simple_dt_translate,
+> -};
+> -EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
+> -
+>  /**
+>   * irq_domain_create_simple() - Set up a 'simple' translation range
+>   */
+> @@ -181,4 +176,11 @@ void irq_domain_generate_simple(const struct of_device_id *match,
+>  		pr_info("no node found\n");
+>  }
+>  EXPORT_SYMBOL_GPL(irq_domain_generate_simple);
+> +#else /* CONFIG_OF_IRQ */
+> +#define irq_domain_simple_dt_translate NULL
+>  #endif /* CONFIG_OF_IRQ */
+> +
+> +struct irq_domain_ops irq_domain_simple_ops = {
+> +	.dt_translate = irq_domain_simple_dt_translate,
 
-> > No.  You're not going to be able to get a single binding which handles
-> > the setup for all systems based off a given SoC let alone multiple SoCs.
-> > It is possible to come up with some subsets which work over multiple
-> > boards but that's going to be outside the binding for the I2S controller
-> > and in a board audio hardware binding for the subset.
+.dt_translate is surrounded by CONFIG_OF, so it will break on !CONFIG_OF.
 
-> I never said a single binding. Part of device tree is describing how
-> devices are connected together which is a large part of the audio
-> configuration. Whether there's one common driver or not doesn't really
-> matter. The important part right now is to define the bindings and do so
-> in a common way where possible.
+> +};
+> +EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
 
-That's what I'm hearing when I hear you talk about things like defining
-a binding that works for multiple SoCs or which defines stuff like word
-size and master/slave mode (word size especially needs to be a runtime
-property).
+The extern declaration in irqdomain.h is surrounded by CONFIG_OF_IRQ, so
+it needs to be moved out of that as well.
 
-> My original point really was that when defining a binding, it should be
-> as complete as possible rather than done incrementally over time. You
-> are describing the h/w, and that's not changing. For an i2s block, only
-> having a dma channel is definitely not complete.
+On Sparc, CONFIG_OF is true, but CONFIG_OF_IRQ is false. So that
+combination needs to be handled as well.
 
-The binding posted had DMA, registers and IRQ which seems like exactly
-what I'd expect for an I2S controller - the reason only DMA was being
-highlighted is that that's the only bit with a lack of clarity on the
-bindings.
-
-> > This has been discussed repeatedly, we really need to work out how to
-> > educate device tree people about this stuff, it gets *very* repetitive
-> > having the discussion over and over again.
-
-> As you might guess, audio is not an area I have been spending time on
-> recently. Perhaps seeing a complete binding with all the pieces (codec,
-> i2s, misc gpio's, etc.) would help educate us.
-
-Stephen's patches are the closest I've seen yet to what's been decided.
-
-This is exactly the sort of concern I have with education - we've been
-through this discussion repeatedly and yet every time a new person from
-the OF side turns up we have to go through the same explanations and
-discussion again.  Like I say this really does get very repetitive.
+Rob
