@@ -1,74 +1,57 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: Re: [PATCH v5] power: bq20z75: devicetree init support
-Date: Mon, 28 Nov 2011 11:13:21 -0800
-Message-ID: <1322507601.3888.2.camel@rklein-linux2>
-References: <1316031547-18281-1-git-send-email-rklein@nvidia.com>
-	 <20111124184215.GA29135@oksana.dev.rtsoft.ru>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: GPIO/IRQ expander cannot map interrupt
+Date: Mon, 28 Nov 2011 12:01:11 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDAF8B7@HQMAIL01.nvidia.com>
+References: <20111125104511.GA16748@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20111124184215.GA29135@oksana.dev.rtsoft.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20111125104511.GA16748-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2011-11-24 at 10:42 -0800, Anton Vorontsov wrote:
-> Hello Rhyland,
->=20
-> Got this:
->=20
->   CC [M]  drivers/power/bq20z75.o
-> drivers/power/bq20z75.c: In function =E2=80=98bq20z75_of_populate_pda=
-ta=E2=80=99:
-> drivers/power/bq20z75.c:630:21: error: storage size of =E2=80=98gpio_=
-flags=E2=80=99 isn=E2=80=99t known
-> drivers/power/bq20z75.c:668:2: error: implicit declaration of functio=
-n =E2=80=98of_get_named_gpio_flags=E2=80=99 [-Werror=3Dimplicit-functio=
-n-declaration]
-> drivers/power/bq20z75.c:671:19: error: =E2=80=98OF_GPIO_ACTIVE_LOW=E2=
-=80=99 undeclared (first use in this function)
-> drivers/power/bq20z75.c:671:19: note: each undeclared identifier is r=
-eported only once for each function it appears in
-> drivers/power/bq20z75.c:630:21: warning: unused variable =E2=80=98gpi=
-o_flags=E2=80=99 [-Wunused-variable]
-> drivers/power/bq20z75.c:627:29: warning: unused variable =E2=80=98dti=
-d=E2=80=99 [-Wunused-variable]
->=20
-> I fixed this by...
->=20
-> On Wed, Sep 14, 2011 at 01:19:07PM -0700, Rhyland Klein wrote:
->=20
-> > +#if defined(CONFIG_OF)
-> > +#include <linux/of_device.h>
->=20
-> Adding linux/of_gpio.h
->=20
-> > +static const struct of_device_id bq20z75_dt_ids[] =3D {
-> > +	{ .compatible =3D "ti,bq20z75" },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, bq20z75_dt_ids);
-> > +
-> > +static struct bq20z75_platform_data *bq20z75_of_populate_pdata(
-> > +	struct i2c_client *client)
-> > +{
-> > +	const struct of_device_id *dtid;
->=20
-> And deleting that line.
->=20
->=20
-> Applied to battery-2.6.git, but please double check if everything
-> is OK.
->=20
-> Thanks,
->=20
+Thierry Reding wrote at Friday, November 25, 2011 3:45 AM:
+> The following is an extract from a device tree of a Tegra2-based board I'm
+> working on:
+> 
+[swarren: Abbreviated the DT during quoting]
+> 	i2c@7000c000 {
+> 		keypad1: sx8634@2b {
+> 			interrupt-parent = <&gpioext>;
+> 			interrupts = <2>;
+> 		gpioext: gpio-ad8p@41 {
+> 			gpio-controller;
+> 			#gpio-cells = <2>;
+> 			interrupt-controller;
+> 			#interrupt-cells = <1>;
+> 	i2c@7000c400 {
+> 		keypad2: sx8634@2b {
+> 			interrupt-parent = <&gpioext>;
+> 			interrupts = <3>;
+> 
+> So basically I have a GPIO/IRQ expander on the first I2C bus (gpioext) to
+> which the two keypad (sx8634) chips are connected. They use GPIOs 2 and 3 of
+> the expander as interrupts.
+> 
+> This all seems to work partially: the gpioext is properly detected as parent
+> for both keypad controllers during I2C device registration. Within the
+> gpio-ad8p driver I register an IRQ domain (using irq_domain_add_simple()) in
+> order to allow the OF code to properly map the IRQs for the controller's
+> children.
+> 
+> The problem, however, is that the keypad I2C devices are registered before the
+> gpioext device is probed, which results in a situation where the IRQs cannot
+> be mapped because the gpioext device hasn't had a chance to register the IRQ
+> domain yet.
 
-Yah, sorry about that. Seems things have changed a bit since I
-originally sent out the patch. I synced battery-2.6 and everything look=
-s
-great.
+I believe this is something that the forthcoming "deferred probing"
+mechanism will solve. This isn't in place yet. I /think/ it's one of the
+things that Grant Likely is working on getting going during his sabattical,
+so hopefully there will be some patches you can try out soon.
 
-thanks,
-rhyland
+-- 
+nvpublic
