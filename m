@@ -1,48 +1,52 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH v2 0/4] OMAP serial device tree support
-Date: Mon, 28 Nov 2011 15:31:49 +0900
-Message-ID: <20111128063149.GB15189@kroah.com>
-References: <1321969456-24266-1-git-send-email-rnayak@ti.com>
- <20111127033642.GA28378@kroah.com>
- <4ED32500.5060908@ti.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v2 1/4] ARM: vexpress: Get rid of MMIO_P2V
+Date: Mon, 28 Nov 2011 10:40:12 +0000
+Message-ID: <1322476812.3164.13.camel@hornet.cambridge.arm.com>
+References: <1322060508-11298-1-git-send-email-pawel.moll@arm.com>
+ <1322060508-11298-2-git-send-email-pawel.moll@arm.com>
+ <20111125161500.GD2098@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4ED32500.5060908@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, khilman@ti.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111125161500.GD2098@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2011 at 11:36:56AM +0530, Rajendra Nayak wrote:
-> On Sunday 27 November 2011 09:06 AM, Greg KH wrote:
-> >On Tue, Nov 22, 2011 at 07:14:12PM +0530, Rajendra Nayak wrote:
-> >>v2 is based on the latest omap-serial runtime patches, which
-> >>can be found here[1]
-> >>
-> >>The series passes minimal data that allows serial console
-> >>boot, with UART's initialised from device tree.
-> >>However some of low power support for UART and remote
-> >>wakeup needs more work.
-> >>Boot tested on OMAP4 panda and OMAP4 sdp boards.
-> >>
-> >>Patches can be found here..
-> >>git://gitorious.org/omap-pm/linux.git for-dt/serial
-> >
-> >What tree are these going to go through, some device tree one, or do you
-> >want me to take the serial driver patches?
-> 
-> Hi Greg,
-> 
-> These patches have a dependency on the omap-serial runtime series.
-> So once that makes it in, through the serial driver tree, and once we
-> have the necessary Acks from the Device Tree maintainers on the relevant
-> patches from this series, these could go through the serial driver tree
-> as well.
-
-Then all of these should probably go through the device tree tree.
-
-thanks,
-
-greg k-h
+T24gRnJpLCAyMDExLTExLTI1IGF0IDE2OjE1ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBU
+cnkgdGhpcyAodW50ZXN0ZWQpOgo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9wbGF0LXZlcnNh
+dGlsZS9oZWFkc21wLlMgYi9hcmNoL2FybS9wbGF0LXZlcnNhdGlsZS9oZWFkc21wLlMKPiBpbmRl
+eCBkMzk3YTFmLi4wYmUyZWZjIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL3BsYXQtdmVyc2F0aWxl
+L2hlYWRzbXAuUwo+ICsrKyBiL2FyY2gvYXJtL3BsYXQtdmVyc2F0aWxlL2hlYWRzbXAuUwo+IEBA
+IC0yOCw2ICsyOCw3IEBAIEVOVFJZKHZlcnNhdGlsZV9zZWNvbmRhcnlfc3RhcnR1cCkKPiAgcGVu
+OiAgIGxkciAgICAgcjcsIFtyNl0KPiAgICAgICAgIGNtcCAgICAgcjcsIHIwCj4gICAgICAgICBi
+bmUgICAgIHBlbgo+ICtFTkRQUk9DKHZlcnNhdGlsZV9zZWNvbmRhcnlfc3RhcnR1cCkKPiAKPiAg
+ICAgICAgIC8qCj4gICAgICAgICAgKiB3ZSd2ZSBiZWVuIHJlbGVhc2VkIGZyb20gdGhlIGhvbGRp
+bmcgcGVuOiBzZWNvbmRhcnlfc3RhY2sKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC12ZXhw
+cmVzcy9wbGF0c21wLmMgYi9hcmNoL2FybS9tYWNoLXZleHByZXNzL3BsYXRzbXAuYwo+IGluZGV4
+IDJiNWY3YWMuLjEyNGZmYjEgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9w
+bGF0c21wLmMKPiArKysgYi9hcmNoL2FybS9tYWNoLXZleHByZXNzL3BsYXRzbXAuYwo+IEBAIC0x
+Myw4ICsxMyw2IEBACj4gICNpbmNsdWRlIDxsaW51eC9zbXAuaD4KPiAgI2luY2x1ZGUgPGxpbnV4
+L2lvLmg+Cj4gCj4gLSNpbmNsdWRlIDxhc20vdW5pZmllZC5oPgo+IC0KPiAgI2luY2x1ZGUgPG1h
+Y2gvbW90aGVyYm9hcmQuaD4KPiAgI2RlZmluZSBWMk1fUEFfQ1M3IDB4MTAwMDAwMDAKPiAKPiBA
+QCAtNDYsNiArNDQsNiBAQCB2b2lkIF9faW5pdCBwbGF0Zm9ybV9zbXBfcHJlcGFyZV9jcHVzKHVu
+c2lnbmVkIGludCBtYXhfY3B1cykKPiAgICAgICAgICAqIHNlY29uZGFyeSBDUFUgYnJhbmNoZXMg
+dG8gdGhpcyBhZGRyZXNzLgo+ICAgICAgICAgICovCj4gICAgICAgICB3cml0ZWwofjAsIE1NSU9f
+UDJWKFYyTV9TWVNfRkxBR1NDTFIpKTsKPiAtICAgICAgIHdyaXRlbChCU1lNKHZpcnRfdG9fcGh5
+cyh2ZXJzYXRpbGVfc2Vjb25kYXJ5X3N0YXJ0dXApKSwKPiArICAgICAgIHdyaXRlbCh2aXJ0X3Rv
+X3BoeXModmVyc2F0aWxlX3NlY29uZGFyeV9zdGFydHVwKSwKPiAgICAgICAgICAgICAgICAgTU1J
+T19QMlYoVjJNX1NZU19GTEFHU1NFVCkpOwo+ICB9CgpTdXJlIHRoaW5nLCB3aWxsIHRyeSB0aGF0
+LgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
