@@ -1,41 +1,52 @@
-From: Pawel Moll <pawel.moll@arm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v2 0/4] Versatile Express DT support
-Date: Mon, 28 Nov 2011 15:20:17 +0000
-Message-ID: <1322493617.3164.56.camel@hornet.cambridge.arm.com>
+Date: Mon, 28 Nov 2011 09:39:23 -0600
+Message-ID: <4ED3AB2B.7090003@gmail.com>
 References: <1322060508-11298-1-git-send-email-pawel.moll@arm.com>
  <4ED399C8.9080908@gmail.com>
+ <1322493617.3164.56.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4ED399C8.9080908@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1322493617.3164.56.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDExLTExLTI4IGF0IDE0OjI1ICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBP
-dGhlciB0aGFuIERhdmUncyBjb21tZW50cywgbG9va3MgZ29vZC4gRm9yIHRoZSBzZXJpZXM6Cj4g
-Cj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4KClRoYW5r
-cyEKCj4gVGhlcmUgYXJlIGEgbnVtYmVyIG9mIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgdmFyaW91
-cyBwZXJpcGhlcmFscyBkZWZpbmVkCj4gd2l0aG91dCBkb2N1bWVudGF0aW9uLCBidXQgeW91J3Jl
-IG5vdCByZWFsbHkgdXNpbmcgdGhlbSBzbyBJIHRoaW5rIGl0J3MKPiBmaW5lIGZvciBub3cuIEJU
-VywgSSBiZWxpZXZlIERhdmUgc2FpZCBoZSB3YXMgZ29pbmcgdG8gZG9jdW1lbnQgc29tZSBvZgo+
-IHRoZSBwcmltZWNlbGwgcGVyaXBoZXJhbHMuIDopCgpZZXAsIHdlIGFncmVlZCB3aXRoIERhdmUg
-dGhhdCB0aGUgb25lcyBJJ2xsIHRha2UgY2FyZSBvZiBzb29uIGFyZSBNTUNJCihQTDE4MCkgYW5k
-IHRoZSBWRSBzeXNyZWdzLCB0aGUgcmVzdCBpcyBoaXMgOi0pCgpPbiB0aGF0IHN1YmplY3QgLSBz
-b21lIHRpbWUgYWdvIEkgc2VudCBhIHBhdGNoIGFkZGluZyAic2lsIiB2ZW5kb3IKc3RyaW5nLCBh
-cyB0aGlzIG9uZSB0aGUgb25seSBub24tZG9jdW1lbnRlZCBvbmUgSSB1c2VkOgoKaHR0cDovL2Fy
-dGljbGUuZ21hbmUub3JnL2dtYW5lLmxpbnV4LmRyaXZlcnMuZGV2aWNldHJlZS85MzYyLwoKQ2hl
-ZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 11/28/2011 09:20 AM, Pawel Moll wrote:
+> On Mon, 2011-11-28 at 14:25 +0000, Rob Herring wrote:
+>> Other than Dave's comments, looks good. For the series:
+>>
+>> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
+> Thanks!
+> 
+>> There are a number of compatible strings for various peripherals defined
+>> without documentation, but you're not really using them so I think it's
+>> fine for now. BTW, I believe Dave said he was going to document some of
+>> the primecell peripherals. :)
+> 
+> Yep, we agreed with Dave that the ones I'll take care of soon are MMCI
+> (PL180) and the VE sysregs, the rest is his :-)
+> 
+> On that subject - some time ago I sent a patch adding "sil" vendor
+> string, as this one the only non-documented one I used:
+> 
+> http://article.gmane.org/gmane.linux.drivers.devicetree/9362/
+
+Okay. I'll apply.
+
+But that's just a vendor. There's still binding docs needed for the
+actual sil9022 device and some others.
+
+Rob
