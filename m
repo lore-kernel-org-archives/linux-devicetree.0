@@ -1,52 +1,39 @@
-From: Pawel Moll <pawel.moll@arm.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH v2 1/4] ARM: vexpress: Get rid of MMIO_P2V
-Date: Mon, 28 Nov 2011 10:40:12 +0000
-Message-ID: <1322476812.3164.13.camel@hornet.cambridge.arm.com>
+Date: Mon, 28 Nov 2011 10:44:16 +0000
+Message-ID: <20111128104416.GD9581@n2100.arm.linux.org.uk>
 References: <1322060508-11298-1-git-send-email-pawel.moll@arm.com>
  <1322060508-11298-2-git-send-email-pawel.moll@arm.com>
  <20111125161500.GD2098@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111125161500.GD2098@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111125161500.GD2098-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDExLTExLTI1IGF0IDE2OjE1ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBU
-cnkgdGhpcyAodW50ZXN0ZWQpOgo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9wbGF0LXZlcnNh
-dGlsZS9oZWFkc21wLlMgYi9hcmNoL2FybS9wbGF0LXZlcnNhdGlsZS9oZWFkc21wLlMKPiBpbmRl
-eCBkMzk3YTFmLi4wYmUyZWZjIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL3BsYXQtdmVyc2F0aWxl
-L2hlYWRzbXAuUwo+ICsrKyBiL2FyY2gvYXJtL3BsYXQtdmVyc2F0aWxlL2hlYWRzbXAuUwo+IEBA
-IC0yOCw2ICsyOCw3IEBAIEVOVFJZKHZlcnNhdGlsZV9zZWNvbmRhcnlfc3RhcnR1cCkKPiAgcGVu
-OiAgIGxkciAgICAgcjcsIFtyNl0KPiAgICAgICAgIGNtcCAgICAgcjcsIHIwCj4gICAgICAgICBi
-bmUgICAgIHBlbgo+ICtFTkRQUk9DKHZlcnNhdGlsZV9zZWNvbmRhcnlfc3RhcnR1cCkKPiAKPiAg
-ICAgICAgIC8qCj4gICAgICAgICAgKiB3ZSd2ZSBiZWVuIHJlbGVhc2VkIGZyb20gdGhlIGhvbGRp
-bmcgcGVuOiBzZWNvbmRhcnlfc3RhY2sKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC12ZXhw
-cmVzcy9wbGF0c21wLmMgYi9hcmNoL2FybS9tYWNoLXZleHByZXNzL3BsYXRzbXAuYwo+IGluZGV4
-IDJiNWY3YWMuLjEyNGZmYjEgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9w
-bGF0c21wLmMKPiArKysgYi9hcmNoL2FybS9tYWNoLXZleHByZXNzL3BsYXRzbXAuYwo+IEBAIC0x
-Myw4ICsxMyw2IEBACj4gICNpbmNsdWRlIDxsaW51eC9zbXAuaD4KPiAgI2luY2x1ZGUgPGxpbnV4
-L2lvLmg+Cj4gCj4gLSNpbmNsdWRlIDxhc20vdW5pZmllZC5oPgo+IC0KPiAgI2luY2x1ZGUgPG1h
-Y2gvbW90aGVyYm9hcmQuaD4KPiAgI2RlZmluZSBWMk1fUEFfQ1M3IDB4MTAwMDAwMDAKPiAKPiBA
-QCAtNDYsNiArNDQsNiBAQCB2b2lkIF9faW5pdCBwbGF0Zm9ybV9zbXBfcHJlcGFyZV9jcHVzKHVu
-c2lnbmVkIGludCBtYXhfY3B1cykKPiAgICAgICAgICAqIHNlY29uZGFyeSBDUFUgYnJhbmNoZXMg
-dG8gdGhpcyBhZGRyZXNzLgo+ICAgICAgICAgICovCj4gICAgICAgICB3cml0ZWwofjAsIE1NSU9f
-UDJWKFYyTV9TWVNfRkxBR1NDTFIpKTsKPiAtICAgICAgIHdyaXRlbChCU1lNKHZpcnRfdG9fcGh5
-cyh2ZXJzYXRpbGVfc2Vjb25kYXJ5X3N0YXJ0dXApKSwKPiArICAgICAgIHdyaXRlbCh2aXJ0X3Rv
-X3BoeXModmVyc2F0aWxlX3NlY29uZGFyeV9zdGFydHVwKSwKPiAgICAgICAgICAgICAgICAgTU1J
-T19QMlYoVjJNX1NZU19GTEFHU1NFVCkpOwo+ICB9CgpTdXJlIHRoaW5nLCB3aWxsIHRyeSB0aGF0
-LgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Nov 25, 2011 at 04:15:00PM +0000, Dave Martin wrote:
+> diff --git a/arch/arm/plat-versatile/headsmp.S b/arch/arm/plat-versatile/headsmp.S
+> index d397a1f..0be2efc 100644
+> --- a/arch/arm/plat-versatile/headsmp.S
+> +++ b/arch/arm/plat-versatile/headsmp.S
+> @@ -28,6 +28,7 @@ ENTRY(versatile_secondary_startup)
+>  pen:	ldr	r7, [r6]
+>  	cmp	r7, r0
+>  	bne	pen
+> +ENDPROC(versatile_secondary_startup)
+
+This is wrong.  You're telling the assembler that this function ends here.
+It doesn't, it continues on.  Put the ENDPROC at the end of the function.
