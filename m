@@ -1,37 +1,48 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH] of/irq: of_irq_init: add check for parent equal to child node
-Date: Sun, 27 Nov 2011 20:49:10 -0600
-Message-ID: <1322448550-15392-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, benh@kernel.crashing.org, Rob Herring <rob.herring@calxeda.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH v2 0/4] OMAP serial device tree support
+Date: Mon, 28 Nov 2011 11:36:56 +0530
+Message-ID: <4ED32500.5060908@ti.com>
+References: <1321969456-24266-1-git-send-email-rnayak@ti.com> <20111127033642.GA28378@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20111127033642.GA28378@kroah.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg KH <greg@kroah.com>
+Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, khilman@ti.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+On Sunday 27 November 2011 09:06 AM, Greg KH wrote:
+> On Tue, Nov 22, 2011 at 07:14:12PM +0530, Rajendra Nayak wrote:
+>> v2 is based on the latest omap-serial runtime patches, which
+>> can be found here[1]
+>>
+>> The series passes minimal data that allows serial console
+>> boot, with UART's initialised from device tree.
+>> However some of low power support for UART and remote
+>> wakeup needs more work.
+>> Boot tested on OMAP4 panda and OMAP4 sdp boards.
+>>
+>> Patches can be found here..
+>> git://gitorious.org/omap-pm/linux.git for-dt/serial
+>
+> What tree are these going to go through, some device tree one, or do you
+> want me to take the serial driver patches?
 
-With the revert of "of/irq: of_irq_find_parent: check for parent equal to
-child" (dc9372808412edb), we need another way to handle parent node equal
-to the child node. This can simply be handled in of_irq_init by checking
-for this condition.
+Hi Greg,
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
----
- drivers/of/irq.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+These patches have a dependency on the omap-serial runtime series.
+So once that makes it in, through the serial driver tree, and once we
+have the necessary Acks from the Device Tree maintainers on the relevant
+patches from this series, these could go through the serial driver tree
+as well.
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 791270b..19c0115 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -424,6 +424,8 @@ void __init of_irq_init(const struct of_device_id *matches)
- 
- 		desc->dev = np;
- 		desc->interrupt_parent = of_irq_find_parent(np);
-+		if (desc->interrupt_parent == np)
-+			desc->interrupt_parent = NULL;
- 		list_add_tail(&desc->list, &intc_desc_list);
- 	}
- 
--- 
-1.7.5.4
+thanks,
+Rajendra
+
+>
+> thanks,
+>
+> greg k-h
+
