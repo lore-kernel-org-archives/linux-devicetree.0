@@ -1,47 +1,44 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 0/4] OMAP serial device tree support
-Date: Mon, 28 Nov 2011 07:44:15 -0600
-Message-ID: <4ED3902F.7080801@gmail.com>
-References: <1321969456-24266-1-git-send-email-rnayak@ti.com> <20111127033642.GA28378@kroah.com> <4ED32500.5060908@ti.com> <20111128063149.GB15189@kroah.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 3/5] regulator: pass device_node to
+ of_get_regulator_init_data()
+Date: Mon, 28 Nov 2011 22:03:40 +0800
+Message-ID: <20111128140339.GA19754@S2100-06.ap.freescale.net>
+References: <1322487439-27254-1-git-send-email-shawn.guo@linaro.org>
+ <1322487439-27254-4-git-send-email-shawn.guo@linaro.org>
+ <20111128133425.GE8275@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20111128063149.GB15189@kroah.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Greg KH <greg@kroah.com>
-Cc: Rajendra Nayak <rnayak@ti.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, khilman@ti.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111128133425.GE8275-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2011 12:31 AM, Greg KH wrote:
-> On Mon, Nov 28, 2011 at 11:36:56AM +0530, Rajendra Nayak wrote:
->> On Sunday 27 November 2011 09:06 AM, Greg KH wrote:
->>> On Tue, Nov 22, 2011 at 07:14:12PM +0530, Rajendra Nayak wrote:
->>>> v2 is based on the latest omap-serial runtime patches, which
->>>> can be found here[1]
->>>>
->>>> The series passes minimal data that allows serial console
->>>> boot, with UART's initialised from device tree.
->>>> However some of low power support for UART and remote
->>>> wakeup needs more work.
->>>> Boot tested on OMAP4 panda and OMAP4 sdp boards.
->>>>
->>>> Patches can be found here..
->>>> git://gitorious.org/omap-pm/linux.git for-dt/serial
->>>
->>> What tree are these going to go through, some device tree one, or do you
->>> want me to take the serial driver patches?
->>
->> Hi Greg,
->>
->> These patches have a dependency on the omap-serial runtime series.
->> So once that makes it in, through the serial driver tree, and once we
->> have the necessary Acks from the Device Tree maintainers on the relevant
->> patches from this series, these could go through the serial driver tree
->> as well.
+On Mon, Nov 28, 2011 at 01:34:26PM +0000, Mark Brown wrote:
+> On Mon, Nov 28, 2011 at 09:37:17PM +0800, Shawn Guo wrote:
 > 
-> Then all of these should probably go through the device tree tree.
+> > ---
+> >  drivers/regulator/of_regulator.c       |    7 ++++---
+> >  include/linux/regulator/of_regulator.h |    6 ++++--
+> >  2 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> Clearly this is going to break the build as you've not updated the
+> users.
 
-Generally, DT related driver changes go in thru the respective driver trees.
+Sorry, I missed that regulator/fixed.c is already using the api.
+Will fix it in v2.
 
-Rob
+-- 
+Regards,
+Shawn
