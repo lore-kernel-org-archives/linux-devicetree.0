@@ -1,92 +1,60 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Pawel Moll <pawel.moll@arm.com>
 Subject: Re: [PATCH v2 0/4] Versatile Express DT support
-Date: Mon, 28 Nov 2011 14:57:00 +0000
-Message-ID: <20111128145700.GC2465@localhost.localdomain>
+Date: Mon, 28 Nov 2011 15:09:07 +0000
+Message-ID: <1322492947.3164.44.camel@hornet.cambridge.arm.com>
 References: <1322060508-11298-1-git-send-email-pawel.moll@arm.com>
- <4ED399C8.9080908@gmail.com>
+ <4ED399C8.9080908@gmail.com>  <20111128145700.GC2465@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4ED399C8.9080908-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111128145700.GC2465@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2011 at 08:25:12AM -0600, Rob Herring wrote:
-> On 11/23/2011 09:01 AM, Pawel Moll wrote:
-> > Hello again,
-> > 
-> > This version of the series (hopefully) addresses all the suggestions
-> > made by Dave, Rob and Russell.
-> > 
-> > The compatible values are specific for the tiles now and the memory
-> > map variant is defined as a custom property in the motherboard node.
-> > 
-> > Tested on V2P-CA9 coretile both with ATAGs and DT and V2P-CA5s with DT.
-> > 
-> > All comments, as always, welcomed!
-> > 
-> > Pawel
-> > 
-> > 
-> > 
-> > Pawel Moll (4):
-> >   ARM: vexpress: Get rid of MMIO_P2V
-> >   ARM: vexpress: Add DT support in v2m
-> >   ARM: vexpress: Initial RS1 memory map support
-> >   ARM: vexpress: DT-based support for CoreTiles Express A5x2 and A9x4
-> > 
-> >  Documentation/devicetree/bindings/arm/vexpress    |  101 ++++++++
-> >  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi           |  192 +++++++++++++++
-> >  arch/arm/boot/dts/vexpress-v2m.dtsi               |  191 +++++++++++++++
-> >  arch/arm/boot/dts/vexpress-v2p-ca5s.dts           |  132 ++++++++++
-> >  arch/arm/boot/dts/vexpress-v2p-ca9.dts            |  146 +++++++++++
-> >  arch/arm/include/asm/hardware/arm_timer.h         |    5 +
-> >  arch/arm/mach-vexpress/Kconfig                    |   35 +++
-> >  arch/arm/mach-vexpress/Makefile                   |    1 +
-> >  arch/arm/mach-vexpress/Makefile.boot              |    6 +
-> >  arch/arm/mach-vexpress/core.h                     |   21 ++-
-> >  arch/arm/mach-vexpress/ct-ca9x4.c                 |   52 +---
-> >  arch/arm/mach-vexpress/include/mach/ct-ca9x4.h    |   13 +-
-> >  arch/arm/mach-vexpress/include/mach/debug-macro.S |   37 +++-
-> >  arch/arm/mach-vexpress/include/mach/motherboard.h |   58 +++--
-> >  arch/arm/mach-vexpress/include/mach/uncompress.h  |   13 +-
-> >  arch/arm/mach-vexpress/platsmp.c                  |    4 +-
-> >  arch/arm/mach-vexpress/v2m.c                      |  265 ++++++++++++++++++---
-> >  arch/arm/mach-vexpress/v2p-ca5s_ca9.c             |  115 +++++++++
-> >  18 files changed, 1272 insertions(+), 115 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/vexpress
-> >  create mode 100644 arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
-> >  create mode 100644 arch/arm/boot/dts/vexpress-v2m.dtsi
-> >  create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-> >  create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca9.dts
-> >  create mode 100644 arch/arm/mach-vexpress/v2p-ca5s_ca9.c
-> 
-> Other than Dave's comments, looks good. For the series:
-> 
-> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> There are a number of compatible strings for various peripherals defined
-> without documentation, but you're not really using them so I think it's
-> fine for now. BTW, I believe Dave said he was going to document some of
-> the primecell peripherals. :)
-
-Oh, btw, git am reports a few whitespace errors on the last full post of
-the series (v2).
-
-Can you shove the series through checkpatch.pl and/or git am and fix any
-minor issues, now that the series is relatively stable?
-
-Thanks
----Dave
+T24gTW9uLCAyMDExLTExLTI4IGF0IDE0OjU3ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBP
+aCwgYnR3LCBnaXQgYW0gcmVwb3J0cyBhIGZldyB3aGl0ZXNwYWNlIGVycm9ycyBvbiB0aGUgbGFz
+dCBmdWxsIHBvc3Qgb2YKPiB0aGUgc2VyaWVzICh2MikuCj4gCj4gQ2FuIHlvdSBzaG92ZSB0aGUg
+c2VyaWVzIHRocm91Z2ggY2hlY2twYXRjaC5wbCBhbmQvb3IgZ2l0IGFtIGFuZCBmaXggYW55Cj4g
+bWlub3IgaXNzdWVzLCBub3cgdGhhdCB0aGUgc2VyaWVzIGlzIHJlbGF0aXZlbHkgc3RhYmxlPwoK
+SSBkaWQsIGFjdHVhbGx5OgoKODwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQokIHNjcmlwdHMvY2hlY2twYXRjaC5wbCAw
+MDAxLUFSTS12ZXhwcmVzcy1HZXQtcmlkLW9mLU1NSU9fUDJWLnBhdGNoIAp0b3RhbDogMCBlcnJv
+cnMsIDAgd2FybmluZ3MsIDM2MyBsaW5lcyBjaGVja2VkCgowMDAxLUFSTS12ZXhwcmVzcy1HZXQt
+cmlkLW9mLU1NSU9fUDJWLnBhdGNoIGhhcyBubyBvYnZpb3VzIHN0eWxlIHByb2JsZW1zIGFuZCBp
+cyByZWFkeSBmb3Igc3VibWlzc2lvbi4KJCBzY3JpcHRzL2NoZWNrcGF0Y2gucGwgMDAwMi1BUk0t
+dmV4cHJlc3MtQWRkLURULXN1cHBvcnQtaW4tdjJtLnBhdGNoIAp0b3RhbDogMCBlcnJvcnMsIDAg
+d2FybmluZ3MsIDUwNSBsaW5lcyBjaGVja2VkCgowMDAyLUFSTS12ZXhwcmVzcy1BZGQtRFQtc3Vw
+cG9ydC1pbi12Mm0ucGF0Y2ggaGFzIG5vIG9idmlvdXMgc3R5bGUgcHJvYmxlbXMgYW5kIGlzIHJl
+YWR5IGZvciBzdWJtaXNzaW9uLgokIHNjcmlwdHMvY2hlY2twYXRjaC5wbCAwMDAzLUFSTS12ZXhw
+cmVzcy1Jbml0aWFsLVJTMS1tZW1vcnktbWFwLXN1cHBvcnQucGF0Y2ggCldBUk5JTkc6IFVzZSBv
+ZiB2b2xhdGlsZSBpcyB1c3VhbGx5IHdyb25nOiBzZWUgRG9jdW1lbnRhdGlvbi92b2xhdGlsZS1j
+b25zaWRlcmVkLWhhcm1mdWwudHh0CiMzMDg6IEZJTEU6IGFyY2gvYXJtL21hY2gtdmV4cHJlc3Mv
+aW5jbHVkZS9tYWNoL3VuY29tcHJlc3MuaDoyNToKKyNkZWZpbmUgQU1CQV9QRVJJUEhfSUQwKGJh
+c2UpCSgqKHZvbGF0aWxlIHVuc2lnbmVkIGNoYXIgKikoKGJhc2UpICsgMHhmZTApKQoKdG90YWw6
+IDAgZXJyb3JzLCAxIHdhcm5pbmdzLCAzNjggbGluZXMgY2hlY2tlZAoKMDAwMy1BUk0tdmV4cHJl
+c3MtSW5pdGlhbC1SUzEtbWVtb3J5LW1hcC1zdXBwb3J0LnBhdGNoIGhhcyBzdHlsZSBwcm9ibGVt
+cywgcGxlYXNlIHJldmlldy4KCklmIGFueSBvZiB0aGVzZSBlcnJvcnMgYXJlIGZhbHNlIHBvc2l0
+aXZlcywgcGxlYXNlIHJlcG9ydAp0aGVtIHRvIHRoZSBtYWludGFpbmVyLCBzZWUgQ0hFQ0tQQVRD
+SCBpbiBNQUlOVEFJTkVSUy4KJCBzY3JpcHRzL2NoZWNrcGF0Y2gucGwgMDAwNC1BUk0tdmV4cHJl
+c3MtRFQtYmFzZWQtc3VwcG9ydC1mb3ItQ29yZVRpbGVzLUV4cHJlc3MtLnBhdGNoIAp0b3RhbDog
+MCBlcnJvcnMsIDAgd2FybmluZ3MsIDQyNCBsaW5lcyBjaGVja2VkCgowMDA0LUFSTS12ZXhwcmVz
+cy1EVC1iYXNlZC1zdXBwb3J0LWZvci1Db3JlVGlsZXMtRXhwcmVzcy0ucGF0Y2ggaGFzIG5vIG9i
+dmlvdXMgc3R5bGUgcHJvYmxlbXMgYW5kIGlzIHJlYWR5IGZvciBzdWJtaXNzaW9uLgo4PC0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tCgoKSW4gdGhlIHBhc3QgSSBub3RpY2VkIHRoYXQgc2FtZSAtIHNvbWV0aW1lcyBnaXQg
+YW0gaXMgY29tcGxhaW5pbmcgd2hlbgpjaGVjaHBhdGNoIGlzIGNsZWFuLiBJIG5ldmVyIHdhcyBk
+ZXRlcm1pbmVkIHRvIGZpZ3VyZSBvdXQgd2h5LCB0aG91Z2guLi4KClBhd2XFggoKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
