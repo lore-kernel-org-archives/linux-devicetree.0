@@ -1,16 +1,13 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 4/5] regulator: mc13892: add device tree probe support
-Date: Mon, 28 Nov 2011 22:08:06 +0800
-Message-ID: <20111128140805.GB19754@S2100-06.ap.freescale.net>
-References: <1322487439-27254-1-git-send-email-shawn.guo@linaro.org>
- <1322487439-27254-5-git-send-email-shawn.guo@linaro.org>
- <20111128133545.GF8275@opensource.wolfsonmicro.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] Versatile Express DT support
+Date: Mon, 28 Nov 2011 08:25:12 -0600
+Message-ID: <4ED399C8.9080908@gmail.com>
+References: <1322060508-11298-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111128133545.GF8275-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <1322060508-11298-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,23 +17,66 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2011 at 01:35:45PM +0000, Mark Brown wrote:
-> On Mon, Nov 28, 2011 at 09:37:18PM +0800, Shawn Guo wrote:
-> > It adds device tree probe support for mc13892-regulator driver.
+On 11/23/2011 09:01 AM, Pawel Moll wrote:
+> Hello again,
 > 
-> You haven't documented the binding here at all.  Documentation is
-> mandatory for all device tree bindings.
+> This version of the series (hopefully) addresses all the suggestions
+> made by Dave, Rob and Russell.
+> 
+> The compatible values are specific for the tiles now and the memory
+> map variant is defined as a custom property in the motherboard node.
+> 
+> Tested on V2P-CA9 coretile both with ATAGs and DT and V2P-CA5s with DT.
+> 
+> All comments, as always, welcomed!
+> 
+> Pawel
+> 
+> 
+> 
+> Pawel Moll (4):
+>   ARM: vexpress: Get rid of MMIO_P2V
+>   ARM: vexpress: Add DT support in v2m
+>   ARM: vexpress: Initial RS1 memory map support
+>   ARM: vexpress: DT-based support for CoreTiles Express A5x2 and A9x4
+> 
+>  Documentation/devicetree/bindings/arm/vexpress    |  101 ++++++++
+>  arch/arm/boot/dts/vexpress-v2m-rs1.dtsi           |  192 +++++++++++++++
+>  arch/arm/boot/dts/vexpress-v2m.dtsi               |  191 +++++++++++++++
+>  arch/arm/boot/dts/vexpress-v2p-ca5s.dts           |  132 ++++++++++
+>  arch/arm/boot/dts/vexpress-v2p-ca9.dts            |  146 +++++++++++
+>  arch/arm/include/asm/hardware/arm_timer.h         |    5 +
+>  arch/arm/mach-vexpress/Kconfig                    |   35 +++
+>  arch/arm/mach-vexpress/Makefile                   |    1 +
+>  arch/arm/mach-vexpress/Makefile.boot              |    6 +
+>  arch/arm/mach-vexpress/core.h                     |   21 ++-
+>  arch/arm/mach-vexpress/ct-ca9x4.c                 |   52 +---
+>  arch/arm/mach-vexpress/include/mach/ct-ca9x4.h    |   13 +-
+>  arch/arm/mach-vexpress/include/mach/debug-macro.S |   37 +++-
+>  arch/arm/mach-vexpress/include/mach/motherboard.h |   58 +++--
+>  arch/arm/mach-vexpress/include/mach/uncompress.h  |   13 +-
+>  arch/arm/mach-vexpress/platsmp.c                  |    4 +-
+>  arch/arm/mach-vexpress/v2m.c                      |  265 ++++++++++++++++++---
+>  arch/arm/mach-vexpress/v2p-ca5s_ca9.c             |  115 +++++++++
+>  18 files changed, 1272 insertions(+), 115 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/vexpress
+>  create mode 100644 arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+>  create mode 100644 arch/arm/boot/dts/vexpress-v2m.dtsi
+>  create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+>  create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca9.dts
+>  create mode 100644 arch/arm/mach-vexpress/v2p-ca5s_ca9.c
 
-It reminds me that I should add binding document for mc13xxx mfd
-driver.  However, there is basically nothing to add for
-mc13892-regulator binding, as it has nothing specific but all that
-have already documented in
-Documentation/devicetree/bindings/regulator/regulator.txt.
+Other than Dave's comments, looks good. For the series:
 
--- 
-Regards,
-Shawn
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+There are a number of compatible strings for various peripherals defined
+without documentation, but you're not really using them so I think it's
+fine for now. BTW, I believe Dave said he was going to document some of
+the primecell peripherals. :)
+
+Rob
