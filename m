@@ -1,14 +1,16 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 05/14] tegra: fdt: Add Tegra2x device tree file
-Date: Mon, 28 Nov 2011 11:56:53 -0700
-Message-ID: <4ED3D975.4090903@nvidia.com>
-References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
- <1322106896-23054-6-git-send-email-sjg@chromium.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 2/5] regulator: fix label names used in device tree
+ bindings
+Date: Mon, 28 Nov 2011 19:02:29 +0000
+Message-ID: <20111128190228.GD1586@opensource.wolfsonmicro.com>
+References: <1322487439-27254-1-git-send-email-shawn.guo@linaro.org>
+ <1322487439-27254-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1322106896-23054-6-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1322487439-27254-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,33 +20,12 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2011 08:54 PM, Simon Glass wrote:
-> This was taken from commit 1ea6b8f at:
-> git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
+On Mon, Nov 28, 2011 at 09:37:16PM +0800, Shawn Guo wrote:
+> Device tree compiler does not recognize '-' in label name.  Instead,
+> '_' works fine.
 
-That's not the latest version in linux-next. Also, this doesn't include
-quite a few changes that have been sent to the mailing lists but not yet
-applied.
-
-In particular, linux-next now includes a minimal USB binding. Should we
-just use this in U-Boot for now? We should get review on the kernel
-lists before bringing in this more advanced USB binding in U-Boot, and
-perhaps even add the binding into the kernel at the same time?
-
-Patches have been posted to:
-* Convert to the finalized ARM GIC binding.
-* Disable devices in the per-board .dts files that aren't used on those
-boards.
-* Various other cleanups in order to make the .dts files match the
-kernel's non-DT board files.
-* Perhaps more that I forget.
-
-I suppose those could be applied to U-Boot as and when they are applied
-to the kernel.
-
--- 
-nvpublic
+Applied, thanks.
