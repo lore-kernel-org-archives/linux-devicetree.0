@@ -1,36 +1,91 @@
 From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH] of/irq: of_irq_init: add check for parent equal to
- child node
-Date: Mon, 28 Nov 2011 10:54:46 +0000
-Message-ID: <1322477686.3164.31.camel@hornet.cambridge.arm.com>
-References: <1322448550-15392-1-git-send-email-robherring2@gmail.com>
+Subject: Re: [PATCH v2 2/4] ARM: vexpress: Add DT support in v2m
+Date: Mon, 28 Nov 2011 10:54:22 +0000
+Message-ID: <1322477662.3164.30.camel@hornet.cambridge.arm.com>
+References: <1322060508-11298-1-git-send-email-pawel.moll@arm.com>
+ <1322060508-11298-3-git-send-email-pawel.moll@arm.com>
+ <20111125161808.GE2098@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1322448550-15392-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111125161808.GE2098@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2011-11-27 at 20:49 -0600, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
->=20
-> With the revert of "of/irq: of_irq_find_parent: check for parent equa=
-l to
-> child" (dc9372808412edb), we need another way to handle parent node e=
-qual
-> to the child node. This can simply be handled in of_irq_init by check=
-ing
-> for this condition.
->=20
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-
-Works for me, thanks!
-
-Tested-by: Pawel Moll <pawel.moll@arm.com>
-
-Cheers!
-
-Pawe=C5=82
+T24gRnJpLCAyMDExLTExLTI1IGF0IDE2OjE4ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBb
+U2luY2UgdGhpcyB0ZXh0IGlzIG5vdyBzdGFibGUgZW5vdWdoIHRvIGJlIHByb29mcmVhZCwgSSds
+bCBsaXN0IG1pbm9yCj4gcGVkYW50aWMgbml0cyBhbG9uZyB3aXRoIHRoZSBvdGhlciBjb21tZW50
+cyAtLSB0aGV5IGFyZW4ndCB2aXRhbCB0byB0aGUKPiBtZWFuaW5nIHRob3VnaCwgYW5kIHRoZSBk
+b2N1bWVudGF0aW9uIHN0aWxsICJ3b3JrcyIgaWYgdGhleSBhcmVuJ3QKPiBhY3RlZCBvbi5dCgpb
+c25pcF0KCk1vc3QgYXBwcmVjaWF0ZWQhIEknbGwgInByb2Nlc3MiIGFsbCB5b3VyIHN1Z2dlc3Rp
+b25zLCB0aGFua3MhCgo+ID4gQEAgLTUwLDEwICs1NSwzNCBAQCBzdGF0aWMgdm9pZCBfX2lvbWVt
+ICp2Mm1fc3lzcmVnX2Jhc2U7Cj4gPgo+ID4gIHN0YXRpYyB2b2lkIF9faW5pdCB2Mm1fdGltZXJf
+aW5pdCh2b2lkKQo+ID4gIHsKPiA+IC0gICAgIHZvaWQgX19pb21lbSAqc3lzY3RsX2Jhc2U7Cj4g
+PiAtICAgICB2b2lkIF9faW9tZW0gKnRpbWVyMDFfYmFzZTsKPiA+ICsgICAgIHZvaWQgX19pb21l
+bSAqc3lzY3RsX2Jhc2UgPSBOVUxMOwo+ID4gKyAgICAgdm9pZCBfX2lvbWVtICp0aW1lcjAxX2Jh
+c2UgPSBOVUxMOwo+ID4gKyAgICAgdW5zaWduZWQgaW50IHRpbWVyMDFfaXJxID0gTk9fSVJROwo+
+ID4gKwo+ID4gKyAgICAgaWYgKG9mX2hhdmVfcG9wdWxhdGVkX2R0KCkpIHsKPiA+ICsjaWYgZGVm
+aW5lZChDT05GSUdfQVJDSF9WRVhQUkVTU19EVCkKPiA+ICsgICAgICAgICAgICAgaW50IGVycjsK
+PiA+ICsgICAgICAgICAgICAgY29uc3QgY2hhciAqcGF0aDsKPiA+ICsgICAgICAgICAgICAgc3Ry
+dWN0IGRldmljZV9ub2RlICpub2RlOwo+ID4gKwo+ID4gKyAgICAgICAgICAgICBub2RlID0gb2Zf
+ZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwgImFybSxzcDgxMCIpOwo+ID4gKyAgICAg
+ICAgICAgICBpZiAobm9kZSkKPiA+ICsgICAgICAgICAgICAgICAgICAgICBzeXNjdGxfYmFzZSA9
+IG9mX2lvbWFwKG5vZGUsIDApOwo+ID4gKwo+ID4gKyAgICAgICAgICAgICBlcnIgPSBvZl9wcm9w
+ZXJ0eV9yZWFkX3N0cmluZyhvZl9hbGlhc2VzLCAidGltZXIiLCAmcGF0aCk7Cj4gPiArICAgICAg
+ICAgICAgIGlmICghZXJyKQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIG5vZGUgPSBvZl9maW5k
+X25vZGVfYnlfcGF0aChwYXRoKTsKPiA+ICsgICAgICAgICAgICAgaWYgKG5vZGUpIHsKPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICB0aW1lcjAxX2Jhc2UgPSBvZl9pb21hcChub2RlLCAwKTsKPiA+
+ICsgICAgICAgICAgICAgICAgICAgICB0aW1lcjAxX2lycSA9IGlycV9vZl9wYXJzZV9hbmRfbWFw
+KG5vZGUsIDApOwo+ID4gKyAgICAgICAgICAgICB9Cj4gPiArI2VuZGlmCj4gPiArICAgICB9IGVs
+c2Ugewo+ID4gKyAgICAgICAgICAgICBzeXNjdGxfYmFzZSA9IGlvcmVtYXAoVjJNX1NZU0NUTCwg
+U1pfNEspOwo+ID4gKyAgICAgICAgICAgICB0aW1lcjAxX2Jhc2UgPSBpb3JlbWFwKFYyTV9USU1F
+UjAxLCBTWl80Syk7Cj4gPiArICAgICAgICAgICAgIHRpbWVyMDFfaXJxID0gSVJRX1YyTV9USU1F
+UjA7Cj4gPiArICAgICB9Cj4gCj4gRG8gd2UgZXZlbiBoYXZlIG9mX2hhdmVfcG9wdWxhdGVkX2R0
+KCkgaW4gYSBub24tRFQga2VybmVsPwo+IAo+IE1heWJlIGNoYW5nZSB0aGlzIHRvCj4gCj4gI2lm
+IGRlZmluZWQoQ09ORklHX0FSQ0hfVkVYUFJFU1NfRFQpCj4gICAgICAgICBpZiAob2ZfaGF2ZV9w
+b3B1bGF0ZWRfZHQoKSkgewo+ICAgICAgICAgICAgICAgICAvKiAuLi4gKi8KPiAgICAgICAgIH0g
+ZWxzZQo+ICNlbmRpZgo+ICAgICAgICAgLyogZm9sbG93IG9uIGZyb20gcHJldmlvdXMgZWxzZSAq
+Lwo+ICAgICAgICAgewo+ICAgICAgICAgICAgICAgICAvKiAuLi4gKi8KPiAgICAgICAgIH0KPiAK
+PiAuLi5vciBpZiB0aGF0IGZlZWxzIGEgbGl0dGxlIHVuY2xlYXIsIG1heWJlIGRvIHRoaXM6Cj4g
+Cj4gI2lmIGRlZmluZWQoQ09ORklHX0FSQ0hfVkVYUFJFU1NfRFQpCj4gICAgICAgICBpZiAob2Zf
+aGF2ZV9wb3B1bGF0ZWRfZHQoKSkgewo+ICAgICAgICAgICAgICAgICAvKiAuLi4gKi8KPiAgICAg
+ICAgIH0gZWxzZSB7Cj4gI2Vsc2UKPiAgICAgICAgIHsKPiAjZW5kaWYKPiAgICAgICAgICAgICAg
+ICAgLyogLi4uICovCj4gICAgICAgICB9CgpvZl9oYXZlX3BvcHVsYXRlZF9kdCgpIGlzIHNhZmUs
+IHNlZSAiaW5jbHVkZS9saW51eC9vZi5oIjoKCiNpZmRlZiBDT05GSUdfT0YgCnN0YXRpYyBpbmxp
+bmUgYm9vbCBvZl9oYXZlX3BvcHVsYXRlZF9kdCh2b2lkKQp7ICAgICAgIAogICAgICAgIHJldHVy
+biBhbGxub2RlcyAhPSBOVUxMOwp9ICAgICAgIAojZWxzZSAvKiBDT05GSUdfT0YgKi8Kc3RhdGlj
+IGlubGluZSBib29sIG9mX2hhdmVfcG9wdWxhdGVkX2R0KHZvaWQpCnsgICAgICAgCiAgICAgICAg
+cmV0dXJuIGZhbHNlOwp9ICAgICAgIAojZW5kaWYgLyogQ09ORklHX09GICovCgo+ID4gQEAgLTYz
+LDIwICs5MiwyMCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgdjJtX3RpbWVyX2luaXQodm9pZCkKPiA+
+ICAgICAgICAgICAgICAgd3JpdGVsKHNjY3RybCwgc3lzY3RsX2Jhc2UgKyBTQ0NUUkwpOwo+ID4g
+ICAgICAgfQo+ID4KPiA+IC0gICAgIHRpbWVyMDFfYmFzZSA9IGlvcmVtYXAoVjJNX1RJTUVSMDEs
+IFNaXzRLKTsKPiA+IC0gICAgIFdBUk5fT04oIXRpbWVyMDFfYmFzZSk7Cj4gPiAtICAgICBpZiAo
+dGltZXIwMV9iYXNlKSB7Cj4gPiArICAgICBXQVJOX09OKCF0aW1lcjAxX2Jhc2UgfHwgdGltZXIw
+MV9pcnEgIT0gTk9fSVJRKTsKPiAKPiBJcyB0aGF0IHN1cHBvc2VkIHRvIGJlICF0aW1lcjAxX2Jh
+c2UgfHwgdGltZXIwMV9pcnEgPT0gTk9fSVJRID8KClllcywgSSBzcG90dGVkIGFuZCBmaXhlZCB0
+aGlzIGluIHRoZSBtZWFuIHRpbWUuCgo+IElmIHNvLCBpcyBtaWdodCBiZSBiZXR0ZXIgdG8gd3Jp
+dGUKPiAKPiBXQVJOX09OKCEoZXhwcikpOwo+IGlmIChleHByKSB7Cj4gICAgICAgICAuLi4KPiAK
+PiBzbyB0aGF0IHRoZSBjb25kaXRpb25zIGFyZSBjbGVhciBpbnZlcnNlcy4KCkdvb2QgcG9pbnQs
+IHdpbGwgZG8uCgo+ID4gQEAgLTQ3MCwzICs0OTksOTkgQEAgTUFDSElORV9TVEFSVChWRVhQUkVT
+UywgIkFSTS1WZXJzYXRpbGUgRXhwcmVzcyIpCj4gPiAgICAgICAudGltZXIgICAgICAgICAgPSAm
+djJtX3RpbWVyLAo+ID4gICAgICAgLmluaXRfbWFjaGluZSAgID0gdjJtX2luaXQsCj4gPiAgTUFD
+SElORV9FTkQKPiAKPiBJdCB3b3VsZCBiZSB1c2VmdWwgdG8gaGF2ZSBhIGNvbW1lbnQgc29tZXdo
+ZXJlIGluZGljYXRpbmcgdGhhdCB0aGUKPiBEVF9NQUNISU5FX1NUQVJUKCkgZW50cmllcyBsaXZl
+IGluIHRoZSBjb3JyZXNwb25kaW5nIGN0LSouYyBmaWxlcyBmb3IKPiBEVC1lbmFibGVkIGNvcmV0
+aWxlcy4KPiAKPiBOb3QgZXNzZW50aWFsLCB0aG91Z2ggLi4uIG1vc3QgcGVvcGxlIGRvIGtub3cg
+aG93IHRvIHVzZSBncmVwLgoKV2hlcmUgZXhhY3RseSB3b3VsZCB5b3Ugc2VlIHRoYXQgY29tbWVu
+dD8KClRoYW5rcyBmb3IgdGhlIHJldmlldyEKClBhd2XFggoKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
