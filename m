@@ -1,16 +1,15 @@
 From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 3/5] regulator: pass device_node to
- of_get_regulator_init_data()
-Date: Mon, 28 Nov 2011 13:34:26 +0000
-Message-ID: <20111128133425.GE8275@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 4/5] regulator: mc13892: add device tree probe support
+Date: Mon, 28 Nov 2011 13:35:45 +0000
+Message-ID: <20111128133545.GF8275@opensource.wolfsonmicro.com>
 References: <1322487439-27254-1-git-send-email-shawn.guo@linaro.org>
- <1322487439-27254-4-git-send-email-shawn.guo@linaro.org>
+ <1322487439-27254-5-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1322487439-27254-4-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1322487439-27254-5-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,12 +23,8 @@ To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2011 at 09:37:17PM +0800, Shawn Guo wrote:
+On Mon, Nov 28, 2011 at 09:37:18PM +0800, Shawn Guo wrote:
+> It adds device tree probe support for mc13892-regulator driver.
 
-> ---
->  drivers/regulator/of_regulator.c       |    7 ++++---
->  include/linux/regulator/of_regulator.h |    6 ++++--
->  2 files changed, 8 insertions(+), 5 deletions(-)
-
-Clearly this is going to break the build as you've not updated the
-users.
+You haven't documented the binding here at all.  Documentation is
+mandatory for all device tree bindings.
