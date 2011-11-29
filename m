@@ -1,76 +1,151 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Pin control mappings for DT
-Date: Tue, 29 Nov 2011 10:02:32 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFB24@HQMAIL01.nvidia.com>
-References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
- <20111129174255.GQ31337@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111129174255.GQ31337-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: [PATCH v2 1/3] ARM: at91/aic: add device tree support for AIC
+Date: Tue, 29 Nov 2011 19:07:46 +0100
+Message-ID: <1322590066-430-1-git-send-email-nicolas.ferre@atmel.com>
+References: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, robherring2@gmail.com, grant.likely@secretlab.ca
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, plagnioj@jcrosoft.com, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Tony Lindgren wrote at Tuesday, November 29, 2011 10:43 AM:
-> * Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [111128 23:07]:
-> > Greetings,
-> >
-> > can we have some initial idea about DT support for pin control
-> > devices and how these will look? Since pin control seems to be
-> > a cruicial piece for people to get board data out of their kernels
-> > we'd better have a common understanding.
-...
-> > 2) Board pin group definitions, saying "these three pins
-> >   belong to the group "i2c0-pins"
-> 
-> These should be there for each driver, just like the interrupts:
-> 
-> 	uart3: serial@48020000 {
-> 		compatible = "ti,8250";
-> 		reg = <0x48020000 0x100>;
-> 		reg-shift = <2>;
-> 		interrupts = < 106 >;
-> 		pins = "uart3_rx_irrx.uart3_rx_irrx",
-> 			"uart3_tx_irtx.uart3_tx_irtx";
-> 	};
+Ioremap registers from DT specification and adding
+of a simple irq domain for AIC interrupts.
 
-I don't agree here. I think that pinmux data is more strongly related
-to the pinmux controller HW than the HW blocks that have their signals
-affected by the pinmux.
+Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+v2: - use of_irq_init() function for device tree probing
+    - add documentation
+    - use own simple struct irq_domain_ops
 
-I'd rather see a centralized pinmux table listing all the pinmux settings
-that the board should use. Either the table should include references to
-other nodes that use each setting, or the other nodes should refer to the
-table in the pinmux node and this indicate which settings they should use.
+ .../devicetree/bindings/arm/atmel-aic.txt          |   20 +++++++++
+ arch/arm/Kconfig                                   |    1 +
+ arch/arm/mach-at91/irq.c                           |   45 +++++++++++++++++++-
+ 3 files changed, 64 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
 
-Ignoring this objection, if the pinmux details are kept in each device's
-own node, the binding needs to be a lot more complex than just listing the
-set of pins that are used; the following need to be covered:
-
-* Alternative configurations e.g. for muxing a single I2C controller on
-to multiple sets of I2C pins to represent a bus mux.
-
-* Alternative configurations for active/sleep(suspend) etc.
-
-* Pin configuration in addition to mux function selection.
-
-It seems like it'd be easier to represent that all in a/some table(s) in
-the pinmux node. I think the current pinctrl mapping table would be a good
-model to start out with. But, we'd have to expand that to cover pin config
-as well as mux, or have separate tables in DT for each (which would be
-harder to keep in sync)
-
+diff --git a/Documentation/devicetree/bindings/arm/atmel-aic.txt b/Documentation/devicetree/bindings/arm/atmel-aic.txt
+new file mode 100644
+index 0000000..e306c63
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/atmel-aic.txt
+@@ -0,0 +1,20 @@
++* Advanced Interrupt Controller (AIC)
++
++Required properties:
++- compatible: Should be "atmel,<chip>-dma"
++- interrupt-controller: Identifies the node as an interrupt controller.
++- interrupt-parent: For single AIC system, it is an empty property.
++- #interrupt-cells: The number of cells to define the interrupts. Must be 1 as
++  the AIC has no configuration options for interrupt sources. The cell is an u32
++  and defines the interrupt number.
++- reg: Should contain AIC registers location and length
++
++Example:
++
++	aic: interrupt-controller@fffff000 {
++		compatible = "atmel,at91rm9200-aic";
++		interrupt-controller;
++		interrupt-parent;
++		#interrupt-cells = <1>;
++		reg = <0xfffff000 0x200>;
++	};
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 44789ef..293c152 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -318,6 +318,7 @@ config ARCH_AT91
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select HAVE_CLK
+ 	select CLKDEV_LOOKUP
++	select IRQ_DOMAIN
+ 	help
+ 	  This enables support for systems based on the Atmel AT91RM9200,
+ 	  AT91SAM9 and AT91CAP9 processors.
+diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
+index be6b639..46418ef 100644
+--- a/arch/arm/mach-at91/irq.c
++++ b/arch/arm/mach-at91/irq.c
+@@ -24,6 +24,9 @@
+ #include <linux/module.h>
+ #include <linux/mm.h>
+ #include <linux/types.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/irqdomain.h>
+ 
+ #include <mach/hardware.h>
+ #include <asm/irq.h>
+@@ -34,6 +37,12 @@
+ #include <asm/mach/map.h>
+ 
+ void __iomem *at91_aic_base;
++static struct irq_domain at91_aic_domain;
++static struct irq_domain_ops at91_aic_domain_ops = {
++#if defined(CONFIG_OF)
++	.dt_translate = irq_domain_simple_dt_translate,
++#endif
++};
+ 
+ static void at91_aic_mask_irq(struct irq_data *d)
+ {
+@@ -127,6 +136,29 @@ static struct irq_chip at91_aic_chip = {
+ 	.irq_set_wake	= at91_aic_set_wake,
+ };
+ 
++#if defined(CONFIG_OF)
++static int __init __at91_aic_of_init(struct device_node *node,
++				     struct device_node *parent)
++{
++	at91_aic_base = of_iomap(node, 0);
++	at91_aic_domain.of_node = of_node_get(node);
++
++	return 0;
++}
++
++static const struct of_device_id aic_ids[] __initconst = {
++	{ .compatible = "atmel,at91rm9200-aic", .data = __at91_aic_of_init },
++	{ /*sentinel*/ }
++};
++
++static void __init at91_aic_of_init(void)
++{
++	of_irq_init(aic_ids);
++}
++#else
++static void __init at91_aic_of_init(void) {}
++#endif
++
+ /*
+  * Initialize the AIC interrupt controller.
+  */
+@@ -134,10 +166,13 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
+ {
+ 	unsigned int i;
+ 
+-	at91_aic_base = ioremap(AT91_AIC, 512);
++	if(of_have_populated_dt())
++		at91_aic_of_init();
++	else
++		at91_aic_base = ioremap(AT91_AIC, 512);
+ 
+ 	if (!at91_aic_base)
+-		panic("Impossible to ioremap AT91_AIC\n");
++		panic("Unable to ioremap AIC registers\n");
+ 
+ 	/*
+ 	 * The IVR is used by macro get_irqnr_and_base to read and verify.
+@@ -169,4 +204,10 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
+ 	/* Disable and clear all interrupts initially */
+ 	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
+ 	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
++
++	/* Add irq domain for AIC */
++	at91_aic_domain.irq_base = at91_aic_domain.hwirq_base = 0;
++	at91_aic_domain.nr_irq = NR_AIC_IRQS;
++	at91_aic_domain.ops = &at91_aic_domain_ops;
++	irq_domain_add(&at91_aic_domain);
+ }
 -- 
-nvpublic
+1.7.5.4
