@@ -1,46 +1,135 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v3 0/5] Versatile Express DT support
-Date: Tue, 29 Nov 2011 17:16:59 +0000
-Message-ID: <1322587019.3164.111.camel@hornet.cambridge.arm.com>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <20111129170013.GD2829@localhost.localdomain>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Pin control mappings for DT
+Date: Tue, 29 Nov 2011 09:42:55 -0800
+Message-ID: <20111129174255.GQ31337@atomide.com>
+References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111129170013.GD2829@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDExLTExLTI5IGF0IDE3OjAwICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBJ
-J20gdHJ5aW5nIHRvIGJ1aWxkLi4uIHdoYXQgdHJlZSBhcmUgeW91IGJhc2luZyBvbj8KCnYzLjIt
-cmMzOgoKJCBnaXQgbG9nIC0tb25lbGluZSBIRUFELi4udjMuMi1yYzN+CjNiOWRmMWUgQVJNOiB2
-ZXhwcmVzczogRFQtYmFzZWQgc3VwcG9ydCBmb3IgQ29yZVRpbGVzIEV4cHJlc3MgQTV4MiBhbmQg
-QTl4NAo1YTFjNTY1IEFSTTogdmV4cHJlc3M6IEluaXRpYWwgUlMxIG1lbW9yeSBtYXAgc3VwcG9y
-dAo5MzU1ZThhIEFSTTogdmV4cHJlc3M6IEFkZCBEVCBzdXBwb3J0IGluIHYybQowNTI5YmQ2IEFS
-TTogdmV4cHJlc3M6IEdldCByaWQgb2YgTU1JT19QMlYKNjgxMThjYyBBUk06IHZlcnNhdGlsZTog
-QWRkIG1pc3NpbmcgRU5EUFJPQyB0byBoZWFkc21wLlMKY2FjYTZhMCBMaW51eCAzLjItcmMzCgo+
-IFdpdGggdjMuMi1yYzMgb3IgbmV4dCwgSSBnZXQgT0YgaGVhZGVyIGZhaWx1cmVzIGxpa2UgdGhl
-IGZvbGxvd2luZzoKPiAKPiBhcmNoL2FybS9rZXJuZWwvZGV2dHJlZS5jOiBJbiBmdW5jdGlvbiDi
-gJhhcm1fZHRfbWVtYmxvY2tfcmVzZXJ2ZeKAmToKPiBhcmNoL2FybS9rZXJuZWwvZGV2dHJlZS5j
-OjQxOjc6IGVycm9yOiDigJhpbml0aWFsX2Jvb3RfcGFyYW1z4oCZIHVuZGVjbGFyZWQgKGZpcnN0
-IHVzZSBpbiB0aGlzIGZ1bmN0aW9uKQo+IGFyY2gvYXJtL2tlcm5lbC9kZXZ0cmVlLmM6NDE6Nzog
-bm90ZTogZWFjaCB1bmRlY2xhcmVkIGlkZW50aWZpZXIgaXMgcmVwb3J0ZWQgb25seSBvbmNlIGZv
-ciBlYWNoIGZ1bmN0aW9uIGl0IGFwcGVhcnMgaW4KWy4uLl0KCkNhbiB5b3Ugc2VuZCBtZSB5b3Vy
-IGNvbmZpZywgcGxlYXNlPwoKQWxzbywgSSBmb3Jnb3QgdG8gbWVudGlvbiB0aGF0IHlvdSBuZWVk
-IFJvYidzICJvZi9pcnE6IG9mX2lycV9pbml0OiBhZGQKY2hlY2sgZm9yIHBhcmVudCBlcXVhbCB0
-byBjaGlsZApub2RlIiAoaHR0cDovL2FydGljbGUuZ21hbmUub3JnL2dtYW5lLmxpbnV4Lmtlcm5l
-bC8xMjIxMDUxKSB0byBnZXQgdGhpcwp3b3JraW5nLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi,
+
+* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [111128 23:07]:
+> Greetings,
+> 
+> can we have some initial idea about DT support for pin control
+> devices and how these will look? Since pin control seems to be
+> a cruicial piece for people to get board data out of their kernels
+> we'd better have a common understanding.
+
+Below is what I currently have for the pinmux-simple.c driver
+I'm working on. That's easy to change though so please comment.
+ 
+> The way I've understood it, we will need three pieces of
+> DT data:
+> 
+> 1) Per-driver info, includes the pin controller base, its pins, their
+>  (optional) names and their specific presets like bias etc.
+
+	pinmux@4a100000 {
+		compatible = "pinmux-simple";
+		reg = <0x4a100000 0x194>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		pinmux,access-width-16bit = <1>;
+
+		pinmux-gpmc_ad0@4a100040 {
+			reg = <0x4a100040>;
+			pinmux,functions =
+				"gpmc_ad0", "sdmmc2_dat0", "", "",
+				"", "", "", "";
+		};
+
+		pinmux-uart3_rx_irrx@4a100144 {
+			reg = <0x4a100144>;
+			pinmux,functions =
+				"uart3_rx_irrx", "dmtimer8_pwm_evt", "", "gpio_143",
+				"", "", "", "safe_mode";
+		};
+
+		...
+	};
+
+ 
+> 2) Board pin group definitions, saying "these three pins
+>   belong to the group "i2c0-pins"
+
+These should be there for each driver, just like the interrupts:
+
+	uart3: serial@48020000 {
+		compatible = "ti,8250";
+		reg = <0x48020000 0x100>;
+		reg-shift = <2>;
+		interrupts = < 106 >;
+		pins = "uart3_rx_irrx.uart3_rx_irrx",
+			"uart3_tx_irtx.uart3_tx_irtx";
+	};
+
+Note that for now the format for now is pin_register.function.
+I guess we could have it set up with something like:
+
+		pins = <&uart3_rx_irrx 7 0>;
+
+But it easily becomes impossible for people to get it right.
+Anybody got better suggestions here?
+
+Also I don't have anything for setting the driver specific
+default values yet.
+ 
+> 3) Board function mapping definitions saying "the pin group
+>   'i2c0-pins' is to be used with device i2c0" which can map
+>   several groups to a single device.
+
+I don't think is needed? The #2 above allows mapping them
+automatically. However, the mapping needs to be fixed for the
+pinctrl fwk to make this work with both static data DT driver
+instances.
+ 
+> (1) should be read out by each pin controller driver and
+> (2)+(3) by the pin controller, specifically  pinmux core.
+
+Yeah it makes sense to have the common code map the DT entries
+to devices.
+ 
+> I'm tentatively also thinking about:
+> 
+> (4) Pin group state map - as in "group 'i2c0-pins' have
+>   the states 'active', 'sleeping' and 'idle' "
+> 
+> Since this last piece needs to be connected to say
+> bias settings etc it's currently unclear to me how that
+> would work. But (1) thro (3) seem pretty solid.
+
+Setting the pin states seems to be unhandled in the pinctrl
+fwk currently, right?
+
+In many cases it's only the pin using device driver that knows
+how the pins should be set for PM and pulls, so these could
+be set by the default values in DT for each driver.
+
+Then some pins need to be dynamically re-muxed for wake-up
+events etc, so I guess adding generic 'wakeup' and 'disabled'
+modes might do the trick as long as those won't touch the
+pull values configured by the driver. For example, 'wakeup' can
+be used data lines, such as serial rx line. In that case the
+serial rx line would be temporarily muxed into a GPIO input
+function with wake-up flags set for the pin.
+
+Regards, 
+
+Tony
