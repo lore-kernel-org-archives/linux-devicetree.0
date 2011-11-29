@@ -1,111 +1,158 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: GPIO/IRQ expander cannot map interrupt
-Date: Tue, 29 Nov 2011 07:59:26 +0100
-Message-ID: <20111129065926.GA5044@avionic-0098.mockup.avionic-design.de>
-References: <20111125104511.GA16748@avionic-0098.adnet.avionic-design.de>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDAF8B7@HQMAIL01.nvidia.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH v2 3/4] omap-serial: Add minimal device tree support
+Date: Tue, 29 Nov 2011 12:34:25 +0530
+Message-ID: <4ED483F9.4020107@ti.com>
+References: <1321969456-24266-1-git-send-email-rnayak@ti.com> <1321969456-24266-4-git-send-email-rnayak@ti.com> <4ED38F1C.5080604@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174FDAF8B7-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4ED38F1C.5080604@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, khilman@ti.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On Monday 28 November 2011 07:09 PM, Rob Herring wrote:
+> On 11/22/2011 07:44 AM, Rajendra Nayak wrote:
+>> Adapt the driver to device tree and pass minimal platform
+>> data from device tree needed for console boot.
+>> No power management features will be suppported for now
+>> since it requires more tweaks around OCP settings
+>> to toggle forceidle/noidle/smaridle bits and handling
+>
+> typo: smartidle
+>
+>> remote wakeup and dynamic muxing.
+>>
+>> Signed-off-by: Rajendra Nayak<rnayak@ti.com>
+>
+> Acked-by: Rob Herring<rob.herring@calxeda.com>
 
---cWoXeonUoKmBZSoM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks Rob, will fix the above typo.
 
-* Stephen Warren wrote:
-> Thierry Reding wrote at Friday, November 25, 2011 3:45 AM:
-> > The following is an extract from a device tree of a Tegra2-based board =
-I'm
-> > working on:
-> >=20
-> [swarren: Abbreviated the DT during quoting]
-> > 	i2c@7000c000 {
-> > 		keypad1: sx8634@2b {
-> > 			interrupt-parent =3D <&gpioext>;
-> > 			interrupts =3D <2>;
-> > 		gpioext: gpio-ad8p@41 {
-> > 			gpio-controller;
-> > 			#gpio-cells =3D <2>;
-> > 			interrupt-controller;
-> > 			#interrupt-cells =3D <1>;
-> > 	i2c@7000c400 {
-> > 		keypad2: sx8634@2b {
-> > 			interrupt-parent =3D <&gpioext>;
-> > 			interrupts =3D <3>;
-> >=20
-> > So basically I have a GPIO/IRQ expander on the first I2C bus (gpioext) =
-to
-> > which the two keypad (sx8634) chips are connected. They use GPIOs 2 and=
- 3 of
-> > the expander as interrupts.
-> >=20
-> > This all seems to work partially: the gpioext is properly detected as p=
-arent
-> > for both keypad controllers during I2C device registration. Within the
-> > gpio-ad8p driver I register an IRQ domain (using irq_domain_add_simple(=
-)) in
-> > order to allow the OF code to properly map the IRQs for the controller's
-> > children.
-> >=20
-> > The problem, however, is that the keypad I2C devices are registered bef=
-ore the
-> > gpioext device is probed, which results in a situation where the IRQs c=
-annot
-> > be mapped because the gpioext device hasn't had a chance to register th=
-e IRQ
-> > domain yet.
->=20
-> I believe this is something that the forthcoming "deferred probing"
-> mechanism will solve. This isn't in place yet. I /think/ it's one of the
-> things that Grant Likely is working on getting going during his sabattica=
-l,
-> so hopefully there will be some patches you can try out soon.
+>
+> Rob
+>
+>> ---
+>>   .../devicetree/bindings/serial/omap_serial.txt     |   10 ++++
+>>   drivers/tty/serial/omap-serial.c                   |   45 ++++++++++++++++++-
+>>   2 files changed, 52 insertions(+), 3 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/serial/omap_serial.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
+>> new file mode 100644
+>> index 0000000..342eedd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
+>> @@ -0,0 +1,10 @@
+>> +OMAP UART controller
+>> +
+>> +Required properties:
+>> +- compatible : should be "ti,omap2-uart" for OMAP2 controllers
+>> +- compatible : should be "ti,omap3-uart" for OMAP3 controllers
+>> +- compatible : should be "ti,omap4-uart" for OMAP4 controllers
+>> +- ti,hwmods : Must be "uart<n>", n being the instance number (1-based)
+>> +
+>> +Optional properties:
+>> +- clock-frequency : frequency of the clock input to the UART
+>> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+>> index f14b9c5..5aa524e 100644
+>> --- a/drivers/tty/serial/omap-serial.c
+>> +++ b/drivers/tty/serial/omap-serial.c
+>> @@ -38,6 +38,7 @@
+>>   #include<linux/serial_core.h>
+>>   #include<linux/irq.h>
+>>   #include<linux/pm_runtime.h>
+>> +#include<linux/of.h>
+>>
+>>   #include<plat/dma.h>
+>>   #include<plat/dmtimer.h>
+>> @@ -1324,6 +1325,19 @@ static void uart_tx_dma_callback(int lch, u16 ch_status, void *data)
+>>   	return;
+>>   }
+>>
+>> +static struct omap_uart_port_info *of_get_uart_port_info(struct device *dev)
+>> +{
+>> +	struct omap_uart_port_info *omap_up_info;
+>> +
+>> +	omap_up_info = devm_kzalloc(dev, sizeof(*omap_up_info), GFP_KERNEL);
+>> +	if (!omap_up_info)
+>> +		return NULL; /* out of memory */
+>> +
+>> +	of_property_read_u32(dev->of_node, "clock-frequency",
+>> +					&omap_up_info->uartclk);
+>> +	return omap_up_info;
+>> +}
+>> +
+>>   static int serial_omap_probe(struct platform_device *pdev)
+>>   {
+>>   	struct uart_omap_port	*up;
+>> @@ -1331,6 +1345,9 @@ static int serial_omap_probe(struct platform_device *pdev)
+>>   	struct omap_uart_port_info *omap_up_info = pdev->dev.platform_data;
+>>   	int ret = -ENOSPC;
+>>
+>> +	if (pdev->dev.of_node)
+>> +		omap_up_info = of_get_uart_port_info(&pdev->dev);
+>> +
+>>   	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>   	if (!mem) {
+>>   		dev_err(&pdev->dev, "no mem resource?\n");
+>> @@ -1375,9 +1392,20 @@ static int serial_omap_probe(struct platform_device *pdev)
+>>   	up->port.regshift = 2;
+>>   	up->port.fifosize = 64;
+>>   	up->port.ops =&serial_omap_pops;
+>> -	up->port.line = pdev->id;
+>> -	sprintf(up->name, "OMAP UART%d", up->port.line);
+>>
+>> +	if (pdev->dev.of_node)
+>> +		up->port.line = of_alias_get_id(pdev->dev.of_node, "serial");
+>> +	else
+>> +		up->port.line = pdev->id;
+>> +
+>> +	if (up->port.line<  0) {
+>> +		dev_err(&pdev->dev, "failed to get alias/pdev id, errno %d\n",
+>> +								up->port.line);
+>> +		ret = -ENODEV;
+>> +		goto err;
+>> +	}
+>> +
+>> +	sprintf(up->name, "OMAP UART%d", up->port.line);
+>>   	up->port.mapbase = mem->start;
+>>   	up->port.membase = ioremap(mem->start, resource_size(mem));
+>>   	if (!up->port.membase) {
+>> @@ -1530,7 +1558,7 @@ static int serial_omap_runtime_suspend(struct device *dev)
+>>   	if (!up)
+>>   		return -EINVAL;
+>>
+>> -	if (!pdata->enable_wakeup)
+>> +	if (!pdata || !pdata->enable_wakeup)
+>>   		return 0;
+>>
+>>   	if (pdata->get_context_loss_count)
+>> @@ -1591,12 +1619,23 @@ static const struct dev_pm_ops serial_omap_dev_pm_ops = {
+>>   				serial_omap_runtime_resume, NULL)
+>>   };
+>>
+>> +#if defined(CONFIG_OF)
+>> +static const struct of_device_id omap_serial_of_match[] = {
+>> +	{ .compatible = "ti,omap2-uart" },
+>> +	{ .compatible = "ti,omap3-uart" },
+>> +	{ .compatible = "ti,omap4-uart" },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, omap_serial_of_match);
+>> +#endif
+>> +
+>>   static struct platform_driver serial_omap_driver = {
+>>   	.probe          = serial_omap_probe,
+>>   	.remove         = serial_omap_remove,
+>>   	.driver		= {
+>>   		.name	= DRIVER_NAME,
+>>   		.pm	=&serial_omap_dev_pm_ops,
+>> +		.of_match_table = of_match_ptr(omap_serial_of_match),
+>>   	},
+>>   };
+>>
+>
 
-I've seen some patches floating around, but I'm not sure that, in the curre=
-nt
-form, deferred probing will solve this issue. Or at least not solve it in t=
-he
-most efficient way. From what I understand, deferred probing is merely a so=
-rt
-of hook that allows the driver to specify at probe time that some resources
-are still missing and is used for cases where there is no explicit dependen=
-cy
-information and thus the driver core doesn't know in which order devices ne=
-ed
-to be probed.
-
-However, for this particular case we actually have this explicit dependency
-information because the devices specify an interrupt and/or GPIO parent.
-Moreover it's not really the probing that is the issue here, but rather the
-device instantiation. The OF core instantiates the I2C slaves much too early
-(i.e. together with the interrupt parent) and therefore requires access to
-the IRQ domain mapping at the time of the instantiation already.
-
-Using deferred probing in this case would require the driver to repeat the
-complete IRQ mapping sequence that is already done when OF populates the
-device tree. Perhaps in addition to deferred probing we also need deferred
-*instantiation*.
-
-Thierry
-
---cWoXeonUoKmBZSoM
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk7Ugs4ACgkQZ+BJyKLjJp9htACfYnWdPFgmsxKj9yCxRXjS9RD/
-cakAoK6fz0TIhqxCeYnz5blskZyXWu7U
-=Po6w
------END PGP SIGNATURE-----
-
---cWoXeonUoKmBZSoM--
