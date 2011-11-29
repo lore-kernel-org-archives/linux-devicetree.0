@@ -1,36 +1,37 @@
 From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: Configurable interrupt sources, and DT bindings
-Date: Tue, 29 Nov 2011 11:20:10 +0000
-Message-ID: <20111129112010.GD2851@opensource.wolfsonmicro.com>
-References: <4ED40B5F.6030603@nvidia.com>
- <4ED417F2.1030900@gmail.com>
+Subject: Re: GPIO/IRQ expander cannot map interrupt
+Date: Tue, 29 Nov 2011 11:48:58 +0000
+Message-ID: <20111129114858.GB12111@sirena.org.uk>
+References: <20111125104511.GA16748@avionic-0098.adnet.avionic-design.de>
+ <74CDBE0F657A3D45AFBB94109FB122FF174FDAF8B7@HQMAIL01.nvidia.com>
+ <20111129065926.GA5044@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4ED417F2.1030900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111129065926.GA5044-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 28, 2011 at 05:23:30PM -0600, Rob Herring wrote:
+On Tue, Nov 29, 2011 at 07:59:26AM +0100, Thierry Reding wrote:
 
-> I think adding another property is the wrong approach. The information
-> is already there in the interrupt binding. irq_create_of_mapping almost
-> does what you need. Perhaps it could be extended to return the type as
-> part of the irq resource. There are already defined resource bits for this:
+> of hook that allows the driver to specify at probe time that some resources
+> are still missing and is used for cases where there is no explicit dependency
+> information and thus the driver core doesn't know in which order devices need
+> to be probed.
 
-That looks like a sensible place to put the translation but it (or the
-dt_translate() op it calls) is still going to need to figure out the
-value to return from somewhere and if the interrupt binding defines that
-information it's not terribly obvious.
+The intention is to use it at all times and just not bother with
+explicit ordering information as this is going to be more robust
+especially given the need to sort out things like driver registration
+ordering.
+
+> However, for this particular case we actually have this explicit dependency
+> information because the devices specify an interrupt and/or GPIO parent.
+> Moreover it's not really the probing that is the issue here, but rather the
+> device instantiation. The OF core instantiates the I2C slaves much too early
+> (i.e. together with the interrupt parent) and therefore requires access to
+> the IRQ domain mapping at the time of the instantiation already.
+
+That's a separate issue though.
