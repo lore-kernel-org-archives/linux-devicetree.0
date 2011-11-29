@@ -1,14 +1,15 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Versatile Express DT support
-Date: Tue, 29 Nov 2011 17:00:13 +0000
-Message-ID: <20111129170013.GD2829@localhost.localdomain>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH V2] arm/tegra: convert tegra20 to GIC devicetree binding
+Date: Tue, 29 Nov 2011 09:13:37 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFADC@HQMAIL01.nvidia.com>
+References: <1322528052-6516-1-git-send-email-swarren@nvidia.com>
+ <4ED4D78A.6000400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1322579473-8804-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <4ED4D78A.6000400-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,45 +19,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMjksIDIwMTEgYXQgMDM6MTE6MDhQTSArMDAwMCwgUGF3ZWwgTW9sbCB3cm90
-ZToKPiBIaSBBbGwsCj4gCj4gQW5vdGhlciwgaG9wZWZ1bGx5IGNsb3NlIHRvIHRoZSBmaW5hbCwg
-dmVyc2lvbiBvZiB0aGUgc2VyaWVzLi4uCj4gCj4gQ2hhbmdlcyBmcm9tIHYyOgo+IAo+ICogbmV3
-IHBhdGNoIGFkZGluZyBFTkRQUk9DIGF0IHRoZSBlbmQgb2YgYXJjaC9hcm0vcGxhdC12ZXJzYXRp
-bGUvaGVhZHNtcC5TCj4gICBhbmQgcmVtb3ZpbmcgdXNlIG9mIEJTWU0oKSByZWFsdmlldyBhbmQg
-dmV4cHJlc3MgcGxhdGZvcm0gU01QIGNhbGxzCj4gCj4gKiB1cGRhdGVkIGJpbmRpbmcgZG9jdW1l
-bnRhdGlvbiBhY2NvcmRpbmcgdG8gRGF2ZSdzIGNvbW1lbnRzCj4gCj4gKiBjaGFuZ2VkIG1vdGhl
-cmJvYXJkIGxhYmVscyBwcmVmaXggZnJvbSBtYl8gdG8gdjJtXyAodG8gYmUKPiAgIGNvbnNpc3Rl
-bnQgYWNyb3NzIGNvZGUgYW5kIERUIGZpbGVzKQo+IAo+ICogcmV3b3JrZWQgdjJtIHRpbWVyIGlu
-aXRpYWxpemF0aW9uIChhZ2Fpbikgc28gbm8gI2lmZGVmcyBhcmUgcmVxdWlyZWQKPiAgIGluIG5v
-bi1EVCBjb2RlCj4gCj4gKiByZW5hbWVkICh0byB2ZW5kb3ItIGFuZCBwbGF0Zm9ybS1zcGVjaWZp
-YyAiYXJtLHYybS10aW1lciIpIGFuZCBtb3ZlZAo+ICAgKHRvIHZleHByZXNzLXYybSouZHRzaSBm
-aWxlcykgdGltZXIgRFQgYWxpYXMsIGFzIGl0IGlzIGFjdHVhbGx5Cj4gICBtb3RoZXJib2FyZCBz
-cGVjaWZpYyBhbmQgdGhlIHRpbGUgRFRTIHNob3VsZG4ndCBoYXZlIHRvIGNhcmU7Cj4gICBkb2N1
-bWVudGF0aW9uIHVwZGF0ZWQgYWNjb3JkaW5nbHkKPiAKPiBUZXN0ZWQgb24gVjJQLUNBOSB3aXRo
-IEFUQUdzIGFuZCBEVCBhbmQgb24gVjJQLUNBNXMgd2l0aCBEVC4KPiAKPiBQcmV2aW91cyB2ZXJz
-aW9uIGhhcyBiZWVuIGFsc28gdGVzdGVkIGJ5IFJ5YW4gSGFya2luIGFuZAo+IHByb3Zpc2lvbmFs
-bHkgYWNrZWQgYnkgUm9iIEhlcnJpbmcuCj4gCj4gVGhhbmtzIGZvciBhbGwgeW91ciBoZWxwLCBl
-c3BlY2lhbGx5IHRvIERhdmUgZm9yIGhpcyBjb250aW51b3VzIHN1cHBvcnQhCgpJJ20gdHJ5aW5n
-IHRvIGJ1aWxkLi4uIHdoYXQgdHJlZSBhcmUgeW91IGJhc2luZyBvbj8KCldpdGggdjMuMi1yYzMg
-b3IgbmV4dCwgSSBnZXQgT0YgaGVhZGVyIGZhaWx1cmVzIGxpa2UgdGhlIGZvbGxvd2luZzoKCmFy
-Y2gvYXJtL2tlcm5lbC9kZXZ0cmVlLmM6IEluIGZ1bmN0aW9uIOKAmGFybV9kdF9tZW1ibG9ja19y
-ZXNlcnZl4oCZOgphcmNoL2FybS9rZXJuZWwvZGV2dHJlZS5jOjQxOjc6IGVycm9yOiDigJhpbml0
-aWFsX2Jvb3RfcGFyYW1z4oCZIHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9u
-KQphcmNoL2FybS9rZXJuZWwvZGV2dHJlZS5jOjQxOjc6IG5vdGU6IGVhY2ggdW5kZWNsYXJlZCBp
-ZGVudGlmaWVyIGlzIHJlcG9ydGVkIG9ubHkgb25jZSBmb3IgZWFjaCBmdW5jdGlvbiBpdCBhcHBl
-YXJzIGluCgpbLi4uXQoKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYzogSW4gZnVuY3Rpb24g
-4oCYdjJtX2R0X3NjYW5fbWVtb3J5X21hcOKAmToKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0u
-Yzo1Mjk6MjogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uIOKAmG9mX2dl
-dF9mbGF0X2R0X3Byb3DigJkKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYzo1Mjk6Nzogd2Fy
-bmluZzogYXNzaWdubWVudCBtYWtlcyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2Fz
-dAoKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYzogSW4gZnVuY3Rpb24g4oCYdjJtX2R0X21h
-cF9pb+KAmToKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYzo1Mzg6MjogZXJyb3I6IGltcGxp
-Y2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uIOKAmG9mX3NjYW5fZmxhdF9kdOKAmQoKQ2hlZXJz
-Ci0tLURhdmUKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMu
-b3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1k
-aXNjdXNzCg==
+Cousson, Benoit wrote at Tuesday, November 29, 2011 6:01 AM:
+> Hi Stephen & Peter,
+> 
+> On 11/29/2011 1:54 AM, Stephen Warren wrote:
+> > From: pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org<pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> [...]
+> 
+> > @@ -125,6 +131,14 @@ void __init tegra_init_irq(void)
+> >   	gic_arch_extn.irq_unmask = tegra_unmask;
+> >   	gic_arch_extn.irq_retrigger = tegra_retrigger;
+> >
+> > -	gic_init(0, 29, IO_ADDRESS(TEGRA_ARM_INT_DIST_BASE),
+> > -		 IO_ADDRESS(TEGRA_ARM_PERIF_BASE + 0x100));
+> > +#ifdef CONFIG_OF
+> > +	/* Check if there is a devicetree present as of_irq_init doesn't
+> > +	 * indicate if an interrupt controller node was found.
+> > +	 */
+> > +	if (of_find_node_by_path("/"))
+> > +		of_irq_init(tegra_irq_match);
+> > +	else
+> > +#endif
+> 
+> For the same kind of need, I found the following API:
+> 
+> of_have_populated_dt()
+> 
+> Moreover, it returns false if !CONFIG_OF, so it will avoid the #ifdef.
+
+That sounds like a great idea. Unfortunately, of_irq_init() is a DT-only
+function. Exynos has the following in mainline to solve this:
+
+        if (!of_have_populated_dt())
+                gic_init_bases(...);
+#ifdef CONFIG_OF
+        else
+                of_irq_init(exynos4_dt_irq_match);
+#endif
+
+Perhaps we should add a dummy of_irq_init() too, so that we can remove
+this ifdef.
+
+-- 
+nvpublic
