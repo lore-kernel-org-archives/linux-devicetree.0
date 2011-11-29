@@ -1,16 +1,14 @@
 From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] ARM: vexpress: DT-based support for CoreTiles
- Express A5x2 and A9x4
-Date: Tue, 29 Nov 2011 16:40:50 +0000
-Message-ID: <20111129164050.GC2829@localhost.localdomain>
+Subject: Re: [PATCH v3 0/5] Versatile Express DT support
+Date: Tue, 29 Nov 2011 17:00:13 +0000
+Message-ID: <20111129170013.GD2829@localhost.localdomain>
 References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-6-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1322579473-8804-6-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1322579473-8804-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,344 +22,41 @@ To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2011 at 03:11:13PM +0000, Pawel Moll wrote:
-> This patch adds Device Trees for ARM Ltd. CoreTile Express A5x2
-> and CoreTile Express A9x4 used with V2M motherboard and an initial
-> implementation of the DT machine support (this code is separate
-> from the current core tile code).
-> 
-> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vexpress-v2p-ca5s.dts |  131 ++++++++++++++++++++++++++++
->  arch/arm/boot/dts/vexpress-v2p-ca9.dts  |  145 +++++++++++++++++++++++++++++++
->  arch/arm/mach-vexpress/Kconfig          |   23 +++++
->  arch/arm/mach-vexpress/Makefile         |    1 +
->  arch/arm/mach-vexpress/v2p-ca5s_ca9.c   |  115 ++++++++++++++++++++++++
->  5 files changed, 415 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca5s.dts
->  create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca9.dts
->  create mode 100644 arch/arm/mach-vexpress/v2p-ca5s_ca9.c
-> 
-> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-> new file mode 100644
-> index 0000000..e63c251
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-> @@ -0,0 +1,131 @@
-> +/*
-> + * ARM Ltd. Versatile Express
-> + *
-> + * CoreTile Express A5x2
-> + * Cortex-A5 MPCore (V2P-CA5s)
-> + *
-> + * HBI-0225B
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	model = "V2P-CA5s";
-> +	arm,hbi = <0x225>;
-> +	compatible = "arm,vexpress-v2p-ca5s";
-> +	interrupt-parent = <&gic>;
-> +
-> +	aliases {
-> +		serial0 = &v2m_serial0;
-> +		serial1 = &v2m_serial1;
-> +		serial2 = &v2m_serial2;
-> +		serial3 = &v2m_serial3;
-> +		i2c0 = &v2m_i2c_dvi;
-> +		i2c1 = &v2m_i2c_pcie;
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x40000000>;
-> +	};
-> +
-> +	hdlcd@2a110000 {
-> +		compatible = "arm,hdlcd";
-> +		reg = <0x2a110000 0x1000>;
-> +		interrupts = <0 85 4>;
-> +	};
-> +
-> +	memory-controller@2a150000 {
-> +		compatible = "arm,pl341", "arm,primecell";
-> +		reg = <0x2a150000 0x1000>;
-> +	};
-> +
-> +	memory-controller@2a190000 {
-> +		compatible = "arm,pl354", "arm,primecell";
-> +		reg = <0x2a190000 0x1000>;
-> +		interrupts = <0 86 4>,
-> +			     <0 87 4>;
-> +	};
-> +
-> +	gic: interrupt-controller@2c001000 {
-> +		compatible = "arm,cortex-a9-gic";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <0>;
-> +		interrupt-controller;
-> +		reg = <0x2c001000 0x1000>,
-> +		      <0x2c000100 0x100>;
-> +	};
-> +
-> +	L2: cache-controller@2c0f0000 {
-> +		compatible = "arm,pl310-cache";
-> +		reg = <0x2c0f0000 0x1000>;
-> +		interrupts = <0 84 4>;
-> +		cache-level = <2>;
-> +		arm,data-latency = <0>;
-> +		arm,tag-latency = <0>;
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,cortex-a9-pmu";
-> +		interrupts = <0 68 4>,
-> +			     <0 69 4>;
-> +	};
-> +
-> +	motherboard {
-> +		ranges = <0 0 0x08000000 0x04000000>,
-> +			 <1 0 0x14000000 0x04000000>,
-> +			 <2 0 0x18000000 0x04000000>,
-> +			 <3 0 0x1c000000 0x04000000>,
-> +			 <4 0 0x0c000000 0x04000000>,
-> +			 <5 0 0x10000000 0x04000000>;
-> +
-> +		interrupt-map-mask = <0 0 63>;
-> +		interrupt-map = <0 0  0 &gic 0  0 4>,
-> +				<0 0  1 &gic 0  1 4>,
-> +				<0 0  2 &gic 0  2 4>,
-> +				<0 0  3 &gic 0  3 4>,
-> +				<0 0  4 &gic 0  4 4>,
-> +				<0 0  5 &gic 0  5 4>,
-> +				<0 0  6 &gic 0  6 4>,
-> +				<0 0  7 &gic 0  7 4>,
-> +				<0 0  8 &gic 0  8 4>,
-> +				<0 0  9 &gic 0  9 4>,
-> +				<0 0 10 &gic 0 10 4>,
-> +				<0 0 11 &gic 0 11 4>,
-> +				<0 0 12 &gic 0 12 4>,
-> +				<0 0 13 &gic 0 13 4>,
-> +				<0 0 14 &gic 0 14 4>,
-> +				<0 0 15 &gic 0 15 4>,
-> +				<0 0 16 &gic 0 16 4>,
-> +				<0 0 17 &gic 0 17 4>,
-> +				<0 0 18 &gic 0 18 4>,
-> +				<0 0 19 &gic 0 19 4>,
-> +				<0 0 20 &gic 0 20 4>,
-> +				<0 0 21 &gic 0 21 4>,
-> +				<0 0 22 &gic 0 22 4>,
-> +				<0 0 23 &gic 0 23 4>,
-> +				<0 0 24 &gic 0 24 4>,
-> +				<0 0 25 &gic 0 25 4>,
-> +				<0 0 26 &gic 0 26 4>,
-> +				<0 0 27 &gic 0 27 4>,
-> +				<0 0 28 &gic 0 28 4>,
-> +				<0 0 29 &gic 0 29 4>,
-> +				<0 0 30 &gic 0 30 4>,
-> +				<0 0 31 &gic 0 31 4>,
-> +				<0 0 32 &gic 0 32 4>,
-> +				<0 0 33 &gic 0 33 4>,
-> +				<0 0 34 &gic 0 34 4>,
-> +				<0 0 35 &gic 0 35 4>,
-> +				<0 0 36 &gic 0 36 4>,
-> +				<0 0 37 &gic 0 37 4>,
-> +				<0 0 38 &gic 0 38 4>,
-> +				<0 0 39 &gic 0 39 4>,
-> +				<0 0 40 &gic 0 40 4>,
-> +				<0 0 41 &gic 0 41 4>,
-> +				<0 0 42 &gic 0 42 4>;
-> +	};
-> +};
-> +
-> +/include/ "vexpress-v2m-rs1.dtsi"
-> diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-> new file mode 100644
-> index 0000000..c51fe09
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-> @@ -0,0 +1,145 @@
-> +/*
-> + * ARM Ltd. Versatile Express
-> + *
-> + * CoreTile Express A9x4
-> + * Cortex-A9 MPCore (V2P-CA9)
-> + *
-> + * HBI-0191B
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	model = "V2P-CA9";
-> +	arm,hbi = <0x191>;
-> +	compatible = "arm,vexpress-v2p-ca9";
-> +	interrupt-parent = <&gic>;
-> +
-> +	aliases {
-> +		serial0 = &v2m_serial0;
-> +		serial1 = &v2m_serial1;
-> +		serial2 = &v2m_serial2;
-> +		serial3 = &v2m_serial3;
-> +		i2c0 = &v2m_i2c_dvi;
-> +		i2c1 = &v2m_i2c_pcie;
-> +	};
-> +
-> +	memory@60000000 {
-> +		device_type = "memory";
-> +		reg = <0x60000000 0x40000000>;
-> +	};
-> +
-> +	clcd@10020000 {
-> +		compatible = "arm,pl111", "arm,primecell";
-> +		reg = <0x10020000 0x1000>;
-> +		interrupts = <0 44 4>;
-> +	};
-> +
-> +	memory-controller@100e0000 {
-> +		compatible = "arm,pl341", "arm,primecell";
-> +		reg = <0x100e0000 0x1000>;
-> +	};
-> +
-> +	memory-controller@100e1000 {
-> +		compatible = "arm,pl354", "arm,primecell";
-> +		reg = <0x100e1000 0x1000>;
-> +		interrupts = <0 45 4>,
-> +			     <0 46 4>;
-> +	};
-> +
-> +	timer@100e4000 {
-> +		compatible = "arm,sp804", "arm,primecell";
-> +		reg = <0x100e4000 0x1000>;
-> +		interrupts = <0 48 4>,
-> +			     <0 49 4>;
-> +	};
-> +
-> +	watchdog@100e5000 {
-> +		compatible = "arm,sp805", "arm,primecell";
-> +		reg = <0x100e5000 0x1000>;
-> +		interrupts = <0 51 4>;
-> +	};
-> +
-> +	gic: interrupt-controller@1e001000 {
-> +		compatible = "arm,cortex-a9-gic";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <0>;
-> +		interrupt-controller;
-> +		reg = <0x1e001000 0x1000>,
-> +		      <0x1e000100 0x100>;
-> +	};
-> +
-> +	L2: cache-controller@1e00a000 {
-> +		compatible = "arm,pl310-cache";
-> +		reg = <0x1e00a000 0x1000>;
-> +		interrupts = <0 43 4>;
-> +		cache-level = <2>;
-> +		arm,data-latency = <0>;
-> +		arm,tag-latency = <0>;
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,cortex-a9-pmu";
-> +		interrupts = <0 60 4>,
-> +			     <0 61 4>,
-> +			     <0 62 4>,
-> +			     <0 63 4>;
-> +	};
-> +
-> +	motherboard {
-> +		ranges = <0 0 0x40000000 0x04000000>,
-> +			 <1 0 0x44000000 0x04000000>,
-> +			 <2 0 0x48000000 0x04000000>,
-> +			 <3 0 0x4c000000 0x04000000>,
-> +			 <7 0 0x10000000 0x00020000>;
-> +
-> +		interrupt-map-mask = <0 0 63>;
-> +		interrupt-map = <0 0  0 &gic 0  0 4>,
-> +				<0 0  1 &gic 0  1 4>,
-> +				<0 0  2 &gic 0  2 4>,
-> +				<0 0  3 &gic 0  3 4>,
-> +				<0 0  4 &gic 0  4 4>,
-> +				<0 0  5 &gic 0  5 4>,
-> +				<0 0  6 &gic 0  6 4>,
-> +				<0 0  7 &gic 0  7 4>,
-> +				<0 0  8 &gic 0  8 4>,
-> +				<0 0  9 &gic 0  9 4>,
-> +				<0 0 10 &gic 0 10 4>,
-> +				<0 0 11 &gic 0 11 4>,
-> +				<0 0 12 &gic 0 12 4>,
-> +				<0 0 13 &gic 0 13 4>,
-> +				<0 0 14 &gic 0 14 4>,
-> +				<0 0 15 &gic 0 15 4>,
-> +				<0 0 16 &gic 0 16 4>,
-> +				<0 0 17 &gic 0 17 4>,
-> +				<0 0 18 &gic 0 18 4>,
-> +				<0 0 19 &gic 0 19 4>,
-> +				<0 0 20 &gic 0 20 4>,
-> +				<0 0 21 &gic 0 21 4>,
-> +				<0 0 22 &gic 0 22 4>,
-> +				<0 0 23 &gic 0 23 4>,
-> +				<0 0 24 &gic 0 24 4>,
-> +				<0 0 25 &gic 0 25 4>,
-> +				<0 0 26 &gic 0 26 4>,
-> +				<0 0 27 &gic 0 27 4>,
-> +				<0 0 28 &gic 0 28 4>,
-> +				<0 0 29 &gic 0 29 4>,
-> +				<0 0 30 &gic 0 30 4>,
-> +				<0 0 31 &gic 0 31 4>,
-> +				<0 0 32 &gic 0 32 4>,
-> +				<0 0 33 &gic 0 33 4>,
-> +				<0 0 34 &gic 0 34 4>,
-> +				<0 0 35 &gic 0 35 4>,
-> +				<0 0 36 &gic 0 36 4>,
-> +				<0 0 37 &gic 0 37 4>,
-> +				<0 0 38 &gic 0 38 4>,
-> +				<0 0 39 &gic 0 39 4>,
-> +				<0 0 40 &gic 0 40 4>,
-> +				<0 0 41 &gic 0 41 4>,
-> +				<0 0 42 &gic 0 42 4>;
-> +	};
-> +};
-> +
-> +/include/ "vexpress-v2m.dtsi"
-> diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfig
-> index 2180888..9eb8161 100644
-> --- a/arch/arm/mach-vexpress/Kconfig
-> +++ b/arch/arm/mach-vexpress/Kconfig
-> @@ -23,4 +23,27 @@ config ARCH_VEXPRESS_RS1
->  	  RS1 VE memory map (i.a. motherboard peripherals at
->  	  0x1c000000, RAM at 0x80000000).
->  
-> +config ARCH_VEXPRESS_V2P_CA5S_CA9
-> +	bool "CoreTile Express A5x2 and A9x4 based platform support"
-> +	select CPU_V7
-> +	select ARM_GIC
-> +	select ARCH_VEXPRESS_RS1
-> +	select ARCH_VEXPRESS_DT
-> +	select ARM_ERRATA_720789
-> +	select ARM_ERRATA_751472
-> +	select PL310_ERRATA_753970 if CACHE_PL310
-
-The config option for L2x0/PL310 doesn't get selected for this platform.
-Rather than bloat the list in arch/arm/mm/Kconfig each time we add a
-coretile (and get a merge conflict with anyone else adding a platform
-with an L2CC) I've posted a patch to attempt to factorise that:
-
-ARM: pl2x0/pl310: Refactor Kconfig to be more maintainable
-
-If this looks OK and nobody objects, I suggest to build on top of that.
-
-
-Note that select PL310_ERRATA_753970 if CACHE_PL310 also needs to be
-propagated to ARCH_VEXPRESS_CA9X4.  Maybe we should have a common symbol
-which selects/depends on the common stuff instead of duplicating it for
-every coretile -- they will tend to get out of sync.
-
-Cheers
----Dave
+T24gVHVlLCBOb3YgMjksIDIwMTEgYXQgMDM6MTE6MDhQTSArMDAwMCwgUGF3ZWwgTW9sbCB3cm90
+ZToKPiBIaSBBbGwsCj4gCj4gQW5vdGhlciwgaG9wZWZ1bGx5IGNsb3NlIHRvIHRoZSBmaW5hbCwg
+dmVyc2lvbiBvZiB0aGUgc2VyaWVzLi4uCj4gCj4gQ2hhbmdlcyBmcm9tIHYyOgo+IAo+ICogbmV3
+IHBhdGNoIGFkZGluZyBFTkRQUk9DIGF0IHRoZSBlbmQgb2YgYXJjaC9hcm0vcGxhdC12ZXJzYXRp
+bGUvaGVhZHNtcC5TCj4gICBhbmQgcmVtb3ZpbmcgdXNlIG9mIEJTWU0oKSByZWFsdmlldyBhbmQg
+dmV4cHJlc3MgcGxhdGZvcm0gU01QIGNhbGxzCj4gCj4gKiB1cGRhdGVkIGJpbmRpbmcgZG9jdW1l
+bnRhdGlvbiBhY2NvcmRpbmcgdG8gRGF2ZSdzIGNvbW1lbnRzCj4gCj4gKiBjaGFuZ2VkIG1vdGhl
+cmJvYXJkIGxhYmVscyBwcmVmaXggZnJvbSBtYl8gdG8gdjJtXyAodG8gYmUKPiAgIGNvbnNpc3Rl
+bnQgYWNyb3NzIGNvZGUgYW5kIERUIGZpbGVzKQo+IAo+ICogcmV3b3JrZWQgdjJtIHRpbWVyIGlu
+aXRpYWxpemF0aW9uIChhZ2Fpbikgc28gbm8gI2lmZGVmcyBhcmUgcmVxdWlyZWQKPiAgIGluIG5v
+bi1EVCBjb2RlCj4gCj4gKiByZW5hbWVkICh0byB2ZW5kb3ItIGFuZCBwbGF0Zm9ybS1zcGVjaWZp
+YyAiYXJtLHYybS10aW1lciIpIGFuZCBtb3ZlZAo+ICAgKHRvIHZleHByZXNzLXYybSouZHRzaSBm
+aWxlcykgdGltZXIgRFQgYWxpYXMsIGFzIGl0IGlzIGFjdHVhbGx5Cj4gICBtb3RoZXJib2FyZCBz
+cGVjaWZpYyBhbmQgdGhlIHRpbGUgRFRTIHNob3VsZG4ndCBoYXZlIHRvIGNhcmU7Cj4gICBkb2N1
+bWVudGF0aW9uIHVwZGF0ZWQgYWNjb3JkaW5nbHkKPiAKPiBUZXN0ZWQgb24gVjJQLUNBOSB3aXRo
+IEFUQUdzIGFuZCBEVCBhbmQgb24gVjJQLUNBNXMgd2l0aCBEVC4KPiAKPiBQcmV2aW91cyB2ZXJz
+aW9uIGhhcyBiZWVuIGFsc28gdGVzdGVkIGJ5IFJ5YW4gSGFya2luIGFuZAo+IHByb3Zpc2lvbmFs
+bHkgYWNrZWQgYnkgUm9iIEhlcnJpbmcuCj4gCj4gVGhhbmtzIGZvciBhbGwgeW91ciBoZWxwLCBl
+c3BlY2lhbGx5IHRvIERhdmUgZm9yIGhpcyBjb250aW51b3VzIHN1cHBvcnQhCgpJJ20gdHJ5aW5n
+IHRvIGJ1aWxkLi4uIHdoYXQgdHJlZSBhcmUgeW91IGJhc2luZyBvbj8KCldpdGggdjMuMi1yYzMg
+b3IgbmV4dCwgSSBnZXQgT0YgaGVhZGVyIGZhaWx1cmVzIGxpa2UgdGhlIGZvbGxvd2luZzoKCmFy
+Y2gvYXJtL2tlcm5lbC9kZXZ0cmVlLmM6IEluIGZ1bmN0aW9uIOKAmGFybV9kdF9tZW1ibG9ja19y
+ZXNlcnZl4oCZOgphcmNoL2FybS9rZXJuZWwvZGV2dHJlZS5jOjQxOjc6IGVycm9yOiDigJhpbml0
+aWFsX2Jvb3RfcGFyYW1z4oCZIHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9u
+KQphcmNoL2FybS9rZXJuZWwvZGV2dHJlZS5jOjQxOjc6IG5vdGU6IGVhY2ggdW5kZWNsYXJlZCBp
+ZGVudGlmaWVyIGlzIHJlcG9ydGVkIG9ubHkgb25jZSBmb3IgZWFjaCBmdW5jdGlvbiBpdCBhcHBl
+YXJzIGluCgpbLi4uXQoKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYzogSW4gZnVuY3Rpb24g
+4oCYdjJtX2R0X3NjYW5fbWVtb3J5X21hcOKAmToKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0u
+Yzo1Mjk6MjogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uIOKAmG9mX2dl
+dF9mbGF0X2R0X3Byb3DigJkKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYzo1Mjk6Nzogd2Fy
+bmluZzogYXNzaWdubWVudCBtYWtlcyBwb2ludGVyIGZyb20gaW50ZWdlciB3aXRob3V0IGEgY2Fz
+dAoKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYzogSW4gZnVuY3Rpb24g4oCYdjJtX2R0X21h
+cF9pb+KAmToKYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy92Mm0uYzo1Mzg6MjogZXJyb3I6IGltcGxp
+Y2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uIOKAmG9mX3NjYW5fZmxhdF9kdOKAmQoKQ2hlZXJz
+Ci0tLURhdmUKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMu
+b3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1k
+aXNjdXNzCg==
