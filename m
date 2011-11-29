@@ -1,115 +1,85 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: RFC of_boardconfig
-Date: Tue, 29 Nov 2011 08:42:21 -0600
-Message-ID: <4ED4EF4D.4080806@gmail.com>
-References: <4ECF9DA8.8000504@openwrt.org>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: [PATCH v3 1/5] ARM: versatile: Add missing ENDPROC to headsmp.S
+Date: Tue, 29 Nov 2011 15:11:09 +0000
+Message-ID: <1322579473-8804-2-git-send-email-pawel.moll@arm.com>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4ECF9DA8.8000504-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/25/2011 07:52 AM, John Crispin wrote:
-> Hi All,
-> 
-> before starting to implement the following proposed wrappers, i wanted
-> to get some more views on the feasibility of these wrappers.
-> 
-> On most routers that OpenWRT supports, we will find a sector within a
-> MTD device that holds the board specific info like MAC, wifi calibration
-> data ...
-> 
-> These wrappers try to provide a generic representation of these board
-> configuration sectors.
-> 
-> Thank you,
-> John
-> 
-> 
-> 
-> Documentation/devicetree/bindings/boardconfig.txt -->
-> 
+Once the ENDPROC is in place, BSYM() in not longer necessary
+to get correct pointer to versatile_secondary_startup().
 
-Sounds like a generic, undefined use name, but your use is specific.
+Signed-off-by: Pawel Moll <pawel.moll@arm.com>
+---
+ arch/arm/mach-realview/platsmp.c  |    3 +--
+ arch/arm/mach-vexpress/platsmp.c  |    4 +---
+ arch/arm/plat-versatile/headsmp.S |    1 +
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
-> The boardconfig master node requires the following properties:
-> - compatible    - should be set to "boardconfig"
-> - partition     - the partition that the data is stored in
->                         "<&partition offset size>"
-> 
-> boardconfig slave nodes require the following properties:
-> - label         - the name that the config element gets exported by
-> - data          - information describing the actual data
->                         "<offset size validator>"
-> 
-> both node types allow to set the following optional properties
-> - magic         - check for magic sequence at correct offset
->                         <offset byte1 byte2 ... byteN>
-
-magic values do what?
-
-> - no-export     - if this property is set the data will *not* be
-> 		  exported via sysfs
-> 
-> It is possible to define N of these sections within the device tree.
-> 
-> Boardconfig example for a device with 2 macs and a wmac eeprom:
->         eep: boardconfig {
->                 compatible = "boarconfig";
->                 partition = <&boardconfpart 0x0 0x100>;
->                 magic = <0x0 0x11 0x22>;
->                 lanmac {
->                         label = "LAN";
-
-How is label used?
-
->                         data = <0x100 0x6>;
->                 };
-> 
->                 wanmac {
->                         label = "WAN";
->                         data = <0x106 0x6>;
->                 };
-> 
->                 ath9keeprom {
->                         label = "eeprom";
->                         partition = <0x200 0x200>;
->                         magic = <0x0 0x55 0xaa 0xaa 0x55>;
->                         no-export;
->                 };
->         };
-> 
-> you can are then able to reference these properties from other nodes:
->         ethernet {
->                 compatible = "ethernet";
->                 phy-mode = "mii";
->                 //mac-address = [ 00 11 22 33 44 55 ];
-
-Why throw out the defined way to set a MAC addr and invent something
-new. If it's separating out some of the properties you want, you can
-have multiple "ethernet" nodes with some properties in each node and it
-all gets combined together at dtb compile time. I think the Tegra and
-other ARM dts files have examples of this.
-
-Rob
-
->                 mac-boardconf = <&eep lanmac>;
->         };
-> 
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+diff --git a/arch/arm/mach-realview/platsmp.c b/arch/arm/mach-realview/platsmp.c
+index e83c654..17c878d 100644
+--- a/arch/arm/mach-realview/platsmp.c
++++ b/arch/arm/mach-realview/platsmp.c
+@@ -17,7 +17,6 @@
+ #include <asm/hardware/gic.h>
+ #include <asm/mach-types.h>
+ #include <asm/smp_scu.h>
+-#include <asm/unified.h>
+ 
+ #include <mach/board-eb.h>
+ #include <mach/board-pb11mp.h>
+@@ -75,6 +74,6 @@ void __init platform_smp_prepare_cpus(unsigned int max_cpus)
+ 	 * until it receives a soft interrupt, and then the
+ 	 * secondary CPU branches to this address.
+ 	 */
+-	__raw_writel(BSYM(virt_to_phys(versatile_secondary_startup)),
++	__raw_writel(virt_to_phys(versatile_secondary_startup),
+ 		     __io_address(REALVIEW_SYS_FLAGSSET));
+ }
+diff --git a/arch/arm/mach-vexpress/platsmp.c b/arch/arm/mach-vexpress/platsmp.c
+index 2b5f7ac..124ffb1 100644
+--- a/arch/arm/mach-vexpress/platsmp.c
++++ b/arch/arm/mach-vexpress/platsmp.c
+@@ -13,8 +13,6 @@
+ #include <linux/smp.h>
+ #include <linux/io.h>
+ 
+-#include <asm/unified.h>
+-
+ #include <mach/motherboard.h>
+ #define V2M_PA_CS7 0x10000000
+ 
+@@ -46,6 +44,6 @@ void __init platform_smp_prepare_cpus(unsigned int max_cpus)
+ 	 * secondary CPU branches to this address.
+ 	 */
+ 	writel(~0, MMIO_P2V(V2M_SYS_FLAGSCLR));
+-	writel(BSYM(virt_to_phys(versatile_secondary_startup)),
++	writel(virt_to_phys(versatile_secondary_startup),
+ 		MMIO_P2V(V2M_SYS_FLAGSSET));
+ }
+diff --git a/arch/arm/plat-versatile/headsmp.S b/arch/arm/plat-versatile/headsmp.S
+index d397a1f..dd703ef 100644
+--- a/arch/arm/plat-versatile/headsmp.S
++++ b/arch/arm/plat-versatile/headsmp.S
+@@ -38,3 +38,4 @@ pen:	ldr	r7, [r6]
+ 	.align
+ 1:	.long	.
+ 	.long	pen_release
++ENDPROC(versatile_secondary_startup)
+-- 
+1.6.3.3
