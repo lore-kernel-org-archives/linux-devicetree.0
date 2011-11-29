@@ -1,151 +1,72 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [PATCH v2 1/3] ARM: at91/aic: add device tree support for AIC
-Date: Tue, 29 Nov 2011 19:07:46 +0100
-Message-ID: <1322590066-430-1-git-send-email-nicolas.ferre@atmel.com>
-References: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <167b5ccfc31d9637186c5201cd83cb62df81fc0f.1322171620.git.nicolas.ferre@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, robherring2@gmail.com, grant.likely@secretlab.ca
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, plagnioj@jcrosoft.com, Nicolas Ferre <nicolas.ferre@atmel.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2] arm/tegra: convert tegra20 to GIC devicetree binding
+Date: Tue, 29 Nov 2011 13:52:27 -0600
+Message-ID: <4ED537FB.1010307@gmail.com>
+References: <1322528052-6516-1-git-send-email-swarren@nvidia.com> <4ED4D78A.6000400@ti.com> <74CDBE0F657A3D45AFBB94109FB122FF174FDAFADC@HQMAIL01.nvidia.com> <4ED51AC4.50303@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4ED51AC4.50303-l0cyMroinI0@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ioremap registers from DT specification and adding
-of a simple irq domain for AIC interrupts.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
-v2: - use of_irq_init() function for device tree probing
-    - add documentation
-    - use own simple struct irq_domain_ops
+On 11/29/2011 11:47 AM, Cousson, Benoit wrote:
+> On 11/29/2011 6:13 PM, Stephen Warren wrote:
+>> Cousson, Benoit wrote at Tuesday, November 29, 2011 6:01 AM:
+>>> Hi Stephen&  Peter,
+>>>
+>>> On 11/29/2011 1:54 AM, Stephen Warren wrote:
+>>>> From: pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org<pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> [...]
+>>>
+>>>> @@ -125,6 +131,14 @@ void __init tegra_init_irq(void)
+>>>>        gic_arch_extn.irq_unmask = tegra_unmask;
+>>>>        gic_arch_extn.irq_retrigger = tegra_retrigger;
+>>>>
+>>>> -    gic_init(0, 29, IO_ADDRESS(TEGRA_ARM_INT_DIST_BASE),
+>>>> -         IO_ADDRESS(TEGRA_ARM_PERIF_BASE + 0x100));
+>>>> +#ifdef CONFIG_OF
+>>>> +    /* Check if there is a devicetree present as of_irq_init doesn't
+>>>> +     * indicate if an interrupt controller node was found.
+>>>> +     */
+>>>> +    if (of_find_node_by_path("/"))
+>>>> +        of_irq_init(tegra_irq_match);
+>>>> +    else
+>>>> +#endif
+>>>
+>>> For the same kind of need, I found the following API:
+>>>
+>>> of_have_populated_dt()
+>>>
+>>> Moreover, it returns false if !CONFIG_OF, so it will avoid the #ifdef.
+>>
+>> That sounds like a great idea. Unfortunately, of_irq_init() is a DT-only
+>> function. Exynos has the following in mainline to solve this:
+>>
+>>          if (!of_have_populated_dt())
+>>                  gic_init_bases(...);
+>> #ifdef CONFIG_OF
+>>          else
+>>                  of_irq_init(exynos4_dt_irq_match);
+>> #endif
+>>
+>> Perhaps we should add a dummy of_irq_init() too, so that we can remove
+>> this ifdef.
+> 
+> Yes, indeed, I think that's much better. Most of_XXX APIs do have a
+> dummy version, but for some reason some of them do not.
+> That one clearly deserve a dummy version.
 
- .../devicetree/bindings/arm/atmel-aic.txt          |   20 +++++++++
- arch/arm/Kconfig                                   |    1 +
- arch/arm/mach-at91/irq.c                           |   45 +++++++++++++++++++-
- 3 files changed, 64 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
+I had an empty version originally and removed it based on Grant's review...
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-aic.txt b/Documentation/devicetree/bindings/arm/atmel-aic.txt
-new file mode 100644
-index 0000000..e306c63
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/atmel-aic.txt
-@@ -0,0 +1,20 @@
-+* Advanced Interrupt Controller (AIC)
-+
-+Required properties:
-+- compatible: Should be "atmel,<chip>-dma"
-+- interrupt-controller: Identifies the node as an interrupt controller.
-+- interrupt-parent: For single AIC system, it is an empty property.
-+- #interrupt-cells: The number of cells to define the interrupts. Must be 1 as
-+  the AIC has no configuration options for interrupt sources. The cell is an u32
-+  and defines the interrupt number.
-+- reg: Should contain AIC registers location and length
-+
-+Example:
-+
-+	aic: interrupt-controller@fffff000 {
-+		compatible = "atmel,at91rm9200-aic";
-+		interrupt-controller;
-+		interrupt-parent;
-+		#interrupt-cells = <1>;
-+		reg = <0xfffff000 0x200>;
-+	};
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 44789ef..293c152 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -318,6 +318,7 @@ config ARCH_AT91
- 	select ARCH_REQUIRE_GPIOLIB
- 	select HAVE_CLK
- 	select CLKDEV_LOOKUP
-+	select IRQ_DOMAIN
- 	help
- 	  This enables support for systems based on the Atmel AT91RM9200,
- 	  AT91SAM9 and AT91CAP9 processors.
-diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
-index be6b639..46418ef 100644
---- a/arch/arm/mach-at91/irq.c
-+++ b/arch/arm/mach-at91/irq.c
-@@ -24,6 +24,9 @@
- #include <linux/module.h>
- #include <linux/mm.h>
- #include <linux/types.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqdomain.h>
- 
- #include <mach/hardware.h>
- #include <asm/irq.h>
-@@ -34,6 +37,12 @@
- #include <asm/mach/map.h>
- 
- void __iomem *at91_aic_base;
-+static struct irq_domain at91_aic_domain;
-+static struct irq_domain_ops at91_aic_domain_ops = {
-+#if defined(CONFIG_OF)
-+	.dt_translate = irq_domain_simple_dt_translate,
-+#endif
-+};
- 
- static void at91_aic_mask_irq(struct irq_data *d)
- {
-@@ -127,6 +136,29 @@ static struct irq_chip at91_aic_chip = {
- 	.irq_set_wake	= at91_aic_set_wake,
- };
- 
-+#if defined(CONFIG_OF)
-+static int __init __at91_aic_of_init(struct device_node *node,
-+				     struct device_node *parent)
-+{
-+	at91_aic_base = of_iomap(node, 0);
-+	at91_aic_domain.of_node = of_node_get(node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aic_ids[] __initconst = {
-+	{ .compatible = "atmel,at91rm9200-aic", .data = __at91_aic_of_init },
-+	{ /*sentinel*/ }
-+};
-+
-+static void __init at91_aic_of_init(void)
-+{
-+	of_irq_init(aic_ids);
-+}
-+#else
-+static void __init at91_aic_of_init(void) {}
-+#endif
-+
- /*
-  * Initialize the AIC interrupt controller.
-  */
-@@ -134,10 +166,13 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
- {
- 	unsigned int i;
- 
--	at91_aic_base = ioremap(AT91_AIC, 512);
-+	if(of_have_populated_dt())
-+		at91_aic_of_init();
-+	else
-+		at91_aic_base = ioremap(AT91_AIC, 512);
- 
- 	if (!at91_aic_base)
--		panic("Impossible to ioremap AT91_AIC\n");
-+		panic("Unable to ioremap AIC registers\n");
- 
- 	/*
- 	 * The IVR is used by macro get_irqnr_and_base to read and verify.
-@@ -169,4 +204,10 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
- 	/* Disable and clear all interrupts initially */
- 	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
- 	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
-+
-+	/* Add irq domain for AIC */
-+	at91_aic_domain.irq_base = at91_aic_domain.hwirq_base = 0;
-+	at91_aic_domain.nr_irq = NR_AIC_IRQS;
-+	at91_aic_domain.ops = &at91_aic_domain_ops;
-+	irq_domain_add(&at91_aic_domain);
- }
--- 
-1.7.5.4
+The original intent was this call should be in a DT board file and
+therefore always enabled. Perhaps you can split tegra_init_irq into 2
+functions with one having all but gic_init and then call that function
+from board-dt.c along with of_irq_init.
+
+Rob
