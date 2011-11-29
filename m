@@ -1,135 +1,64 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Pin control mappings for DT
-Date: Tue, 29 Nov 2011 09:42:55 -0800
-Message-ID: <20111129174255.GQ31337@atomide.com>
-References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2] arm/tegra: convert tegra20 to GIC devicetree binding
+Date: Tue, 29 Nov 2011 18:47:48 +0100
+Message-ID: <4ED51AC4.50303@ti.com>
+References: <1322528052-6516-1-git-send-email-swarren@nvidia.com> <4ED4D78A.6000400@ti.com> <74CDBE0F657A3D45AFBB94109FB122FF174FDAFADC@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFADC-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 11/29/2011 6:13 PM, Stephen Warren wrote:
+> Cousson, Benoit wrote at Tuesday, November 29, 2011 6:01 AM:
+>> Hi Stephen&  Peter,
+>>
+>> On 11/29/2011 1:54 AM, Stephen Warren wrote:
+>>> From: pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org<pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> [...]
+>>
+>>> @@ -125,6 +131,14 @@ void __init tegra_init_irq(void)
+>>>    	gic_arch_extn.irq_unmask = tegra_unmask;
+>>>    	gic_arch_extn.irq_retrigger = tegra_retrigger;
+>>>
+>>> -	gic_init(0, 29, IO_ADDRESS(TEGRA_ARM_INT_DIST_BASE),
+>>> -		 IO_ADDRESS(TEGRA_ARM_PERIF_BASE + 0x100));
+>>> +#ifdef CONFIG_OF
+>>> +	/* Check if there is a devicetree present as of_irq_init doesn't
+>>> +	 * indicate if an interrupt controller node was found.
+>>> +	 */
+>>> +	if (of_find_node_by_path("/"))
+>>> +		of_irq_init(tegra_irq_match);
+>>> +	else
+>>> +#endif
+>>
+>> For the same kind of need, I found the following API:
+>>
+>> of_have_populated_dt()
+>>
+>> Moreover, it returns false if !CONFIG_OF, so it will avoid the #ifdef.
+>
+> That sounds like a great idea. Unfortunately, of_irq_init() is a DT-only
+> function. Exynos has the following in mainline to solve this:
+>
+>          if (!of_have_populated_dt())
+>                  gic_init_bases(...);
+> #ifdef CONFIG_OF
+>          else
+>                  of_irq_init(exynos4_dt_irq_match);
+> #endif
+>
+> Perhaps we should add a dummy of_irq_init() too, so that we can remove
+> this ifdef.
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [111128 23:07]:
-> Greetings,
-> 
-> can we have some initial idea about DT support for pin control
-> devices and how these will look? Since pin control seems to be
-> a cruicial piece for people to get board data out of their kernels
-> we'd better have a common understanding.
+Yes, indeed, I think that's much better. Most of_XXX APIs do have a 
+dummy version, but for some reason some of them do not.
+That one clearly deserve a dummy version.
 
-Below is what I currently have for the pinmux-simple.c driver
-I'm working on. That's easy to change though so please comment.
- 
-> The way I've understood it, we will need three pieces of
-> DT data:
-> 
-> 1) Per-driver info, includes the pin controller base, its pins, their
->  (optional) names and their specific presets like bias etc.
-
-	pinmux@4a100000 {
-		compatible = "pinmux-simple";
-		reg = <0x4a100000 0x194>;
-		#address-cells = <1>;
-		#size-cells = <0>;
-		pinmux,access-width-16bit = <1>;
-
-		pinmux-gpmc_ad0@4a100040 {
-			reg = <0x4a100040>;
-			pinmux,functions =
-				"gpmc_ad0", "sdmmc2_dat0", "", "",
-				"", "", "", "";
-		};
-
-		pinmux-uart3_rx_irrx@4a100144 {
-			reg = <0x4a100144>;
-			pinmux,functions =
-				"uart3_rx_irrx", "dmtimer8_pwm_evt", "", "gpio_143",
-				"", "", "", "safe_mode";
-		};
-
-		...
-	};
-
- 
-> 2) Board pin group definitions, saying "these three pins
->   belong to the group "i2c0-pins"
-
-These should be there for each driver, just like the interrupts:
-
-	uart3: serial@48020000 {
-		compatible = "ti,8250";
-		reg = <0x48020000 0x100>;
-		reg-shift = <2>;
-		interrupts = < 106 >;
-		pins = "uart3_rx_irrx.uart3_rx_irrx",
-			"uart3_tx_irtx.uart3_tx_irtx";
-	};
-
-Note that for now the format for now is pin_register.function.
-I guess we could have it set up with something like:
-
-		pins = <&uart3_rx_irrx 7 0>;
-
-But it easily becomes impossible for people to get it right.
-Anybody got better suggestions here?
-
-Also I don't have anything for setting the driver specific
-default values yet.
- 
-> 3) Board function mapping definitions saying "the pin group
->   'i2c0-pins' is to be used with device i2c0" which can map
->   several groups to a single device.
-
-I don't think is needed? The #2 above allows mapping them
-automatically. However, the mapping needs to be fixed for the
-pinctrl fwk to make this work with both static data DT driver
-instances.
- 
-> (1) should be read out by each pin controller driver and
-> (2)+(3) by the pin controller, specifically  pinmux core.
-
-Yeah it makes sense to have the common code map the DT entries
-to devices.
- 
-> I'm tentatively also thinking about:
-> 
-> (4) Pin group state map - as in "group 'i2c0-pins' have
->   the states 'active', 'sleeping' and 'idle' "
-> 
-> Since this last piece needs to be connected to say
-> bias settings etc it's currently unclear to me how that
-> would work. But (1) thro (3) seem pretty solid.
-
-Setting the pin states seems to be unhandled in the pinctrl
-fwk currently, right?
-
-In many cases it's only the pin using device driver that knows
-how the pins should be set for PM and pulls, so these could
-be set by the default values in DT for each driver.
-
-Then some pins need to be dynamically re-muxed for wake-up
-events etc, so I guess adding generic 'wakeup' and 'disabled'
-modes might do the trick as long as those won't touch the
-pull values configured by the driver. For example, 'wakeup' can
-be used data lines, such as serial rx line. In that case the
-serial rx line would be temporarily muxed into a GPIO input
-function with wake-up flags set for the pin.
-
-Regards, 
-
-Tony
+Regards,
+Benoit
