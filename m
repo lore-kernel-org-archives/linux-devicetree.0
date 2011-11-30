@@ -1,16 +1,15 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Pin control mappings for DT
-Date: Wed, 30 Nov 2011 16:14:56 +0100
-Message-ID: <CACRpkdYY0Am52m2Lss+_wxnxXA9nHiGJ2TTdXymAPk=g4Zg+Jw@mail.gmail.com>
-References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
- <20111129174255.GQ31337@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDAFB24@HQMAIL01.nvidia.com>
- <20111129195937.GO13928@atomide.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
+Date: Wed, 30 Nov 2011 15:37:49 +0000
+Message-ID: <20111130153749.GE2045@localhost.localdomain>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+ <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111129195937.GO13928-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1322579473-8804-5-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,68 +19,94 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2011 at 8:59 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+On Tue, Nov 29, 2011 at 03:11:12PM +0000, Pawel Moll wrote:
+> This patch adds support for RS1 memory map based Versatile Express
+> motherboard.
 
-> The current pinctrl mapping is totally messed up in it's current form I'm
-> sorry to say in a polite way :)
+[...]
 
-Hehe :-)
+> +config ARCH_VEXPRESS_RS1
+> +	bool
+> +	select AUTO_ZRELADDR
+> +	select ARM_PATCH_PHYS_VIRT
+> +	help
+> +	  RS1 VE memory map (i.a. motherboard peripherals at
+> +	  0x1c000000, RAM at 0x80000000).
+> +
+>  endmenu
+> diff --git a/arch/arm/mach-vexpress/Makefile.boot b/arch/arm/mach-vexpress/Makefile.boot
+> index 8630b3d..05b77a5 100644
+> --- a/arch/arm/mach-vexpress/Makefile.boot
+> +++ b/arch/arm/mach-vexpress/Makefile.boot
+> @@ -1,3 +1,9 @@
+> +ifeq ($(CONFIG_ARCH_VEXPRESS_RS1),y)
+> +   zreladdr-y	+= 0x80008000
+> +params_phys-y	:= 0x80000100
+> +initrd_phys-y	:= 0x80800000
 
-> It currently assumes one set of static map data being passed from the
-> board/machine. So you can't mix static data and dynamic data coming
-> from DT.
+This results in a uImage which is a bit broken if using a normal u-Boot
+configured for vexpress-v2p-ca9, because the bootloader makes some
+memory map assumptions, and anyway we don't expect the kernel to work
+unless it's loaded at the start of RAM:
 
-For the global list of maps in pinctrl I sent a patch today which
-augments this so board files can add several incremental sets of
-maps.
 
-So it can now grow dynamically but not shrink dynamically (hey,
-50% done!)
+## Booting kernel from Legacy Image at 62000400 ...
+   Image Name:   Linux-3.2.0-rc3+
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    2464984 Bytes = 2.4 MiB
+   Load Address: 80008000
+   Entry Point:  80008000
+   Verifying Checksum ... OK
+## Loading init Ramdisk from Legacy Image at 80ffffc0 ...
+   Image Name:
+   Image Type:   ARM Linux RAMDisk Image (uncompressed)
+   Data Size:    2216523 Bytes = 2.1 MiB
+   Load Address: 81000000
+   Entry Point:  81000000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 80ffc000
+   Booting using the fdt blob at 0x80ffc000
+   Loading Kernel Image ... OK
+OK
+   Loading Ramdisk to 7fcd3000, end 7fef024b ... OK
+   Loading Device Tree to 7fcce000, end 7fcd2779 ... OK
 
-> And it does not allow freeing the mappings if you have a loadable
-> pinmux module.. Things get even more messed up when trying to support
-> multiple driver instances..
->
-> To sort this out the mappings need to be tied to pinctrl/pinmux driver
-> instances to start with.
+Starting kernel ...
 
-It *is* tied to the pinctrl/pinmux driver instance since each mapping entry
-has:
+Uncompressing Linux... done, booting the kernel.
+Booting Linux on physical CPU 0
+Initializing cgroup subsys cpuset
+Linux version 3.2.0-rc3+ (davem@e103592) (gcc version 4.5.2 (Ubuntu/Linaro 4.5.2-8ubuntu3) ) #12 SMP Wed Nov 30 15:10:19 GMT 2011
+CPU: ARMv7 Processor [410fc091] revision 1 (ARMv7), cr=10c53c7d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+Machine: ARM Versatile Express, model: V2P-CA9
+bootconsole [earlycon0] enabled
+Ignoring RAM at 60000000-7fffffff (vmalloc region overlap).
+Ignoring RAM at 60000000-9fffffff (vmalloc region overlap).
+INITRD: 0x7fcd3000+0x0021d24b is not a memory region - disabling initrd
+Memory policy: ECC disabled, Data cache writealloc
 
- * @ctrl_dev: the pin control device to be used by this mapping, may be NULL
- *      if you provide .ctrl_dev_name instead (this is more common)
- * @ctrl_dev_name: the name of the device controlling this specific mapping,
- *      the name must be the same as in your struct device*, may be NULL if
- *      you provide .ctrl_dev instead
+<HANG>
 
-        struct device *ctrl_dev;
-        const char *ctrl_dev_name;
 
-If what you propose is to do away with these two fields and instead
-store just the rest of the mapping in a per-pinctrl list passed in
-from platform data, as is done with regulators, I see what you mean,
-that's maybe more elegant. The current solution is on par with
-clkdev.
+If I strip the uImage and rebuild it with -a 0x60008000 -e 0x60008000
+and no other changes, that's sufficient to give me a fully booting
+kernel.  I can also boot a single image on v2p-ca9 both with and without
+a dtb in this configuration.
 
-> That should be done before relying on it further
-> and adding more features to it. Anyways, on the positive side, it seems
-> that eventually most mappings can be dynamically generated with DT.
+I'm using a Linaro u-Boot from a couple of releses ago; it's possible
+things have changed since.
 
-Yes, DT will likely make things better.
 
-> Oh, one more thing that needs to be considered is that the mappings are not
-> static. Consider popular development boards like beagle. Depending how
-> you choose to use the available pins, you need to mux them for an
-> extension board, for example. You don't really want to edit the mux mappings
-> and recompile the kernel just to support the same board with different
-> add on boards. Just changing the DT entries should be enough to map
-> the extra pins to an extra I2C controller or LCD or whatever.
+Do you know of any specific u-Boot version which shouldn't have these
+problems?
 
-Once we have DT support for the mappings this should
-come for free I guess?
+Was the hard-coded uImage load address/entry point problem ever fixed?
+(It totally defeats loading a single uImage on multiple board variants.)
 
-Linus
+Cheers
+---Dave
