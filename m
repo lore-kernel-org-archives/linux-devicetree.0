@@ -1,127 +1,107 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V3] ASoC: Tegra I2S: Add device tree binding
-Date: Tue, 29 Nov 2011 18:36:48 -0700
-Message-ID: <1322617008-32055-1-git-send-email-swarren@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: Configurable interrupt sources, and DT bindings
+Date: Tue, 29 Nov 2011 18:24:06 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFD60@HQMAIL01.nvidia.com>
+References: <4ED40B5F.6030603@nvidia.com> <4ED417F2.1030900@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4ED417F2.1030900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v3: Fix compile warning; s/&of_dma/of_dma/.
-v2:
-* Modified binding to include the DMA controller's phandle. This value
-  isn't used by the driver, but is useful to correctly represent the HW.
-* Renamed dma-channel property to dma-request-selector to better match
-  what it describes. Added missing "nvidia," prefix to it.
+Rob Herring wrote at Monday, November 28, 2011 4:24 PM:
+> On 11/28/2011 04:29 PM, Stephen Warren wrote:
+> > Many interrupt sinks support various of active high/low, rising/falling
+> > edge. This can already be configured by setting #interrupt-cells
+> > appropriately, and defining an interrupt-controller-specific binding for
+> > the additional cells.
+> >
+> > At least some interrupt sources have similar configurability in HW. An
+> > example is the WM8903 audio codec, which can generate both active high
+> > and active low interrupt signals.
+> >
+> > One possibility is to describe this directly in the binding for each
+> > interrupt source....
+...
+> > However, given that interrupt sinks already know which signaling methods
+> > they support, and may be configured to accept a specific method per
+> > interrupt input using extra interrupt cells, perhaps the solution isn't
+> > to create a binding that the interrupt sink parses in isolation, but
+> > rather to create a new API within the kernel where the interrupt source
+> > can query the interrupt sink for a list of supported signaling methods,
+> > and pick one that it also supports, and use it. This list could be
+> > restricted based on the interrupts property's extra cells.
+> >
+> > What are people's thoughts here; should we go down this
+> > auto-configuration route, or just explicitly configure interrupt sources
+> > using a binding other than the interrupts property?
+> >
+> > Related, having this negotiation followed by a request_irq() passing the
+> > flags back to the sink seems a little redundant, but I suppose if the
+> > sink is configurable and unconstrained, this is necessary.
+> 
+> I think adding another property is the wrong approach. The information
+> is already there in the interrupt binding. irq_create_of_mapping almost
+> does what you need. Perhaps it could be extended to return the type as
+> part of the irq resource. There are already defined resource bits for this:
+> 
+> /* PnP IRQ specific bits (IORESOURCE_BITS) */
+> #define IORESOURCE_IRQ_HIGHEDGE		(1<<0)
+> #define IORESOURCE_IRQ_LOWEDGE		(1<<1)
+> #define IORESOURCE_IRQ_HIGHLEVEL	(1<<2)
+> #define IORESOURCE_IRQ_LOWLEVEL		(1<<3)
+> 
+> It may be a bit problematic to change irq_create_of_mapping as Sparc has
+> a different version.
 
- .../devicetree/bindings/sound/tegra20-i2s.txt      |   17 ++++++++++++
- sound/soc/tegra/tegra_i2s.c                        |   27 ++++++++++++++++---
- 2 files changed, 39 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/tegra20-i2s.txt
+Taking a look at the code, I think it can work like this:
 
-diff --git a/Documentation/devicetree/bindings/sound/tegra20-i2s.txt b/Documentation/devicetree/bindings/sound/tegra20-i2s.txt
-new file mode 100644
-index 0000000..0df2b5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tegra20-i2s.txt
-@@ -0,0 +1,17 @@
-+NVIDIA Tegra 20 I2S controller
-+
-+Required properties:
-+- compatible : "nvidia,tegra20-i2s"
-+- reg : Should contain I2S registers location and length
-+- interrupts : Should contain I2S interrupt
-+- nvidia,dma-request-selector : The Tegra DMA controller's phandle and
-+  request selector for this I2S controller
-+
-+Example:
-+
-+i2s@70002800 {
-+	compatible = "nvidia,tegra20-i2s";
-+	reg = <0x70002800 0x200>;
-+	interrupts = < 45 >;
-+	nvidia,dma-request-selector = < &apbdma 2 >;
-+};
-diff --git a/sound/soc/tegra/tegra_i2s.c b/sound/soc/tegra/tegra_i2s.c
-index ca4d0c0..33509de 100644
---- a/sound/soc/tegra/tegra_i2s.c
-+++ b/sound/soc/tegra/tegra_i2s.c
-@@ -36,6 +36,7 @@
- #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- #include <mach/iomap.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
-@@ -331,6 +332,8 @@ static __devinit int tegra_i2s_platform_probe(struct platform_device *pdev)
- {
- 	struct tegra_i2s * i2s;
- 	struct resource *mem, *memregion, *dmareq;
-+	u32 of_dma[2];
-+	u32 dma_ch;
- 	int ret;
- 
- 	i2s = devm_kzalloc(&pdev->dev, sizeof(struct tegra_i2s), GFP_KERNEL);
-@@ -360,9 +363,16 @@ static __devinit int tegra_i2s_platform_probe(struct platform_device *pdev)
- 
- 	dmareq = platform_get_resource(pdev, IORESOURCE_DMA, 0);
- 	if (!dmareq) {
--		dev_err(&pdev->dev, "No DMA resource\n");
--		ret = -ENODEV;
--		goto err_clk_put;
-+		if (of_property_read_u32_array(pdev->dev.of_node,
-+					"nvidia,dma-request-selector",
-+					of_dma, 2) < 0) {
-+			dev_err(&pdev->dev, "No DMA resource\n");
-+			ret = -ENODEV;
-+			goto err_clk_put;
-+		}
-+		dma_ch = of_dma[1];
-+	} else {
-+		dma_ch = dmareq->start;
- 	}
- 
- 	memregion = devm_request_mem_region(&pdev->dev, mem->start,
-@@ -383,12 +393,12 @@ static __devinit int tegra_i2s_platform_probe(struct platform_device *pdev)
- 	i2s->capture_dma_data.addr = mem->start + TEGRA_I2S_FIFO2;
- 	i2s->capture_dma_data.wrap = 4;
- 	i2s->capture_dma_data.width = 32;
--	i2s->capture_dma_data.req_sel = dmareq->start;
-+	i2s->capture_dma_data.req_sel = dma_ch;
- 
- 	i2s->playback_dma_data.addr = mem->start + TEGRA_I2S_FIFO1;
- 	i2s->playback_dma_data.wrap = 4;
- 	i2s->playback_dma_data.width = 32;
--	i2s->playback_dma_data.req_sel = dmareq->start;
-+	i2s->playback_dma_data.req_sel = dma_ch;
- 
- 	i2s->reg_ctrl = TEGRA_I2S_CTRL_FIFO_FORMAT_PACKED;
- 
-@@ -422,10 +432,16 @@ static int __devexit tegra_i2s_platform_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id tegra_i2s_of_match[] __devinitconst = {
-+	{ .compatible = "nvidia,tegra20-i2s", },
-+	{},
-+};
-+
- static struct platform_driver tegra_i2s_driver = {
- 	.driver = {
- 		.name = DRV_NAME,
- 		.owner = THIS_MODULE,
-+		.of_match_table = tegra_i2s_of_match,
- 	},
- 	.probe = tegra_i2s_platform_probe,
- 	.remove = __devexit_p(tegra_i2s_platform_remove),
-@@ -436,3 +452,4 @@ MODULE_AUTHOR("Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>");
- MODULE_DESCRIPTION("Tegra I2S ASoC driver");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_DEVICE_TABLE(of, tegra_i2s_of_match);
+* Except for SPARC, irq_of_parse_and_map() calls irq_create_of_mapping(),
+  which calls the IRQ chip's dt_translate() function which can return the
+  type from the interrupt specifier in DT, and if it did, the type is
+  passed to irq_set_irq_type().
+
+* SPARC's custom irq_of_parse_and_map() doesn't call irq_set_irq_type()
+  as far as I can tell. I think we can just ignore this for now; if SPARC
+  wants to participate in this scheme, its custom irq_of_parse_and_map()
+  could be enhanced appropriately.
+
+* I assert that all IRQ chips that want to participate must define an
+  interrupt specifier DT binding that defines the trigger type; e.g.
+  that implemented by using irq_domain_add_simple() and #interrupt-cells
+  greater than 1.
+
+* I assert that all IRQ chips that want to participate must call
+  irqd_set_trigger_type() from their irq_set_type op. This will cache the
+  type for later access. This call is missing from Tegra's GPIO interrupt
+  controller, but can easily be added.
+
+* Create a new function that drivers can call on their Linux interrupt ID,
+  which internally calls irqd_get_trigger_type(). This will return the
+  configured type, and they can adjust their interrupt output pin
+  appropriately, or fail to probe if they can't support the selected type.
+
+* We can probably remove any platform data fields that configure a device's
+  interrupt output type (e.g. WM8903 has an irq_active_low field in pdata)
+  and replace it with this scheme. If that won't work, we can have drivers
+  call the new API only when instantiated from DT, so they continue to
+  work unchanged in the non-DT case.
+
+Does that sound like a reasonable solution? If so, I can start hooking this
+together.
+
 -- 
-1.7.0.4
+nvpublic
