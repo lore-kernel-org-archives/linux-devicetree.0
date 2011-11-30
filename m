@@ -1,18 +1,16 @@
 From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Subject: Re: Pin control mappings for DT
-Date: Wed, 30 Nov 2011 08:54:15 -0800
-Message-ID: <20111130165415.GR13928@atomide.com>
+Date: Wed, 30 Nov 2011 09:12:42 -0800
+Message-ID: <20111130171242.GS13928@atomide.com>
 References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
- <20111129174255.GQ31337@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDAFB24@HQMAIL01.nvidia.com>
- <20111129195937.GO13928@atomide.com>
- <CACRpkdYY0Am52m2Lss+_wxnxXA9nHiGJ2TTdXymAPk=g4Zg+Jw@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF174FDAFB12@HQMAIL01.nvidia.com>
+ <CACRpkdb=dMWhyXv1g9-8jrF3kdqe1kM+fhbJy8kRO5BSR_GBvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYY0Am52m2Lss+_wxnxXA9nHiGJ2TTdXymAPk=g4Zg+Jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CACRpkdb=dMWhyXv1g9-8jrF3kdqe1kM+fhbJy8kRO5BSR_GBvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,95 +24,40 @@ To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [111130 06:39]:
-> On Tue, Nov 29, 2011 at 8:59 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> 
-> > The current pinctrl mapping is totally messed up in it's current form I'm
-> > sorry to say in a polite way :)
-> 
-> Hehe :-)
-
-Heh I knew you would not be offended by that ;)
- 
-> > It currently assumes one set of static map data being passed from the
-> > board/machine. So you can't mix static data and dynamic data coming
-> > from DT.
-> 
-> For the global list of maps in pinctrl I sent a patch today which
-> augments this so board files can add several incremental sets of
-> maps.
-> 
-> So it can now grow dynamically but not shrink dynamically (hey,
-> 50% done!)
-
-Great, sounds like that makes multiple pinmux driver instances to work,
-unloading the pinmux driver of course will still not work..
- 
-> > And it does not allow freeing the mappings if you have a loadable
-> > pinmux module.. Things get even more messed up when trying to support
-> > multiple driver instances..
-> >
-> > To sort this out the mappings need to be tied to pinctrl/pinmux driver
-> > instances to start with.
-> 
-> It *is* tied to the pinctrl/pinmux driver instance since each mapping entry
-> has:
-> 
->  * @ctrl_dev: the pin control device to be used by this mapping, may be NULL
->  *      if you provide .ctrl_dev_name instead (this is more common)
->  * @ctrl_dev_name: the name of the device controlling this specific mapping,
->  *      the name must be the same as in your struct device*, may be NULL if
->  *      you provide .ctrl_dev instead
-> 
->         struct device *ctrl_dev;
->         const char *ctrl_dev_name;
-> 
-> If what you propose is to do away with these two fields and instead
-> store just the rest of the mapping in a per-pinctrl list passed in
-> from platform data, as is done with regulators, I see what you mean,
-> that's maybe more elegant. The current solution is on par with
-> clkdev.
-
-Yes right, they should be per-pinctrl as otherwise we can't free the
-mapping when unloading a pinmux driver. Basically we need a way to do
-pinmux_free_mappings(struct pinmux_map *map) so it only frees per-pinctrl
-map.
-
-Maybe the static map should be copied over to make it per-pinctrl during
-init based on the ctrl_dev_name?
- 
-> > That should be done before relying on it further
-> > and adding more features to it. Anyways, on the positive side, it seems
-> > that eventually most mappings can be dynamically generated with DT.
-> 
-> Yes, DT will likely make things better.
-> 
-> > Oh, one more thing that needs to be considered is that the mappings are not
-> > static. Consider popular development boards like beagle. Depending how
-> > you choose to use the available pins, you need to mux them for an
-> > extension board, for example. You don't really want to edit the mux mappings
-> > and recompile the kernel just to support the same board with different
-> > add on boards. Just changing the DT entries should be enough to map
-> > the extra pins to an extra I2C controller or LCD or whatever.
-> 
-> Once we have DT support for the mappings this should
-> come for free I guess?
-
-Yes that's correct. Then the board just needs to have the add-on board
-defined in DT with it's pins and it will get probed if the drivers
-are there.
-
-Further, we should be able to also support new package variations with
-existing kernels just by modifying the DT data. The only difference
-between package versions is which signals are available and to which
-pins they are being routed.
-
-Just to give some idea of the scope of problem it solves, we already
-have static data for 9 packages in arch/arm/mach-omap2/mux*4*.c with
-omap3 three alone having 4 packages.. Even with that being incremental
-data that's marked __initdata, it's still not a scalable way of doing
-things as there will be more and more packages.
-
-Regards,
-
-Tony
+KiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IFsxMTExMzAgMDU6MDBd
+Ogo+IE9uIFR1ZSwgTm92IDI5LCAyMDExIGF0IDY6NTUgUE0sIFN0ZXBoZW4gV2FycmVuIDxzd2Fy
+cmVuQG52aWRpYS5jb20+IHdyb3RlOgo+ID4gTGludXMgV2FsbGVpaiB3cm90ZSBhdCBUdWVzZGF5
+LCBOb3ZlbWJlciAyOSwgMjAxMSAxMjo0MiBBTToKPiAKPiA+PiAxKSBQZXItZHJpdmVyIGluZm8s
+IGluY2x1ZGVzIHRoZSBwaW4gY29udHJvbGxlciBiYXNlLCBpdHMgcGlucywgdGhlaXIKPiA+PiDC
+oChvcHRpb25hbCkgbmFtZXMgYW5kIHRoZWlyIHNwZWNpZmljIHByZXNldHMgbGlrZSBiaWFzIGV0
+Yy4KPiA+Cj4gPiBJJ20gc3RpbGwgcGxhbm5pbmcgb24gcHV0dGluZyB0aGlzIGFsbCBpbnRvIHRo
+ZSBkcml2ZXIgc291cmNlIGNvZGU7IEkKPiA+IGRvbid0IHJlYWxseSBzZWUgYW55IGFkdmFudGFn
+ZSBvZiBwdXR0aW5nIHRoaXMgYWxtb3N0IHN0YXRpYyBkYXRhIGludG8KPiA+IERUIGp1c3QgdG8g
+cGFyc2UgaXQgYmFjayBvdXQgaW50byB0aGUgc2FtZSB0YWJsZXMgdGhhdCBjb3VsZCBiZSB3cml0
+dGVuCj4gPiBzdHJhaWdodCBpbnRvIHRoZSBkcml2ZXIgYW55d2F5LiAob25seSBhbG1vc3Qgc3Rh
+dGljIHJhdGhlciB0aGFuIHN0YXRpYwo+ID4gc2luY2Ugd2UnbGwgbmVlZCBuZXcgdGFibGVzIGZv
+ciBlYWNoIFNvQykKPiAKPiBJIHRoaW5rIE9NQVAgYWxyZWFkeSBoYXZlIGEgZmV3IGRpZmZlcmVu
+dCBTb0NzIHVzaW5nIHRoZSBzYW1lCj4gcGlubXV4IEhXIGJsb2NrLCBzbyBmb3IgdGhlbSBpdCBt
+YWtlcyBtb3JlIHNlbnNlLgo+IAo+IE1heWJlIHdoZW4geW91IGhhdmUgeW91ciBUZWdyYSA3IGNo
+aXBzIHVzaW5nIHRoZSBzYW1lCj4gY29udHJvbGxlciBhcyBUZWdyYSB7IDMsIDQsIDUsIDYgfSB3
+aXRoIHlldCBhbm90aGVyIHBpbiBsaXN0Cj4gaXQgd2lsbCBtYWtlIHNlbnNlIDotKQo+IAo+IEJl
+c2lkZXMgLSBkb2luZyBpdCBvbmUgd2F5IGRvZXMgbm90IGV4Y2x1ZGUgdGhlIG90aGVyLgoKWWVh
+aCB3ZSBzaG91bGQgYmUgcHJldHR5IGVhc2lseSBhYmxlIHRvIHN1cHBvcnQgYW55IGNvbWJpbmF0
+aW9uCm9mIHRoZSBmb2xsb3dpbmcgZGF0YSBzb3VyY2VzOgoKLSBTdGF0aWMgbWFwcyBwYXNzZWQg
+ZnJvbSBib2FyZC9tYWNoaW5lCi0gTXV4IGRhdGEgYmVpbmcgbG9hZGVkIGR5bmFtaWNhbGx5IGZy
+b20gbG9hZGFibGUgcGlubXV4IG1vZHVsZXMKLSBNdXggZGF0YSBhbmQgbWFwcyBiZWluZyBsb2Fk
+ZWQgZHluYW1pY2FsbHkgZnJvbSBEVAogCj4gSWYgdGhlIHRhYmxlcyBnZXRzIGxhcmdlIEkgd2ls
+bCBoYXZlIFRvcnZhbGRzIG9uIG15IHRhaWwgZm9yCj4gcHV0dGluZyBub25zZW5zaWNhbCBsaXN0
+cyBpbnRvIHRoZSBrZXJuZWwgdGhhdCdkIGJldHRlciBiZWVuCj4ga2VwdCBvdXRzaWRlIGl0LgoK
+WWVhaCB0aGUgcHJvYmxlbSBpcyB0aGF0IGRhdGEgd2lsbCBqdXN0IGdyb3cgYW5kIGdyb3cgYmVj
+YXVzZQpwYWNrYWdlcyBjaGFuZ2Ugd2l0aCBzaHJpbmthZ2UgYW5kIG5lZWQgdG8gc3VwcG9ydCBu
+b24tUE9QIGFuZApQT1AgY2hpcHMuIFNvIG5vIG1hdHRlciB3aGVyZSB5b3Ugc3R1ZmYgdGhpcyBk
+YXRhLCB0aGUgYW1vdW50Cm9mIGlmIHdpbGwganVzdCBncm93LiBQYXNzaW5nIHRoZSBtdXggZGF0
+YSBmcm9tIERUIGhhcyB0aGUKYWR2YW50YWdlIG9mIG9ubHkgcGFzc2luZyBvbmx5IG9uZSBzaW5n
+bGUgaW5zdGFuY2Ugb2YgaG9wZWZ1bGx5CmNvcnJlY3QgZGF0YS4KClNvIHByb2JhYmx5IHNvbWUg
+Y29tYmluYXRpb24gb2Ygc3RhdGljIGRhdGEsIGxvYWRpbmcgZGF0YSBmcm9tCmxvYWRhYmxlIG1v
+ZHVsZXMsIGFuZCBwYXNzaW5nIHNvbWUgZnJvbSBEVCB3aWxsIGJlIHRoZSBvcHRpbWFsCnNvbHV0
+aW9uLgoKUmVnYXJkcywKClRvbnkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRp
+c2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8v
+ZGV2aWNldHJlZS1kaXNjdXNzCg==
