@@ -1,19 +1,17 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Pin control mappings for DT
-Date: Wed, 30 Nov 2011 09:45:38 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFE75@HQMAIL01.nvidia.com>
-References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
- <20111129174255.GQ31337@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDAFB24@HQMAIL01.nvidia.com>
- <20111129195937.GO13928@atomide.com>
- <CACRpkdYY0Am52m2Lss+_wxnxXA9nHiGJ2TTdXymAPk=g4Zg+Jw@mail.gmail.com>
- <20111130165415.GR13928@atomide.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
+Date: Wed, 30 Nov 2011 17:54:10 +0000
+Message-ID: <20111130175410.GJ2045@localhost.localdomain>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+ <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
+ <20111130153749.GE2045@localhost.localdomain>
+ <1322673302.3180.25.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111130165415.GR13928-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1322673302.3180.25.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,42 +21,140 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony Lindgren wrote at Wednesday, November 30, 2011 9:54 AM:
-> * Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [111130 06:39]:
-> > On Tue, Nov 29, 2011 at 8:59 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-...
-> Just to give some idea of the scope of problem it solves, we already
-> have static data for 9 packages in arch/arm/mach-omap2/mux*4*.c with
-> omap3 three alone having 4 packages.. Even with that being incremental
-> data that's marked __initdata, it's still not a scalable way of doing
-> things as there will be more and more packages.
+On Wed, Nov 30, 2011 at 05:15:02PM +0000, Pawel Moll wrote:
+> On Wed, 2011-11-30 at 15:37 +0000, Dave Martin wrote:
+> >
+> > This results in a uImage which is a bit broken if using a normal u-Boot
+> > configured for vexpress-v2p-ca9, because the bootloader makes some
+> > memory map assumptions, and anyway we don't expect the kernel to work
+> > unless it's loaded at the start of RAM:
+> > 
+> > 
+> > ## Booting kernel from Legacy Image at 62000400 ...
+> >    Image Name:   Linux-3.2.0-rc3+
+> >    Image Type:   ARM Linux Kernel Image (uncompressed)
+> >    Data Size:    2464984 Bytes = 2.4 MiB
+> >    Load Address: 80008000
+> >    Entry Point:  80008000
+> >    Verifying Checksum ... OK
+> > ## Loading init Ramdisk from Legacy Image at 80ffffc0 ...
+> >    Image Name:
+> >    Image Type:   ARM Linux RAMDisk Image (uncompressed)
+> >    Data Size:    2216523 Bytes = 2.1 MiB
+> >    Load Address: 81000000
+> >    Entry Point:  81000000
+> >    Verifying Checksum ... OK
+> > ## Flattened Device Tree blob at 80ffc000
+> >    Booting using the fdt blob at 0x80ffc000
+> >    Loading Kernel Image ... OK
+> > OK
+> >    Loading Ramdisk to 7fcd3000, end 7fef024b ... OK
+> >    Loading Device Tree to 7fcce000, end 7fcd2779 ... OK
+> > 
+> > Starting kernel ...
+> > 
+> > Uncompressing Linux... done, booting the kernel.
+> > Booting Linux on physical CPU 0
+> > Initializing cgroup subsys cpuset
+> > Linux version 3.2.0-rc3+ (davem@e103592) (gcc version 4.5.2 (Ubuntu/Linaro 4.5.2-8ubuntu3) ) #12 SMP Wed Nov 30 15:10:19 GMT 2011
+> > CPU: ARMv7 Processor [410fc091] revision 1 (ARMv7), cr=10c53c7d
+> > CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+> > Machine: ARM Versatile Express, model: V2P-CA9
+> > bootconsole [earlycon0] enabled
+> > Ignoring RAM at 60000000-7fffffff (vmalloc region overlap).
+> > Ignoring RAM at 60000000-9fffffff (vmalloc region overlap).
+> > INITRD: 0x7fcd3000+0x0021d24b is not a memory region - disabling initrd
+> > Memory policy: ECC disabled, Data cache writeall
+> > Cheers
+> > ---Dave
+> > 
+> > 
+> > oc
+> > 
+> > <HANG>
+> 
+> Yes, this is known problem with U-boot. Could you try again with
+> "mem=512M" parameter?
 
-Are these purely packaging options for the same silicon, such that any
-pin ID in the pinmux controller always represents the same pad on the
-die, it's just that some may not actually be bonded out to actual pins
-or balls on the package (or some mux functions might select controllers
-that are "not present" in the die)? Or, is this the same IP block used
-in multiple SoCs, where the use of each pin ID in the pinmux controller,
-and the meaning of each mux function value for each pin ID, are actually
-hooked up to different logical functions within the SoC?
+The "ignoring RAM" messages go away...
 
-For the former case (pure bonding options), the pinctrl documentation
-recommends having the pinctrl driver expose the die pads, rather than
-the package pins/balls. That way, there's a pinctrl single data set that
-works across all the n package variations. The only issue here is that
-when constructing the pinctrl mapping table, you need to only actually
-use pins/functions that are valid for the particular SoC you know you're
-using, but that's true anyway irrespective of whether the pinctrl driver
-actually defines the unusable options or not.
+## Booting kernel from Legacy Image at 62000400 ...
+   Image Name:   Linux-3.2.0-rc3+
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    2307920 Bytes = 2.2 MiB
+   Load Address: 80008000
+   Entry Point:  80008000
+   Verifying Checksum ... OK
+## Loading init Ramdisk from Legacy Image at 80ffffc0 ...
+   Image Name:
+   Image Type:   ARM Linux RAMDisk Image (uncompressed)
+   Data Size:    2216523 Bytes = 2.1 MiB
+   Load Address: 81000000
+   Entry Point:  81000000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 80ffc000
+   Booting using the fdt blob at 0x80ffc000
+   Loading Kernel Image ... OK
+OK
+   Loading Ramdisk to 7fcd3000, end 7fef024b ... OK
+   Loading Device Tree to 7fcce000, end 7fcd2779 ... OK
 
-Tegra20 is in the same situation; there are at least 2 packaging options
-for it. The Tegra20 pinctrl driver has been written with 1 dataset
-representing what's on the die, rather than 2 datasets fully representing
-which subsets actually make it out to the package.
+Starting kernel ...
 
--- 
-nvpublic
+Uncompressing Linux... done, booting the kernel.
+Initializing cgroup subsys cpuset
+Linux version 3.2.0-rc3+ (davem@e103592) (gcc version 4.5.2 (Ubuntu/Linaro 4.5.2-8ubuntu3) ) #18 Wed Nov 30 15:54:02 GMT 2011
+CPU: ARMv7 Processor [410fc091] revision 1 (ARMv7), cr=10c53c7d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+Machine: ARM Versatile Express, model: V2P-CA9
+bootconsole [earlycon0] enabled
+INITRD: 0x7fcd3000+0x0021d24b is not a memory region - disabling initrd
+Memory policy: ECC disabled, Data cache writeback
+
+
+... but the kernel still hangs.
+
+U-Boot's built-in assumption about using addresses around 0x7f000000 to
+relocate the dtb and initrd are clearly a problem here, though if that
+was the only problem, the kernel would have booted further than this...
+
+It would be nice to know what's going on here, but I'm reasonably
+convinced that we're just booting the kernel in a silly way here, and
+U-Boot really needs to be fixed to avoid the fixed-load-address
+limitation.
+
+ 
+> > If I strip the uImage and rebuild it with -a 0x60008000 -e 0x60008000
+> > and no other changes, that's sufficient to give me a fully booting
+> > kernel.  I can also boot a single image on v2p-ca9 both with and without
+> > a dtb in this configuration.
+> > 
+> > I'm using a Linaro u-Boot from a couple of releses ago; it's possible
+> > things have changed since.
+> > 
+> > Do you know of any specific u-Boot version which shouldn't have these
+> > problems?
+> > 
+> > Was the hard-coded uImage load address/entry point problem ever fixed?
+> > (It totally defeats loading a single uImage on multiple board variants.)
+> 
+> I simply don't use U-boot at all, what solves the problem
+> "systematically" ;-) I wonder if it was possible to override the
+> load/entry address in the runtime?
+
+I believe not, but there have been some discussions about loading to a
+default "start of RAM" location if the uImage's load address/entry point
+are zero, or having some header flag to indicate this.
+
+I don't know about the implementation status of this, though.
+
+
+Tixy, do you know anything about the current status of this issue in
+U-Boot?  Do you have a workaround for it?
+
+Cheers
+---Dave
