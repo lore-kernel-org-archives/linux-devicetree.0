@@ -1,163 +1,87 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] gpio/tegra: Make it a DT interrupt controller
-Date: Tue, 29 Nov 2011 21:28:11 -0600
-Message-ID: <4ED5A2CB.8020905@gmail.com>
-References: <1322616743-31985-1-git-send-email-swarren@nvidia.com> <1322616743-31985-2-git-send-email-swarren@nvidia.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Configurable interrupt sources, and DT bindings
+Date: Wed, 30 Nov 2011 16:13:49 +1100
+Message-ID: <20111130051349.GG5435@truffala.fritz.box>
+References: <4ED40B5F.6030603@nvidia.com>
+ <20111129013055.GH3508@truffala.fritz.box>
+ <20111129105538.GC2851@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1322616743-31985-2-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111129105538.GC2851-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/29/2011 07:32 PM, Stephen Warren wrote:
-> Fix the DT binding documentation to describe interrupt-related properties,
-> and the contents of "child" node interrupts property.
+On Tue, Nov 29, 2011 at 10:55:38AM +0000, Mark Brown wrote:
+> On Tue, Nov 29, 2011 at 12:30:55PM +1100, David Gibson wrote:
+> > On Mon, Nov 28, 2011 at 03:29:51PM -0700, Stephen Warren wrote:
 > 
-> Update tegra20.dtsi to specify the required interrupt-related properties.
+> > > One possibility is to describe this directly in the binding for each
+> > > interrupt source. I originally proposed the following for the WM8903:
 > 
-> Fix the driver to creating an IRQ domain for itself, so that child node
-> interrupts properties are correctly parsed.
+> ...
 > 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> This patch depends on "arm/tegra: convert tegra20 to GIC devicetree binding",
-> at least for context, and probably functionally (and of course patch 1 in
-> this series).
+> > > Mark Brown pointed out that we probably want to standardize the binding,
+> > > so that every interrupt source doesn't do something different.
 > 
-> I've tested that this patch causes the WM8903 to receive a valid IRQ when
-> instantiated from device-tree (although the patches to instantiate the
-> WM8903 from DT are local to me for now).
+> > Um.. why?  These new properties don't appear to give any information
+> > that isn't already in the interrupts property (albeit in irq
+> > controller dependent form).
 > 
->  .../devicetree/bindings/gpio/gpio_nvidia.txt       |   10 ++++++++++
->  arch/arm/boot/dts/tegra20.dtsi                     |    2 ++
->  drivers/gpio/gpio-tegra.c                          |    4 ++++
->  3 files changed, 16 insertions(+), 0 deletions(-)
+> If nothing else because doing a custom binding for every single
+> interrupt controller out there is depressingly redundant; even if we've
+> got a bunch of legacy devices with odd bindings it's going to be better
+> all round if we have something new devices can just pick up.  Pretty
+> much every single interrupt controller in the embedded space is going to
+> need this information.
+
+Ok, so feel free to define a semi-standard way of encoding this
+information in interrupt specifiers, for use by all new PIC bindings.
+But these new properties still duplicate information that already has
+to be in the interrupts property.  Worse, it provides no way of
+specifying different information for each irq, if the device has
+several.
+
+> There's also the issue of communicating the setting to the interrupt
+> consumer, though this isn't really directly relevant to the device tree
+> bindings.
+
+Right.  I can see a use for some in-kernel interface to let the device
+driver retrieve the level/sense info from the PIC driver (which
+already needs to interpret this from the interrupts property).  But
+that has no effect on the DT bindings.
+
+> > Auto-configuration is the only one that actually seems to do something
+> > new.  It is a potentially interesting problem, one example of a fairly
+> > common class with modern device tree bindings, where things
+> > traditionally assumed to be fixed properties of the hardware are often
+> > runtime configurable in modern setups.
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> index eb4b530..ecdf19c 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> @@ -6,3 +6,13 @@ Required properties:
->    second cell is used to specify optional parameters:
->    - bit 0 specifies polarity (0 for normal, 1 for inverted)
->  - gpio-controller : Marks the device node as a GPIO controller.
-> +- #interrupt-cells : Should be 3.
+> Actually there's a large element of things being fixed by the board but
+> the hardware being able to run with a wide range of board configurations
+> depending on what amuses the electrical engineers and what restrictions
+> the other devices in the system have.  For example, if there are pulls
+> on the board we would want the idle configuration to be whatever the
+> pull value is.
 
-Should be 2??
+Sure, but that's nothing new.  Board constraints are part of the fixed
+hardware information that can already be specified by fixed interrupt
+specifiers in the DT.
 
-> +  The first cell is the GPIO number.
-> +  The second cell is used to specify flags:
-> +    bits[3:0] trigger type and level flags:
-> +      1 = low-to-high edge triggered.
-> +      2 = high-to-low edge triggered.
-> +      4 = active high level-sensitive.
-> +      8 = active low level-sensitive.
-> +      Valid combinations are 1, 2, 3, 4, 8.
-> +- interrupt-controller : Marks the device node as an interrupt controller.
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-> index db6f562..e25f4a6 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -79,6 +79,8 @@
->  			       0 55 0x04
->  			       0 87 0x04
->  			       0 89 0x04 >;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
->  		#gpio-cells = <2>;
->  		gpio-controller;
->  	};
-> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-> index 61044c8..26b0c85 100644
-> --- a/drivers/gpio/gpio-tegra.c
-> +++ b/drivers/gpio/gpio-tegra.c
-> @@ -25,6 +25,7 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/module.h>
-> +#include <linux/irqdomain.h>
->  
->  #include <asm/mach/irq.h>
->  
-> @@ -410,6 +411,9 @@ static int __devinit tegra_gpio_probe(struct platform_device *pdev)
->  			spin_lock_init(&bank->lvl_lock[j]);
->  	}
->  
-> +	if (pdev->dev.of_node)
-> +		irq_domain_add_simple(pdev->dev.of_node, TEGRA_GPIO_TO_IRQ(0));
-> +
-
-This is a bit of a temporary solution. Really, you want to end up with
-something like this to eliminate INT_GPIO_BASE and dynamically assign
-the irqbase:
-
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 61044c8..a146a20 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -139,7 +139,7 @@ static int tegra_gpio_direction_output(struct
-gpio_chip *chip, unsigned offset,
-
- static int tegra_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
- {
--       return TEGRA_GPIO_TO_IRQ(offset);
-+       return irq_domain_to_irq(chip->domain, offset);
-
->>> This is a bit wrong. You need a tegra_gpio_chip containing a domain
-and gpio_chip.
-
- }
-
- static struct gpio_chip tegra_gpio_chip = {
-@@ -155,28 +155,28 @@ static struct gpio_chip tegra_gpio_chip = {
-
- static void tegra_gpio_irq_ack(struct irq_data *d)
- {
--       int gpio = d->irq - INT_GPIO_BASE;
-+       int gpio = d->hwirq;
-
-        tegra_gpio_writel(1 << GPIO_BIT(gpio), GPIO_INT_CLR(gpio));
- }
-
- static void tegra_gpio_irq_mask(struct irq_data *d)
- {
--       int gpio = d->irq - INT_GPIO_BASE;
-+       int gpio = d->hwirq;
-
-        tegra_gpio_mask_write(GPIO_MSK_INT_ENB(gpio), gpio, 0);
- }
-
- static void tegra_gpio_irq_unmask(struct irq_data *d)
- {
--       int gpio = d->irq - INT_GPIO_BASE;
-+       int gpio = d->hwirq;
-
-        tegra_gpio_mask_write(GPIO_MSK_INT_ENB(gpio), gpio, 1);
- }
-
- static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- {
--       int gpio = d->irq - INT_GPIO_BASE;
-+       int gpio = d->hwirq;
-        struct tegra_gpio_bank *bank = irq_data_get_irq_chip_data(d);
-        int port = GPIO_PORT(gpio);
-        int lvl_type;
-@@ -385,6 +385,7 @@ static int __devinit tegra_gpio_probe(struct
-platform_device *pdev)
-        tegra_gpio_chip.of_node = pdev->dev.of_node;
- #endif
-
-+       domain.irq_base = irq_alloc_descs(...)
-
-        gpiochip_add(&tegra_gpio_chip);
-
-        for (gpio = 0; gpio < TEGRA_NR_GPIOS; gpio++) {
-
-
-Rob
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
