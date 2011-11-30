@@ -1,107 +1,163 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Configurable interrupt sources, and DT bindings
-Date: Tue, 29 Nov 2011 18:24:06 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFD60@HQMAIL01.nvidia.com>
-References: <4ED40B5F.6030603@nvidia.com> <4ED417F2.1030900@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] gpio/tegra: Make it a DT interrupt controller
+Date: Tue, 29 Nov 2011 21:28:11 -0600
+Message-ID: <4ED5A2CB.8020905@gmail.com>
+References: <1322616743-31985-1-git-send-email-swarren@nvidia.com> <1322616743-31985-2-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4ED417F2.1030900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1322616743-31985-2-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote at Monday, November 28, 2011 4:24 PM:
-> On 11/28/2011 04:29 PM, Stephen Warren wrote:
-> > Many interrupt sinks support various of active high/low, rising/falling
-> > edge. This can already be configured by setting #interrupt-cells
-> > appropriately, and defining an interrupt-controller-specific binding for
-> > the additional cells.
-> >
-> > At least some interrupt sources have similar configurability in HW. An
-> > example is the WM8903 audio codec, which can generate both active high
-> > and active low interrupt signals.
-> >
-> > One possibility is to describe this directly in the binding for each
-> > interrupt source....
-...
-> > However, given that interrupt sinks already know which signaling methods
-> > they support, and may be configured to accept a specific method per
-> > interrupt input using extra interrupt cells, perhaps the solution isn't
-> > to create a binding that the interrupt sink parses in isolation, but
-> > rather to create a new API within the kernel where the interrupt source
-> > can query the interrupt sink for a list of supported signaling methods,
-> > and pick one that it also supports, and use it. This list could be
-> > restricted based on the interrupts property's extra cells.
-> >
-> > What are people's thoughts here; should we go down this
-> > auto-configuration route, or just explicitly configure interrupt sources
-> > using a binding other than the interrupts property?
-> >
-> > Related, having this negotiation followed by a request_irq() passing the
-> > flags back to the sink seems a little redundant, but I suppose if the
-> > sink is configurable and unconstrained, this is necessary.
+
+
+On 11/29/2011 07:32 PM, Stephen Warren wrote:
+> Fix the DT binding documentation to describe interrupt-related properties,
+> and the contents of "child" node interrupts property.
 > 
-> I think adding another property is the wrong approach. The information
-> is already there in the interrupt binding. irq_create_of_mapping almost
-> does what you need. Perhaps it could be extended to return the type as
-> part of the irq resource. There are already defined resource bits for this:
+> Update tegra20.dtsi to specify the required interrupt-related properties.
 > 
-> /* PnP IRQ specific bits (IORESOURCE_BITS) */
-> #define IORESOURCE_IRQ_HIGHEDGE		(1<<0)
-> #define IORESOURCE_IRQ_LOWEDGE		(1<<1)
-> #define IORESOURCE_IRQ_HIGHLEVEL	(1<<2)
-> #define IORESOURCE_IRQ_LOWLEVEL		(1<<3)
+> Fix the driver to creating an IRQ domain for itself, so that child node
+> interrupts properties are correctly parsed.
 > 
-> It may be a bit problematic to change irq_create_of_mapping as Sparc has
-> a different version.
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> This patch depends on "arm/tegra: convert tegra20 to GIC devicetree binding",
+> at least for context, and probably functionally (and of course patch 1 in
+> this series).
+> 
+> I've tested that this patch causes the WM8903 to receive a valid IRQ when
+> instantiated from device-tree (although the patches to instantiate the
+> WM8903 from DT are local to me for now).
+> 
+>  .../devicetree/bindings/gpio/gpio_nvidia.txt       |   10 ++++++++++
+>  arch/arm/boot/dts/tegra20.dtsi                     |    2 ++
+>  drivers/gpio/gpio-tegra.c                          |    4 ++++
+>  3 files changed, 16 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
+> index eb4b530..ecdf19c 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
+> @@ -6,3 +6,13 @@ Required properties:
+>    second cell is used to specify optional parameters:
+>    - bit 0 specifies polarity (0 for normal, 1 for inverted)
+>  - gpio-controller : Marks the device node as a GPIO controller.
+> +- #interrupt-cells : Should be 3.
 
-Taking a look at the code, I think it can work like this:
+Should be 2??
 
-* Except for SPARC, irq_of_parse_and_map() calls irq_create_of_mapping(),
-  which calls the IRQ chip's dt_translate() function which can return the
-  type from the interrupt specifier in DT, and if it did, the type is
-  passed to irq_set_irq_type().
+> +  The first cell is the GPIO number.
+> +  The second cell is used to specify flags:
+> +    bits[3:0] trigger type and level flags:
+> +      1 = low-to-high edge triggered.
+> +      2 = high-to-low edge triggered.
+> +      4 = active high level-sensitive.
+> +      8 = active low level-sensitive.
+> +      Valid combinations are 1, 2, 3, 4, 8.
+> +- interrupt-controller : Marks the device node as an interrupt controller.
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index db6f562..e25f4a6 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -79,6 +79,8 @@
+>  			       0 55 0x04
+>  			       0 87 0x04
+>  			       0 89 0x04 >;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+>  		#gpio-cells = <2>;
+>  		gpio-controller;
+>  	};
+> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+> index 61044c8..26b0c85 100644
+> --- a/drivers/gpio/gpio-tegra.c
+> +++ b/drivers/gpio/gpio-tegra.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/module.h>
+> +#include <linux/irqdomain.h>
+>  
+>  #include <asm/mach/irq.h>
+>  
+> @@ -410,6 +411,9 @@ static int __devinit tegra_gpio_probe(struct platform_device *pdev)
+>  			spin_lock_init(&bank->lvl_lock[j]);
+>  	}
+>  
+> +	if (pdev->dev.of_node)
+> +		irq_domain_add_simple(pdev->dev.of_node, TEGRA_GPIO_TO_IRQ(0));
+> +
 
-* SPARC's custom irq_of_parse_and_map() doesn't call irq_set_irq_type()
-  as far as I can tell. I think we can just ignore this for now; if SPARC
-  wants to participate in this scheme, its custom irq_of_parse_and_map()
-  could be enhanced appropriately.
+This is a bit of a temporary solution. Really, you want to end up with
+something like this to eliminate INT_GPIO_BASE and dynamically assign
+the irqbase:
 
-* I assert that all IRQ chips that want to participate must define an
-  interrupt specifier DT binding that defines the trigger type; e.g.
-  that implemented by using irq_domain_add_simple() and #interrupt-cells
-  greater than 1.
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index 61044c8..a146a20 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -139,7 +139,7 @@ static int tegra_gpio_direction_output(struct
+gpio_chip *chip, unsigned offset,
 
-* I assert that all IRQ chips that want to participate must call
-  irqd_set_trigger_type() from their irq_set_type op. This will cache the
-  type for later access. This call is missing from Tegra's GPIO interrupt
-  controller, but can easily be added.
+ static int tegra_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+ {
+-       return TEGRA_GPIO_TO_IRQ(offset);
++       return irq_domain_to_irq(chip->domain, offset);
 
-* Create a new function that drivers can call on their Linux interrupt ID,
-  which internally calls irqd_get_trigger_type(). This will return the
-  configured type, and they can adjust their interrupt output pin
-  appropriately, or fail to probe if they can't support the selected type.
+>>> This is a bit wrong. You need a tegra_gpio_chip containing a domain
+and gpio_chip.
 
-* We can probably remove any platform data fields that configure a device's
-  interrupt output type (e.g. WM8903 has an irq_active_low field in pdata)
-  and replace it with this scheme. If that won't work, we can have drivers
-  call the new API only when instantiated from DT, so they continue to
-  work unchanged in the non-DT case.
+ }
 
-Does that sound like a reasonable solution? If so, I can start hooking this
-together.
+ static struct gpio_chip tegra_gpio_chip = {
+@@ -155,28 +155,28 @@ static struct gpio_chip tegra_gpio_chip = {
 
--- 
-nvpublic
+ static void tegra_gpio_irq_ack(struct irq_data *d)
+ {
+-       int gpio = d->irq - INT_GPIO_BASE;
++       int gpio = d->hwirq;
+
+        tegra_gpio_writel(1 << GPIO_BIT(gpio), GPIO_INT_CLR(gpio));
+ }
+
+ static void tegra_gpio_irq_mask(struct irq_data *d)
+ {
+-       int gpio = d->irq - INT_GPIO_BASE;
++       int gpio = d->hwirq;
+
+        tegra_gpio_mask_write(GPIO_MSK_INT_ENB(gpio), gpio, 0);
+ }
+
+ static void tegra_gpio_irq_unmask(struct irq_data *d)
+ {
+-       int gpio = d->irq - INT_GPIO_BASE;
++       int gpio = d->hwirq;
+
+        tegra_gpio_mask_write(GPIO_MSK_INT_ENB(gpio), gpio, 1);
+ }
+
+ static int tegra_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+-       int gpio = d->irq - INT_GPIO_BASE;
++       int gpio = d->hwirq;
+        struct tegra_gpio_bank *bank = irq_data_get_irq_chip_data(d);
+        int port = GPIO_PORT(gpio);
+        int lvl_type;
+@@ -385,6 +385,7 @@ static int __devinit tegra_gpio_probe(struct
+platform_device *pdev)
+        tegra_gpio_chip.of_node = pdev->dev.of_node;
+ #endif
+
++       domain.irq_base = irq_alloc_descs(...)
+
+        gpiochip_add(&tegra_gpio_chip);
+
+        for (gpio = 0; gpio < TEGRA_NR_GPIOS; gpio++) {
+
+
+Rob
