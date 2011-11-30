@@ -1,43 +1,84 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v3 3/5] ARM: vexpress: Add DT support in v2m
-Date: Wed, 30 Nov 2011 11:46:40 +0000
-Message-ID: <1322653600.3164.153.camel@hornet.cambridge.arm.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Versatile Express DT support
+Date: Wed, 30 Nov 2011 12:08:18 +0000
+Message-ID: <20111130120818.GB2045@localhost.localdomain>
 References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-4-git-send-email-pawel.moll@arm.com>
- <201111292119.11554.arnd@arndb.de>
+ <20111129170013.GD2829@localhost.localdomain>
+ <1322587019.3164.111.camel@hornet.cambridge.arm.com>
+ <20111130104842.GA2045@localhost.localdomain>
+ <1322651640.3164.135.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201111292119.11554.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1322651640.3164.135.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDExLTExLTI5IGF0IDIxOjE5ICswMDAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgo+
-IE9uIFR1ZXNkYXkgMjkgTm92ZW1iZXIgMjAxMSwgUGF3ZWwgTW9sbCB3cm90ZToKPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIGNvbXBhY3QtZmxhc2hAMWEwMDAgewo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImF0YS1nZW5lcmljIjsKPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MWEwMDAgMHgxMDAKPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MWExMDAgMHhmMDA+Owo+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWctc2hpZnQgPSA8Mj47Cj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICB9Owo+IAo+IFNob3VsZG4ndCB0aGVyZSBhbHNvIGJlIGEgbW9yZSBz
-cGVjaWZpYyAiY29tcGF0aWJsZSIgdmFsdWUsIGluIGNhc2Ugd2UgaGF2ZQo+IHRvIGRldGVjdCB0
-aGlzIENGIHNsb3QgZm9yIHNvbWUgcmVhc29uPwoKSXQgd2FzIHRoZSBjb21wYXRpYmxlLXZhbHVl
-LW9mLWNob2ljZSBpbgoiZHJpdmVycy9hdGEvcGF0YV9vZl9wbGF0Zm9ybS5jIiwgdW5mb3J0dW5h
-dGVseSB1bmRvY3VtZW50ZWQgLSBhcyBJIGhhdmUKanVzdCByZWFsaXplZCAtIGluIHRoZSAiRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzIi4uLgoKPiBJcyB0aGVyZSBhY3R1YWxseSBu
-byBpbnRlcnJ1cHQ/CgpObywgcG9sbGluZyBtb2RlIG9ubHkuIEFuZCB5ZXMsIGl0IHdvcmtzIDst
-KQoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Nov 30, 2011 at 11:14:00AM +0000, Pawel Moll wrote:
+> On Wed, 2011-11-30 at 10:48 +0000, Dave Martin wrote:
+> > Attached.  It's just vexpress_defconfig, plus ARCH_VEXPRESS_V2P_CA5S_CA9=y
+> 
+> Could you try that?
+> 
+> 8<----------------------------------------------
+> diff --git a/arch/arm/mach-vexpress/Kconfig
+> b/arch/arm/mach-vexpress/Kconfig
+> index 9eb8161..ded66d0 100644
+> --- a/arch/arm/mach-vexpress/Kconfig
+> +++ b/arch/arm/mach-vexpress/Kconfig
+> @@ -11,7 +11,7 @@ config ARCH_VEXPRESS_CA9X4
+>  
+>  config ARCH_VEXPRESS_DT
+>         bool
+> -       select OF
+> +       select USE_OF
+>         help
+>           VE platform *requiring* Flattened Device Tree to boot.
+> 8<----------------------------------------------
+> 
+> The OF is an effect of the USE_OF, not the other way round, sorry about
+> the mistake.
+> 
+> Of course I could go the "classic way" and make the
+> ARCH_VEXPRESS_V2P_CA5S_CA9 dependant on the OF, but this means that the
+> DT-powered tile would be invisible till one enables USE_OF. Any
+> opinions?
+
+Your suggestion fixes it -- I suggest we keep the config this way round;
+this means that OF gets turned on when enabling a coretile which requires
+it, and those coretiles are offered as choices even before OF is turned
+on.  That feels like a sensible behaviour for the config.
+
+
+While we're about this, building of the applicable dtbs is not currently
+enabled.
+
+Can we add this, so that "make dtbs" works?
+
+diff --git a/arch/arm/mach-vexpress/Makefile.boot b/arch/arm/mach-vexpress/Makefile.boot
+index 05b77a5..b89ffde 100644
+--- a/arch/arm/mach-vexpress/Makefile.boot
++++ b/arch/arm/mach-vexpress/Makefile.boot
+@@ -7,3 +7,7 @@ else
+ params_phys-y	:= 0x60000100
+ initrd_phys-y	:= 0x60800000
+ endif
++
++dtb-$(CONFIG_ARCH_VEXPRESS_V2P_CA5S_CA9) += \
++					vexpress-v2p-ca5s.dtb \
++					vexpress-v2p-ca9.dtb
+
+Cheers
+---Dave
