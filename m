@@ -1,161 +1,49 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: [PATCH net-next v5 4/4] powerpc: tqm8548/tqm8xx: add and update CAN device nodes
-Date: Wed, 30 Nov 2011 13:10:35 +0100
-Message-ID: <1322655035-18809-5-git-send-email-wg@grandegger.com>
-References: <1322655035-18809-1-git-send-email-wg@grandegger.com>
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1322655035-18809-1-git-send-email-wg@grandegger.com>
-Sender: linux-can-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: linux-can@vger.kernel.org, socketcan-users@lists.berlios.de, Wolfgang Grandegger <wg@grandegger.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@ozlabs.org, Kumar Gala <galak@kernel.crashing.org>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v3 0/5] Versatile Express DT support
+Date: Wed, 30 Nov 2011 12:15:08 +0000
+Message-ID: <1322655308.3164.177.camel@hornet.cambridge.arm.com>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+ <20111129170013.GD2829@localhost.localdomain>
+ <1322587019.3164.111.camel@hornet.cambridge.arm.com>
+ <20111130104842.GA2045@localhost.localdomain>
+ <1322651640.3164.135.camel@hornet.cambridge.arm.com>
+ <20111130120818.GB2045@localhost.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111130120818.GB2045@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables or updates support for the CC770 and AN82527
-CAN controller on the TQM8548 and TQM8xx boards.
-
-CC: devicetree-discuss@lists.ozlabs.org
-CC: linuxppc-dev@ozlabs.org
-CC: Kumar Gala <galak@kernel.crashing.org>
-Signed-off-by: Wolfgang Grandegger <wg@grandegger.com>
----
- arch/powerpc/boot/dts/tqm8548-bigflash.dts |   19 ++++++++++++++-----
- arch/powerpc/boot/dts/tqm8548.dts          |   19 ++++++++++++++-----
- arch/powerpc/boot/dts/tqm8xx.dts           |   25 +++++++++++++++++++++++++
- 3 files changed, 53 insertions(+), 10 deletions(-)
-
-diff --git a/arch/powerpc/boot/dts/tqm8548-bigflash.dts b/arch/powerpc/boot/dts/tqm8548-bigflash.dts
-index 9452c3c..d918752 100644
---- a/arch/powerpc/boot/dts/tqm8548-bigflash.dts
-+++ b/arch/powerpc/boot/dts/tqm8548-bigflash.dts
-@@ -352,7 +352,7 @@
- 		ranges = <
- 			0 0x0 0xfc000000 0x04000000	// NOR FLASH bank 1
- 			1 0x0 0xf8000000 0x08000000	// NOR FLASH bank 0
--			2 0x0 0xa3000000 0x00008000	// CAN (2 x i82527)
-+			2 0x0 0xa3000000 0x00008000	// CAN (2 x CC770)
- 			3 0x0 0xa3010000 0x00008000	// NAND FLASH
- 
- 		>;
-@@ -393,18 +393,27 @@
- 		};
- 
- 		/* Note: CAN support needs be enabled in U-Boot */
--		can0@2,0 {
--			compatible = "intel,82527"; // Bosch CC770
-+		can@2,0 {
-+			compatible = "bosch,cc770"; // Bosch CC770
- 			reg = <2 0x0 0x100>;
- 			interrupts = <4 1>;
- 			interrupt-parent = <&mpic>;
-+			bosch,external-clock-frequency = <16000000>;
-+			bosch,disconnect-rx1-input;
-+			bosch,disconnect-tx1-output;
-+			bosch,iso-low-speed-mux;
-+			bosch,clock-out-frequency = <16000000>;
- 		};
- 
--		can1@2,100 {
--			compatible = "intel,82527"; // Bosch CC770
-+		can@2,100 {
-+			compatible = "bosch,cc770"; // Bosch CC770
- 			reg = <2 0x100 0x100>;
- 			interrupts = <4 1>;
- 			interrupt-parent = <&mpic>;
-+			bosch,external-clock-frequency = <16000000>;
-+			bosch,disconnect-rx1-input;
-+			bosch,disconnect-tx1-output;
-+			bosch,iso-low-speed-mux;
- 		};
- 
- 		/* Note: NAND support needs to be enabled in U-Boot */
-diff --git a/arch/powerpc/boot/dts/tqm8548.dts b/arch/powerpc/boot/dts/tqm8548.dts
-index 619776f..988d887 100644
---- a/arch/powerpc/boot/dts/tqm8548.dts
-+++ b/arch/powerpc/boot/dts/tqm8548.dts
-@@ -352,7 +352,7 @@
- 		ranges = <
- 			0 0x0 0xfc000000 0x04000000	// NOR FLASH bank 1
- 			1 0x0 0xf8000000 0x08000000	// NOR FLASH bank 0
--			2 0x0 0xe3000000 0x00008000	// CAN (2 x i82527)
-+			2 0x0 0xe3000000 0x00008000	// CAN (2 x CC770)
- 			3 0x0 0xe3010000 0x00008000	// NAND FLASH
- 
- 		>;
-@@ -393,18 +393,27 @@
- 		};
- 
- 		/* Note: CAN support needs be enabled in U-Boot */
--		can0@2,0 {
--			compatible = "intel,82527"; // Bosch CC770
-+		can@2,0 {
-+			compatible = "bosch,cc770"; // Bosch CC770
- 			reg = <2 0x0 0x100>;
- 			interrupts = <4 1>;
- 			interrupt-parent = <&mpic>;
-+			bosch,external-clock-frequency = <16000000>;
-+			bosch,disconnect-rx1-input;
-+			bosch,disconnect-tx1-output;
-+			bosch,iso-low-speed-mux;
-+			bosch,clock-out-frequency = <16000000>;
- 		};
- 
--		can1@2,100 {
--			compatible = "intel,82527"; // Bosch CC770
-+		can@2,100 {
-+			compatible = "bosch,cc770"; // Bosch CC770
- 			reg = <2 0x100 0x100>;
- 			interrupts = <4 1>;
- 			interrupt-parent = <&mpic>;
-+			bosch,external-clock-frequency = <16000000>;
-+			bosch,disconnect-rx1-input;
-+			bosch,disconnect-tx1-output;
-+			bosch,iso-low-speed-mux;
- 		};
- 
- 		/* Note: NAND support needs to be enabled in U-Boot */
-diff --git a/arch/powerpc/boot/dts/tqm8xx.dts b/arch/powerpc/boot/dts/tqm8xx.dts
-index f6da7ec..c3dba25 100644
---- a/arch/powerpc/boot/dts/tqm8xx.dts
-+++ b/arch/powerpc/boot/dts/tqm8xx.dts
-@@ -57,6 +57,7 @@
- 
- 		ranges = <
- 			0x0 0x0 0x40000000 0x800000
-+			0x3 0x0 0xc0000000 0x200
- 		>;
- 
- 		flash@0,0 {
-@@ -67,6 +68,30 @@
- 			bank-width = <4>;
- 			device-width = <2>;
- 		};
-+
-+		/* Note: CAN support needs be enabled in U-Boot */
-+		can@3,0 {
-+			compatible = "intc,82527";
-+			reg = <3 0x0 0x80>;
-+			interrupts = <8 1>;
-+			interrupt-parent = <&PIC>;
-+			bosch,external-clock-frequency = <16000000>;
-+			bosch,disconnect-rx1-input;
-+			bosch,disconnect-tx1-output;
-+			bosch,iso-low-speed-mux;
-+			bosch,clock-out-frequency = <16000000>;
-+		};
-+
-+		can@3,100 {
-+			compatible = "intc,82527";
-+			reg = <3 0x100 0x80>;
-+			interrupts = <8 1>;
-+			interrupt-parent = <&PIC>;
-+			bosch,external-clock-frequency = <16000000>;
-+			bosch,disconnect-rx1-input;
-+			bosch,disconnect-tx1-output;
-+			bosch,iso-low-speed-mux;
-+		};
- 	};
- 
- 	soc@fff00000 {
--- 
-1.7.4.1
-
+T24gV2VkLCAyMDExLTExLTMwIGF0IDEyOjA4ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBZ
+b3VyIHN1Z2dlc3Rpb24gZml4ZXMgaXQgLS0gSSBzdWdnZXN0IHdlIGtlZXAgdGhlIGNvbmZpZyB0
+aGlzIHdheSByb3VuZDsKPiB0aGlzIG1lYW5zIHRoYXQgT0YgZ2V0cyB0dXJuZWQgb24gd2hlbiBl
+bmFibGluZyBhIGNvcmV0aWxlIHdoaWNoIHJlcXVpcmVzCj4gaXQsIGFuZCB0aG9zZSBjb3JldGls
+ZXMgYXJlIG9mZmVyZWQgYXMgY2hvaWNlcyBldmVuIGJlZm9yZSBPRiBpcyB0dXJuZWQKPiBvbi4g
+IFRoYXQgZmVlbHMgbGlrZSBhIHNlbnNpYmxlIGJlaGF2aW91ciBmb3IgdGhlIGNvbmZpZy4KCk9r
+LgoKPiBXaGlsZSB3ZSdyZSBhYm91dCB0aGlzLCBidWlsZGluZyBvZiB0aGUgYXBwbGljYWJsZSBk
+dGJzIGlzIG5vdCBjdXJyZW50bHkKPiBlbmFibGVkLgo+IAo+IENhbiB3ZSBhZGQgdGhpcywgc28g
+dGhhdCAibWFrZSBkdGJzIiB3b3Jrcz8KPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC12
+ZXhwcmVzcy9NYWtlZmlsZS5ib290IGIvYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9NYWtlZmlsZS5i
+b290Cj4gaW5kZXggMDViNzdhNS4uYjg5ZmZkZSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9tYWNo
+LXZleHByZXNzL01ha2VmaWxlLmJvb3QKPiArKysgYi9hcmNoL2FybS9tYWNoLXZleHByZXNzL01h
+a2VmaWxlLmJvb3QKPiBAQCAtNywzICs3LDcgQEAgZWxzZQo+ICBwYXJhbXNfcGh5cy15CTo9IDB4
+NjAwMDAxMDAKPiAgaW5pdHJkX3BoeXMteQk6PSAweDYwODAwMDAwCj4gIGVuZGlmCj4gKwo+ICtk
+dGItJChDT05GSUdfQVJDSF9WRVhQUkVTU19WMlBfQ0E1U19DQTkpICs9IFwKPiArCQkJCQl2ZXhw
+cmVzcy12MnAtY2E1cy5kdGIgXAo+ICsJCQkJCXZleHByZXNzLXYycC1jYTkuZHRiCgpZZXMsIEkg
+YWxyZWFkeSBoYXZlIG1vcmUtb3ItbGVzcyB0aGUgc2FtZSB0aGluZy4KCkNoZWVycyEKClBhd2XF
+ggoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
