@@ -1,77 +1,93 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Wed, 30 Nov 2011 17:15:02 +0000
-Message-ID: <1322673302.3180.25.camel@hornet.cambridge.arm.com>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
- <20111130153749.GE2045@localhost.localdomain>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH 2/2] gpio/tegra: Make it a DT interrupt controller
+Date: Wed, 30 Nov 2011 09:19:42 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFE4D@HQMAIL01.nvidia.com>
+References: <1322616743-31985-1-git-send-email-swarren@nvidia.com>
+ <1322616743-31985-2-git-send-email-swarren@nvidia.com>
+ <4ED5A2CB.8020905@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111130153749.GE2045@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Tixy <tixy@yxit.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4ED5A2CB.8020905-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDExLTExLTMwIGF0IDE1OjM3ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPgo+
-IFRoaXMgcmVzdWx0cyBpbiBhIHVJbWFnZSB3aGljaCBpcyBhIGJpdCBicm9rZW4gaWYgdXNpbmcg
-YSBub3JtYWwgdS1Cb290Cj4gY29uZmlndXJlZCBmb3IgdmV4cHJlc3MtdjJwLWNhOSwgYmVjYXVz
-ZSB0aGUgYm9vdGxvYWRlciBtYWtlcyBzb21lCj4gbWVtb3J5IG1hcCBhc3N1bXB0aW9ucywgYW5k
-IGFueXdheSB3ZSBkb24ndCBleHBlY3QgdGhlIGtlcm5lbCB0byB3b3JrCj4gdW5sZXNzIGl0J3Mg
-bG9hZGVkIGF0IHRoZSBzdGFydCBvZiBSQU06Cj4gCj4gCj4gIyMgQm9vdGluZyBrZXJuZWwgZnJv
-bSBMZWdhY3kgSW1hZ2UgYXQgNjIwMDA0MDAgLi4uCj4gICAgSW1hZ2UgTmFtZTogICBMaW51eC0z
-LjIuMC1yYzMrCj4gICAgSW1hZ2UgVHlwZTogICBBUk0gTGludXggS2VybmVsIEltYWdlICh1bmNv
-bXByZXNzZWQpCj4gICAgRGF0YSBTaXplOiAgICAyNDY0OTg0IEJ5dGVzID0gMi40IE1pQgo+ICAg
-IExvYWQgQWRkcmVzczogODAwMDgwMDAKPiAgICBFbnRyeSBQb2ludDogIDgwMDA4MDAwCj4gICAg
-VmVyaWZ5aW5nIENoZWNrc3VtIC4uLiBPSwo+ICMjIExvYWRpbmcgaW5pdCBSYW1kaXNrIGZyb20g
-TGVnYWN5IEltYWdlIGF0IDgwZmZmZmMwIC4uLgo+ICAgIEltYWdlIE5hbWU6Cj4gICAgSW1hZ2Ug
-VHlwZTogICBBUk0gTGludXggUkFNRGlzayBJbWFnZSAodW5jb21wcmVzc2VkKQo+ICAgIERhdGEg
-U2l6ZTogICAgMjIxNjUyMyBCeXRlcyA9IDIuMSBNaUIKPiAgICBMb2FkIEFkZHJlc3M6IDgxMDAw
-MDAwCj4gICAgRW50cnkgUG9pbnQ6ICA4MTAwMDAwMAo+ICAgIFZlcmlmeWluZyBDaGVja3N1bSAu
-Li4gT0sKPiAjIyBGbGF0dGVuZWQgRGV2aWNlIFRyZWUgYmxvYiBhdCA4MGZmYzAwMAo+ICAgIEJv
-b3RpbmcgdXNpbmcgdGhlIGZkdCBibG9iIGF0IDB4ODBmZmMwMDAKPiAgICBMb2FkaW5nIEtlcm5l
-bCBJbWFnZSAuLi4gT0sKPiBPSwo+ICAgIExvYWRpbmcgUmFtZGlzayB0byA3ZmNkMzAwMCwgZW5k
-IDdmZWYwMjRiIC4uLiBPSwo+ICAgIExvYWRpbmcgRGV2aWNlIFRyZWUgdG8gN2ZjY2UwMDAsIGVu
-ZCA3ZmNkMjc3OSAuLi4gT0sKPiAKPiBTdGFydGluZyBrZXJuZWwgLi4uCj4gCj4gVW5jb21wcmVz
-c2luZyBMaW51eC4uLiBkb25lLCBib290aW5nIHRoZSBrZXJuZWwuCj4gQm9vdGluZyBMaW51eCBv
-biBwaHlzaWNhbCBDUFUgMAo+IEluaXRpYWxpemluZyBjZ3JvdXAgc3Vic3lzIGNwdXNldAo+IExp
-bnV4IHZlcnNpb24gMy4yLjAtcmMzKyAoZGF2ZW1AZTEwMzU5MikgKGdjYyB2ZXJzaW9uIDQuNS4y
-IChVYnVudHUvTGluYXJvIDQuNS4yLTh1YnVudHUzKSApICMxMiBTTVAgV2VkIE5vdiAzMCAxNTox
-MDoxOSBHTVQgMjAxMQo+IENQVTogQVJNdjcgUHJvY2Vzc29yIFs0MTBmYzA5MV0gcmV2aXNpb24g
-MSAoQVJNdjcpLCBjcj0xMGM1M2M3ZAo+IENQVTogUElQVCAvIFZJUFQgbm9uYWxpYXNpbmcgZGF0
-YSBjYWNoZSwgVklQVCBhbGlhc2luZyBpbnN0cnVjdGlvbiBjYWNoZQo+IE1hY2hpbmU6IEFSTSBW
-ZXJzYXRpbGUgRXhwcmVzcywgbW9kZWw6IFYyUC1DQTkKPiBib290Y29uc29sZSBbZWFybHljb24w
-XSBlbmFibGVkCj4gSWdub3JpbmcgUkFNIGF0IDYwMDAwMDAwLTdmZmZmZmZmICh2bWFsbG9jIHJl
-Z2lvbiBvdmVybGFwKS4KPiBJZ25vcmluZyBSQU0gYXQgNjAwMDAwMDAtOWZmZmZmZmYgKHZtYWxs
-b2MgcmVnaW9uIG92ZXJsYXApLgo+IElOSVRSRDogMHg3ZmNkMzAwMCsweDAwMjFkMjRiIGlzIG5v
-dCBhIG1lbW9yeSByZWdpb24gLSBkaXNhYmxpbmcgaW5pdHJkCj4gTWVtb3J5IHBvbGljeTogRUND
-IGRpc2FibGVkLCBEYXRhIGNhY2hlIHdyaXRlYWxsCj4gQ2hlZXJzCj4gLS0tRGF2ZQo+IAo+IAo+
-IG9jCj4gCj4gPEhBTkc+CgpZZXMsIHRoaXMgaXMga25vd24gcHJvYmxlbSB3aXRoIFUtYm9vdC4g
-Q291bGQgeW91IHRyeSBhZ2FpbiB3aXRoCiJtZW09NTEyTSIgcGFyYW1ldGVyPwoKPiBJZiBJIHN0
-cmlwIHRoZSB1SW1hZ2UgYW5kIHJlYnVpbGQgaXQgd2l0aCAtYSAweDYwMDA4MDAwIC1lIDB4NjAw
-MDgwMDAKPiBhbmQgbm8gb3RoZXIgY2hhbmdlcywgdGhhdCdzIHN1ZmZpY2llbnQgdG8gZ2l2ZSBt
-ZSBhIGZ1bGx5IGJvb3RpbmcKPiBrZXJuZWwuICBJIGNhbiBhbHNvIGJvb3QgYSBzaW5nbGUgaW1h
-Z2Ugb24gdjJwLWNhOSBib3RoIHdpdGggYW5kIHdpdGhvdXQKPiBhIGR0YiBpbiB0aGlzIGNvbmZp
-Z3VyYXRpb24uCj4gCj4gSSdtIHVzaW5nIGEgTGluYXJvIHUtQm9vdCBmcm9tIGEgY291cGxlIG9m
-IHJlbGVzZXMgYWdvOyBpdCdzIHBvc3NpYmxlCj4gdGhpbmdzIGhhdmUgY2hhbmdlZCBzaW5jZS4K
-PiAKPiBEbyB5b3Uga25vdyBvZiBhbnkgc3BlY2lmaWMgdS1Cb290IHZlcnNpb24gd2hpY2ggc2hv
-dWxkbid0IGhhdmUgdGhlc2UKPiBwcm9ibGVtcz8KPiAKPiBXYXMgdGhlIGhhcmQtY29kZWQgdUlt
-YWdlIGxvYWQgYWRkcmVzcy9lbnRyeSBwb2ludCBwcm9ibGVtIGV2ZXIgZml4ZWQ/Cj4gKEl0IHRv
-dGFsbHkgZGVmZWF0cyBsb2FkaW5nIGEgc2luZ2xlIHVJbWFnZSBvbiBtdWx0aXBsZSBib2FyZCB2
-YXJpYW50cy4pCgpJIHNpbXBseSBkb24ndCB1c2UgVS1ib290IGF0IGFsbCwgd2hhdCBzb2x2ZXMg
-dGhlIHByb2JsZW0KInN5c3RlbWF0aWNhbGx5IiA7LSkgSSB3b25kZXIgaWYgaXQgd2FzIHBvc3Np
-YmxlIHRvIG92ZXJyaWRlIHRoZQpsb2FkL2VudHJ5IGFkZHJlc3MgaW4gdGhlIHJ1bnRpbWU/CgpD
-aGVlcnMhCgpQYXdlxYIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Rob Herring wrote at Tuesday, November 29, 2011 8:28 PM:
+> On 11/29/2011 07:32 PM, Stephen Warren wrote:
+> > Fix the DT binding documentation to describe interrupt-related properties,
+> > and the contents of "child" node interrupts property.
+> >
+> > Update tegra20.dtsi to specify the required interrupt-related properties.
+> >
+> > Fix the driver to creating an IRQ domain for itself, so that child node
+> > interrupts properties are correctly parsed.
+
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
+...
+> > +- #interrupt-cells : Should be 3.
+> 
+> Should be 2??
+
+Yes, typo.
+
+> > diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+
+> > +	if (pdev->dev.of_node)
+> > +		irq_domain_add_simple(pdev->dev.of_node, TEGRA_GPIO_TO_IRQ(0));
+> > +
+> 
+> This is a bit of a temporary solution. Really, you want to end up with
+> something like this to eliminate INT_GPIO_BASE and dynamically assign
+> the irqbase:
+
+>  static int tegra_gpio_to_irq(struct gpio_chip *chip, unsigned offset)
+>  {
+> -       return TEGRA_GPIO_TO_IRQ(offset);
+> +       return irq_domain_to_irq(chip->domain, offset);
+> 
+> >>> This is a bit wrong. You need a tegra_gpio_chip containing a domain
+> and gpio_chip.
+
+That implies there's always an IRQ domain for this chip. Right now, my
+patch only creates an IRQ domain when the GPIO controller is instantiated
+from DT; there is no domain when instantiated as a platform device from a
+board file. I suppose that really should change, but:
+
+Some board files initialize platform devices as follows:
+
+./arch/arm/mach-tegra/board-seaboard.c:162:	.irq = TEGRA_GPIO_TO_IRQ(TEGRA_GPIO_ISL29018_IRQ),
+./arch/arm/mach-tegra/board-seaboard.c:186:	.irq = TEGRA_GPIO_TO_IRQ(TEGRA_GPIO_CDC_IRQ),
+./arch/arm/mach-tegra/board-harmony.c:104:	.irq = TEGRA_GPIO_TO_IRQ(TEGRA_GPIO_CDC_IRQ),
+
+Is there a way to make that work if there is no static IRQ numbering and
+hence the compile-time macro TEGRA_GPIO_TO_IRQ() doesn't exist?
+
+For Tegra, IRQ domain support (CONFIG_IRQ_DOMAIN) is only enabled via
+CONFIG_USE_OF, so for non-DT builds isn't enabled. I guess we could
+easily make CONFIG_ARCH_TEGRA select CONFIG_IRQ_DOMAIN though.
+
+The sooner we switch to DT-only the better!
+
+>  static void tegra_gpio_irq_ack(struct irq_data *d)
+>  {
+> -       int gpio = d->irq - INT_GPIO_BASE;
+> +       int gpio = d->hwirq;
+
+Is the hwirq field valid when there isn't an IRQ domain?
+
+Thanks for the feedback.
+
+-- 
+nvpublic
