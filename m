@@ -1,17 +1,17 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Wed, 30 Nov 2011 17:54:10 +0000
-Message-ID: <20111130175410.GJ2045@localhost.localdomain>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
- <20111130153749.GE2045@localhost.localdomain>
- <1322673302.3180.25.camel@hornet.cambridge.arm.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: Pin control mappings for DT
+Date: Wed, 30 Nov 2011 10:16:24 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFE9E@HQMAIL01.nvidia.com>
+References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
+ <20111129174255.GQ31337@atomide.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF174FDAFB24@HQMAIL01.nvidia.com>
+ <20111129195937.GO13928@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1322673302.3180.25.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+In-Reply-To: <20111129195937.GO13928-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,140 +21,144 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 30, 2011 at 05:15:02PM +0000, Pawel Moll wrote:
-> On Wed, 2011-11-30 at 15:37 +0000, Dave Martin wrote:
+Tony Lindgren wrote at Tuesday, November 29, 2011 1:00 PM:
+> * Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> [111129 09:27]:
+> > Tony Lindgren wrote at Tuesday, November 29, 2011 10:43 AM:
+> > > * Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [111128 23:07]:
+> > > > Greetings,
+> > > >
+> > > > can we have some initial idea about DT support for pin control
+> > > > devices and how these will look? Since pin control seems to be
+> > > > a cruicial piece for people to get board data out of their kernels
+> > > > we'd better have a common understanding.
+> > ...
+> > > > 2) Board pin group definitions, saying "these three pins
+> > > >   belong to the group "i2c0-pins"
+> > >
+> > > These should be there for each driver, just like the interrupts:
+> > >
+> > > 	uart3: serial@48020000 {
+> > > 		compatible = "ti,8250";
+> > > 		reg = <0x48020000 0x100>;
+> > > 		reg-shift = <2>;
+> > > 		interrupts = < 106 >;
+> > > 		pins = "uart3_rx_irrx.uart3_rx_irrx",
+> > > 			"uart3_tx_irtx.uart3_tx_irtx";
+> > > 	};
 > >
-> > This results in a uImage which is a bit broken if using a normal u-Boot
-> > configured for vexpress-v2p-ca9, because the bootloader makes some
-> > memory map assumptions, and anyway we don't expect the kernel to work
-> > unless it's loaded at the start of RAM:
-> > 
-> > 
-> > ## Booting kernel from Legacy Image at 62000400 ...
-> >    Image Name:   Linux-3.2.0-rc3+
-> >    Image Type:   ARM Linux Kernel Image (uncompressed)
-> >    Data Size:    2464984 Bytes = 2.4 MiB
-> >    Load Address: 80008000
-> >    Entry Point:  80008000
-> >    Verifying Checksum ... OK
-> > ## Loading init Ramdisk from Legacy Image at 80ffffc0 ...
-> >    Image Name:
-> >    Image Type:   ARM Linux RAMDisk Image (uncompressed)
-> >    Data Size:    2216523 Bytes = 2.1 MiB
-> >    Load Address: 81000000
-> >    Entry Point:  81000000
-> >    Verifying Checksum ... OK
-> > ## Flattened Device Tree blob at 80ffc000
-> >    Booting using the fdt blob at 0x80ffc000
-> >    Loading Kernel Image ... OK
-> > OK
-> >    Loading Ramdisk to 7fcd3000, end 7fef024b ... OK
-> >    Loading Device Tree to 7fcce000, end 7fcd2779 ... OK
-> > 
-> > Starting kernel ...
-> > 
-> > Uncompressing Linux... done, booting the kernel.
-> > Booting Linux on physical CPU 0
-> > Initializing cgroup subsys cpuset
-> > Linux version 3.2.0-rc3+ (davem@e103592) (gcc version 4.5.2 (Ubuntu/Linaro 4.5.2-8ubuntu3) ) #12 SMP Wed Nov 30 15:10:19 GMT 2011
-> > CPU: ARMv7 Processor [410fc091] revision 1 (ARMv7), cr=10c53c7d
-> > CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-> > Machine: ARM Versatile Express, model: V2P-CA9
-> > bootconsole [earlycon0] enabled
-> > Ignoring RAM at 60000000-7fffffff (vmalloc region overlap).
-> > Ignoring RAM at 60000000-9fffffff (vmalloc region overlap).
-> > INITRD: 0x7fcd3000+0x0021d24b is not a memory region - disabling initrd
-> > Memory policy: ECC disabled, Data cache writeall
-> > Cheers
-> > ---Dave
-> > 
-> > 
-> > oc
-> > 
-> > <HANG>
+> > I don't agree here. I think that pinmux data is more strongly related
+> > to the pinmux controller HW than the HW blocks that have their signals
+> > affected by the pinmux.
 > 
-> Yes, this is known problem with U-boot. Could you try again with
-> "mem=512M" parameter?
+> I don't think so. The pinmux controller needs to know the available functions.
+> But the functions selected for each driver are board/machine specific.
 
-The "ignoring RAM" messages go away...
+That's certainly true.
 
-## Booting kernel from Legacy Image at 62000400 ...
-   Image Name:   Linux-3.2.0-rc3+
-   Image Type:   ARM Linux Kernel Image (uncompressed)
-   Data Size:    2307920 Bytes = 2.2 MiB
-   Load Address: 80008000
-   Entry Point:  80008000
-   Verifying Checksum ... OK
-## Loading init Ramdisk from Legacy Image at 80ffffc0 ...
-   Image Name:
-   Image Type:   ARM Linux RAMDisk Image (uncompressed)
-   Data Size:    2216523 Bytes = 2.1 MiB
-   Load Address: 81000000
-   Entry Point:  81000000
-   Verifying Checksum ... OK
-## Flattened Device Tree blob at 80ffc000
-   Booting using the fdt blob at 0x80ffc000
-   Loading Kernel Image ... OK
-OK
-   Loading Ramdisk to 7fcd3000, end 7fef024b ... OK
-   Loading Device Tree to 7fcce000, end 7fcd2779 ... OK
+However, in my opinion just because the actual usage of the pinmux is
+board-/machine-specific, that doesn't determine whether the description
+of that usage has to be stored in the DT node of the devices that are
+affected by the pinmux, or in some centralized table.
 
-Starting kernel ...
-
-Uncompressing Linux... done, booting the kernel.
-Initializing cgroup subsys cpuset
-Linux version 3.2.0-rc3+ (davem@e103592) (gcc version 4.5.2 (Ubuntu/Linaro 4.5.2-8ubuntu3) ) #18 Wed Nov 30 15:54:02 GMT 2011
-CPU: ARMv7 Processor [410fc091] revision 1 (ARMv7), cr=10c53c7d
-CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-Machine: ARM Versatile Express, model: V2P-CA9
-bootconsole [earlycon0] enabled
-INITRD: 0x7fcd3000+0x0021d24b is not a memory region - disabling initrd
-Memory policy: ECC disabled, Data cache writeback
-
-
-... but the kernel still hangs.
-
-U-Boot's built-in assumption about using addresses around 0x7f000000 to
-relocate the dtb and initrd are clearly a problem here, though if that
-was the only problem, the kernel would have booted further than this...
-
-It would be nice to know what's going on here, but I'm reasonably
-convinced that we're just booting the kernel in a silly way here, and
-U-Boot really needs to be fixed to avoid the fixed-load-address
-limitation.
-
- 
-> > If I strip the uImage and rebuild it with -a 0x60008000 -e 0x60008000
-> > and no other changes, that's sufficient to give me a fully booting
-> > kernel.  I can also boot a single image on v2p-ca9 both with and without
-> > a dtb in this configuration.
-> > 
-> > I'm using a Linaro u-Boot from a couple of releses ago; it's possible
-> > things have changed since.
-> > 
-> > Do you know of any specific u-Boot version which shouldn't have these
-> > problems?
-> > 
-> > Was the hard-coded uImage load address/entry point problem ever fixed?
-> > (It totally defeats loading a single uImage on multiple board variants.)
+> We already have many alternative pins on the same package at least for
+> omaps. It's up to the board designed to select which pins to use.
+> And the pinmux controller has no way of knowing the routing. And mapping
+> all the combinations in the pinmux driver is just not scalable.
+>
+> > I'd rather see a centralized pinmux table listing all the pinmux settings
+> > that the board should use. Either the table should include references to
+> > other nodes that use each setting, or the other nodes should refer to the
+> > table in the pinmux node and this indicate which settings they should use.
 > 
-> I simply don't use U-boot at all, what solves the problem
-> "systematically" ;-) I wonder if it was possible to override the
-> load/entry address in the runtime?
+> Are you talking about static tables in the kernel? We already have something
+> like this, and it just does not scale. We end up with huge amounts of static
+> data in the kernel that needs to be patched constantly for drivers and PM..
+> 
+> The goal is to boot the same kernel on various SoC/board/machine variants,
+> we don't want to edit a board/machine specific table in the kernel for
+> each variant. Or maybe you have something else in mind that I don't
+> understand?
 
-I believe not, but there have been some discussions about loading to a
-default "start of RAM" location if the uImage's load address/entry point
-are zero, or having some header flag to indicate this.
+Yes, I think we're talking about slightly different things.
 
-I don't know about the implementation status of this, though.
+There are two components to the data:
 
+1) The definition of what the pinmux HW can do.
 
-Tixy, do you know anything about the current status of this issue in
-U-Boot?  Do you have a workaround for it?
+There shouldn't be any combinations here.
 
-Cheers
----Dave
+This data should simply list for each pin what the valid mux options are.
+(or for each pin group if mux registers control n pins at a time as on
+Tegra)
+
+This is the equivalent of the data that the pinctrl driver provides to
+the pinctrl core in Linux.
+
+If a logical function (8-bit MMC) requires 10 pins to be individually
+configured, then that isn't represented at all in this dataset. This is
+why I say "no combinations".
+
+Yes, this can be large in itself, but it's linear in the number of pins,
+groups, and functions, not exponential in the number of possible
+combinations of those pins/groups/functions.
+
+If n packages use the same pinmux HW, but end up routing different subsets
+of die pads to actual package pins/balls, I think this dataset should
+represent the die, not the package options. (See my other email) This
+reduces the number of similar but different datasets (perhaps that's what
+you mean when you talked about combinations?)
+
+This data set is what I'd expect some pinctrl drivers to encode internally
+using static tables, and perhaps some will parse this out of DT, most
+likely using a custom DT binding per pinctrl HW design; perhaps with
+consistent/similar base design across SoCs, but unlikely to be parse by
+any core pinctrl code.
+
+I mainly say that the DT binding is custom here because the information
+needed by the pinctrl driver is pretty custom per SoC. Basic stuff like
+a list of pins, functions may be common, but there will likely be many
+additional fields for each pin/group/function/... needed by the
+individual pinctrl driver.
+
+2) The board-specific configuration for the pinmux.
+
+This only represents the specific usage for a board; it'll say e.g. that
+for SD/MMC controller 2, you need pins A=SD2_CMD, F=SD2_CLK, G..N=SD2_DAT.
+
+This should limit the size of the data; there's no need to represent e.g.
+all the possible sets of pins that a particular SD/MMC controller could be
+mux'd to here, since presumably only a single option is actually valid on
+the board.
+
+This is the equivalent of the mapping table handled by the pinctrl core
+on Linux.
+
+> > Ignoring this objection, if the pinmux details are kept in each device's
+> > own node, the binding needs to be a lot more complex than just listing the
+> > set of pins that are used; the following need to be covered:
+> >
+> > * Alternative configurations e.g. for muxing a single I2C controller on
+> > to multiple sets of I2C pins to represent a bus mux.
+> 
+> Hmm, then you just list the functions in the I2C controller DT entry?
+> The above example already passes two pins.
+
+I suppose with a sufficiently flexible mapping, we could distribute the
+data that becomes the pinctrl mapping table across each device's own
+node.
+
+But when the pinctrl core starts up, it probably won't want to enumerate
+the whole device tree looking for nodes that happen to have properties
+that look like this distributed pinmux binding. I guess we'd need to
+lazily parse each device's DT node when it first calls into pinmux_get().
+
+I wonder what node we'd put the "system hog" entries into. I guess the
+pinctrl core can parse the pinctrl device's own node for the same
+properties whenever a controller is registered.
+
+-- 
+nvpublic
