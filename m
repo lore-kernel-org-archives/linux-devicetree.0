@@ -1,15 +1,16 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Configurable interrupt sources, and DT bindings
-Date: Wed, 30 Nov 2011 16:31:46 +1100
-Message-ID: <20111130053146.GH5435@truffala.fritz.box>
-References: <4ED40B5F.6030603@nvidia.com> <4ED417F2.1030900@gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDAFD60@HQMAIL01.nvidia.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/5] mfd: mc13xxx: add device tree probe support
+Date: Wed, 30 Nov 2011 16:12:10 +0800
+Message-ID: <20111130081209.GB2506@S2100-06.ap.freescale.net>
+References: <1322487439-27254-1-git-send-email-shawn.guo@linaro.org>
+ <1322487439-27254-2-git-send-email-shawn.guo@linaro.org>
+ <4ED49683.10609@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174FDAFD60-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <4ED49683.10609-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,106 +20,69 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+To: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2011 at 06:24:06PM -0800, Stephen Warren wrote:
-> Rob Herring wrote at Monday, November 28, 2011 4:24 PM:
-> > On 11/28/2011 04:29 PM, Stephen Warren wrote:
-> > > Many interrupt sinks support various of active high/low, rising/falling
-> > > edge. This can already be configured by setting #interrupt-cells
-> > > appropriately, and defining an interrupt-controller-specific binding for
-> > > the additional cells.
-> > >
-> > > At least some interrupt sources have similar configurability in HW. An
-> > > example is the WM8903 audio codec, which can generate both active high
-> > > and active low interrupt signals.
-> > >
-> > > One possibility is to describe this directly in the binding for each
-> > > interrupt source....
-> ...
-> > > However, given that interrupt sinks already know which signaling methods
-> > > they support, and may be configured to accept a specific method per
-> > > interrupt input using extra interrupt cells, perhaps the solution isn't
-> > > to create a binding that the interrupt sink parses in isolation, but
-> > > rather to create a new API within the kernel where the interrupt source
-> > > can query the interrupt sink for a list of supported signaling methods,
-> > > and pick one that it also supports, and use it. This list could be
-> > > restricted based on the interrupts property's extra cells.
-> > >
-> > > What are people's thoughts here; should we go down this
-> > > auto-configuration route, or just explicitly configure interrupt sources
-> > > using a binding other than the interrupts property?
-> > >
-> > > Related, having this negotiation followed by a request_irq() passing the
-> > > flags back to the sink seems a little redundant, but I suppose if the
-> > > sink is configurable and unconstrained, this is necessary.
-> > 
-> > I think adding another property is the wrong approach. The information
-> > is already there in the interrupt binding. irq_create_of_mapping almost
-> > does what you need. Perhaps it could be extended to return the type as
-> > part of the irq resource. There are already defined resource bits for this:
-> > 
-> > /* PnP IRQ specific bits (IORESOURCE_BITS) */
-> > #define IORESOURCE_IRQ_HIGHEDGE		(1<<0)
-> > #define IORESOURCE_IRQ_LOWEDGE		(1<<1)
-> > #define IORESOURCE_IRQ_HIGHLEVEL	(1<<2)
-> > #define IORESOURCE_IRQ_LOWLEVEL		(1<<3)
-> > 
-> > It may be a bit problematic to change irq_create_of_mapping as Sparc has
-> > a different version.
+On Tue, Nov 29, 2011 at 01:53:31PM +0530, Rajendra Nayak wrote:
+> []...
+> >+};
+> >+MODULE_DEVICE_TABLE(of, mc13xxx_dt_ids);
+> >+
+> >  static int mc13xxx_probe(struct spi_device *spi)
+> >  {
+> >+	struct device_node *np = spi->dev.of_node;
+> >+	const struct of_device_id *of_id;
+> >+	struct spi_driver *sdrv = to_spi_driver(spi->dev.driver);
+> >  	struct mc13xxx *mc13xxx;
+> >  	struct mc13xxx_platform_data *pdata = dev_get_platdata(&spi->dev);
+> >  	enum mc13xxx_id id;
+> >  	int ret;
+> >
+> >-	if (!pdata) {
+> >-		dev_err(&spi->dev, "invalid platform data\n");
+> >-		return -EINVAL;
+> >-	}
+> >+	of_id = of_match_device(mc13xxx_dt_ids,&spi->dev);
+> >+	if (of_id)
+> >+		sdrv->id_table =&mc13xxx_device_id[(enum mc13xxx_id) of_id->data];
+> >
+> >  	mc13xxx = kzalloc(sizeof(*mc13xxx), GFP_KERNEL);
+> >  	if (!mc13xxx)
+> >@@ -735,6 +787,15 @@ static int mc13xxx_probe(struct spi_device *spi)
+> >  	if (ret)
+> >  		goto err_mask;
+> >
+> >+	mc13xxx->irq_gpio = of_get_named_gpio(np, "mc13xxx-irq-gpios", 0);
+> >+	if (gpio_is_valid(mc13xxx->irq_gpio)) {
+> >+		ret = gpio_request_one(mc13xxx->irq_gpio, GPIOF_IN,
+> >+				       "mc13xxx-irq");
+> >+		if (ret)
+> >+			goto err_mask;
+> >+		spi->irq = gpio_to_irq(mc13xxx->irq_gpio);
 > 
-> Taking a look at the code, I think it can work like this:
+> This seems wrong, because its adding information about the irq actually
+> being a gpio within the driver (which was otherwise hidden by the board
+> files doing a gpio_to_irq()). What happens if on some device this is
+> actually hooked to an irq line instead of a gpio?
+> There should be a better way to do this using Device tree.
 > 
-> * Except for SPARC, irq_of_parse_and_map() calls irq_create_of_mapping(),
->   which calls the IRQ chip's dt_translate() function which can return the
->   type from the interrupt specifier in DT, and if it did, the type is
->   passed to irq_set_irq_type().
-> 
-> * SPARC's custom irq_of_parse_and_map() doesn't call irq_set_irq_type()
->   as far as I can tell. I think we can just ignore this for now; if SPARC
->   wants to participate in this scheme, its custom irq_of_parse_and_map()
->   could be enhanced appropriately.
-> 
-> * I assert that all IRQ chips that want to participate must define an
->   interrupt specifier DT binding that defines the trigger type; e.g.
->   that implemented by using irq_domain_add_simple() and #interrupt-cells
->   greater than 1.
+Indeed.  I should have 'interrupt-parent' and 'interrupts' encoded as
+below, so that 'spi->irq = irq_of_parse_and_map(nc, 0);' in of_spi.c
+can get the irq set up properly.
 
-This changes nothing w.r.t. the DT binding.  The irq chip driver
-already needs to determine the irq type from the dt irq specifier.
-But that doesn't imply that #interrupt-cells must be >1, nor even that
-the irq specifier encodes the type information.  e.g. if an irq chip
-_only_ supports active-low level interrupts, then the type info need
-no appear in its irq specifiers, but it can still correctly pass the
-type info to irq_set_irq_type().
+pmic: mc13892@0 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	compatible = "fsl,mc13892";
+	spi-max-frequency = <6000000>;
+	reg = <0>;
+	interrupt-parent = <&gpio0>;
+	interrupts = <8>;
+};
 
-> * I assert that all IRQ chips that want to participate must call
->   irqd_set_trigger_type() from their irq_set_type op. This will cache the
->   type for later access. This call is missing from Tegra's GPIO interrupt
->   controller, but can easily be added.
-> 
-> * Create a new function that drivers can call on their Linux interrupt ID,
->   which internally calls irqd_get_trigger_type(). This will return the
->   configured type, and they can adjust their interrupt output pin
->   appropriately, or fail to probe if they can't support the selected type.
-
-AFAICT this is essentially a means for the irq chip driver to
-communicate the type info back to the driver for the irq source.  It
-sounds reasonable at first glance.
-
-> * We can probably remove any platform data fields that configure a device's
->   interrupt output type (e.g. WM8903 has an irq_active_low field in pdata)
->   and replace it with this scheme. If that won't work, we can have drivers
->   call the new API only when instantiated from DT, so they continue to
->   work unchanged in the non-DT case.
-
-I don't see how there is anything DT related here at all.  It's just
-about communicating between different parts of the kernel.
+Thanks for catching this.
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Regards,
+Shawn
