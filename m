@@ -1,18 +1,15 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v3 0/5] Versatile Express DT support
-Date: Wed, 30 Nov 2011 12:15:08 +0000
-Message-ID: <1322655308.3164.177.camel@hornet.cambridge.arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 3/5] ARM: vexpress: Add DT support in v2m
+Date: Wed, 30 Nov 2011 13:34:40 +0000
+Message-ID: <201111301334.40372.arnd@arndb.de>
 References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <20111129170013.GD2829@localhost.localdomain>
- <1322587019.3164.111.camel@hornet.cambridge.arm.com>
- <20111130104842.GA2045@localhost.localdomain>
- <1322651640.3164.135.camel@hornet.cambridge.arm.com>
- <20111130120818.GB2045@localhost.localdomain>
+ <201111292119.11554.arnd@arndb.de>
+ <1322653600.3164.153.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111130120818.GB2045@localhost.localdomain>
+In-Reply-To: <1322653600.3164.153.camel@hornet.cambridge.arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,28 +19,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
+To: Pawel Moll <pawel.moll@arm.com>
 Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDExLTExLTMwIGF0IDEyOjA4ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBZ
-b3VyIHN1Z2dlc3Rpb24gZml4ZXMgaXQgLS0gSSBzdWdnZXN0IHdlIGtlZXAgdGhlIGNvbmZpZyB0
-aGlzIHdheSByb3VuZDsKPiB0aGlzIG1lYW5zIHRoYXQgT0YgZ2V0cyB0dXJuZWQgb24gd2hlbiBl
-bmFibGluZyBhIGNvcmV0aWxlIHdoaWNoIHJlcXVpcmVzCj4gaXQsIGFuZCB0aG9zZSBjb3JldGls
-ZXMgYXJlIG9mZmVyZWQgYXMgY2hvaWNlcyBldmVuIGJlZm9yZSBPRiBpcyB0dXJuZWQKPiBvbi4g
-IFRoYXQgZmVlbHMgbGlrZSBhIHNlbnNpYmxlIGJlaGF2aW91ciBmb3IgdGhlIGNvbmZpZy4KCk9r
-LgoKPiBXaGlsZSB3ZSdyZSBhYm91dCB0aGlzLCBidWlsZGluZyBvZiB0aGUgYXBwbGljYWJsZSBk
-dGJzIGlzIG5vdCBjdXJyZW50bHkKPiBlbmFibGVkLgo+IAo+IENhbiB3ZSBhZGQgdGhpcywgc28g
-dGhhdCAibWFrZSBkdGJzIiB3b3Jrcz8KPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC12
-ZXhwcmVzcy9NYWtlZmlsZS5ib290IGIvYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9NYWtlZmlsZS5i
-b290Cj4gaW5kZXggMDViNzdhNS4uYjg5ZmZkZSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9tYWNo
-LXZleHByZXNzL01ha2VmaWxlLmJvb3QKPiArKysgYi9hcmNoL2FybS9tYWNoLXZleHByZXNzL01h
-a2VmaWxlLmJvb3QKPiBAQCAtNywzICs3LDcgQEAgZWxzZQo+ICBwYXJhbXNfcGh5cy15CTo9IDB4
-NjAwMDAxMDAKPiAgaW5pdHJkX3BoeXMteQk6PSAweDYwODAwMDAwCj4gIGVuZGlmCj4gKwo+ICtk
-dGItJChDT05GSUdfQVJDSF9WRVhQUkVTU19WMlBfQ0E1U19DQTkpICs9IFwKPiArCQkJCQl2ZXhw
-cmVzcy12MnAtY2E1cy5kdGIgXAo+ICsJCQkJCXZleHByZXNzLXYycC1jYTkuZHRiCgpZZXMsIEkg
-YWxyZWFkeSBoYXZlIG1vcmUtb3ItbGVzcyB0aGUgc2FtZSB0aGluZy4KCkNoZWVycyEKClBhd2XF
-ggoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+On Wednesday 30 November 2011, Pawel Moll wrote:
+> 
+> On Tue, 2011-11-29 at 21:19 +0000, Arnd Bergmann wrote:
+> > On Tuesday 29 November 2011, Pawel Moll wrote:
+> > > +                       compact-flash@1a000 {
+> > > +                               compatible = "ata-generic";
+> > > +                               reg = <0x1a000 0x100
+> > > +                                      0x1a100 0xf00>;
+> > > +                               reg-shift = <2>;
+> > > +                       };
+> > 
+> > Shouldn't there also be a more specific "compatible" value, in case we have
+> > to detect this CF slot for some reason?
+> 
+> It was the compatible-value-of-choice in
+> "drivers/ata/pata_of_platform.c", unfortunately undocumented - as I have
+> just realized - in the "Documentation/devicetree/bindings"...
+
+You should certainly *also* have "ata-generic" in there as the value
+that is used by the existing driver, but it usually makes sense to have
+a more specific value in addition, just as a precaution for the future,
+in case that the specific hardware is not entirely identical to all others
+and we have to do a separate workaround.
+
+> > Is there actually no interrupt?
+> 
+> No, polling mode only. And yes, it works ;-)
+
+Fascinating
+
+	Arnd
