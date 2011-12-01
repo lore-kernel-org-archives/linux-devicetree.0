@@ -1,86 +1,45 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Wed, 30 Nov 2011 22:36:51 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1111302220450.2357@xanadu.home>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
- <20111130153749.GE2045@localhost.localdomain>
- <1322673302.3180.25.camel@hornet.cambridge.arm.com>
- <20111130175410.GJ2045@localhost.localdomain>
- <alpine.LFD.2.02.1111301522340.2357@xanadu.home>
- <20111130204805.GA5698@sirena.org.uk>
- <alpine.LFD.2.02.1111301604230.2357@xanadu.home>
- <20111130215000.GU9581@n2100.arm.linux.org.uk>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [RFC 6/8] of: add clock providers
+Date: Thu, 1 Dec 2011 14:34:48 +0800
+Message-ID: <20111201063447.GH711@S2100-06.ap.freescale.net>
+References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
+ <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
+ <20111121153716.GA16417@S2100-06.ap.freescale.net>
+ <CACxGe6teGPmgOiwSVQ_PebXo=9x8EVwjH2qQYi5LU813BvY3Ow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111130215000.GU9581-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6teGPmgOiwSVQ_PebXo=9x8EVwjH2qQYi5LU813BvY3Ow@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Nov 2011, Russell King - ARM Linux wrote:
+On Wed, Nov 30, 2011 at 12:38:19PM -0700, Grant Likely wrote:
+> On Mon, Nov 21, 2011 at 8:37 AM, Shawn Guo <shawn.guo@freescale.com> =
+wrote:
+> > On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
+> >> +struct clk *of_clk_get_by_name(struct device_node *np, const char=
+ *name)
+> >> +{
+> >> + =A0 =A0 int index =3D 0;
+> >> +
+> >> + =A0 =A0 if (name)
+> >> + =A0 =A0 =A0 =A0 =A0 =A0 index =3D of_property_match_string(np, "=
+clock-input-names", name);
+> >
+> > If it fails to match name, we may want to force 'index' back to 0.
+>=20
+> Actually, if it fails to match, the function should fail.
 
-> On Wed, Nov 30, 2011 at 04:38:26PM -0500, Nicolas Pitre wrote:
-> > On Wed, 30 Nov 2011, Mark Brown wrote:
-> > 
-> > > On Wed, Nov 30, 2011 at 03:43:50PM -0500, Nicolas Pitre wrote:
-> > > 
-> > > > annoying.  If nothing moves I might just go ahead with those changes and 
-> > > > simply rip the uImage make target out of the kernel as well.  Maybe the 
-> > > > inconvenience will be a sufficient incentive for people to lobby proper 
-> > > > u-Boot support.  And it is not like if the u-Boot patches didn't exist 
-> > > 
-> > > Oh, dear.  Any pointers to the discussions on the u-boot side?
-> > 
-> > Certainly.  Many different threads actually.  Here's a few:
-> > 
-> > http://news.gmane.org/group/gmane.comp.boot-loaders.u-boot/thread=114981
-> > 
-> > http://news.gmane.org/group/gmane.comp.boot-loaders.u-boot/thread=115774
-> > 
-> > And this is not the first time this issue has come up:
-> > 
-> > http://news.gmane.org/group/gmane.comp.boot-loaders.u-boot/thread=83824
-> > 
-> > http://news.gmane.org/group/gmane.linux.ports.arm.kernel/thread=81546/force_load=t/focus=84138
-> > 
-> > Yet more u-Boot woes:
-> > 
-> > http://news.gmane.org/group/gmane.linux.ports.arm.kernel/thread=53973
-> > 
-> > I'm sure there are others, but that's what I've quickly dug out.
-> 
-> So why are we still supporting uboot in the mainline kernel on ARM?
+Hmm, that will require the clock-input-name be same as the second
+parameter of clk_get() - con_id, which may have been named to some
+string not suitable for clock-input-name.  For those case, we will
+probably need to change the drivers to rename the con_id?  Or just
+force the clock-input-name to be that improper con_id string?
 
-As a demonstration of good will I'd say.
-
-I still believe that the uImage wrapping is _not_ ARM specific, and that 
-someone should step up to be the maintainer of a generic u-Boot Kconfig 
-menu and makefile target(s) common to all architectures.
-
-But until Stephen's u-Boot patches are merged, and the corresponding 
-mkimage and u-Boot binaries are deployed, there is little point keeping 
-a uImage makefile target for a kernel which is meant to be run on 
-multiple SOCs.
-
-This is already affecting i.MX which could already have a single kernel 
-image for the whole SOC family despite different RAM addresses if this 
-wasn't for this uImage format limitation.  So at the moment the mkimage 
-step makes sense only at kernel install time when you know the exact 
-machine where the installation will take place, not at kernel build 
-time.
-
-
-
-Nicolas
+--=20
+Regards,
+Shawn
