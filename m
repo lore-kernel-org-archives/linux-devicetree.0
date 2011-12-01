@@ -1,45 +1,48 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [RFC 6/8] of: add clock providers
-Date: Thu, 1 Dec 2011 14:34:48 +0800
-Message-ID: <20111201063447.GH711@S2100-06.ap.freescale.net>
-References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
- <1320801583-12774-7-git-send-email-grant.likely@secretlab.ca>
- <20111121153716.GA16417@S2100-06.ap.freescale.net>
- <CACxGe6teGPmgOiwSVQ_PebXo=9x8EVwjH2qQYi5LU813BvY3Ow@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/4] Add device tree support for mc13892 regulator driver
+Date: Thu,  1 Dec 2011 17:21:04 +0800
+Message-ID: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6teGPmgOiwSVQ_PebXo=9x8EVwjH2qQYi5LU813BvY3Ow@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 30, 2011 at 12:38:19PM -0700, Grant Likely wrote:
-> On Mon, Nov 21, 2011 at 8:37 AM, Shawn Guo <shawn.guo@freescale.com> =
-wrote:
-> > On Tue, Nov 08, 2011 at 06:19:41PM -0700, Grant Likely wrote:
-> >> +struct clk *of_clk_get_by_name(struct device_node *np, const char=
- *name)
-> >> +{
-> >> + =A0 =A0 int index =3D 0;
-> >> +
-> >> + =A0 =A0 if (name)
-> >> + =A0 =A0 =A0 =A0 =A0 =A0 index =3D of_property_match_string(np, "=
-clock-input-names", name);
-> >
-> > If it fails to match name, we may want to force 'index' back to 0.
->=20
-> Actually, if it fails to match, the function should fail.
+Changes since v1:
+ * Drop '[PATCH 2/5] regulator: fix label names used in device tree
+   bindings' which has been picked up
+ * Add binding document for mfd/mc13xxx-core device tree support
+ * Fix regulator/fixed.c breakage caused by interface change on
+   of_get_regulator_init_data()
+ * Reword the commit message of patch #2 a little bit to make the
+   reason for changing clear
+ * Retrieve the irq from gpio irq domain
 
-Hmm, that will require the clock-input-name be same as the second
-parameter of clk_get() - con_id, which may have been named to some
-string not suitable for clock-input-name.  For those case, we will
-probably need to change the drivers to rename the con_id?  Or just
-force the clock-input-name to be that improper con_id string?
+Shawn Guo (4):
+      mfd: mc13xxx: add device tree probe support
+      regulator: pass device_node to of_get_regulator_init_data()
+      regulator: mc13892: add device tree probe support
+      arm/imx: add mc13892 support into imx51-babbage.dts
 
---=20
-Regards,
-Shawn
+ Documentation/devicetree/bindings/mfd/mc13xxx.txt |   50 ++++++++++
+ arch/arm/boot/dts/imx51-babbage.dts               |  103 ++++++++++++++++++++-
+ drivers/mfd/mc13xxx-core.c                        |  106 +++++++++++++++------
+ drivers/regulator/fixed.c                         |    2 +-
+ drivers/regulator/mc13892-regulator.c             |   43 ++++++--
+ drivers/regulator/mc13xxx-regulator-core.c        |   57 +++++++++++
+ drivers/regulator/mc13xxx.h                       |   20 ++++
+ drivers/regulator/of_regulator.c                  |    7 +-
+ include/linux/mfd/mc13xxx.h                       |    1 +
+ include/linux/regulator/of_regulator.h            |    6 +-
+ 10 files changed, 345 insertions(+), 50 deletions(-)
