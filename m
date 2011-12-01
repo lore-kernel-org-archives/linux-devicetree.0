@@ -1,66 +1,107 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Thu, 1 Dec 2011 08:19:40 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDB01C6@HQMAIL01.nvidia.com>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
- <20111130153749.GE2045@localhost.localdomain>
- <1322673302.3180.25.camel@hornet.cambridge.arm.com>
- <20111130175410.GJ2045@localhost.localdomain>
- <alpine.LFD.2.02.1111301522340.2357@xanadu.home>
- <20111130204805.GA5698@sirena.org.uk>
- <alpine.LFD.2.02.1111301604230.2357@xanadu.home>
- <20111201111049.GB2915@opensource.wolfsonmicro.com>
- <20111201121403.GC2026@localhost.localdomain>
+Subject: RE: [PATCH] ASoC: Add device tree binding for WM8903
+Date: Thu, 1 Dec 2011 08:46:35 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDB01D8@HQMAIL01.nvidia.com>
+References: <1322700455-26916-1-git-send-email-swarren@nvidia.com>
+ <20111201132559.GG2915@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111201121403.GC2026-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20111201132559.GG2915-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dave Martin wrote at Thursday, December 01, 2011 5:14 AM:
-> On Thu, Dec 01, 2011 at 11:10:50AM +0000, Mark Brown wrote:
-> > On Wed, Nov 30, 2011 at 04:38:26PM -0500, Nicolas Pitre wrote:
-> > > On Wed, 30 Nov 2011, Mark Brown wrote:
-> >
-> > > > Oh, dear.  Any pointers to the discussions on the u-boot side?
-> >
-> > > Certainly.  Many different threads actually.  Here's a few:
-> >
-> > OK, thanks - I see Stephen just followed up and Wolfgang seems
-> > moderately happy so hopefully there will be some progress.  It also
-> > occurs to me that there's at least Qi also using uImages, hopefully
-> > other bootloaders are going to be easier to deal with (or already cope).
+Mark Brown wrote at Thursday, December 01, 2011 6:26 AM:
+> On Wed, Nov 30, 2011 at 05:47:35PM -0700, Stephen Warren wrote:
 > 
-> If Stephen's patches are heading for merge, that's great.
+> > v2: (swarren) Significantly reworked based on review feedback.
+> > v1: (swarren) Applied the following modifications relative to John's code:
+> > * Cleaned up DT parsing code
+> > * Documented DT binding
+> > * Set up wm8903->gpio_chip.of_node, extracted from another patch by John.
 > 
-> If this feature remains blocked though, could we support Wolfgang's
-> preference for start-of-RAM-relative load and entry address?
+> Don't put stuff like this in the changelog.  "Significantly reworked"
+> isn't going to help anyone reading the logs...
 
-It looks like my change is progressing to being checked in:
+Sorry, I forgot to move it this time.
 
-http://lists.denx.de/pipermail/u-boot/2011-December/111865.html
+> > @@ -1931,18 +1942,65 @@ static int wm8903_probe(struct snd_soc_codec *codec)
+> >
+> >  	wm8903_reset(codec);
+> >
+> > -	/* Set up GPIOs and microphone detection */
+> > +	/* Get configuration from platform data, or device tree */
+> >  	if (pdata) {
+> > -		bool mic_gpio = false;
+> > +		have_pdata = true;
+> > +		gpio_base = pdata->gpio_base;
+> > +		irq_active_low = pdata->irq_active_low;
+> > +		micdet_cfg = pdata->micdet_cfg;
+> > +		wm8903->mic_delay = pdata->micdet_delay;
+> > +		gpio_cfg = &pdata->gpio_cfg[0];
+> > +	} else if (codec->dev->of_node) {
+> > +		have_pdata = true;
+> 
+> This all seems really complicated and invasive, especially the
+> have_pdata flag.  Why not just always have a platform data structure and
+> fill it in from the device tree?
 
-As background though, I don't think an "SDRAM-relative" approach would
-be any more or less likely to get checked in; the size of the patch
-would end up being just the same as my final "don't copy the kernel to
-any load address" patch. Incidentally, the very first patch I posted
-was for an "SDRAM-relative" load address, although it ended up being
-far more complex than my final patch due to the way I implemented it;
-a rewrite would come out much smaller.
+The first patch set did that, and you objected to how it was structured...
+
+> > +		if (wm8903->irq) {
+> > +			irq_data = irq_get_irq_data(wm8903->irq);
+> > +			if (!irq_data) {
+> > +				dev_err(codec->dev, "Invalid IRQ: %d\n",
+> > +					wm8903->irq);
+> > +				return -EINVAL;
+> > +			}
+> > +			trigger = irqd_get_trigger_type(irq_data);
+> > +			switch (trigger) {
+> > +			case IRQ_TYPE_NONE:
+> > +			case IRQ_TYPE_LEVEL_HIGH:
+> > +				irq_active_low = false;
+> > +				break;
+> > +			case IRQ_TYPE_LEVEL_LOW:
+> > +				irq_active_low = true;
+> > +				break;
+> > +			default:
+> > +				dev_err(codec->dev,
+> > +					"Unsupported IRQ trigger: %x\n",
+> > +					trigger);
+> > +				return -EINVAL;
+> > +			}
+> > +		}
+> 
+> This stuff isn't device tree specific.
+
+OK, I could remove the platform data's irq_active_low flag, and determine
+the IRQ polarity this way in all cases. Do you want that? I avoided doing
+it this time around since it'd affect non-device-tree users of the codec
+too, and I aimed for complete backwards compatibility (although that said,
+the only in-tree user is the Tegra machines, and they don't set this flag,
+so the impact would be minimal in-tree)
+
+> > +#ifdef CONFIG_OF
+> > +/* Match table for of_platform binding */
+> > +static const struct of_device_id wm8903_of_match[] __devinitconst = {
+> > +	{ .compatible = "wlf,wm8903", },
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, wm8903_of_match);
+> > +#else
+> > +#define wm8903_of_match NULL
+> > +#endif
+> 
+> If you're going to do this then go through and consistently add the
+> defines.  I'd also be inclined to drop the comment.
+
+I'll just drop the ifdefs; looking at all the other codecs, they don't
+have ifdefs anyway - I thought I added the ifdefs to be consistent, but
+I must have checked something other than ASoC codecs...
 
 -- 
 nvpublic
