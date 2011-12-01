@@ -1,160 +1,408 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 4/4] arm/imx: add mc13892 support into imx51-babbage.dts
-Date: Thu,  1 Dec 2011 17:21:08 +0800
-Message-ID: <1322731268-12158-5-git-send-email-shawn.guo@linaro.org>
-References: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
+From: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Subject: [PATCH net-next v6 3/4] can: cc770: add platform
+	bus driver for the CC770 and AN82527
+Date: Thu,  1 Dec 2011 10:41:20 +0100
+Message-ID: <1322732481-2255-4-git-send-email-wg@grandegger.com>
+References: <1322732481-2255-1-git-send-email-wg@grandegger.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1322731268-12158-1-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Return-path: <socketcan-users-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+In-Reply-To: <1322732481-2255-1-git-send-email-wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+List-Unsubscribe: <https://lists.berlios.de/mailman/options/socketcan-users>,
+	<mailto:socketcan-users-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.berlios.de/pipermail/socketcan-users>
+List-Post: <mailto:socketcan-users-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org>
+List-Help: <mailto:socketcan-users-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.berlios.de/mailman/listinfo/socketcan-users>,
+	<mailto:socketcan-users-request-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org?subject=subscribe>
+Sender: socketcan-users-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+Errors-To: socketcan-users-bounces-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, socketcan-users-0fE9KPoRgkgATYTw5x5z8w@public.gmane.org, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It adds mc13892 support into imx51-babbage device tree source.
+This driver works with both, static platform data and device tree
+bindings. It has been tested on a TQM855L board with two AN82527
+CAN controllers on the local bus.
 
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+CC: Devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+CC: linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+CC: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Signed-off-by: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Acked-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx51-babbage.dts |  103 ++++++++++++++++++++++++++++++++++-
- 1 files changed, 101 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/net/can/cc770.txt          |   53 ++++
+ drivers/net/can/cc770/Kconfig                      |    7 +
+ drivers/net/can/cc770/Makefile                     |    1 +
+ drivers/net/can/cc770/cc770_platform.c             |  272 ++++++++++++++++++++
+ 4 files changed, 333 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/can/cc770.txt
+ create mode 100644 drivers/net/can/cc770/cc770_platform.c
 
-diff --git a/arch/arm/boot/dts/imx51-babbage.dts b/arch/arm/boot/dts/imx51-babbage.dts
-index f8766af..407fc0b 100644
---- a/arch/arm/boot/dts/imx51-babbage.dts
-+++ b/arch/arm/boot/dts/imx51-babbage.dts
-@@ -31,12 +31,14 @@
- 				esdhc@70004000 { /* ESDHC1 */
- 					fsl,cd-internal;
- 					fsl,wp-internal;
-+					vmmc-supply = <&vsd_reg>;
- 					status = "okay";
- 				};
+diff --git a/Documentation/devicetree/bindings/net/can/cc770.txt b/Documentation/devicetree/bindings/net/can/cc770.txt
+new file mode 100644
+index 0000000..77027bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/cc770.txt
+@@ -0,0 +1,53 @@
++Memory mapped Bosch CC770 and Intel AN82527 CAN controller
++
++Note: The CC770 is a CAN controller from Bosch, which is 100%
++compatible with the old AN82527 from Intel, but with "bugs" being fixed.
++
++Required properties:
++
++- compatible : should be "bosch,cc770" for the CC770 and "intc,82527"
++	for the AN82527.
++
++- reg : should specify the chip select, address offset and size required
++	to map the registers of the controller. The size is usually 0x80.
++
++- interrupts : property with a value describing the interrupt source
++	(number and sensitivity) required for the controller.
++
++Optional properties:
++
++- bosch,external-clock-frequency : frequency of the external oscillator
++	clock in Hz. Note that the internal clock frequency used by the
++	controller is half of that value. If not specified, a default
++	value of 16000000 (16 MHz) is used.
++
++- bosch,clock-out-frequency : slock frequency in Hz on the CLKOUT pin.
++	If not specified or if the specified value is 0, the CLKOUT pin
++	will be disabled.
++
++- bosch,slew-rate : slew rate of the CLKOUT signal. If not specified,
++	a resonable value will be calculated.
++
++- bosch,disconnect-rx0-input : see data sheet.
++
++- bosch,disconnect-rx1-input : see data sheet.
++
++- bosch,disconnect-tx1-output : see data sheet.
++
++- bosch,polarity-dominant : see data sheet.
++
++- bosch,divide-memory-clock : see data sheet.
++
++- bosch,iso-low-speed-mux : see data sheet.
++
++For further information, please have a look to the CC770 or AN82527.
++
++Examples:
++
++can@3,100 {
++	compatible = "bosch,cc770";
++	reg = <3 0x100 0x80>;
++	interrupts = <2 0>;
++	interrupt-parent = <&mpic>;
++	bosch,external-clock-frequency = <16000000>;
++};
+diff --git a/drivers/net/can/cc770/Kconfig b/drivers/net/can/cc770/Kconfig
+index 28e4d48..22c07a8 100644
+--- a/drivers/net/can/cc770/Kconfig
++++ b/drivers/net/can/cc770/Kconfig
+@@ -11,4 +11,11 @@ config CAN_CC770_ISA
+ 	  connected to the ISA bus using I/O port, memory mapped or
+ 	  indirect access.
  
- 				esdhc@70008000 { /* ESDHC2 */
- 					cd-gpios = <&gpio0 6 0>; /* GPIO1_6 */
- 					wp-gpios = <&gpio0 5 0>; /* GPIO1_5 */
-+					vmmc-supply = <&vsd_reg>;
- 					status = "okay";
- 				};
++config CAN_CC770_PLATFORM
++	tristate "Generic Platform Bus based CC770 driver"
++	---help---
++	  This driver adds support for the CC770 and AN82527 chips
++	  connected to the "platform bus" (Linux abstraction for directly
++	  to the processor attached devices).
++
+ endif
+diff --git a/drivers/net/can/cc770/Makefile b/drivers/net/can/cc770/Makefile
+index 872ecff..9fb8321 100644
+--- a/drivers/net/can/cc770/Makefile
++++ b/drivers/net/can/cc770/Makefile
+@@ -4,5 +4,6 @@
  
-@@ -57,8 +59,105 @@
- 						compatible = "fsl,mc13892";
- 						spi-max-frequency = <6000000>;
- 						reg = <0>;
--						mc13xxx-irq-gpios = <&gpio0 8 0>; /* GPIO1_8 */
--						fsl,mc13xxx-uses-regulator;
-+						interrupt-parent = <&gpio0>;
-+						interrupts = <8>;
-+
-+						regulators {
-+							sw1_reg: mc13892__sw1 {
-+								regulator-min-microvolt = <600000>;
-+								regulator-max-microvolt = <1375000>;
-+								regulator-boot-on;
-+								regulator-always-on;
-+							};
-+
-+							sw2_reg: mc13892__sw2 {
-+								regulator-min-microvolt = <900000>;
-+								regulator-max-microvolt = <1850000>;
-+								regulator-boot-on;
-+								regulator-always-on;
-+							};
-+
-+							sw3_reg: mc13892__sw3 {
-+								regulator-min-microvolt = <1100000>;
-+								regulator-max-microvolt = <1850000>;
-+								regulator-boot-on;
-+								regulator-always-on;
-+							};
-+
-+							sw4_reg: mc13892__sw4 {
-+								regulator-min-microvolt = <1100000>;
-+								regulator-max-microvolt = <1850000>;
-+								regulator-boot-on;
-+								regulator-always-on;
-+							};
-+
-+							viohi_reg: mc13892__viohi {
-+								regulator-boot-on;
-+								regulator-always-on;
-+							};
-+
-+							vpll_reg: mc13892__vpll {
-+								regulator-min-microvolt = <1050000>;
-+								regulator-max-microvolt = <1800000>;
-+								regulator-boot-on;
-+								regulator-always-on;
-+							};
-+
-+							vdig_reg: mc13892__vdig {
-+								regulator-min-microvolt = <1650000>;
-+								regulator-max-microvolt = <1650000>;
-+								regulator-boot-on;
-+							};
-+
-+							vsd_reg: mc13892__vsd {
-+								regulator-min-microvolt = <1800000>;
-+								regulator-max-microvolt = <3150000>;
-+							};
-+
-+							vusb2_reg: mc13892__vusb2 {
-+								regulator-min-microvolt = <2400000>;
-+								regulator-max-microvolt = <2775000>;
-+								regulator-boot-on;
-+								regulator-always-on;
-+							};
-+
-+							vvideo_reg: mc13892__vvideo {
-+								regulator-min-microvolt = <2775000>;
-+								regulator-max-microvolt = <2775000>;
-+							};
-+
-+							vaudio_reg: mc13892__vaudio {
-+								regulator-min-microvolt = <2300000>;
-+								regulator-max-microvolt = <3000000>;
-+							};
-+
-+							vcam_reg: mc13892__vcam {
-+								regulator-min-microvolt = <2500000>;
-+								regulator-max-microvolt = <3000000>;
-+							};
-+
-+							vgen1_reg: mc13892__vgen1 {
-+								regulator-min-microvolt = <1200000>;
-+								regulator-max-microvolt = <1200000>;
-+							};
-+
-+							vgen2_reg: mc13892__vgen2 {
-+								regulator-min-microvolt = <1200000>;
-+								regulator-max-microvolt = <3150000>;
-+								regulator-always-on;
-+							};
-+
-+							vgen3_reg: mc13892__vgen3 {
-+								regulator-min-microvolt = <1800000>;
-+								regulator-max-microvolt = <2900000>;
-+								regulator-always-on;
-+							};
-+
-+							vusb_reg: mc13892__vusb {
-+								regulator-boot-on;
-+								regulator-always-on;
-+							};
-+						};
- 					};
+ obj-$(CONFIG_CAN_CC770) += cc770.o
+ obj-$(CONFIG_CAN_CC770_ISA) += cc770_isa.o
++obj-$(CONFIG_CAN_CC770_PLATFORM) += cc770_platform.o
  
- 					flash: at45db321d@1 {
+ ccflags-$(CONFIG_CAN_DEBUG_DEVICES) := -DDEBUG
+diff --git a/drivers/net/can/cc770/cc770_platform.c b/drivers/net/can/cc770/cc770_platform.c
+new file mode 100644
+index 0000000..53115ee
+--- /dev/null
++++ b/drivers/net/can/cc770/cc770_platform.c
+@@ -0,0 +1,272 @@
++/*
++ * Driver for CC770 and AN82527 CAN controllers on the platform bus
++ *
++ * Copyright (C) 2009, 2011 Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the version 2 of the GNU General Public License
++ * as published by the Free Software Foundation
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++/*
++ * If platform data are used you should have similar definitions
++ * in your board-specific code:
++ *
++ *   static struct cc770_platform_data myboard_cc770_pdata = {
++ *           .osc_freq = 16000000,
++ *           .cir = 0x41,
++ *           .cor = 0x20,
++ *           .bcr = 0x40,
++ *   };
++ *
++ * Please see include/linux/can/platform/cc770.h for description of
++ * above fields.
++ *
++ * If the device tree is used, you need a CAN node definition in your
++ * DTS file similar to:
++ *
++ *   can@3,100 {
++ *           compatible = "bosch,cc770";
++ *           reg = <3 0x100 0x80>;
++ *           interrupts = <2 0>;
++ *           interrupt-parent = <&mpic>;
++ *           bosch,external-clock-frequency = <16000000>;
++ *   };
++ *
++ * See "Documentation/devicetree/bindings/net/can/cc770.txt" for further
++ * information.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/netdevice.h>
++#include <linux/delay.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/can.h>
++#include <linux/can/dev.h>
++#include <linux/can/platform/cc770.h>
++
++#include "cc770.h"
++
++#define DRV_NAME "cc770_platform"
++
++MODULE_AUTHOR("Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>");
++MODULE_DESCRIPTION("Socket-CAN driver for CC770 on the platform bus");
++MODULE_LICENSE("GPL v2");
++
++#define CC770_PLATFORM_CAN_CLOCK  16000000
++
++static u8 cc770_platform_read_reg(const struct cc770_priv *priv, int reg)
++{
++	return ioread8(priv->reg_base + reg);
++}
++
++static void cc770_platform_write_reg(const struct cc770_priv *priv, int reg,
++				     u8 val)
++{
++	iowrite8(val, priv->reg_base + reg);
++}
++
++static int __devinit cc770_get_of_node_data(struct platform_device *pdev,
++					    struct cc770_priv *priv)
++{
++	struct device_node *np = pdev->dev.of_node;
++	const u32 *prop;
++	int prop_size;
++	u32 clkext;
++
++	prop = of_get_property(np, "bosch,external-clock-frequency",
++			       &prop_size);
++	if (prop && (prop_size ==  sizeof(u32)))
++		clkext = *prop;
++	else
++		clkext = CC770_PLATFORM_CAN_CLOCK; /* default */
++	priv->can.clock.freq = clkext;
++
++	/* The system clock may not exceed 10 MHz */
++	if (priv->can.clock.freq > 10000000) {
++		priv->cpu_interface |= CPUIF_DSC;
++		priv->can.clock.freq /= 2;
++	}
++
++	/* The memory clock may not exceed 8 MHz */
++	if (priv->can.clock.freq > 8000000)
++		priv->cpu_interface |= CPUIF_DMC;
++
++	if (of_get_property(np, "bosch,divide-memory-clock", NULL))
++		priv->cpu_interface |= CPUIF_DMC;
++	if (of_get_property(np, "bosch,iso-low-speed-mux", NULL))
++		priv->cpu_interface |= CPUIF_MUX;
++
++	if (!of_get_property(np, "bosch,no-comperator-bypass", NULL))
++		priv->bus_config |= BUSCFG_CBY;
++	if (of_get_property(np, "bosch,disconnect-rx0-input", NULL))
++		priv->bus_config |= BUSCFG_DR0;
++	if (of_get_property(np, "bosch,disconnect-rx1-input", NULL))
++		priv->bus_config |= BUSCFG_DR1;
++	if (of_get_property(np, "bosch,disconnect-tx1-output", NULL))
++		priv->bus_config |= BUSCFG_DT1;
++	if (of_get_property(np, "bosch,polarity-dominant", NULL))
++		priv->bus_config |= BUSCFG_POL;
++
++	prop = of_get_property(np, "bosch,clock-out-frequency", &prop_size);
++	if (prop && (prop_size == sizeof(u32)) && *prop > 0) {
++		u32 cdv = clkext / *prop;
++		int slew;
++
++		if (cdv > 0 && cdv < 16) {
++			priv->cpu_interface |= CPUIF_CEN;
++			priv->clkout |= (cdv - 1) & CLKOUT_CD_MASK;
++
++			prop = of_get_property(np, "bosch,slew-rate",
++					       &prop_size);
++			if (prop && (prop_size == sizeof(u32))) {
++				slew = *prop;
++			} else {
++				/* Determine default slew rate */
++				slew = (CLKOUT_SL_MASK >>
++					CLKOUT_SL_SHIFT) -
++					((cdv * clkext - 1) / 8000000);
++				if (slew < 0)
++					slew = 0;
++			}
++			priv->clkout |= (slew << CLKOUT_SL_SHIFT) &
++				CLKOUT_SL_MASK;
++		} else {
++			dev_dbg(&pdev->dev, "invalid clock-out-frequency\n");
++		}
++	}
++
++	return 0;
++}
++
++static int __devinit cc770_get_platform_data(struct platform_device *pdev,
++					     struct cc770_priv *priv)
++{
++
++	struct cc770_platform_data *pdata = pdev->dev.platform_data;
++
++	priv->can.clock.freq = pdata->osc_freq;
++	if (priv->cpu_interface | CPUIF_DSC)
++		priv->can.clock.freq /= 2;
++	priv->clkout = pdata->cor;
++	priv->bus_config = pdata->bcr;
++	priv->cpu_interface = pdata->cir;
++
++	return 0;
++}
++
++static int __devinit cc770_platform_probe(struct platform_device *pdev)
++{
++	struct net_device *dev;
++	struct cc770_priv *priv;
++	struct resource *mem;
++	resource_size_t mem_size;
++	void __iomem *base;
++	int err, irq;
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	irq = platform_get_irq(pdev, 0);
++	if (!mem || irq <= 0)
++		return -ENODEV;
++
++	mem_size = resource_size(mem);
++	if (!request_mem_region(mem->start, mem_size, pdev->name))
++		return -EBUSY;
++
++	base = ioremap(mem->start, mem_size);
++	if (!base) {
++		err = -ENOMEM;
++		goto exit_release_mem;
++	}
++
++	dev = alloc_cc770dev(0);
++	if (!dev) {
++		err = -ENOMEM;
++		goto exit_unmap_mem;
++	}
++
++	dev->irq = irq;
++	priv = netdev_priv(dev);
++	priv->read_reg = cc770_platform_read_reg;
++	priv->write_reg = cc770_platform_write_reg;
++	priv->irq_flags = IRQF_SHARED;
++	priv->reg_base = base;
++
++	if (pdev->dev.of_node)
++		err = cc770_get_of_node_data(pdev, priv);
++	else if (pdev->dev.platform_data)
++		err = cc770_get_platform_data(pdev, priv);
++	else
++		err = -ENODEV;
++	if (err)
++		goto exit_free_cc770;
++
++	dev_dbg(&pdev->dev,
++		 "reg_base=0x%p irq=%d clock=%d cpu_interface=0x%02x "
++		 "bus_config=0x%02x clkout=0x%02x\n",
++		 priv->reg_base, dev->irq, priv->can.clock.freq,
++		 priv->cpu_interface, priv->bus_config, priv->clkout);
++
++	dev_set_drvdata(&pdev->dev, dev);
++	SET_NETDEV_DEV(dev, &pdev->dev);
++
++	err = register_cc770dev(dev);
++	if (err) {
++		dev_err(&pdev->dev,
++			"couldn't register CC700 device (err=%d)\n", err);
++		goto exit_free_cc770;
++	}
++
++	return 0;
++
++exit_free_cc770:
++	free_cc770dev(dev);
++exit_unmap_mem:
++	iounmap(base);
++exit_release_mem:
++	release_mem_region(mem->start, mem_size);
++
++	return err;
++}
++
++static int __devexit cc770_platform_remove(struct platform_device *pdev)
++{
++	struct net_device *dev = dev_get_drvdata(&pdev->dev);
++	struct cc770_priv *priv = netdev_priv(dev);
++	struct resource *mem;
++
++	unregister_cc770dev(dev);
++	iounmap(priv->reg_base);
++	free_cc770dev(dev);
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	release_mem_region(mem->start, resource_size(mem));
++
++	return 0;
++}
++
++static struct of_device_id __devinitdata cc770_platform_table[] = {
++	{.compatible = "bosch,cc770"}, /* CC770 from Bosch */
++	{.compatible = "intc,82527"},  /* AN82527 from Intel CP */
++	{},
++};
++
++static struct platform_driver cc770_platform_driver = {
++	.driver = {
++		.name = DRV_NAME,
++		.owner = THIS_MODULE,
++		.of_match_table = cc770_platform_table,
++	},
++	.probe = cc770_platform_probe,
++	.remove = __devexit_p(cc770_platform_remove),
++};
++
++module_platform_driver(cc770_platform_driver);
 -- 
 1.7.4.1
