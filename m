@@ -1,13 +1,23 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 1/3] ARM: at91/aic: add irq domain and device tree support
-Date: Thu,  1 Dec 2011 16:42:07 +0100
-Message-ID: <1322754127-15206-1-git-send-email-nicolas.ferre@atmel.com>
-References: <1322590066-430-1-git-send-email-nicolas.ferre@atmel.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
+Date: Thu, 1 Dec 2011 08:19:40 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDB01C6@HQMAIL01.nvidia.com>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+ <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
+ <20111130153749.GE2045@localhost.localdomain>
+ <1322673302.3180.25.camel@hornet.cambridge.arm.com>
+ <20111130175410.GJ2045@localhost.localdomain>
+ <alpine.LFD.2.02.1111301522340.2357@xanadu.home>
+ <20111130204805.GA5698@sirena.org.uk>
+ <alpine.LFD.2.02.1111301604230.2357@xanadu.home>
+ <20111201111049.GB2915@opensource.wolfsonmicro.com>
+ <20111201121403.GC2026@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1322590066-430-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20111201121403.GC2026-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,313 +27,40 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an irqdomain for the AIC interrupt controller.
-The device tree support is mapping the registers and
-is using the irq_domain_simple_ops to manage hwirq
-translation.
-The documentation is describing the meaning of the
-two cells required for using this "interrupt-controller"
-in a device tree node.
+Dave Martin wrote at Thursday, December 01, 2011 5:14 AM:
+> On Thu, Dec 01, 2011 at 11:10:50AM +0000, Mark Brown wrote:
+> > On Wed, Nov 30, 2011 at 04:38:26PM -0500, Nicolas Pitre wrote:
+> > > On Wed, 30 Nov 2011, Mark Brown wrote:
+> >
+> > > > Oh, dear.  Any pointers to the discussions on the u-boot side?
+> >
+> > > Certainly.  Many different threads actually.  Here's a few:
+> >
+> > OK, thanks - I see Stephen just followed up and Wolfgang seems
+> > moderately happy so hopefully there will be some progress.  It also
+> > occurs to me that there's at least Qi also using uImages, hopefully
+> > other bootloaders are going to be easier to deal with (or already cope).
+> 
+> If Stephen's patches are heading for merge, that's great.
+> 
+> If this feature remains blocked though, could we support Wolfgang's
+> preference for start-of-RAM-relative load and entry address?
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
-This patch should go on top of Jamie's patch:
-"irqdomain: export irq_domain_simple_ops for !CONFIG_OF"
-https://lkml.org/lkml/2011/12/1/109
+It looks like my change is progressing to being checked in:
 
-v3: - change number of cells to define an AIC interrupt (irq trigger type)
-    - change current .dtsi files to match specification
-    - use irq_domain_simple_ops (for DT mapping)
+http://lists.denx.de/pipermail/u-boot/2011-December/111865.html
 
-v2: - use of_irq_init() function for device tree probing
-    - add documentation
-    - use own simple struct irq_domain_ops
+As background though, I don't think an "SDRAM-relative" approach would
+be any more or less likely to get checked in; the size of the patch
+would end up being just the same as my final "don't copy the kernel to
+any load address" patch. Incidentally, the very first patch I posted
+was for an "SDRAM-relative" load address, although it ended up being
+far more complex than my final patch due to the way I implemented it;
+a rewrite would come out much smaller.
 
- .../devicetree/bindings/arm/atmel-aic.txt          |   38 +++++++++++++++++++
- arch/arm/Kconfig                                   |    1 +
- arch/arm/boot/dts/at91sam9g20.dtsi                 |   16 ++++----
- arch/arm/boot/dts/at91sam9g45.dtsi                 |   14 +++---
- arch/arm/mach-at91/irq.c                           |   40 +++++++++++++++++++-
- 5 files changed, 92 insertions(+), 17 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/atmel-aic.txt b/Documentation/devicetree/bindings/arm/atmel-aic.txt
-new file mode 100644
-index 0000000..ade2761
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/atmel-aic.txt
-@@ -0,0 +1,38 @@
-+* Advanced Interrupt Controller (AIC)
-+
-+Required properties:
-+- compatible: Should be "atmel,<chip>-dma"
-+- interrupt-controller: Identifies the node as an interrupt controller.
-+- interrupt-parent: For single AIC system, it is an empty property.
-+- #interrupt-cells: The number of cells to define the interrupts. It sould be 2.
-+  The first cell is the GPIO number.
-+  The second cell is used to specify flags:
-+    bits[3:0] trigger type and level flags:
-+      1 = low-to-high edge triggered.
-+      2 = high-to-low edge triggered.
-+      4 = active high level-sensitive.
-+      8 = active low level-sensitive.
-+      Valid combinations are 1, 2, 3, 4, 8.
-+      Default flag for internal sources should be set to 4 (active high).
-+- reg: Should contain AIC registers location and length
-+
-+Examples:
-+	/*
-+	 * AIC
-+	 */
-+	aic: interrupt-controller@fffff000 {
-+		compatible = "atmel,at91rm9200-aic";
-+		interrupt-controller;
-+		interrupt-parent;
-+		#interrupt-cells = <2>;
-+		reg = <0xfffff000 0x200>;
-+	};
-+
-+	/*
-+	 * An interrupt generating device that is wired to an AIC.
-+	 */
-+	dma: dma-controller@ffffec00 {
-+		compatible = "atmel,at91sam9g45-dma";
-+		reg = <0xffffec00 0x200>;
-+		interrupts = <21 4>;
-+	};
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 57e16d4..b33603a 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -318,6 +318,7 @@ config ARCH_AT91
- 	select ARCH_REQUIRE_GPIOLIB
- 	select HAVE_CLK
- 	select CLKDEV_LOOKUP
-+	select IRQ_DOMAIN
- 	help
- 	  This enables support for systems based on the Atmel AT91RM9200,
- 	  AT91SAM9 and AT91CAP9 processors.
-diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-index aeef042..0782f80 100644
---- a/arch/arm/boot/dts/at91sam9g20.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-@@ -47,7 +47,7 @@
- 			ranges;
- 
- 			aic: interrupt-controller@fffff000 {
--				#interrupt-cells = <1>;
-+				#interrupt-cells = <2>;
- 				compatible = "atmel,at91rm9200-aic";
- 				interrupt-controller;
- 				interrupt-parent;
-@@ -57,14 +57,14 @@
- 			dbgu: serial@fffff200 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffff200 0x200>;
--				interrupts = <1>;
-+				interrupts = <1 4>;
- 				status = "disabled";
- 			};
- 
- 			usart0: serial@fffb0000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffb0000 0x200>;
--				interrupts = <6>;
-+				interrupts = <6 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -73,7 +73,7 @@
- 			usart1: serial@fffb4000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffb4000 0x200>;
--				interrupts = <7>;
-+				interrupts = <7 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -82,7 +82,7 @@
- 			usart2: serial@fffb8000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffb8000 0x200>;
--				interrupts = <8>;
-+				interrupts = <8 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -91,7 +91,7 @@
- 			usart3: serial@fffd0000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffd0000 0x200>;
--				interrupts = <23>;
-+				interrupts = <23 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -100,7 +100,7 @@
- 			usart4: serial@fffd4000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffd4000 0x200>;
--				interrupts = <24>;
-+				interrupts = <24 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -109,7 +109,7 @@
- 			usart5: serial@fffd8000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffd8000 0x200>;
--				interrupts = <25>;
-+				interrupts = <25 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index db6a452..e89b1d7 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -46,7 +46,7 @@
- 			ranges;
- 
- 			aic: interrupt-controller@fffff000 {
--				#interrupt-cells = <1>;
-+				#interrupt-cells = <2>;
- 				compatible = "atmel,at91rm9200-aic";
- 				interrupt-controller;
- 				interrupt-parent;
-@@ -56,20 +56,20 @@
- 			dma: dma-controller@ffffec00 {
- 				compatible = "atmel,at91sam9g45-dma";
- 				reg = <0xffffec00 0x200>;
--				interrupts = <21>;
-+				interrupts = <21 4>;
- 			};
- 
- 			dbgu: serial@ffffee00 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xffffee00 0x200>;
--				interrupts = <1>;
-+				interrupts = <1 4>;
- 				status = "disabled";
- 			};
- 
- 			usart0: serial@fff8c000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfff8c000 0x200>;
--				interrupts = <7>;
-+				interrupts = <7 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -78,7 +78,7 @@
- 			usart1: serial@fff90000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfff90000 0x200>;
--				interrupts = <8>;
-+				interrupts = <8 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -87,7 +87,7 @@
- 			usart2: serial@fff94000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfff94000 0x200>;
--				interrupts = <9>;
-+				interrupts = <9 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -96,7 +96,7 @@
- 			usart3: serial@fff98000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfff98000 0x200>;
--				interrupts = <10>;
-+				interrupts = <10 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
-index be6b639..1c13a2c 100644
---- a/arch/arm/mach-at91/irq.c
-+++ b/arch/arm/mach-at91/irq.c
-@@ -24,6 +24,9 @@
- #include <linux/module.h>
- #include <linux/mm.h>
- #include <linux/types.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqdomain.h>
- 
- #include <mach/hardware.h>
- #include <asm/irq.h>
-@@ -34,6 +37,7 @@
- #include <asm/mach/map.h>
- 
- void __iomem *at91_aic_base;
-+static struct irq_domain at91_aic_domain;
- 
- static void at91_aic_mask_irq(struct irq_data *d)
- {
-@@ -127,6 +131,29 @@ static struct irq_chip at91_aic_chip = {
- 	.irq_set_wake	= at91_aic_set_wake,
- };
- 
-+#if defined(CONFIG_OF)
-+static int __init __at91_aic_of_init(struct device_node *node,
-+				     struct device_node *parent)
-+{
-+	at91_aic_base = of_iomap(node, 0);
-+	at91_aic_domain.of_node = of_node_get(node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aic_ids[] __initconst = {
-+	{ .compatible = "atmel,at91rm9200-aic", .data = __at91_aic_of_init },
-+	{ /*sentinel*/ }
-+};
-+
-+static void __init at91_aic_of_init(void)
-+{
-+	of_irq_init(aic_ids);
-+}
-+#else
-+static void __init at91_aic_of_init(void) {}
-+#endif
-+
- /*
-  * Initialize the AIC interrupt controller.
-  */
-@@ -134,10 +161,13 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
- {
- 	unsigned int i;
- 
--	at91_aic_base = ioremap(AT91_AIC, 512);
-+	if(of_have_populated_dt())
-+		at91_aic_of_init();
-+	else
-+		at91_aic_base = ioremap(AT91_AIC, 512);
- 
- 	if (!at91_aic_base)
--		panic("Impossible to ioremap AT91_AIC\n");
-+		panic("Unable to ioremap AIC registers\n");
- 
- 	/*
- 	 * The IVR is used by macro get_irqnr_and_base to read and verify.
-@@ -169,4 +199,10 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
- 	/* Disable and clear all interrupts initially */
- 	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
- 	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
-+
-+	/* Add irq domain for AIC */
-+	at91_aic_domain.irq_base = at91_aic_domain.hwirq_base = 0;
-+	at91_aic_domain.nr_irq = NR_AIC_IRQS;
-+	at91_aic_domain.ops = &irq_domain_simple_ops;
-+	irq_domain_add(&at91_aic_domain);
- }
 -- 
-1.7.5.4
+nvpublic
