@@ -1,94 +1,33 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH 1/1] net/macb: add DT support
-Date: Fri, 02 Dec 2011 16:30:36 +0100
-Message-ID: <4ED8EF1C.80503@atmel.com>
-References: <1321626565-11261-1-git-send-email-plagnioj@jcrosoft.com> <20111118155824.GA9981@totoro> <20111120164740.GC21480@game.jcrosoft.org> <20111120171123.GA7845@gallagher>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] mfd: mc13xxx: add device tree probe support
+Date: Fri, 2 Dec 2011 15:36:38 +0000
+Message-ID: <20111202153637.GY8245@opensource.wolfsonmicro.com>
+References: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
+ <1322731268-12158-2-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20111120171123.GA7845@gallagher>
-Sender: netdev-owner@vger.kernel.org
-To: Jamie Iles <jamie@jamieiles.com>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss@ozlabs.org, netdev@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1322731268-12158-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2011 06:11 PM, Jamie Iles :
-> On Sun, Nov 20, 2011 at 05:47:40PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
->> On 15:58 Fri 18 Nov     , Jamie Iles wrote:
->>> Hi Jean-Christophe,
->>>
->>> On Fri, Nov 18, 2011 at 03:29:25PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>> allow the DT to pass the mac address and the phy mode
->>>>
->>>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD<plagnioj@jcrosoft.com>
->>>> Cc: Jamie Iles<jamie@jamieiles.com>
->>>> Cc: Nicolas Ferre<nicolas.ferre@atmel.com>
->>>
->>> This looks OK to me in principle.  I can't easily test this at the
->>> moment, but as I don't have a DT platform that has the clk framework up
->>> and running.  A couple of nits/questions inline, but thanks for doing
->>> this!
->>>
->>> Jamie
->>>
->>>> ---
->>>>   Documentation/devicetree/bindings/net/macb.txt |   22 ++++++++
->>>>   drivers/net/ethernet/cadence/macb.c            |   65 +++++++++++++++++++++---
->>>>   drivers/net/ethernet/cadence/macb.h            |    2 +
->>>>   3 files changed, 81 insertions(+), 8 deletions(-)
->>>>   create mode 100644 Documentation/devicetree/bindings/net/macb.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
->>>> new file mode 100644
->>>> index 0000000..2b727ec
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/macb.txt
->>>> @@ -0,0 +1,22 @@
->>>> +* Cadence EMACB
->>>> +
->>>> +Implemeted on Atmel AT91&  AVR32 SoC
->>>
->>> I think something along the lines of "Binding for the Cadence MACB
->>> Ethernet controller" rather than listing specific parts might be
->>> clearer.
->> I prefer as we will have implementation detail in the binding
->
-> I can't see any Atmel specific implementation detail here though so lets
-> keep it generic for now.  There isn't a benefit to keeping a list of
-> SoC's that the device is implemented in here as it'll only become out of
-> date.  We need to make it easy for other vendors to reuse the binding +
-> driver.
->
->>>> +		compatible = "atmel,macb";
->>>
->>> This should be "cdns,macb" as it isn't Atmel specific.  I believe cdns
->>> is the correct stock ticker symbol for Cadence.
->> here I put "atmel,macb" on purpose to specify the difference of the IP between
->> the soc, in fact it should have been atmel-at91,macb
->
-> Well if we really can't detect the difference from the revision register
-> then we should have "cdns,macb" *and* "atmel,at91-macb" at least then
-> where platforms could claim compatibility as:
->
-> 	compatible = "atmel,at91-macb", "cdns,macb";
+On Thu, Dec 01, 2011 at 05:21:05PM +0800, Shawn Guo wrote:
 
-re-thinking about this I propose that we go for the following compatible 
-string for macb:
+> +Sub-nodes:
+> +- regulators : Contain the regulator nodes.  The bindings details of individual
+> +  regulator node can be found in:
+> +  Documentation/devicetree/bindings/regulator/regulator.txt
 
-- compatible: Should be "cdns,<chip>-macb"
-
-And as the first SoC that have embedded an emacb that is compatible with 
-current 10/100 AT91 usage is AVR32 at32ap7000... We may end up with 
-"cdns,at32ap7000-macb" compatible string. The first ones with different 
-synthesis parameters where at91sam9260/3 so I may also add:
-"cdns,at91sam9260-macb".
-Then you will have to add the first SoC that uses the gigabit version of 
-the macb...
-What do you think about that?
-
-BTW, "cdns" seems not included in the vendor-prefixes.txt file yet...
-
-Bye,
--- 
-Nicolas Ferre
+How does the driver figure out which regulators map onto which subnodes?
