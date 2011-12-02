@@ -1,42 +1,75 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2] net/macb: add DT support
-Date: Fri, 02 Dec 2011 12:58:32 -0500 (EST)
-Message-ID: <20111202.125832.1208514279272697863.davem@davemloft.net>
-References: <1322846050-4543-1-git-send-email-nicolas.ferre@atmel.com>
- <1322847782-22650-1-git-send-email-nicolas.ferre@atmel.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH 02/14] fdt: Add functions to access phandles,
+ arrays and bools
+Date: Fri, 2 Dec 2011 10:12:33 -0800
+Message-ID: <CAPnjgZ18E88tfA+dETjHJHs1+i2MBZsmqRCeoa23LWmMerdZBQ@mail.gmail.com>
+References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
+	<1322106896-23054-3-git-send-email-sjg@chromium.org>
+	<4ED3D5DC.10502@nvidia.com> <4ED846F4.5080704@gmail.com>
+	<CAPnjgZ3VN4FPRk1wTJsrzOHvNHNvDwUBHDLJNtVRSHNps=Mjvg@mail.gmail.com>
+	<4ED90967.4080402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1322847782-22650-1-git-send-email-nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: nicolas.ferre@atmel.com
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, jamie@jamieiles.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <4ED90967.4080402@gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Jerry Van Baren <gvb.uboot@gmail.com>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <TWarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Date: Fri,  2 Dec 2011 18:43:02 +0100
+Hi Jerry,
 
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> 
-> Allow the device tree to provide the mac address and the phy mode.
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> [nicolas.ferre@atmel.com: change "compatible" node property, doc and DT hwaddr]
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Cc: Jamie Iles <jamie@jamieiles.com>
-> ---
-> v2: modify macb_get_hwaddr_dt() parameter
+On Fri, Dec 2, 2011 at 9:22 AM, Jerry Van Baren <gvb.uboot@gmail.com> wrote:
+> On 12/01/2011 11:58 PM, Simon Glass wrote:
+>>
+>> Hi Jerry,
+>>
+>> On Thu, Dec 1, 2011 at 7:33 PM, Jerry Van Baren<gvb.uboot@gmail.com>
+>> =A0wrote:
+>
+> [snip]
+>
+>>> FDT helper functions have been accumulating in common/fdt_support.c
+>>> rather
+>>> than a separate file. =A0Simon, what is the history of lib/fdtdec.c? =
+=A0Is it
+>>> a
+>>> shared file from the linux kernel? =A0If it is u-boot specific, it would
+>>> probably be better to add the functions to fdt_support.c.
+>>
+>> There are sort-of two FDT strands within U-Boot. The main one is
+>> support for putting together an FDT to pass to the kernel (cmd_fdt,
+>> fdt_support), and the other is for U-Boot's own use (run-time
+>> configuration of U-Boot, fdtdec). They both use libfdt.
+>>
+>> I regard fdt_support as part of the former, and fdtdec (decode-only
+>> helper functions) as part of the latter. At present when you turn on
+>> CONFIG_OF_LIBFDT you get everything, but we could provide finer
+>> granularity for platforms which only want to decode an FDT for
+>> run-time config and don't want to mess with it. Since fdt_decode is
+>> about 6KB of code that might be useful.
+>
+> Ahh, I see. =A0I have not been closely tracking the u-boot config (fdtdec)
+> improvements, so I did not recognize it as being part of that effort. That
+> makes sense.
 
-You'll have to respin these two macb patches, as they don't apply properly
-to the net-next tree which is where they should be targetted.
+You are welcome, thanks.
 
-Thanks.
+Regards
+Simon
+
+>
+> Thanks,
+> gvb
+>
+> [snip]
+>
