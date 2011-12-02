@@ -1,33 +1,65 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] mfd: mc13xxx: add device tree probe support
-Date: Fri, 2 Dec 2011 15:36:38 +0000
-Message-ID: <20111202153637.GY8245@opensource.wolfsonmicro.com>
-References: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
- <1322731268-12158-2-git-send-email-shawn.guo@linaro.org>
+From: Jamie Iles <jamie@jamieiles.com>
+Subject: Re: [PATCH 1/1] net/macb: add DT support
+Date: Fri, 2 Dec 2011 15:38:32 +0000
+Message-ID: <20111202153832.GA4998@totoro>
+References: <1321626565-11261-1-git-send-email-plagnioj@jcrosoft.com>
+ <20111118155824.GA9981@totoro>
+ <20111120164740.GC21480@game.jcrosoft.org>
+ <20111120171123.GA7845@gallagher>
+ <4ED8EF1C.80503@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1322731268-12158-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <4ED8EF1C.80503@atmel.com>
+Sender: netdev-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Jamie Iles <jamie@jamieiles.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss@ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 01, 2011 at 05:21:05PM +0800, Shawn Guo wrote:
+On Fri, Dec 02, 2011 at 04:30:36PM +0100, Nicolas Ferre wrote:
+> On 11/20/2011 06:11 PM, Jamie Iles :
+> >On Sun, Nov 20, 2011 at 05:47:40PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >>On 15:58 Fri 18 Nov     , Jamie Iles wrote:
+[...]
+> >>>>+		compatible = "atmel,macb";
+> >>>
+> >>>This should be "cdns,macb" as it isn't Atmel specific.  I believe cdns
+> >>>is the correct stock ticker symbol for Cadence.
+> >>here I put "atmel,macb" on purpose to specify the difference of the IP between
+> >>the soc, in fact it should have been atmel-at91,macb
+> >
+> >Well if we really can't detect the difference from the revision register
+> >then we should have "cdns,macb" *and* "atmel,at91-macb" at least then
+> >where platforms could claim compatibility as:
+> >
+> >	compatible = "atmel,at91-macb", "cdns,macb";
+> 
+> re-thinking about this I propose that we go for the following
+> compatible string for macb:
+> 
+> - compatible: Should be "cdns,<chip>-macb"
+> 
+> And as the first SoC that have embedded an emacb that is compatible
+> with current 10/100 AT91 usage is AVR32 at32ap7000... We may end up
+> with "cdns,at32ap7000-macb" compatible string. The first ones with
+> different synthesis parameters where at91sam9260/3 so I may also
+> add:
+> "cdns,at91sam9260-macb".
+> Then you will have to add the first SoC that uses the gigabit
+> version of the macb...
+> What do you think about that?
 
-> +Sub-nodes:
-> +- regulators : Contain the regulator nodes.  The bindings details of individual
-> +  regulator node can be found in:
-> +  Documentation/devicetree/bindings/regulator/regulator.txt
+Sure, that works for me, though I guess this is a much more general 
+thing than this one binding, but that does make sense to me.  I think 
+that keeping a general "cdns,macb" _too_ still makes sense though as 
+lots of it may well be detectable and it will probably be difficult for 
+one SoC vendor to know whether their IP instantiation really is the same 
+as another vendors...  Either way I don't have a strong opinion on that.
 
-How does the driver figure out which regulators map onto which subnodes?
+> BTW, "cdns" seems not included in the vendor-prefixes.txt file yet...
+
+No, that one is missing.  If you want to add it then feel free, if not 
+I'll add it to my list of patches to do!
+
+Jamie
