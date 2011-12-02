@@ -1,18 +1,17 @@
 From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH 02/14] fdt: Add functions to access phandles,
-	arrays and bools
-Date: Fri, 2 Dec 2011 08:38:24 -0800
-Message-ID: <CAPnjgZ0jc1uOD949q_7=r758hgTvByy0tMHY4pjy+nSGbQgNYg@mail.gmail.com>
+Subject: Re: [PATCH 05/14] tegra: fdt: Add Tegra2x device tree file
+Date: Fri, 2 Dec 2011 08:47:04 -0800
+Message-ID: <CAPnjgZ1cgkHWcqymrap=cD6hX+1HZhQ4tjX_c-+B4oDtXU+bdg@mail.gmail.com>
 References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
-	<1322106896-23054-3-git-send-email-sjg@chromium.org>
-	<4ED3D5DC.10502@nvidia.com>
-	<CAPnjgZ29tsNXd1+1eXdTHRjgh_MQJrXoc23_oqO9UPJ73mu7ZA@mail.gmail.com>
-	<4ED8F4FD.4030002@nvidia.com>
+	<1322106896-23054-6-git-send-email-sjg@chromium.org>
+	<4ED3D975.4090903@nvidia.com>
+	<CAPnjgZ11cFm15E9MHXno_YGp0NxdOHhGBavYbQBP5Nu_TOtx7A@mail.gmail.com>
+	<4ED8F5A1.1010408@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4ED8F4FD.4030002@nvidia.com>
+In-Reply-To: <4ED8F5A1.1010408@nvidia.com>
 List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
 	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
 List-Archive: <http://lists.denx.de/pipermail/u-boot>
@@ -28,90 +27,55 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Stephen,
 
-On Fri, Dec 2, 2011 at 7:55 AM, Stephen Warren <swarren@nvidia.com> wrote:
-> On 12/01/2011 06:01 PM, Simon Glass wrote:
+On Fri, Dec 2, 2011 at 7:58 AM, Stephen Warren <swarren@nvidia.com> wrote:
+> On 12/01/2011 06:24 PM, Simon Glass wrote:
 >> Hi Stephen,
 >>
->> On Mon, Nov 28, 2011 at 10:41 AM, Stephen Warren <swarren@nvidia.com> wr=
-ote:
+>> On Mon, Nov 28, 2011 at 10:56 AM, Stephen Warren <swarren@nvidia.com> wrote:
 >>> On 11/23/2011 08:54 PM, Simon Glass wrote:
->>>> Add a function to lookup a property which is a phandle in a node, and
->>>> another to read a fixed-length integer array from an fdt property.
->>>> Also add a function to read boolean properties.
->>>>
->>>> Signed-off-by: Simon Glass <sjg@chromium.org>
->
->>>> +/**
->>>> + * Look up a boolean property in a node and return it.
->>>> + *
->>>> + * A boolean properly is true if present in the device tree and false=
- if not
->>>> + * present, or present with a 0 value.
->>>> + *
->>>> + * @param blob =A0 =A0 =A0 FDT blob
->>>> + * @param node =A0 =A0 =A0 node to examine
->>>> + * @param prop_name =A0name of property to find
->>>> + * @return 1 if the properly is present; 0 if it isn't present or is 0
->>>> + */
->>>> +int fdtdec_get_bool(const void *blob, int node, const char *prop_name=
-);
+>>>> This was taken from commit 1ea6b8f at:
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
 >>>
->>> Does U-Boot allow use of the "bool" type here?
+> ...
+>>> In particular, linux-next now includes a minimal USB binding. Should we
+>>> just use this in U-Boot for now? We should get review on the kernel
+>>> lists before bringing in this more advanced USB binding in U-Boot, and
+>>> perhaps even add the binding into the kernel at the same time?
 >>
->> Which bool type? It is returning an int.
+>> I copied my email to the device-tree mailing list. Hopefully that is
+>> enough to get a review there. It feels wrong to send U-Boot patches to
+>> the kernel list...?
 >
-> I was asking if the return type could be changed to bool.
+> I think the kernel and U-boot need to co-ordinate on the DT bindings.
+> Posting at least to linux-tegra, the Tegra maintainers, and perhaps even
+> the kernel's domain-specific list (i.e. linux-usb) seems appropriate to
+> me. DT is a cross-functional thing, and really needs cross-functional
+> discussion and review. devicetree-discuss will cover the DT experts, but
+> probably not the CPU and subsystem experts.
 
-Sorry I misunderstood -  no U-Boot does not have a bool type yet.
+I worry about the implication that I am blazing a trail here. I would
+prefer to take the bindings as set down by the kernel and make them
+work within U-Boot. The reasoning here is that Linux has more
+demanding requirements, and more flexibility, so it is unlikely that
+U-Boot would need more features in its fdt. The one exception might be
+due to efficiency. If it takes 10ms and 50KB of code to figure out the
+system state from the fdt then U-Boot people might get upset, so I do
+want to make sure the bindings can be efficiently parsed by U-Boot
+(hence my peripheral id approach).
 
->
->>>> +int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
->>>> +{
->>>> + =A0 =A0 const s32 *cell;
->>>> + =A0 =A0 int len;
->>>> +
->>>> + =A0 =A0 debug("%s: %s\n", __func__, prop_name);
->>>> + =A0 =A0 cell =3D fdt_getprop(blob, node, prop_name, &len);
->>>> + =A0 =A0 if (!cell)
->>>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
->>>> + =A0 =A0 if (len >=3D sizeof(u32) && *cell =3D=3D 0)
->>>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
->>>> +
->>>> + =A0 =A0 return 1;
->>>> +}
->>>
->>> In the kernel, I believe that property existence is all that's usually
->>> checked. Is that wrong? Did the definition of a boolean property's value
->>> in the function description above come from the specification? If a
->>> property had a length of 0/1/2/3 with a zero value, it seems very odd to
->>> treat that as true.
->>
->> It is useful to be able to set the value to 0 or 1 (with fdtget/put),
->> rather than remove or add the property. A value with a length of less
->> than one cell is considered illegal here.
->>
->> The basic idea is that the presence of the property means that it is
->> 'true'. If it happens to have a value, then we allow that to specify
->> 'false' if it is zero.
->
-> Well, it's more up to standard device tree practice, not me. I've
-> certainly sent patches that used a property with 0/1 value as a bool
-> and received review feedback from DT experts that DT represents bools
-> as present/absent properties, both with no value, so I assume zero
-> length.
+Where those bindings don't exist yet, I would prefer to use a
+place-holder until they are set, then change the U-Boot code later.
+That process can take many months and we don't want to hold back
+actual functionality in U-Boot just because we haven't finalized the
+fdt definitions for a particular peripheral.
 
-Yes that is the preferred way. However, it is useful to be able to
-define a meaning when the property does have a value. The value may
-come into the fdt later after compilation. At that point it is easier
-to change a value rather than make something present/absent. For one
-thing it can be done without adjust the size of the fdt blob.
-
-Perhaps the solution is to adjust fdtput to support boolean values
-explicitly (in that it would add or remove the property based on a
-command-line 0/1 value).
-
-Still I think it is useful to support a zero value meaning false when
-it is provided.
+I will certainly widen my distribution list for fdt patches in the
+hope that resolution can be reached then and there, but it will be
+hard for kernel people to agree a binding until they have written /
+modified the driver. IMO it would probably be a good idea for people
+to subscribe to device-tree-discuss if they are interested in fdt
+things, kernel or U-Boot or other. LKML already gets a huge amount of
+traffic.
 
 Regards,
 Simon
