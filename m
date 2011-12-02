@@ -1,23 +1,12 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Fri, 2 Dec 2011 19:28:52 +0000
-Message-ID: <20111202192852.GG2892@localhost.localdomain>
-References: <20111130153749.GE2045@localhost.localdomain>
- <1322673302.3180.25.camel@hornet.cambridge.arm.com>
- <20111130175410.GJ2045@localhost.localdomain>
- <alpine.LFD.2.02.1111301522340.2357@xanadu.home>
- <20111130204805.GA5698@sirena.org.uk>
- <alpine.LFD.2.02.1111301604230.2357@xanadu.home>
- <20111201111049.GB2915@opensource.wolfsonmicro.com>
- <20111201121403.GC2026@localhost.localdomain>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDB01C6@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDB0539@HQMAIL01.nvidia.com>
+From: Kyle Moffett <Kyle.D.Moffett-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
+Subject: [RFC PATCH 0/3] New "gpio-poweroff" driver to turn off platform
+ devices with GPIOs
+Date: Fri,  2 Dec 2011 15:37:58 -0500
+Message-ID: <1322858281-17831-1-git-send-email-Kyle.D.Moffett@boeing.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174FDB0539-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,49 +16,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2011 at 09:41:12AM -0800, Stephen Warren wrote:
-> Stephen Warren wrote at Thursday, December 01, 2011 9:20 AM:
-> > Dave Martin wrote at Thursday, December 01, 2011 5:14 AM:
-> > > On Thu, Dec 01, 2011 at 11:10:50AM +0000, Mark Brown wrote:
-> > > > On Wed, Nov 30, 2011 at 04:38:26PM -0500, Nicolas Pitre wrote:
-> > > > > On Wed, 30 Nov 2011, Mark Brown wrote:
-> > > >
-> > > > > > Oh, dear.  Any pointers to the discussions on the u-boot side?
-> > > >
-> > > > > Certainly.  Many different threads actually.  Here's a few:
-> > > >
-> > > > OK, thanks - I see Stephen just followed up and Wolfgang seems
-> > > > moderately happy so hopefully there will be some progress.  It also
-> > > > occurs to me that there's at least Qi also using uImages, hopefully
-> > > > other bootloaders are going to be easier to deal with (or already cope).
-> > >
-> > > If Stephen's patches are heading for merge, that's great.
-> > >
-> > > If this feature remains blocked though, could we support Wolfgang's
-> > > preference for start-of-RAM-relative load and entry address?
-> > 
-> > It looks like my change is progressing to being checked in:
-> > 
-> > http://lists.denx.de/pipermail/u-boot/2011-December/111865.html
-> 
-> For the record, the changes are now in U-Boot master:
-> 
-> d510859 image: Don't detect XIP images as overlapping.
-> b9b50e8 image: Implement IH_TYPE_KERNEL_NOLOAD
-> 
-> I should also note that Marek Vasut posted some patches to implement a
-> bootz command in U-Boot. This turned out to be much less invasive than
-> I originally thought, so once those patches are finalized, uImage might
-> be irrelevant except for initrds (U-Boot already accepts a raw FDT
-> without uImage wrapping for bootm and hence bootz).
-> 
-> http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg69287.html
+Hello all,
 
-Great, thanks for the alert.
+I'm working on support for some custom hardware of ours, and part of
+the support code is the ability for the software to shutdown the power
+supply using GPIOs (via an I2C GPIO controller).
 
-Cheers
----Dave
+I previously had this in my platform code, but it seemed generically
+useful, so I split it out into a separate module for others to use.
+
+The first two patches are generic of_gpio enhancements, providing some
+new library functions for requesting lots of GPIOs at once.
+
+The third patch is the actual driver itself.  The driver can be used to
+instantiate a platform device as a whole-machine-poweroff device as we
+use it on our hardware.  Alternatively it can instantiate multiple
+platform devs at specific locations on the device tree which trigger
+from the platform_driver->shutdown() callback.
+
+For architectures which are still stuck in the dark ages, this driver
+also supports being instantiated via legacy platform_data.
+
+The OpenFirmware binding documentation is added in the third patch.
+Since this is my first cut, it's a little rough, so please be gentle.
+
+I'm interested to know what you all think.
+
+Cheers,
+Kyle Moffett
+
+--
+Interested in my work on the Debian "powerpcspe" port?
+I'm keeping a blog here: http://pureperl.blogspot.com/
