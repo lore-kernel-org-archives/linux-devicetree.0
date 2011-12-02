@@ -1,69 +1,34 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] ARM: at91/net: add macb ethernet controller in 9g45 DT
-Date: Sat, 3 Dec 2011 06:56:59 +0100
-Message-ID: <20111203055659.GL18533@game.jcrosoft.org>
-References: <1322847782-22650-1-git-send-email-nicolas.ferre@atmel.com>
- <1322848237-23154-1-git-send-email-nicolas.ferre@atmel.com>
+From: Thomas Meyer <thomas@m3y3r.de>
+Subject: [PATCH] ll_temac: Use kcalloc instead of kzalloc to allocate array
+Date: Fri, 02 Dec 2011 23:35:43 +0100
+Message-ID: <1322865343.1534.356.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1322848237-23154-1-git-send-email-nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, jamie@jamieiles.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 18:50 Fri 02 Dec     , Nicolas Ferre wrote:
-> Add the Cadence macb ethernet controller in at91sam9g45 .dtsi and
-> enable it in at91sam9m10g45ek board device tree file.
-> 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
->  arch/arm/boot/dts/at91sam9g45.dtsi     |    7 +++++++
->  arch/arm/boot/dts/at91sam9m10g45ek.dts |    6 ++++++
->  2 files changed, 13 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-> index e89b1d7..67f94d3 100644
-> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -101,6 +101,13 @@
->  				atmel,use-dma-tx;
->  				status = "disabled";
->  			};
-> +
-> +			macb0: ethernet@fffbc000 {
-> +				compatible = "cdns,at32ap7000-macb", "cdns,macb";
-> +				reg = <0xfffbc000 0x100>;
-> +				interrupts = <25 4>;
-why?
-> +				status = "disabled";
-> +			};
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> index 85b34f5..17377a2 100644
-> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> @@ -30,6 +30,12 @@
->  			usart1: serial@fff90000 {
->  				status = "okay";
->  			};
-> +
-> +			macb0: ethernet@fffbc000 {
-> +				local-mac-address = [3a 0e 03 04 05 06];
-please drop this is not supposed to be in the dts but updated for each board
+The advantage of kcalloc is, that will prevent integer overflows which could
+result from the multiplication of number of elements and size and it is also
+a bit nicer to read.
 
-Best Regards,
-J.
+The semantic patch that makes this change is available
+in https://lkml.org/lkml/2011/11/25/107
+
+Signed-off-by: Thomas Meyer <thomas@m3y3r.de>
+---
+
+diff -u -p a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c 2011-11-28 19:36:47.733440944 +0100
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c 2011-11-28 19:53:34.187365029 +0100
+@@ -237,7 +237,7 @@ static int temac_dma_bd_init(struct net_
+ 	struct sk_buff *skb;
+ 	int i;
+ 
+-	lp->rx_skb = kzalloc(sizeof(*lp->rx_skb) * RX_BD_NUM, GFP_KERNEL);
++	lp->rx_skb = kcalloc(RX_BD_NUM, sizeof(*lp->rx_skb), GFP_KERNEL);
+ 	if (!lp->rx_skb) {
+ 		dev_err(&ndev->dev,
+ 				"can't allocate memory for DMA RX buffer\n");
