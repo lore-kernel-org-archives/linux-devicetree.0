@@ -1,38 +1,42 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 3/5] OMAP4: devices: Do not create dmic device if the dtb has been provided
-Date: Fri,  2 Dec 2011 11:52:58 +0200
-Message-ID: <1322819580-7424-4-git-send-email-peter.ujfalusi@ti.com>
-References: <1322819580-7424-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1322819580-7424-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: Misael Lopez Cruz <misael.lopez@ti.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+From: Kushwaha Prabhakar-B32579 <B32579-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: alias variable support
+Date: Fri, 2 Dec 2011 10:14:47 +0000
+Message-ID: <071A08F2C6A57E4E94D980ECA553F87441D37C@039-SN1MPN1-004.039d.mgd.msft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If dtb is provided of will create the needed devices dynamically so there
-is no need to create the platform device for DMIC here.
+Hi,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/mach-omap2/devices.c |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ Is there a way in dts to have alias for a variable just like we have alias for node.
 
-diff --git a/arch/arm/mach-omap2/devices.c b/arch/arm/mach-omap2/devices.c
-index 35d5dff..d7ca473 100644
---- a/arch/arm/mach-omap2/devices.c
-+++ b/arch/arm/mach-omap2/devices.c
-@@ -344,6 +344,10 @@ static void omap_init_dmic(void)
- 	struct omap_hwmod *oh;
- 	struct platform_device *pdev;
- 
-+	/* If dtb is there, the devices will be created dynamically */
-+	if (of_have_populated_dt())
-+		return;
-+
- 	oh = omap_hwmod_lookup("dmic");
- 	if (!oh) {
- 		printk(KERN_ERR "Could not look up mcpdm hw_mod\n");
--- 
-1.7.8.rc4
+For example for a node "abc"
 
+
+            alias_comp = "comp-2.0"
+
+		abc@3100 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			cell-index = <1>;
+			compatible = alias_comp
+			reg = <0x3100 0x100>;
+		};
+
+Here alias_comp will be replaced by "comp-2.0" during compilation.
+
+Regards,
+Prabhakar
