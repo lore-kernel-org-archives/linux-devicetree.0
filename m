@@ -1,15 +1,24 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] net/macb: add DT support
-Date: Fri, 2 Dec 2011 17:28:54 +0000
-Message-ID: <20111202172854.GB4998@totoro>
-References: <20111202153832.GA4998@totoro>
- <1322846050-4543-1-git-send-email-nicolas.ferre@atmel.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
+Date: Fri, 2 Dec 2011 09:41:12 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF174FDB0539@HQMAIL01.nvidia.com>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+ <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
+ <20111130153749.GE2045@localhost.localdomain>
+ <1322673302.3180.25.camel@hornet.cambridge.arm.com>
+ <20111130175410.GJ2045@localhost.localdomain>
+ <alpine.LFD.2.02.1111301522340.2357@xanadu.home>
+ <20111130204805.GA5698@sirena.org.uk>
+ <alpine.LFD.2.02.1111301604230.2357@xanadu.home>
+ <20111201111049.GB2915@opensource.wolfsonmicro.com>
+ <20111201121403.GC2026@localhost.localdomain>
+ <74CDBE0F657A3D45AFBB94109FB122FF174FDB01C6@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1322846050-4543-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174FDB01C6-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,56 +28,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
-
-On Fri, Dec 02, 2011 at 06:14:10PM +0100, Nicolas Ferre wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Stephen Warren wrote at Thursday, December 01, 2011 9:20 AM:
+> Dave Martin wrote at Thursday, December 01, 2011 5:14 AM:
+> > On Thu, Dec 01, 2011 at 11:10:50AM +0000, Mark Brown wrote:
+> > > On Wed, Nov 30, 2011 at 04:38:26PM -0500, Nicolas Pitre wrote:
+> > > > On Wed, 30 Nov 2011, Mark Brown wrote:
+> > >
+> > > > > Oh, dear.  Any pointers to the discussions on the u-boot side?
+> > >
+> > > > Certainly.  Many different threads actually.  Here's a few:
+> > >
+> > > OK, thanks - I see Stephen just followed up and Wolfgang seems
+> > > moderately happy so hopefully there will be some progress.  It also
+> > > occurs to me that there's at least Qi also using uImages, hopefully
+> > > other bootloaders are going to be easier to deal with (or already cope).
+> >
+> > If Stephen's patches are heading for merge, that's great.
+> >
+> > If this feature remains blocked though, could we support Wolfgang's
+> > preference for start-of-RAM-relative load and entry address?
 > 
-> Allow the device tree to provide the mac address and the phy mode.
+> It looks like my change is progressing to being checked in:
 > 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: change "compatible" node property, doc and DT hwaddr]
-> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> http://lists.denx.de/pipermail/u-boot/2011-December/111865.html
 
-Looks nice to me.  There's a patch below to add the GEM stuff to the 
-binding too if you want to role that in.
+For the record, the changes are now in U-Boot master:
 
-Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+d510859 image: Don't detect XIP images as overlapping.
+b9b50e8 image: Implement IH_TYPE_KERNEL_NOLOAD
 
-8<----
+I should also note that Marek Vasut posted some patches to implement a
+bootz command in U-Boot. This turned out to be much less invasive than
+I originally thought, so once those patches are finalized, uImage might
+be irrelevant except for initrds (U-Boot already accepts a raw FDT
+without uImage wrapping for bootm and hence bootz).
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 7f0b90a..e09e3fb 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -1,9 +1,11 @@
--* Cadence MACB Ethernet controller
-+* Cadence MACB/GEM Ethernet controller
- 
- Required properties:
--- compatible: Should be "cdns,[<chip>-]macb"
-+- compatible: Should be "cdns,[<chip>-]{macb,gem}"
-   Use "cdns,at91sam9260-macb" Atmel at91sam9260 and at91sam9263 SoCs.
-   Use "cdns,at32ap7000-macb" for other 10/100 usage or use the generic form: "cdns,macb"
-+  Use "cnds,pc302-gem" for Picochip picoXcell pc302 and later devices based on
-+  the Cadence GEM, or the generic form "cdns,gem".
- - reg: Address and length of the register set for the device
- - interrupts: Should contain macb interrupt
- - phy-mode: String, operation mode of the PHY interface.
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index 103c6e6..89060e6 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -1247,6 +1247,8 @@ static const struct of_device_id macb_dt_ids[] = {
- 	{ .compatible = "cdns,at32ap7000-macb" },
- 	{ .compatible = "cdns,at91sam9260-macb" },
- 	{ .compatible = "cdns,macb" },
-+	{ .compatible = "cdns,pc302-gem" },
-+	{ .compatible = "cdns,gem" },
- 	{ /* sentinel */ }
- };
+http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg69287.html
+
+-- 
+nvpublic
