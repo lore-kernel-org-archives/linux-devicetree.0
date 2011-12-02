@@ -1,61 +1,58 @@
-From: Anton Vorontsov <anton.vorontsov@linaro.org>
-Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
-Date: Sat, 3 Dec 2011 02:46:36 +0400
-Message-ID: <20111202224636.GA10432@oksana.dev.rtsoft.ru>
-References: <20111110151852.GA7465@oksana.dev.rtsoft.ru>
- <20111110152606.GB3207@oksana.dev.rtsoft.ru>
- <20111110153816.239af1d7@lxorguk.ukuu.org.uk>
- <20111110162859.GA7088@oksana.dev.rtsoft.ru>
- <20111202191917.GB3037@localhost.localdomain>
- <20111202223402.GA7780@oksana.dev.rtsoft.ru>
- <20111202224018.GB7780@oksana.dev.rtsoft.ru>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: RE: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
+Date: Fri, 2 Dec 2011 17:52:51 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1112021739420.2357@xanadu.home>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+ <1322579473-8804-5-git-send-email-pawel.moll@arm.com>
+ <20111130153749.GE2045@localhost.localdomain>
+ <1322673302.3180.25.camel@hornet.cambridge.arm.com>
+ <20111130175410.GJ2045@localhost.localdomain>
+ <alpine.LFD.2.02.1111301522340.2357@xanadu.home>
+ <20111130204805.GA5698@sirena.org.uk>
+ <alpine.LFD.2.02.1111301604230.2357@xanadu.home>
+ <20111201111049.GB2915@opensource.wolfsonmicro.com>
+ <20111201121403.GC2026@localhost.localdomain>
+ <74CDBE0F657A3D45AFBB94109FB122FF174FDB01C6@HQMAIL01.nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF174FDB0539@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111202224018.GB7780@oksana.dev.rtsoft.ru>
-Sender: linux-ide-owner@vger.kernel.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Linus Torvalds <torvalds@linux-foundation.org>, Jeff Garzik <jgarzik@redhat.com>, Pawel Moll <pawel.moll@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174FDB0539-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 03, 2011 at 02:40:18AM +0400, Anton Vorontsov wrote:
-> On Sat, Dec 03, 2011 at 02:34:02AM +0400, Anton Vorontsov wrote:
-> > On Fri, Dec 02, 2011 at 07:19:17PM +0000, Dave Martin wrote:
-> > [...]
-> > > > > > Drivers should not use NO_IRQ; moreover, some architectures don't
-> > > > > > have it nowadays. '0' is the 'no irq' case.
-> > > > > > 
-> > > > > > Signed-off-by: Anton Vorontsov <cbouatmailru@gmail.com>
-> > > > > 
-> > > > > Acked-by: Alan Cox <alan@linux.intel.com>
-> > > > 
-> > > > In case if we don't want a "band-aid fix" for 3.2, here is the patch
-> > > > that just does the proper fix (w/ a risk to break minor architectures).
-> > > 
-> > > This is now broken on ARM where, for good or bad, NO_IRQ currently is
-> > > used and is -1.
-> > > 
-> > > How do we resolve it?
-> > 
-> > One option is to test this patch on a board that is now broken:
-> > 
-> > http://lkml.org/lkml/2011/11/10/290
+On Fri, 2 Dec 2011, Stephen Warren wrote:
+
+> For the record, the changes are now in U-Boot master:
 > 
-> Oh, actually, reading my own patch:
+> d510859 image: Don't detect XIP images as overlapping.
+> b9b50e8 image: Implement IH_TYPE_KERNEL_NOLOAD
+
+Yay!  Thank you Stephen for driving this to a successful resolution.
+
+Of course, boards won't be updated to the latest u-boot right away, nor 
+will the enhanced mkimage tool be commonly available.
+
+> I should also note that Marek Vasut posted some patches to implement a
+> bootz command in U-Boot. This turned out to be much less invasive than
+> I originally thought, so once those patches are finalized, uImage might
+> be irrelevant except for initrds (U-Boot already accepts a raw FDT
+> without uImage wrapping for bootm and hence bootz).
 > 
-> "ARM defines NO_IRQ to -1, but OF code relies on IRQ domains support,
->  which returns correct ('0') value in 'no irq' case. So everything
->  should be fine."
+> http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg69287.html
 
-Ahh. Forget it, the remark was for the of/irq.c fix itself.
+Excellent!
 
-So, we need the http://lkml.org/lkml/2011/11/10/290 fix. Otherwise
-the driver is indeed broken for ARM. Would be great if somebody could
-test it.
 
-Thanks,
-
--- 
-Anton Vorontsov
-Email: cbouatmailru@gmail.com
+Nicolas
