@@ -1,15 +1,16 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH 05/14] tegra: fdt: Add Tegra2x device tree file
-Date: Thu, 1 Dec 2011 17:24:49 -0800
-Message-ID: <CAPnjgZ11cFm15E9MHXno_YGp0NxdOHhGBavYbQBP5Nu_TOtx7A@mail.gmail.com>
+From: Jerry Van Baren <gvb.uboot@gmail.com>
+Subject: Re: [PATCH 02/14] fdt: Add functions to access phandles,
+ arrays and bools
+Date: Thu, 01 Dec 2011 22:33:08 -0500
+Message-ID: <4ED846F4.5080704@gmail.com>
 References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
-	<1322106896-23054-6-git-send-email-sjg@chromium.org>
-	<4ED3D975.4090903@nvidia.com>
+	<1322106896-23054-3-git-send-email-sjg@chromium.org>
+	<4ED3D5DC.10502@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4ED3D975.4090903@nvidia.com>
+In-Reply-To: <4ED3D5DC.10502@nvidia.com>
 List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
 	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
 List-Archive: <http://lists.denx.de/pipermail/u-boot>
@@ -23,51 +24,44 @@ To: Stephen Warren <swarren@nvidia.com>
 Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <TWarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Mon, Nov 28, 2011 at 10:56 AM, Stephen Warren <swarren@nvidia.com> wrote:
+On 11/28/2011 01:41 PM, Stephen Warren wrote:
 > On 11/23/2011 08:54 PM, Simon Glass wrote:
->> This was taken from commit 1ea6b8f at:
->> git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
+>> Add a function to lookup a property which is a phandle in a node, and
+>> another to read a fixed-length integer array from an fdt property.
+>> Also add a function to read boolean properties.
+>>
+>> Signed-off-by: Simon Glass<sjg@chromium.org>
 >
-> That's not the latest version in linux-next. Also, this doesn't include
-> quite a few changes that have been sent to the mailing lists but not yet
-> applied.
+> Looking at the U-Boot custodians web page, you need to send the core DT
+> changes (well, probably anything DT related) to Jerry Van Baren.
 
-OK I see a newer version in 'next' that now has USB so have picked
-that up. I picked 'master' originally.
+Yeah, I saw the patch go by.  I did not recognize the file it patched 
+and looked at the history:
 
->
-> In particular, linux-next now includes a minimal USB binding. Should we
-> just use this in U-Boot for now? We should get review on the kernel
-> lists before bringing in this more advanced USB binding in U-Boot, and
-> perhaps even add the binding into the kernel at the same time?
+commit b5220bc6ed6e6a197adf4926958dca1df4b420b0
+Author: Simon Glass <sjg@chromium.org>
+Date:   Mon Oct 24 19:15:32 2011 +0000
 
-I copied my email to the device-tree mailing list. Hopefully that is
-enough to get a review there. It feels wrong to send U-Boot patches to
-the kernel list...?
+     fdt: add decode helper library
 
->
-> Patches have been posted to:
-> * Convert to the finalized ARM GIC binding.
-> * Disable devices in the per-board .dts files that aren't used on those
-> boards.
-> * Various other cleanups in order to make the .dts files match the
-> kernel's non-DT board files.
-> * Perhaps more that I forget.
+     This library provides useful functions to drivers which want to use
+     the fdt to control their operation. Functions are provided to:
+     :
+     :
 
-Well I would prefer to pick these up when they are actually applied!
+and the copyright is "Copyright (c) 2011 The Chromium OS Authors."
 
->
-> I suppose those could be applied to U-Boot as and when they are applied
-> to the kernel.
+FDT helper functions have been accumulating in common/fdt_support.c 
+rather than a separate file.  Simon, what is the history of 
+lib/fdtdec.c?  Is it a shared file from the linux kernel?  If it is 
+u-boot specific, it would probably be better to add the functions to 
+fdt_support.c.
 
-Yes I think so.
+In the same vein, I also have not looked at the functions provided by 
+fdtdec.c to see if there is any overlap with existing fdt_support.c 
+functions (a quick look says not).
 
-Regards,
-Simon
+Best regards,
+gvb
 
->
-> --
-> nvpublic
->
+[snip]
