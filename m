@@ -1,16 +1,23 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] irqdomain: protect macro variable in domain iterators
-Date: Fri, 2 Dec 2011 14:30:42 +0000
-Message-ID: <20111202143042.GE2892@localhost.localdomain>
-References: <1322833997-32083-1-git-send-email-nicolas.ferre@atmel.com>
- <20111202125932.GB2892@localhost.localdomain>
- <4ED8D7FE.1000205@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Configurable interrupt sources, and DT bindings
+Date: Sat, 3 Dec 2011 01:31:07 +1100
+Message-ID: <20111202143107.GJ5427@truffala.fritz.box>
+References: <20111129013055.GH3508@truffala.fritz.box>
+ <20111129105538.GC2851@opensource.wolfsonmicro.com>
+ <20111130051349.GG5435@truffala.fritz.box>
+ <20111130093305.GB2791@opensource.wolfsonmicro.com>
+ <20111130133140.GL5435@truffala.fritz.box>
+ <20111201110738.GA2915@opensource.wolfsonmicro.com>
+ <20111202053814.GH5427@truffala.fritz.box>
+ <20111202112722.GG8245@opensource.wolfsonmicro.com>
+ <20111202122418.GI5427@truffala.fritz.box>
+ <20111202133413.GR8245@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4ED8D7FE.1000205-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20111202133413.GR8245-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,101 +27,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2011 at 07:51:58AM -0600, Rob Herring wrote:
-> On 12/02/2011 06:59 AM, Dave Martin wrote:
-> > On Fri, Dec 02, 2011 at 02:53:17PM +0100, Nicolas Ferre wrote:
-> >> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >> Error found while using those iterators in an irq controller
-> >> initialization function.
-> >>
-> >> May also need protection around irq and hwirq macro variables
-> >> but those values are usually plain "int" anyway... Tell me if you
-> >> feel that it should be done.
-> >>
-> >>  include/linux/irqdomain.h |    8 ++++----
-> >>  1 files changed, 4 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-> >> index 99834e58..a553004 100644
-> >> --- a/include/linux/irqdomain.h
-> >> +++ b/include/linux/irqdomain.h
-> >> @@ -82,12 +82,12 @@ static inline unsigned int irq_domain_to_irq(struct irq_domain *d,
-> >>  }
-> >>  
-> >>  #define irq_domain_for_each_hwirq(d, hw) \
-> >> -	for (hw = d->hwirq_base; hw < d->hwirq_base + d->nr_irq; hw++)
-> >> +	for (hw = (d)->hwirq_base; hw < (d)->hwirq_base + (d)->nr_irq; hw++)
-> >>  
-> >>  #define irq_domain_for_each_irq(d, hw, irq) \
-> >> -	for (hw = d->hwirq_base, irq = irq_domain_to_irq(d, hw); \
-> >> -	     hw < d->hwirq_base + d->nr_irq; \
-> >> -	     hw++, irq = irq_domain_to_irq(d, hw))
-> >> +	for (hw = (d)->hwirq_base, irq = irq_domain_to_irq((d), hw); \
-> >> +	     hw < (d)->hwirq_base + (d)->nr_irq; \
-> >> +	     hw++, irq = irq_domain_to_irq((d), hw))
-> > 
-> > I suggest just putting all the brackets in -- if having spotted this
-> > problem you only half-fix the macros, an opportunity is being missed;
-> > someone have to come and fix it again later:
-> > 
-> > 
-> > #define irq_domain_for_each_hwirq(d, hw) \
-> > 	for ((hw) = (d)->hwirq_base; (hw) < (d)->hwirq_base + (d)->nr_irq; (hw)++)
-> > 
-> > #define irq_domain_for_each_irq(d, hw, irq) \
-> > 	for ((hw) = (d)->hwirq_base, (irq) = irq_domain_to_irq(d, hw); \
-> > 	     (hw) < (d)->hwirq_base + (d)->nr_irq; \
-> > 	     (hw)++, (irq) = irq_domain_to_irq(d, hw))
-> > 
+On Fri, Dec 02, 2011 at 01:34:13PM +0000, Mark Brown wrote:
+> On Fri, Dec 02, 2011 at 11:24:18PM +1100, David Gibson wrote:
 > 
-> Parameters on the left side of an '=' can't be a complex expression.
-> Look at other iterator macros.
+> > No, you suggested it be a global property of the interrupt source.
+> > Same problem, just less so.
+> 
+> Cite?
 
-Do you mean "can't" or "shouldn't, by policy"?  I don't see a statement of
-the policy, but feel free to point me at it if it exists.
+My apologies.  I was mixing up who said what.  It was Stephen who made
+this proposal, kicking off the thread.
 
-An arbitrarily complex expression can appear on the left size of a C
-assignment, providing that it is an lvalue of an appropriate type; though
-if it involves things like casts or ?: we would rapidly get into ill-
-advised obfuscated code territory.
+SW> One possibility is to describe this directly in the binding for each
+SW> interrupt source. I originally proposed the following for the WM8903:
 
+SW> * Interrupt output is active high by default.
+SW> * Presence of an "irq-active-low" property selects an active low
+SW> * output
+SW> instead.
 
-The most plausible use I can think of it something like:
+SW> Mark Brown pointed out that we probably want to standardize the
+SW> binding,
+SW> so that every interrupt source doesn't do something different.
 
-int do_something(type *result, args)
-{
-	widget w;
-	/* ... */
+SW> Perhaps one of:
 
-	widget_for_each_whatever(*result, w) {
-		/* do stuff */
-	}
+SW> irq-active-low;
+SW> irq-active-high;
+SW> irq-edge-falling;
+SW> irq-edge-rising;
 
-	/* ... */
-}
+And he does go on to suggest another alternative that does allow
+multiple interrupts to be described.
 
-I don't comment on whether this is a good idea, but from the language
-point of view it is perfectly reasonable.
+> > > Not in the real world, in the real world we don't have device tree
+> > > bindings for most of the interrupt controllers out there and therefore
+> > > no code exists to parse them.  There's a fairly small set of current
+> > > systems using device tree and a very large set of systems which have
+> > > never used it before and are currently working on implementing it.
+> 
+> > If we support the PIC at all, it must know how to determine the
+> > interrupt types.  When DT support is added to the PIC, that will
+> > include determining the type from the interrupt specifiers.  If we
+> > don't support the PIC, we don't care.
+> 
+> *sigh*  We do care because as I say in the paragraph you quote above
+> people are trying to roll device tree out onto new platforms.  The
+> coverage on PowerPC and SPARC is near 100% but the coverage on ARM is
+> very far away from that so we're going to have to create a large number
+> of new bindings.
 
-(Note that *result = something parses how we want, but *result++, if
-generated in the macro expansion, will not)
+I guess, but irq spec bindings are so trivial, it's just not a big
+deal.  As I say, by all means write a best-current-practice document
+with a suggested binding.  But if people go their own way it really
+doesn't hurt much.  And there are situations where people would
+reasonably want different irq specifiers.  e.g. including polarity
+information wouldn't make much sense for a PIC which only handled
+message signalled interrupts.
 
-
-You're right that this won't work with at least some of the existing
-macros, but my view is if that if a macro can be made trivially correct,
-without pitfalls, that you should do it.  As a general principle, this
-helps to avoid latent bugs in the code.  I don't think we should have
-a special-case rule because this is a certain special flavour of macro,
-unless implementing the macro robustly becomes impossible.
-
-
-Just my opinion, though -- if people want it the other way, then I don't
-have a serious problem with that.
-
-Cheers
----Dave
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
