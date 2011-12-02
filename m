@@ -1,86 +1,63 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH 05/14] tegra: fdt: Add Tegra2x device tree file
-Date: Fri, 2 Dec 2011 08:47:04 -0800
-Message-ID: <CAPnjgZ1cgkHWcqymrap=cD6hX+1HZhQ4tjX_c-+B4oDtXU+bdg@mail.gmail.com>
-References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
-	<1322106896-23054-6-git-send-email-sjg@chromium.org>
-	<4ED3D975.4090903@nvidia.com>
-	<CAPnjgZ11cFm15E9MHXno_YGp0NxdOHhGBavYbQBP5Nu_TOtx7A@mail.gmail.com>
-	<4ED8F5A1.1010408@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4ED8F5A1.1010408@nvidia.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@nvidia.com>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <TWarren@nvidia.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] isp1760: Fix endianness-sensitivity in of_isp1760_probe()
+Date: Fri,  2 Dec 2011 16:58:18 +0000
+Message-ID: <1322845098-19516-1-git-send-email-dave.martin@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arvid Brodin <arvid.brodin-AM1FMPraTHU@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Data read direct from device tree properties will be in the device
+tree's native endianness (i.e., big-endian).
 
-On Fri, Dec 2, 2011 at 7:58 AM, Stephen Warren <swarren@nvidia.com> wrote:
-> On 12/01/2011 06:24 PM, Simon Glass wrote:
->> Hi Stephen,
->>
->> On Mon, Nov 28, 2011 at 10:56 AM, Stephen Warren <swarren@nvidia.com> wrote:
->>> On 11/23/2011 08:54 PM, Simon Glass wrote:
->>>> This was taken from commit 1ea6b8f at:
->>>> git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
->>>
-> ...
->>> In particular, linux-next now includes a minimal USB binding. Should we
->>> just use this in U-Boot for now? We should get review on the kernel
->>> lists before bringing in this more advanced USB binding in U-Boot, and
->>> perhaps even add the binding into the kernel at the same time?
->>
->> I copied my email to the device-tree mailing list. Hopefully that is
->> enough to get a review there. It feels wrong to send U-Boot patches to
->> the kernel list...?
->
-> I think the kernel and U-boot need to co-ordinate on the DT bindings.
-> Posting at least to linux-tegra, the Tegra maintainers, and perhaps even
-> the kernel's domain-specific list (i.e. linux-usb) seems appropriate to
-> me. DT is a cross-functional thing, and really needs cross-functional
-> discussion and review. devicetree-discuss will cover the DT experts, but
-> probably not the CPU and subsystem experts.
+This patch uses of_property_read_u32() to read the bus-width
+property in host byte order instead.
 
-I worry about the implication that I am blazing a trail here. I would
-prefer to take the bindings as set down by the kernel and make them
-work within U-Boot. The reasoning here is that Linux has more
-demanding requirements, and more flexibility, so it is unlikely that
-U-Boot would need more features in its fdt. The one exception might be
-due to efficiency. If it takes 10ms and 50KB of code to figure out the
-system state from the fdt then U-Boot people might get upset, so I do
-want to make sure the bindings can be efficiently parsed by U-Boot
-(hence my peripheral id approach).
+Signed-off-by: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+---
+Changes since v1:
 
-Where those bindings don't exist yet, I would prefer to use a
-place-holder until they are set, then change the U-Boot code later.
-That process can take many months and we don't want to hold back
-actual functionality in U-Boot just because we haven't finalized the
-fdt definitions for a particular peripheral.
+v2: Rebased against v3.2-rc3
+    Fix typo'd call to of_property_read_u32()
 
-I will certainly widen my distribution list for fdt patches in the
-hope that resolution can be reached then and there, but it will be
-hard for kernel people to agree a binding until they have written /
-modified the driver. IMO it would probably be a good idea for people
-to subscribe to device-tree-discuss if they are interested in fdt
-things, kernel or U-Boot or other. LKML already gets a huge amount of
-traffic.
+    Tested on Versatile Express with Pawel Moll's DT support series:
+    http://lists.infradead.org/pipermail/linux-arm-kernel/2011-November/074440.html
 
-Regards,
-Simon
+ drivers/usb/host/isp1760-if.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
->
-> --
-> nvpublic
->
+diff --git a/drivers/usb/host/isp1760-if.c b/drivers/usb/host/isp1760-if.c
+index a7dc1e1..b605224 100644
+--- a/drivers/usb/host/isp1760-if.c
++++ b/drivers/usb/host/isp1760-if.c
+@@ -47,9 +47,9 @@ static int of_isp1760_probe(struct platform_device *dev)
+ 	int virq;
+ 	resource_size_t res_len;
+ 	int ret;
+-	const unsigned int *prop;
+ 	unsigned int devflags = 0;
+ 	enum of_gpio_flags gpio_flags;
++	u32 bus_width = 0;
+ 
+ 	drvdata = kzalloc(sizeof(*drvdata), GFP_KERNEL);
+ 	if (!drvdata)
+@@ -77,8 +77,8 @@ static int of_isp1760_probe(struct platform_device *dev)
+ 		devflags |= ISP1760_FLAG_ISP1761;
+ 
+ 	/* Some systems wire up only 16 of the 32 data lines */
+-	prop = of_get_property(dp, "bus-width", NULL);
+-	if (prop && *prop == 16)
++	of_property_read_u32(dp, "bus-width", &bus_width);
++	if (bus_width == 16)
+ 		devflags |= ISP1760_FLAG_BUS_WIDTH_16;
+ 
+ 	if (of_get_property(dp, "port1-otg", NULL) != NULL)
+-- 
+1.7.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
