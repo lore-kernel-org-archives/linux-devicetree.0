@@ -1,14 +1,22 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 05/14] tegra: fdt: Add Tegra2x device tree file
-Date: Fri, 02 Dec 2011 08:58:25 -0700
-Message-ID: <4ED8F5A1.1010408@nvidia.com>
-References: <1322106896-23054-2-git-send-email-sjg@chromium.org>	<1322106896-23054-6-git-send-email-sjg@chromium.org>	<4ED3D975.4090903@nvidia.com>
- <CAPnjgZ11cFm15E9MHXno_YGp0NxdOHhGBavYbQBP5Nu_TOtx7A@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Pin control mappings for DT
+Date: Fri, 2 Dec 2011 08:30:24 -0800
+Message-ID: <20111202163023.GO13928@atomide.com>
+References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
+ <20111129174255.GQ31337@atomide.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF174FDAFB24@HQMAIL01.nvidia.com>
+ <20111129195937.GO13928@atomide.com>
+ <CACRpkdYY0Am52m2Lss+_wxnxXA9nHiGJ2TTdXymAPk=g4Zg+Jw@mail.gmail.com>
+ <20111130165415.GR13928@atomide.com>
+ <CACRpkdayqNgmOQAG+Kr_xPX8aeKghmeoDdaR4mK0N3U1CcYt-A@mail.gmail.com>
+ <20111201222202.GG13928@atomide.com>
+ <CACRpkdYL8tzwrdkeuGFWsL=NC5wPqGrhrx093VevyanqUq+QkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPnjgZ11cFm15E9MHXno_YGp0NxdOHhGBavYbQBP5Nu_TOtx7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYL8tzwrdkeuGFWsL=NC5wPqGrhrx093VevyanqUq+QkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,34 +26,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2011 06:24 PM, Simon Glass wrote:
-> Hi Stephen,
-> 
-> On Mon, Nov 28, 2011 at 10:56 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 11/23/2011 08:54 PM, Simon Glass wrote:
->>> This was taken from commit 1ea6b8f at:
->>> git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
->>
-...
->> In particular, linux-next now includes a minimal USB binding. Should we
->> just use this in U-Boot for now? We should get review on the kernel
->> lists before bringing in this more advanced USB binding in U-Boot, and
->> perhaps even add the binding into the kernel at the same time?
-> 
-> I copied my email to the device-tree mailing list. Hopefully that is
-> enough to get a review there. It feels wrong to send U-Boot patches to
-> the kernel list...?
-
-I think the kernel and U-boot need to co-ordinate on the DT bindings.
-Posting at least to linux-tegra, the Tegra maintainers, and perhaps even
-the kernel's domain-specific list (i.e. linux-usb) seems appropriate to
-me. DT is a cross-functional thing, and really needs cross-functional
-discussion and review. devicetree-discuss will cover the DT experts, but
-probably not the CPU and subsystem experts.
-
--- 
-nvpublic
+KiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IFsxMTEyMDIgMDE6NTZd
+Ogo+IE9uIFRodSwgRGVjIDEsIDIwMTEgYXQgMTE6MjIgUE0sIFRvbnkgTGluZGdyZW4gPHRvbnlA
+YXRvbWlkZS5jb20+IHdyb3RlOgo+IAo+ID4gQnV0IGhvdyBkb2VzIHRoZSBzZWNvbmQgcGlubXV4
+IGRyaXZlciBpbnN0YW5jZSBrbm93IGlmIGl0J3MgT0sKPiA+IHRvIGFkZCB0byB0aGUgbWFwcGlu
+ZyBvciBub3Q/IFRoZSBtYXBwaW5nIGV4aXN0cywgYnV0IGl0IG1pZ2h0IGJlCj4gPiBhbHNvIGZy
+b20gdGhlIHByZXZpb3VzIHRpbWUgeW91IGxvYWRlZCB0aGUgcGlubXV4IGRyaXZlci4uCj4gCj4g
+VGhlIG1hcHBpbmdzIGFyZSBub3QgYWRkZWQgZnJvbSBwaW5tdXggZHJpdmVycywgYXRsZWFzdCBu
+b3QKPiB0aGUgaW4tdHJlZSBkcml2ZXJzLiBNYXBwaW5ncyBhcmUgYm9hcmQgZGF0YS4KPiAKPiBU
+aGUgZXhpc3RpbmcgVTMwMCBkcml2ZXIgb25seSBkZWZpbmVzIGl0J3MgcGlucyBhbmQgZ3JvdXBz
+Cj4gKGFuZCB0aGVzZSBhcmUgaW5kZWVkIHBlci1kZXZpY2UpCj4gCj4gVGhlIG1hcCBpcyBkZWZp
+bmVkIGJ5IGFyY2gvYXJtL21hY2gtdTMwMC9jb3JlLmMKPiBhbmQgcmVnaXN0ZXJlZCB3aGVuIHRo
+YXQgTUFDSElORV9UWVBFIGlzIHJlZ2lzdGVyZWQuCj4gCj4gU28gdGhhdCdzIHdoeSBJIHNheSBp
+dCdzIGxpa2UgdGhlIGNsa2RldiBtYXBzLgoKUmlnaHQsIGJ1dCB0aGVyZSBtYXkgbm90IGJlIGJv
+YXJkIGRhdGEgbmVjZXNzYXJpbHkuIFdpdGggZGV2aWNlCnRyZWUgdGhlcmUgcmVhbGx5IHNob3Vs
+ZCBub3QgYmUgYW55IG5lZWQgZm9yIHN0YXRpYyBtYXBzLiBBbGwgdGhlCm5lY2Vzc2FyeSBpbmZv
+cm1hdGlvbiBjYW4gYmUgcHVsbGVkIGZyb20gZGV2aWNlIHRyZWUgdG8gZHluYW1pY2FsbHkKYnVp
+bGQgdGhlIG1hcHMuCiAKPiA+PiBUaGF0IHRoZSBtYXBwaW5nIGlzIGZvciBhbGwgZGV2aWNlcyBk
+b2Vzbid0IHN0b3AgeW91IGZyb20KPiA+PiBsb2FkaW5nIGFuZCB1bmxvYWRpbmcgcGlubXV4IGRy
+aXZlcnMgYXMgbXVjaCBhcyB5b3UKPiA+PiB3YW50LCB3ZSBhbHJlYWR5IGhhbmRsZSB0aGF0ICh3
+ZWxsIHRoZXJlIG1heSBiZSBidWdzIGluIHRoZQo+ID4+IGNvZGUgc2luY2UgaXQncyBub3QgZGVw
+bG95ZWQgb24gYW55IHN5c3RlbSBhZGRpbmcvcmVtb3ZpbmcKPiA+PiBjb250cm9sbGVycywgYnV0
+IHRoZSBpZGVhIHN1cmUgaXMgdGhlcmUuLi4pIMKgaWYgeW91J3JlIG9ubHkKPiA+PiB1c2luZyBo
+b2dzIGFuZCBubyBwaW5tdXhfZ2V0KCkgZnJvbSBlbHNld2hlcmUgb24gaXQsCj4gPj4gaXQgd2ls
+bCBldmVuIHdvcmsgaW4gcHJhY3RpY2UgOi0pCj4gPgo+ID4gV2VsbCBpZiB0aGVyZSBhcmUgZHlu
+YW1pYyBtYXBzLCB3ZSBzdGlsbCBuZWVkIHRvIHJlbGVhc2UKPiA+IHRoZSBtYXBzIGFsc28uCj4g
+Cj4gSG0gSSB0aGluayBJJ20gbm90IGdyYXNwaW5nIHRoZSBjb25jZXB0IG9mIGR5bmFtaWMgbWFw
+cwo+IHNpbXBseS4KPiAKPiBUaGUgY3VycmVudCBtYXBzIGFyZSBkeW5hbWljIGluIHRoZSBzZW5z
+ZSB0aGF0IHRoZXkgYXJlCj4gcmVnaXN0ZXJlZCBieSB0aGUgYm9hcmQgZmlsZXMsIGFuZCBjYW4g
+YWxzbyBiZSAod2l0aAo+IHRoZSByZWNlbnQgcGF0Y2hlcykgYWRkaXRpdmVseSBhZGRlZCwgc2F5
+IGlmIHRoZSBTb0MKPiBoYXMgb25lIGJpZyBjaHVuayBvZiBjb21tb24gbWFwcGluZ3MgYW5kIHNt
+YWxsZXIKPiBjaHVua3Mgb2YgcGVyLWJvYXJkIG1hcHBpbmdzIChpbXBsZW1lbnRlZCBmb3IgUFhB
+KS4KClN1cmUsIHNvdW5kcyBsaWtlIHRoYXQncyB3b3JraW5nIGZpbmUgYXMgbG9uZyBhcyB5b3Ug
+aGF2ZSBib2FyZApmaWxlcyBhbmQgbWFwcyBwYXNzZWQgZnJvbSBib2FyZCBmaWxlcy4KIAo+ID4g
+SG93IGFib3V0IHdlIHBhc3MgdGhlIHN0YXRpYyBtYXAgaW4gcGxhdGZvcm1fZGF0YSB0byB0aGUg
+cGlubXV4Cj4gPiBkcml2ZXIgaW4gcXVlc3Rpb24sIHRoZW4gaGF2ZSB0aGUgcGlubXV4IGRyaXZl
+ciBzZXQgaXQgdXAgd2l0aAo+ID4gcGluY3RybCBmd2sgYXMgcGVyLXBpbmN0cmwgbWFwLgo+IAo+
+IFRoYXQgd291bGQgYmUgYSByZWZhY3RvcmluZyBtYWtpbmcgaXQgbW9yZSBsaWtlIGhvdwo+IHJl
+Z3VsYXRvcnMgcGFzcyB0aGVpciBjb25zdW1lciBsaXN0cywgYnV0IGl0J3Mgbm90Cj4gZml4aW5n
+IHNvbWV0aGluZyB0aGF0IGlzIGJyb2tlbiBJTU8uCgpZZWFoIEkgdW5kZXJzdGFuZCBpdCdzIG5v
+dCBicm9rZW4gcmlnaHQgbm93IHdpdGggbWFwcwpwYXNzZWQgZnJvbSBib2FyZCBmaWxlcy4KCkkg
+Z3Vlc3MgSSdsbCB0cnkgdG8gZml4IGl0IHVwIGF0IHNvbWUgcG9pbnQgdG8gbWFrZSBpdApiZWhh
+dmUgYWxzbyBmb3IgZGV2aWNlIHRyZWUuCiAKPiA+IFRoaXMgd291bGQgcmVtb3ZlIHRoZSBuZWVk
+IGZvciB0aGUgZ2xvYmFsIG1hcC4gVGhpcyB3b3VsZAo+ID4gYWxzbyBhbGxvdyBtYWtpbmcgdGhl
+IHBpbmN0cmwgZndrIGludG8gbG9hZGFibGUgbW9kdWxlcwo+ID4gaW4gc29tZSBjYXNlcy4KPiAK
+PiBUaGUgZHJpdmVycyBhcmUgbG9hZGFibGUgdG9kYXksIGJ1dCB3aHkgc2hvdWxkIHRoZSBwaW5j
+dHJsCj4gKmZyYW1ld29yayogYmUgYSBsb2FkYWJsZSBtb2R1bGU/IFJlZ3VsYXRvcnMgYW5kCj4g
+Y2xvY2tzIGFyZSBib29sIEkgZG9uJ3Qgc2VlIHdoeSB0aGUgcGluY3RybCBjb3JlIHNob3VsZAo+
+IGJlIGFueSBkaWZmZXJlbnQ/CgpIZWgganVzdCBiZWNhdXNlIHdlIGNvdWxkLi4gdG8gbWFrZSBk
+ZXZlbG9wbWVudCBlYXNpZXI/IDopCgpJIHRoaW5rIGN1cnJlbnRseSBvbmx5IHBpbm11eF9yZWdp
+c3Rlcl9tYXBwaW5ncyB3b3VsZCBibG9jawp0aGF0LgoKUmVnYXJkcywKClRvbnkKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNz
+IG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczov
+L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
