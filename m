@@ -1,56 +1,94 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/5] ASoC: omap-dmic: Add device tree bindings
-Date: Fri, 2 Dec 2011 15:29:16 +0000
-Message-ID: <20111202152916.GW8245@opensource.wolfsonmicro.com>
-References: <1322819580-7424-1-git-send-email-peter.ujfalusi@ti.com>
- <1322819580-7424-2-git-send-email-peter.ujfalusi@ti.com>
- <20111202122558.GM8245@opensource.wolfsonmicro.com>
- <4ED8C57B.2000503@ti.com>
- <20111202130242.GO8245@opensource.wolfsonmicro.com>
- <4ED8D321.7030904@ti.com>
- <20111202140044.GS8245@opensource.wolfsonmicro.com>
- <4ED8E7B5.2010209@ti.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 1/1] net/macb: add DT support
+Date: Fri, 02 Dec 2011 16:30:36 +0100
+Message-ID: <4ED8EF1C.80503@atmel.com>
+References: <1321626565-11261-1-git-send-email-plagnioj@jcrosoft.com> <20111118155824.GA9981@totoro> <20111120164740.GC21480@game.jcrosoft.org> <20111120171123.GA7845@gallagher>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4ED8E7B5.2010209@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Misael Lopez Cruz <misael.lopez@ti.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20111120171123.GA7845@gallagher>
+Sender: netdev-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss@ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2011 at 03:59:01PM +0100, Cousson, Benoit wrote:
-> On 12/2/2011 3:00 PM, Mark Brown wrote:
+On 11/20/2011 06:11 PM, Jamie Iles :
+> On Sun, Nov 20, 2011 at 05:47:40PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>> On 15:58 Fri 18 Nov     , Jamie Iles wrote:
+>>> Hi Jean-Christophe,
+>>>
+>>> On Fri, Nov 18, 2011 at 03:29:25PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>> allow the DT to pass the mac address and the phy mode
+>>>>
+>>>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD<plagnioj@jcrosoft.com>
+>>>> Cc: Jamie Iles<jamie@jamieiles.com>
+>>>> Cc: Nicolas Ferre<nicolas.ferre@atmel.com>
+>>>
+>>> This looks OK to me in principle.  I can't easily test this at the
+>>> moment, but as I don't have a DT platform that has the clk framework up
+>>> and running.  A couple of nits/questions inline, but thanks for doing
+>>> this!
+>>>
+>>> Jamie
+>>>
+>>>> ---
+>>>>   Documentation/devicetree/bindings/net/macb.txt |   22 ++++++++
+>>>>   drivers/net/ethernet/cadence/macb.c            |   65 +++++++++++++++++++++---
+>>>>   drivers/net/ethernet/cadence/macb.h            |    2 +
+>>>>   3 files changed, 81 insertions(+), 8 deletions(-)
+>>>>   create mode 100644 Documentation/devicetree/bindings/net/macb.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+>>>> new file mode 100644
+>>>> index 0000000..2b727ec
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/net/macb.txt
+>>>> @@ -0,0 +1,22 @@
+>>>> +* Cadence EMACB
+>>>> +
+>>>> +Implemeted on Atmel AT91&  AVR32 SoC
+>>>
+>>> I think something along the lines of "Binding for the Cadence MACB
+>>> Ethernet controller" rather than listing specific parts might be
+>>> clearer.
+>> I prefer as we will have implementation detail in the binding
+>
+> I can't see any Atmel specific implementation detail here though so lets
+> keep it generic for now.  There isn't a benefit to keeping a list of
+> SoC's that the device is implemented in here as it'll only become out of
+> date.  We need to make it easy for other vendors to reuse the binding +
+> driver.
+>
+>>>> +		compatible = "atmel,macb";
+>>>
+>>> This should be "cdns,macb" as it isn't Atmel specific.  I believe cdns
+>>> is the correct stock ticker symbol for Cadence.
+>> here I put "atmel,macb" on purpose to specify the difference of the IP between
+>> the soc, in fact it should have been atmel-at91,macb
+>
+> Well if we really can't detect the difference from the revision register
+> then we should have "cdns,macb" *and* "atmel,at91-macb" at least then
+> where platforms could claim compatibility as:
+>
+> 	compatible = "atmel,at91-macb", "cdns,macb";
 
-> >At least the DMA bindings seem fairly well sorted - we just merged the
-> >Tegra audio bindings which define a Tegra property for the DMA request
-> >signal.  There's a reasonable amount of variation in how these things
-> >get plumbed together.
+re-thinking about this I propose that we go for the following compatible 
+string for macb:
 
-> Mmm, I missed that series, but I'm not sure it is doing the right thing.
-> - First the name is missing :-(
-> - Secondly a dma-channel is not a dma-request... So I'm not sure
-> what that series is supposed to add...
+- compatible: Should be "cdns,<chip>-macb"
 
-The idea is that the thing going into the block is the request line,
-this is sufficient to identify to the DMA controller code which hardware
-is being talked about.
+And as the first SoC that have embedded an emacb that is compatible with 
+current 10/100 AT91 usage is AVR32 at32ap7000... We may end up with 
+"cdns,at32ap7000-macb" compatible string. The first ones with different 
+synthesis parameters where at91sam9260/3 so I may also add:
+"cdns,at91sam9260-macb".
+Then you will have to add the first SoC that uses the gigabit version of 
+the macb...
+What do you think about that?
 
-> >This is also OK for clocks since they'll go through the clock API so
-> >nothing needs doing there either.
+BTW, "cdns" seems not included in the vendor-prefixes.txt file yet...
 
-> Yep, my point was about the DT churn that this will generate.
-
-Adding new things isn't churn in quite the same way - extending bindings
-is a more natural process than dropping old bits of binding.
-
-> At the end, the effort should be only at OMAP core level, so the
-> driver should not be affected if we decide to move hwmod stuff into
-> DT or not.
-
-Well, the binding will at least need to be updated.  Though of course
-if we manage to ship the DTS for the OMAP with the kernel then it won't
-really matter if we churn the binding and we may as well not document it
-at all, treating it as an internal part of the kernel that happens to go
-through device tree.
+Bye,
+-- 
+Nicolas Ferre
