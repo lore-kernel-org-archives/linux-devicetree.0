@@ -1,61 +1,47 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Sat, 3 Dec 2011 00:03:19 +0100
-Message-ID: <201112030003.20003.marek.vasut@gmail.com>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDB0539@HQMAIL01.nvidia.com>
- <alpine.LFD.2.02.1112021739420.2357@xanadu.home>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
+Date: Sat, 03 Dec 2011 10:12:53 +1100
+Message-ID: <1322867573.11728.22.camel@pasglop>
+References: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
+	 <20111202192618.GC3037@localhost.localdomain>
+	 <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.02.1112021739420.2357-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dave Martin <dave.martin@linaro.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> On Fri, 2 Dec 2011, Stephen Warren wrote:
-> > For the record, the changes are now in U-Boot master:
-> > 
-> > d510859 image: Don't detect XIP images as overlapping.
-> > b9b50e8 image: Implement IH_TYPE_KERNEL_NOLOAD
+On Fri, 2011-12-02 at 11:28 -0800, Linus Torvalds wrote:
+> On Fri, Dec 2, 2011 at 11:26 AM, Dave Martin <dave.martin@linaro.org> wrote:
+> >
+> > This is now broken on ARM where, for good or bad, NO_IRQ currently is
+> > used and is -1.
+> >
+> > How do we resolve it?  If we are ready to eliminate NO_IRQ from
+> > drivers/of/irq.c (or indeed, all code that uses it) and just use 0 for
+> > that case, we should surely just do it... but I'm not confident I can
+> > judge on that.
 > 
-> Yay!  Thank you Stephen for driving this to a successful resolution.
+> Just stop using NO_IRQ. First in drivers/of/irq.c, then in any drivers
+> as you notice breakage.
+
+Agreed. In fact the whole hack in drivers/of/irq.c was to accomodate ARM
+which still uses -1, powerpc changed to 0 a long time ago.
+
+Now that we have a generic remapper between HW and "linux" IRQ numbers,
+there is no reason to stick to -1 even on ARM.
+
+> Don't *change* NO_IRQ to zero (that whole #define is broken - leave it
+> around as a marker of brokenness), just start removing it from all the
+> ARM drivers that use the OF infrastructure. Which is presumably not
+> all that many yet.
 > 
-> Of course, boards won't be updated to the latest u-boot right away
+> So whenever you find breakage, the fix now is to just remove NO_IRQ
+> tests, and replace them with "!irq".
 
-Though we should demand it on the new boards at least.
-
-> , nor
-> will the enhanced mkimage tool be commonly available.
-
-Why not, just tell people to use up-to-date tools, otherwise you can't support 
-them. It's really easy.
-
-> 
-> > I should also note that Marek Vasut posted some patches to implement a
-> > bootz command in U-Boot. This turned out to be much less invasive than
-> > I originally thought, so once those patches are finalized, uImage might
-> > be irrelevant except for initrds (U-Boot already accepts a raw FDT
-> > without uImage wrapping for bootm and hence bootz).
-> > 
-> > http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg69287.html
-> 
-> Excellent!
-> 
-Nico, please see my other mail. This is really going to 2012.03 release 
-earliest. 2011.12 release is definitelly missed, sorry.
-
-> 
-> Nicolas
-
-M
+Cheers,
+Ben.
