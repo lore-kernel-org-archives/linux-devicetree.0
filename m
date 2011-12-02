@@ -1,37 +1,83 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 1/5] ASoC: omap-dmic: Add device tree bindings
-Date: Fri, 02 Dec 2011 14:32:59 +0200
-Message-ID: <4ED8C57B.2000503@ti.com>
-References: <1322819580-7424-1-git-send-email-peter.ujfalusi@ti.com> <1322819580-7424-2-git-send-email-peter.ujfalusi@ti.com> <20111202122558.GM8245@opensource.wolfsonmicro.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] irqdomain: protect macro variable in domain iterators
+Date: Fri, 2 Dec 2011 12:59:32 +0000
+Message-ID: <20111202125932.GB2892@localhost.localdomain>
+References: <1322833997-32083-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20111202122558.GM8245@opensource.wolfsonmicro.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Misael Lopez Cruz <misael.lopez@ti.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1322833997-32083-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2011 02:25 PM, Mark Brown wrote:
-> On Fri, Dec 02, 2011 at 11:52:56AM +0200, Peter Ujfalusi wrote:
->=20
->> +Required properties:
->> +  - compatible : "ti,omap4-dmic"
->> +  - ti,hwmods  : List of hwmod names associated with DMIC, in most =
-case
->> +		 it is "dmic".
->=20
-> Shouldn't there also be a regs property giving the register window?
+On Fri, Dec 02, 2011 at 02:53:17PM +0100, Nicolas Ferre wrote:
+> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+> Error found while using those iterators in an irq controller
+> initialization function.
+> 
+> May also need protection around irq and hwirq macro variables
+> but those values are usually plain "int" anyway... Tell me if you
+> feel that it should be done.
+> 
+>  include/linux/irqdomain.h |    8 ++++----
+>  1 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> index 99834e58..a553004 100644
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -82,12 +82,12 @@ static inline unsigned int irq_domain_to_irq(struct irq_domain *d,
+>  }
+>  
+>  #define irq_domain_for_each_hwirq(d, hw) \
+> -	for (hw = d->hwirq_base; hw < d->hwirq_base + d->nr_irq; hw++)
+> +	for (hw = (d)->hwirq_base; hw < (d)->hwirq_base + (d)->nr_irq; hw++)
+>  
+>  #define irq_domain_for_each_irq(d, hw, irq) \
+> -	for (hw = d->hwirq_base, irq = irq_domain_to_irq(d, hw); \
+> -	     hw < d->hwirq_base + d->nr_irq; \
+> -	     hw++, irq = irq_domain_to_irq(d, hw))
+> +	for (hw = (d)->hwirq_base, irq = irq_domain_to_irq((d), hw); \
+> +	     hw < (d)->hwirq_base + (d)->nr_irq; \
+> +	     hw++, irq = irq_domain_to_irq((d), hw))
 
-As of now we receive all these information via OMAP hwmod.
-All the properties (addresses, irq, etc) of the HW IP will be coming
-from DT as soon as I can remove the ti,hwmod property.
+I suggest just putting all the brackets in -- if having spotted this
+problem you only half-fix the macros, an opportunity is being missed;
+someone have to come and fix it again later:
 
---=20
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+#define irq_domain_for_each_hwirq(d, hw) \
+	for ((hw) = (d)->hwirq_base; (hw) < (d)->hwirq_base + (d)->nr_irq; (hw)++)
+
+#define irq_domain_for_each_irq(d, hw, irq) \
+	for ((hw) = (d)->hwirq_base, (irq) = irq_domain_to_irq(d, hw); \
+	     (hw) < (d)->hwirq_base + (d)->nr_irq; \
+	     (hw)++, (irq) = irq_domain_to_irq(d, hw))
+
+
+If you feel happier though, you can harmlessly add the extra brackets round
+the arguments to irq_domain_to_irq(), without changing the behaviour.
+Arguably the "always add brackets" rule is simpler to understand.
+
+In fact, where a macro argument is not part of a larger expression, or is an
+operand to a comma-expression, there's no need for extra brackets -- all
+possible operators parse at higher priority than commas.  A macro argument
+which itself is a comma-expression whould have to be explicitly bracketed
+in the macro invocation anyway, so there is no extra risk of the macro
+expansion being parsed in an unexpected way in that case.
+
+Cheers
+---Dave
