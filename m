@@ -1,22 +1,14 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Configurable interrupt sources, and DT bindings
-Date: Fri, 2 Dec 2011 23:24:18 +1100
-Message-ID: <20111202122418.GI5427@truffala.fritz.box>
-References: <4ED40B5F.6030603@nvidia.com>
- <20111129013055.GH3508@truffala.fritz.box>
- <20111129105538.GC2851@opensource.wolfsonmicro.com>
- <20111130051349.GG5435@truffala.fritz.box>
- <20111130093305.GB2791@opensource.wolfsonmicro.com>
- <20111130133140.GL5435@truffala.fritz.box>
- <20111201110738.GA2915@opensource.wolfsonmicro.com>
- <20111202053814.GH5427@truffala.fritz.box>
- <20111202112722.GG8245@opensource.wolfsonmicro.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] irqdomain: protect macro variable in domain iterators
+Date: Fri, 02 Dec 2011 14:25:12 +0100
+Message-ID: <4ED8D1B8.1010009@atmel.com>
+References: <1322833997-32083-1-git-send-email-nicolas.ferre@atmel.com>
+ <20111202125932.GB2892@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111202112722.GG8245-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <20111202125932.GB2892-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,75 +18,76 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2011 at 11:27:22AM +0000, Mark Brown wrote:
-> On Fri, Dec 02, 2011 at 04:38:14PM +1100, David Gibson wrote:
-> > On Thu, Dec 01, 2011 at 11:07:39AM +0000, Mark Brown wrote:
-> 
-> > > Right, but you could stuff those in an enormous array or whatever - the
-> > > point was to describe the per interrupt information.
-> 
-> > Well, ok, but that's not what you proposed.  In any case putting
-> 
-> Please stop claiming this, it's incredibly irritating.  At *no* point
-> have I suggested making the interrupt type a global property of the
-> interrupt controller, that would be silly.  What I did do was mistakenly
-> assume that the binding would be something more device tree like than a
-> table of magic numbers which you then projected into a desire to make
-> this a global property of the interrupt controller.
+On 12/02/2011 01:59 PM, Dave Martin :
+> On Fri, Dec 02, 2011 at 02:53:17PM +0100, Nicolas Ferre wrote:
+>> Signed-off-by: Nicolas Ferre<nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+>> Error found while using those iterators in an irq controller
+>> initialization function.
+>>
+>> May also need protection around irq and hwirq macro variables
+>> but those values are usually plain "int" anyway... Tell me if you
+>> feel that it should be done.
+>>
+>>   include/linux/irqdomain.h |    8 ++++----
+>>   1 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+>> index 99834e58..a553004 100644
+>> --- a/include/linux/irqdomain.h
+>> +++ b/include/linux/irqdomain.h
+>> @@ -82,12 +82,12 @@ static inline unsigned int irq_domain_to_irq(struct irq_domain *d,
+>>   }
+>>
+>>   #define irq_domain_for_each_hwirq(d, hw) \
+>> -	for (hw = d->hwirq_base; hw<  d->hwirq_base + d->nr_irq; hw++)
+>> +	for (hw = (d)->hwirq_base; hw<  (d)->hwirq_base + (d)->nr_irq; hw++)
+>>
+>>   #define irq_domain_for_each_irq(d, hw, irq) \
+>> -	for (hw = d->hwirq_base, irq = irq_domain_to_irq(d, hw); \
+>> -	     hw<  d->hwirq_base + d->nr_irq; \
+>> -	     hw++, irq = irq_domain_to_irq(d, hw))
+>> +	for (hw = (d)->hwirq_base, irq = irq_domain_to_irq((d), hw); \
+>> +	     hw<  (d)->hwirq_base + (d)->nr_irq; \
+>> +	     hw++, irq = irq_domain_to_irq((d), hw))
+>
+> I suggest just putting all the brackets in -- if having spotted this
+> problem you only half-fix the macros, an opportunity is being missed;
+> someone have to come and fix it again later:
 
-No, you suggested it be a global property of the interrupt source.
-Same problem, just less so.
+Exactly, this is why I added a little comment to the patch:
 
-> > important irq type information anywhere othrt than the irq specifers
-> > listed in the 'interrupts' property is not a good idea.  It would be
-> > breakin to overall model of the DT interrupt tree with poor
-> > justification.
-> 
-> I do think there's a reasonable case for just creatinng a new version of
-> the binding which is more readable but perhaps that's just me.
-> 
-> > > Well, then it'd be good if we could get that written up as a spec and
-> > > factor out the parsing code then start pushing back very strongly on any
-> > > new bindings that don't follow the spec.  
-> 
-> > Well, write up a best practice document and get it up on
-> > devicetree.org.  I think you overestimate the problem though.  The
-> > specific case you've described can be handled with an in-kernel
-> > mechanism for the irq controller driver to advertise the irq type back
-> > to the irq source's driver - no DT change necessary, and it even
-> > handles all the legacy cases.
-> 
-> The in kernel bit of this is already fine, the problem is on the device
-> tree side.
-> 
-> > > I don't think so really - it seems like what you're saying is "there's a
-> > > place where people could put this information in a device specific
-> > > fashion" and I'm looking for something that's not device specific as
-> > > this is a general need and we shouldn't have to be doing device specific 
-> > > things here.
-> 
-> > It'd be nice, but it's just not worth breaking away from existing
-> > practice to achieve it.  Remember that more or less by definition, we
-> > *already have* code to interpret the device specific tokens (in the
-> > irq controller driver).
-> 
-> Not in the real world, in the real world we don't have device tree
-> bindings for most of the interrupt controllers out there and therefore
-> no code exists to parse them.  There's a fairly small set of current
-> systems using device tree and a very large set of systems which have
-> never used it before and are currently working on implementing it.
+"May also need protection around irq and hwirq macro variables
+but those values are usually plain "int" anyway... Tell me if you
+feel that it should be done."
 
-If we support the PIC at all, it must know how to determine the
-interrupt types.  When DT support is added to the PIC, that will
-include determining the type from the interrupt specifiers.  If we
-don't support the PIC, we don't care.
+> #define irq_domain_for_each_hwirq(d, hw) \
+> 	for ((hw) = (d)->hwirq_base; (hw)<  (d)->hwirq_base + (d)->nr_irq; (hw)++)
+>
+> #define irq_domain_for_each_irq(d, hw, irq) \
+> 	for ((hw) = (d)->hwirq_base, (irq) = irq_domain_to_irq(d, hw); \
+> 	     (hw)<  (d)->hwirq_base + (d)->nr_irq; \
+> 	     (hw)++, (irq) = irq_domain_to_irq(d, hw))
+>
+>
+> If you feel happier though, you can harmlessly add the extra brackets round
+> the arguments to irq_domain_to_irq(), without changing the behaviour.
+> Arguably the "always add brackets" rule is simpler to understand.
+>
+> In fact, where a macro argument is not part of a larger expression, or is an
+> operand to a comma-expression, there's no need for extra brackets -- all
+> possible operators parse at higher priority than commas.  A macro argument
+> which itself is a comma-expression whould have to be explicitly bracketed
+> in the macro invocation anyway, so there is no extra risk of the macro
+> expansion being parsed in an unexpected way in that case.
 
+Thanks for the detailed explanation. I resend the patch with the "always 
+add brackets" corrections.
+
+Best regards,
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Nicolas Ferre
