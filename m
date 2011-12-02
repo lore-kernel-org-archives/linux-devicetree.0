@@ -1,54 +1,56 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 1/5] ASoC: omap-dmic: Add device tree bindings
-Date: Fri, 2 Dec 2011 14:31:13 +0100
-Message-ID: <4ED8D321.7030904@ti.com>
-References: <1322819580-7424-1-git-send-email-peter.ujfalusi@ti.com> <1322819580-7424-2-git-send-email-peter.ujfalusi@ti.com> <20111202122558.GM8245@opensource.wolfsonmicro.com> <4ED8C57B.2000503@ti.com> <20111202130242.GO8245@opensource.wolfsonmicro.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: Configurable interrupt sources, and DT bindings
+Date: Fri, 2 Dec 2011 13:34:13 +0000
+Message-ID: <20111202133413.GR8245@opensource.wolfsonmicro.com>
+References: <4ED40B5F.6030603@nvidia.com>
+ <20111129013055.GH3508@truffala.fritz.box>
+ <20111129105538.GC2851@opensource.wolfsonmicro.com>
+ <20111130051349.GG5435@truffala.fritz.box>
+ <20111130093305.GB2791@opensource.wolfsonmicro.com>
+ <20111130133140.GL5435@truffala.fritz.box>
+ <20111201110738.GA2915@opensource.wolfsonmicro.com>
+ <20111202053814.GH5427@truffala.fritz.box>
+ <20111202112722.GG8245@opensource.wolfsonmicro.com>
+ <20111202122418.GI5427@truffala.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20111202130242.GO8245@opensource.wolfsonmicro.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Misael Lopez Cruz <misael.lopez@ti.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111202122418.GI5427-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/2/2011 2:02 PM, Mark Brown wrote:
-> On Fri, Dec 02, 2011 at 02:32:59PM +0200, Peter Ujfalusi wrote:
->
->> As of now we receive all these information via OMAP hwmod.
->> All the properties (addresses, irq, etc) of the HW IP will be coming
->> from DT as soon as I can remove the ti,hwmod property.
->
-> Oh, right.  We should really be churning the device tree like this - the
-> idea is that the device tree should be stable and independant of kernel
-> versions.  It would be better if we were able to go straight to the one
-> without hwmod, especially if Benoit is able to get the underlying
-> changes done soon (which sounded like it might be the case).
+On Fri, Dec 02, 2011 at 11:24:18PM +1100, David Gibson wrote:
 
-I wish it were that easy... but there are too many bindings that are not 
-yet there in DT core.
+> No, you suggested it be a global property of the interrupt source.
+> Same problem, just less so.
 
-Even if the reg-names and interrupts-names are accepted, which is still 
-not obvious due to a little bit of resistance, we still do not have dma 
-request bindings, nor clock bindings, nor pin mux.
-All these information are provided today by hwmod, so it will still be 
-there for a couple of more merge windows.
+Cite?
 
-The important point for me, it to avoid having to change the driver 
-whenever these bindings will be there. This will be OK today for reg and 
-interrupts since they both go through Linux resources.
+> > Not in the real world, in the real world we don't have device tree
+> > bindings for most of the interrupt controllers out there and therefore
+> > no code exists to parse them.  There's a fairly small set of current
+> > systems using device tree and a very large set of systems which have
+> > never used it before and are currently working on implementing it.
 
-> Could we define and implement the "real" version now (it should be reasonable to
-> code blind except possibly for the DMA channel as it's such a direct
-> mapping) with hwmod left in there as something that's legacy for old
-> kernels?
+> If we support the PIC at all, it must know how to determine the
+> interrupt types.  When DT support is added to the PIC, that will
+> include determining the type from the interrupt specifiers.  If we
+> don't support the PIC, we don't care.
 
-I think DT churn is unavoidable due to the ongoing effort to add clock, 
-regulator, dma, pin mux into DT core.
-I don't think we should wait to have all that ready to start migrating 
-to DT.
-
-Regards,
-Benoit
-
+*sigh*  We do care because as I say in the paragraph you quote above
+people are trying to roll device tree out onto new platforms.  The
+coverage on PowerPC and SPARC is near 100% but the coverage on ARM is
+very far away from that so we're going to have to create a large number
+of new bindings.
