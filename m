@@ -1,85 +1,122 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Pin control mappings for DT
-Date: Fri, 2 Dec 2011 08:30:24 -0800
-Message-ID: <20111202163023.GO13928@atomide.com>
-References: <CACRpkdYYvG2OXzwpiptbK4VWdeWVGTmE9c4PPC+EecFMkRZEiA@mail.gmail.com>
- <20111129174255.GQ31337@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDAFB24@HQMAIL01.nvidia.com>
- <20111129195937.GO13928@atomide.com>
- <CACRpkdYY0Am52m2Lss+_wxnxXA9nHiGJ2TTdXymAPk=g4Zg+Jw@mail.gmail.com>
- <20111130165415.GR13928@atomide.com>
- <CACRpkdayqNgmOQAG+Kr_xPX8aeKghmeoDdaR4mK0N3U1CcYt-A@mail.gmail.com>
- <20111201222202.GG13928@atomide.com>
- <CACRpkdYL8tzwrdkeuGFWsL=NC5wPqGrhrx093VevyanqUq+QkQ@mail.gmail.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH 02/14] fdt: Add functions to access phandles,
+	arrays and bools
+Date: Fri, 2 Dec 2011 08:38:24 -0800
+Message-ID: <CAPnjgZ0jc1uOD949q_7=r758hgTvByy0tMHY4pjy+nSGbQgNYg@mail.gmail.com>
+References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
+	<1322106896-23054-3-git-send-email-sjg@chromium.org>
+	<4ED3D5DC.10502@nvidia.com>
+	<CAPnjgZ29tsNXd1+1eXdTHRjgh_MQJrXoc23_oqO9UPJ73mu7ZA@mail.gmail.com>
+	<4ED8F4FD.4030002@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYL8tzwrdkeuGFWsL=NC5wPqGrhrx093VevyanqUq+QkQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <4ED8F4FD.4030002@nvidia.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Stephen Warren <swarren@nvidia.com>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <TWarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-KiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IFsxMTEyMDIgMDE6NTZd
-Ogo+IE9uIFRodSwgRGVjIDEsIDIwMTEgYXQgMTE6MjIgUE0sIFRvbnkgTGluZGdyZW4gPHRvbnlA
-YXRvbWlkZS5jb20+IHdyb3RlOgo+IAo+ID4gQnV0IGhvdyBkb2VzIHRoZSBzZWNvbmQgcGlubXV4
-IGRyaXZlciBpbnN0YW5jZSBrbm93IGlmIGl0J3MgT0sKPiA+IHRvIGFkZCB0byB0aGUgbWFwcGlu
-ZyBvciBub3Q/IFRoZSBtYXBwaW5nIGV4aXN0cywgYnV0IGl0IG1pZ2h0IGJlCj4gPiBhbHNvIGZy
-b20gdGhlIHByZXZpb3VzIHRpbWUgeW91IGxvYWRlZCB0aGUgcGlubXV4IGRyaXZlci4uCj4gCj4g
-VGhlIG1hcHBpbmdzIGFyZSBub3QgYWRkZWQgZnJvbSBwaW5tdXggZHJpdmVycywgYXRsZWFzdCBu
-b3QKPiB0aGUgaW4tdHJlZSBkcml2ZXJzLiBNYXBwaW5ncyBhcmUgYm9hcmQgZGF0YS4KPiAKPiBU
-aGUgZXhpc3RpbmcgVTMwMCBkcml2ZXIgb25seSBkZWZpbmVzIGl0J3MgcGlucyBhbmQgZ3JvdXBz
-Cj4gKGFuZCB0aGVzZSBhcmUgaW5kZWVkIHBlci1kZXZpY2UpCj4gCj4gVGhlIG1hcCBpcyBkZWZp
-bmVkIGJ5IGFyY2gvYXJtL21hY2gtdTMwMC9jb3JlLmMKPiBhbmQgcmVnaXN0ZXJlZCB3aGVuIHRo
-YXQgTUFDSElORV9UWVBFIGlzIHJlZ2lzdGVyZWQuCj4gCj4gU28gdGhhdCdzIHdoeSBJIHNheSBp
-dCdzIGxpa2UgdGhlIGNsa2RldiBtYXBzLgoKUmlnaHQsIGJ1dCB0aGVyZSBtYXkgbm90IGJlIGJv
-YXJkIGRhdGEgbmVjZXNzYXJpbHkuIFdpdGggZGV2aWNlCnRyZWUgdGhlcmUgcmVhbGx5IHNob3Vs
-ZCBub3QgYmUgYW55IG5lZWQgZm9yIHN0YXRpYyBtYXBzLiBBbGwgdGhlCm5lY2Vzc2FyeSBpbmZv
-cm1hdGlvbiBjYW4gYmUgcHVsbGVkIGZyb20gZGV2aWNlIHRyZWUgdG8gZHluYW1pY2FsbHkKYnVp
-bGQgdGhlIG1hcHMuCiAKPiA+PiBUaGF0IHRoZSBtYXBwaW5nIGlzIGZvciBhbGwgZGV2aWNlcyBk
-b2Vzbid0IHN0b3AgeW91IGZyb20KPiA+PiBsb2FkaW5nIGFuZCB1bmxvYWRpbmcgcGlubXV4IGRy
-aXZlcnMgYXMgbXVjaCBhcyB5b3UKPiA+PiB3YW50LCB3ZSBhbHJlYWR5IGhhbmRsZSB0aGF0ICh3
-ZWxsIHRoZXJlIG1heSBiZSBidWdzIGluIHRoZQo+ID4+IGNvZGUgc2luY2UgaXQncyBub3QgZGVw
-bG95ZWQgb24gYW55IHN5c3RlbSBhZGRpbmcvcmVtb3ZpbmcKPiA+PiBjb250cm9sbGVycywgYnV0
-IHRoZSBpZGVhIHN1cmUgaXMgdGhlcmUuLi4pIMKgaWYgeW91J3JlIG9ubHkKPiA+PiB1c2luZyBo
-b2dzIGFuZCBubyBwaW5tdXhfZ2V0KCkgZnJvbSBlbHNld2hlcmUgb24gaXQsCj4gPj4gaXQgd2ls
-bCBldmVuIHdvcmsgaW4gcHJhY3RpY2UgOi0pCj4gPgo+ID4gV2VsbCBpZiB0aGVyZSBhcmUgZHlu
-YW1pYyBtYXBzLCB3ZSBzdGlsbCBuZWVkIHRvIHJlbGVhc2UKPiA+IHRoZSBtYXBzIGFsc28uCj4g
-Cj4gSG0gSSB0aGluayBJJ20gbm90IGdyYXNwaW5nIHRoZSBjb25jZXB0IG9mIGR5bmFtaWMgbWFw
-cwo+IHNpbXBseS4KPiAKPiBUaGUgY3VycmVudCBtYXBzIGFyZSBkeW5hbWljIGluIHRoZSBzZW5z
-ZSB0aGF0IHRoZXkgYXJlCj4gcmVnaXN0ZXJlZCBieSB0aGUgYm9hcmQgZmlsZXMsIGFuZCBjYW4g
-YWxzbyBiZSAod2l0aAo+IHRoZSByZWNlbnQgcGF0Y2hlcykgYWRkaXRpdmVseSBhZGRlZCwgc2F5
-IGlmIHRoZSBTb0MKPiBoYXMgb25lIGJpZyBjaHVuayBvZiBjb21tb24gbWFwcGluZ3MgYW5kIHNt
-YWxsZXIKPiBjaHVua3Mgb2YgcGVyLWJvYXJkIG1hcHBpbmdzIChpbXBsZW1lbnRlZCBmb3IgUFhB
-KS4KClN1cmUsIHNvdW5kcyBsaWtlIHRoYXQncyB3b3JraW5nIGZpbmUgYXMgbG9uZyBhcyB5b3Ug
-aGF2ZSBib2FyZApmaWxlcyBhbmQgbWFwcyBwYXNzZWQgZnJvbSBib2FyZCBmaWxlcy4KIAo+ID4g
-SG93IGFib3V0IHdlIHBhc3MgdGhlIHN0YXRpYyBtYXAgaW4gcGxhdGZvcm1fZGF0YSB0byB0aGUg
-cGlubXV4Cj4gPiBkcml2ZXIgaW4gcXVlc3Rpb24sIHRoZW4gaGF2ZSB0aGUgcGlubXV4IGRyaXZl
-ciBzZXQgaXQgdXAgd2l0aAo+ID4gcGluY3RybCBmd2sgYXMgcGVyLXBpbmN0cmwgbWFwLgo+IAo+
-IFRoYXQgd291bGQgYmUgYSByZWZhY3RvcmluZyBtYWtpbmcgaXQgbW9yZSBsaWtlIGhvdwo+IHJl
-Z3VsYXRvcnMgcGFzcyB0aGVpciBjb25zdW1lciBsaXN0cywgYnV0IGl0J3Mgbm90Cj4gZml4aW5n
-IHNvbWV0aGluZyB0aGF0IGlzIGJyb2tlbiBJTU8uCgpZZWFoIEkgdW5kZXJzdGFuZCBpdCdzIG5v
-dCBicm9rZW4gcmlnaHQgbm93IHdpdGggbWFwcwpwYXNzZWQgZnJvbSBib2FyZCBmaWxlcy4KCkkg
-Z3Vlc3MgSSdsbCB0cnkgdG8gZml4IGl0IHVwIGF0IHNvbWUgcG9pbnQgdG8gbWFrZSBpdApiZWhh
-dmUgYWxzbyBmb3IgZGV2aWNlIHRyZWUuCiAKPiA+IFRoaXMgd291bGQgcmVtb3ZlIHRoZSBuZWVk
-IGZvciB0aGUgZ2xvYmFsIG1hcC4gVGhpcyB3b3VsZAo+ID4gYWxzbyBhbGxvdyBtYWtpbmcgdGhl
-IHBpbmN0cmwgZndrIGludG8gbG9hZGFibGUgbW9kdWxlcwo+ID4gaW4gc29tZSBjYXNlcy4KPiAK
-PiBUaGUgZHJpdmVycyBhcmUgbG9hZGFibGUgdG9kYXksIGJ1dCB3aHkgc2hvdWxkIHRoZSBwaW5j
-dHJsCj4gKmZyYW1ld29yayogYmUgYSBsb2FkYWJsZSBtb2R1bGU/IFJlZ3VsYXRvcnMgYW5kCj4g
-Y2xvY2tzIGFyZSBib29sIEkgZG9uJ3Qgc2VlIHdoeSB0aGUgcGluY3RybCBjb3JlIHNob3VsZAo+
-IGJlIGFueSBkaWZmZXJlbnQ/CgpIZWgganVzdCBiZWNhdXNlIHdlIGNvdWxkLi4gdG8gbWFrZSBk
-ZXZlbG9wbWVudCBlYXNpZXI/IDopCgpJIHRoaW5rIGN1cnJlbnRseSBvbmx5IHBpbm11eF9yZWdp
-c3Rlcl9tYXBwaW5ncyB3b3VsZCBibG9jawp0aGF0LgoKUmVnYXJkcywKClRvbnkKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNz
-IG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczov
-L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+Hi Stephen,
+
+On Fri, Dec 2, 2011 at 7:55 AM, Stephen Warren <swarren@nvidia.com> wrote:
+> On 12/01/2011 06:01 PM, Simon Glass wrote:
+>> Hi Stephen,
+>>
+>> On Mon, Nov 28, 2011 at 10:41 AM, Stephen Warren <swarren@nvidia.com> wr=
+ote:
+>>> On 11/23/2011 08:54 PM, Simon Glass wrote:
+>>>> Add a function to lookup a property which is a phandle in a node, and
+>>>> another to read a fixed-length integer array from an fdt property.
+>>>> Also add a function to read boolean properties.
+>>>>
+>>>> Signed-off-by: Simon Glass <sjg@chromium.org>
+>
+>>>> +/**
+>>>> + * Look up a boolean property in a node and return it.
+>>>> + *
+>>>> + * A boolean properly is true if present in the device tree and false=
+ if not
+>>>> + * present, or present with a 0 value.
+>>>> + *
+>>>> + * @param blob =A0 =A0 =A0 FDT blob
+>>>> + * @param node =A0 =A0 =A0 node to examine
+>>>> + * @param prop_name =A0name of property to find
+>>>> + * @return 1 if the properly is present; 0 if it isn't present or is 0
+>>>> + */
+>>>> +int fdtdec_get_bool(const void *blob, int node, const char *prop_name=
+);
+>>>
+>>> Does U-Boot allow use of the "bool" type here?
+>>
+>> Which bool type? It is returning an int.
+>
+> I was asking if the return type could be changed to bool.
+
+Sorry I misunderstood -  no U-Boot does not have a bool type yet.
+
+>
+>>>> +int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
+>>>> +{
+>>>> + =A0 =A0 const s32 *cell;
+>>>> + =A0 =A0 int len;
+>>>> +
+>>>> + =A0 =A0 debug("%s: %s\n", __func__, prop_name);
+>>>> + =A0 =A0 cell =3D fdt_getprop(blob, node, prop_name, &len);
+>>>> + =A0 =A0 if (!cell)
+>>>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+>>>> + =A0 =A0 if (len >=3D sizeof(u32) && *cell =3D=3D 0)
+>>>> + =A0 =A0 =A0 =A0 =A0 =A0 return 0;
+>>>> +
+>>>> + =A0 =A0 return 1;
+>>>> +}
+>>>
+>>> In the kernel, I believe that property existence is all that's usually
+>>> checked. Is that wrong? Did the definition of a boolean property's value
+>>> in the function description above come from the specification? If a
+>>> property had a length of 0/1/2/3 with a zero value, it seems very odd to
+>>> treat that as true.
+>>
+>> It is useful to be able to set the value to 0 or 1 (with fdtget/put),
+>> rather than remove or add the property. A value with a length of less
+>> than one cell is considered illegal here.
+>>
+>> The basic idea is that the presence of the property means that it is
+>> 'true'. If it happens to have a value, then we allow that to specify
+>> 'false' if it is zero.
+>
+> Well, it's more up to standard device tree practice, not me. I've
+> certainly sent patches that used a property with 0/1 value as a bool
+> and received review feedback from DT experts that DT represents bools
+> as present/absent properties, both with no value, so I assume zero
+> length.
+
+Yes that is the preferred way. However, it is useful to be able to
+define a meaning when the property does have a value. The value may
+come into the fdt later after compilation. At that point it is easier
+to change a value rather than make something present/absent. For one
+thing it can be done without adjust the size of the fdt blob.
+
+Perhaps the solution is to adjust fdtput to support boolean values
+explicitly (in that it would add or remove the property based on a
+command-line 0/1 value).
+
+Still I think it is useful to support a zero value meaning false when
+it is provided.
+
+Regards,
+Simon
+
+>
+> --
+> nvpublic
+>
