@@ -1,68 +1,80 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] ARM: vexpress: Initial RS1 memory map support
-Date: Fri, 2 Dec 2011 20:06:19 +0100
-Message-ID: <201112022006.20165.marek.vasut@gmail.com>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDB01C6@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF174FDB0539@HQMAIL01.nvidia.com>
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
+Date: Fri, 2 Dec 2011 19:19:17 +0000
+Message-ID: <20111202191917.GB3037@localhost.localdomain>
+References: <20111110151852.GA7465@oksana.dev.rtsoft.ru>
+ <20111110152606.GB3207@oksana.dev.rtsoft.ru>
+ <20111110153816.239af1d7@lxorguk.ukuu.org.uk>
+ <20111110162859.GA7088@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF174FDB0539-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Tixy <tixy-V7l+QrSAdiO1Qrn1Bg8BZw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Linus Torvalds <torvalds@linux-foundation.org>, Jeff Garzik <jgarzik@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-> Stephen Warren wrote at Thursday, December 01, 2011 9:20 AM:
-> > Dave Martin wrote at Thursday, December 01, 2011 5:14 AM:
-> > > On Thu, Dec 01, 2011 at 11:10:50AM +0000, Mark Brown wrote:
-> > > > On Wed, Nov 30, 2011 at 04:38:26PM -0500, Nicolas Pitre wrote:
-> > > > > On Wed, 30 Nov 2011, Mark Brown wrote:
-> > > > > > Oh, dear.  Any pointers to the discussions on the u-boot side?
-> > > > > 
-> > > > > Certainly.  Many different threads actually.  Here's a few:
-> > > > OK, thanks - I see Stephen just followed up and Wolfgang seems
-> > > > moderately happy so hopefully there will be some progress.  It also
-> > > > occurs to me that there's at least Qi also using uImages, hopefully
-> > > > other bootloaders are going to be easier to deal with (or already
-> > > > cope).
-> > > 
-> > > If Stephen's patches are heading for merge, that's great.
-> > > 
-> > > If this feature remains blocked though, could we support Wolfgang's
-> > > preference for start-of-RAM-relative load and entry address?
+On Thu, Nov 10, 2011 at 08:28:59PM +0400, Anton Vorontsov wrote:
+> Drivers should not use NO_IRQ; moreover, some architectures don't
+> have it nowadays. '0' is the 'no irq' case.
+> 
+> Signed-off-by: Anton Vorontsov <cbouatmailru@gmail.com>
+> Acked-by: Alan Cox <alan@linux.intel.com>
+> ---
+> 
+> On Thu, Nov 10, 2011 at 03:38:16PM +0000, Alan Cox wrote:
+> > On Thu, 10 Nov 2011 19:26:06 +0400
+> > Anton Vorontsov <cbouatmailru@gmail.com> wrote:
 > > 
-> > It looks like my change is progressing to being checked in:
+> > > Drivers should not use NO_IRQ; moreover, some architectures don't
+> > > have it nowadays. '0' is the 'no irq' case.
+> > > 
+> > > Signed-off-by: Anton Vorontsov <cbouatmailru@gmail.com>
 > > 
-> > http://lists.denx.de/pipermail/u-boot/2011-December/111865.html
+> > Acked-by: Alan Cox <alan@linux.intel.com>
 > 
-> For the record, the changes are now in U-Boot master:
-> 
-> d510859 image: Don't detect XIP images as overlapping.
-> b9b50e8 image: Implement IH_TYPE_KERNEL_NOLOAD
-> 
-> I should also note that Marek Vasut posted some patches to implement a
-> bootz command in U-Boot. This turned out to be much less invasive than
-> I originally thought, so once those patches are finalized, uImage might
-> be irrelevant except for initrds (U-Boot already accepts a raw FDT
-> without uImage wrapping for bootm and hence bootz).
-> 
-> http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg69287.html
+> In case if we don't want a "band-aid fix" for 3.2, here is the patch
+> that just does the proper fix (w/ a risk to break minor architectures).
 
-Hi guys,
+This is now broken on ARM where, for good or bad, NO_IRQ currently is
+used and is -1.
 
-I'm now cleaning up the PXA support in U-Boot and there's also a lot of 
-university load. It's unlikely bootz will make it to .12, but 2012.03 seems 
-real. Any help is welcome though.
+How do we resolve it?  If we are ready to eliminate NO_IRQ from
+drivers/of/irq.c (or indeed, all code that uses it) and just use 0 for
+that case, we should surely just do it... but I'm not confident I can
+judge on that.
 
-M
+Half-removing NO_IRQ is going to be problematic, though...
+I really don't care whether the "no irq" value is 0 or -1, but it is
+abundantly clear that choosing different values to mean the same thing
+on opposite sides of an interface does not work.
+
+Cheers
+---Dave
+
+> 
+>  drivers/ata/pata_of_platform.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/ata/pata_of_platform.c b/drivers/ata/pata_of_platform.c
+> index a72ab0d..2a472c5 100644
+> --- a/drivers/ata/pata_of_platform.c
+> +++ b/drivers/ata/pata_of_platform.c
+> @@ -52,7 +52,7 @@ static int __devinit pata_of_platform_probe(struct platform_device *ofdev)
+>  	}
+>  
+>  	ret = of_irq_to_resource(dn, 0, &irq_res);
+> -	if (ret == NO_IRQ)
+> +	if (!ret)
+>  		irq_res.start = irq_res.end = 0;
+>  	else
+>  		irq_res.flags = 0;
+> -- 
+> 1.7.5.3
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
