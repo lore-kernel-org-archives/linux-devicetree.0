@@ -1,13 +1,13 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 17/17] tegra: fdt: Enable FDT support for Seaboard
-Date: Fri,  2 Dec 2011 18:11:40 -0800
-Message-ID: <1322878300-5551-18-git-send-email-sjg@chromium.org>
-References: <1322878300-5551-1-git-send-email-sjg@chromium.org>
+Subject: [PATCH 3/6] fdt: Add fdtdec functions to read byte array
+Date: Fri,  2 Dec 2011 18:57:48 -0800
+Message-ID: <1322881071-11148-4-git-send-email-sjg@chromium.org>
+References: <1322881071-11148-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1322878300-5551-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1322881071-11148-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,33 +18,92 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This switches Seaboard over to use FDT for run-time config instead of
-CONFIG options. USB is the only user at present.
+From: Anton Staff <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Sometimes we don't need a full cell for each value. This provides
+a simple function to read a byte array, both with and without
+copying it.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
+ include/fdtdec.h |   32 ++++++++++++++++++++++++++++++++
+ lib/fdtdec.c     |   24 ++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 0 deletions(-)
 
- include/configs/seaboard.h |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
-
-diff --git a/include/configs/seaboard.h b/include/configs/seaboard.h
-index b6d9f7a..1dc775a 100644
---- a/include/configs/seaboard.h
-+++ b/include/configs/seaboard.h
-@@ -27,6 +27,11 @@
- #include <asm/sizes.h>
- #include "tegra2-common.h"
- 
-+/* Enable fdt support for Seaboard. Flash the image in u-boot-dtb.bin */
-+#define CONFIG_DEFAULT_DEVICE_TREE	tegra2-seaboard
-+#define CONFIG_OF_CONTROL
-+#define CONFIG_OF_SEPARATE
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 9871b81..f72d219 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -231,3 +231,35 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
+  * @return 0 if all ok or gpio was FDT_GPIO_NONE; -1 on error
+  */
+ int fdtdec_setup_gpio(struct fdt_gpio_state *gpio);
 +
- /* High-level configuration options */
- #define TEGRA2_SYSMEM		"mem=384M@0M nvmem=128M@384M mem=512M@512M"
- #define V_PROMPT		"Tegra2 (SeaBoard) # "
++/**
++ * Look up a property in a node and return its contents in a byte
++ * array of given length. The property must have at least enough data for
++ * the array (count bytes). It may have more, but this will be ignored.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param array		array to fill with data
++ * @param count		number of array elements
++ * @return 0 if ok, or -FDT_ERR_MISSING if the property is not found,
++ *		or -FDT_ERR_BADLAYOUT if not enough data
++ */
++int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
++		u8 *array, int count);
++
++/**
++ * Look up a property in a node and return a pointer to its contents as a
++ * byte array of given length. The property must have at least enough data
++ * for the array (count bytes). It may have more, but this will be ignored.
++ * The data is not copied.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param count		number of array elements
++ * @return pointer to byte array if found, or NULL if the property is not
++ *		found or there is not enough data
++ */
++const u8 *fdtdec_locate_byte_array(const void *blob, int node,
++			     const char *prop_name, int count);
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 509b81f..90db53c 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -315,3 +315,27 @@ int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
+ 		return gpio_direction_input(gpio->gpio);
+ 	}
+ }
++
++int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
++		u8 *array, int count)
++{
++	const u8 *cell;
++	int err;
++
++	cell = get_prop_len(blob, node, prop_name, count, &err);
++	if (!err)
++		memcpy(array, cell, count);
++	return err;
++}
++
++const u8 *fdtdec_locate_byte_array(const void *blob, int node,
++			     const char *prop_name, int count)
++{
++	const u8 *cell;
++	int err;
++
++	cell = get_prop_len(blob, node, prop_name, count, &err);
++	if (err)
++		return NULL;
++	return cell;
++}
 -- 
 1.7.3.1
