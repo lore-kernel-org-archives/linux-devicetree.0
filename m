@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 05/17] arm: fdt: Ensure that an embedded fdt is word-aligned
-Date: Fri,  2 Dec 2011 18:11:28 -0800
-Message-ID: <1322878300-5551-6-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 04/17] fdt: Add basic support for decoding GPIO definitions
+Date: Fri,  2 Dec 2011 18:11:27 -0800
+Message-ID: <1322878300-5551-5-git-send-email-sjg@chromium.org>
 References: <1322878300-5551-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,48 +21,209 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-By putting the fdt blob into a distinctive area we can ensure that it appears
-at the start of the data section and is word-aligned.
+This adds some support into fdtdec for reading GPIO definitions from
+the fdt. We permit up to FDT_GPIO_MAX GPIOs in the system. Each GPIO
+is of the form:
 
-Note: It does not seem to be possible to get objcopy to honour its
---section-alignment flag, which would otherwise provide an easier fix
-for this problem.
+gpio-function-name = <phandle gpio_num flags>;
+
+where:
+
+phandle is a pointer to the GPIO node
+gpio_num is the number of the GPIO (0 to 223)
+flags is some flags, proposed as follows:
+
+   bit    meaning
+   0      0=input, 1=output
+   1      for output only: inital value of output
+   2      0=polarity normal, 1=active low (inverted)
+
+An example is:
+
+enable-propounder = <&gpio 43 1>;
+
+which means that GPIO 43 is an output and we can enable the propounder by
+setting gpio 43 high.
+
+Two main functions are provided:
+
+fdtdec_decode_gpio() reads a GPIO property from an fdt node and decodes it
+into a structure.
+
+fdtdec_setup_gpio() sets up the GPIO by calling gpio_request and
+gpio_direction_input/output() for you.
+
+Both functions can cope with the property being missing, which is taken to
+mean that that GPIO function is not available or is not needed.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 
- arch/arm/cpu/armv7/u-boot.lds |    5 +++++
- dts/Makefile                  |    2 +-
- 2 files changed, 6 insertions(+), 1 deletions(-)
+ include/fdtdec.h |   49 ++++++++++++++++++++++++++++++++
+ lib/fdtdec.c     |   83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/cpu/armv7/u-boot.lds b/arch/arm/cpu/armv7/u-boot.lds
-index 40ecf78..793e51b 100644
---- a/arch/arm/cpu/armv7/u-boot.lds
-+++ b/arch/arm/cpu/armv7/u-boot.lds
-@@ -43,6 +43,11 @@ SECTIONS
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 974520a..57db42b 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -61,6 +61,26 @@ enum fdt_compat_id {
+ 	COMPAT_COUNT,
+ };
  
- 	. = ALIGN(4);
- 	.data : {
-+		/*
-+		 * Sadly objcopy seems to ignore --section-alignment.
-+		 * Put any embedded device tree first so it is aligned.
-+		 */
-+		*(.dts.data)
- 		*(.data)
- 	}
++/* For now we allow 224 GPIOs. We can extend this later if required */
++enum {
++	FDT_GPIO_NONE = 255,	/* an invalid GPIO used to end our list */
++	FDT_GPIO_MAX  = 224,	/* maximum valid GPIO number */
++
++	FDT_GPIO_OUTPUT	= 1 << 0,	/* set as output (else input) */
++	FDT_GPIO_HIGH	= 1 << 1,	/* set output as high (else low) */
++	FDT_GPIO_ACTIVE_LOW = 1 << 2,	/* input is active low (else high) */
++};
++
++/* This is the state of a GPIO pin as defined by the fdt */
++struct fdt_gpio_state {
++	const char *name;	/* name of the fdt property defining this */
++	u8 gpio;		/* GPIO number, or FDT_GPIO_NONE if none */
++	u8 flags;		/* FDT_GPIO_... flags */
++};
++
++/* This tells us whether a fdt_gpio_state record is valid or not */
++#define fdt_gpio_isvalid(x) ((x)->gpio != FDT_GPIO_NONE)
++
+ /**
+  * Find the next numbered alias for a peripheral. This is used to enumerate
+  * all the peripherals of a certain type.
+@@ -181,3 +201,32 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
+  * @return 1 if the properly is present; 0 if it isn't present or is 0
+  */
+ int fdtdec_get_bool(const void *blob, int node, const char *prop_name);
++
++/**
++ * Decode a single GPIOs from an FDT.
++ *
++ * If the property is not found, then the GPIO structure will still be
++ * initialised, with gpio set to FDT_GPIO_NONE. This makes it easy to
++ * provide optional GPIOs.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Node to look at
++ * @param prop_name	Node property name
++ * @param gpio		gpio elements to fill from FDT
++ * @return 0 if ok, -FDT_ERR_NOTFOUND if the property is missing.
++ */
++int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
++		struct fdt_gpio_state *gpio);
++
++/**
++ * Set up a GPIO pin according to the provided gpio information. This sets it
++ * to either input or output. If an output, then the defined value is
++ * assigned.
++ *
++ * If the gpio is FDT_GPIO_NONE, no action is taken. This makes it easy to
++ * deal with optional GPIOs.
++ *
++ * @param gpio		GPIO info to use for set up
++ * @return 0 if all ok or gpio was FDT_GPIO_NONE; -1 on error
++ */
++int fdtdec_setup_gpio(struct fdt_gpio_state *gpio);
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 8f972b7..8eed752 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -24,6 +24,9 @@
+ #include <libfdt.h>
+ #include <fdtdec.h>
  
-diff --git a/dts/Makefile b/dts/Makefile
-index 5792afd..83547d4 100644
---- a/dts/Makefile
-+++ b/dts/Makefile
-@@ -79,7 +79,7 @@ $(obj)dt.o: $(DT_BIN)
- 	\
- 	cd $(dir ${DT_BIN}) && \
- 	$(OBJCOPY) -I binary -O $${oformat} -B $${oarch} \
--		$(notdir ${DT_BIN}) $@
-+		--prefix-sections=.dts $(notdir ${DT_BIN}) $@
- 	rm $(DT_BIN)
++/* we need the generic GPIO interface here */
++#include <asm-generic/gpio.h>
++
+ DECLARE_GLOBAL_DATA_PTR;
  
- OBJS-$(CONFIG_OF_EMBED)	:= dt.o
+ /*
+@@ -231,3 +234,83 @@ int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
+ 
+ 	return 1;
+ }
++
++/**
++ * Decode a list of GPIOs from an FDT. This creates a list of GPIOs with no
++ * terminating item.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Node to look at
++ * @param prop_name	Node property name
++ * @param gpio		Array of gpio elements to fill from FDT. This will be
++ *			untouched if either 0 or an error is returned
++ * @param max_count	Maximum number of elements allowed
++ * @return number of GPIOs read if ok, -FDT_ERR_BADLAYOUT if max_count would
++ * be exceeded, or -FDT_ERR_NOTFOUND if the property is missing.
++ */
++static int fdtdec_decode_gpios(const void *blob, int node,
++		const char *prop_name, struct fdt_gpio_state *gpio,
++		int max_count)
++{
++	const struct fdt_property *prop;
++	const u32 *cell;
++	const char *name;
++	int len, i;
++
++	debug("%s: %s\n", __func__, prop_name);
++	assert(max_count > 0);
++	prop = fdt_get_property(blob, node, prop_name, &len);
++	if (!prop) {
++		debug("FDT: %s: property '%s' missing\n", __func__, prop_name);
++		return -FDT_ERR_NOTFOUND;
++	}
++
++	/* We will use the name to tag the GPIO */
++	name = fdt_string(blob, prop->nameoff);
++	cell = (u32 *)prop->data;
++	len /= sizeof(u32) * 3;		/* 3 cells per GPIO record */
++	if (len > max_count) {
++		debug("FDT: %s: too many GPIOs / cells for "
++			"property '%s'\n", __func__, prop_name);
++		return -FDT_ERR_BADLAYOUT;
++	}
++
++	/* Read out the GPIO data from the cells */
++	for (i = 0; i < len; i++, cell += 3) {
++		gpio[i].gpio = fdt32_to_cpu(cell[1]);
++		gpio[i].flags = fdt32_to_cpu(cell[2]);
++		gpio[i].name = name;
++	}
++
++	return len;
++}
++
++int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
++		struct fdt_gpio_state *gpio)
++{
++	int err;
++
++	debug("%s: %s\n", __func__, prop_name);
++	gpio->gpio = FDT_GPIO_NONE;
++	err = fdtdec_decode_gpios(blob, node, prop_name, gpio, 1);
++	return err == 1 ? 0 : err;
++}
++
++int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
++{
++	/*
++	 * Return success if there is no GPIO defined. This is used for
++	 * optional GPIOs)
++	 */
++	if (!fdt_gpio_isvalid(gpio))
++		return 0;
++
++	if (gpio_request(gpio->gpio, gpio->name))
++		return -1;
++	if (gpio->flags & FDT_GPIO_OUTPUT) {
++		return gpio_direction_output(gpio->gpio,
++					     gpio->flags & FDT_GPIO_HIGH);
++	} else {
++		return gpio_direction_input(gpio->gpio);
++	}
++}
 -- 
 1.7.3.1
