@@ -1,38 +1,55 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v5 1/4] regulator: helper routine to extract
-	regulator_init_data
-Date: Sun, 4 Dec 2011 15:54:35 +0000
-Message-ID: <20111204155433.GA16287@opensource.wolfsonmicro.com>
-References: <1321615040-13257-1-git-send-email-rnayak@ti.com> <1321615040-13257-2-git-send-email-rnayak@ti.com> <CAJuYYwRO+AS=WmQfNAe8L6Gi5Dm4VsCuVqk3X5Nb8uUYAdLnJQ@mail.gmail.com>
+From: Wolfgang Denk <wd@denx.de>
+Subject: Re: [PATCH] drivers, char: add U-Boot bootcount driver
+Date: Sun, 04 Dec 2011 17:34:17 +0100
+Message-ID: <20111204163417.1AD6625EA22@gemini.denx.de>
+References: <1322991921-21096-1-git-send-email-hs@denx.de> <20111204114741.GA5788@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJuYYwRO+AS=WmQfNAe8L6Gi5Dm4VsCuVqk3X5Nb8uUYAdLnJQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Rajendra Nayak <rnayak@ti.com>, grant.likely@secretlab.ca, robherring2@gmail.com, linaro-dev@lists.linaro.org, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, olof@lixom.net, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20111204114741.GA5788@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <w.sang@pengutronix.de>
+Cc: Heiko Schocher <hs@denx.de>, Vitaly Bordug <vbordug@ru.mvista.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 04, 2011 at 06:51:23PM +0530, Thomas Abraham wrote:
+Dear Wolfram,
 
-> For regulators that are not turned on by bootloader, and which require
-> 'apply_uV' constraint, is there any alternative for turning on the
-> regulator when using dt?
+in message <20111204114741.GA5788@pengutronix.de> you wrote:
+> 
+> >       Description: OSDL CGL specifies that carrier grade Linux
+> >       shall provide support for detecting a repeating reboot cycle
+> > 	due to recurring failures. This detection should happen in
+> > 	user space before system services are started.
+>
+> So, technically, a flag would be enough, not necessarily a counter? Although a
+> counter probably has more advantages...
 
-If the regulator isn't software managed then always_on covers this - the
-regulator core will enable any always_on regulators that haven't been
-enabled already.
+The real-life applications we have seen so far all required a counter.
+They all required to switch to a recovery mode or other alternative
+boot sequence after N failed boot attempts, with N > 1 in all cases.
 
->  	/* do we need to apply the constraint voltage */
-> -	if (rdev->constraints->apply_uV &&
-> -	    rdev->constraints->min_uV == rdev->constraints->max_uV) {
-> +	if ((rdev->constraints->apply_uV &&
-> +	    rdev->constraints->min_uV == rdev->constraints->max_uV) ||
-> +		(!rdev->constraints->boot_on && rdev->constraints->always_on)) {
->  		ret = _regulator_do_set_voltage(rdev,
->  						rdev->constraints->min_uV,
->  						rdev->constraints->max_uV);
+> >                   reg = <0x23060 0x20>;
+>
+> I assume that non-volatile memory would qualify as a boot-counter, so those
+> could be tied to I2C busses etc? reg would not fit then.
 
-I'm not sure I understand the intended logic there.  Voltage constraints
-and enable/disable constraints are orthogonal here.
+Actually all kind of non-volatile storage can be used - it depends
+on specific hardware roperties.  Some SoCs have registers that are
+guaranteed not to change theier value during a reset; on other systems
+we have storage or NVRAM in RTCs or similar, or we can use SRAM, or
+I2C or SPI attached EEPROM, or even storage on SDCard, USB or other
+storage devices.
+
+This binding covers the memory type only.
+
+Best regards,
+
+Wolfgang Denk
+
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+"There is nothing new under the sun, but there are lots of old things
+we don't know yet."                                  - Ambrose Bierce
