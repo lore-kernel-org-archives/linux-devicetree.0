@@ -1,85 +1,93 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] arm, davinci: configure davinci aemif chipselects through
- OF
-Date: Sun, 04 Dec 2011 16:33:59 +0400
-Message-ID: <4EDB68B7.8080609@mvista.com>
-References: <1322991679-20947-1-git-send-email-hs@denx.de>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH] RFC, watchdog: add generic wdt driver API
+Date: Sun, 4 Dec 2011 13:59:28 +0100
+Message-ID: <20111204125928.GB5788@pengutronix.de>
+References: <1322992423-21683-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1322991679-20947-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1322992423-21683-1-git-send-email-hs@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Wolfgang Denk <wd@denx.de>, Stefan Roese <sr@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 04-12-2011 13:41, Heiko Schocher wrote:
+--/NkBOFFp2J2Af1nK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-[...]
+On Sun, Dec 04, 2011 at 10:53:43AM +0100, Heiko Schocher wrote:
+> This driver implements a character device with major number 10 and minor
+> number 130.  It is a software abstraction of the hardware watchdog
+> with two different APIs.  While the driver periodically triggers the
+> hardware watchdog, the software can setup independent timeout periods.
+>=20
+> "REGULAR API"
+> provides a facility to setup a watchdog behaviour shared by all
+> processes using the driver.  This interface uses read, write and
+> ioctl calls.
+>=20
+> "CHAIN API"
+> can be used to register configurable "watchdog chains" from
+> kernel and/or user space. This interface uses ioctl calls only.
+>=20
+> more info about this two APIs are found in
+> Documentation/watchdog/wd-api.txt
+>=20
+> Different hardware layers can attached to this driver. As this
+> is an RFC add in this patch also, as an example for an hardware
+> layer, support for the arm davinci internal WDT.
+>=20
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Wolfgang Denk <wd@denx.de>
+> Cc: Stefan Roese <sr@denx.de>
+>=20
+> ---
+> This patch is a port from Linux 2.4 and thought as an RFC, so comments
+> are greately appreciated. First question is, has this watchdog driver
+> API a chance to go in mainline? If so, what is the direction to
+> go to push it ...
 
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/aemif.txt b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
-> new file mode 100644
-> index 0000000..c9ed551
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
-> @@ -0,0 +1,85 @@
-> +* Texas Instruments Davinci AEMIF
-> +
-> +This file provides information, what the device node for the
-> +davinci aemifa interface contain.
-[...]
-> +Example (enbw_cmc board):
-> +	aemif@60000000 {
-> +		compatible = "ti,davinci-emifa";
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		reg = <0x68000000 0x80000>;
-> +		ranges = <2 0 0x60000000 0x02000000
-> +			  3 0 0x62000000 0x02000000
-> +			  4 0 0x64000000 0x02000000
-> +			  5 0 0x66000000 0x02000000>;
-> +		cs2@0x60000000 {
+I don't see this flying. We finally have a watchdog framework in the kernel
+which covers the long existing API used by existing drivers. If I understoo=
+d it
+right, this additional API needs new drivers for all the watchdogs? Also, I
+didn't fully get what you are missing from the combination of the current A=
+PI
+and additional userspace-handling? (check [1] for one example, not really
+covering your use case but showing a potential way maybe) Didn't look much =
+at
+the code, but glimpsing says it needs some cleanups regarding comments and
+excessive debug output.
 
-    0x shouldn't be included.
+Regards,
 
-> +			compatible = "ti,davinci-cs";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			/* all timings in nanoseconds */
-> +			cs = <2>;
-> +			asize = <1>;
-> +			ta = <0>;
-> +			rhold = <7>;
-> +			rstrobe = <42>;
-> +			rsetup = <14>;
-> +			whold = <7>;
-> +			wstrobe = <42>;
-> +			wsetup = <14>;
-> +			ew = <0>;
-> +			ss = <0>;
-> +		};
-> +		flash@2,0 {
+   Wolfram
 
-   Why you have one kind of address for cs2@60000000 node and other kind for 
-this node?
+[1] http://lists.freedesktop.org/archives/systemd-devel/2011-November/00380=
+2.html
 
-WBR, Sergei
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--/NkBOFFp2J2Af1nK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEARECAAYFAk7bbrAACgkQD27XaX1/VRvlqgCfYk6kRdyi0oQ1vpqDeyZahXcb
+PuQAn1esGX8zXO9bOJLHneIG5Q7uEJlQ
+=A9NP
+-----END PGP SIGNATURE-----
+
+--/NkBOFFp2J2Af1nK--
