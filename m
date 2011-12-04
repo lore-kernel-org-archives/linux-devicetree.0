@@ -1,93 +1,105 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH] RFC, watchdog: add generic wdt driver API
-Date: Sun, 4 Dec 2011 13:59:28 +0100
-Message-ID: <20111204125928.GB5788@pengutronix.de>
-References: <1322992423-21683-1-git-send-email-hs@denx.de>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v5 1/4] regulator: helper routine to extract regulator_init_data
+Date: Sun, 4 Dec 2011 18:51:23 +0530
+Message-ID: <CAJuYYwRO+AS=WmQfNAe8L6Gi5Dm4VsCuVqk3X5Nb8uUYAdLnJQ@mail.gmail.com>
+References: <1321615040-13257-1-git-send-email-rnayak@ti.com>
+	<1321615040-13257-2-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1322992423-21683-1-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Wolfgang Denk <wd@denx.de>, Stefan Roese <sr@denx.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1321615040-13257-2-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, robherring2@gmail.com, linaro-dev@lists.linaro.org, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, olof@lixom.net, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---/NkBOFFp2J2Af1nK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Dec 04, 2011 at 10:53:43AM +0100, Heiko Schocher wrote:
-> This driver implements a character device with major number 10 and minor
-> number 130.  It is a software abstraction of the hardware watchdog
-> with two different APIs.  While the driver periodically triggers the
-> hardware watchdog, the software can setup independent timeout periods.
->=20
-> "REGULAR API"
-> provides a facility to setup a watchdog behaviour shared by all
-> processes using the driver.  This interface uses read, write and
-> ioctl calls.
->=20
-> "CHAIN API"
-> can be used to register configurable "watchdog chains" from
-> kernel and/or user space. This interface uses ioctl calls only.
->=20
-> more info about this two APIs are found in
-> Documentation/watchdog/wd-api.txt
->=20
-> Different hardware layers can attached to this driver. As this
-> is an RFC add in this patch also, as an example for an hardware
-> layer, support for the arm davinci internal WDT.
->=20
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Wolfgang Denk <wd@denx.de>
-> Cc: Stefan Roese <sr@denx.de>
->=20
+On 18 November 2011 16:47, Rajendra Nayak <rnayak@ti.com> wrote:
+> The helper routine is meant to be used by the regulator drivers
+> to extract the regulator_init_data structure from the data
+> that is passed from device tree.
+> 'consumer_supplies' which is part of regulator_init_data is not extra=
+cted
+> as the regulator consumer mappings are passed through DT differently,
+> implemented in subsequent patches.
+> Similarly the regulator<-->parent/supply mapping is handled in
+> subsequent patches.
+>
+> Also add documentation for regulator bindings to be used to pass
+> regulator_init_data struct information from device tree.
+>
+> Some of the regulator properties which are linux and board specific,
+> are left out since its not clear if they can
+> be in someway embedded into the kernel or passed in from DT.
+> They will be revisited later.
+>
+> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
 > ---
-> This patch is a port from Linux 2.4 and thought as an RFC, so comments
-> are greately appreciated. First question is, has this watchdog driver
-> API a chance to go in mainline? If so, what is the direction to
-> go to push it ...
+> =A0.../devicetree/bindings/regulator/regulator.txt =A0 =A0| =A0 54 ++=
++++++++++++
+> =A0drivers/regulator/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 | =A0 =A01 +
+> =A0drivers/regulator/of_regulator.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0 81 ++++++++++++++++++++
+> =A0include/linux/regulator/of_regulator.h =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
+ 20 +++++
+> =A04 files changed, 156 insertions(+), 0 deletions(-)
+> =A0create mode 100644 Documentation/devicetree/bindings/regulator/reg=
+ulator.txt
+> =A0create mode 100644 drivers/regulator/of_regulator.c
+> =A0create mode 100644 include/linux/regulator/of_regulator.h
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/regulator.tx=
+t b/Documentation/devicetree/bindings/regulator/regulator.txt
+> new file mode 100644
+> index 0000000..82bef20
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+> @@ -0,0 +1,54 @@
+> +Voltage/Current Regulators
+> +
+> +Optional properties:
+> +- regulator-name: A string used as a descriptive name for regulator =
+outputs
+> +- regulator-min-microvolt: smallest voltage consumers may set
+> +- regulator-max-microvolt: largest voltage consumers may set
+> +- regulator-microvolt-offset: Offset applied to voltages to compensa=
+te for voltage drops
+> +- regulator-min-microamp: smallest current consumers may set
+> +- regulator-max-microamp: largest current consumers may set
+> +- regulator-always-on: boolean, regulator should never be disabled
+> +- regulator-boot-on: bootloader/firmware enabled regulator
+> +- <name>-supply: phandle to the parent supply/regulator node
 
-I don't see this flying. We finally have a watchdog framework in the kernel
-which covers the long existing API used by existing drivers. If I understoo=
-d it
-right, this additional API needs new drivers for all the watchdogs? Also, I
-didn't fully get what you are missing from the combination of the current A=
-PI
-and additional userspace-handling? (check [1] for one example, not really
-covering your use case but showing a potential way maybe) Didn't look much =
-at
-the code, but glimpsing says it needs some cleanups regarding comments and
-excessive debug output.
+=46or regulators that are not turned on by bootloader, and which requir=
+e
+'apply_uV' constraint, is there any alternative for turning on the
+regulator when using dt?
 
-Regards,
+Or, how about adding a additional check as below.
 
-   Wolfram
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 5baa196..25a6781 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -816,8 +816,9 @@ static int machine_constraints_voltage(struct
+regulator_dev *rdev,
+ 	int ret;
 
-[1] http://lists.freedesktop.org/archives/systemd-devel/2011-November/00380=
-2.html
+ 	/* do we need to apply the constraint voltage */
+-	if (rdev->constraints->apply_uV &&
+-	    rdev->constraints->min_uV =3D=3D rdev->constraints->max_uV) {
++	if ((rdev->constraints->apply_uV &&
++	    rdev->constraints->min_uV =3D=3D rdev->constraints->max_uV) ||
++		(!rdev->constraints->boot_on && rdev->constraints->always_on)) {
+ 		ret =3D _regulator_do_set_voltage(rdev,
+ 						rdev->constraints->min_uV,
+ 						rdev->constraints->max_uV);
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---/NkBOFFp2J2Af1nK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk7bbrAACgkQD27XaX1/VRvlqgCfYk6kRdyi0oQ1vpqDeyZahXcb
-PuQAn1esGX8zXO9bOJLHneIG5Q7uEJlQ
-=A9NP
------END PGP SIGNATURE-----
-
---/NkBOFFp2J2Af1nK--
+Thanks,
+Thomas.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
