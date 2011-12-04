@@ -1,96 +1,66 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH] drivers, char: add U-Boot bootcount driver
-Date: Sun, 4 Dec 2011 12:47:41 +0100
-Message-ID: <20111204114741.GA5788@pengutronix.de>
-References: <1322991921-21096-1-git-send-email-hs@denx.de>
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] arm, davinci: configure davinci aemif chipselects through
+ OF
+Date: Sun, 04 Dec 2011 16:25:45 +0400
+Message-ID: <4EDB66C9.9050302@mvista.com>
+References: <1322991679-20947-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1322991921-21096-1-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: Wolfgang Denk <wd@denx.de>, Vitaly Bordug <vbordug@ru.mvista.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1322991679-20947-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 04-12-2011 13:41, Heiko Schocher wrote:
 
-On Sun, Dec 04, 2011 at 10:45:21AM +0100, Heiko Schocher wrote:
-> This driver implements the Linux kernel half of the boot count feature -
-> the boot counter can only be reset after it is clear that the
-> application has been started and is running correctly, which usually
-> can only be determined by the application code itself. Thus the reset
-> of the boot counter must be done by application code, which thus needs
-> an appropriate driver.
+> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+> Cc: Kevin Hilman<khilman-l0cyMroinI0@public.gmane.org>
+> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
 
-An appropriate mechanism, not necessarily a driver, see below.
+> diff --git a/arch/arm/mach-davinci/aemif.c b/arch/arm/mach-davinci/aemif.c
+> index 1ce70a9..12c559f 100644
+> --- a/arch/arm/mach-davinci/aemif.c
+> +++ b/arch/arm/mach-davinci/aemif.c
+[...]
+> @@ -131,3 +138,99 @@ int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+>   	return 0;
+>   }
+>   EXPORT_SYMBOL(davinci_aemif_setup_timing);
+> +
+> +#if defined(CONFIG_OF)
+> +static int dv_get_value(struct device_node *np, const char *name)
+> +{
+> +	const u32 *data;
+> +	int len;
+> +
+> +	data = of_get_property(np, name,&len);
+> +	if (data)
+> +		return be32_to_cpu(readl(data));
 
-> Required feature by the Carrier Grade Linux Requirements Definition;
-> see for example document "Carrier Grade Linux Requirements Definition
-> Overview V3.0" at
->=20
-> http://www.linuxfoundation.org/collaborate/workgroups/cgl/requirements#SM=
-M.6.0_Boot_Cycle_Detection
->=20
->       Description: OSDL CGL specifies that carrier grade Linux
->       shall provide support for detecting a repeating reboot cycle
-> 	due to recurring failures. This detection should happen in
-> 	user space before system services are started.
+    Why readl() here?! Device tree is not a peripheral device...
 
-So, technically, a flag would be enough, not necessarily a counter? Althoug=
-h a
-counter probably has more advantages...
+> +
+> +	return -EINVAL;
+> +}
 
-> This driver provides read/write access to the U-Boot bootcounter
-> through PROC FS and/or sysFS file.
+    Isn't there already a standard helper for that, of_property_read_u32()?
 
-Why ProcFS? Why ProcFS and/or SysFS? Which has priority? Why not /dev?
-
-> The bootcountregister gets configured via DTS.
-> for example on the enbw_cmc board:
->=20
-> bootcount@0x23060 {
->                   compatible =3D "uboot,bootcount";
-
-No. I assume you are not the vendor of what is at 0x23060, the actual devic=
-e.
-Only the device must be encoded in the compatible-entry which then implies =
-the
-bootcount functionality. Also, keep in mind that your solution should be
-generic for bootloaders.
-
->                   reg =3D <0x23060 0x20>;
-
-I assume that non-volatile memory would qualify as a boot-counter, so those
-could be tied to I2C busses etc? reg would not fit then.
-
-I do wonder if it makes more sense to add such functionality to the
-watchdog-core to save the additional device (CCed). Needs a second thought,
-though...
-
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk7bXd0ACgkQD27XaX1/VRtikACfUVsugIOq9HGDOCZJnqSKyFnL
-tJMAoJgohhT9H7MwsdkZxL9YbjNGR8K0
-=z91i
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+WBR, Sergei
