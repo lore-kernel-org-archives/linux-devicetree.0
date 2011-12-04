@@ -1,112 +1,278 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
-Date: Sat, 3 Dec 2011 19:56:08 +0100
-Message-ID: <CAMuHMdXvwJ4f6a5Y2+TXn1X3CAg2Ok51f2+n4ye0uTfAVgBC1Q@mail.gmail.com>
-References: <20111110151852.GA7465@oksana.dev.rtsoft.ru>
-	<20111110152606.GB3207@oksana.dev.rtsoft.ru>
-	<20111110153816.239af1d7@lxorguk.ukuu.org.uk>
-	<20111110162859.GA7088@oksana.dev.rtsoft.ru>
-	<20111202191917.GB3037@localhost.localdomain>
-	<20111202232243.6af6f1e2@lxorguk.ukuu.org.uk>
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH] arm,davinci: configure davinci aemif chipselects through OF
+Date: Sun,  4 Dec 2011 10:41:19 +0100
+Message-ID: <1322991679-20947-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20111202232243.6af6f1e2@lxorguk.ukuu.org.uk>
-Sender: linux-ide-owner@vger.kernel.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Dave Martin <dave.martin@linaro.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Linus Torvalds <torvalds@linux-foundation.org>, Jeff Garzik <jgarzik@redhat.com>, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Kevin Hilman <khilman@ti.com>, davinci-linux-open-source@linux.davincidsp.com, Wolfgang Denk <wd@denx.de>, devicetree-discuss@lists.ozlabs.org, Sekhar Nori <nsekhar@ti.com>, grant.likely@secretlab.ca, Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 3, 2011 at 00:22, Alan Cox <alan@lxorguk.ukuu.org.uk> wrote=
-:
->> This is now broken on ARM where, for good or bad, NO_IRQ currently i=
-s
->> used and is -1.
->
-> Good.
->
-> ARM developers have been told to change this for several years. The n=
-ice
-> approach hasn't worked, the patient approach hasn't worked so now fin=
-ally
-> ARM is going to be dragged kicking and screaming into doing the work
-> everyone else did several years ago.
->
-> I have so little sympathy over this that you'll need a quantum physic=
-ist
-> to measure it.
->
->> Half-removing NO_IRQ is going to be problematic, though...
->> I really don't care whether the "no irq" value is 0 or -1, but it is
->> abundantly clear that choosing different values to mean the same thi=
-ng
->> on opposite sides of an interface does not work.
->
-> You've had years to fix it. If I were you I'd delete NO_IRQ from your
-> tree, type make and get it done. It's not even a big job to clean it =
-out.
->
-> At that point various other drivers will also start working properly =
-on
-> ARM because they use 0 for polled mode.
+Signed-off-by: Heiko Schocher <hs@denx.de>
+Cc: davinci-linux-open-source@linux.davincidsp.com
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: grant.likely@secretlab.ca
+Cc: Sekhar Nori <nsekhar@ti.com>
+Cc: Kevin Hilman <khilman@ti.com>
+Cc: Wolfgang Denk <wd@denx.de>
+---
+ .../devicetree/bindings/arm/davinci/aemif.txt      |   85 ++++++++++++++++
+ arch/arm/mach-davinci/aemif.c                      |  105 +++++++++++++++++++-
+ arch/arm/mach-davinci/include/mach/aemif.h         |    1 +
+ 3 files changed, 190 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci/aemif.txt
 
-Not just ARM:
-
-arch/arm/include/asm/irq.h:#ifndef
-NO_IRQarch/arm/include/asm/irq.h:#define NO_IRQ =C2=A0 =C2=A0 =C2=A0 ((=
-unsigned
-int)(-1))arch/microblaze/include/asm/irq.h:#define NO_IRQ
-(-1)arch/mn10300/include/asm/irq.h:#define NO_IRQ
-INT_MAXarch/openrisc/include/asm/irq.h:#define NO_IRQ
-(-1)arch/parisc/include/asm/irq.h:#define NO_IRQ
-(-1)arch/powerpc/include/asm/irq.h:#define NO_IRQ
-(0)arch/powerpc/include/asm/machdep.h: =C2=A0 =C2=A0 /* Return an irq, =
-or NO_IRQ
-to indicate=C2=A0arch/powerpc/include/asm/parport.h: =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 if (virq
-=3D=3D NO_IRQ)arch/powerpc/include/asm/qe_ic.h: =C2=A0 =C2=A0 =C2=A0 if=
- (cascade_irq !=3D
-NO_IRQ)arch/powerpc/include/asm/qe_ic.h: =C2=A0 =C2=A0 =C2=A0 if (casca=
-de_irq !=3D
-NO_IRQ)arch/powerpc/include/asm/qe_ic.h: =C2=A0 =C2=A0 =C2=A0 if (casca=
-de_irq !=3D
-NO_IRQ)arch/powerpc/include/asm/qe_ic.h: =C2=A0 =C2=A0 =C2=A0 if (casca=
-de_irq !=3D
-NO_IRQ)arch/powerpc/include/asm/qe_ic.h: =C2=A0 =C2=A0 =C2=A0 if (casca=
-de_irq =3D=3D
-NO_IRQ)arch/powerpc/include/asm/qe_ic.h: =C2=A0 =C2=A0 =C2=A0 if (casca=
-de_irq !=3D
-NO_IRQ)arch/sparc/include/asm/irq_32.h:#define NO_IRQ
-0xffffffffarch/sparc/include/asm/irq_64.h:#define NO_IRQ
-0xffffffff
-
-And it's not just definitions of NO_IRQ. These are easy to find.
-On some archs (notably ARM) zero still seems to be a valid IRQ number,
-e.g. IRQ_LOCOMO_KEY and IRQ_DMA0C0.
-
-Also, UML has TIMER_IRQ being zero.
-
-A quick grep found many more IRQ definitions being zero, but
-surprisingly the few
-I looked into were definitions without users (e.g. SE7343_FPGA_IRQ_MRSH=
-PC0,
-ROUTE_VIA_IRQ0 aka IRQ_MB93493_VDC_ROUTE).
-
-Perhaps request_irq() should just reject zero to find all of them?
-
-Gr{oetje,eeting}s,
-
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 =C2=A0=C2=A0 -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/arm/davinci/aemif.txt b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
+new file mode 100644
+index 0000000..c9ed551
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
+@@ -0,0 +1,85 @@
++* Texas Instruments Davinci AEMIF
++
++This file provides information, what the device node for the
++davinci aemifa interface contain.
++
++Required properties:
++- compatible: "ti,davinci-emifa";
++- #address-cells : Should be either two or three.  The first cell is the
++                   chipselect number, and the remaining cells are the
++                   offset into the chipselect.
++- #size-cells : Either one or two, depending on how large each chipselect
++                can be.
++- ranges : Each range corresponds to a single chipselect, and cover
++           the entire access window as configured.
++
++Optional properties:
++- none
++
++Optional subnodes:
++- Chipselect setup:
++  - Required properties:
++	- compatible: "ti,davinci-cs";
++	- #address-cells = <1>;
++	- #size-cells = <1>;
++
++    Timing setup, all timings in nanoseconds
++	- cs:		chipselect (value 2,3,4 or 5)
++	- asize:	Asynchronous Data Bus Width.
++			value:
++			0: 8 bit
++			1: 16 bit
++	- ta:		Minimum Turn-Around time.
++	- rhold:	Read hold width
++	- rstrobe:	Read strobe width
++	- rsetup:	Read setup width
++	- whold:	Write hold width
++	- wstrobe:	Write strobe width
++	- wsetup:	Write setup width
++	- ew:		Extend Wait bit
++			value:
++			0: Extended wait cycles disabled.
++			1: Extended wait cycles enabled.
++	-ss:		Select Strobe bit.
++			value:
++			0: Normal Mode enabled.
++			1: Select Strobe Mode enabled.
++- CFI driver:
++  see: Documentation/devicetree/bindings/mtd/mtd-physmap.txt
++
++Example (enbw_cmc board):
++	aemif@60000000 {
++		compatible = "ti,davinci-emifa";
++		#address-cells = <2>;
++		#size-cells = <1>;
++		reg = <0x68000000 0x80000>;
++		ranges = <2 0 0x60000000 0x02000000
++			  3 0 0x62000000 0x02000000
++			  4 0 0x64000000 0x02000000
++			  5 0 0x66000000 0x02000000>;
++		cs2@0x60000000 {
++			compatible = "ti,davinci-cs";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			/* all timings in nanoseconds */
++			cs = <2>;
++			asize = <1>;
++			ta = <0>;
++			rhold = <7>;
++			rstrobe = <42>;
++			rsetup = <14>;
++			whold = <7>;
++			wstrobe = <42>;
++			wsetup = <14>;
++			ew = <0>;
++			ss = <0>;
++		};
++		flash@2,0 {
++			compatible = "cfi-flash";
++			reg = <2 0x0 0x400000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			bank-width = <2>;
++			device-width = <2>;
++		};
++	};
+diff --git a/arch/arm/mach-davinci/aemif.c b/arch/arm/mach-davinci/aemif.c
+index 1ce70a9..12c559f 100644
+--- a/arch/arm/mach-davinci/aemif.c
++++ b/arch/arm/mach-davinci/aemif.c
+@@ -13,12 +13,14 @@
+ #include <linux/err.h>
+ #include <linux/clk.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/time.h>
+ 
+ #include <mach/aemif.h>
+ 
+ /* Timing value configuration */
+-
++#define ASIZE(x)	(x)
+ #define TA(x)		((x) << 2)
+ #define RHOLD(x)	((x) << 4)
+ #define RSTROBE(x)	((x) << 7)
+@@ -26,7 +28,10 @@
+ #define WHOLD(x)	((x) << 17)
+ #define WSTROBE(x)	((x) << 20)
+ #define WSETUP(x)	((x) << 26)
++#define EW(x)		((x) << 30)
++#define SS(x)		((x) << 31)
+ 
++#define ASIZE_MAX	0x1
+ #define TA_MAX		0x3
+ #define RHOLD_MAX	0x7
+ #define RSTROBE_MAX	0x3f
+@@ -34,6 +39,8 @@
+ #define WHOLD_MAX	0x7
+ #define WSTROBE_MAX	0x3f
+ #define WSETUP_MAX	0xf
++#define EW_MAX		0x1
++#define SS_MAX		0x1
+ 
+ #define TIMING_MASK	(TA(TA_MAX) | \
+ 				RHOLD(RHOLD_MAX) | \
+@@ -131,3 +138,99 @@ int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+ 	return 0;
+ }
+ EXPORT_SYMBOL(davinci_aemif_setup_timing);
++
++#if defined(CONFIG_OF)
++static int dv_get_value(struct device_node *np, const char *name)
++{
++	const u32 *data;
++	int len;
++
++	data = of_get_property(np, name, &len);
++	if (data)
++		return be32_to_cpu(readl(data));
++
++	return -EINVAL;
++}
++
++static int davinci_aemif_setup_timing_of_one(struct device_node *np,
++		void __iomem *base)
++{
++	unsigned val;
++	int asize, ta, rhold, rstrobe, rsetup, whold, wstrobe, wsetup;
++	int ew, ss;
++	int cs;
++	unsigned offset;
++	struct clk *aemif_clk;
++	unsigned long clkrate;
++
++	aemif_clk = clk_get(NULL, "aemif");
++	if (IS_ERR(aemif_clk))
++		return PTR_ERR(aemif_clk);
++
++	clkrate = clk_get_rate(aemif_clk);
++
++	clkrate /= 1000;	/* turn clock into kHz for ease of use */
++
++	cs = dv_get_value(np, "cs");
++	if (cs < 2)
++		return -EINVAL;
++
++	offset = A1CR_OFFSET + (cs - 2) * 4;
++	asize	= dv_get_value(np, "asize");
++	ta	= aemif_calc_rate(dv_get_value(np, "ta"), clkrate, TA_MAX);
++	rhold	= aemif_calc_rate(dv_get_value(np, "rhold"), clkrate,
++			RHOLD_MAX);
++	rstrobe	= aemif_calc_rate(dv_get_value(np, "rstrobe"), clkrate,
++			RSTROBE_MAX);
++	rsetup	= aemif_calc_rate(dv_get_value(np, "rsetup"), clkrate,
++			RSETUP_MAX);
++	whold	= aemif_calc_rate(dv_get_value(np, "whold"), clkrate,
++			WHOLD_MAX);
++	wstrobe	= aemif_calc_rate(dv_get_value(np, "wstrobe"), clkrate,
++			WSTROBE_MAX);
++	wsetup	= aemif_calc_rate(dv_get_value(np, "wsetup"), clkrate,
++			WSETUP_MAX);
++	ew	= dv_get_value(np, "ew");
++	ss	= dv_get_value(np, "ss");
++
++	if (asize < 0 || ta < 0 || rhold < 0 || rstrobe < 0 || rsetup < 0 ||
++			whold < 0 || wstrobe < 0 || wsetup < 0 || ew < 0 ||
++			ss < 0) {
++		pr_err("%s: cannot get suitable timings\n", __func__);
++		return -EINVAL;
++	}
++
++	val = ASIZE(asize) | TA(ta) | RHOLD(rhold) | RSTROBE(rstrobe) |
++		RSETUP(rsetup) | WHOLD(whold) | WSTROBE(wstrobe) |
++		WSETUP(wsetup) | EW(ew) | SS(ss);
++
++	__raw_writel(val, base + offset);
++
++	return 0;
++}
++
++int davinci_aemif_setup_timing_of(void)
++{
++	struct device_node *np = NULL;
++	void __iomem *base;
++
++	np =  of_find_compatible_node(NULL, NULL, "ti,davinci-emifa");
++	if (!np) {
++		pr_warning("%s: ti,davinci-emifa not found\n", __func__);
++		return 0;
++	}
++
++	base = of_iomap(np, 0);
++	for_each_compatible_node(np, NULL, "ti,davinci-cs")
++		davinci_aemif_setup_timing_of_one(np, base);
++
++	iounmap(base);
++	return 0;
++}
++#else
++int davinci_aemif_setup_timing_of(void)
++{
++	return 0;
++}
++#endif
++EXPORT_SYMBOL(davinci_aemif_setup_timing_of);
+diff --git a/arch/arm/mach-davinci/include/mach/aemif.h b/arch/arm/mach-davinci/include/mach/aemif.h
+index 05b2934..1538565 100644
+--- a/arch/arm/mach-davinci/include/mach/aemif.h
++++ b/arch/arm/mach-davinci/include/mach/aemif.h
+@@ -33,4 +33,5 @@ struct davinci_aemif_timing {
+ 
+ int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+ 					void __iomem *base, unsigned cs);
++int davinci_aemif_setup_timing_of(void);
+ #endif
+-- 
+1.7.6.4
