@@ -1,51 +1,91 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/2] gpio/tegra: Dynamically allocate IRQ base, and
- support DT
-Date: Mon, 5 Dec 2011 22:44:05 +0800
-Message-ID: <20111205144404.GE2980@S2100-06.ap.freescale.net>
-References: <1322700336-26866-1-git-send-email-swarren@nvidia.com>
- <1322700336-26866-2-git-send-email-swarren@nvidia.com>
- <20111205065527.GD2980@S2100-06.ap.freescale.net>
- <4EDCC894.7060200@gmail.com>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] drivers, char: add U-Boot bootcount driver
+Date: Mon, 05 Dec 2011 15:39:46 +0100
+Message-ID: <4EDCD7B2.5030409@denx.de>
+References: <1322991921-21096-1-git-send-email-hs@denx.de>
+ <20111204114741.GA5788@pengutronix.de>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4EDCC894.7060200-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20111204114741.GA5788-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Vitaly Bordug <vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2011 at 07:35:16AM -0600, Rob Herring wrote:
-> Shawn,
-> 
-> On 12/05/2011 12:55 AM, Shawn Guo wrote:
-> > On Wed, Nov 30, 2011 at 05:45:36PM -0700, Stephen Warren wrote:
-> > [...]
-> >>  static void tegra_gpio_irq_ack(struct irq_data *d)
-> >>  {
-> >> -	int gpio = d->irq - INT_GPIO_BASE;
-> >> +	int gpio = d->hwirq;
-> >>  
-> > Though it's working right now, I'm not sure it's safe enough.  This
-> > only works when d->hwirq_base is 0, which is true for now.  But I doubt
-> > it will be always true.  I guess hwirq_base was introduced there for
-> > some reason.  When some day irqdomain starts using this field, the
-> > above code starts being broken.  IMO, the way that generic-chip.c is
-> > using to calculate the number, d->irq - gc->irq_base, is much more
-> > safer.
-> 
-> It does work as the GIC hwirq_base is non-zero. It was introduced
-> exactly so that no conversion of hwirq is needed for functions like
-> this. hwirq_base is the starting point local to the controller
-> numbering. Say you have gpio controller with 16 lines, but only the
-> upper 8 lines have interrupt capability. Then you would set hwirq_base
-> to 8 and nr_irq to 8. Then hwirq will always be set to 8-15.
-> 
-Ah, ok.  In that case, it's safe to use.  Thanks for help understand
-it.  I will use hwirq for my gpio-mxc patch then.
+Hello Wolfram,
 
+Wolfram Sang wrote:
+> On Sun, Dec 04, 2011 at 10:45:21AM +0100, Heiko Schocher wrote:
+>> This driver implements the Linux kernel half of the boot count feature -
+>> the boot counter can only be reset after it is clear that the
+>> application has been started and is running correctly, which usually
+>> can only be determined by the application code itself. Thus the reset
+>> of the boot counter must be done by application code, which thus needs
+>> an appropriate driver.
+> 
+> An appropriate mechanism, not necessarily a driver, see below.
+> 
+>> Required feature by the Carrier Grade Linux Requirements Definition;
+>> see for example document "Carrier Grade Linux Requirements Definition
+>> Overview V3.0" at
+>>
+>> http://www.linuxfoundation.org/collaborate/workgroups/cgl/requirements#SMM.6.0_Boot_Cycle_Detection
+>>
+>>       Description: OSDL CGL specifies that carrier grade Linux
+>>       shall provide support for detecting a repeating reboot cycle
+>> 	due to recurring failures. This detection should happen in
+>> 	user space before system services are started.
+> 
+> So, technically, a flag would be enough, not necessarily a counter? Although a
+> counter probably has more advantages...
+> 
+>> This driver provides read/write access to the U-Boot bootcounter
+>> through PROC FS and/or sysFS file.
+> 
+> Why ProcFS? Why ProcFS and/or SysFS? Which has priority? Why not /dev?
+
+I drop the ProcFS support for v2.
+
+>> The bootcountregister gets configured via DTS.
+>> for example on the enbw_cmc board:
+>>
+>> bootcount@0x23060 {
+>>                   compatible = "uboot,bootcount";
+> 
+> No. I assume you are not the vendor of what is at 0x23060, the actual device.
+> Only the device must be encoded in the compatible-entry which then implies the
+> bootcount functionality. Also, keep in mind that your solution should be
+> generic for bootloaders.
+
+So I should call it compatible = "generic, bootcount" ?
+
+>>                   reg = <0x23060 0x20>;
+> 
+> I assume that non-volatile memory would qualify as a boot-counter, so those
+> could be tied to I2C busses etc? reg would not fit then.
+
+Currently, mem only supported, add this to the Documentation and log
+message.
+
+> I do wonder if it makes more sense to add such functionality to the
+> watchdog-core to save the additional device (CCed). Needs a second thought,
+> though...
+
+Thanks!
+
+bye,
+heiko
 -- 
-Regards,
-Shawn
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
