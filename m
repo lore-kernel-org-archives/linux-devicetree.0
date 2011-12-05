@@ -1,75 +1,39 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [PATCH v3 2/2] ARM: at91/net: add macb ethernet controller in 9g45 DT
-Date: Mon,  5 Dec 2011 12:59:53 +0100
-Message-ID: <1ec7a786c94564a9b15a61239f41a2a3fba8578a.1323086095.git.nicolas.ferre@atmel.com>
-References: <1322847782-22650-1-git-send-email-nicolas.ferre@atmel.com>
- <714ca7492d8d45b50eab34448c4b70933ce5701c.1323086095.git.nicolas.ferre@atmel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <714ca7492d8d45b50eab34448c4b70933ce5701c.1323086095.git.nicolas.ferre@atmel.com>
-In-Reply-To: <714ca7492d8d45b50eab34448c4b70933ce5701c.1323086095.git.nicolas.ferre@atmel.com>
-References: <714ca7492d8d45b50eab34448c4b70933ce5701c.1323086095.git.nicolas.ferre@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robherring2@gmail.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, plagnioj@jcrosoft.com
-Cc: linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, jamie@jamieiles.com, Nicolas Ferre <nicolas.ferre@atmel.com>
+From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [PATCH] RFC, watchdog: add generic wdt driver API
+Date: Mon, 5 Dec 2011 12:26:49 +0000
+Message-ID: <20111205122649.6fc6aed2@lxorguk.ukuu.org.uk>
+References: <1322992423-21683-1-git-send-email-hs@denx.de>
+ <20111204125928.GB5788@pengutronix.de>
+ <20111204170810.8370625EA22@gemini.denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111204170810.8370625EA22-C2Gvrrd9BC/j/ljBK/0BTg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the Cadence macb ethernet controller in at91sam9g45 .dtsi and
-enable it in at91sam9m10g45ek board device tree file.
+> that we have a number of customers who consider the existing wdt
+> support unsufficient for their use cases.  We've been using it on all
+> kinds on PPC systems, and now on ARM as well.
+> 
+> We will not fight for inclusion of this driver, we just wat to know if
+> it's worth investing efforts to get it accepted or if this is a lost
+> case.
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
-v3: - form a thread with "macb DT support" patch
-    - remove "local-mac-address" from 9m10g45ek.dts file but use it in
-      documentation example.
+I think it would be better to start from the needed feature list than the
+implementation of an old and wildly different pile of code. Then discuss
+adding those features that are relevant to the current framework - which
+ought to be relatively easy now each watchdog is a set of methods.
 
- Documentation/devicetree/bindings/net/macb.txt |    1 +
- arch/arm/boot/dts/at91sam9g45.dtsi             |    7 +++++++
- arch/arm/boot/dts/at91sam9m10g45ek.dts         |    5 +++++
- 3 files changed, 13 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 2e24f05..44afa0e 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -21,4 +21,5 @@ Examples:
- 		reg = <0xfffc4000 0x4000>;
- 		interrupts = <21>;
- 		phy-mode = "rmii";
-+		local-mac-address = [3a 0e 03 04 05 06];
- 	};
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index e89b1d7..67f94d3 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -101,6 +101,13 @@
- 				atmel,use-dma-tx;
- 				status = "disabled";
- 			};
-+
-+			macb0: ethernet@fffbc000 {
-+				compatible = "cdns,at32ap7000-macb", "cdns,macb";
-+				reg = <0xfffbc000 0x100>;
-+				interrupts = <25 4>;
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 85b34f5..a387e77 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -30,6 +30,11 @@
- 			usart1: serial@fff90000 {
- 				status = "okay";
- 			};
-+
-+			macb0: ethernet@fffbc000 {
-+				phy-mode = "rmii";
-+				status = "okay";
-+			};
- 		};
- 	};
- };
--- 
-1.7.5.4
+Alan
