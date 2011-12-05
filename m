@@ -1,53 +1,57 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 2/2] gpio/tegra: Dynamically allocate IRQ base, and
- support DT
-Date: Mon, 5 Dec 2011 09:19:00 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1750B7702E@HQMAIL01.nvidia.com>
-References: <1322700336-26866-1-git-send-email-swarren@nvidia.com>
- <1322700336-26866-2-git-send-email-swarren@nvidia.com>
- <20111205065527.GD2980@S2100-06.ap.freescale.net>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v3 5/5] ARM: vexpress: DT-based support for CoreTiles
+ Express A5x2 and A9x4
+Date: Mon, 05 Dec 2011 17:24:40 +0000
+Message-ID: <1323105880.3147.55.camel@hornet.cambridge.arm.com>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+ <1322579473-8804-6-git-send-email-pawel.moll@arm.com>
+ <20111129164050.GC2829@localhost.localdomain>
+ <1322678364.3180.34.camel@hornet.cambridge.arm.com>
+ <20111201122144.GD2026@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111205065527.GD2980-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111201122144.GD2026@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote at Sunday, December 04, 2011 11:55 PM:
-> On Wed, Nov 30, 2011 at 05:45:36PM -0700, Stephen Warren wrote:
-> [...]
-> >  static void tegra_gpio_irq_ack(struct irq_data *d)
-> >  {
-> > -	int gpio = d->irq - INT_GPIO_BASE;
-> > +	int gpio = d->hwirq;
-> >
-> Though it's working right now, I'm not sure it's safe enough.  This
-> only works when d->hwirq_base is 0, which is true for now.  But I doubt
-> it will be always true.  I guess hwirq_base was introduced there for
-> some reason.  When some day irqdomain starts using this field, the
-> above code starts being broken.  IMO, the way that generic-chip.c is
-> using to calculate the number, d->irq - gc->irq_base, is much more
-> safer.
-
-If I'm understanding IRQ domains correctly, the hwirq_base value is
-picked by the driver when registering the IRQ domain. Hence, there's
-no way for hwirq_base to not be zero without someone editing gpio-tegra.c,
-and as part of doing that, the quoted code could be adjusted if required.
-Does that seem reasonable?
-
-Rob, you suggested the code above - what's your take?
-
--- 
-nvpublic
+T24gVGh1LCAyMDExLTEyLTAxIGF0IDEyOjIxICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBU
+aGF0IHdpbGwgd29yaywgYnV0IHdlIHNob3VsZCBtYWtlIGl0IGNsZWFyIHRoYXQgdGhpcyBvcHRp
+b24gZG9lcyBub3QKPiBwcm92aWRlIGJvYXJkIHN1cHBvcnQgYWxsIGJ5IGl0c2VsZiwgbWF5YmU6
+Cj4gCj4gIlByb3ZpZGVzIGNvbW1vbiBkZXBlbmRlbmNpZXMgZm9yIFZFIHBsYXRmb3JtcyBiYXNl
+ZCBvbiBDb3J0ZXgtQTUgb3IKPiBDb3J0ZXgtQTkgcHJvY2Vzc29ycy4gIEluIG9yZGVyIHRvIGJ1
+aWxkIGEgd29ya2luZyBrZXJuZWwsIHlvdSBtdXN0IGFsc28KPiBlbmFibGUgb25lIG9yIG1vcmUg
+Y29yZSB0aWxlIHN1cHBvcnQgb3B0aW9ucy4iCgpBY3R1YWxseSwgdGhlIGxvbmdlciBJIHRoaW5r
+IGFib3V0IGl0IHRoZSBtb3JlIGl0IHNlZW1zIHRoYXQgdGhpcyBjb2RlCmRvZXNuJ3Qgc3VwcG9y
+dCBhIHBhcnRpY3VsYXIgdGlsZSwgYnV0IHJhdGhlciBhIHBhcnRpY3VsYXIgcHJvY2Vzc29yLi4u
+CkFmdGVyIGFsbCBfZXhhY3RseV8gdGhlIHNhbWUgY29kZSB3aWxsIHdvcmsgd2l0aCBhbnkgU01N
+IGJhc2VkIG9uIEZQR0EKTG9naWMgVGlsZSAoVjJGLTJYVjYpLCBldmVuIGlmIGl0IHdhcyB2ZXJ5
+IGRpZmZlcmVudCBmcm9tIHRoZSBjb3JldGlsZSwKZWcuIEE5IHdpdGggUlMxIG1lbW9yeSBtYXAu
+IEluIHN1Y2ggY2FzZSBtYWtpbmcgaXQgY29tcGF0aWJsZSB3aXRoClYyUC1DQTkgd291bGQgYmUg
+bG9naWNhbGx5IHdyb25nLi4uCgpJIGhhdmUgYW4gaWRlYSBvZiBzcGlubmluZyB0aGUgY29tcGF0
+aWJsZSB2YWx1ZXMgYWdhaW4gdG8gZ2V0IHNvbWV0aGluZwpsaWtlIHRoYXQ6Cgpjb21wYXRpYmxl
+ID0gImFybSx2ZXhwcmVzcy12MnAtY2E1cyIsICJhcm0sdmV4cHJlc3MtY29ydGV4X2E1IjsKY29t
+cGF0aWJsZSA9ICJhcm0sdmV4cHJlc3MtdjJwLWNhOSIsICJhcm0sdmV4cHJlc3MtY29ydGV4X2E5
+IjsKY29tcGF0aWJsZSA9ICJhcm0sdmV4cHJlc3MtdjJwLWNhMTUiLCAiYXJtLHZleHByZXNzLWNv
+cnRleF9hMTUiOwoKYW5kIHRoZSBib2FyZCBjb2RlIHdvdWxkIHNpbXBseSBoYXZlOgoKc3RhdGlj
+IGNvbnN0IGNoYXIgKmR0X2NhNV9jYTlfZHRfbWF0Y2hbXSBfX2luaXRkYXRhID0gewoJImFybSx2
+ZXhwcmVzcy1jb3J0ZXhfYTUiLAoJImFybSx2ZXhwcmVzcy1jb3J0ZXhfYTkiLAoJTlVMTCwKfTsK
+CkkndmUgYWxyZWFkeSB0cmllZCB0aGF0IChhZGRpbmcgdHJlZSBmb3IgQTE1IHRpbGUgYXMgd2Vs
+bCkgYW5kIGl0CmFjdHVhbGx5IHNpbXBsaWZpZXMgYSBsb3Qgb2YgdGhpbmdzLiBJJ2xsIGNsZWFu
+IHRoZSBwYXRjaGVzLCB0ZXN0IHRoZW0KYW5kIHBvc3QgdG9tb3Jyb3cuIE9mIGNvdXJzZSBpZiBh
+bnlvbmUgdGhpbmtzIGl0J3MgYSBiYWQgaWRlYSBJJ20gaGFwcHkKdG8gZ2V0IGJhY2sgdG8gd2hl
+cmUgd2Ugd2VyZSBsYXN0IHdlZWsuCgpDaGVlcnMhCgpQYXdlxYIKCgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
