@@ -1,68 +1,37 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] ARM: vexpress: DT-based support for CoreTiles
- Express A5x2 and A9x4
-Date: Mon, 5 Dec 2011 17:37:09 +0000
-Message-ID: <20111205173709.GA29812@localhost.localdomain>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-6-git-send-email-pawel.moll@arm.com>
- <20111129164050.GC2829@localhost.localdomain>
- <1322678364.3180.34.camel@hornet.cambridge.arm.com>
- <20111201122144.GD2026@localhost.localdomain>
- <1323105880.3147.55.camel@hornet.cambridge.arm.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
+Date: Mon, 5 Dec 2011 12:40:16 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1112051236350.2357@xanadu.home>
+References: <20111110162859.GA7088@oksana.dev.rtsoft.ru> <20111202192618.GC3037@localhost.localdomain> <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com> <1322867573.11728.22.camel@pasglop> <20111205161157.GA27550@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1323105880.3147.55.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20111205161157.GA27550@localhost.localdomain>
+Sender: linux-ide-owner@vger.kernel.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Torvalds <torvalds@linux-foundation.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2011 at 05:24:40PM +0000, Pawel Moll wrote:
-> On Thu, 2011-12-01 at 12:21 +0000, Dave Martin wrote:
-> > That will work, but we should make it clear that this option does not
-> > provide board support all by itself, maybe:
+On Mon, 5 Dec 2011, Dave Martin wrote:
+> On Sat, Dec 03, 2011 at 10:12:53AM +1100, Benjamin Herrenschmidt wrote:
+> > On Fri, 2011-12-02 at 11:28 -0800, Linus Torvalds wrote:
+> > > Don't *change* NO_IRQ to zero (that whole #define is broken - leave it
+> > > around as a marker of brokenness), just start removing it from all the
+> > > ARM drivers that use the OF infrastructure. Which is presumably not
+> > > all that many yet.
+> > > 
+> > > So whenever you find breakage, the fix now is to just remove NO_IRQ
+> > > tests, and replace them with "!irq".
 > > 
-> > "Provides common dependencies for VE platforms based on Cortex-A5 or
-> > Cortex-A9 processors.  In order to build a working kernel, you must also
-> > enable one or more core tile support options."
 > 
-> Actually, the longer I think about it the more it seems that this code
-> doesn't support a particular tile, but rather a particular processor...
-> After all _exactly_ the same code will work with any SMM based on FPGA
-> Logic Tile (V2F-2XV6), even if it was very different from the coretile,
-> eg. A9 with RS1 memory map. In such case making it compatible with
-> V2P-CA9 would be logically wrong...
-> 
-> I have an idea of spinning the compatible values again to get something
-> like that:
-> 
-> compatible = "arm,vexpress-v2p-ca5s", "arm,vexpress-cortex_a5";
-> compatible = "arm,vexpress-v2p-ca9", "arm,vexpress-cortex_a9";
-> compatible = "arm,vexpress-v2p-ca15", "arm,vexpress-cortex_a15";
+> Russell, do you know whether it would make sense to set a timeline for 
+> removing NO_IRQ from ARM platforms and migrating to 0 for the no-interrupt
+> case?  I'm assuming that this mainly involves migrating existing hard-wired
+> code that deals with interrupt numbers to use irq domains.
 
-The trouble is, node { compatible = x } means "node is an x", not "node
-has an x".
+How many drivers do use IRQ #0 to start with?  We might discover that in 
+practice there is only a very few cases where this is an issue if 0 
+would mean no IRQ.
 
-So, we should be careful do document what e.g. arm,vexpress-cortex_a5
-actually means.  It doesn't mean Cortex-A5, but instead it represents
-a whole jumble of characteristics which we expect to be common to all
-vexpress-based A5 platforms.
 
-It feels that in practice arm,vexpress-cortex_a5 actually means 
-exactly the same thing as arm,vexpress-v2p-ca5s.  Are you sure these
-two are really independent?  (In other words, do we expect multiple
-different vexpress variants based on A5, and so on?)
-
-Cheers
----Dave
+Nicolas
