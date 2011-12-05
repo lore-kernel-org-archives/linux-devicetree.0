@@ -1,49 +1,55 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Pawel Moll <pawel.moll@arm.com>
 Subject: Re: [PATCH v3 3/5] ARM: vexpress: Add DT support in v2m
-Date: Mon, 5 Dec 2011 16:25:31 +0000
-Message-ID: <20111205162520.GA27547@localhost.localdomain>
+Date: Mon, 05 Dec 2011 16:30:57 +0000
+Message-ID: <1323102657.3147.39.camel@hornet.cambridge.arm.com>
 References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
  <1322579473-8804-4-git-send-email-pawel.moll@arm.com>
+ <20111205162520.GA27547@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1322579473-8804-4-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111205162520.GA27547@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2011 at 03:11:11PM +0000, Pawel Moll wrote:
-> This patch provides hooks for DT-based tile machine implementations
-> and adds Device Tree description for the motherboard.
-
-[...]
-
-> +static struct of_dev_auxdata v2m_dt_auxdata_lookup[] __initdata = {
-> +	OF_DEV_AUXDATA("arm,vexpress-flash", V2M_NOR0, "physmap-flash",
-> +			&v2m_flash_data),
-> +	OF_DEV_AUXDATA("arm,primecell", V2M_MMCI, "mb:mmci", &v2m_mmci_data),
-> +	{}
-
-Are we missing some AUXDATA here?  I thought we had a lot more drivers
-which are not converted to OF, such as ambakmi and many more.
-
-I notice some things explicitly failing, e.g.:
-
-clcd-pl11x: probe of 10020000.clcd failed with error -22
-clcd-pl11x: probe of 1001f000.clcd failed with error -22
-
-...I haven't tracked down exactly what is going on here, yet.
-
-Cheers
----Dave
+T24gTW9uLCAyMDExLTEyLTA1IGF0IDE2OjI1ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBP
+biBUdWUsIE5vdiAyOSwgMjAxMSBhdCAwMzoxMToxMVBNICswMDAwLCBQYXdlbCBNb2xsIHdyb3Rl
+Ogo+ID4gVGhpcyBwYXRjaCBwcm92aWRlcyBob29rcyBmb3IgRFQtYmFzZWQgdGlsZSBtYWNoaW5l
+IGltcGxlbWVudGF0aW9ucwo+ID4gYW5kIGFkZHMgRGV2aWNlIFRyZWUgZGVzY3JpcHRpb24gZm9y
+IHRoZSBtb3RoZXJib2FyZC4KPiAKPiBbLi4uXQo+IAo+ID4gK3N0YXRpYyBzdHJ1Y3Qgb2ZfZGV2
+X2F1eGRhdGEgdjJtX2R0X2F1eGRhdGFfbG9va3VwW10gX19pbml0ZGF0YSA9IHsKPiA+ICsJT0Zf
+REVWX0FVWERBVEEoImFybSx2ZXhwcmVzcy1mbGFzaCIsIFYyTV9OT1IwLCAicGh5c21hcC1mbGFz
+aCIsCj4gPiArCQkJJnYybV9mbGFzaF9kYXRhKSwKPiA+ICsJT0ZfREVWX0FVWERBVEEoImFybSxw
+cmltZWNlbGwiLCBWMk1fTU1DSSwgIm1iOm1tY2kiLCAmdjJtX21tY2lfZGF0YSksCj4gPiArCXt9
+Cj4gCj4gQXJlIHdlIG1pc3Npbmcgc29tZSBBVVhEQVRBIGhlcmU/ICBJIHRob3VnaHQgd2UgaGFk
+IGEgbG90IG1vcmUgZHJpdmVycwo+IHdoaWNoIGFyZSBub3QgY29udmVydGVkIHRvIE9GLCBzdWNo
+IGFzIGFtYmFrbWkgYW5kIG1hbnkgbW9yZS4KCk5vLCBhcyBSb2Igc3VnZ2VzdGVkIEkgcmVtb3Zl
+ZCBhbGwgdGhlIGRldmljZXMgdGhhdCBkb24ndCBuZWVkIHBsYXRmb3JtCmRhdGEgYW5kIHdlcmUg
+dGhlcmUgb25seSBmb3IgdGhlIGNsb2NrcyBzYWtlIGFuZCBjcmVhdGVkIGV4cGxpY2l0IGxvb2t1
+cAp0YWJsZXMgZm9yIHRoZW0uIFRoZSBhbWJha21pIHlvdSBoYXZlIG1lbnRpb25lZCBkb2Vzbid0
+IHRha2UgYW55CnBsYXRmb3JtIGRhdGEsIGp1c3QgdGhlIHJlc291cmNlcyBhbmQgY2xvY2ssIHNv
+IGl0IHdvcmtzIGZpbmUuCgo+IEkgbm90aWNlIHNvbWUgdGhpbmdzIGV4cGxpY2l0bHkgZmFpbGlu
+ZywgZS5nLjoKPiAKPiBjbGNkLXBsMTF4OiBwcm9iZSBvZiAxMDAyMDAwMC5jbGNkIGZhaWxlZCB3
+aXRoIGVycm9yIC0yMgo+IGNsY2QtcGwxMXg6IHByb2JlIG9mIDEwMDFmMDAwLmNsY2QgZmFpbGVk
+IHdpdGggZXJyb3IgLTIyCj4gCj4gLi4uSSBoYXZlbid0IHRyYWNrZWQgZG93biBleGFjdGx5IHdo
+YXQgaXMgZ29pbmcgb24gaGVyZSwgeWV0LgoKQ0xDRCBpcyB0aGUgb25seSBkZXZpY2UgdGhhdCBk
+b2Vzbid0IHdvcmsgcmlnaHQgbm93LiBJJ3ZlIHNraXBwZWQgaXQKaW50ZW50aW9uYWxseSBhcyBp
+dCB3YXMgY29uZmlndXJlZCBpbiBhIG5vbi10cml2aWFsIHdheSBvbiBhIHBlci10aWxlCmJhc2lz
+IChhbmQgcGFzc2luZyB0d28gc2VwYXJhdGUgc2V0cyBvZiBhdXhkYXRhIGlzIHRyaWNreSkgYW5k
+IHRoZSB3b3JrCm9uIGJpbmRpbmdzIGZvciB0aGUgZHJpdmVyIGlzIG9uZ29pbmcuCgpQcm9iYWJs
+eSB0aGlzIHNob3VsZCBiZSBtZW50aW9uZWQgaW4gdGhlIHBhdGNoIGRlc2NyaXB0aW9uLiBXaWxs
+IGRvLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
