@@ -1,52 +1,54 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] gpio/tegra: Dynamically allocate IRQ base, and support
- DT
-Date: Mon, 05 Dec 2011 07:35:16 -0600
-Message-ID: <4EDCC894.7060200@gmail.com>
-References: <1322700336-26866-1-git-send-email-swarren@nvidia.com>
- <1322700336-26866-2-git-send-email-swarren@nvidia.com>
- <20111205065527.GD2980@S2100-06.ap.freescale.net>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/5] ASoC: omap-dmic: Add device tree bindings
+Date: Mon, 05 Dec 2011 15:45:04 +0200
+Message-ID: <4EDCCAE0.2000009@ti.com>
+References: <1322819580-7424-1-git-send-email-peter.ujfalusi@ti.com> <1322819580-7424-2-git-send-email-peter.ujfalusi@ti.com> <20111203112206.GE6043@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111205065527.GD2980-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20111203112206.GE6043@opensource.wolfsonmicro.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Misael Lopez Cruz <misael.lopez@ti.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn,
+On 12/03/2011 01:22 PM, Mark Brown wrote:
+> On Fri, Dec 02, 2011 at 11:52:56AM +0200, Peter Ujfalusi wrote:
+>=20
+>> @@ -0,0 +1,13 @@
+>> +* Texas Instruments OMAP4 Digital Microphone Module
+>> +
+>> +Required properties:
+>> +  - compatible : "ti,omap4-dmic"
+>> +  - ti,hwmods  : List of hwmod names associated with DMIC, in most =
+case
+>> +		 it is "dmic".
+>=20
+> Actually thinking about this some more I think what's concerning me i=
+s
+> the documentation as much as anything else - if it was just an intern=
+al,
+> unpublished interface of the OMAP core code which happened to use dev=
+ice
+> tree I probably wouldn't have worried about it churning.
 
-On 12/05/2011 12:55 AM, Shawn Guo wrote:
-> On Wed, Nov 30, 2011 at 05:45:36PM -0700, Stephen Warren wrote:
-> [...]
->>  static void tegra_gpio_irq_ack(struct irq_data *d)
->>  {
->> -	int gpio = d->irq - INT_GPIO_BASE;
->> +	int gpio = d->hwirq;
->>  
-> Though it's working right now, I'm not sure it's safe enough.  This
-> only works when d->hwirq_base is 0, which is true for now.  But I doubt
-> it will be always true.  I guess hwirq_base was introduced there for
-> some reason.  When some day irqdomain starts using this field, the
-> above code starts being broken.  IMO, the way that generic-chip.c is
-> using to calculate the number, d->irq - gc->irq_base, is much more
-> safer.
+Actually it is documented here:
+Documentation/devicetree/bindings/arm/omap/omap.txt
 
-It does work as the GIC hwirq_base is non-zero. It was introduced
-exactly so that no conversion of hwirq is needed for functions like
-this. hwirq_base is the starting point local to the controller
-numbering. Say you have gpio controller with 16 lines, but only the
-upper 8 lines have interrupt capability. Then you would set hwirq_base
-to 8 and nr_irq to 8. Then hwirq will always be set to 8-15.
+In order to move all OMAP drivers to DT - as Benoit already mentioned -
+we need additional work in DT.
+At this point of time if we add the DT representation we anyways need t=
+o
+change it as the core will receive the features, and we still need to
+fall back to hwmod to get the drivers working.
+As soon as we can migrate away from the hwmod we will do, but having
+this in place helps us to migrate other parts to DT.
 
-Rob
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
