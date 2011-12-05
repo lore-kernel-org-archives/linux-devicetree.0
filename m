@@ -1,82 +1,42 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: [PATCH 5/5] power: sbs-battery: Change power supply name
-Date: Mon,  5 Dec 2011 15:58:07 -0800
-Message-ID: <1323129487-24859-5-git-send-email-rklein@nvidia.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 3/5] Adding entry for Smart Battery Systems
+Date: Mon,  5 Dec 2011 15:58:05 -0800
+Message-ID: <1323129487-24859-3-git-send-email-rklein@nvidia.com>
 References: <1323129487-24859-1-git-send-email-rklein@nvidia.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323129487-24859-1-git-send-email-rklein@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rhyland Klein <rklein@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1323129487-24859-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The power supply name used to be fixed as "battery". This change allows
-for multiple batteries by generating the name rather than using a fixed
-value.
-
-Signed-off-by: Rhyland Klein <rklein@nvidia.com>
+Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/power/sbs-battery.c |   21 ++++++++++++++++++---
- 1 files changed, 18 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/power/sbs-battery.c b/drivers/power/sbs-battery.c
-index 761500c..9ee6903 100644
---- a/drivers/power/sbs-battery.c
-+++ b/drivers/power/sbs-battery.c
-@@ -150,6 +150,7 @@ struct sbs_info {
- 	int				poll_time;
- 	struct delayed_work		work;
- 	int				ignore_changes;
-+	char				*name;
- };
- 
- static int sbs_read_word_data(struct i2c_client *client, u8 address)
-@@ -681,15 +682,25 @@ static int __devinit sbs_probe(struct i2c_client *client,
- 	struct sbs_platform_data *pdata = client->dev.platform_data;
- 	int rc;
- 	int irq;
-+	char *name;
- 
--	chip = kzalloc(sizeof(struct sbs_info), GFP_KERNEL);
--	if (!chip)
-+	name = kasprintf(GFP_KERNEL, "%s-%s", "sbs", dev_name(&client->dev));
-+	if (!name) {
-+		dev_err(&client->dev, "Failed to allocate device name\n");
- 		return -ENOMEM;
-+	}
-+
-+	chip = kzalloc(sizeof(struct sbs_info), GFP_KERNEL);
-+	if (!chip) {
-+		rc = -ENOMEM;
-+		goto exit_free_name;
-+	}
- 
- 	chip->client = client;
- 	chip->enable_detection = false;
- 	chip->gpio_detect = false;
--	chip->power_supply.name = "battery";
-+	chip->name = name;
-+	chip->power_supply.name = name;
- 	chip->power_supply.type = POWER_SUPPLY_TYPE_BATTERY;
- 	chip->power_supply.properties = sbs_properties;
- 	chip->power_supply.num_properties = ARRAY_SIZE(sbs_properties);
-@@ -774,6 +785,9 @@ exit_psupply:
- 
- 	kfree(chip);
- 
-+exit_free_name:
-+	kfree(name);
-+
- 	return rc;
- }
- 
-@@ -790,6 +804,7 @@ static int __devexit sbs_remove(struct i2c_client *client)
- 
- 	cancel_delayed_work_sync(&chip->work);
- 
-+	kfree(chip->name);
- 	kfree(chip);
- 	chip = NULL;
- 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2c1b2cb..334c548 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -32,6 +32,7 @@ powervr	Imagination Technologies
+ qcom	Qualcomm, Inc.
+ ramtron	Ramtron International
+ samsung	Samsung Semiconductor
++sbs	Smart Battery System
+ schindler	Schindler
+ simtek
+ sirf	SiRF Technology, Inc.
 -- 
 1.7.0.4
