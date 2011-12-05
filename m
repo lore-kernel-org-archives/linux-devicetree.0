@@ -1,20 +1,17 @@
-From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
-Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
-Date: Mon, 5 Dec 2011 18:45:22 +0000
-Message-ID: <20111205184522.316598de@lxorguk.ukuu.org.uk>
-References: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
- <20111202192618.GC3037@localhost.localdomain>
- <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com>
- <1322867573.11728.22.camel@pasglop>
- <20111205161157.GA27550@localhost.localdomain>
- <alpine.LFD.2.02.1112051236350.2357@xanadu.home>
- <20111205180253.GB29812@localhost.localdomain>
- <alpine.LFD.2.02.1112051310150.2357@xanadu.home>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] mfd: mc13xxx: add device tree probe support
+Date: Mon, 5 Dec 2011 19:09:47 +0000
+Message-ID: <20111205190946.GD7467@opensource.wolfsonmicro.com>
+References: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
+ <1322731268-12158-2-git-send-email-shawn.guo@linaro.org>
+ <20111202153637.GY8245@opensource.wolfsonmicro.com>
+ <20111205064124.GC2980@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.02.1112051310150.2357-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111205064124.GC2980-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,26 +21,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeff Garzik <jgarzik-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Ingo Molnar <mingo-X9Un+BFzKDI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> But as you illustrated, there is a large number of drivers that already 
-> assume no IRQ is < 0, even if they don't use any IRQ #0 themselves.  
-> That is a much bigger problem to fix.
+On Mon, Dec 05, 2011 at 02:41:24PM +0800, Shawn Guo wrote:
+> On Fri, Dec 02, 2011 at 03:36:38PM +0000, Mark Brown wrote:
+> > On Thu, Dec 01, 2011 at 05:21:05PM +0800, Shawn Guo wrote:
 
-And a much larger number assuming the reverse is true which are hiding
-potential bugs on ARM.
+> > > +Sub-nodes:
+> > > +- regulators : Contain the regulator nodes.  The bindings details of individual
+> > > +  regulator node can be found in:
+> > > +  Documentation/devicetree/bindings/regulator/regulator.txt
 
-Looking at the serial stuff the best checks appear to be looking at
-"irq", "-1" and NO_IRQ.
+> > How does the driver figure out which regulators map onto which subnodes?
 
-For migration stuff that's doing broken things like
+> There should only be one sub-node named 'regulators', otherwise, DTC
+> will report ERROR (duplicate_node_names).
 
-	if (irq < 0)
-
-can be changed to
-
-	if (irq <= 0)
-
-and that can be done before NO_IRQ itself is nailed on ARM and PA-RISC.
+That doesn't answer the question - I've still no idea how the binding is
+supposed to map the nodes contained within regulators onto the physical
+regulators.
