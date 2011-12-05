@@ -1,44 +1,81 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v5 1/4] regulator: helper routine to extract regulator_init_data
-Date: Mon, 5 Dec 2011 16:14:40 +0530
-Message-ID: <CAJuYYwSRW-=XufvHS1miO2xNANwQMZqPbt=VyPEonywnAsvVUQ@mail.gmail.com>
-References: <1321615040-13257-1-git-send-email-rnayak@ti.com>
-	<1321615040-13257-2-git-send-email-rnayak@ti.com>
-	<CAJuYYwRO+AS=WmQfNAe8L6Gi5Dm4VsCuVqk3X5Nb8uUYAdLnJQ@mail.gmail.com>
-	<20111204155433.GA16287@opensource.wolfsonmicro.com>
-	<CAJuYYwQ-9wCu-+q0S2YYeFYemq74ULdZ-EwPGLWKHA4+0VZcsA@mail.gmail.com>
-	<20111205103447.GC11150@opensource.wolfsonmicro.com>
+From: Heiko Schocher <hs@denx.de>
+Subject: Re: [PATCH] arm,
+ davinci: configure davinci aemif chipselects through OF
+Date: Mon, 05 Dec 2011 11:50:41 +0100
+Message-ID: <4EDCA201.4080505@denx.de>
+References: <1322991679-20947-1-git-send-email-hs@denx.de>
+ <4EDB66C9.9050302@mvista.com>
+Reply-To: hs@denx.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20111205103447.GC11150@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Rajendra Nayak <rnayak@ti.com>, grant.likely@secretlab.ca, robherring2@gmail.com, linaro-dev@lists.linaro.org, patches@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, olof@lixom.net, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <4EDB66C9.9050302@mvista.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, davinci-linux-open-source@linux.davincidsp.com, Wolfgang Denk <wd@denx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 December 2011 16:04, Mark Brown
-<broonie@opensource.wolfsonmicro.com> wrote:
-> On Mon, Dec 05, 2011 at 02:40:50PM +0530, Thomas Abraham wrote:
->> On 4 December 2011 21:24, Mark Brown
->
->> > If the regulator isn't software managed then always_on covers this - the
->> > regulator core will enable any always_on regulators that haven't been
->> > enabled already.
->
->> Thanks for the hint. I was trying to deal with a regulator that was
->> not software managed but also required the voltage level to be set to
->> certain level. That was possible with 'apply_uV' constraint in non-dt
->> case. Anyway, I have modified the code to manage the regulator and
->> this works fine in dt case as well without the 'apply_uV' constraint.
->
-> With the regulator device tree bindings if the regulator is configured
-> to run a single voltage the bindings will set apply_uV unconditionally
-> so there's no need for a separate constraint.
->
+Hello Sergei,
 
-Sorry if I have missed this, but I could not find 'apply_uV' being set
-as you described in the v5 of the regulator-dt patchset.
+Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 04-12-2011 13:41, Heiko Schocher wrote:
+> 
+>> Signed-off-by: Heiko Schocher<hs@denx.de>
+>> Cc: davinci-linux-open-source@linux.davincidsp.com
+>> Cc: devicetree-discuss@lists.ozlabs.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: grant.likely@secretlab.ca
+>> Cc: Sekhar Nori<nsekhar@ti.com>
+>> Cc: Kevin Hilman<khilman@ti.com>
+>> Cc: Wolfgang Denk<wd@denx.de>
+> 
+>> diff --git a/arch/arm/mach-davinci/aemif.c
+>> b/arch/arm/mach-davinci/aemif.c
+>> index 1ce70a9..12c559f 100644
+>> --- a/arch/arm/mach-davinci/aemif.c
+>> +++ b/arch/arm/mach-davinci/aemif.c
+> [...]
+>> @@ -131,3 +138,99 @@ int davinci_aemif_setup_timing(struct
+>> davinci_aemif_timing *t,
+>>       return 0;
+>>   }
+>>   EXPORT_SYMBOL(davinci_aemif_setup_timing);
+>> +
+>> +#if defined(CONFIG_OF)
+>> +static int dv_get_value(struct device_node *np, const char *name)
+>> +{
+>> +    const u32 *data;
+>> +    int len;
+>> +
+>> +    data = of_get_property(np, name,&len);
+>> +    if (data)
+>> +        return be32_to_cpu(readl(data));
+> 
+>    Why readl() here?! Device tree is not a peripheral device...
+> 
+>> +
+>> +    return -EINVAL;
+>> +}
+> 
+>    Isn't there already a standard helper for that, of_property_read_u32()?
 
-Thanks,
-Thomas.
+Yep, fixed that.
+
+Thanks!
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
