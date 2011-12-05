@@ -1,14 +1,14 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/6] tegra: fdt: Add keyboard definitions for Seaboard
-Date: Mon, 05 Dec 2011 16:49:59 -0700
-Message-ID: <4EDD58A7.3070104@nvidia.com>
+Subject: Re: [PATCH 3/6] fdt: Add fdtdec functions to read byte array
+Date: Mon, 05 Dec 2011 16:54:56 -0700
+Message-ID: <4EDD59D0.9090607@nvidia.com>
 References: <1322881071-11148-1-git-send-email-sjg@chromium.org>
- <1322881071-11148-3-git-send-email-sjg@chromium.org>
+ <1322881071-11148-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1322881071-11148-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1322881071-11148-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,16 +25,24 @@ List-Id: devicetree@vger.kernel.org
 On 12/02/2011 07:57 PM, Simon Glass wrote:
 > From: Anton Staff <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > 
-> Seaboard uses a QUERTY keyboard. We add key codes for this to
-> enable key scanning to work.
+> Sometimes we don't need a full cell for each value. This provides
+> a simple function to read a byte array, both with and without
+> copying it.
 
-> +++ b/board/nvidia/dts/tegra2-seaboard.dts
-...
-> +	kbc@7000e200 {
-> +		status = "okay";
+> +const u8 *fdtdec_locate_byte_array(const void *blob, int node,
+> +			     const char *prop_name, int count)
+> +{
+> +	const u8 *cell;
+> +	int err;
+> +
+> +	cell = get_prop_len(blob, node, prop_name, count, &err);
 
-That's the default, so this isn't needed; instead, add status =
-"disabled" to any boards that don't use kbc.
+Isn't that called get_prop_check_min_len() now?
+
+> +	if (err)
+> +		return NULL;
+> +	return cell;
+> +}
 
 -- 
 nvpublic
