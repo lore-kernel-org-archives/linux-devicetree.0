@@ -1,63 +1,84 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v3 5/5] ARM: vexpress: DT-based support for CoreTiles
- Express A5x2 and A9x4
-Date: Mon, 05 Dec 2011 17:47:36 +0000
-Message-ID: <1323107256.3147.63.camel@hornet.cambridge.arm.com>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-6-git-send-email-pawel.moll@arm.com>
- <20111129164050.GC2829@localhost.localdomain>
- <1322678364.3180.34.camel@hornet.cambridge.arm.com>
- <20111201122144.GD2026@localhost.localdomain>
- <1323105880.3147.55.camel@hornet.cambridge.arm.com>
- <20111205173709.GA29812@localhost.localdomain>
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
+Date: Mon, 5 Dec 2011 18:02:53 +0000
+Message-ID: <20111205180253.GB29812@localhost.localdomain>
+References: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
+ <20111202192618.GC3037@localhost.localdomain>
+ <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com>
+ <1322867573.11728.22.camel@pasglop>
+ <20111205161157.GA27550@localhost.localdomain>
+ <alpine.LFD.2.02.1112051236350.2357@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111205173709.GA29812@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.02.1112051236350.2357@xanadu.home>
+Sender: linux-ide-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Torvalds <torvalds@linux-foundation.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDExLTEyLTA1IGF0IDE3OjM3ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiA+
-IEkgaGF2ZSBhbiBpZGVhIG9mIHNwaW5uaW5nIHRoZSBjb21wYXRpYmxlIHZhbHVlcyBhZ2FpbiB0
-byBnZXQgc29tZXRoaW5nCj4gPiBsaWtlIHRoYXQ6Cj4gPiAKPiA+IGNvbXBhdGlibGUgPSAiYXJt
-LHZleHByZXNzLXYycC1jYTVzIiwgImFybSx2ZXhwcmVzcy1jb3J0ZXhfYTUiOwo+ID4gY29tcGF0
-aWJsZSA9ICJhcm0sdmV4cHJlc3MtdjJwLWNhOSIsICJhcm0sdmV4cHJlc3MtY29ydGV4X2E5IjsK
-PiA+IGNvbXBhdGlibGUgPSAiYXJtLHZleHByZXNzLXYycC1jYTE1IiwgImFybSx2ZXhwcmVzcy1j
-b3J0ZXhfYTE1IjsKPiAKPiBUaGUgdHJvdWJsZSBpcywgbm9kZSB7IGNvbXBhdGlibGUgPSB4IH0g
-bWVhbnMgIm5vZGUgaXMgYW4geCIsIG5vdCAibm9kZQo+IGhhcyBhbiB4Ii4KClllcy4uLgoKPiBT
-bywgd2Ugc2hvdWxkIGJlIGNhcmVmdWwgZG8gZG9jdW1lbnQgd2hhdCBlLmcuIGFybSx2ZXhwcmVz
-cy1jb3J0ZXhfYTUKPiBhY3R1YWxseSBtZWFucy4gIEl0IGRvZXNuJ3QgbWVhbiBDb3J0ZXgtQTUs
-IGJ1dCBpbnN0ZWFkIGl0IHJlcHJlc2VudHMKPiBhIHdob2xlIGp1bWJsZSBvZiBjaGFyYWN0ZXJp
-c3RpY3Mgd2hpY2ggd2UgZXhwZWN0IHRvIGJlIGNvbW1vbiB0byBhbGwKPiB2ZXhwcmVzcy1iYXNl
-ZCBBNSBwbGF0Zm9ybXMuCgouLi4gc28gSSdkIHRyYW5zbGF0ZSBpdCBhcyAiaXMgYSBWZXJzYXRp
-bGUgRXhwcmVzcyBwbGF0Zm9ybSBiYXNlZCBvbgpDb3J0ZXgtQTUgcHJvY2Vzc29yIiBhbmQgZG9j
-dW1lbnQgaXQgYXMgc3VjaC4gQXMgSSBzYWlkIC0gcGF0Y2hlcwp0b21vcnJvdy4KCj4gSXQgZmVl
-bHMgdGhhdCBpbiBwcmFjdGljZSBhcm0sdmV4cHJlc3MtY29ydGV4X2E1IGFjdHVhbGx5IG1lYW5z
-IAo+IGV4YWN0bHkgdGhlIHNhbWUgdGhpbmcgYXMgYXJtLHZleHByZXNzLXYycC1jYTVzLiAgQXJl
-IHlvdSBzdXJlIHRoZXNlCj4gdHdvIGFyZSByZWFsbHkgaW5kZXBlbmRlbnQ/ICAoSW4gb3RoZXIg
-d29yZHMsIGRvIHdlIGV4cGVjdCBtdWx0aXBsZQo+IGRpZmZlcmVudCB2ZXhwcmVzcyB2YXJpYW50
-cyBiYXNlZCBvbiBBNSwgYW5kIHNvIG9uPykKClRoZSBleGFtcGxlcyBmb3IgQTUgSSBjYW4gcXVv
-dGEgYXJlIHR3byBkaWZmZXJlbnQgU01NcyBJIHVzZWQgKG9uZSBvbiBhCiJzbWFsbCIsIHNlY29u
-ZCBvbmUgb24gYSAibGFyZ2UiIEZQR0EgYm9hcmQpLCBidXQgdGhleSB3ZXJlIHZlcnkgc2ltaWxh
-cgp0byB0aGUgQTUgY29yZSB0aWxlIC0gc28gc2ltaWxhciB0aGF0IHlvdSBjb3VsZCAocHJvYmFi
-bHkpIHVzZSB0aGUgY29yZQp0aWxlIERUQiB0byBkcml2ZSB0aGVtLiBUaGUgQTkgU01NIHdpdGgg
-UlMxIG1lbW9yeSBtYXAgSSd2ZSBtZW50aW9uZWQgaXMKbXVjaCBtb3JlIGludGVyZXN0aW5nIGNh
-c2UgLSBBOSBwbGF0Zm9ybSBidXQgbm90aGluZyBsaWtlIG9yaWdpbmFsIEE5CmNvcmUgdGlsZS4u
-LiBBbHNvIHRoZSBBMTUgbG9va3MgaW50ZXJlc3RpbmcgYXMgd2Ugd2lsbCBtb3N0IGxpa2VseSBn
-ZXQKdGhlIHNhbWUgdGlsZXMgKGFzIGluOiBQQ0IpIHdpdGggZGlmZmVyZW50IHByb2Nlc3NvcnMg
-KGFzIGluOiBkaWZmZXJlbnQKc2lsaWNvbikuIFRoaXMgd2lsbCBiZSBmdW4gOi0pCgpDaGVlcnMh
-CgpQYXdlxYIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-bGludXgtYXJtLWtlcm5lbAo=
+On Mon, Dec 05, 2011 at 12:40:16PM -0500, Nicolas Pitre wrote:
+> On Mon, 5 Dec 2011, Dave Martin wrote:
+> > On Sat, Dec 03, 2011 at 10:12:53AM +1100, Benjamin Herrenschmidt wrote:
+> > > On Fri, 2011-12-02 at 11:28 -0800, Linus Torvalds wrote:
+> > > > Don't *change* NO_IRQ to zero (that whole #define is broken - leave it
+> > > > around as a marker of brokenness), just start removing it from all the
+> > > > ARM drivers that use the OF infrastructure. Which is presumably not
+> > > > all that many yet.
+> > > > 
+> > > > So whenever you find breakage, the fix now is to just remove NO_IRQ
+> > > > tests, and replace them with "!irq".
+> > > 
+> > 
+> > Russell, do you know whether it would make sense to set a timeline for 
+> > removing NO_IRQ from ARM platforms and migrating to 0 for the no-interrupt
+> > case?  I'm assuming that this mainly involves migrating existing hard-wired
+> > code that deals with interrupt numbers to use irq domains.
+> 
+> How many drivers do use IRQ #0 to start with?  We might discover that in 
+> practice there is only a very few cases where this is an issue if 0 
+> would mean no IRQ.
+
+The total number of files referring to NO_IRQ is not that huge:
+
+arch/arm/	188 matches in 39 files
+drivers/	174 matches in 84 files
+
+Unfortunately, NO_IRQ is often not spelled "NO_IRQ".  It looks like the assumption
+"irq < 0 === no irq" may be quite a lot more widespread than "NO_IRQ === no irq".
+Since there's no specific thing we can grep for (and simply due to volume)
+finding all such instances may be quite a bit harder.
+
+For example, git grep 'irq.*\(>=\|<[^=]\) *0' gives
+
+drivers/	435 matches in 314 files
+arch/arm/	18 matches in 15 files
+
+A few examples:
+drivers/input/mouse/pxa930_trkball.c:   if (irq < 0) {
+drivers/input/keyboard/tegra-kbc.c:     if (irq < 0) {
+drivers/crypto/omap-sham.c:     if (dd->irq >= 0)
+
+...etc., etc., although there are probably a fair number of false positives here.
+
+
+whereas git grep 'irq.*\(<\|>\|<=\|>=\|==\|!=\) \+-1' gives
+
+drivers/	68 matches in 28 files
+arch/arm/	18 matches in 15 files
+
+Examples: 
+
+
+...and that's just the code which is C and is also kind enough to put
+irq numbers in variables with names containing "irq".
+
+It also doesn't catch people initialising variables or struct/array
+members to -1, unadorned "-1" arguments to functions and so on... though
+those are likely to appear in mostly the same files matching the above
+expressions, it won't be an exact 1:1 correspondence.
+
+
+Cheers
+---Dave
