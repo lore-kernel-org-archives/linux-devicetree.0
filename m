@@ -1,42 +1,112 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCH] net/macb: add DT support
-Date: Mon, 5 Dec 2011 11:48:38 +0000
-Message-ID: <20111205114838.GC21006@totoro>
-References: <20111202153832.GA4998@totoro>
- <1322846050-4543-1-git-send-email-nicolas.ferre@atmel.com>
- <20111202172854.GB4998@totoro>
- <4ED910B6.7080000@atmel.com>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] arm,
+ davinci: configure davinci aemif chipselects through OF
+Date: Mon, 05 Dec 2011 12:49:04 +0100
+Message-ID: <4EDCAFB0.1080009@denx.de>
+References: <1322991679-20947-1-git-send-email-hs@denx.de>
+ <4EDB68B7.8080609@mvista.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4ED910B6.7080000@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Jamie Iles <jamie@jamieiles.com>, robherring2@gmail.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <4EDB68B7.8080609-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2011 at 06:53:58PM +0100, Nicolas Ferre wrote:
-> On 12/02/2011 06:28 PM, Jamie Iles :
-[...]
-> >diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-> >index 103c6e6..89060e6 100644
-> >--- a/drivers/net/ethernet/cadence/macb.c
-> >+++ b/drivers/net/ethernet/cadence/macb.c
-> >@@ -1247,6 +1247,8 @@ static const struct of_device_id macb_dt_ids[] = {
-> >  	{ .compatible = "cdns,at32ap7000-macb" },
-> >  	{ .compatible = "cdns,at91sam9260-macb" },
-> >  	{ .compatible = "cdns,macb" },
-> >+	{ .compatible = "cdns,pc302-gem" },
-> >+	{ .compatible = "cdns,gem" },
-> >  	{ /* sentinel */ }
-> >  };
+Hello Sergei,
+
+Sergei Shtylyov wrote:
+> Hello.
 > 
-> BTW, I think we may also modify the MII/RMII selection code for
-> adding gigabit selection... but maybe you already have the patches?
+> On 04-12-2011 13:41, Heiko Schocher wrote:
+> 
+>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
+>> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+> [...]
+> 
+>> diff --git a/Documentation/devicetree/bindings/arm/davinci/aemif.txt
+>> b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
+>> new file mode 100644
+>> index 0000000..c9ed551
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
+>> @@ -0,0 +1,85 @@
+>> +* Texas Instruments Davinci AEMIF
+>> +
+>> +This file provides information, what the device node for the
+>> +davinci aemifa interface contain.
+> [...]
+>> +Example (enbw_cmc board):
+>> +    aemif@60000000 {
+>> +        compatible = "ti,davinci-emifa";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <1>;
+>> +        reg = <0x68000000 0x80000>;
+>> +        ranges = <2 0 0x60000000 0x02000000
+>> +              3 0 0x62000000 0x02000000
+>> +              4 0 0x64000000 0x02000000
+>> +              5 0 0x66000000 0x02000000>;
+>> +        cs2@0x60000000 {
+> 
+>    0x shouldn't be included.
 
-No, I don't have access to a version of the GEM with gigabit support.  
-The platforms I was working on used it as a 10/100 controller, but had 
-to use the GEM to get hardware timestamping support.
+fixed.
 
-Jamie
+>> +            compatible = "ti,davinci-cs";
+>> +            #address-cells = <1>;
+>> +            #size-cells = <1>;
+>> +            /* all timings in nanoseconds */
+>> +            cs = <2>;
+>> +            asize = <1>;
+>> +            ta = <0>;
+>> +            rhold = <7>;
+>> +            rstrobe = <42>;
+>> +            rsetup = <14>;
+>> +            whold = <7>;
+>> +            wstrobe = <42>;
+>> +            wsetup = <14>;
+>> +            ew = <0>;
+>> +            ss = <0>;
+>> +        };
+>> +        flash@2,0 {
+> 
+>   Why you have one kind of address for cs2@60000000 node and other kind
+> for this node?
+
+Typo it must be
+
+cs2@68000010 {
+[...]
+}
+
+As the chipselect registers start @0x68000000 maybe
+I should add in ranges a "x 0 0x68000000 0x00080000" line? But
+which value has x, as this range has no chipselect? So I could add
+subnodes "cs2@680000yy" with a reg entry "reg = <x yy 4>;" with
+yy = offset from 0x68000000 and drop the "cs" property?
+
+Or are the "ti,davinci-cs" nodes no subnodes from "ti,davinci-emifa",
+so I easy can use "reg = <0x68000010 4>;"?
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
