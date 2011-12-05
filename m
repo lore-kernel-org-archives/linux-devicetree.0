@@ -1,112 +1,63 @@
-From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
-Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
-Date: Mon, 5 Dec 2011 17:41:32 +0000
-Message-ID: <20111205174132.564e0bb0@lxorguk.ukuu.org.uk>
-References: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
- <20111202192618.GC3037@localhost.localdomain>
- <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com>
- <1322867573.11728.22.camel@pasglop>
- <20111205161157.GA27550@localhost.localdomain>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v3 5/5] ARM: vexpress: DT-based support for CoreTiles
+ Express A5x2 and A9x4
+Date: Mon, 05 Dec 2011 17:47:36 +0000
+Message-ID: <1323107256.3147.63.camel@hornet.cambridge.arm.com>
+References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
+ <1322579473-8804-6-git-send-email-pawel.moll@arm.com>
+ <20111129164050.GC2829@localhost.localdomain>
+ <1322678364.3180.34.camel@hornet.cambridge.arm.com>
+ <20111201122144.GD2026@localhost.localdomain>
+ <1323105880.3147.55.camel@hornet.cambridge.arm.com>
+ <20111205173709.GA29812@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111205161157.GA27550-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeff Garzik <jgarzik-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Ingo Molnar <mingo-X9Un+BFzKDI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111205173709.GA29812@localhost.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> Russell, do you know whether it would make sense to set a timeline for 
-> removing NO_IRQ from ARM platforms and migrating to 0 for the no-interrupt
-> case?  I'm assuming that this mainly involves migrating existing hard-wired
-> code that deals with interrupt numbers to use irq domains.
-
-The timelime was several years ago. Several years of complete inaction
-later the chickens have come home to roost.
-
-I refer you to Linus mail of 26 Sept 2006 to linux-kernel ('restore
-libata build on frv')
-
-Quoting Linus email:
-
->> That's fine -- but don't use zero to mean none. We have NO_IRQ for
->> that, and zero isn't an appropriate choice.
->
-> Zero _is_ an appropriate choice, dammit!
->
-> That NO_IRQ thing should be zero, and any architecture that thinks that
->zero is a valid IRQ just needs to fix its own irq mapping so that the
-> "cookie" doesn't work.
->
-> The thing is, it's zero. Get over it. It can't be "-1" or some other
-> random value like people have indicated, because that thing is often read
-> from places where "-1" simply isn't a possible value (eg it gets its
-> default value initialized from a "unsigned char" in MMIO space on x86).
->
-> So instead of making everybody and their dog to silly things with some
-> NO_IRQ define that they haven't historically done, the rule is simple: "0"
-> means "no irq", so that you can test for it with obvious code like
->
->	if (!dev->irq)
->		..
->
-> and then, if your actual _hardware_ things that the bit-pattern with all
-> bits clear is a valid irq that can be used for normal devices, then what
-> you do is you add a irq number translation layer (WHICH WE NEED AND HAVE
-> _ANYWAY_) and make sure that nobody sees that on a _software_ level.
-
-----------
-
-On 15th October 2008 Linus said the following to linux-next
-
-> Grr. Can we please just get rid of that IDIOTIC thing instead?
-> 
-> NO_IRQ was a bad idea to begin with. Let's not add more.
-> 
-> I assume that broken driver is some ARM-specific thing. I certainly don't 
-> want to see NO_IRQ in any general drivers. So instead of having that 
-> NO_IRQ insanity spread any more, I'd much rather see the driver either 
-> fixed to not use it, or just marked ARM-only.
->
-> The proper way to test for whether an interrupt is valid or not is to do
->
-> 	if (dev->irq) {
->		...
-> and no other. There is no spoon. That NO_IRQ was insane. And
-> architectures or drivers that still think otherwise should fix themselves.
-
-------------
-
-So there we are.. ARM spent years ignoring clear direction. If ARM breaks
-for a release now so be it. You've had *YEARS* to get off your collective
-backsides and sort it out.
-
-> I worry that if we just change the convention for the OF case, we'll end
-> up with OF-ised platform drivers which have to deal with a different no-
-> irq convention depending on whether they are probed as platform drivers
-> or through the OF framework ... and these ported or semi-ported drivers
-> will be intermixed with unported drivers, confusing maintainers
-
-All drivers should assume that  if (!dev->irq) works. Zero is not an IRQ
-except in certain buried internal invisible cases in arch code (legacy PC
-timer being the obvious one).
-
-Come to think about it we had a prior discussion about NO_IRQ in 2005
-even!
-
-The core kernel generic IRQ code knows about zero being special, many
-common driver layer components such as serial and network phylib do, so
-if anything it's going to fix bugs sorting the mess out on ARM.
-
-Jut fix it. Other platforms have done so without problem.
-
-Alan
+T24gTW9uLCAyMDExLTEyLTA1IGF0IDE3OjM3ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiA+
+IEkgaGF2ZSBhbiBpZGVhIG9mIHNwaW5uaW5nIHRoZSBjb21wYXRpYmxlIHZhbHVlcyBhZ2FpbiB0
+byBnZXQgc29tZXRoaW5nCj4gPiBsaWtlIHRoYXQ6Cj4gPiAKPiA+IGNvbXBhdGlibGUgPSAiYXJt
+LHZleHByZXNzLXYycC1jYTVzIiwgImFybSx2ZXhwcmVzcy1jb3J0ZXhfYTUiOwo+ID4gY29tcGF0
+aWJsZSA9ICJhcm0sdmV4cHJlc3MtdjJwLWNhOSIsICJhcm0sdmV4cHJlc3MtY29ydGV4X2E5IjsK
+PiA+IGNvbXBhdGlibGUgPSAiYXJtLHZleHByZXNzLXYycC1jYTE1IiwgImFybSx2ZXhwcmVzcy1j
+b3J0ZXhfYTE1IjsKPiAKPiBUaGUgdHJvdWJsZSBpcywgbm9kZSB7IGNvbXBhdGlibGUgPSB4IH0g
+bWVhbnMgIm5vZGUgaXMgYW4geCIsIG5vdCAibm9kZQo+IGhhcyBhbiB4Ii4KClllcy4uLgoKPiBT
+bywgd2Ugc2hvdWxkIGJlIGNhcmVmdWwgZG8gZG9jdW1lbnQgd2hhdCBlLmcuIGFybSx2ZXhwcmVz
+cy1jb3J0ZXhfYTUKPiBhY3R1YWxseSBtZWFucy4gIEl0IGRvZXNuJ3QgbWVhbiBDb3J0ZXgtQTUs
+IGJ1dCBpbnN0ZWFkIGl0IHJlcHJlc2VudHMKPiBhIHdob2xlIGp1bWJsZSBvZiBjaGFyYWN0ZXJp
+c3RpY3Mgd2hpY2ggd2UgZXhwZWN0IHRvIGJlIGNvbW1vbiB0byBhbGwKPiB2ZXhwcmVzcy1iYXNl
+ZCBBNSBwbGF0Zm9ybXMuCgouLi4gc28gSSdkIHRyYW5zbGF0ZSBpdCBhcyAiaXMgYSBWZXJzYXRp
+bGUgRXhwcmVzcyBwbGF0Zm9ybSBiYXNlZCBvbgpDb3J0ZXgtQTUgcHJvY2Vzc29yIiBhbmQgZG9j
+dW1lbnQgaXQgYXMgc3VjaC4gQXMgSSBzYWlkIC0gcGF0Y2hlcwp0b21vcnJvdy4KCj4gSXQgZmVl
+bHMgdGhhdCBpbiBwcmFjdGljZSBhcm0sdmV4cHJlc3MtY29ydGV4X2E1IGFjdHVhbGx5IG1lYW5z
+IAo+IGV4YWN0bHkgdGhlIHNhbWUgdGhpbmcgYXMgYXJtLHZleHByZXNzLXYycC1jYTVzLiAgQXJl
+IHlvdSBzdXJlIHRoZXNlCj4gdHdvIGFyZSByZWFsbHkgaW5kZXBlbmRlbnQ/ICAoSW4gb3RoZXIg
+d29yZHMsIGRvIHdlIGV4cGVjdCBtdWx0aXBsZQo+IGRpZmZlcmVudCB2ZXhwcmVzcyB2YXJpYW50
+cyBiYXNlZCBvbiBBNSwgYW5kIHNvIG9uPykKClRoZSBleGFtcGxlcyBmb3IgQTUgSSBjYW4gcXVv
+dGEgYXJlIHR3byBkaWZmZXJlbnQgU01NcyBJIHVzZWQgKG9uZSBvbiBhCiJzbWFsbCIsIHNlY29u
+ZCBvbmUgb24gYSAibGFyZ2UiIEZQR0EgYm9hcmQpLCBidXQgdGhleSB3ZXJlIHZlcnkgc2ltaWxh
+cgp0byB0aGUgQTUgY29yZSB0aWxlIC0gc28gc2ltaWxhciB0aGF0IHlvdSBjb3VsZCAocHJvYmFi
+bHkpIHVzZSB0aGUgY29yZQp0aWxlIERUQiB0byBkcml2ZSB0aGVtLiBUaGUgQTkgU01NIHdpdGgg
+UlMxIG1lbW9yeSBtYXAgSSd2ZSBtZW50aW9uZWQgaXMKbXVjaCBtb3JlIGludGVyZXN0aW5nIGNh
+c2UgLSBBOSBwbGF0Zm9ybSBidXQgbm90aGluZyBsaWtlIG9yaWdpbmFsIEE5CmNvcmUgdGlsZS4u
+LiBBbHNvIHRoZSBBMTUgbG9va3MgaW50ZXJlc3RpbmcgYXMgd2Ugd2lsbCBtb3N0IGxpa2VseSBn
+ZXQKdGhlIHNhbWUgdGlsZXMgKGFzIGluOiBQQ0IpIHdpdGggZGlmZmVyZW50IHByb2Nlc3NvcnMg
+KGFzIGluOiBkaWZmZXJlbnQKc2lsaWNvbikuIFRoaXMgd2lsbCBiZSBmdW4gOi0pCgpDaGVlcnMh
+CgpQYXdlxYIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
