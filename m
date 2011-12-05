@@ -1,42 +1,38 @@
 From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] mfd: mc13xxx: add device tree probe support
-Date: Mon, 5 Dec 2011 14:41:24 +0800
-Message-ID: <20111205064124.GC2980@S2100-06.ap.freescale.net>
-References: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
- <1322731268-12158-2-git-send-email-shawn.guo@linaro.org>
- <20111202153637.GY8245@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/2] gpio/tegra: Dynamically allocate IRQ base, and
+ support DT
+Date: Mon, 5 Dec 2011 14:55:28 +0800
+Message-ID: <20111205065527.GD2980@S2100-06.ap.freescale.net>
+References: <1322700336-26866-1-git-send-email-swarren@nvidia.com>
+ <1322700336-26866-2-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20111202153637.GY8245-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1322700336-26866-2-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2011 at 03:36:38PM +0000, Mark Brown wrote:
-> On Thu, Dec 01, 2011 at 05:21:05PM +0800, Shawn Guo wrote:
-> 
-> > +Sub-nodes:
-> > +- regulators : Contain the regulator nodes.  The bindings details of individual
-> > +  regulator node can be found in:
-> > +  Documentation/devicetree/bindings/regulator/regulator.txt
-> 
-> How does the driver figure out which regulators map onto which subnodes?
-
-There should only be one sub-node named 'regulators', otherwise, DTC
-will report ERROR (duplicate_node_names).
+On Wed, Nov 30, 2011 at 05:45:36PM -0700, Stephen Warren wrote:
+[...]
+>  static void tegra_gpio_irq_ack(struct irq_data *d)
+>  {
+> -	int gpio = d->irq - INT_GPIO_BASE;
+> +	int gpio = d->hwirq;
+>  
+Though it's working right now, I'm not sure it's safe enough.  This
+only works when d->hwirq_base is 0, which is true for now.  But I doubt
+it will be always true.  I guess hwirq_base was introduced there for
+some reason.  When some day irqdomain starts using this field, the
+above code starts being broken.  IMO, the way that generic-chip.c is
+using to calculate the number, d->irq - gc->irq_base, is much more
+safer.
 
 -- 
 Regards,
 Shawn
+
+>  	tegra_gpio_writel(1 << GPIO_BIT(gpio), GPIO_INT_CLR(gpio));
+>  }
