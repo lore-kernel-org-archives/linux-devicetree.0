@@ -1,55 +1,48 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v3 3/5] ARM: vexpress: Add DT support in v2m
-Date: Mon, 05 Dec 2011 16:30:57 +0000
-Message-ID: <1323102657.3147.39.camel@hornet.cambridge.arm.com>
-References: <1322579473-8804-1-git-send-email-pawel.moll@arm.com>
- <1322579473-8804-4-git-send-email-pawel.moll@arm.com>
- <20111205162520.GA27547@localhost.localdomain>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: libfdt: Add support for appending the values to a existing
+ property
+Date: Mon, 05 Dec 2011 10:21:50 -0600
+Message-ID: <E1RXbId-0003zK-SS@jdl.com>
+References: <20111205012207.GA3734@truffala.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20111205162520.GA27547@localhost.localdomain>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20111205012207.GA3734-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDExLTEyLTA1IGF0IDE2OjI1ICswMDAwLCBEYXZlIE1hcnRpbiB3cm90ZToKPiBP
-biBUdWUsIE5vdiAyOSwgMjAxMSBhdCAwMzoxMToxMVBNICswMDAwLCBQYXdlbCBNb2xsIHdyb3Rl
-Ogo+ID4gVGhpcyBwYXRjaCBwcm92aWRlcyBob29rcyBmb3IgRFQtYmFzZWQgdGlsZSBtYWNoaW5l
-IGltcGxlbWVudGF0aW9ucwo+ID4gYW5kIGFkZHMgRGV2aWNlIFRyZWUgZGVzY3JpcHRpb24gZm9y
-IHRoZSBtb3RoZXJib2FyZC4KPiAKPiBbLi4uXQo+IAo+ID4gK3N0YXRpYyBzdHJ1Y3Qgb2ZfZGV2
-X2F1eGRhdGEgdjJtX2R0X2F1eGRhdGFfbG9va3VwW10gX19pbml0ZGF0YSA9IHsKPiA+ICsJT0Zf
-REVWX0FVWERBVEEoImFybSx2ZXhwcmVzcy1mbGFzaCIsIFYyTV9OT1IwLCAicGh5c21hcC1mbGFz
-aCIsCj4gPiArCQkJJnYybV9mbGFzaF9kYXRhKSwKPiA+ICsJT0ZfREVWX0FVWERBVEEoImFybSxw
-cmltZWNlbGwiLCBWMk1fTU1DSSwgIm1iOm1tY2kiLCAmdjJtX21tY2lfZGF0YSksCj4gPiArCXt9
-Cj4gCj4gQXJlIHdlIG1pc3Npbmcgc29tZSBBVVhEQVRBIGhlcmU/ICBJIHRob3VnaHQgd2UgaGFk
-IGEgbG90IG1vcmUgZHJpdmVycwo+IHdoaWNoIGFyZSBub3QgY29udmVydGVkIHRvIE9GLCBzdWNo
-IGFzIGFtYmFrbWkgYW5kIG1hbnkgbW9yZS4KCk5vLCBhcyBSb2Igc3VnZ2VzdGVkIEkgcmVtb3Zl
-ZCBhbGwgdGhlIGRldmljZXMgdGhhdCBkb24ndCBuZWVkIHBsYXRmb3JtCmRhdGEgYW5kIHdlcmUg
-dGhlcmUgb25seSBmb3IgdGhlIGNsb2NrcyBzYWtlIGFuZCBjcmVhdGVkIGV4cGxpY2l0IGxvb2t1
-cAp0YWJsZXMgZm9yIHRoZW0uIFRoZSBhbWJha21pIHlvdSBoYXZlIG1lbnRpb25lZCBkb2Vzbid0
-IHRha2UgYW55CnBsYXRmb3JtIGRhdGEsIGp1c3QgdGhlIHJlc291cmNlcyBhbmQgY2xvY2ssIHNv
-IGl0IHdvcmtzIGZpbmUuCgo+IEkgbm90aWNlIHNvbWUgdGhpbmdzIGV4cGxpY2l0bHkgZmFpbGlu
-ZywgZS5nLjoKPiAKPiBjbGNkLXBsMTF4OiBwcm9iZSBvZiAxMDAyMDAwMC5jbGNkIGZhaWxlZCB3
-aXRoIGVycm9yIC0yMgo+IGNsY2QtcGwxMXg6IHByb2JlIG9mIDEwMDFmMDAwLmNsY2QgZmFpbGVk
-IHdpdGggZXJyb3IgLTIyCj4gCj4gLi4uSSBoYXZlbid0IHRyYWNrZWQgZG93biBleGFjdGx5IHdo
-YXQgaXMgZ29pbmcgb24gaGVyZSwgeWV0LgoKQ0xDRCBpcyB0aGUgb25seSBkZXZpY2UgdGhhdCBk
-b2Vzbid0IHdvcmsgcmlnaHQgbm93LiBJJ3ZlIHNraXBwZWQgaXQKaW50ZW50aW9uYWxseSBhcyBp
-dCB3YXMgY29uZmlndXJlZCBpbiBhIG5vbi10cml2aWFsIHdheSBvbiBhIHBlci10aWxlCmJhc2lz
-IChhbmQgcGFzc2luZyB0d28gc2VwYXJhdGUgc2V0cyBvZiBhdXhkYXRhIGlzIHRyaWNreSkgYW5k
-IHRoZSB3b3JrCm9uIGJpbmRpbmdzIGZvciB0aGUgZHJpdmVyIGlzIG9uZ29pbmcuCgpQcm9iYWJs
-eSB0aGlzIHNob3VsZCBiZSBtZW50aW9uZWQgaW4gdGhlIHBhdGNoIGRlc2NyaXB0aW9uLiBXaWxs
-IGRvLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+> From: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Some properties may contain multiple values, these values may need
+> to be added to the property respectively. this patch provides this
+> functionality. The main purpose of fdt_append_prop() is to append
+> the values to a existing property, or create a new property if it
+> dose not exist.
+> 
+> Signed-off-by: Minghuan Lian <Minghuan.Lian-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> --- 
+> 
+> Jon,
+> 
+> Minghuan Lian sent this to the list ages ago, but it got stuck for
+> months in a mailing list mishap.  It more recently resurfaced, I made
+> some small cleanups and added testcases.  Please apply.
+
+Ooo, sorry. So, yeah...
+
+Applied.
+
+Thanks,
+jdl
