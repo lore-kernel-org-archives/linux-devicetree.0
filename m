@@ -1,68 +1,37 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
-Subject: Re: [PATCH] drivers, char: add U-Boot bootcount driver
-Date: Tue, 6 Dec 2011 23:06:20 +0100
-Message-ID: <20111206220620.GF14154@pengutronix.de>
-References: <1322991921-21096-1-git-send-email-hs@denx.de>
- <20111204114741.GA5788@pengutronix.de>
- <4EDCD7B2.5030409@denx.de>
- <20111206215056.GD14154@pengutronix.de>
- <20111206215609.5D1FF1A32820@gemini.denx.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] ARM: vexpress: Get rid of MMIO_P2V
+Date: Tue, 06 Dec 2011 23:49:54 +0100
+Message-ID: <5087012.8uYbFcxygW@wuerfel>
+References: <1323186229-22054-1-git-send-email-pawel.moll@arm.com>
+ <1323186229-22054-3-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7mxbaLlpDEyR1+x6"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111206215609.5D1FF1A32820@gemini.denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfgang Denk <wd@denx.de>
-Cc: Heiko Schocher <hs@denx.de>, Vitaly Bordug <vbordug@ru.mvista.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1323186229-22054-3-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 06 December 2011 15:43:45 Pawel Moll wrote:
+> This patch gets rid of the MMIO_P2V and __MMIO_P2V macros,
+> defining constant virtual base for motherboard and tile
+> peripherals instead.
+> 
+> Additionally, in preparation for the new motherboard memory
+> map, the motherboard peripherals are using base pointers
+> calculated in runtime, instead of compile-time calculated
+> values.
+> 
+> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 
---7mxbaLlpDEyR1+x6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> > bootcount itself is not a device. It is a feature of certain devices. A=
-nd that
-> > needs to be implemented; possibly generic enough that it can work for r=
-egister
-> > based, i2c based, and so forth, accesses.
->=20
-> If "boot counter" is not a good name for such a device, then what name
-> would you suggest?
-
-None.
-
-> Or do you think a counter (which can be implemented in a number of
-> different ways, depending on hardware specifics) is not a device?
-
-Yes.
-
-> What would be such a device, then?
-
-"maxim,ds1338"
-
-Please have a look at the devicetree.org-wiki-page I just mentioned:
-
-http://devicetree.org/Device_Tree_Usage
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---7mxbaLlpDEyR1+x6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk7ekdwACgkQD27XaX1/VRujTwCfeaBd9rE2zzPpVHRf2DNqUWFp
-zUkAoIJVoLSMaVWyJzbOrxrkC5/H8g43
-=9fDN
------END PGP SIGNATURE-----
-
---7mxbaLlpDEyR1+x6--
+Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org
