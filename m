@@ -1,85 +1,41 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
-Date: Tue, 6 Dec 2011 09:37:09 +0000
-Message-ID: <20111206093709.GB2274@linaro.org>
-References: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
- <20111202192618.GC3037@localhost.localdomain>
- <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com>
- <1322867573.11728.22.camel@pasglop>
- <20111205161157.GA27550@localhost.localdomain>
- <alpine.LFD.2.02.1112051236350.2357@xanadu.home>
- <20111205180253.GB29812@localhost.localdomain>
- <alpine.LFD.2.02.1112051310150.2357@xanadu.home>
- <20111205192605.GD29812@localhost.localdomain>
- <alpine.LFD.2.02.1112051443190.2357@xanadu.home>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] mfd: mc13xxx: add device tree probe support
+Date: Tue, 6 Dec 2011 10:13:05 +0000
+Message-ID: <20111206101304.GA28840@opensource.wolfsonmicro.com>
+References: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
+ <1322731268-12158-2-git-send-email-shawn.guo@linaro.org>
+ <20111202153637.GY8245@opensource.wolfsonmicro.com>
+ <20111205064124.GC2980@S2100-06.ap.freescale.net>
+ <20111205190946.GD7467@opensource.wolfsonmicro.com>
+ <20111206032642.GI2980@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-next-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.02.1112051443190.2357@xanadu.home>
-Sender: linux-next-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Torvalds <torvalds@linux-foundation.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20111206032642.GI2980-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2011 at 02:49:01PM -0500, Nicolas Pitre wrote:
+On Tue, Dec 06, 2011 at 11:26:43AM +0800, Shawn Guo wrote:
+> On Mon, Dec 05, 2011 at 07:09:47PM +0000, Mark Brown wrote:
 
-[...]
+> > That doesn't answer the question - I've still no idea how the binding is
+> > supposed to map the nodes contained within regulators onto the physical
+> > regulators.
 
-> > > > Unfortunately, NO_IRQ is often not spelled "NO_IRQ".  It looks like the assumption
-> > > > "irq < 0 === no irq" may be quite a lot more widespread than "NO_IRQ === no irq".
-> > > > Since there's no specific thing we can grep for (and simply due to volume)
-> > > > finding all such instances may be quite a bit harder.
-> > > [...]
-> > > 
-> > > ARgh.
-> > > 
-> > > My point was about current actual usage of the IRQ numbered 0 which 
-> > > probably prompted the introduction of NO_IRQ in the first place.  What I 
-> > > was saying is that the number of occurrences where IRQ #0 is currently 
-> > > used into drivers that would get confused if 0 would mean no IRQ is 
-> > > probably quite small.
-> > 
-> > Ah, I misunderstood -- that's a separate issue, but also an important one.
-> > I guess this applies to a fair number of older boards.  One way of fixing
-> > this would be to migrate those boards to use irq domains -- but those boards
-> > may be sporadically maintained.
-> >  
-> > > But as you illustrated, there is a large number of drivers that already 
-> > > assume no IRQ is < 0, even if they don't use any IRQ #0 themselves.  
-> > > That is a much bigger problem to fix.
-> > 
-> > My concern is that as soon as we start to change this in significant
-> > volume, a _lot_ of stuff is going to break.  Everywhere that an irq value
-> > is passed from one piece of code to another, there is a potential
-> > interface mismatch -- there seems to be no single place where we can
-> > apply a conversion and fix everything.
-> 
-> No need to convert everything.
-> 
-> First move is to make irq=0 meaning no IRQ.  That means making things 
-> like:
-> 
-> 	if (irq < 0)
-> 	if (irq >= 0)
-> 
-> into
-> 
-> 	if (irq <= 0)
-> 	if (irq > 0)
-> 
-> And replace NO_IRQ with 0.
->
-> That change shouldn't break anything, except those drivers which are 1) 
-> being passed an actual IRQ #0 and 2) testing for no IRQ.  I suspect that 
-> those conditions aren't very common together.
+> And here it is.  It finds the regulator node by looking for the
+> regulator name.
 
-To clarify, you're suggesting that the meanings of all other IRQ values
-would not change initially?  (i.e., we remap HW irq 0, if there is one,
-to some other random number but have a 1:1 mapping for everything else).
-
-
-That could make sense as an approach.
-
-Cheers
----Dave
+OK, this needs to be documented in the binding documentation - people
+shouldn't need to look at the code to figure this out.
