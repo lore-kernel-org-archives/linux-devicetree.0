@@ -1,52 +1,43 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
-Date: Tue, 6 Dec 2011 07:13:21 +0100
-Message-ID: <20111206061321.GH9192@game.jcrosoft.org>
-References: <20111110162859.GA7088@oksana.dev.rtsoft.ru>
- <20111202192618.GC3037@localhost.localdomain>
- <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com>
- <1322867573.11728.22.camel@pasglop>
- <20111205161157.GA27550@localhost.localdomain>
- <alpine.LFD.2.02.1112051236350.2357@xanadu.home>
- <20111205180253.GB29812@localhost.localdomain>
- <alpine.LFD.2.02.1112051310150.2357@xanadu.home>
- <20111205184522.316598de@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v3 1/3] ARM: at91/aic: add irq domain and device tree
+ support
+Date: Tue, 6 Dec 2011 07:34:16 +0100
+Message-ID: <20111206063416.GI9192@game.jcrosoft.org>
+References: <1322590066-430-1-git-send-email-nicolas.ferre@atmel.com>
+ <1322754127-15206-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-next-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20111205184522.316598de@lxorguk.ukuu.org.uk>
-Sender: linux-next-owner@vger.kernel.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Jeff Garzik <jgarzik@redhat.com>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Anton Vorontsov <cbouatmailru@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@elte.hu>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1322754127-15206-1-git-send-email-nicolas.ferre@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, robherring2@gmail.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18:45 Mon 05 Dec     , Alan Cox wrote:
-> > But as you illustrated, there is a large number of drivers that already 
-> > assume no IRQ is < 0, even if they don't use any IRQ #0 themselves.  
-> > That is a much bigger problem to fix.
+On 16:42 Thu 01 Dec     , Nicolas Ferre wrote:
+> Add an irqdomain for the AIC interrupt controller.
+> The device tree support is mapping the registers and
+> is using the irq_domain_simple_ops to manage hwirq
+> translation.
+> The documentation is describing the meaning of the
+> two cells required for using this "interrupt-controller"
+> in a device tree node.
 > 
-> And a much larger number assuming the reverse is true which are hiding
-> potential bugs on ARM.
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+> This patch should go on top of Jamie's patch:
+> "irqdomain: export irq_domain_simple_ops for !CONFIG_OF"
+> https://lkml.org/lkml/2011/12/1/109
 > 
-> Looking at the serial stuff the best checks appear to be looking at
-> "irq", "-1" and NO_IRQ.
+> v3: - change number of cells to define an AIC interrupt (irq trigger type)
+>     - change current .dtsi files to match specification
+>     - use irq_domain_simple_ops (for DT mapping)
 > 
-> For migration stuff that's doing broken things like
-> 
-> 	if (irq < 0)
-> 
-> can be changed to
-> 
-> 	if (irq <= 0)
-> 
-> and that can be done before NO_IRQ itself is nailed on ARM and PA-RISC.
-can we sinply introduce a macro irq_is_valid
-
-and make it chip dependant as gpio_is_valid
-and then move away from irq 0 valid
-
-so we do not need to brake anthing first and then easly convert them
+> v2: - use of_irq_init() function for device tree probing
+>     - add documentation
+>     - use own simple struct irq_domain_ops
+just one stuff missing the definition of the external irq
 
 Best Regards,
 J.
