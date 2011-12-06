@@ -1,32 +1,84 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 1/2] of/irq: Get rid of NO_IRQ usage
-Date: Tue, 6 Dec 2011 13:25:07 -0800
-Message-ID: <CA+55aFwGFogD4ROCH9m=c2jqB2axvrH-dnKPtA8kxXL9b3CVBw@mail.gmail.com>
-References: <20111110151852.GA7465@oksana.dev.rtsoft.ru> <20111110152541.GA3207@oksana.dev.rtsoft.ru>
- <4EDE877A.4080708@gmail.com>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH] drivers, char: add U-Boot bootcount driver
+Date: Tue, 6 Dec 2011 22:50:56 +0100
+Message-ID: <20111206215056.GD14154@pengutronix.de>
+References: <1322991921-21096-1-git-send-email-hs@denx.de>
+ <20111204114741.GA5788@pengutronix.de>
+ <4EDCD7B2.5030409@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <4EDE877A.4080708@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Anton Vorontsov <cbouatmailru@gmail.com>, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4EDCD7B2.5030409@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: Wolfgang Denk <wd@denx.de>, Vitaly Bordug <vbordug@ru.mvista.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 6, 2011 at 1:22 PM, Rob Herring <robherring2@gmail.com> wrote:
->
-> This warning code is really ugly. Can we just drop it? In my searching
-> of in kernel dts files, there's only 1 instance I have found (Versatile
-> AB watchdog) that would hit this.
 
-I do agree. Especially since we never got any input on whether it works or not.
+--IDYEmSnFhs3mNXr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> If not, you don't need to handle irq_create_of_mapping return as that is
-> already always 0 for no irq or error.
+Hi Heiko,
 
-Yeah, I'd like to just remove NO_IRQ from the OF paths. Afaik, it
-hasn't worked as NO_IRQ before anyway, so even if the rest of the
-drivers end up continuing using NO_IRQ, the OF-enabled ones on ARM
-should just stop. There can't be many of those yet.
+> >> This driver provides read/write access to the U-Boot bootcounter
+> >> through PROC FS and/or sysFS file.
+> >=20
+> > Why ProcFS? Why ProcFS and/or SysFS? Which has priority? Why not /dev?
+>=20
+> I drop the ProcFS support for v2.
 
-                          Linus
+Don't bother. This approach starts from the wrong side.
+
+>=20
+> >> The bootcountregister gets configured via DTS.
+> >> for example on the enbw_cmc board:
+> >>
+> >> bootcount@0x23060 {
+> >>                   compatible =3D "uboot,bootcount";
+> >=20
+> > No. I assume you are not the vendor of what is at 0x23060, the actual d=
+evice.
+> > Only the device must be encoded in the compatible-entry which then impl=
+ies the
+> > bootcount functionality. Also, keep in mind that your solution should be
+> > generic for bootloaders.
+>=20
+> So I should call it compatible =3D "generic, bootcount" ?
+
+Nope, you should give it the name of the device. Remember that 'compatible'=
+ is
+no 1:1 replacement for platform_driver-binding. Check
+http://devicetree.org/Device_Tree_Usage, especially the sections about the
+compatible-property.
+
+bootcount itself is not a device. It is a feature of certain devices. And t=
+hat
+needs to be implemented; possibly generic enough that it can work for regis=
+ter
+based, i2c based, and so forth, accesses.
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--IDYEmSnFhs3mNXr+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEUEARECAAYFAk7ejkAACgkQD27XaX1/VRsK8gCgsBZlpGkToxR4W/TNp7j9yOmo
+8TEAmNpVaf1A7KManfT9jWcx10Ntn/M=
+=k/HJ
+-----END PGP SIGNATURE-----
+
+--IDYEmSnFhs3mNXr+--
