@@ -1,43 +1,45 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v3 1/3] ARM: at91/aic: add irq domain and device tree
- support
-Date: Tue, 6 Dec 2011 07:34:16 +0100
-Message-ID: <20111206063416.GI9192@game.jcrosoft.org>
-References: <1322590066-430-1-git-send-email-nicolas.ferre@atmel.com>
- <1322754127-15206-1-git-send-email-nicolas.ferre@atmel.com>
+From: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] regulator: helper routine to extract
+ regulator_init_data
+Date: Tue, 06 Dec 2011 12:24:06 +0530
+Message-ID: <4EDDBC0E.7050806@ti.com>
+References: <1321615040-13257-1-git-send-email-rnayak@ti.com>
+ <1321615040-13257-2-git-send-email-rnayak@ti.com>
+ <CAJuYYwRO+AS=WmQfNAe8L6Gi5Dm4VsCuVqk3X5Nb8uUYAdLnJQ@mail.gmail.com>
+ <20111204155433.GA16287@opensource.wolfsonmicro.com>
+ <CAJuYYwQ-9wCu-+q0S2YYeFYemq74ULdZ-EwPGLWKHA4+0VZcsA@mail.gmail.com>
+ <20111205103447.GC11150@opensource.wolfsonmicro.com>
+ <CAJuYYwSRW-=XufvHS1miO2xNANwQMZqPbt=VyPEonywnAsvVUQ@mail.gmail.com>
+ <20111205105733.GE11150@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1322754127-15206-1-git-send-email-nicolas.ferre@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, robherring2@gmail.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111205105733.GE11150-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 16:42 Thu 01 Dec     , Nicolas Ferre wrote:
-> Add an irqdomain for the AIC interrupt controller.
-> The device tree support is mapping the registers and
-> is using the irq_domain_simple_ops to manage hwirq
-> translation.
-> The documentation is describing the meaning of the
-> two cells required for using this "interrupt-controller"
-> in a device tree node.
-> 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
-> This patch should go on top of Jamie's patch:
-> "irqdomain: export irq_domain_simple_ops for !CONFIG_OF"
-> https://lkml.org/lkml/2011/12/1/109
-> 
-> v3: - change number of cells to define an AIC interrupt (irq trigger type)
->     - change current .dtsi files to match specification
->     - use irq_domain_simple_ops (for DT mapping)
-> 
-> v2: - use of_irq_init() function for device tree probing
->     - add documentation
->     - use own simple struct irq_domain_ops
-just one stuff missing the definition of the external irq
+On Monday 05 December 2011 04:27 PM, Mark Brown wrote:
+> On Mon, Dec 05, 2011 at 04:14:40PM +0530, Thomas Abraham wrote:
+>> On 5 December 2011 16:04, Mark Brown
+>
+>>> With the regulator device tree bindings if the regulator is configured
+>>> to run a single voltage the bindings will set apply_uV unconditionally
+>>> so there's no need for a separate constraint.
+>
+>> Sorry if I have missed this, but I could not find 'apply_uV' being set
+>> as you described in the v5 of the regulator-dt patchset.
+>
+> Yes, looks like Rajendra missed that - just fixed it.
 
-Best Regards,
-J.
+Thanks Mark, I certainly seem to have missed it.
