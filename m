@@ -1,81 +1,111 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: PWM and backlight devices
-Date: Tue, 6 Dec 2011 16:07:49 +0100
-Message-ID: <20111206150749.GA13761@avionic-0098.adnet.avionic-design.de>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: [PATCH v4 0/6] Versatile Express DT support
+Date: Tue,  6 Dec 2011 15:43:43 +0000
+Message-ID: <1323186229-22054-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0292005752607495949=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello again,
 
---===============0292005752607495949==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Content-Disposition: inline
+Here goes the fourth version of the series, hopefully something that
+could be merged for 3.3 (all Revieved-by-s and Acked-by-s welcomed!)
 
+Changes since v3:
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+* The "core tile" support has been renamed (no real code change)
+  to support for "platforms based on a processor" and the DTBs now
+  must be now compatible with "arm,vexpress-<tile-model>" and
+  "arm,vexpress-<processor>", the latter being the important bit.
+  Documentation has been updated accordingly (all language
+  suggestions more then welcome).
 
-Hi,
+* Added support code for Cortex-A7 and Cortex-A15 based platforms
+  and DTS for V2P-CA15 tile with Test Chip 1.
 
-I'm working on adding support for a device which is booted from a device tree
-only. Currently this gets me to a login prompt on a serial console and the
-device is basically functional. However, the device also has a display with a
-backlight that is controlled via a PWM (supplied by the SoC). If this was a
-regular board it would be simple to implement this via the pwm-backlight
-driver.
+* ARCH_VEXPRESS_RS1 has been dropped and the addresses in
+  Makefile.boot are not modified, so the behaviour of the non-DT
+  code is not changed at any time. ARCH_VEXPRESS_DT now enforces
+  AUTO_ZRELADDR.
 
-Unfortunately, the pwm-backlight driver doesn't have device tree support yet
-and I'm not sure how to best implement it. As far as I can see, I would first
-need to have some way of representing a PWM device in the DT that I could
-reference in the pwm-backlight device node and I would need to add actual DT
-support to pwm-backlight. Implementing support for the data passed in the
-platform data should be rather straightforward, but I don't see how the
-callback functions could be represented in the DT.
+* Compact Flash is now compatible with "arm,vexpress-cf" as well
+  as with "ata-generic".
 
-For some setups it would probably be enough to just specify the used PWM, but
-other boards fiddle with some GPIOs in the callbacks and I guess that could
-be represented by adding a "gpios" property with a list of pins that need to
-be toggled for example when the backlight power is enabled/disabled.
+* V2x_PERIPH macros are now (void _iomem *) pointers and the
+  V2x_PERIPH_P2V macros were dropped.
 
-Has anyone done something similar yet? Am I even on the right track here?
+* Wrong ARCH_VEXPRESS_DT->OF selection was fixed to ->USE_OF.
 
-Thierry
+* PL310-related Kconfig options were aligned to Will's and Dave's
+  changes.
 
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature
+* "make dtbs" compile all provided vexpress-*.dts files now.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Tested on:
+- V2P-CA9 with ATAGs
+- V2P-CA9 with DT
+- V2P-CA5s with DT
+- V2P-CA15 with DT
+- V2F-2XV6 Cortex-A7 SMM with DT
 
-iEUEARECAAYFAk7eL8UACgkQZ+BJyKLjJp8gcQCfYB2a6gV78wP5/uyBrLwxdmwr
-L+UAljv1j2z+HkZHmMO/1xZw4BDviJA=
-=JpfD
------END PGP SIGNATURE-----
+Series v2 has been also tested by Ryan Harkin and provisionally acked
+by Rob Herring.
 
---7AUc2qLy4jB3hD7Z--
+Thanks for all your help, especially to Dave and Arnd for their
+continuous support!
 
---===============0292005752607495949==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Pawel Moll (6):
+  ARM: versatile: Add missing ENDPROC to headsmp.S
+  ARM: vexpress: Get rid of MMIO_P2V
+  ARM: vexpress: Add DT support for the motherboard
+  ARM: vexpress: Motherboard RS1 memory map support
+  ARM: vexpress: DT-based support for Cortex-A5 and Cortex-A9 based
+    tiles
+  ARM: vexpress: DT-based support for Cortex-A7 and Cortex-A15 based
+    tiles
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0292005752607495949==--
+ Documentation/devicetree/bindings/arm/vexpress.txt |  118 +++++++++
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi            |  196 +++++++++++++++
+ arch/arm/boot/dts/vexpress-v2m.dtsi                |  195 +++++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts        |  138 +++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca5s.dts            |  131 ++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts             |  145 +++++++++++
+ arch/arm/include/asm/hardware/arm_timer.h          |    5 +
+ arch/arm/mach-realview/platsmp.c                   |    3 +-
+ arch/arm/mach-vexpress/Kconfig                     |   68 +++++-
+ arch/arm/mach-vexpress/Makefile                    |    2 +
+ arch/arm/mach-vexpress/Makefile.boot               |    6 +
+ arch/arm/mach-vexpress/core.h                      |   19 ++-
+ arch/arm/mach-vexpress/ct-ca9x4.c                  |   52 +---
+ arch/arm/mach-vexpress/dt-ca5_ca9.c                |  114 +++++++++
+ arch/arm/mach-vexpress/dt-ca7_ca15.c               |   95 +++++++
+ arch/arm/mach-vexpress/include/mach/ct-ca9x4.h     |   13 +-
+ arch/arm/mach-vexpress/include/mach/debug-macro.S  |   37 +++-
+ arch/arm/mach-vexpress/include/mach/irqs.h         |    2 +-
+ arch/arm/mach-vexpress/include/mach/motherboard.h  |   58 +++--
+ arch/arm/mach-vexpress/include/mach/uncompress.h   |   13 +-
+ arch/arm/mach-vexpress/platsmp.c                   |    7 +-
+ arch/arm/mach-vexpress/v2m.c                       |  259 ++++++++++++++++++--
+ arch/arm/plat-versatile/headsmp.S                  |    1 +
+ 23 files changed, 1557 insertions(+), 120 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/vexpress.txt
+ create mode 100644 arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+ create mode 100644 arch/arm/boot/dts/vexpress-v2m.dtsi
+ create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+ create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+ create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca9.dts
+ create mode 100644 arch/arm/mach-vexpress/dt-ca5_ca9.c
+ create mode 100644 arch/arm/mach-vexpress/dt-ca7_ca15.c
