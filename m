@@ -1,84 +1,50 @@
-From: Wolfram Sang <w.sang@pengutronix.de>
+From: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
 Subject: Re: [PATCH] drivers, char: add U-Boot bootcount driver
-Date: Tue, 6 Dec 2011 22:50:56 +0100
-Message-ID: <20111206215056.GD14154@pengutronix.de>
+Date: Tue, 06 Dec 2011 22:56:09 +0100
+Message-ID: <20111206215609.5D1FF1A32820@gemini.denx.de>
 References: <1322991921-21096-1-git-send-email-hs@denx.de>
- <20111204114741.GA5788@pengutronix.de>
- <4EDCD7B2.5030409@denx.de>
+ <20111204114741.GA5788@pengutronix.de> <4EDCD7B2.5030409@denx.de>
+ <20111206215056.GD14154@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4EDCD7B2.5030409@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: Wolfgang Denk <wd@denx.de>, Vitaly Bordug <vbordug@ru.mvista.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20111206215056.GD14154-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vitaly Bordug <vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Dear Wolfram,
 
---IDYEmSnFhs3mNXr+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In message <20111206215056.GD14154-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> you wrote:
+> 
+> bootcount itself is not a device. It is a feature of certain devices. And that
+> needs to be implemented; possibly generic enough that it can work for register
+> based, i2c based, and so forth, accesses.
 
-Hi Heiko,
+If "boot counter" is not a good name for such a device, then what name
+would you suggest?
 
-> >> This driver provides read/write access to the U-Boot bootcounter
-> >> through PROC FS and/or sysFS file.
-> >=20
-> > Why ProcFS? Why ProcFS and/or SysFS? Which has priority? Why not /dev?
->=20
-> I drop the ProcFS support for v2.
+Or do you think a counter (which can be implemented in a number of
+different ways, depending on hardware specifics) is not a device?
+What would be such a device, then?
 
-Don't bother. This approach starts from the wrong side.
+Best regards,
 
->=20
-> >> The bootcountregister gets configured via DTS.
-> >> for example on the enbw_cmc board:
-> >>
-> >> bootcount@0x23060 {
-> >>                   compatible =3D "uboot,bootcount";
-> >=20
-> > No. I assume you are not the vendor of what is at 0x23060, the actual d=
-evice.
-> > Only the device must be encoded in the compatible-entry which then impl=
-ies the
-> > bootcount functionality. Also, keep in mind that your solution should be
-> > generic for bootloaders.
->=20
-> So I should call it compatible =3D "generic, bootcount" ?
+Wolfgang Denk
 
-Nope, you should give it the name of the device. Remember that 'compatible'=
- is
-no 1:1 replacement for platform_driver-binding. Check
-http://devicetree.org/Device_Tree_Usage, especially the sections about the
-compatible-property.
-
-bootcount itself is not a device. It is a feature of certain devices. And t=
-hat
-needs to be implemented; possibly generic enough that it can work for regis=
-ter
-based, i2c based, and so forth, accesses.
-
-Regards,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---IDYEmSnFhs3mNXr+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEUEARECAAYFAk7ejkAACgkQD27XaX1/VRsK8gCgsBZlpGkToxR4W/TNp7j9yOmo
-8TEAmNpVaf1A7KManfT9jWcx10Ntn/M=
-=k/HJ
------END PGP SIGNATURE-----
-
---IDYEmSnFhs3mNXr+--
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
+"How is this place run - is it an anarchy?"
+"No, I wouldn't say so; it is not that well organised..."
