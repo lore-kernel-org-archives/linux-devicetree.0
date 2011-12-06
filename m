@@ -1,13 +1,18 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 5/5 v2] power: sbs-battery: Change power supply name
-Date: Mon,  5 Dec 2011 17:50:49 -0800
-Message-ID: <1323136249-4134-5-git-send-email-rklein@nvidia.com>
-References: <1323136249-4134-1-git-send-email-rklein@nvidia.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] mfd: mc13xxx: add device tree probe support
+Date: Tue, 6 Dec 2011 11:26:43 +0800
+Message-ID: <20111206032642.GI2980@S2100-06.ap.freescale.net>
+References: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
+ <1322731268-12158-2-git-send-email-shawn.guo@linaro.org>
+ <20111202153637.GY8245@opensource.wolfsonmicro.com>
+ <20111205064124.GC2980@S2100-06.ap.freescale.net>
+ <20111205190946.GD7467@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1323136249-4134-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111205190946.GD7467-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,70 +22,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The power supply name used to be fixed as "battery". This change allows
-for multiple batteries by generating the name rather than using a fixed
-value.
+On Mon, Dec 05, 2011 at 07:09:47PM +0000, Mark Brown wrote:
+> On Mon, Dec 05, 2011 at 02:41:24PM +0800, Shawn Guo wrote:
+> > On Fri, Dec 02, 2011 at 03:36:38PM +0000, Mark Brown wrote:
+> > > On Thu, Dec 01, 2011 at 05:21:05PM +0800, Shawn Guo wrote:
+> 
+> > > > +Sub-nodes:
+> > > > +- regulators : Contain the regulator nodes.  The bindings details of individual
+> > > > +  regulator node can be found in:
+> > > > +  Documentation/devicetree/bindings/regulator/regulator.txt
+> 
+> > > How does the driver figure out which regulators map onto which subnodes?
+> 
+> > There should only be one sub-node named 'regulators', otherwise, DTC
+> > will report ERROR (duplicate_node_names).
+> 
+> That doesn't answer the question - I've still no idea how the binding is
+> supposed to map the nodes contained within regulators onto the physical
+> regulators.
+> 
+Oops, I missed the question.  It's in the patch #3.
 
-v2: simplified kasprintf and cleaned up unneeded member of sbs_info.
+> +struct mc13xxx_regulator_init_data * __devinit mc13xxx_parse_regulators_dt(
+> +     struct platform_device *pdev, struct mc13xxx_regulator *regulators,
+> +     int num_regulators)
+> +{
+> +     struct mc13xxx_regulator_priv *priv = platform_get_drvdata(pdev);
+> +     struct mc13xxx_regulator_init_data *data, *p;
+> +     struct device_node *parent, *child;
+> +     int i;
+> +
+> +     of_node_get(pdev->dev.parent->of_node);
+> +     parent = of_find_node_by_name(pdev->dev.parent->of_node, "regulators");
+> +     if (!parent)
+> +             return NULL;
+> +
+> +     data = devm_kzalloc(&pdev->dev, sizeof(*data) * priv->num_regulators,
+> +                         GFP_KERNEL);
+> +     if (!data)
+> +             return NULL;
+> +     p = data;
+> +
+> +     for_each_child_of_node(parent, child) {
+> +             for (i = 0; i < num_regulators; i++) {
+> +                     if (!of_node_cmp(child->name,
+> +                                      regulators[i].desc.name)) {
 
-Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/power/sbs-battery.c |   19 ++++++++++++++++---
- 1 files changed, 16 insertions(+), 3 deletions(-)
+And here it is.  It finds the regulator node by looking for the
+regulator name.
 
-diff --git a/drivers/power/sbs-battery.c b/drivers/power/sbs-battery.c
-index 00bd9e0..b677b88 100644
---- a/drivers/power/sbs-battery.c
-+++ b/drivers/power/sbs-battery.c
-@@ -682,15 +682,24 @@ static int __devinit sbs_probe(struct i2c_client *client,
- 	struct sbs_platform_data *pdata = client->dev.platform_data;
- 	int rc;
- 	int irq;
-+	char *name;
- 
--	chip = kzalloc(sizeof(struct sbs_info), GFP_KERNEL);
--	if (!chip)
-+	name = kasprintf(GFP_KERNEL, "sbs-%s", dev_name(&client->dev));
-+	if (!name) {
-+		dev_err(&client->dev, "Failed to allocate device name\n");
- 		return -ENOMEM;
-+	}
-+
-+	chip = kzalloc(sizeof(struct sbs_info), GFP_KERNEL);
-+	if (!chip) {
-+		rc = -ENOMEM;
-+		goto exit_free_name;
-+	}
- 
- 	chip->client = client;
- 	chip->enable_detection = false;
- 	chip->gpio_detect = false;
--	chip->power_supply.name = "battery";
-+	chip->power_supply.name = name;
- 	chip->power_supply.type = POWER_SUPPLY_TYPE_BATTERY;
- 	chip->power_supply.properties = sbs_properties;
- 	chip->power_supply.num_properties = ARRAY_SIZE(sbs_properties);
-@@ -775,6 +784,9 @@ exit_psupply:
- 
- 	kfree(chip);
- 
-+exit_free_name:
-+	kfree(name);
-+
- 	return rc;
- }
- 
-@@ -791,6 +803,7 @@ static int __devexit sbs_remove(struct i2c_client *client)
- 
- 	cancel_delayed_work_sync(&chip->work);
- 
-+	kfree(chip->power_supply.name);
- 	kfree(chip);
- 	chip = NULL;
- 
--- 
-1.7.0.4
+Regards,
+Shawn
+
+> +                             p->id = i;
+> +                             p->init_data = of_get_regulator_init_data(
+> +                                                     &pdev->dev, child);
+> +                             p->node = child;
+> +                             p++;
+> +                             break;
+> +                     }
+> +             }
+> +     }
+> +
+> +     return data;
+> +}
