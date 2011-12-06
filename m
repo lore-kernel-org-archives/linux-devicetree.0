@@ -1,92 +1,116 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] mfd: mc13xxx: add device tree probe support
-Date: Tue, 6 Dec 2011 11:26:43 +0800
-Message-ID: <20111206032642.GI2980@S2100-06.ap.freescale.net>
-References: <1322731268-12158-1-git-send-email-shawn.guo@linaro.org>
- <1322731268-12158-2-git-send-email-shawn.guo@linaro.org>
- <20111202153637.GY8245@opensource.wolfsonmicro.com>
- <20111205064124.GC2980@S2100-06.ap.freescale.net>
- <20111205190946.GD7467@opensource.wolfsonmicro.com>
+From: Mike Frysinger <vapier@gentoo.org>
+Subject: Re: [PATCH v2 04/17] fdt: Add basic support for decoding
+	GPIO definitions
+Date: Mon, 5 Dec 2011 22:55:59 -0500
+Message-ID: <201112052256.00939.vapier@gentoo.org>
+References: <1322878300-5551-1-git-send-email-sjg@chromium.org>
+	<4EDD440C.80002@nvidia.com>
+	<CAPnjgZ03+tfMhkqo4=uarcAf1E8hTfvSF_Y0=V70tuqP866QQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111205190946.GD7467-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0998838338=="
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <CAPnjgZ03+tfMhkqo4=uarcAf1E8hTfvSF_Y0=V70tuqP866QQQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: u-boot@lists.denx.de
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <TWarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2011 at 07:09:47PM +0000, Mark Brown wrote:
-> On Mon, Dec 05, 2011 at 02:41:24PM +0800, Shawn Guo wrote:
-> > On Fri, Dec 02, 2011 at 03:36:38PM +0000, Mark Brown wrote:
-> > > On Thu, Dec 01, 2011 at 05:21:05PM +0800, Shawn Guo wrote:
-> 
-> > > > +Sub-nodes:
-> > > > +- regulators : Contain the regulator nodes.  The bindings details of individual
-> > > > +  regulator node can be found in:
-> > > > +  Documentation/devicetree/bindings/regulator/regulator.txt
-> 
-> > > How does the driver figure out which regulators map onto which subnodes?
-> 
-> > There should only be one sub-node named 'regulators', otherwise, DTC
-> > will report ERROR (duplicate_node_names).
-> 
-> That doesn't answer the question - I've still no idea how the binding is
-> supposed to map the nodes contained within regulators onto the physical
-> regulators.
-> 
-Oops, I missed the question.  It's in the patch #3.
+--===============0998838338==
+Content-Type: multipart/signed;
+  boundary="nextPart1979436.ZpTLeaD5Zj";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 
-> +struct mc13xxx_regulator_init_data * __devinit mc13xxx_parse_regulators_dt(
-> +     struct platform_device *pdev, struct mc13xxx_regulator *regulators,
-> +     int num_regulators)
-> +{
-> +     struct mc13xxx_regulator_priv *priv = platform_get_drvdata(pdev);
-> +     struct mc13xxx_regulator_init_data *data, *p;
-> +     struct device_node *parent, *child;
-> +     int i;
-> +
-> +     of_node_get(pdev->dev.parent->of_node);
-> +     parent = of_find_node_by_name(pdev->dev.parent->of_node, "regulators");
-> +     if (!parent)
-> +             return NULL;
-> +
-> +     data = devm_kzalloc(&pdev->dev, sizeof(*data) * priv->num_regulators,
-> +                         GFP_KERNEL);
-> +     if (!data)
-> +             return NULL;
-> +     p = data;
-> +
-> +     for_each_child_of_node(parent, child) {
-> +             for (i = 0; i < num_regulators; i++) {
-> +                     if (!of_node_cmp(child->name,
-> +                                      regulators[i].desc.name)) {
+--nextPart1979436.ZpTLeaD5Zj
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-And here it is.  It finds the regulator node by looking for the
-regulator name.
+On Monday 05 December 2011 17:52:01 Simon Glass wrote:
+> On Mon, Dec 5, 2011 at 2:22 PM, Stephen Warren wrote:
+> > On 12/05/2011 02:56 PM, Simon Glass wrote:
+> > * A system-wide GPIO ID, in which case the numbering is "virtual" (e.g.
+> > a concatenation of the GPIOs on all the present controllers), and you
+> > can choose to start the first controller's GPIOs at 0, 1, 1000 etc.,
+> > thus leaving -1, 0, -n..999 etc. as invalid GPIOs. This is what the
+> > Linux kernel's gpiolib uses (and some say this global numbering scheme
+> > was a mistake).
+>=20
+> Well maybe it was a mistake, but it seems painful for the user to
+> translate GPIO numbers in this way. U-Boot's GPIO command takes a GPIO
+> number, which starts at zero.
 
-Regards,
-Shawn
+u-boot should simply follow what linux is doing as it keeps things a hell o=
+f a=20
+lot simpler for us: the code is done, people moving between the worlds don'=
+t=20
+get surprised and screw something up, and we don't accidentally forget "oh,=
+ in=20
+u-boot we do XXX instead of YYY" and screw things up ourselves.
 
-> +                             p->id = i;
-> +                             p->init_data = of_get_regulator_init_data(
-> +                                                     &pdev->dev, child);
-> +                             p->node = child;
-> +                             p++;
-> +                             break;
-> +                     }
-> +             }
-> +     }
-> +
-> +     return data;
-> +}
+> >> I currently use the max value available to the u8. We can change it at
+> >> will when we update the u8 type to u16 which is why I made it a
+> >> constant.
+> >=20
+> > include/asm-generic/gpio.h seems to use an int to represent a GPIO. I'd
+> > suggest these APIs do the same, rather than use a u8.
+>=20
+> Do you mean the fdt_gpio_state structure? I have not used u8 for any
+> function calls and would not.
+
+the asm-generic/gpio.h using "int" as a gpio is wrong.  it should be=20
+"unsigned".  there's a patch somewhere to fix this.
+
+> This adds 3 bytes for every entry. What is the benefit? People get
+> upset when we waste memory!
+
+some systems have more than 256 GPIOs.  it's actually not that hard to hit =
+the=20
+limit.
+=2Dmike
+
+--nextPart1979436.ZpTLeaD5Zj
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (GNU/Linux)
+
+iQIcBAABAgAGBQJO3ZJQAAoJEEFjO5/oN/WB0KgP/2dFXhrMGEq4J3KS8aPj+PhL
+W7Nfn+85Z6Aj1Fy9bfnksKPRkev2ppt2LH8urOp/8MSSmGMiBY4xV9DfUZuPc7BG
+VLRudiL/p1qRRgzqXsC9UMbD0MEcbJY77kQ86UxiGjfuPf0jODba2aB3uJfjqi2m
+thNmm8LV7p0s24D5BO0jsMU0t3MMBAuPL7rLxaJbuYaVWHA+SNM7zpIcIEbR74du
+eFMe/xcBXw9KNmcIlwz5f5sw2Aj6AEgrtf+Qj3uXeYB/etnsig50eBSYkpDBAKB0
+88LZsrojUVJegiReqWy4Zh6DynKqCWLiJqXcQ5xzdCKPkhjuEzG5e0dgXT4xBv//
+OvfImdfzWm5gtLzoTntbXu6pPtbIuKdjlSIhSfEflRqKTj+WB2fV59Z4SzE6+2Vo
+ANNq5fCQeKZLCDmuMBqiQPsvVLNvDMZcpbwAWcROAWaJwuYU6b8mcrij/A+X59LB
+iv0HZYPhbhc9CRUThKOOhnimBMeyQBX/eNZyAZqEZ2m9zg6ra8IPFY+G73pdx9A0
+iPdlG1mhVAXaOul/n3p+XZe0zWLLxZLanpvG6krWF2i/BNyI4vKny93Wnu6NusFp
+gV8P/zGCQJ8l79aSEShA5CC7KEn6QFLfK4w0xkrDGrcLcfVBKWRw7nZMVV/2twox
+pQ0ue6AN5zszLtcf68Bj
+=xdKR
+-----END PGP SIGNATURE-----
+
+--nextPart1979436.ZpTLeaD5Zj--
+
+--===============0998838338==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+U-Boot mailing list
+U-Boot@lists.denx.de
+http://lists.denx.de/mailman/listinfo/u-boot
+
+--===============0998838338==--
