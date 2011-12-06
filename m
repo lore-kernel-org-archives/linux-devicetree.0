@@ -1,54 +1,47 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: PWM and backlight devices
-Date: Tue, 06 Dec 2011 12:20:47 -0600
-Message-ID: <4EDE5CFF.1060709@gmail.com>
-References: <20111206150749.GA13761@avionic-0098.adnet.avionic-design.de>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 5/5] ASoC: WM8903: Add device tree binding
+Date: Tue, 6 Dec 2011 10:22:24 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1750B773EE@HQMAIL01.nvidia.com>
+References: <1322863721-29793-1-git-send-email-swarren@nvidia.com>
+ <1322863721-29793-6-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111206150749.GA13761-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1322863721-29793-6-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, John Bonesio <bones-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2011 09:07 AM, Thierry Reding wrote:
-> Hi,
-> 
-> I'm working on adding support for a device which is booted from a device tree
-> only. Currently this gets me to a login prompt on a serial console and the
-> device is basically functional. However, the device also has a display with a
-> backlight that is controlled via a PWM (supplied by the SoC). If this was a
-> regular board it would be simple to implement this via the pwm-backlight
-> driver.
-> 
-> Unfortunately, the pwm-backlight driver doesn't have device tree support yet
-> and I'm not sure how to best implement it. As far as I can see, I would first
-> need to have some way of representing a PWM device in the DT that I could
-> reference in the pwm-backlight device node and I would need to add actual DT
-> support to pwm-backlight. Implementing support for the data passed in the
-> platform data should be rather straightforward, but I don't see how the
-> callback functions could be represented in the DT.
-> 
-> For some setups it would probably be enough to just specify the used PWM, but
-> other boards fiddle with some GPIOs in the callbacks and I guess that could
-> be represented by adding a "gpios" property with a list of pins that need to
-> be toggled for example when the backlight power is enabled/disabled.
-> 
-> Has anyone done something similar yet? Am I even on the right track here?
-> 
+Stephen Warren wrote at Friday, December 02, 2011 3:09 PM:
+> Document the device tree binding for the WM8903 codec, and modify the
+> driver to extract platform data from the device tree, if present.
 
-I haven't seen anything. Perhaps something similar to how the gpio-keys
-binding is done would work here. This could have a phandle to the pwm
-device similar to gpios.
+Mark,
 
-Rob
+I just realized that when I was re-organizing all the WM8903 patches, I
+dropped the part that added the of_match table to the driver:
+
++static const struct of_device_id wm8903_of_match[] __devinitconst = {
++	{ .compatible = "wlf,wm8903", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, wm8903_of_match);
+
+Now, everything still works without this. Looking at the Linux OF code,
+it works by retrieving the compatible property, taking everything after
+the comma if present, and then creating an i2c_board_info with that
+type, which in this case is "wm8903" and matches wm8903.c's i2c_device_id
+table. See drivers/of/of_i2c.c:of_i2c_register_devices() and the call to
+base.c:of_modalias_node().
+
+So, the question is: Should I go back and add the of_match table, or
+is I2C intended to work without it perpetually? I notice that you added
+an of_match table for all the other WM codecs.
+
+Thanks.
+
+-- 
+nvpublic
