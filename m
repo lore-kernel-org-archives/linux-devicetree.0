@@ -1,57 +1,56 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] ASoC: WM8903: Add device tree binding
-Date: Tue, 06 Dec 2011 13:06:58 -0600
-Message-ID: <4EDE67D2.2020507@gmail.com>
-References: <1322863721-29793-1-git-send-email-swarren@nvidia.com>
- <1322863721-29793-6-git-send-email-swarren@nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1750B773EE@HQMAIL01.nvidia.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH] ata: Don't use NO_IRQ in pata_of_platform driver
+Date: Tue, 6 Dec 2011 14:11:42 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1112061408000.2357@xanadu.home>
+References: <20111110162859.GA7088@oksana.dev.rtsoft.ru> <20111202192618.GC3037@localhost.localdomain> <CA+55aFwekNWz+V4440f=2iu_BfOxSg0NjVogv4cZZDFbJBNoAQ@mail.gmail.com> <1322867573.11728.22.camel@pasglop> <20111205161157.GA27550@localhost.localdomain>
+ <alpine.LFD.2.02.1112051236350.2357@xanadu.home> <20111205180253.GB29812@localhost.localdomain> <alpine.LFD.2.02.1112051310150.2357@xanadu.home> <20111205192605.GD29812@localhost.localdomain> <alpine.LFD.2.02.1112051443190.2357@xanadu.home>
+ <20111206093709.GB2274@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1750B773EE-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20111206093709.GB2274@linaro.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Torvalds <torvalds@linux-foundation.org>, Anton Vorontsov <cbouatmailru@gmail.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linux-ide@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Pawel Moll <pawel.moll@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 6 Dec 2011, Dave Martin wrote:
 
-On 12/06/2011 12:22 PM, Stephen Warren wrote:
-> Stephen Warren wrote at Friday, December 02, 2011 3:09 PM:
->> Document the device tree binding for the WM8903 codec, and modify the
->> driver to extract platform data from the device tree, if present.
+> On Mon, Dec 05, 2011 at 02:49:01PM -0500, Nicolas Pitre wrote:
 > 
-> Mark,
+> > No need to convert everything.
+> > 
+> > First move is to make irq=0 meaning no IRQ.  That means making things 
+> > like:
+> > 
+> > 	if (irq < 0)
+> > 	if (irq >= 0)
+> > 
+> > into
+> > 
+> > 	if (irq <= 0)
+> > 	if (irq > 0)
+> > 
+> > And replace NO_IRQ with 0.
+> >
+> > That change shouldn't break anything, except those drivers which are 1) 
+> > being passed an actual IRQ #0 and 2) testing for no IRQ.  I suspect that 
+> > those conditions aren't very common together.
 > 
-> I just realized that when I was re-organizing all the WM8903 patches, I
-> dropped the part that added the of_match table to the driver:
-> 
-> +static const struct of_device_id wm8903_of_match[] __devinitconst = {
-> +	{ .compatible = "wlf,wm8903", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, wm8903_of_match);
-> 
-> Now, everything still works without this. Looking at the Linux OF code,
-> it works by retrieving the compatible property, taking everything after
-> the comma if present, and then creating an i2c_board_info with that
-> type, which in this case is "wm8903" and matches wm8903.c's i2c_device_id
-> table. See drivers/of/of_i2c.c:of_i2c_register_devices() and the call to
-> base.c:of_modalias_node().
-> 
-> So, the question is: Should I go back and add the of_match table, or
-> is I2C intended to work without it perpetually? I notice that you added
-> an of_match table for all the other WM codecs.
+> To clarify, you're suggesting that the meanings of all other IRQ values
+> would not change initially?
 
-It definitely tries to match first with the OF match table, so it should
-probably be added back.
+Initially, or even ever.
 
-Rob
+> (i.e., we remap HW irq 0, if there is one,
+> to some other random number but have a 1:1 mapping for everything else).
+
+Exact.
+
+> That could make sense as an approach.
+
+You might notice that a true IRQ #0 passed to generic drivers is not 
+really frequent.
+
+
+Nicolas
