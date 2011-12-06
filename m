@@ -1,97 +1,54 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 2/3] arm/dts: OMAP: Remove bootargs node from board files
-Date: Tue, 06 Dec 2011 12:06:48 -0600
-Message-ID: <4EDE59B8.1070808@gmail.com>
-References: <y> <1323190149-6492-3-git-send-email-b-cousson@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: PWM and backlight devices
+Date: Tue, 06 Dec 2011 12:20:47 -0600
+Message-ID: <4EDE5CFF.1060709@gmail.com>
+References: <20111206150749.GA13761@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1323190149-6492-3-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111206150749.GA13761-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Benoit,
-
-On 12/06/2011 10:49 AM, Benoit Cousson wrote:
-> Since 3.2, the CONFIG_ARM_ATAG_DTB_COMPAT config allows
-> an old bootloader to still use ATAG to provide cmdline.
+On 12/06/2011 09:07 AM, Thierry Reding wrote:
+> Hi,
 > 
-> Remove chosen/bootargs from the DTS board files.
+> I'm working on adding support for a device which is booted from a device tree
+> only. Currently this gets me to a login prompt on a serial console and the
+> device is basically functional. However, the device also has a display with a
+> backlight that is controlled via a PWM (supplied by the SoC). If this was a
+> regular board it would be simple to implement this via the pwm-backlight
+> driver.
 > 
-> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
+> Unfortunately, the pwm-backlight driver doesn't have device tree support yet
+> and I'm not sure how to best implement it. As far as I can see, I would first
+> need to have some way of representing a PWM device in the DT that I could
+> reference in the pwm-backlight device node and I would need to add actual DT
+> support to pwm-backlight. Implementing support for the data passed in the
+> platform data should be rather straightforward, but I don't see how the
+> callback functions could be represented in the DT.
+> 
+> For some setups it would probably be enough to just specify the used PWM, but
+> other boards fiddle with some GPIOs in the callbacks and I guess that could
+> be represented by adding a "gpios" property with a list of pins that need to
+> be toggled for example when the backlight power is enabled/disabled.
+> 
+> Has anyone done something similar yet? Am I even on the right track here?
+> 
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+I haven't seen anything. Perhaps something similar to how the gpio-keys
+binding is done would work here. This could have a phandle to the pwm
+device similar to gpios.
 
 Rob
-
-> ---
->  arch/arm/boot/dts/omap3-beagle.dts |    9 ---------
->  arch/arm/boot/dts/omap4-panda.dts  |    9 ---------
->  arch/arm/boot/dts/omap4-sdp.dts    |    9 ---------
->  3 files changed, 0 insertions(+), 27 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-> index 9486be6..9f72cd4 100644
-> --- a/arch/arm/boot/dts/omap3-beagle.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle.dts
-> @@ -13,15 +13,6 @@
->  	model = "TI OMAP3 BeagleBoard";
->  	compatible = "ti,omap3-beagle", "ti,omap3";
->  
-> -	/*
-> -	 * Since the initial device tree board file does not create any
-> -	 * devices (MMC, network...), the only way to boot is to provide a
-> -	 * ramdisk.
-> -	 */
-> -	chosen {
-> -		bootargs = "root=/dev/ram0 rw console=ttyO2,115200n8 initrd=0x81600000,20M ramdisk_size=20480 no_console_suspend debug earlyprintk";
-> -	};
-> -
->  	memory {
->  		device_type = "memory";
->  		reg = <0x80000000 0x20000000>; /* 512 MB */
-> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-> index c702657..9755ad5 100644
-> --- a/arch/arm/boot/dts/omap4-panda.dts
-> +++ b/arch/arm/boot/dts/omap4-panda.dts
-> @@ -13,15 +13,6 @@
->  	model = "TI OMAP4 PandaBoard";
->  	compatible = "ti,omap4-panda", "ti,omap4430", "ti,omap4";
->  
-> -	/*
-> -	 * Since the initial device tree board file does not create any
-> -	 * devices (MMC, network...), the only way to boot is to provide a
-> -	 * ramdisk.
-> -	 */
-> -	chosen {
-> -		bootargs = "root=/dev/ram0 rw console=ttyO2,115200n8 initrd=0x81600000,20M ramdisk_size=20480 no_console_suspend debug";
-> -	};
-> -
->  	memory {
->  		device_type = "memory";
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-> index 066e28c..63c6b2b 100644
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -13,15 +13,6 @@
->  	model = "TI OMAP4 SDP board";
->  	compatible = "ti,omap4-sdp", "ti,omap4430", "ti,omap4";
->  
-> -	/*
-> -	 * Since the initial device tree board file does not create any
-> -	 * devices (MMC, network...), the only way to boot is to provide a
-> -	 * ramdisk.
-> -	 */
-> -	chosen {
-> -		bootargs = "root=/dev/ram0 rw console=ttyO2,115200n8 initrd=0x81600000,20M ramdisk_size=20480 no_console_suspend debug";
-> -	};
-> -
->  	memory {
->  		device_type = "memory";
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
