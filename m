@@ -1,66 +1,25 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: [PATCH 3/3] ARM: OMAP2+: board-generic: Replace #if defined by #ifdef for consistency
-Date: Tue, 6 Dec 2011 17:49:09 +0100
-Message-ID: <1323190149-6492-4-git-send-email-b-cousson@ti.com>
-References: <y>
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH 1/5] drivers: power: Rename bq20z75 to sbs-battery
+Date: Tue, 6 Dec 2011 17:41:00 +0000
+Message-ID: <20111206174100.GA15449@srcf.ucam.org>
+References: <1323129487-24859-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <y>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1323129487-24859-1-git-send-email-rklein@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rhyland Klein <rklein@nvidia.com>
+Cc: Anton Vorontsov <cbouatmailru@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-The file contains a mix of #ifdef and #if defined().
-Replace the #if... by #ifdef.
+On Mon, Dec 05, 2011 at 03:58:03PM -0800, Rhyland Klein wrote:
 
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
----
- arch/arm/mach-omap2/board-generic.c |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+> +config BATTERY_SBS
+> +        tristate "SBS Compliant gas gauge"
 
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-index fb55fa3..09f44e0 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -92,7 +92,7 @@ static void __init omap3_init(void)
- }
- #endif
- 
--#if defined(CONFIG_SOC_OMAP2420)
-+#ifdef CONFIG_SOC_OMAP2420
- static const char *omap242x_boards_compat[] __initdata = {
- 	"ti,omap2420",
- 	NULL,
-@@ -110,7 +110,7 @@ DT_MACHINE_START(OMAP242X_DT, "Generic OMAP2420 (Flattened Device Tree)")
- MACHINE_END
- #endif
- 
--#if defined(CONFIG_SOC_OMAP2430)
-+#ifdef CONFIG_SOC_OMAP2430
- static const char *omap243x_boards_compat[] __initdata = {
- 	"ti,omap2430",
- 	NULL,
-@@ -128,7 +128,7 @@ DT_MACHINE_START(OMAP243X_DT, "Generic OMAP2430 (Flattened Device Tree)")
- MACHINE_END
- #endif
- 
--#if defined(CONFIG_ARCH_OMAP3)
-+#ifdef CONFIG_ARCH_OMAP3
- static const char *omap3_boards_compat[] __initdata = {
- 	"ti,omap3",
- 	NULL,
-@@ -146,7 +146,7 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
- MACHINE_END
- #endif
- 
--#if defined(CONFIG_ARCH_OMAP4)
-+#ifdef CONFIG_ARCH_OMAP4
- static const char *omap4_boards_compat[] __initdata = {
- 	"ti,omap4",
- 	NULL,
+This could potentially be confusing with the ACPI SBS code - I guess the 
+long term ideal would be to merge them?
+
 -- 
-1.7.0.4
-
+Matthew Garrett | mjg59@srcf.ucam.org
