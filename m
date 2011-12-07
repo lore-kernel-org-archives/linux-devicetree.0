@@ -1,44 +1,65 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [PATCH 1/3 v4] usb: tegra20-ehci: Add devicetree support.
-Date: Wed, 7 Dec 2011 09:08:26 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1750B77736@HQMAIL01.nvidia.com>
-References: <1311283067-18952-1-git-send-email-achew@nvidia.com>
- <20111207034200.GG32515@game.jcrosoft.org>
+From: Alan Cox <alan-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [PATCH] RFC, watchdog: add generic wdt driver API
+Date: Wed, 7 Dec 2011 17:23:11 +0000
+Message-ID: <20111207172311.37b3358a@lxorguk.ukuu.org.uk>
+References: <1322992423-21683-1-git-send-email-hs@denx.de>
+ <20111204125928.GB5788@pengutronix.de>
+ <20111204170810.8370625EA22@gemini.denx.de>
+ <20111205122649.6fc6aed2@lxorguk.ukuu.org.uk>
+ <4EDF099E.80207@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20111207034200.GG32515@game.jcrosoft.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Andrew Chew <AChew@nvidia.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "olof@lixom.net" <olof@lixom.net>, Dan Willemsen <dwillemsen@nvidia.com>, Rhyland Klein <rklein@nvidia.com>, Venkat Moganty <vmoganty@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4EDF099E.80207-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: hs-ynQEQJNshbs@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jean-Christophe PLAGNIOL-VILLARD wrote at Tuesday, December 06, 2011 8:42 PM:
-> On 14:17 Thu 21 Jul     , achew@nvidia.com wrote:
-> > From: Andrew Chew <achew@nvidia.com>
-> >
-> > Add code to try to get platform data information (register base, irq,
-> > modes, various tuning parameters) from device tree, if not present in board
-> > files.
-...
-> > +static u64 tegra_ehci_dmamask = DMA_BIT_MASK(TEGRA_USB_DMA_ALIGN);
-> I really does not like this
-> as the dmamask is supposed to be device specific
-> 
-> before we put it in the soc codewhich alow to have it generic
-> 
-> this need to be manage a DT level
-> 	dmamask = <32>
-> 
-> or
-> 	dmamask = <0xffffffff>
+>   A chain can request to kill the registering process if the interval
+>   elapses.  In this case a restarted process can register with the
+>   driver giving the same identifier and reset the chain.  This is the
+>   main reason why there is no association between chains and processes
+>   or open device files.
 
-Jean-Christophe,
+How do genuinely unused chains get automatically cleaned up
 
-The patch you're replying to is very old; Olof has posted (and applied)
-some basic USB bindings much more recently than the above.
+>   Possible chain actions:
+>   - ACTION_SIGNAL: sends a configurable signal to the process
+>   - ACTION_KILL: sends the SIGKILL signal to the process
 
--- 
-nvpublic
+These two are the same (detail)
+
+> starting point to integrate it? As this "chain API" would controlled
+> through ioctl() calls maybe drivers/watchdog/watchdog_dev.c would be
+> a good place... or a drivers/watchdog/watchdog_chain.c which gets the
+> ioctl calls, watchdog_dev.c couldn't parse ...
+
+It doesn't actually seem to have any connection at all with the kernel
+watchdog drivers. I don't mean that as a criticism but what you are
+describing seems to be some kind of software timer groups.
+
+If you wanted to link it to a real watchdog presumably you'd just put the
+watchdog pinging user space process in a group and set it to get killed
+if the group triggered.
+
+I'm not sure I understand why it can't be done cleanly in userspace
+either.
+
+If you have a daemon accepting unix domain connections then it can get
+the pid of the other end and can kill it, or monitor incoming packets and
+requests from it. If that process is also the one pinging the hardware
+watchdog it can provide reboot protection against its own crashing. It
+can also do much more flexible and interesting policy things like only
+pinging the watchdog each time all the clients check in.
+
+Alan
