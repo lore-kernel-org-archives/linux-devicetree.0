@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 07/16] tegra: fdt: Add Tegra2x device tree file from kernel
-Date: Tue,  6 Dec 2011 17:24:06 -0800
-Message-ID: <1323221055-20113-8-git-send-email-sjg@chromium.org>
+Subject: [PATCH v3 05/16] arm: fdt: Ensure that an embedded fdt is word-aligned
+Date: Tue,  6 Dec 2011 17:24:04 -0800
+Message-ID: <1323221055-20113-6-git-send-email-sjg@chromium.org>
 References: <1323221055-20113-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,206 +21,48 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This was taken from commit b48c54e2 at:
-git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
+By putting the fdt blob into a distinctive area we can ensure that it appears
+at the start of the data section and is word-aligned.
 
-config.mk is updated to provide this file to boards through the
-built-in mechanism:
-
-/include/ ARCH_CPU_DTS
+Note: It does not seem to be possible to get objcopy to honour its
+--section-alignment flag, which would otherwise provide an easier fix
+for this problem.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 
- arch/arm/cpu/armv7/tegra2/config.mk |    2 +
- arch/arm/dts/tegra20.dtsi           |  169 +++++++++++++++++++++++++++++++++++
- 2 files changed, 171 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/dts/tegra20.dtsi
+ arch/arm/cpu/armv7/u-boot.lds |    5 +++++
+ dts/Makefile                  |    2 +-
+ 2 files changed, 6 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/cpu/armv7/tegra2/config.mk b/arch/arm/cpu/armv7/tegra2/config.mk
-index 2303dba..fe9ef5b 100644
---- a/arch/arm/cpu/armv7/tegra2/config.mk
-+++ b/arch/arm/cpu/armv7/tegra2/config.mk
-@@ -31,3 +31,5 @@ CFLAGS_arch/arm/lib/board.o += -march=armv4t
- endif
+diff --git a/arch/arm/cpu/armv7/u-boot.lds b/arch/arm/cpu/armv7/u-boot.lds
+index 40ecf78..793e51b 100644
+--- a/arch/arm/cpu/armv7/u-boot.lds
++++ b/arch/arm/cpu/armv7/u-boot.lds
+@@ -43,6 +43,11 @@ SECTIONS
  
- USE_PRIVATE_LIBGCC = yes
-+
-+CONFIG_ARCH_DEVICE_TREE := tegra20
-diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-new file mode 100644
-index 0000000..6146d24
---- /dev/null
-+++ b/arch/arm/dts/tegra20.dtsi
-@@ -0,0 +1,169 @@
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	compatible = "nvidia,tegra20";
-+	interrupt-parent = <&intc>;
-+
-+	intc: interrupt-controller@50041000 {
-+		compatible = "nvidia,tegra20-gic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		reg = < 0x50041000 0x1000 >,
-+		      < 0x50040100 0x0100 >;
-+	};
-+
-+	i2c@7000c000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000C000 0x100>;
-+		interrupts = < 70 >;
-+	};
-+
-+	i2c@7000c400 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000C400 0x100>;
-+		interrupts = < 116 >;
-+	};
-+
-+	i2c@7000c500 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000C500 0x100>;
-+		interrupts = < 124 >;
-+	};
-+
-+	i2c@7000d000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000D000 0x200>;
-+		interrupts = < 85 >;
-+	};
-+
-+	i2s@70002800 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2s";
-+		reg = <0x70002800 0x200>;
-+		interrupts = < 45 >;
-+		dma-channel = < 2 >;
-+	};
-+
-+	i2s@70002a00 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-i2s";
-+		reg = <0x70002a00 0x200>;
-+		interrupts = < 35 >;
-+		dma-channel = < 1 >;
-+	};
-+
-+	das@70000c00 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-das";
-+		reg = <0x70000c00 0x80>;
-+	};
-+
-+	gpio: gpio@6000d000 {
-+		compatible = "nvidia,tegra20-gpio";
-+		reg = < 0x6000d000 0x1000 >;
-+		interrupts = < 64 65 66 67 87 119 121 >;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+	};
-+
-+	pinmux: pinmux@70000000 {
-+		compatible = "nvidia,tegra20-pinmux";
-+		reg = < 0x70000014 0x10    /* Tri-state registers */
-+			0x70000080 0x20    /* Mux registers */
-+			0x700000a0 0x14    /* Pull-up/down registers */
-+			0x70000868 0xa8 >; /* Pad control registers */
-+	};
-+
-+	serial@70006000 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006000 0x40>;
-+		reg-shift = <2>;
-+		interrupts = < 68 >;
-+	};
-+
-+	serial@70006040 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006040 0x40>;
-+		reg-shift = <2>;
-+		interrupts = < 69 >;
-+	};
-+
-+	serial@70006200 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006200 0x100>;
-+		reg-shift = <2>;
-+		interrupts = < 78 >;
-+	};
-+
-+	serial@70006300 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006300 0x100>;
-+		reg-shift = <2>;
-+		interrupts = < 122 >;
-+	};
-+
-+	serial@70006400 {
-+		compatible = "nvidia,tegra20-uart";
-+		reg = <0x70006400 0x100>;
-+		reg-shift = <2>;
-+		interrupts = < 123 >;
-+	};
-+
-+	sdhci@c8000000 {
-+		compatible = "nvidia,tegra20-sdhci";
-+		reg = <0xc8000000 0x200>;
-+		interrupts = < 46 >;
-+	};
-+
-+	sdhci@c8000200 {
-+		compatible = "nvidia,tegra20-sdhci";
-+		reg = <0xc8000200 0x200>;
-+		interrupts = < 47 >;
-+	};
-+
-+	sdhci@c8000400 {
-+		compatible = "nvidia,tegra20-sdhci";
-+		reg = <0xc8000400 0x200>;
-+		interrupts = < 51 >;
-+	};
-+
-+	sdhci@c8000600 {
-+		compatible = "nvidia,tegra20-sdhci";
-+		reg = <0xc8000600 0x200>;
-+		interrupts = < 63 >;
-+	};
-+
-+	usb@c5000000 {
-+		compatible = "nvidia,tegra20-ehci", "usb-ehci";
-+		reg = <0xc5000000 0x4000>;
-+		interrupts = < 52 >;
-+		phy_type = "utmi";
-+	};
-+
-+	usb@c5004000 {
-+		compatible = "nvidia,tegra20-ehci", "usb-ehci";
-+		reg = <0xc5004000 0x4000>;
-+		interrupts = < 53 >;
-+		phy_type = "ulpi";
-+	};
-+
-+	usb@c5008000 {
-+		compatible = "nvidia,tegra20-ehci", "usb-ehci";
-+		reg = <0xc5008000 0x4000>;
-+		interrupts = < 129 >;
-+		phy_type = "utmi";
-+	};
-+
-+};
-+
+ 	. = ALIGN(4);
+ 	.data : {
++		/*
++		 * Sadly objcopy seems to ignore --section-alignment.
++		 * Put any embedded device tree first so it is aligned.
++		 */
++		*(.dts.data)
+ 		*(.data)
+ 	}
+ 
+diff --git a/dts/Makefile b/dts/Makefile
+index 5792afd..83547d4 100644
+--- a/dts/Makefile
++++ b/dts/Makefile
+@@ -79,7 +79,7 @@ $(obj)dt.o: $(DT_BIN)
+ 	\
+ 	cd $(dir ${DT_BIN}) && \
+ 	$(OBJCOPY) -I binary -O $${oformat} -B $${oarch} \
+-		$(notdir ${DT_BIN}) $@
++		--prefix-sections=.dts $(notdir ${DT_BIN}) $@
+ 	rm $(DT_BIN)
+ 
+ OBJS-$(CONFIG_OF_EMBED)	:= dt.o
 -- 
 1.7.3.1
