@@ -1,54 +1,44 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH] microblaze/irq: Change NO_IRQ to 0
-Date: Wed, 07 Dec 2011 10:39:46 -0600
-Message-ID: <4EDF96D2.9070808@gmail.com>
-References: <4EDEE2B2.7080606@gmail.com> <1323268911-6104-1-git-send-email-robherring2@gmail.com> <CA+55aFzz2SMvKJcRzOU0+Rd1MHMtygTmT9rDcyy7qGjuVFJKHg@mail.gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [PATCH 1/3 v4] usb: tegra20-ehci: Add devicetree support.
+Date: Wed, 7 Dec 2011 09:08:26 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1750B77736@HQMAIL01.nvidia.com>
+References: <1311283067-18952-1-git-send-email-achew@nvidia.com>
+ <20111207034200.GG32515@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+55aFzz2SMvKJcRzOU0+Rd1MHMtygTmT9rDcyy7qGjuVFJKHg@mail.gmail.com>
+In-Reply-To: <20111207034200.GG32515@game.jcrosoft.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Michal Simek <monstr@monstr.eu>, John Linn <John.Linn@xilinx.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Randy Dunlap <rdunlap@xenotime.net>, Andrew Morton <akpm@linux-foundation.org>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Anton Vorontsov <anton.vorontsov@linaro.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Andrew Chew <AChew@nvidia.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "olof@lixom.net" <olof@lixom.net>, Dan Willemsen <dwillemsen@nvidia.com>, Rhyland Klein <rklein@nvidia.com>, Venkat Moganty <vmoganty@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
-
-On 12/07/2011 10:05 AM, Linus Torvalds wrote:
-> On Wed, Dec 7, 2011 at 6:41 AM, Rob Herring <robherring2@gmail.com> wrote:
->>
->> This patch changes the Microblaze NO_IRQ setting from -1 to 0 to bring
->> it in line with most of the rest of the kernel.  It also prepares for
->> Microblaze eventually supporting multiple interrupt controllers by
->> breaking the assumption that hwirq# == Linux IRQ#.  The Linux IRQ
->> number is just a cookie with no guarantee of a direct relationship
->> with the hardware irq arrangement.
+Jean-Christophe PLAGNIOL-VILLARD wrote at Tuesday, December 06, 2011 8:42 PM:
+> On 14:17 Thu 21 Jul     , achew@nvidia.com wrote:
+> > From: Andrew Chew <achew@nvidia.com>
+> >
+> > Add code to try to get platform data information (register base, irq,
+> > modes, various tuning parameters) from device tree, if not present in board
+> > files.
+...
+> > +static u64 tegra_ehci_dmamask = DMA_BIT_MASK(TEGRA_USB_DMA_ALIGN);
+> I really does not like this
+> as the dmamask is supposed to be device specific
 > 
-> This looks really nice and would probably be a great example for other
-> architectures with the same issue.
+> before we put it in the soc codewhich alow to have it generic
 > 
-> My only (small) nit is that just from a debuggability standpoint I'd
-> actually suggest keeping the "translated" and "hardware" interrupt
-> numbers totally disjoint, which would seem to be trivial - make the
-> offset be 32 instead of 1. Sure, some NR_IRQ arrays would end up being
-> a bit bigger that way, but it would allow for trivially seeing whether
-> anybody reports the raw or translated irq numbers by just looking at
-> the number. That could reduce lots of confusion if somebody ends up
-> having the old non-translated number hardcoded etc.
+> this need to be manage a DT level
+> 	dmamask = <32>
 > 
-> It would also potentially allow for actual debug checks - having code
-> like "WARN_ON_ONCE(irq < 32)" in some arch-specific irq controller
-> registration path etc, which is much harder to do with the overlapping
-> numbers.
+> or
+> 	dmamask = <0xffffffff>
 
-Agreed. I debated making it 16 just to skip the legacy interrupts as
-we're doing on ARM. So there's 2 benefits to skipping to 32.
+Jean-Christophe,
 
-Anyway, I'll leave it to someone that can actually build and test this.
+The patch you're replying to is very old; Olof has posted (and applied)
+some basic USB bindings much more recently than the above.
 
-> But it's nice to see how small the patch *can* be.
-
-If only ARM was this easy...
-
-Rob
+-- 
+nvpublic
