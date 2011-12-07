@@ -1,157 +1,85 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: Boolean properties
-Date: Tue, 6 Dec 2011 16:01:20 -0800
-Message-ID: <CAPnjgZ1q7EH=dbdqDqwe76xSf7-YLNUprqzC-vrbAZo+FYEtiQ@mail.gmail.com>
-References: <CAPnjgZ1BevAt3==ZcQKn_f7xudrcKE+ks0YpHwBFqTXg2uc7Jw@mail.gmail.com>
- <20111206231216.GB7631@truffala.fritz.box>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v2 04/17] fdt: Add basic support for decoding
+ GPIO definitions
+Date: Tue, 6 Dec 2011 17:21:27 -0800
+Message-ID: <CAPnjgZ2dof_-hJadap6Jkc-1wLo5i2XonMpn62k_5jmd_Zvr=g@mail.gmail.com>
+References: <1322878300-5551-1-git-send-email-sjg@chromium.org>
+	<4EDD440C.80002@nvidia.com>
+	<CAPnjgZ03+tfMhkqo4=uarcAf1E8hTfvSF_Y0=V70tuqP866QQQ@mail.gmail.com>
+	<201112052256.00939.vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111206231216.GB7631-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <201112052256.00939.vapier@gentoo.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Mike Frysinger <vapier@gentoo.org>
+Cc: u-boot@lists.denx.de, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <TWarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Hi Mike,
 
-On Tue, Dec 6, 2011 at 3:12 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Mon, Dec 05, 2011 at 04:29:22PM -0800, Simon Glass wrote:
->> Hi,
+On Mon, Dec 5, 2011 at 7:55 PM, Mike Frysinger <vapier@gentoo.org> wrote:
+> On Monday 05 December 2011 17:52:01 Simon Glass wrote:
+>> On Mon, Dec 5, 2011 at 2:22 PM, Stephen Warren wrote:
+>> > On 12/05/2011 02:56 PM, Simon Glass wrote:
+>> > * A system-wide GPIO ID, in which case the numbering is "virtual" (e.g.
+>> > a concatenation of the GPIOs on all the present controllers), and you
+>> > can choose to start the first controller's GPIOs at 0, 1, 1000 etc.,
+>> > thus leaving -1, 0, -n..999 etc. as invalid GPIOs. This is what the
+>> > Linux kernel's gpiolib uses (and some say this global numbering scheme
+>> > was a mistake).
 >>
->> As I understand it, boolean properties in the device tree are defined
->> as follows:
->>
->> - if the property is present, then it is true
->> - if the property is absent, then it is false
+>> Well maybe it was a mistake, but it seems painful for the user to
+>> translate GPIO numbers in this way. U-Boot's GPIO command takes a GPIO
+>> number, which starts at zero.
 >
-> That's the common convention. =A0Although an individual binding could
-> define something else, and I think some already do define a
-> boolean~=3Dint approach instead (e.g. the ibm,dfp cpu property). =A0In
-> some cases that's anticipating future expansion to values other than 0
-> and 1.
+> u-boot should simply follow what linux is doing as it keeps things a hell=
+ of a
+> lot simpler for us: the code is done, people moving between the worlds do=
+n't
+> get surprised and screw something up, and we don't accidentally forget "o=
+h, in
+> u-boot we do XXX instead of YYY" and screw things up ourselves.
 
-OK I didn't know that.
-
->
->> The fdtget and fdtput utilities deal with reading and changing these.
->> At present fdtget returns the value of the property and is not
->> suitable for boolean properties. fdtput allows setting of a property
->> value but not removing it.
->>
->> To deal with boolean properties these utilities need to change. One
->> option is to use something like:
->>
->> $ fdtget -t f /path/to/node property
->> (prints 'true' or 'false')
->> $ fdtput -t f /path/to/node property false/true
->> $ fdtput -t f /path/to/node property 0/1
->> (deletes the property for false and 0; adds it with no value for true an=
-d 1)
->>
->> (Unfortunately the 'b' type is taken for byte at present, so it is
->> unclear to be so far what letter we should use for 'f' in the -t flag)
->
-> Hrm. =A0Rather than treating this as a boolean "type", I think it would
-> be less ambiguous to instead add options to explicitly delete a
-> property (either e.g. fdtput -d or a new fdtdel), and to create an
-> empty valued property.
-
-That was my first thought, but I thought it would be painful since
-callers would need to do something like:
-
-if [ $value -eq 0 ]
-   fdtput -d /path/to/node property
-else
-   fdtput /path/to/node property <some tag that means nothing>
-    (or maybe    fdtput -z /path/to/node property)
-fi
-
-so better IMO to provide boolean support in the tool. But it does
-illustrate that presence/absence is not always ideal.
+Good, I think that is what we are doing. But if Linux changes the GPIO
+numbering we may need to do something.
 
 >
->> But first I would like to suggest that we support boolean properties
->> with a value, i.e. change to:
+>> >> I currently use the max value available to the u8. We can change it at
+>> >> will when we update the u8 type to u16 which is why I made it a
+>> >> constant.
+>> >
+>> > include/asm-generic/gpio.h seems to use an int to represent a GPIO. I'd
+>> > suggest these APIs do the same, rather than use a u8.
 >>
->> - if the property is absent, then it is false
->> - if the property is present, then it is true
->> =A0 =A0 - unless the property has a 0 value, iwc it is false
+>> Do you mean the fdt_gpio_state structure? I have not used u8 for any
+>> function calls and would not.
 >
-> So the first question here is who/what exactly constitutes "we" here -
-> kernel, u-boot, dtc? =A0Using the above logic sounds like a good idea
-> for fdt readers on the "be liberal in what you accept" principle. =A0But
-> it's something I'd like to see Mitch Bradley and/or Segher comment on
-> - they'd have a better idea of whether there's existing practice that
-> might break with that.
+> the asm-generic/gpio.h using "int" as a gpio is wrong. =A0it should be
+> "unsigned". =A0there's a patch somewhere to fix this.
 
-I mean device tree users (kernel, u-boot) rather than dtc (which I
-suspect would be unaffected).
+OK, will wait to see it.
 
 >
->> There are three reasons:
->> 1. it is very confusing for the poor user to set a property value to 0
->> and have it come back as 'true' from a function that checks these
->> sorts of things. This is particularly true since fdt properties do not
->> have types, or even type hints. =A0The function I have in mind is
->> something like this (modified to fit the discussion):
->>
->> /**
->> =A0* Look up a boolean property in a node and return it.
->> =A0*
->> =A0* A boolean properly is true if present in the device tree and false =
-if not
->> =A0* present (regardless of any property data/value).
->> =A0*
->> =A0* @param blob =A0 =A0 =A0 =A0FDT blob
->> =A0* @param node =A0 =A0 =A0 =A0node to examine
->> =A0* @param prop_name =A0 name of property to find
->> =A0* @return 1 if the properly is present; 0 if it isn't present
->> =A0*/
->> int fdtdec_get_bool(const void *blob, int node, const char *prop_name);
->>
->> An alternative might be to print an error (and refuse to return a
->> value) when a boolean property has a value:
->>
->> =A0* @return 1 if the properly is present; 0 if it isn't present, -1 if
->> it has any data (and is therefore illegal as a boolean property)
+>> This adds 3 bytes for every entry. What is the benefit? People get
+>> upset when we waste memory!
 >
-> Kind of a pain for C.
+> some systems have more than 256 GPIOs. =A0it's actually not that hard to =
+hit the
+> limit.
+> -mike
 
-I don't like it either. But we currently have a situation where a zero
-value is considered true, and this can be confusing. I would prefer to
-expand the meaning.
-
->
->> 2. it allows us to adjust the boolean value without requiring a change
->> in the size of the device tree blob (faster, easier)
->>
->> 3. Related to 2 it allows us to put template values in the fdt which
->> can then be *optionally* updated in the build system or in U-Boot to
->> the required value before passing to the kernel.
->>
->> I presume this discussion has happened before - can anyone please
->> point me to the thread?
->>
+Not for me so far, but I don't doubt it. I have changed it to uint in
+the series.
 
 Regards,
 Simon
-
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
