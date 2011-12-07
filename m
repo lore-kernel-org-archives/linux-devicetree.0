@@ -1,129 +1,159 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 5/6] ASoC: Tegra: Move DAS configuration into DAS driver
-Date: Wed,  7 Dec 2011 13:58:29 -0700
-Message-ID: <1323291510-22338-5-git-send-email-swarren@nvidia.com>
-References: <1323291510-22338-1-git-send-email-swarren@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1323291510-22338-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/4] ARM: OMAP2/3: intc: Add DT support for TI interrupt
+ controller
+Date: Wed, 07 Dec 2011 15:20:11 -0600
+Message-ID: <4EDFD88B.8060008@gmail.com>
+References: <1323291049-24964-1-git-send-email-b-cousson@ti.com> <1323291049-24964-3-git-send-email-b-cousson@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1323291049-24964-3-git-send-email-b-cousson@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Move DAS routing setup into the DAS driver itself. This removes the need
-to duplicate this in each machine driver, of which we'll soon have three.
 
-An added advantage is that the machine drivers no longer call the Tegra20-
-specific DAS functions by name, so the machine driver no longer needs to
-be split up into Tegra20 and Tegra30 versions.
+On 12/07/2011 02:50 PM, Benoit Cousson wrote:
+> Add a function to initialize the OMAP2/3 interrupt controller (INTC)
+> using a device tree node.
+> 
+> Replace some printk() with the proper pr_ macro.
+> 
+> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../devicetree/bindings/arm/omap/intc.txt          |   27 +++++++++++++++
+>  arch/arm/mach-omap2/common.h                       |   10 ++++++
+>  arch/arm/mach-omap2/irq.c                          |   35 ++++++++++++++++++--
+>  3 files changed, 69 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/omap/intc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/intc.txt b/Documentation/devicetree/bindings/arm/omap/intc.txt
+> new file mode 100644
+> index 0000000..f2583e6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/omap/intc.txt
+> @@ -0,0 +1,27 @@
+> +* OMAP Interrupt Controller
+> +
+> +OMAP2/3 are using a TI interrupt controller that can support several
+> +configurable number of interrupts.
+> +
+> +Main node required properties:
+> +
+> +- compatible : should be:
+> +	"ti,omap2-intc"
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source. The type shall be a <u32> and the value shall be 1.
+> +
+> +  The cell contains the interrupt number in the range [0-128].
+> +- ti,intc-size: Number of interrupts handled by the interrupt controller.
+> +- reg: physical base address and size of the intc registers map.
+> +
+> +Example:
+> +
+> +	intc: interrupt-controller@1 {
+> +		compatible = "ti,omap2-intc";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		ti,intc-size = <96>;
+> +		reg = <0x48200000 0x1000>;
+> +	};
+> +
+> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+> index 012bac7..bcfccc2 100644
+> --- a/arch/arm/mach-omap2/common.h
+> +++ b/arch/arm/mach-omap2/common.h
+> @@ -156,6 +156,16 @@ void omap3_intc_resume_idle(void);
+>  void omap2_intc_handle_irq(struct pt_regs *regs);
+>  void omap3_intc_handle_irq(struct pt_regs *regs);
+>  
+> +struct device_node;
+> +#ifdef CONFIG_OF
+> +int __init intc_of_init(struct device_node *node, struct device_node *parent);
+> +#else
+> +int __init intc_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  /*
+>   * wfi used in low power code. Directly opcode is used instead
+>   * of instruction to avoid mulit-omap build break
+> diff --git a/arch/arm/mach-omap2/irq.c b/arch/arm/mach-omap2/irq.c
+> index 42b1d65..cafc663 100644
+> --- a/arch/arm/mach-omap2/irq.c
+> +++ b/arch/arm/mach-omap2/irq.c
+> @@ -17,6 +17,9 @@
+>  #include <mach/hardware.h>
+>  #include <asm/exception.h>
+>  #include <asm/mach/irq.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/irqdomain.h>
+>  
+>  
+>  /* selected INTC register offsets */
+> @@ -166,7 +169,7 @@ static void __init omap_init_irq(u32 base, int nr_irqs)
+>  		/* Static mapping, never released */
+>  		bank->base_reg = ioremap(base, SZ_4K);
+>  		if (!bank->base_reg) {
+> -			printk(KERN_ERR "Could not ioremap irq bank%i\n", i);
+> +			pr_err("Could not ioremap irq bank%i\n", i);
+>  			continue;
+>  		}
+>  
+> @@ -179,8 +182,8 @@ static void __init omap_init_irq(u32 base, int nr_irqs)
+>  		nr_banks++;
+>  	}
+>  
+> -	printk(KERN_INFO "Total of %ld interrupts on %d active controller%s\n",
+> -	       nr_of_irqs, nr_banks, nr_banks > 1 ? "s" : "");
+> +	pr_info("Total of %ld interrupts on %d active controller%s\n",
+> +		nr_of_irqs, nr_banks, nr_banks > 1 ? "s" : "");
+>  }
+>  
+>  void __init omap2_init_irq(void)
+> @@ -236,6 +239,32 @@ asmlinkage void __exception_irq_entry omap2_intc_handle_irq(struct pt_regs *regs
+>  	omap_intc_handle_irq(base_addr, regs);
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +int __init intc_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	struct resource res;
+> +	u32 nr_irqs;
+> +
+> +	if (WARN_ON(!node))
+> +		return -ENODEV;
+> +
+> +	if (of_address_to_resource(node, 0, &res)) {
+> +		WARN(1, "unable to get intc registers\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32(node, "ti,intc-size", &nr_irqs)) {
+> +		WARN(1, "unable to get intc-size\n");
+> +		return -EINVAL;
 
-If individual machine drivers need a different routing setup to this
-default, they can still call the DAS functions to set that up.
+There is no default value that makes sense?
 
-Long-term, DAS will be a codec driver, and user-space will be able to
-control its routing, possibly within constraints that the machine driver
-sets up. Configuring the DAS routing from the DAS driver is a very slight
-move in that direction.
+> +	}
+> +
+> +	omap_init_irq(res.start, nr_irqs);
+> +	irq_domain_add_simple(node, 0);
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v2: New patch. Sorry for the churn here. This should avoid the Paz00
-(Toshiba AC100) machine driver from having to add the calls to the DAS
-driver.
+Have you read the NO_IRQ thread...
 
- sound/soc/tegra/tegra_das.c    |   13 +++++++++++++
- sound/soc/tegra/tegra_wm8903.c |   13 -------------
- sound/soc/tegra/trimslice.c    |   23 -----------------------
- 3 files changed, 13 insertions(+), 36 deletions(-)
+Is 0 ever a valid interrupt for a driver? If so, you must not use 0 for
+the base. I would pick 16 to skip over legacy ISA irqs.
 
-diff --git a/sound/soc/tegra/tegra_das.c b/sound/soc/tegra/tegra_das.c
-index 5b82b4e..3b3c1ba 100644
---- a/sound/soc/tegra/tegra_das.c
-+++ b/sound/soc/tegra/tegra_das.c
-@@ -202,6 +202,19 @@ static int __devinit tegra_das_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
-+	ret = tegra_das_connect_dap_to_dac(TEGRA_DAS_DAP_ID_1,
-+					   TEGRA_DAS_DAP_SEL_DAC1);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't set up DAS DAP connection\n");
-+		goto err;
-+	}
-+	ret = tegra_das_connect_dac_to_dap(TEGRA_DAS_DAC_ID_1,
-+					   TEGRA_DAS_DAC_SEL_DAP1);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't set up DAS DAC connection\n");
-+		goto err;
-+	}
-+
- 	tegra_das_debug_add(das);
- 
- 	platform_set_drvdata(pdev, das);
-diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
-index 2f5b107..ba2d23e 100644
---- a/sound/soc/tegra/tegra_wm8903.c
-+++ b/sound/soc/tegra/tegra_wm8903.c
-@@ -249,19 +249,6 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
- 	struct tegra_wm8903_platform_data *pdata = machine->pdata;
- 	int ret;
- 
--	ret = tegra_das_connect_dap_to_dac(TEGRA_DAS_DAP_ID_1,
--					   TEGRA_DAS_DAP_SEL_DAC1);
--	if (ret) {
--		dev_err(card->dev, "Can't set up DAS DAP connection\n");
--		return ret;
--	}
--	ret = tegra_das_connect_dac_to_dap(TEGRA_DAS_DAC_ID_1,
--					   TEGRA_DAS_DAC_SEL_DAP1);
--	if (ret) {
--		dev_err(card->dev, "Can't set up DAS DAC connection\n");
--		return ret;
--	}
--
- 	if (gpio_is_valid(pdata->gpio_spkr_en)) {
- 		ret = gpio_request(pdata->gpio_spkr_en, "spkr_en");
- 		if (ret) {
-diff --git a/sound/soc/tegra/trimslice.c b/sound/soc/tegra/trimslice.c
-index 043eb7c..7d95b76 100644
---- a/sound/soc/tegra/trimslice.c
-+++ b/sound/soc/tegra/trimslice.c
-@@ -115,28 +115,6 @@ static const struct snd_soc_dapm_route trimslice_audio_map[] = {
- 	{"RLINEIN", NULL, "Line In"},
- };
- 
--static int trimslice_asoc_init(struct snd_soc_pcm_runtime *rtd)
--{
--	struct snd_soc_codec *codec = rtd->codec;
--	struct snd_soc_card *card = codec->card;
--	int ret;
--
--	ret = tegra_das_connect_dap_to_dac(TEGRA_DAS_DAP_ID_1,
--					   TEGRA_DAS_DAP_SEL_DAC1);
--	if (ret) {
--		dev_err(card->dev, "Can't set up DAS DAP connection\n");
--		return ret;
--	}
--	ret = tegra_das_connect_dac_to_dap(TEGRA_DAS_DAC_ID_1,
--					   TEGRA_DAS_DAC_SEL_DAP1);
--	if (ret) {
--		dev_err(card->dev, "Can't set up DAS DAC connection\n");
--		return ret;
--	}
--
--	return 0;
--}
--
- static struct snd_soc_dai_link trimslice_tlv320aic23_dai = {
- 	.name = "TLV320AIC23",
- 	.stream_name = "AIC23",
-@@ -144,7 +122,6 @@ static struct snd_soc_dai_link trimslice_tlv320aic23_dai = {
- 	.platform_name = "tegra-pcm-audio",
- 	.cpu_dai_name = "tegra-i2s.0",
- 	.codec_dai_name = "tlv320aic23-hifi",
--	.init = trimslice_asoc_init,
- 	.ops = &trimslice_asoc_ops,
- };
- 
--- 
-1.7.0.4
+irqdomains should always be enabled regardless of CONFIG_OF. So either
+you can leave it as is if OF is always enabled for OMAP, or you should
+move domain setup into omap_init_irq.
+
+Rob
