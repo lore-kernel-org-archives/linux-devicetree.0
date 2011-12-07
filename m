@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 05/16] arm: fdt: Ensure that an embedded fdt is word-aligned
-Date: Tue,  6 Dec 2011 17:24:04 -0800
-Message-ID: <1323221055-20113-6-git-send-email-sjg@chromium.org>
+Subject: [PATCH v3 16/16] tegra: fdt: Enable FDT support for Seaboard
+Date: Tue,  6 Dec 2011 17:24:15 -0800
+Message-ID: <1323221055-20113-17-git-send-email-sjg@chromium.org>
 References: <1323221055-20113-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,48 +21,32 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-By putting the fdt blob into a distinctive area we can ensure that it appears
-at the start of the data section and is word-aligned.
-
-Note: It does not seem to be possible to get objcopy to honour its
---section-alignment flag, which would otherwise provide an easier fix
-for this problem.
+This switches Seaboard over to use FDT for run-time config instead of
+CONFIG options. USB is the only user at present.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
+Changes in v3:
+- Drop Tegra USB alignment patch as we will deal with this another way
 
- arch/arm/cpu/armv7/u-boot.lds |    5 +++++
- dts/Makefile                  |    2 +-
- 2 files changed, 6 insertions(+), 1 deletions(-)
+ include/configs/seaboard.h |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/cpu/armv7/u-boot.lds b/arch/arm/cpu/armv7/u-boot.lds
-index 40ecf78..793e51b 100644
---- a/arch/arm/cpu/armv7/u-boot.lds
-+++ b/arch/arm/cpu/armv7/u-boot.lds
-@@ -43,6 +43,11 @@ SECTIONS
+diff --git a/include/configs/seaboard.h b/include/configs/seaboard.h
+index b6d9f7a..1dc775a 100644
+--- a/include/configs/seaboard.h
++++ b/include/configs/seaboard.h
+@@ -27,6 +27,11 @@
+ #include <asm/sizes.h>
+ #include "tegra2-common.h"
  
- 	. = ALIGN(4);
- 	.data : {
-+		/*
-+		 * Sadly objcopy seems to ignore --section-alignment.
-+		 * Put any embedded device tree first so it is aligned.
-+		 */
-+		*(.dts.data)
- 		*(.data)
- 	}
- 
-diff --git a/dts/Makefile b/dts/Makefile
-index 5792afd..83547d4 100644
---- a/dts/Makefile
-+++ b/dts/Makefile
-@@ -79,7 +79,7 @@ $(obj)dt.o: $(DT_BIN)
- 	\
- 	cd $(dir ${DT_BIN}) && \
- 	$(OBJCOPY) -I binary -O $${oformat} -B $${oarch} \
--		$(notdir ${DT_BIN}) $@
-+		--prefix-sections=.dts $(notdir ${DT_BIN}) $@
- 	rm $(DT_BIN)
- 
- OBJS-$(CONFIG_OF_EMBED)	:= dt.o
++/* Enable fdt support for Seaboard. Flash the image in u-boot-dtb.bin */
++#define CONFIG_DEFAULT_DEVICE_TREE	tegra2-seaboard
++#define CONFIG_OF_CONTROL
++#define CONFIG_OF_SEPARATE
++
+ /* High-level configuration options */
+ #define TEGRA2_SYSMEM		"mem=384M@0M nvmem=128M@384M mem=512M@512M"
+ #define V_PROMPT		"Tegra2 (SeaBoard) # "
 -- 
 1.7.3.1
