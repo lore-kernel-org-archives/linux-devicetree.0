@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 01/16] fdt: Tidy up a few fdtdec problems
-Date: Tue,  6 Dec 2011 17:24:00 -0800
-Message-ID: <1323221055-20113-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH v3 04/16] fdt: Add basic support for decoding GPIO definitions
+Date: Tue,  6 Dec 2011 17:24:03 -0800
+Message-ID: <1323221055-20113-5-git-send-email-sjg@chromium.org>
 References: <1323221055-20113-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,131 +21,198 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This fixes five trivial issues in fdtdec.c:
-1. fdtdec_get_is_enabled() doesn't really need a default value
-2. The fdt must be word-aligned, since otherwise it will fail on ARM
-3. The compat_names[] array is missing its first element. This is needed
-only because the first fdt_compat_id is defined to be invalid.
-4. Added a header prototype for fdtdec_next_compatible()
-5. Change fdtdec_next_alias() to only increment its 'upto' parameter
-on success, to make the display error messages in the caller easier.
+This adds some support into fdtdec for reading GPIO definitions from
+the fdt. We permit up to FDT_GPIO_MAX GPIOs in the system. Each GPIO
+is of the form:
+
+gpio-function-name = <phandle gpio_num flags>;
+
+where:
+
+phandle is a pointer to the GPIO node
+gpio_num is the number of the GPIO (0 to 223)
+flags is a flag, as follows:
+
+   bit    meaning
+   0      0=polarity normal, 1=active low (inverted)
+
+An example is:
+
+gpio-enable-propounder = <&gpio 43 0>;
+
+which means that GPIO 43 is used to enable the propounder (setting the
+GPIO high), or that you can detect that the propounder is enabled by
+checking if the GPIO is high (the fdt does not indicate input/output).
+
+Two main functions are provided:
+
+fdtdec_decode_gpio() reads a GPIO property from an fdt node and decodes it
+into a structure.
+
+fdtdec_setup_gpio() sets up the GPIO by calling gpio_request for you.
+
+Both functions can cope with the property being missing, which is taken to
+mean that that GPIO function is not available or is not needed.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 
- include/fdtdec.h |   23 +++++++++++++++++++----
- lib/fdtdec.c     |   22 ++++++++++++++++------
- 2 files changed, 35 insertions(+), 10 deletions(-)
+ include/fdtdec.h |   45 +++++++++++++++++++++++++++++++
+ lib/fdtdec.c     |   78 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 123 insertions(+), 0 deletions(-)
 
 diff --git a/include/fdtdec.h b/include/fdtdec.h
-index d871cdd..49dbac4 100644
+index c414131..a640db1 100644
 --- a/include/fdtdec.h
 +++ b/include/fdtdec.h
-@@ -82,6 +82,21 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 		enum fdt_compat_id id, int *upto);
- 
- /**
-+ * Find the next compatible node for a peripheral.
-+ *
-+ * Do the first call with node = 0. This function will return a pointer to
-+ * the next compatible node. Next time you call this function, pass the
-+ * value returned, and the next node will be provided.
-+ *
-+ * @param blob		FDT blob to use
-+ * @param node		Start node for search
-+ * @param id		Compatible ID to look for (enum fdt_compat_id)
-+ * @return offset of next compatible node, or -FDT_ERR_NOTFOUND if no more
-+ */
-+int fdtdec_next_compatible(const void *blob, int node,
-+		enum fdt_compat_id id);
-+
-+/**
-  * Look up an address property in a node and return it as an address.
-  * The property must hold either one address with no trailing data or
-  * one address with a length. This is only tested on 32-bit machines.
-@@ -112,14 +127,14 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
-  * Checks whether a node is enabled.
-  * This looks for a 'status' property. If this exists, then returns 1 if
-  * the status is 'ok' and 0 otherwise. If there is no status property,
-- * it returns the default value.
-+ * it returns 1 on the assumption that anything mentioned should be enabled
-+ * by default.
-  *
-  * @param blob	FDT blob
-  * @param node	node to examine
-- * @param default_val	default value to return if no 'status' property exists
-- * @return integer value 0/1, if found, or default_val if not
-+ * @return integer value 0 (not enabled) or 1 (enabled)
-  */
--int fdtdec_get_is_enabled(const void *blob, int node, int default_val);
-+int fdtdec_get_is_enabled(const void *blob, int node);
- 
- /**
-  * Checks whether we have a valid fdt available to control U-Boot, and panic
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 0f87163..55bbfc8 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -33,6 +33,7 @@ DECLARE_GLOBAL_DATA_PTR;
-  */
- #define COMPAT(id, name) name
- static const char * const compat_names[COMPAT_COUNT] = {
-+	COMPAT(UNKNOWN, "<none>"),
+@@ -61,6 +61,23 @@ enum fdt_compat_id {
+ 	COMPAT_COUNT,
  };
  
++/* GPIOs are numbered from 0 */
++enum {
++	FDT_GPIO_NONE = -1U,	/* an invalid GPIO used to end our list */
++
++	FDT_GPIO_ACTIVE_LOW = 1 << 0,	/* input is active low (else high) */
++};
++
++/* This is the state of a GPIO pin as defined by the fdt */
++struct fdt_gpio_state {
++	const char *name;	/* name of the fdt property defining this */
++	uint gpio;		/* GPIO number, or FDT_GPIO_NONE if none */
++	u8 flags;		/* FDT_GPIO_... flags */
++};
++
++/* This tells us whether a fdt_gpio_state record is valid or not */
++#define fdt_gpio_isvalid(x) ((x)->gpio != FDT_GPIO_NONE)
++
  /**
-@@ -84,14 +85,21 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
- 	return default_val;
- }
+  * Find the next numbered alias for a peripheral. This is used to enumerate
+  * all the peripherals of a certain type.
+@@ -181,3 +198,31 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
+  * @return 1 if the properly is present; 0 if it isn't present
+  */
+ int fdtdec_get_bool(const void *blob, int node, const char *prop_name);
++
++/**
++ * Decode a single GPIOs from an FDT.
++ *
++ * If the property is not found, then the GPIO structure will still be
++ * initialised, with gpio set to FDT_GPIO_NONE. This makes it easy to
++ * provide optional GPIOs.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Node to look at
++ * @param prop_name	Node property name
++ * @param gpio		gpio elements to fill from FDT
++ * @return 0 if ok, -FDT_ERR_NOTFOUND if the property is missing.
++ */
++int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
++		struct fdt_gpio_state *gpio);
++
++/**
++ * Set up a GPIO pin according to the provided gpio information. At present this
++ * just requests the GPIO.
++ *
++ * If the gpio is FDT_GPIO_NONE, no action is taken. This makes it easy to
++ * deal with optional GPIOs.
++ *
++ * @param gpio		GPIO info to use for set up
++ * @return 0 if all ok or gpio was FDT_GPIO_NONE; -1 on error
++ */
++int fdtdec_setup_gpio(struct fdt_gpio_state *gpio);
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index ca6a698..69f8b66 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -24,6 +24,9 @@
+ #include <libfdt.h>
+ #include <fdtdec.h>
  
--int fdtdec_get_is_enabled(const void *blob, int node, int default_val)
-+int fdtdec_get_is_enabled(const void *blob, int node)
- {
- 	const char *cell;
- 
-+	/*
-+	 * It should say "okay", so only allow that. Some fdts use "ok" but
-+	 * this is a bug. Please fix your device tree source file. See here
-+	 * for discussion:
-+	 *
-+	 * http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg71598.html
-+	 */
- 	cell = fdt_getprop(blob, node, "status", NULL);
- 	if (cell)
--		return 0 == strcmp(cell, "ok");
--	return default_val;
-+		return 0 == strcmp(cell, "okay");
-+	return 1;
- }
- 
- enum fdt_compat_id fd_dec_lookup(const void *blob, int node)
-@@ -122,14 +130,16 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 	/* snprintf() is not available */
- 	assert(strlen(name) < MAX_STR_LEN);
- 	sprintf(str, "%.*s%d", MAX_STR_LEN, name, *upto);
--	(*upto)++;
- 	node = find_alias_node(blob, str);
- 	if (node < 0)
- 		return node;
- 	err = fdt_node_check_compatible(blob, node, compat_names[id]);
- 	if (err < 0)
- 		return err;
--	return err ? -FDT_ERR_NOTFOUND : node;
-+	if (err)
-+		return -FDT_ERR_NOTFOUND;
-+	(*upto)++;
-+	return node;
- }
++/* we need the generic GPIO interface here */
++#include <asm-generic/gpio.h>
++
+ DECLARE_GLOBAL_DATA_PTR;
  
  /*
-@@ -140,7 +150,7 @@ int fdtdec_next_alias(const void *blob, const char *name,
- int fdtdec_check_fdt(void)
- {
- 	/* We must have an fdt */
--	if (fdt_check_header(gd->fdt_blob))
-+	if (((uintptr_t)gd->fdt_blob & 3) || fdt_check_header(gd->fdt_blob))
- 		panic("No valid fdt found - please append one to U-Boot\n"
- 			"binary or define CONFIG_OF_EMBED\n");
- 	return 0;
+@@ -222,3 +225,78 @@ int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
+ 	cell = fdt_getprop(blob, node, prop_name, &len);
+ 	return cell != NULL;
+ }
++
++/**
++ * Decode a list of GPIOs from an FDT. This creates a list of GPIOs with no
++ * terminating item.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Node to look at
++ * @param prop_name	Node property name
++ * @param gpio		Array of gpio elements to fill from FDT. This will be
++ *			untouched if either 0 or an error is returned
++ * @param max_count	Maximum number of elements allowed
++ * @return number of GPIOs read if ok, -FDT_ERR_BADLAYOUT if max_count would
++ * be exceeded, or -FDT_ERR_NOTFOUND if the property is missing.
++ */
++static int fdtdec_decode_gpios(const void *blob, int node,
++		const char *prop_name, struct fdt_gpio_state *gpio,
++		int max_count)
++{
++	const struct fdt_property *prop;
++	const u32 *cell;
++	const char *name;
++	int len, i;
++
++	debug("%s: %s\n", __func__, prop_name);
++	assert(max_count > 0);
++	prop = fdt_get_property(blob, node, prop_name, &len);
++	if (!prop) {
++		debug("FDT: %s: property '%s' missing\n", __func__, prop_name);
++		return -FDT_ERR_NOTFOUND;
++	}
++
++	/* We will use the name to tag the GPIO */
++	name = fdt_string(blob, prop->nameoff);
++	cell = (u32 *)prop->data;
++	len /= sizeof(u32) * 3;		/* 3 cells per GPIO record */
++	if (len > max_count) {
++		debug("FDT: %s: too many GPIOs / cells for "
++			"property '%s'\n", __func__, prop_name);
++		return -FDT_ERR_BADLAYOUT;
++	}
++
++	/* Read out the GPIO data from the cells */
++	for (i = 0; i < len; i++, cell += 3) {
++		gpio[i].gpio = fdt32_to_cpu(cell[1]);
++		gpio[i].flags = fdt32_to_cpu(cell[2]);
++		gpio[i].name = name;
++	}
++
++	return len;
++}
++
++int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
++		struct fdt_gpio_state *gpio)
++{
++	int err;
++
++	debug("%s: %s\n", __func__, prop_name);
++	gpio->gpio = FDT_GPIO_NONE;
++	err = fdtdec_decode_gpios(blob, node, prop_name, gpio, 1);
++	return err == 1 ? 0 : err;
++}
++
++int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
++{
++	/*
++	 * Return success if there is no GPIO defined. This is used for
++	 * optional GPIOs)
++	 */
++	if (!fdt_gpio_isvalid(gpio))
++		return 0;
++
++	if (gpio_request(gpio->gpio, gpio->name))
++		return -1;
++	return 0;
++}
 -- 
 1.7.3.1
