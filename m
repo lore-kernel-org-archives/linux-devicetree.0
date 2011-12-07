@@ -1,8 +1,8 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 08/16] tegra: fdt: Add device tree file for Tegra2 Seaboard
- from kernel
-Date: Tue,  6 Dec 2011 17:24:07 -0800
-Message-ID: <1323221055-20113-9-git-send-email-sjg@chromium.org>
+Subject: [PATCH v3 09/16] tegra: usb: fdt: Add additional device tree
+ definitions for USB ports
+Date: Tue,  6 Dec 2011 17:24:08 -0800
+Message-ID: <1323221055-20113-10-git-send-email-sjg@chromium.org>
 References: <1323221055-20113-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,60 +19,55 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Remy Bohmer <linux-SYUVB/VFmdasTnJN9+BGXg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This was taken from commit b48c54e2 at:
-git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
+This adds peripheral IDs to the USB part of the device tree for U-Boot.
+
+The peripheral IDs provide easy access to clock registers. We will likely
+remove this in favor of a full clock tree when it is available in the
+kernel (but probably still retain the peripheral ID, just move it into
+a clock node).
+
+The USB timing information may vary between boards sometimes, but for
+now we hard-code it in C. This is because all current T2x boards use
+the same values, we will deal with T3x later and we first need to agree
+on the format for this timing information in the fdt and may in fact
+decide that it has no place there.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 
- board/nvidia/dts/tegra2-seaboard.dts |   36 ++++++++++++++++++++++++++++++++++
- 1 files changed, 36 insertions(+), 0 deletions(-)
- create mode 100644 board/nvidia/dts/tegra2-seaboard.dts
+ arch/arm/dts/tegra20.dtsi |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
-new file mode 100644
-index 0000000..dde5d03
---- /dev/null
-+++ b/board/nvidia/dts/tegra2-seaboard.dts
-@@ -0,0 +1,36 @@
-+/dts-v1/;
-+
-+/memreserve/ 0x1c000000 0x04000000;
-+/include/ ARCH_CPU_DTS
-+
-+/ {
-+	model = "NVIDIA Seaboard";
-+	compatible = "nvidia,seaboard", "nvidia,tegra20";
-+
-+	chosen {
-+		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk1p3 rw rootwait";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = < 0x00000000 0x40000000 >;
-+	};
-+
-+	serial@70006300 {
-+		clock-frequency = < 216000000 >;
-+	};
-+
-+	sdhci@c8000400 {
-+		cd-gpios = <&gpio 69 0>; /* gpio PI5 */
-+		wp-gpios = <&gpio 57 0>; /* gpio PH1 */
-+		power-gpios = <&gpio 70 0>; /* gpio PI6 */
-+	};
-+
-+	sdhci@c8000600 {
-+		support-8bit;
-+	};
-+
-+	usb@c5000000 {
-+		nvidia,vbus-gpio = <&gpio 24 0>; /* PD0 */
-+	};
-+};
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+index 6146d24..27e3127 100644
+--- a/arch/arm/dts/tegra20.dtsi
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -149,6 +149,7 @@
+ 		reg = <0xc5000000 0x4000>;
+ 		interrupts = < 52 >;
+ 		phy_type = "utmi";
++		u-boot,periph-id = <22>;	// PERIPH_ID_USBD
+ 	};
+ 
+ 	usb@c5004000 {
+@@ -156,6 +157,7 @@
+ 		reg = <0xc5004000 0x4000>;
+ 		interrupts = < 53 >;
+ 		phy_type = "ulpi";
++		u-boot,periph-id = <58>;	// PERIPH_ID_USB2
+ 	};
+ 
+ 	usb@c5008000 {
+@@ -163,6 +165,7 @@
+ 		reg = <0xc5008000 0x4000>;
+ 		interrupts = < 129 >;
+ 		phy_type = "utmi";
++		u-boot,periph-id = <59>;	// PERIPH_ID_USB3
+ 	};
+ 
+ };
 -- 
 1.7.3.1
