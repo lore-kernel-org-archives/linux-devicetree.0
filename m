@@ -1,164 +1,216 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH 10/14] tegra: usb: Add support for USB
-	peripheral
-Date: Thu, 8 Dec 2011 13:24:56 -0800
-Message-ID: <CAPnjgZ0AuBNkYKN0JHQyc7DdzwUSZivR+Dv2BkiFsKQBNMeP8A@mail.gmail.com>
-References: <1322106896-23054-2-git-send-email-sjg@chromium.org>
-	<1322106896-23054-11-git-send-email-sjg@chromium.org>
-	<4ED3DF1D.6080009@nvidia.com>
-	<CAPnjgZ1-yxq-O-vsy1gNJ8AOzh7Sz9j5PG9Tx1sKpnAxhApJAQ@mail.gmail.com>
-	<4EDD38AC.30908@nvidia.com>
-	<CAPnjgZ0MTaPa4pq1VXk_XbmuDyWTfy-H33W4deNVn2ALUrcW_A@mail.gmail.com>
-	<4EDD429E.8010507@nvidia.com>
-	<CAPnjgZ2G220G-i3PPtS4XJYY0ornWFOoK3=b93jG-6GE_g2O5w@mail.gmail.com>
-	<4EDD5F1B.5060205@nvidia.com>
-	<CAPnjgZ2h7F228q=pXuf7M9vTASurY3R5an_QV-mrETLf8nzA1A@mail.gmail.com>
-	<4EDE7E1C.2090203@nvidia.com>
-	<CAPnjgZ1G+mv6uv8SrdMm7DoqFjeeyVHYv6nbQxn9qixfbQMGvA@mail.gmail.com>
-	<4EDFFAC5.5070002@nvidia.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 4/6] tegra: Add tegra keyboard support
+Date: Thu, 8 Dec 2011 13:56:00 -0800
+Message-ID: <CAPnjgZ3AP2d7kGqawm=CyySd=y0UfXAsYr4r0TvXaX+64pdUuA@mail.gmail.com>
+References: <1322881071-11148-1-git-send-email-sjg@chromium.org>
+ <1322881071-11148-5-git-send-email-sjg@chromium.org>
+ <4EDFE259.9080201@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4EDFFAC5.5070002@nvidia.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@nvidia.com>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <TWarren@nvidia.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4EDFE259.9080201-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Stephen,
 
-On Wed, Dec 7, 2011 at 3:46 PM, Stephen Warren <swarren@nvidia.com> wrote:
-> On 12/06/2011 02:23 PM, Simon Glass wrote:
->> Hi Stephen,
->>
->> On Tue, Dec 6, 2011 at 12:42 PM, Stephen Warren <swarren@nvidia.com> wrote:
->>> On 12/05/2011 06:14 PM, Simon Glass wrote:
->>>> Hi Stephen,
->>>>
->>>> On Mon, Dec 5, 2011 at 4:17 PM, Stephen Warren <swarren@nvidia.com> wrote:
->>>>> On 12/05/2011 04:35 PM, Simon Glass wrote:
-> ...
->>>>>> Also the only way I can see it being hard-coded is by the kernel
->>>>>> looking at the peripheral address and converting this to an ID. That
->>>>>> seems really ugly to me. Or am I missing something?
->>>>>
->>>>> Well, the Tegra SD/MMC driver works exactly that way (well, mapping an
->>>>> instance ID to both base address and periph ID), so there's certainly
->>>>> precedent for this. And that driver is not unique.
->>>>
->>>> I don't know if I can NAK a comment but I would like to NAK this one.
->>>
->>> I don't know what that means; that you believe my statement is
->>> incorrect, or you don't like the argument I'm basing on it or ...?
->>
->> What happens is that the SD/MMC driver (dating from pre-FDT days) has
->> a hard-coded base address and peripheral ID, based on an instance ID
->> (0, 1, 2).
+On Wed, Dec 7, 2011 at 2:02 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On 12/02/2011 07:57 PM, Simon Glass wrote:
+>> Add support for internal matrix keyboard controller for Nvidia Tegra pla=
+tforms.
+>> This driver uses the fdt decode function to obtain its key codes.
 >
-> That's basically the exact same thing, it's just the exact fields that
-> are the key into and output from the table are different.
+>> +static int fdt_decode_kbc(const void *blob, int node, struct keyb *conf=
+ig)
+>> +{
+>> + =A0 =A0 =A0 config->kbc =3D (struct kbc_tegra *)fdtdec_get_addr(blob, =
+node, "reg");
+>> + =A0 =A0 =A0 config->plain_keycode =3D fdtdec_locate_byte_array(blob, n=
+ode,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "keycode-p=
+lain", KBC_KEY_COUNT);
+>> + =A0 =A0 =A0 config->shift_keycode =3D fdtdec_locate_byte_array(blob, n=
+ode,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "keycode-s=
+hift", KBC_KEY_COUNT);
+>> + =A0 =A0 =A0 config->fn_keycode =3D fdtdec_locate_byte_array(blob, node,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "keycode-f=
+n", KBC_KEY_COUNT);
+>> + =A0 =A0 =A0 config->ctrl_keycode =3D fdtdec_locate_byte_array(blob, no=
+de,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "keycode-c=
+trl", KBC_KEY_COUNT);
+>> + =A0 =A0 =A0 if (!config->plain_keycode) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 debug("%s: cannot find keycode-plain map\n=
+", __func__);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -1;
+>> + =A0 =A0 =A0 }
+>> + =A0 =A0 =A0 return 0;
+>> +}
 >
->> I would expect that we want the FDT to control all of this - it
->> already has the base address, can have the peripheral ID, and the
->> instance ID (ordering) should be set by the FDT not hard-coded IMO.
->> That's the reason for my NAK comment. It just seems completely wrong
->> to duplicate this information in the driver and require the instance
->> ordering to be hard-coded in the driver. It means that boards that
->> want to change this ordering must fiddle around in the driver to make
->> this work.
->>
->> Also this is U-Boot, not the kernel. Commands like 'ext2load' require
->> that you pass the instance ID to indicate which device to use.
+> Simon,
 >
-> SD/MMC is a very different use-case, and not a good analogy to USB.
->
-> With SD, the user always wants to identify a specific device that they
-> know contains their files.
->
-> With USB, the user doesn't care that there are multiple USB host
-> controllers in the SoC; they just want to plug in their device somewhere
-> and have it work. Having to decide which USB controller to enable at a
-> time is pretty hokey, given there's unlikely to be any indication at all
-> on the PCB or case which ports map to which USB controllers.
->
-> What the user might care about is selecting a enumerated particular USB
-> device. They'd only know which one after looking at some "lsusb" command
-> (or whatever it's called in U-Boot) in the general case.
->
-> Hence, I assert that USB host controller number is completely
-> irrelevant, and all should be active at once.
+> Sorry to keep pushing back on everything so much, but I don't believe
+> the structure of this binding is correct.
 
-In our case we do not want to look at the USB port the contains the 3G
-modem, for example, just the external one which can contain a USB
-stick.
+If I didn't want your feedback I would not have copied you on the
+patches :-) It is very useful to know how things are being done in the
+kernel and we need to try to keep U-Boot and the kernel as close as
+possible on the fdt side (although perhaps not in any other way -
+U-Boot is a boot loader not an OS). I'm starting to form the view that
+U-Boot will need a few more tweaks on top of the kernel file in some
+cases, but let's see. Thanks very much for taking the time to provide
+this very useful feedback. If nothing else these discussions might
+tease out issues to address later.
 
 >
-> This of course is all somewhat moot given that I pointed out
-> ehci-tegra.c only supports one of the hosts anyway...
+> From a purely HW perspective, the only thing that exists is a single
+> mapping from (row, col) to keycode. I believe that's all the KBC
+> driver's binding should define.
 >
->> OK, so is your objection that we ignore a peripheral that has no
->> alias?
+> I'll amend that slightly: keyboards commonly implement the Fn key
+> internally in HW, since it causes keys to emit completely different raw
+> codes, so I can see this driver wanting both keycode-plain and keycode-fn.
 >
-> Yes.
+> However, keycode-shift and keycode-ctrl are purely SW concepts. As such,
+> they shouldn't be part of the KBC's own mapping table. Witness how the
+> kernel's Tegra KBC driver only contains the plain and fn tables (albeit
+> merged into a single array for ease of use), and the input core is what
+> interpets e.g. KEY_LEFTSHIFT as a modifier.
 
-OK. We will ignore it anyway since USB2 is marked as disabled, but I
-agree that isn't true in general.
-
->
-> And that enumeration is based on alias nodes not enumerating all nodes
-> that match the compatible flag.
->
->> If I change the code to locate these and add them at the end
->> would that be better?
->
-> Sure.
->
-> I think the best implementation would be to enumerate everything solely
-> based on compatible flags, and allowing "usb start" to accept either an
-> alias name (which would be fixed) or a DT unit address or node name
-> (which would be fixed) or a controller index (which might vary based on
-> enumeration order) to select the controller.
->
-> The next best implementation would be to enumerate solely based on
-> compatible flags, then sort the list based on alias, thus allowing alias
-> to cause a static order.
->
-> However, enumerating based on alias, then enumerating based on
-> compatible flags and adding any missing nodes would be fine.
-
-Well ok. Since this is basically a small *addition* to the code
-(scanning things that don't have an alias), and will have no effect
-with the device tree as included in this series, I would like to do
-this as a follow-on patch after the series. I hope you can live with
-that also?
+Yes, certainly for ctrl I agree that we can simply calculate it.
+Although interestingly the other two keyboard drivers in U-Boot use
+the same approach as here, so maybe there is a fish hook somewhere (I
+have not written this code before).
 
 >
->>> As I mentioned elsewhere, the patches only allow one to actually use usb
->>> controller 0; ehci-tegra.c's ehci_hcd_init() hard-codes port 0 when
->>> calling tegrausb_start_port(). Rather than relying on non-standard
->>> aliases usage to restrict the set of USB devices that get instantiated,
->>> why not just add status = "disabled" to all but one USB host's node in
->>> each board's .dts file; that's the standard way to disable devices.
->>
->> I can do that, but how do I solve the ordering problem?
+> So specifically what I'd like to see changed in this binding is:
 >
-> If you only have one enabled controller in the .dts file, there can't be
-> any ordering issue since there is always only 1 controller.
+> a) We need binding documentation for the Tegra KBC binding, in the same
+> style as found in the kernel's Documentation/devicetree/bindings.
 
-I really was referring to how it should be done. We will enable two
-points. Only one is currently accessible due to us needing either a
-parameter to 'usb start' or the virtual ehci hub code. But USB
-upstreaming is not complete after this series - it is only a step in
-the process. I feel that 14 patches is big enough for a series :-)
+OK will do - should I just put that in the cover letter? There is no
+such file in U-Boot.
+
+>
+> b) The Tegra KBC binding should include only the keycode-plain and
+> keycode-fn properties; nothing to do with shift/ctrl/alt/.... (Well,
+> also any standardized properties such as compatible, reg, interrupts).
+
+OK. I'm not sure how I specify what happens when you press shift...
+
+>
+> c) We need binding documentation for the data that is/could-be common
+> across multiple keyboards: i.e. what does each key code value represent;
+> which is KEY_A, KEY_LEFTSHIFT, etc.? These values should be common
+> across (1) all keyboards (2) some standardized meaning for DT that can
+> be used by U-Boot, the Linux kernel, etc. Perhaps there is already such
+> a standard?
+
+I'm not aware of it.
+
+>
+> d) Shift/Ctrl/Alt/... modifier mapping tables should be specified by a
+> separate binding that can be common to any/all keyboards (probably the
+> same document as (b) above). The input to this table should be the raw
+> codes from keycode-plain/keycode-fn. The output would be the values sent
+> to whatever consumes keyboard input. The naming of these properties
+> should make it obvious that it's something not specific to Tegra's KBC,
+> and SW oriented. Perhaps something semantically similar to loadkeys' or
+> xkbcomp's input, although I haven't looked at those in detail.
+
+While I agree this would be nice, it involves adding a layer of
+software into U-Boot which doesn't currently exist (converting key
+codes + modifies into ASCII codes).
+
+>
+> Linux probably wouldn't use (d), since it already has its own
+> SW-oriented methods of setting up such mapping tables. Although perhaps
+> in the future the default mappings could be set up from these properties.
+
+Well, and X already has its own, etc.
+
+>
+> U-Boot would need (d), since AIUI, there is no handling of such a higher
+> layer of mapping tables there right now.
+>
+> Initially, the code to parse and implement the mappings in (d) could be
+> part of the Tegra KBC driver, if there's nowhere else to put it. I
+> simply want to ensure that the structure of the mapping table bindings
+> doesn't require them to be specific to Tegra KBC, or perpetually
+> implemented by the Tegra KBC driver even when/if U-Boot does acquire a
+> higher layer that deals with this kind of thing. That's because they're
+> SW concepts not part of the HW/HW-binding.
+
+Do you think for the purposes of this series I should modify it to
+remove support for the shift key and make the ctrl key use calculated
+values? We can then address shift later. That at least puts the
+hardware driver up there.
+
+However, even if I do that, the question of what do do about shift
+needs to be resolved. At present we have a 128-byte table and a few
+lines of code which allows use to support any keyboard type. Whether
+we have @ or " above the 2 key, we can support it. If there is a funny
+blue hotkey which means 'boot from USB' when you press it and 'boot
+from SD' when you press it with shift, we can support it with a
+mapping >=3D ascii 128. It provides maximum flexibility.
+
+The problem is when we have lots of keyboards we may want to do the
+translation across all of them to reduce duplicated code in U-Boot.
+
+>From what I can see there will be three keyboard implementations in U-Boot:
+
+- drivers/input/keyboard.c has a translation table
+- drivers/input/i8042.c has a translation table also, and supports
+German and English
+- this driver which has a translation table in the fdt, which seems
+like a step forward
+
+We can certainly have a discussion about shift key translation and how
+it should work. The same discussion probably applies to un-shifted
+keys though, since they may well be printed differently in other
+languages. At least with the scheme in this series you can support any
+keyboard you like and have complete control over how it behaves.
+
+I think asking for a new input layer in U-Boot. But this does not
+exist at present. Don't you think this is taking things a little far?
+I am trying to upstream a hardware driver :-)
+
+My reading of the Tegra keyboard driver in the kernel is that it
+*could* use the keycode-plain and keycode-fn properties as given in
+this series.  They would replace the tegra_kbc_default_keymap[] array.
+However, code would need to be added to create that array for use by
+the upper layers of linux keyboard input, since presumably it will be
+a while before the kernel's drivers/input/keyboard/matrix_keypad.c
+supports an fdt-based mapping. It certainly will not use a shift or
+ctrl mapping, since these are handled by upper layers of Linux input.
+
+So after all this musing I see two options:
+
+1. Modify this series to remove 'shift' support and make 'ctrl' use a
+calculated value (i.e. unlike the other two existing U-Boot drivers).
+We lose access to a number of symbols but I could hard-code a mapping
+in for the keyboard on Seaboard, say.
+
+2. a. Go with what we have, put a 'u-boot,' prefix on the
+keycode-shift property and don't expect the kernel to ever use it.  b.
+Start talking on the U-Boot list about the need for a middle input
+translation layer and a generic header file which defines key codes in
+a standardized way. Then write this layer, get it accepted and
+refactor the 3 keyboard drivers to use it.
+
+Thoughts?
 
 Regards,
 Simon
