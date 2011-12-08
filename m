@@ -1,122 +1,68 @@
-From: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH] arm,davinci: configure davinci aemif chipselects
-	through OF
-Date: Thu, 8 Dec 2011 10:29:14 +0000
-Message-ID: <DF0F476B391FA8409C78302C7BA518B6040CBB@DBDE01.ent.ti.com>
-References: <1322991679-20947-1-git-send-email-hs@denx.de>
-	<DF0F476B391FA8409C78302C7BA518B603EFB2@DBDE01.ent.ti.com>
-	<4EE06B79.7070804@denx.de>
-	<DF0F476B391FA8409C78302C7BA518B6040A03@DBDE01.ent.ti.com>
-	<4EE07E27.8090602@denx.de>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v4 3/6] ARM: vexpress: Add DT support for the motherboard
+Date: Thu, 08 Dec 2011 10:37:59 +0000
+Message-ID: <1323340679.32116.26.camel@hornet.cambridge.arm.com>
+References: <1323186229-22054-1-git-send-email-pawel.moll@arm.com>
+ <1323186229-22054-4-git-send-email-pawel.moll@arm.com>
+ <47277884.EQ6QaTZjNt@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <4EE07E27.8090602-ynQEQJNshbs@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "gregkh-l3A5Bk7waGM@public.gmane.org" <gregkh-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <47277884.EQ6QaTZjNt@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-On Thu, Dec 08, 2011 at 14:36:47, Heiko Schocher wrote:
-
-> >>>> diff --git a/arch/arm/mach-davinci/aemif.c b/arch/arm/mach-davinci/aemif.c
-> >>>> index 1ce70a9..12c559f 100644
-> >>>> --- a/arch/arm/mach-davinci/aemif.c
-> >>>> +++ b/arch/arm/mach-davinci/aemif.c
-> >>>> @@ -13,12 +13,14 @@
-> >>>>  #include <linux/err.h>
-> >>>>  #include <linux/clk.h>
-> >>>>  #include <linux/module.h>
-> >>>> +#include <linux/of.h>
-> >>>> +#include <linux/of_address.h>
-> >>>>  #include <linux/time.h>
-> >>>>  
-> >>>>  #include <mach/aemif.h>
-> >>>>  
-> >>>>  /* Timing value configuration */
-> >>>> -
-> >>>> +#define ASIZE(x)	(x)
-> >>>>  #define TA(x)		((x) << 2)
-> >>>>  #define RHOLD(x)	((x) << 4)
-> >>>>  #define RSTROBE(x)	((x) << 7)
-> >>>> @@ -26,7 +28,10 @@
-> >>>>  #define WHOLD(x)	((x) << 17)
-> >>>>  #define WSTROBE(x)	((x) << 20)
-> >>>>  #define WSETUP(x)	((x) << 26)
-> >>>> +#define EW(x)		((x) << 30)
-> >>>> +#define SS(x)		((x) << 31)
-> >>> You are adding support for additional configuration
-> >>> parameters which should be done in a separate patch.
-> >> Hmm.. they are only used in the OF case ... is this split
-> >> really needed?
-> > 
-> > But they should also be useful in the non-OF case, no?
-> > Why restrict their usage to the OF case?
-> 
-> I thought there is no need, because nobody needed this yet ...
-> Ok, I change this too, so I have to fix this files:
-
-True, no one configured these so far (relied on the defaults).
-
-Also, they probably did not get added into the timing API since
-they are not really timing parameters. Its better to add a separate 
-configuration API for these.
-
-It will be better to move the driver outside of arch/arm/
-before adding new features. I don't know if there is a place
-defined yet for "memory interface" drivers, so, drivers/misc/
-may be the place.
-
-I have added Greg and Arnd for their opinion in this.
-
-Greg, Arnd,
-
-Brief background:
-
-DaVinci AEMIF is an async memory interface peripheral implemented
-in arch/arm/mach-davinci/aemif.c. It helps interface to NAND, NOR
-and other asynchronous memories. Currently it just provides an API
-for timing value configuration. The API is invoked by the MTD NAND
-driver.
-
-Specification here: http://www.ti.com/lit/ug/sprue20c/sprue20c.pdf
-
-We are looking at a place for this outside of architecture code.
-
-> 
-> $ grep -lr davinci_aemif_timing .
-> ./arch/arm/mach-davinci/board-dm644x-evm.c
-> ./arch/arm/mach-davinci/board-dm646x-evm.c
-> ./arch/arm/mach-davinci/board-da850-evm.c
-> ./arch/arm/mach-davinci/include/mach/aemif.h
-> ./arch/arm/mach-davinci/include/mach/nand.h
-> ./arch/arm/mach-davinci/board-da830-evm.c
-> ./drivers/mtd/nand/davinci_nand.c
-> 
-> I do not know the values for this boards for the new parameters.
-> How to proceed? Do you know this values? Or is it Ok, if I add in
-
-If we add a new API, there won't be a need to touch existing
-board code.
-
-> arch/arm/mach-davinci/include/mach/aemif.h
-> a "#define AEMIF_VALUE_NOT USED 0xff" and if the new value is set to
-> this I don't change this setting in the register?
-> 
-> bye,
-> Heiko
-
-Thanks,
-Sekhar
+T24gV2VkLCAyMDExLTEyLTA3IGF0IDIyOjQ5ICswMDAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgo+
+IE9uIFR1ZXNkYXkgMDYgRGVjZW1iZXIgMjAxMSAxNTo0Mzo0NiBQYXdlbCBNb2xsIHdyb3RlOgo+
+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3Qgb2ZfZGV2X2F1eGRhdGEgdjJtX2R0X2F1eGRhdGFfbG9v
+a3VwW10gX19pbml0ZGF0YSA9IHsKPiA+ICsgICAgICAgT0ZfREVWX0FVWERBVEEoImFybSx2ZXhw
+cmVzcy1mbGFzaCIsIFYyTV9OT1IwLCAicGh5c21hcC1mbGFzaCIsCj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICAmdjJtX2ZsYXNoX2RhdGEpLAo+ID4gKyAgICAgICBPRl9ERVZfQVVYREFUQSgi
+YXJtLHByaW1lY2VsbCIsIFYyTV9NTUNJLCAibWI6bW1jaSIsICZ2Mm1fbW1jaV9kYXRhKSwKPiA+
+ICsgICAgICAge30KPiA+ICt9Owo+IAo+IE9uZSBtb3JlIHRoaW5nIEkgbm90aWNlZC4gV2hpbGUg
+SSdtIG5vdCBmYW1pbGlhciB3aXRoIHRoZSBwcm9ncmVzcyBvbgo+IGRldmljZSBkcml2ZXIgY29u
+dmVyc2lvbiwgCgpJJ20gYXdhcmUgb2YgdGhlc2UgdHdvIGxhc3Qgbm9uLURUIGJpdHMgYW5kIGFj
+dHVhbGx5IGFscmVhZHkgc3RhcnRlZAp3b3JraW5nIG9uIHRoZW0sIGJ1dCB0aGlzIHdvbid0IGhh
+cHBlbiB0aGlzIHllYXIgKEknbSBvbiBob2xpZGF5CnN0YXJ0aW5nIG5leHQgRnJpZGF5IHdpdGhv
+dXQgYW55IGFjY2VzcyB0byBJbnRlcm5ldCB3aGF0c29ldmVyIDotKQoKPiBJIHRoaW5rIHlvdSBz
+aG91bGQgYmUgdXNpbmcgdGhlIHBoeXNtYXBfb2YKPiBkcml2ZXIgaW5zdGVhZCBvZiBwaHlzbWFw
+LCB3aGljaCB3aWxsIHJlbW92ZSB0aGUgbmVlZCBmb3IgdGhlCj4gcGxhdGZvcm0gZGF0YS4KClRo
+ZXJlJ3Mgb25lIGJpdCBtaXNzaW5nIGluIHRoZSBwaHlzbWFwX29mLiBUaGUgInNldF92cHAiIGhh
+bmRsZSB3aGljaCBpcwp1c2VkIG9uIFZFOgoKc3RhdGljIHN0cnVjdCBwaHlzbWFwX2ZsYXNoX2Rh
+dGEgdjJtX2ZsYXNoX2RhdGEgPSB7CiAgICAgICAgLndpZHRoICAgICAgICAgID0gNCwKICAgICAg
+ICAuc2V0X3ZwcCAgICAgICAgPSB2Mm1fZmxhc2hfc2V0X3ZwcCwKfTsgICAgICAKCk15IHBsYW4g
+aXMgdG8gZXh0ZW5kIHRoZSBwaHlzbWFwX29mIGRyaXZlciBzbyBpdCBjb3VsZCBvcGVyYXRlIFZQ
+UCB2aWEKZ3BpbyBBUEkgYW5kIG1ha2UgdGhlIHN5c3JlZyBhIGdwaW8gY29udHJvbGxlciwgaGF2
+aW5nIEZsYXNoIFZQUCwgQ0YgJgpNTUMgY2FyZCBkZXRlY3RzIGFuZCBEVkkgb3V0cHV0IGNvbnRy
+b2wgKHRoYXQncyBmb3IgQ0xDRCkgYXMgaW50ZXJuYWwKR1BJTyBsaW5lcy4KCj4gRm9yIG1tY2ks
+IGl0IHNob3VsZCBub3QgYmUgaGFyZCB0byBkbyBjaGFuZ2UgdGhlIGRyaXZlciBzbyBpdAo+IHVu
+ZGVyc3RhbmRzIHRoZSBkZXZpY2UgdHJlZSwgdG9vLiBUaGUgZWFzaWVzdCBpbXBsZW1lbnRhdGlv
+biBmb3IKPiB0aGF0IHdvdWxkIGJlIHRvIGFkZCBzb21lIGNvZGUgaW50byBtbWNpX3Byb2JlIGFu
+ZCBhbGxvY2F0ZQo+IGFuIG1tY2lfcGxhdGZvcm1fZGF0YSBzdHJ1Y3R1cmUgdGhhdCBnZXRzIGZp
+bGxlZCB3aXRoIHRoZSByZXF1aXJlZAo+IGF0dHJpYnV0ZXMuCgpJJ3ZlIHN0YXJ0ZWQgdGhlIGlt
+cGxlbWVudGF0aW9uIGFscmVhZHksIGJ1dCBpdCB0dXJuZWQgb3V0IG11Y2ggdHJpY2tpZXIKdGhh
+dCBJIHdhcyBob3BpbmcuLi4gT25lIHRoaW5nIGlzIHRoZSAic3RhdHVzIiBoYW5kbGUgKGNhcmQg
+ZGV0ZWN0IGxpbmUKInZpcnR1YWwgZ3BpbyIgSSBtZW50aW9uZWQgYWJvdmUpLCB0aGUgc2Vjb25k
+IHByb2JsZW0gaXMgdGhlIGZhY3QgdGhhdAptbWNpIHBsYXRmb3JtIGRhdGEgY2FuIHRha2UgZ2Vu
+ZXJpYyBjYXBzIE1NQ19DQVBfKiBmcm9tCmluY2x1ZGUvbGludXgvbW1jL2hvc3QuaCAobm93IGV2
+ZW4gY2FwczIgYXMgd2VsbCkuLi4gVGhpcyBpc3N1ZSB3YXMKYWxyZWFkeSBicmllZmx5IG1lbnRp
+b25lZCBoZXJlOgpodHRwOi8vYXJ0aWNsZS5nbWFuZS5vcmcvZ21hbmUubGludXgua2VybmVsLnNh
+bXN1bmctc29jLzc2MzkgYW5kIGFzCnRoZXJlIHdhcyBubyBnZW5lcmljIHJlc29sdXRpb24gbXkg
+cGxhbiBpcyB0byByZXVzZSBhcyBtdWNoIHByb3BlcnRpZXMKZnJvbSBvdGhlciBNTUMgaG9zdCBj
+b250cm9sbGVycyBhbmQgZm9yZ2UgdGhlIG1pc3Npbmcgb25lIChhcyBhIHN1cGVyc2V0Cm9mIEFS
+TSdzIGFuZCBTVEUncyBjZWxsIGltcGxlbWVudGF0aW9ucykuIEJ1dCBhcyBJIHNhaWQsIGl0J3Mg
+dW5saWtlbHkKdG8gaGFwcGVuIHRoaXMgeWVhci4uLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
+ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
