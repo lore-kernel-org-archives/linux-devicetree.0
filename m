@@ -1,44 +1,135 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH V3] arm/tegra: convert tegra20 to GIC devicetree binding
-Date: Wed, 7 Dec 2011 21:25:53 -0800
-Message-ID: <20111208052553.GA30037@quad.lixom.net>
-References: <1322616559-31941-1-git-send-email-swarren@nvidia.com>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] arm,
+ davinci: configure davinci aemif chipselects through OF
+Date: Thu, 08 Dec 2011 08:47:05 +0100
+Message-ID: <4EE06B79.7070804@denx.de>
+References: <1322991679-20947-1-git-send-email-hs@denx.de>
+ <DF0F476B391FA8409C78302C7BA518B603EFB2@DBDE01.ent.ti.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1322616559-31941-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <DF0F476B391FA8409C78302C7BA518B603EFB2-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: "Hilman, Kevin" <khilman-l0cyMroinI0@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2011 at 06:29:19PM -0700, Stephen Warren wrote:
-> From: pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hello Nori,
+
+Nori, Sekhar wrote:
+> Hi Heiko,
 > 
-> Convert tegra20 IRQ intialization to the GIC devicetree binding. Modify the
-> interrupt definitions in the dts files according to
-> Documentation/devicetree/bindings/arm/gic.txt
+> On Sun, Dec 04, 2011 at 15:11:19, Heiko Schocher wrote:
 > 
-> v3 (swarren):
-> * Moved of_irq_init() call into board-dt.c to avoid ifdef'ing it.
->   - Even with a dummy replacement if !CONFIG_OF, the reference from
->     tegra_dt_irq_match[] to gic_of_init() would still have to be ifdef'd
->   - It's plausible that tegra_dt_irq_match[] may need to contain more
->     entries in the future, and defining what they are seems more suitable
->     for board-dt.c than irq.c
-> v2 (swarren):
-> * Removed some stale GIC init code from board-dt.c
-> * Undid some accidental 0x -> 0x0 search/replace.
+> Please provide a patch description. Nice to see device tree
+> support being added for DaVinci devices.
+
+fixed.
+
+>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
+>> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/arm/davinci/aemif.txt      |   85 ++++++++++++++++
+>>  arch/arm/mach-davinci/aemif.c                      |  105 +++++++++++++++++++-
+>>  arch/arm/mach-davinci/include/mach/aemif.h         |    1 +
+>>  3 files changed, 190 insertions(+), 1 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/aemif.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/davinci/aemif.txt b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
+>> new file mode 100644
+>> index 0000000..c9ed551
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
+>> @@ -0,0 +1,85 @@
+>> +* Texas Instruments Davinci AEMIF
+>> +
+>> +This file provides information, what the device node for the
+>> +davinci aemifa interface contain.
+>            ^^^^^^
+>            aemif
+
+fixed, thanks.
+
+>> +
+>> +Required properties:
+>> +- compatible: "ti,davinci-emifa";
+
+Shouldn't this also be "ti,davinci-aemif" ?
+
+[...]
+>> diff --git a/arch/arm/mach-davinci/aemif.c b/arch/arm/mach-davinci/aemif.c
+>> index 1ce70a9..12c559f 100644
+>> --- a/arch/arm/mach-davinci/aemif.c
+>> +++ b/arch/arm/mach-davinci/aemif.c
+>> @@ -13,12 +13,14 @@
+>>  #include <linux/err.h>
+>>  #include <linux/clk.h>
+>>  #include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>>  #include <linux/time.h>
+>>  
+>>  #include <mach/aemif.h>
+>>  
+>>  /* Timing value configuration */
+>> -
+>> +#define ASIZE(x)	(x)
+>>  #define TA(x)		((x) << 2)
+>>  #define RHOLD(x)	((x) << 4)
+>>  #define RSTROBE(x)	((x) << 7)
+>> @@ -26,7 +28,10 @@
+>>  #define WHOLD(x)	((x) << 17)
+>>  #define WSTROBE(x)	((x) << 20)
+>>  #define WSETUP(x)	((x) << 26)
+>> +#define EW(x)		((x) << 30)
+>> +#define SS(x)		((x) << 31)
 > 
-> Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> You are adding support for additional configuration
+> parameters which should be done in a separate patch.
 
-Applied with minor fixup since Marc's rework of the irq code isn't in my
-branch; the resulting merge conflict is trivial to fix up.
+Hmm.. they are only used in the OF case ... is this split
+really needed?
 
-I applied this to for-3.3/dt (see separate email about branch changes).
+[...]
+>> +static int davinci_aemif_setup_timing_of_one(struct device_node *np,
+>> +		void __iomem *base)
+>> +{
+[...]
+>> +	val = ASIZE(asize) | TA(ta) | RHOLD(rhold) | RSTROBE(rstrobe) |
+>> +		RSETUP(rsetup) | WHOLD(whold) | WSTROBE(wstrobe) |
+>> +		WSETUP(wsetup) | EW(ew) | SS(ss);
+>> +
+>> +	__raw_writel(val, base + offset);
+>> +
+>> +	return 0;
+>> +}
+> 
+> This shares a large amount of code with davinci_aemif_setup_timing().
+> Can you try writing this as a OF wrapper to the existing function?
 
+Done.
 
--Olof
+Waiting to your response to my 2 questions above, after that sending
+the v2.
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
