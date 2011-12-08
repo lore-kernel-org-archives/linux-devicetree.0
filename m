@@ -1,68 +1,55 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v4 3/6] ARM: vexpress: Add DT support for the motherboard
-Date: Thu, 08 Dec 2011 10:37:59 +0000
-Message-ID: <1323340679.32116.26.camel@hornet.cambridge.arm.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] ARM: vexpress: DT-based support for Cortex-A5 and
+ Cortex-A9 based tiles
+Date: Thu, 8 Dec 2011 11:40:05 +0000
+Message-ID: <20111208114005.GA2015@linaro.org>
 References: <1323186229-22054-1-git-send-email-pawel.moll@arm.com>
- <1323186229-22054-4-git-send-email-pawel.moll@arm.com>
- <47277884.EQ6QaTZjNt@wuerfel>
+ <1323186229-22054-6-git-send-email-pawel.moll@arm.com>
+ <20111207153338.GD2910@linaro.org>
+ <1323284974.32116.12.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <47277884.EQ6QaTZjNt@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1323284974.32116.12.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDExLTEyLTA3IGF0IDIyOjQ5ICswMDAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgo+
-IE9uIFR1ZXNkYXkgMDYgRGVjZW1iZXIgMjAxMSAxNTo0Mzo0NiBQYXdlbCBNb2xsIHdyb3RlOgo+
-ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3Qgb2ZfZGV2X2F1eGRhdGEgdjJtX2R0X2F1eGRhdGFfbG9v
-a3VwW10gX19pbml0ZGF0YSA9IHsKPiA+ICsgICAgICAgT0ZfREVWX0FVWERBVEEoImFybSx2ZXhw
-cmVzcy1mbGFzaCIsIFYyTV9OT1IwLCAicGh5c21hcC1mbGFzaCIsCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAmdjJtX2ZsYXNoX2RhdGEpLAo+ID4gKyAgICAgICBPRl9ERVZfQVVYREFUQSgi
-YXJtLHByaW1lY2VsbCIsIFYyTV9NTUNJLCAibWI6bW1jaSIsICZ2Mm1fbW1jaV9kYXRhKSwKPiA+
-ICsgICAgICAge30KPiA+ICt9Owo+IAo+IE9uZSBtb3JlIHRoaW5nIEkgbm90aWNlZC4gV2hpbGUg
-SSdtIG5vdCBmYW1pbGlhciB3aXRoIHRoZSBwcm9ncmVzcyBvbgo+IGRldmljZSBkcml2ZXIgY29u
-dmVyc2lvbiwgCgpJJ20gYXdhcmUgb2YgdGhlc2UgdHdvIGxhc3Qgbm9uLURUIGJpdHMgYW5kIGFj
-dHVhbGx5IGFscmVhZHkgc3RhcnRlZAp3b3JraW5nIG9uIHRoZW0sIGJ1dCB0aGlzIHdvbid0IGhh
-cHBlbiB0aGlzIHllYXIgKEknbSBvbiBob2xpZGF5CnN0YXJ0aW5nIG5leHQgRnJpZGF5IHdpdGhv
-dXQgYW55IGFjY2VzcyB0byBJbnRlcm5ldCB3aGF0c29ldmVyIDotKQoKPiBJIHRoaW5rIHlvdSBz
-aG91bGQgYmUgdXNpbmcgdGhlIHBoeXNtYXBfb2YKPiBkcml2ZXIgaW5zdGVhZCBvZiBwaHlzbWFw
-LCB3aGljaCB3aWxsIHJlbW92ZSB0aGUgbmVlZCBmb3IgdGhlCj4gcGxhdGZvcm0gZGF0YS4KClRo
-ZXJlJ3Mgb25lIGJpdCBtaXNzaW5nIGluIHRoZSBwaHlzbWFwX29mLiBUaGUgInNldF92cHAiIGhh
-bmRsZSB3aGljaCBpcwp1c2VkIG9uIFZFOgoKc3RhdGljIHN0cnVjdCBwaHlzbWFwX2ZsYXNoX2Rh
-dGEgdjJtX2ZsYXNoX2RhdGEgPSB7CiAgICAgICAgLndpZHRoICAgICAgICAgID0gNCwKICAgICAg
-ICAuc2V0X3ZwcCAgICAgICAgPSB2Mm1fZmxhc2hfc2V0X3ZwcCwKfTsgICAgICAKCk15IHBsYW4g
-aXMgdG8gZXh0ZW5kIHRoZSBwaHlzbWFwX29mIGRyaXZlciBzbyBpdCBjb3VsZCBvcGVyYXRlIFZQ
-UCB2aWEKZ3BpbyBBUEkgYW5kIG1ha2UgdGhlIHN5c3JlZyBhIGdwaW8gY29udHJvbGxlciwgaGF2
-aW5nIEZsYXNoIFZQUCwgQ0YgJgpNTUMgY2FyZCBkZXRlY3RzIGFuZCBEVkkgb3V0cHV0IGNvbnRy
-b2wgKHRoYXQncyBmb3IgQ0xDRCkgYXMgaW50ZXJuYWwKR1BJTyBsaW5lcy4KCj4gRm9yIG1tY2ks
-IGl0IHNob3VsZCBub3QgYmUgaGFyZCB0byBkbyBjaGFuZ2UgdGhlIGRyaXZlciBzbyBpdAo+IHVu
-ZGVyc3RhbmRzIHRoZSBkZXZpY2UgdHJlZSwgdG9vLiBUaGUgZWFzaWVzdCBpbXBsZW1lbnRhdGlv
-biBmb3IKPiB0aGF0IHdvdWxkIGJlIHRvIGFkZCBzb21lIGNvZGUgaW50byBtbWNpX3Byb2JlIGFu
-ZCBhbGxvY2F0ZQo+IGFuIG1tY2lfcGxhdGZvcm1fZGF0YSBzdHJ1Y3R1cmUgdGhhdCBnZXRzIGZp
-bGxlZCB3aXRoIHRoZSByZXF1aXJlZAo+IGF0dHJpYnV0ZXMuCgpJJ3ZlIHN0YXJ0ZWQgdGhlIGlt
-cGxlbWVudGF0aW9uIGFscmVhZHksIGJ1dCBpdCB0dXJuZWQgb3V0IG11Y2ggdHJpY2tpZXIKdGhh
-dCBJIHdhcyBob3BpbmcuLi4gT25lIHRoaW5nIGlzIHRoZSAic3RhdHVzIiBoYW5kbGUgKGNhcmQg
-ZGV0ZWN0IGxpbmUKInZpcnR1YWwgZ3BpbyIgSSBtZW50aW9uZWQgYWJvdmUpLCB0aGUgc2Vjb25k
-IHByb2JsZW0gaXMgdGhlIGZhY3QgdGhhdAptbWNpIHBsYXRmb3JtIGRhdGEgY2FuIHRha2UgZ2Vu
-ZXJpYyBjYXBzIE1NQ19DQVBfKiBmcm9tCmluY2x1ZGUvbGludXgvbW1jL2hvc3QuaCAobm93IGV2
-ZW4gY2FwczIgYXMgd2VsbCkuLi4gVGhpcyBpc3N1ZSB3YXMKYWxyZWFkeSBicmllZmx5IG1lbnRp
-b25lZCBoZXJlOgpodHRwOi8vYXJ0aWNsZS5nbWFuZS5vcmcvZ21hbmUubGludXgua2VybmVsLnNh
-bXN1bmctc29jLzc2MzkgYW5kIGFzCnRoZXJlIHdhcyBubyBnZW5lcmljIHJlc29sdXRpb24gbXkg
-cGxhbiBpcyB0byByZXVzZSBhcyBtdWNoIHByb3BlcnRpZXMKZnJvbSBvdGhlciBNTUMgaG9zdCBj
-b250cm9sbGVycyBhbmQgZm9yZ2UgdGhlIG1pc3Npbmcgb25lIChhcyBhIHN1cGVyc2V0Cm9mIEFS
-TSdzIGFuZCBTVEUncyBjZWxsIGltcGxlbWVudGF0aW9ucykuIEJ1dCBhcyBJIHNhaWQsIGl0J3Mg
-dW5saWtlbHkKdG8gaGFwcGVuIHRoaXMgeWVhci4uLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Dec 07, 2011 at 07:09:34PM +0000, Pawel Moll wrote:
+> On Wed, 2011-12-07 at 15:33 +0000, Dave Martin wrote:
+> > Oh, we should select HAVE_PATA_PLATFORM in here somewhere too.
+> > But that's not critical for this series.
+> 
+> It's already selected in "arch/arm/Kconfig":
+> 
+> config ARCH_VEXPRESS
+>         bool "ARM Ltd. Versatile Express family"
+>         select ARCH_WANT_OPTIONAL_GPIOLIB
+>         select ARM_AMBA
+>         select ARM_TIMER_SP804 
+>         select CLKDEV_LOOKUP
+>         select HAVE_MACH_CLKDEV
+>         select GENERIC_CLOCKEVENTS
+>         select HAVE_CLK
+>         select HAVE_PATA_PLATFORM
+>         select ICST
+>         select PLAT_VERSATILE
+>         select PLAT_VERSATILE_CLCD
+>         help
+>           This enables support for the ARM Ltd Versatile Express boards.
+
+Oh, OK.  I was looking in mach-vexpress/Kconfig instead ...
+
+Cheers
+---Dave
