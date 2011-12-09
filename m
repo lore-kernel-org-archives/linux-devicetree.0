@@ -1,241 +1,221 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: [PATCH v5 8/9] ARM: vexpress: Add Device Tree for V2P-CA9 core tile
-Date: Fri,  9 Dec 2011 19:03:51 +0000
-Message-ID: <1323457432-4800-9-git-send-email-pawel.moll@arm.com>
-References: <1323457432-4800-1-git-send-email-pawel.moll@arm.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 2/6] ASoC: Allow the DAPM routes to be stored in
+ device tree
+Date: Fri, 9 Dec 2011 13:52:00 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17518605B1@HQMAIL01.nvidia.com>
+References: <1323291510-22338-1-git-send-email-swarren@nvidia.com>
+ <1323291510-22338-2-git-send-email-swarren@nvidia.com>
+ <20111208043149.GA31372@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1323457432-4800-1-git-send-email-pawel.moll@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Cc: Pawel Moll <pawel.moll@arm.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20111208043149.GA31372-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Device Tree file for the CoreTile Express A9x4 (V2P-CA9).
+Mark Brown wrote at Wednesday, December 07, 2011 9:32 PM:
+> On Wed, Dec 07, 2011 at 01:58:26PM -0700, Stephen Warren wrote:
+> 
+> > +	audio-routing =
+> > +		"Headphone Jack", "HPOUTR",
+> > +		"Headphone Jack", "HPOUTL",
+> > +		"Int Spk", "ROP",
+> > +		"Int Spk", "RON",
+> > +		"Int Spk", "LOP",
+> > +		"Int Spk", "LON",
+> > +		"Mic Jack", "MICBIAS",
+> > +		"IN1L", "Mic Jack";
+> 
+> Before we do this we first need to come up with a way of specifying the
+> DAPM nodes.  For the CODEC pins I'm fairly comfortable with just
+> documenting the fact that we want to use the pins as labelled on the
+> CODEC datsheet but for other objects on the board we need to come up
+> with something.  The tricky bit here is jacks - we need to be able to
+> express headsets, translate them into the separate input and output
+> widgets that DAPM uses while coping with multiple biases and custom
+> detection methods.
 
-Signed-off-by: Pawel Moll <pawel.moll@arm.com>
----
- arch/arm/boot/dts/vexpress-v2p-ca9.dts |  190 ++++++++++++++++++++++++++++++++
- arch/arm/mach-vexpress/Makefile.boot   |    3 +-
- 2 files changed, 192 insertions(+), 1 deletions(-)
- create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca9.dts
+I'd originally made this property specific to the Tegra+WM8903 machine
+driver, and you'd asked me to make it generic. Is there room to use
+the binding above for the Tegra+WM8903 machine driver only, in order
+to get the driver converted to DT, then define/implement something
+completely generic to replace it, i.e. the stuff below?
 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-new file mode 100644
-index 0000000..84542e7
---- /dev/null
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-@@ -0,0 +1,190 @@
-+/*
-+ * ARM Ltd. Versatile Express
-+ *
-+ * CoreTile Express A9x4
-+ * Cortex-A9 MPCore (V2P-CA9)
-+ *
-+ * HBI-0191B
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "V2P-CA9";
-+	arm,hbi = <0x191>;
-+	compatible = "arm,vexpress,v2p-ca9", "arm,vexpress";
-+	interrupt-parent = <&gic>;
-+
-+	aliases {
-+		serial0 = &v2m_serial0;
-+		serial1 = &v2m_serial1;
-+		serial2 = &v2m_serial2;
-+		serial3 = &v2m_serial3;
-+		i2c0 = &v2m_i2c_dvi;
-+		i2c1 = &v2m_i2c_pcie;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <1>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <2>;
-+			next-level-cache = <&L2>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <3>;
-+			next-level-cache = <&L2>;
-+		};
-+	};
-+
-+	memory@60000000 {
-+		device_type = "memory";
-+		reg = <0x60000000 0x40000000>;
-+	};
-+
-+	clcd@10020000 {
-+		compatible = "arm,pl111", "arm,primecell";
-+		reg = <0x10020000 0x1000>;
-+		interrupts = <0 44 4>;
-+	};
-+
-+	memory-controller@100e0000 {
-+		compatible = "arm,pl341", "arm,primecell";
-+		reg = <0x100e0000 0x1000>;
-+	};
-+
-+	memory-controller@100e1000 {
-+		compatible = "arm,pl354", "arm,primecell";
-+		reg = <0x100e1000 0x1000>;
-+		interrupts = <0 45 4>,
-+			     <0 46 4>;
-+	};
-+
-+	timer@100e4000 {
-+		compatible = "arm,sp804", "arm,primecell";
-+		reg = <0x100e4000 0x1000>;
-+		interrupts = <0 48 4>,
-+			     <0 49 4>;
-+	};
-+
-+	watchdog@100e5000 {
-+		compatible = "arm,sp805", "arm,primecell";
-+		reg = <0x100e5000 0x1000>;
-+		interrupts = <0 51 4>;
-+	};
-+
-+	scu@1e000000 {
-+		compatible = "arm,cortex-a9-scu";
-+		reg = <0x1e000000 0x58>;
-+	};
-+
-+	timer@1e000600 {
-+		compatible = "arm,smp-twd";
-+		reg = <0x1e000600 0x20>;
-+		interrupts = <1 2 0xf04>,
-+			     <1 3 0xf04>;
-+	};
-+
-+	gic: interrupt-controller@1e001000 {
-+		compatible = "arm,cortex-a9-gic";
-+		#interrupt-cells = <3>;
-+		#address-cells = <0>;
-+		interrupt-controller;
-+		reg = <0x1e001000 0x1000>,
-+		      <0x1e000100 0x100>;
-+	};
-+
-+	L2: cache-controller@1e00a000 {
-+		compatible = "arm,pl310-cache";
-+		reg = <0x1e00a000 0x1000>;
-+		interrupts = <0 43 4>;
-+		cache-level = <2>;
-+		arm,data-latency = <1 1 1>;
-+		arm,tag-latency = <1 1 1>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,cortex-a9-pmu";
-+		interrupts = <0 60 4>,
-+			     <0 61 4>,
-+			     <0 62 4>,
-+			     <0 63 4>;
-+	};
-+
-+	motherboard {
-+		ranges = <0 0 0x40000000 0x04000000>,
-+			 <1 0 0x44000000 0x04000000>,
-+			 <2 0 0x48000000 0x04000000>,
-+			 <3 0 0x4c000000 0x04000000>,
-+			 <7 0 0x10000000 0x00020000>;
-+
-+		interrupt-map-mask = <0 0 63>;
-+		interrupt-map = <0 0  0 &gic 0  0 4>,
-+				<0 0  1 &gic 0  1 4>,
-+				<0 0  2 &gic 0  2 4>,
-+				<0 0  3 &gic 0  3 4>,
-+				<0 0  4 &gic 0  4 4>,
-+				<0 0  5 &gic 0  5 4>,
-+				<0 0  6 &gic 0  6 4>,
-+				<0 0  7 &gic 0  7 4>,
-+				<0 0  8 &gic 0  8 4>,
-+				<0 0  9 &gic 0  9 4>,
-+				<0 0 10 &gic 0 10 4>,
-+				<0 0 11 &gic 0 11 4>,
-+				<0 0 12 &gic 0 12 4>,
-+				<0 0 13 &gic 0 13 4>,
-+				<0 0 14 &gic 0 14 4>,
-+				<0 0 15 &gic 0 15 4>,
-+				<0 0 16 &gic 0 16 4>,
-+				<0 0 17 &gic 0 17 4>,
-+				<0 0 18 &gic 0 18 4>,
-+				<0 0 19 &gic 0 19 4>,
-+				<0 0 20 &gic 0 20 4>,
-+				<0 0 21 &gic 0 21 4>,
-+				<0 0 22 &gic 0 22 4>,
-+				<0 0 23 &gic 0 23 4>,
-+				<0 0 24 &gic 0 24 4>,
-+				<0 0 25 &gic 0 25 4>,
-+				<0 0 26 &gic 0 26 4>,
-+				<0 0 27 &gic 0 27 4>,
-+				<0 0 28 &gic 0 28 4>,
-+				<0 0 29 &gic 0 29 4>,
-+				<0 0 30 &gic 0 30 4>,
-+				<0 0 31 &gic 0 31 4>,
-+				<0 0 32 &gic 0 32 4>,
-+				<0 0 33 &gic 0 33 4>,
-+				<0 0 34 &gic 0 34 4>,
-+				<0 0 35 &gic 0 35 4>,
-+				<0 0 36 &gic 0 36 4>,
-+				<0 0 37 &gic 0 37 4>,
-+				<0 0 38 &gic 0 38 4>,
-+				<0 0 39 &gic 0 39 4>,
-+				<0 0 40 &gic 0 40 4>,
-+				<0 0 41 &gic 0 41 4>,
-+				<0 0 42 &gic 0 42 4>;
-+	};
-+};
-+
-+/include/ "vexpress-v2m.dtsi"
-diff --git a/arch/arm/mach-vexpress/Makefile.boot b/arch/arm/mach-vexpress/Makefile.boot
-index 5e2177e..2f0ad9f 100644
---- a/arch/arm/mach-vexpress/Makefile.boot
-+++ b/arch/arm/mach-vexpress/Makefile.boot
-@@ -4,4 +4,5 @@
- params_phys-y	:= 0x60000100
- initrd_phys-y	:= 0x60800000
- 
--dtb-$(CONFIG_ARCH_VEXPRESS_DT)	+= vexpress-v2p-ca5s.dtb
-+dtb-$(CONFIG_ARCH_VEXPRESS_DT)	+= vexpress-v2p-ca5s.dtb \
-+				   vexpress-v2p-ca9.dtb
+This would be a fair bit of work to implement, but what are your thoughts
+on the binding example below? It's very strongly based on ASoC, but since
+that's so strongly based on the HW, I think you can consider it a pure
+HW model rather than something derived from the way the driver works.
+
+(The example isn't meant to represent any particular machine, although I
+stole a bunch of it from Harmony to start with)
+
+wm8903.dtsi:
+
+/define/ WM8903_PORT_I2S0 0
+/define/ WM8903_PIN_HPOUTL 0
+/define/ WM8903_PIN_HPOUTR 1
+...
+
+tegra-harmony.dts:
+
+wm8903: wm8903@... {
+	#embedded-audio-pin-cells = <1>;
+	#embedded-audio-port-cells = <1>;
+};
+
+i2s1: i2s@... {
+	#embedded-audio-port-cells = <0>;
+};
+
+sound {
+	compatible = "nvidia,tegra-audio-wm8903-harmony",
+		     "nvidia,tegra-audio-wm8903"
+	model = "NVIDIA Tegra Harmony";
+
+	/*
+	 * This is a more device-tree-idiomatic way of representing the
+	 * routing table (using phandles and pin IDs) rather than text.
+	 * This assumes my /define/ feature in dtc for the symbolic
+	 * names
+	 */
+	audio-routing = <
+		&hp                     &wm8903 WM8903_PIN_HPOUTR
+		&hp                     &wm8903 WM8903_PIN_HPOUTL
+		&spk                    &wm8903 WM8903_PIN_ROP
+		&spk                    &wm8903 WM8903_PIN_RON
+		&spk                    &wm8903 WM8903_PIN_LOP
+		&spk                    &wm8903 WM8903_PIN_LON
+		&imic                   &wm8903 WM8903_PIN_MICBIAS
+		&wm8903 WM8903_PIN_IN1L &imic
+	>;
+
+	/*
+	 * A completely generic OF binding would need nodes representing
+	 * DAI links, but this binding just for Tegra+WM8903 can assume
+	 * just a single link, and hence put the properties right here.
+	 */
+	nvidia,i2s-controller = <&i2s1>;
+	nvidia,audio-codec = <&wm8903 WM8903_PORT_I2S0>;
+
+	spk: endpoint@0 {
+		compatible = "embedded-audio-endpoint";
+		name = "Int Speakers";
+		type = "Speakers";
+		#embedded-audio-pin-cells = <0>;
+		enable-gpios = <&codec 2 0>;
+	};
+
+	hp: endpoint@1 {
+		compatible = "embedded-audio-endpoint";
+		name = "Headphones";
+		type = "Headphone";
+		#embedded-audio-pin-cells = <0>;
+		/*
+		 * GPIO inversion: Could be handled with separate
+		 * {en,dis}able-gpios properties as here, or could be
+		 * represented in the GPIO controller's binding,
+		 * i.e. the extra GPIO cells.
+		 */
+		/*
+		 * This is really used for "hp_mute" on Kaen; perhaps
+		 * mute is different to disable...
+		 */
+		disable-gpios = <&gpio NNN 0>;
+	};
+
+	emic: endpoint@2 {
+		compatible = "embedded-audio-endpoint";
+		name = "Ext Microphone";
+		type = "Microphone";
+		#embedded-audio-pin-cells = <0>;
+		enable-gpios = <&gpio 184 0>; /* gpio PX0 */
+	};
+
+	imic: endpoint@3 {
+		compatible = "embedded-audio-endpoint";
+		name = "Int Microphone";
+		type = "Microphone";
+		#embedded-audio-pin-cells = <0>;
+		supply = <&reg-dmic>;
+	};
+
+	lin: endpoint@4 {
+		compatible = "embedded-audio-endpoint";
+		name = "Line In";
+		type = "Line Input";
+		#embedded-audio-pin-cells = <0>;
+	};
+
+	lout: endpoint@5 {
+		compatible = "embedded-audio-endpoint";
+		name = "Line Out";
+		type = "Line Output";
+		#embedded-audio-pin-cells = <0>;
+	};
+
+	headsetj: jack@0 {
+		compatible = "embedded-audio-jack";
+		hosts = <&hp &emic>;
+	};
+
+	linj: jack@1 {
+		compatible = "embedded-audio-jack";
+		hosts = <&lin>;
+	};
+
+	loutj: jack@2 {
+		compatible = "embedded-audio-jack";
+		hosts = <&lout>;
+	};
+
+	gpio@0 {
+		compatible = "embedded-audio-detect-gpio";
+		gpio = <&gpio 178 0>; /* gpio PW2 */
+		/*
+		 * GPIO inversion: Could use an explicit property here,
+		 * or, could be represented in the GPIO controller's
+		 * binding, i.e. the extra GPIO cells.
+		 */
+		debounce-interval = <250>; /* mS */
+		/*
+		 * Always the whole jack here, or do we need to specify
+		 * which endpoints within the jack?
+		 */
+		affected-jack = <&linj>;
+	};
+
+	micbias@0 {
+		/*
+		 * Is "micbias" the correct name here? Perhaps current-
+		 * detect? If all mics need a mic bias, so it's a well
+		 * known name, it's OK.
+		 */
+		compatible = "embedded-audio-detect-micbias";
+		/*
+		 * Here, I'm assuming that struct snd_soc_codec_driver
+		 * would gain a generic "start mic detect" function, so
+		 * a generic machine driver could activate that without
+		 * having to link against e.g. wm8903_mic_detect().
+		 */
+		micbias = <&wm8903 WM8903_PIN_MICBIAS>;
+		/*
+		 * "1" below is index into headsetj's hosted endpoints.
+		 * Perhaps this should reference <&imic> instead, and
+		 * then map that back to the jack?
+		 */
+		affected-jack-endpoint = <&headsetj 1>;
+	};
+
+	/*
+	 * Custom detection methods could be implemented by additional
+	 * nodes with their own compatible values and bindings, hence
+	 * handled entirely by that custom code.
+	 */
+};
+
 -- 
-1.7.5.4
+nvpublic
