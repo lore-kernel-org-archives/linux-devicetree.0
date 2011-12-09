@@ -1,74 +1,141 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: [PATCH v2 04/10] rtc: rtc-twl: Add DT support for RTC inside twl4030/twl6030
-Date: Fri, 9 Dec 2011 15:02:35 +0100
-Message-ID: <1323439361-1647-5-git-send-email-b-cousson@ti.com>
-References: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 5/5] microblaze: Introduce IRQ_SW_OFFSET to help with
+ sw IRQ
+Date: Fri, 09 Dec 2011 08:12:35 -0600
+Message-ID: <4EE21753.8050501@gmail.com>
+References: <1323431121-12780-1-git-send-email-monstr@monstr.eu> <1323431121-12780-2-git-send-email-monstr@monstr.eu> <1323431121-12780-3-git-send-email-monstr@monstr.eu> <1323431121-12780-4-git-send-email-monstr@monstr.eu> <1323431121-12780-5-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, rob.herring@calxeda.com
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>, Alessandro Zummo <a.zummo@towertech.it>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1323431121-12780-5-git-send-email-monstr@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, anton.vorontsov@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the DT support for the TI rtc-twl present in the twl4030
-and twl6030 devices.
+On 12/09/2011 05:45 AM, Michal Simek wrote:
+> If you setup IRQ_OFFSET > nr_irq you completely separate hardware
+> and software IRQs which help you with debugging.
+> 
+> For example:
+> IRQ_SW_OFFSET = 32
+> 
+>         DTS   HW(line)   LINUX
+> timer - 2     3          35
+> sysace  4     5          37
+> serial  5     6          38
+> 
+> HW line is setup DTS + NO_IRQ_OFFSET to ensure that NO_IRQ is always 0.
+> 
 
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
----
- Documentation/devicetree/bindings/rtc/twl-rtc.txt |   12 ++++++++++++
- drivers/rtc/rtc-twl.c                             |   10 ++++++++--
- 2 files changed, 20 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/twl-rtc.txt
+This is really confusing. DTS is the HW numbering. The last 2 columns
+are both Linux IRQ numbering. Just create a single define for an offset.
+Then I would combine this into the previous patch.
 
-diff --git a/Documentation/devicetree/bindings/rtc/twl-rtc.txt b/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-new file mode 100644
-index 0000000..596e0c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-@@ -0,0 +1,12 @@
-+* TI twl RTC
-+
-+The TWL family (twl4030/6030) contains a RTC.
-+
-+Required properties:
-+- compatible : Should be twl4030-rtc
-+
-+Examples:
-+
-+rtc@0 {
-+    compatible = "ti,twl4030-rtc";
-+};
-diff --git a/drivers/rtc/rtc-twl.c b/drivers/rtc/rtc-twl.c
-index 20687d5..d43b4f6 100644
---- a/drivers/rtc/rtc-twl.c
-+++ b/drivers/rtc/rtc-twl.c
-@@ -550,6 +550,11 @@ static int twl_rtc_resume(struct platform_device *pdev)
- #define twl_rtc_resume  NULL
- #endif
- 
-+static const struct of_device_id twl_rtc_of_match[] = {
-+	{.compatible = "ti,twl4030-rtc", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, twl_rtc_of_match);
- MODULE_ALIAS("platform:twl_rtc");
- 
- static struct platform_driver twl4030rtc_driver = {
-@@ -559,8 +564,9 @@ static struct platform_driver twl4030rtc_driver = {
- 	.suspend	= twl_rtc_suspend,
- 	.resume		= twl_rtc_resume,
- 	.driver		= {
--		.owner	= THIS_MODULE,
--		.name	= "twl_rtc",
-+		.owner		= THIS_MODULE,
-+		.name		= "twl_rtc",
-+		.of_match_table = twl_rtc_of_match,
- 	},
- };
- 
--- 
-1.7.0.4
+Rob
 
+> ~ # cat /proc/interrupts
+>            CPU0
+>  35:       3570  Xilinx INTC-level     timer
+>  37:          0  Xilinx INTC-level     systemace
+>  38:        108  Xilinx INTC-level     serial
+> 
+> Signed-off-by: Michal Simek <monstr@monstr.eu>
+> ---
+>  arch/microblaze/include/asm/irq.h |   12 +++++++++++-
+>  arch/microblaze/kernel/intc.c     |   11 ++++-------
+>  arch/microblaze/kernel/irq.c      |    9 ++++-----
+>  3 files changed, 19 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
+> index b07c179..97e98f1 100644
+> --- a/arch/microblaze/include/asm/irq.h
+> +++ b/arch/microblaze/include/asm/irq.h
+> @@ -9,7 +9,17 @@
+>  #ifndef _ASM_MICROBLAZE_IRQ_H
+>  #define _ASM_MICROBLAZE_IRQ_H
+>  
+> -#define NR_IRQS (32 + 1)	/* Add 1 to skip over IRQ0 */
+> +
+> +/*
+> + * Linux IRQ# is currently offset by one to map to the hardware
+> + * irq number. So hardware IRQ0 maps to Linux irq 1.
+> + */
+> +#define NO_IRQ_OFFSET	1
+> +
+> +/* Use greater value to separate software and hw IRQs */
+> +#define IRQ_SW_OFFSET	0
+> +#define IRQ_OFFSET	(NO_IRQ_OFFSET + IRQ_SW_OFFSET)
+> +#define NR_IRQS		(32 + IRQ_OFFSET)
+>  #include <asm-generic/irq.h>
+>  
+>  /* This type is the placeholder for a hardware interrupt number. It has to
+> diff --git a/arch/microblaze/kernel/intc.c b/arch/microblaze/kernel/intc.c
+> index c66fce9c..44b177e 100644
+> --- a/arch/microblaze/kernel/intc.c
+> +++ b/arch/microblaze/kernel/intc.c
+> @@ -92,11 +92,8 @@ unsigned int get_irq(struct pt_regs *regs)
+>  	 * NOTE: This function is the one that needs to be improved in
+>  	 * order to handle multiple interrupt controllers. It currently
+>  	 * is hardcoded to check for interrupts only on the first INTC.
+> -	 *
+> -	 * Linux IRQ# is currently offset by one to map to the hardware
+> -	 * irq number.  So hardware IRQ0 maps to Linux irq 1.
+>  	 */
+> -	irq = in_be32(INTC_BASE + IVR) + 1;
+> +	irq = in_be32(INTC_BASE + IVR) + NO_IRQ_OFFSET;
+>  	pr_debug("get_irq: %d\n", irq);
+>  
+>  	return irq;
+> @@ -149,8 +146,8 @@ void __init init_IRQ(void)
+>  	/* Turn on the Master Enable. */
+>  	out_be32(intc_baseaddr + MER, MER_HIE | MER_ME);
+>  
+> -	for (i = 1; i <= nr_irq; ++i) {
+> -		if (intr_mask & (0x00000001 << (i - 1))) {
+> +	for (i = IRQ_OFFSET; i < (nr_irq + IRQ_OFFSET); ++i) {
+> +		if (intr_mask & (0x00000001 << (i - IRQ_OFFSET))) {
+>  			irq_set_chip_and_handler_name(i, &intc_dev,
+>  				handle_edge_irq, "edge");
+>  			irq_clear_status_flags(i, IRQ_LEVEL);
+> @@ -159,6 +156,6 @@ void __init init_IRQ(void)
+>  				handle_level_irq, "level");
+>  			irq_set_status_flags(i, IRQ_LEVEL);
+>  		}
+> -		irq_get_irq_data(i)->hwirq = i - 1;
+> +		irq_get_irq_data(i)->hwirq = i - IRQ_OFFSET;
+>  	}
+>  }
+> diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
+> index ac1b463..bbebcae 100644
+> --- a/arch/microblaze/kernel/irq.c
+> +++ b/arch/microblaze/kernel/irq.c
+> @@ -34,7 +34,8 @@ void __irq_entry do_IRQ(struct pt_regs *regs)
+>  	irq = get_irq(regs);
+>  next_irq:
+>  	BUG_ON(!irq);
+> -	generic_handle_irq(irq);
+> +	/* Substract 1 because of get_irq */
+> +	generic_handle_irq(irq + IRQ_OFFSET - NO_IRQ_OFFSET);
+>  
+>  	irq = get_irq(regs);
+>  	if (irq) {
+> @@ -52,15 +53,13 @@ next_irq:
+>    intc without any cascades or any connection that's why mapping is 1:1 */
+>  unsigned int irq_create_mapping(struct irq_host *host, irq_hw_number_t hwirq)
+>  {
+> -	return hwirq + 1;
+> +	return hwirq + IRQ_OFFSET;
+>  }
+>  EXPORT_SYMBOL_GPL(irq_create_mapping);
+>  
+>  unsigned int irq_create_of_mapping(struct device_node *controller,
+>  				   const u32 *intspec, unsigned int intsize)
+>  {
+> -	/* Hardware irq is mapped to Linux IRQ# by a 1 offset. Linux irq
+> -	 * 0 means no IRQ. */
+> -	return intspec[0] + 1;
+> +	return intspec[0] + IRQ_OFFSET;
+>  }
+>  EXPORT_SYMBOL_GPL(irq_create_of_mapping);
