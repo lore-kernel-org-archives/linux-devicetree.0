@@ -1,55 +1,85 @@
-From: Colin Cross <ccross@android.com>
-Subject: Re: [PATCH v6 04/10] arm/tegra: prepare early init for multiple tegra variants
-Date: Fri, 9 Dec 2011 10:35:09 -0800
-Message-ID: <CAMbhsRR1HdG6QnNdrnD3y9DApnDR3RrUqFyTt5vZT0qR9n=ECg@mail.gmail.com>
-References: <1323348254-29072-1-git-send-email-pdeschrijver@nvidia.com>
-	<1323348254-29072-5-git-send-email-pdeschrijver@nvidia.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF1750B77A7E@HQMAIL01.nvidia.com>
-	<CAMbhsRTD1rQBY7Sn2km=XsUYsHMdqQqZSKu4agc0GB6+QE79fA@mail.gmail.com>
-	<20111209111925.GK27578@tbergstrom-lnx.Nvidia.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: [PATCH v5 1/9] ARM: versatile: Add missing ENDPROC to headsmp.S
+Date: Fri,  9 Dec 2011 19:03:44 +0000
+Message-ID: <1323457432-4800-2-git-send-email-pawel.moll@arm.com>
+References: <1323457432-4800-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20111209111925.GK27578@tbergstrom-lnx.Nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, Gary King <gking@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1323457432-4800-1-git-send-email-pawel.moll@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 9, 2011 at 3:19 AM, Peter De Schrijver
-<pdeschrijver@nvidia.com> wrote:
-> On Thu, Dec 08, 2011 at 07:29:43PM +0100, Colin Cross wrote:
->> On Thu, Dec 8, 2011 at 9:57 AM, Stephen Warren <swarren@nvidia.com> =
-wrote:
->> > Peter De Schrijver wrote at Thursday, December 08, 2011 5:44 AM:
->> >> This patch splits the early init code in a common and a tegra20 s=
-pecific part.
->> >> L2 cache initialization is generalized and discovers the cache as=
-sociativity
->> >> at runtime. Also use arm_pm_restart instead of arm_arch_reset and=
- reset the
->> >> the system using the PMC reset feature rather then the CAR system=
- reset.
->> >
->> > This one really should be at least 3 separate patches:
->> > * s/tegra_init_early/tegra20_init_early/ in machine descriptions
->> > * Switch reset mechanism from CAR to PMC
->> > * tegra_init_cache modifications
->> > * Not sure if all the ifdef additions go in the above, or if some =
-should be
->> > =A0separate?
->> >
->> > Still, I think it's probably OK to go in as it is even if it isn't=
- optimal.
->>
->> Please at least split out the reset change. =A0Does using the PMC re=
-set
->> instead of the CAR reset still result in a warm reset, or does it
->> change to a cold reset?
->
-> What do you consider a cold reset in the tegra world?
+Once the ENDPROC is in place, BSYM() in not longer necessary
+to get correct pointer to versatile_secondary_startup().
 
-Power rails turn off and on.  Some of our debugging tools rely on
-memory contents surviving across a reset, and that is generally true
-of a warm reset, but not a cold reset.
+Signed-off-by: Pawel Moll <pawel.moll@arm.com>
+---
+ arch/arm/mach-realview/platsmp.c  |    3 +--
+ arch/arm/mach-vexpress/platsmp.c  |    4 +---
+ arch/arm/plat-versatile/headsmp.S |    1 +
+ 3 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/mach-realview/platsmp.c b/arch/arm/mach-realview/platsmp.c
+index e83c654..17c878d 100644
+--- a/arch/arm/mach-realview/platsmp.c
++++ b/arch/arm/mach-realview/platsmp.c
+@@ -17,7 +17,6 @@
+ #include <asm/hardware/gic.h>
+ #include <asm/mach-types.h>
+ #include <asm/smp_scu.h>
+-#include <asm/unified.h>
+ 
+ #include <mach/board-eb.h>
+ #include <mach/board-pb11mp.h>
+@@ -75,6 +74,6 @@ void __init platform_smp_prepare_cpus(unsigned int max_cpus)
+ 	 * until it receives a soft interrupt, and then the
+ 	 * secondary CPU branches to this address.
+ 	 */
+-	__raw_writel(BSYM(virt_to_phys(versatile_secondary_startup)),
++	__raw_writel(virt_to_phys(versatile_secondary_startup),
+ 		     __io_address(REALVIEW_SYS_FLAGSSET));
+ }
+diff --git a/arch/arm/mach-vexpress/platsmp.c b/arch/arm/mach-vexpress/platsmp.c
+index 2b5f7ac..124ffb1 100644
+--- a/arch/arm/mach-vexpress/platsmp.c
++++ b/arch/arm/mach-vexpress/platsmp.c
+@@ -13,8 +13,6 @@
+ #include <linux/smp.h>
+ #include <linux/io.h>
+ 
+-#include <asm/unified.h>
+-
+ #include <mach/motherboard.h>
+ #define V2M_PA_CS7 0x10000000
+ 
+@@ -46,6 +44,6 @@ void __init platform_smp_prepare_cpus(unsigned int max_cpus)
+ 	 * secondary CPU branches to this address.
+ 	 */
+ 	writel(~0, MMIO_P2V(V2M_SYS_FLAGSCLR));
+-	writel(BSYM(virt_to_phys(versatile_secondary_startup)),
++	writel(virt_to_phys(versatile_secondary_startup),
+ 		MMIO_P2V(V2M_SYS_FLAGSSET));
+ }
+diff --git a/arch/arm/plat-versatile/headsmp.S b/arch/arm/plat-versatile/headsmp.S
+index d397a1f..dd703ef 100644
+--- a/arch/arm/plat-versatile/headsmp.S
++++ b/arch/arm/plat-versatile/headsmp.S
+@@ -38,3 +38,4 @@ pen:	ldr	r7, [r6]
+ 	.align
+ 1:	.long	.
+ 	.long	pen_release
++ENDPROC(versatile_secondary_startup)
+-- 
+1.7.5.4
