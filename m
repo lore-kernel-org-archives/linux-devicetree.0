@@ -1,188 +1,84 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: [PATCH 4/5] microblaze: Change NO_IRQ to 0
-Date: Fri,  9 Dec 2011 12:45:20 +0100
-Message-ID: <1323431121-12780-4-git-send-email-monstr@monstr.eu>
-References: <1323431121-12780-1-git-send-email-monstr@monstr.eu>
- <1323431121-12780-2-git-send-email-monstr@monstr.eu>
- <1323431121-12780-3-git-send-email-monstr@monstr.eu>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323431121-12780-3-git-send-email-monstr@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robherring2@gmail.com
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, anton.vorontsov@linaro.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 2/4] ARM: OMAP2/3: intc: Add DT support for TI interrupt
+ controller
+Date: Fri, 09 Dec 2011 07:20:56 -0600
+Message-ID: <4EE20B38.8050006@gmail.com>
+References: <1323291049-24964-1-git-send-email-b-cousson@ti.com> <1323291049-24964-3-git-send-email-b-cousson@ti.com> <4EDFD88B.8060008@gmail.com> <4EE0D0E6.3060202@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EE0D0E6.3060202@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-As has been discussed many times[1], Using NO_IRQ set to anything other
-than 0 is bug waiting to happen since many drivers follow the pattern
-"if (!irq)" for testing whether or not an irq has been set.
+On 12/08/2011 08:59 AM, Cousson, Benoit wrote:
+> On 12/7/2011 10:20 PM, Rob Herring wrote:
+>> On 12/07/2011 02:50 PM, Benoit Cousson wrote:
+> 
+> [...]
+> 
+>>> +#ifdef CONFIG_OF
+>>> +int __init intc_of_init(struct device_node *node, struct device_node
+>>> *parent)
+>>> +{
+>>> +    struct resource res;
+>>> +    u32 nr_irqs;
+>>> +
+>>> +    if (WARN_ON(!node))
+>>> +        return -ENODEV;
+>>> +
+>>> +    if (of_address_to_resource(node, 0,&res)) {
+>>> +        WARN(1, "unable to get intc registers\n");
+>>> +        return -EINVAL;
+>>> +    }
+>>> +
+>>> +    if (of_property_read_u32(node, "ti,intc-size",&nr_irqs)) {
+>>> +        WARN(1, "unable to get intc-size\n");
+>>> +        return -EINVAL;
+>>
+>> There is no default value that makes sense?
+> 
+> So far we have 96 or 128, so I can put 96 as a default and just keep the
+> warning without returning an error.
+> 
+>>> +    }
+>>> +
+>>> +    omap_init_irq(res.start, nr_irqs);
+>>> +    irq_domain_add_simple(node, 0);
+>>
+>> Have you read the NO_IRQ thread...
+> 
+> Yeah, I tried, but that's a long email thread with some unclear
+> conclusion...
+> The point is that the few users of that API today are using 0 as a base
+> as well, so I thought it was still valid.
+> 
+>> Is 0 ever a valid interrupt for a driver? If so, you must not use 0 for
+>> the base. I would pick 16 to skip over legacy ISA irqs.
+> 
+> I do not have any 0 interrupts right now, my concern is that I still
+> have some legacy non-DT drivers that expect the previous hwirq = irq
+> mapping.
 
-This patch changes the Microblaze NO_IRQ setting from -1 to 0 to bring
-it in line with most of the rest of the kernel.  It also prepares for
-Microblaze eventually supporting multiple interrupt controllers by
-breaking the assumption that hwirq# == Linux IRQ#.  The Linux IRQ
-number is just a cookie with no guarantee of a direct relationship
-with the hardware irq arrangement.
+I guess it depends how easily you can shift all the irq defines. You
+allow specifying the base so that you can set it to 0 for non-DT and -1
+(dynamic allocation) for DT.
 
-At this point, Microblaze interrupt handling only supports only one
-instance of one kind of interrupt controller (xilinx_intc).  This change
-shouldn't affect any architecture code outside of the interrupt
-controller driver and the irq_of mapping.
+> 
+>> irqdomains should always be enabled regardless of CONFIG_OF. So either
+>> you can leave it as is if OF is always enabled for OMAP, or you should
+>> move domain setup into omap_init_irq.
+> 
+> OK, but it looks like I cannot really modify the current INTC to DT
+> without having fully adapted the OMAP drivers to use
+> irq_of_parse_and_map. Or did I miss something?
+> 
 
-Updated to 3.2 and to use irq_data.hwirq by Rob Herring.
+No, the drivers should not need to be modified as long as they get the
+irq's from platform device resources. You just want to make sure the
+INTC has no knowledge of it's irq base so it can change.
 
-[1] http://lkml.org/lkml/2005/11/21/221
-
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Signed-off-by: Michal Simek <monstr@monstr.eu>
----
- arch/microblaze/include/asm/irq.h |    4 ++--
- arch/microblaze/kernel/intc.c     |   31 ++++++++++++++++++-------------
- arch/microblaze/kernel/irq.c      |   10 ++++++----
- 3 files changed, 26 insertions(+), 19 deletions(-)
-
-diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
-index cc54187..b07c179 100644
---- a/arch/microblaze/include/asm/irq.h
-+++ b/arch/microblaze/include/asm/irq.h
-@@ -9,7 +9,7 @@
- #ifndef _ASM_MICROBLAZE_IRQ_H
- #define _ASM_MICROBLAZE_IRQ_H
- 
--#define NR_IRQS 32
-+#define NR_IRQS (32 + 1)	/* Add 1 to skip over IRQ0 */
- #include <asm-generic/irq.h>
- 
- /* This type is the placeholder for a hardware interrupt number. It has to
-@@ -20,7 +20,7 @@ typedef unsigned long irq_hw_number_t;
- 
- extern unsigned int nr_irq;
- 
--#define NO_IRQ (-1)
-+#define NO_IRQ 0
- 
- struct pt_regs;
- extern void do_IRQ(struct pt_regs *regs);
-diff --git a/arch/microblaze/kernel/intc.c b/arch/microblaze/kernel/intc.c
-index 1293098..c66fce9c 100644
---- a/arch/microblaze/kernel/intc.c
-+++ b/arch/microblaze/kernel/intc.c
-@@ -42,8 +42,9 @@ unsigned int nr_irq;
- 
- static void intc_enable_or_unmask(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->irq;
--	pr_debug("enable_or_unmask: %d\n", d->irq);
-+	unsigned long mask = 1 << d->hwirq;
-+
-+	pr_debug("enable_or_unmask: %ld\n", d->hwirq);
- 	out_be32(INTC_BASE + SIE, mask);
- 
- 	/* ack level irqs because they can't be acked during
-@@ -56,20 +57,21 @@ static void intc_enable_or_unmask(struct irq_data *d)
- 
- static void intc_disable_or_mask(struct irq_data *d)
- {
--	pr_debug("disable: %d\n", d->irq);
--	out_be32(INTC_BASE + CIE, 1 << d->irq);
-+	pr_debug("disable: %ld\n", d->hwirq);
-+	out_be32(INTC_BASE + CIE, 1 << d->hwirq);
- }
- 
- static void intc_ack(struct irq_data *d)
- {
--	pr_debug("ack: %d\n", d->irq);
--	out_be32(INTC_BASE + IAR, 1 << d->irq);
-+	pr_debug("ack: %ld\n", d->hwirq);
-+	out_be32(INTC_BASE + IAR, 1 << d->hwirq);
- }
- 
- static void intc_mask_ack(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->irq;
--	pr_debug("disable_and_ack: %d\n", d->irq);
-+	unsigned long mask = 1 << d->hwirq;
-+
-+	pr_debug("disable_and_ack: %ld\n", d->hwirq);
- 	out_be32(INTC_BASE + CIE, mask);
- 	out_be32(INTC_BASE + IAR, mask);
- }
-@@ -90,8 +92,11 @@ unsigned int get_irq(struct pt_regs *regs)
- 	 * NOTE: This function is the one that needs to be improved in
- 	 * order to handle multiple interrupt controllers. It currently
- 	 * is hardcoded to check for interrupts only on the first INTC.
-+	 *
-+	 * Linux IRQ# is currently offset by one to map to the hardware
-+	 * irq number.  So hardware IRQ0 maps to Linux irq 1.
- 	 */
--	irq = in_be32(INTC_BASE + IVR);
-+	irq = in_be32(INTC_BASE + IVR) + 1;
- 	pr_debug("get_irq: %d\n", irq);
- 
- 	return irq;
-@@ -116,8 +121,7 @@ void __init init_IRQ(void)
- 	intc = of_find_compatible_node(NULL, NULL, "xlnx,xps-intc-1.00.a");
- 	BUG_ON(!intc);
- 
--	intc_baseaddr = be32_to_cpup(of_get_property(intc,
--								"reg", NULL));
-+	intc_baseaddr = be32_to_cpup(of_get_property(intc, "reg", NULL));
- 	intc_baseaddr = (unsigned long) ioremap(intc_baseaddr, PAGE_SIZE);
- 	nr_irq = be32_to_cpup(of_get_property(intc,
- 						"xlnx,num-intr-inputs", NULL));
-@@ -145,8 +149,8 @@ void __init init_IRQ(void)
- 	/* Turn on the Master Enable. */
- 	out_be32(intc_baseaddr + MER, MER_HIE | MER_ME);
- 
--	for (i = 0; i < nr_irq; ++i) {
--		if (intr_mask & (0x00000001 << i)) {
-+	for (i = 1; i <= nr_irq; ++i) {
-+		if (intr_mask & (0x00000001 << (i - 1))) {
- 			irq_set_chip_and_handler_name(i, &intc_dev,
- 				handle_edge_irq, "edge");
- 			irq_clear_status_flags(i, IRQ_LEVEL);
-@@ -155,5 +159,6 @@ void __init init_IRQ(void)
- 				handle_level_irq, "level");
- 			irq_set_status_flags(i, IRQ_LEVEL);
- 		}
-+		irq_get_irq_data(i)->hwirq = i - 1;
- 	}
- }
-diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
-index e5d63a8..ac1b463 100644
---- a/arch/microblaze/kernel/irq.c
-+++ b/arch/microblaze/kernel/irq.c
-@@ -33,11 +33,11 @@ void __irq_entry do_IRQ(struct pt_regs *regs)
- 	irq_enter();
- 	irq = get_irq(regs);
- next_irq:
--	BUG_ON(irq == -1U);
-+	BUG_ON(!irq);
- 	generic_handle_irq(irq);
- 
- 	irq = get_irq(regs);
--	if (irq != -1U) {
-+	if (irq) {
- 		pr_debug("next irq: %d\n", irq);
- 		++concurrent_irq;
- 		goto next_irq;
-@@ -52,13 +52,15 @@ next_irq:
-   intc without any cascades or any connection that's why mapping is 1:1 */
- unsigned int irq_create_mapping(struct irq_host *host, irq_hw_number_t hwirq)
- {
--	return hwirq;
-+	return hwirq + 1;
- }
- EXPORT_SYMBOL_GPL(irq_create_mapping);
- 
- unsigned int irq_create_of_mapping(struct device_node *controller,
- 				   const u32 *intspec, unsigned int intsize)
- {
--	return intspec[0];
-+	/* Hardware irq is mapped to Linux IRQ# by a 1 offset. Linux irq
-+	 * 0 means no IRQ. */
-+	return intspec[0] + 1;
- }
- EXPORT_SYMBOL_GPL(irq_create_of_mapping);
--- 
-1.7.5.4
+Rob
