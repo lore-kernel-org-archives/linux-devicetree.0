@@ -1,39 +1,59 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] ASoC: Allow the DAPM routes to be stored in
-	device tree
-Date: Sat, 10 Dec 2011 12:49:23 +0000
-Message-ID: <20111210124921.GA20568@opensource.wolfsonmicro.com>
-References: <1323291510-22338-1-git-send-email-swarren@nvidia.com> <1323291510-22338-2-git-send-email-swarren@nvidia.com> <20111208043149.GA31372@opensource.wolfsonmicro.com> <74CDBE0F657A3D45AFBB94109FB122FF17518605B1@HQMAIL01.nvidia.com>
+From: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+Subject: Re: [PATCH v5 5/9] ARM: versatile: Map local timers using Device
+ Tree when possible
+Date: Sat, 10 Dec 2011 19:27:09 +0400
+Message-ID: <4EE37A4D.8060204@ru.mvista.com>
+References: <1323457432-4800-1-git-send-email-pawel.moll@arm.com>
+ <1323457432-4800-6-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17518605B1-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1323457432-4800-6-git-send-email-pawel.moll@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 09, 2011 at 01:52:00PM -0800, Stephen Warren wrote:
+Hello.
 
-> I'd originally made this property specific to the Tegra+WM8903 machine
-> driver, and you'd asked me to make it generic. Is there room to use
-> the binding above for the Tegra+WM8903 machine driver only, in order
-> to get the driver converted to DT, then define/implement something
-> completely generic to replace it, i.e. the stuff below?
+On 09-12-2011 23:03, Pawel Moll wrote:
 
-I was asking for the code to be generic, not the binding itself.  If the 
-code could for example take a property name as an argument that'd allow 
-other bindings to use the same code without having to have a generic 
-binding which has bits which depend strongly on some Linux specific
-machine driver.
+> If twd_base is not set, try to map the TWD registers from
+> "arm,smp-twd" Device Tree node (compatible value as used in
+> Highbank's DT).
 
-> This would be a fair bit of work to implement, but what are your thoughts
-> on the binding example below? It's very strongly based on ASoC, but since
-> that's so strongly based on the HW, I think you can consider it a pure
-> HW model rather than something derived from the way the driver works.
+> Signed-off-by: Pawel Moll<pawel.moll@arm.com>
+> ---
+>   arch/arm/plat-versatile/localtimer.c |   12 ++++++++++++
+>   1 files changed, 12 insertions(+), 0 deletions(-)
 
-It's starting to get an idiomatic way of representing the external
-nodes, HDA is probably a good source of inspiration :)  We do need to
-have a think about the jacks, though - simple ones are fine but
-multifinction is more fun.
+> diff --git a/arch/arm/plat-versatile/localtimer.c b/arch/arm/plat-versatile/localtimer.c
+> index 0fb3961..e3da322 100644
+> --- a/arch/arm/plat-versatile/localtimer.c
+> +++ b/arch/arm/plat-versatile/localtimer.c
+[...]
+> @@ -21,6 +23,16 @@
+>    */
+>   int __cpuinit local_timer_setup(struct clock_event_device *evt)
+>   {
+> +#if defined(CONFIG_OF)
+> +	if (!twd_base) {
+> +		struct device_node *np = of_find_compatible_node(NULL,
+> +				NULL, "arm,smp-twd");
+> +
+> +		twd_base = of_iomap(np, 0);
+> +		if (!twd_base)
+> +			return -ENXIO;
+
+    -ENOMEM.
+
+WBR, Sergei
