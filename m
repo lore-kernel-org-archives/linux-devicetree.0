@@ -1,51 +1,53 @@
-From: Kevin Hilman <khilman@ti.com>
-Subject: Re: [PATCH v2 01/10] ARM: OMAP2+: pm: Do not init statically the SR and voltage layer with DT
-Date: Fri, 09 Dec 2011 17:32:26 -0800
-Message-ID: <87obvhgqj9.fsf@ti.com>
-References: <1323438631-28124-1-git-send-email-b-cousson@ti.com>
-	<1323438631-28124-2-git-send-email-b-cousson@ti.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 5/5] microblaze: Introduce IRQ_SW_OFFSET to help with
+ sw IRQ
+Date: Sat, 10 Dec 2011 11:41:42 +0100
+Message-ID: <4EE33766.6060704@monstr.eu>
+References: <1323431121-12780-1-git-send-email-monstr@monstr.eu> <1323431121-12780-2-git-send-email-monstr@monstr.eu> <1323431121-12780-3-git-send-email-monstr@monstr.eu> <1323431121-12780-4-git-send-email-monstr@monstr.eu> <1323431121-12780-5-git-send-email-monstr@monstr.eu> <4EE21753.8050501@gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1323438631-28124-2-git-send-email-b-cousson@ti.com> (Benoit
-	Cousson's message of "Fri, 9 Dec 2011 14:50:22 +0100")
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4EE21753.8050501@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, anton.vorontsov@linaro.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Benoit Cousson <b-cousson@ti.com> writes:
+Rob Herring wrote:
+> On 12/09/2011 05:45 AM, Michal Simek wrote:
+>> If you setup IRQ_OFFSET > nr_irq you completely separate hardware
+>> and software IRQs which help you with debugging.
+>>
+>> For example:
+>> IRQ_SW_OFFSET = 32
+>>
+>>         DTS   HW(line)   LINUX
+>> timer - 2     3          35
+>> sysace  4     5          37
+>> serial  5     6          38
+>>
+>> HW line is setup DTS + NO_IRQ_OFFSET to ensure that NO_IRQ is always 0.
+>>
+> 
+> This is really confusing. DTS is the HW numbering. The last 2 columns
+> are both Linux IRQ numbering. Just create a single define for an offset.
+> Then I would combine this into the previous patch.
+> 
 
-> In the case of DT, the PMIC and SR initialization will be done using
-> a completely different mechanism.
->
-> Disable this part if a DT blob is available.
->
-> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Kevin Hilman <khilman@ti.com>
+DTS generator, which we used for DTS generator for more than 2 years,
+generates for the first IRQ in the system this property "interrupts = < 0 2 >;"
+Which is HW line 1 and linux irq_data->hwirq 0 (because of shift) and irq_data->irq = 1
+for SW_OFFSET=0.
 
-Acked-by: Kevin Hilman <khilman@ti.com>
+Anyway no problem to keep just NO_IRQ_OFFSET value.
 
-> ---
->  arch/arm/mach-omap2/pm.c |    8 ++++++++
->  1 files changed, 8 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/mach-omap2/pm.c b/arch/arm/mach-omap2/pm.c
-> index 1881fe9..ad4f693 100644
-> --- a/arch/arm/mach-omap2/pm.c
-> +++ b/arch/arm/mach-omap2/pm.c
-> @@ -227,6 +227,14 @@ postcore_initcall(omap2_common_pm_init);
->  
->  static int __init omap2_common_pm_late_init(void)
->  {
-> +	/*
-> +	 * In the case of DT, the PMIC and SR initialization will be done using
-> +	 * a completely different mechanism.
-> +	 * Disable this part if a DT blob is available.
-> +	 */
-> +	if (of_have_populated_dt())
-> +		return 0;
-> +
->  	/* Init the voltage layer */
->  	omap_pmic_late_init();
->  	omap_voltage_late_init();
+Thanks,
+Michal
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
