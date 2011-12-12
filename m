@@ -1,13 +1,13 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [RFC v2 9/9] arm/highbank: Use clock binding common support code
-Date: Mon, 12 Dec 2011 15:02:09 -0700
-Message-ID: <1323727329-4989-9-git-send-email-grant.likely@secretlab.ca>
-References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Initial DT clock bindings
+Date: Mon, 12 Dec 2011 16:52:15 -0600
+Message-ID: <4EE6859F.2040807@gmail.com>
+References: <1323727236-4811-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1323727329-4989-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+In-Reply-To: <1323727236-4811-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,201 +17,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch makes the Calxeda Highbank platform use the common DT clock
-binding support code for setting up timers and fixed clocks.
+On 12/12/2011 04:00 PM, Grant Likely wrote:
+> Hi everyone,
+> 
+> Here's my second posting of initial device tree bindings for clocks.  I'm
+> a lot happier with how this is looking now, and Versatile is pretty much
+> entirely converted.  In fact, the realview, integrator and vexpress platforms
+> are pretty close now too.  Just for fun I went and converted Highbank also.
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/Kconfig                             |    1 +
- arch/arm/boot/dts/highbank.dts               |   32 ++++++++++++++++++++++++-
- arch/arm/mach-highbank/clock.c               |   19 ---------------
- arch/arm/mach-highbank/core.h                |    1 -
- arch/arm/mach-highbank/highbank.c            |   13 +---------
- arch/arm/mach-highbank/include/mach/clkdev.h |   11 +++++++++
- 6 files changed, 44 insertions(+), 33 deletions(-)
- create mode 100644 arch/arm/mach-highbank/include/mach/clkdev.h
+Thanks! I'll give it a spin.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index e084b7e..33c2958 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -341,6 +341,7 @@ config ARCH_HIGHBANK
- 	select ARM_GIC
- 	select ARM_TIMER_SP804
- 	select CLKDEV_LOOKUP
-+	select HAVE_MACH_CLKDEV
- 	select CPU_V7
- 	select GENERIC_CLOCKEVENTS
- 	select HAVE_ARM_SCU
-diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
-index aeb1a75..a60e41d 100644
---- a/arch/arm/boot/dts/highbank.dts
-+++ b/arch/arm/boot/dts/highbank.dts
-@@ -25,6 +25,10 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
-+	clocks = <&pclk>;
-+	clock-names = "apb_pclk";
-+	clock-ranges;
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -54,6 +58,20 @@
- 		};
- 	};
- 
-+	clocks {
-+		eclk: eclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <200000000>;
-+		};
-+
-+		pclk: pclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <150000000>;
-+		};
-+	};
-+
- 	memory {
- 		name = "memory";
- 		device_type = "memory";
-@@ -70,6 +88,7 @@
- 		compatible = "simple-bus";
- 		interrupt-parent = <&intc>;
- 		ranges;
-+		clock-ranges;
- 
- 		timer@fff10600 {
- 			compatible = "arm,smp-twd";
-@@ -117,6 +136,7 @@
- 			compatible = "calxeda,hb-sdhci";
- 			reg = <0xffe0e000 0x1000>;
- 			interrupts = <0 90 4>;
-+			clocks = <&eclk>;
- 		};
- 
- 		ipc@fff20000 {
-@@ -157,10 +177,18 @@
- 			interrupts = <0 17 4>;
- 		};
- 
--		timer {
-+		timer@fff34000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0xfff34000 0x20>;
-+			interrupts = <0 18 4>;
-+			linux,clockevents-device;
-+		};
-+
-+		timer@fff34020 {
- 			compatible = "arm,sp804", "arm,primecell";
--			reg = <0xfff34000 0x1000>;
-+			reg = <0xfff34020 0x20>;
- 			interrupts = <0 18 4>;
-+			linux,clock-source;
- 		};
- 
- 		rtc@fff35000 {
-diff --git a/arch/arm/mach-highbank/clock.c b/arch/arm/mach-highbank/clock.c
-index c25a2ae..96f4599 100644
---- a/arch/arm/mach-highbank/clock.c
-+++ b/arch/arm/mach-highbank/clock.c
-@@ -19,10 +19,6 @@
- #include <linux/clk.h>
- #include <linux/clkdev.h>
- 
--struct clk {
--	unsigned long rate;
--};
--
- int clk_enable(struct clk *clk)
- {
- 	return 0;
-@@ -45,18 +41,3 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
- {
- 	return 0;
- }
--
--static struct clk eclk = { .rate = 200000000 };
--static struct clk pclk = { .rate = 150000000 };
--
--static struct clk_lookup lookups[] = {
--	{ .clk = &pclk, .con_id = "apb_pclk", },
--	{ .clk = &pclk, .dev_id = "sp804", },
--	{ .clk = &eclk, .dev_id = "ffe0e000.sdhci", },
--	{ .clk = &pclk, .dev_id = "fff36000.serial", },
--};
--
--void __init highbank_clocks_init(void)
--{
--	clkdev_add_table(lookups, ARRAY_SIZE(lookups));
--}
-diff --git a/arch/arm/mach-highbank/core.h b/arch/arm/mach-highbank/core.h
-index 7e33fc9..490f430 100644
---- a/arch/arm/mach-highbank/core.h
-+++ b/arch/arm/mach-highbank/core.h
-@@ -1,5 +1,4 @@
- extern void highbank_set_cpu_jump(int cpu, void *jump_addr);
--extern void highbank_clocks_init(void);
- extern void __iomem *scu_base_addr;
- #ifdef CONFIG_DEBUG_HIGHBANK_UART
- extern void highbank_lluart_map_io(void);
-diff --git a/arch/arm/mach-highbank/highbank.c b/arch/arm/mach-highbank/highbank.c
-index 88660d5..13a3b15 100644
---- a/arch/arm/mach-highbank/highbank.c
-+++ b/arch/arm/mach-highbank/highbank.c
-@@ -95,24 +95,15 @@ static void __init highbank_init_irq(void)
- 
- static void __init highbank_timer_init(void)
- {
--	int irq;
- 	struct device_node *np;
--	void __iomem *timer_base;
- 
- 	/* Map system registers */
- 	np = of_find_compatible_node(NULL, NULL, "calxeda,hb-sregs");
- 	sregs_base = of_iomap(np, 0);
- 	WARN_ON(!sregs_base);
- 
--	np = of_find_compatible_node(NULL, NULL, "arm,sp804");
--	timer_base = of_iomap(np, 0);
--	WARN_ON(!timer_base);
--	irq = irq_of_parse_and_map(np, 0);
--
--	highbank_clocks_init();
--
--	sp804_clocksource_init(timer_base + 0x20, "timer1");
--	sp804_clockevents_init(timer_base, irq, "timer0");
-+	for_each_compatible_node(np, NULL, "arm,sp804")
-+		sp804_dt_setup(np);
- }
- 
- static struct sys_timer highbank_timer = {
-diff --git a/arch/arm/mach-highbank/include/mach/clkdev.h b/arch/arm/mach-highbank/include/mach/clkdev.h
-new file mode 100644
-index 0000000..0fe8f0e
---- /dev/null
-+++ b/arch/arm/mach-highbank/include/mach/clkdev.h
-@@ -0,0 +1,11 @@
-+#ifndef __ASM_MACH_CLKDEV_H
-+#define __ASM_MACH_CLKDEV_H
-+
-+struct clk {
-+	unsigned long rate;
-+};
-+
-+#define __clk_get(clk)	({ 1; })
-+#define __clk_put(clk)	do { } while (0)
-+
-+#endif
--- 
-1.7.5.4
+> There is still stuff to clean up, and I want to add test cases for the new
+> clock framework, but otherwise I think it is pretty complete.  There are
+> some changes to the binding documentation that you'll want to pay attention
+> to.
+> 
+> This series is based on v3.2-rc5 plus the of_parse_phandle_args() patches
+> that I posted a couple of hours ago.
+> 
+Where? I'm not seeing them on devicetree-discuss.
+
+Can you publish this series on your git tree?
+
+Rob
+
+> 
+>  .../devicetree/bindings/clock/clock-bindings.txt   |  114 +++++++++++
+>  .../devicetree/bindings/clock/fixed-clock.txt      |   21 ++
+>  arch/arm/Kconfig                                   |    1 +
+>  arch/arm/boot/dts/highbank.dts                     |   32 +++-
+>  arch/arm/boot/dts/testcases/tests-phandle.dtsi     |    2 +
+>  arch/arm/boot/dts/versatile-ab.dts                 |   79 ++++++++
+>  arch/arm/common/timer-sp.c                         |   72 ++++++-
+>  arch/arm/include/asm/hardware/timer-sp.h           |    2 +
+>  arch/arm/mach-highbank/clock.c                     |   19 --
+>  arch/arm/mach-highbank/core.h                      |    1 -
+>  arch/arm/mach-highbank/highbank.c                  |   13 +-
+>  arch/arm/mach-highbank/include/mach/clkdev.h       |   11 +
+>  arch/arm/mach-integrator/impd1.c                   |   30 +---
+>  arch/arm/mach-integrator/include/mach/clkdev.h     |   19 --
+>  arch/arm/mach-integrator/integrator_cp.c           |   21 +--
+>  arch/arm/mach-realview/core.c                      |   22 +--
+>  arch/arm/mach-realview/include/mach/clkdev.h       |   10 -
+>  arch/arm/mach-versatile/core.c                     |   61 +------
+>  arch/arm/mach-versatile/include/mach/clkdev.h      |   10 -
+>  arch/arm/mach-versatile/versatile_dt.c             |   39 ++++-
+>  arch/arm/mach-vexpress/include/mach/clkdev.h       |    9 -
+>  arch/arm/mach-zynq/include/mach/clkdev.h           |   10 -
+>  arch/arm/plat-versatile/clock.c                    |  151 ++++++++++++++
+>  arch/arm/plat-versatile/include/plat/clock.h       |   34 ++++
+>  drivers/clk/clkdev.c                               |    9 +
+>  drivers/of/Kconfig                                 |    6 +
+>  drivers/of/Makefile                                |    1 +
+>  drivers/of/base.c                                  |   36 ++++
+>  drivers/of/clock.c                                 |  208 ++++++++++++++++++++
+>  drivers/of/selftest.c                              |   29 +++
+>  include/linux/of.h                                 |    3 +
+>  include/linux/of_clk.h                             |   41 ++++
+>  32 files changed, 893 insertions(+), 223 deletions(-)
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
