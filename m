@@ -1,13 +1,15 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Initial DT clock bindings
-Date: Mon, 12 Dec 2011 16:52:15 -0600
-Message-ID: <4EE6859F.2040807@gmail.com>
-References: <1323727236-4811-1-git-send-email-grant.likely@secretlab.ca>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [RFC v2 4/9] of: add clock providers
+Date: Mon, 12 Dec 2011 23:29:03 +0000
+Message-ID: <20111212232903.GC2616@gallagher>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1323727236-4811-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1323727329-4989-4-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,69 +20,91 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2011 04:00 PM, Grant Likely wrote:
-> Hi everyone,
-> 
-> Here's my second posting of initial device tree bindings for clocks.  I'm
-> a lot happier with how this is looking now, and Versatile is pretty much
-> entirely converted.  In fact, the realview, integrator and vexpress platforms
-> are pretty close now too.  Just for fun I went and converted Highbank also.
+Hi Grant,
 
-Thanks! I'll give it a spin.
+I'm still going through these and trying to digest them but a couple of 
+quick questions/comments.
 
-> There is still stuff to clean up, and I want to add test cases for the new
-> clock framework, but otherwise I think it is pretty complete.  There are
-> some changes to the binding documentation that you'll want to pay attention
-> to.
-> 
-> This series is based on v3.2-rc5 plus the of_parse_phandle_args() patches
-> that I posted a couple of hours ago.
-> 
-Where? I'm not seeing them on devicetree-discuss.
+Jamie
 
-Can you publish this series on your git tree?
+On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> new file mode 100644
+> index 0000000..e40c436
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -0,0 +1,114 @@
+> +This binding is a work-in-progress, and are based on some experimental
+> +work by benh[1].
+> +
+> +Sources of clock signal can be represented by any node in the device
+> +tree.  Those nodes are designated as clock providers.  Clock consumer
+> +nodes use a phandle and clock specifier pair to connect clock provider
+> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
+> +specifier is an array of one more more cells identifying the clock
+> +output on a device.  The length of a clock specifier is defined by the
+> +value of a #clock-cells property in the clock provider node.
+> +
+> +[1] http://patchwork.ozlabs.org/patch/31551/
+> +
+> +==Clock providers==
+> +
+> +Required properties:
+> +#clock-cells:	   Number of cells in a clock specifier; typically will be
+> +		   set to 1
 
-Rob
+I'm not sure I fully understand what the extra cells actually mean for 
+clocks.  I think the first integer is the clock output to use but some 
+of the versatile and highbank ones only have a phandle or is it more 
+implementation defined?  The clock-output-names description hints at 
+recommended, so I find this a little confusing, but that could just be 
+me!
 
-> 
->  .../devicetree/bindings/clock/clock-bindings.txt   |  114 +++++++++++
->  .../devicetree/bindings/clock/fixed-clock.txt      |   21 ++
->  arch/arm/Kconfig                                   |    1 +
->  arch/arm/boot/dts/highbank.dts                     |   32 +++-
->  arch/arm/boot/dts/testcases/tests-phandle.dtsi     |    2 +
->  arch/arm/boot/dts/versatile-ab.dts                 |   79 ++++++++
->  arch/arm/common/timer-sp.c                         |   72 ++++++-
->  arch/arm/include/asm/hardware/timer-sp.h           |    2 +
->  arch/arm/mach-highbank/clock.c                     |   19 --
->  arch/arm/mach-highbank/core.h                      |    1 -
->  arch/arm/mach-highbank/highbank.c                  |   13 +-
->  arch/arm/mach-highbank/include/mach/clkdev.h       |   11 +
->  arch/arm/mach-integrator/impd1.c                   |   30 +---
->  arch/arm/mach-integrator/include/mach/clkdev.h     |   19 --
->  arch/arm/mach-integrator/integrator_cp.c           |   21 +--
->  arch/arm/mach-realview/core.c                      |   22 +--
->  arch/arm/mach-realview/include/mach/clkdev.h       |   10 -
->  arch/arm/mach-versatile/core.c                     |   61 +------
->  arch/arm/mach-versatile/include/mach/clkdev.h      |   10 -
->  arch/arm/mach-versatile/versatile_dt.c             |   39 ++++-
->  arch/arm/mach-vexpress/include/mach/clkdev.h       |    9 -
->  arch/arm/mach-zynq/include/mach/clkdev.h           |   10 -
->  arch/arm/plat-versatile/clock.c                    |  151 ++++++++++++++
->  arch/arm/plat-versatile/include/plat/clock.h       |   34 ++++
->  drivers/clk/clkdev.c                               |    9 +
->  drivers/of/Kconfig                                 |    6 +
->  drivers/of/Makefile                                |    1 +
->  drivers/of/base.c                                  |   36 ++++
->  drivers/of/clock.c                                 |  208 ++++++++++++++++++++
->  drivers/of/selftest.c                              |   29 +++
->  include/linux/of.h                                 |    3 +
->  include/linux/of_clk.h                             |   41 ++++
->  32 files changed, 893 insertions(+), 223 deletions(-)
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> +Optional properties:
+> +clock-output-names: Recommended to be a list of strings of clock output signal
+> +		    names indexed by the first cell in the clock specifier.
+> +		    However, the meaning of clock-output-name is domain
+> +		    specific to the clock provider, and is only provided to
+> +		    encourage using the same meaning for the majority of clock
+> +		    providers.  This format may not work for clock providers
+> +		    using a complex clock specifier format.  In those cases it
+> +		    is recommended to omit this property and create a binding
+> +		    specific names property.
+> +
+> +		   Clock consumer nodes must never directly reference
+> +		   the provider's clock-output-name property.
+> +
+> +For example:
+> +
+> +    oscillator {
+> +        #clock-cells = <1>;
+> +        clock-output-names = "ckil", "ckih";
+> +    };
+> +
+> +- this node defines a device with two clock outputs, the first named
+> +  "ckil" and the second named "ckih".  Consumer nodes always reference
+> +  clocks by index. The names should reflect the clock output signal
+> +  names for the device.
+> +
+> +==Clock consumers==
+> +
+> +Required properties:
+> +clocks:		List of phandle and clock specifier pairs, one pair
+> +		for each clock input to the device.
+
+Some of the highbank and versatile devicetree nodes have clocks 
+properties that aren't a pair e.g. versatile timer has
+"clocks = <&tim_clk>;".  
+
+> +clock-names:	List of clock input name strings sorted in the same
+> +		order as the clocks property.  Consumers drivers
+> +		will use clock-names to match clock input names
+> +		with clocks specifiers.
+
+The versatile and highbank patches appears to omit this required 
+property in several nodes.  So is this really optional?
+
+Jamie
