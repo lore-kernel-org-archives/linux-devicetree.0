@@ -1,110 +1,60 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [RFC v2 4/9] of: add clock providers
-Date: Mon, 12 Dec 2011 23:29:03 +0000
-Message-ID: <20111212232903.GC2616@gallagher>
-References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC v2 6/9] arm/dt: add devicetree support to sp804 timer support
+Date: Mon, 12 Dec 2011 17:54:46 -0600
+Message-ID: <4EE69446.2060009@gmail.com>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca> <1323727329-4989-6-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1323727329-4989-4-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1323727329-4989-6-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@ti.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Grant,
 
-I'm still going through these and trying to digest them but a couple of 
-quick questions/comments.
+On 12/12/2011 04:02 PM, Grant Likely wrote:
+> This patch adds support to the sp804 code for retrieving timer
+> configuration from the device tree.  sp804 channels can be used as
+> a clock event device or a clock source.
+> 
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> ---
 
-Jamie
+[snip]
 
-On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> new file mode 100644
-> index 0000000..e40c436
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -0,0 +1,114 @@
-> +This binding is a work-in-progress, and are based on some experimental
-> +work by benh[1].
 > +
-> +Sources of clock signal can be represented by any node in the device
-> +tree.  Those nodes are designated as clock providers.  Clock consumer
-> +nodes use a phandle and clock specifier pair to connect clock provider
-> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
-> +specifier is an array of one more more cells identifying the clock
-> +output on a device.  The length of a clock specifier is defined by the
-> +value of a #clock-cells property in the clock provider node.
-> +
-> +[1] http://patchwork.ozlabs.org/patch/31551/
-> +
-> +==Clock providers==
-> +
-> +Required properties:
-> +#clock-cells:	   Number of cells in a clock specifier; typically will be
-> +		   set to 1
+> +	/*
+> +	 * Figure out how to use this clock
+> +	 *
+> +	 * Note: This is kind of ugly since it requires linux-specific
+> +	 * properties in the device tree so that Linux knows which sp804
+> +	 * channels can be used as the clock source and the clock events
+> +	 * trigger.  Something OS agnostic would be nicer, but it isn't
+> +	 * obvious what that should look like.
+> +	 */
+> +	if (of_get_property(node, "linux,clock-source", NULL)) {
+> +		__sp804_clocksource_init(base, node->full_name, clk);
+> +	} else if (of_get_property(node, "linux,clockevents-device", NULL)) {
+> +		irq = irq_of_parse_and_map(node, 0);
+> +		__sp804_clockevents_init(base, irq, node->full_name, clk);
 
-I'm not sure I fully understand what the extra cells actually mean for 
-clocks.  I think the first integer is the clock output to use but some 
-of the versatile and highbank ones only have a phandle or is it more 
-implementation defined?  The clock-output-names description hints at 
-recommended, so I find this a little confusing, but that could just be 
-me!
+At least in the case of highbank, there is no interrupt connected for
+2nd timer in the h/w. So we could use that fact and presence of a clock
+for each timer to determine which to use. Some of the ARM boards have 2
+sp804's (4 timers) though and you could use any combination I think.
+Does it really matter which one is selected as long as it meets the
+needs of the OS? Yes, we could think of possible scenarios that don't
+work, but it's not likely to see a slew of new platforms with sp804's as
+new ARM core integrate the timers in. Although, bcmring is a bit strange
+setting up 2 clksrc's, but that doesn't really present a problem.
 
-> +Optional properties:
-> +clock-output-names: Recommended to be a list of strings of clock output signal
-> +		    names indexed by the first cell in the clock specifier.
-> +		    However, the meaning of clock-output-name is domain
-> +		    specific to the clock provider, and is only provided to
-> +		    encourage using the same meaning for the majority of clock
-> +		    providers.  This format may not work for clock providers
-> +		    using a complex clock specifier format.  In those cases it
-> +		    is recommended to omit this property and create a binding
-> +		    specific names property.
-> +
-> +		   Clock consumer nodes must never directly reference
-> +		   the provider's clock-output-name property.
-> +
-> +For example:
-> +
-> +    oscillator {
-> +        #clock-cells = <1>;
-> +        clock-output-names = "ckil", "ckih";
-> +    };
-> +
-> +- this node defines a device with two clock outputs, the first named
-> +  "ckil" and the second named "ckih".  Consumer nodes always reference
-> +  clocks by index. The names should reflect the clock output signal
-> +  names for the device.
-> +
-> +==Clock consumers==
-> +
-> +Required properties:
-> +clocks:		List of phandle and clock specifier pairs, one pair
-> +		for each clock input to the device.
+The fact that you split the timer to 2 nodes is a bit of Linux's needs
+defining the binding. The h/w block is a block with 2 timers. It's not
+really split. The block does have a single set of primecell ID registers
+at 0xfe0 for example.
 
-Some of the highbank and versatile devicetree nodes have clocks 
-properties that aren't a pair e.g. versatile timer has
-"clocks = <&tim_clk>;".  
-
-> +clock-names:	List of clock input name strings sorted in the same
-> +		order as the clocks property.  Consumers drivers
-> +		will use clock-names to match clock input names
-> +		with clocks specifiers.
-
-The versatile and highbank patches appears to omit this required 
-property in several nodes.  So is this really optional?
-
-Jamie
+Rob
