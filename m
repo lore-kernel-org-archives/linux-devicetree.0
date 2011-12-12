@@ -1,50 +1,45 @@
-From: Sergei Shtylyov <sshtylyov-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>
+From: Pawel Moll <pawel.moll@arm.com>
 Subject: Re: [PATCH v5 5/9] ARM: versatile: Map local timers using Device
  Tree when possible
-Date: Mon, 12 Dec 2011 15:18:26 +0400
-Message-ID: <4EE5E302.8070301@ru.mvista.com>
+Date: Mon, 12 Dec 2011 11:29:20 +0000
+Message-ID: <1323689360.2391.15.camel@hornet.cambridge.arm.com>
 References: <1323457432-4800-1-git-send-email-pawel.moll@arm.com>
  <1323457432-4800-6-git-send-email-pawel.moll@arm.com>
  <4EE37A4D.8060204@ru.mvista.com>
  <1323687811.2391.3.camel@hornet.cambridge.arm.com>
+ <4EE5E302.8070301@ru.mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1323687811.2391.3.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4EE5E302.8070301@ru.mvista.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8uCgpPbiAxMi0xMi0yMDExIDE1OjAzLCBQYXdlbCBNb2xsIHdyb3RlOgoKPj4+ICAgIGlu
-dCBfX2NwdWluaXQgbG9jYWxfdGltZXJfc2V0dXAoc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAq
-ZXZ0KQo+Pj4gICAgewo+Pj4gKyNpZiBkZWZpbmVkKENPTkZJR19PRikKPj4+ICsJaWYgKCF0d2Rf
-YmFzZSkgewo+Pj4gKwkJc3RydWN0IGRldmljZV9ub2RlICpucCA9IG9mX2ZpbmRfY29tcGF0aWJs
-ZV9ub2RlKE5VTEwsCj4+PiArCQkJCU5VTEwsICJhcm0sc21wLXR3ZCIpOwo+Pj4gKwo+Pj4gKwkJ
-dHdkX2Jhc2UgPSBvZl9pb21hcChucCwgMCk7Cj4+PiArCQlpZiAoIXR3ZF9iYXNlKQo+Pj4gKwkJ
-CXJldHVybiAtRU5YSU87Cgo+PiAgICAgIC1FTk9NRU0uCgo+IEhtLiBXaGF0IEkgZGlkIHNpbXBs
-eSBtaW1pY3MgdGhpcyAoImFyY2gvYXJtL2luY2x1ZGUvYXNtL2xvY2FsdGltZXIuaCIpOgoKPiAj
-aWZkZWYgQ09ORklHX0xPQ0FMX1RJTUVSUwo+IFsuLi5dCj4gI2Vsc2UKCj4gc3RhdGljIGlubGlu
-ZSBpbnQgbG9jYWxfdGltZXJfc2V0dXAoc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0KQo+
-IHsKPiAgICAgICAgICByZXR1cm4gLUVOWElPOwo+IH0KCj4gTm93LCBJIGhhZCBhIGxvb2sgYXQg
-ImluY2x1ZGUvYXNtLWdlbmVyaWMvZXJybm8tYmFzZS5oIjoKCj4gI2RlZmluZSBFTlhJTyAgICAg
-ICAgICAgIDYgICAgICAvKiBObyBzdWNoIGRldmljZSBvciBhZGRyZXNzICovCj4gWy4uLl0KPiAj
-ZGVmaW5lIEVOT01FTSAgICAgICAgICAxMiAgICAgIC8qIE91dCBvZiBtZW1vcnkgKi8KCj4gYW5k
-IHRvIGJlIGhvbmVzdCwgRU5YSU8gbWFrZXMgbW9yZSBzZW5zZSB0byBtZSwgYnV0IEkgcmVhbGx5
-IGhhdmUgbm8KPiBzdHJvbmcgZmVlbGluZ3MgZWl0aGVyIHdheS4uLiBEbyB5b3U/CgogICAgSSB0
-aGluayBpZiBvZl9pb21hcCgpIGZhaWxzLCBpdCdzIGJlY2F1c2UgdGhlIHN5c3RlbSBpcyBvdXQg
-b2YgbWVtb3J5LCBzbyAKLUVOT01FTSBzZWVtcyBtb3JlIHByb3BlciBlcnJvciBpbiB0aGlzIGNh
-c2UuIEFsdGhvdWdoLi4uIGl0J3Mgbm90IHRoZSBvbmx5IApjYXNlIHdoZW4gb2ZfaW9tYXAoKSBm
-YWlscy4KCj4gVGhhbmtzIGZvciB5b3VyIHRpbWUhCgo+IFBhd2XFggoKV0JSLCBTZXJnZWkKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1k
-aXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpo
-dHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+T24gTW9uLCAyMDExLTEyLTEyIGF0IDExOjE4ICswMDAwLCBTZXJnZWkgU2h0eWx5b3Ygd3JvdGU6
+Cj4gICAgIEkgdGhpbmsgaWYgb2ZfaW9tYXAoKSBmYWlscywgaXQncyBiZWNhdXNlIHRoZSBzeXN0
+ZW0gaXMgb3V0IG9mIG1lbW9yeSwgc28gCj4gLUVOT01FTSBzZWVtcyBtb3JlIHByb3BlciBlcnJv
+ciBpbiB0aGlzIGNhc2UuIEFsdGhvdWdoLi4uIGl0J3Mgbm90IHRoZSBvbmx5IAo+IGNhc2Ugd2hl
+biBvZl9pb21hcCgpIGZhaWxzLgoKSSBhY3R1YWxseSB0aGluayB0aGF0IGluIHRoaXMgdXNlIGNh
+c2UgaXQncyBtdWNoIG1vcmUgbGlrZWx5IHRoYXQKb2ZfaW9tYXAoKSByZXR1cm5zIE5VTEwgYmVj
+YXVzZSBvZl9hZGRyZXNzX3RvX3Jlc291cmNlKCkgZmFpbHM6Cgp2b2lkIF9faW9tZW0gKm9mX2lv
+bWFwKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIGludCBpbmRleCkKeyAgICAgICAKICAgICAgICBz
+dHJ1Y3QgcmVzb3VyY2UgcmVzOwogICAgICAgIAogICAgICAgIGlmIChvZl9hZGRyZXNzX3RvX3Jl
+c291cmNlKG5wLCBpbmRleCwgJnJlcykpCiAgICAgICAgICAgICAgICByZXR1cm4gTlVMTDsKCmFu
+ZCB0aGlzIHdpbGwgLSBhZ2FpbiBtb3N0IGxpa2VseSAtIGhhcHBlbiB3aGVuIG5wID09IE5VTEwg
+KHNvCm9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKCkgcmV0dXJucyBub3RoaW5nKS4gVGhhdCdzIHdo
+YXQgbWFrZXMgRU5YSU8gbG9vawpnb29kIHRvIG1lIHRoZXJlLi4uCgpDaGVlcnMhCgpQYXdlxYIK
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
