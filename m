@@ -1,8 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [RFC v2 3/9] of: Add of_property_match_string() to find index into a
- string list
-Date: Mon, 12 Dec 2011 15:02:03 -0700
-Message-ID: <1323727329-4989-3-git-send-email-grant.likely@secretlab.ca>
+Subject: [RFC v2 6/9] arm/dt: add devicetree support to sp804 timer support
+Date: Mon, 12 Dec 2011 15:02:06 -0700
+Message-ID: <1323727329-4989-6-git-send-email-grant.likely@secretlab.ca>
 References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,142 +18,146 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a helper function for finding the index of a string in a string
-list property.  This helper is useful for bindings that use a separate
-*-name property for attaching names to tuples in another property such
-as 'reg' or 'gpios'.
+This patch adds support to the sp804 code for retrieving timer
+configuration from the device tree.  sp804 channels can be used as
+a clock event device or a clock source.
 
 Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 ---
- arch/arm/boot/dts/testcases/tests-phandle.dtsi |    2 +
- drivers/of/base.c                              |   36 ++++++++++++++++++++++++
- drivers/of/selftest.c                          |   29 +++++++++++++++++++
- include/linux/of.h                             |    3 ++
- 4 files changed, 70 insertions(+), 0 deletions(-)
+ arch/arm/common/timer-sp.c               |   72 ++++++++++++++++++++++++++---
+ arch/arm/include/asm/hardware/timer-sp.h |    2 +
+ 2 files changed, 66 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/testcases/tests-phandle.dtsi b/arch/arm/boot/dts/testcases/tests-phandle.dtsi
-index ec0c4e6..0007d3c 100644
---- a/arch/arm/boot/dts/testcases/tests-phandle.dtsi
-+++ b/arch/arm/boot/dts/testcases/tests-phandle.dtsi
-@@ -31,6 +31,8 @@
- 				phandle-list-bad-phandle = <12345678 0 0>;
- 				phandle-list-bad-args = <&provider2 1 0>,
- 							<&provider3 0>;
-+				empty-property;
-+				unterminated-string = [40 41 42 43];
- 			};
- 		};
- 	};
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index c6db9ab..ff3c1fb 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -761,6 +761,42 @@ int of_property_read_string_index(struct device_node *np, const char *propname,
- }
- EXPORT_SYMBOL_GPL(of_property_read_string_index);
+diff --git a/arch/arm/common/timer-sp.c b/arch/arm/common/timer-sp.c
+index 2393b5b..93aed48 100644
+--- a/arch/arm/common/timer-sp.c
++++ b/arch/arm/common/timer-sp.c
+@@ -25,16 +25,18 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_clk.h>
++#include <linux/of_irq.h>
  
-+/**
-+ * of_property_match_string() - Find string in a list and return index
-+ * @np: pointer to node containing string list property
-+ * @propname: string list property name
-+ * @string: pointer to string to search for in string list
-+ *
-+ * This function searches a string list property and returns the index
-+ * of a specific string value.
-+ */
-+int of_property_match_string(struct device_node *np, const char *propname,
-+			     const char *string)
+ #include <asm/hardware/arm_timer.h>
+ 
+-static long __init sp804_get_clock_rate(const char *name)
++static long __init sp804_get_clock_rate(struct clk *clk, const char *name)
+ {
+-	struct clk *clk;
+ 	long rate;
+ 	int err;
+ 
+-	clk = clk_get_sys("sp804", name);
+ 	if (IS_ERR(clk)) {
+ 		pr_err("sp804: %s clock not found: %d\n", name,
+ 			(int)PTR_ERR(clk));
+@@ -67,9 +69,10 @@ static long __init sp804_get_clock_rate(const char *name)
+ 	return rate;
+ }
+ 
+-void __init sp804_clocksource_init(void __iomem *base, const char *name)
++static void __init __sp804_clocksource_init(void __iomem *base,
++					const char *name, struct clk *clk)
+ {
+-	long rate = sp804_get_clock_rate(name);
++	long rate = sp804_get_clock_rate(clk, name);
+ 
+ 	if (rate < 0)
+ 		return;
+@@ -85,6 +88,10 @@ void __init sp804_clocksource_init(void __iomem *base, const char *name)
+ 		rate, 200, 32, clocksource_mmio_readl_down);
+ }
+ 
++void __init sp804_clocksource_init(void __iomem *base, const char *name)
 +{
-+	struct property *prop = of_find_property(np, propname, NULL);
-+	size_t l;
-+	int i;
-+	const char *p, *end;
-+
-+	if (!prop)
-+		return -EINVAL;
-+	if (!prop->value)
-+		return -ENODATA;
-+
-+	p = prop->value;
-+	end = p + prop->length;
-+
-+	for (i = 0; p < end; i++, p += l) {
-+		l = strlen(p) + 1;
-+		if (p + l > end)
-+			return -EILSEQ;
-+		pr_debug("comparing %s with %s\n", string, p);
-+		if (strcmp(string, p) == 0)
-+			return i; /* Found it; return index */
-+	}
-+	return -ENODATA;
++	__sp804_clocksource_init(base, name, clk_get_sys("sp804", name));
 +}
-+EXPORT_SYMBOL_GPL(of_property_match_string);
  
- /**
-  * of_property_count_strings - Find and return the number of strings from a
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index 9d2b480..f24ffd7 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -120,6 +120,34 @@ static void __init of_selftest_parse_phandle_with_args(void)
- 	pr_info("end - %s\n", passed_all ? "PASS" : "FAIL");
+ static void __iomem *clkevt_base;
+ static unsigned long clkevt_reload;
+@@ -158,11 +165,11 @@ static struct irqaction sp804_timer_irq = {
+ 	.dev_id		= &sp804_clockevent,
+ };
+ 
+-void __init sp804_clockevents_init(void __iomem *base, unsigned int irq,
+-	const char *name)
++static void __init __sp804_clockevents_init(void __iomem *base,
++			unsigned int irq, const char *name, struct clk *clk)
+ {
+ 	struct clock_event_device *evt = &sp804_clockevent;
+-	long rate = sp804_get_clock_rate(name);
++	long rate = sp804_get_clock_rate(clk, name);
+ 
+ 	if (rate < 0)
+ 		return;
+@@ -179,3 +186,52 @@ void __init sp804_clockevents_init(void __iomem *base, unsigned int irq,
+ 	setup_irq(irq, &sp804_timer_irq);
+ 	clockevents_register_device(evt);
  }
- 
-+static void __init of_selftest_property_match_string(void)
-+{
-+	struct device_node *np;
-+	int rc;
 +
-+	pr_info("start\n");
-+	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
-+	if (!np) {
-+		pr_err("No testcase data in device tree\n");
++void __init sp804_clockevents_init(void __iomem *base, unsigned int irq,
++	const char *name)
++{
++	__sp804_clockevents_init(base, irq, name, clk_get_sys("sp804", name));
++}
++
++#ifdef CONFIG_OF
++void __init sp804_dt_setup(struct device_node *node)
++{
++	struct clk *clk;
++	unsigned int irq;
++	__iomem void * base;
++
++	pr_debug("%s(): Setting up sp804 clock %s\n", __func__, node->name);
++
++	/* Find the base address of the clock */
++	base = of_iomap(node, 0);
++	if (!base) {
++		pr_err("ERROR: Cannot get base address of sp804 %s\n",
++			node->full_name);
 +		return;
 +	}
 +
-+	rc = of_property_match_string(np, "phandle-list-names", "first");
-+	selftest(rc == 0, "first expected:0 got:%i\n", rc);
-+	rc = of_property_match_string(np, "phandle-list-names", "second");
-+	selftest(rc == 1, "second expected:0 got:%i\n", rc);
-+	rc = of_property_match_string(np, "phandle-list-names", "third");
-+	selftest(rc == 2, "third expected:0 got:%i\n", rc);
-+	rc = of_property_match_string(np, "phandle-list-names", "fourth");
-+	selftest(rc == -ENODATA, "unmatched string; rc=%i", rc);
-+	rc = of_property_match_string(np, "missing-property", "blah");
-+	selftest(rc == -EINVAL, "missing property; rc=%i", rc);
-+	rc = of_property_match_string(np, "empty-property", "blah");
-+	selftest(rc == -ENODATA, "empty property; rc=%i", rc);
-+	rc = of_property_match_string(np, "unterminated-string", "blah");
-+	selftest(rc == -EILSEQ, "unterminated string; rc=%i", rc);
-+}
++	writel(0, base + TIMER_CTRL); /* Disable the clock */
 +
- static int __init of_selftest(void)
- {
- 	struct device_node *np;
-@@ -133,6 +161,7 @@ static int __init of_selftest(void)
- 
- 	pr_info("start of selftest - you will see error messages\n");
- 	of_selftest_parse_phandle_with_args();
-+	of_selftest_property_match_string();
- 	pr_info("end of selftest - %s\n", selftest_passed ? "PASS" : "FAIL");
- 	return 0;
- }
-diff --git a/include/linux/of.h b/include/linux/of.h
-index ea44fd7..f02794e 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -218,6 +218,9 @@ extern int of_property_read_string(struct device_node *np,
- extern int of_property_read_string_index(struct device_node *np,
- 					 const char *propname,
- 					 int index, const char **output);
-+extern int of_property_match_string(struct device_node *np,
-+				    const char *propname,
-+				    const char *string);
- extern int of_property_count_strings(struct device_node *np,
- 				     const char *propname);
- extern int of_device_is_compatible(const struct device_node *device,
++	clk = of_clk_get(node, 0);
++	if (!clk) {
++		pr_err("ERROR: Cannot get clock for sp804 %s\n", node->name);
++		return;
++	}
++
++	/*
++	 * Figure out how to use this clock
++	 *
++	 * Note: This is kind of ugly since it requires linux-specific
++	 * properties in the device tree so that Linux knows which sp804
++	 * channels can be used as the clock source and the clock events
++	 * trigger.  Something OS agnostic would be nicer, but it isn't
++	 * obvious what that should look like.
++	 */
++	if (of_get_property(node, "linux,clock-source", NULL)) {
++		__sp804_clocksource_init(base, node->full_name, clk);
++	} else if (of_get_property(node, "linux,clockevents-device", NULL)) {
++		irq = irq_of_parse_and_map(node, 0);
++		__sp804_clockevents_init(base, irq, node->full_name, clk);
++	};
++}
++#endif /* CONFIG_OF */
+diff --git a/arch/arm/include/asm/hardware/timer-sp.h b/arch/arm/include/asm/hardware/timer-sp.h
+index 4384d81..edd0ec3 100644
+--- a/arch/arm/include/asm/hardware/timer-sp.h
++++ b/arch/arm/include/asm/hardware/timer-sp.h
+@@ -1,2 +1,4 @@
++struct device_node;
+ void sp804_clocksource_init(void __iomem *, const char *);
+ void sp804_clockevents_init(void __iomem *, unsigned int, const char *);
++void sp804_dt_setup(struct device_node *node);
 -- 
 1.7.5.4
