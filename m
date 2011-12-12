@@ -1,291 +1,217 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [RFC v2 8/9] dt/arm: versatile add clock parsing
-Date: Mon, 12 Dec 2011 15:02:08 -0700
-Message-ID: <1323727329-4989-8-git-send-email-grant.likely@secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [RFC v2 9/9] arm/highbank: Use clock binding common support code
+Date: Mon, 12 Dec 2011 15:02:09 -0700
+Message-ID: <1323727329-4989-9-git-send-email-grant.likely@secretlab.ca>
 References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Mike Turquette <mturquette@ti.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Shawn Guo <shawn.guo@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1323727329-4989-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Mike Turquette <mturquette@ti.com>
----
- arch/arm/boot/dts/versatile-ab.dts     |   79 ++++++++++++++++++++++++++++++++
- arch/arm/mach-versatile/core.c         |   39 +--------------
- arch/arm/mach-versatile/versatile_dt.c |   39 +++++++++++++++-
- 3 files changed, 119 insertions(+), 38 deletions(-)
+This patch makes the Calxeda Highbank platform use the common DT clock
+binding support code for setting up timers and fixed clocks.
 
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index 0b32925..d29fc2b 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -8,6 +8,10 @@
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/Kconfig                             |    1 +
+ arch/arm/boot/dts/highbank.dts               |   32 ++++++++++++++++++++++++-
+ arch/arm/mach-highbank/clock.c               |   19 ---------------
+ arch/arm/mach-highbank/core.h                |    1 -
+ arch/arm/mach-highbank/highbank.c            |   13 +---------
+ arch/arm/mach-highbank/include/mach/clkdev.h |   11 +++++++++
+ 6 files changed, 44 insertions(+), 33 deletions(-)
+ create mode 100644 arch/arm/mach-highbank/include/mach/clkdev.h
+
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index e084b7e..33c2958 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -341,6 +341,7 @@ config ARCH_HIGHBANK
+ 	select ARM_GIC
+ 	select ARM_TIMER_SP804
+ 	select CLKDEV_LOOKUP
++	select HAVE_MACH_CLKDEV
+ 	select CPU_V7
+ 	select GENERIC_CLOCKEVENTS
+ 	select HAVE_ARM_SCU
+diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
+index aeb1a75..a60e41d 100644
+--- a/arch/arm/boot/dts/highbank.dts
++++ b/arch/arm/boot/dts/highbank.dts
+@@ -25,6 +25,10 @@
+ 	#address-cells = <1>;
  	#size-cells = <1>;
- 	interrupt-parent = <&vic>;
  
-+	clocks = <&ref24_clk>;
++	clocks = <&pclk>;
 +	clock-names = "apb_pclk";
 +	clock-ranges;
 +
- 	aliases {
- 		serial0 = &uart0;
- 		serial1 = &uart1;
-@@ -19,6 +23,42 @@
- 		reg = <0x0 0x08000000>;
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -54,6 +58,20 @@
+ 		};
  	};
  
 +	clocks {
-+		ref24_clk: ref24clk {
++		eclk: eclk {
 +			compatible = "fixed-clock";
 +			#clock-cells = <0>;
-+			clock-frequency = <24000000>;
++			clock-frequency = <200000000>;
 +		};
 +
-+		tim_clk: timclk {
++		pclk: pclk {
 +			compatible = "fixed-clock";
 +			#clock-cells = <0>;
-+			clock-frequency = <1000000>;
-+		};
-+
-+		ref_clk: refclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32000>;
++			clock-frequency = <150000000>;
 +		};
 +	};
 +
-+	sys@10000000 {
-+		compatible = "arm,versatile-sys-regs";
-+		reg = <0x10000000 0x100>;
-+
-+		osc4_clk: clock {
-+			compatible = "idt,ics307";
-+			#clock-cells = <1>;
-+			idt,ref-clock-freq = <24000000>;
-+			idt,vco-div-range = <12 519>;
-+			idt,ref-div-range = <3 129>;
-+
-+			arm,reg-vco-offset = <0x1c>;
-+			arm,reg-lock-offset = <0x20>;
-+		};
-+	};
-+
- 	flash@34000000 {
- 		compatible = "arm,versatile-flash";
- 		reg = <0x34000000 0x4000000>;
-@@ -53,6 +93,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+ 	memory {
+ 		name = "memory";
+ 		device_type = "memory";
+@@ -70,6 +88,7 @@
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&intc>;
  		ranges;
 +		clock-ranges;
  
- 		vic: intc@10140000 {
- 			compatible = "arm,versatile-vic";
-@@ -108,6 +149,8 @@
- 			compatible = "arm,pl110", "arm,primecell";
- 			reg = <0x10120000 0x1000>;
- 			interrupts = <16>;
-+			clocks = <&osc4_clk 0>;
-+			clock-names = "apb_pclk";
+ 		timer@fff10600 {
+ 			compatible = "arm,smp-twd";
+@@ -117,6 +136,7 @@
+ 			compatible = "calxeda,hb-sdhci";
+ 			reg = <0xffe0e000 0x1000>;
+ 			interrupts = <0 90 4>;
++			clocks = <&eclk>;
  		};
  
- 		sctl@101e0000 {
-@@ -121,6 +164,36 @@
- 			interrupts = <0>;
+ 		ipc@fff20000 {
+@@ -157,10 +177,18 @@
+ 			interrupts = <0 17 4>;
  		};
  
-+		timer@101e2000 {
-+			compatible = "arm,sp804";
-+			reg = <0x101e2000 0x1000>;
-+			clocks = <&tim_clk>;
-+			interrupts = <4>;
+-		timer {
++		timer@fff34000 {
++			compatible = "arm,sp804", "arm,primecell";
++			reg = <0xfff34000 0x20>;
++			interrupts = <0 18 4>;
 +			linux,clockevents-device;
 +		};
 +
-+		timer@101e2020 {
-+			compatible = "arm,sp804";
-+			reg = <0x101e2020 0x1000>;
-+			clocks = <&tim_clk>;
-+			interrupts = <4>;
-+		};
-+
-+		timer@101e3000 {
-+			compatible = "arm,sp804";
-+			reg = <0x101e3000 0x1000>;
-+			clocks = <&tim_clk>;
-+			interrupts = <5>;
++		timer@fff34020 {
+ 			compatible = "arm,sp804", "arm,primecell";
+-			reg = <0xfff34000 0x1000>;
++			reg = <0xfff34020 0x20>;
+ 			interrupts = <0 18 4>;
 +			linux,clock-source;
-+		};
-+
-+		timer@101e3020 {
-+			compatible = "arm,sp804";
-+			reg = <0x101e3020 0x1000>;
-+			clocks = <&tim_clk>;
-+			interrupts = <5>;
-+		};
-+
- 		gpio0: gpio@101e4000 {
- 			compatible = "arm,pl061", "arm,primecell";
- 			reg = <0x101e4000 0x1000>;
-@@ -165,6 +238,8 @@
- 			#size-cells = <1>;
- 			ranges = <0 0x10000000 0x10000>;
- 
-+			clock-ranges;
-+
- 			aaci@4000 {
- 				compatible = "arm,primecell";
- 				reg = <0x4000 0x1000>;
-@@ -180,12 +255,16 @@
- 				reg = <0x6000 0x1000>;
- 				interrupt-parent = <&sic>;
- 				interrupts = <3>;
-+				clocks = <&ref24_clk>;
-+				clock-names = "KMIREFCLK";
- 			};
- 			kmi@7000 {
- 				compatible = "arm,pl050", "arm,primecell";
- 				reg = <0x7000 0x1000>;
- 				interrupt-parent = <&sic>;
- 				interrupts = <4>;
-+				clocks = <&ref24_clk>;
-+				clock-names = "KMIREFCLK";
- 			};
  		};
- 	};
-diff --git a/arch/arm/mach-versatile/core.c b/arch/arm/mach-versatile/core.c
-index 47f4531..7b4e00a 100644
---- a/arch/arm/mach-versatile/core.c
-+++ b/arch/arm/mach-versatile/core.c
-@@ -26,6 +26,7 @@
- #include <linux/interrupt.h>
- #include <linux/irqdomain.h>
- #include <linux/of_address.h>
-+#include <linux/of_clk.h>
- #include <linux/of_platform.h>
- #include <linux/amba/bus.h>
- #include <linux/amba/clcd.h>
-@@ -647,44 +648,11 @@ static struct amba_device *amba_devs[] __initdata = {
- /*
-  * Lookup table for attaching a specific name and platform_data pointer to
-  * devices as they get created by of_platform_populate().  Ideally this table
-- * would not exist, but the current clock implementation depends on some devices
-- * having a specific name.
-+ * would not exist, but some devices still need platform data.
-  */
- struct of_dev_auxdata versatile_auxdata_lookup[] __initdata = {
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_MMCI0_BASE, "fpga:05", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_KMI0_BASE, "fpga:06", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_KMI1_BASE, "fpga:07", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_UART3_BASE, "fpga:09", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_MMCI1_BASE, "fpga:0b", NULL),
+ 
+ 		rtc@fff35000 {
+diff --git a/arch/arm/mach-highbank/clock.c b/arch/arm/mach-highbank/clock.c
+index c25a2ae..96f4599 100644
+--- a/arch/arm/mach-highbank/clock.c
++++ b/arch/arm/mach-highbank/clock.c
+@@ -19,10 +19,6 @@
+ #include <linux/clk.h>
+ #include <linux/clkdev.h>
+ 
+-struct clk {
+-	unsigned long rate;
+-};
 -
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_CLCD_BASE, "dev:20", &clcd_plat_data),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_UART0_BASE, "dev:f1", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_UART1_BASE, "dev:f2", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_UART2_BASE, "dev:f3", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SSP_BASE, "dev:f4", NULL),
- 
--#if 0
--	/*
--	 * These entries are unnecessary because no clocks referencing
--	 * them.  I've left them in for now as place holders in case
--	 * any of them need to be added back, but they should be
--	 * removed before actually committing this patch.  --gcl
--	 */
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_AACI_BASE, "fpga:04", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SCI1_BASE, "fpga:0a", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SMC_BASE, "dev:00", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_MPMC_BASE, "dev:10", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_DMAC_BASE, "dev:30", NULL),
--
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SCTL_BASE, "dev:e0", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_WATCHDOG_BASE, "dev:e1", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_GPIO0_BASE, "dev:e4", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_GPIO1_BASE, "dev:e5", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_GPIO2_BASE, "dev:e6", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_GPIO3_BASE, "dev:e7", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_RTC_BASE, "dev:e8", NULL),
--	OF_DEV_AUXDATA("arm,primecell", VERSATILE_SCI_BASE, "dev:f0", NULL),
--#endif
-+	OF_DEV_AUXDATA("arm,primecell", VERSATILE_CLCD_BASE, NULL, &clcd_plat_data),
- 	{}
- };
- #endif
-@@ -799,4 +767,3 @@ static void __init versatile_timer_init(void)
- struct sys_timer versatile_timer = {
- 	.init		= versatile_timer_init,
- };
--
-diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
-index 54e037c..26c9705 100644
---- a/arch/arm/mach-versatile/versatile_dt.c
-+++ b/arch/arm/mach-versatile/versatile_dt.c
-@@ -21,14 +21,49 @@
-  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-  */
- 
-+#include <linux/io.h>
- #include <linux/init.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-+#include <linux/of_clk.h>
-+#include <linux/slab.h>
-+
-+#include <plat/sched_clock.h>
-+#include <mach/hardware.h>
-+#include <mach/clkdev.h>
-+#include <asm/irq.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
- 
- #include "core.h"
- 
-+static void __init versatile_dt_init_early(void)
-+{
-+	void __iomem *sys = __io_address(VERSATILE_SYS_BASE);
-+	u32 val;
-+
-+	/*
-+	 * TODO: DT generalization of early init code; the ARM Versatile,
-+	 * Realview, Integrator, and VExpress boards are pretty similar here.
-+	 * All call versatile_sched_clock_init(), and need to configure the
-+	 * correct clock input to the sp804 timers
-+	 */
-+	versatile_sched_clock_init(sys + VERSATILE_SYS_24MHz_OFFSET, 24000000);
-+
-+	/*
-+	 * set clock frequency to the sp804 timers:
-+	 * VERSATILE_REFCLK is 32KHz
-+	 * VERSATILE_TIMCLK is 1MHz
-+	 */
-+	sys = __io_address(VERSATILE_SCTL_BASE);
-+	val = readl(sys);
-+	val |= (VERSATILE_TIMCLK << VERSATILE_TIMER1_EnSel);
-+	val |= (VERSATILE_TIMCLK << VERSATILE_TIMER2_EnSel);
-+	val |= (VERSATILE_TIMCLK << VERSATILE_TIMER3_EnSel);
-+	val |= (VERSATILE_TIMCLK << VERSATILE_TIMER4_EnSel);
-+	writel(val, sys);
-+}
-+
- static void __init versatile_dt_init(void)
+ int clk_enable(struct clk *clk)
  {
- 	of_platform_populate(NULL, of_default_bus_match_table,
-@@ -43,9 +78,9 @@ static const char *versatile_dt_match[] __initconst = {
+ 	return 0;
+@@ -45,18 +41,3 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
+ {
+ 	return 0;
+ }
+-
+-static struct clk eclk = { .rate = 200000000 };
+-static struct clk pclk = { .rate = 150000000 };
+-
+-static struct clk_lookup lookups[] = {
+-	{ .clk = &pclk, .con_id = "apb_pclk", },
+-	{ .clk = &pclk, .dev_id = "sp804", },
+-	{ .clk = &eclk, .dev_id = "ffe0e000.sdhci", },
+-	{ .clk = &pclk, .dev_id = "fff36000.serial", },
+-};
+-
+-void __init highbank_clocks_init(void)
+-{
+-	clkdev_add_table(lookups, ARRAY_SIZE(lookups));
+-}
+diff --git a/arch/arm/mach-highbank/core.h b/arch/arm/mach-highbank/core.h
+index 7e33fc9..490f430 100644
+--- a/arch/arm/mach-highbank/core.h
++++ b/arch/arm/mach-highbank/core.h
+@@ -1,5 +1,4 @@
+ extern void highbank_set_cpu_jump(int cpu, void *jump_addr);
+-extern void highbank_clocks_init(void);
+ extern void __iomem *scu_base_addr;
+ #ifdef CONFIG_DEBUG_HIGHBANK_UART
+ extern void highbank_lluart_map_io(void);
+diff --git a/arch/arm/mach-highbank/highbank.c b/arch/arm/mach-highbank/highbank.c
+index 88660d5..13a3b15 100644
+--- a/arch/arm/mach-highbank/highbank.c
++++ b/arch/arm/mach-highbank/highbank.c
+@@ -95,24 +95,15 @@ static void __init highbank_init_irq(void)
  
- DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile (Device Tree Support)")
- 	.map_io		= versatile_map_io,
--	.init_early	= versatile_init_early,
-+	.init_early	= versatile_dt_init_early,
- 	.init_irq	= versatile_init_irq,
--	.timer		= &versatile_timer,
-+	.timer		= &versatile_dt_timer,
- 	.init_machine	= versatile_dt_init,
- 	.dt_compat	= versatile_dt_match,
- MACHINE_END
+ static void __init highbank_timer_init(void)
+ {
+-	int irq;
+ 	struct device_node *np;
+-	void __iomem *timer_base;
+ 
+ 	/* Map system registers */
+ 	np = of_find_compatible_node(NULL, NULL, "calxeda,hb-sregs");
+ 	sregs_base = of_iomap(np, 0);
+ 	WARN_ON(!sregs_base);
+ 
+-	np = of_find_compatible_node(NULL, NULL, "arm,sp804");
+-	timer_base = of_iomap(np, 0);
+-	WARN_ON(!timer_base);
+-	irq = irq_of_parse_and_map(np, 0);
+-
+-	highbank_clocks_init();
+-
+-	sp804_clocksource_init(timer_base + 0x20, "timer1");
+-	sp804_clockevents_init(timer_base, irq, "timer0");
++	for_each_compatible_node(np, NULL, "arm,sp804")
++		sp804_dt_setup(np);
+ }
+ 
+ static struct sys_timer highbank_timer = {
+diff --git a/arch/arm/mach-highbank/include/mach/clkdev.h b/arch/arm/mach-highbank/include/mach/clkdev.h
+new file mode 100644
+index 0000000..0fe8f0e
+--- /dev/null
++++ b/arch/arm/mach-highbank/include/mach/clkdev.h
+@@ -0,0 +1,11 @@
++#ifndef __ASM_MACH_CLKDEV_H
++#define __ASM_MACH_CLKDEV_H
++
++struct clk {
++	unsigned long rate;
++};
++
++#define __clk_get(clk)	({ 1; })
++#define __clk_put(clk)	do { } while (0)
++
++#endif
 -- 
 1.7.5.4
