@@ -1,220 +1,162 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH 4/6] tegra: Add tegra keyboard support
-Date: Mon, 12 Dec 2011 10:10:30 -0800
-Message-ID: <CAPnjgZ1dskr04mNfdkTPVLjbv8EnJisQvt1YrYOjKSSa=AbhkA@mail.gmail.com>
-References: <1322881071-11148-1-git-send-email-sjg@chromium.org>
-	<1322881071-11148-5-git-send-email-sjg@chromium.org>
-	<4EDFE259.9080201@nvidia.com>
-	<CAPnjgZ3AP2d7kGqawm=CyySd=y0UfXAsYr4r0TvXaX+64pdUuA@mail.gmail.com>
-	<4EE64135.5070300@nvidia.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 09/17] tegra: usb: fdt: Add additional device tree
+ definitions for USB ports
+Date: Mon, 12 Dec 2011 11:13:04 -0700
+Message-ID: <4EE64430.5070508@nvidia.com>
+References: <1322878300-5551-1-git-send-email-sjg@chromium.org>	<1322878300-5551-10-git-send-email-sjg@chromium.org>	<4EDD52D4.7090906@nvidia.com>	<CAPnjgZ1J_cOS_E+ZiDoZUh79V7LUFzVkx-0nhbPTDwuGCGvDnQ@mail.gmail.com>	<4EDE7B06.7060401@nvidia.com>	<CAPnjgZ035Cen11ObFXjKUCqypvVKzkewhfY2F=yGH8=RWxVuSA@mail.gmail.com>	<4EDFF898.1070708@nvidia.com>
+ <CAPnjgZ1adfU652Z2ob30GTWZiCnah4WsJNfVrroWvtM5LXW93Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4EE64135.5070300@nvidia.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@nvidia.com>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, U-Boot Mailing List <u-boot@lists.denx.de>, Rakesh Iyer <riyer@nvidia.com>, Tom Warren <TWarren@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPnjgZ1adfU652Z2ob30GTWZiCnah4WsJNfVrroWvtM5LXW93Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Remy Bohmer <linux-SYUVB/VFmdasTnJN9+BGXg@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Mon, Dec 12, 2011 at 10:00 AM, Stephen Warren <swarren@nvidia.com> wrote:
-> On 12/08/2011 02:56 PM, Simon Glass wrote:
->> Hi Stephen,
+On 12/08/2011 02:10 PM, Simon Glass wrote:
+> Hi Stephen,
+> 
+> On Wed, Dec 7, 2011 at 3:36 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 12/06/2011 02:09 PM, Simon Glass wrote:
+>>> On Tue, Dec 6, 2011 at 12:28 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> On 12/05/2011 05:55 PM, Simon Glass wrote:
+>>>>> On Mon, Dec 5, 2011 at 3:25 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>>> On 12/02/2011 07:11 PM, Simon Glass wrote:
+>>>>>>> This adds peripheral IDs and timing information to the USB part of the
+>>>>>>> device tree for U-Boot.
+>>>>>>>
+>>>>>>> The peripheral IDs provide easy access to clock registers. We will likely
+>>>>>>> remove this in favor of a full clock tree when it is available in the
+>>>>>>> kernel (but probably still retain the peripheral ID, just move it into
+>>>>>>> a clock node).
+>>>>>>>
+>>>>>>> The USB timing information does apparently vary between boards sometimes,
+>>>>>>> so is include in the fdt for convenience.
 >>
->> On Wed, Dec 7, 2011 at 2:02 PM, Stephen Warren <swarren@nvidia.com> wrot=
-e:
->>> On 12/02/2011 07:57 PM, Simon Glass wrote:
->>>> Add support for internal matrix keyboard controller for Nvidia Tegra p=
-latforms.
->>>> This driver uses the fdt decode function to obtain its key codes.
-> ...
->>> From a purely HW perspective, the only thing that exists is a single
->>> mapping from (row, col) to keycode. I believe that's all the KBC
->>> driver's binding should define.
+>>>>>>>       usb@c5000000 {
+>>>>>>>               compatible = "nvidia,tegra20-ehci", "usb-ehci";
+>>>>>>>               reg = <0xc5000000 0x4000>;
+>>>>>>>               interrupts = < 52 >;
+>>>>>>>               phy_type = "utmi";
+>>>>>>> +             periph-id = <22>;       // PERIPH_ID_USBD
+>>>>>>
+>>>>>> Given this is a temporary U-Boot-specific solution, can the property be
+>>>>>> named u-boot,periph-id so it's obvious that when writing a .dts for the
+>>>>>> kernel only, you don't care about this value.
+>>>>>
+>>>>> ok. I suggest the kernel does something similar.
+>>>>
+>>>> The kernel will use the standardized clock bindings once they're ready
+>>>> and we convert Tegra over to use them. The kernel is extremely unlikely
+>>>> to ever use "periph-id" or "u-boot,periph-id".
 >>>
->>> I'll amend that slightly: keyboards commonly implement the Fn key
->>> internally in HW, since it causes keys to emit completely different raw
->>> codes, so I can see this driver wanting both keycode-plain and keycode-=
-fn.
+>>> What is the time frame on this working be completed and merged?
+>>
+>> Sorry, I have no idea. I've been focusing on other subsystems (pinmux,
+>> audio) and haven't been following the clock stuff at all. Hopefully
+>> someone will start driving Tegra kernel towards common clock soon, but I
+>> don't think exactly who and when has been nailed down yet.
+>>
+>>>> Right now, the kernel's clock driver contains a mapping table from
+>>>> device name (e.g. tegra-ehci.2) to clock name (e.g. usb3). This allows
+>>>> the kernel USB driver to work without any explicit periph-id or similar
+>>>> DT property.
 >>>
->>> However, keycode-shift and keycode-ctrl are purely SW concepts. As such,
->>> they shouldn't be part of the KBC's own mapping table. Witness how the
->>> kernel's Tegra KBC driver only contains the plain and fn tables (albeit
->>> merged into a single array for ease of use), and the input core is what
->>> interpets e.g. KEY_LEFTSHIFT as a modifier.
+>>> Where does tegra-ehci.2 come from? I don't see that in the fdt.
 >>
->> Yes, certainly for ctrl I agree that we can simply calculate it.
->> Although interestingly the other two keyboard drivers in U-Boot use
->> the same approach as here, so maybe there is a fish hook somewhere (I
->> have not written this code before).
->
->>> So specifically what I'd like to see changed in this binding is:
->>>
->>> a) We need binding documentation for the Tegra KBC binding, in the same
->>> style as found in the kernel's Documentation/devicetree/bindings.
+>> Pre-DT, everything was instantiated from platform devices. Each one had
+>> a name ("tegra-ehci") and an instance number ("2"), which concatenate to
+>> "tegra-ehci.2". All the clocks (and I think other resources like
+>> regulators) in the kernel were marked as being for use by a particular
+>> device name. For example in arch/arm/mach-tegra/tegra2_clocks.c:
 >>
->> OK will do - should I just put that in the cover letter? There is no
->> such file in U-Boot.
->
-> Right now, the canonical location for binding documentation appears to
-> be the kernel's Documentation/devicetree/bindings/ directory. Perhaps we
-> should add the documentation there first?
->
-> At least, we should post the binding document in the standard kernel
-> style to the linux-input and devicetree-discuss mailing lists even if it
-> doesn't get immediately checked in.
->
-> I recall from the kernel summit that Grant Likely was thinking of
-> creating an outside-the-kernel repository for either/both of binding
-> documentation and .dts/.dtsi. I'm not sure if any progress has been made
-> there yet.
-
-Not enough that it is done, but I believe it is happening.
-
->
->>> b) The Tegra KBC binding should include only the keycode-plain and
->>> keycode-fn properties; nothing to do with shift/ctrl/alt/.... (Well,
->>> also any standardized properties such as compatible, reg, interrupts).
+>> static struct clk tegra_list_clks[] = {
+>> ...
+>>        PERIPH_CLK("usb3",      "tegra-ehci.2", ...),
 >>
->> OK. I'm not sure how I specify what happens when you press shift...
+>> With DT, the device names typically don't follow this format (in this
+>> case, it'd be something more like "/usb@c5008000"). However, this
+>> prevented the clock lookups by device name from working, so a temporary
+>> scheme was put in place to keep the same device names. This is driven by
+>> "AUXDATA", for example in arch/arm/mach-tegra/board-dt.c:
 >>
->>>
->>> c) We need binding documentation for the data that is/could-be common
->>> across multiple keyboards: i.e. what does each key code value represent;
->>> which is KEY_A, KEY_LEFTSHIFT, etc.? These values should be common
->>> across (1) all keyboards (2) some standardized meaning for DT that can
->>> be used by U-Boot, the Linux kernel, etc. Perhaps there is already such
->>> a standard?
 >>
->> I'm not aware of it.
->
-> I looked around for any kind of existing keyboard mapping binding, and I
-> couldn't find anything.
->
-> I did find a Samsung matrix KBC binding in the kernel
-> (Documentation/devicetree/bindings/input/samsung-keypad.txt) which is
-> conceptually at the same level as having a "plain" table, although no
-> "fn" table in their case. I prefer the proposed Tegra binding's table
-> approach rather than having a separate node per key myself.
->
->>> d) Shift/Ctrl/Alt/... modifier mapping tables should be specified by a
->>> separate binding that can be common to any/all keyboards (probably the
->>> same document as (b) above). The input to this table should be the raw
->>> codes from keycode-plain/keycode-fn. The output would be the values sent
->>> to whatever consumes keyboard input. The naming of these properties
->>> should make it obvious that it's something not specific to Tegra's KBC,
->>> and SW oriented. Perhaps something semantically similar to loadkeys' or
->>> xkbcomp's input, although I haven't looked at those in detail.
+>> struct of_dev_auxdata tegra20_auxdata_lookup[] __initdata = {
+>> ...
+>> //             compatible, unit address, device name
+>> OF_DEV_AUXDATA("nvidia,tegra20-ehci", TEGRA_USB3_BASE, "tegra-ehci.2",
 >>
->> While I agree this would be nice, it involves adding a layer of
->> software into U-Boot which doesn't currently exist (converting key
->> codes + modifies into ASCII codes).
->
-> It doesn't have to be a separate lyaer in U-Boot; the binding just has
-> to be defined in a way that doesn't tie it to the Tegra KBC driver, so
-> it can be re-used.
->
-> In other words:
->
-> Tegra KBC's binding defines:
->
-> nvidia,keycode-plain
-> nvidia,keycode-fn
->
-> (these should output "shift" and "ctrl" keycodes for later processing)
->
-> Generic key mapping binding defines:
->
-> modifier-mapping-shift
-> modifier-mapping-ctrl
->
-> ... which take as input the values generated by keycode-plain/keycode-fn
-> and output the rewritten keycodes.
->
-> (the difference here is that the input to those tables is the output
-> from the nvidia,keycode-foo tables, rather than the raw HW keycodes)
-
-I'm not sure this passes the 'simple' test. But OK. If we limit it to
-characters <128 then we can avoid doubling the size of each mapping.
-
->
-> As far as implementation goes, all of that can be handled inside the
-> Tegra KBC driver for now, so no new layer is required.
->
-> I think we should run this plan, and both binding definitions past the
-> linux-input mailing list; people there will be far more aware of any
-> previous work in this area, whether this plan makes sense, etc.
->
-> ...
->> I think asking for a new input layer in U-Boot. But this does not
->> exist at present. Don't you think this is taking things a little far?
->> I am trying to upstream a hardware driver :-)
->
-> Yes, I'd like a clear documentation/naming separation between the
-> HW-specific plain/fn keycode array and the higher-level shift/ctrl
-> mappings. I certainly am not requesting that you create a separate input
-> layer in U-Boot to handle those mappings; it can all be done in the
-> Tegra KBC driver for now.
-
-I would prefer to just leave it as it is and deal with the input layer
-when there is demand for it. But I'm OK with your plan.
-
->
->> My reading of the Tegra keyboard driver in the kernel is that it
->> *could* use the keycode-plain and keycode-fn properties as given in
->> this series. =A0They would replace the tegra_kbc_default_keymap[] array.
->
-> Yes, that seems quite reasonable.
->
->> However, code would need to be added to create that array for use by
->> the upper layers of linux keyboard input, since presumably it will be
->> a while before the kernel's drivers/input/keyboard/matrix_keypad.c
->> supports an fdt-based mapping. It certainly will not use a shift or
->> ctrl mapping, since these are handled by upper layers of Linux input.
+>> This means that any device with the given compatible property value, the
+>> given unit address will be named accordingly.
 >>
->> So after all this musing I see two options:
+>> This allows the existing clock/regulator lookups to work unmodified.
 >>
->> 1. Modify this series to remove 'shift' support and make 'ctrl' use a
->> calculated value (i.e. unlike the other two existing U-Boot drivers).
->> We lose access to a number of symbols but I could hard-code a mapping
->> in for the keyboard on Seaboard, say.
+>> Once DT bindings are in place for clocks, regulators, etc., the clock
+>> tables can be derived from DT, phandles will be used to match clocks and
+>> devices rather than device names, and the AUXDATA table can go away.
 >>
->> 2. a. Go with what we have, put a 'u-boot,' prefix on the
->> keycode-shift property and don't expect the kernel to ever use it. =A0b.
->> Start talking on the U-Boot list about the need for a middle input
->> translation layer and a generic header file which defines key codes in
->> a standardized way. Then write this layer, get it accepted and
->> refactor the 3 keyboard drivers to use it.
->
-> I'd like to ask for comments in linux-input in case they have any other
-> ideas, e.g. whether a set of separately documented modifier mapping
-> properties makes sense. If not, I suppose the following set of
-> properties would suffice:
->
-> nvidia,keycode-plain
-> nvidia,keycode-fn
-> u-boot,keycode-shift
-> u-boot,keycode-ctrl
->
-> (although the last two seem to want both nvidia, and u-boot, prefixes)
+>> The equivalent in U-Boot would be a table that maps from driver type
+>> (e.g. COMPAT_NVIDIA_TEGRA20_USB or perhaps NVIDIA_TEGRA20_USB?) and
+>> address to periph id. Again, once the clock bindings are complete and
+>> the nodes present in the .dts file, that mapping table can be removed
+>> and everything will work based on phandles.
+>>
+>> I'd like to point out here that everything is in a pretty big state of
+>> flux/development, since DT support for ARM is new. Temporary workarounds
+>> like AUXDATA allow us to make as much work as possible using device
+>> tree, but without having to put temporary nodes/properties into the .dts
+>> files themselves. That way, the DT bindings will only ever get added to
+>> in a compatible fashion, rather than going through multiple incompatible
+>> sets of requirements.
+> 
+> Gosh.
+> 
+> I have to say that I feel that peripheral IDs are the best solution
+> for Tegra U-Boot until everything is worked out in the kernel.
 
-OK. Since this seems to be a kernel issue and Nvidia-specific can I
-ask if you can please send this email? I will wait for confirmation
-that this is OK before going further.
+The problem here is that it requires the DT to change incompatibly
+later; it adds a property to the DT now that will be at best
+meaningless/unused in the future.
 
-Regards,
-Simon
+If we simply don't add anything to the DT now, there's nothing to remove
+from the DT later. Newer U-Boots might require additional information in
+the DT (i.e. perhaps rely on full clock bindings) but won't deprecate
+any existing fields.
 
->
-> --
-> nvpublic
+> We can't rely on phandles since they don't exist without an fdt,
+> unless we mandate that everyone must use an fdt. I don't feel
+> comfortable doing that until things are a bit more stable with all the
+> things you are working on.
+
+Sure, phandles won't work until the complete clock binding is implemnted.
+
+> I really can't see why we want to put a table in U-Boot which does a
+> mapping that is clear a hardware feature and IMO belongs in the fdt
+> (why repeat peripheral addresses in the code and the fdt?).
+
+It's a HW feature of the clock/reset controller, not the USB controller.
+
+> Plus I still don't have an answer to my question about how we can
+> ensure that instance 0 is a particular device.
+
+As I said before, in the context of USB (where IIRC the question was
+asked), you can enable just a single USB controller. The code only
+supports a single controller anyway.
+
+For SD/MMC, it does make sense to statically name some/all devices. That
+is what /aliases is for. It's just that as I said, /aliases is meant to
+control naming of devices that have been enumerated, not control the
+enumeration itself.
+
+-- 
+nvpublic
