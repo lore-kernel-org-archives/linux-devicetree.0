@@ -1,114 +1,39 @@
 From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 2/4] ARM: OMAP2/3: intc: Add DT support for TI interrupt
- controller
-Date: Tue, 13 Dec 2011 14:45:12 +0530
-Message-ID: <4EE717A0.8020304@ti.com>
-References: <1323291049-24964-1-git-send-email-b-cousson@ti.com> <1323291049-24964-3-git-send-email-b-cousson@ti.com>
+Subject: [PATCH v2 0/3] Device tree support for TWL regulators
+Date: Tue, 13 Dec 2011 15:49:32 +0530
+Message-ID: <1323771575-3550-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1323291049-24964-3-git-send-email-b-cousson@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: broonie@opensource.wolfsonmicro.com, devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+This series adds DT support for TWL regulator driver and
+passes regulator data for two OMAP4 boards (OMAP4 panda and
+OMAP4 sdp) from device tree.
 
-> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-> index 012bac7..bcfccc2 100644
-> --- a/arch/arm/mach-omap2/common.h
-> +++ b/arch/arm/mach-omap2/common.h
-> @@ -156,6 +156,16 @@ void omap3_intc_resume_idle(void);
->   void omap2_intc_handle_irq(struct pt_regs *regs);
->   void omap3_intc_handle_irq(struct pt_regs *regs);
->
-> +struct device_node;
-> +#ifdef CONFIG_OF
-> +int __init intc_of_init(struct device_node *node, struct device_node *parent);
-> +#else
-> +int __init intc_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	return 0;
-> +}
-
-This seems to break !CONFIG_OF builds as common.h is included in
-multiple c files causing 'multiple definition' errors.
+Patches are based on for-next of the regulator tree[1] with
+omap i2c/twl DT adaptation patches[2] from Benoit pulled in
+and are available here:
+git://gitorious.org/omap-pm/linux.git for-dt/regulator-twl
 
 regards,
 Rajendra
 
-> +#endif
-> +
->   /*
->    * wfi used in low power code. Directly opcode is used instead
->    * of instruction to avoid mulit-omap build break
-> diff --git a/arch/arm/mach-omap2/irq.c b/arch/arm/mach-omap2/irq.c
-> index 42b1d65..cafc663 100644
-> --- a/arch/arm/mach-omap2/irq.c
-> +++ b/arch/arm/mach-omap2/irq.c
-> @@ -17,6 +17,9 @@
->   #include<mach/hardware.h>
->   #include<asm/exception.h>
->   #include<asm/mach/irq.h>
-> +#include<linux/of.h>
-> +#include<linux/of_address.h>
-> +#include<linux/irqdomain.h>
->
->
->   /* selected INTC register offsets */
-> @@ -166,7 +169,7 @@ static void __init omap_init_irq(u32 base, int nr_irqs)
->   		/* Static mapping, never released */
->   		bank->base_reg = ioremap(base, SZ_4K);
->   		if (!bank->base_reg) {
-> -			printk(KERN_ERR "Could not ioremap irq bank%i\n", i);
-> +			pr_err("Could not ioremap irq bank%i\n", i);
->   			continue;
->   		}
->
-> @@ -179,8 +182,8 @@ static void __init omap_init_irq(u32 base, int nr_irqs)
->   		nr_banks++;
->   	}
->
-> -	printk(KERN_INFO "Total of %ld interrupts on %d active controller%s\n",
-> -	       nr_of_irqs, nr_banks, nr_banks>  1 ? "s" : "");
-> +	pr_info("Total of %ld interrupts on %d active controller%s\n",
-> +		nr_of_irqs, nr_banks, nr_banks>  1 ? "s" : "");
->   }
->
->   void __init omap2_init_irq(void)
-> @@ -236,6 +239,32 @@ asmlinkage void __exception_irq_entry omap2_intc_handle_irq(struct pt_regs *regs
->   	omap_intc_handle_irq(base_addr, regs);
->   }
->
-> +#ifdef CONFIG_OF
-> +int __init intc_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +	struct resource res;
-> +	u32 nr_irqs;
-> +
-> +	if (WARN_ON(!node))
-> +		return -ENODEV;
-> +
-> +	if (of_address_to_resource(node, 0,&res)) {
-> +		WARN(1, "unable to get intc registers\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (of_property_read_u32(node, "ti,intc-size",&nr_irqs)) {
-> +		WARN(1, "unable to get intc-size\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	omap_init_irq(res.start, nr_irqs);
-> +	irq_domain_add_simple(node, 0);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->   #ifdef CONFIG_ARCH_OMAP3
->   static struct omap3_intc_regs intc_context[ARRAY_SIZE(irq_banks)];
->
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+[2] git://gitorious.org/omap-pm/linux.git for_3.3/3_omap_dt_i2c_twl
+
+Rajendra Nayak (3):
+  regulator: twl: adapt twl-regulator driver to dt
+  ARM: omap4-sdp: Pass regulator data from dt
+  omap4: panda: Pass regulator data from dt
+
+ .../bindings/regulator/twl-regulator.txt           |   57 +++++++++
+ arch/arm/boot/dts/omap4-panda.dts                  |   24 ++++
+ arch/arm/boot/dts/omap4-sdp.dts                    |   36 ++++++
+ drivers/regulator/twl-regulator.c                  |  128 +++++++++++++-------
+ 4 files changed, 199 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/twl-regulator.txt
 
