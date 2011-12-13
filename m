@@ -1,54 +1,114 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 2/6] ASoC: Allow the DAPM routes to be
- stored in device tree
-Date: Tue, 13 Dec 2011 12:07:29 +0800
-Message-ID: <20111213040728.GA4565@opensource.wolfsonmicro.com>
-References: <1323291510-22338-1-git-send-email-swarren@nvidia.com>
-	<1323291510-22338-2-git-send-email-swarren@nvidia.com>
-	<20111208043149.GA31372@opensource.wolfsonmicro.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF17518605B1@HQMAIL01.nvidia.com>
-	<20111210124921.GA20568@opensource.wolfsonmicro.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF1751860838@HQMAIL01.nvidia.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH 2/4] ARM: OMAP2/3: intc: Add DT support for TI interrupt
+ controller
+Date: Tue, 13 Dec 2011 14:45:12 +0530
+Message-ID: <4EE717A0.8020304@ti.com>
+References: <1323291049-24964-1-git-send-email-b-cousson@ti.com> <1323291049-24964-3-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1751860838@HQMAIL01.nvidia.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Rob Herring <robherring2@gmail.com>, Liam Girdwood <lrg@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1323291049-24964-3-git-send-email-b-cousson@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2011 at 11:34:13AM -0800, Stephen Warren wrote:
-> Mark Brown wrote at Saturday, December 10, 2011 5:49 AM:
+Hi Benoit,
 
-> > It's starting to get an idiomatic way of representing the external
-> > nodes, HDA is probably a good source of inspiration :)  We do need to
-> > have a think about the jacks, though - simple ones are fine but
-> > multifinction is more fun.
+> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+> index 012bac7..bcfccc2 100644
+> --- a/arch/arm/mach-omap2/common.h
+> +++ b/arch/arm/mach-omap2/common.h
+> @@ -156,6 +156,16 @@ void omap3_intc_resume_idle(void);
+>   void omap2_intc_handle_irq(struct pt_regs *regs);
+>   void omap3_intc_handle_irq(struct pt_regs *regs);
+>
+> +struct device_node;
+> +#ifdef CONFIG_OF
+> +int __init intc_of_init(struct device_node *node, struct device_node *parent);
+> +#else
+> +int __init intc_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	return 0;
+> +}
 
-> I just wanted to confirm that you're talking about multiple audio
-> functions here (e.g. mic+headphones), rather than mixing audio with
-> other features (e.g. s-video + line out). I don't think the latter has
+This seems to break !CONFIG_OF builds as common.h is included in
+multiple c files causing 'multiple definition' errors.
 
-Both.
+regards,
+Rajendra
 
-> any kind of representation in the kernel right now though? That said,
+> +#endif
+> +
+>   /*
+>    * wfi used in low power code. Directly opcode is used instead
+>    * of instruction to avoid mulit-omap build break
+> diff --git a/arch/arm/mach-omap2/irq.c b/arch/arm/mach-omap2/irq.c
+> index 42b1d65..cafc663 100644
+> --- a/arch/arm/mach-omap2/irq.c
+> +++ b/arch/arm/mach-omap2/irq.c
+> @@ -17,6 +17,9 @@
+>   #include<mach/hardware.h>
+>   #include<asm/exception.h>
+>   #include<asm/mach/irq.h>
+> +#include<linux/of.h>
+> +#include<linux/of_address.h>
+> +#include<linux/irqdomain.h>
+>
+>
+>   /* selected INTC register offsets */
+> @@ -166,7 +169,7 @@ static void __init omap_init_irq(u32 base, int nr_irqs)
+>   		/* Static mapping, never released */
+>   		bank->base_reg = ioremap(base, SZ_4K);
+>   		if (!bank->base_reg) {
+> -			printk(KERN_ERR "Could not ioremap irq bank%i\n", i);
+> +			pr_err("Could not ioremap irq bank%i\n", i);
+>   			continue;
+>   		}
+>
+> @@ -179,8 +182,8 @@ static void __init omap_init_irq(u32 base, int nr_irqs)
+>   		nr_banks++;
+>   	}
+>
+> -	printk(KERN_INFO "Total of %ld interrupts on %d active controller%s\n",
+> -	       nr_of_irqs, nr_banks, nr_banks>  1 ? "s" : "");
+> +	pr_info("Total of %ld interrupts on %d active controller%s\n",
+> +		nr_of_irqs, nr_banks, nr_banks>  1 ? "s" : "");
+>   }
+>
+>   void __init omap2_init_irq(void)
+> @@ -236,6 +239,32 @@ asmlinkage void __exception_irq_entry omap2_intc_handle_irq(struct pt_regs *regs
+>   	omap_intc_handle_irq(base_addr, regs);
+>   }
+>
+> +#ifdef CONFIG_OF
+> +int __init intc_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	struct resource res;
+> +	u32 nr_irqs;
+> +
+> +	if (WARN_ON(!node))
+> +		return -ENODEV;
+> +
+> +	if (of_address_to_resource(node, 0,&res)) {
+> +		WARN(1, "unable to get intc registers\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32(node, "ti,intc-size",&nr_irqs)) {
+> +		WARN(1, "unable to get intc-size\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	omap_init_irq(res.start, nr_irqs);
+> +	irq_domain_add_simple(node, 0);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>   #ifdef CONFIG_ARCH_OMAP3
+>   static struct omap3_intc_regs intc_context[ARRAY_SIZE(irq_banks)];
+>
 
-Depends; if you listen to Lennart and Kay it's totally there already and
-there's nothing to worry about.
-
-> it might be a good idea to represent jacks outside any audio complex
-> DT node, so that they could host functionality of different types if
-> the HW does so...
-
-Clearly, and even audio jacks have non-audio functionality like buttons.
