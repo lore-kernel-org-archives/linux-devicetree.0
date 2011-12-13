@@ -1,88 +1,59 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v6 03/10] arm/tegra: prepare clock code for multiple
- tegra variants
-Date: Tue, 13 Dec 2011 13:21:26 +0200
-Message-ID: <20111213112126.GW27578@tbergstrom-lnx.Nvidia.com>
-References: <1323348254-29072-1-git-send-email-pdeschrijver@nvidia.com>
- <1323348254-29072-4-git-send-email-pdeschrijver@nvidia.com>
- <CAMbhsRT97Oq-=8f9++f6Jgg=YVaimKSz68xcDDNbDbvL+V5fJg@mail.gmail.com>
- <20111209091319.GI27578@tbergstrom-lnx.Nvidia.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 1/3] ARM: OMAP2+: kconfig: Enable devicetree by default
+ for OMAP2+ systems
+Date: Tue, 13 Dec 2011 15:27:16 +0200
+Message-ID: <1323782836.1877.79.camel@deskari>
+References: <y>  <1323190149-6492-2-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111209091319.GI27578@tbergstrom-lnx.Nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Colin Cross <ccross@android.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, Gary King <gking@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-fks2mgNc63g7jAxRs2RU"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1323190149-6492-2-git-send-email-b-cousson@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 09, 2011 at 10:13:20AM +0100, Peter De Schrijver wrote:
-> On Thu, Dec 08, 2011 at 07:25:53PM +0100, Colin Cross wrote:
-> > On Thu, Dec 8, 2011 at 4:43 AM, Peter De Schrijver <pdeschrijver@nvidia.com<mailto:pdeschrijver@nvidia.com>> wrote:
-> > Rework the tegra20 clock code to support multiple tegra variants :
-> > 
-> >  * remove tegra2_periph_reset_assert/tegra2_periph_reset_deassert. This
-> >   functionality should be in clock.c.
-> >  * compile tegra_sdmmc_tap_delay only on tegra20 as this feature will not
-> >   be available in future variants.
-> >  * don't export clk_measure_input_freq as its functionality is also available
-> >   using clk_get_rate().
-> > 
-> > Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com<mailto:pdeschrijver@nvidia.com>>
-> > ---
-> >  arch/arm/mach-tegra/clock.c         |   12 +++++++-----
-> >  arch/arm/mach-tegra/clock.h         |    8 ++++----
-> >  arch/arm/mach-tegra/tegra2_clocks.c |   14 +-------------
-> >  arch/arm/mach-tegra/timer.c         |   12 ++++++++----
-> >  4 files changed, 20 insertions(+), 26 deletions(-)
-> > 
-> > diff --git a/arch/arm/mach-tegra/clock.c b/arch/arm/mach-tegra/clock.c
-> > index f8d41ff..f27bdcc 100644
-> > --- a/arch/arm/mach-tegra/clock.c
-> > +++ b/arch/arm/mach-tegra/clock.c
-> > @@ -387,13 +387,15 @@ EXPORT_SYMBOL(tegra_clk_init_from_table);
-> > 
-> >  void tegra_periph_reset_deassert(struct clk *c)
-> >  {
-> > -       tegra2_periph_reset_deassert(c);
-> > +       BUG_ON(!c->ops->reset);
-> > +       c->ops->reset(c, false);
-> >  }
-> >  EXPORT_SYMBOL(tegra_periph_reset_deassert);
-> > 
-> >  void tegra_periph_reset_assert(struct clk *c)
-> >  {
-> > -       tegra2_periph_reset_assert(c);
-> > +       BUG_ON(!c->ops->reset);
-> > +       c->ops->reset(c, true);
-> >  }
-> >  EXPORT_SYMBOL(tegra_periph_reset_assert);
-> > 
-> > @@ -403,9 +405,9 @@ void __init tegra_init_clock(void)
-> >  }
-> > 
-> >  /*
-> > - * The SDMMC controllers have extra bits in the clock source register that
-> > - * adjust the delay between the clock and data to compenstate for delays
-> > - * on the PCB.
-> > + * The SDMMC controllers on tegra20 have extra bits in the clock source
-> > + * register that adjust the delay between the clock and data to compenstate
-> > + * for delays on the PCB.
-> >  */
-> >  void tegra_sdmmc_tap_delay(struct clk *c, int delay)
-> >  {
-> > 
-> > I created this wrapper around tegra2_sdmmc_tap_delay because I guessed the same requirement would be present in tegra3.  If you don't expect this to be required on anything but tegra2, you could drop the wrapper and just have callers use tegra2_sdmmc_tap_delay.
-> > 
-> 
-> I will ask around if this is needed for tegra30.
-> 
 
-This feature moved to the SDMMC block in tegra30, so we don't need any code
-in the clock framework anymore. So I think we should just use
-tegra2_sdmmc_tap_delay directly.
+--=-fks2mgNc63g7jAxRs2RU
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
+Hi,
 
-Peter.
+On Tue, 2011-12-06 at 17:49 +0100, Benoit Cousson wrote:
+> devicetree will become the mandatory boot method for OMAP2+.
+> In order to avoid cluttering the OMAP code with #ifdef CONFIG_OF,
+> select USE_OF by default for every OMAP2+ systems.
+> Select as well the APPENDED_DTB and ATAG_DTB_COMPAT to allow legacy
+> boot loader to keep working properly.
+
+APPENDED_DTB sounds a bit dangerous to be enabled by default according
+to the config help text.
+
+ Tomi
+
+
+--=-fks2mgNc63g7jAxRs2RU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAABAgAGBQJO51K0AAoJEPo9qoy8lh71ab4P/2pbJcgf+P1noIfarvZPjr2Y
+76+2lnjsHXpnyqvMhW2bRwlcgL4ectASlz0/yO0rjLB4XDbtSFl9l2I5CtH76N4H
+GXdUy+3WeJwcm7qwwxuFaaWPJkGUFbCK7THb6teG9W3e/P6omoprzWWVD7WS11Gs
+zhTLcHRrDnabO6vkofgVT1W4+x6N5jMWUE5BSC9H6UzmGVd7sBqCIENRGLLVdj8W
+2wp6dLg7MRM0HaJ1SEspqY94TEa22VcOxsBkSLQEyzWtQEErSHzwO3siJYwqaUpm
+4hZmgZh9Yu39jPI7LgGRtgcsycHBrRl6XlgAudD3CEZS9r0kDJJ2USlOh+rJpelG
+HFkv0m4vducchskByfQwunC1CagHGEcllQdljC5dW3kz1vxEn17j4aMTKD3Y1IXp
+++V3KSHwIi90G7J44aWEWgGqj7z94vDSJHJ7y/j2LyiJr7Cz9GT+FIsjVh6mnSUa
+91DNSXhIMx2bhc9auo4XJ1zHQHRx8Zm7th8Vs4ofRsGvPdbdG1VSxAuYWjHQiWMH
+KyEA/Sn9rcQgkQ6oBJPtwAinQxJH9z4Q7NEtCiqNcqgaiHWi/PmRknrqkTbNKxrP
+Ib8xmgcbAtT2AquB/DAhVpK40GvJ3y2EEBZmx67PZUWlWMRxYyGuL9ZsgRT5YF/K
+0KFlEfuEDfncKDANHARa
+=3Wxg
+-----END PGP SIGNATURE-----
+
+--=-fks2mgNc63g7jAxRs2RU--
+
