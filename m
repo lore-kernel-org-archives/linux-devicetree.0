@@ -1,53 +1,85 @@
-From: Rob Herring <robherring2@gmail.com>
+From: "Moffett, Kyle D" <Kyle.D.Moffett@boeing.com>
 Subject: Re: [REPOST RFC PATCH 0/3] New "gpio-poweroff" driver to turn off
  platform devices with GPIOs
-Date: Tue, 13 Dec 2011 13:10:22 -0600
-Message-ID: <4EE7A31E.7080301@gmail.com>
+Date: Tue, 13 Dec 2011 14:44:48 -0600
+Message-ID: <895CF182-4BF7-4DF5-A467-944EC008DBC3@boeing.com>
 References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
+ <4EE7A31E.7080301@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
+In-Reply-To: <4EE7A31E.7080301@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kyle Moffett <Kyle.D.Moffett@boeing.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 12/13/2011 12:23 PM, Kyle Moffett wrote:
-> Hello again,
+On Dec 13, 2011, at 14:10, Rob Herring wrote:
+> On 12/13/2011 12:23 PM, Kyle Moffett wrote:
+>> 
+>> I posted this patch series a few weeks ago and saw no responses, so I
+>> tweaked the CC list and am reposting it again for review.
+>> 
+>> I'm working on support for some custom hardware of ours, and part of
+>> the support code is the ability for the software to shutdown the power
+>> supply using GPIOs (via an I2C GPIO controller).
+>> 
+>> I previously had this in my platform code, but it seemed generically
+>> useful, so I split it out into a separate module for others to use.
+>> 
+>> The first two patches are generic of_gpio enhancements, providing some
+>> new library functions for requesting lots of GPIOs at once.
+>> 
+>> The third patch is the actual driver itself.  The driver can be used to
+>> instantiate a platform device as a whole-machine-poweroff device as we
+>> use it on our hardware.  Alternatively it can instantiate multiple
+>> platform devs at specific locations on the device tree which trigger
+>> from the platform_driver->shutdown() callback.
+>> 
+>> For architectures which are still stuck in the dark ages, this driver
+>> also supports being instantiated via legacy platform_data.
 > 
-> I posted this patch series a few weeks ago and saw no responses, so I
-> tweaked the CC list and am reposting it again for review.
-> 
-> I'm working on support for some custom hardware of ours, and part of
-> the support code is the ability for the software to shutdown the power
-> supply using GPIOs (via an I2C GPIO controller).
-> 
-> I previously had this in my platform code, but it seemed generically
-> useful, so I split it out into a separate module for others to use.
-> 
-> The first two patches are generic of_gpio enhancements, providing some
-> new library functions for requesting lots of GPIOs at once.
-> 
-> The third patch is the actual driver itself.  The driver can be used to
-> instantiate a platform device as a whole-machine-poweroff device as we
-> use it on our hardware.  Alternatively it can instantiate multiple
-> platform devs at specific locations on the device tree which trigger
-> from the platform_driver->shutdown() callback.
-> 
-> For architectures which are still stuck in the dark ages, this driver
-> also supports being instantiated via legacy platform_data.
+> Leave them there... :)
 
-Leave them there... :)
+Mostly this was out of convenience and imitating the other OF platform
+drivers.  I wrote it and ended up with a struct full of probe data being
+passed between functions, so I just called it "platform_data" :-D.
 
-> The OpenFirmware binding documentation is added in the third patch.
-> Since this is my first cut, it's a little rough, so please be gentle.
+
+>> The OpenFirmware binding documentation is added in the third patch.
+>> Since this is my first cut, it's a little rough, so please be gentle.
+>> 
+>> I'm interested to know what you all think.
 > 
-> I'm interested to know what you all think.
+> Does the regulator framework gpio-regulator not work for this?
 
-Does the regulator framework gpio-regulator not work for this?
+Well, when I initially wrote this code, the regulator framework didn't
+exist :-D.
 
-The DT gpio patches look useful on their own.
+I looked at it a bit when I was generalizing my code, but it seemed
+dramatically more complicated than I needed, and I couldn't see any
+reasonable way to hook it from the machine_poweroff() code.
 
-Rob
+There's also the fact that I was looking for a pure-device-tree type
+of driver and the regulator framework does not seem to support the
+standard OF-platform probe system.
+
+I will admit that there's probably some value in having a more generic
+GPIO-power-control (instead of just poweroff), but I don't have the
+target use-case to be able to design for it.
+
+
+> The DT gpio patches look useful on their own.
+
+Yeah, it seemed like a fairly generic extension of the existing API.
+
+Thanks for the comments!
+
+Cheers,
+Kyle Moffett
+
+--
+Curious about my work on the Debian powerpcspe port?
+I'm keeping a blog here: http://pureperl.blogspot.com/
