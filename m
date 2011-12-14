@@ -1,53 +1,124 @@
-From: Govindraj <govindraj.ti@gmail.com>
-Subject: Re: [PATCH v3 0/4] OMAP serial device tree support
-Date: Wed, 14 Dec 2011 20:11:55 +0530
-Message-ID: <CAAL8m4yA_pdaL6_reEtcvGSZBHw5XdrcVLevTNL2GON09174=w@mail.gmail.com>
-References: <1323863746-18145-1-git-send-email-rnayak@ti.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [PATCH v7 00/14] Add support for tegra30 and cardhu
+Date: Wed, 14 Dec 2011 17:03:12 +0200
+Message-ID: <1323875032-18221-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1323863746-18145-1-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, tony@atomide.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, Gary King <gking@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rajendra,
+This patchset adds support for the tegra30 SoC and the cardhu development
+board.
 
-On Wed, Dec 14, 2011 at 5:25 PM, Rajendra Nayak <rnayak@ti.com> wrote:
-> v3 is rebased on top of the latest serial runtime
-> patches[1] and boot tested with/without DT on OMAP4
-> SDP and OMAP4 Panda boards.
->
-> Patches can be found here..
-> git://gitorious.org/omap-pm/linux.git for-dt/serial
->
-> I also had to pull in a fix[2] for DT testing (already in linux-omap
-> master) which was missing as the serial runtime branch[1]
-> was based on an older master commit.
->
-> Changes in v3:
-> -1- Rebased on latest serial runtime patches
-> -2- Minor typr fixes
->
-> Changes in v2:
-> -1- Got rid of binding to define which uart is console
-> -2- Added checks to default clock speed to 48Mhz
-> -3- Added compatible for each OMAP family
-> -4- Used of_alias_get_id to populate port.line
->
-> [1] git://gitorious.org/runtime_3-0/runtime_3-0.git for_3_3/lo_rc4_uartruntime
-> [2] http://www.spinics.net/lists/arm-kernel/msg150751.html
->
+Patchset is on top of linux-next and
+http://www.spinics.net/lists/linux-tegra/msg03016.html.
 
-I merged this patch series to a tmp_intg branch [1]
-having uart runtime changes and sanity tested on
-3430sdp/zoom3/panda seems fine.
+Most important changes in v7:
 
---
-Thanks,
-Govindraj.R
+* split board-dt.c in board-dt-tegra20.c and board-dt-tegra30.c
+* split early init preparation into several patches
+* remove tegra_sdmmc_tap_delay. Drivers should use tegra2_sdmmc_tap_delay as
+  from tegra30 onwards this feature will no longer handled by the clock code
+  as it's implemented in the SDMMC block now.
+* remove CONFIG_CARDHU and the corresponding Kconfig entry
 
-[1]:
-git://gitorious.org/runtime_3-0/runtime_3-0.git
-for_3_3/tmp_rc4_uart_pm_intg
+Most important changes in v6:
+
+* Align with latest version of the ARM restart implementation
+* Address comments on tegra_sdmmc_tap_delay()
+
+Most important changes in v5:
+
+* use devicetree binding for GIC
+* define a seperate machine for tegra30
+* add documentation for tegra devicetree compatible definitions
+
+Most important changes in v4:
+
+* cleanup clock code to work on multiple tegra variants
+* added dependencies to avoid building tegra20 only code for tegra30
+
+Most important changes in v3:
+
+* align with ARM restart rework. might need a bit of rework to merge with the
+  latest version of this.
+* minor cleanups and reformats
+
+Most important changes in v2:
+
+* account for arch_reset cleanup
+* seperate patch for renaming pinmux-t2.h and pinmux-t2-tables.c
+* fixed bug in common cache initialization
+* fixed compatibility with non DT boards (boottested on harmony)
+* improved commit messages
+
+Peter De Schrijver (14):
+  arm/tegra: initial device tree for tegra30
+  arm/tegra: cleanup tegra20 support
+  arm/tegra: prepare clock code for multiple tegra variants
+  arm/tegra: don't export clk_measure_input_freq
+  arm/tegra: prepare early init for multiple tegra variants
+  arm/tegra: rename board-dt.c to board-dt-tegra20.c
+  arm/tegra: use PMC reset
+  arm/tegra: generalize L2 cache initialization
+  arm/tegra: rename tegra20 pinmux files
+  arm/tegra: prepare pinmux code for multiple tegra variants
+  arm/tegra: add new fields to struct tegra_pingroup_desc
+  arm/tegra: pinmux tables and definitions for tegra30
+  arm/tegra: implement support for tegra30
+  arm/tegra: add support for tegra30 based board cardhu
+
+ Documentation/devicetree/bindings/arm/tegra.txt   |   14 +
+ arch/arm/boot/dts/tegra-cardhu.dts                |   36 ++
+ arch/arm/boot/dts/tegra30.dtsi                    |  127 +++++++
+ arch/arm/mach-tegra/Kconfig                       |   30 ++-
+ arch/arm/mach-tegra/Makefile                      |    9 +-
+ arch/arm/mach-tegra/Makefile.boot                 |    1 +
+ arch/arm/mach-tegra/board-dt-tegra20.c            |  143 ++++++++
+ arch/arm/mach-tegra/board-dt-tegra30.c            |   63 ++++
+ arch/arm/mach-tegra/board-dt.c                    |  154 ---------
+ arch/arm/mach-tegra/board-harmony-pcie.c          |    1 +
+ arch/arm/mach-tegra/board-harmony-pinmux.c        |    1 +
+ arch/arm/mach-tegra/board-harmony.c               |    2 +-
+ arch/arm/mach-tegra/board-paz00-pinmux.c          |    1 +
+ arch/arm/mach-tegra/board-paz00.c                 |    2 +-
+ arch/arm/mach-tegra/board-seaboard-pinmux.c       |    2 +-
+ arch/arm/mach-tegra/board-seaboard.c              |    6 +-
+ arch/arm/mach-tegra/board-trimslice-pinmux.c      |    1 +
+ arch/arm/mach-tegra/board-trimslice.c             |    2 +-
+ arch/arm/mach-tegra/board.h                       |    4 +-
+ arch/arm/mach-tegra/clock.c                       |   20 +-
+ arch/arm/mach-tegra/clock.h                       |    4 -
+ arch/arm/mach-tegra/common.c                      |   53 +++-
+ arch/arm/mach-tegra/include/mach/clk.h            |    2 +-
+ arch/arm/mach-tegra/include/mach/irqs.h           |    2 -
+ arch/arm/mach-tegra/include/mach/pinmux-t2.h      |  184 ----------
+ arch/arm/mach-tegra/include/mach/pinmux-tegra20.h |  184 ++++++++++
+ arch/arm/mach-tegra/include/mach/pinmux-tegra30.h |  320 ++++++++++++++++++
+ arch/arm/mach-tegra/include/mach/pinmux.h         |   88 ++++-
+ arch/arm/mach-tegra/pinmux-t2-tables.c            |  228 -------------
+ arch/arm/mach-tegra/pinmux-tegra20-tables.c       |  244 +++++++++++++
+ arch/arm/mach-tegra/pinmux-tegra30-tables.c       |  376 +++++++++++++++++++++
+ arch/arm/mach-tegra/pinmux.c                      |  153 ++++++---
+ arch/arm/mach-tegra/tegra2_clocks.c               |   19 +-
+ arch/arm/mach-tegra/timer.c                       |   12 +-
+ 34 files changed, 1789 insertions(+), 699 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/tegra.txt
+ create mode 100644 arch/arm/boot/dts/tegra-cardhu.dts
+ create mode 100644 arch/arm/boot/dts/tegra30.dtsi
+ create mode 100644 arch/arm/mach-tegra/board-dt-tegra20.c
+ create mode 100644 arch/arm/mach-tegra/board-dt-tegra30.c
+ delete mode 100644 arch/arm/mach-tegra/board-dt.c
+ delete mode 100644 arch/arm/mach-tegra/include/mach/pinmux-t2.h
+ create mode 100644 arch/arm/mach-tegra/include/mach/pinmux-tegra20.h
+ create mode 100644 arch/arm/mach-tegra/include/mach/pinmux-tegra30.h
+ delete mode 100644 arch/arm/mach-tegra/pinmux-t2-tables.c
+ create mode 100644 arch/arm/mach-tegra/pinmux-tegra20-tables.c
+ create mode 100644 arch/arm/mach-tegra/pinmux-tegra30-tables.c
+
+-- 
+1.7.7.rc0.72.g4b5ea.dirty
+
