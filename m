@@ -1,38 +1,79 @@
 From: Kevin Hilman <khilman@ti.com>
-Subject: Re: [PATCH v2 02/10] i2c: OMAP: Add DT support for i2c controller
-Date: Tue, 13 Dec 2011 17:06:40 -0800
-Message-ID: <87hb14q7vj.fsf@ti.com>
+Subject: Re: [PATCH v2 07/10] arm/dts: omap4-panda: Add twl6030 and i2c EEPROM
+Date: Tue, 13 Dec 2011 21:06:16 -0800
+Message-ID: <87obvbpws7.fsf@ti.com>
 References: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
-	<1323439361-1647-3-git-send-email-b-cousson@ti.com>
+	<1323439361-1647-8-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1323439361-1647-3-git-send-email-b-cousson@ti.com> (Benoit
-	Cousson's message of "Fri, 9 Dec 2011 15:02:33 +0100")
+In-Reply-To: <1323439361-1647-8-git-send-email-b-cousson@ti.com> (Benoit
+	Cousson's message of "Fri, 9 Dec 2011 15:02:38 +0100")
 Sender: linux-omap-owner@vger.kernel.org
 To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ben Dooks <ben-linux@fluff.org>
+Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
+
+Hi Benoit,
 
 Benoit Cousson <b-cousson@ti.com> writes:
 
-> Add initial DT support to retrieve the frequency using a
-> DT attribute instead of the pdata pointer if of_node exist.
+> Update pandaboard dts file with required clock frequencies
+> for the i2c client devices existing on pandaboard.
 >
-> Add documentation for omap i2c controller binding.
+> Add the twl6030 node in i2c1 controller.
 >
-> Based on original patches from Manju and Grant.
+> This is the minimal support needed to boot OMAP4 boards
+> without any crash.
+> The support for all the features included in this MFD will be
+> added later.
+>
+> Add a generic i2c EEPROM entry.
 >
 > Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Ben Dooks <ben-linux@fluff.org>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  arch/arm/boot/dts/omap4-panda.dts |   45 +++++++++++++++++++++++++++++++++++++
+>  1 files changed, 45 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+> index 9755ad5..b66bcd6 100644
+> --- a/arch/arm/boot/dts/omap4-panda.dts
+> +++ b/arch/arm/boot/dts/omap4-panda.dts
+> @@ -18,3 +18,48 @@
+>  		reg = <0x80000000 0x40000000>; /* 1 GB */
+>  	};
+>  };
+> +
+> +&i2c1 {
+> +	clock-frequency = <400000>;
+> +
+> +	/*
+> +	 * Integrated Power Management Chip
+> +	 * http://www.ti.com/lit/ds/symlink/twl6030.pdf
+> +	 */
+> +	twl@48 {
+> +		compatible = "ti,twl6030";
+> +		reg = <0x48>;
+> +		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+> +		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		interrupt-parent = <&gic>;
+> +
+> +		/* twl is a MFD, so it will contain a bunch of sub-ips */
+> +		rtc {
+> +			compatible = "ti,twl4030-rtc";
+> +			interrupts = <11>;
+> +		};
 
-This seems indepenent from the rest of the series, and I can queue up
-for merge via the I2C tree.
+After seeing the mostly cut & paste in Rajendra's regulator series, I'm
+wondering if it wouldn't be better to just have a twl4030.dtsi here
+which has the RTC and all the regulators with the default voltage ranges
+from the TWL data sheet.   
 
-Benoit, please confirm that we shouldn't have any problems if this patch
-goes independently.
-
-Grant/Rob, with your ack on the bindings, I can queue this up for the
-I2C maintainers along with some other OMAP I2C changes for v3.3.
+Not knowing much about how includes work in DT, would it then be
+possible for board files to override things like default voltage ranges
+for regulators?
 
 Kevin
