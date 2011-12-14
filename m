@@ -1,13 +1,13 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 4/9] gpio: pl061: use chained_irq_* functions in irq handler
-Date: Wed, 14 Dec 2011 14:15:19 -0700
-Message-ID: <CACxGe6uAEUXe=7B5c0yDdRWpMx-_d=dwc5wofh3FYaUN=EZQQg@mail.gmail.com>
-References: <1323876538-20406-1-git-send-email-robherring2@gmail.com> <1323876538-20406-5-git-send-email-robherring2@gmail.com>
+Subject: Re: [PATCH 5/9] gpio: pl061: convert to use 0 for no irq
+Date: Wed, 14 Dec 2011 14:16:09 -0700
+Message-ID: <CACxGe6ujBaRLxo9JSW-vMHz1TZs+poKacHQbvC=aAjUsSq=m4g@mail.gmail.com>
+References: <1323876538-20406-1-git-send-email-robherring2@gmail.com> <1323876538-20406-6-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323876538-20406-5-git-send-email-robherring2@gmail.com>
+In-Reply-To: <1323876538-20406-6-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robherring2@gmail.com>
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, shawn.guo@freescale.com, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@ti.com>, Tony Lindgren <tony@atomide.com>, Barry Song <baohua.song@csr.com>, Linus Walleij <linus.ml.walleij@gmail.com>, Rob Herring <rob.herring@calxeda.com>
@@ -17,8 +17,8 @@ On Wed, Dec 14, 2011 at 8:28 AM, Rob Herring <robherring2@gmail.com> wr=
 ote:
 > From: Rob Herring <rob.herring@calxeda.com>
 >
-> Use chained_irq_enter/exit helper functions instead of direct pointer
-> accesses. This is needed for generic irq chip conversion.
+> We don't want drivers using NO_IRQ, so remove its use. For now, 0 or
+> -1 means no irq until platforms are converted to use 0.
 >
 > Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 > Cc: Grant Likely <grant.likely@secretlab.ca>
@@ -27,47 +27,70 @@ Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
 > Cc: Linus Walleij <linus.ml.walleij@gmail.com>
 > ---
-> =A0drivers/gpio/gpio-pl061.c | =A0 =A06 ++++--
-> =A01 files changed, 4 insertions(+), 2 deletions(-)
+> =A0drivers/gpio/gpio-pl061.c =A0| =A0 =A08 ++++----
+> =A0include/linux/amba/pl061.h | =A0 =A02 +-
+> =A02 files changed, 5 insertions(+), 5 deletions(-)
 >
 > diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-> index 4102f63..0f718f9 100644
+> index 0f718f9..fe19dec 100644
 > --- a/drivers/gpio/gpio-pl061.c
 > +++ b/drivers/gpio/gpio-pl061.c
-> @@ -23,6 +23,7 @@
-> =A0#include <linux/amba/bus.h>
-> =A0#include <linux/amba/pl061.h>
-> =A0#include <linux/slab.h>
-> +#include <asm/mach/irq.h>
+> @@ -53,7 +53,7 @@ struct pl061_gpio {
+> =A0 =A0 =A0 =A0spinlock_t =A0 =A0 =A0 =A0 =A0 =A0 =A0irq_lock; =A0 =A0=
+ =A0 /* IRQ registers */
 >
-> =A0#define GPIODIR 0x400
-> =A0#define GPIOIS =A00x404
-> @@ -211,8 +212,9 @@ static void pl061_irq_handler(unsigned irq, struc=
-t irq_desc *desc)
-> =A0 =A0 =A0 =A0struct list_head *chip_list =3D irq_get_handler_data(i=
-rq);
-> =A0 =A0 =A0 =A0struct list_head *ptr;
-> =A0 =A0 =A0 =A0struct pl061_gpio *chip;
-> + =A0 =A0 =A0 struct irq_chip *irqchip =3D irq_desc_get_chip(desc);
+> =A0 =A0 =A0 =A0void __iomem =A0 =A0 =A0 =A0 =A0 =A0*base;
+> - =A0 =A0 =A0 unsigned =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0irq_base;
+> + =A0 =A0 =A0 int =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 irq_base;
+> =A0 =A0 =A0 =A0struct gpio_chip =A0 =A0 =A0 =A0gc;
+> =A0};
 >
-> - =A0 =A0 =A0 desc->irq_data.chip->irq_ack(&desc->irq_data);
-> + =A0 =A0 =A0 chained_irq_enter(irqchip, desc);
-> =A0 =A0 =A0 =A0list_for_each(ptr, chip_list) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned long pending;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0int offset;
-> @@ -227,7 +229,7 @@ static void pl061_irq_handler(unsigned irq, struc=
-t irq_desc *desc)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0for_each_set_bit(offset, &pending, PL0=
-61_GPIO_NR)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0generic_handle_irq(pl0=
-61_to_irq(&chip->gc, offset));
-> =A0 =A0 =A0 =A0}
-> - =A0 =A0 =A0 desc->irq_data.chip->irq_unmask(&desc->irq_data);
-> + =A0 =A0 =A0 chained_irq_exit(irqchip, desc);
-> =A0}
+> @@ -119,7 +119,7 @@ static int pl061_to_irq(struct gpio_chip *gc, uns=
+igned offset)
+> =A0{
+> =A0 =A0 =A0 =A0struct pl061_gpio *chip =3D container_of(gc, struct pl=
+061_gpio, gc);
 >
-> =A0static int pl061_probe(struct amba_device *dev, const struct amba_=
-id *id)
+> - =A0 =A0 =A0 if (chip->irq_base =3D=3D NO_IRQ)
+> + =A0 =A0 =A0 if (chip->irq_base <=3D 0)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+>
+> =A0 =A0 =A0 =A0return chip->irq_base + offset;
+> @@ -250,7 +250,7 @@ static int pl061_probe(struct amba_device *dev, c=
+onst struct amba_id *id)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0chip->irq_base =3D pdata->irq_base;
+> =A0 =A0 =A0 =A0} else if (dev->dev.of_node) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0chip->gc.base =3D -1;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 chip->irq_base =3D NO_IRQ;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 chip->irq_base =3D 0;
+> =A0 =A0 =A0 =A0} else {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0ret =3D -ENODEV;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto free_mem;
+> @@ -290,7 +290,7 @@ static int pl061_probe(struct amba_device *dev, c=
+onst struct amba_id *id)
+> =A0 =A0 =A0 =A0 * irq_chip support
+> =A0 =A0 =A0 =A0 */
+>
+> - =A0 =A0 =A0 if (chip->irq_base =3D=3D NO_IRQ)
+> + =A0 =A0 =A0 if (chip->irq_base <=3D 0)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return 0;
+>
+> =A0 =A0 =A0 =A0writeb(0, chip->base + GPIOIE); /* disable irqs */
+> diff --git a/include/linux/amba/pl061.h b/include/linux/amba/pl061.h
+> index 2412af9..fb83c04 100644
+> --- a/include/linux/amba/pl061.h
+> +++ b/include/linux/amba/pl061.h
+> @@ -7,7 +7,7 @@ struct pl061_platform_data {
+> =A0 =A0 =A0 =A0unsigned =A0 =A0 =A0 =A0gpio_base;
+>
+> =A0 =A0 =A0 =A0/* number of the first IRQ.
+> - =A0 =A0 =A0 =A0* If the IRQ functionality in not desired this must =
+be set to NO_IRQ.
+> + =A0 =A0 =A0 =A0* If the IRQ functionality in not desired this must =
+be set to 0.
+> =A0 =A0 =A0 =A0 */
+> =A0 =A0 =A0 =A0unsigned =A0 =A0 =A0 =A0irq_base;
+>
 > --
 > 1.7.5.4
 >
