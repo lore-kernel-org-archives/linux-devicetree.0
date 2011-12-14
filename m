@@ -1,45 +1,38 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/3] ARM: OMAP2+: kconfig: Enable devicetree by default
- for OMAP2+ systems
-Date: Tue, 13 Dec 2011 14:38:56 -0800
-Message-ID: <20111213223855.GW32251@atomide.com>
-References: <y>
- <1323190149-6492-2-git-send-email-b-cousson@ti.com>
- <1323782836.1877.79.camel@deskari>
- <4EE75448.4010701@ti.com>
+From: Kevin Hilman <khilman@ti.com>
+Subject: Re: [PATCH v2 02/10] i2c: OMAP: Add DT support for i2c controller
+Date: Tue, 13 Dec 2011 17:06:40 -0800
+Message-ID: <87hb14q7vj.fsf@ti.com>
+References: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
+	<1323439361-1647-3-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4EE75448.4010701@ti.com>
+In-Reply-To: <1323439361-1647-3-git-send-email-b-cousson@ti.com> (Benoit
+	Cousson's message of "Fri, 9 Dec 2011 15:02:33 +0100")
 Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ben Dooks <ben-linux@fluff.org>
 List-Id: devicetree@vger.kernel.org
 
-* Cousson, Benoit <b-cousson@ti.com> [111213 05:02]:
-> On 12/13/2011 2:27 PM, Tomi Valkeinen wrote:
-> >Hi,
-> >
-> >On Tue, 2011-12-06 at 17:49 +0100, Benoit Cousson wrote:
-> >>devicetree will become the mandatory boot method for OMAP2+.
-> >>In order to avoid cluttering the OMAP code with #ifdef CONFIG_OF,
-> >>select USE_OF by default for every OMAP2+ systems.
-> >>Select as well the APPENDED_DTB and ATAG_DTB_COMPAT to allow legacy
-> >>boot loader to keep working properly.
-> >
-> >APPENDED_DTB sounds a bit dangerous to be enabled by default according
-> >to the config help text.
-> 
-> The help is indeed really scary :-)
+Benoit Cousson <b-cousson@ti.com> writes:
 
-Heh, but it's also true.
- 
-> Tony,
-> Do we want to keep it by default? Or should we fix the kconfig help?
+> Add initial DT support to retrieve the frequency using a
+> DT attribute instead of the pdata pointer if of_node exist.
+>
+> Add documentation for omap i2c controller binding.
+>
+> Based on original patches from Manju and Grant.
+>
+> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Ben Dooks <ben-linux@fluff.org>
 
-Let's just leave out those two from omap2plus_defconfig then.
+This seems indepenent from the rest of the series, and I can queue up
+for merge via the I2C tree.
 
-Regards,
+Benoit, please confirm that we shouldn't have any problems if this patch
+goes independently.
 
-Tony
+Grant/Rob, with your ack on the bindings, I can queue this up for the
+I2C maintainers along with some other OMAP I2C changes for v3.3.
+
+Kevin
