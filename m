@@ -1,53 +1,90 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/9] irq domain for gen irq chip and pl061 DT irq support
-Date: Wed, 14 Dec 2011 09:41:48 -0600
-Message-ID: <4EE8C3BC.8080808@gmail.com>
-References: <1323876538-20406-1-git-send-email-robherring2@gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/9] dt: add empty of_get_node/of_put_node functions
+Date: Wed, 14 Dec 2011 09:02:24 -0700
+Message-ID: <CACxGe6vNaQtd5FtTWbYpH_Hwfp7OgMfOcBYuDEDULJ3XnYdL9g@mail.gmail.com>
+References: <1323876538-20406-1-git-send-email-robherring2@gmail.com> <1323876538-20406-2-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1323876538-20406-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1323876538-20406-2-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, shawn.guo@freescale.com, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@ti.com>, Tony Lindgren <tony@atomide.com>, Barry Song <baohua.song@csr.com>, Linus Walleij <linus.ml.walleij@gmail.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2011 09:28 AM, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> 
-> This series adds irq_domain support to generic irq chip, converts the
-> pl061 gpio driver to use generic irq chip, and finally adds DT irq binding
-> support for pl061. The pl061 driver is also fixed to use 0 for no irq
-> instead of -1 or NO_IRQ.
-> 
-> The irq_domain support should be transparent to users of generic irq
-> chip. Shawn Guo has tested previous version with i.MX AVIC and his fixes
-> have been incorporated. Any testing by other users of generic irq chip
-> is appreciated.
-> 
-> This series is also dependent on:
-> 
-> irqdomain: export irq_domain_simple_ops for !CONFIG_OF
-> http://www.spinics.net/lists/arm-kernel/msg150290.html
-> 
-> gpio: pl061: drop extra check for NULL platform_data
-> http://www.spinics.net/lists/arm-kernel/msg151701.html
-> 
-> Tested on highbank and built all defconfigs.
-> 
-> Rob
+On Wed, Dec 14, 2011 at 8:28 AM, Rob Herring <robherring2@gmail.com> wr=
+ote:
+> From: Rob Herring <rob.herring@calxeda.com>
+>
+> Add empty of_get_node/of_put_node functions for !CONFIG_OF builds.
+>
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
 
-Forgot to mention this series is also available here:
+Looks good.
 
-git://sources.calxeda.com/kernel/linux.git pl061-domain
+> ---
+> =A0include/linux/of.h | =A0 29 ++++++++++++++---------------
+> =A01 files changed, 14 insertions(+), 15 deletions(-)
+>
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 4948552..e291381 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -65,6 +65,20 @@ struct device_node {
+> =A0#endif
+> =A0};
+>
+> +#if defined(CONFIG_SPARC) || !defined(CONFIG_OF)
+> +/* Dummy ref counting routines - to be implemented later */
+> +static inline struct device_node *of_node_get(struct device_node *no=
+de)
+> +{
+> + =A0 =A0 =A0 return node;
+> +}
+> +static inline void of_node_put(struct device_node *node)
+> +{
+> +}
+> +#else
+> +extern struct device_node *of_node_get(struct device_node *node);
+> +extern void of_node_put(struct device_node *node);
+> +#endif
+> +
+> =A0#ifdef CONFIG_OF
+>
+> =A0/* Pointer for first entry in chain of all nodes. */
+> @@ -95,21 +109,6 @@ static inline void of_node_set_flag(struct device=
+_node *n, unsigned long flag)
+>
+> =A0extern struct device_node *of_find_all_nodes(struct device_node *p=
+rev);
+>
+> -#if defined(CONFIG_SPARC)
+> -/* Dummy ref counting routines - to be implemented later */
+> -static inline struct device_node *of_node_get(struct device_node *no=
+de)
+> -{
+> - =A0 =A0 =A0 return node;
+> -}
+> -static inline void of_node_put(struct device_node *node)
+> -{
+> -}
+> -
+> -#else
+> -extern struct device_node *of_node_get(struct device_node *node);
+> -extern void of_node_put(struct device_node *node);
+> -#endif
+> -
+> =A0/*
+> =A0* OF address retrieval & translation
+> =A0*/
+> --
+> 1.7.5.4
+>
 
-Rob
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
