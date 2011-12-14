@@ -1,92 +1,68 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: [PATCH v7 14/14] arm/tegra: add support for tegra30 based board cardhu
-Date: Wed, 14 Dec 2011 17:03:26 +0200
-Message-ID: <1323875032-18221-15-git-send-email-pdeschrijver@nvidia.com>
-References: <1323875032-18221-1-git-send-email-pdeschrijver@nvidia.com>
+From: Kevin Hilman <khilman@ti.com>
+Subject: Re: [PATCH v3 0/4] OMAP serial device tree support
+Date: Wed, 14 Dec 2011 07:20:13 -0800
+Message-ID: <87d3brnpsi.fsf@ti.com>
+References: <1323863746-18145-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323875032-18221-1-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, Gary King <gking@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1323863746-18145-1-git-send-email-rnayak@ti.com> (Rajendra
+	Nayak's message of "Wed, 14 Dec 2011 17:25:42 +0530")
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>, Greg KH <greg@kroah.com>, Alan Cox <alan@linux.intel.com>
+Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for the tegra30 based cardhu development board. Cardhu is a tablet
-formfactor reference design for tegra30. The patch provides a device tree for
-the board, updates Makefile.boot to build the dtb, includes the platform in
-Kconfig and updates board-dt.c.
+Greg, Alan,
 
-Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
----
- arch/arm/boot/dts/tegra-cardhu.dts     |   36 ++++++++++++++++++++++++++++++++
- arch/arm/mach-tegra/Makefile.boot      |    1 +
- arch/arm/mach-tegra/board-dt-tegra30.c |    1 +
- 3 files changed, 38 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/tegra-cardhu.dts
+Rajendra Nayak <rnayak@ti.com> writes:
 
-diff --git a/arch/arm/boot/dts/tegra-cardhu.dts b/arch/arm/boot/dts/tegra-cardhu.dts
-new file mode 100644
-index 0000000..70c41fc
---- /dev/null
-+++ b/arch/arm/boot/dts/tegra-cardhu.dts
-@@ -0,0 +1,36 @@
-+/dts-v1/;
-+
-+/include/ "tegra30.dtsi"
-+
-+/ {
-+	model = "NVIDIA Tegra30 Cardhu evaluation board";
-+	compatible = "nvidia,cardhu", "nvidia,tegra30";
-+
-+	memory {
-+		reg = < 0x80000000 0x40000000 >;
-+	};
-+
-+	serial@70006000 {
-+		clock-frequency = < 408000000 >;
-+	};
-+
-+	i2c@7000c000 {
-+		clock-frequency = <100000>;
-+	};
-+
-+	i2c@7000c400 {
-+		clock-frequency = <100000>;
-+	};
-+
-+	i2c@7000c500 {
-+		clock-frequency = <100000>;
-+	};
-+
-+	i2c@7000c700 {
-+		clock-frequency = <100000>;
-+	};
-+
-+	i2c@7000d000 {
-+		clock-frequency = <100000>;
-+	};
-+};
-diff --git a/arch/arm/mach-tegra/Makefile.boot b/arch/arm/mach-tegra/Makefile.boot
-index cf51a00..9a82094 100644
---- a/arch/arm/mach-tegra/Makefile.boot
-+++ b/arch/arm/mach-tegra/Makefile.boot
-@@ -7,3 +7,4 @@ dtb-$(CONFIG_MACH_PAZ00) += tegra-paz00.dtb
- dtb-$(CONFIG_MACH_SEABOARD) += tegra-seaboard.dtb
- dtb-$(CONFIG_MACH_TRIMSLICE) += tegra-trimslice.dtb
- dtb-$(CONFIG_MACH_VENTANA) += tegra-ventana.dtb
-+dtb-$(CONFIG_ARCH_TEGRA_3x_SOC) += tegra-cardhu.dtb
-diff --git a/arch/arm/mach-tegra/board-dt-tegra30.c b/arch/arm/mach-tegra/board-dt-tegra30.c
-index f44a29c..3c197e2 100644
---- a/arch/arm/mach-tegra/board-dt-tegra30.c
-+++ b/arch/arm/mach-tegra/board-dt-tegra30.c
-@@ -47,6 +47,7 @@ static void __init tegra30_dt_init(void)
- }
- 
- static const char *tegra30_dt_board_compat[] = {
-+	"nvidia,cardhu",
- 	NULL
- };
- 
--- 
-1.7.7.rc0.72.g4b5ea.dirty
+> v3 is rebased on top of the latest serial runtime
+> patches[1] and boot tested with/without DT on OMAP4
+> SDP and OMAP4 Panda boards.
+
+With your ack on the drivers/tty/* stuff, I can queue this via the OMAP
+tree on top of the runtime PM conversion that it depends on.
+
+Thanks,
+
+Kevin
+
+> Patches can be found here..
+> git://gitorious.org/omap-pm/linux.git for-dt/serial
+>
+> I also had to pull in a fix[2] for DT testing (already in linux-omap
+> master) which was missing as the serial runtime branch[1]
+> was based on an older master commit.
+>
+> Changes in v3:
+> -1- Rebased on latest serial runtime patches
+> -2- Minor typr fixes
+>
+> Changes in v2:
+> -1- Got rid of binding to define which uart is console
+> -2- Added checks to default clock speed to 48Mhz
+> -3- Added compatible for each OMAP family
+> -4- Used of_alias_get_id to populate port.line
+>
+> [1] git://gitorious.org/runtime_3-0/runtime_3-0.git for_3_3/lo_rc4_uartruntime
+> [2] http://www.spinics.net/lists/arm-kernel/msg150751.html
+>
+> Rajendra Nayak (4):
+>   omap-serial: Get rid of all pdev->id usage
+>   omap-serial: Use default clock speed (48Mhz) if not specified
+>   omap-serial: Add minimal device tree support
+>   ARM: omap: pass minimal SoC/board data for UART from dt
+>
+>  .../devicetree/bindings/serial/omap_serial.txt     |   10 +++
+>  arch/arm/boot/dts/omap3.dtsi                       |   31 ++++++++
+>  arch/arm/boot/dts/omap4.dtsi                       |   28 +++++++
+>  arch/arm/mach-omap2/board-generic.c                |    1 -
+>  drivers/tty/serial/omap-serial.c                   |   80 +++++++++++++++----
+>  5 files changed, 132 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/omap_serial.txt
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
