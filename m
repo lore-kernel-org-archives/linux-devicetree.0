@@ -1,32 +1,58 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [REPOST RFC PATCH 0/3] New "gpio-poweroff" driver to turn off
- platform devices with GPIOs
-Date: Wed, 14 Dec 2011 12:02:40 +0000
-Message-ID: <20111214120240.GC25088@sirena.org.uk>
-References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
- <4EE7A31E.7080301@gmail.com>
- <895CF182-4BF7-4DF5-A467-944EC008DBC3@boeing.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 0/4] OMAP serial device tree support
+Date: Wed, 14 Dec 2011 07:47:54 -0600
+Message-ID: <4EE8A90A.10206@gmail.com>
+References: <1323863746-18145-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <895CF182-4BF7-4DF5-A467-944EC008DBC3@boeing.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Moffett, Kyle D" <Kyle.D.Moffett@boeing.com>
-Cc: Rob Herring <robherring2@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1323863746-18145-1-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, tony@atomide.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 13, 2011 at 02:44:48PM -0600, Moffett, Kyle D wrote:
+On 12/14/2011 05:55 AM, Rajendra Nayak wrote:
+> v3 is rebased on top of the latest serial runtime
+> patches[1] and boot tested with/without DT on OMAP4
+> SDP and OMAP4 Panda boards.
+> 
+> Patches can be found here..
+> git://gitorious.org/omap-pm/linux.git for-dt/serial
+> 
+> I also had to pull in a fix[2] for DT testing (already in linux-omap
+> master) which was missing as the serial runtime branch[1]
+> was based on an older master commit.
+> 
+> Changes in v3:
+> -1- Rebased on latest serial runtime patches
+> -2- Minor typr fixes
+> 
+> Changes in v2:
+> -1- Got rid of binding to define which uart is console
+> -2- Added checks to default clock speed to 48Mhz
+> -3- Added compatible for each OMAP family
+> -4- Used of_alias_get_id to populate port.line
+> 
+> [1] git://gitorious.org/runtime_3-0/runtime_3-0.git for_3_3/lo_rc4_uartruntime
+> [2] http://www.spinics.net/lists/arm-kernel/msg150751.html
+> 
+> Rajendra Nayak (4):
+>   omap-serial: Get rid of all pdev->id usage
+>   omap-serial: Use default clock speed (48Mhz) if not specified
+>   omap-serial: Add minimal device tree support
+>   ARM: omap: pass minimal SoC/board data for UART from dt
+> 
+>  .../devicetree/bindings/serial/omap_serial.txt     |   10 +++
+>  arch/arm/boot/dts/omap3.dtsi                       |   31 ++++++++
+>  arch/arm/boot/dts/omap4.dtsi                       |   28 +++++++
+>  arch/arm/mach-omap2/board-generic.c                |    1 -
+>  drivers/tty/serial/omap-serial.c                   |   80 +++++++++++++++----
+>  5 files changed, 132 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/omap_serial.txt
 
-> I looked at it a bit when I was generalizing my code, but it seemed
-> dramatically more complicated than I needed, and I couldn't see any
-> reasonable way to hook it from the machine_poweroff() code.
+Looks good. For the series:
 
-Some ST platform had to do odd stuff with regulators to power off, it
-made a platform device representing the odd poweroff code.
+Reviewed-by: Rob Herring <rob.herring@calxeda.com>
 
-> There's also the fact that I was looking for a pure-device-tree type
-> of driver and the regulator framework does not seem to support the
-> standard OF-platform probe system.
-
-The regulator API in -next has DT bindings.
