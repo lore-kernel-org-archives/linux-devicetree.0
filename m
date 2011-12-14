@@ -1,31 +1,72 @@
-From: Alan Cox <alan@linux.intel.com>
-Subject: Re: [PATCH v3 0/4] OMAP serial device tree support
-Date: Wed, 14 Dec 2011 17:18:43 +0000
-Message-ID: <20111214171843.5f638874@bob.linux.org.uk>
-References: <1323863746-18145-1-git-send-email-rnayak@ti.com>
-	<87d3brnpsi.fsf@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] of/base: Take NULL string into account for
+ property with multiple strings
+Date: Wed, 14 Dec 2011 10:18:22 -0800
+Message-ID: <20111214181822.GE32251@atomide.com>
+References: <1323095036-3739-1-git-send-email-b-cousson@ti.com>
+ <1323095036-3739-2-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <87d3brnpsi.fsf@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1323095036-3739-2-git-send-email-b-cousson@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>, Greg KH <greg@kroah.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Dec 2011 07:20:13 -0800
-Kevin Hilman <khilman@ti.com> wrote:
+* Benoit Cousson <b-cousson@ti.com> [111205 05:53]:
+> The current implementation just ignore any NULL string inserted in a
+> multiple strings property.
+> In some cases we can have a property with a fix number of strings but
+> not necessarily used, like for example in a list of valid pinmux modes.
+> 
+>  prop = "uart_rx", "uart_tx", "", "", "safe_mode";
+> 
+> Do no skip NULL string and take them into account in
+> of_property_read_string_index and of_property_count_strings.
+> 
+> Reported-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
 
-> Greg, Alan,
-> 
-> Rajendra Nayak <rnayak@ti.com> writes:
-> 
-> > v3 is rebased on top of the latest serial runtime
-> > patches[1] and boot tested with/without DT on OMAP4
-> > SDP and OMAP4 Panda boards.
-> 
-> With your ack on the drivers/tty/* stuff, I can queue this via the
-> OMAP tree on top of the runtime PM conversion that it depends on.
+This fix should be merged before people start doing workarounds
+in drivers for this:
 
-Go for it
+Tested-by: Tony Lindgren <tony@atomide.com>
+
+> ---
+>  drivers/of/base.c |    8 +++-----
+>  1 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 9b6588e..b707243 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -752,7 +752,7 @@ int of_property_read_string_index(struct device_node *np, const char *propname,
+>  
+>  	for (i = 0; total < prop->length; total += l, p += l) {
+>  		l = strlen(p) + 1;
+> -		if ((*p != 0) && (i++ == index)) {
+> +		if (i++ == index) {
+>  			*output = p;
+>  			return 0;
+>  		}
+> @@ -790,11 +790,9 @@ int of_property_count_strings(struct device_node *np, const char *propname)
+>  
+>  	p = prop->value;
+>  
+> -	for (i = 0; total < prop->length; total += l, p += l) {
+> +	for (i = 0; total < prop->length; total += l, p += l, i++)
+>  		l = strlen(p) + 1;
+> -		if (*p != 0)
+> -			i++;
+> -	}
+> +
+>  	return i;
+>  }
+>  EXPORT_SYMBOL_GPL(of_property_count_strings);
+> -- 
+> 1.7.0.4
+> 
