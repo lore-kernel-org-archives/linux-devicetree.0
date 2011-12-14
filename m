@@ -1,70 +1,60 @@
-From: "Moffett, Kyle D" <Kyle.D.Moffett-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [REPOST RFC PATCH 0/3] New "gpio-poweroff" driver to turn off
- platform devices with GPIOs
-Date: Wed, 14 Dec 2011 14:34:37 -0600
-Message-ID: <E30C4693-0D31-4A9A-9E9D-0FC03C5F6B8A@boeing.com>
-References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
- <4EE7A31E.7080301@gmail.com>
- <895CF182-4BF7-4DF5-A467-944EC008DBC3@boeing.com>
- <20111214120240.GC25088@sirena.org.uk>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 3/9] irq: convert generic-chip to use irq_domain
+Date: Wed, 14 Dec 2011 14:14:28 -0700
+Message-ID: <CACxGe6sqTx4h3vPgq+XrAoqLTiDMB-vcS5C9GgYssdsSYV_0qA@mail.gmail.com>
+References: <1323876538-20406-1-git-send-email-robherring2@gmail.com> <1323876538-20406-4-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111214120240.GC25088-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1323876538-20406-4-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, shawn.guo@freescale.com, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@ti.com>, Tony Lindgren <tony@atomide.com>, Barry Song <baohua.song@csr.com>, Linus Walleij <linus.ml.walleij@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Dec 14, 2011, at 07:02, Mark Brown wrote:
-> On Tue, Dec 13, 2011 at 02:44:48PM -0600, Moffett, Kyle D wrote:
->> I looked at it a bit when I was generalizing my code, but it seemed
->> dramatically more complicated than I needed, and I couldn't see any
->> reasonable way to hook it from the machine_poweroff() code.
-> 
-> Some ST platform had to do odd stuff with regulators to power off, it
-> made a platform device representing the odd poweroff code.
+On Wed, Dec 14, 2011 at 8:28 AM, Rob Herring <robherring2@gmail.com> wr=
+ote:
+> From: Rob Herring <rob.herring@calxeda.com>
+>
+> Add irq domain support to irq generic-chip. This enables users of
+> generic-chip to support dynamic irq assignment needed for DT interrup=
+t
+> binding. Users must be converted to use irq_data.hwirq for determinin=
+g
+> local interrupt numbers rather than using the Linux irq number.
+>
+> irq_base is kept for now as there are a few users of it. Once they
+> are converted to use the irq domain, it can be removed.
+>
+> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> ---
+> =A0include/linux/irq.h =A0 =A0 =A0 | =A0 =A02 +-
+> =A0kernel/irq/Kconfig =A0 =A0 =A0 =A0| =A0 =A01 +
+> =A0kernel/irq/generic-chip.c | =A0 57 ++++++++++++++++++++++++++++---=
+-------------
+> =A03 files changed, 38 insertions(+), 22 deletions(-)
+>
+> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> index bff29c5..9ba8a30 100644
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -664,7 +664,7 @@ struct irq_chip_generic {
+> =A0 =A0 =A0 =A0raw_spinlock_t =A0 =A0 =A0 =A0 =A0lock;
+> =A0 =A0 =A0 =A0void __iomem =A0 =A0 =A0 =A0 =A0 =A0*reg_base;
+> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0irq_base;
+> - =A0 =A0 =A0 unsigned int =A0 =A0 =A0 =A0 =A0 =A0irq_cnt;
+> + =A0 =A0 =A0 struct irq_domain =A0 =A0 =A0 *domain;
 
-This is actually what I did originally, albeit with GPIOs.
+Instead of making domain a pointer, why not embed the structure inside
+irq_chip_generic?  I don't see a reason for keeping it separate.
 
-In our case we have a chassis with 6 computers in it, and one of the
-computers has 3 GPIOs which are wired to the "off" signal for each domain
-(one domain per pair of computers).
+After changing that you can add my Acked-by for this patch.
 
-Due to isolation requirements, that computer can't turn the domains back
-on from software, so really all we need to be able to do is trigger each
-GPIO in sequence as part of the poweroff.
-
-So basically the "gpio-poweroff" driver was just a slightly-more-generic
-way of doing what I was doing before, by looking up the GPIOs in the
-device-tree.
+g.
 
 
->> There's also the fact that I was looking for a pure-device-tree type
->> of driver and the regulator framework does not seem to support the
->> standard OF-platform probe system.
-> 
-> The regulator API in -next has DT bindings.
-
-Based on the description of our hardware, is there a good way that I
-can wire up gpio-regulator driver to our hardware with just the device
-tree (and maybe one small board-specific function) to make it shut down
-each domain in sequence at poweroff time? Otherwise I will just go back
-to my custom board-specific function for GPIO-twiddling.
-
-Cheers,
-Kyle Moffett
-
---
-Curious about my work on the Debian powerpcspe port?
-I'm keeping a blog here: http://pureperl.blogspot.com/
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
