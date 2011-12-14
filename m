@@ -1,79 +1,50 @@
-From: Kevin Hilman <khilman@ti.com>
-Subject: Re: [PATCH v2 07/10] arm/dts: omap4-panda: Add twl6030 and i2c EEPROM
-Date: Tue, 13 Dec 2011 21:06:16 -0800
-Message-ID: <87obvbpws7.fsf@ti.com>
-References: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
-	<1323439361-1647-8-git-send-email-b-cousson@ti.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: [PATCH v3 2/4] omap-serial: Use default clock speed (48Mhz) if not specified
+Date: Wed, 14 Dec 2011 17:25:44 +0530
+Message-ID: <1323863746-18145-3-git-send-email-rnayak@ti.com>
+References: <1323863746-18145-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1323439361-1647-8-git-send-email-b-cousson@ti.com> (Benoit
-	Cousson's message of "Fri, 9 Dec 2011 15:02:38 +0100")
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1323863746-18145-1-git-send-email-rnayak@ti.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com
+Cc: tony@atomide.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+Use a default clock speed of 48Mhz, instead of ending up with 0,
+if platforms fail to specify a valid clock speed.
 
-Benoit Cousson <b-cousson@ti.com> writes:
+Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+---
+ drivers/tty/serial/omap-serial.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-> Update pandaboard dts file with required clock frequencies
-> for the i2c client devices existing on pandaboard.
->
-> Add the twl6030 node in i2c1 controller.
->
-> This is the minimal support needed to boot OMAP4 boards
-> without any crash.
-> The support for all the features included in this MFD will be
-> added later.
->
-> Add a generic i2c EEPROM entry.
->
-> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> ---
->  arch/arm/boot/dts/omap4-panda.dts |   45 +++++++++++++++++++++++++++++++++++++
->  1 files changed, 45 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-> index 9755ad5..b66bcd6 100644
-> --- a/arch/arm/boot/dts/omap4-panda.dts
-> +++ b/arch/arm/boot/dts/omap4-panda.dts
-> @@ -18,3 +18,48 @@
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
->  	};
->  };
-> +
-> +&i2c1 {
-> +	clock-frequency = <400000>;
-> +
-> +	/*
-> +	 * Integrated Power Management Chip
-> +	 * http://www.ti.com/lit/ds/symlink/twl6030.pdf
-> +	 */
-> +	twl@48 {
-> +		compatible = "ti,twl6030";
-> +		reg = <0x48>;
-> +		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
-> +		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		interrupt-parent = <&gic>;
-> +
-> +		/* twl is a MFD, so it will contain a bunch of sub-ips */
-> +		rtc {
-> +			compatible = "ti,twl4030-rtc";
-> +			interrupts = <11>;
-> +		};
+diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+index a02cc9f..f14b9c5 100644
+--- a/drivers/tty/serial/omap-serial.c
++++ b/drivers/tty/serial/omap-serial.c
+@@ -43,6 +43,8 @@
+ #include <plat/dmtimer.h>
+ #include <plat/omap-serial.h>
+ 
++#define DEFAULT_CLK_SPEED 48000000 /* 48Mhz*/
++
+ static struct uart_omap_port *ui[OMAP_MAX_HSUART_PORTS];
+ 
+ /* Forward declaration of functions */
+@@ -1386,6 +1388,11 @@ static int serial_omap_probe(struct platform_device *pdev)
+ 
+ 	up->port.flags = omap_up_info->flags;
+ 	up->port.uartclk = omap_up_info->uartclk;
++	if (!up->port.uartclk) {
++		up->port.uartclk = DEFAULT_CLK_SPEED;
++		dev_warn(&pdev->dev, "No clock speed specified: using default:"
++						"%d\n", DEFAULT_CLK_SPEED);
++	}
+ 	up->uart_dma.uart_base = mem->start;
+ 	up->errata = omap_up_info->errata;
+ 
+-- 
+1.7.1
 
-After seeing the mostly cut & paste in Rajendra's regulator series, I'm
-wondering if it wouldn't be better to just have a twl4030.dtsi here
-which has the RTC and all the regulators with the default voltage ranges
-from the TWL data sheet.   
-
-Not knowing much about how includes work in DT, would it then be
-possible for board files to override things like default voltage ranges
-for regulators?
-
-Kevin
