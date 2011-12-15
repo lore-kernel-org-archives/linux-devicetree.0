@@ -1,107 +1,132 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [RFC v2 4/9] of: add clock providers
-Date: Thu, 15 Dec 2011 23:13:36 +0800
-Message-ID: <20111215151335.GB2831@S2100-06.ap.freescale.net>
-References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
- <20111212232903.GC2616@gallagher>
- <CACxGe6t50zJNpo=QWPzgFMpQ6Cfi9YZyrKuMSTrrA2oYiLF2Pw@mail.gmail.com>
- <20111215135129.GA2831@S2100-06.ap.freescale.net>
- <4EEA02D5.9020309@gmail.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH v2 02/10] i2c: OMAP: Add DT support for i2c controller
+Date: Thu, 15 Dec 2011 16:05:41 +0100
+Message-ID: <4EEA0CC5.4090602@ti.com>
+References: <1323439361-1647-1-git-send-email-b-cousson@ti.com> <1323439361-1647-3-git-send-email-b-cousson@ti.com> <4EE8D5A1.2080100@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4EEA02D5.9020309@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EE8D5A1.2080100@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
 To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Jamie Iles <jamie@jamieiles.com>, Sascha Hauer <kernel@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Mike Turquette <mturquette@ti.com>
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ben Dooks <ben-linux@fluff.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2011 at 08:23:17AM -0600, Rob Herring wrote:
-> 
-> 
-> On 12/15/2011 07:51 AM, Shawn Guo wrote:
-> > On Tue, Dec 13, 2011 at 10:54:58AM -0700, Grant Likely wrote:
-> >> On Mon, Dec 12, 2011 at 4:29 PM, Jamie Iles <jamie@jamieiles.com> wrote:
-> >>> Hi Grant,
-> >>>
-> >>> I'm still going through these and trying to digest them but a couple of
-> >>> quick questions/comments.
-> >>>
-> >>> Jamie
-> >>>
-> >>> On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
-> >>>> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..e40c436
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >>>> @@ -0,0 +1,114 @@
-> >>>> +This binding is a work-in-progress, and are based on some experimental
-> >>>> +work by benh[1].
-> >>>> +
-> >>>> +Sources of clock signal can be represented by any node in the device
-> >>>> +tree.  Those nodes are designated as clock providers.  Clock consumer
-> >>>> +nodes use a phandle and clock specifier pair to connect clock provider
-> >>>> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
-> >>>> +specifier is an array of one more more cells identifying the clock
-> >>>> +output on a device.  The length of a clock specifier is defined by the
-> >>>> +value of a #clock-cells property in the clock provider node.
-> >>>> +
-> >>>> +[1] http://patchwork.ozlabs.org/patch/31551/
-> >>>> +
-> >>>> +==Clock providers==
-> >>>> +
-> >>>> +Required properties:
-> >>>> +#clock-cells:           Number of cells in a clock specifier; typically will be
-> >>>> +                set to 1
-> >>>
-> >>> I'm not sure I fully understand what the extra cells actually mean for
-> >>> clocks.  I think the first integer is the clock output to use but some
-> >>> of the versatile and highbank ones only have a phandle or is it more
-> >>> implementation defined?  The clock-output-names description hints at
-> >>> recommended, so I find this a little confusing, but that could just be
-> >>> me!
-> >>
-> >> I'm following convention here that has been established with
-> >> interrupts, gpios, and others.  Sometimes more information is needed
-> >> that just the clock number.  Using #clock-cells gives a clock provider
-> >> the option of having additional fields for clock flags or other data.
-> >> This is very much implementation defined.  Simple clock providers that
-> >> only have a single clock output can easily use #clock-cells = <0>.
-> >> Providers with multiple outputs will need to use 1 or more cells.
-> >>
-> > It totally destroys my understanding on #clock-cells :)
-> > 
-> > I thought it's introduced to reduce the clock nodes in dts.  That said,
-> > #clock-cells stands for the number of clks we describe in the node.
-> > When #clock-cells > 1 for a node, the node becomes a clk blob which
-> > actually contains multiple clks.  I migrated the imx6 clock to your
-> > first post with this approach [1], using 70 nodes to describe 110
-> > clocks (~35% nodes reduced).
-> > 
-> > Now, you are saying it's not designed for this purpose.  I'm pretty
-> > confused, because the only reasonable use of #clock-cells to me is
-> > just that way, and I fail to see why we need #clock-cells if we do
-> > not use it that way.
-> > 
-> > http://comments.gmane.org/gmane.linux.drivers.devicetree/9631
-> 
-> Think of clock-cells as the size of array elements (minus 1), not the
-> number of array elements. If you have more than 1 clock per node, then
-> you need more information on the clock input side than just a phandle to
-> describe which clock you are using. Typically this would just be the
-> phandle plus index of the clock you want. This is just like gpio where
-> you have controller phandle plus gpio line number.
-> 
-It seems I misunderstood/misused the #clock-cells.  So even we have
-multiple clks embedded in a node, #clock-cells=1 works for most of the
-cases, since what really matters is just the index of the clk we want
-the phandle to point to.  And the clock driver has to figure out how
-many clks are in there by some other means.  Correct me please, if I
-still misunderstand it.
+Hi Rob,
 
--- 
-Regards,
-Shawn
+On 12/14/2011 5:58 PM, Rob Herring wrote:
+> Benoit,
+>
+> On 12/09/2011 08:02 AM, Benoit Cousson wrote:
+>> Add initial DT support to retrieve the frequency using a
+>> DT attribute instead of the pdata pointer if of_node exist.
+>>
+>> Add documentation for omap i2c controller binding.
+>>
+>> Based on original patches from Manju and Grant.
+>>
+>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>> Cc: Ben Dooks<ben-linux@fluff.org>
+>> ---
+>>   Documentation/devicetree/bindings/i2c/omap-i2c.txt |   42 ++++++++
+>>   drivers/i2c/busses/i2c-omap.c                      |  100 +++++++++++++-------
+>>   2 files changed, 107 insertions(+), 35 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/i2c/omap-i2c.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/omap-i2c.txt b/Documentation/devicetree/bindings/i2c/omap-i2c.txt
+>> new file mode 100644
+>> index 0000000..d259a17
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/omap-i2c.txt
+>> @@ -0,0 +1,42 @@
+>> +I2C for OMAP platforms
+>> +
+>> +Required properties :
+>> +- compatible : Must be "ti,omap3-i2c" or "ti,omap4-i2c"
+>> +- ti,hwmods : Must be "i2c<n>", n being the instance number (1-based)
+>> +- #address-cells =<1>;
+>> +- #size-cells =<0>;
+>> +
+>> +Recommended properties :
+>> +- clock-frequency : Desired I2C bus clock frequency in Hz. Otherwise
+>> +  the default 100 kHz frequency will be used.
+>> +
+>> +Optional properties:
+>> +- Child nodes conforming to i2c bus binding
+>> +- ti,flags : u32: settings or errata relative to the i2c
+>> +    0x1:   OMAP_I2C_FLAG_NO_FIFO
+>> +    0x2:   OMAP_I2C_FLAG_SIMPLE_CLOCK
+>> +    0x4:   OMAP_I2C_FLAG_16BIT_DATA_REG
+>> +    0x8:   OMAP_I2C_FLAG_RESET_REGS_POSTIDLE
+>> +    0x10:  OMAP_I2C_FLAG_APPLY_ERRATA_I207
+>> +    0x20:  OMAP_I2C_FLAG_ALWAYS_ARMXOR_CLK
+>> +    0x40:  OMAP_I2C_FLAG_FORCE_19200_INT_CLK
+>> +  Valid for ti,omap3-i2c only:
+>> +    0x80:  OMAP_I2C_FLAG_BUS_SHIFT_1: 8 bits registers
+>> +    0x100: OMAP_I2C_FLAG_BUS_SHIFT_2: 16 bits registers
+>
+> It's generally preferred to split these out to separate properties since
+> there is not yet define capability in dts.
+
+Yeah, I was hoping that Stephen's DTC patches were accepted to avoid that.
+
+> Can some of these be removed
+> by having more specific compatible strings? That is the whole point in
+> having compatible strings not be generic. omap4-i2c and omap3-i2c is
+> still kind of generic.
+
+Do you mean creating some attributes like that:
+
++    ti,16bits_shift;
++    ti,reset_postidle;
++    ti,errata_i207;
+
+Or using some omap3-i2c or omap4-i2c to determine the proper version and 
+thus populate the right flags during probe.
+
+[...]
+
+>> @@ -965,6 +956,31 @@ static const struct i2c_algorithm omap_i2c_algo = {
+>>   	.functionality	= omap_i2c_func,
+>>   };
+>>
+>> +#ifdef CONFIG_OF
+>> +static struct omap_i2c_bus_platform_data omap3_pdata = {
+>> +	.rev = OMAP_I2C_IP_VERSION_1,
+>> +};
+>> +
+>> +static struct omap_i2c_bus_platform_data omap4_pdata = {
+>> +	.rev = OMAP_I2C_IP_VERSION_2,
+>> +};
+>
+> This is redundant. The ip version can be determined from the compatible
+> string.
+
+I'm confused...
+I'm using the compatible string below to chose the proper value.
+This flag is then used later at runtime.
+I'm using a pseudo pdata because that driver is still used in old 
+platform that does and will never not have DT support.
+
+>> +static const struct of_device_id omap_i2c_of_match[] = {
+>> +	{
+>> +		.compatible = "ti,omap4-i2c",
+>> +		.data =&omap4_pdata,
+>> +	},
+>> +	{
+>> +		.compatible = "ti,omap3-i2c",
+>> +		.data =&omap3_pdata,
+>> +	},
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, omap_i2c_of_match);
+>> +#else
+>> +#define omap_i2c_of_match NULL
+>
+> Use of_match_ptr instead of the #else.
+
+OK, good point.
+
+Thanks,
+Benoit
