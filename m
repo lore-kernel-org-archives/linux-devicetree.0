@@ -1,78 +1,77 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3/9] irq: convert generic-chip to use irq_domain
-Date: Thu, 15 Dec 2011 08:55:32 -0700
-Message-ID: <CACxGe6t=ngbzNLkX+df8gP0aoMmgnsVqn2V2eRHpGi5FoFci_w@mail.gmail.com>
-References: <1323876538-20406-1-git-send-email-robherring2@gmail.com>
- <1323876538-20406-4-git-send-email-robherring2@gmail.com>
- <20111215052512.GB21815@S2101-09.ap.freescale.net>
- <20111215055501.GC21815@S2101-09.ap.freescale.net>
- <4EE9F899.7010402@gmail.com> <4EE9FC99.6030905@gmail.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH v2 02/10] i2c: OMAP: Add DT support for i2c controller
+Date: Thu, 15 Dec 2011 17:09:34 +0100
+Message-ID: <4EEA1BBE.2090802@ti.com>
+References: <1323439361-1647-1-git-send-email-b-cousson@ti.com> <1323439361-1647-3-git-send-email-b-cousson@ti.com> <4EE8D5A1.2080100@gmail.com> <4EEA0CC5.4090602@ti.com> <4EEA16CB.6040708@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4EE9FC99.6030905-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EEA16CB.6040708@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ben Dooks <ben-linux@fluff.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2011 at 6:56 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Shawn,
+On 12/15/2011 4:48 PM, Rob Herring wrote:
+> On 12/15/2011 09:05 AM, Cousson, Benoit wrote:
+
+[...]
+
+>> Or using some omap3-i2c or omap4-i2c to determine the proper version and
+>> thus populate the right flags during probe.
+>>
 >
-> On 12/15/2011 07:39 AM, Rob Herring wrote:
->> On 12/14/2011 11:55 PM, Shawn Guo wrote:
->>> On Thu, Dec 15, 2011 at 01:25:20PM +0800, Shawn Guo wrote:
->>>> On Wed, Dec 14, 2011 at 09:28:52AM -0600, Rob Herring wrote:
->>>>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>>>
->>>>> Add irq domain support to irq generic-chip. This enables users of
->>>>> generic-chip to support dynamic irq assignment needed for DT interrupt
->>>>> binding. Users must be converted to use irq_data.hwirq for determining
->>>>> local interrupt numbers rather than using the Linux irq number.
->>>>>
->>>>> irq_base is kept for now as there are a few users of it. Once they
->>>>> are converted to use the irq domain, it can be removed.
->>>>>
->>>>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>>> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
->>>>> ---
+> If that's specific enough, then yes. I meant that if say only the
+> omap3578 (making up numbers here) has errata i207, then define a
+> compatible string "ti,omap3578-i2c" that implies that and possibly other
+> flags.
+>
+> To put it another way, there are only N valid combinations of flags and
+> N is probably fairly small as long as the flags are dictated by the i2c
+> h/w rev or how it was integrated into a particular SOC. So you should
+> have N compatible strings that reflect those valid combinations. The
+> driver can still use the flags internally.
+>
+> For any flags that are in fact board level configuration, they should be
+> broken out as individual properties. Most of these sound like they are
+> properties of the h/w and not user configuration of the h/w.
+
+Yes, indeed, I got the point. This is even much better for the 
+implementation standpoint. The whole stuff is located inside the driver 
+where it should belong.
+
+>> [...]
+>>
+>>>> @@ -965,6 +956,31 @@ static const struct i2c_algorithm omap_i2c_algo = {
+>>>>        .functionality    = omap_i2c_func,
+>>>>    };
 >>>>
->>>> Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>
->>> Sorry, I have to take that tag back after I correct my test setup.
->>> It does not work for imx5 TZIC case, because the following change
->>> I suggested before is missed.
+>>>> +#ifdef CONFIG_OF
+>>>> +static struct omap_i2c_bus_platform_data omap3_pdata = {
+>>>> +    .rev = OMAP_I2C_IP_VERSION_1,
+>>>> +};
+>>>> +
+>>>> +static struct omap_i2c_bus_platform_data omap4_pdata = {
+>>>> +    .rev = OMAP_I2C_IP_VERSION_2,
+>>>> +};
 >>>
->>> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
->>> index eb763f7..2a2aac1 100644
->>> --- a/kernel/irq/irqdomain.c
->>> +++ b/kernel/irq/irqdomain.c
->>> @@ -39,7 +39,7 @@ void irq_domain_add(struct irq_domain *domain)
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
->>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->domain =3D domain;
->>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->hwirq =3D hwirq;
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->hwirq =3D hwirq - domain->hwirq_base;
+>>> This is redundant. The ip version can be determined from the compatible
+>>> string.
 >>
->> This is a problem. It entirely defeats the point of hwirq_base and it
->> would break the GIC. We need to fix this in the generic irq chip.
+>> I'm confused...
+>> I'm using the compatible string below to chose the proper value.
+>> This flag is then used later at runtime.
+>> I'm using a pseudo pdata because that driver is still used in old
+>> platform that does and will never not have DT support.
 >>
 >
-> I think I found a fix. Can you try 's/d->hwirq/(d->hwirq % 32)/' in
-> generic-chip.c.
+> After more thought, never mind. You'll probably need it for handling the
+> flags as I proposed above.
 
-Ugh, but that hard codes an assumption that a domain cannot have more
-that 32 irqs.
+Yes, I'm taking advantage of the existing pdata structure to provide the 
+proper flags.
 
-/me goes to dig into irq_domain code...
+Thanks for that feedback,
+Benoit
 
-g.
