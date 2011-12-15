@@ -1,18 +1,15 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 3/9] irq: convert generic-chip to use irq_domain
-Date: Thu, 15 Dec 2011 22:46:33 +0800
-Message-ID: <20111215144632.GD2963@S2100-06.ap.freescale.net>
-References: <1323876538-20406-1-git-send-email-robherring2@gmail.com>
- <1323876538-20406-4-git-send-email-robherring2@gmail.com>
- <20111215052512.GB21815@S2101-09.ap.freescale.net>
- <20111215055501.GC21815@S2101-09.ap.freescale.net>
- <4EE9F899.7010402@gmail.com> <4EE9FC99.6030905@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 3/9] ARM: versatile: Map local timers using Device
+ Tree when possible
+Date: Thu, 15 Dec 2011 08:53:28 -0600
+Message-ID: <4EEA09E8.3010807@gmail.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-4-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4EE9FC99.6030905-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1323957761-13553-4-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,17 +19,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2011 at 07:56:41AM -0600, Rob Herring wrote:
-[...]
-> I think I found a fix. Can you try 's/d->hwirq/(d->hwirq % 32)/' in
-> generic-chip.c.
+On 12/15/2011 08:02 AM, Pawel Moll wrote:
+> Try to map TWD registers basing on a "arm,smp-twd" Device Tree
+> node (compatible value as used in Highbank's DT). This overrides
+> existing twd_base value.
 > 
-Tried, it works.
+> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/plat-versatile/localtimer.c |   12 ++++++++++++
+>  1 files changed, 12 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/plat-versatile/localtimer.c b/arch/arm/plat-versatile/localtimer.c
+> index 0fb3961..8f0dc10 100644
+> --- a/arch/arm/plat-versatile/localtimer.c
+> +++ b/arch/arm/plat-versatile/localtimer.c
+> @@ -11,6 +11,8 @@
+>  #include <linux/init.h>
+>  #include <linux/smp.h>
+>  #include <linux/clockchips.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>  
+>  #include <asm/smp_twd.h>
+>  #include <asm/localtimer.h>
+> @@ -21,6 +23,16 @@
+>   */
+>  int __cpuinit local_timer_setup(struct clock_event_device *evt)
+>  {
+> +#if defined(CONFIG_OF)
+> +	struct device_node *node = of_find_compatible_node(NULL,
+> +			NULL, "arm,smp-twd");
+> +
+> +	if (node)
+> +		twd_base = of_iomap(node, 0);
+> +#endif
 
--- 
-Regards,
-Shawn
+I think your previous version was more correct. This is going to find
+the node and do ioremap N times where N is the number of cores. It does
+work though because that is what I did initially too.
+
+Rob
