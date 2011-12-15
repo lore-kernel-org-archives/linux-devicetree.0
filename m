@@ -1,44 +1,92 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 1/3] ARM: OMAP2+: kconfig: Enable devicetree by default
- for OMAP2+ systems
-Date: Thu, 15 Dec 2011 17:28:49 +0100
-Message-ID: <4EEA2041.6070304@ti.com>
-References: <y> <1323190149-6492-2-git-send-email-b-cousson@ti.com> <1323782836.1877.79.camel@deskari> <4EE75448.4010701@ti.com> <20111213223855.GW32251@atomide.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 3/9] irq: convert generic-chip to use irq_domain
+Date: Thu, 15 Dec 2011 09:39:34 -0700
+Message-ID: <CACxGe6t+t_4fAXiLq085LaBS32oaSe3k8tAgiUtuZ7Pu3xawZA@mail.gmail.com>
+References: <1323876538-20406-1-git-send-email-robherring2@gmail.com>
+ <1323876538-20406-4-git-send-email-robherring2@gmail.com>
+ <20111215052512.GB21815@S2101-09.ap.freescale.net>
+ <20111215055501.GC21815@S2101-09.ap.freescale.net>
+ <4EE9F899.7010402@gmail.com> <4EE9FC99.6030905@gmail.com>
+ <CACxGe6t=ngbzNLkX+df8gP0aoMmgnsVqn2V2eRHpGi5FoFci_w@mail.gmail.com>
+ <4EEA1DA8.6040705@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20111213223855.GW32251@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4EEA1DA8.6040705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/13/2011 11:38 PM, Tony Lindgren wrote:
-> * Cousson, Benoit<b-cousson@ti.com>  [111213 05:02]:
->> On 12/13/2011 2:27 PM, Tomi Valkeinen wrote:
->>> Hi,
+On Thu, Dec 15, 2011 at 9:17 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 12/15/2011 09:55 AM, Grant Likely wrote:
+>> On Thu, Dec 15, 2011 at 6:56 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
+te:
+>>> Shawn,
 >>>
->>> On Tue, 2011-12-06 at 17:49 +0100, Benoit Cousson wrote:
->>>> devicetree will become the mandatory boot method for OMAP2+.
->>>> In order to avoid cluttering the OMAP code with #ifdef CONFIG_OF,
->>>> select USE_OF by default for every OMAP2+ systems.
->>>> Select as well the APPENDED_DTB and ATAG_DTB_COMPAT to allow legacy
->>>> boot loader to keep working properly.
+>>> On 12/15/2011 07:39 AM, Rob Herring wrote:
+>>>> On 12/14/2011 11:55 PM, Shawn Guo wrote:
+>>>>> On Thu, Dec 15, 2011 at 01:25:20PM +0800, Shawn Guo wrote:
+>>>>>> On Wed, Dec 14, 2011 at 09:28:52AM -0600, Rob Herring wrote:
+>>>>>>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>>>>>>
+>>>>>>> Add irq domain support to irq generic-chip. This enables users of
+>>>>>>> generic-chip to support dynamic irq assignment needed for DT interr=
+upt
+>>>>>>> binding. Users must be converted to use irq_data.hwirq for determin=
+ing
+>>>>>>> local interrupt numbers rather than using the Linux irq number.
+>>>>>>>
+>>>>>>> irq_base is kept for now as there are a few users of it. Once they
+>>>>>>> are converted to use the irq domain, it can be removed.
+>>>>>>>
+>>>>>>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>>>>>> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+>>>>>>> ---
+>>>>>>
+>>>>>> Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>
+>>>>> Sorry, I have to take that tag back after I correct my test setup.
+>>>>> It does not work for imx5 TZIC case, because the following change
+>>>>> I suggested before is missed.
+>>>>>
+>>>>> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+>>>>> index eb763f7..2a2aac1 100644
+>>>>> --- a/kernel/irq/irqdomain.c
+>>>>> +++ b/kernel/irq/irqdomain.c
+>>>>> @@ -39,7 +39,7 @@ void irq_domain_add(struct irq_domain *domain)
+>>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
+>>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
+>>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->domain =3D domain;
+>>>>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->hwirq =3D hwirq;
+>>>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->hwirq =3D hwirq - domain->hwirq_base;
+>>>>
+>>>> This is a problem. It entirely defeats the point of hwirq_base and it
+>>>> would break the GIC. We need to fix this in the generic irq chip.
+>>>>
 >>>
->>> APPENDED_DTB sounds a bit dangerous to be enabled by default according
->>> to the config help text.
+>>> I think I found a fix. Can you try 's/d->hwirq/(d->hwirq % 32)/' in
+>>> generic-chip.c.
 >>
->> The help is indeed really scary :-)
+>> Ugh, but that hard codes an assumption that a domain cannot have more
+>> that 32 irqs.
+>>
+>> /me goes to dig into irq_domain code...
 >
-> Heh, but it's also true.
->
->> Tony,
->> Do we want to keep it by default? Or should we fix the kconfig help?
->
-> Let's just leave out those two from omap2plus_defconfig then.
+> No, it hard codes that generic irq chip is 32 interrupts at most which
+> is already the case. That's why the TZIC uses 5 generic irq chip instance=
+s.
 
-OK. I'll do that.
+Oops, you're right.  I wasn't paying close enough attention. Sorry for
+the noise.
 
-Benoit
-
+g.
