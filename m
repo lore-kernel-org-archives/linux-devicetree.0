@@ -1,132 +1,112 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v2 02/10] i2c: OMAP: Add DT support for i2c controller
-Date: Thu, 15 Dec 2011 16:05:41 +0100
-Message-ID: <4EEA0CC5.4090602@ti.com>
-References: <1323439361-1647-1-git-send-email-b-cousson@ti.com> <1323439361-1647-3-git-send-email-b-cousson@ti.com> <4EE8D5A1.2080100@gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC v2 5/9] dt/clock: Add handling for fixed clocks and a clock
+ node setup iterator
+Date: Thu, 15 Dec 2011 23:19:51 +0800
+Message-ID: <20111215151950.GC2831@S2100-06.ap.freescale.net>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-5-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EE8D5A1.2080100@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ben Dooks <ben-linux@fluff.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1323727329-4989-5-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Grant,
 
-On 12/14/2011 5:58 PM, Rob Herring wrote:
-> Benoit,
->
-> On 12/09/2011 08:02 AM, Benoit Cousson wrote:
->> Add initial DT support to retrieve the frequency using a
->> DT attribute instead of the pdata pointer if of_node exist.
->>
->> Add documentation for omap i2c controller binding.
->>
->> Based on original patches from Manju and Grant.
->>
->> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
->> Cc: Ben Dooks<ben-linux@fluff.org>
->> ---
->>   Documentation/devicetree/bindings/i2c/omap-i2c.txt |   42 ++++++++
->>   drivers/i2c/busses/i2c-omap.c                      |  100 +++++++++++++-------
->>   2 files changed, 107 insertions(+), 35 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/i2c/omap-i2c.txt
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/omap-i2c.txt b/Documentation/devicetree/bindings/i2c/omap-i2c.txt
->> new file mode 100644
->> index 0000000..d259a17
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/omap-i2c.txt
->> @@ -0,0 +1,42 @@
->> +I2C for OMAP platforms
->> +
->> +Required properties :
->> +- compatible : Must be "ti,omap3-i2c" or "ti,omap4-i2c"
->> +- ti,hwmods : Must be "i2c<n>", n being the instance number (1-based)
->> +- #address-cells =<1>;
->> +- #size-cells =<0>;
->> +
->> +Recommended properties :
->> +- clock-frequency : Desired I2C bus clock frequency in Hz. Otherwise
->> +  the default 100 kHz frequency will be used.
->> +
->> +Optional properties:
->> +- Child nodes conforming to i2c bus binding
->> +- ti,flags : u32: settings or errata relative to the i2c
->> +    0x1:   OMAP_I2C_FLAG_NO_FIFO
->> +    0x2:   OMAP_I2C_FLAG_SIMPLE_CLOCK
->> +    0x4:   OMAP_I2C_FLAG_16BIT_DATA_REG
->> +    0x8:   OMAP_I2C_FLAG_RESET_REGS_POSTIDLE
->> +    0x10:  OMAP_I2C_FLAG_APPLY_ERRATA_I207
->> +    0x20:  OMAP_I2C_FLAG_ALWAYS_ARMXOR_CLK
->> +    0x40:  OMAP_I2C_FLAG_FORCE_19200_INT_CLK
->> +  Valid for ti,omap3-i2c only:
->> +    0x80:  OMAP_I2C_FLAG_BUS_SHIFT_1: 8 bits registers
->> +    0x100: OMAP_I2C_FLAG_BUS_SHIFT_2: 16 bits registers
->
-> It's generally preferred to split these out to separate properties since
-> there is not yet define capability in dts.
+On Mon, Dec 12, 2011 at 03:02:05PM -0700, Grant Likely wrote:
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> ---
+>  drivers/of/clock.c     |   43 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_clk.h |    4 ++++
+>  2 files changed, 47 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/clock.c b/drivers/of/clock.c
+> index 6519e96..1c189b4 100644
+> --- a/drivers/of/clock.c
+> +++ b/drivers/of/clock.c
+> @@ -3,6 +3,7 @@
+>   */
+>  
+>  #include <linux/clk.h>
+> +#include <linux/clkdev.h>
+>  #include <linux/err.h>
+>  #include <linux/errno.h>
+>  #include <linux/module.h>
+> @@ -163,3 +164,45 @@ struct clk *of_clk_get_by_name(struct device_node *np, const char *name)
+>  
+>  	return clk;
+>  }
+> +
+> +/**
+> + * of_clk_init() - Scan and init clock providers from the DT
+> + * @matches: array of compatible values and init functions for providers.
+> + *
+> + * This function scans the device tree for matching clock providers and
+> + * calls their initialization functions
+> + */
+> +void __init of_clk_init(const struct of_device_id *matches)
+> +{
+> +	struct device_node *np;
+> +
+> +	for_each_matching_node(np, matches) {
+> +		const struct of_device_id *match = of_match_node(matches, np);
+> +		of_clk_init_cb_t clk_init_cb = match->data;
+> +		clk_init_cb(np);
+> +	}
+> +}
+> +
+> +static struct clk *of_fixed_clk_get(struct of_phandle_args *a, void *data)
+> +{
+> +	return data;
+> +}
+> +
+> +/**
+> + * of_fixed_clk_setup() - Setup function for simple fixed rate clock
+> + */
+> +void __init of_fixed_clk_setup(struct device_node *node)
+> +{
+> +	struct clk *clk;
+> +	u32 rate;
+> +
+> +	if (of_property_read_u32(node, "clock-frequency", &rate))
+> +		return;
+> +
+> +	clk = kzalloc(sizeof(*clk), GFP_KERNEL);
+> +	if (!clk)
+> +		return;
+> +	clk->rate = rate;
+> +
+> +	of_clk_add_provider(node, of_fixed_clk_get, clk);
+> +}
 
-Yeah, I was hoping that Stephen's DTC patches were accepted to avoid that.
+Just take the fixed clk as example, I have a node below as a blob,
+which has 3 fixed clks encoded.
 
-> Can some of these be removed
-> by having more specific compatible strings? That is the whole point in
-> having compatible strings not be generic. omap4-i2c and omap3-i2c is
-> still kind of generic.
+ref_clk: ref {
+	compatible = "fixed-clock", "basic-clock";
+	#clock-cells = <1>;
+	clock-frequency = <24000000 32768 0>;
+	clock-output-name = "osc",
+			    "ckil",
+			    "ckih";
+};
 
-Do you mean creating some attributes like that:
+If this is valid, the of_fixed_clk_setup() should scan the node for
+multiple clks, right?
 
-+    ti,16bits_shift;
-+    ti,reset_postidle;
-+    ti,errata_i207;
-
-Or using some omap3-i2c or omap4-i2c to determine the proper version and 
-thus populate the right flags during probe.
-
-[...]
-
->> @@ -965,6 +956,31 @@ static const struct i2c_algorithm omap_i2c_algo = {
->>   	.functionality	= omap_i2c_func,
->>   };
->>
->> +#ifdef CONFIG_OF
->> +static struct omap_i2c_bus_platform_data omap3_pdata = {
->> +	.rev = OMAP_I2C_IP_VERSION_1,
->> +};
->> +
->> +static struct omap_i2c_bus_platform_data omap4_pdata = {
->> +	.rev = OMAP_I2C_IP_VERSION_2,
->> +};
->
-> This is redundant. The ip version can be determined from the compatible
-> string.
-
-I'm confused...
-I'm using the compatible string below to chose the proper value.
-This flag is then used later at runtime.
-I'm using a pseudo pdata because that driver is still used in old 
-platform that does and will never not have DT support.
-
->> +static const struct of_device_id omap_i2c_of_match[] = {
->> +	{
->> +		.compatible = "ti,omap4-i2c",
->> +		.data =&omap4_pdata,
->> +	},
->> +	{
->> +		.compatible = "ti,omap3-i2c",
->> +		.data =&omap3_pdata,
->> +	},
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, omap_i2c_of_match);
->> +#else
->> +#define omap_i2c_of_match NULL
->
-> Use of_match_ptr instead of the #else.
-
-OK, good point.
-
-Thanks,
-Benoit
+-- 
+Regards,
+Shawn
