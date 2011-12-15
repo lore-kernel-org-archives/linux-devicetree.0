@@ -1,223 +1,104 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core tile
- (TC1 variant)
-Date: Thu, 15 Dec 2011 14:02:41 +0000
-Message-ID: <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC v2 4/9] of: add clock providers
+Date: Thu, 15 Dec 2011 08:23:17 -0600
+Message-ID: <4EEA02D5.9020309@gmail.com>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+ <20111212232903.GC2616@gallagher>
+ <CACxGe6t50zJNpo=QWPzgFMpQ6Cfi9YZyrKuMSTrrA2oYiLF2Pw@mail.gmail.com>
+ <20111215135129.GA2831@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Cc: Pawel Moll <pawel.moll@arm.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111215135129.GA2831-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Device Tree file for the CoreTile Express A15x2
-(V2P-CA15) with Test Chip 1.
 
-As the chip's GIC has 160 interrupt inputs and equivalent SMM
-(FPGA) has GIC synthesised with 256 interrupts, NR_IRQS is
-increased.
 
-Signed-off-by: Pawel Moll <pawel.moll@arm.com>
----
- arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts |  155 +++++++++++++++++++++++++++
- arch/arm/mach-vexpress/Makefile.boot        |    3 +-
- arch/arm/mach-vexpress/include/mach/irqs.h  |    2 +-
- 3 files changed, 158 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+On 12/15/2011 07:51 AM, Shawn Guo wrote:
+> On Tue, Dec 13, 2011 at 10:54:58AM -0700, Grant Likely wrote:
+>> On Mon, Dec 12, 2011 at 4:29 PM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
+>>> Hi Grant,
+>>>
+>>> I'm still going through these and trying to digest them but a couple of
+>>> quick questions/comments.
+>>>
+>>> Jamie
+>>>
+>>> On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
+>>>> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>>> new file mode 100644
+>>>> index 0000000..e40c436
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>>> @@ -0,0 +1,114 @@
+>>>> +This binding is a work-in-progress, and are based on some experimental
+>>>> +work by benh[1].
+>>>> +
+>>>> +Sources of clock signal can be represented by any node in the device
+>>>> +tree.  Those nodes are designated as clock providers.  Clock consumer
+>>>> +nodes use a phandle and clock specifier pair to connect clock provider
+>>>> +outputs to clock inputs.  Similar to the gpio specifiers, a clock
+>>>> +specifier is an array of one more more cells identifying the clock
+>>>> +output on a device.  The length of a clock specifier is defined by the
+>>>> +value of a #clock-cells property in the clock provider node.
+>>>> +
+>>>> +[1] http://patchwork.ozlabs.org/patch/31551/
+>>>> +
+>>>> +==Clock providers==
+>>>> +
+>>>> +Required properties:
+>>>> +#clock-cells:           Number of cells in a clock specifier; typically will be
+>>>> +                set to 1
+>>>
+>>> I'm not sure I fully understand what the extra cells actually mean for
+>>> clocks.  I think the first integer is the clock output to use but some
+>>> of the versatile and highbank ones only have a phandle or is it more
+>>> implementation defined?  The clock-output-names description hints at
+>>> recommended, so I find this a little confusing, but that could just be
+>>> me!
+>>
+>> I'm following convention here that has been established with
+>> interrupts, gpios, and others.  Sometimes more information is needed
+>> that just the clock number.  Using #clock-cells gives a clock provider
+>> the option of having additional fields for clock flags or other data.
+>> This is very much implementation defined.  Simple clock providers that
+>> only have a single clock output can easily use #clock-cells = <0>.
+>> Providers with multiple outputs will need to use 1 or more cells.
+>>
+> It totally destroys my understanding on #clock-cells :)
+> 
+> I thought it's introduced to reduce the clock nodes in dts.  That said,
+> #clock-cells stands for the number of clks we describe in the node.
+> When #clock-cells > 1 for a node, the node becomes a clk blob which
+> actually contains multiple clks.  I migrated the imx6 clock to your
+> first post with this approach [1], using 70 nodes to describe 110
+> clocks (~35% nodes reduced).
+> 
+> Now, you are saying it's not designed for this purpose.  I'm pretty
+> confused, because the only reasonable use of #clock-cells to me is
+> just that way, and I fail to see why we need #clock-cells if we do
+> not use it that way.
+> 
+> http://comments.gmane.org/gmane.linux.drivers.devicetree/9631
 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-new file mode 100644
-index 0000000..02cada5
---- /dev/null
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-@@ -0,0 +1,155 @@
-+/*
-+ * ARM Ltd. Versatile Express
-+ *
-+ * CoreTile Express A15x2 (version with Test Chip 1)
-+ * Cortex-A15 MPCore (V2P-CA15)
-+ *
-+ * HBI-0237A
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "V2P-CA15";
-+	arm,hbi = <0x237>;
-+	compatible = "arm,vexpress,v2p-ca15,tc1", "arm,vexpress,v2p-ca15", "arm,vexpress";
-+	interrupt-parent = <&gic>;
-+
-+	aliases {
-+		serial0 = &v2m_serial0;
-+		serial1 = &v2m_serial1;
-+		serial2 = &v2m_serial2;
-+		serial3 = &v2m_serial3;
-+		i2c0 = &v2m_i2c_dvi;
-+		i2c1 = &v2m_i2c_pcie;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a15";
-+			reg = <1>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>;
-+	};
-+
-+	hdlcd@2b000000 {
-+		compatible = "arm,hdlcd";
-+		reg = <0x2b000000 0x1000>;
-+		interrupts = <0 85 4>;
-+	};
-+
-+	memory-controller@2b0a0000 {
-+		compatible = "arm,pl341", "arm,primecell";
-+		reg = <0x2b0a0000 0x1000>;
-+	};
-+
-+	wdt@2b060000 {
-+		compatible = "arm,sp805", "arm,primecell";
-+		reg = <0x2b060000 0x1000>;
-+		interrupts = <98>;
-+	};
-+
-+	gic: interrupt-controller@2c001000 {
-+		compatible = "arm,cortex-a9-gic";
-+		#interrupt-cells = <3>;
-+		#address-cells = <0>;
-+		interrupt-controller;
-+		reg = <0x2c001000 0x1000>,
-+		      <0x2c002000 0x100>;
-+	};
-+
-+	memory-controller@7ffd0000 {
-+		compatible = "arm,pl354", "arm,primecell";
-+		reg = <0x7ffd0000 0x1000>;
-+		interrupts = <0 86 4>,
-+			     <0 87 4>;
-+	};
-+
-+	dma@7ffb0000 {
-+		compatible = "arm,pl330", "arm,primecell";
-+		reg = <0x7ffb0000 0x1000>;
-+		interrupts = <0 92 4>,
-+			     <0 88 4>,
-+			     <0 89 4>,
-+			     <0 90 4>,
-+			     <0 91 4>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,cortex-a9-pmu";
-+		interrupts = <0 68 4>,
-+			     <0 69 4>;
-+	};
-+
-+	motherboard {
-+		ranges = <0 0 0x08000000 0x04000000>,
-+			 <1 0 0x14000000 0x04000000>,
-+			 <2 0 0x18000000 0x04000000>,
-+			 <3 0 0x1c000000 0x04000000>,
-+			 <4 0 0x0c000000 0x04000000>,
-+			 <5 0 0x10000000 0x04000000>;
-+
-+		interrupt-map-mask = <0 0 63>;
-+		interrupt-map = <0 0  0 &gic 0  0 4>,
-+				<0 0  1 &gic 0  1 4>,
-+				<0 0  2 &gic 0  2 4>,
-+				<0 0  3 &gic 0  3 4>,
-+				<0 0  4 &gic 0  4 4>,
-+				<0 0  5 &gic 0  5 4>,
-+				<0 0  6 &gic 0  6 4>,
-+				<0 0  7 &gic 0  7 4>,
-+				<0 0  8 &gic 0  8 4>,
-+				<0 0  9 &gic 0  9 4>,
-+				<0 0 10 &gic 0 10 4>,
-+				<0 0 11 &gic 0 11 4>,
-+				<0 0 12 &gic 0 12 4>,
-+				<0 0 13 &gic 0 13 4>,
-+				<0 0 14 &gic 0 14 4>,
-+				<0 0 15 &gic 0 15 4>,
-+				<0 0 16 &gic 0 16 4>,
-+				<0 0 17 &gic 0 17 4>,
-+				<0 0 18 &gic 0 18 4>,
-+				<0 0 19 &gic 0 19 4>,
-+				<0 0 20 &gic 0 20 4>,
-+				<0 0 21 &gic 0 21 4>,
-+				<0 0 22 &gic 0 22 4>,
-+				<0 0 23 &gic 0 23 4>,
-+				<0 0 24 &gic 0 24 4>,
-+				<0 0 25 &gic 0 25 4>,
-+				<0 0 26 &gic 0 26 4>,
-+				<0 0 27 &gic 0 27 4>,
-+				<0 0 28 &gic 0 28 4>,
-+				<0 0 29 &gic 0 29 4>,
-+				<0 0 30 &gic 0 30 4>,
-+				<0 0 31 &gic 0 31 4>,
-+				<0 0 32 &gic 0 32 4>,
-+				<0 0 33 &gic 0 33 4>,
-+				<0 0 34 &gic 0 34 4>,
-+				<0 0 35 &gic 0 35 4>,
-+				<0 0 36 &gic 0 36 4>,
-+				<0 0 37 &gic 0 37 4>,
-+				<0 0 38 &gic 0 38 4>,
-+				<0 0 39 &gic 0 39 4>,
-+				<0 0 40 &gic 0 40 4>,
-+				<0 0 41 &gic 0 41 4>,
-+				<0 0 42 &gic 0 42 4>;
-+	};
-+};
-+
-+/include/ "vexpress-v2m-rs1.dtsi"
-diff --git a/arch/arm/mach-vexpress/Makefile.boot b/arch/arm/mach-vexpress/Makefile.boot
-index 2f0ad9f..909f85e 100644
---- a/arch/arm/mach-vexpress/Makefile.boot
-+++ b/arch/arm/mach-vexpress/Makefile.boot
-@@ -5,4 +5,5 @@ params_phys-y	:= 0x60000100
- initrd_phys-y	:= 0x60800000
- 
- dtb-$(CONFIG_ARCH_VEXPRESS_DT)	+= vexpress-v2p-ca5s.dtb \
--				   vexpress-v2p-ca9.dtb
-+				   vexpress-v2p-ca9.dtb \
-+				   vexpress-v2p-ca15-tc1.dtb
-diff --git a/arch/arm/mach-vexpress/include/mach/irqs.h b/arch/arm/mach-vexpress/include/mach/irqs.h
-index 7054cbf..4b10ee7 100644
---- a/arch/arm/mach-vexpress/include/mach/irqs.h
-+++ b/arch/arm/mach-vexpress/include/mach/irqs.h
-@@ -1,4 +1,4 @@
- #define IRQ_LOCALTIMER		29
- #define IRQ_LOCALWDOG		30
- 
--#define NR_IRQS	128
-+#define NR_IRQS	256
--- 
-1.7.5.4
+Think of clock-cells as the size of array elements (minus 1), not the
+number of array elements. If you have more than 1 clock per node, then
+you need more information on the clock input side than just a phandle to
+describe which clock you are using. Typically this would just be the
+phandle plus index of the clock you want. This is just like gpio where
+you have controller phandle plus gpio line number.
+
+Rob
