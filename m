@@ -1,455 +1,100 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 1/6] ARM: at91/aic: add irq domain and device tree support
-Date: Thu, 15 Dec 2011 20:16:03 +0100
-Message-ID: <85d531b5686e5eff623bed9618f802198409905f.1323975517.git.nicolas.ferre@atmel.com>
-References: <1323976568-20244-1-git-send-email-nicolas.ferre@atmel.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v6 3/9] ARM: versatile: Map local timers using Device
+ Tree when possible
+Date: Thu, 15 Dec 2011 17:25:17 +0000
+Message-ID: <1323969917.18989.8.camel@hornet.cambridge.arm.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-4-git-send-email-pawel.moll@arm.com>
+ <4EEA09E8.3010807@gmail.com>
+ <1323962751.18989.4.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1323976568-20244-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1323962751.18989.4.camel@hornet.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add an irqdomain for the AIC interrupt controller.
-The device tree support is mapping the registers and
-is using the irq_domain_simple_ops to manage hwirq
-translation.
-The documentation is describing the meaning of the
-two cells required for using this "interrupt-controller"
-in a device tree node.
-
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
-This patch should go on top of Jamie's patch:
-"irqdomain: export irq_domain_simple_ops for !CONFIG_OF"
-https://lkml.org/lkml/2011/12/1/109
-
-v4: - use irq_alloc_descs() to find irq_base
-    - add a new constant AIC_BASE_IRQ that will allow to skip
-      first interrupt numbers (in the future)
-
-v3: - change number of cells to define an AIC interrupt (irq trigger type)
-    - change current .dtsi files to match specification
-    - use irq_domain_simple_ops (for DT mapping)
-
-v2: - use of_irq_init() function for device tree probing
-    - add documentation
-    - use own simple struct irq_domain_ops
-
-
- .../devicetree/bindings/arm/atmel-aic.txt          |   38 ++++++++
- arch/arm/Kconfig                                   |    1 +
- arch/arm/boot/dts/at91sam9g20.dtsi                 |   16 ++--
- arch/arm/boot/dts/at91sam9g45.dtsi                 |   14 ++--
- arch/arm/mach-at91/include/mach/irqs.h             |    3 +-
- arch/arm/mach-at91/irq.c                           |   91 +++++++++++++++-----
- 6 files changed, 126 insertions(+), 37 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/atmel-aic.txt b/Documentation/devicetree/bindings/arm/atmel-aic.txt
-new file mode 100644
-index 0000000..ade2761
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/atmel-aic.txt
-@@ -0,0 +1,38 @@
-+* Advanced Interrupt Controller (AIC)
-+
-+Required properties:
-+- compatible: Should be "atmel,<chip>-dma"
-+- interrupt-controller: Identifies the node as an interrupt controller.
-+- interrupt-parent: For single AIC system, it is an empty property.
-+- #interrupt-cells: The number of cells to define the interrupts. It sould be 2.
-+  The first cell is the GPIO number.
-+  The second cell is used to specify flags:
-+    bits[3:0] trigger type and level flags:
-+      1 = low-to-high edge triggered.
-+      2 = high-to-low edge triggered.
-+      4 = active high level-sensitive.
-+      8 = active low level-sensitive.
-+      Valid combinations are 1, 2, 3, 4, 8.
-+      Default flag for internal sources should be set to 4 (active high).
-+- reg: Should contain AIC registers location and length
-+
-+Examples:
-+	/*
-+	 * AIC
-+	 */
-+	aic: interrupt-controller@fffff000 {
-+		compatible = "atmel,at91rm9200-aic";
-+		interrupt-controller;
-+		interrupt-parent;
-+		#interrupt-cells = <2>;
-+		reg = <0xfffff000 0x200>;
-+	};
-+
-+	/*
-+	 * An interrupt generating device that is wired to an AIC.
-+	 */
-+	dma: dma-controller@ffffec00 {
-+		compatible = "atmel,at91sam9g45-dma";
-+		reg = <0xffffec00 0x200>;
-+		interrupts = <21 4>;
-+	};
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index e084b7e..ad13928 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -318,6 +318,7 @@ config ARCH_AT91
- 	select ARCH_REQUIRE_GPIOLIB
- 	select HAVE_CLK
- 	select CLKDEV_LOOKUP
-+	select IRQ_DOMAIN
- 	help
- 	  This enables support for systems based on the Atmel AT91RM9200,
- 	  AT91SAM9 and AT91CAP9 processors.
-diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-index aeef042..0782f80 100644
---- a/arch/arm/boot/dts/at91sam9g20.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-@@ -47,7 +47,7 @@
- 			ranges;
- 
- 			aic: interrupt-controller@fffff000 {
--				#interrupt-cells = <1>;
-+				#interrupt-cells = <2>;
- 				compatible = "atmel,at91rm9200-aic";
- 				interrupt-controller;
- 				interrupt-parent;
-@@ -57,14 +57,14 @@
- 			dbgu: serial@fffff200 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffff200 0x200>;
--				interrupts = <1>;
-+				interrupts = <1 4>;
- 				status = "disabled";
- 			};
- 
- 			usart0: serial@fffb0000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffb0000 0x200>;
--				interrupts = <6>;
-+				interrupts = <6 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -73,7 +73,7 @@
- 			usart1: serial@fffb4000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffb4000 0x200>;
--				interrupts = <7>;
-+				interrupts = <7 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -82,7 +82,7 @@
- 			usart2: serial@fffb8000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffb8000 0x200>;
--				interrupts = <8>;
-+				interrupts = <8 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -91,7 +91,7 @@
- 			usart3: serial@fffd0000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffd0000 0x200>;
--				interrupts = <23>;
-+				interrupts = <23 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -100,7 +100,7 @@
- 			usart4: serial@fffd4000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffd4000 0x200>;
--				interrupts = <24>;
-+				interrupts = <24 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -109,7 +109,7 @@
- 			usart5: serial@fffd8000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfffd8000 0x200>;
--				interrupts = <25>;
-+				interrupts = <25 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index db6a452..e89b1d7 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -46,7 +46,7 @@
- 			ranges;
- 
- 			aic: interrupt-controller@fffff000 {
--				#interrupt-cells = <1>;
-+				#interrupt-cells = <2>;
- 				compatible = "atmel,at91rm9200-aic";
- 				interrupt-controller;
- 				interrupt-parent;
-@@ -56,20 +56,20 @@
- 			dma: dma-controller@ffffec00 {
- 				compatible = "atmel,at91sam9g45-dma";
- 				reg = <0xffffec00 0x200>;
--				interrupts = <21>;
-+				interrupts = <21 4>;
- 			};
- 
- 			dbgu: serial@ffffee00 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xffffee00 0x200>;
--				interrupts = <1>;
-+				interrupts = <1 4>;
- 				status = "disabled";
- 			};
- 
- 			usart0: serial@fff8c000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfff8c000 0x200>;
--				interrupts = <7>;
-+				interrupts = <7 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -78,7 +78,7 @@
- 			usart1: serial@fff90000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfff90000 0x200>;
--				interrupts = <8>;
-+				interrupts = <8 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -87,7 +87,7 @@
- 			usart2: serial@fff94000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfff94000 0x200>;
--				interrupts = <9>;
-+				interrupts = <9 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-@@ -96,7 +96,7 @@
- 			usart3: serial@fff98000 {
- 				compatible = "atmel,at91sam9260-usart";
- 				reg = <0xfff98000 0x200>;
--				interrupts = <10>;
-+				interrupts = <10 4>;
- 				atmel,use-dma-rx;
- 				atmel,use-dma-tx;
- 				status = "disabled";
-diff --git a/arch/arm/mach-at91/include/mach/irqs.h b/arch/arm/mach-at91/include/mach/irqs.h
-index ac8b7df..e3ee0fc 100644
---- a/arch/arm/mach-at91/include/mach/irqs.h
-+++ b/arch/arm/mach-at91/include/mach/irqs.h
-@@ -25,6 +25,7 @@
- #include <mach/at91_aic.h>
- 
- #define NR_AIC_IRQS 32
-+#define AIC_BASE_IRQ 0
- 
- 
- /*
-@@ -40,7 +41,7 @@
-  * symbols in gpio.h for ones handled indirectly as GPIOs.
-  * We make provision for 5 banks of GPIO.
-  */
--#define	NR_IRQS		(NR_AIC_IRQS + (5 * 32))
-+#define	NR_IRQS		(AIC_BASE_IRQ + NR_AIC_IRQS + (5 * 32))
- 
- /* FIQ is AIC source 0. */
- #define FIQ_START AT91_ID_FIQ
-diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
-index be6b639..3e3d521 100644
---- a/arch/arm/mach-at91/irq.c
-+++ b/arch/arm/mach-at91/irq.c
-@@ -24,6 +24,10 @@
- #include <linux/module.h>
- #include <linux/mm.h>
- #include <linux/types.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/err.h>
- 
- #include <mach/hardware.h>
- #include <asm/irq.h>
-@@ -34,22 +38,28 @@
- #include <asm/mach/map.h>
- 
- void __iomem *at91_aic_base;
-+static struct irq_domain at91_aic_domain;
-+
-+static inline unsigned int aic_irq(struct irq_data *d)
-+{
-+	return d->hwirq;
-+}
- 
- static void at91_aic_mask_irq(struct irq_data *d)
- {
- 	/* Disable interrupt on AIC */
--	at91_aic_write(AT91_AIC_IDCR, 1 << d->irq);
-+	at91_aic_write(AT91_AIC_IDCR, 1 << aic_irq(d));
- }
- 
- static void at91_aic_unmask_irq(struct irq_data *d)
- {
- 	/* Enable interrupt on AIC */
--	at91_aic_write(AT91_AIC_IECR, 1 << d->irq);
-+	at91_aic_write(AT91_AIC_IECR, 1 << aic_irq(d));
- }
- 
- unsigned int at91_extern_irq;
- 
--#define is_extern_irq(irq) ((1 << (irq)) & at91_extern_irq)
-+#define is_extern_irq(hwirq) ((1 << (hwirq)) & at91_extern_irq)
- 
- static int at91_aic_set_type(struct irq_data *d, unsigned type)
- {
-@@ -63,13 +73,13 @@ static int at91_aic_set_type(struct irq_data *d, unsigned type)
- 		srctype = AT91_AIC_SRCTYPE_RISING;
- 		break;
- 	case IRQ_TYPE_LEVEL_LOW:
--		if ((d->irq == AT91_ID_FIQ) || is_extern_irq(d->irq))		/* only supported on external interrupts */
-+		if ((aic_irq(d) == AT91_ID_FIQ) || is_extern_irq(aic_irq(d)))		/* only supported on external interrupts */
- 			srctype = AT91_AIC_SRCTYPE_LOW;
- 		else
- 			return -EINVAL;
- 		break;
- 	case IRQ_TYPE_EDGE_FALLING:
--		if ((d->irq == AT91_ID_FIQ) || is_extern_irq(d->irq))		/* only supported on external interrupts */
-+		if ((aic_irq(d) == AT91_ID_FIQ) || is_extern_irq(aic_irq(d)))		/* only supported on external interrupts */
- 			srctype = AT91_AIC_SRCTYPE_FALLING;
- 		else
- 			return -EINVAL;
-@@ -78,8 +88,8 @@ static int at91_aic_set_type(struct irq_data *d, unsigned type)
- 		return -EINVAL;
- 	}
- 
--	smr = at91_aic_read(AT91_AIC_SMR(d->irq)) & ~AT91_AIC_SRCTYPE;
--	at91_aic_write(AT91_AIC_SMR(d->irq), smr | srctype);
-+	smr = at91_aic_read(AT91_AIC_SMR(aic_irq(d))) & ~AT91_AIC_SRCTYPE;
-+	at91_aic_write(AT91_AIC_SMR(aic_irq(d)), smr | srctype);
- 	return 0;
- }
- 
-@@ -90,13 +100,13 @@ static u32 backups;
- 
- static int at91_aic_set_wake(struct irq_data *d, unsigned value)
- {
--	if (unlikely(d->irq >= 32))
-+	if (unlikely(aic_irq(d) >= at91_aic_domain.nr_irq))
- 		return -EINVAL;
- 
- 	if (value)
--		wakeups |= (1 << d->irq);
-+		wakeups |= (1 << aic_irq(d));
- 	else
--		wakeups &= ~(1 << d->irq);
-+		wakeups &= ~(1 << aic_irq(d));
- 
- 	return 0;
- }
-@@ -127,36 +137,75 @@ static struct irq_chip at91_aic_chip = {
- 	.irq_set_wake	= at91_aic_set_wake,
- };
- 
-+#if defined(CONFIG_OF)
-+static int __init __at91_aic_of_init(struct device_node *node,
-+				     struct device_node *parent)
-+{
-+	at91_aic_base = of_iomap(node, 0);
-+	at91_aic_domain.of_node = of_node_get(node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id aic_ids[] __initconst = {
-+	{ .compatible = "atmel,at91rm9200-aic", .data = __at91_aic_of_init },
-+	{ /*sentinel*/ }
-+};
-+
-+static void __init at91_aic_of_init(void)
-+{
-+	of_irq_init(aic_ids);
-+}
-+#else
-+static void __init at91_aic_of_init(void) {}
-+#endif
-+
- /*
-  * Initialize the AIC interrupt controller.
-  */
- void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
- {
- 	unsigned int i;
-+	int hwirq, irq;
- 
--	at91_aic_base = ioremap(AT91_AIC, 512);
-+	if(of_have_populated_dt())
-+		at91_aic_of_init();
-+	else
-+		at91_aic_base = ioremap(AT91_AIC, 512);
- 
- 	if (!at91_aic_base)
--		panic("Impossible to ioremap AT91_AIC\n");
-+		panic("Unable to ioremap AIC registers\n");
-+
-+	/* Add irq domain for AIC */
-+	at91_aic_domain.nr_irq = NR_AIC_IRQS;
-+	at91_aic_domain.irq_base = irq_alloc_descs(-1, AIC_BASE_IRQ,
-+						at91_aic_domain.nr_irq, 0);
-+	if (IS_ERR_VALUE(at91_aic_domain.irq_base)) {
-+		WARN(1, "Cannot allocate irq_descs, assuming pre-allocated\n");
-+		at91_aic_domain.irq_base = AIC_BASE_IRQ;
-+	}
-+	at91_aic_domain.ops = &irq_domain_simple_ops;
-+	irq_domain_add(&at91_aic_domain);
- 
- 	/*
- 	 * The IVR is used by macro get_irqnr_and_base to read and verify.
- 	 * The irq number is NR_AIC_IRQS when a spurious interrupt has occurred.
- 	 */
--	for (i = 0; i < NR_AIC_IRQS; i++) {
-+	irq_domain_for_each_irq((&at91_aic_domain), hwirq, irq) {
-+
- 		/* Put irq number in Source Vector Register: */
--		at91_aic_write(AT91_AIC_SVR(i), i);
-+		at91_aic_write(AT91_AIC_SVR(hwirq), irq);
- 		/* Active Low interrupt, with the specified priority */
--		at91_aic_write(AT91_AIC_SMR(i), AT91_AIC_SRCTYPE_LOW | priority[i]);
-+		at91_aic_write(AT91_AIC_SMR(hwirq), AT91_AIC_SRCTYPE_LOW | priority[hwirq]);
- 
--		irq_set_chip_and_handler(i, &at91_aic_chip, handle_level_irq);
--		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
--
--		/* Perform 8 End Of Interrupt Command to make sure AIC will not Lock out nIRQ */
--		if (i < 8)
--			at91_aic_write(AT91_AIC_EOICR, 0);
-+		irq_set_chip_and_handler(irq, &at91_aic_chip, handle_level_irq);
-+		set_irq_flags(irq, IRQF_VALID | IRQF_PROBE);
- 	}
- 
-+	/* Perform 8 End Of Interrupt Command to make sure AIC will not Lock out nIRQ */
-+	for (i = 0; i < 8; i++)
-+		at91_aic_write(AT91_AIC_EOICR, 0);
-+
- 	/*
- 	 * Spurious Interrupt ID in Spurious Vector Register is NR_AIC_IRQS
- 	 * When there is no current interrupt, the IRQ Vector Register reads the value stored in AIC_SPU
--- 
-1.7.5.4
+T24gVGh1LCAyMDExLTEyLTE1IGF0IDE1OjI1ICswMDAwLCBQYXdlbCBNb2xsIHdyb3RlOgo+ID4g
+SSB0aGluayB5b3VyIHByZXZpb3VzIHZlcnNpb24gd2FzIG1vcmUgY29ycmVjdC4gVGhpcyBpcyBn
+b2luZyB0byBmaW5kCj4gPiB0aGUgbm9kZSBhbmQgZG8gaW9yZW1hcCBOIHRpbWVzIHdoZXJlIE4g
+aXMgdGhlIG51bWJlciBvZiBjb3Jlcy4gSXQgZG9lcwo+ID4gd29yayB0aG91Z2ggYmVjYXVzZSB0
+aGF0IGlzIHdoYXQgSSBkaWQgaW5pdGlhbGx5IHRvby4KPiAKPiBSaWdodCwgaG93IGFib3V0IHRo
+YXQsIHRoZW46Cj4gCj4gQEAgLTIxLDYgKzIzLDIyIEBACj4gICAqLwo+ICBpbnQgX19jcHVpbml0
+IGxvY2FsX3RpbWVyX3NldHVwKHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgKmV2dCkKPiAgewo+
+ICsjaWYgZGVmaW5lZChDT05GSUdfT0YpCj4gKyAgICAgICBzdGF0aWMgaW50IGR0X25vZGVfcHJv
+YmVkOwo+ICsKPiArICAgICAgIGlmICghZHRfbm9kZV9wcm9iZWQpIHsKPiArICAgICAgICAgICAg
+ICAgc3RydWN0IGRldmljZV9ub2RlICpub2RlID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVM
+TCwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE5VTEwsICJhcm0sc21wLXR3ZCIp
+Owo+ICsKPiArICAgICAgICAgICAgICAgaWYgKG5vZGUpCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgdHdkX2Jhc2UgPSBvZl9pb21hcChub2RlLCAwKTsKPiArCj4gKyAgICAgICAgICAgICAgIGR0
+X25vZGVfcHJvYmVkID0gMTsKPiArICAgICAgIH0KPiArI2VuZGlmCj4gKyAgICAgICBpZiAoIXR3
+ZF9iYXNlKQo+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOWElPOwo+ICsKPiAgICAgICAgIGV2
+dC0+aXJxID0gSVJRX0xPQ0FMVElNRVI7Cj4gICAgICAgICB0d2RfdGltZXJfc2V0dXAoZXZ0KTsK
+PiAgICAgICAgIHJldHVybiAwOwoKT2ssIHNvIEkgaGF2ZSB1cGRhdGVkIHRoZSBib3RoIHZleHBy
+ZXNzLWR0IGFuZAp2ZXhwcmVzcy1kdC1ybWstZGV2ZWwtc3RhYmxlIGJyYW5jaGVzIGxpa2UgdGhh
+dC4KCkFybmQsIFJ1c3NlbGwsIHRoZSBuZXcgcHVsbCByZXF1ZXN0IGJlbG93LgoKSSdsbCBzZWUg
+eW91IGFsbCBuZXh0IHllYXIhCgpDaGVlcnMhCgpQYXdlxYIKCjg8LS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKVGhlIGZv
+bGxvd2luZyBjaGFuZ2VzIHNpbmNlIGNvbW1pdCA1NWIwMmQyZjQ0NDVhZDYyNTIxMzgxN2ExNzM2
+YmYyODg0ZDMyNTQ3OgoKICBNZXJnZSBicmFuY2ggJ2RybS1maXhlcycgb2YgZ2l0Oi8vcGVvcGxl
+LmZyZWVkZXNrdG9wLm9yZy9+YWlybGllZC9saW51eCAoMjAxMS0xMi0xNCAxOTo0NTo0MCAtMDgw
+MCkKCmFyZSBhdmFpbGFibGUgaW4gdGhlIGdpdCByZXBvc2l0b3J5IGF0OgoKICBnaXQ6Ly9naXQu
+bGluYXJvLm9yZy9wZW9wbGUvcGF3ZWxtb2xsL2xpbnV4LmdpdCB2ZXhwcmVzcy1kdAoKUGF3ZWwg
+TW9sbCAoOSk6CiAgICAgIEFSTTogdmVyc2F0aWxlOiBBZGQgbWlzc2luZyBFTkRQUk9DIHRvIGhl
+YWRzbXAuUwogICAgICBBUk06IHZleHByZXNzOiBHZXQgcmlkIG9mIE1NSU9fUDJWCiAgICAgIEFS
+TTogdmVyc2F0aWxlOiBNYXAgbG9jYWwgdGltZXJzIHVzaW5nIERldmljZSBUcmVlIHdoZW4gcG9z
+c2libGUKICAgICAgQVJNOiB2ZXhwcmVzczogVXNlIEZEVCBkYXRhIGluIHBsYXRmb3JtIFNNUCBj
+YWxscwogICAgICBBUk06IHZleHByZXNzOiBBZGQgRGV2aWNlIFRyZWUgc3VwcG9ydAogICAgICBB
+Uk06IHZleHByZXNzOiBNb3RoZXJib2FyZCBSUzEgbWVtb3J5IG1hcCBzdXBwb3J0CiAgICAgIEFS
+TTogdmV4cHJlc3M6IEFkZCBEZXZpY2UgVHJlZSBmb3IgVjJQLUNBNXMgY29yZSB0aWxlCiAgICAg
+IEFSTTogdmV4cHJlc3M6IEFkZCBEZXZpY2UgVHJlZSBmb3IgVjJQLUNBOSBjb3JlIHRpbGUKICAg
+ICAgQVJNOiB2ZXhwcmVzczogQWRkIERldmljZSBUcmVlIGZvciBWMlAtQ0ExNSBjb3JlIHRpbGUg
+KFRDMSB2YXJpYW50KQoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vdmV4
+cHJlc3MudHh0IHwgIDE0NCArKysrKysrKysrCiBhcmNoL2FybS9LY29uZmlnICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL3ZleHBy
+ZXNzLXYybS1yczEuZHRzaSAgICAgICAgICAgIHwgIDIwMSArKysrKysrKysrKysrKwogYXJjaC9h
+cm0vYm9vdC9kdHMvdmV4cHJlc3MtdjJtLmR0c2kgICAgICAgICAgICAgICAgfCAgMjAwICsrKysr
+KysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy92ZXhwcmVzcy12MnAtY2ExNS10YzEuZHRzICAg
+ICAgICB8ICAxNTUgKysrKysrKysrKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3ZleHByZXNzLXYycC1j
+YTVzLmR0cyAgICAgICAgICAgIHwgIDE2MCArKysrKysrKysrKwogYXJjaC9hcm0vYm9vdC9kdHMv
+dmV4cHJlc3MtdjJwLWNhOS5kdHMgICAgICAgICAgICAgfCAgMTkwICsrKysrKysrKysrKysKIGFy
+Y2gvYXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2FybV90aW1lci5oICAgICAgICAgIHwgICAgNSAr
+CiBhcmNoL2FybS9tYWNoLXJlYWx2aWV3L3BsYXRzbXAuYyAgICAgICAgICAgICAgICAgICB8ICAg
+IDMgKy0KIGFyY2gvYXJtL21hY2gtdmV4cHJlc3MvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
+IHwgICA0NSArKystCiBhcmNoL2FybS9tYWNoLXZleHByZXNzL01ha2VmaWxlLmJvb3QgICAgICAg
+ICAgICAgICB8ICAgIDYgKwogYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9jb3JlLmggICAgICAgICAg
+ICAgICAgICAgICAgfCAgICA5ICstCiBhcmNoL2FybS9tYWNoLXZleHByZXNzL2N0LWNhOXg0LmMg
+ICAgICAgICAgICAgICAgICB8ICAgNDggKy0tLQogYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9pbmNs
+dWRlL21hY2gvY3QtY2E5eDQuaCAgICAgfCAgIDEzICstCiBhcmNoL2FybS9tYWNoLXZleHByZXNz
+L2luY2x1ZGUvbWFjaC9kZWJ1Zy1tYWNyby5TICB8ICAgMzcgKysrLQogYXJjaC9hcm0vbWFjaC12
+ZXhwcmVzcy9pbmNsdWRlL21hY2gvaXJxcy5oICAgICAgICAgfCAgICAyICstCiBhcmNoL2FybS9t
+YWNoLXZleHByZXNzL2luY2x1ZGUvbWFjaC9tb3RoZXJib2FyZC5oICB8ICAgNTggKysrLS0KIGFy
+Y2gvYXJtL21hY2gtdmV4cHJlc3MvaW5jbHVkZS9tYWNoL3VuY29tcHJlc3MuaCAgIHwgICAxMyAr
+LQogYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9wbGF0c21wLmMgICAgICAgICAgICAgICAgICAgfCAg
+MTUzICsrKysrKysrKystCiBhcmNoL2FybS9tYWNoLXZleHByZXNzL3YybS5jICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAyODIgKysrKysrKysrKysrKysrKysrLS0KIGFyY2gvYXJtL21tL0tjb25m
+aWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArLQogYXJjaC9hcm0vcGxh
+dC12ZXJzYXRpbGUvaGVhZHNtcC5TICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGFyY2gvYXJt
+L3BsYXQtdmVyc2F0aWxlL2xvY2FsdGltZXIuYyAgICAgICAgICAgICAgIHwgICAxOSArKwogMjMg
+ZmlsZXMgY2hhbmdlZCwgMTYyOCBpbnNlcnRpb25zKCspLCAxMjAgZGVsZXRpb25zKC0pCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS92ZXhw
+cmVzcy50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy92ZXhwcmVzcy12
+Mm0tcnMxLmR0c2kKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy92ZXhwcmVz
+cy12Mm0uZHRzaQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3ZleHByZXNz
+LXYycC1jYTE1LXRjMS5kdHMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy92
+ZXhwcmVzcy12MnAtY2E1cy5kdHMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0
+cy92ZXhwcmVzcy12MnAtY2E5LmR0cwoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
