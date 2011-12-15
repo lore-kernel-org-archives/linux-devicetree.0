@@ -1,53 +1,144 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH resend] OF/device-tree: Add some entries to vendor-prefixes.txt
-Date: Wed, 14 Dec 2011 17:31:12 -0600
-Message-ID: <4EE931C0.30402@gmail.com>
-References: <1323905179-28355-1-git-send-email-ddaney.cavm@gmail.com>
+From: Kevin Hilman <khilman@ti.com>
+Subject: Re: [PATCH v2 07/10] arm/dts: omap4-panda: Add twl6030 and i2c EEPROM
+Date: Wed, 14 Dec 2011 16:31:53 -0800
+Message-ID: <87ty52oeti.fsf@ti.com>
+References: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
+	<1323439361-1647-8-git-send-email-b-cousson@ti.com>
+	<87obvbpws7.fsf@ti.com> <4EE8D3D9.5020403@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323905179-28355-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EE8D3D9.5020403@ti.com> (Benoit Cousson's message of "Wed, 14
+	Dec 2011 17:50:33 +0100")
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2011 05:26 PM, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
-> 
-> We are currently using 'cavium', 'cortina' and 'st', add them to the
-> list of known prefixes.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+"Cousson, Benoit" <b-cousson@ti.com> writes:
 
-Applied.
+> Hi Kevin,
+>
+> On 12/14/2011 6:06 AM, Kevin Hilman wrote:
+>> Hi Benoit,
+>>
+>> Benoit Cousson<b-cousson@ti.com>  writes:
+>>
+>>> Update pandaboard dts file with required clock frequencies
+>>> for the i2c client devices existing on pandaboard.
+>>>
+>>> Add the twl6030 node in i2c1 controller.
+>>>
+>>> This is the minimal support needed to boot OMAP4 boards
+>>> without any crash.
+>>> The support for all the features included in this MFD will be
+>>> added later.
+>>>
+>>> Add a generic i2c EEPROM entry.
+>>>
+>>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>>> Cc: Grant Likely<grant.likely@secretlab.ca>
+>>> ---
+>>>   arch/arm/boot/dts/omap4-panda.dts |   45 +++++++++++++++++++++++++++++++++++++
+>>>   1 files changed, 45 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+>>> index 9755ad5..b66bcd6 100644
+>>> --- a/arch/arm/boot/dts/omap4-panda.dts
+>>> +++ b/arch/arm/boot/dts/omap4-panda.dts
+>>> @@ -18,3 +18,48 @@
+>>>   		reg =<0x80000000 0x40000000>; /* 1 GB */
+>>>   	};
+>>>   };
+>>> +
+>>> +&i2c1 {
+>>> +	clock-frequency =<400000>;
+>>> +
+>>> +	/*
+>>> +	 * Integrated Power Management Chip
+>>> +	 * http://www.ti.com/lit/ds/symlink/twl6030.pdf
+>>> +	 */
+>>> +	twl@48 {
+>>> +		compatible = "ti,twl6030";
+>>> +		reg =<0x48>;
+>>> +		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+>>> +		interrupts =<0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+>>> +		interrupt-controller;
+>>> +		#interrupt-cells =<1>;
+>>> +		interrupt-parent =<&gic>;
+>>> +
+>>> +		/* twl is a MFD, so it will contain a bunch of sub-ips */
+>>> +		rtc {
+>>> +			compatible = "ti,twl4030-rtc";
+>>> +			interrupts =<11>;
+>>> +		};
+>>
+>> After seeing the mostly cut&  paste in Rajendra's regulator series, I'm
+>> wondering if it wouldn't be better to just have a twl4030.dtsi here
+>> which has the RTC and all the regulators with the default voltage ranges
+>> from the TWL data sheet.
+>
+> Yes, indeed, it is still small here but will become much bigger with
+> the regulators.
+> In fact twl6030 is a SoC like OMAP, so all the TWL specific internal
+> details can be located in a single file.
+> The board will just have to provide the i2c address and the IRQ information.
+>
+>> Not knowing much about how includes work in DT, would it then be
+>> possible for board files to override things like default voltage ranges
+>> for regulators?
+>
+> To be honest, I was wondering as well how to do that with the
+> /include/ functionality :-)
+> But I've just done a couple of DTC test, and this seems to be pretty
+> straightforward.
+>
+> The boards will contain that:
+> &i2c1 {
+> 	clock-frequency = <400000>;
+>
+> 	twl: twl@48 {
+> 		reg = <0x48>;
+> 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+> 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+> 		interrupt-controller;
+> 		interrupt-parent = <&gic>;
+> 	};
+> };
+>
+> /include/ "twl6030.dtsi"
+>
 
-Rob
+Nice.
 
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    3 +++
->  1 files changed, 3 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index afb9bff..6708797 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -8,7 +8,9 @@ amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
->  apm	Applied Micro Circuits Corporation (APM)
->  arm	ARM Ltd.
->  atmel	Atmel Corporation
-> +cavium	Cavium, Inc.
->  chrp	Common Hardware Reference Platform
-> +cortina	Cortina Systems, Inc.
->  dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
->  denx	Denx Software Engineering
->  epson	Seiko Epson Corp.
-> @@ -36,6 +38,7 @@ schindler	Schindler
->  sil	Silicon Image
->  simtek
->  sirf	SiRF Technology, Inc.
-> +st	STMicroelectronics
->  stericsson	ST-Ericsson
->  ti	Texas Instruments
->  wlf	Wolfson Microelectronics
+> ...
+>
+> And the twl6030.dtsi will contain that for the moment:
+>
+> /*
+>  * Integrated Power Management Chip
+>  * http://www.ti.com/lit/ds/symlink/twl6030.pdf
+>  */
+> &twl {
+> 	compatible = "ti,twl6030";
+> 	#interrupt-cells = <1>;
+>
+> 	/* twl is a MFD, so it will contain a bunch of sub-ips */
+> 	rtc {
+> 		compatible = "ti,twl4030-rtc";
+> 		interrupts = <11>;
+> 	};
+> };
+>
+> And then all the regulators from Rajendra's series will be there as well.
+>
+> This will avoid the duplication between sdp and panda. Beagle will
+> need a twl4030.dtsi which is different than the twl6030.
+
+Great!
+
+> I'll update and repost the series soon.
+
+Thanks,
+
+Kevin
