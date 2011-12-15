@@ -1,50 +1,52 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v3 4/4] ARM: omap: pass minimal SoC/board data for UART
- from dt
-Date: Thu, 15 Dec 2011 11:06:15 +0100
-Message-ID: <4EE9C697.4010604@ti.com>
-References: <1323863746-18145-1-git-send-email-rnayak@ti.com> <1323863746-18145-5-git-send-email-rnayak@ti.com> <20111214192509.GH32251@atomide.com> <4EE99923.4030902@ti.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [RFC V1 2/4] dts/imx6q: add cpufreq property
+Date: Thu, 15 Dec 2011 19:58:54 +0800
+Message-ID: <20111215115852.GC10522@S2101-09.ap.freescale.net>
+References: <1323947798-25251-1-git-send-email-richard.zhao@linaro.org>
+ <1323947798-25251-2-git-send-email-richard.zhao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EE99923.4030902@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, govindraj.raja@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1323947798-25251-2-git-send-email-richard.zhao@linaro.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: Richard Zhao <richard.zhao@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, linaro-dev@lists.linaro.org, patches@linaro.org, eric.miao@linaro.org, linux@arm.linux.org.uk, kernel@pengutronix.de, davej@redhat.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Hi Richard,
 
-On 12/15/2011 7:52 AM, Rajendra Nayak wrote:
-> On Thursday 15 December 2011 12:55 AM, Tony Lindgren wrote:
->> * Rajendra Nayak<rnayak@ti.com> [111214 03:24]:
->>> Pass minimal data needed for console boot, from dt, for
->>> OMAP4 panda/sdp and OMAP3 beagle boards, and get rid of the
->>> static initialization from generic board file.
->>>
->>> Acked-by: Rob Herring<rob.herring@calxeda.com>
->>> Signed-off-by: Rajendra Nayak<rnayak@ti.com>
->>
->> This we can't merge because this breaks serial console for
->> omap2 because you're not adding the omap2 specific dtsi
->> entries for omap2..
->
-> But we never had omap2 working with DT, because we never added
-> a .dtsi file for omap2 or a .dts file for any omap2 board variants.
->
-> Until now the DT support on OMAP has been limited to OMAP3 and OMAP4
-> with boards limited to omap3beagle/omap4Panda and omap4sdp.
->
-> So when we do add base support for omap2, we could update those
-> with the serial entries.
+Whenever we invent some new device tree binding support, we need to
+Cc devicetree-discuss@lists.ozlabs.org (Cc-ed).
 
-I'm quite confused as well... Have you tried the current 3.2 kernel on 
-an OMAP2 board?
+On Thu, Dec 15, 2011 at 07:16:36PM +0800, Richard Zhao wrote:
+> Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+> ---
+>  arch/arm/boot/dts/imx6q.dtsi |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index 263e8f3..9e9943b 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -29,6 +29,8 @@
+>  			compatible = "arm,cortex-a9";
+>  			reg = <0>;
+>  			next-level-cache = <&L2>;
+> +			cpu_freqs = <996000000 792000000 396000000 198000000>;
+> +			cpu_volts = <1225000 1100000 950000 850000>;
 
-So far I've been taking care of keeping the OMAP2 support into the 
-board-generic.c file, but I've never added any omap2.dtsi or 
-omap2-board.dts file to support it.
+For dt property name, we use '-' rather than '_'.
+
+And I'm not sure this is correct, since these data obviously does not
+belong to "arm,cortex-a9".
 
 Regards,
-Benoit
+Shawn
+
+>  		};
+>  
+>  		cpu@1 {
+> -- 
+> 1.7.5.4
+
