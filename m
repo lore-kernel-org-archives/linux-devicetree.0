@@ -1,100 +1,137 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v6 3/9] ARM: versatile: Map local timers using Device
- Tree when possible
-Date: Thu, 15 Dec 2011 17:25:17 +0000
-Message-ID: <1323969917.18989.8.camel@hornet.cambridge.arm.com>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
- <1323957761-13553-4-git-send-email-pawel.moll@arm.com>
- <4EEA09E8.3010807@gmail.com>
- <1323962751.18989.4.camel@hornet.cambridge.arm.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC v2 4/9] of: add clock providers
+Date: Thu, 15 Dec 2011 10:37:19 -0700
+Message-ID: <CACxGe6t1UyzKhUGQXyYvKd-iNQJNCR7dXUra6pAE-LF_UCNSuw@mail.gmail.com>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+ <20111212232903.GC2616@gallagher>
+ <CACxGe6t50zJNpo=QWPzgFMpQ6Cfi9YZyrKuMSTrrA2oYiLF2Pw@mail.gmail.com>
+ <20111215135129.GA2831@S2100-06.ap.freescale.net> <4EEA02D5.9020309@gmail.com>
+ <20111215151335.GB2831@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1323962751.18989.4.camel@hornet.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111215151335.GB2831-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDExLTEyLTE1IGF0IDE1OjI1ICswMDAwLCBQYXdlbCBNb2xsIHdyb3RlOgo+ID4g
-SSB0aGluayB5b3VyIHByZXZpb3VzIHZlcnNpb24gd2FzIG1vcmUgY29ycmVjdC4gVGhpcyBpcyBn
-b2luZyB0byBmaW5kCj4gPiB0aGUgbm9kZSBhbmQgZG8gaW9yZW1hcCBOIHRpbWVzIHdoZXJlIE4g
-aXMgdGhlIG51bWJlciBvZiBjb3Jlcy4gSXQgZG9lcwo+ID4gd29yayB0aG91Z2ggYmVjYXVzZSB0
-aGF0IGlzIHdoYXQgSSBkaWQgaW5pdGlhbGx5IHRvby4KPiAKPiBSaWdodCwgaG93IGFib3V0IHRo
-YXQsIHRoZW46Cj4gCj4gQEAgLTIxLDYgKzIzLDIyIEBACj4gICAqLwo+ICBpbnQgX19jcHVpbml0
-IGxvY2FsX3RpbWVyX3NldHVwKHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgKmV2dCkKPiAgewo+
-ICsjaWYgZGVmaW5lZChDT05GSUdfT0YpCj4gKyAgICAgICBzdGF0aWMgaW50IGR0X25vZGVfcHJv
-YmVkOwo+ICsKPiArICAgICAgIGlmICghZHRfbm9kZV9wcm9iZWQpIHsKPiArICAgICAgICAgICAg
-ICAgc3RydWN0IGRldmljZV9ub2RlICpub2RlID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVM
-TCwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE5VTEwsICJhcm0sc21wLXR3ZCIp
-Owo+ICsKPiArICAgICAgICAgICAgICAgaWYgKG5vZGUpCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgdHdkX2Jhc2UgPSBvZl9pb21hcChub2RlLCAwKTsKPiArCj4gKyAgICAgICAgICAgICAgIGR0
-X25vZGVfcHJvYmVkID0gMTsKPiArICAgICAgIH0KPiArI2VuZGlmCj4gKyAgICAgICBpZiAoIXR3
-ZF9iYXNlKQo+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOWElPOwo+ICsKPiAgICAgICAgIGV2
-dC0+aXJxID0gSVJRX0xPQ0FMVElNRVI7Cj4gICAgICAgICB0d2RfdGltZXJfc2V0dXAoZXZ0KTsK
-PiAgICAgICAgIHJldHVybiAwOwoKT2ssIHNvIEkgaGF2ZSB1cGRhdGVkIHRoZSBib3RoIHZleHBy
-ZXNzLWR0IGFuZAp2ZXhwcmVzcy1kdC1ybWstZGV2ZWwtc3RhYmxlIGJyYW5jaGVzIGxpa2UgdGhh
-dC4KCkFybmQsIFJ1c3NlbGwsIHRoZSBuZXcgcHVsbCByZXF1ZXN0IGJlbG93LgoKSSdsbCBzZWUg
-eW91IGFsbCBuZXh0IHllYXIhCgpDaGVlcnMhCgpQYXdlxYIKCjg8LS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKVGhlIGZv
-bGxvd2luZyBjaGFuZ2VzIHNpbmNlIGNvbW1pdCA1NWIwMmQyZjQ0NDVhZDYyNTIxMzgxN2ExNzM2
-YmYyODg0ZDMyNTQ3OgoKICBNZXJnZSBicmFuY2ggJ2RybS1maXhlcycgb2YgZ2l0Oi8vcGVvcGxl
-LmZyZWVkZXNrdG9wLm9yZy9+YWlybGllZC9saW51eCAoMjAxMS0xMi0xNCAxOTo0NTo0MCAtMDgw
-MCkKCmFyZSBhdmFpbGFibGUgaW4gdGhlIGdpdCByZXBvc2l0b3J5IGF0OgoKICBnaXQ6Ly9naXQu
-bGluYXJvLm9yZy9wZW9wbGUvcGF3ZWxtb2xsL2xpbnV4LmdpdCB2ZXhwcmVzcy1kdAoKUGF3ZWwg
-TW9sbCAoOSk6CiAgICAgIEFSTTogdmVyc2F0aWxlOiBBZGQgbWlzc2luZyBFTkRQUk9DIHRvIGhl
-YWRzbXAuUwogICAgICBBUk06IHZleHByZXNzOiBHZXQgcmlkIG9mIE1NSU9fUDJWCiAgICAgIEFS
-TTogdmVyc2F0aWxlOiBNYXAgbG9jYWwgdGltZXJzIHVzaW5nIERldmljZSBUcmVlIHdoZW4gcG9z
-c2libGUKICAgICAgQVJNOiB2ZXhwcmVzczogVXNlIEZEVCBkYXRhIGluIHBsYXRmb3JtIFNNUCBj
-YWxscwogICAgICBBUk06IHZleHByZXNzOiBBZGQgRGV2aWNlIFRyZWUgc3VwcG9ydAogICAgICBB
-Uk06IHZleHByZXNzOiBNb3RoZXJib2FyZCBSUzEgbWVtb3J5IG1hcCBzdXBwb3J0CiAgICAgIEFS
-TTogdmV4cHJlc3M6IEFkZCBEZXZpY2UgVHJlZSBmb3IgVjJQLUNBNXMgY29yZSB0aWxlCiAgICAg
-IEFSTTogdmV4cHJlc3M6IEFkZCBEZXZpY2UgVHJlZSBmb3IgVjJQLUNBOSBjb3JlIHRpbGUKICAg
-ICAgQVJNOiB2ZXhwcmVzczogQWRkIERldmljZSBUcmVlIGZvciBWMlAtQ0ExNSBjb3JlIHRpbGUg
-KFRDMSB2YXJpYW50KQoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vdmV4
-cHJlc3MudHh0IHwgIDE0NCArKysrKysrKysrCiBhcmNoL2FybS9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL3ZleHBy
-ZXNzLXYybS1yczEuZHRzaSAgICAgICAgICAgIHwgIDIwMSArKysrKysrKysrKysrKwogYXJjaC9h
-cm0vYm9vdC9kdHMvdmV4cHJlc3MtdjJtLmR0c2kgICAgICAgICAgICAgICAgfCAgMjAwICsrKysr
-KysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy92ZXhwcmVzcy12MnAtY2ExNS10YzEuZHRzICAg
-ICAgICB8ICAxNTUgKysrKysrKysrKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3ZleHByZXNzLXYycC1j
-YTVzLmR0cyAgICAgICAgICAgIHwgIDE2MCArKysrKysrKysrKwogYXJjaC9hcm0vYm9vdC9kdHMv
-dmV4cHJlc3MtdjJwLWNhOS5kdHMgICAgICAgICAgICAgfCAgMTkwICsrKysrKysrKysrKysKIGFy
-Y2gvYXJtL2luY2x1ZGUvYXNtL2hhcmR3YXJlL2FybV90aW1lci5oICAgICAgICAgIHwgICAgNSAr
-CiBhcmNoL2FybS9tYWNoLXJlYWx2aWV3L3BsYXRzbXAuYyAgICAgICAgICAgICAgICAgICB8ICAg
-IDMgKy0KIGFyY2gvYXJtL21hY2gtdmV4cHJlc3MvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
-IHwgICA0NSArKystCiBhcmNoL2FybS9tYWNoLXZleHByZXNzL01ha2VmaWxlLmJvb3QgICAgICAg
-ICAgICAgICB8ICAgIDYgKwogYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9jb3JlLmggICAgICAgICAg
-ICAgICAgICAgICAgfCAgICA5ICstCiBhcmNoL2FybS9tYWNoLXZleHByZXNzL2N0LWNhOXg0LmMg
-ICAgICAgICAgICAgICAgICB8ICAgNDggKy0tLQogYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9pbmNs
-dWRlL21hY2gvY3QtY2E5eDQuaCAgICAgfCAgIDEzICstCiBhcmNoL2FybS9tYWNoLXZleHByZXNz
-L2luY2x1ZGUvbWFjaC9kZWJ1Zy1tYWNyby5TICB8ICAgMzcgKysrLQogYXJjaC9hcm0vbWFjaC12
-ZXhwcmVzcy9pbmNsdWRlL21hY2gvaXJxcy5oICAgICAgICAgfCAgICAyICstCiBhcmNoL2FybS9t
-YWNoLXZleHByZXNzL2luY2x1ZGUvbWFjaC9tb3RoZXJib2FyZC5oICB8ICAgNTggKysrLS0KIGFy
-Y2gvYXJtL21hY2gtdmV4cHJlc3MvaW5jbHVkZS9tYWNoL3VuY29tcHJlc3MuaCAgIHwgICAxMyAr
-LQogYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9wbGF0c21wLmMgICAgICAgICAgICAgICAgICAgfCAg
-MTUzICsrKysrKysrKystCiBhcmNoL2FybS9tYWNoLXZleHByZXNzL3YybS5jICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAyODIgKysrKysrKysrKysrKysrKysrLS0KIGFyY2gvYXJtL21tL0tjb25m
-aWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArLQogYXJjaC9hcm0vcGxh
-dC12ZXJzYXRpbGUvaGVhZHNtcC5TICAgICAgICAgICAgICAgICAgfCAgICAxICsKIGFyY2gvYXJt
-L3BsYXQtdmVyc2F0aWxlL2xvY2FsdGltZXIuYyAgICAgICAgICAgICAgIHwgICAxOSArKwogMjMg
-ZmlsZXMgY2hhbmdlZCwgMTYyOCBpbnNlcnRpb25zKCspLCAxMjAgZGVsZXRpb25zKC0pCiBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS92ZXhw
-cmVzcy50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy92ZXhwcmVzcy12
-Mm0tcnMxLmR0c2kKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy92ZXhwcmVz
-cy12Mm0uZHRzaQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3ZleHByZXNz
-LXYycC1jYTE1LXRjMS5kdHMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy92
-ZXhwcmVzcy12MnAtY2E1cy5kdHMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0
-cy92ZXhwcmVzcy12MnAtY2E5LmR0cwoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Dec 15, 2011 at 8:13 AM, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On Thu, Dec 15, 2011 at 08:23:17AM -0600, Rob Herring wrote:
+>>
+>>
+>> On 12/15/2011 07:51 AM, Shawn Guo wrote:
+>> > On Tue, Dec 13, 2011 at 10:54:58AM -0700, Grant Likely wrote:
+>> >> On Mon, Dec 12, 2011 at 4:29 PM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wro=
+te:
+>> >>> Hi Grant,
+>> >>>
+>> >>> I'm still going through these and trying to digest them but a couple=
+ of
+>> >>> quick questions/comments.
+>> >>>
+>> >>> Jamie
+>> >>>
+>> >>> On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
+>> >>>> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings=
+.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> >>>> new file mode 100644
+>> >>>> index 0000000..e40c436
+>> >>>> --- /dev/null
+>> >>>> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> >>>> @@ -0,0 +1,114 @@
+>> >>>> +This binding is a work-in-progress, and are based on some experime=
+ntal
+>> >>>> +work by benh[1].
+>> >>>> +
+>> >>>> +Sources of clock signal can be represented by any node in the devi=
+ce
+>> >>>> +tree. =A0Those nodes are designated as clock providers. =A0Clock c=
+onsumer
+>> >>>> +nodes use a phandle and clock specifier pair to connect clock prov=
+ider
+>> >>>> +outputs to clock inputs. =A0Similar to the gpio specifiers, a clock
+>> >>>> +specifier is an array of one more more cells identifying the clock
+>> >>>> +output on a device. =A0The length of a clock specifier is defined =
+by the
+>> >>>> +value of a #clock-cells property in the clock provider node.
+>> >>>> +
+>> >>>> +[1] http://patchwork.ozlabs.org/patch/31551/
+>> >>>> +
+>> >>>> +=3D=3DClock providers=3D=3D
+>> >>>> +
+>> >>>> +Required properties:
+>> >>>> +#clock-cells: =A0 =A0 =A0 =A0 =A0 Number of cells in a clock speci=
+fier; typically will be
+>> >>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0set to 1
+>> >>>
+>> >>> I'm not sure I fully understand what the extra cells actually mean f=
+or
+>> >>> clocks. =A0I think the first integer is the clock output to use but =
+some
+>> >>> of the versatile and highbank ones only have a phandle or is it more
+>> >>> implementation defined? =A0The clock-output-names description hints =
+at
+>> >>> recommended, so I find this a little confusing, but that could just =
+be
+>> >>> me!
+>> >>
+>> >> I'm following convention here that has been established with
+>> >> interrupts, gpios, and others. =A0Sometimes more information is needed
+>> >> that just the clock number. =A0Using #clock-cells gives a clock provi=
+der
+>> >> the option of having additional fields for clock flags or other data.
+>> >> This is very much implementation defined. =A0Simple clock providers t=
+hat
+>> >> only have a single clock output can easily use #clock-cells =3D <0>.
+>> >> Providers with multiple outputs will need to use 1 or more cells.
+>> >>
+>> > It totally destroys my understanding on #clock-cells :)
+>> >
+>> > I thought it's introduced to reduce the clock nodes in dts. =A0That sa=
+id,
+>> > #clock-cells stands for the number of clks we describe in the node.
+>> > When #clock-cells > 1 for a node, the node becomes a clk blob which
+>> > actually contains multiple clks. =A0I migrated the imx6 clock to your
+>> > first post with this approach [1], using 70 nodes to describe 110
+>> > clocks (~35% nodes reduced).
+>> >
+>> > Now, you are saying it's not designed for this purpose. =A0I'm pretty
+>> > confused, because the only reasonable use of #clock-cells to me is
+>> > just that way, and I fail to see why we need #clock-cells if we do
+>> > not use it that way.
+>> >
+>> > http://comments.gmane.org/gmane.linux.drivers.devicetree/9631
+>>
+>> Think of clock-cells as the size of array elements (minus 1), not the
+>> number of array elements. If you have more than 1 clock per node, then
+>> you need more information on the clock input side than just a phandle to
+>> describe which clock you are using. Typically this would just be the
+>> phandle plus index of the clock you want. This is just like gpio where
+>> you have controller phandle plus gpio line number.
+>>
+> It seems I misunderstood/misused the #clock-cells. =A0So even we have
+> multiple clks embedded in a node, #clock-cells=3D1 works for most of the
+> cases, since what really matters is just the index of the clk we want
+> the phandle to point to. =A0And the clock driver has to figure out how
+> many clks are in there by some other means. =A0Correct me please, if I
+> still misunderstand it.
+
+Yes, it sounds like you have it right.
+
+g.
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
