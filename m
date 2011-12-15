@@ -1,51 +1,136 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v6 3/9] ARM: versatile: Map local timers using Device
- Tree when possible
-Date: Thu, 15 Dec 2011 15:25:51 +0000
-Message-ID: <1323962751.18989.4.camel@hornet.cambridge.arm.com>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
- <1323957761-13553-4-git-send-email-pawel.moll@arm.com>
- <4EEA09E8.3010807@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 02/10] i2c: OMAP: Add DT support for i2c controller
+Date: Thu, 15 Dec 2011 09:48:27 -0600
+Message-ID: <4EEA16CB.6040708@gmail.com>
+References: <1323439361-1647-1-git-send-email-b-cousson@ti.com> <1323439361-1647-3-git-send-email-b-cousson@ti.com> <4EE8D5A1.2080100@gmail.com> <4EEA0CC5.4090602@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4EEA09E8.3010807@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EEA0CC5.4090602@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ben Dooks <ben-linux@fluff.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDExLTEyLTE1IGF0IDE0OjUzICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiA+
-IEBAIC0yMSw2ICsyMywxNiBAQAo+ID4gICAqLwo+ID4gIGludCBfX2NwdWluaXQgbG9jYWxfdGlt
-ZXJfc2V0dXAoc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0KQo+ID4gIHsKPiA+ICsjaWYg
-ZGVmaW5lZChDT05GSUdfT0YpCj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSA9IG9mX2Zp
-bmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsCj4gPiArCQkJTlVMTCwgImFybSxzbXAtdHdkIik7Cj4g
-PiArCj4gPiArCWlmIChub2RlKQo+ID4gKwkJdHdkX2Jhc2UgPSBvZl9pb21hcChub2RlLCAwKTsK
-PiA+ICsjZW5kaWYKPiAKPiBJIHRoaW5rIHlvdXIgcHJldmlvdXMgdmVyc2lvbiB3YXMgbW9yZSBj
-b3JyZWN0LiBUaGlzIGlzIGdvaW5nIHRvIGZpbmQKPiB0aGUgbm9kZSBhbmQgZG8gaW9yZW1hcCBO
-IHRpbWVzIHdoZXJlIE4gaXMgdGhlIG51bWJlciBvZiBjb3Jlcy4gSXQgZG9lcwo+IHdvcmsgdGhv
-dWdoIGJlY2F1c2UgdGhhdCBpcyB3aGF0IEkgZGlkIGluaXRpYWxseSB0b28uCgpSaWdodCwgaG93
-IGFib3V0IHRoYXQsIHRoZW46CgpAQCAtMjEsNiArMjMsMjIgQEAKICAqLwogaW50IF9fY3B1aW5p
-dCBsb2NhbF90aW1lcl9zZXR1cChzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpldnQpCiB7Cisj
-aWYgZGVmaW5lZChDT05GSUdfT0YpCisgICAgICAgc3RhdGljIGludCBkdF9ub2RlX3Byb2JlZDsK
-KworICAgICAgIGlmICghZHRfbm9kZV9wcm9iZWQpIHsKKyAgICAgICAgICAgICAgIHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqbm9kZSA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsCisgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgTlVMTCwgImFybSxzbXAtdHdkIik7CisKKyAgICAgICAg
-ICAgICAgIGlmIChub2RlKQorICAgICAgICAgICAgICAgICAgICAgICB0d2RfYmFzZSA9IG9mX2lv
-bWFwKG5vZGUsIDApOworCisgICAgICAgICAgICAgICBkdF9ub2RlX3Byb2JlZCA9IDE7CisgICAg
-ICAgfQorI2VuZGlmCisgICAgICAgaWYgKCF0d2RfYmFzZSkKKyAgICAgICAgICAgICAgIHJldHVy
-biAtRU5YSU87CisKICAgICAgICBldnQtPmlycSA9IElSUV9MT0NBTFRJTUVSOwogICAgICAgIHR3
-ZF90aW1lcl9zZXR1cChldnQpOwogICAgICAgIHJldHVybiAwOwoKCkNoZWVycyEKClBhd2XFggoK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+On 12/15/2011 09:05 AM, Cousson, Benoit wrote:
+> Hi Rob,
+> 
+> On 12/14/2011 5:58 PM, Rob Herring wrote:
+>> Benoit,
+>>
+>> On 12/09/2011 08:02 AM, Benoit Cousson wrote:
+>>> Add initial DT support to retrieve the frequency using a
+>>> DT attribute instead of the pdata pointer if of_node exist.
+>>>
+>>> Add documentation for omap i2c controller binding.
+>>>
+>>> Based on original patches from Manju and Grant.
+>>>
+>>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>>> Cc: Ben Dooks<ben-linux@fluff.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/i2c/omap-i2c.txt |   42 ++++++++
+>>>   drivers/i2c/busses/i2c-omap.c                      |  100
+>>> +++++++++++++-------
+>>>   2 files changed, 107 insertions(+), 35 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/i2c/omap-i2c.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/omap-i2c.txt
+>>> b/Documentation/devicetree/bindings/i2c/omap-i2c.txt
+>>> new file mode 100644
+>>> index 0000000..d259a17
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/i2c/omap-i2c.txt
+>>> @@ -0,0 +1,42 @@
+>>> +I2C for OMAP platforms
+>>> +
+>>> +Required properties :
+>>> +- compatible : Must be "ti,omap3-i2c" or "ti,omap4-i2c"
+>>> +- ti,hwmods : Must be "i2c<n>", n being the instance number (1-based)
+>>> +- #address-cells =<1>;
+>>> +- #size-cells =<0>;
+>>> +
+>>> +Recommended properties :
+>>> +- clock-frequency : Desired I2C bus clock frequency in Hz. Otherwise
+>>> +  the default 100 kHz frequency will be used.
+>>> +
+>>> +Optional properties:
+>>> +- Child nodes conforming to i2c bus binding
+>>> +- ti,flags : u32: settings or errata relative to the i2c
+>>> +    0x1:   OMAP_I2C_FLAG_NO_FIFO
+>>> +    0x2:   OMAP_I2C_FLAG_SIMPLE_CLOCK
+>>> +    0x4:   OMAP_I2C_FLAG_16BIT_DATA_REG
+>>> +    0x8:   OMAP_I2C_FLAG_RESET_REGS_POSTIDLE
+>>> +    0x10:  OMAP_I2C_FLAG_APPLY_ERRATA_I207
+>>> +    0x20:  OMAP_I2C_FLAG_ALWAYS_ARMXOR_CLK
+>>> +    0x40:  OMAP_I2C_FLAG_FORCE_19200_INT_CLK
+>>> +  Valid for ti,omap3-i2c only:
+>>> +    0x80:  OMAP_I2C_FLAG_BUS_SHIFT_1: 8 bits registers
+>>> +    0x100: OMAP_I2C_FLAG_BUS_SHIFT_2: 16 bits registers
+>>
+>> It's generally preferred to split these out to separate properties since
+>> there is not yet define capability in dts.
+> 
+> Yeah, I was hoping that Stephen's DTC patches were accepted to avoid that.
+> 
+>> Can some of these be removed
+>> by having more specific compatible strings? That is the whole point in
+>> having compatible strings not be generic. omap4-i2c and omap3-i2c is
+>> still kind of generic.
+> 
+> Do you mean creating some attributes like that:
+> 
+> +    ti,16bits_shift;
+> +    ti,reset_postidle;
+> +    ti,errata_i207;
+> 
+> Or using some omap3-i2c or omap4-i2c to determine the proper version and
+> thus populate the right flags during probe.
+> 
+
+If that's specific enough, then yes. I meant that if say only the
+omap3578 (making up numbers here) has errata i207, then define a
+compatible string "ti,omap3578-i2c" that implies that and possibly other
+flags.
+
+To put it another way, there are only N valid combinations of flags and
+N is probably fairly small as long as the flags are dictated by the i2c
+h/w rev or how it was integrated into a particular SOC. So you should
+have N compatible strings that reflect those valid combinations. The
+driver can still use the flags internally.
+
+For any flags that are in fact board level configuration, they should be
+broken out as individual properties. Most of these sound like they are
+properties of the h/w and not user configuration of the h/w.
+
+
+> [...]
+> 
+>>> @@ -965,6 +956,31 @@ static const struct i2c_algorithm omap_i2c_algo = {
+>>>       .functionality    = omap_i2c_func,
+>>>   };
+>>>
+>>> +#ifdef CONFIG_OF
+>>> +static struct omap_i2c_bus_platform_data omap3_pdata = {
+>>> +    .rev = OMAP_I2C_IP_VERSION_1,
+>>> +};
+>>> +
+>>> +static struct omap_i2c_bus_platform_data omap4_pdata = {
+>>> +    .rev = OMAP_I2C_IP_VERSION_2,
+>>> +};
+>>
+>> This is redundant. The ip version can be determined from the compatible
+>> string.
+> 
+> I'm confused...
+> I'm using the compatible string below to chose the proper value.
+> This flag is then used later at runtime.
+> I'm using a pseudo pdata because that driver is still used in old
+> platform that does and will never not have DT support.
+> 
+
+After more thought, never mind. You'll probably need it for handling the
+flags as I proposed above.
+
+Rob
