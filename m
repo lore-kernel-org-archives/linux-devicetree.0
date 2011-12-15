@@ -1,92 +1,74 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3/9] irq: convert generic-chip to use irq_domain
-Date: Thu, 15 Dec 2011 09:39:34 -0700
-Message-ID: <CACxGe6t+t_4fAXiLq085LaBS32oaSe3k8tAgiUtuZ7Pu3xawZA@mail.gmail.com>
-References: <1323876538-20406-1-git-send-email-robherring2@gmail.com>
- <1323876538-20406-4-git-send-email-robherring2@gmail.com>
- <20111215052512.GB21815@S2101-09.ap.freescale.net>
- <20111215055501.GC21815@S2101-09.ap.freescale.net>
- <4EE9F899.7010402@gmail.com> <4EE9FC99.6030905@gmail.com>
- <CACxGe6t=ngbzNLkX+df8gP0aoMmgnsVqn2V2eRHpGi5FoFci_w@mail.gmail.com>
- <4EEA1DA8.6040705@gmail.com>
+From: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH] arm,davinci: configure davinci aemif chipselects
+	through OF
+Date: Thu, 15 Dec 2011 17:10:57 +0000
+Message-ID: <DF0F476B391FA8409C78302C7BA518B604A17B@DBDE01.ent.ti.com>
+References: <1322991679-20947-1-git-send-email-hs@denx.de>
+	<4EE07E27.8090602@denx.de>
+	<DF0F476B391FA8409C78302C7BA518B6040CBB@DBDE01.ent.ti.com>
+	<201112081548.08548.arnd@arndb.de>
+	<DF0F476B391FA8409C78302C7BA518B60471C1@DBDE01.ent.ti.com>
+	<CAPcSpELkWJpP9-3UoNHF_aWSdd_b0FHNooNm+zF7UTjHEBC_vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4EEA1DA8.6040705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CAPcSpELkWJpP9-3UoNHF_aWSdd_b0FHNooNm+zF7UTjHEBC_vg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Ben Gardiner <bengardiner-ScDXFp4xN3PN+rMO2ozGnw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "gregkh-l3A5Bk7waGM@public.gmane.org" <gregkh-l3A5Bk7waGM@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 15, 2011 at 9:17 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 12/15/2011 09:55 AM, Grant Likely wrote:
->> On Thu, Dec 15, 2011 at 6:56 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
->>> Shawn,
->>>
->>> On 12/15/2011 07:39 AM, Rob Herring wrote:
->>>> On 12/14/2011 11:55 PM, Shawn Guo wrote:
->>>>> On Thu, Dec 15, 2011 at 01:25:20PM +0800, Shawn Guo wrote:
->>>>>> On Wed, Dec 14, 2011 at 09:28:52AM -0600, Rob Herring wrote:
->>>>>>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>>>>>
->>>>>>> Add irq domain support to irq generic-chip. This enables users of
->>>>>>> generic-chip to support dynamic irq assignment needed for DT interr=
-upt
->>>>>>> binding. Users must be converted to use irq_data.hwirq for determin=
-ing
->>>>>>> local interrupt numbers rather than using the Linux irq number.
->>>>>>>
->>>>>>> irq_base is kept for now as there are a few users of it. Once they
->>>>>>> are converted to use the irq domain, it can be removed.
->>>>>>>
->>>>>>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>>>>>> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
->>>>>>> ---
->>>>>>
->>>>>> Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>>
->>>>> Sorry, I have to take that tag back after I correct my test setup.
->>>>> It does not work for imx5 TZIC case, because the following change
->>>>> I suggested before is missed.
->>>>>
->>>>> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
->>>>> index eb763f7..2a2aac1 100644
->>>>> --- a/kernel/irq/irqdomain.c
->>>>> +++ b/kernel/irq/irqdomain.c
->>>>> @@ -39,7 +39,7 @@ void irq_domain_add(struct irq_domain *domain)
->>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
->>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 }
->>>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->domain =3D domain;
->>>>> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->hwirq =3D hwirq;
->>>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 d->hwirq =3D hwirq - domain->hwirq_base;
->>>>
->>>> This is a problem. It entirely defeats the point of hwirq_base and it
->>>> would break the GIC. We need to fix this in the generic irq chip.
->>>>
->>>
->>> I think I found a fix. Can you try 's/d->hwirq/(d->hwirq % 32)/' in
->>> generic-chip.c.
->>
->> Ugh, but that hard codes an assumption that a domain cannot have more
->> that 32 irqs.
->>
->> /me goes to dig into irq_domain code...
->
-> No, it hard codes that generic irq chip is 32 interrupts at most which
-> is already the case. That's why the TZIC uses 5 generic irq chip instance=
-s.
+Hi Ben,
 
-Oops, you're right.  I wasn't paying close enough attention. Sorry for
-the noise.
+On Wed, Dec 14, 2011 at 20:05:25, Ben Gardiner wrote:
+> Hello Arnd and Sekhar,
+> 
+> On Tue, Dec 13, 2011 at 1:34 PM, Nori, Sekhar <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
+> > [...]
+> > On Thu, Dec 08, 2011 at 21:18:08, Arnd Bergmann wrote:
+> >> [...]
+> >> If you want it to provide endpoint devices that are handled by
+> >> distinct subsystems in Linux, I would make it an mfd multifunction
+> >> device and make the common code a driver that scans the connected
+> >> memories in order to register its child devices for each of the
+> >> subsystems.
+> >
+> > Okay. Thanks for the explanation. Since the users of AEMIF at this
+> > point are mtd devices, I propose moving it to drivers/mtd/davinci-aemif.c
+> > (of course, mtd folks need to approve).
+> 
+> We have a vested interest in the davinci AEMIF setup facilities
+> in-kernel; I'm electing to pipe-up now rather than later. Sadly our
+> board is not yet in mainline so my opinions may be redirected to the
+> bit-bucket as you see fit. We are planning to post a patch series for
+> our complete board support -- but we can't do it right now.
+> 
+> The AEMIF is useful for interfacing to other asynchronous devices too;
+> our newest board uses it for accessing memory mapped FPGA functional
+> blocks via UIO and for permanent storage to a compact flash using
+> pata_platform. In both cases the timings and mode for the chip-select
+> are manually configured before the devices are registered. In both
+> cases the performance of the endpoints could be better preserved
+> across CPU freq transitions if the hooks for cpufreq transitions
+> recently proposed by Sudhakar [1] were part of an mfd device and hence
+> applicable to devices other than mtd.
+> 
+> Again, I apologize for requesting features for boards that are not yet
+> in mainline.
 
-g.
+No problem. Thanks for showing a use case I didn't know existed.
+Now we just need to find someone to work on moving aemif to mfd
+multifunction device :)
+
+Thanks,
+Sekhar
