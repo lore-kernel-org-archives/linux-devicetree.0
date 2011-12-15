@@ -1,97 +1,21 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH] arm/dts: Add minimal device tree support for omap2420 and
- omap2430
-Date: Thu, 15 Dec 2011 13:39:41 -0800
-Message-ID: <20111215213940.GW32251@atomide.com>
-References: <1323863746-18145-1-git-send-email-rnayak@ti.com>
- <1323863746-18145-5-git-send-email-rnayak@ti.com>
- <20111214192509.GH32251@atomide.com>
- <4EE99923.4030902@ti.com>
- <4EE9C697.4010604@ti.com>
- <20111215211320.GU32251@atomide.com>
- <4EEA6686.3010504@ti.com>
- <20111215213722.GV32251@atomide.com>
+From: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 00/14] Add support for tegra30 and cardhu
+Date: Thu, 15 Dec 2011 14:06:56 -0800
+Message-ID: <CAMbhsRTtrVsfXXpW9WeSc72kqfJ3qQwDZ_TRWp4M1H-zYY=YRA@mail.gmail.com>
+References: <1323875032-18221-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111215213722.GV32251@atomide.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, govindraj.raja@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1323875032-18221-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Gary King <gking-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add minimal device tree support for omap2420 and omap2430
+On Wed, Dec 14, 2011 at 7:03 AM, Peter De Schrijver
+<pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> This patchset adds support for the tegra30 SoC and the cardhu development
+> board.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-
---- /dev/null
-+++ b/arch/arm/boot/dts/omap2.dtsi
-@@ -0,0 +1,67 @@
-+/*
-+ * Device Tree Source for OMAP2 SoC
-+ *
-+ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	compatible = "ti,omap2430", "ti,omap2420", "ti,omap2";
-+
-+	aliases {
-+		serial0 = &uart1;
-+		serial1 = &uart2;
-+		serial2 = &uart3;
-+	};
-+
-+	cpus {
-+		cpu@0 {
-+			compatible = "arm,arm1136jf-s";
-+		};
-+	};
-+
-+	soc {
-+		compatible = "ti,omap-infra";
-+		mpu {
-+			compatible = "ti,omap2-mpu";
-+			ti,hwmods = "mpu";
-+		};
-+	};
-+
-+	ocp {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		ti,hwmods = "l3_main";
-+
-+		intc: interrupt-controller@1 {
-+			compatible = "ti,omap2-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		uart1: serial@4806a000 {
-+			compatible = "ti,omap2-uart";
-+			ti,hwmods = "uart1";
-+			clock-frequency = <48000000>;
-+		};
-+
-+		uart2: serial@4806c000 {
-+			compatible = "ti,omap2-uart";
-+			ti,hwmods = "uart2";
-+			clock-frequency = <48000000>;
-+		};
-+
-+		uart3: serial@4806e000 {
-+			compatible = "ti,omap2-uart";
-+			ti,hwmods = "uart3";
-+			clock-frequency = <48000000>;
-+		};
-+	};
-+};
+Whole series,
+Acked-by: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
