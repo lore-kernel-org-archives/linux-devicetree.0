@@ -1,16 +1,13 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] Add fdtget utility to read property values from a
- device tree
-Date: Thu, 15 Dec 2011 17:37:51 -0800
-Message-ID: <CAPnjgZ0Na+zAX2cj=b1HbyGW5iNLGLn2rAeQEfZ9LwBLDW6a1w@mail.gmail.com>
-References: <1316711466-14199-1-git-send-email-sjg@chromium.org>
- <1316711466-14199-5-git-send-email-sjg@chromium.org>
- <20110923012007.GG12286@yookeroo.fritz.box>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: at91: irqdomain and device tree for AIC and GPIO
+Date: Thu, 15 Dec 2011 19:53:43 -0600
+Message-ID: <4EEAA4A7.3040902@gmail.com>
+References: <1323976568-20244-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20110923012007.GG12286-787xzQ0H9iQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-Reply-To: <1323976568-20244-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,67 +17,56 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Nicolas,
 
-On Thu, Sep 22, 2011 at 6:20 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Thu, Sep 22, 2011 at 10:11:05AM -0700, Simon Glass wrote:
->> This simply utility makes it easy for scripts to read values from the de=
-vice
->> tree. It is written in C and uses the same libfdt as the rest of the dtc
->> package.
->>
->> What is it for:
->> - Reading fdt values from scripts
->> - Extracting fdt information within build systems
->> - Looking at particular values without having to dump the entire tree
->>
->> To use it, specify the fdt binary file on command line followed by a lis=
-t of
->> node, property pairs. The utility then looks up each node, finds the pro=
-perty
->> and displays the value.
->>
->> Each value is printed on a new line.
->>
->> fdtget tries to guess the type of each property based on its contents. T=
-his
->> is not always reliable, so you can use the -t option to force fdtget to =
-decode
->> the value as a string, or byte, etc.
->>
->> To read from stdin, use - as the file.
->>
->> Usage:
->> =A0 =A0 =A0 fdtget <options> <dt file> [<node> <property>]...
->> Options:
->> =A0 =A0 =A0 -t <type> =A0 =A0 =A0 Type of data
->> =A0 =A0 =A0 -h =A0 =A0 =A0 =A0 =A0 =A0 =A0Print this help
->>
->> <type> =A0 =A0 =A0 =A0s=3Dstring, i=3Dint, u=3Dunsigned, x=3Dhex
->> =A0 =A0 =A0 Optional modifier prefix:
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 hh or b=3Dbyte, h=3D2 byte, l=3D4 byte (defa=
-ult)
->>
->> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
-> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+On 12/15/2011 01:16 PM, Nicolas Ferre wrote:
+> Hi,
+> 
+> This series adds irqdomain and device tree support for both the
+> interrupt and GPIO controllers of AT91 SoC.
+> 
+> The AIC part has already been sent some time ago but has been
+> reworked to address Rob's comments. This reworked patch is marked
+> with a "v4" tag.
+> 
+> The series can go on top of Jamie's patch
+> "irqdomain: export irq_domain_simple_ops for !CONFIG_OF"
+> and has been tested on top of 'v3.2-rc5' + 'arm-soc/at91/ioremap'
+> and 'arm-soc/at91/gpio'
+> 
+> Jean-Christophe PLAGNIOL-VILLARD (1):
+>       ARM: at91/gpio: add DT support
+> 
+> Nicolas Ferre (5):
+>       ARM: at91/aic: add irq domain and device tree support
+>       ARM: at91/gpio: add irqdomain to gpio interrupts
+>       ARM: at91/gpio: add .to_irq gpio_chip handler and rework irq_to_gpio
+>       ARM: at91/gpio: remove the static specification of gpio_chip.base
+>       ARM: at91/board-dt: remove AIC irq domain from board file
+> 
+>  .../devicetree/bindings/arm/atmel-aic.txt          |   38 ++++
+>  .../devicetree/bindings/gpio/gpio_at91.txt         |   20 ++
+>  arch/arm/Kconfig                                   |    1 +
+>  arch/arm/boot/dts/at91sam9g20.dtsi                 |   44 ++++-
+>  arch/arm/boot/dts/at91sam9g45.dtsi                 |   59 +++++-
+>  arch/arm/mach-at91/board-dt.c                      |   15 +--
+>  arch/arm/mach-at91/gpio.c                          |  197 ++++++++++++++++----
+>  arch/arm/mach-at91/include/mach/gpio.h             |   12 --
+>  arch/arm/mach-at91/include/mach/irqs.h             |    3 +-
+>  arch/arm/mach-at91/irq.c                           |   91 +++++++--
+>  10 files changed, 383 insertions(+), 97 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_at91.txt
 
-Has this been applied? I cannot see it in the repo.
+What about using generic irq chip as I previously mentioned? It looks to
+me like both the AIC and gpio controller could use it. I've added irq
+domain support to generic irq chip, so it should simplify your changes.
+The latest branch is here:
 
-Regards
-Simon
+git://sources.calxeda.com/kernel/linux.git pl061-domain-v2
 
->
-> --
-> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
-baroque, and my code
-> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
-other_
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
-round_!
-> http://www.ozlabs.org/~dgibson
+Rob
