@@ -1,95 +1,52 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH] arm/dts: Add minimal device tree support for omap2420
- and omap2430
-Date: Fri, 16 Dec 2011 09:31:05 +0530
-Message-ID: <4EEAC281.7010705@ti.com>
-References: <1323863746-18145-1-git-send-email-rnayak@ti.com> <1323863746-18145-5-git-send-email-rnayak@ti.com> <20111214192509.GH32251@atomide.com> <4EE99923.4030902@ti.com> <4EE9C697.4010604@ti.com> <20111215211320.GU32251@atomide.com> <4EEA6686.3010504@ti.com> <20111215213722.GV32251@atomide.com> <20111215213940.GW32251@atomide.com>
+From: Vaibhav Hiremath <hvaibhav@ti.com>
+Subject: [PATCH] arm/dts: Add support for OMAP3 Mistral EVM board
+Date: Fri, 16 Dec 2011 11:36:00 +0530
+Message-ID: <1324015560-26735-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20111215213940.GW32251@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, govindraj.raja@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org, robherring2@gmail.com
+To: linux-omap@vger.kernel.org
+Cc: tony@atomide.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, b-cousson@ti.com, Vaibhav Hiremath <hvaibhav@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 16 December 2011 03:09 AM, Tony Lindgren wrote:
-> Add minimal device tree support for omap2420 and omap2430
+Add OMAP3 Mistral EVM DTS file to use the omap3.dtsi SoC file,
+along with memory node information.
 
-Looks good to me.
+Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
+---
+Boot tested it on DM37x Mistral EVM, kernel parses the info correctly.
 
->
-> Signed-off-by: Tony Lindgren<tony@atomide.com>
->
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap2.dtsi
-> @@ -0,0 +1,67 @@
-> +/*
-> + * Device Tree Source for OMAP2 SoC
-> + *
-> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + */
-> +
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	compatible = "ti,omap2430", "ti,omap2420", "ti,omap2";
-> +
-> +	aliases {
-> +		serial0 =&uart1;
-> +		serial1 =&uart2;
-> +		serial2 =&uart3;
-> +	};
-> +
-> +	cpus {
-> +		cpu@0 {
-> +			compatible = "arm,arm1136jf-s";
-> +		};
-> +	};
-> +
-> +	soc {
-> +		compatible = "ti,omap-infra";
-> +		mpu {
-> +			compatible = "ti,omap2-mpu";
-> +			ti,hwmods = "mpu";
-> +		};
-> +	};
-> +
-> +	ocp {
-> +		compatible = "simple-bus";
-> +		#address-cells =<1>;
-> +		#size-cells =<1>;
-> +		ranges;
-> +		ti,hwmods = "l3_main";
-> +
-> +		intc: interrupt-controller@1 {
-> +			compatible = "ti,omap2-intc";
-> +			interrupt-controller;
-> +			#interrupt-cells =<1>;
-> +		};
-> +
-> +		uart1: serial@4806a000 {
-> +			compatible = "ti,omap2-uart";
-> +			ti,hwmods = "uart1";
-> +			clock-frequency =<48000000>;
-> +		};
-> +
-> +		uart2: serial@4806c000 {
-> +			compatible = "ti,omap2-uart";
-> +			ti,hwmods = "uart2";
-> +			clock-frequency =<48000000>;
-> +		};
-> +
-> +		uart3: serial@4806e000 {
-> +			compatible = "ti,omap2-uart";
-> +			ti,hwmods = "uart3";
-> +			clock-frequency =<48000000>;
-> +		};
-> +	};
-> +};
+ arch/arm/boot/dts/omap3-evm.dts |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap3-evm.dts
+
+diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
+new file mode 100644
+index 0000000..59b2de0
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-evm.dts
+@@ -0,0 +1,20 @@
++/*
++ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++
++/include/ "omap3.dtsi"
++
++/ {
++	model = "TI OMAP3 Mistral EVM";
++	compatible = "ti,omap3-evm", "ti,omap3";
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x10000000>; /* 256 MB */
++	};
++};
+-- 
+1.7.0.4
 
