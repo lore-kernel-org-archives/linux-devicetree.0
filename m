@@ -1,7 +1,7 @@
 From: Richard Zhao <richard.zhao@linaro.org>
-Subject: [PATCH V2 2/4] dts/imx6q: add cpufreq property
-Date: Fri, 16 Dec 2011 18:31:00 +0800
-Message-ID: <1324031462-24961-3-git-send-email-richard.zhao@linaro.org>
+Subject: [PATCH V2 4/4] arm/imx6q: select ARCH_HAS_CPUFREQ
+Date: Fri, 16 Dec 2011 18:31:02 +0800
+Message-ID: <1324031462-24961-5-git-send-email-richard.zhao@linaro.org>
 References: <1324031462-24961-1-git-send-email-richard.zhao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,23 +14,21 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
 ---
- arch/arm/boot/dts/imx6q.dtsi |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ arch/arm/mach-imx/Kconfig |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 263e8f3..f2e3eaf 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -29,6 +29,9 @@
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
- 			next-level-cache = <&L2>;
-+			cpu-freqs = <996000000 792000000 396000000 198000000>;
-+			cpu-volts = <1225000 1100000 950000 850000>;
-+			trans-latency = <61036>; /* two CLK32 periods */
- 		};
+diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+index c44aa97..39cf00a 100644
+--- a/arch/arm/mach-imx/Kconfig
++++ b/arch/arm/mach-imx/Kconfig
+@@ -595,6 +595,7 @@ comment "i.MX6 family:"
  
- 		cpu@1 {
+ config SOC_IMX6Q
+ 	bool "i.MX6 Quad support"
++	select ARCH_HAS_CPUFREQ
+ 	select ARM_GIC
+ 	select CACHE_L2X0
+ 	select CPU_V7
 -- 
 1.7.5.4
 
