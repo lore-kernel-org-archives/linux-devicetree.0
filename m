@@ -1,40 +1,70 @@
-From: Bryan Huntsman <bryanh@codeaurora.org>
-Subject: Re: [PATCH V2 1/4] cpufreq: add arm soc generic cpufreq driver
-Date: Fri, 16 Dec 2011 11:59:02 -0800
-Message-ID: <4EEBA306.3060309@codeaurora.org>
-References: <1324031462-24961-1-git-send-email-richard.zhao@linaro.org> <1324031462-24961-2-git-send-email-richard.zhao@linaro.org> <20111216105229.GB3230@totoro>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 0/4] OMAP serial device tree support
+Date: Fri, 16 Dec 2011 13:57:31 -0800
+Message-ID: <20111216215731.GQ32251@atomide.com>
+References: <1323863746-18145-1-git-send-email-rnayak@ti.com>
+ <4EE8A90A.10206@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <20111216105229.GB3230@totoro>
-Sender: cpufreq-owner@vger.kernel.org
-To: Jamie Iles <jamie@jamieiles.com>
-Cc: Richard Zhao <richard.zhao@linaro.org>, linux@arm.linux.org.uk, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, davej@redhat.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4EE8A90A.10206@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Rajendra Nayak <rnayak@ti.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, khilman@ti.com, govindraj.raja@ti.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linaro-dev@lists.linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/16/2011 02:52 AM, Jamie Iles wrote:
->
->> +static DEFINE_PER_CPU(unsigned long, l_p_j_ref);
->> +static unsigned long l_p_j_ref_freq;
->> +
->> +static struct clk *cpu_clk;
+Rob,
+
+* Rob Herring <robherring2@gmail.com> [111214 05:16]:
+> On 12/14/2011 05:55 AM, Rajendra Nayak wrote:
+> > v3 is rebased on top of the latest serial runtime
+> > patches[1] and boot tested with/without DT on OMAP4
+> > SDP and OMAP4 Panda boards.
+> > 
+> > Patches can be found here..
+> > git://gitorious.org/omap-pm/linux.git for-dt/serial
+> > 
+> > I also had to pull in a fix[2] for DT testing (already in linux-omap
+> > master) which was missing as the serial runtime branch[1]
+> > was based on an older master commit.
+> > 
+> > Changes in v3:
+> > -1- Rebased on latest serial runtime patches
+> > -2- Minor typr fixes
+> > 
+> > Changes in v2:
+> > -1- Got rid of binding to define which uart is console
+> > -2- Added checks to default clock speed to 48Mhz
+> > -3- Added compatible for each OMAP family
+> > -4- Used of_alias_get_id to populate port.line
+> > 
+> > [1] git://gitorious.org/runtime_3-0/runtime_3-0.git for_3_3/lo_rc4_uartruntime
+> > [2] http://www.spinics.net/lists/arm-kernel/msg150751.html
+> > 
+> > Rajendra Nayak (4):
+> >   omap-serial: Get rid of all pdev->id usage
+> >   omap-serial: Use default clock speed (48Mhz) if not specified
+> >   omap-serial: Add minimal device tree support
+> >   ARM: omap: pass minimal SoC/board data for UART from dt
+> > 
+> >  .../devicetree/bindings/serial/omap_serial.txt     |   10 +++
+> >  arch/arm/boot/dts/omap3.dtsi                       |   31 ++++++++
+> >  arch/arm/boot/dts/omap4.dtsi                       |   28 +++++++
+> >  arch/arm/mach-omap2/board-generic.c                |    1 -
+> >  drivers/tty/serial/omap-serial.c                   |   80 +++++++++++++++----
+> >  5 files changed, 132 insertions(+), 18 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/serial/omap_serial.txt
 > 
-> This assumes that all CPU's share the same clk and run at the same rate.  
-> Is that a fair/safe assumption?  I honestly don't know the answer to 
-> this so it's just a question!!!
+> Looks good. For the series:
+> 
+> Reviewed-by: Rob Herring <rob.herring@calxeda.com>
 
-On MSM, cpus independently scale both frequency and voltage.  Our clock
-driver isn't upstream yet.  David Brown has a preliminary version here:
+Care to check if your Reviewed-by can also be applied
+to the additional patch "[PATCH] arm/dts: Add minimal device
+tree support for omap2420 and omap2430" that's needed
+to keep serial port working for omap2 with this series?
 
-https://www.codeaurora.org/gitweb/quic/kernel/?p=davidb/linux-msm.git;a=shortlog;h=refs/heads/msm-clock-rfc
+Regards,
 
-Once we get our driver upstream, MSM will be an exception and not select
-ARM_GENERIC_CPUFREQ.  We'll probably have a separate msm-cpufreq.c
-driver under drivers/cpufreq/.
-
-- Bryan
-
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+Tony
