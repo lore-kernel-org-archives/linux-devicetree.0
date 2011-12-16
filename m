@@ -1,16 +1,14 @@
-From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: OMAP2+: kconfig: Enable devicetree by default
- for OMAP2+ systems
-Date: Fri, 16 Dec 2011 16:25:40 +0100
-Message-ID: <4EEB62F4.2010202@ti.com>
-References: <y> <1323190149-6492-2-git-send-email-b-cousson@ti.com>
- <1323782836.1877.79.camel@deskari> <4EE75448.4010701@ti.com>
- <20111213223855.GW32251@atomide.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: at91: irqdomain and device tree for AIC and GPIO
+Date: Fri, 16 Dec 2011 17:29:29 +0100
+Message-ID: <4EEB71E9.3050609@atmel.com>
+References: <1323976568-20244-1-git-send-email-nicolas.ferre@atmel.com>
+ <4EEAA4A7.3040902@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111213223855.GW32251-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <4EEAA4A7.3040902-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,85 +18,68 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-On 12/13/2011 11:38 PM, Tony Lindgren wrote:
-> * Cousson, Benoit<b-cousson-l0cyMroinI0@public.gmane.org>  [111213 05:02]:
->> On 12/13/2011 2:27 PM, Tomi Valkeinen wrote:
->>> Hi,
->>>
->>> On Tue, 2011-12-06 at 17:49 +0100, Benoit Cousson wrote:
->>>> devicetree will become the mandatory boot method for OMAP2+.
->>>> In order to avoid cluttering the OMAP code with #ifdef CONFIG_OF,
->>>> select USE_OF by default for every OMAP2+ systems.
->>>> Select as well the APPENDED_DTB and ATAG_DTB_COMPAT to allow legacy
->>>> boot loader to keep working properly.
->>>
->>> APPENDED_DTB sounds a bit dangerous to be enabled by default according
->>> to the config help text.
+On 12/16/2011 02:53 AM, Rob Herring :
+> Nicolas,
+> 
+> On 12/15/2011 01:16 PM, Nicolas Ferre wrote:
+>> Hi,
 >>
->> The help is indeed really scary :-)
+>> This series adds irqdomain and device tree support for both the
+>> interrupt and GPIO controllers of AT91 SoC.
+>>
+>> The AIC part has already been sent some time ago but has been
+>> reworked to address Rob's comments. This reworked patch is marked
+>> with a "v4" tag.
+>>
+>> The series can go on top of Jamie's patch
+>> "irqdomain: export irq_domain_simple_ops for !CONFIG_OF"
+>> and has been tested on top of 'v3.2-rc5' + 'arm-soc/at91/ioremap'
+>> and 'arm-soc/at91/gpio'
+>>
+>> Jean-Christophe PLAGNIOL-VILLARD (1):
+>>       ARM: at91/gpio: add DT support
+>>
+>> Nicolas Ferre (5):
+>>       ARM: at91/aic: add irq domain and device tree support
+>>       ARM: at91/gpio: add irqdomain to gpio interrupts
+>>       ARM: at91/gpio: add .to_irq gpio_chip handler and rework irq_to_gpio
+>>       ARM: at91/gpio: remove the static specification of gpio_chip.base
+>>       ARM: at91/board-dt: remove AIC irq domain from board file
+>>
+>>  .../devicetree/bindings/arm/atmel-aic.txt          |   38 ++++
+>>  .../devicetree/bindings/gpio/gpio_at91.txt         |   20 ++
+>>  arch/arm/Kconfig                                   |    1 +
+>>  arch/arm/boot/dts/at91sam9g20.dtsi                 |   44 ++++-
+>>  arch/arm/boot/dts/at91sam9g45.dtsi                 |   59 +++++-
+>>  arch/arm/mach-at91/board-dt.c                      |   15 +--
+>>  arch/arm/mach-at91/gpio.c                          |  197 ++++++++++++++++----
+>>  arch/arm/mach-at91/include/mach/gpio.h             |   12 --
+>>  arch/arm/mach-at91/include/mach/irqs.h             |    3 +-
+>>  arch/arm/mach-at91/irq.c                           |   91 +++++++--
+>>  10 files changed, 383 insertions(+), 97 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_at91.txt
 > 
-> Heh, but it's also true.
+> What about using generic irq chip as I previously mentioned? It looks to
+> me like both the AIC and gpio controller could use it. I've added irq
+> domain support to generic irq chip, so it should simplify your changes.
+> The latest branch is here:
 > 
->> Tony,
->> Do we want to keep it by default? Or should we fix the kconfig help?
-> 
-> Let's just leave out those two from omap2plus_defconfig then.
+> git://sources.calxeda.com/kernel/linux.git pl061-domain-v2
 
-Here is the updated version.
-Just let me know if you'd like to get the full series re-posted.
+Rob,
 
-Thanks,
-Benoit
+Yes, that definitively makes sense but I fear that this rework will
+delay again the introduction of a couple of products and the work we
+have to do to enable DT for other drivers.
+The AIC and GPIO will definitively need a rework but I cannot start this
+now and as I have a nearly working solution, I would prefer to start
+this task later...
 
----
->From b33d4be0213ab0c630b87bd3df77035cbb109cd0 Mon Sep 17 00:00:00 2001
-From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Date: Thu, 1 Dec 2011 10:21:16 +0100
-Subject: [PATCH] ARM: OMAP2+: kconfig: Enable devicetree by default for OMAP2+ systems
-
-devicetree will become the mandatory boot method for OMAP2+.
-In order to avoid cluttering the OMAP code with #ifdef CONFIG_OF,
-select USE_OF by default for every OMAP2+ systems.
-
-Enable PROC_DEVICETREE as well.
-
-Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/mach-omap2/Kconfig |    1 -
- arch/arm/plat-omap/Kconfig  |    2 ++
- 2 files changed, 2 insertions(+), 1 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-index b662513..bdd5b68 100644
---- a/arch/arm/mach-omap2/Kconfig
-+++ b/arch/arm/mach-omap2/Kconfig
-@@ -111,7 +111,6 @@ comment "OMAP Board Type"
- config MACH_OMAP_GENERIC
- 	bool "Generic OMAP2+ board"
- 	depends on ARCH_OMAP2PLUS
--	select USE_OF
- 	default y
- 	help
- 	  Support for generic TI OMAP2+ boards using Flattened Device Tree.
-diff --git a/arch/arm/plat-omap/Kconfig b/arch/arm/plat-omap/Kconfig
-index aa59f42..734009a 100644
---- a/arch/arm/plat-omap/Kconfig
-+++ b/arch/arm/plat-omap/Kconfig
-@@ -24,6 +24,8 @@ config ARCH_OMAP2PLUS
- 	select CLKDEV_LOOKUP
- 	select GENERIC_IRQ_CHIP
- 	select OMAP_DM_TIMER
-+	select USE_OF
-+	select PROC_DEVICETREE
- 	help
- 	  "Systems based on OMAP2, OMAP3 or OMAP4"
- 
+Best regards,
 -- 
-1.7.0.4
+Nicolas Ferre
