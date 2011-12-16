@@ -1,72 +1,67 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/6] ARM: at91: irqdomain and device tree for AIC and GPIO
-Date: Thu, 15 Dec 2011 19:53:43 -0600
-Message-ID: <4EEAA4A7.3040902@gmail.com>
-References: <1323976568-20244-1-git-send-email-nicolas.ferre@atmel.com>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: Re: [RFC V1 2/4] dts/imx6q: add cpufreq property
+Date: Fri, 16 Dec 2011 10:47:31 +0800
+Message-ID: <20111216024730.GS28768@b20223-02.ap.freescale.net>
+References: <1323947798-25251-1-git-send-email-richard.zhao@linaro.org>
+ <1323947798-25251-2-git-send-email-richard.zhao@linaro.org>
+ <20111215115852.GC10522@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1323976568-20244-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111215115852.GC10522@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Richard Zhao <richard.zhao@linaro.org>, linux@arm.linux.org.uk, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, eric.miao@linaro.org, cpufreq@vger.kernel.org, kernel@pengutronix.de, davej@redhat.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Nicolas,
+On Thu, Dec 15, 2011 at 07:58:54PM +0800, Shawn Guo wrote:
+> Hi Richard,
+> 
+> Whenever we invent some new device tree binding support, we need to
+> Cc devicetree-discuss@lists.ozlabs.org (Cc-ed).
+Thanks for your reminder.
+> 
+> On Thu, Dec 15, 2011 at 07:16:36PM +0800, Richard Zhao wrote:
+> > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/imx6q.dtsi |    2 ++
+> >  1 files changed, 2 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> > index 263e8f3..9e9943b 100644
+> > --- a/arch/arm/boot/dts/imx6q.dtsi
+> > +++ b/arch/arm/boot/dts/imx6q.dtsi
+> > @@ -29,6 +29,8 @@
+> >  			compatible = "arm,cortex-a9";
+> >  			reg = <0>;
+> >  			next-level-cache = <&L2>;
+> > +			cpu_freqs = <996000000 792000000 396000000 198000000>;
+> > +			cpu_volts = <1225000 1100000 950000 850000>;
+> 
+> For dt property name, we use '-' rather than '_'.
+ok.
+> 
+> And I'm not sure this is correct, since these data obviously does not
+> belong to "arm,cortex-a9".
+That's why RFC.
 
-On 12/15/2011 01:16 PM, Nicolas Ferre wrote:
-> Hi,
+Thanks
+Richard
 > 
-> This series adds irqdomain and device tree support for both the
-> interrupt and GPIO controllers of AT91 SoC.
+> Regards,
+> Shawn
 > 
-> The AIC part has already been sent some time ago but has been
-> reworked to address Rob's comments. This reworked patch is marked
-> with a "v4" tag.
+> >  		};
+> >  
+> >  		cpu@1 {
+> > -- 
+> > 1.7.5.4
 > 
-> The series can go on top of Jamie's patch
-> "irqdomain: export irq_domain_simple_ops for !CONFIG_OF"
-> and has been tested on top of 'v3.2-rc5' + 'arm-soc/at91/ioremap'
-> and 'arm-soc/at91/gpio'
 > 
-> Jean-Christophe PLAGNIOL-VILLARD (1):
->       ARM: at91/gpio: add DT support
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> Nicolas Ferre (5):
->       ARM: at91/aic: add irq domain and device tree support
->       ARM: at91/gpio: add irqdomain to gpio interrupts
->       ARM: at91/gpio: add .to_irq gpio_chip handler and rework irq_to_gpio
->       ARM: at91/gpio: remove the static specification of gpio_chip.base
->       ARM: at91/board-dt: remove AIC irq domain from board file
-> 
->  .../devicetree/bindings/arm/atmel-aic.txt          |   38 ++++
->  .../devicetree/bindings/gpio/gpio_at91.txt         |   20 ++
->  arch/arm/Kconfig                                   |    1 +
->  arch/arm/boot/dts/at91sam9g20.dtsi                 |   44 ++++-
->  arch/arm/boot/dts/at91sam9g45.dtsi                 |   59 +++++-
->  arch/arm/mach-at91/board-dt.c                      |   15 +--
->  arch/arm/mach-at91/gpio.c                          |  197 ++++++++++++++++----
->  arch/arm/mach-at91/include/mach/gpio.h             |   12 --
->  arch/arm/mach-at91/include/mach/irqs.h             |    3 +-
->  arch/arm/mach-at91/irq.c                           |   91 +++++++--
->  10 files changed, 383 insertions(+), 97 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_at91.txt
 
-What about using generic irq chip as I previously mentioned? It looks to
-me like both the AIC and gpio controller could use it. I've added irq
-domain support to generic irq chip, so it should simplify your changes.
-The latest branch is here:
-
-git://sources.calxeda.com/kernel/linux.git pl061-domain-v2
-
-Rob
