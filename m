@@ -1,60 +1,40 @@
-From: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH V2 3/4] arm/imx6q: register arm_clk as cpu to clkdev
-Date: Fri, 16 Dec 2011 11:35:39 -0500
-Message-ID: <21672683C5A3814BB4DB938EBE482DE40A1AE8EF74@IAD2MBX09.mex02.mlsrvr.com>
-References: <1324031462-24961-1-git-send-email-richard.zhao@linaro.org>,
-	<1324031462-24961-4-git-send-email-richard.zhao@linaro.org>
+From: Bryan Huntsman <bryanh@codeaurora.org>
+Subject: Re: [PATCH V2 1/4] cpufreq: add arm soc generic cpufreq driver
+Date: Fri, 16 Dec 2011 11:59:02 -0800
+Message-ID: <4EEBA306.3060309@codeaurora.org>
+References: <1324031462-24961-1-git-send-email-richard.zhao@linaro.org> <1324031462-24961-2-git-send-email-richard.zhao@linaro.org> <20111216105229.GB3230@totoro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1324031462-24961-4-git-send-email-richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20111216105229.GB3230@totoro>
+Sender: cpufreq-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: Richard Zhao <richard.zhao@linaro.org>, linux@arm.linux.org.uk, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, davej@redhat.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Is there a portable/generic approach for other drivers that may
-want to use arm-cpufreq.c? arm_clk is not normally defined for
-my SoC and I don't see an easy way to pull it in.
+On 12/16/2011 02:52 AM, Jamie Iles wrote:
+>
+>> +static DEFINE_PER_CPU(unsigned long, l_p_j_ref);
+>> +static unsigned long l_p_j_ref_freq;
+>> +
+>> +static struct clk *cpu_clk;
+> 
+> This assumes that all CPU's share the same clk and run at the same rate.  
+> Is that a fair/safe assumption?  I honestly don't know the answer to 
+> this so it's just a question!!!
 
---Mark Langsdorf
-Calxeda, Inc.
+On MSM, cpus independently scale both frequency and voltage.  Our clock
+driver isn't upstream yet.  David Brown has a preliminary version here:
 
-________________________________________
-From: Richard Zhao [richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
-Sent: Friday, December 16, 2011 4:31 AM
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org; davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Mark Langsdorf; linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org; patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Richard Zhao
-Subject: [PATCH V2 3/4] arm/imx6q: register arm_clk as cpu to clkdev
+https://www.codeaurora.org/gitweb/quic/kernel/?p=davidb/linux-msm.git;a=shortlog;h=refs/heads/msm-clock-rfc
 
-cpufreq needs cpu clock to change frequency.
+Once we get our driver upstream, MSM will be an exception and not select
+ARM_GENERIC_CPUFREQ.  We'll probably have a separate msm-cpufreq.c
+driver under drivers/cpufreq/.
 
-Signed-off-by: Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/mach-imx/clock-imx6q.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+- Bryan
 
-diff --git a/arch/arm/mach-imx/clock-imx6q.c b/arch/arm/mach-imx/clock-imx6q.c
-index 039a7ab..72acbc2 100644
---- a/arch/arm/mach-imx/clock-imx6q.c
-+++ b/arch/arm/mach-imx/clock-imx6q.c
-@@ -1911,6 +1911,7 @@ static struct clk_lookup lookups[] = {
-        _REGISTER_CLOCK(NULL, "gpmi_io_clk", gpmi_io_clk),
-        _REGISTER_CLOCK(NULL, "usboh3_clk", usboh3_clk),
-        _REGISTER_CLOCK(NULL, "sata_clk", sata_clk),
-+       _REGISTER_CLOCK(NULL, "cpu", arm_clk),
- };
-
- int imx6q_set_lpm(enum mxc_cpu_pwr_mode mode)
---
-1.7.5.4
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
