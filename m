@@ -1,54 +1,42 @@
-From: Richard Zhao <richard.zhao@linaro.org>
-Subject: Re: [PATCH V2 1/4] cpufreq: add arm soc generic cpufreq driver
-Date: Sat, 17 Dec 2011 16:39:54 +0800
-Message-ID: <20111217083952.GE2010@richard-laptop>
-References: <1324031462-24961-1-git-send-email-richard.zhao@linaro.org>
- <1324031462-24961-2-git-send-email-richard.zhao@linaro.org>
- <20111216105229.GB3230@totoro>
- <4EEBA306.3060309@codeaurora.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [REPOST RFC PATCH 0/3] New "gpio-poweroff" driver to turn off
+ platform devices with GPIOs
+Date: Sat, 17 Dec 2011 09:20:44 +0000
+Message-ID: <20111217092044.GC2833@opensource.wolfsonmicro.com>
+References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
+ <4EE7A31E.7080301@gmail.com>
+ <895CF182-4BF7-4DF5-A467-944EC008DBC3@boeing.com>
+ <20111214120240.GC25088@sirena.org.uk>
+ <E30C4693-0D31-4A9A-9E9D-0FC03C5F6B8A@boeing.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4EEBA306.3060309@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bryan Huntsman <bryanh@codeaurora.org>
-Cc: Jamie Iles <jamie@jamieiles.com>, linux@arm.linux.org.uk, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, davej@redhat.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <E30C4693-0D31-4A9A-9E9D-0FC03C5F6B8A-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: "Moffett, Kyle D" <Kyle.D.Moffett-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 16, 2011 at 11:59:02AM -0800, Bryan Huntsman wrote:
-> On 12/16/2011 02:52 AM, Jamie Iles wrote:
-> >
-> >> +static DEFINE_PER_CPU(unsigned long, l_p_j_ref);
-> >> +static unsigned long l_p_j_ref_freq;
-> >> +
-> >> +static struct clk *cpu_clk;
-> > 
-> > This assumes that all CPU's share the same clk and run at the same rate.  
-> > Is that a fair/safe assumption?  I honestly don't know the answer to 
-> > this so it's just a question!!!
-> 
-> On MSM, cpus independently scale both frequency and voltage.  Our clock
-> driver isn't upstream yet.  David Brown has a preliminary version here:
-If
- - cpu_clk are per_cpu, and get from cpu0 clk, cpu1 clk, etc.
-   The same to regulators.
- - set CPUFREQ_SHARED_TYPE_NONE
- - don't set affect cpus.
+On Wed, Dec 14, 2011 at 02:34:37PM -0600, Moffett, Kyle D wrote:
+> On Dec 14, 2011, at 07:02, Mark Brown wrote:
 
-Does that help you?
+> > The regulator API in -next has DT bindings.
 
-Thanks
-Richard
-> 
-> https://www.codeaurora.org/gitweb/quic/kernel/?p=davidb/linux-msm.git;a=shortlog;h=refs/heads/msm-clock-rfc
-> 
-> Once we get our driver upstream, MSM will be an exception and not select
-> ARM_GENERIC_CPUFREQ.  We'll probably have a separate msm-cpufreq.c
-> driver under drivers/cpufreq/.
-> 
-> - Bryan
-> 
-> -- 
-> Sent by an employee of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> Based on the description of our hardware, is there a good way that I
+> can wire up gpio-regulator driver to our hardware with just the device
+> tree (and maybe one small board-specific function) to make it shut down
+> each domain in sequence at poweroff time? Otherwise I will just go back
+> to my custom board-specific function for GPIO-twiddling.
+
+No, it's a very rare use case so there's nothing off the shelf.  But it
+should be straightfoward to write a device driver doing this.
