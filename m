@@ -1,42 +1,83 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [REPOST RFC PATCH 0/3] New "gpio-poweroff" driver to turn off
- platform devices with GPIOs
-Date: Sat, 17 Dec 2011 09:20:44 +0000
-Message-ID: <20111217092044.GC2833@opensource.wolfsonmicro.com>
-References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
- <4EE7A31E.7080301@gmail.com>
- <895CF182-4BF7-4DF5-A467-944EC008DBC3@boeing.com>
- <20111214120240.GC25088@sirena.org.uk>
- <E30C4693-0D31-4A9A-9E9D-0FC03C5F6B8A@boeing.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 1/4] cpufreq: add arm soc generic cpufreq driver
+Date: Sat, 17 Dec 2011 10:29:29 +0100
+Message-ID: <1771359.4jv0xX1vFp@wuerfel>
+References: <1324031462-24961-1-git-send-email-richard.zhao@linaro.org>
+ <4EEB5683.7000409@gmail.com> <20111217080001.GC2010@richard-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E30C4693-0D31-4A9A-9E9D-0FC03C5F6B8A-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Moffett, Kyle D" <Kyle.D.Moffett-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20111217080001.GC2010@richard-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linaro-dev@lists.linaro.org
+Cc: linux@arm.linux.org.uk, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, davej@redhat.com, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2011 at 02:34:37PM -0600, Moffett, Kyle D wrote:
-> On Dec 14, 2011, at 07:02, Mark Brown wrote:
+On Saturday 17 December 2011 16:00:03 Richard Zhao wrote:
+> On Fri, Dec 16, 2011 at 08:32:35AM -0600, Rob Herring wrote:
+> > On 12/16/2011 04:30 AM, Richard Zhao wrote:
+> > > It support single core and multi-core ARM SoCs. But it assume
+> > > all cores share the same frequency and voltage.
+> > > 
+> > > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+> > > ---
+> > >  drivers/cpufreq/Kconfig.arm   |    8 ++
+> > >  drivers/cpufreq/Makefile      |    1 +
+> > >  drivers/cpufreq/arm-cpufreq.c |  269 +++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 278 insertions(+), 0 deletions(-)
+> > >  create mode 100644 drivers/cpufreq/arm-cpufreq.c
+> > > 
+> > 
+> > What makes this specific to ARM and not a generic DT + clk api +
+> > regulator api driver?
+>
+> smp loops_per_jiffy update needs arm header <asm/cpu.h>.
 
-> > The regulator API in -next has DT bindings.
+I would suggest to instead change the definition of adjust_jiffies in the
+core so it can be overridden by the architecture, like this
 
-> Based on the description of our hardware, is there a good way that I
-> can wire up gpio-regulator driver to our hardware with just the device
-> tree (and maybe one small board-specific function) to make it shut down
-> each domain in sequence at poweroff time? Otherwise I will just go back
-> to my custom board-specific function for GPIO-twiddling.
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 987a165..174584d 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -189,6 +189,7 @@ EXPORT_SYMBOL_GPL(cpufreq_cpu_put);
+  * systems as each CPU might be scaled differently. So, use the arch
+  * per-CPU loops_per_jiffy value wherever possible.
+  */
++#ifndef adjust_jiffies
+ #ifndef CONFIG_SMP
+ static unsigned long l_p_j_ref;
+ static unsigned int  l_p_j_ref_freq;
+@@ -218,7 +219,8 @@ static inline void adjust_jiffies(unsigned long val, struct cpufreq_freqs *ci)
+ {
+        return;
+ }
+-#endif
++#endif /* CONFIG_SMP */
++#endif /* adjust_jiffies */
+ 
+ 
+ /**
 
-No, it's a very rare use case so there's nothing off the shelf.  But it
-should be straightfoward to write a device driver doing this.
+
+Then ARM (and any others that want the driver) can provide their own
+implementation and set 
+
+#define adjust_jiffies(val, ci) adjust_jiffies((val), (ci))
+
+to let the core use that instead of the generic UP version.
+
+
+While we're there, we should probably try to fix drivers that use loops_per_jiffy,
+because that is not what they think it is on SMP.
+
+	Arnd
