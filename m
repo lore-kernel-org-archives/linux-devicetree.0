@@ -1,63 +1,87 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 1/3] i2c: tegra: Support DVC controller in device tree
-Date: Sun, 18 Dec 2011 16:46:21 +0100
-Message-ID: <20111218154621.GB5600@avionic-0098.mockup.avionic-design.de>
-References: <1324186101-23695-1-git-send-email-swarren@nvidia.com>
- <20111218154208.GA5600@avionic-0098.mockup.avionic-design.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Sun, 18 Dec 2011 23:01:38 +0100
+Message-ID: <CACRpkdYu7HCBdAzqNr1pwZMgvZFyBYpcJXYo-RUx5R-U3CJ1BA@mail.gmail.com>
+References: <1324203229-15571-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111218154208.GA5600-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1324203229-15571-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Dec 18, 2011 at 11:13 AM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
 
---WYTEVAkct0FjGQmd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
+> and can be configured to provide multiple banks of GPIO pins. =A0The first
+> bank (A) can also provide IRQ capabilities.
 
-* Thierry Reding wrote:
-> * Stephen Warren wrote:
-> [...]
-> > @@ -636,7 +649,18 @@ static int tegra_i2c_probe(struct platform_device =
-*pdev)
-> >  			i2c_dev->bus_clk_rate =3D be32_to_cpup(prop);
-> >  	}
-> > =20
-> > -	if (pdev->id =3D=3D 3)
-> > +#if defined(CONFIG_OF)
-> > +	if (pdev->dev.of_node) {
-> > +		const struct of_device_id *match;
-> > +
-> > +		match =3D of_match_device(tegra_i2c_of_match, &pdev->dev);
-> > +		if (!match)
-> > +			return -EINVAL;
-> > +
-> > +		i2c_dev->is_dvc =3D match->data;
-> > +	}
-> > +#endif
-> > +	else if (pdev->id =3D=3D 3)
->=20
-> Shouldn't the "else" move into the CONFIG_OF branch?
+Overall this is looking good.
 
-Okay, I hadn't seen v2. Please ignore.
+Here is a problem (I think):
 
-Thierry
+> +static int dwapb_irq_set_type(struct irq_data *d, u32 type)
+> +{
+> + =A0 =A0 =A0 struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(=
+d);
+> + =A0 =A0 =A0 struct dwapb_gpio *gpio =3D gc->private;
+> + =A0 =A0 =A0 int bit =3D d->hwirq;
+> + =A0 =A0 =A0 unsigned long level, polarity;
+> +
+> + =A0 =A0 =A0 if (type & ~(IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING |
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_L=
+EVEL_LOW))
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+> +
+> + =A0 =A0 =A0 level =3D readl(gpio->regs + INT_TYPE_REG_OFFS);
+> + =A0 =A0 =A0 polarity =3D readl(gpio->regs + INT_POLARITY_REG_OFFS);
+> +
+> + =A0 =A0 =A0 if (type & IRQ_TYPE_EDGE_RISING) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 level |=3D (1 << bit);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity |=3D (1 << bit);
+> + =A0 =A0 =A0 } else if (type & IRQ_TYPE_EDGE_FALLING) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 level |=3D (1 << bit);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity &=3D ~(1 << bit);
 
---WYTEVAkct0FjGQmd
-Content-Type: application/pgp-signature
+So what if you get request for *both* falling and rising edges?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+This is not uncommon at all, for example a GPIO which detecs
+MMC card insertions and removals like drivers/host/mmc/mmci.c
+will want interrupts on both edges since we want to change state
+whenever the card is inserted *or* removed.
 
-iEYEARECAAYFAk7uCs0ACgkQZ+BJyKLjJp9zjgCgp3ScbUwDibzHsQp5Zax4T4ik
-+v0AoKeC59wb36uy22bf4A8lQV/d1hT1
-=0pd+
------END PGP SIGNATURE-----
+If you check drivers/gpio/gpio-u300.c you can see how I handled
+this on another hardware where triggering on falling and rising
+edges was a binary choice and thus mutually exclusive: I toggle
+for each interrupt.
 
---WYTEVAkct0FjGQmd--
+See u300_toggle_trigger(), u300_gpio_irq_type().
+
+So either you do something like that, or you detect both set
+and return an error, else the poor caller will just get falling
+edges in this driver...
+
+> + =A0 =A0 =A0 } else if (type & IRQ_TYPE_LEVEL_HIGH) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 level &=3D ~(1 << bit);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity |=3D (1 << bit);
+> + =A0 =A0 =A0 } else if (type & IRQ_TYPE_LEVEL_LOW) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 level &=3D ~(1 << bit);
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity &=3D ~(1 << bit);
+> + =A0 =A0 =A0 }
+
+This is OK though, these are mutually exclusive.
+
+Yours,
+Linus Walleij
