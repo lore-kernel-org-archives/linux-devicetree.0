@@ -1,42 +1,100 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v7 00/14] Add support for tegra30 and cardhu
-Date: Sat, 17 Dec 2011 20:48:31 -0800
-Message-ID: <20111218044831.GB4336@quad.lixom.net>
-References: <1323875032-18221-1-git-send-email-pdeschrijver@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1323875032-18221-1-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Colin Cross <ccross@android.com>, Stephen Warren <swarren@nvidia.com>, Gary King <gking@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/3] i2c: tegra: Support DVC controller in device tree
+Date: Sat, 17 Dec 2011 22:28:19 -0700
+Message-ID: <1324186101-23695-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 14, 2011 at 05:03:12PM +0200, Peter De Schrijver wrote:
-> This patchset adds support for the tegra30 SoC and the cardhu development
-> board.
+One of the Tegra I2C blocks is inside the DVC (Digital Voltage Controller)
+block. This block is identical to the rest of the I2C blocks, except that
+it only supports master mode, it has registers moved around, and it needs
+some extra init to get it into I2C mode.  The register moves are handled
+by i2c_readl and i2c_writel
 
-Thanks, applied to for-3.3/dt (first patch) and for-3.3/soc (the rest).
-I didn't want to split up too much between the branches and make
-cross-dependencies since that defeats most of the idea behind topic branches,
-so I left it at that.
+This patch adds a new compatible value for controllers of this "DVC"
+type; I figured that this approach was reasonable, as opposed to adding
+an is-dvc property under the existing compatible value, since the HW
+truly is different.
 
-I rebased for-3.3/soc (which only had one patch on it before) to be on top of
-rmk's devel-stable and for-3.3/dt, and will tell Arnd about those dependencies
-when sending up the branches -- other SoCs have similar dependencies already so
-it's not a problem.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Ben, it'd probably be simplest if you could ack this patch, and we
+could take it through the Tegra tree.
 
-I had to do some minor touchups, including redoing the move of board-dt.c due
-to other changes to the file. Please check final contents of the branch and let
-me know if there's a problem.
+ drivers/i2c/busses/i2c-tegra.c |   37 +++++++++++++++++++++++++------------
+ 1 files changed, 25 insertions(+), 12 deletions(-)
 
-Also, the defconfig needs to be updated to enable t30 support as well as move
-over to the new config option for t20. I'll post a patch in a few minutes.
-
-Please let me know how the branch looks as soon as practical, since the
-clock is ticking on getting the branches into arm-soc in the next few
-days for the upcoming merge window.
-
-
--Olof
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 46b6500..c264e8c 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -26,6 +26,7 @@
+ #include <linux/delay.h>
+ #include <linux/slab.h>
+ #include <linux/i2c-tegra.h>
++#include <linux/of_device.h>
+ #include <linux/of_i2c.h>
+ #include <linux/module.h>
+ 
+@@ -558,6 +559,18 @@ static const struct i2c_algorithm tegra_i2c_algo = {
+ 	.functionality	= tegra_i2c_func,
+ };
+ 
++#if defined(CONFIG_OF)
++/* Match table for of_platform binding */
++static const struct of_device_id tegra_i2c_of_match[] __devinitconst = {
++	{ .compatible = "nvidia,tegra20-i2c",     .data = (void *)0},
++	{ .compatible = "nvidia,tegra20-i2c-dvc", .data = (void *)1},
++	{},
++};
++MODULE_DEVICE_TABLE(of, tegra_i2c_of_match);
++#else
++#define tegra_i2c_of_match NULL
++#endif
++
+ static int tegra_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_i2c_dev *i2c_dev;
+@@ -636,7 +649,18 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 			i2c_dev->bus_clk_rate = be32_to_cpup(prop);
+ 	}
+ 
+-	if (pdev->id == 3)
++#if defined(CONFIG_OF)
++	if (pdev->dev.of_node) {
++		const struct of_device_id *match;
++
++		match = of_match_device(tegra_i2c_of_match, &pdev->dev);
++		if (!match)
++			return -EINVAL;
++
++		i2c_dev->is_dvc = match->data;
++	}
++#endif
++	else if (pdev->id == 3)
+ 		i2c_dev->is_dvc = 1;
+ 	init_completion(&i2c_dev->msg_complete);
+ 
+@@ -738,17 +762,6 @@ static int tegra_i2c_resume(struct platform_device *pdev)
+ }
+ #endif
+ 
+-#if defined(CONFIG_OF)
+-/* Match table for of_platform binding */
+-static const struct of_device_id tegra_i2c_of_match[] __devinitconst = {
+-	{ .compatible = "nvidia,tegra20-i2c", },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, tegra_i2c_of_match);
+-#else
+-#define tegra_i2c_of_match NULL
+-#endif
+-
+ static struct platform_driver tegra_i2c_driver = {
+ 	.probe   = tegra_i2c_probe,
+ 	.remove  = tegra_i2c_remove,
+-- 
+1.7.5.4
