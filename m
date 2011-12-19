@@ -1,48 +1,60 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v7 00/14] Add support for tegra30 and cardhu
-Date: Mon, 19 Dec 2011 14:21:29 +0200
-Message-ID: <20111219122129.GA2840@tbergstrom-lnx.Nvidia.com>
-References: <1323875032-18221-1-git-send-email-pdeschrijver@nvidia.com>
- <20111218044831.GB4336@quad.lixom.net>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 2/9] irq: check domain hwirq range for DT translate
+Date: Mon, 19 Dec 2011 13:41:52 +0100
+Message-ID: <4EEF3110.30203@ti.com>
+References: <1323876538-20406-1-git-send-email-robherring2@gmail.com> <1323876538-20406-3-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111218044831.GB4336@quad.lixom.net>
+In-Reply-To: <1323876538-20406-3-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Russell King <linux@arm.linux.org.uk>, Colin Cross <ccross@android.com>, Stephen Warren <swarren@nvidia.com>, Gary King <gking@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Kevin Hilman <khilman@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.ml.walleij@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Barry Song <baohua.song@csr.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 18, 2011 at 05:48:31AM +0100, Olof Johansson wrote:
-> On Wed, Dec 14, 2011 at 05:03:12PM +0200, Peter De Schrijver wrote:
-> > This patchset adds support for the tegra30 SoC and the cardhu development
-> > board.
-> 
-> Thanks, applied to for-3.3/dt (first patch) and for-3.3/soc (the rest).
-> I didn't want to split up too much between the branches and make
-> cross-dependencies since that defeats most of the idea behind topic branches,
-> so I left it at that.
-> 
-> I rebased for-3.3/soc (which only had one patch on it before) to be on top of
-> rmk's devel-stable and for-3.3/dt, and will tell Arnd about those dependencies
-> when sending up the branches -- other SoCs have similar dependencies already so
-> it's not a problem.
-> 
-> I had to do some minor touchups, including redoing the move of board-dt.c due
-> to other changes to the file. Please check final contents of the branch and let
-> me know if there's a problem.
-> 
-> Also, the defconfig needs to be updated to enable t30 support as well as move
-> over to the new config option for t20. I'll post a patch in a few minutes.
-> 
-> Please let me know how the branch looks as soon as practical, since the
-> clock is ticking on getting the branches into arm-soc in the next few
-> days for the upcoming merge window.
-> 
+Hi Rob,
 
-Branch boots fine on my cardhu board.
+While trying your series to take advantage of the generic-irq domain 
+support for OMAP3 INTC, I realized that the following patch is breaking 
+drivers that are using irq_domain_add_simple.
 
-Cheers,
+The point is that irq_domain_add_simple does not populate hwirq_base or 
+nr_irq, so that test will always fail if the domain is created by the 
+irq_domain_add_simple API.
 
-Peter.
+Adding an extra parameter to provide the nr_irq should fix that.
+
+The long term fix should be to use the generic-irq for such driver, but 
+this is not the same effort, so it might worth fixing that API for the 
+moment.
+
+Regards,
+Benoit
+
+On 12/14/2011 4:28 PM, Rob Herring wrote:
+> From: Rob Herring<rob.herring@calxeda.com>
+>
+> A DT node may have more than 1 domain associated with it, so make sure
+> the hwirq number is within range when doing DT translation.
+>
+> Signed-off-by: Rob Herring<rob.herring@calxeda.com>
+> Cc: Thomas Gleixner<tglx@linutronix.de>
+> ---
+>   kernel/irq/irqdomain.c |    3 +++
+>   1 files changed, 3 insertions(+), 0 deletions(-)
+>
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 200ce83..ae6441e 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -135,6 +135,9 @@ int irq_domain_simple_dt_translate(struct irq_domain *d,
+>   		return -EINVAL;
+>   	if (intsize<  1)
+>   		return -EINVAL;
+> +	if ((intspec[0]<  d->hwirq_base) ||
+> +	    (intspec[0]>= d->hwirq_base + d->nr_irq))
+> +		return -EINVAL;
+>
+>   	*out_hwirq = intspec[0];
+>   	*out_type = IRQ_TYPE_NONE;
