@@ -1,80 +1,47 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [RFC v2 PATCH 2/3] dt: device tree bindings for TI's EMIF sdram controller
-Date: Mon, 19 Dec 2011 08:56:01 -0800
-Message-ID: <CAOesGMi79_4EH58rErxkBNevEUeCf56pSfEG2A4ejD4b4pNf-A@mail.gmail.com>
-References: <1324303533-17458-1-git-send-email-aneesh@ti.com>
-	<1324303533-17458-3-git-send-email-aneesh@ti.com>
+From: "Moffett, Kyle D" <Kyle.D.Moffett@boeing.com>
+Subject: Re: [REPOST RFC PATCH 0/3] New "gpio-poweroff" driver to turn off
+ platform devices with GPIOs
+Date: Mon, 19 Dec 2011 10:56:41 -0600
+Message-ID: <D482A908-020C-43E0-ADFC-33AE213D7257@boeing.com>
+References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
+ <4EE7A31E.7080301@gmail.com>
+ <895CF182-4BF7-4DF5-A467-944EC008DBC3@boeing.com>
+ <20111214120240.GC25088@sirena.org.uk>
+ <E30C4693-0D31-4A9A-9E9D-0FC03C5F6B8A@boeing.com>
+ <20111217092044.GC2833@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1324303533-17458-3-git-send-email-aneesh@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Aneesh V <aneesh@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajendra Nayak <rnayak@ti.com>, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20111217092044.GC2833@opensource.wolfsonmicro.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Dec 17, 2011, at 04:20, Mark Brown wrote:
+> On Wed, Dec 14, 2011 at 02:34:37PM -0600, Moffett, Kyle D wrote:
+>> On Dec 14, 2011, at 07:02, Mark Brown wrote:
+>>> The regulator API in -next has DT bindings.
+>> 
+>> Based on the description of our hardware, is there a good way that I
+>> can wire up gpio-regulator driver to our hardware with just the device
+>> tree (and maybe one small board-specific function) to make it shut down
+>> each domain in sequence at poweroff time? Otherwise I will just go back
+>> to my custom board-specific function for GPIO-twiddling.
+> 
+> No, it's a very rare use case so there's nothing off the shelf.  But it
+> should be straightfoward to write a device driver doing this.
 
-=46ewer comments here. :) But see below.
+Well, so that's what the "gpio-poweroff" driver I wrote is.  All it does
+is hook into the device model and DT and provide various poweroff hooks
+that poke GPIOs.
 
-On Mon, Dec 19, 2011 at 6:05 AM, Aneesh V <aneesh@ti.com> wrote:
+I still don't understand how the regulator API is supposed to help in my
+particular case (whole-system poweroff).
 
+Additional advice would be highly appreciated.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/ti/emif.tx=
-t
-> @@ -0,0 +1,64 @@
-> +* EMIF family of TI SDRAM controllers
-> +
-> +EMIF - External Memory Interface - is an SDRAM controller used in
-> +TI SoCs. EMIF supports, based on the IP revision, one or more of
-> +DDR2/DDR3/LPDDR2 protocols. This binding describes a given instance
-> +of the EMIF IP and memory parts attached to it.
-> +
-> +Required properties:
-> +- compatible =A0 : One or more of "ti,emif-ddr2", "ti,emif-ddr3", an=
-d
-> + =A0"ti,emif-lpddr2"
-> +
-> + =A0"ti,emif-ddr2" should be listed of the EMIF controller on this S=
-oC
-> + =A0supports DDR2 memories
-> +
-> + =A0"ti,emif-ddr3" should be listed of the EMIF controller on this S=
-oC
-> + =A0supports DDR3 memories
-> +
-> + =A0"ti,emif-lpddr2" should be listed of the EMIF controller on this=
- SoC
-> + =A0supports LPDDR2 memories
-> +
-> +- ti,hwmods =A0 =A0: For TI hwmods processing and omap device creati=
-on
-> + =A0the value shall be "emif<n>" where <n> is the number of the EMIF
-> + =A0instance with base 1.
-> +
-> +- phy-type =A0 =A0 : string indicating the phy type. Should be one o=
-f the
-> + =A0following:
-> +
-> + =A0"phy-type-omap4" =A0: PHY used in OMAP4 family of SoCs
-> +
-> + =A0"phy-type-dm81xx" : PHY used in DM81XX family of SoCs
-> +
-> +- ddr-handle =A0 : phandle to a "ddr" node representing the memory p=
-art
-> + =A0attached to this EMIF instance.
-
-Just specify said ddr node as a child of this node instead of give it
-a handle. What other bus would the ddr node sit on, if not the memory
-controller bus?
-
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Kyle Moffett
