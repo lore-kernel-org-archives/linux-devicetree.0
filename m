@@ -1,35 +1,62 @@
-From: Richard Zhao <richard.zhao@linaro.org>
-Subject: [PATCH V3 7/7] arm/imx6q: select ARCH_HAS_CPUFREQ
-Date: Mon, 19 Dec 2011 11:21:43 +0800
-Message-ID: <1324264903-15395-8-git-send-email-richard.zhao@linaro.org>
-References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
+From: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 1/4] i2c: tegra: Add __devinit/exit to probe/remove
+Date: Mon, 19 Dec 2011 12:23:40 +0530
+Message-ID: <CAM=Q2csGoQR8PZhQO_oeVZt9CqEq377Ut8swY5g12M_=71on9g@mail.gmail.com>
+References: <1324189772-26914-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
-Sender: cpufreq-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: linux@arm.linux.org.uk, davej@redhat.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rdunlap@xenotime.net, kernel@pengutronix.de, shawn.guo@linaro.org, catalin.marinas@arm.com, eric.miao@linaro.org, mark.langsdorf@calxeda.com, davidb@codeaurora.org, arnd@arndb.de, bryanh@codeaurora.org, jamie@jamieiles.com, marc.zyngier@arm.com, linaro-dev@lists.linaro.org, patches@linaro.org, Richard Zhao <richard.zhao@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1324189772-26914-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
----
- arch/arm/mach-imx/Kconfig |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+On Sun, Dec 18, 2011 at 11:59 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
+rote:
+> This fixes some section mismatch build warnings.
+What was the error was a devinit function called from these?
 
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index c44aa97..39cf00a 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -595,6 +595,7 @@ comment "i.MX6 family:"
- 
- config SOC_IMX6Q
- 	bool "i.MX6 Quad support"
-+	select ARCH_HAS_CPUFREQ
- 	select ARM_GIC
- 	select CACHE_L2X0
- 	select CPU_V7
--- 
-1.7.5.4
-
-
+>
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2: New patch.
+>
+> =A0drivers/i2c/busses/i2c-tegra.c | =A0 =A04 ++--
+> =A01 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-=
+tegra.c
+> index 46b6500..e8560ed 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -558,7 +558,7 @@ static const struct i2c_algorithm tegra_i2c_algo =
+=3D {
+> =A0 =A0 =A0 =A0.functionality =A0=3D tegra_i2c_func,
+> =A0};
+>
+> -static int tegra_i2c_probe(struct platform_device *pdev)
+> +static int __devinit tegra_i2c_probe(struct platform_device *pdev)
+> =A0{
+> =A0 =A0 =A0 =A0struct tegra_i2c_dev *i2c_dev;
+> =A0 =A0 =A0 =A0struct tegra_i2c_platform_data *pdata =3D pdev->dev.pl=
+atform_data;
+> @@ -690,7 +690,7 @@ err_iounmap:
+> =A0 =A0 =A0 =A0return ret;
+> =A0}
+>
+> -static int tegra_i2c_remove(struct platform_device *pdev)
+> +static int __devexit tegra_i2c_remove(struct platform_device *pdev)
+> =A0{
+> =A0 =A0 =A0 =A0struct tegra_i2c_dev *i2c_dev =3D platform_get_drvdata=
+(pdev);
+> =A0 =A0 =A0 =A0i2c_del_adapter(&i2c_dev->adapter);
+> --
+> 1.7.5.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-i2c" =
+in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
