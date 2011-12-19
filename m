@@ -1,34 +1,37 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v2 03/10] mfd: twl-core: Add initial DT support for twl4030/twl6030
-Date: Mon, 19 Dec 2011 14:53:29 +0100
-Message-ID: <4EEF41D9.30101@ti.com>
-References: <1323439361-1647-1-git-send-email-b-cousson@ti.com> <1323439361-1647-4-git-send-email-b-cousson@ti.com> <20111219120321.GM11800@sortiz-mobl>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] regulator: mc13892: add device tree probe support
+Date: Mon, 19 Dec 2011 22:07:31 +0800
+Message-ID: <20111219140730.GB5257@S2100-06.ap.freescale.net>
+References: <1323702958-4831-1-git-send-email-shawn.guo@linaro.org>
+ <1323702958-4831-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20111219120321.GM11800@sortiz-mobl>
-Sender: linux-omap-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Balaji T K <balajitk@ti.com>, Graeme Gregory <gg@slimlogic.co.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1323702958-4831-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Salut Samuel,
+On Mon, Dec 12, 2011 at 11:15:57PM +0800, Shawn Guo wrote:
+> It adds device tree probe support for mc13892-regulator driver.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 
-On 12/19/2011 1:03 PM, Samuel Ortiz wrote:
-> Hi Benoit,
->
-> On Fri, Dec 09, 2011 at 03:02:34PM +0100, Benoit Cousson wrote:
->> Add initial device-tree support for twl familly chips.
->> The current version is missing the regulator entries due
->> to the lack of DT regulator bindings for the moment.
->> Only the simple sub-modules that do not depend on
->> platform_data information can be initialized properly.
->>
->> Add documentation for the Texas Instruments TWL Integrated Chip.
-> Thanks, patch applied.
+Ping?
 
-Thanks,
-Benoit
-
-
+-- 
+Regards,
+Shawn
