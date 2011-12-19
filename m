@@ -1,100 +1,58 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpio: add a driver for the Synopsys DesignWare APB
- GPIO block
-Date: Mon, 19 Dec 2011 00:44:31 +0000
-Message-ID: <20111219004431.GE2376@gallagher>
-References: <1324203229-15571-1-git-send-email-jamie@jamieiles.com>
- <CACRpkdYu7HCBdAzqNr1pwZMgvZFyBYpcJXYo-RUx5R-U3CJ1BA@mail.gmail.com>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: Re: [PATCH V2 1/4] cpufreq: add arm soc generic cpufreq driver
+Date: Mon, 19 Dec 2011 09:03:58 +0800
+Message-ID: <20111219010357.GW28768@b20223-02.ap.freescale.net>
+References: <1324031462-24961-1-git-send-email-richard.zhao@linaro.org>
+ <1324031462-24961-2-git-send-email-richard.zhao@linaro.org>
+ <20111216105229.GB3230@totoro>
+ <4EEBA306.3060309@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <cpufreq-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYu7HCBdAzqNr1pwZMgvZFyBYpcJXYo-RUx5R-U3CJ1BA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <4EEBA306.3060309@codeaurora.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: Bryan Huntsman <bryanh@codeaurora.org>
+Cc: Jamie Iles <jamie@jamieiles.com>, linux@arm.linux.org.uk, patches@linaro.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, eric.miao@linaro.org, cpufreq@vger.kernel.org, kernel@pengutronix.de, davej@redhat.com, linaro-dev@lists.linaro.org, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Bryan,
 
-On Sun, Dec 18, 2011 at 11:01:38PM +0100, Linus Walleij wrote:
-> On Sun, Dec 18, 2011 at 11:13 AM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
-> =
+On Fri, Dec 16, 2011 at 11:59:02AM -0800, Bryan Huntsman wrote:
+> On 12/16/2011 02:52 AM, Jamie Iles wrote:
+> >
+> >> +static DEFINE_PER_CPU(unsigned long, l_p_j_ref);
+> >> +static unsigned long l_p_j_ref_freq;
+> >> +
+> >> +static struct clk *cpu_clk;
+> > 
+> > This assumes that all CPU's share the same clk and run at the same rate.  
+> > Is that a fair/safe assumption?  I honestly don't know the answer to 
+> > this so it's just a question!!!
+> 
+> On MSM, cpus independently scale both frequency and voltage.  Our clock
+> driver isn't upstream yet.  David Brown has a preliminary version here:
+> 
+> https://www.codeaurora.org/gitweb/quic/kernel/?p=davidb/linux-msm.git;a=shortlog;h=refs/heads/msm-clock-rfc
+> 
+> Once we get our driver upstream, MSM will be an exception and not select
+> ARM_GENERIC_CPUFREQ.  We'll probably have a separate msm-cpufreq.c
+> driver under drivers/cpufreq/.
+Do you have to patch to implement per-cpu udelay? In current code, udelay uses
+global loops_per_jiffy.
 
-> > The Synopsys DesignWare block is used in some ARM devices (picoxcell)
-> > and can be configured to provide multiple banks of GPIO pins. =A0The fi=
-rst
-> > bank (A) can also provide IRQ capabilities.
-> =
+Thanks
+Richard
+> 
+> - Bryan
+> 
+> -- 
+> Sent by an employee of the Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-> Overall this is looking good.
-> =
-
-> Here is a problem (I think):
-> =
-
-> > +static int dwapb_irq_set_type(struct irq_data *d, u32 type)
-> > +{
-> > + =A0 =A0 =A0 struct irq_chip_generic *gc =3D irq_data_get_irq_chip_dat=
-a(d);
-> > + =A0 =A0 =A0 struct dwapb_gpio *gpio =3D gc->private;
-> > + =A0 =A0 =A0 int bit =3D d->hwirq;
-> > + =A0 =A0 =A0 unsigned long level, polarity;
-> > +
-> > + =A0 =A0 =A0 if (type & ~(IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING=
- |
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE=
-_LEVEL_LOW))
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
-> > +
-> > + =A0 =A0 =A0 level =3D readl(gpio->regs + INT_TYPE_REG_OFFS);
-> > + =A0 =A0 =A0 polarity =3D readl(gpio->regs + INT_POLARITY_REG_OFFS);
-> > +
-> > + =A0 =A0 =A0 if (type & IRQ_TYPE_EDGE_RISING) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 level |=3D (1 << bit);
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity |=3D (1 << bit);
-> > + =A0 =A0 =A0 } else if (type & IRQ_TYPE_EDGE_FALLING) {
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 level |=3D (1 << bit);
-> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 polarity &=3D ~(1 << bit);
-> =
-
-> So what if you get request for *both* falling and rising edges?
-> =
-
-> This is not uncommon at all, for example a GPIO which detecs
-> MMC card insertions and removals like drivers/host/mmc/mmci.c
-> will want interrupts on both edges since we want to change state
-> whenever the card is inserted *or* removed.
-> =
-
-> If you check drivers/gpio/gpio-u300.c you can see how I handled
-> this on another hardware where triggering on falling and rising
-> edges was a binary choice and thus mutually exclusive: I toggle
-> for each interrupt.
-> =
-
-> See u300_toggle_trigger(), u300_gpio_irq_type().
-> =
-
-> So either you do something like that, or you detect both set
-> and return an error, else the poor caller will just get falling
-> edges in this driver...
-
-Hmm, I hadn't thought of that.  I've had a quick once-over your u300 =
-
-gpio driver and that looks pretty neat.  I'll give that a go over the =
-
-next day or two and repost.
-
-Thanks for the pointer!
-
-Jamie
