@@ -1,62 +1,161 @@
-From: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/4] i2c: tegra: Add __devinit/exit to probe/remove
-Date: Mon, 19 Dec 2011 12:23:40 +0530
-Message-ID: <CAM=Q2csGoQR8PZhQO_oeVZt9CqEq377Ut8swY5g12M_=71on9g@mail.gmail.com>
-References: <1324189772-26914-1-git-send-email-swarren@nvidia.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Mon, 19 Dec 2011 09:56:54 +0000
+Message-ID: <20111219095654.GB2459@totoro>
+References: <1324203229-15571-1-git-send-email-jamie@jamieiles.com>
+ <4EEEA983.7010402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1324189772-26914-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4EEEA983.7010402-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 18, 2011 at 11:59 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
-rote:
-> This fixes some section mismatch build warnings.
-What was the error was a devinit function called from these?
+Hi Rob,
 
->
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> v2: New patch.
->
-> =A0drivers/i2c/busses/i2c-tegra.c | =A0 =A04 ++--
-> =A01 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-=
-tegra.c
-> index 46b6500..e8560ed 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -558,7 +558,7 @@ static const struct i2c_algorithm tegra_i2c_algo =
-=3D {
-> =A0 =A0 =A0 =A0.functionality =A0=3D tegra_i2c_func,
-> =A0};
->
-> -static int tegra_i2c_probe(struct platform_device *pdev)
-> +static int __devinit tegra_i2c_probe(struct platform_device *pdev)
-> =A0{
-> =A0 =A0 =A0 =A0struct tegra_i2c_dev *i2c_dev;
-> =A0 =A0 =A0 =A0struct tegra_i2c_platform_data *pdata =3D pdev->dev.pl=
-atform_data;
-> @@ -690,7 +690,7 @@ err_iounmap:
-> =A0 =A0 =A0 =A0return ret;
-> =A0}
->
-> -static int tegra_i2c_remove(struct platform_device *pdev)
-> +static int __devexit tegra_i2c_remove(struct platform_device *pdev)
-> =A0{
-> =A0 =A0 =A0 =A0struct tegra_i2c_dev *i2c_dev =3D platform_get_drvdata=
-(pdev);
-> =A0 =A0 =A0 =A0i2c_del_adapter(&i2c_dev->adapter);
-> --
-> 1.7.5.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-i2c" =
-in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
+On Sun, Dec 18, 2011 at 09:03:31PM -0600, Rob Herring wrote:
+> Jamie,
+> 
+> On 12/18/2011 04:13 AM, Jamie Iles wrote:
+> > The Synopsys DesignWare block is used in some ARM devices (picoxcell)
+> > and can be configured to provide multiple banks of GPIO pins.  The first
+> > bank (A) can also provide IRQ capabilities.
+> > 
+> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> > ---
+> > 
+> > I was originally working on a generic binding for the generic gpio
+> > driver, but this doesn't scale well when there are interrupt
+> > capabilities in the controller, so here's a driver specifically for the
+> > Synopsys block.
+> > 
+> >  .../devicetree/bindings/gpio/snps-dwapb-gpio.txt   |   63 ++++
+> >  drivers/gpio/Kconfig                               |   10 +
+> >  drivers/gpio/Makefile                              |    1 +
+> >  drivers/gpio/gpio-dwapb.c                          |  337 ++++++++++++++++++++
+> >  4 files changed, 411 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> >  create mode 100644 drivers/gpio/gpio-dwapb.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> > new file mode 100644
+> > index 0000000..62943fd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+> > @@ -0,0 +1,63 @@
+> > +* Synopsys DesignWare APB GPIO controller
+> > +
+> > +Required properties:
+> > +- compatible : Should be "snps,dw-apb-gpio"
+> > +- reg : Address and length of the register set for the device
+> > +
+> > +The GPIO controller has a configurable number of banks, each of which are
+> > +represented as child nodes with the following properties:
+> > +
+> > +Required properties:
+> > +- compatible : "snps,dw-apb-gpio-bank"
+> > +- gpio-controller : Marks the device node as a gpio controller.
+> > +- #gpio-cells : Should be two.  The first cell is the pin number and
+> > +  the second cell is used to specify optional parameters (currently
+> > +  unused).
+> > +- snps,gpio-bank : The integer bank index of the bank, a single cell.
+> 
+> What about using reg for this? It looks like this is only used for
+> calculating register addresses?
+> 
+> This smells a bit like cell-index which is a no-no.
+
+I did think of using reg originally, but as the banks have memory-mapped 
+registers it felt like it was overloading it a little.  I'm more than 
+happy to change to use reg as the index if you think that's the right 
+thing to do.
+
+> > +- nr-gpio : The number of pins in the bank, a single cell.
+> 
+> Valid range is ?
+
+Good point, I'll clarify that, but it's up to 32.
+
+> > +
+> > +Optional properties:
+> > +- interrupt-controller : The first bank may be configured to be an interrupt
+> > +controller.
+> > +- #interrupt-cells : Specifies the number of cells needed to encode an
+> > +interrupt.  Shall be set to 2.  The first cell defines the interrupt number,
+> > +the second encodes the triger flags encoded as:
+> > +
+> > +	bits[3:0] trigger type and level flags.
+> > +		1 = low-to-high edge triggered
+> > +		2 = high-to-low edge triggered
+> > +		4 = active high level-sensitive
+> > +		8 = active low level-sensitive
+> > +
+> > +- interrupt-parent : The parent interrupt controller.
+> > +- interrupts : The interrupts to the parent controller raised when GPIOs
+> > +generate the interrupts.
+> > +
+> > +Example:
+> > +
+> > +gpio: gpio@20000 {
+> > +	compatible = "snps,dw-apb-gpio";
+> > +	reg = <0x20000 0x1000>;
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +
+> > +	banka: gpio-controller@0 {
+> > +		compatible = "snps,dw-apb-gpio-bank";
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		nr-gpio = <8>;
+> > +		snps,gpio-bank = <0>
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> > +		interrupt-parent = <&vic1>;
+> > +		interrupts = <0 1 2 3 4 5 6 7>;
+> > +	};
+> > +
+> > +	bankb: gpio-controller@1 {
+> > +		compatible = "snps,dw-apb-gpio-bank";
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		nr-gpio = <8>;
+> > +		snps,gpio-bank = <1>
+> > +	};
+> > +};
+> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> > index 573532f..93fd69d 100644
+> > --- a/drivers/gpio/Kconfig
+> > +++ b/drivers/gpio/Kconfig
+> > @@ -85,6 +85,16 @@ config GPIO_GENERIC_PLATFORM
+> >  	help
+> >  	  Say yes here to support basic platform_device memory-mapped GPIO controllers.
+> >  
+> > +config GPIO_DWAPB
+> > +	bool "Synopsys DesignWare APB GPIO driver"
+> > +	select GPIO_GENERIC
+> > +	select GENERIC_IRQ_CHIP
+> > +	select IRQ_DOMAIN
+> 
+> In case you missed it, my irq domain support for generic irq chip makes
+> this and putting domain code in your driver unnecessary.
+
+I'm sure I did see those patches but managed to completely miss them 
+when doing this.  I'll grab those and give them a test.
+
+Jamie
