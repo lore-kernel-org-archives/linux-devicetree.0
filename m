@@ -1,60 +1,70 @@
 From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 2/9] irq: check domain hwirq range for DT translate
-Date: Mon, 19 Dec 2011 13:41:52 +0100
-Message-ID: <4EEF3110.30203@ti.com>
-References: <1323876538-20406-1-git-send-email-robherring2@gmail.com> <1323876538-20406-3-git-send-email-robherring2@gmail.com>
+Subject: Re: [PATCH 0/3] of: Add support for named irq and reg
+Date: Mon, 19 Dec 2011 14:50:49 +0100
+Message-ID: <4EEF4139.3050609@ti.com>
+References: <1323095036-3739-1-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323876538-20406-3-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Kevin Hilman <khilman@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.ml.walleij@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Barry Song <baohua.song@csr.com>, Thomas Gleixner <tglx@linutronix.de>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1323095036-3739-1-git-send-email-b-cousson@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Grant and Rob,
 
-While trying your series to take advantage of the generic-irq domain 
-support for OMAP3 INTC, I realized that the following patch is breaking 
-drivers that are using irq_domain_add_simple.
+Gentle ping: Do you have some comment on that series?
 
-The point is that irq_domain_add_simple does not populate hwirq_base or 
-nr_irq, so that test will always fail if the domain is created by the 
-irq_domain_add_simple API.
-
-Adding an extra parameter to provide the nr_irq should fix that.
-
-The long term fix should be to use the generic-irq for such driver, but 
-this is not the same effort, so it might worth fixing that API for the 
-moment.
-
-Regards,
+Thanks,
 Benoit
 
-On 12/14/2011 4:28 PM, Rob Herring wrote:
-> From: Rob Herring<rob.herring@calxeda.com>
+On 12/5/2011 3:23 PM, Benoit Cousson wrote:
+> Hi Grant&  Rob,
 >
-> A DT node may have more than 1 domain associated with it, so make sure
-> the hwirq number is within range when doing DT translation.
+> Following the previous patch submission [1], here is an updated series
+> that adds the support for both reg and irq names.
+> A small improvement is done as well on the property with multiple strings
+> helper function.
 >
-> Signed-off-by: Rob Herring<rob.herring@calxeda.com>
-> Cc: Thomas Gleixner<tglx@linutronix.de>
-> ---
->   kernel/irq/irqdomain.c |    3 +++
->   1 files changed, 3 insertions(+), 0 deletions(-)
+> Please note that I've just realized that Russell's concern with the
+> /proc/iomem readability might not even be valid in the DT case.
+> I might be wrong, but it looks like devices created by of_device_alloc
+> does not seems to call the insert_resource. It means that the /proc/iomem
+> is mostly empty when the devices are created from device tree blob.
+> I'm not sure it was done on purpose, but even if this is not the case,
+> the fact is that this /proc/iomem entry does not seems to be used
+> extensively.
+> That does not mean it cannot be improved, but it should change the urgency
+> to fix that with regards to that series.
 >
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index 200ce83..ae6441e 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -135,6 +135,9 @@ int irq_domain_simple_dt_translate(struct irq_domain *d,
->   		return -EINVAL;
->   	if (intsize<  1)
->   		return -EINVAL;
-> +	if ((intspec[0]<  d->hwirq_base) ||
-> +	    (intspec[0]>= d->hwirq_base + d->nr_irq))
-> +		return -EINVAL;
+> This series is based on 3.2-rc4 and is available here:
+> git://gitorious.org/omap-pm/linux.git for_3.3/resource-names
 >
->   	*out_hwirq = intspec[0];
->   	*out_type = IRQ_TYPE_NONE;
+> Comments are welcome.
+>
+> Auto comment: I'm not super happy with these new properties name because it
+> is not really consistent. If you have any better idea, do not hesitate.
+>
+> Thanks,
+> Benoit
+>
+>
+> [1] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg57881.html
+>
+>
+> Benoit Cousson (3):
+>    of/base: Take NULL string into account for property with multiple strings
+>    of/address: Add reg-names property to name an iomem resource
+>    of/irq: Add interrupts-names property to name an irq resource
+>
+>   .../devicetree/bindings/interrupts-names.txt       |   50 ++++++++++++++++++++
+>   Documentation/devicetree/bindings/reg-names.txt    |   48 +++++++++++++++++++
+>   drivers/of/address.c                               |   16 ++++--
+>   drivers/of/base.c                                  |    8 +--
+>   drivers/of/irq.c                                   |   11 ++++-
+>   5 files changed, 122 insertions(+), 11 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/interrupts-names.txt
+>   create mode 100644 Documentation/devicetree/bindings/reg-names.txt
+
