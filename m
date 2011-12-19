@@ -1,107 +1,83 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
-Date: Mon, 19 Dec 2011 09:00:44 -0600
-Message-ID: <4EEF519C.4090808@gmail.com>
-References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org> <1324264903-15395-5-git-send-email-richard.zhao@linaro.org> <20111219100512.GC2459@totoro> <20111219141925.GA1789@richard-laptop> <20111219143913.GI2351@totoro>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/9] irq: check domain hwirq range for DT translate
+Date: Mon, 19 Dec 2011 16:21:15 +0100
+Message-ID: <4EEF566B.6080703@ti.com>
+References: <1323876538-20406-1-git-send-email-robherring2@gmail.com>
+ <1323876538-20406-3-git-send-email-robherring2@gmail.com>
+ <4EEF3110.30203@ti.com> <4EEF48EE.1070800@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <20111219143913.GI2351@totoro>
-Sender: cpufreq-owner@vger.kernel.org
-To: Jamie Iles <jamie@jamieiles.com>
-Cc: Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, davej@redhat.com, grant.likely@secretlab.ca, rdunlap@xenotime.net, kernel@pengutronix.de, shawn.guo@linaro.org, catalin.marinas@arm.com, eric.miao@linaro.org, mark.langsdorf@calxeda.com, davidb@codeaurora.org, arnd@arndb.de, bryanh@codeaurora.org, marc.zyngier@arm.com, linaro-dev@lists.linaro.org, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4EEF48EE.1070800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/19/2011 08:39 AM, Jamie Iles wrote:
-> On Mon, Dec 19, 2011 at 10:19:29PM +0800, Richard Zhao wrote:
->> On Mon, Dec 19, 2011 at 10:05:12AM +0000, Jamie Iles wrote:
->>> Hi Richard,
->>>
->>> On Mon, Dec 19, 2011 at 11:21:40AM +0800, Richard Zhao wrote:
->>>> It support single core and multi-core ARM SoCs. But currently it assume
->>>> all cores share the same frequency and voltage.
->>>>
->>>> Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
->>>> ---
->>>>  .../devicetree/bindings/cpufreq/generic-cpufreq    |    7 +
->>>>  drivers/cpufreq/Kconfig                            |    8 +
->>>>  drivers/cpufreq/Makefile                           |    2 +
->>>>  drivers/cpufreq/generic-cpufreq.c                  |  251 ++++++++++++++++++++
->>>>  4 files changed, 268 insertions(+), 0 deletions(-)
->>>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/generic-cpufreq
->>>>  create mode 100644 drivers/cpufreq/generic-cpufreq.c
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/cpufreq/generic-cpufreq b/Documentation/devicetree/bindings/cpufreq/generic-cpufreq
->>>> new file mode 100644
->>>> index 0000000..15dd780
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/cpufreq/generic-cpufreq
->>>> @@ -0,0 +1,7 @@
->>>> +Generic cpufreq driver
->>>> +
->>>> +Required properties in /cpus/cpu@0:
->>>> +- compatible : "generic-cpufreq"
->>>
->>> I'm not convinced this is the best way to do this.  By requiring a 
->>> generic-cpufreq compatible string we're encoding Linux driver 
->>> information into the hardware description.  The only way I can see to 
->>> avoid this is to provide a generic_clk_cpufreq_init() function that 
->>> platforms can call in their machine init code to use the driver.
-
-Agreed on the compatible string. It's putting Linux specifics into DT.
-
-You could flip this around and have the module make a call into the
-kernel to determine whether to initialize or not. Then platforms could
-set a flag to indicate this.
-
->> It'll prevent the driver from being a kernel module.
-> 
-> Hmm, that's not very nice either!  I guess you _could_ add an 
-> of_machine_is_compatible() check against a list of compatible machines 
-> in the driver but that feels a little gross.  Hopefully Rob or Grant 
-> have a good alternative!
-> 
-
-What does cpufreq core do if multiple drivers are registered? Perhaps a
-ranking is needed and this would only get enabled if there are no other
-drivers and other conditions like having the clock "cpu" present are met.
-
-Rob
-
->> Hi Grant & Rob,
+On 12/19/2011 3:23 PM, Rob Herring wrote:
+> Benoit,
+>
+> On 12/19/2011 06:41 AM, Cousson, Benoit wrote:
+>> Hi Rob,
 >>
->> Could you comment?
+>> While trying your series to take advantage of the generic-irq domain
+>> support for OMAP3 INTC, I realized that the following patch is breaking
+>> drivers that are using irq_domain_add_simple.
 >>
+>> The point is that irq_domain_add_simple does not populate hwirq_base or
+>> nr_irq, so that test will always fail if the domain is created by the
+>> irq_domain_add_simple API.
+>>
+>> Adding an extra parameter to provide the nr_irq should fix that.
+>>
+>> The long term fix should be to use the generic-irq for such driver, but
+>> this is not the same effort, so it might worth fixing that API for the
+>> moment.
+>>
+>> Regards,
+>> Benoit
+>>
+>> On 12/14/2011 4:28 PM, Rob Herring wrote:
+>>> From: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 >>>
->>>> +- cpu-freqs : cpu frequency points it support
->>>> +- cpu-volts : cpu voltages required by the frequency point at the same index
->>>> +- trans-latency :  transition_latency
->>>> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
->>>> index e24a2a1..216eecd 100644
->>>> --- a/drivers/cpufreq/Kconfig
->>>> +++ b/drivers/cpufreq/Kconfig
->>>> @@ -179,6 +179,14 @@ config CPU_FREQ_GOV_CONSERVATIVE
->>>>  
->>>>  	  If in doubt, say N.
->>>>  
->>>> +config GENERIC_CPUFREQ_DRIVER
->>>> +	bool "Generic cpufreq driver using clock/regulator/devicetree"
->>>> +	help
->>>> +	  This adds generic CPUFreq driver. It assumes all
->>>> +	  cores of the CPU share the same clock and voltage.
->>>> +
->>>> +	  If in doubt, say N.
+>>> A DT node may have more than 1 domain associated with it, so make sure
+>>> the hwirq number is within range when doing DT translation.
 >>>
->>> I think this needs dependencies on HAVE_CLK, OF and REGULATOR.
->> right, Thanks. I can not check clk before generic clock framework
->> come in.
->> Added:
->> 	depends on OF && REGULATOR
->> 	select CPU_FREQ_TABLE
-> 
-> You can still use HAVE_CLK.  That symbol has been around for ages and 
-> any platform implementing the clk API should select it so it's fine to 
-> depend on it even before there is a generic struct clk.
-> 
-> Jamie
+>>> Signed-off-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>> Cc: Thomas Gleixner<tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+>>> ---
+>>>    kernel/irq/irqdomain.c |    3 +++
+>>>    1 files changed, 3 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+>>> index 200ce83..ae6441e 100644
+>>> --- a/kernel/irq/irqdomain.c
+>>> +++ b/kernel/irq/irqdomain.c
+>>> @@ -135,6 +135,9 @@ int irq_domain_simple_dt_translate(struct
+>>> irq_domain *d,
+>>>            return -EINVAL;
+>>>        if (intsize<   1)
+>>>            return -EINVAL;
+>>> +    if ((intspec[0]<   d->hwirq_base) ||
+>>> +        (intspec[0]>= d->hwirq_base + d->nr_irq))
+>
+> I think this should work:
+>
+> if (d->nr_irq&&  ((intspec[0]<  d->hwirq_base) ||
+>      (intspec[0]>= d->hwirq_base + d->nr_irq)))
+
+Yes, indeed. It is even simpler that fixing the API.
+
+I can now repost the OMAP3/4 series based on this series.
+
+Thanks,
+Benoit
