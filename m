@@ -1,203 +1,387 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH v2] microblaze: Change NO_IRQ to 0
-Date: Mon, 19 Dec 2011 15:19:54 +0100
-Message-ID: <1324304394-5655-1-git-send-email-monstr@monstr.eu>
+From: Richard Zhao <richard.zhao@linaro.org>
+Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
+Date: Mon, 19 Dec 2011 22:19:29 +0800
+Message-ID: <20111219141925.GA1789@richard-laptop>
+References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
+ <1324264903-15395-5-git-send-email-richard.zhao@linaro.org>
+ <20111219100512.GC2459@totoro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111219100512.GC2459@totoro>
+Sender: cpufreq-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, davej@redhat.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rdunlap@xenotime.net, kernel@pengutronix.de, shawn.guo@linaro.org, catalin.marinas@arm.com, eric.miao@linaro.org, mark.langsdorf@calxeda.com, davidb@codeaurora.org, arnd@arndb.de, bryanh@codeaurora.org, marc.zyngier@arm.com, linaro-dev@lists.linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-As has been discussed many times[1], Using NO_IRQ set to anything other
-than 0 is bug waiting to happen since many drivers follow the pattern
-"if (!irq)" for testing whether or not an irq has been set.
+On Mon, Dec 19, 2011 at 10:05:12AM +0000, Jamie Iles wrote:
+> Hi Richard,
+> 
+> On Mon, Dec 19, 2011 at 11:21:40AM +0800, Richard Zhao wrote:
+> > It support single core and multi-core ARM SoCs. But currently it assume
+> > all cores share the same frequency and voltage.
+> > 
+> > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+> > ---
+> >  .../devicetree/bindings/cpufreq/generic-cpufreq    |    7 +
+> >  drivers/cpufreq/Kconfig                            |    8 +
+> >  drivers/cpufreq/Makefile                           |    2 +
+> >  drivers/cpufreq/generic-cpufreq.c                  |  251 ++++++++++++++++++++
+> >  4 files changed, 268 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/cpufreq/generic-cpufreq
+> >  create mode 100644 drivers/cpufreq/generic-cpufreq.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/cpufreq/generic-cpufreq b/Documentation/devicetree/bindings/cpufreq/generic-cpufreq
+> > new file mode 100644
+> > index 0000000..15dd780
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/cpufreq/generic-cpufreq
+> > @@ -0,0 +1,7 @@
+> > +Generic cpufreq driver
+> > +
+> > +Required properties in /cpus/cpu@0:
+> > +- compatible : "generic-cpufreq"
+> 
+> I'm not convinced this is the best way to do this.  By requiring a 
+> generic-cpufreq compatible string we're encoding Linux driver 
+> information into the hardware description.  The only way I can see to 
+> avoid this is to provide a generic_clk_cpufreq_init() function that 
+> platforms can call in their machine init code to use the driver.
+It'll prevent the driver from being a kernel module.
 
-This patch changes the Microblaze NO_IRQ setting from -1 to 0 to bring
-it in line with most of the rest of the kernel.  It also prepares for
-Microblaze eventually supporting multiple interrupt controllers by
-breaking the assumption that hwirq# == Linux IRQ#.  The Linux IRQ
-number is just a cookie with no guarantee of a direct relationship
-with the hardware irq arrangement.
+Hi Grant & Rob,
 
-At this point, Microblaze interrupt handling only supports only one
-instance of one kind of interrupt controller (xilinx_intc).  This change
-shouldn't affect any architecture code outside of the interrupt
-controller driver and the irq_of mapping.
+Could you comment?
 
-Updated to 3.2 and to use irq_data.hwirq by Rob Herring.
-Tested and fixed by Michal Simek.
+> 
+> > +- cpu-freqs : cpu frequency points it support
+> > +- cpu-volts : cpu voltages required by the frequency point at the same index
+> > +- trans-latency :  transition_latency
+> > diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+> > index e24a2a1..216eecd 100644
+> > --- a/drivers/cpufreq/Kconfig
+> > +++ b/drivers/cpufreq/Kconfig
+> > @@ -179,6 +179,14 @@ config CPU_FREQ_GOV_CONSERVATIVE
+> >  
+> >  	  If in doubt, say N.
+> >  
+> > +config GENERIC_CPUFREQ_DRIVER
+> > +	bool "Generic cpufreq driver using clock/regulator/devicetree"
+> > +	help
+> > +	  This adds generic CPUFreq driver. It assumes all
+> > +	  cores of the CPU share the same clock and voltage.
+> > +
+> > +	  If in doubt, say N.
+> 
+> I think this needs dependencies on HAVE_CLK, OF and REGULATOR.
+right, Thanks. I can not check clk before generic clock framework
+come in.
+Added:
+	depends on OF && REGULATOR
+	select CPU_FREQ_TABLE
+> 
+> > +
+> >  menu "x86 CPU frequency scaling drivers"
+> >  depends on X86
+> >  source "drivers/cpufreq/Kconfig.x86"
+> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> > index ce75fcb..2dbdab1 100644
+> > --- a/drivers/cpufreq/Makefile
+> > +++ b/drivers/cpufreq/Makefile
+> > @@ -13,6 +13,8 @@ obj-$(CONFIG_CPU_FREQ_GOV_CONSERVATIVE)	+= cpufreq_conservative.o
+> >  # CPUfreq cross-arch helpers
+> >  obj-$(CONFIG_CPU_FREQ_TABLE)		+= freq_table.o
+> >  
+> > +obj-$(CONFIG_GENERIC_CPUFREQ_DRIVER)	+= generic-cpufreq.o
+> > +
+> >  ##################################################################################
+> >  # x86 drivers.
+> >  # Link order matters. K8 is preferred to ACPI because of firmware bugs in early
+> > diff --git a/drivers/cpufreq/generic-cpufreq.c b/drivers/cpufreq/generic-cpufreq.c
+> > new file mode 100644
+> > index 0000000..781bb9b
+> > --- /dev/null
+> > +++ b/drivers/cpufreq/generic-cpufreq.c
+> > @@ -0,0 +1,251 @@
+> > +/*
+> > + * Copyright (C) 2011 Freescale Semiconductor, Inc.
+> > + */
+> > +
+> > +/*
+> > + * The code contained herein is licensed under the GNU General Public
+> > + * License. You may obtain a copy of the GNU General Public License
+> > + * Version 2 or later at the following locations:
+> > + *
+> > + * http://www.opensource.org/licenses/gpl-license.html
+> > + * http://www.gnu.org/copyleft/gpl.html
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/cpufreq.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <linux/err.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/of.h>
+> > +
+> > +static u32 *cpu_freqs; /* HZ */
+> > +static u32 *cpu_volts; /* uV */
+> > +static u32 trans_latency; /* ns */
+> > +static int cpu_op_nr;
+> > +
+> > +static struct clk *cpu_clk;
+> > +static struct regulator *cpu_reg;
+> > +static struct cpufreq_frequency_table *freq_table;
+> > +
+> > +static int set_cpu_freq(unsigned long freq, int index, int higher)
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	if (higher && cpu_reg)
+> > +		regulator_set_voltage(cpu_reg,
+> > +				cpu_volts[index], cpu_volts[index]);
+> > +
+> > +	ret = clk_set_rate(cpu_clk, freq);
+> > +	if (ret != 0) {
+> > +		pr_err("generic-cpufreq: cannot set CPU clock rate\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	if (!higher && cpu_reg)
+> > +		regulator_set_voltage(cpu_reg,
+> > +				cpu_volts[index], cpu_volts[index]);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int generic_verify_speed(struct cpufreq_policy *policy)
+> > +{
+> > +	return cpufreq_frequency_table_verify(policy, freq_table);
+> > +}
+> > +
+> > +static unsigned int generic_get_speed(unsigned int cpu)
+> > +{
+> > +	return clk_get_rate(cpu_clk) / 1000;
+> > +}
+> > +
+> > +static int generic_set_target(struct cpufreq_policy *policy,
+> > +			  unsigned int target_freq, unsigned int relation)
+> > +{
+> > +	struct cpufreq_freqs freqs;
+> > +	unsigned long freq_Hz;
+> > +	int cpu;
+> > +	int ret = 0;
+> > +	unsigned int index;
+> > +
+> > +	cpufreq_frequency_table_target(policy, freq_table,
+> > +			target_freq, relation, &index);
+> > +	freq_Hz = clk_round_rate(cpu_clk, cpu_freqs[index]);
+> > +	freq_Hz = freq_Hz ? freq_Hz : cpu_freqs[index];
+> > +	freqs.old = clk_get_rate(cpu_clk) / 1000;
+> > +	freqs.new = freq_Hz / 1000;
+> > +	freqs.flags = 0;
+> > +
+> > +	if (freqs.old == freqs.new)
+> > +		return 0;
+> > +
+> > +	for_each_possible_cpu(cpu) {
+> > +		freqs.cpu = cpu;
+> > +		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
+> > +	}
+> > +
+> > +	ret = set_cpu_freq(freq_Hz, index, (freqs.new > freqs.old));
+> 
+> If this fails then we'll still be notifying the transition at the 
+> requested rate even though it didn't work.  I guess we should really get 
+> the rate of the clk and put that into freqs for the POSTCHANGE 
+> notification.
+right, Thanks.
+Added:
+	if (ret)
+		freq.new = clk_get_rate(cpu_clk) / 1000;
 
-[1] http://lkml.org/lkml/2005/11/21/221
+> 
+> > +
+> > +	for_each_possible_cpu(cpu) {
+> > +		freqs.cpu = cpu;
+> > +		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int generic_cpufreq_init(struct cpufreq_policy *policy)
+> > +{
+> > +	int ret;
+> > +
+> > +	if (policy->cpu >= num_possible_cpus())
+> > +		return -EINVAL;
+> > +
+> > +	policy->cur = clk_get_rate(cpu_clk) / 1000;
+> > +	policy->shared_type = CPUFREQ_SHARED_TYPE_ANY;
+> > +	cpumask_setall(policy->cpus);
+> > +	/* Manual states, that PLL stabilizes in two CLK32 periods */
+> > +	policy->cpuinfo.transition_latency = trans_latency;
+> > +
+> > +	ret = cpufreq_frequency_table_cpuinfo(policy, freq_table);
+> > +
+> > +	if (ret < 0) {
+> > +		pr_err("%s: invalid frequency table for cpu %d\n",
+> > +		       __func__, policy->cpu);
+> > +		return ret;
+> > +	}
+> > +
+> > +	cpufreq_frequency_table_get_attr(freq_table, policy->cpu);
+> > +	return 0;
+> > +}
+> > +
+> > +static int generic_cpufreq_exit(struct cpufreq_policy *policy)
+> > +{
+> > +	cpufreq_frequency_table_put_attr(policy->cpu);
+> > +	return 0;
+> > +}
+> > +
+> > +static struct cpufreq_driver generic_cpufreq_driver = {
+> > +	.flags = CPUFREQ_STICKY,
+> > +	.verify = generic_verify_speed,
+> > +	.target = generic_set_target,
+> > +	.get = generic_get_speed,
+> > +	.init = generic_cpufreq_init,
+> > +	.exit = generic_cpufreq_exit,
+> > +	.name = "generic",
+> 
+> This may be a little too generic?  "generic-reg-clk"?
+I ever thought about it. If it's exact, it'll be "generic-reg-clk-dt".
+Is "generic-reg-clk" or "generic-reg-clk-dt" too long for file name?
+> 
+> > +};
+> > +
+> > +static int __devinit generic_cpufreq_driver_init(void)
+> > +{
+> > +	struct device_node *cpu0;
+> > +	const struct property *pp;
+> > +	int i, ret;
+> > +
+> > +	pr_info("Generic CPU frequency driver\n");
+> > +
+> > +	cpu0 = of_find_node_by_path("/cpus/cpu@0");
+> > +	if (!cpu0)
+> > +		return -ENODEV;
+> > +
+> > +	if (!of_device_is_compatible(cpu0, "generic-cpufreq"))
+> > +		return -ENODEV;
+> 
+> As above, I'd personally rather not use compatible strings, 
+I still think checking compatible is better. So I need device tree
+maintainer's comments.
+> but if you 
+> do, then I think return 0 here rather than -ENODEV else I believe you'll 
+> get a potentially confusing message on the console for platforms that 
+> don't use this.
+I should let it be tristate. If it's not compatible, I don't need
+the module any more.
+> 
+> > +
+> > +	pp = of_find_property(cpu0, "cpu-freqs", NULL);
+> > +	if (!pp) {
+> > +		ret = -ENODEV;
+> > +		goto put_node;
+> > +	}
+> > +	cpu_op_nr = pp->length / sizeof(u32);
+> > +	if (!cpu_op_nr) {
+> > +		ret = -ENODEV;
+> > +		goto put_node;
+> > +	}
+> > +	ret = -ENOMEM;
+> > +	cpu_freqs = kzalloc(sizeof(*cpu_freqs) * cpu_op_nr, GFP_KERNEL);
+> > +	if (!cpu_freqs)
+> > +		goto put_node;
+> > +	of_property_read_u32_array(cpu0, "cpu-freqs", cpu_freqs, cpu_op_nr);
+> > +
+> > +	pp = of_find_property(cpu0, "cpu-volts", NULL);
+> > +	if (pp) {
+> > +		if (cpu_op_nr == pp->length / sizeof(u32)) {
+> > +			cpu_volts = kzalloc(sizeof(*cpu_freqs) * cpu_op_nr,
+> > +						GFP_KERNEL);
+> > +			if (!cpu_volts)
+> > +				goto free_cpu_freqs;
+> > +			of_property_read_u32_array(cpu0, "cpu-volts",
+> > +						cpu_volts, cpu_op_nr);
+> > +		} else
+> > +			pr_warn("%s: invalid cpu_volts!\n", __func__);
+> > +	}
+> > +
+> > +	if (of_property_read_u32(cpu0, "trans-latency", &trans_latency))
+> > +		trans_latency = CPUFREQ_ETERNAL;
+> > +
+> > +	freq_table = kmalloc(sizeof(struct cpufreq_frequency_table)
+> > +				* (cpu_op_nr + 1), GFP_KERNEL);
+> > +	if (!freq_table)
+> > +		goto free_cpu_volts;
+> > +
+> > +	for (i = 0; i < cpu_op_nr; i++) {
+> > +		freq_table[i].index = i;
+> > +		freq_table[i].frequency = cpu_freqs[i] / 1000;
+> > +	}
+> > +
+> > +	freq_table[i].index = i;
+> > +	freq_table[i].frequency = CPUFREQ_TABLE_END;
+> > +
+> > +	cpu_clk = clk_get(NULL, "cpu");
+> > +	if (IS_ERR(cpu_clk)) {
+> > +		pr_err("%s: failed to get cpu clock\n", __func__);
+> > +		ret = PTR_ERR(cpu_clk);
+> > +		goto free_freq_table;
+> > +	}
+> > +
+> > +	if (cpu_volts) {
+> > +		cpu_reg = regulator_get(NULL, "cpu");
+> > +		if (IS_ERR(cpu_reg)) {
+> > +			pr_warn("%s: regulator cpu get failed.\n", __func__);
+> > +			cpu_reg = NULL;
+> > +		}
+> > +	}
+> > +
+> > +	ret = cpufreq_register_driver(&generic_cpufreq_driver);
+> > +	if (ret)
+> > +		goto reg_put;
+> > +
+> > +	of_node_put(cpu0);
+> > +
+> > +	return 0;
+> > +
+> > +reg_put:
+> > +	if (cpu_reg)
+> > +		regulator_put(cpu_reg);
+> > +	clk_put(cpu_clk);
+> > +free_freq_table:
+> > +	kfree(freq_table);
+> > +free_cpu_volts:
+> > +	kfree(cpu_volts);
+> > +free_cpu_freqs:
+> > +	kfree(cpu_freqs);
+> > +put_node:
+> > +	of_node_put(cpu0);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void generic_cpufreq_driver_exit(void)
+> > +{
+> > +	cpufreq_unregister_driver(&generic_cpufreq_driver);
+> > +	kfree(cpu_freqs);
+> > +	kfree(cpu_volts);
+> > +	kfree(freq_table);
+> > +	clk_put(cpu_clk);
+> 
+> Should this do something with the regulator too?
+right.
+Added:
+	if (cpu_reg)
+		regulator_put(cpu_reg);
 
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-
----
-v2: Use NO_/IRQ_OFFSET and not to use hardcoded numbers.
-    Keep option to be able to break assumption that hwirq# == Linux IRQ#
----
- arch/microblaze/include/asm/irq.h |   11 +++++++++--
- arch/microblaze/kernel/intc.c     |   28 +++++++++++++++-------------
- arch/microblaze/kernel/irq.c      |   11 ++++++-----
- 3 files changed, 30 insertions(+), 20 deletions(-)
-
-diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
-index cc54187..b116a82 100644
---- a/arch/microblaze/include/asm/irq.h
-+++ b/arch/microblaze/include/asm/irq.h
-@@ -9,7 +9,14 @@
- #ifndef _ASM_MICROBLAZE_IRQ_H
- #define _ASM_MICROBLAZE_IRQ_H
- 
--#define NR_IRQS 32
-+
-+/*
-+ * Linux IRQ# is currently offset by one to map to the hardware
-+ * irq number. So hardware IRQ0 maps to Linux irq 1.
-+ */
-+#define NO_IRQ_OFFSET	1
-+#define IRQ_OFFSET	NO_IRQ_OFFSET
-+#define NR_IRQS		(32 + IRQ_OFFSET)
- #include <asm-generic/irq.h>
- 
- /* This type is the placeholder for a hardware interrupt number. It has to
-@@ -20,7 +27,7 @@ typedef unsigned long irq_hw_number_t;
- 
- extern unsigned int nr_irq;
- 
--#define NO_IRQ (-1)
-+#define NO_IRQ 0
- 
- struct pt_regs;
- extern void do_IRQ(struct pt_regs *regs);
-diff --git a/arch/microblaze/kernel/intc.c b/arch/microblaze/kernel/intc.c
-index 1293098..44b177e 100644
---- a/arch/microblaze/kernel/intc.c
-+++ b/arch/microblaze/kernel/intc.c
-@@ -42,8 +42,9 @@ unsigned int nr_irq;
- 
- static void intc_enable_or_unmask(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->irq;
--	pr_debug("enable_or_unmask: %d\n", d->irq);
-+	unsigned long mask = 1 << d->hwirq;
-+
-+	pr_debug("enable_or_unmask: %ld\n", d->hwirq);
- 	out_be32(INTC_BASE + SIE, mask);
- 
- 	/* ack level irqs because they can't be acked during
-@@ -56,20 +57,21 @@ static void intc_enable_or_unmask(struct irq_data *d)
- 
- static void intc_disable_or_mask(struct irq_data *d)
- {
--	pr_debug("disable: %d\n", d->irq);
--	out_be32(INTC_BASE + CIE, 1 << d->irq);
-+	pr_debug("disable: %ld\n", d->hwirq);
-+	out_be32(INTC_BASE + CIE, 1 << d->hwirq);
- }
- 
- static void intc_ack(struct irq_data *d)
- {
--	pr_debug("ack: %d\n", d->irq);
--	out_be32(INTC_BASE + IAR, 1 << d->irq);
-+	pr_debug("ack: %ld\n", d->hwirq);
-+	out_be32(INTC_BASE + IAR, 1 << d->hwirq);
- }
- 
- static void intc_mask_ack(struct irq_data *d)
- {
--	unsigned long mask = 1 << d->irq;
--	pr_debug("disable_and_ack: %d\n", d->irq);
-+	unsigned long mask = 1 << d->hwirq;
-+
-+	pr_debug("disable_and_ack: %ld\n", d->hwirq);
- 	out_be32(INTC_BASE + CIE, mask);
- 	out_be32(INTC_BASE + IAR, mask);
- }
-@@ -91,7 +93,7 @@ unsigned int get_irq(struct pt_regs *regs)
- 	 * order to handle multiple interrupt controllers. It currently
- 	 * is hardcoded to check for interrupts only on the first INTC.
- 	 */
--	irq = in_be32(INTC_BASE + IVR);
-+	irq = in_be32(INTC_BASE + IVR) + NO_IRQ_OFFSET;
- 	pr_debug("get_irq: %d\n", irq);
- 
- 	return irq;
-@@ -116,8 +118,7 @@ void __init init_IRQ(void)
- 	intc = of_find_compatible_node(NULL, NULL, "xlnx,xps-intc-1.00.a");
- 	BUG_ON(!intc);
- 
--	intc_baseaddr = be32_to_cpup(of_get_property(intc,
--								"reg", NULL));
-+	intc_baseaddr = be32_to_cpup(of_get_property(intc, "reg", NULL));
- 	intc_baseaddr = (unsigned long) ioremap(intc_baseaddr, PAGE_SIZE);
- 	nr_irq = be32_to_cpup(of_get_property(intc,
- 						"xlnx,num-intr-inputs", NULL));
-@@ -145,8 +146,8 @@ void __init init_IRQ(void)
- 	/* Turn on the Master Enable. */
- 	out_be32(intc_baseaddr + MER, MER_HIE | MER_ME);
- 
--	for (i = 0; i < nr_irq; ++i) {
--		if (intr_mask & (0x00000001 << i)) {
-+	for (i = IRQ_OFFSET; i < (nr_irq + IRQ_OFFSET); ++i) {
-+		if (intr_mask & (0x00000001 << (i - IRQ_OFFSET))) {
- 			irq_set_chip_and_handler_name(i, &intc_dev,
- 				handle_edge_irq, "edge");
- 			irq_clear_status_flags(i, IRQ_LEVEL);
-@@ -155,5 +156,6 @@ void __init init_IRQ(void)
- 				handle_level_irq, "level");
- 			irq_set_status_flags(i, IRQ_LEVEL);
- 		}
-+		irq_get_irq_data(i)->hwirq = i - IRQ_OFFSET;
- 	}
- }
-diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
-index e5d63a8..bbebcae 100644
---- a/arch/microblaze/kernel/irq.c
-+++ b/arch/microblaze/kernel/irq.c
-@@ -33,11 +33,12 @@ void __irq_entry do_IRQ(struct pt_regs *regs)
- 	irq_enter();
- 	irq = get_irq(regs);
- next_irq:
--	BUG_ON(irq == -1U);
--	generic_handle_irq(irq);
-+	BUG_ON(!irq);
-+	/* Substract 1 because of get_irq */
-+	generic_handle_irq(irq + IRQ_OFFSET - NO_IRQ_OFFSET);
- 
- 	irq = get_irq(regs);
--	if (irq != -1U) {
-+	if (irq) {
- 		pr_debug("next irq: %d\n", irq);
- 		++concurrent_irq;
- 		goto next_irq;
-@@ -52,13 +53,13 @@ next_irq:
-   intc without any cascades or any connection that's why mapping is 1:1 */
- unsigned int irq_create_mapping(struct irq_host *host, irq_hw_number_t hwirq)
- {
--	return hwirq;
-+	return hwirq + IRQ_OFFSET;
- }
- EXPORT_SYMBOL_GPL(irq_create_mapping);
- 
- unsigned int irq_create_of_mapping(struct device_node *controller,
- 				   const u32 *intspec, unsigned int intsize)
- {
--	return intspec[0];
-+	return intspec[0] + IRQ_OFFSET;
- }
- EXPORT_SYMBOL_GPL(irq_create_of_mapping);
--- 
-1.7.5.4
+Thanks very much for your review!
+Richard
+> 
+> Jamie
