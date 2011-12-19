@@ -1,143 +1,52 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2] gpio: pl061: enable interrupts with DT style binding
-Date: Mon, 19 Dec 2011 14:54:38 -0600
-Message-ID: <1324328078-7310-1-git-send-email-robherring2@gmail.com>
-References: <1323876538-20406-9-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323876538-20406-9-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.ml.walleij@gmail.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: [PATCH] irqdomain: include linux/bug.h for WARN_ON()
+Date: Mon, 19 Dec 2011 22:22:37 +0000
+Message-ID: <1324333357-3357-1-git-send-email-jamie@jamieiles.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+Commit 6d274309d (irq: support domains with non-zero hwirq base)
+introduced a WARN_ON() for an invalid hwirq in irq_domain_to_irq() but
+doesn't include linux/bug.h resulting in:
 
-Enable DT interrupt binding support for pl061 gpio lines. If the gpio
-node has an interrupt-controller property, then it will be setup to
-handle interrupts on gpio lines.
+include/linux/irqdomain.h: In function 'irq_domain_to_irq':
+include/linux/irqdomain.h:78:2: error: implicit declaration of function 'WARN_ON'
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Linus Walleij <linus.ml.walleij@gmail.com>
+if it isn't implicitly pulled in before.
+
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 ---
-v2:
-- use domain ptr from struct irq_chip_generic
-- Add comment on irq_base values.
+ include/linux/irqdomain.h |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
- .../devicetree/bindings/gpio/pl061-gpio.txt        |   15 +++++++++
- drivers/gpio/gpio-pl061.c                          |   31 +++++++++++---------
- 2 files changed, 32 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/pl061-gpio.txt b/Documentation/devicetree/bindings/gpio/pl061-gpio.txt
-index a2c416b..9671d4e 100644
---- a/Documentation/devicetree/bindings/gpio/pl061-gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/pl061-gpio.txt
-@@ -8,3 +8,18 @@ Required properties:
- - gpio-controller : Marks the device node as a GPIO controller.
- - interrupts : Interrupt mapping for GPIO IRQ.
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index fd9815b..0c17b4b 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -15,6 +15,7 @@
+ #ifndef _LINUX_IRQDOMAIN_H
+ #define _LINUX_IRQDOMAIN_H
  
-+Optional properties:
-+- interrupt-controller : Identifies the node as an interrupt controller. Must
-+  be present if using gpios lines for interrupts.
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source.  The type shall be a <u32> and the value shall be 2.
-+
-+  The 1st cell contains the interrupt number 0-7 corresponding to the gpio
-+  line.
-+
-+  The 2nd cell is the flags, encoding trigger type and level flags.
-+	1 = low-to-high edge triggered
-+	2 = high-to-low edge triggered
-+	4 = active high level-sensitive
-+	8 = active low level-sensitive
-+
-diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-index 96ff6b2..ea799c7 100644
---- a/drivers/gpio/gpio-pl061.c
-+++ b/drivers/gpio/gpio-pl061.c
-@@ -16,6 +16,8 @@
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
- #include <linux/bitops.h>
- #include <linux/workqueue.h>
- #include <linux/gpio.h>
-@@ -52,7 +54,6 @@ struct pl061_gpio {
- 	spinlock_t		lock;		/* GPIO registers */
++#include <linux/bug.h>
+ #include <linux/mod_devicetable.h>
  
- 	void __iomem		*base;
--	int			irq_base;
- 	struct irq_chip_generic	*irq_gc;
- 	struct gpio_chip	gc;
- };
-@@ -118,18 +119,16 @@ static void pl061_set_value(struct gpio_chip *gc, unsigned offset, int value)
- static int pl061_to_irq(struct gpio_chip *gc, unsigned offset)
- {
- 	struct pl061_gpio *chip = container_of(gc, struct pl061_gpio, gc);
--
--	if (chip->irq_base <= 0)
--		return -EINVAL;
--
--	return chip->irq_base + offset;
-+	if (!chip->irq_gc)
-+		return -ENXIO;
-+	return irq_domain_to_irq(&chip->irq_gc->domain, offset);
- }
- 
- static int pl061_irq_type(struct irq_data *d, unsigned trigger)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 	struct pl061_gpio *chip = gc->private;
--	int offset = d->irq - chip->irq_base;
-+	int offset = d->hwirq;
- 	unsigned long flags;
- 	u8 gpiois, gpioibe, gpioiev;
- 
-@@ -219,7 +218,7 @@ static int pl061_probe(struct amba_device *dev, const struct amba_id *id)
- 	struct pl061_platform_data *pdata;
- 	struct pl061_gpio *chip;
- 	struct list_head *chip_list;
--	int ret, irq, i;
-+	int ret, irq, i, irq_base;
- 	static DECLARE_BITMAP(init_irq, NR_IRQS);
- 
- 	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
-@@ -229,10 +228,13 @@ static int pl061_probe(struct amba_device *dev, const struct amba_id *id)
- 	pdata = dev->dev.platform_data;
- 	if (pdata) {
- 		chip->gc.base = pdata->gpio_base;
--		chip->irq_base = pdata->irq_base;
-+		irq_base = pdata->irq_base;
- 	} else if (dev->dev.of_node) {
- 		chip->gc.base = -1;
--		chip->irq_base = 0;
-+		if (of_get_property(dev->dev.of_node, "interrupt-controller", NULL))
-+			irq_base = -1;
-+		else
-+			irq_base = 0;
- 	} else {
- 		ret = -ENODEV;
- 		goto free_mem;
-@@ -268,13 +270,14 @@ static int pl061_probe(struct amba_device *dev, const struct amba_id *id)
- 		goto iounmap;
- 
- 	/*
--	 * irq_chip support
-+	 * irq_chip support. If irq_base is 0, then we don't support interrupts
-+	 * on gpio lines and just return now. Otherwise setup the interrupts.
- 	 */
--
--	if (chip->irq_base <= 0)
-+	if (!irq_base)
- 		return 0;
- 
--	pl061_init_gc(chip, chip->irq_base);
-+	pl061_init_gc(chip, irq_base);
-+	chip->irq_gc->domain.of_node = of_node_get(dev->dev.of_node);
- 
- 	writeb(0, chip->base + GPIOIE); /* disable irqs */
- 	irq = dev->irq[0];
+ #ifdef CONFIG_IRQ_DOMAIN
 -- 
 1.7.5.4
