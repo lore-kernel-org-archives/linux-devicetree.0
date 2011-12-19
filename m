@@ -1,37 +1,68 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] regulator: mc13892: add device tree probe support
-Date: Mon, 19 Dec 2011 22:07:31 +0800
-Message-ID: <20111219140730.GB5257@S2100-06.ap.freescale.net>
-References: <1323702958-4831-1-git-send-email-shawn.guo@linaro.org>
- <1323702958-4831-3-git-send-email-shawn.guo@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/3] of/base: Take NULL string into account for property
+ with multiple strings
+Date: Mon, 19 Dec 2011 08:02:41 -0600
+Message-ID: <4EEF4401.1060303@gmail.com>
+References: <1323095036-3739-1-git-send-email-b-cousson@ti.com> <1323095036-3739-2-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1323702958-4831-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1323095036-3739-2-git-send-email-b-cousson@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 12, 2011 at 11:15:57PM +0800, Shawn Guo wrote:
-> It adds device tree probe support for mc13892-regulator driver.
+On 12/05/2011 08:23 AM, Benoit Cousson wrote:
+> The current implementation just ignore any NULL string inserted in a
+> multiple strings property.
+> In some cases we can have a property with a fix number of strings but
+> not necessarily used, like for example in a list of valid pinmux modes.
 > 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+>  prop = "uart_rx", "uart_tx", "", "", "safe_mode";
+> 
+> Do no skip NULL string and take them into account in
+> of_property_read_string_index and of_property_count_strings.
+> 
+> Reported-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
 
-Ping?
+Applied. The others need Grant's agreement.
 
--- 
-Regards,
-Shawn
+Rob
+
+> ---
+>  drivers/of/base.c |    8 +++-----
+>  1 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 9b6588e..b707243 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -752,7 +752,7 @@ int of_property_read_string_index(struct device_node *np, const char *propname,
+>  
+>  	for (i = 0; total < prop->length; total += l, p += l) {
+>  		l = strlen(p) + 1;
+> -		if ((*p != 0) && (i++ == index)) {
+> +		if (i++ == index) {
+>  			*output = p;
+>  			return 0;
+>  		}
+> @@ -790,11 +790,9 @@ int of_property_count_strings(struct device_node *np, const char *propname)
+>  
+>  	p = prop->value;
+>  
+> -	for (i = 0; total < prop->length; total += l, p += l) {
+> +	for (i = 0; total < prop->length; total += l, p += l, i++)
+>  		l = strlen(p) + 1;
+> -		if (*p != 0)
+> -			i++;
+> -	}
+> +
+>  	return i;
+>  }
+>  EXPORT_SYMBOL_GPL(of_property_count_strings);
+
