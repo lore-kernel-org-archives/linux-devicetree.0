@@ -1,57 +1,64 @@
-From: Ryan Mallon <rmallon@gmail.com>
-Subject: Re: [PATCH v2] microblaze: Change NO_IRQ to 0
-Date: Tue, 20 Dec 2011 10:06:52 +1100
-Message-ID: <4EEFC38C.4010201@gmail.com>
-References: <1324304394-5655-1-git-send-email-monstr@monstr.eu>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF
+ and DDR
+Date: Mon, 19 Dec 2011 15:35:59 -0800
+Message-ID: <20111219233559.GW6464@atomide.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com>
+ <4EEFC23A.30201@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1324304394-5655-1-git-send-email-monstr@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4EEFC23A.30201@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Aneesh V <aneesh@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/12/11 01:19, Michal Simek wrote:
-
-> As has been discussed many times[1], Using NO_IRQ set to anything other
-> than 0 is bug waiting to happen since many drivers follow the pattern
-> "if (!irq)" for testing whether or not an irq has been set.
+* Rob Herring <robherring2@gmail.com> [111219 14:29]:
+> On 12/19/2011 08:05 AM, Aneesh V wrote:
+> > This is an RFC to add new device tree bindings for DDR memories and
+> > EMIF - TI's DDR SDRAM controller. 
+> > 
+> > The first patch adds bindings for DDR memories. Currently,
+> > we have added properties for only DDR3 and LPDDR2 memories.
+> > However, the binding can be easily extended to describe
+> > other types such as DDR2 in the future.
+> > 
+> > The second patch provides the bindings for the EMIF controller.
+> > 
+> > The final patch provides DT data for EMIF controller instances
+> > in OMAP4 and LPDDR2 memories attached to them on various boards.
+> > 
+> > Thanks to Rajendra for answering my numerous queries on device tree.
+> > 
+> > This is a re-post of the RFC that was posted to devicetree-discuss ml,
+> > now sent to a larger audience and looping out an internal list.
+> > Please ignore the previous version.
 > 
-> This patch changes the Microblaze NO_IRQ setting from -1 to 0 to bring
-> it in line with most of the rest of the kernel.  It also prepares for
-> Microblaze eventually supporting multiple interrupt controllers by
-> breaking the assumption that hwirq# == Linux IRQ#.  The Linux IRQ
-> number is just a cookie with no guarantee of a direct relationship
-> with the hardware irq arrangement.
-> 
-> At this point, Microblaze interrupt handling only supports only one
-> instance of one kind of interrupt controller (xilinx_intc).  This change
-> shouldn't affect any architecture code outside of the interrupt
-> controller driver and the irq_of mapping.
-> 
-> Updated to 3.2 and to use irq_data.hwirq by Rob Herring.
-> Tested and fixed by Michal Simek.
-> 
-> [1] http://lkml.org/lkml/2005/11/21/221
-> 
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Signed-off-by: Michal Simek <monstr@monstr.eu>
+> There's already a standard way (i.e. JEDEC standard) to define DDR chip
+> configuration that's called SPD. Why invent something new? While this is
+> normally an i2c eeprom on a DIMM, there's no reason you couldn't get it
+> from somewhere else including perhaps the DT. There's already code in
+> u-boot that can parse SPD data.
 
-<snip>
+I agree generic JEDEC standard would be good for the DT.
+ 
+> In general, is it really feasible to parse the DTB before DDR is
+> initialized?
 
->  extern unsigned int nr_irq;
->  
-> -#define NO_IRQ (-1)
-> +#define NO_IRQ 0
+Changing timings is still needed for DVFS during runtime.
 
-IIUC, NO_IRQ should actually be removed in favour of testing against
-zero explictly. On Linus' latest tree there are three appearances of
-NO_IRQ in arch/microblaze: this definition and two uses and
-arch/microblaze/pci/pci-common.c. The latter should be removed by this
-patch. I assume there are still uses of NO_IRQ in drivers used by
-microblaze which prevent removal of NO_IRQ completely?
+But we can boot to userspace with bootloader set timings, so I'm
+thinking that maybe these timings should be just set by loadable
+modules. Just the configuration of which timings to select should
+be passed via DT. Something in compatible like:
 
-~Ryan
+	.compatible = "ti,omap3630", "sdram-micron-mt46h32m32lf-6";
+
+And that should allow the SDRC driver to only accept timings for
+"sdram-micron-mt46h32m32lf-6".
+
+Regards,
+
+Tony
