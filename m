@@ -1,52 +1,46 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCH] irqdomain: include linux/bug.h for WARN_ON()
-Date: Mon, 19 Dec 2011 22:22:37 +0000
-Message-ID: <1324333357-3357-1-git-send-email-jamie@jamieiles.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF
+ and DDR
+Date: Mon, 19 Dec 2011 17:01:14 -0600
+Message-ID: <4EEFC23A.30201@gmail.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1324303533-17458-1-git-send-email-aneesh@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Aneesh V <aneesh@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 6d274309d (irq: support domains with non-zero hwirq base)
-introduced a WARN_ON() for an invalid hwirq in irq_domain_to_irq() but
-doesn't include linux/bug.h resulting in:
+On 12/19/2011 08:05 AM, Aneesh V wrote:
+> This is an RFC to add new device tree bindings for DDR memories and
+> EMIF - TI's DDR SDRAM controller. 
+> 
+> The first patch adds bindings for DDR memories. Currently,
+> we have added properties for only DDR3 and LPDDR2 memories.
+> However, the binding can be easily extended to describe
+> other types such as DDR2 in the future.
+> 
+> The second patch provides the bindings for the EMIF controller.
+> 
+> The final patch provides DT data for EMIF controller instances
+> in OMAP4 and LPDDR2 memories attached to them on various boards.
+> 
+> Thanks to Rajendra for answering my numerous queries on device tree.
+> 
+> This is a re-post of the RFC that was posted to devicetree-discuss ml,
+> now sent to a larger audience and looping out an internal list.
+> Please ignore the previous version.
 
-include/linux/irqdomain.h: In function 'irq_domain_to_irq':
-include/linux/irqdomain.h:78:2: error: implicit declaration of function 'WARN_ON'
+There's already a standard way (i.e. JEDEC standard) to define DDR chip
+configuration that's called SPD. Why invent something new? While this is
+normally an i2c eeprom on a DIMM, there's no reason you couldn't get it
+from somewhere else including perhaps the DT. There's already code in
+u-boot that can parse SPD data.
 
-if it isn't implicitly pulled in before.
+In general, is it really feasible to parse the DTB before DDR is
+initialized?
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
----
- include/linux/irqdomain.h |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
-
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index fd9815b..0c17b4b 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -15,6 +15,7 @@
- #ifndef _LINUX_IRQDOMAIN_H
- #define _LINUX_IRQDOMAIN_H
- 
-+#include <linux/bug.h>
- #include <linux/mod_devicetable.h>
- 
- #ifdef CONFIG_IRQ_DOMAIN
--- 
-1.7.5.4
+Rob
