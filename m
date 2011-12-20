@@ -1,114 +1,68 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: [PATCH v2 5/5] ARM: OMAP2+: board-generic: Use of_irq_init API
-Date: Tue, 20 Dec 2011 14:39:58 +0100
-Message-ID: <1324388398-2683-6-git-send-email-b-cousson@ti.com>
-References: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC 0/7] Add PWM device-tree support.
+Date: Tue, 20 Dec 2011 14:41:16 +0100
+Message-ID: <20111220134116.GA1267@avionic-0098.adnet.avionic-design.de>
+References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
+ <4EF08C9E.9020302@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: rob.herring@calxeda.com, tony@atomide.com
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
+Content-Type: multipart/mixed; boundary="===============7604718354333852899=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4EF08C9E.9020302-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the of_irq_init API introduced in 3.2 to handle
-interrupt-controller with DT.
-Update the irq_match table to map the proper XXX_of_init
-functions for INTC and GIC drivers.
 
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <rob.herring@calxeda.com>
----
- arch/arm/mach-omap2/board-generic.c |   30 ++++++++++++++++--------------
- 1 files changed, 16 insertions(+), 14 deletions(-)
+--===============7604718354333852899==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Content-Disposition: inline
 
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-index e493877..2529017 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -12,6 +12,7 @@
-  * published by the Free Software Foundation.
-  */
- #include <linux/io.h>
-+#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/irqdomain.h>
- #include <linux/i2c/twl.h>
-@@ -24,6 +25,17 @@
- #include "common.h"
- #include "common-board-devices.h"
- 
-+static struct of_device_id irq_match[] __initdata = {
-+	{ .compatible = "ti,omap2-intc", .data = intc_of_init, },
-+	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
-+	{ }
-+};
-+
-+static void __init omap_init_irq(void)
-+{
-+	of_irq_init(irq_match);
-+}
-+
- /*
-  * XXX: Still needed to boot until the i2c & twl driver is adapted to
-  * device-tree
-@@ -58,18 +70,8 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
- 	{ }
- };
- 
--static struct of_device_id intc_match[] __initdata = {
--	{ .compatible = "ti,omap3-intc", },
--	{ .compatible = "arm,cortex-a9-gic", },
--	{ }
--};
--
- static void __init omap_generic_init(void)
- {
--	struct device_node *node = of_find_matching_node(NULL, intc_match);
--	if (node)
--		irq_domain_add_simple(node, 0);
--
- 	omap_serial_init();
- 	omap_sdrc_init(NULL, NULL);
- 
-@@ -103,7 +105,7 @@ DT_MACHINE_START(OMAP242X_DT, "Generic OMAP2420 (Flattened Device Tree)")
- 	.reserve	= omap_reserve,
- 	.map_io		= omap242x_map_io,
- 	.init_early	= omap2420_init_early,
--	.init_irq	= omap2_init_irq,
-+	.init_irq	= omap_init_irq,
- 	.handle_irq	= omap2_intc_handle_irq,
- 	.init_machine	= omap_generic_init,
- 	.timer		= &omap2_timer,
-@@ -122,7 +124,7 @@ DT_MACHINE_START(OMAP243X_DT, "Generic OMAP2430 (Flattened Device Tree)")
- 	.reserve	= omap_reserve,
- 	.map_io		= omap243x_map_io,
- 	.init_early	= omap2430_init_early,
--	.init_irq	= omap2_init_irq,
-+	.init_irq	= omap_init_irq,
- 	.handle_irq	= omap2_intc_handle_irq,
- 	.init_machine	= omap_generic_init,
- 	.timer		= &omap2_timer,
-@@ -141,7 +143,7 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
- 	.reserve	= omap_reserve,
- 	.map_io		= omap3_map_io,
- 	.init_early	= omap3430_init_early,
--	.init_irq	= omap3_init_irq,
-+	.init_irq	= omap_init_irq,
- 	.handle_irq	= omap3_intc_handle_irq,
- 	.init_machine	= omap3_init,
- 	.timer		= &omap3_timer,
-@@ -160,7 +162,7 @@ DT_MACHINE_START(OMAP4_DT, "Generic OMAP4 (Flattened Device Tree)")
- 	.reserve	= omap_reserve,
- 	.map_io		= omap4_map_io,
- 	.init_early	= omap4430_init_early,
--	.init_irq	= gic_init_irq,
-+	.init_irq	= omap_init_irq,
- 	.handle_irq	= gic_handle_irq,
- 	.init_machine	= omap4_init,
- 	.timer		= &omap4_timer,
--- 
-1.7.0.4
 
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+* Rob Herring wrote:
+> You need binding documentation for the pwm portion.
+
+Okay. I was going to add the documentation once this had seen some
+discussion, but I guess you'd rather see the documentation first and discuss
+it then, correct?
+
+Thierry
+
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEARECAAYFAk7wkHwACgkQZ+BJyKLjJp9tQACfQGhc+lb5yrWqdFnHWkDEpMHK
+JsgAoIPGsnwsLOTUTt6WQZqbvq/OWhYj
+=LzEb
+-----END PGP SIGNATURE-----
+
+--7JfCtLOvnd9MIVvH--
+
+--===============7604718354333852899==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7604718354333852899==--
