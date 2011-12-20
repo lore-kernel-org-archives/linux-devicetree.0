@@ -1,15 +1,23 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC 6/7] pwm: Add Tegra2 SoC support
-Date: Tue, 20 Dec 2011 15:23:53 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF176BE92EA7@HQMAIL01.nvidia.com>
-References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
- <1324377138-32129-7-git-send-email-thierry.reding@avionic-design.de>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] mfd: mc13xxx: add device tree probe support
+Date: Tue, 20 Dec 2011 23:25:27 +0000
+Message-ID: <20111220232526.GA6551@opensource.wolfsonmicro.com>
+References: <1323702958-4831-1-git-send-email-shawn.guo@linaro.org>
+ <1323702958-4831-2-git-send-email-shawn.guo@linaro.org>
+ <20111220005708.GM2860@opensource.wolfsonmicro.com>
+ <20111220020101.GD5683@S2100-06.ap.freescale.net>
+ <20111220015931.GX2860@opensource.wolfsonmicro.com>
+ <20111220030347.GB2995@S2101-09.ap.freescale.net>
+ <20111220112510.GL2866@opensource.wolfsonmicro.com>
+ <20111220135251.GB5129@S2101-09.ap.freescale.net>
+ <20111220143558.GT2866@opensource.wolfsonmicro.com>
+ <20111220153101.GD5348@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1324377138-32129-7-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20111220153101.GD5348-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,87 +27,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thierry Reding wrote at Tuesday, December 20, 2011 3:32 AM:
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+On Tue, Dec 20, 2011 at 11:31:03PM +0800, Shawn Guo wrote:
+> On Tue, Dec 20, 2011 at 02:35:58PM +0000, Mark Brown wrote:
 
-This seems reasonable, besides Olof's comments. I made a few comments
-below, although I understand most were present in the original patch
-you're upstreaming.
+> > I don't know that that helps, register numbers and shifts aren't going
+> > to do anything for legibility.
 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> I think it helps.  It's not about legibility but identification.  For
+> mc13892 driver to work, it has to match the register number and enable
+> bit shift given by mc13892 reference manual.  So register number +
+> enable bit shift is stable and unique to identify a mc13892 regulator.
 
-> +config PWM_TEGRA
-> +	tristate "NVIDIA Tegra PWM support"
-> +	depends on ARCH_TEGRA
-> +	default n
+It's unique but I feel the disadvantages in terms of legibility of the
+resulting device trees are substantial - we want humans to be able to
+read and write device trees, preferrably without having to dig out the
+datasheet for the part.  So long as the names are reasonably sensible
+and can be understood in the case of any lack of clarity we should be
+OK.
 
-I think you need some help text there.
+> > The problem with the names was that the
+> > names chosen were poorly defined (why call DCDCn chipname__dcdcn?) and
+> > not documented in the binding, not that they were names.
 
-> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> The problem with name is it's name.  The mc13892 driver can still work
+> with naming regulator differently from mc13892 reference manual.  So
+> using name to bind a regulator means we are binding with Linux mc13892
+> driver.  In that case, DT probe works if and only if the name in dts
+> matches the name used in mc13892 driver, and it does not work as long
+> as the name dts does not match the name used in mc13892 driver.
 
-> +struct tegra_pwm_chip {
-> +	struct pwm_chip		chip;
-> +	struct device		*dev;
-> +
-> +	struct clk		*clk;
-> +
-> +	int			clk_enb[4];
-
-s/clk_enb/enable/? This is really more about whether the PWM channel is
-enabled than the clock; the fact the clock has to be enabled for the PWM
-to run is an implementation detail.
-
-> +static int tegra_pwm_config(struct pwm_chip *chip, unsigned int pwm,
-> +		int duty_ns, int period_ns)
-...
-> +	/* the struct clk may be shared across multiple PWM devices, so
-> +	 * only enable the PWM if this device has been enabled
-> +	 */
-> +	if (pc->clk_enb[num])
-> +		val |= PWM_ENABLE;
-
-That comment doesn't describe what the code is doing. Perhaps if a comment
-is needed at all:
-
-/* If the PWM channel is enabled, keep it enabled */
-
-> +static int tegra_pwm_probe(struct platform_device *pdev)
-...
-> +	pwm->chip.label = "tegra-pwm";
-> +	pwm->chip.ops = &tegra_pwm_ops;
-> +	pwm->chip.base = -1;
-> +	pwm->chip.npwm = 4;
-
-I mentioned in an earlier patch it'd be a good idea to store a struct
-device * in pcm_chip. That'd also avoid allow the label field to be
-removed, since you can just use dev_name(pwm_chip->dev) then.
-
-> +static int __init tegra_pwm_init(void)
-> +{
-> +	return platform_driver_register(&tegra_pwm_driver);
-> +}
-> +subsys_initcall(tegra_pwm_init);
-> +
-> +static void __exit tegra_pwm_exit(void)
-> +{
-> +	platform_driver_unregister(&tegra_pwm_driver);
-> +}
-> +module_exit(tegra_pwm_exit);
-
-Can you use module_init() for tegra_pwm_init() instead. That had better
-be possible, since the Kconfig allows building this as a module. If so,
-you can replace that quoted block with:
-
-module_platform_driver(tegra_pwm_driver);
-
-> +MODULE_LICENSE("GPL v2");
-
-The license header says GPLv2+, so this should just be "GPL" according
-to the meanings in include/linux/module.h.
-
--- 
-nvpublic
+This is the whole reason why I'm saying that you need to define the
+names used in the binding - if the names are a defined part of the
+binding then there's nothing driver specific about them.
