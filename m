@@ -1,73 +1,106 @@
-From: Aneesh V <aneesh@ti.com>
-Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF
- and DDR
-Date: Tue, 20 Dec 2011 15:46:49 +0530
-Message-ID: <4EF06091.1050102@ti.com>
-References: <1324303533-17458-1-git-send-email-aneesh@ti.com> <4EEFC23A.30201@gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [RFC 0/7] Add PWM device-tree support.
+Date: Tue, 20 Dec 2011 11:32:11 +0100
+Message-ID: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EEFC23A.30201@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 December 2011 04:31 AM, Rob Herring wrote:
-> On 12/19/2011 08:05 AM, Aneesh V wrote:
->> This is an RFC to add new device tree bindings for DDR memories and
->> EMIF - TI's DDR SDRAM controller.
->>
->> The first patch adds bindings for DDR memories. Currently,
->> we have added properties for only DDR3 and LPDDR2 memories.
->> However, the binding can be easily extended to describe
->> other types such as DDR2 in the future.
->>
->> The second patch provides the bindings for the EMIF controller.
->>
->> The final patch provides DT data for EMIF controller instances
->> in OMAP4 and LPDDR2 memories attached to them on various boards.
->>
->> Thanks to Rajendra for answering my numerous queries on device tree.
->>
->> This is a re-post of the RFC that was posted to devicetree-discuss ml,
->> now sent to a larger audience and looping out an internal list.
->> Please ignore the previous version.
->
-> There's already a standard way (i.e. JEDEC standard) to define DDR chip
-> configuration that's called SPD. Why invent something new? While this is
-> normally an i2c eeprom on a DIMM, there's no reason you couldn't get it
-> from somewhere else including perhaps the DT. There's already code in
-> u-boot that can parse SPD data.
+This patch series adds very rudimentary device-tree support for PWM devices.
+I fully realize that this is early work and it should not be merged as is.
+However I wanted to post these patches for review to make sure I'm not on a
+wild-goose chase.
 
-Thanks for pointing this out. I looked into this a bit. I see some
-difficulties in adopting SPD for our needs.
+With all of these patches applied (plus one board-specific patch that is not
+included), I'm able to control the backlight on the device I'm working on
+using the sysfs interface provided by the pwm-backlight driver and the
+backlight class.
 
-1. Our primary target is LPDDR2 and I can't seem to find an SPD
-standard for LPDDR2. Maybe, because automatic memory detection is not
-that critical in the embedded world.
+This series is based on Sascha Hauer's series of patches[0] to add a generic
+PWM framework. The first patch in this series is takes from Sascha's branch,
+while the second patch enables each PWM chip to provide multiple PWM devices
+(none of the drivers in Sascha's branch are converted yet).
 
-2. I did find one for DDR SDRAM memories(Appendix D, Rev 1.0 - maybe
-for the first generation of PC DDR memories). But many of the AC timing
-parameters needed to program our controller are not listed in it.
+Patch 3 adds some code to lookup a PWM chip given its device-tree handle. This
+code will be used later on by the pwm-backlight driver to find the PWM device
+that it should be using. I did not include any binding documentation yet since
+I wasn't sure the DT binding was at all sensible.
 
-3. We do not really need DDR3 support at the moment because we do not
-intend to scale DDR frequency in platforms with DDR3 memory. This is
-due the to limited operating frequency range of DDR3.
+Patch 4 was taken from the Chromium tree and is required to provide proper
+clocking of the Tegra2 PWFM controller. All Chromium-specific tags have been
+removed from the commit message.
 
-So, I was wondering whether I should limit the binding to only LPDDR2
-and have an SPD based binding for DDR2/DDR3 if that is required later?
-What do you think?
+Patch 5 cleans up the clock registration for Tegra2 because patch 6 will only
+instantiate one device for the PWFM controller instead of four.
 
->
-> In general, is it really feasible to parse the DTB before DDR is
-> initialized?
+Patch 6 adds a generic PWM framework driver for the Tegra2 PWFM controller.
+The code is taken from the Chromium tree with some adjustments to integrate it
+with the PWM framework.
 
-As pointed out by Tony we rely on bootloader for the initial SDRAM
-configuration. The kernel SDRAM controller driver is used mainly for
-DVFS and thermal management.
+Patch 7 implements DT-based probing in the pwm-backlight driver. Note that
+this code only handles the "pwm" property (by looking up the PWM device via
+the new PWM DT binding) and the "default-" and "max-brightness" properties.
+Switching power to the backlight via GPIOs is not supported yet.
 
-best regards,
-Aneesh
+[0]: http://git.pengutronix.de/?p=imx/linux-2.6.git;a=shortlog;h=refs/heads/pwmlib
 
+Sascha Hauer (1):
+  PWM: add pwm framework support
+
+Simon Que (1):
+  arm: tegra: Fix PWM clock programming
+
+Thierry Reding (5):
+  pwm: Allow chips to support multiple PWMs.
+  of: Add PWM support.
+  arm: tegra: Provide clock for only one PWM controller.
+  pwm: Add Tegra2 SoC support
+  pwm-backlight: Add rudimentary device-tree support
+
+ .../bindings/video/backlight/pwm-backlight         |   16 +
+ Documentation/pwm.txt                              |   56 ++++
+ MAINTAINERS                                        |    6 +
+ arch/arm/boot/dts/tegra20.dtsi                     |    6 +
+ arch/arm/mach-tegra/board-dt.c                     |    1 +
+ arch/arm/mach-tegra/clock.h                        |    1 +
+ arch/arm/mach-tegra/devices.c                      |   15 +
+ arch/arm/mach-tegra/devices.h                      |    1 +
+ arch/arm/mach-tegra/tegra2_clocks.c                |   33 ++-
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    1 +
+ drivers/of/Kconfig                                 |    6 +
+ drivers/of/Makefile                                |    1 +
+ drivers/of/pwm.c                                   |   88 ++++++
+ drivers/pwm/Kconfig                                |   17 ++
+ drivers/pwm/Makefile                               |    2 +
+ drivers/pwm/core.c                                 |  301 ++++++++++++++++++++
+ drivers/pwm/pwm-tegra.c                            |  274 ++++++++++++++++++
+ drivers/video/backlight/Kconfig                    |    2 +-
+ drivers/video/backlight/pwm_bl.c                   |   70 +++++-
+ include/linux/of_pwm.h                             |   41 +++
+ include/linux/pwm.h                                |   49 ++++
+ 22 files changed, 976 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/pwm-backlight
+ create mode 100644 Documentation/pwm.txt
+ create mode 100644 drivers/of/pwm.c
+ create mode 100644 drivers/pwm/Kconfig
+ create mode 100644 drivers/pwm/Makefile
+ create mode 100644 drivers/pwm/core.c
+ create mode 100644 drivers/pwm/pwm-tegra.c
+ create mode 100644 include/linux/of_pwm.h
+
+-- 
+1.7.8
