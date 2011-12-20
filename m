@@ -1,77 +1,89 @@
-From: Aneesh V <aneesh@ti.com>
-Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF
- and DDR
-Date: Tue, 20 Dec 2011 19:38:09 +0530
-Message-ID: <4EF096C9.1070808@ti.com>
-References: <1324303533-17458-1-git-send-email-aneesh@ti.com> <4EEFC23A.30201@gmail.com> <20111219233559.GW6464@atomide.com> <4EF0671B.7090508@ti.com> <4EF0824A.9060208@ti.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] Add fdtget utility to read property values from a
+ device tree
+Date: Tue, 20 Dec 2011 23:01:48 +1100
+Message-ID: <20111220120148.GB5133@truffala.fritz.box>
+References: <1316711466-14199-1-git-send-email-sjg@chromium.org>
+ <1316711466-14199-5-git-send-email-sjg@chromium.org>
+ <20110923012007.GG12286@yookeroo.fritz.box>
+ <CAPnjgZ0Na+zAX2cj=b1HbyGW5iNLGLn2rAeQEfZ9LwBLDW6a1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EF0824A.9060208@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPnjgZ0Na+zAX2cj=b1HbyGW5iNLGLn2rAeQEfZ9LwBLDW6a1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit
+On Thu, Dec 15, 2011 at 05:37:51PM -0800, Simon Glass wrote:
+> Hi,
+> =
 
-On Tuesday 20 December 2011 06:10 PM, Cousson, Benoit wrote:
-> Hi Aneesh,
->
+> On Thu, Sep 22, 2011 at 6:20 PM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> > On Thu, Sep 22, 2011 at 10:11:05AM -0700, Simon Glass wrote:
+> >> This simply utility makes it easy for scripts to read values from the =
+device
+> >> tree. It is written in C and uses the same libfdt as the rest of the d=
+tc
+> >> package.
+> >>
+> >> What is it for:
+> >> - Reading fdt values from scripts
+> >> - Extracting fdt information within build systems
+> >> - Looking at particular values without having to dump the entire tree
+> >>
+> >> To use it, specify the fdt binary file on command line followed by a l=
+ist of
+> >> node, property pairs. The utility then looks up each node, finds the p=
+roperty
+> >> and displays the value.
+> >>
+> >> Each value is printed on a new line.
+> >>
+> >> fdtget tries to guess the type of each property based on its contents.=
+ This
+> >> is not always reliable, so you can use the -t option to force fdtget t=
+o decode
+> >> the value as a string, or byte, etc.
+> >>
+> >> To read from stdin, use - as the file.
+> >>
+> >> Usage:
+> >> =A0 =A0 =A0 fdtget <options> <dt file> [<node> <property>]...
+> >> Options:
+> >> =A0 =A0 =A0 -t <type> =A0 =A0 =A0 Type of data
+> >> =A0 =A0 =A0 -h =A0 =A0 =A0 =A0 =A0 =A0 =A0Print this help
+> >>
+> >> <type> =A0 =A0 =A0 =A0s=3Dstring, i=3Dint, u=3Dunsigned, x=3Dhex
+> >> =A0 =A0 =A0 Optional modifier prefix:
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 hh or b=3Dbyte, h=3D2 byte, l=3D4 byte (de=
+fault)
+> >>
+> >> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >
+> > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> =
 
-<snip>
+> Has this been applied? I cannot see it in the repo.
 
->>>> In general, is it really feasible to parse the DTB before DDR is
->>>> initialized?
->>>
->>> Changing timings is still needed for DVFS during runtime.
->>>
->>> But we can boot to userspace with bootloader set timings, so I'm
->>
->> As far as I understand, in the current out-of-tree DVFS implementation
->> for OMAP, DVFS can start even before user-space.
->
-> Maybe it is the case, but that does not mean it should.
-> We can potentially delay the DVFS init until the user-space is started.
-> This should not be considered as a big constraint.
->
->>> thinking that maybe these timings should be just set by loadable
->>> modules. Just the configuration of which timings to select should
->>> be passed via DT. Something in compatible like:
->>>
->>> .compatible = "ti,omap3630", "sdram-micron-mt46h32m32lf-6";
->>>
->>> And that should allow the SDRC driver to only accept timings for
->>> "sdram-micron-mt46h32m32lf-6".
->>
->> Do you mean one module per memory device and have all timing data in
->> the respective module? Wouldn't this clutter the kernel proper with all
->> these tables. By having the timing data in DT, it can be eventually
->> moved out of kernel eventually, right?
->
-> Yes, that's the theory, but referring to Olof's point, this is not
-> necessarily the goal of DT to store all the information that are not
-> board dependent.
-> In this case, each DDR will have it sets of well known AC timings data
-> that will never depend of the board config. In this case, storing that
-> inside DT might not be the best solution.
->
-> In fact we always had the same kind of discussion for the pinmux data
-> and for the clock data...
->
-> The conclusion being that most of the static data does not have to be in
-> the DTS.
-> But since Linus was complaining about the huge amount of data inside the
-> kernel, it is not obvious what the best solution is:-)
+I haven't chased it, I'm afraid.  You'll need to follow up with Jon directl=
+y.
 
-Hmm.. I get the point now. Linus' complaint is what I had in mind too.
-My humble opinion is to have such data in DTS but re-use it as much as
-possible. That is, we could have something like a "sdram-micron-
-mt46h32m32lf-6.dtsi"(as you suggested before) that can be included by
-board level DTS files. I think the fact that dts files are organized at
-arch level today is limiting such re-use. Please correct me if I am
-wrong.
+-- =
 
-br,
-Aneesh
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
