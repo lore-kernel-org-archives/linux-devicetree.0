@@ -1,93 +1,66 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC 7/7] pwm-backlight: Add rudimentary device-tree support
-Date: Tue, 20 Dec 2011 15:33:36 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF176BE92EBE@HQMAIL01.nvidia.com>
-References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
- <1324377138-32129-8-git-send-email-thierry.reding@avionic-design.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
+Date: Tue, 20 Dec 2011 23:48:45 +0000
+Message-ID: <20111220234844.GC6551@opensource.wolfsonmicro.com>
+References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
+ <1324264903-15395-5-git-send-email-richard.zhao@linaro.org>
+ <20111220145904.GD29727@sirena.org.uk>
+ <20111220232701.GA1698@richard-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1324377138-32129-8-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111220232701.GA1698@richard-laptop>
+Sender: cpufreq-owner@vger.kernel.org
+To: Richard Zhao <richard.zhao@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, arnd@arndb.de, mark.langsdorf@calxeda.com, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, bryanh@codeaurora.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, davidb@codeaurora.org, shawn.guo@linaro.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Thierry Reding wrote at Tuesday, December 20, 2011 3:32 AM:
-> This commit adds very basic support for device-tree probing. Currently,
-> only a PWM and maximum and default brightness values can be specified.
-> Enabling or disabling backlight power via GPIOs is not yet supported.
+On Wed, Dec 21, 2011 at 07:27:03AM +0800, Richard Zhao wrote:
+> On Tue, Dec 20, 2011 at 02:59:04PM +0000, Mark Brown wrote:
 
-> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight
+> > My comments on the previous version of the patch still apply:
 
-> +Required properties:
-> +  - compatible: "pwm-backlight"
-> +  - default-brightness: the default brightness setting
-> +  - max-brightness: the maximum brightness setting
+> >  - The voltage ranges being set need to be specified as ranges.
 
-What are the units of those two properties? Percentage seems like a
-reasonable choice, although that's not what the patch implements.
+> cpu normally need strict voltages. and only proved operating opints
+> are allowed to set in dts. If the voltage changes slightly especially
+> for high frequency, it's easy to cause unstable.
 
-> +  - pwm: OF device-tree PWM specification
-> +
-> +Example:
-> +
-> +	backlight {
-> +		compatible = "pwm-backlight";
-> +		default-brightness = <224>;
-> +		max-brightness = <255>;
-> +		pwm = <&pwm 0 5000000>;
-> +	};
+Clearly there will be limits which get more and more restrictive as the
+frequencies get higher but there will always be at least some play in
+the numbers as one must at a minimum specify tolerance ranges, and at
+lower frequencies the ranges specified will typically get compartively
+large.
 
-This may be fine, but I'm not sure that representing the backlight as a
-standalone object is correct; I wonder if you want to represent a complete
-LCD display complex, including backlight, various GPIOs, and other display
-properties, all in the one node? That said, I suppose you could easily
-layer this as follows:
+Note also that not all hardware specifies things in terms of a fixed set
+of operating points, sometimes only the minimum voltage specification is
+varied with frequency or sometimes you see maximum and minimum stepping
+independently.
 
-reg: regulator {
-    // GPIO regulator
-};
+Further note that if all hardware really does have as tight a set of
+requirements as you suggest then the regulator support in the driver
+needs to be non-optional otherwise a board without software regulator
+control might drop the frequency without also dropping the voltage.
 
-bl: backlight {
-    compatible = "pwm-backlight";
-    default-brightness = <224>;
-    max-brightness = <255>;
-    pwm = <&pwm 0 5000000>;
-    power-supply = <&reg>;
-};
+> >  - Frequencies that can't be supported due to limitations of the
+> >    available supplies shouldn't be exposed to users.
 
-lcd@x {
-    backlight = <&bl>;
-    ...
-};
+> As I said, only proved operation points are allowed.
 
-so this probably is OK.
+This statement appears to be unrelated to the comment you're replying
+to.
 
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-...
-> +static int pwm_backlight_parse_dt(struct device *dev,
-> +				  struct platform_pwm_backlight_data *data)
-...
-> +	/*
-> +	 * TODO: Most users of this driver use a number of GPIOs to control
-> +	 *       backlight power. Support for specifying these needs to be
-> +	 *       added.
-> +	 */
+> > You also need to define how the core supplies get looked up.
 
-At least for the power GPIO, this should probably modeled as a GPIO-based
-fixed voltage regulator. Are there other GPIOs that are directly related
-to a backlight rather than an LCD complex?
+> It's pure software. platform uses this driver have to define "cpu" consumer.
 
--- 
-nvpublic
+You still need to define this in the binding.
+
+> > > +	pr_info("Generic CPU frequency driver\n");
+
+> > This seems noisy...
+
+> Why? Do you think only errors and warnings can print out?
+
+Yes.
