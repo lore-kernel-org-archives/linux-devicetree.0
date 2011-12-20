@@ -1,14 +1,13 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v3 1/5] dt: add of_get_child_count helper function
-Date: Tue, 20 Dec 2011 12:35:02 -0600
-Message-ID: <4EF0D556.3030701@gmail.com>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-2-git-send-email-b29396@freescale.com>
+Subject: Re: [PATCH 1/1] dt: fix some code indent issue in of.h
+Date: Tue, 20 Dec 2011 12:42:05 -0600
+Message-ID: <4EF0D6FD.8070406@gmail.com>
+References: <1324404609-3999-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1324402840-32451-2-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1324404609-3999-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,65 +18,74 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2011 11:40 AM, Dong Aisheng wrote:
+On 12/20/2011 12:10 PM, Dong Aisheng wrote:
 > From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> Currently most code to get child count in kernel are almost same,
-> add a helper to implement this function for dt to use.
-> 
-> ---
-> Changes v1->v2:
->  * change the name from of_get_child_number to of_get_child_count
+> Checkpatch script will report some warnings for the old coding style:
+> WARNING: suspect code indent for conditional statements (8, 0)
+>         for (child = of_get_next_child(parent, NULL); child != NULL; \
+> [...]
+> +static inline int of_get_child_count(const struct device_node *np)
 > 
 > Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-I assume you want this to go in with the rest of the series? If not, let
-me know.
-
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-Rob
-
 > ---
->  include/linux/of.h |   16 ++++++++++++++++
->  1 files changed, 16 insertions(+), 0 deletions(-)
+>  include/linux/of.h |   12 ++++++------
+>  1 files changed, 6 insertions(+), 6 deletions(-)
 > 
 > diff --git a/include/linux/of.h b/include/linux/of.h
-> index 4948552..d0d91a1 100644
+> index f1a490c..95dee0a 100644
 > --- a/include/linux/of.h
 > +++ b/include/linux/of.h
-> @@ -189,6 +189,17 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+> @@ -163,22 +163,22 @@ extern struct device_node *of_find_node_by_name(struct device_node *from,
+>  	const char *name);
+>  #define for_each_node_by_name(dn, name) \
+>  	for (dn = of_find_node_by_name(NULL, name); dn; \
+> -	     dn = of_find_node_by_name(dn, name))
+> +		dn = of_find_node_by_name(dn, name))
+>  extern struct device_node *of_find_node_by_type(struct device_node *from,
+>  	const char *type);
+>  #define for_each_node_by_type(dn, type) \
+>  	for (dn = of_find_node_by_type(NULL, type); dn; \
+> -	     dn = of_find_node_by_type(dn, type))
+> +		dn = of_find_node_by_type(dn, type))
+>  extern struct device_node *of_find_compatible_node(struct device_node *from,
+>  	const char *type, const char *compat);
+>  #define for_each_compatible_node(dn, type, compatible) \
+>  	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
+> -	     dn = of_find_compatible_node(dn, type, compatible))
+> +		dn = of_find_compatible_node(dn, type, compatible))
+>  extern struct device_node *of_find_matching_node(struct device_node *from,
+>  	const struct of_device_id *matches);
+>  #define for_each_matching_node(dn, matches) \
+>  	for (dn = of_find_matching_node(NULL, matches); dn; \
+> -	     dn = of_find_matching_node(dn, matches))
+> +		dn = of_find_matching_node(dn, matches))
+>  extern struct device_node *of_find_node_by_path(const char *path);
+>  extern struct device_node *of_find_node_by_phandle(phandle handle);
+>  extern struct device_node *of_get_parent(const struct device_node *node);
+> @@ -187,13 +187,13 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+>  					     struct device_node *prev);
+>  #define for_each_child_of_node(parent, child) \
 >  	for (child = of_get_next_child(parent, NULL); child != NULL; \
->  	     child = of_get_next_child(parent, child))
+> -	     child = of_get_next_child(parent, child))
+> +		child = of_get_next_child(parent, child))
 >  
-> +static inline int of_get_child_count(const struct device_node *np)
-> +{
-> +	struct device_node *child = NULL;
-> +	int num = 0;
-> +
-> +	while ((child = of_get_next_child(np, child)))
-> +		num++;
-> +
-> +	return num;
-> +}
-> +
 >  extern struct device_node *of_find_node_with_property(
 >  	struct device_node *from, const char *prop_name);
 >  #define for_each_node_with_property(dn, prop_name) \
-> @@ -262,6 +273,11 @@ static inline bool of_have_populated_dt(void)
->  #define for_each_child_of_node(parent, child) \
->  	while (0)
+>  	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
+> -	     dn = of_find_node_with_property(dn, prop_name))
+> +		dn = of_find_node_with_property(dn, prop_name))
 >  
-> +static inline int of_get_child_count(const struct device_node *np)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
->  static inline int of_device_is_compatible(const struct device_node *device,
->  					  const char *name)
->  {
+>  extern struct property *of_find_property(const struct device_node *np,
+>  					 const char *name,
+
+The old way looks fine to me and indenting like this is commonly used in
+the kernel.
+
+Rob
