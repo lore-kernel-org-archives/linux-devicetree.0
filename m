@@ -1,77 +1,49 @@
-From: Aneesh V <aneesh@ti.com>
-Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF
- and DDR
-Date: Tue, 20 Dec 2011 16:14:43 +0530
-Message-ID: <4EF0671B.7090508@ti.com>
-References: <1324303533-17458-1-git-send-email-aneesh@ti.com> <4EEFC23A.30201@gmail.com> <20111219233559.GW6464@atomide.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 1/3] mfd: mc13xxx: add device tree probe support
+Date: Tue, 20 Dec 2011 11:25:11 +0000
+Message-ID: <20111220112510.GL2866@opensource.wolfsonmicro.com>
+References: <1323702958-4831-1-git-send-email-shawn.guo@linaro.org>
+ <1323702958-4831-2-git-send-email-shawn.guo@linaro.org>
+ <20111220005708.GM2860@opensource.wolfsonmicro.com>
+ <20111220020101.GD5683@S2100-06.ap.freescale.net>
+ <20111220015931.GX2860@opensource.wolfsonmicro.com>
+ <20111220030347.GB2995@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20111219233559.GW6464@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20111220030347.GB2995@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 December 2011 05:05 AM, Tony Lindgren wrote:
-> * Rob Herring<robherring2@gmail.com>  [111219 14:29]:
->> On 12/19/2011 08:05 AM, Aneesh V wrote:
->>> This is an RFC to add new device tree bindings for DDR memories and
->>> EMIF - TI's DDR SDRAM controller.
->>>
->>> The first patch adds bindings for DDR memories. Currently,
->>> we have added properties for only DDR3 and LPDDR2 memories.
->>> However, the binding can be easily extended to describe
->>> other types such as DDR2 in the future.
->>>
->>> The second patch provides the bindings for the EMIF controller.
->>>
->>> The final patch provides DT data for EMIF controller instances
->>> in OMAP4 and LPDDR2 memories attached to them on various boards.
->>>
->>> Thanks to Rajendra for answering my numerous queries on device tree.
->>>
->>> This is a re-post of the RFC that was posted to devicetree-discuss ml,
->>> now sent to a larger audience and looping out an internal list.
->>> Please ignore the previous version.
->>
->> There's already a standard way (i.e. JEDEC standard) to define DDR chip
->> configuration that's called SPD. Why invent something new? While this is
->> normally an i2c eeprom on a DIMM, there's no reason you couldn't get it
->> from somewhere else including perhaps the DT. There's already code in
->> u-boot that can parse SPD data.
->
-> I agree generic JEDEC standard would be good for the DT.
+On Tue, Dec 20, 2011 at 11:03:48AM +0800, Shawn Guo wrote:
+> On Tue, Dec 20, 2011 at 01:59:32AM +0000, Mark Brown wrote:
 
-Please see my comments in reply to Rob's mail. SPD doesn't seems to
-have a standard for LPDDR2. What JEDEC has now is not suitable for our
-needs.
+> > You're missing the point - someone reading the documentation needs to be
+> > able to figure out what strings they need to use for all the different
+> > regulators on the chip are without groveling through the driver code.
 
->
->> In general, is it really feasible to parse the DTB before DDR is
->> initialized?
->
-> Changing timings is still needed for DVFS during runtime.
->
-> But we can boot to userspace with bootloader set timings, so I'm
+...
 
-As far as I understand, in the current out-of-tree DVFS implementation
-for OMAP, DVFS can start even before user-space.
+> > That's *not* something that we should be exposing in the device tree
+> > bindings.  This is an implementation detail of the Linux driver which
+> > might well change in future.
 
-> thinking that maybe these timings should be just set by loadable
-> modules. Just the configuration of which timings to select should
-> be passed via DT. Something in compatible like:
->
-> 	.compatible = "ti,omap3630", "sdram-micron-mt46h32m32lf-6";
->
-> And that should allow the SDRC driver to only accept timings for
-> "sdram-micron-mt46h32m32lf-6".
+> Any suggestion on a better binding for mc13892 regulator device?
 
-Do you mean one module per memory device and have all timing data in
-the respective module? Wouldn't this clutter the kernel proper with all
-these tables. By having the timing data in DT, it can be eventually
-moved out of kernel eventually, right?
-
-br,
-Aneesh
+Well, removing the random extra _s would be a big start (though I'd just
+drop the chip name entirely from the name of the regulators since by the
+time we're looking at the regulator we've already identified the chip)
+and as I keep saying you need to document what the names mean - what are
+the possible names and how do they map onto the hardware?
