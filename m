@@ -1,58 +1,150 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+From: Rob Herring <robherring2@gmail.com>
 Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
-Date: Tue, 20 Dec 2011 14:59:04 +0000
-Message-ID: <20111220145904.GD29727@sirena.org.uk>
-References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
- <1324264903-15395-5-git-send-email-richard.zhao@linaro.org>
+Date: Tue, 20 Dec 2011 09:13:22 -0600
+Message-ID: <4EF0A612.2060400@gmail.com>
+References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org> <1324264903-15395-5-git-send-email-richard.zhao@linaro.org> <20111219100512.GC2459@totoro> <20111219141925.GA1789@richard-laptop> <20111219143913.GI2351@totoro> <4EEF519C.4090808@gmail.com> <20111220015934.GD15863@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1324264903-15395-5-git-send-email-richard.zhao@linaro.org>
+In-Reply-To: <20111220015934.GD15863@b20223-02.ap.freescale.net>
 Sender: cpufreq-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, arnd@arndb.de, mark.langsdorf@calxeda.com, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, bryanh@codeaurora.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, davidb@codeaurora.org, shawn.guo@linaro.org, linaro-dev@lists.linaro.org
+To: Richard Zhao <richard.zhao@freescale.com>
+Cc: Jamie Iles <jamie@jamieiles.com>, linux@arm.linux.org.uk, arnd@arndb.de, mark.langsdorf@calxeda.com, linaro-dev@lists.linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, bryanh@codeaurora.org, cpufreq@vger.kernel.org, grant.likely@secretlab.ca, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, davej@redhat.com, davidb@codeaurora.org, shawn.guo@linaro.org, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2011 at 11:21:40AM +0800, Richard Zhao wrote:
-> It support single core and multi-core ARM SoCs. But currently it assume
-> all cores share the same frequency and voltage.
+On 12/19/2011 07:59 PM, Richard Zhao wrote:
+> On Mon, Dec 19, 2011 at 09:00:44AM -0600, Rob Herring wrote:
+>> On 12/19/2011 08:39 AM, Jamie Iles wrote:
+>>> On Mon, Dec 19, 2011 at 10:19:29PM +0800, Richard Zhao wrote:
+>>>> On Mon, Dec 19, 2011 at 10:05:12AM +0000, Jamie Iles wrote:
+>>>>> Hi Richard,
+>>>>>
+>>>>> On Mon, Dec 19, 2011 at 11:21:40AM +0800, Richard Zhao wrote:
+>>>>>> It support single core and multi-core ARM SoCs. But currently it assume
+>>>>>> all cores share the same frequency and voltage.
+>>>>>>
+>>>>>> Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/cpufreq/generic-cpufreq    |    7 +
+>>>>>>  drivers/cpufreq/Kconfig                            |    8 +
+>>>>>>  drivers/cpufreq/Makefile                           |    2 +
+>>>>>>  drivers/cpufreq/generic-cpufreq.c                  |  251 ++++++++++++++++++++
+>>>>>>  4 files changed, 268 insertions(+), 0 deletions(-)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/generic-cpufreq
+>>>>>>  create mode 100644 drivers/cpufreq/generic-cpufreq.c
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/cpufreq/generic-cpufreq b/Documentation/devicetree/bindings/cpufreq/generic-cpufreq
+>>>>>> new file mode 100644
+>>>>>> index 0000000..15dd780
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/cpufreq/generic-cpufreq
+>>>>>> @@ -0,0 +1,7 @@
+>>>>>> +Generic cpufreq driver
+>>>>>> +
+>>>>>> +Required properties in /cpus/cpu@0:
+>>>>>> +- compatible : "generic-cpufreq"
+>>>>>
+>>>>> I'm not convinced this is the best way to do this.  By requiring a 
+>>>>> generic-cpufreq compatible string we're encoding Linux driver 
+>>>>> information into the hardware description.  The only way I can see to 
+>>>>> avoid this is to provide a generic_clk_cpufreq_init() function that 
+>>>>> platforms can call in their machine init code to use the driver.
+>>
+>> Agreed on the compatible string.
+> Assume you reject to use compatible string.
+>> It's putting Linux specifics into DT.
+>>
+>> You could flip this around and have the module make a call into the
+>> kernel to determine whether to initialize or not. Then platforms could
+>> set a flag to indicate this.
+> Could you make it more clear? kernel global variable, macro, or function?
 
-My comments on the previous version of the patch still apply:
+Any of those. Of course, direct access to variables across modules is
+discouraged, so it would probably be a function that checks a variable.
 
- - The voltage ranges being set need to be specified as ranges.
- - Frequencies that can't be supported due to limitations of the
-   available supplies shouldn't be exposed to users.
- - The driver needs to handle errors.
+> - Following your idea, I think, we can add in driver/cpufreq/cpufreq.c:
+> int (*clk_reg_cpufreq_get_op_table) (struct op_table *tbl, int *size);
+> SoC code set the callback. If it's NULL, driver will exit. We can get rid
+> of DT. It'll make cpufreq core dirty, but it's the only file built-in.
 
-> +Required properties in /cpus/cpu@0:
-> +- compatible : "generic-cpufreq"
-> +- cpu-freqs : cpu frequency points it support
-> +- cpu-volts : cpu voltages required by the frequency point at the same index
-> +- trans-latency :  transition_latency
+But aren't you getting the operating points from the DT? Then you don't
+want to put this code into each platform.
 
-You need to define units for all of these, and for the transition
-latency you need to be clear about what's being measured (it looks like
-the CPU time only, not any voltage ramping).
+> 
+> - Drop module support. SoC call generic_clk_cpufreq_init as Jamie said.
+> 
+>>
+>>>> It'll prevent the driver from being a kernel module.
+>>>
+>>> Hmm, that's not very nice either!  I guess you _could_ add an 
+>>> of_machine_is_compatible() check against a list of compatible machines 
+>>> in the driver but that feels a little gross.  Hopefully Rob or Grant 
+>>> have a good alternative!
+>>>
+>>
+>> What does cpufreq core do if multiple drivers are registered?
+> current cpufreq core only support one cpufreq_driver. Others will fail
+> except the first time.
 
-You also need to define how the core supplies get looked up.
+Then whoever gets there first wins. Make your driver register late and
+if someone doesn't want to use it they can register a custom driver earlier.
 
-> +	/* Manual states, that PLL stabilizes in two CLK32 periods */
-> +	policy->cpuinfo.transition_latency = trans_latency;
+Rob
 
-I guess this comment is a cut'n'paste error.
+>> Perhaps a
+>> ranking is needed and this would only get enabled if there are no other
+>> drivers and other conditions like having the clock "cpu" present are met.
+> We'd better keep cpufreq core simple. For this driver, register cpufreq_driver
+> is the last thing after checking all conditions.
+> 
+>>
+>> Rob
+>>
+>>>> Hi Grant & Rob,
+>>>>
+>>>> Could you comment?
+>>>>
+>>>>>
+>>>>>> +- cpu-freqs : cpu frequency points it support
+>>>>>> +- cpu-volts : cpu voltages required by the frequency point at the same index
+>>>>>> +- trans-latency :  transition_latency
+>>>>>> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+>>>>>> index e24a2a1..216eecd 100644
+>>>>>> --- a/drivers/cpufreq/Kconfig
+>>>>>> +++ b/drivers/cpufreq/Kconfig
+>>>>>> @@ -179,6 +179,14 @@ config CPU_FREQ_GOV_CONSERVATIVE
+>>>>>>  
+>>>>>>  	  If in doubt, say N.
+>>>>>>  
+>>>>>> +config GENERIC_CPUFREQ_DRIVER
+>>>>>> +	bool "Generic cpufreq driver using clock/regulator/devicetree"
+>>>>>> +	help
+>>>>>> +	  This adds generic CPUFreq driver. It assumes all
+>>>>>> +	  cores of the CPU share the same clock and voltage.
+>>>>>> +
+>>>>>> +	  If in doubt, say N.
+>>>>>
+>>>>> I think this needs dependencies on HAVE_CLK, OF and REGULATOR.
+>>>> right, Thanks. I can not check clk before generic clock framework
+>>>> come in.
+>>>> Added:
+>>>> 	depends on OF && REGULATOR
+>>>> 	select CPU_FREQ_TABLE
+>>>
+>>> You can still use HAVE_CLK.  That symbol has been around for ages and 
+>>> any platform implementing the clk API should select it so it's fine to 
+>>> depend on it even before there is a generic struct clk.
+> You are right. Thanks.
+> 
+> Richard
+>>>
+>>> Jamie
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
 
-> +
-> +	ret = cpufreq_frequency_table_cpuinfo(policy, freq_table);
-> +
-> +	if (ret < 0) {
-> +		pr_err("%s: invalid frequency table for cpu %d\n",
-> +		       __func__, policy->cpu);
-
-You should define pr_fmt to always include __func__ in the messages
-rather than open coding - ensures consistency and is less noisy in the
-code.
-
-> +	pr_info("Generic CPU frequency driver\n");
-
-This seems noisy...
