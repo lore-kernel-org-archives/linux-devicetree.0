@@ -1,179 +1,99 @@
-From: Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
-Date: Wed, 21 Dec 2011 05:57:51 +0800
-Message-ID: <CAH8gqwWfDD5_d04rg93a4dmFfymtw_kXEH1Uhze_tDN1knUgUA@mail.gmail.com>
-References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
-	<4EEF519C.4090808@gmail.com>
-	<20111220015934.GD15863@b20223-02.ap.freescale.net>
-	<201112201521.37747.arnd@arndb.de>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC 1/7] PWM: add pwm framework support
+Date: Tue, 20 Dec 2011 14:13:38 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF176BE92E50@HQMAIL01.nvidia.com>
+References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
+ <1324377138-32129-2-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3688559450507059403=="
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <201112201521.37747.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1324377138-32129-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============3688559450507059403==
-Content-Type: multipart/alternative; boundary=f46d043be19a9bd83004b48d28e7
+Thierry Reding wrote at Tuesday, December 20, 2011 3:32 AM:
+> This patch adds framework support for PWM (pulse width modulation) devices.
+...
 
---f46d043be19a9bd83004b48d28e7
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/Documentation/pwm.txt b/Documentation/pwm.txt
 
-=E5=9C=A8 2011-12-20 =E4=B8=8B=E5=8D=8811:22=EF=BC=8C"Arnd Bergmann" <arnd@=
-arndb.de>=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Tuesday 20 December 2011, Richard Zhao wrote:
-> > > >>>> +Generic cpufreq driver
-> > > >>>> +
-> > > >>>> +Required properties in /cpus/cpu@0:
-> > > >>>> +- compatible : "generic-cpufreq"
-> > > >>>
-> > > >>> I'm not convinced this is the best way to do this.  By requiring =
-a
-> > > >>> generic-cpufreq compatible string we're encoding Linux driver
-> > > >>> information into the hardware description.  The only way I can
-see to
-> > > >>> avoid this is to provide a generic_clk_cpufreq_init() function
-that
-> > > >>> platforms can call in their machine init code to use the driver.
-> > >
-> > > Agreed on the compatible string.
-> > Assume you reject to use compatible string.
-> > > It's putting Linux specifics into DT.
-> > >
-> > > You could flip this around and have the module make a call into the
-> > > kernel to determine whether to initialize or not. Then platforms coul=
-d
-> > > set a flag to indicate this.
-> > Could you make it more clear? kernel global variable, macro, or
-function?
-> >
-> > - Following your idea, I think, we can add in driver/cpufreq/cpufreq.c:
-> > int (*clk_reg_cpufreq_get_op_table) (struct op_table *tbl, int *size);
-> > SoC code set the callback. If it's NULL, driver will exit. We can get
-rid
-> > of DT. It'll make cpufreq core dirty, but it's the only file built-in.
-> >
-> > - Drop module support. SoC call generic_clk_cpufreq_init as Jamie said.
->
-> I think you don't actually need a "compatible" property here, as long as
-we
-> ensure that the "cpu-freqs", "cpu-volts" and "trans-latency" properties
-are
-> present in the cpu node if and only if the machine works with this driver
-> (why else would you put them there?).
-It is more easy for me.
-Rob, agree?
+> +Identifying PWMs
+> +----------------
+> +
+> +PWMs are identified by unique ids throughout the system. A platform
+> +should call pwmchip_reserve() during init time to reserve the id range
+> +for internal PWMs so that users have a fixed id to refer to specific
+> +PWMs.
 
-Richard
->
-> CPUs are special in the device trees in a number of ways, so I think we
-> can treat this as a logical extension. This way, you can still make the
-> generic cpufreq driver a loadable module. You don't get module autoloadin=
-g
-> with this structure, but that is already the case because the cpu nodes
-> in the device tree are not translated into linux devices.
->
->        Arnd
+pwmchip_reserve() doesn't seem to exist in this patch.
 
---f46d043be19a9bd83004b48d28e7
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
 
-<p><br>
-=E5=9C=A8 2011-12-20 =E4=B8=8B=E5=8D=8811:22=EF=BC=8C&quot;Arnd Bergmann&qu=
-ot; &lt;<a href=3D"mailto:arnd-r2nGTMty4D4@public.gmane.org">arnd-r2nGTMty4D4@public.gmane.org</a>&gt;=E5=86=99=E9=
-=81=93=EF=BC=9A<br>
-&gt;<br>
-&gt; On Tuesday 20 December 2011, Richard Zhao wrote:<br>
-&gt; &gt; &gt; &gt;&gt;&gt;&gt; +Generic cpufreq driver<br>
-&gt; &gt; &gt; &gt;&gt;&gt;&gt; +<br>
-&gt; &gt; &gt; &gt;&gt;&gt;&gt; +Required properties in /cpus/cpu@0:<br>
-&gt; &gt; &gt; &gt;&gt;&gt;&gt; +- compatible : &quot;generic-cpufreq&quot;=
-<br>
-&gt; &gt; &gt; &gt;&gt;&gt;<br>
-&gt; &gt; &gt; &gt;&gt;&gt; I&#39;m not convinced this is the best way to d=
-o this. =C2=A0By requiring a<br>
-&gt; &gt; &gt; &gt;&gt;&gt; generic-cpufreq compatible string we&#39;re enc=
-oding Linux driver<br>
-&gt; &gt; &gt; &gt;&gt;&gt; information into the hardware description. =C2=
-=A0The only way I can see to<br>
-&gt; &gt; &gt; &gt;&gt;&gt; avoid this is to provide a generic_clk_cpufreq_=
-init() function that<br>
-&gt; &gt; &gt; &gt;&gt;&gt; platforms can call in their machine init code t=
-o use the driver.<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; Agreed on the compatible string.<br>
-&gt; &gt; Assume you reject to use compatible string.<br>
-&gt; &gt; &gt; It&#39;s putting Linux specifics into DT.<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; You could flip this around and have the module make a call i=
-nto the<br>
-&gt; &gt; &gt; kernel to determine whether to initialize or not. Then platf=
-orms could<br>
-&gt; &gt; &gt; set a flag to indicate this.<br>
-&gt; &gt; Could you make it more clear? kernel global variable, macro, or f=
-unction?<br>
-&gt; &gt;<br>
-&gt; &gt; - Following your idea, I think, we can add in driver/cpufreq/cpuf=
-req.c:<br>
-&gt; &gt; int (*clk_reg_cpufreq_get_op_table) (struct op_table *tbl, int *s=
-ize);<br>
-&gt; &gt; SoC code set the callback. If it&#39;s NULL, driver will exit. We=
- can get rid<br>
-&gt; &gt; of DT. It&#39;ll make cpufreq core dirty, but it&#39;s the only f=
-ile built-in.<br>
-&gt; &gt;<br>
-&gt; &gt; - Drop module support. SoC call generic_clk_cpufreq_init as Jamie=
- said.<br>
-&gt;<br>
-&gt; I think you don&#39;t actually need a &quot;compatible&quot; property =
-here, as long as we<br>
-&gt; ensure that the &quot;cpu-freqs&quot;, &quot;cpu-volts&quot; and &quot=
-;trans-latency&quot; properties are<br>
-&gt; present in the cpu node if and only if the machine works with this dri=
-ver<br>
-&gt; (why else would you put them there?).<br>
-It is more easy for me. <br>
-Rob, agree?</p>
-<p>Richard<br>
-&gt;<br>
-&gt; CPUs are special in the device trees in a number of ways, so I think w=
-e<br>
-&gt; can treat this as a logical extension. This way, you can still make th=
-e<br>
-&gt; generic cpufreq driver a loadable module. You don&#39;t get module aut=
-oloading<br>
-&gt; with this structure, but that is already the case because the cpu node=
-s<br>
-&gt; in the device tree are not translated into linux devices.<br>
-&gt;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0Arnd<br>
-</p>
+> +/**
+> + * pwmchip_add() - register a new pwm
+> + * @chip: the pwm
+> + *
+> + * register a new pwm. pwm->pwm_id must be initialized. if pwm_id < 0 then
+> + * a dynamically assigned id will be used, otherwise the id specified,
 
---f46d043be19a9bd83004b48d28e7--
+I don't see any code that assigns pwm_id if it's negative.
 
+> + */
+> +int pwmchip_add(struct pwm_chip *chip)
+> +{
+> +	struct pwm_device *pwm;
+> +	int ret = 0;
+> +
+> +	pwm = kzalloc(sizeof(*pwm), GFP_KERNEL);
+> +	if (!pwm)
+> +		return -ENOMEM;
+> +
+> +	pwm->chip = chip;
+> +
+> +	mutex_lock(&pwm_lock);
+> +
+> +	if (chip->pwm_id >= 0 && _find_pwm(chip->pwm_id)) {
+> +		ret = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	list_add_tail(&pwm->node, &pwm_list);
+> +out:
+> +	mutex_unlock(&pwm_lock);
+> +
+> +	if (ret)
+> +		kfree(pwm);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(pwmchip_add);
 
---===============3688559450507059403==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+There have been discussions before re: GPIOs and interrupts that creating
+a global namespace for them was a mistake. This new PWM API does the same
+thing. Is there an issue here?
 
-_______________________________________________
-linaro-dev mailing list
-linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-http://lists.linaro.org/mailman/listinfo/linaro-dev
+I suppose that coming at it purely from a device tree perspective, the
+numbering scheme doesn't matter, since it can be dynamically assigned
+in the same way that global GPIO and IRQ IDs are with device tree. Still,
+there's plenty of non-device tree stuff around, so this is probably worth
+thinking about.
 
---===============3688559450507059403==--
+Is 0 a valid ID? Given previous GPIO and IRQ discussions, we should
+disallow 0 explicitly. The rationale is that such an invalid ID can be
+used to indicate "no PWM", and 0 is a good value for that, since it's
+what uninitialized global data gets set to.
+
+-- 
+nvpublic
