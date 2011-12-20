@@ -1,18 +1,21 @@
 From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] regulator: mc13892: add device tree probe support
-Date: Tue, 20 Dec 2011 01:34:25 +0000
-Message-ID: <20111220013425.GU2860@opensource.wolfsonmicro.com>
-References: <1323702958-4831-1-git-send-email-shawn.guo@linaro.org>
- <1323702958-4831-3-git-send-email-shawn.guo@linaro.org>
- <20111219140730.GB5257@S2100-06.ap.freescale.net>
- <20111220005414.GL2860@opensource.wolfsonmicro.com>
- <20111220013711.GC5683@S2100-06.ap.freescale.net>
+Subject: Re: [REPOST RFC PATCH 0/3] New "gpio-poweroff" driver to turn off
+ platform devices with GPIOs
+Date: Tue, 20 Dec 2011 01:38:20 +0000
+Message-ID: <20111220013819.GV2860@opensource.wolfsonmicro.com>
+References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
+ <4EE7A31E.7080301@gmail.com>
+ <895CF182-4BF7-4DF5-A467-944EC008DBC3@boeing.com>
+ <20111214120240.GC25088@sirena.org.uk>
+ <E30C4693-0D31-4A9A-9E9D-0FC03C5F6B8A@boeing.com>
+ <20111217092044.GC2833@opensource.wolfsonmicro.com>
+ <D482A908-020C-43E0-ADFC-33AE213D7257@boeing.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20111220013711.GC5683-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <D482A908-020C-43E0-ADFC-33AE213D7257-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,16 +25,16 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Moffett, Kyle D" <Kyle.D.Moffett-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2011 at 09:37:12AM +0800, Shawn Guo wrote:
+On Mon, Dec 19, 2011 at 10:56:41AM -0600, Moffett, Kyle D wrote:
 
-> It seems that Samuel has applied it.
+> I still don't understand how the regulator API is supposed to help in my
+> particular case (whole-system poweroff).
 
-> http://article.gmane.org/gmane.linux.drivers.devicetree/10441
-
-Oh, that's a bit unfortunate as looking at the first patch I'm still not
-happy I understand what the regulator part of the binding is supposed to
-be...
+Well, it depends what you need to do.  In the ST-Ericsson case what they
+needed to do was collapse the core supplies for the CPU.  But previously
+you were talking about power domains, not whole system poweroff.
+Usually a power domain is a subset of the full system power.
