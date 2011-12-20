@@ -1,61 +1,77 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] mfd: mc13xxx: add device tree probe support
-Date: Tue, 20 Dec 2011 21:52:52 +0800
-Message-ID: <20111220135251.GB5129@S2101-09.ap.freescale.net>
-References: <1323702958-4831-1-git-send-email-shawn.guo@linaro.org>
- <1323702958-4831-2-git-send-email-shawn.guo@linaro.org>
- <20111220005708.GM2860@opensource.wolfsonmicro.com>
- <20111220020101.GD5683@S2100-06.ap.freescale.net>
- <20111220015931.GX2860@opensource.wolfsonmicro.com>
- <20111220030347.GB2995@S2101-09.ap.freescale.net>
- <20111220112510.GL2866@opensource.wolfsonmicro.com>
+From: Aneesh V <aneesh@ti.com>
+Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF
+ and DDR
+Date: Tue, 20 Dec 2011 19:38:09 +0530
+Message-ID: <4EF096C9.1070808@ti.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com> <4EEFC23A.30201@gmail.com> <20111219233559.GW6464@atomide.com> <4EF0671B.7090508@ti.com> <4EF0824A.9060208@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111220112510.GL2866-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EF0824A.9060208@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2011 at 11:25:11AM +0000, Mark Brown wrote:
-> On Tue, Dec 20, 2011 at 11:03:48AM +0800, Shawn Guo wrote:
-> > On Tue, Dec 20, 2011 at 01:59:32AM +0000, Mark Brown wrote:
-> 
-> > > You're missing the point - someone reading the documentation needs to be
-> > > able to figure out what strings they need to use for all the different
-> > > regulators on the chip are without groveling through the driver code.
-> 
-> ...
-> 
-> > > That's *not* something that we should be exposing in the device tree
-> > > bindings.  This is an implementation detail of the Linux driver which
-> > > might well change in future.
-> 
-> > Any suggestion on a better binding for mc13892 regulator device?
-> 
-> Well, removing the random extra _s would be a big start (though I'd just
-> drop the chip name entirely from the name of the regulators since by the
-> time we're looking at the regulator we've already identified the chip)
-> and as I keep saying you need to document what the names mean - what are
-> the possible names and how do they map onto the hardware?
-> 
-I just came up with an idea which can totally avoid matching name.  It
-seems that we can identify a regulator using register plus enable bit,
-which is basically 'reg' and 'enable_bit' in 'mc13xxx_regulator'.  As
-these data must be coming from hardware manual, they should be stable
-enough for binding a regulator.  What do you think?
+Hi Benoit
 
--- 
-Regards,
-Shawn
+On Tuesday 20 December 2011 06:10 PM, Cousson, Benoit wrote:
+> Hi Aneesh,
+>
+
+<snip>
+
+>>>> In general, is it really feasible to parse the DTB before DDR is
+>>>> initialized?
+>>>
+>>> Changing timings is still needed for DVFS during runtime.
+>>>
+>>> But we can boot to userspace with bootloader set timings, so I'm
+>>
+>> As far as I understand, in the current out-of-tree DVFS implementation
+>> for OMAP, DVFS can start even before user-space.
+>
+> Maybe it is the case, but that does not mean it should.
+> We can potentially delay the DVFS init until the user-space is started.
+> This should not be considered as a big constraint.
+>
+>>> thinking that maybe these timings should be just set by loadable
+>>> modules. Just the configuration of which timings to select should
+>>> be passed via DT. Something in compatible like:
+>>>
+>>> .compatible = "ti,omap3630", "sdram-micron-mt46h32m32lf-6";
+>>>
+>>> And that should allow the SDRC driver to only accept timings for
+>>> "sdram-micron-mt46h32m32lf-6".
+>>
+>> Do you mean one module per memory device and have all timing data in
+>> the respective module? Wouldn't this clutter the kernel proper with all
+>> these tables. By having the timing data in DT, it can be eventually
+>> moved out of kernel eventually, right?
+>
+> Yes, that's the theory, but referring to Olof's point, this is not
+> necessarily the goal of DT to store all the information that are not
+> board dependent.
+> In this case, each DDR will have it sets of well known AC timings data
+> that will never depend of the board config. In this case, storing that
+> inside DT might not be the best solution.
+>
+> In fact we always had the same kind of discussion for the pinmux data
+> and for the clock data...
+>
+> The conclusion being that most of the static data does not have to be in
+> the DTS.
+> But since Linus was complaining about the huge amount of data inside the
+> kernel, it is not obvious what the best solution is:-)
+
+Hmm.. I get the point now. Linus' complaint is what I had in mind too.
+My humble opinion is to have such data in DTS but re-use it as much as
+possible. That is, we could have something like a "sdram-micron-
+mt46h32m32lf-6.dtsi"(as you suggested before) that can be included by
+board level DTS files. I think the fact that dts files are organized at
+arch level today is limiting such re-use. Please correct me if I am
+wrong.
+
+br,
+Aneesh
