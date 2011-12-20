@@ -1,13 +1,20 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [RFC 0/7] Add PWM device-tree support.
-Date: Tue, 20 Dec 2011 14:41:16 +0100
-Message-ID: <20111220134116.GA1267@avionic-0098.adnet.avionic-design.de>
-References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
- <4EF08C9E.9020302@gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] mfd: mc13xxx: add device tree probe support
+Date: Tue, 20 Dec 2011 21:52:52 +0800
+Message-ID: <20111220135251.GB5129@S2101-09.ap.freescale.net>
+References: <1323702958-4831-1-git-send-email-shawn.guo@linaro.org>
+ <1323702958-4831-2-git-send-email-shawn.guo@linaro.org>
+ <20111220005708.GM2860@opensource.wolfsonmicro.com>
+ <20111220020101.GD5683@S2100-06.ap.freescale.net>
+ <20111220015931.GX2860@opensource.wolfsonmicro.com>
+ <20111220030347.GB2995@S2101-09.ap.freescale.net>
+ <20111220112510.GL2866@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7604718354333852899=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4EF08C9E.9020302-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111220112510.GL2866-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,52 +24,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 20, 2011 at 11:25:11AM +0000, Mark Brown wrote:
+> On Tue, Dec 20, 2011 at 11:03:48AM +0800, Shawn Guo wrote:
+> > On Tue, Dec 20, 2011 at 01:59:32AM +0000, Mark Brown wrote:
+> 
+> > > You're missing the point - someone reading the documentation needs to be
+> > > able to figure out what strings they need to use for all the different
+> > > regulators on the chip are without groveling through the driver code.
+> 
+> ...
+> 
+> > > That's *not* something that we should be exposing in the device tree
+> > > bindings.  This is an implementation detail of the Linux driver which
+> > > might well change in future.
+> 
+> > Any suggestion on a better binding for mc13892 regulator device?
+> 
+> Well, removing the random extra _s would be a big start (though I'd just
+> drop the chip name entirely from the name of the regulators since by the
+> time we're looking at the regulator we've already identified the chip)
+> and as I keep saying you need to document what the names mean - what are
+> the possible names and how do they map onto the hardware?
+> 
+I just came up with an idea which can totally avoid matching name.  It
+seems that we can identify a regulator using register plus enable bit,
+which is basically 'reg' and 'enable_bit' in 'mc13xxx_regulator'.  As
+these data must be coming from hardware manual, they should be stable
+enough for binding a regulator.  What do you think?
 
---===============7604718354333852899==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
-Content-Disposition: inline
-
-
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-* Rob Herring wrote:
-> You need binding documentation for the pwm portion.
-
-Okay. I was going to add the documentation once this had seen some
-discussion, but I guess you'd rather see the documentation first and discuss
-it then, correct?
-
-Thierry
-
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEARECAAYFAk7wkHwACgkQZ+BJyKLjJp9tQACfQGhc+lb5yrWqdFnHWkDEpMHK
-JsgAoIPGsnwsLOTUTt6WQZqbvq/OWhYj
-=LzEb
------END PGP SIGNATURE-----
-
---7JfCtLOvnd9MIVvH--
-
---===============7604718354333852899==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============7604718354333852899==--
+-- 
+Regards,
+Shawn
