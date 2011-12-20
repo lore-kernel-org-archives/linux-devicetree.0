@@ -1,45 +1,76 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH V2 1/4] i2c: tegra: Add __devinit/exit to probe/remove
-Date: Tue, 20 Dec 2011 13:47:29 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF176BE92E21@HQMAIL01.nvidia.com>
-References: <1324189772-26914-1-git-send-email-swarren@nvidia.com>
-	<20111220015634.GA27789@quad.lixom.net>
- <CAM=Q2cs8K4vraWPNqervcmxEqUGiAbng+44+L9OhD3ijPw9tAA@mail.gmail.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] ARM/of: allow *machine_desc.dt_compat to be const
+Date: Tue, 20 Dec 2011 22:56:45 +0100
+Message-ID: <1324418205-30355-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAM=Q2cs8K4vraWPNqervcmxEqUGiAbng+44+L9OhD3ijPw9tAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Shubhrajyoti Datta wrote at Monday, December 19, 2011 11:15 PM:
-...
-> Hi Stephen ,
-> could you check this one also
-> thanks.
-> 
-> From: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
-> Date: Tue, 20 Dec 2011 11:40:51 +0530
-> Subject: [PATCH] I2C : tegra : devexit in remove
-> 
-> Adding I2C __devexxit in remove
-> 
-> Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
-
-Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
-Ben or Olof,
-
-> -       .remove  = tegra_i2c_remove,
-> +       .remove  =__devexit_p(tegra_i2c_remove),
-
-When you apply this, can you fix it up to add a space after the = in
-the modified line? If you want, I can post an updated version to do that.
-
--- 
-nvpublic
+VGhpcyBhbGxvd3MgZHRfY29tcGF0IHRvIHBvaW50IHRvIGEgY29uc3RhbnQgbGlzdCBvZiBjb21w
+YXRpYmxlIHN0cmluZ3MuCgpTaWduZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8dS5rbGVp
+bmUta29lbmlnQHBlbmd1dHJvbml4LmRlPgotLS0KSGVsbG8sCgpkb2VzIHRoaXMgbmVlZCB0byBi
+ZSBzcGxpdCBpbnRvIGFuIG9mIGFuZCBhbiBBUk0gcGFydD8KCkJlc3QgcmVnYXJkcwpVd2UKCiBh
+cmNoL2FybS9pbmNsdWRlL2FzbS9tYWNoL2FyY2guaCB8ICAgIDIgKy0KIGRyaXZlcnMvb2YvZmR0
+LmMgICAgICAgICAgICAgICAgIHwgICAgNCArKy0tCiBpbmNsdWRlL2xpbnV4L29mX2ZkdC5oICAg
+ICAgICAgICB8ICAgIDQgKystLQogMyBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDUg
+ZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vaW5jbHVkZS9hc20vbWFjaC9hcmNo
+LmggYi9hcmNoL2FybS9pbmNsdWRlL2FzbS9tYWNoL2FyY2guaAppbmRleCAyYjBlZmMzLi4wMmE3
+MThhIDEwMDY0NAotLS0gYS9hcmNoL2FybS9pbmNsdWRlL2FzbS9tYWNoL2FyY2guaAorKysgYi9h
+cmNoL2FybS9pbmNsdWRlL2FzbS9tYWNoL2FyY2guaApAQCAtMTksNyArMTksNyBAQCBzdHJ1Y3Qg
+bWFjaGluZV9kZXNjIHsKIAl1bnNpZ25lZCBpbnQJCW5yOwkJLyogYXJjaGl0ZWN0dXJlIG51bWJl
+cgkqLwogCWNvbnN0IGNoYXIJCSpuYW1lOwkJLyogYXJjaGl0ZWN0dXJlIG5hbWUJKi8KIAl1bnNp
+Z25lZCBsb25nCQlhdGFnX29mZnNldDsJLyogdGFnZ2VkIGxpc3QgKHJlbGF0aXZlKSAqLwotCWNv
+bnN0IGNoYXIJCSoqZHRfY29tcGF0OwkvKiBhcnJheSBvZiBkZXZpY2UgdHJlZQorCWNvbnN0IGNo
+YXIgKmNvbnN0IAkqZHRfY29tcGF0OwkvKiBhcnJheSBvZiBkZXZpY2UgdHJlZQogCQkJCQkJICog
+J2NvbXBhdGlibGUnIHN0cmluZ3MJKi8KIAogCXVuc2lnbmVkIGludAkJbnJfaXJxczsJLyogbnVt
+YmVyIG9mIElSUXMgKi8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvZmR0LmMgYi9kcml2ZXJzL29m
+L2ZkdC5jCmluZGV4IGZkODVmYTIuLjdkYzhlNmQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvb2YvZmR0
+LmMKKysrIGIvZHJpdmVycy9vZi9mZHQuYwpAQCAtMTA3LDcgKzEwNyw3IEBAIGludCBvZl9mZHRf
+aXNfY29tcGF0aWJsZShzdHJ1Y3QgYm9vdF9wYXJhbV9oZWFkZXIgKmJsb2IsCiAgKiBvZl9mZHRf
+bWF0Y2ggLSBSZXR1cm4gdHJ1ZSBpZiBub2RlIG1hdGNoZXMgYSBsaXN0IG9mIGNvbXBhdGlibGUg
+dmFsdWVzCiAgKi8KIGludCBvZl9mZHRfbWF0Y2goc3RydWN0IGJvb3RfcGFyYW1faGVhZGVyICpi
+bG9iLCB1bnNpZ25lZCBsb25nIG5vZGUsCi0gICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKipj
+b21wYXQpCisgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKmNvbnN0ICpjb21wYXQpCiB7CiAJ
+dW5zaWduZWQgaW50IHRtcCwgc2NvcmUgPSAwOwogCkBAIC01NDEsNyArNTQxLDcgQEAgaW50IF9f
+aW5pdCBvZl9mbGF0X2R0X2lzX2NvbXBhdGlibGUodW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBj
+aGFyICpjb21wYXQpCiAvKioKICAqIG9mX2ZsYXRfZHRfbWF0Y2ggLSBSZXR1cm4gdHJ1ZSBpZiBu
+b2RlIG1hdGNoZXMgYSBsaXN0IG9mIGNvbXBhdGlibGUgdmFsdWVzCiAgKi8KLWludCBfX2luaXQg
+b2ZfZmxhdF9kdF9tYXRjaCh1bnNpZ25lZCBsb25nIG5vZGUsIGNvbnN0IGNoYXIgKipjb21wYXQp
+CitpbnQgX19pbml0IG9mX2ZsYXRfZHRfbWF0Y2godW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBj
+aGFyICpjb25zdCAqY29tcGF0KQogewogCXJldHVybiBvZl9mZHRfbWF0Y2goaW5pdGlhbF9ib290
+X3BhcmFtcywgbm9kZSwgY29tcGF0KTsKIH0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvb2Zf
+ZmR0LmggYi9pbmNsdWRlL2xpbnV4L29mX2ZkdC5oCmluZGV4IGM4NGQ5MDAuLmVkMTM2YWQgMTAw
+NjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvb2ZfZmR0LmgKKysrIGIvaW5jbHVkZS9saW51eC9vZl9m
+ZHQuaApAQCAtNzEsNyArNzEsNyBAQCBleHRlcm4gaW50IG9mX2ZkdF9pc19jb21wYXRpYmxlKHN0
+cnVjdCBib290X3BhcmFtX2hlYWRlciAqYmxvYiwKIAkJCQl1bnNpZ25lZCBsb25nIG5vZGUsCiAJ
+CQkJY29uc3QgY2hhciAqY29tcGF0KTsKIGV4dGVybiBpbnQgb2ZfZmR0X21hdGNoKHN0cnVjdCBi
+b290X3BhcmFtX2hlYWRlciAqYmxvYiwgdW5zaWduZWQgbG9uZyBub2RlLAotCQkJY29uc3QgY2hh
+ciAqKmNvbXBhdCk7CisJCQljb25zdCBjaGFyICpjb25zdCAqY29tcGF0KTsKIGV4dGVybiB2b2lk
+IG9mX2ZkdF91bmZsYXR0ZW5fdHJlZSh1bnNpZ25lZCBsb25nICpibG9iLAogCQkJICAgICAgIHN0
+cnVjdCBkZXZpY2Vfbm9kZSAqKm15bm9kZXMpOwogCkBAIC04OCw3ICs4OCw3IEBAIGV4dGVybiBp
+bnQgb2Zfc2Nhbl9mbGF0X2R0KGludCAoKml0KSh1bnNpZ25lZCBsb25nIG5vZGUsIGNvbnN0IGNo
+YXIgKnVuYW1lLAogZXh0ZXJuIHZvaWQgKm9mX2dldF9mbGF0X2R0X3Byb3AodW5zaWduZWQgbG9u
+ZyBub2RlLCBjb25zdCBjaGFyICpuYW1lLAogCQkJCSB1bnNpZ25lZCBsb25nICpzaXplKTsKIGV4
+dGVybiBpbnQgb2ZfZmxhdF9kdF9pc19jb21wYXRpYmxlKHVuc2lnbmVkIGxvbmcgbm9kZSwgY29u
+c3QgY2hhciAqbmFtZSk7Ci1leHRlcm4gaW50IG9mX2ZsYXRfZHRfbWF0Y2godW5zaWduZWQgbG9u
+ZyBub2RlLCBjb25zdCBjaGFyICoqbWF0Y2hlcyk7CitleHRlcm4gaW50IG9mX2ZsYXRfZHRfbWF0
+Y2godW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFyICpjb25zdCAqbWF0Y2hlcyk7CiBleHRl
+cm4gdW5zaWduZWQgbG9uZyBvZl9nZXRfZmxhdF9kdF9yb290KHZvaWQpOwogCiBleHRlcm4gaW50
+IGVhcmx5X2luaXRfZHRfc2Nhbl9jaG9zZW4odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFy
+ICp1bmFtZSwKLS0gCjEuNy43LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1k
+aXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZv
+L2RldmljZXRyZWUtZGlzY3Vzcwo=
