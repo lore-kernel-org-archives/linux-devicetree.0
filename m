@@ -1,76 +1,179 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] ARM/of: allow *machine_desc.dt_compat to be const
-Date: Tue, 20 Dec 2011 22:56:45 +0100
-Message-ID: <1324418205-30355-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
+Date: Wed, 21 Dec 2011 05:57:51 +0800
+Message-ID: <CAH8gqwWfDD5_d04rg93a4dmFfymtw_kXEH1Uhze_tDN1knUgUA@mail.gmail.com>
+References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
+	<4EEF519C.4090808@gmail.com>
+	<20111220015934.GD15863@b20223-02.ap.freescale.net>
+	<201112201521.37747.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3688559450507059403=="
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <201112201521.37747.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhbGxvd3MgZHRfY29tcGF0IHRvIHBvaW50IHRvIGEgY29uc3RhbnQgbGlzdCBvZiBjb21w
-YXRpYmxlIHN0cmluZ3MuCgpTaWduZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8dS5rbGVp
-bmUta29lbmlnQHBlbmd1dHJvbml4LmRlPgotLS0KSGVsbG8sCgpkb2VzIHRoaXMgbmVlZCB0byBi
-ZSBzcGxpdCBpbnRvIGFuIG9mIGFuZCBhbiBBUk0gcGFydD8KCkJlc3QgcmVnYXJkcwpVd2UKCiBh
-cmNoL2FybS9pbmNsdWRlL2FzbS9tYWNoL2FyY2guaCB8ICAgIDIgKy0KIGRyaXZlcnMvb2YvZmR0
-LmMgICAgICAgICAgICAgICAgIHwgICAgNCArKy0tCiBpbmNsdWRlL2xpbnV4L29mX2ZkdC5oICAg
-ICAgICAgICB8ICAgIDQgKystLQogMyBmaWxlcyBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKyksIDUg
-ZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vaW5jbHVkZS9hc20vbWFjaC9hcmNo
-LmggYi9hcmNoL2FybS9pbmNsdWRlL2FzbS9tYWNoL2FyY2guaAppbmRleCAyYjBlZmMzLi4wMmE3
-MThhIDEwMDY0NAotLS0gYS9hcmNoL2FybS9pbmNsdWRlL2FzbS9tYWNoL2FyY2guaAorKysgYi9h
-cmNoL2FybS9pbmNsdWRlL2FzbS9tYWNoL2FyY2guaApAQCAtMTksNyArMTksNyBAQCBzdHJ1Y3Qg
-bWFjaGluZV9kZXNjIHsKIAl1bnNpZ25lZCBpbnQJCW5yOwkJLyogYXJjaGl0ZWN0dXJlIG51bWJl
-cgkqLwogCWNvbnN0IGNoYXIJCSpuYW1lOwkJLyogYXJjaGl0ZWN0dXJlIG5hbWUJKi8KIAl1bnNp
-Z25lZCBsb25nCQlhdGFnX29mZnNldDsJLyogdGFnZ2VkIGxpc3QgKHJlbGF0aXZlKSAqLwotCWNv
-bnN0IGNoYXIJCSoqZHRfY29tcGF0OwkvKiBhcnJheSBvZiBkZXZpY2UgdHJlZQorCWNvbnN0IGNo
-YXIgKmNvbnN0IAkqZHRfY29tcGF0OwkvKiBhcnJheSBvZiBkZXZpY2UgdHJlZQogCQkJCQkJICog
-J2NvbXBhdGlibGUnIHN0cmluZ3MJKi8KIAogCXVuc2lnbmVkIGludAkJbnJfaXJxczsJLyogbnVt
-YmVyIG9mIElSUXMgKi8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvZmR0LmMgYi9kcml2ZXJzL29m
-L2ZkdC5jCmluZGV4IGZkODVmYTIuLjdkYzhlNmQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvb2YvZmR0
-LmMKKysrIGIvZHJpdmVycy9vZi9mZHQuYwpAQCAtMTA3LDcgKzEwNyw3IEBAIGludCBvZl9mZHRf
-aXNfY29tcGF0aWJsZShzdHJ1Y3QgYm9vdF9wYXJhbV9oZWFkZXIgKmJsb2IsCiAgKiBvZl9mZHRf
-bWF0Y2ggLSBSZXR1cm4gdHJ1ZSBpZiBub2RlIG1hdGNoZXMgYSBsaXN0IG9mIGNvbXBhdGlibGUg
-dmFsdWVzCiAgKi8KIGludCBvZl9mZHRfbWF0Y2goc3RydWN0IGJvb3RfcGFyYW1faGVhZGVyICpi
-bG9iLCB1bnNpZ25lZCBsb25nIG5vZGUsCi0gICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKipj
-b21wYXQpCisgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgKmNvbnN0ICpjb21wYXQpCiB7CiAJ
-dW5zaWduZWQgaW50IHRtcCwgc2NvcmUgPSAwOwogCkBAIC01NDEsNyArNTQxLDcgQEAgaW50IF9f
-aW5pdCBvZl9mbGF0X2R0X2lzX2NvbXBhdGlibGUodW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBj
-aGFyICpjb21wYXQpCiAvKioKICAqIG9mX2ZsYXRfZHRfbWF0Y2ggLSBSZXR1cm4gdHJ1ZSBpZiBu
-b2RlIG1hdGNoZXMgYSBsaXN0IG9mIGNvbXBhdGlibGUgdmFsdWVzCiAgKi8KLWludCBfX2luaXQg
-b2ZfZmxhdF9kdF9tYXRjaCh1bnNpZ25lZCBsb25nIG5vZGUsIGNvbnN0IGNoYXIgKipjb21wYXQp
-CitpbnQgX19pbml0IG9mX2ZsYXRfZHRfbWF0Y2godW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBj
-aGFyICpjb25zdCAqY29tcGF0KQogewogCXJldHVybiBvZl9mZHRfbWF0Y2goaW5pdGlhbF9ib290
-X3BhcmFtcywgbm9kZSwgY29tcGF0KTsKIH0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvb2Zf
-ZmR0LmggYi9pbmNsdWRlL2xpbnV4L29mX2ZkdC5oCmluZGV4IGM4NGQ5MDAuLmVkMTM2YWQgMTAw
-NjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvb2ZfZmR0LmgKKysrIGIvaW5jbHVkZS9saW51eC9vZl9m
-ZHQuaApAQCAtNzEsNyArNzEsNyBAQCBleHRlcm4gaW50IG9mX2ZkdF9pc19jb21wYXRpYmxlKHN0
-cnVjdCBib290X3BhcmFtX2hlYWRlciAqYmxvYiwKIAkJCQl1bnNpZ25lZCBsb25nIG5vZGUsCiAJ
-CQkJY29uc3QgY2hhciAqY29tcGF0KTsKIGV4dGVybiBpbnQgb2ZfZmR0X21hdGNoKHN0cnVjdCBi
-b290X3BhcmFtX2hlYWRlciAqYmxvYiwgdW5zaWduZWQgbG9uZyBub2RlLAotCQkJY29uc3QgY2hh
-ciAqKmNvbXBhdCk7CisJCQljb25zdCBjaGFyICpjb25zdCAqY29tcGF0KTsKIGV4dGVybiB2b2lk
-IG9mX2ZkdF91bmZsYXR0ZW5fdHJlZSh1bnNpZ25lZCBsb25nICpibG9iLAogCQkJICAgICAgIHN0
-cnVjdCBkZXZpY2Vfbm9kZSAqKm15bm9kZXMpOwogCkBAIC04OCw3ICs4OCw3IEBAIGV4dGVybiBp
-bnQgb2Zfc2Nhbl9mbGF0X2R0KGludCAoKml0KSh1bnNpZ25lZCBsb25nIG5vZGUsIGNvbnN0IGNo
-YXIgKnVuYW1lLAogZXh0ZXJuIHZvaWQgKm9mX2dldF9mbGF0X2R0X3Byb3AodW5zaWduZWQgbG9u
-ZyBub2RlLCBjb25zdCBjaGFyICpuYW1lLAogCQkJCSB1bnNpZ25lZCBsb25nICpzaXplKTsKIGV4
-dGVybiBpbnQgb2ZfZmxhdF9kdF9pc19jb21wYXRpYmxlKHVuc2lnbmVkIGxvbmcgbm9kZSwgY29u
-c3QgY2hhciAqbmFtZSk7Ci1leHRlcm4gaW50IG9mX2ZsYXRfZHRfbWF0Y2godW5zaWduZWQgbG9u
-ZyBub2RlLCBjb25zdCBjaGFyICoqbWF0Y2hlcyk7CitleHRlcm4gaW50IG9mX2ZsYXRfZHRfbWF0
-Y2godW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFyICpjb25zdCAqbWF0Y2hlcyk7CiBleHRl
-cm4gdW5zaWduZWQgbG9uZyBvZl9nZXRfZmxhdF9kdF9yb290KHZvaWQpOwogCiBleHRlcm4gaW50
-IGVhcmx5X2luaXRfZHRfc2Nhbl9jaG9zZW4odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFy
-ICp1bmFtZSwKLS0gCjEuNy43LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1k
-aXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZv
-L2RldmljZXRyZWUtZGlzY3Vzcwo=
+--===============3688559450507059403==
+Content-Type: multipart/alternative; boundary=f46d043be19a9bd83004b48d28e7
+
+--f46d043be19a9bd83004b48d28e7
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+=E5=9C=A8 2011-12-20 =E4=B8=8B=E5=8D=8811:22=EF=BC=8C"Arnd Bergmann" <arnd@=
+arndb.de>=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tuesday 20 December 2011, Richard Zhao wrote:
+> > > >>>> +Generic cpufreq driver
+> > > >>>> +
+> > > >>>> +Required properties in /cpus/cpu@0:
+> > > >>>> +- compatible : "generic-cpufreq"
+> > > >>>
+> > > >>> I'm not convinced this is the best way to do this.  By requiring =
+a
+> > > >>> generic-cpufreq compatible string we're encoding Linux driver
+> > > >>> information into the hardware description.  The only way I can
+see to
+> > > >>> avoid this is to provide a generic_clk_cpufreq_init() function
+that
+> > > >>> platforms can call in their machine init code to use the driver.
+> > >
+> > > Agreed on the compatible string.
+> > Assume you reject to use compatible string.
+> > > It's putting Linux specifics into DT.
+> > >
+> > > You could flip this around and have the module make a call into the
+> > > kernel to determine whether to initialize or not. Then platforms coul=
+d
+> > > set a flag to indicate this.
+> > Could you make it more clear? kernel global variable, macro, or
+function?
+> >
+> > - Following your idea, I think, we can add in driver/cpufreq/cpufreq.c:
+> > int (*clk_reg_cpufreq_get_op_table) (struct op_table *tbl, int *size);
+> > SoC code set the callback. If it's NULL, driver will exit. We can get
+rid
+> > of DT. It'll make cpufreq core dirty, but it's the only file built-in.
+> >
+> > - Drop module support. SoC call generic_clk_cpufreq_init as Jamie said.
+>
+> I think you don't actually need a "compatible" property here, as long as
+we
+> ensure that the "cpu-freqs", "cpu-volts" and "trans-latency" properties
+are
+> present in the cpu node if and only if the machine works with this driver
+> (why else would you put them there?).
+It is more easy for me.
+Rob, agree?
+
+Richard
+>
+> CPUs are special in the device trees in a number of ways, so I think we
+> can treat this as a logical extension. This way, you can still make the
+> generic cpufreq driver a loadable module. You don't get module autoloadin=
+g
+> with this structure, but that is already the case because the cpu nodes
+> in the device tree are not translated into linux devices.
+>
+>        Arnd
+
+--f46d043be19a9bd83004b48d28e7
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<p><br>
+=E5=9C=A8 2011-12-20 =E4=B8=8B=E5=8D=8811:22=EF=BC=8C&quot;Arnd Bergmann&qu=
+ot; &lt;<a href=3D"mailto:arnd-r2nGTMty4D4@public.gmane.org">arnd-r2nGTMty4D4@public.gmane.org</a>&gt;=E5=86=99=E9=
+=81=93=EF=BC=9A<br>
+&gt;<br>
+&gt; On Tuesday 20 December 2011, Richard Zhao wrote:<br>
+&gt; &gt; &gt; &gt;&gt;&gt;&gt; +Generic cpufreq driver<br>
+&gt; &gt; &gt; &gt;&gt;&gt;&gt; +<br>
+&gt; &gt; &gt; &gt;&gt;&gt;&gt; +Required properties in /cpus/cpu@0:<br>
+&gt; &gt; &gt; &gt;&gt;&gt;&gt; +- compatible : &quot;generic-cpufreq&quot;=
+<br>
+&gt; &gt; &gt; &gt;&gt;&gt;<br>
+&gt; &gt; &gt; &gt;&gt;&gt; I&#39;m not convinced this is the best way to d=
+o this. =C2=A0By requiring a<br>
+&gt; &gt; &gt; &gt;&gt;&gt; generic-cpufreq compatible string we&#39;re enc=
+oding Linux driver<br>
+&gt; &gt; &gt; &gt;&gt;&gt; information into the hardware description. =C2=
+=A0The only way I can see to<br>
+&gt; &gt; &gt; &gt;&gt;&gt; avoid this is to provide a generic_clk_cpufreq_=
+init() function that<br>
+&gt; &gt; &gt; &gt;&gt;&gt; platforms can call in their machine init code t=
+o use the driver.<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; Agreed on the compatible string.<br>
+&gt; &gt; Assume you reject to use compatible string.<br>
+&gt; &gt; &gt; It&#39;s putting Linux specifics into DT.<br>
+&gt; &gt; &gt;<br>
+&gt; &gt; &gt; You could flip this around and have the module make a call i=
+nto the<br>
+&gt; &gt; &gt; kernel to determine whether to initialize or not. Then platf=
+orms could<br>
+&gt; &gt; &gt; set a flag to indicate this.<br>
+&gt; &gt; Could you make it more clear? kernel global variable, macro, or f=
+unction?<br>
+&gt; &gt;<br>
+&gt; &gt; - Following your idea, I think, we can add in driver/cpufreq/cpuf=
+req.c:<br>
+&gt; &gt; int (*clk_reg_cpufreq_get_op_table) (struct op_table *tbl, int *s=
+ize);<br>
+&gt; &gt; SoC code set the callback. If it&#39;s NULL, driver will exit. We=
+ can get rid<br>
+&gt; &gt; of DT. It&#39;ll make cpufreq core dirty, but it&#39;s the only f=
+ile built-in.<br>
+&gt; &gt;<br>
+&gt; &gt; - Drop module support. SoC call generic_clk_cpufreq_init as Jamie=
+ said.<br>
+&gt;<br>
+&gt; I think you don&#39;t actually need a &quot;compatible&quot; property =
+here, as long as we<br>
+&gt; ensure that the &quot;cpu-freqs&quot;, &quot;cpu-volts&quot; and &quot=
+;trans-latency&quot; properties are<br>
+&gt; present in the cpu node if and only if the machine works with this dri=
+ver<br>
+&gt; (why else would you put them there?).<br>
+It is more easy for me. <br>
+Rob, agree?</p>
+<p>Richard<br>
+&gt;<br>
+&gt; CPUs are special in the device trees in a number of ways, so I think w=
+e<br>
+&gt; can treat this as a logical extension. This way, you can still make th=
+e<br>
+&gt; generic cpufreq driver a loadable module. You don&#39;t get module aut=
+oloading<br>
+&gt; with this structure, but that is already the case because the cpu node=
+s<br>
+&gt; in the device tree are not translated into linux devices.<br>
+&gt;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0Arnd<br>
+</p>
+
+--f46d043be19a9bd83004b48d28e7--
+
+
+--===============3688559450507059403==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linaro-dev mailing list
+linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+http://lists.linaro.org/mailman/listinfo/linaro-dev
+
+--===============3688559450507059403==--
