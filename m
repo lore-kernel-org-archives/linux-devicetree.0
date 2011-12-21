@@ -1,119 +1,87 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [RFC 7/7] pwm-backlight: Add rudimentary device-tree support
-Date: Wed, 21 Dec 2011 09:04:43 -1000
-Message-ID: <4EF22DCB.10502@firmworks.com>
-References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
- <1324377138-32129-8-git-send-email-thierry.reding@avionic-design.de>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92EBE@HQMAIL01.nvidia.com>
- <20111221093257.GF542@avionic-0098.mockup.avionic-design.de>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE9302E@HQMAIL01.nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 3/3] ARM: OMAP2+: board-generic: Replace #if defined by
+ #ifdef for consistency
+Date: Wed, 21 Dec 2011 11:19:15 -0800
+Message-ID: <20111221191915.GF24444@atomide.com>
+References: <y>
+ <1323190149-6492-4-git-send-email-b-cousson@ti.com>
+ <4EF08B8B.2040400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF176BE9302E-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4EF08B8B.2040400@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/21/2011 8:20 AM, Stephen Warren wrote:
-> Thierry Reding wrote at Wednesday, December 21, 2011 2:33 AM:
->> * Stephen Warren wrote:
->>> Thierry Reding wrote at Tuesday, December 20, 2011 3:32 AM:
->> [...]
->>>> +  - default-brightness: the default brightness setting
->>>> +  - max-brightness: the maximum brightness setting
->>>
->>> What are the units of those two properties? Percentage seems like a
->>> reasonable choice, although that's not what the patch implements.
->>
->> That's just the way the pwm-backlight driver works. Typically the maximum
->> brightness is set to 255. I think you can set these values to pretty much
->> anything, and the driver will convert the brightness set via sysfs to the
->> range from 0 to max-brightness.
->
-> It sounds like this numbering scheme is some SW abstraction then and not
-> directly related to HW. It's questionable that this should be represented
-> in DT, although if it's not I'm not sure where else it could be.
->
-> I think from a pure HW perspective, you need to represent:
-> * PWM period. nS is fine here.
-> * Minimum PWM duty cycle. nS or percentage is probably fine here. I don't
->    know which is more likely to be specified in data sheets.
->    (This is missing in the current patch, but supported in pwm_bl.c, so
->    I assume there's a need for this, and hence it should be added to DT)
-> * Maximum PWM duty cycle. nS or percentage is probably fine here. I don't
->    know which is more likely to be specified in data sheets.
->    (I think this is assumed to be 100% duty cycle by pwm_bl.c, so perhaps
->    there isn't a need to represent this in DT?)
->
-> Now, the Linux PWM driver then needs to know a range to map those min/max
-> HW duty cycles to. These are the values where it's unclear to me if/how
-> DT should represent them. It looks like the SW min value is always 0, and
-> the SW max value is what max-brightness is in the patch. Is there any
-> particular reason that max-brightness has to be a particular value, or
-> even defined in the DT at all? Could we hard-code it to 255 in the DT
-> parsing code, and not store it in the DT at all; would anything break
-> if we did that?
->
-> If we do need to represent it in DT, given it's a Linux-specific value,
-> perhaps the property name should have a "linux," or "linux-pwm-bl,"
-> prefix?
->
-> Thinking some more, perhaps the concept of "number of distinct useful
-> brightness steps" is a reasonable pure HW concept.
+* Cousson, Benoit <b-cousson@ti.com> [111220 04:48]:
+> Hi Tony,
+> 
+> What about that patch?
+> 
+> This is the only one that is missing in lo.
+> I know it is not a big deal, but it will make things a little bit cleaner.
 
-On the PWM-controlled backlights that I have used, there is no such 
-quantization at the hardware level.  The light (LED or fluorescent tube) 
-sees an analog signal, typically a low-pass-filtered PWM waveform, and 
-responds accordingly.  Human factors may establish a limit on the number 
-of useful distinct levels, but there is no way to determine that from a 
-data sheet, and thus no definitive hardware-defined value to assign to a 
-property.
+I think we should wait on this one and combine it later on into
+some other clean-up patch.
 
-The objective hardware parameters are often
+Regards,
 
-a) clock frequency choices for the PWM input
-b) counter choices for base period
-c) counter choices for on phase
-
-There is usually wide latitude for choosing (a) and (b).  Depending on 
-the analog filtering and the response characteristics of the light 
-source, some choices may result in flickering.  So it would be 
-reasonable to report frequency and base period settings that, on the 
-hardware in question, result in a reasonable number of flicker-free 
-brightness steps.
-
-To further complicate matters, the relationship between PWM duty cycle 
-and perceived brightness is usually nonlinear, so equally-spaced duty 
-cycle percentages might not result in the best perceived brightness ramp.
-
-One useful way to describe a given hardware system would be to have 
-properties reporting values that work well for that hardware.  You would 
-need to report a good base clock frequency, a good base period, and an 
-array of N values that give a good perceived brightness ramp.
-
-The backlight control on my PC laptop has 16 levels, 0 to 15.  That 
-seems adequate to me.
-
-> If we rename max-
-> brightness to something representing that concept, we can still use the
-> value as max_brightness in the driver (well, subtract 1) and everyone's
-> happy? Perhaps "num-brightness-levels"?
->
-> If we store a "default brightness" in the DT, perhaps we should represent
-> it in the same way as the min/max PWM duty cycle values, and convert it
-> to the 0..max_brighness range when parsing the DT. I'm not sure what we'd
-> do if the selected value didn't align with a value obtainable using one
-> of the "num-brightness-steps" though. I guess that implies that the default
-> should be an integer step ID (as it is in your patch), not a duty cycle?
->
+Tony
+ 
+> Thanks,
+> Benoit
+> 
+> On 12/6/2011 5:49 PM, Benoit Cousson wrote:
+> >The file contains a mix of #ifdef and #if defined().
+> >Replace the #if... by #ifdef.
+> >
+> >Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+> >Cc: Tony Lindgren<tony@atomide.com>
+> >---
+> >  arch/arm/mach-omap2/board-generic.c |    8 ++++----
+> >  1 files changed, 4 insertions(+), 4 deletions(-)
+> >
+> >diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+> >index fb55fa3..09f44e0 100644
+> >--- a/arch/arm/mach-omap2/board-generic.c
+> >+++ b/arch/arm/mach-omap2/board-generic.c
+> >@@ -92,7 +92,7 @@ static void __init omap3_init(void)
+> >  }
+> >  #endif
+> >
+> >-#if defined(CONFIG_SOC_OMAP2420)
+> >+#ifdef CONFIG_SOC_OMAP2420
+> >  static const char *omap242x_boards_compat[] __initdata = {
+> >  	"ti,omap2420",
+> >  	NULL,
+> >@@ -110,7 +110,7 @@ DT_MACHINE_START(OMAP242X_DT, "Generic OMAP2420 (Flattened Device Tree)")
+> >  MACHINE_END
+> >  #endif
+> >
+> >-#if defined(CONFIG_SOC_OMAP2430)
+> >+#ifdef CONFIG_SOC_OMAP2430
+> >  static const char *omap243x_boards_compat[] __initdata = {
+> >  	"ti,omap2430",
+> >  	NULL,
+> >@@ -128,7 +128,7 @@ DT_MACHINE_START(OMAP243X_DT, "Generic OMAP2430 (Flattened Device Tree)")
+> >  MACHINE_END
+> >  #endif
+> >
+> >-#if defined(CONFIG_ARCH_OMAP3)
+> >+#ifdef CONFIG_ARCH_OMAP3
+> >  static const char *omap3_boards_compat[] __initdata = {
+> >  	"ti,omap3",
+> >  	NULL,
+> >@@ -146,7 +146,7 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
+> >  MACHINE_END
+> >  #endif
+> >
+> >-#if defined(CONFIG_ARCH_OMAP4)
+> >+#ifdef CONFIG_ARCH_OMAP4
+> >  static const char *omap4_boards_compat[] __initdata = {
+> >  	"ti,omap4",
+> >  	NULL,
+> 
