@@ -1,78 +1,87 @@
-From: =?utf-8?Q?Lothar_Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: RE: [RFC PATCH v3 1/5] dt: add of_get_child_count helper function
-Date: Wed, 21 Dec 2011 07:05:40 +0100
-Message-ID: <20209.30516.772365.586920@ipc1.ka-ro>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-2-git-send-email-b29396@freescale.com>
- <201112202047.10308.marek.vasut@gmail.com>
- <7FE21149F4667147B645348EC605788505C544@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [RFC 6/7] pwm: Add Tegra2 SoC support
+Date: Wed, 21 Dec 2011 08:19:27 +0100
+Message-ID: <20111221071927.GA542@avionic-0098.mockup.avionic-design.de>
+References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
+ <1324377138-32129-7-git-send-email-thierry.reding@avionic-design.de>
+ <CAOesGMibzg80rpeUMt-RTyz=0cffHtZmUe09XDdODNKwZmsX2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7FE21149F4667147B645348EC605788505C544@039-SN2MPN1-013.039d.mgd.msft.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng-B29396 <B29396@freescale.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "w.sang@pengutronix.de" <w.sang@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Guo Shawn-R65073 <r65073@freescale.com>, Marek Vasut <marek.vasut@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============7260493061698139134=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOesGMibzg80rpeUMt-RTyz=0cffHtZmUe09XDdODNKwZmsX2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpEb25nIEFpc2hlbmctQjI5Mzk2IHdyaXRlczoKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tCj4gPiBGcm9tOiBNYXJlayBWYXN1dCBbbWFpbHRvOm1hcmVrLnZhc3V0QGdtYWlsLmNv
-bV0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgRGVjZW1iZXIgMjEsIDIwMTEgMzo0NyBBTQo+ID4gVG86
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+ID4gQ2M6IERvbmcgQWlzaGVu
-Zy1CMjkzOTY7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7Cj4gPiBsaW51cy53YWxsZWlq
-QHN0ZXJpY3Nzb24uY29tOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyB3LnNhbmdAcGVuZ3V0cm9u
-aXguZGU7Cj4gPiByb2IuaGVycmluZ0BjYWx4ZWRhLmNvbTsgZ3JhbnQubGlrZWx5QHNlY3JldGxh
-Yi5jYTsga2VybmVsQHBlbmd1dHJvbml4LmRlOwo+ID4gY2piQGxhcHRvcC5vcmc7IGRldmljZXRy
-ZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnOyBHdW8gU2hhd24tUjY1MDczCj4gPiBTdWJqZWN0
-OiBSZTogW1JGQyBQQVRDSCB2MyAxLzVdIGR0OiBhZGQgb2ZfZ2V0X2NoaWxkX2NvdW50IGhlbHBl
-ciBmdW5jdGlvbgo+ID4gSW1wb3J0YW5jZTogSGlnaAo+ID4gCj4gPiA+IEZyb206IERvbmcgQWlz
-aGVuZyA8ZG9uZy5haXNoZW5nQGxpbmFyby5vcmc+Cj4gPiA+Cj4gPiA+IEN1cnJlbnRseSBtb3N0
-IGNvZGUgdG8gZ2V0IGNoaWxkIGNvdW50IGluIGtlcm5lbCBhcmUgYWxtb3N0IHNhbWUsIGFkZAo+
-ID4gPiBhIGhlbHBlciB0byBpbXBsZW1lbnQgdGhpcyBmdW5jdGlvbiBmb3IgZHQgdG8gdXNlLgo+
-ID4gPgo+ID4gPiAtLS0KPiA+ID4gQ2hhbmdlcyB2MS0+djI6Cj4gPiA+ICAqIGNoYW5nZSB0aGUg
-bmFtZSBmcm9tIG9mX2dldF9jaGlsZF9udW1iZXIgdG8gb2ZfZ2V0X2NoaWxkX2NvdW50Cj4gPiA+
-Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IERvbmcgQWlzaGVuZyA8ZG9uZy5haXNoZW5nQGxpbmFyby5v
-cmc+Cj4gPiA+IENjOiBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+Cj4g
-PiA+IENjOiBSb2IgSGVycmluZyA8cm9iLmhlcnJpbmdAY2FseGVkYS5jb20+Cj4gPiA+IC0tLQo+
-ID4gPiAgaW5jbHVkZS9saW51eC9vZi5oIHwgICAxNiArKysrKysrKysrKysrKysrCj4gPiA+ICAx
-IGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4gPiA+Cj4g
-PiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L29mLmggYi9pbmNsdWRlL2xpbnV4L29mLmgg
-aW5kZXgKPiA+ID4gNDk0ODU1Mi4uZDBkOTFhMSAxMDA2NDQKPiA+ID4gLS0tIGEvaW5jbHVkZS9s
-aW51eC9vZi5oCj4gPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvb2YuaAo+ID4gPiBAQCAtMTg5LDYg
-KzE4OSwxNyBAQCBleHRlcm4gc3RydWN0IGRldmljZV9ub2RlCj4gPiA+ICpvZl9nZXRfbmV4dF9j
-aGlsZChjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsIGZvciAoY2hpbGQgPQo+ID4gPiBv
-Zl9nZXRfbmV4dF9jaGlsZChwYXJlbnQsIE5VTEwpOyBjaGlsZCAhPSBOVUxMOyBcCj4gPiA+ICAJ
-ICAgICBjaGlsZCA9IG9mX2dldF9uZXh0X2NoaWxkKHBhcmVudCwgY2hpbGQpKQo+ID4gPgo+ID4g
-PiArc3RhdGljIGlubGluZSBpbnQgb2ZfZ2V0X2NoaWxkX2NvdW50KGNvbnN0IHN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqbnApIHsKPiA+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNoaWxkID0gTlVMTDsK
-PiA+ID4gKwlpbnQgbnVtID0gMDsKPiA+ID4gKwo+ID4gPiArCXdoaWxlICgoY2hpbGQgPSBvZl9n
-ZXRfbmV4dF9jaGlsZChucCwgY2hpbGQpKSkKPiA+IAo+ID4gVGhlIGFzc2lnbm1lbnQgaW4gdGhp
-cyBjb25kaXRpb24gcmVhbGx5IGxvb2tzIGVlcmllLCBtYXliZSBqdXN0IHJld3JpdGUgaXQgdG8g
-ZG8KPiA+IHsgfSB3aGlsZSAoKSA/IEFsc28sIGFyZW4ndCB0aGUgcGFyZW50aGVzaXMgdW5uZWNl
-c3Nhcnk/Cj4gPiAKPiBZZXMsIG9uZSBtb3JlIHBhcmVudGhlc2lzLiBJIHdpbGwgcmVtb3ZlIGl0
-LiBUaGFua3MuCj4gRm9yIHRoZSBjb25kaXRpb24sIGl0J3MgYSBsaXR0bGUgdHJpY2sgYnV0IEkg
-Z3Vlc3MgZm9yIGEgaGVscGVyIGZ1bmN0aW9uCj4gaXQncyBvayByaWdodD8gQW5kIHRoZXJlJ3Jl
-IGFscmVhZHkgbWFueSBwbGFjZXMgdXNpbmcgbGlrZSB0aGlzLgo+IApJdCdzIGEgYmFkIGhhYml0
-IHRvIHVzZSBhbiBhc3NpZ25tZW50IGFzIGFuIGV4cHJlc3Npb24uIEl0IGFsd2F5cwpsb29rcyBs
-aWtlIHNvbWVvbmUgdXNlZCAnPScgaW5zdGVhZCBvZiAnPT0nLgoKWW91IHNob3VsZCBtYWtlIGl0
-IGNsZWFyIHRoYXQgdGhhdCdzIG5vdCB0aGUgY2FzZSBsaWtlOgp8CSAgIHdoaWxlICgoY2hpbGQg
-PSBvZl9nZXRfbmV4dF9jaGlsZChucCwgY2hpbGQpKSAhPSBOVUxMKQoKCkxvdGhhciBXYcOfbWFu
-bgotLSAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KCkthLVJvIGVsZWN0cm9uaWNzIEdtYkggfCBQYXNjYWxzdHJhw59lIDIyIHwgRCAt
-IDUyMDc2IEFhY2hlbgpQaG9uZTogKzQ5IDI0MDggMTQwMi0wIHwgRmF4OiArNDkgMjQwOCAxNDAy
-LTEwCkdlc2Now6RmdHNmw7xocmVyOiBNYXR0aGlhcyBLYXVzc2VuCkhhbmRlbHNyZWdpc3RlcmVp
-bnRyYWc6IEFtdHNnZXJpY2h0IEFhY2hlbiwgSFJCIDQ5OTYKCnd3dy5rYXJvLWVsZWN0cm9uaWNz
-LmRlIHwgaW5mb0BrYXJvLWVsZWN0cm9uaWNzLmRlCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+--===============7260493061698139134==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+Content-Disposition: inline
+
+
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+* Olof Johansson wrote:
+> Hi,
+>=20
+> On Tue, Dec 20, 2011 at 2:32 AM, Thierry Reding
+> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+>=20
+> If the code is copyright nvidia without a signed-off-by from them,
+> then they at least deserve mentioning of original authorship in the
+> change log.
+
+Yes, I forgot to add a comment to that effect. Alternatively I could try to
+get both Gary King (original author) and Simon Que (Chromium) to sign-off on
+the current patch if that is preferable.
+
+> It's also proving itself easier to do the driver and the device tree
+> and board-dt update separately since they tend to have different merge
+> paths.
+>=20
+> Care to split up as two patches, one for drivers/ and one for arch/arm/?
+
+No problem. I will also address the other comments in the next version.
+
+Thanks,
+Thierry
+
+--fUYQa+Pmc3FrFX/N
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEARECAAYFAk7xiH8ACgkQZ+BJyKLjJp951QCbB/twfTrfNiUN7A7a+R0crCH6
+poYAoJGju5UX3CTH4ILSkdXpQxJhP5Mc
+=P608
+-----END PGP SIGNATURE-----
+
+--fUYQa+Pmc3FrFX/N--
+
+--===============7260493061698139134==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7260493061698139134==--
