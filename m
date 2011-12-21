@@ -1,26 +1,90 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [RFC 1/7] PWM: add pwm framework support
-Date: Wed, 21 Dec 2011 00:54:39 +0000
-Message-ID: <20111221005439.GC13529@sirena.org.uk>
-References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
- <1324377138-32129-2-git-send-email-thierry.reding@avionic-design.de>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92E50@HQMAIL01.nvidia.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] mfd: mc13xxx: add device tree probe support
+Date: Wed, 21 Dec 2011 09:25:21 +0800
+Message-ID: <20111221012519.GA5983@S2101-09.ap.freescale.net>
+References: <1323702958-4831-2-git-send-email-shawn.guo@linaro.org>
+ <20111220005708.GM2860@opensource.wolfsonmicro.com>
+ <20111220020101.GD5683@S2100-06.ap.freescale.net>
+ <20111220015931.GX2860@opensource.wolfsonmicro.com>
+ <20111220030347.GB2995@S2101-09.ap.freescale.net>
+ <20111220112510.GL2866@opensource.wolfsonmicro.com>
+ <20111220135251.GB5129@S2101-09.ap.freescale.net>
+ <20111220143558.GT2866@opensource.wolfsonmicro.com>
+ <20111220153101.GD5348@S2101-09.ap.freescale.net>
+ <20111220232526.GA6551@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF176BE92E50-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <20111220232526.GA6551-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2011 at 02:13:38PM -0800, Stephen Warren wrote:
+On Tue, Dec 20, 2011 at 11:25:27PM +0000, Mark Brown wrote:
+> On Tue, Dec 20, 2011 at 11:31:03PM +0800, Shawn Guo wrote:
+> > On Tue, Dec 20, 2011 at 02:35:58PM +0000, Mark Brown wrote:
+> 
+> > > I don't know that that helps, register numbers and shifts aren't going
+> > > to do anything for legibility.
+> 
+> > I think it helps.  It's not about legibility but identification.  For
+> > mc13892 driver to work, it has to match the register number and enable
+> > bit shift given by mc13892 reference manual.  So register number +
+> > enable bit shift is stable and unique to identify a mc13892 regulator.
+> 
+> It's unique but I feel the disadvantages in terms of legibility of the
+> resulting device trees are substantial - we want humans to be able to
+> read and write device trees, preferrably without having to dig out the
+> datasheet for the part.
 
-> There have been discussions before re: GPIOs and interrupts that creating
-> a global namespace for them was a mistake. This new PWM API does the same
-> thing. Is there an issue here?
+Eh, device tree is all about describing hardware.  I do not understand
+what is wrong with looking at hardware manual when writing dts.
 
-It is an issue with the PWM API but as the PWM API already exists
-(without a generic implementation) it's kind of out of scope to fix that
-- it'd be a big churn to do along with providing standard code.
+> So long as the names are reasonably sensible
+> and can be understood in the case of any lack of clarity we should be
+> OK.
+> 
+The problem is even if we have the name defined that way, it has to be
+matched to the name used in mc13892 driver somehow, if we want to use
+name as the key to find the regulator defined in mc13892 driver as
+array mc13892_regulators[].
+
+> > > The problem with the names was that the
+> > > names chosen were poorly defined (why call DCDCn chipname__dcdcn?) and
+> > > not documented in the binding, not that they were names.
+> 
+> > The problem with name is it's name.  The mc13892 driver can still work
+> > with naming regulator differently from mc13892 reference manual.  So
+> > using name to bind a regulator means we are binding with Linux mc13892
+> > driver.  In that case, DT probe works if and only if the name in dts
+> > matches the name used in mc13892 driver, and it does not work as long
+> > as the name dts does not match the name used in mc13892 driver.
+> 
+> This is the whole reason why I'm saying that you need to define the
+> names used in the binding - if the names are a defined part of the
+> binding then there's nothing driver specific about them.
+> 
+Can you please help me understand how this can be achieved with an
+example?  Taking 'mc13892__sw1' as the example, if I read your comment
+before correctly, 'sw1' is the name that you are suggesting.  How this
+name can be nothing driver specific?  After all, we need to find
+regulator MC13892_SW1 defined in mc13892_regulators[] by matching name
+'sw1' defined by binding and name 'MC13892_SW1' defined by driver
+somehow, if we want to use name to bind the regulator.
+
+I feel I might miss your point again.  So please help clarify.
+
+-- 
+Regards,
+Shawn
