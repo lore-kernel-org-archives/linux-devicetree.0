@@ -1,67 +1,113 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [RFC 4/7] arm: tegra: Fix PWM clock programming
-Date: Wed, 21 Dec 2011 10:12:27 +0100
-Message-ID: <20111221091227.GE542@avionic-0098.mockup.avionic-design.de>
-References: <1324377138-32129-1-git-send-email-thierry.reding@avionic-design.de>
- <1324377138-32129-5-git-send-email-thierry.reding@avionic-design.de>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92E7E@HQMAIL01.nvidia.com>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
+Date: Wed, 21 Dec 2011 17:27:40 +0800
+Message-ID: <20111221092739.GI15863@b20223-02.ap.freescale.net>
+References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
+ <1324264903-15395-5-git-send-email-richard.zhao@linaro.org>
+ <20111220145904.GD29727@sirena.org.uk>
+ <20111220232701.GA1698@richard-laptop>
+ <20111220234844.GC6551@opensource.wolfsonmicro.com>
+ <20111221012046.GE15863@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7CZp05NP8/gJM8Cl"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <cpufreq-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF176BE92E7E-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Simon Que <sque-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Bill Huang <bilhuang-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <20111221012046.GE15863@b20223-02.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: linux@arm.linux.org.uk, mark.langsdorf@calxeda.com, arnd@arndb.de, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, bryanh@codeaurora.org, cpufreq@vger.kernel.org, grant.likely@secretlab.ca, jamie@jamieiles.com, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, davej@redhat.com, linaro-dev@lists.linaro.org, davidb@codeaurora.org, shawn.guo@linaro.org, rob.herring@calxeda.com, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Dec 21, 2011 at 09:20:46AM +0800, Richard Zhao wrote:
+> Hi Mark,
+> 
+> On Tue, Dec 20, 2011 at 11:48:45PM +0000, Mark Brown wrote:
+> > On Wed, Dec 21, 2011 at 07:27:03AM +0800, Richard Zhao wrote:
+> > > On Tue, Dec 20, 2011 at 02:59:04PM +0000, Mark Brown wrote:
+> > 
+> > > > My comments on the previous version of the patch still apply:
+> > 
+> > > >  - The voltage ranges being set need to be specified as ranges.
+> > 
+> > > cpu normally need strict voltages. and only proved operating opints
+> > > are allowed to set in dts. If the voltage changes slightly especially
+> > > for high frequency, it's easy to cause unstable.
+> > 
+> > Clearly there will be limits which get more and more restrictive as the
+> > frequencies get higher but there will always be at least some play in
+> > the numbers as one must at a minimum specify tolerance ranges, and at
+> > lower frequencies the ranges specified will typically get compartively
+> > large.
+> hmm, reasonable. I'll add it in dts. Thanks.
+> > 
+> > Note also that not all hardware specifies things in terms of a fixed set
+> > of operating points, sometimes only the minimum voltage specification is
+> > varied with frequency or sometimes you see maximum and minimum stepping
+> > independently.
+> cpus that don't use freq table is out of scope of this driver.
+> > 
+> > Further note that if all hardware really does have as tight a set of
+> > requirements as you suggest then the regulator support in the driver
+> > needs to be non-optional otherwise a board without software regulator
+> > control might drop the frequency without also dropping the voltage.
+> It's ok to only adjuct freq without changes voltage. You can find many
+> arm soc cpufreq drivers don't change voltage.
+> If dts specify voltage but don't have such regulator. I'll assume it
+> always runs on the initial volatage (highest for most cases).
+> > 
+> > > >  - Frequencies that can't be supported due to limitations of the
+> > > >    available supplies shouldn't be exposed to users.
+> > 
+> > > As I said, only proved operation points are allowed.
+> > 
+> > This statement appears to be unrelated to the comment you're replying
+> > to.
+> I meant the exact voltage can always successfull set. Anyway, I'll add
+> regulator_set_voltage return value checking.
+> > 
+> > > > You also need to define how the core supplies get looked up.
+> > 
+> > > It's pure software. platform uses this driver have to define "cpu" consumer.
+> > 
+> > You still need to define this in the binding.
+> You mean regulator DT binding? already in ? I'll check it.
+Mark, cpu node is not a struct device, sys_device instead. I can not find
+regulator via device/dt node. Can I still use the string to get regulator
+after converting to DT?
 
---7CZp05NP8/gJM8Cl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+And regulator binding is not on cpufreq git tree.
 
-* Stephen Warren wrote:
-> Thierry Reding wrote at Tuesday, December 20, 2011 3:32 AM:
-> > From: Simon Que <sque-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >=20
-> > PWM clock source registers in Tegra 2 have different clock source selec=
-tion bit
-> > fields than other registers.  PWM clock source bits in CLK_SOURCE_PWM_0=
- register
-> > are located at bit field bit[30:28] while others are at bit field bit[3=
-1:30] in
-> > their respective clock source register.
-> >=20
-> > This patch updates the clock programming to correctly reflect that, by =
-adding a
-> > flag to indicate the alternate bit field format and checking for it when
-> > selecting a clock source (parent clock).
-> >=20
-> > Also, adjusts for the frequency divider being offset by 1.
->=20
-> That last line applies to the original patch in the ChromeOS tree, but
-> not to the patch you posted (the edit to arch/arm/mach-tegra/pwm.c that
-> was in the original patch isn't part of this patch).
+Thanks
+Richard
+> > 
+> > > > > +	pr_info("Generic CPU frequency driver\n");
+> > 
+> > > > This seems noisy...
+> > 
+> > > Why? Do you think only errors and warnings can print out?
+> > 
+> > Yes.
+> 
+> Maybe I can remove it. But I'd probably add freq table dump. It's more important.
+> Agree?
+> 
+> I checked pr_fmt. Thanks very much. I'll use below and remove __func_.
+> #define pr_fmt(fmt)             KBUILD_MODNAME ": " fmt
+> 
+> 
+> Thanks
+> Richard
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-Right, I've adjusted the commit message to take that into account. I assume
-the commit now also requires my Signed-off-by because I actually modified t=
-he
-patch? This would be true even in the previous version because I had to make
-some small adjustments.
-
-Thierry
-
---7CZp05NP8/gJM8Cl
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEUEARECAAYFAk7xovsACgkQZ+BJyKLjJp8LOwCgqxWVZ5xy1a/3jf7aJCt/p6x+
-aAMAmLBbJWN+sDQ0E/MkMnG7M62qsIQ=
-=Lgp5
------END PGP SIGNATURE-----
-
---7CZp05NP8/gJM8Cl--
