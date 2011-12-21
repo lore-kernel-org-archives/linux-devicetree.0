@@ -1,53 +1,57 @@
-From: Andy Whitcroft <apw@canonical.com>
-Subject: Re: [PATCH 1/1] dt: fix some code indent issue in of.h
-Date: Wed, 21 Dec 2011 11:37:04 +0000
-Message-ID: <20111221113704.GA18598@localhost>
-References: <1324404609-3999-1-git-send-email-b29396@freescale.com>
- <4EF0D6FD.8070406@gmail.com>
- <7FE21149F4667147B645348EC605788505C492@039-SN2MPN1-013.039d.mgd.msft.net>
- <1324436782.14214.8.camel@joe2Laptop>
+From: Kay Sievers <kay.sievers@vrfy.org>
+Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
+Date: Wed, 21 Dec 2011 12:44:57 +0100
+Message-ID: <CAPXgP10FCrqdTg++46m4+xxM9tw1ZrKc8wz=JkKjCHJ0hQPtng@mail.gmail.com>
+References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org>
+ <20111221012046.GE15863@b20223-02.ap.freescale.net>
+ <20111221092739.GI15863@b20223-02.ap.freescale.net>
+ <201112210943.34310.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1324436782.14214.8.camel@joe2Laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Rob Herring <robherring2@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Guo Shawn-R65073 <r65073@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201112210943.34310.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linaro-dev@lists.linaro.org, catalin.marinas@arm.com, eric.miao@linaro.org, grant.likely@secretlab.ca, rdunlap@xenotime.net, jamie@jamieiles.com, linux@arm.linux.org.uk, cpufreq@vger.kernel.org, Greg KH <greg@kroah.com>, davidb@codeaurora.org, patches@linaro.org, marc.zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, davej@redhat.com, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org, mark.langsdorf@calxeda.com, Mark Brown <broonie@opensource.wolfsonmicro.com>, bryanh@codeaurora.org, Richard Zhao <richard.zhao@freescale.com>, kernel@pengutronix.de, shawn.guo@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2011 at 07:06:22PM -0800, Joe Perches wrote:
-> On Wed, 2011-12-21 at 02:57 +0000, Dong Aisheng-B29396 wrote:
-> > > On 12/20/2011 12:10 PM, Dong Aisheng wrote:
-> > > > From: Dong Aisheng <dong.aisheng@linaro.org>
-> > > > Checkpatch script will report some warnings for the old coding style:
-> > > > WARNING: suspect code indent for conditional statements (8, 0)
-> > > >         for (child = of_get_next_child(parent, NULL); child != NULL; \
-> > > > [...]
-> []
-> > > > diff --git a/include/linux/of.h b/include/linux/of.h index
-> []
-> > > > @@ -163,22 +163,22 @@ extern struct device_node *of_find_node_by_name(struct
-> > > device_node *from,
-> > > >  	const char *name);
-> > > >  #define for_each_node_by_name(dn, name) \
-> > > >  	for (dn = of_find_node_by_name(NULL, name); dn; \
-> > > > -	     dn = of_find_node_by_name(dn, name))
-> > > > +		dn = of_find_node_by_name(dn, name))
-> > > The old way looks fine to me and indenting like this is commonly used in the
-> > > kernel.
-> > Yes, i was also ok without those annoying warning.
-> > Do you think if we need to fix the checkpatch.pl if the it is commonly used
-> > In the kernel?
-> 
-> I don't.  I think it's better for people to realize that
-> checkpatch is and will always be an imperfect tool and
-> that they should learn to ignore inappropriate warnings.
+On Wed, Dec 21, 2011 at 10:43, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 21 December 2011, Richard Zhao wrote:
+>> On Wed, Dec 21, 2011 at 09:20:46AM +0800, Richard Zhao wrote:
+>
+>> > > > > You also need to define how the core supplies get looked up.
+>> > >
+>> > > > It's pure software. platform uses this driver have to define "cpu" consumer.
+>> > >
+>> > > You still need to define this in the binding.
+>> > You mean regulator DT binding? already in ? I'll check it.
+>> Mark, cpu node is not a struct device, sys_device instead. I can not find
+>> regulator via device/dt node. Can I still use the string to get regulator
+>> after converting to DT?
+>
+> I believe Kay and Greg have the plan to unify "class" and "bus" in sysfs, which
+> implies turning sys_device into a derived class of device instead of kobject.
+> If that understanding is correct, we might as well do that now so we can
+> attach a device_node to a sys_device.
+>
+> Kay, does this make sense?
 
-Right.  Checkpatch is simply a helper, if you have checkpatch warnings
-in a patch you are submitting then you need to be able to mentally
-justify them.  It is there to catch the basic stuff that wastes so much
-of the reviewers time and to help you get your patches accepted quicker.
-It is not a substitute for your own common sense.
+Yes, it's all converted already:
+  http://git.kernel.org/?p=linux/kernel/git/kay/patches.git;a=tree
 
--apw
+The sysdev stuff will entirely go away, the devices are just 'struct
+device' and the sysdev classes are all converted to buses.
+
+We will convert all classes to buses over time time, and have a single
+type of device and a single type of subsystem.
+
+Kay
