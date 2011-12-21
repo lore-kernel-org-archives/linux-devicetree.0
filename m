@@ -1,87 +1,71 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/3] ARM: OMAP2+: board-generic: Replace #if defined by
- #ifdef for consistency
-Date: Wed, 21 Dec 2011 11:19:15 -0800
-Message-ID: <20111221191915.GF24444@atomide.com>
-References: <y>
- <1323190149-6492-4-git-send-email-b-cousson@ti.com>
- <4EF08B8B.2040400@ti.com>
+From: Alan Cox <alan@linux.intel.com>
+Subject: Re: [PATCH] serial/efm32: add new driver
+Date: Wed, 21 Dec 2011 20:28:47 +0000
+Message-ID: <20111221202847.4ffeba10@bob.linux.org.uk>
+References: <1324479959-7343-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4EF08B8B.2040400@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1324479959-7343-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Uwe =?ISO-8859-1?B?S2xlaW5lLUv2bmln?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@suse.de>, linux-serial@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-* Cousson, Benoit <b-cousson@ti.com> [111220 04:48]:
-> Hi Tony,
-> 
-> What about that patch?
-> 
-> This is the only one that is missing in lo.
-> I know it is not a big deal, but it will make things a little bit cleaner.
+On Wed, 21 Dec 2011 16:05:59 +0100
+Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> wrote:
 
-I think we should wait on this one and combine it later on into
-some other clean-up patch.
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+>=20
+> note that ARCH_EFM32 isn't in mainline yet, so to be actually usable
+> some arch patches are needed.
 
-Regards,
+Start by running it through the CodingStyle scripts as I see a //
+comment in there 8)
 
-Tony
- 
-> Thanks,
-> Benoit
-> 
-> On 12/6/2011 5:49 PM, Benoit Cousson wrote:
-> >The file contains a mix of #ifdef and #if defined().
-> >Replace the #if... by #ifdef.
-> >
-> >Signed-off-by: Benoit Cousson<b-cousson@ti.com>
-> >Cc: Tony Lindgren<tony@atomide.com>
-> >---
-> >  arch/arm/mach-omap2/board-generic.c |    8 ++++----
-> >  1 files changed, 4 insertions(+), 4 deletions(-)
-> >
-> >diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> >index fb55fa3..09f44e0 100644
-> >--- a/arch/arm/mach-omap2/board-generic.c
-> >+++ b/arch/arm/mach-omap2/board-generic.c
-> >@@ -92,7 +92,7 @@ static void __init omap3_init(void)
-> >  }
-> >  #endif
-> >
-> >-#if defined(CONFIG_SOC_OMAP2420)
-> >+#ifdef CONFIG_SOC_OMAP2420
-> >  static const char *omap242x_boards_compat[] __initdata = {
-> >  	"ti,omap2420",
-> >  	NULL,
-> >@@ -110,7 +110,7 @@ DT_MACHINE_START(OMAP242X_DT, "Generic OMAP2420 (Flattened Device Tree)")
-> >  MACHINE_END
-> >  #endif
-> >
-> >-#if defined(CONFIG_SOC_OMAP2430)
-> >+#ifdef CONFIG_SOC_OMAP2430
-> >  static const char *omap243x_boards_compat[] __initdata = {
-> >  	"ti,omap2430",
-> >  	NULL,
-> >@@ -128,7 +128,7 @@ DT_MACHINE_START(OMAP243X_DT, "Generic OMAP2430 (Flattened Device Tree)")
-> >  MACHINE_END
-> >  #endif
-> >
-> >-#if defined(CONFIG_ARCH_OMAP3)
-> >+#ifdef CONFIG_ARCH_OMAP3
-> >  static const char *omap3_boards_compat[] __initdata = {
-> >  	"ti,omap3",
-> >  	NULL,
-> >@@ -146,7 +146,7 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
-> >  MACHINE_END
-> >  #endif
-> >
-> >-#if defined(CONFIG_ARCH_OMAP4)
-> >+#ifdef CONFIG_ARCH_OMAP4
-> >  static const char *omap4_boards_compat[] __initdata = {
-> >  	"ti,omap4",
-> >  	NULL,
-> 
+
+> +static void efm32_usart_rx_chars(struct efm32_usart_port *efm_port)
+> +{
+> +	struct uart_port *port =3D &efm_port->port;
+> +	struct tty_struct *tty =3D port->state->port.tty;
+
+Needs to be using krefs and checking the tty is not NULL
+(tty_port_tty_get)
+
+> +static void efm32_usart_set_termios(struct uart_port *port,
+> +		struct ktermios *new, struct ktermios *old)
+> +{
+> +	struct efm32_usart_port *efm_port =3D to_efm_port(port);
+> +	unsigned long flags;
+> +	unsigned baud;
+> +	u32 clkdiv;
+> +
+> +	/* no modem control lines */
+> +	new->c_cflag &=3D ~(HUPCL | CRTSCTS | CMSPAR);
+
+Minor item - HUPCL shouldn't get cleared - its a request for hangup
+behaviour not a port feature.
+
+> +	/* currently only some features are implemented */
+> +	new->c_cflag &=3D ~CSIZE;
+> +	new->c_cflag |=3D CS8;
+> +	new->c_cflag |=3D CSTOPB;
+> +	new->c_cflag &=3D ~PARENB;
+
+If you can do CS8 without parity you can do CS7 with parity.
+
+> +	new->c_iflag =3D 0;
+
+This seems broken. Lots of the iflgs are user requests and stack
+properties not port features. For example you can do xon/xoff as its
+pure software. As far as I can see you should leave c_iflag alone.
+
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
