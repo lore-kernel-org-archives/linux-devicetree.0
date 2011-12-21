@@ -1,99 +1,78 @@
-From: Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: =?utf-8?Q?Lothar_Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 Subject: RE: [RFC PATCH v3 1/5] dt: add of_get_child_count helper function
-Date: Wed, 21 Dec 2011 03:27:01 +0000
-Message-ID: <7FE21149F4667147B645348EC605788505C544@039-SN2MPN1-013.039d.mgd.msft.net>
+Date: Wed, 21 Dec 2011 07:05:40 +0100
+Message-ID: <20209.30516.772365.586920@ipc1.ka-ro>
 References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
  <1324402840-32451-2-git-send-email-b29396@freescale.com>
  <201112202047.10308.marek.vasut@gmail.com>
+ <7FE21149F4667147B645348EC605788505C544@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201112202047.10308.marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7FE21149F4667147B645348EC605788505C544@039-SN2MPN1-013.039d.mgd.msft.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng-B29396 <B29396@freescale.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "w.sang@pengutronix.de" <w.sang@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Guo Shawn-R65073 <r65073@freescale.com>, Marek Vasut <marek.vasut@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Marek Vasut [mailto:marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
-> Sent: Wednesday, December 21, 2011 3:47 AM
-> To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: Dong Aisheng-B29396; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org; s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org;
-> rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org; grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org;
-> cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Guo Shawn-R65073
-> Subject: Re: [RFC PATCH v3 1/5] dt: add of_get_child_count helper function
-> Importance: High
-> 
-> > From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > Currently most code to get child count in kernel are almost same, add
-> > a helper to implement this function for dt to use.
-> >
-> > ---
-> > Changes v1->v2:
-> >  * change the name from of_get_child_number to of_get_child_count
-> >
-> > Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  include/linux/of.h |   16 ++++++++++++++++
-> >  1 files changed, 16 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/include/linux/of.h b/include/linux/of.h index
-> > 4948552..d0d91a1 100644
-> > --- a/include/linux/of.h
-> > +++ b/include/linux/of.h
-> > @@ -189,6 +189,17 @@ extern struct device_node
-> > *of_get_next_child(const struct device_node *node, for (child =
-> > of_get_next_child(parent, NULL); child != NULL; \
-> >  	     child = of_get_next_child(parent, child))
-> >
-> > +static inline int of_get_child_count(const struct device_node *np) {
-> > +	struct device_node *child = NULL;
-> > +	int num = 0;
-> > +
-> > +	while ((child = of_get_next_child(np, child)))
-> 
-> The assignment in this condition really looks eerie, maybe just rewrite it to do
-> { } while () ? Also, aren't the parenthesis unnecessary?
-> 
-Yes, one more parenthesis. I will remove it. Thanks.
-For the condition, it's a little trick but I guess for a helper function
-it's ok right? And there're already many places using like this.
-
-Regards
-Dong Aisheng
-
-> M
-> > +		num++;
-> > +
-> > +	return num;
-> > +}
-> > +
-> >  extern struct device_node *of_find_node_with_property(
-> >  	struct device_node *from, const char *prop_name);
-> >  #define for_each_node_with_property(dn, prop_name) \
-> > @@ -262,6 +273,11 @@ static inline bool of_have_populated_dt(void)
-> >  #define for_each_child_of_node(parent, child) \
-> >  	while (0)
-> >
-> > +static inline int of_get_child_count(const struct device_node *np)
-> > +{
-> > +	return -ENOSYS;
-> > +}
-> > +
-> >  static inline int of_device_is_compatible(const struct device_node
-> > *device, const char *name)
-> >  {
+SGksCgpEb25nIEFpc2hlbmctQjI5Mzk2IHdyaXRlczoKPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tCj4gPiBGcm9tOiBNYXJlayBWYXN1dCBbbWFpbHRvOm1hcmVrLnZhc3V0QGdtYWlsLmNv
+bV0KPiA+IFNlbnQ6IFdlZG5lc2RheSwgRGVjZW1iZXIgMjEsIDIwMTEgMzo0NyBBTQo+ID4gVG86
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+ID4gQ2M6IERvbmcgQWlzaGVu
+Zy1CMjkzOTY7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7Cj4gPiBsaW51cy53YWxsZWlq
+QHN0ZXJpY3Nzb24uY29tOyBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyB3LnNhbmdAcGVuZ3V0cm9u
+aXguZGU7Cj4gPiByb2IuaGVycmluZ0BjYWx4ZWRhLmNvbTsgZ3JhbnQubGlrZWx5QHNlY3JldGxh
+Yi5jYTsga2VybmVsQHBlbmd1dHJvbml4LmRlOwo+ID4gY2piQGxhcHRvcC5vcmc7IGRldmljZXRy
+ZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnOyBHdW8gU2hhd24tUjY1MDczCj4gPiBTdWJqZWN0
+OiBSZTogW1JGQyBQQVRDSCB2MyAxLzVdIGR0OiBhZGQgb2ZfZ2V0X2NoaWxkX2NvdW50IGhlbHBl
+ciBmdW5jdGlvbgo+ID4gSW1wb3J0YW5jZTogSGlnaAo+ID4gCj4gPiA+IEZyb206IERvbmcgQWlz
+aGVuZyA8ZG9uZy5haXNoZW5nQGxpbmFyby5vcmc+Cj4gPiA+Cj4gPiA+IEN1cnJlbnRseSBtb3N0
+IGNvZGUgdG8gZ2V0IGNoaWxkIGNvdW50IGluIGtlcm5lbCBhcmUgYWxtb3N0IHNhbWUsIGFkZAo+
+ID4gPiBhIGhlbHBlciB0byBpbXBsZW1lbnQgdGhpcyBmdW5jdGlvbiBmb3IgZHQgdG8gdXNlLgo+
+ID4gPgo+ID4gPiAtLS0KPiA+ID4gQ2hhbmdlcyB2MS0+djI6Cj4gPiA+ICAqIGNoYW5nZSB0aGUg
+bmFtZSBmcm9tIG9mX2dldF9jaGlsZF9udW1iZXIgdG8gb2ZfZ2V0X2NoaWxkX2NvdW50Cj4gPiA+
+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IERvbmcgQWlzaGVuZyA8ZG9uZy5haXNoZW5nQGxpbmFyby5v
+cmc+Cj4gPiA+IENjOiBHcmFudCBMaWtlbHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+Cj4g
+PiA+IENjOiBSb2IgSGVycmluZyA8cm9iLmhlcnJpbmdAY2FseGVkYS5jb20+Cj4gPiA+IC0tLQo+
+ID4gPiAgaW5jbHVkZS9saW51eC9vZi5oIHwgICAxNiArKysrKysrKysrKysrKysrCj4gPiA+ICAx
+IGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4gPiA+Cj4g
+PiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L29mLmggYi9pbmNsdWRlL2xpbnV4L29mLmgg
+aW5kZXgKPiA+ID4gNDk0ODU1Mi4uZDBkOTFhMSAxMDA2NDQKPiA+ID4gLS0tIGEvaW5jbHVkZS9s
+aW51eC9vZi5oCj4gPiA+ICsrKyBiL2luY2x1ZGUvbGludXgvb2YuaAo+ID4gPiBAQCAtMTg5LDYg
+KzE4OSwxNyBAQCBleHRlcm4gc3RydWN0IGRldmljZV9ub2RlCj4gPiA+ICpvZl9nZXRfbmV4dF9j
+aGlsZChjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUsIGZvciAoY2hpbGQgPQo+ID4gPiBv
+Zl9nZXRfbmV4dF9jaGlsZChwYXJlbnQsIE5VTEwpOyBjaGlsZCAhPSBOVUxMOyBcCj4gPiA+ICAJ
+ICAgICBjaGlsZCA9IG9mX2dldF9uZXh0X2NoaWxkKHBhcmVudCwgY2hpbGQpKQo+ID4gPgo+ID4g
+PiArc3RhdGljIGlubGluZSBpbnQgb2ZfZ2V0X2NoaWxkX2NvdW50KGNvbnN0IHN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqbnApIHsKPiA+ID4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNoaWxkID0gTlVMTDsK
+PiA+ID4gKwlpbnQgbnVtID0gMDsKPiA+ID4gKwo+ID4gPiArCXdoaWxlICgoY2hpbGQgPSBvZl9n
+ZXRfbmV4dF9jaGlsZChucCwgY2hpbGQpKSkKPiA+IAo+ID4gVGhlIGFzc2lnbm1lbnQgaW4gdGhp
+cyBjb25kaXRpb24gcmVhbGx5IGxvb2tzIGVlcmllLCBtYXliZSBqdXN0IHJld3JpdGUgaXQgdG8g
+ZG8KPiA+IHsgfSB3aGlsZSAoKSA/IEFsc28sIGFyZW4ndCB0aGUgcGFyZW50aGVzaXMgdW5uZWNl
+c3Nhcnk/Cj4gPiAKPiBZZXMsIG9uZSBtb3JlIHBhcmVudGhlc2lzLiBJIHdpbGwgcmVtb3ZlIGl0
+LiBUaGFua3MuCj4gRm9yIHRoZSBjb25kaXRpb24sIGl0J3MgYSBsaXR0bGUgdHJpY2sgYnV0IEkg
+Z3Vlc3MgZm9yIGEgaGVscGVyIGZ1bmN0aW9uCj4gaXQncyBvayByaWdodD8gQW5kIHRoZXJlJ3Jl
+IGFscmVhZHkgbWFueSBwbGFjZXMgdXNpbmcgbGlrZSB0aGlzLgo+IApJdCdzIGEgYmFkIGhhYml0
+IHRvIHVzZSBhbiBhc3NpZ25tZW50IGFzIGFuIGV4cHJlc3Npb24uIEl0IGFsd2F5cwpsb29rcyBs
+aWtlIHNvbWVvbmUgdXNlZCAnPScgaW5zdGVhZCBvZiAnPT0nLgoKWW91IHNob3VsZCBtYWtlIGl0
+IGNsZWFyIHRoYXQgdGhhdCdzIG5vdCB0aGUgY2FzZSBsaWtlOgp8CSAgIHdoaWxlICgoY2hpbGQg
+PSBvZl9nZXRfbmV4dF9jaGlsZChucCwgY2hpbGQpKSAhPSBOVUxMKQoKCkxvdGhhciBXYcOfbWFu
+bgotLSAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KCkthLVJvIGVsZWN0cm9uaWNzIEdtYkggfCBQYXNjYWxzdHJhw59lIDIyIHwgRCAt
+IDUyMDc2IEFhY2hlbgpQaG9uZTogKzQ5IDI0MDggMTQwMi0wIHwgRmF4OiArNDkgMjQwOCAxNDAy
+LTEwCkdlc2Now6RmdHNmw7xocmVyOiBNYXR0aGlhcyBLYXVzc2VuCkhhbmRlbHNyZWdpc3RlcmVp
+bnRyYWc6IEFtdHNnZXJpY2h0IEFhY2hlbiwgSFJCIDQ5OTYKCnd3dy5rYXJvLWVsZWN0cm9uaWNz
+LmRlIHwgaW5mb0BrYXJvLWVsZWN0cm9uaWNzLmRlCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
