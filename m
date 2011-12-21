@@ -1,15 +1,11 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 4/4] microblaze: Remove NO_IRQ from architecture
-Date: Wed, 21 Dec 2011 15:32:12 +0100
-Message-ID: <1324477932-19262-4-git-send-email-monstr@monstr.eu>
-References: <1324477932-19262-1-git-send-email-monstr@monstr.eu>
- <1324477932-19262-2-git-send-email-monstr@monstr.eu>
- <1324477932-19262-3-git-send-email-monstr@monstr.eu>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 0/4] Add device tree support for mc13892 regulator driver
+Date: Wed, 21 Dec 2011 23:00:43 +0800
+Message-ID: <1324479647-4580-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1324477932-19262-3-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,56 +15,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-NO_IRQ shouldn't be used by any driver. All Microblaze
-drivers are fixed that's why NO_IRQ can be removed.
+Changes since v3:
+ * The mfd patch in v3 was applied, and it's replaced by a incremental
+   patch to improve the binding document in the new series.
+ * Add a patch to remove the unnecessary prefix 'MC13892__' from
+   regulator name.
+ * Adopt the binding and regulator name changes in dts.
 
-Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-CC: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-CC: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/microblaze/include/asm/irq.h |    2 --
- arch/microblaze/pci/pci-common.c  |    4 ++--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+Changes since v2:
+ * Drop '[PATCH v2 2/4] regulator: pass device_node to
+   of_get_regulator_init_data()' which has been picked up by Mark
+ * Add a note on how driver matches regulator device and the node in
+   binding document
 
-diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
-index b116a82..a175132 100644
---- a/arch/microblaze/include/asm/irq.h
-+++ b/arch/microblaze/include/asm/irq.h
-@@ -27,8 +27,6 @@ typedef unsigned long irq_hw_number_t;
- 
- extern unsigned int nr_irq;
- 
--#define NO_IRQ 0
--
- struct pt_regs;
- extern void do_IRQ(struct pt_regs *regs);
- 
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index db841c7..0d71b2e 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -242,7 +242,7 @@ int pci_read_irq_line(struct pci_dev *pci_dev)
- 			 line, pin);
- 
- 		virq = irq_create_mapping(NULL, line);
--		if (virq != NO_IRQ)
-+		if (virq)
- 			irq_set_irq_type(virq, IRQ_TYPE_LEVEL_LOW);
- 	} else {
- 		pr_debug(" Got one, spec %d cells (0x%08x 0x%08x...) on %s\n",
-@@ -253,7 +253,7 @@ int pci_read_irq_line(struct pci_dev *pci_dev)
- 		virq = irq_create_of_mapping(oirq.controller, oirq.specifier,
- 					     oirq.size);
- 	}
--	if (virq == NO_IRQ) {
-+	if (!virq) {
- 		pr_debug(" Failed to map !\n");
- 		return -1;
- 	}
--- 
-1.7.5.4
+Changes since v1:
+ * Drop '[PATCH 2/5] regulator: fix label names used in device tree
+   bindings' which has been picked up
+ * Add binding document for mfd/mc13xxx-core device tree support
+ * Fix regulator/fixed.c breakage caused by interface change on
+   of_get_regulator_init_data()
+ * Reword the commit message of patch #2 a little bit to make the
+   reason for changing clear
+ * Retrieve the irq from gpio irq domain
+
+Shawn Guo (4):
+      mfd: improve mc13xxx dt binding document
+      regulator: mc13892: remove the unnecessary prefix from regulator name
+      regulator: mc13892: add device tree probe support
+      arm/imx: add mc13892 support into imx51-babbage.dts
+
+ Documentation/devicetree/bindings/mfd/mc13xxx.txt |   31 ++++++-
+ arch/arm/boot/dts/imx51-babbage.dts               |   93 ++++++++++++++++++++-
+ drivers/regulator/mc13892-regulator.c             |   43 +++++++---
+ drivers/regulator/mc13xxx-regulator-core.c        |   57 +++++++++++++
+ drivers/regulator/mc13xxx.h                       |   26 +++++-
+ include/linux/mfd/mc13xxx.h                       |    1 +
+ 6 files changed, 232 insertions(+), 19 deletions(-)
