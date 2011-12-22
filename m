@@ -1,24 +1,57 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V3 4/7] cpufreq: add generic cpufreq driver
-Date: Thu, 22 Dec 2011 00:50:51 +0000
-Message-ID: <20111222005048.GA27144@opensource.wolfsonmicro.com>
-References: <1324264903-15395-1-git-send-email-richard.zhao@linaro.org> <20111221012046.GE15863@b20223-02.ap.freescale.net> <20111221092739.GI15863@b20223-02.ap.freescale.net> <201112210943.34310.arnd@arndb.de> <CAPXgP10FCrqdTg++46m4+xxM9tw1ZrKc8wz=JkKjCHJ0hQPtng@mail.gmail.com> <20111221121246.GB15309@opensource.wolfsonmicro.com> <CAPXgP10CGxfEJ4jK2MkKt0-nAWgiawDERyA1N4wHvMCJfE3oDg@mail.gmail.com> <20111221141907.GA1777@richard-laptop>
+From: Jeff Garzik <jeff@garzik.org>
+Subject: Re: pata_of_platform.c cannot build on sparc
+Date: Wed, 21 Dec 2011 20:40:26 -0500
+Message-ID: <4EF28A8A.5070600@garzik.org>
+References: <20111221.173810.971054965060472866.davem@davemloft.net> <4EF26ADB.2040504@gmail.com> <20111221.191459.1775781797635505733.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111221141907.GA1777@richard-laptop>
-Sender: cpufreq-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@linaro.org>
-Cc: Kay Sievers <kay.sievers@vrfy.org>, Arnd Bergmann <arnd@arndb.de>, Richard Zhao <richard.zhao@freescale.com>, linux@arm.linux.org.uk, mark.langsdorf@calxeda.com, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, bryanh@codeaurora.org, cpufreq@vger.kernel.org, grant.likely@secretlab.ca, jamie@jamieiles.com, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, davej@redhat.com, linaro-dev@lists.linaro.org, davidb@codeaurora.org, shawn.guo@linaro.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, Greg KH <greg@kroah.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20111221.191459.1775781797635505733.davem@davemloft.net>
+Sender: linux-ide-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: robherring2@gmail.com, pawel.moll@arm.com, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jgarzik@redhat.com, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 21, 2011 at 10:19:11PM +0800, Richard Zhao wrote:
+On 12/21/2011 07:14 PM, David Miller wrote:
+> From: Rob Herring<robherring2@gmail.com>
+> Date: Wed, 21 Dec 2011 17:25:15 -0600
+>
+>> On 12/21/2011 04:38 PM, David Miller wrote:
+>>>
+>>> It depends upon CONFIG_OF_IRQ which not all CONFIG_OF platforms support,
+>>> in particular sparc does not support CONFIG_OF_PLATFORM because it
+>>> precomputes all IRQs at boot time when it scans the device tree so all
+>>> of the CONFIG_OF_IRQ infrastructure to probe and resolve IRQs at driver
+>>> probe time is wrong and completely unnecessary.
+>>>
+>>> Add the proper dependencies so that pata_of_platform.c doesn't get
+>>> built on sparc.
+>>>
+>>> CONFIG_OF_IRQ was severely misdesigned, it should just NOP out on
+>>> platforms where the architecture has the final IRQ values already like
+>>> sparc does.  But that's not how it was implemented at all, and now
+>>> we're starting to have all of these drivers get hard dependencies on
+>>> this mechanism and it's datastructures, and the resulting sparc build
+>>> failures from time to time.
+>>>
+>>> Jeff, please push something like the following to Linus so that
+>>> sparc's allmodconfig builds again.  Thanks.
+>>>
+>>
+>> Really, drivers should no longer use of_irq_to_resource (or
+>> of_address_to_resource for that matter). The resources are setup by the
+>> core OF code. The patch I sent does this.
+>
+> Thanks for taking care of this.
 
-> Even cpu node is device, I still need to find a way to get it.  I think it's
-> better have another patch to fix the regulator dt binding in cpu node. I'll
-> not include it in this patch series.
+Being so late in 3.2-rc, it would be preferred to apply&push David's 
+patch for 3.2, and then get Rob's into libata-dev#upstream (linux-next).
 
-I'd expect this to be easy if we can find any device tree data for the
-CPU at all?  It's just another piece of data no different to the clock
-rates or whatever.
+That OK?
+
+	Jeff
+
+
+
+
