@@ -1,60 +1,48 @@
-From: Kyle Moffett <Kyle.D.Moffett@boeing.com>
-Subject: [PATCH] fsl/mpic: Document and use the "big-endian" device-tree flag
-Date: Thu, 22 Dec 2011 11:25:22 -0500
-Message-ID: <1324571123-11577-1-git-send-email-Kyle.D.Moffett@boeing.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Kyle Moffett <Kyle.D.Moffett@boeing.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Randy Dunlap <rdunlap@xenotime.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Kumar Gala <galak@kernel.crashing.org>, Lucas De Marchi <lucas.demarchi@profusion.mobi>, Stuart Yoder <stuart.yoder@freescale.com>, Josh Boyer <jwboyer@linux.vnet.ibm.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 03/12] mfd: twl-core: Add initial DT support for
+ twl4030/twl6030
+Date: Thu, 22 Dec 2011 18:31:06 +0100
+Message-ID: <20111222173106.GJ5183@sortiz-mobl>
+References: <1324565806-31142-1-git-send-email-b-cousson@ti.com>
+ <1324565806-31142-4-git-send-email-b-cousson@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1324565806-31142-4-git-send-email-b-cousson-l0cyMroinI0@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The MPIC code checks for a "big-endian" property and sets the flag
-MPIC_BIG_ENDIAN if one is present.  Unfortunately, the PowerQUICC-III
-compatible device-tree does not specify it, so all of the board ports
-need to manually set that flag when calling mpic_alloc().
+Hi Benoit,
 
-Document the flag and add it to the pq3 device tree.  Existing code
-will still need to pass the MPIC_BIG_ENDIAN flag because their dtb may
-not have this property, but new platforms shouldn't need to do so.
+On Thu, Dec 22, 2011 at 03:56:37PM +0100, Benoit Cousson wrote:
+> Add initial device-tree support for twl familly chips.
+> The current version is missing the regulator entries due
+> to the lack of DT regulator bindings for the moment.
+> Only the simple sub-modules that do not depend on
+> platform_data information can be initialized properly.
+> 
+> Add irqdomain support.
+> 
+> Add documentation for the Texas Instruments TWL Integrated Chip.
+> 
+> Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> Cc: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+> Cc: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mfd/twl-familly.txt        |   47 ++++++++++++++++++
+>  drivers/mfd/Kconfig                                |    1 +
+>  drivers/mfd/twl-core.c                             |   51 +++++++++++++++++++-
+>  3 files changed, 98 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/twl-familly.txt
+Patch applied instead of the previous one, thanks for the quick fix.
 
-Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
----
- .../devicetree/bindings/powerpc/fsl/mpic.txt       |    9 ++++++++-
- arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi            |    1 +
- 2 files changed, 9 insertions(+), 1 deletions(-)
+Cheers,
+Samuel.
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt b/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-index 2cf38bd..ebafba2 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-@@ -56,7 +56,14 @@ PROPERTIES
-           to the client.  The presence of this property also mandates
-           that any initialization related to interrupt sources shall
-           be limited to sources explicitly referenced in the device tree.
--       
-+
-+  - big-endian
-+      Usage: optional
-+      Value type: <empty>
-+          If present the MPIC will be assumed to be big-endian.  Some
-+          device-trees omit this property on MPIC nodes even when the MPIC is
-+          in fact big-endian, so certain boards override this property.
-+
- INTERRUPT SPECIFIER DEFINITION
- 
-   Interrupt specifiers consists of 4 cells encoded as
-diff --git a/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi b/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-index 5c80460..47f2b67 100644
---- a/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-@@ -39,6 +39,7 @@ mpic: pic@40000 {
- 	reg = <0x40000 0x40000>;
- 	compatible = "fsl,mpic";
- 	device_type = "open-pic";
-+	big-endian;
- };
- 
- timer@41100 {
 -- 
-1.7.7.3
-
+Intel Open Source Technology Centre
+http://oss.intel.com/
