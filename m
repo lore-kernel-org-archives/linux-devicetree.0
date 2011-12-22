@@ -1,7 +1,7 @@
 From: Richard Zhao <richard.zhao@linaro.org>
-Subject: [PATCH v4 5/7] dts/imx6q: add cpufreq property
-Date: Thu, 22 Dec 2011 15:09:11 +0800
-Message-ID: <1324537753-30590-6-git-send-email-richard.zhao@linaro.org>
+Subject: [PATCH v4 6/7] arm/imx6q: register arm_clk as cpu to clkdev
+Date: Thu, 22 Dec 2011 15:09:12 +0800
+Message-ID: <1324537753-30590-7-git-send-email-richard.zhao@linaro.org>
 References: <1324537753-30590-1-git-send-email-richard.zhao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,25 @@ To: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-di
 Cc: linux@arm.linux.org.uk, davej@redhat.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rdunlap@xenotime.net, kernel@pengutronix.de, shawn.guo@linaro.org, catalin.marinas@arm.com, eric.miao@linaro.org, mark.langsdorf@calxeda.com, davidb@codeaurora.org, arnd@arndb.de, bryanh@codeaurora.org, jamie@jamieiles.com, marc.zyngier@arm.com, linaro-dev@lists.linaro.org, patches@linaro.org, Richard Zhao <richard.zhao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+cpufreq needs cpu clock to change frequency.
+
 Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
 ---
- arch/arm/boot/dts/imx6q.dtsi |    7 +++++++
- 1 files changed, 7 insertions(+), 0 deletions(-)
+ arch/arm/mach-imx/clock-imx6q.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 263e8f3..2087db7 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -29,6 +29,13 @@
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
- 			next-level-cache = <&L2>;
-+			cpu-freqs = <996000000 792000000 396000000 198000000>;
-+			cpu-volts = <	/* min		max */
-+					1225000		1450000	/* 996M */
-+					1100000		1450000	/* 792M */
-+					950000		1450000	/* 396M */
-+					850000		1450000>; /* 198M */
-+			trans-latency = <61036>; /* two CLK32 periods */
- 		};
+diff --git a/arch/arm/mach-imx/clock-imx6q.c b/arch/arm/mach-imx/clock-imx6q.c
+index 039a7ab..72acbc2 100644
+--- a/arch/arm/mach-imx/clock-imx6q.c
++++ b/arch/arm/mach-imx/clock-imx6q.c
+@@ -1911,6 +1911,7 @@ static struct clk_lookup lookups[] = {
+ 	_REGISTER_CLOCK(NULL, "gpmi_io_clk", gpmi_io_clk),
+ 	_REGISTER_CLOCK(NULL, "usboh3_clk", usboh3_clk),
+ 	_REGISTER_CLOCK(NULL, "sata_clk", sata_clk),
++	_REGISTER_CLOCK(NULL, "cpu", arm_clk),
+ };
  
- 		cpu@1 {
+ int imx6q_set_lpm(enum mxc_cpu_pwr_mode mode)
 -- 
 1.7.5.4
 
