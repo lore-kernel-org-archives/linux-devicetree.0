@@ -1,48 +1,56 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4 03/12] mfd: twl-core: Add initial DT support for
- twl4030/twl6030
-Date: Thu, 22 Dec 2011 18:31:06 +0100
-Message-ID: <20111222173106.GJ5183@sortiz-mobl>
-References: <1324565806-31142-1-git-send-email-b-cousson@ti.com>
- <1324565806-31142-4-git-send-email-b-cousson@ti.com>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: pata_of_platform.c cannot build on sparc
+Date: Thu, 22 Dec 2011 23:00:36 +0300
+Message-ID: <4EF38C64.4030801@mvista.com>
+References: <20111221.173810.971054965060472866.davem@davemloft.net> <4EF26ADB.2040504@gmail.com> <20111221.191459.1775781797635505733.davem@davemloft.net> <4EF28A8A.5070600@garzik.org> <4EF332ED.1050200@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1324565806-31142-4-git-send-email-b-cousson-l0cyMroinI0@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <4EF332ED.1050200@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Jeff Garzik <jeff@garzik.org>, David Miller <davem@davemloft.net>, pawel.moll@arm.com, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jgarzik@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+Hello.
 
-On Thu, Dec 22, 2011 at 03:56:37PM +0100, Benoit Cousson wrote:
-> Add initial device-tree support for twl familly chips.
-> The current version is missing the regulator entries due
-> to the lack of DT regulator bindings for the moment.
-> Only the simple sub-modules that do not depend on
-> platform_data information can be initialized properly.
-> 
-> Add irqdomain support.
-> 
-> Add documentation for the Texas Instruments TWL Integrated Chip.
-> 
-> Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-> Cc: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-> Cc: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
-> Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  .../devicetree/bindings/mfd/twl-familly.txt        |   47 ++++++++++++++++++
->  drivers/mfd/Kconfig                                |    1 +
->  drivers/mfd/twl-core.c                             |   51 +++++++++++++++++++-
->  3 files changed, 98 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/twl-familly.txt
-Patch applied instead of the previous one, thanks for the quick fix.
+On 12/22/2011 04:38 PM, Rob Herring wrote:
 
-Cheers,
-Samuel.
+>>>>> It depends upon CONFIG_OF_IRQ which not all CONFIG_OF platforms
+>>>>> support,
+>>>>> in particular sparc does not support CONFIG_OF_PLATFORM because it
+>>>>> precomputes all IRQs at boot time when it scans the device tree so all
+>>>>> of the CONFIG_OF_IRQ infrastructure to probe and resolve IRQs at driver
+>>>>> probe time is wrong and completely unnecessary.
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+>>>>> Add the proper dependencies so that pata_of_platform.c doesn't get
+>>>>> built on sparc.
+
+>>>>> CONFIG_OF_IRQ was severely misdesigned, it should just NOP out on
+>>>>> platforms where the architecture has the final IRQ values already like
+>>>>> sparc does.  But that's not how it was implemented at all, and now
+>>>>> we're starting to have all of these drivers get hard dependencies on
+>>>>> this mechanism and it's datastructures, and the resulting sparc build
+>>>>> failures from time to time.
+
+>>>>> Jeff, please push something like the following to Linus so that
+>>>>> sparc's allmodconfig builds again.  Thanks.
+
+>>>> Really, drivers should no longer use of_irq_to_resource (or
+>>>> of_address_to_resource for that matter). The resources are setup by the
+>>>> core OF code. The patch I sent does this.
+
+>>> Thanks for taking care of this.
+
+>> Being so late in 3.2-rc, it would be preferred to apply&push David's
+>> patch for 3.2, and then get Rob's into libata-dev#upstream (linux-next).
+
+>> That OK?
+
+> Fine by me.
+
+    But then it should be extended to undo David's patch, right? Or that patch 
+just be reverted afterwards...
+
+WBR, Sergei
