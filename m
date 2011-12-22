@@ -1,97 +1,88 @@
-From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 02/11] i2c: OMAP: Add DT support for i2c controller
-Date: Thu, 22 Dec 2011 09:55:39 +0100
-Message-ID: <4EF2F08B.4070907@ti.com>
-References: <1324398444-23296-1-git-send-email-b-cousson@ti.com>
- <1324398444-23296-3-git-send-email-b-cousson@ti.com>
- <4EF0BB03.6040906@gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH] serial/efm32: add new driver
+Date: Thu, 22 Dec 2011 09:57:06 +0100
+Message-ID: <20111222085706.GD24496@pengutronix.de>
+References: <1324479959-7343-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20111221202847.4ffeba10@bob.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4EF0BB03.6040906-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111221202847.4ffeba10@bob.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Cox <alan@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@suse.de>, linux-serial@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello,
 
-On 12/20/2011 5:42 PM, Rob Herring wrote:
-> On 12/20/2011 10:27 AM, Benoit Cousson wrote:
->> Add initial DT support to retrieve the frequency using a
->> DT attribute instead of the pdata pointer if of_node exist.
->>
->> Add documentation for omap i2c controller binding.
->>
->> Based on original patches from Manju and Grant.
->>
->> Signed-off-by: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
->> Cc: Ben Dooks<ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
->> Cc: Kevin Hilman<khilman-l0cyMroinI0@public.gmane.org>
->
-> One issue below, otherwise:
->
-> Reviewed-by: Rob Herring<rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->
->
->> @@ -1001,15 +1019,24 @@ omap_i2c_probe(struct platform_device *pdev)
->>   		goto err_release_region;
->>   	}
->>
->> -	if (pdata != NULL) {
->> -		speed = pdata->clkrate;
->> +	match = of_match_device(omap_i2c_of_match,&pdev->dev);
->> +	if (match) {
->> +		u32 freq = 100000; /* default to 100000 Hz */
->> +
->> +		pdata = match->data;
->> +		dev->dtrev = pdata->rev;
->> +		dev->flags = pdata->flags;
->> +
->> +		of_property_read_u32(node, "clock-frequency",&freq);
->> +		/* convert DT freq value in Hz into kHz for speed */
->> +		dev->speed = freq / 1000;
->> +	} else if (pdata != NULL) {
->> +		dev->speed = pdata->clkrate;
->> +		dev->flags = pdata->flags;
->>   		dev->set_mpu_wkup_lat = pdata->set_mpu_wkup_lat;
->> -	} else {
->> -		speed = 100;	/* Default speed */
->> -		dev->set_mpu_wkup_lat = NULL;
->> +		dev->dtrev = pdata->rev;
->
-> If you get here, pdata is NULL.
+On Wed, Dec 21, 2011 at 08:28:47PM +0000, Alan Cox wrote:
+> On Wed, 21 Dec 2011 16:05:59 +0100
+> Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> wrote:
+>=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Hello,
+> >=20
+> > note that ARCH_EFM32 isn't in mainline yet, so to be actually usabl=
+e
+> > some arch patches are needed.
+>=20
+> Start by running it through the CodingStyle scripts as I see a //
+> comment in there 8)
+oops
 
-Mmm, it should not. It's true that the patch is not super readable, but 
-here is the result:
+> > +static void efm32_usart_rx_chars(struct efm32_usart_port *efm_port=
+)
+> > +{
+> > +	struct uart_port *port =3D &efm_port->port;
+> > +	struct tty_struct *tty =3D port->state->port.tty;
+>=20
+> Needs to be using krefs and checking the tty is not NULL
+> (tty_port_tty_get)
+ah, I copied from mxs-auart. Will try to find a better example.=20
+=20
+> > +static void efm32_usart_set_termios(struct uart_port *port,
+> > +		struct ktermios *new, struct ktermios *old)
+> > +{
+> > +	struct efm32_usart_port *efm_port =3D to_efm_port(port);
+> > +	unsigned long flags;
+> > +	unsigned baud;
+> > +	u32 clkdiv;
+> > +
+> > +	/* no modem control lines */
+> > +	new->c_cflag &=3D ~(HUPCL | CRTSCTS | CMSPAR);
+>=20
+> Minor item - HUPCL shouldn't get cleared - its a request for hangup
+> behaviour not a port feature.
+ah, I copied that from imx (in an if(0) though).
+=20
+> > +	/* currently only some features are implemented */
+> > +	new->c_cflag &=3D ~CSIZE;
+> > +	new->c_cflag |=3D CS8;
+> > +	new->c_cflag |=3D CSTOPB;
+> > +	new->c_cflag &=3D ~PARENB;
+>=20
+> If you can do CS8 without parity you can do CS7 with parity.
+I sticked to the things I use and tested. According to the manual the
+hardware can do 4 up to 16 data bits with and without parity :-)
+=20
+> > +	new->c_iflag =3D 0;
+>=20
+> This seems broken. Lots of the iflgs are user requests and stack
+> properties not port features. For example you can do xon/xoff as its
+> pure software. As far as I can see you should leave c_iflag alone.
+ok.
 
-	if (match) {
-		u32 freq = 100000; /* default to 100000 Hz */
+I will send an update and fix the drivers I copied from.
 
-		pdata = match->data;
-		dev->dtrev = pdata->rev;
-		dev->flags = pdata->flags;
+Best regards
+Uwe
 
-		of_property_read_u32(node, "clock-frequency", &freq);
-		/* convert DT freq value in Hz into kHz for speed */
-		dev->speed = freq / 1000;
-	} else if (pdata != NULL) {
-		dev->speed = pdata->clkrate;
-		dev->flags = pdata->flags;
-		dev->set_mpu_wkup_lat = pdata->set_mpu_wkup_lat;
-		dev->dtrev = pdata->rev;
-	}
-
-I removed every other pdata reference after this point.
-
-Regards,
-Benoit
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
