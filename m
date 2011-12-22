@@ -1,49 +1,59 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/4] regulator: mc13892: remove the unnecessary prefix
- from regulator name
-Date: Thu, 22 Dec 2011 19:43:20 +0800
-Message-ID: <20111222114319.GA6806@S2100-06.ap.freescale.net>
-References: <1324479647-4580-1-git-send-email-shawn.guo@linaro.org>
- <1324479647-4580-3-git-send-email-shawn.guo@linaro.org>
- <20111222110830.GI4546@opensource.wolfsonmicro.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH v2 1/1] dt: reform for_each_property to for_each_property_of_node
+Date: Thu, 22 Dec 2011 20:19:24 +0800
+Message-ID: <1324556364-26188-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111222110830.GI4546-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, shawn.guo@freescale.com, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 22, 2011 at 11:08:30AM +0000, Mark Brown wrote:
-> On Wed, Dec 21, 2011 at 11:00:45PM +0800, Shawn Guo wrote:
-> > It's not really necessary to add a prefix 'MC13892__' for each mc13892
-> > regulator name, since the chip must have been identified as mc13892
-> > when we look at the regulator name.
-> 
-> Applied, thanks.
-> 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> > Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Think something went wrong with your scripts here...  might be worth
-> checking.
+From: Dong Aisheng <dong.aisheng@linaro.org>
 
-Yes, something did go wrong there.  Thanks for noticing.
+Make this macro easier to use(do not need to pass properties, a node is
+enough), also change to a more sensible name as for_each_child_of_node.
 
+Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+---
+Changes v1->v2:
+- Fix a typo error (micro->macro)
+
+---
+ drivers/of/base.c  |    2 +-
+ include/linux/of.h |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 9b6588e..f6f6fe8 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1159,7 +1159,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+ 	if (!of_aliases)
+ 		return;
+ 
+-	for_each_property(pp, of_aliases->properties) {
++	for_each_property_of_node(of_aliases, pp) {
+ 		const char *start = pp->name;
+ 		const char *end = start + strlen(start);
+ 		struct device_node *np;
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4948552..f1a490c 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -219,8 +219,8 @@ extern int of_device_is_available(const struct device_node *device);
+ extern const void *of_get_property(const struct device_node *node,
+ 				const char *name,
+ 				int *lenp);
+-#define for_each_property(pp, properties) \
+-	for (pp = properties; pp != NULL; pp = pp->next)
++#define for_each_property_of_node(dn, pp) \
++	for (pp = dn->properties; pp != NULL; pp = pp->next)
+ 
+ extern int of_n_addr_cells(struct device_node *np);
+ extern int of_n_size_cells(struct device_node *np);
 -- 
-Regards,
-Shawn
+1.7.0.4
