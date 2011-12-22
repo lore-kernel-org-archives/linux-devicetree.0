@@ -1,7 +1,7 @@
 From: Richard Zhao <richard.zhao@linaro.org>
-Subject: [PATCH v4 3/7] cpufreq: OMAP: remove loops_per_jiffy recalculate for smp
-Date: Thu, 22 Dec 2011 15:09:09 +0800
-Message-ID: <1324537753-30590-4-git-send-email-richard.zhao@linaro.org>
+Subject: [PATCH v4 5/7] dts/imx6q: add cpufreq property
+Date: Thu, 22 Dec 2011 15:09:11 +0800
+Message-ID: <1324537753-30590-6-git-send-email-richard.zhao@linaro.org>
 References: <1324537753-30590-1-git-send-email-richard.zhao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,67 +12,29 @@ To: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-di
 Cc: linux@arm.linux.org.uk, davej@redhat.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rdunlap@xenotime.net, kernel@pengutronix.de, shawn.guo@linaro.org, catalin.marinas@arm.com, eric.miao@linaro.org, mark.langsdorf@calxeda.com, davidb@codeaurora.org, arnd@arndb.de, bryanh@codeaurora.org, jamie@jamieiles.com, marc.zyngier@arm.com, linaro-dev@lists.linaro.org, patches@linaro.org, Richard Zhao <richard.zhao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-arm registered cpufreq transition notifier to recalculate it.
-
 Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
 ---
- drivers/cpufreq/omap-cpufreq.c |   36 ------------------------------------
- 1 files changed, 0 insertions(+), 36 deletions(-)
+ arch/arm/boot/dts/imx6q.dtsi |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/cpufreq/omap-cpufreq.c b/drivers/cpufreq/omap-cpufreq.c
-index 5d04c57..17da4c4 100644
---- a/drivers/cpufreq/omap-cpufreq.c
-+++ b/drivers/cpufreq/omap-cpufreq.c
-@@ -37,16 +37,6 @@
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 263e8f3..2087db7 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -29,6 +29,13 @@
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
+ 			next-level-cache = <&L2>;
++			cpu-freqs = <996000000 792000000 396000000 198000000>;
++			cpu-volts = <	/* min		max */
++					1225000		1450000	/* 996M */
++					1100000		1450000	/* 792M */
++					950000		1450000	/* 396M */
++					850000		1450000>; /* 198M */
++			trans-latency = <61036>; /* two CLK32 periods */
+ 		};
  
- #include <mach/hardware.h>
- 
--#ifdef CONFIG_SMP
--struct lpj_info {
--	unsigned long	ref;
--	unsigned int	freq;
--};
--
--static DEFINE_PER_CPU(struct lpj_info, lpj_ref);
--static struct lpj_info global_lpj_ref;
--#endif
--
- static struct cpufreq_frequency_table *freq_table;
- static atomic_t freq_table_users = ATOMIC_INIT(0);
- static struct clk *mpu_clk;
-@@ -118,32 +108,6 @@ static int omap_target(struct cpufreq_policy *policy,
- 	ret = clk_set_rate(mpu_clk, freqs.new * 1000);
- 	freqs.new = omap_getspeed(policy->cpu);
- 
--#ifdef CONFIG_SMP
--	/*
--	 * Note that loops_per_jiffy is not updated on SMP systems in
--	 * cpufreq driver. So, update the per-CPU loops_per_jiffy value
--	 * on frequency transition. We need to update all dependent CPUs.
--	 */
--	for_each_cpu(i, policy->cpus) {
--		struct lpj_info *lpj = &per_cpu(lpj_ref, i);
--		if (!lpj->freq) {
--			lpj->ref = per_cpu(cpu_data, i).loops_per_jiffy;
--			lpj->freq = freqs.old;
--		}
--
--		per_cpu(cpu_data, i).loops_per_jiffy =
--			cpufreq_scale(lpj->ref, lpj->freq, freqs.new);
--	}
--
--	/* And don't forget to adjust the global one */
--	if (!global_lpj_ref.freq) {
--		global_lpj_ref.ref = loops_per_jiffy;
--		global_lpj_ref.freq = freqs.old;
--	}
--	loops_per_jiffy = cpufreq_scale(global_lpj_ref.ref, global_lpj_ref.freq,
--					freqs.new);
--#endif
--
- 	/* notifiers */
- 	for_each_cpu(i, policy->cpus) {
- 		freqs.cpu = i;
+ 		cpu@1 {
 -- 
 1.7.5.4
 
