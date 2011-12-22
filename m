@@ -1,57 +1,99 @@
-From: Jeff Garzik <jeff@garzik.org>
-Subject: Re: pata_of_platform.c cannot build on sparc
-Date: Wed, 21 Dec 2011 20:40:26 -0500
-Message-ID: <4EF28A8A.5070600@garzik.org>
-References: <20111221.173810.971054965060472866.davem@davemloft.net> <4EF26ADB.2040504@gmail.com> <20111221.191459.1775781797635505733.davem@davemloft.net>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] Add fdtget utility to read property values from a
+ device tree
+Date: Wed, 21 Dec 2011 22:47:56 -0800
+Message-ID: <CAPnjgZ3Y897hEQ2+qLO711Cuv9BvkQvcxusG1XQAyiG3UZ-M0g@mail.gmail.com>
+References: <1316711466-14199-1-git-send-email-sjg@chromium.org>
+ <1316711466-14199-5-git-send-email-sjg@chromium.org>
+ <20110923012007.GG12286@yookeroo.fritz.box>
+ <CAPnjgZ0Na+zAX2cj=b1HbyGW5iNLGLn2rAeQEfZ9LwBLDW6a1w@mail.gmail.com>
+ <20111220120148.GB5133@truffala.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20111221.191459.1775781797635505733.davem@davemloft.net>
-Sender: linux-ide-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: robherring2@gmail.com, pawel.moll@arm.com, linux-ide@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jgarzik@redhat.com, rob.herring@calxeda.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20111220120148.GB5133-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/21/2011 07:14 PM, David Miller wrote:
-> From: Rob Herring<robherring2@gmail.com>
-> Date: Wed, 21 Dec 2011 17:25:15 -0600
->
->> On 12/21/2011 04:38 PM, David Miller wrote:
->>>
->>> It depends upon CONFIG_OF_IRQ which not all CONFIG_OF platforms support,
->>> in particular sparc does not support CONFIG_OF_PLATFORM because it
->>> precomputes all IRQs at boot time when it scans the device tree so all
->>> of the CONFIG_OF_IRQ infrastructure to probe and resolve IRQs at driver
->>> probe time is wrong and completely unnecessary.
->>>
->>> Add the proper dependencies so that pata_of_platform.c doesn't get
->>> built on sparc.
->>>
->>> CONFIG_OF_IRQ was severely misdesigned, it should just NOP out on
->>> platforms where the architecture has the final IRQ values already like
->>> sparc does.  But that's not how it was implemented at all, and now
->>> we're starting to have all of these drivers get hard dependencies on
->>> this mechanism and it's datastructures, and the resulting sparc build
->>> failures from time to time.
->>>
->>> Jeff, please push something like the following to Linus so that
->>> sparc's allmodconfig builds again.  Thanks.
->>>
+Hi Jon,
+
+On Tue, Dec 20, 2011 at 4:01 AM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Thu, Dec 15, 2011 at 05:37:51PM -0800, Simon Glass wrote:
+>> Hi,
 >>
->> Really, drivers should no longer use of_irq_to_resource (or
->> of_address_to_resource for that matter). The resources are setup by the
->> core OF code. The patch I sent does this.
+>> On Thu, Sep 22, 2011 at 6:20 PM, David Gibson
+>> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> > On Thu, Sep 22, 2011 at 10:11:05AM -0700, Simon Glass wrote:
+>> >> This simply utility makes it easy for scripts to read values from the=
+ device
+>> >> tree. It is written in C and uses the same libfdt as the rest of the =
+dtc
+>> >> package.
+>> >>
+>> >> What is it for:
+>> >> - Reading fdt values from scripts
+>> >> - Extracting fdt information within build systems
+>> >> - Looking at particular values without having to dump the entire tree
+>> >>
+>> >> To use it, specify the fdt binary file on command line followed by a =
+list of
+>> >> node, property pairs. The utility then looks up each node, finds the =
+property
+>> >> and displays the value.
+>> >>
+>> >> Each value is printed on a new line.
+>> >>
+>> >> fdtget tries to guess the type of each property based on its contents=
+. This
+>> >> is not always reliable, so you can use the -t option to force fdtget =
+to decode
+>> >> the value as a string, or byte, etc.
+>> >>
+>> >> To read from stdin, use - as the file.
+>> >>
+>> >> Usage:
+>> >> =A0 =A0 =A0 fdtget <options> <dt file> [<node> <property>]...
+>> >> Options:
+>> >> =A0 =A0 =A0 -t <type> =A0 =A0 =A0 Type of data
+>> >> =A0 =A0 =A0 -h =A0 =A0 =A0 =A0 =A0 =A0 =A0Print this help
+>> >>
+>> >> <type> =A0 =A0 =A0 =A0s=3Dstring, i=3Dint, u=3Dunsigned, x=3Dhex
+>> >> =A0 =A0 =A0 Optional modifier prefix:
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 hh or b=3Dbyte, h=3D2 byte, l=3D4 byte (d=
+efault)
+>> >>
+>> >> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> >
+>> > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+>>
+>> Has this been applied? I cannot see it in the repo.
+
+Please can you let me know about the status of this patch?
+
+Regards,
+Simon
+
 >
-> Thanks for taking care of this.
-
-Being so late in 3.2-rc, it would be preferred to apply&push David's 
-patch for 3.2, and then get Rob's into libata-dev#upstream (linux-next).
-
-That OK?
-
-	Jeff
-
-
-
-
+> I haven't chased it, I'm afraid. =A0You'll need to follow up with Jon dir=
+ectly.
+>
+> --
+> David Gibson =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| I'll have my music =
+baroque, and my code
+> david AT gibson.dropbear.id.au =A0| minimalist, thank you. =A0NOT _the_ _=
+other_
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| _way_ _a=
+round_!
+> http://www.ozlabs.org/~dgibson
