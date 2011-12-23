@@ -1,525 +1,149 @@
-From: Kyle Moffett <Kyle.D.Moffett@boeing.com>
-Subject: [PATCH 6/6] powerpc/mpic: Remove duplicate MPIC_WANTS_RESET flag
-Date: Thu, 22 Dec 2011 15:19:14 -0500
-Message-ID: <1324585155-13453-7-git-send-email-Kyle.D.Moffett@boeing.com>
-References: <1324585155-13453-1-git-send-email-Kyle.D.Moffett@boeing.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1324585155-13453-1-git-send-email-Kyle.D.Moffett@boeing.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Kyle Moffett <Kyle.D.Moffett@boeing.com>, Paul Mackerras <paulus@samba.org>, Josh Boyer <jwboyer@gmail.com>, Matt Porter <mporter@kernel.crashing.org>, Kumar Gala <galak@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Scott Wood <scottwood@freescale.com>, Timur Tabi <timur@freescale.com>, Lennert Buytenhek <buytenh@secretlab.ca>, Thomas Gleixner <tglx@linutronix.de>, Paul Gortmaker <paul.gortmaker@windriver.com>, Jiri Kosina <jkosina@suse.cz>, Vitaliy Ivanov <vitalivanov@gmail.com>, "Justin P. Mattock" <justinmattock@gmail.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Trinabh Gupta <g.trinabh@gmail.com>, Arun R Bharadwaj <arun.r.bharadwaj@gmail.com>, Anton Blanchard <anton@samba.org>, Milton Miller <miltonm@bga.com>, linux-kernel@vger.kernel.org, cbe-o
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: [PATCH 7/9] arm/tegra: emc: device tree bindings
+Date: Thu, 22 Dec 2011 16:17:46 -0800
+Message-ID: <1324599468-12845-8-git-send-email-olof@lixom.net>
+References: <1324599468-12845-1-git-send-email-olof@lixom.net>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1324599468-12845-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There are two separate flags controlling whether or not the MPIC is
-reset during initialization, which is completely unnecessary, and only
-one of them can be specified in the device tree.
+Device tree bindings for the EMC tables on tegra.
 
-Also, most platforms in-tree right now do actually want to reset the
-MPIC during initialization anyways, which means lots of duplicate code
-passing the MPIC_WANTS_RESET flag.
-
-Fix all of the callers which currently do not pass the MPIC_WANTS_RESET
-flag to pass the MPIC_NO_RESET flag, then remove the MPIC_WANTS_RESET
-flag and make the code reset the MPIC by default.
-
-Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
+Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 ---
- arch/powerpc/include/asm/mpic.h                   |    6 +-----
- arch/powerpc/platforms/44x/currituck.c            |    2 +-
- arch/powerpc/platforms/44x/iss4xx.c               |    3 +--
- arch/powerpc/platforms/85xx/corenet_ds.c          |    3 ++-
- arch/powerpc/platforms/85xx/ksi8560.c             |    3 +--
- arch/powerpc/platforms/85xx/mpc8536_ds.c          |    4 +---
- arch/powerpc/platforms/85xx/mpc85xx_ads.c         |    3 +--
- arch/powerpc/platforms/85xx/mpc85xx_cds.c         |    3 +--
- arch/powerpc/platforms/85xx/mpc85xx_ds.c          |    2 +-
- arch/powerpc/platforms/85xx/mpc85xx_mds.c         |    3 +--
- arch/powerpc/platforms/85xx/mpc85xx_rdb.c         |    3 +--
- arch/powerpc/platforms/85xx/p1010rdb.c            |    3 +--
- arch/powerpc/platforms/85xx/p1022_ds.c            |    4 +---
- arch/powerpc/platforms/85xx/p1023_rds.c           |    3 +--
- arch/powerpc/platforms/85xx/sbc8548.c             |    3 +--
- arch/powerpc/platforms/85xx/sbc8560.c             |    3 +--
- arch/powerpc/platforms/85xx/socrates.c            |    3 +--
- arch/powerpc/platforms/85xx/stx_gp3.c             |    3 +--
- arch/powerpc/platforms/85xx/tqm85xx.c             |    2 +-
- arch/powerpc/platforms/85xx/xes_mpc85xx.c         |    4 +---
- arch/powerpc/platforms/86xx/pic.c                 |    3 +--
- arch/powerpc/platforms/cell/setup.c               |    3 ++-
- arch/powerpc/platforms/chrp/setup.c               |    3 ++-
- arch/powerpc/platforms/embedded6xx/holly.c        |    3 +--
- arch/powerpc/platforms/embedded6xx/linkstation.c  |    3 +--
- arch/powerpc/platforms/embedded6xx/mpc7448_hpc2.c |    3 +--
- arch/powerpc/platforms/embedded6xx/storcenter.c   |    3 +--
- arch/powerpc/platforms/maple/setup.c              |    2 +-
- arch/powerpc/platforms/pasemi/setup.c             |    2 +-
- arch/powerpc/platforms/powermac/pic.c             |    1 -
- arch/powerpc/platforms/pseries/setup.c            |    3 ++-
- arch/powerpc/sysdev/mpic.c                        |    2 +-
- 32 files changed, 35 insertions(+), 59 deletions(-)
+ .../devicetree/bindings/arm/tegra/emc.txt          |  100 ++++++++++++++++++++
+ arch/arm/boot/dts/tegra20.dtsi                     |    7 ++
+ 2 files changed, 107 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/tegra/emc.txt
 
-diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
-index 2ebac31..d7e3fec 100644
---- a/arch/powerpc/include/asm/mpic.h
-+++ b/arch/powerpc/include/asm/mpic.h
-@@ -348,8 +348,6 @@ struct mpic
- #define MPIC_U3_HT_IRQS			0x00000004
- /* Broken IPI registers (autodetected) */
- #define MPIC_BROKEN_IPI			0x00000008
--/* MPIC wants a reset */
--#define MPIC_WANTS_RESET		0x00000010
- /* Spurious vector requires EOI */
- #define MPIC_SPV_EOI			0x00000020
- /* No passthrough disable */
-@@ -366,9 +364,7 @@ struct mpic
- #define MPIC_SINGLE_DEST_CPU		0x00001000
- /* Enable CoreInt delivery of interrupts */
- #define MPIC_ENABLE_COREINT		0x00002000
--/* Disable resetting of the MPIC.
-- * NOTE: This flag trumps MPIC_WANTS_RESET.
-- */
-+/* Do not reset the MPIC during initialization */
- #define MPIC_NO_RESET			0x00004000
- /* Freescale MPIC (compatible includes "fsl,mpic") */
- #define MPIC_FSL			0x00008000
-diff --git a/arch/powerpc/platforms/44x/currituck.c b/arch/powerpc/platforms/44x/currituck.c
-index 3f6229b..583e67f 100644
---- a/arch/powerpc/platforms/44x/currituck.c
-+++ b/arch/powerpc/platforms/44x/currituck.c
-@@ -83,7 +83,7 @@ static void __init ppc47x_init_irq(void)
- 		 * device-tree, just pass 0 to all arguments
- 		 */
- 		struct mpic *mpic =
--			mpic_alloc(np, 0, 0, 0, 0, " MPIC     ");
-+			mpic_alloc(np, 0, MPIC_NO_RESET, 0, 0, " MPIC     ");
- 		BUG_ON(mpic == NULL);
- 		mpic_init(mpic);
- 		ppc_md.get_irq = mpic_get_irq;
-diff --git a/arch/powerpc/platforms/44x/iss4xx.c b/arch/powerpc/platforms/44x/iss4xx.c
-index 5b8cdbb..a28a862 100644
---- a/arch/powerpc/platforms/44x/iss4xx.c
-+++ b/arch/powerpc/platforms/44x/iss4xx.c
-@@ -71,8 +71,7 @@ static void __init iss4xx_init_irq(void)
- 		/* The MPIC driver will get everything it needs from the
- 		 * device-tree, just pass 0 to all arguments
- 		 */
--		struct mpic *mpic = mpic_alloc(np, 0, 0, 0, 0,
--					       " MPIC     ");
-+		struct mpic *mpic = mpic_alloc(np, 0, MPIC_NO_RESET, 0, 0, " MPIC     ");
- 		BUG_ON(mpic == NULL);
- 		mpic_init(mpic);
- 		ppc_md.get_irq = mpic_get_irq;
-diff --git a/arch/powerpc/platforms/85xx/corenet_ds.c b/arch/powerpc/platforms/85xx/corenet_ds.c
-index 768479b..df69e99 100644
---- a/arch/powerpc/platforms/85xx/corenet_ds.c
-+++ b/arch/powerpc/platforms/85xx/corenet_ds.c
-@@ -36,7 +36,8 @@
- void __init corenet_ds_pic_init(void)
- {
- 	struct mpic *mpic;
--	unsigned int flags = MPIC_BIG_ENDIAN | MPIC_SINGLE_DEST_CPU;
-+	unsigned int flags = MPIC_BIG_ENDIAN | MPIC_SINGLE_DEST_CPU |
-+		MPIC_NO_RESET;
+diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt b/Documentation/devicetree/bindings/arm/tegra/emc.txt
+new file mode 100644
+index 0000000..09335f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/tegra/emc.txt
+@@ -0,0 +1,100 @@
++Embedded Memory Controller
++
++Properties:
++- name : Should be emc
++- #address-cells : Should be 1
++- #size-cells : Should be 0
++- compatible : Should contain "nvidia,tegra20-emc".
++- reg : Offset and length of the register set for the device
++- nvidia,use-ram-code : If present, the sub-nodes will be addressed
++  and chosen using the ramcode board selector. If omitted, only one
++  set of tables can be present and said tables will be used
++  irrespective of ram-code configuration.
++
++Child device nodes describe the memory settings for different configurations and clock rates.
++
++Example:
++
++	emc@7000f400 {
++		#address-cells = < 1 >;
++		#size-cells = < 0 >;
++		compatible = "nvidia,tegra20-emc";
++		reg = <0x7000f4000 0x200>;
++	}
++
++
++Embedded Memory Controller ram-code table
++
++If the emc node has the nvidia,use-ram-code property present, then the
++next level of nodes below the emc table are used to specify which settings
++apply for which ram-code settings.
++
++If the emc node lacks the nvidia,use-ram-code property, this level is omitted
++and the tables are stored directly under the emc node (see below).
++
++Properties:
++
++- name : Should be emc-tables
++- nvidia,ram-code : the binary representation of the ram-code board strappings
++  for which this node (and children) are valid.
++
++
++
++Embedded Memory Controller configuration table
++
++This is a table containing the EMC register settings for the various
++operating speeds of the memory controller. They are always located as
++subnodes of the emc controller node.
++
++There are two ways of specifying which tables to use:
++
++* The simplest is if there is just one set of tables in the device tree,
++  and they will always be used (based on which frequency is used).
++  This is the preferred method, especially when firmware can fill in
++  this information based on the specific system information and just
++  pass it on to the kernel.
++
++* The slightly more complex one is when more than one memory configuration
++  might exist on the system.  The Tegra20 platform handles this during
++  early boot by selecting one out of possible 4 memory settings based
++  on a 2-pin "ram code" bootstrap setting on the board. The values of
++  these strappings can be read through a register in the SoC, and thus
++  used to select which tables to use.
++
++Properties:
++- name : Should be emc-table
++- compatible : Should contain "nvidia,tegra20-emc-table".
++- reg : either an opaque enumerator to tell different tables apart, or
++  the valid frequency for which the table should be used (in kHz).
++- clock-frequency : the clock frequency for the EMC at which this
++  table should be used (in kHz).
++- nvidia,emc-registers : a 46 word array of EMC registers to be programmed
++  for operation at the 'clock-frequency' setting.
++  The order and contents of the registers are:
++    RC, RFC, RAS, RP, R2W, W2R, R2P, W2P, RD_RCD, WR_RCD, RRD, REXT,
++    WDV, QUSE, QRST, QSAFE, RDV, REFRESH, BURST_REFRESH_NUM, PDEX2WR,
++    PDEX2RD, PCHG2PDEN, ACT2PDEN, AR2PDEN, RW2PDEN, TXSR, TCKE, TFAW,
++    TRPAB, TCLKSTABLE, TCLKSTOP, TREFBW, QUSE_EXTRA, FBIO_CFG6, ODT_WRITE,
++    ODT_READ, FBIO_CFG5, CFG_DIG_DLL, DLL_XFORM_DQS, DLL_XFORM_QUSE,
++    ZCAL_REF_CNT, ZCAL_WAIT_CNT, AUTO_CAL_INTERVAL, CFG_CLKTRIM_0,
++    CFG_CLKTRIM_1, CFG_CLKTRIM_2
++
++		emc-table@166000 {
++			reg = <166000>;
++			compatible = "nvidia,tegra20-emc-table";
++			clock-frequency = < 166000 >;
++			nvidia,emc-registers = < 0 0 0 0 0 0 0 0 0 0 0 0 0 0
++						 0 0 0 0 0 0 0 0 0 0 0 0 0 0
++						 0 0 0 0 0 0 0 0 0 0 0 0 0 0
++						 0 0 0 0 >;
++		};
++
++		emc-table@333000 {
++			reg = <333000>;
++			compatible = "nvidia,tegra20-emc-table";
++			clock-frequency = < 333000 >;
++			nvidia,emc-registers = < 0 0 0 0 0 0 0 0 0 0 0 0 0 0
++						 0 0 0 0 0 0 0 0 0 0 0 0 0 0
++						 0 0 0 0 0 0 0 0 0 0 0 0 0 0
++						 0 0 0 0 >;
++		};
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 3da7afd..c162241 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -120,6 +120,13 @@
+ 		interrupts = < 0 91 0x04 >;
+ 	};
  
- 	if (ppc_md.get_irq == mpic_get_coreint_irq)
- 		flags |= MPIC_ENABLE_COREINT;
-diff --git a/arch/powerpc/platforms/85xx/ksi8560.c b/arch/powerpc/platforms/85xx/ksi8560.c
-index 20f75d7..60120e5 100644
---- a/arch/powerpc/platforms/85xx/ksi8560.c
-+++ b/arch/powerpc/platforms/85xx/ksi8560.c
-@@ -57,8 +57,7 @@ static void machine_restart(char *cmd)
- 
- static void __init ksi8560_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN,
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/mpc8536_ds.c b/arch/powerpc/platforms/85xx/mpc8536_ds.c
-index d5373e0..f588726 100644
---- a/arch/powerpc/platforms/85xx/mpc8536_ds.c
-+++ b/arch/powerpc/platforms/85xx/mpc8536_ds.c
-@@ -36,9 +36,7 @@
- 
- void __init mpc8536_ds_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			  MPIC_WANTS_RESET |
--			  MPIC_BIG_ENDIAN,
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_ads.c b/arch/powerpc/platforms/85xx/mpc85xx_ads.c
-index 3bebb51..d19f675 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_ads.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_ads.c
-@@ -50,8 +50,7 @@ static int mpc85xx_exclude_device(struct pci_controller *hose,
- 
- static void __init mpc85xx_ads_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN,
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_cds.c b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-index 40f03da..02d97e3 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-@@ -188,8 +188,7 @@ static struct irqaction mpc85xxcds_8259_irqaction = {
- static void __init mpc85xx_cds_pic_init(void)
- {
- 	struct mpic *mpic;
--	mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN,
-+	mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_ds.c b/arch/powerpc/platforms/85xx/mpc85xx_ds.c
-index 528b9a0..6e23e3e 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_ds.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_ds.c
-@@ -72,12 +72,12 @@ void __init mpc85xx_ds_pic_init(void)
- 
- 	if (of_flat_dt_is_compatible(root, "fsl,MPC8572DS-CAMP")) {
- 		mpic = mpic_alloc(NULL, 0,
-+			MPIC_NO_RESET |
- 			MPIC_BIG_ENDIAN |
- 			MPIC_SINGLE_DEST_CPU,
- 			0, 256, " OpenPIC  ");
- 	} else {
- 		mpic = mpic_alloc(NULL, 0,
--			  MPIC_WANTS_RESET |
- 			  MPIC_BIG_ENDIAN |
- 			  MPIC_SINGLE_DEST_CPU,
- 			0, 256, " OpenPIC  ");
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_mds.c b/arch/powerpc/platforms/85xx/mpc85xx_mds.c
-index a0cb770..57aceb5 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_mds.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_mds.c
-@@ -434,8 +434,7 @@ machine_arch_initcall(p1021_mds, swiotlb_setup_bus_notifier);
- 
- static void __init mpc85xx_mds_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN |
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN |
- 			MPIC_SINGLE_DEST_CPU,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-index a23f6f3..407c739 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_rdb.c
-@@ -48,13 +48,12 @@ void __init mpc85xx_rdb_pic_init(void)
- 	unsigned long root = of_get_flat_dt_root();
- 
- 	if (of_flat_dt_is_compatible(root, "fsl,MPC85XXRDB-CAMP")) {
--		mpic = mpic_alloc(NULL, 0,
-+		mpic = mpic_alloc(NULL, 0, MPIC_NO_RESET |
- 			MPIC_BIG_ENDIAN |
- 			MPIC_SINGLE_DEST_CPU,
- 			0, 256, " OpenPIC  ");
- 	} else {
- 		mpic = mpic_alloc(NULL, 0,
--		  MPIC_WANTS_RESET |
- 		  MPIC_BIG_ENDIAN |
- 		  MPIC_SINGLE_DEST_CPU,
- 		  0, 256, " OpenPIC  ");
-diff --git a/arch/powerpc/platforms/85xx/p1010rdb.c b/arch/powerpc/platforms/85xx/p1010rdb.c
-index d2a569d..0223128 100644
---- a/arch/powerpc/platforms/85xx/p1010rdb.c
-+++ b/arch/powerpc/platforms/85xx/p1010rdb.c
-@@ -32,8 +32,7 @@
- 
- void __init p1010_rdb_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--	  MPIC_WANTS_RESET | MPIC_BIG_ENDIAN |
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN |
- 	  MPIC_SINGLE_DEST_CPU,
- 	  0, 256, " OpenPIC  ");
- 
-diff --git a/arch/powerpc/platforms/85xx/p1022_ds.c b/arch/powerpc/platforms/85xx/p1022_ds.c
-index 433546e..48b59fc 100644
---- a/arch/powerpc/platforms/85xx/p1022_ds.c
-+++ b/arch/powerpc/platforms/85xx/p1022_ds.c
-@@ -241,9 +241,7 @@ p1022ds_valid_monitor_port(enum fsl_diu_monitor_port port)
- 
- void __init p1022_ds_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--		MPIC_WANTS_RESET |
--		MPIC_BIG_ENDIAN |
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN |
- 		MPIC_SINGLE_DEST_CPU,
- 		0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
-diff --git a/arch/powerpc/platforms/85xx/p1023_rds.c b/arch/powerpc/platforms/85xx/p1023_rds.c
-index 88541dc..5935abf 100644
---- a/arch/powerpc/platforms/85xx/p1023_rds.c
-+++ b/arch/powerpc/platforms/85xx/p1023_rds.c
-@@ -93,8 +93,7 @@ machine_device_initcall(p1023_rds, mpc85xx_common_publish_devices);
- 
- static void __init mpc85xx_rds_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--		MPIC_WANTS_RESET | MPIC_BIG_ENDIAN |
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN |
- 		MPIC_SINGLE_DEST_CPU,
- 		0, 256, " OpenPIC  ");
- 
-diff --git a/arch/powerpc/platforms/85xx/sbc8548.c b/arch/powerpc/platforms/85xx/sbc8548.c
-index 184a507..1677b8a 100644
---- a/arch/powerpc/platforms/85xx/sbc8548.c
-+++ b/arch/powerpc/platforms/85xx/sbc8548.c
-@@ -54,8 +54,7 @@ static int sbc_rev;
- 
- static void __init sbc8548_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN,
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/sbc8560.c b/arch/powerpc/platforms/85xx/sbc8560.c
-index 940752e..3c3bbcc 100644
---- a/arch/powerpc/platforms/85xx/sbc8560.c
-+++ b/arch/powerpc/platforms/85xx/sbc8560.c
-@@ -41,8 +41,7 @@
- 
- static void __init sbc8560_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN,
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/socrates.c b/arch/powerpc/platforms/85xx/socrates.c
-index 18f6359..b719192 100644
---- a/arch/powerpc/platforms/85xx/socrates.c
-+++ b/arch/powerpc/platforms/85xx/socrates.c
-@@ -48,8 +48,7 @@ static void __init socrates_pic_init(void)
- {
- 	struct device_node *np;
- 
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN,
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/stx_gp3.c b/arch/powerpc/platforms/85xx/stx_gp3.c
-index e9e5234..27ca3a7 100644
---- a/arch/powerpc/platforms/85xx/stx_gp3.c
-+++ b/arch/powerpc/platforms/85xx/stx_gp3.c
-@@ -48,8 +48,7 @@
- 
- static void __init stx_gp3_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN,
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/tqm85xx.c b/arch/powerpc/platforms/85xx/tqm85xx.c
-index bf7c89f..d7504ce 100644
---- a/arch/powerpc/platforms/85xx/tqm85xx.c
-+++ b/arch/powerpc/platforms/85xx/tqm85xx.c
-@@ -47,7 +47,7 @@
- static void __init tqm85xx_pic_init(void)
- {
- 	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN,
-+			MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/85xx/xes_mpc85xx.c b/arch/powerpc/platforms/85xx/xes_mpc85xx.c
-index 1ab4e02..503c215 100644
---- a/arch/powerpc/platforms/85xx/xes_mpc85xx.c
-+++ b/arch/powerpc/platforms/85xx/xes_mpc85xx.c
-@@ -43,9 +43,7 @@
- 
- void __init xes_mpc85xx_pic_init(void)
- {
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			  MPIC_WANTS_RESET |
--			  MPIC_BIG_ENDIAN,
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN,
- 			0, 256, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 	mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/86xx/pic.c b/arch/powerpc/platforms/86xx/pic.c
-index 27959d6..22cc357 100644
---- a/arch/powerpc/platforms/86xx/pic.c
-+++ b/arch/powerpc/platforms/86xx/pic.c
-@@ -37,8 +37,7 @@ void __init mpc86xx_init_irq(void)
- 	int cascade_irq;
- #endif
- 
--	struct mpic *mpic = mpic_alloc(NULL, 0,
--			MPIC_WANTS_RESET | MPIC_BIG_ENDIAN |
-+	struct mpic *mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN |
- 			MPIC_SINGLE_DEST_CPU,
- 			0, 256, " MPIC     ");
- 	BUG_ON(mpic == NULL);
-diff --git a/arch/powerpc/platforms/cell/setup.c b/arch/powerpc/platforms/cell/setup.c
-index 62002a7..fa3e294 100644
---- a/arch/powerpc/platforms/cell/setup.c
-+++ b/arch/powerpc/platforms/cell/setup.c
-@@ -197,7 +197,8 @@ static void __init mpic_init_IRQ(void)
- 		/* The MPIC driver will get everything it needs from the
- 		 * device-tree, just pass 0 to all arguments
- 		 */
--		mpic = mpic_alloc(dn, 0, MPIC_SECONDARY, 0, 0, " MPIC     ");
-+		mpic = mpic_alloc(dn, 0, MPIC_SECONDARY | MPIC_NO_RESET,
-+				0, 0, " MPIC     ");
- 		if (mpic == NULL)
- 			continue;
- 		mpic_init(mpic);
-diff --git a/arch/powerpc/platforms/chrp/setup.c b/arch/powerpc/platforms/chrp/setup.c
-index f1f17bb..c665d7d 100644
---- a/arch/powerpc/platforms/chrp/setup.c
-+++ b/arch/powerpc/platforms/chrp/setup.c
-@@ -435,7 +435,8 @@ static void __init chrp_find_openpic(void)
- 	if (len > 1)
- 		isu_size = iranges[3];
- 
--	chrp_mpic = mpic_alloc(np, opaddr, 0, isu_size, 0, " MPIC    ");
-+	chrp_mpic = mpic_alloc(np, opaddr, MPIC_NO_RESET,
-+			isu_size, 0, " MPIC    ");
- 	if (chrp_mpic == NULL) {
- 		printk(KERN_ERR "Failed to allocate MPIC structure\n");
- 		goto bail;
-diff --git a/arch/powerpc/platforms/embedded6xx/holly.c b/arch/powerpc/platforms/embedded6xx/holly.c
-index d7727de..ab51b21 100644
---- a/arch/powerpc/platforms/embedded6xx/holly.c
-+++ b/arch/powerpc/platforms/embedded6xx/holly.c
-@@ -154,8 +154,7 @@ static void __init holly_init_IRQ(void)
- 	struct device_node *cascade_node = NULL;
- #endif
- 
--	mpic = mpic_alloc(NULL, 0,
--			MPIC_BIG_ENDIAN | MPIC_WANTS_RESET |
-+	mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN |
- 			MPIC_SPV_EOI | MPIC_NO_PTHROU_DIS | MPIC_REGSET_TSI108,
- 			24, 0,
- 			"Tsi108_PIC");
-diff --git a/arch/powerpc/platforms/embedded6xx/linkstation.c b/arch/powerpc/platforms/embedded6xx/linkstation.c
-index 9479f4e..455e7c08 100644
---- a/arch/powerpc/platforms/embedded6xx/linkstation.c
-+++ b/arch/powerpc/platforms/embedded6xx/linkstation.c
-@@ -82,8 +82,7 @@ static void __init linkstation_init_IRQ(void)
- {
- 	struct mpic *mpic;
- 
--	mpic = mpic_alloc(NULL, 0, MPIC_WANTS_RESET,
--			4, 0, " EPIC     ");
-+	mpic = mpic_alloc(NULL, 0, 0, 4, 0, " EPIC     ");
- 	BUG_ON(mpic == NULL);
- 
- 	/* PCI IRQs */
-diff --git a/arch/powerpc/platforms/embedded6xx/mpc7448_hpc2.c b/arch/powerpc/platforms/embedded6xx/mpc7448_hpc2.c
-index 90acb54..74ccce3 100644
---- a/arch/powerpc/platforms/embedded6xx/mpc7448_hpc2.c
-+++ b/arch/powerpc/platforms/embedded6xx/mpc7448_hpc2.c
-@@ -108,8 +108,7 @@ static void __init mpc7448_hpc2_init_IRQ(void)
- 	struct device_node *cascade_node = NULL;
- #endif
- 
--	mpic = mpic_alloc(NULL, 0,
--			MPIC_BIG_ENDIAN | MPIC_WANTS_RESET |
-+	mpic = mpic_alloc(NULL, 0, MPIC_BIG_ENDIAN |
- 			MPIC_SPV_EOI | MPIC_NO_PTHROU_DIS | MPIC_REGSET_TSI108,
- 			24, 0,
- 			"Tsi108_PIC");
-diff --git a/arch/powerpc/platforms/embedded6xx/storcenter.c b/arch/powerpc/platforms/embedded6xx/storcenter.c
-index 451dce4..e0ed3c7 100644
---- a/arch/powerpc/platforms/embedded6xx/storcenter.c
-+++ b/arch/powerpc/platforms/embedded6xx/storcenter.c
-@@ -84,8 +84,7 @@ static void __init storcenter_init_IRQ(void)
- {
- 	struct mpic *mpic;
- 
--	mpic = mpic_alloc(NULL, 0, MPIC_WANTS_RESET,
--			16, 0, " OpenPIC  ");
-+	mpic = mpic_alloc(NULL, 0, 0, 16, 0, " OpenPIC  ");
- 	BUG_ON(mpic == NULL);
- 
- 	/*
-diff --git a/arch/powerpc/platforms/maple/setup.c b/arch/powerpc/platforms/maple/setup.c
-index 0bcbfe7..3b7545a 100644
---- a/arch/powerpc/platforms/maple/setup.c
-+++ b/arch/powerpc/platforms/maple/setup.c
-@@ -262,7 +262,7 @@ static void __init maple_init_IRQ(void)
- 		flags |= MPIC_BIG_ENDIAN;
- 
- 	/* XXX Maple specific bits */
--	flags |= MPIC_U3_HT_IRQS | MPIC_WANTS_RESET;
-+	flags |= MPIC_U3_HT_IRQS;
- 	/* All U3/U4 are big-endian, older SLOF firmware doesn't encode this */
- 	flags |= MPIC_BIG_ENDIAN;
- 
-diff --git a/arch/powerpc/platforms/pasemi/setup.c b/arch/powerpc/platforms/pasemi/setup.c
-index 98b7a7c..e777ad4 100644
---- a/arch/powerpc/platforms/pasemi/setup.c
-+++ b/arch/powerpc/platforms/pasemi/setup.c
-@@ -224,7 +224,7 @@ static __init void pas_init_IRQ(void)
- 	openpic_addr = of_read_number(opprop, naddr);
- 	printk(KERN_DEBUG "OpenPIC addr: %lx\n", openpic_addr);
- 
--	mpic_flags = MPIC_LARGE_VECTORS | MPIC_NO_BIAS;
-+	mpic_flags = MPIC_LARGE_VECTORS | MPIC_NO_BIAS | MPIC_NO_RESET;
- 
- 	nmiprop = of_get_property(mpic_node, "nmi-source", NULL);
- 	if (nmiprop)
-diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
-index 7761aab..0293d7a 100644
---- a/arch/powerpc/platforms/powermac/pic.c
-+++ b/arch/powerpc/platforms/powermac/pic.c
-@@ -469,7 +469,6 @@ static struct mpic * __init pmac_setup_one_mpic(struct device_node *np,
- 
- 	pmac_call_feature(PMAC_FTR_ENABLE_MPIC, np, 0, 0);
- 
--	flags |= MPIC_WANTS_RESET;
- 	if (of_get_property(np, "big-endian", NULL))
- 		flags |= MPIC_BIG_ENDIAN;
- 
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 6d0a5df..d928412 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -190,7 +190,8 @@ static void __init pseries_mpic_init_IRQ(void)
- 	BUG_ON(openpic_addr == 0);
- 
- 	/* Setup the openpic driver */
--	mpic = mpic_alloc(pSeries_mpic_node, openpic_addr, 0, 16, 0, " MPIC     ");
-+	mpic = mpic_alloc(pSeries_mpic_node, openpic_addr,
-+			MPIC_NO_RESET, 16, 0, " MPIC     ");
- 	BUG_ON(mpic == NULL);
- 
- 	/* Add ISUs */
-diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
-index 90171d4..b9b989d 100644
---- a/arch/powerpc/sysdev/mpic.c
-+++ b/arch/powerpc/sysdev/mpic.c
-@@ -1286,7 +1286,7 @@ struct mpic * __init mpic_alloc(struct device_node *node,
- 	/* When using a device-node, reset requests are only honored if the MPIC
- 	 * is allowed to reset.
- 	 */
--	if ((mpic->flags & MPIC_WANTS_RESET) && !(mpic->flags & MPIC_NO_RESET)) {
-+	if (!(mpic->flags & MPIC_NO_RESET)) {
- 		printk(KERN_DEBUG "mpic: Resetting\n");
- 		mpic_write(mpic->gregs, MPIC_INFO(GREG_GLOBAL_CONF_0),
- 			   mpic_read(mpic->gregs, MPIC_INFO(GREG_GLOBAL_CONF_0))
++	emc@7000f400 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "nvidia,tegra20-emc";
++		reg = <0x7000f400 0x200>;
++	};
++
+ 	sdhci@c8000000 {
+ 		compatible = "nvidia,tegra20-sdhci";
+ 		reg = <0xc8000000 0x200>;
 -- 
-1.7.7.3
+1.7.8.GIT
