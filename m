@@ -1,90 +1,43 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: [PATCH] dt/tegra: seaboard: add i2c devices
-Date: Thu, 22 Dec 2011 18:33:13 -0800
-Message-ID: <1324607593-2378-1-git-send-email-olof__20731.3339262784$1324607676$gmane$org@lixom.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Resent-Message-ID: <20111223023414.GA2460-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
-Resent-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, device-tree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org
+From: Olof Johansson <olof@lixom.net>
+Subject: [PATCH] Input: mpu3050: add of_match table for device-tree probing
+Date: Thu, 22 Dec 2011 18:39:52 -0800
+Message-ID: <1324607992-2919-1-git-send-email-olof@lixom.net>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Add the known i2c devices on seaboard to the i2c table.
+Adding invn,mpu3050 as the initial id.
 
-Also rename the temperature sensor device node, and mark it as a nct1008 instead
-of an adt7461 (which it is -- the chips are compatible though).
-
-
-Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 ---
- arch/arm/boot/dts/tegra-seaboard.dts |   29 +++++++++++++++++++++++++++--
- 1 files changed, 27 insertions(+), 2 deletions(-)
+ drivers/input/misc/mpu3050.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
-index b55a02e..b64e0bd 100644
---- a/arch/arm/boot/dts/tegra-seaboard.dts
-+++ b/arch/arm/boot/dts/tegra-seaboard.dts
-@@ -13,6 +13,18 @@
+diff --git a/drivers/input/misc/mpu3050.c b/drivers/input/misc/mpu3050.c
+index f71dc72..e9a57e3 100644
+--- a/drivers/input/misc/mpu3050.c
++++ b/drivers/input/misc/mpu3050.c
+@@ -348,11 +348,18 @@ static const struct i2c_device_id mpu3050_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, mpu3050_ids);
  
- 	i2c@7000c000 {
- 		clock-frequency = <400000>;
++static const struct of_device_id mpu3050_of_match[] = {
++	{ .compatible = "invn,mpu3050", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, mpu3050_of_match);
 +
-+		light-sensor@44 {
-+			compatible = "isil,isl29018";
-+			reg = <0x44>;
-+			interrupts = < 0 202 0x04 >; /* gpio PZ2 */
-+		};
-+
-+		gyrometer@68 {
-+			compatible = "invn,mpu3050";
-+			reg = <0x68>;
-+			interrupts = < 0 204 0x04 >; /* gpio PZ4 */
-+		};
- 	};
- 
- 	i2c@7000c400 {
-@@ -21,15 +33,28 @@
- 
- 	i2c@7000c500 {
- 		clock-frequency = <400000>;
-+
-+		smart-battery@b {
-+			compatible = "ti,bq20z75", "smart-battery-1.1";
-+			ti,i2c-retry-count = < 2 >;
-+			ti,poll-retry-count = < 10 >;
-+			reg = <0xb>;
-+		};
- 	};
- 
- 	i2c@7000d000 {
- 		clock-frequency = <400000>;
- 
--		adt7461@4c {
--			compatible = "adt7461";
-+		temperature-sensor@4c {
-+			compatible = "nct1008";
- 			reg = <0x4c>;
- 		};
-+
-+		magnetometer@c {
-+			compatible = "ak8975";
-+			reg = <0xc>;
-+			interrupts = < 0 109 0x04 >; /* gpio PN5 */
-+		};
- 	};
- 
- 	serial@70006000 {
+ static struct i2c_driver mpu3050_i2c_driver = {
+ 	.driver	= {
+ 		.name	= "mpu3050",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &mpu3050_pm,
++		.of_match_table = mpu3050_of_match,
+ 	},
+ 	.probe		= mpu3050_probe,
+ 	.remove		= __devexit_p(mpu3050_remove),
 -- 
 1.7.8.GIT
+
