@@ -1,66 +1,120 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v2 0/5] ARM: OMAP2+: Interrupt controllers adaptation
- to DT
-Date: Fri, 23 Dec 2011 10:46:39 +0100
-Message-ID: <4EF44DFF.4090300@ti.com>
-References: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] serial/efm32: add new driver
+Date: Fri, 23 Dec 2011 10:35:22 +0000
+Message-ID: <201112231035.23215.arnd@arndb.de>
+References: <20111221202847.4ffeba10@bob.linux.org.uk> <1324561092-1945-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: rob.herring@calxeda.com
-Cc: tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1324561092-1945-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@suse.de>, kernel@pengutronix.de, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thursday 22 December 2011, Uwe Kleine-K=C3=B6nig wrote:
 
-Are you OK with that update?
+> @@ -0,0 +1,14 @@
+> +* Energymicro efm32 UART
+> +
+> +Required properties:
+> +- compatible : Should be "efm32,usart"
+> +- reg : Address and length of the register set
+> +- interrupts : Should contain uart interrupt
+> +
+> +Example:
+> +
+> +uart@0x4000c400 {
+> +	compatible =3D "efm32,usart";
+> +	reg =3D <0x4000c400 0x400>;
+> +	interrupts =3D <15>;
+> +};
 
-Thanks,
-Benoit
+Do you know if the usart was actually designed by energymicro or licens=
+ed
+from another party? If it is a licensed part, it would be better to
+list the "compatible" value under the company name that made it.
 
-On 12/20/2011 2:39 PM, Benoit Cousson wrote:
-> Hi Tony and Rob,
->
-> Here is the series to take advantage of the new DT interrupt init mechanism.
-> Thanks to Marc's CONFIG_MULTI_IRQ_HANDLER series, OMAP4 just has to use the
-> default GIC binding and does not need some OMAP specific hacks anymore.
-> OMAP2 and 3 are using a simple interrupt controller that can thus expose
-> a simpler binding.
->
-> This update, compared to v1 [1], is introducing the IRQ domain for the
-> OMAP2&3 INTC by default for both DT and none-DT build.
-> Please note that in the near future that code can even be simplier with the
-> introduction of the domain support inside generic irq chip.
->
-> This series is based on lo/dt branch to get the needed cleanup and fixes for
-> OMAP.
->
-> The series is available here for reference:
-> git://gitorious.org/omap-pm/linux.git for_3.3/2_dt_irq
->
-> Regards,
-> Benoit
->
-> [1] http://www.spinics.net/lists/linux-omap/msg61152.html
->
->
-> Benoit Cousson (5):
->    arm/dts: OMAP4: Update DTS file with new GIC bindings
->    ARM: OMAP2/3: intc: Add irqdomain support
->    ARM: OMAP2/3: intc: Add DT support for TI interrupt controller
->    arm/dts: OMAP3: Add interrupt-controller bindings for INTC
->    ARM: OMAP2+: board-generic: Use of_irq_init API
->
->   .../devicetree/bindings/arm/omap/intc.txt          |   27 +++++++++++
->   arch/arm/boot/dts/omap3.dtsi                       |    6 ++-
->   arch/arm/boot/dts/omap4.dtsi                       |    3 +-
->   arch/arm/mach-omap2/board-generic.c                |   30 +++++++------
->   arch/arm/mach-omap2/common.h                       |   10 ++++
->   arch/arm/mach-omap2/irq.c                          |   48 ++++++++++++++++++--
->   6 files changed, 103 insertions(+), 21 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/omap/intc.txt
->
+I would suggest that you also support the "clock-frequency" and/or
+"current-speed" properties that are defined for serial ports, see the
+of_serial driver.
 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 925a1e5..cfeb0f3 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1610,4 +1610,14 @@ config SERIAL_XILINX_PS_UART_CONSOLE
+>  	help
+>  	  Enable a Xilinx PS UART port to be the system console.
+> =20
+> +config SERIAL_EFM32_USART
+> +	bool "EFM32 USART port."
+> +	depends on ARCH_EFM32
+> +	select SERIAL_CORE
+
+Why not tristate? If it's not a console, you should be able to use
+it as a module.
+
+I would generally prefer not to make the driver depend on the
+platform, so we can get better compile time coverage. I think a better
+set of dependencies would be
+
+	depends on HAVE_CLK
+	depends on OF
+	default ARCH_EFM32
+
+> +static void efm32_usart_write32(struct efm32_usart_port *efm_port,
+> +		u32 value, unsigned offset)
+> +{
+> +	__raw_writel(value, efm_port->port.membase + offset);
+> +}
+> +
+> +static u32 efm32_usart_read32(struct efm32_usart_port *efm_port,
+> +		unsigned offset)
+> +{
+> +	return __raw_readl(efm_port->port.membase + offset);
+> +}
+
+Please use writel_relaxed() instead of __raw_writel().
+
+> +static int __devinit efm32_usart_probe(struct platform_device *pdev)
+> +{
+> +	struct efm32_usart_port *efm_port;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	efm_port =3D kzalloc(sizeof(*efm_port), GFP_KERNEL);
+> +	if (!efm_port) {
+> +		dev_dbg(&pdev->dev, "failed to allocate private data\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		ret =3D -ENODEV;
+> +		dev_dbg(&pdev->dev, "failed to determine base address\n");
+> +		goto err_get_base;
+> +	}
+> +
+> +	if (resource_size(res) < 60) {
+> +		ret =3D -EINVAL;
+> +		dev_dbg(&pdev->dev, "memory resource too small\n");
+> +		goto err_too_small;
+> +	}
+
+of_iomap() would be simpler here. I think you can leave out the assignm=
+ent to=20
+mapbase, and go straight to membase here.
+
+checking the resource size should not be necessary, because that would =
+imply
+having an invalid device tree, which you don't have to check at run tim=
+e.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
