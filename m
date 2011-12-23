@@ -1,69 +1,66 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Input: mpu3050: add of_match table for device-tree probing
-Date: Fri, 23 Dec 2011 01:22:46 -0800
-Message-ID: <20111223092246.GA7120@core.coreip.homeip.net>
-References: <1324607992-2919-1-git-send-email-olof@lixom.net>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH v2 0/5] ARM: OMAP2+: Interrupt controllers adaptation
+ to DT
+Date: Fri, 23 Dec 2011 10:46:39 +0100
+Message-ID: <4EF44DFF.4090300@ti.com>
+References: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1324607992-2919-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: rob.herring@calxeda.com
+Cc: tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+Hi Rob,
 
-On Thu, Dec 22, 2011 at 06:39:52PM -0800, Olof Johansson wrote:
-> Adding invn,mpu3050 as the initial id.
-> 
+Are you OK with that update?
 
-I believe you also need to add this to
-Documentation/devicetree/bindings/input/
+Thanks,
+Benoit
 
-Thanks!
+On 12/20/2011 2:39 PM, Benoit Cousson wrote:
+> Hi Tony and Rob,
+>
+> Here is the series to take advantage of the new DT interrupt init mechanism.
+> Thanks to Marc's CONFIG_MULTI_IRQ_HANDLER series, OMAP4 just has to use the
+> default GIC binding and does not need some OMAP specific hacks anymore.
+> OMAP2 and 3 are using a simple interrupt controller that can thus expose
+> a simpler binding.
+>
+> This update, compared to v1 [1], is introducing the IRQ domain for the
+> OMAP2&3 INTC by default for both DT and none-DT build.
+> Please note that in the near future that code can even be simplier with the
+> introduction of the domain support inside generic irq chip.
+>
+> This series is based on lo/dt branch to get the needed cleanup and fixes for
+> OMAP.
+>
+> The series is available here for reference:
+> git://gitorious.org/omap-pm/linux.git for_3.3/2_dt_irq
+>
+> Regards,
+> Benoit
+>
+> [1] http://www.spinics.net/lists/linux-omap/msg61152.html
+>
+>
+> Benoit Cousson (5):
+>    arm/dts: OMAP4: Update DTS file with new GIC bindings
+>    ARM: OMAP2/3: intc: Add irqdomain support
+>    ARM: OMAP2/3: intc: Add DT support for TI interrupt controller
+>    arm/dts: OMAP3: Add interrupt-controller bindings for INTC
+>    ARM: OMAP2+: board-generic: Use of_irq_init API
+>
+>   .../devicetree/bindings/arm/omap/intc.txt          |   27 +++++++++++
+>   arch/arm/boot/dts/omap3.dtsi                       |    6 ++-
+>   arch/arm/boot/dts/omap4.dtsi                       |    3 +-
+>   arch/arm/mach-omap2/board-generic.c                |   30 +++++++------
+>   arch/arm/mach-omap2/common.h                       |   10 ++++
+>   arch/arm/mach-omap2/irq.c                          |   48 ++++++++++++++++++--
+>   6 files changed, 103 insertions(+), 21 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/arm/omap/intc.txt
+>
 
-> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> ---
->  drivers/input/misc/mpu3050.c |    7 +++++++
->  1 files changed, 7 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/input/misc/mpu3050.c b/drivers/input/misc/mpu3050.c
-> index f71dc72..e9a57e3 100644
-> --- a/drivers/input/misc/mpu3050.c
-> +++ b/drivers/input/misc/mpu3050.c
-> @@ -348,11 +348,18 @@ static const struct i2c_device_id mpu3050_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, mpu3050_ids);
->  
-> +static const struct of_device_id mpu3050_of_match[] = {
-> +	{ .compatible = "invn,mpu3050", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, mpu3050_of_match);
-> +
->  static struct i2c_driver mpu3050_i2c_driver = {
->  	.driver	= {
->  		.name	= "mpu3050",
->  		.owner	= THIS_MODULE,
->  		.pm	= &mpu3050_pm,
-> +		.of_match_table = mpu3050_of_match,
->  	},
->  	.probe		= mpu3050_probe,
->  	.remove		= __devexit_p(mpu3050_remove),
-> -- 
-> 1.7.8.GIT
-> 
-
--- 
-Dmitry
