@@ -1,149 +1,90 @@
 From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: [PATCH 7/9] arm/tegra: emc: device tree bindings
-Date: Thu, 22 Dec 2011 16:17:46 -0800
-Message-ID: <1324599468-12845-8-git-send-email-olof@lixom.net>
-References: <1324599468-12845-1-git-send-email-olof@lixom.net>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1324599468-12845-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH] dt/tegra: seaboard: add i2c devices
+Date: Thu, 22 Dec 2011 18:33:13 -0800
+Message-ID: <1324607593-2378-1-git-send-email-olof__20731.3339262784$1324607676$gmane$org@lixom.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Resent-Message-ID: <20111223023414.GA2460-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Resent-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, device-tree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Device tree bindings for the EMC tables on tegra.
+Add the known i2c devices on seaboard to the i2c table.
+
+Also rename the temperature sensor device node, and mark it as a nct1008 instead
+of an adt7461 (which it is -- the chips are compatible though).
+
 
 Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 ---
- .../devicetree/bindings/arm/tegra/emc.txt          |  100 ++++++++++++++++++++
- arch/arm/boot/dts/tegra20.dtsi                     |    7 ++
- 2 files changed, 107 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/emc.txt
+ arch/arm/boot/dts/tegra-seaboard.dts |   29 +++++++++++++++++++++++++++--
+ 1 files changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt b/Documentation/devicetree/bindings/arm/tegra/emc.txt
-new file mode 100644
-index 0000000..09335f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/tegra/emc.txt
-@@ -0,0 +1,100 @@
-+Embedded Memory Controller
+diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+index b55a02e..b64e0bd 100644
+--- a/arch/arm/boot/dts/tegra-seaboard.dts
++++ b/arch/arm/boot/dts/tegra-seaboard.dts
+@@ -13,6 +13,18 @@
+ 
+ 	i2c@7000c000 {
+ 		clock-frequency = <400000>;
 +
-+Properties:
-+- name : Should be emc
-+- #address-cells : Should be 1
-+- #size-cells : Should be 0
-+- compatible : Should contain "nvidia,tegra20-emc".
-+- reg : Offset and length of the register set for the device
-+- nvidia,use-ram-code : If present, the sub-nodes will be addressed
-+  and chosen using the ramcode board selector. If omitted, only one
-+  set of tables can be present and said tables will be used
-+  irrespective of ram-code configuration.
-+
-+Child device nodes describe the memory settings for different configurations and clock rates.
-+
-+Example:
-+
-+	emc@7000f400 {
-+		#address-cells = < 1 >;
-+		#size-cells = < 0 >;
-+		compatible = "nvidia,tegra20-emc";
-+		reg = <0x7000f4000 0x200>;
-+	}
-+
-+
-+Embedded Memory Controller ram-code table
-+
-+If the emc node has the nvidia,use-ram-code property present, then the
-+next level of nodes below the emc table are used to specify which settings
-+apply for which ram-code settings.
-+
-+If the emc node lacks the nvidia,use-ram-code property, this level is omitted
-+and the tables are stored directly under the emc node (see below).
-+
-+Properties:
-+
-+- name : Should be emc-tables
-+- nvidia,ram-code : the binary representation of the ram-code board strappings
-+  for which this node (and children) are valid.
-+
-+
-+
-+Embedded Memory Controller configuration table
-+
-+This is a table containing the EMC register settings for the various
-+operating speeds of the memory controller. They are always located as
-+subnodes of the emc controller node.
-+
-+There are two ways of specifying which tables to use:
-+
-+* The simplest is if there is just one set of tables in the device tree,
-+  and they will always be used (based on which frequency is used).
-+  This is the preferred method, especially when firmware can fill in
-+  this information based on the specific system information and just
-+  pass it on to the kernel.
-+
-+* The slightly more complex one is when more than one memory configuration
-+  might exist on the system.  The Tegra20 platform handles this during
-+  early boot by selecting one out of possible 4 memory settings based
-+  on a 2-pin "ram code" bootstrap setting on the board. The values of
-+  these strappings can be read through a register in the SoC, and thus
-+  used to select which tables to use.
-+
-+Properties:
-+- name : Should be emc-table
-+- compatible : Should contain "nvidia,tegra20-emc-table".
-+- reg : either an opaque enumerator to tell different tables apart, or
-+  the valid frequency for which the table should be used (in kHz).
-+- clock-frequency : the clock frequency for the EMC at which this
-+  table should be used (in kHz).
-+- nvidia,emc-registers : a 46 word array of EMC registers to be programmed
-+  for operation at the 'clock-frequency' setting.
-+  The order and contents of the registers are:
-+    RC, RFC, RAS, RP, R2W, W2R, R2P, W2P, RD_RCD, WR_RCD, RRD, REXT,
-+    WDV, QUSE, QRST, QSAFE, RDV, REFRESH, BURST_REFRESH_NUM, PDEX2WR,
-+    PDEX2RD, PCHG2PDEN, ACT2PDEN, AR2PDEN, RW2PDEN, TXSR, TCKE, TFAW,
-+    TRPAB, TCLKSTABLE, TCLKSTOP, TREFBW, QUSE_EXTRA, FBIO_CFG6, ODT_WRITE,
-+    ODT_READ, FBIO_CFG5, CFG_DIG_DLL, DLL_XFORM_DQS, DLL_XFORM_QUSE,
-+    ZCAL_REF_CNT, ZCAL_WAIT_CNT, AUTO_CAL_INTERVAL, CFG_CLKTRIM_0,
-+    CFG_CLKTRIM_1, CFG_CLKTRIM_2
-+
-+		emc-table@166000 {
-+			reg = <166000>;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = < 166000 >;
-+			nvidia,emc-registers = < 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-+						 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-+						 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-+						 0 0 0 0 >;
++		light-sensor@44 {
++			compatible = "isil,isl29018";
++			reg = <0x44>;
++			interrupts = < 0 202 0x04 >; /* gpio PZ2 */
 +		};
 +
-+		emc-table@333000 {
-+			reg = <333000>;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = < 333000 >;
-+			nvidia,emc-registers = < 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-+						 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-+						 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-+						 0 0 0 0 >;
++		gyrometer@68 {
++			compatible = "invn,mpu3050";
++			reg = <0x68>;
++			interrupts = < 0 204 0x04 >; /* gpio PZ4 */
 +		};
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 3da7afd..c162241 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -120,6 +120,13 @@
- 		interrupts = < 0 91 0x04 >;
  	};
  
-+	emc@7000f400 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "nvidia,tegra20-emc";
-+		reg = <0x7000f400 0x200>;
-+	};
+ 	i2c@7000c400 {
+@@ -21,15 +33,28 @@
+ 
+ 	i2c@7000c500 {
+ 		clock-frequency = <400000>;
 +
- 	sdhci@c8000000 {
- 		compatible = "nvidia,tegra20-sdhci";
- 		reg = <0xc8000000 0x200>;
++		smart-battery@b {
++			compatible = "ti,bq20z75", "smart-battery-1.1";
++			ti,i2c-retry-count = < 2 >;
++			ti,poll-retry-count = < 10 >;
++			reg = <0xb>;
++		};
+ 	};
+ 
+ 	i2c@7000d000 {
+ 		clock-frequency = <400000>;
+ 
+-		adt7461@4c {
+-			compatible = "adt7461";
++		temperature-sensor@4c {
++			compatible = "nct1008";
+ 			reg = <0x4c>;
+ 		};
++
++		magnetometer@c {
++			compatible = "ak8975";
++			reg = <0xc>;
++			interrupts = < 0 109 0x04 >; /* gpio PN5 */
++		};
+ 	};
+ 
+ 	serial@70006000 {
 -- 
 1.7.8.GIT
