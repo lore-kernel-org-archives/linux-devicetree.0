@@ -1,49 +1,47 @@
-From: Richard Zhao <richard.zhao@linaro.org>
-Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Sat, 24 Dec 2011 23:52:29 +0800
-Message-ID: <20111224155227.GC1803@richard-laptop>
-References: <1324537753-30590-1-git-send-email-richard.zhao@linaro.org>
- <1324537753-30590-5-git-send-email-richard.zhao@linaro.org>
- <20111223131851.GB13175@sirena.org.uk>
- <20111224085539.GA1892@richard-laptop>
- <20111224122411.GA13778@sirena.org.uk>
- <20111224132831.GB1803@richard-laptop>
- <20111224134227.GA20908@opensource.wolfsonmicro.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] gpio: pl061: convert to use generic irq chip
+Date: Sun, 25 Dec 2011 00:26:09 +0100
+Message-ID: <CACRpkdY3=4b4P7N-oK1UyHbY-FEzm=nvaGzuD_28Mbof1msY2Q@mail.gmail.com>
+References: <1323876538-20406-8-git-send-email-robherring2@gmail.com>
+ <1324327927-6886-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111224134227.GA20908@opensource.wolfsonmicro.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: linux@arm.linux.org.uk, arnd@arndb.de, mark.langsdorf@calxeda.com, linaro-dev@lists.linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, bryanh@codeaurora.org, cpufreq@vger.kernel.org, grant.likely@secretlab.ca, rdunlap@xenotime.net, eric.miao@linaro.org, rob.herring@calxeda.com, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, davidb@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1324327927-6886-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 24, 2011 at 01:42:29PM +0000, Mark Brown wrote:
-> On Sat, Dec 24, 2011 at 09:28:33PM +0800, Richard Zhao wrote:
-> > On Sat, Dec 24, 2011 at 12:24:11PM +0000, Mark Brown wrote:
-> 
-> >  - trans-latency :  transition latency of cpu freq and related regulator,
-> >    in unit of ns.
-> 
-> > Does it look better?
-> 
-> I think it shouldn't include the regulator part of things.
-> 
-> > If you think regulator thansition latency is board specific, then the board
-> > dts can overrite it.
-> 
-> We should just query this information from the regulator subsystem
-> (there's hooks but currently nothing implements them).  The regulators
-> can define their own bindings if they need to read it from device tree,
-> most of them should be able to do this as a function of knowing about
-> the device.  None of this is specific to cpufreq so cpufreq shouldn't
-> have to define its own support for this.
-I'd like to query the latency by call clk and regulator APIs. but as you said
-both of them have not implemented it yet. I think, for now, we can use the
-property to get the total latency. Once I can get it at runtime, I'll remove
-it. So the definition of trans-latency is just the same as cpufreq transition_latency,
-people get less confused. What do you think?
+On Mon, Dec 19, 2011 at 9:52 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Thanks
-Richard
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>
+> Convert the pl061 irq_chip code to use the generic irq chip code.
+>
+> This has the side effect of using 32-bit accesses rather than 8-bit
+> accesses to interrupt registers. The h/w TRM and testing seem to indicate
+> this is fine.
+>
+> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> v2:
+> - put struct irq_chip_generic pointer into struct pl061_gpio instead of domain
+> ptr.
+
+Looks good to me.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Thanks,
+Linus Walleij
