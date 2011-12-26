@@ -1,51 +1,33 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Mon, 26 Dec 2011 14:22:34 +0000
-Message-ID: <20111226142234.GH8722@opensource.wolfsonmicro.com>
-References: <1324537753-30590-1-git-send-email-richard.zhao@linaro.org>
- <1324537753-30590-5-git-send-email-richard.zhao@linaro.org>
- <20111223131851.GB13175@sirena.org.uk>
- <20111224085539.GA1892@richard-laptop>
- <20111224122411.GA13778@sirena.org.uk>
- <20111224132831.GB1803@richard-laptop>
- <20111224134227.GA20908@opensource.wolfsonmicro.com>
- <20111224155227.GC1803@richard-laptop>
- <20111226111030.GC8722@opensource.wolfsonmicro.com>
- <20111226134449.GA4259@richard-laptop>
+Subject: Re: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
+ domain infrastructure
+Date: Mon, 26 Dec 2011 19:06:17 +0000
+Message-ID: <20111226190616.GL8722@opensource.wolfsonmicro.com>
+References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>
+ <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org>
+ <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20111226134449.GA4259@richard-laptop>
-Sender: cpufreq-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@linaro.org>
-Cc: linux@arm.linux.org.uk, arnd@arndb.de, mark.langsdorf@calxeda.com, linaro-dev@lists.linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, bryanh@codeaurora.org, cpufreq@vger.kernel.org, grant.likely@secretlab.ca, rdunlap@xenotime.net, eric.miao@linaro.org, rob.herring@calxeda.com, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, davidb@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 26, 2011 at 09:44:52PM +0800, Richard Zhao wrote:
-> On Mon, Dec 26, 2011 at 11:10:30AM +0000, Mark Brown wrote:
+On Mon, Dec 12, 2011 at 09:16:29PM +0530, Thomas Abraham wrote:
 
-Fix your mailer to word wrap properly please.
+> +	/* Wait max 1ms */
+> +	timeout = 10;
+> +	while ((__raw_readl(base + 0x4) & S5P_INT_LOCAL_PWR_EN)
+> +					!= S5P_INT_LOCAL_PWR_EN) {
+> +		if (!timeout) {
+> +			pr_err("Power domain %s enable failed\n", domain->name);
+> +			return -ETIMEDOUT;
+> +		}
+> +		timeout--;
+> +		udelay(100);
+> +	}
 
-> > The *call* is there in the regulator subsystem, it's just that none of
-> > the drivers back it up with an actual implementation yet.  Which turns
-> > out to be a good thing as cpufreq can't currently understand variable
-> > latencies and the governors don't deal well with non-trivial latencies
-> > anyway.
-
-> but clk API don't have such calls. and many SoCs only adjust clk
-> frequencies, using one single voltage.
-
-I've not suggested doing this in the clock API, only for the regulator.
-For the clocks it's less clear that it's useful as you don't have the
-bulk operations and it's much rarer to need them.
-
-> > The problem with device tree is that once you've defined a binding
-> > you're stuck with it, it's very hard to change - witness all the magic
-> > number based stuff with the interrupt bindings for example
-
-> So what's your suggestion? We can not set transition_latency to set
-> random number.
-
-As I've repeatedly said I think you should define it to be the latency
-for the SoC only, not for the regulators.
+Might be worth putting a cpu_relax() in there just to be a bit nicer?
