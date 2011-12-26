@@ -1,52 +1,24 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Mon, 26 Dec 2011 11:10:30 +0000
-Message-ID: <20111226111030.GC8722@opensource.wolfsonmicro.com>
-References: <1324537753-30590-1-git-send-email-richard.zhao@linaro.org>
- <1324537753-30590-5-git-send-email-richard.zhao@linaro.org>
- <20111223131851.GB13175@sirena.org.uk>
- <20111224085539.GA1892@richard-laptop>
- <20111224122411.GA13778@sirena.org.uk>
- <20111224132831.GB1803@richard-laptop>
- <20111224134227.GA20908@opensource.wolfsonmicro.com>
- <20111224155227.GC1803@richard-laptop>
+Subject: Re: [PATCH 1/2] PM / Domains: Add OF support
+Date: Mon, 26 Dec 2011 11:29:32 +0000
+Message-ID: <20111226112931.GE8722@opensource.wolfsonmicro.com>
+References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>
+ <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20111224155227.GC1803@richard-laptop>
-Sender: cpufreq-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@linaro.org>
-Cc: linux@arm.linux.org.uk, arnd@arndb.de, mark.langsdorf@calxeda.com, linaro-dev@lists.linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, bryanh@codeaurora.org, cpufreq@vger.kernel.org, grant.likely@secretlab.ca, rdunlap@xenotime.net, eric.miao@linaro.org, rob.herring@calxeda.com, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, davidb@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 24, 2011 at 11:52:29PM +0800, Richard Zhao wrote:
-> On Sat, Dec 24, 2011 at 01:42:29PM +0000, Mark Brown wrote:
-> > On Sat, Dec 24, 2011 at 09:28:33PM +0800, Richard Zhao wrote:
+On Mon, Dec 12, 2011 at 09:16:28PM +0530, Thomas Abraham wrote:
+> A device node pointer is added to generic pm domain structure to associate
+> the domain with a node in the device tree. The platform code parses the
+> device tree to find available nodes representing the generic power domain,
+> instantiates the available domains and initializes them by calling
+> pm_genpd_init().
 
-> > > If you think regulator thansition latency is board specific, then the board
-> > > dts can overrite it.
-
-> > We should just query this information from the regulator subsystem
-> > (there's hooks but currently nothing implements them).  The regulators
-> > can define their own bindings if they need to read it from device tree,
-> > most of them should be able to do this as a function of knowing about
-> > the device.  None of this is specific to cpufreq so cpufreq shouldn't
-> > have to define its own support for this.
-
-> I'd like to query the latency by call clk and regulator APIs. but as you said
-> both of them have not implemented it yet. I think, for now, we can use the
-
-The *call* is there in the regulator subsystem, it's just that none of
-the drivers back it up with an actual implementation yet.  Which turns
-out to be a good thing as cpufreq can't currently understand variable
-latencies and the governors don't deal well with non-trivial latencies
-anyway.
-
-> property to get the total latency. Once I can get it at runtime, I'll remove
-> it. So the definition of trans-latency is just the same as cpufreq transition_latency,
-> people get less confused. What do you think?
-
-The problem with device tree is that once you've defined a binding
-you're stuck with it, it's very hard to change - witness all the magic
-number based stuff with the interrupt bindings for example
+This sounds useful but the binding needs to be documented properly.
