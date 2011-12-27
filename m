@@ -1,35 +1,53 @@
-From: Richard Zhao <richard.zhao@linaro.org>
-Subject: [PATCH V5 7/7] arm/imx6q: select ARCH_HAS_CPUFREQ
-Date: Tue, 27 Dec 2011 16:24:22 +0800
-Message-ID: <1324974262-30963-8-git-send-email-richard.zhao@linaro.org>
-References: <1324974262-30963-1-git-send-email-richard.zhao@linaro.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
+Date: Tue, 27 Dec 2011 10:53:46 +0000
+Message-ID: <20111227105345.GF2870@opensource.wolfsonmicro.com>
+References: <20111223131851.GB13175@sirena.org.uk>
+	<20111224085539.GA1892@richard-laptop>
+	<20111224122411.GA13778@sirena.org.uk>
+	<20111224132831.GB1803@richard-laptop>
+	<20111224134227.GA20908@opensource.wolfsonmicro.com>
+	<20111224155227.GC1803@richard-laptop>
+	<20111226111030.GC8722@opensource.wolfsonmicro.com>
+	<20111226134449.GA4259@richard-laptop>
+	<20111226142234.GH8722@opensource.wolfsonmicro.com>
+	<20111227015109.GJ15863@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1324974262-30963-1-git-send-email-richard.zhao@linaro.org>
-Sender: cpufreq-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: linux@arm.linux.org.uk, davej@redhat.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rdunlap@xenotime.net, kernel@pengutronix.de, shawn.guo@linaro.org, catalin.marinas@arm.com, eric.miao@linaro.org, mark.langsdorf@calxeda.com, davidb@codeaurora.org, arnd@arndb.de, bryanh@codeaurora.org, jamie@jamieiles.com, marc.zyngier@arm.com, linaro-dev@lists.linaro.org, patches@linaro.org, Richard Zhao <richard.zhao@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111227015109.GJ15863-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org, davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
----
- arch/arm/mach-imx/Kconfig |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+On Tue, Dec 27, 2011 at 09:51:10AM +0800, Richard Zhao wrote:
+> On Mon, Dec 26, 2011 at 02:22:34PM +0000, Mark Brown wrote:
 
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index c44aa97..39cf00a 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -595,6 +595,7 @@ comment "i.MX6 family:"
- 
- config SOC_IMX6Q
- 	bool "i.MX6 Quad support"
-+	select ARCH_HAS_CPUFREQ
- 	select ARM_GIC
- 	select CACHE_L2X0
- 	select CPU_V7
--- 
-1.7.5.4
+> > Fix your mailer to word wrap properly please.
 
+> If you mean last mail I sent, I didn't see anything wrong. I use
+> mutt.
 
+It's wrapping at a bit more than 80 columns a lot of the time.
+
+> > > So what's your suggestion? We can not set transition_latency to set
+> > > random number.
+
+> > As I've repeatedly said I think you should define it to be the latency
+> > for the SoC only, not for the regulators.
+
+> Sometimes, regulators are in SoC too. To avoid confusion, I'll use below:
+> clk-trans-latency = <61036>;
+
+Makes sense.
