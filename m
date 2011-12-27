@@ -1,42 +1,35 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] of/pdt: fix section mismatch warning
-Date: Tue, 27 Dec 2011 17:13:07 -0500 (EST)
-Message-ID: <20111227.171307.1727824866350984198.davem@davemloft.net>
-References: <20111227220408.GA18932@merkur.ravnborg.org>
+From: Sylwester Nawrocki <snjw23@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
+ domain infrastructure
+Date: Tue, 27 Dec 2011 23:16:12 +0100
+Message-ID: <4EFA43AC.8030900@gmail.com>
+References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org> <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org> <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org> <20111226190616.GL8722@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111227220408.GA18932-OoSGOWW0KRunlFQ6Q1D1Y0B+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20111226190616.GL8722@opensource.wolfsonmicro.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
-Date: Tue, 27 Dec 2011 23:04:08 +0100
+On 12/26/2011 08:06 PM, Mark Brown wrote:
+> On Mon, Dec 12, 2011 at 09:16:29PM +0530, Thomas Abraham wrote:
+> 
+>> +	/* Wait max 1ms */
+>> +	timeout = 10;
+>> +	while ((__raw_readl(base + 0x4) & S5P_INT_LOCAL_PWR_EN)
+>> +					!= S5P_INT_LOCAL_PWR_EN) {
+>> +		if (!timeout) {
+>> +			pr_err("Power domain %s enable failed\n", domain->name);
+>> +			return -ETIMEDOUT;
+>> +		}
+>> +		timeout--;
+>> +		udelay(100);
+>> +	}
+> 
+> Might be worth putting a cpu_relax() in there just to be a bit nicer?
 
-> prom_early_alloc() is annotated __init, and users of
-> kernel_tree_alloc() is also annotated __init.
-> So simply match the annoation of these to fix the warning.
-
-Not exactly.
-
-drivers/of/fdt.c:of_fdt_unflatten_tree() is not marked __init but does
-pass kernel_tree_alloc in as a callback to __unflatten_device_tree()
-
-So I don't think we can't just mark kernel_tree_alloc as __init to fix
-this problem.
-
-of_fdt_unflatten_tree() seems to be invokable at arbitrary points in
-time, even long after we boot up, so I think we'll end up having to
-unravel things to other way, removing the __init tag from the various
-implementations of prom_early_alloc().
+There is a quite significant delay within the loop, thus it might make more
+sense to replace udelay() with usleep_range() instead.
