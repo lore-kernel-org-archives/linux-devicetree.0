@@ -1,69 +1,97 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH] Input: mpu3050: add of_match table for device-tree probing
-Date: Tue, 27 Dec 2011 09:14:31 -0800
-Message-ID: <CAOesGMjDUYqP3iFzBz06sxyhjMGD4Znxvps4JxCxky56Hxy-PQ@mail.gmail.com>
-References: <1324607992-2919-1-git-send-email-olof@lixom.net>
-	<20111223092246.GA7120@core.coreip.homeip.net>
-	<CAOesGMiGJmc6FhsDcsmROUgoLD4eDFKK=LE7yYjkJn1O7oiL8Q@mail.gmail.com>
-	<4EF9ED4E.6000408@gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: =?UTF-8?q?=5BPATCH=5D=20dt/i2c=3A=20Enumerate=20some=20of=20the=20known=20trivial=20i2c=20devices?=
+Date: Tue, 27 Dec 2011 11:18:46 -0800
+Message-ID: <1325013526-8239-1-git-send-email-olof@lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <4EF9ED4E.6000408@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 27, 2011 at 8:07 AM, Rob Herring <robherring2@gmail.com> wrote:
-> On 12/23/2011 09:58 AM, Olof Johansson wrote:
->> Hi,
->>
->> On Fri, Dec 23, 2011 at 1:22 AM, Dmitry Torokhov
->> <dmitry.torokhov@gmail.com> wrote:
->>> Hi Olof,
->>>
->>> On Thu, Dec 22, 2011 at 06:39:52PM -0800, Olof Johansson wrote:
->>>> Adding invn,mpu3050 as the initial id.
->>>>
->>>
->>> I believe you also need to add this to
->>> Documentation/devicetree/bindings/input/
->>
->> For simple i2c devices that only have a name, address and possibly an
->> interrupt, there's no need to document a binding (it hasn't been done
->> in the past for the vast majority of those devices).
->
-> But then how do you find out if there is a existing binding for a device
-> without searching in the kernel source tree?
-
-That's a silly question, since today that is exactly what you do to
-find out, since the Documentation/devicetree isn't the canonical
-location for _all_ bindings anyway -- some are in ePAPR, some are in
-the old IEEE1275 docs, and some are based on whatever the vendor that
-first introduced the device chose (Apple, and some other vendors,
-mostly PowerPC ones).
-
-> The binding docs are
-> planned to be moved out as they are not Linux specific. There needs to
-> be 1 location to find binding information.
-
-Sure. That has nothing to do with this i2c patch though. There has
-been some talk in the past about creating one location, in part based
-on what is now at devicetree.org.
-
-> I do wonder if we should have a more structured registry or database of
-> bindings than free form text files...
-
-I don't think anyone considers the current text files to be a
-permanent solution, and something more structured would be a good
-idea.
-
-As far as i2c devices go, for now a simple text table of trivial i2c
-devices and their known names could be a good idea -- I'll go through
-current drivers (including my three recently posted patches) and
-create such a list for starter. But I'll do that separately from this
-patch, Dmitry -- please apply it as it is.
-
-
--Olof
+QmFzZWQgb24gcmVjZW50IGRpc2N1c3Npb25zLCB3ZSBhcHBhcmFudGx5IHdhbnQgdG8gZG8gYmlu
+ZGluZ3MgZXZlbiBmb3IKdHJpdmlhbCBpMmMgZGV2aWNlcywgZXZlbiB0aG91Z2ggdGhleSBoYXZl
+IGZvciB5ZWFycyBqdXN0IGJlZW4gYWRkZWQuIFNvCnN0YXJ0IGEgdGFibGUgb2YgdGhlIGN1cnJl
+bnRseSBrbm93biBvbmVzIGZvciBvdGhlcnMgdG8gYmUgYWRkZWQgdG8Kb3ZlciB0aW1lLgoKKEkg
+YW0gaW50ZW50aW9uYWxseSBsZXR0aW5nIGxpbmVzIGdvIG92ZXIgODAgY2hhcmFjdGVycyB0byBt
+YWtlIGl0IGVhc2llcgp0byBzb3J0IHRoZSBmaWxlKS4KCgpTaWduZWQtb2ZmLWJ5OiBPbG9mIEpv
+aGFuc3NvbiA8b2xvZkBsaXhvbS5uZXQ+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvaTJj
+L3RyaXZpYWwtZGV2aWNlcy50eHQgICAgfCAgIDU4ICsrKysrKysrKysrKysrKysrKysrCiAxIGZp
+bGVzIGNoYW5nZWQsIDU4IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRl
+dmljZXMudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2kyYy90cml2aWFsLWRldmljZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
+MDAwMDAuLjFhODVmOTgKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQKQEAgLTAsMCArMSw1OCBAQAorVGhp
+cyBpcyBhIGxpc3Qgb2YgdHJpdmlhbCBpMmMgZGV2aWNlcyB0aGF0IGhhdmUgc2ltcGxlIGRldmlj
+ZSB0cmVlCitiaW5kaW5ncywgY29uc2lzdGluZyBvbmx5IG9mIGEgY29tcGF0aWJsZSBmaWVsZCwg
+YW4gYWRkcmVzcyBhbmQKK3Bvc3NpYmx5IGFuIGludGVycnVwdCBsaW5lLgorCitJZiBhIGRldmlj
+ZSBuZWVkcyBtb3JlIHNwZWNpZmljIGJpbmRpbmdzLCBzdWNoIGFzIHByb3BlcnRpZXMgdG8KK2Rl
+c2NyaWJlIHNvbWUgYXNwZWN0IG9mIGl0LCB0aGVyZSBuZWVkcyB0byBiZSBhIHNwZWNpZmljIGJp
+bmRpbmcKK2RvY3VtZW50IGZvciBpdCBqdXN0IGxpa2UgYW55IG90aGVyIGRldmljZXMuCisKKwor
+Q29tcGF0aWJsZQkJVmVuZG9yIC8gQ2hpcAorPT09PT09PT09PQkJPT09PT09PT09PT09PQorYWQs
+YWQ3NDE0CQlTTUJ1cy9JMkMgRGlnaXRhbCBUZW1wZXJhdHVyZSBTZW5zb3IgaW4gNi1QaW4gU09U
+IHdpdGggU01CdXMgQWxlcnQgYW5kIE92ZXIgVGVtcGVyYXR1cmUgUGluCithZCxhZG05MjQwCQlB
+RE05MjQwOiAgQ29tcGxldGUgU3lzdGVtIEhhcmR3YXJlIE1vbml0b3IgZm9yIHVQcm9jZXNzb3It
+QmFzZWQgU3lzdGVtcworYWRpLGFkdDc0NjEJCSsvLTFDIFRETSBFeHRlbmRlZCBUZW1wIFJhbmdl
+IEkuQworYWR0NzQ2MQkJCSsvLTFDIFRETSBFeHRlbmRlZCBUZW1wIFJhbmdlIEkuQworYXQsMjRj
+MDgJCWkyYyBzZXJpYWwgZWVwcm9tICAoMjRjeHgpCithdG1lbCwyNGMwMgkJaTJjIHNlcmlhbCBl
+ZXByb20gICgyNGN4eCkKK2NhdGFseXN0LDI0YzMyCQlpMmMgc2VyaWFsIGVlcHJvbQorZGFsbGFz
+LGRzMTMwNwkJNjQgeCA4LCBTZXJpYWwsIEkyQyBSZWFsLVRpbWUgQ2xvY2sKK2RhbGxhcyxkczEz
+MzgJCUkyQyBSVEMgd2l0aCA1Ni1CeXRlIE5WIFJBTQorZGFsbGFzLGRzMTMzOQkJSTJDIFNlcmlh
+bCBSZWFsLVRpbWUgQ2xvY2sKK2RhbGxhcyxkczEzNDAJCUkyQyBSVEMgd2l0aCBUcmlja2xlIENo
+YXJnZXIKK2RhbGxhcyxkczEzNzQJCUkyQywgMzItQml0IEJpbmFyeSBDb3VudGVyIFdhdGNoZG9n
+IFJUQyB3aXRoIFRyaWNrbGUgQ2hhcmdlciBhbmQgUmVzZXQgSW5wdXQvT3V0cHV0CitkYWxsYXMs
+ZHMxNjMxCQlIaWdoLVByZWNpc2lvbiBEaWdpdGFsIFRoZXJtb21ldGVyCitkYWxsYXMsZHMxNjgy
+CQlUb3RhbC1FbGFwc2VkLVRpbWUgUmVjb3JkZXIgd2l0aCBBbGFybQorZGFsbGFzLGRzMTc3NQkJ
+VGlueSBEaWdpdGFsIFRoZXJtb21ldGVyIGFuZCBUaGVybW9zdGF0CitkYWxsYXMsZHMzMjMyCQlF
+eHRyZW1lbHkgQWNjdXJhdGUgScKyQyBSVEMgd2l0aCBJbnRlZ3JhdGVkIENyeXN0YWwgYW5kIFNS
+QU0KK2RhbGxhcyxkczQ1MTAJCUNQVSBTdXBlcnZpc29yIHdpdGggTm9udm9sYXRpbGUgTWVtb3J5
+IGFuZCBQcm9ncmFtbWFibGUgSS9PCitkYWxsYXMsZHM3NQkJRGlnaXRhbCBUaGVybW9tZXRlciBh
+bmQgVGhlcm1vc3RhdAorZGlhbG9nLGRhOTA1MwkJREE5MDUzOiBmbGV4aWJsZSBzeXN0ZW0gbGV2
+ZWwgUE1JQyB3aXRoIG11bHRpY29yZSBzdXBwb3J0CitlcHNvbixyeDgwMjUJCUhpZ2gtU3RhYmls
+aXR5LiBJMkMtQnVzIElOVEVSRkFDRSBSRUFMIFRJTUUgQ0xPQ0sgTU9EVUxFCitlcHNvbixyeDg1
+ODEJCUkyQy1CVVMgSU5URVJGQUNFIFJFQUwgVElNRSBDTE9DSyBNT0RVTEUKK2ZzbCxtYWczMTEw
+CQlNQUczMTEwOiBYdHJpbnNpYyBIaWdoIEFjY3VyYWN5LCAzRCBNYWduZXRvbWV0ZXIKK2ZzbCxt
+YzEzODkyCQlNQzEzODkyOiBQb3dlciBNYW5hZ2VtZW50IEludGVncmF0ZWQgQ2lyY3VpdCAoUE1J
+QykgZm9yIGkuTVgzNS81MQorZnNsLG1tYTg0NTAJCU1NQTg0NTBROiBYdHJpbnNpYyBMb3ctcG93
+ZXIsIDMtYXhpcyBYdHJpbnNpYyBBY2NlbGVyb21ldGVyCitmc2wsbXByMTIxCQlNUFIxMjE6IFBy
+b3hpbWl0eSBDYXBhY2l0aXZlIFRvdWNoIFNlbnNvciBDb250cm9sbGVyCitmc2wsc2d0bDUwMDAJ
+CVNHVEw1MDAwOiBVbHRyYSBMb3ctUG93ZXIgQXVkaW8gQ29kZWMKK21heGltLGRzMTA1MAkJNSBC
+aXQgUHJvZ3JhbW1hYmxlLCBQdWxzZS1XaWR0aCBNb2R1bGF0b3IKK21heGltLG1heDEyMzcJCUxv
+dy1Qb3dlciwgNC0vMTItQ2hhbm5lbCwgMi1XaXJlIFNlcmlhbCwgMTItQml0IEFEQ3MKK21heGlt
+LG1heDY2MjUJCTktQml0LzEyLUJpdCBUZW1wZXJhdHVyZSBTZW5zb3JzIHdpdGggScKyQy1Db21w
+YXRpYmxlIFNlcmlhbCBJbnRlcmZhY2UKK21jLHJ2MzAyOWMyCQlSZWFsIFRpbWUgQ2xvY2sgTW9k
+dWxlIHdpdGggSTJDLUJ1cworbmF0aW9uYWwsbG03NQkJSTJDIFRFTVAgU0VOU09SCituYXRpb25h
+bCxsbTgwCQlTZXJpYWwgSW50ZXJmYWNlIEFDUEktQ29tcGF0aWJsZSBNaWNyb3Byb2Nlc3NvciBT
+eXN0ZW0gSGFyZHdhcmUgTW9uaXRvcgorbmF0aW9uYWwsbG05MgkJwrEwLjMzwrBDIEFjY3VyYXRl
+LCAxMi1CaXQgKyBTaWduIFRlbXBlcmF0dXJlIFNlbnNvciBhbmQgVGhlcm1hbCBXaW5kb3cgQ29t
+cGFyYXRvciB3aXRoIFR3by1XaXJlIEludGVyZmFjZQorbnhwLHBjYTk1NTYJCU9jdGFsIFNNQnVz
+IGFuZCBJMkMgcmVnaXN0ZXJlZCBpbnRlcmZhY2UKK254cCxwY2E5NTU3CQk4LWJpdCBJMkMtYnVz
+IGFuZCBTTUJ1cyBJL08gcG9ydCB3aXRoIHJlc2V0CitueHAscGNmODU2MwkJUmVhbC10aW1lIGNs
+b2NrL2NhbGVuZGFyCitvdnRpLG92NTY0MgkJT1Y1NjQyOiBDb2xvciBDTU9TIFFTWEdBICg1LW1l
+Z2FwaXhlbCkgSW1hZ2UgU2Vuc29yIHdpdGggT21uaUJTSSBhbmQgRW1iZWRkZWQgVHJ1ZUZvY3Vz
+CitwZXJpY29tLHB0N2M0MzM4CVJlYWwtdGltZSBDbG9jayBNb2R1bGUKK3BseCxwZXg4NjQ4CQk0
+OC1MYW5lLCAxMi1Qb3J0IFBDSSBFeHByZXNzIEdlbiAyICg1LjAgR1QvcykgU3dpdGNoCityYW10
+cm9uLDI0YzY0CQlpMmMgc2VyaWFsIGVlcHJvbSAgKDI0Y3h4KQorcmljb2gscnM1YzM3MmEJCUky
+QyBidXMgU0VSSUFMIElOVEVSRkFDRSBSRUFMLVRJTUUgQ0xPQ0sgSUMKK3NhbXN1bmcsMjRhZDB4
+ZDEJUzUyNEFEMFhGMSAoMTI4Sy8yNTZLLWJpdCBTZXJpYWwgRUVQUk9NIGZvciBMb3cgUG93ZXIp
+CitzdC1taWNybywyNGMyNTYJCWkyYyBzZXJpYWwgZWVwcm9tICAoMjRjeHgpCitzdG0sbTQxdDAw
+CQlTZXJpYWwgQWNjZXNzIFRJTUVLRUVQRVIKK3N0bSxtNDF0NjIJCVNlcmlhbCByZWFsLXRpbWUg
+Y2xvY2sgKFJUQykgd2l0aCBhbGFybQorc3RtLG00MXQ4MAkJTTQxVDgwIC0gU0VSSUFMIEFDQ0VT
+UyBSVEMgV0lUSCBBTEFSTVMKK3RpLHRzYzIwMDMJCUkyQyBUb3VjaC1TY3JlZW4gQ29udHJvbGxl
+cgotLSAKMS43LjguR0lUCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vz
+c0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZp
+Y2V0cmVlLWRpc2N1c3MK
