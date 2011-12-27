@@ -1,66 +1,166 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Tue, 27 Dec 2011 09:51:10 +0800
-Message-ID: <20111227015109.GJ15863@b20223-02.ap.freescale.net>
-References: <1324537753-30590-5-git-send-email-richard.zhao@linaro.org>
- <20111223131851.GB13175@sirena.org.uk>
- <20111224085539.GA1892@richard-laptop>
- <20111224122411.GA13778@sirena.org.uk>
- <20111224132831.GB1803@richard-laptop>
- <20111224134227.GA20908@opensource.wolfsonmicro.com>
- <20111224155227.GC1803@richard-laptop>
- <20111226111030.GC8722@opensource.wolfsonmicro.com>
- <20111226134449.GA4259@richard-laptop>
- <20111226142234.GH8722@opensource.wolfsonmicro.com>
+From: Igor Grinberg <grinberg@compulab.co.il>
+Subject: Re: [PATCH 2/2] mt_ventoux: support for TeeJet Mt.Ventoux board
+Date: Tue, 27 Dec 2011 09:56:49 +0200
+Message-ID: <4EF97A41.7050605@compulab.co.il>
+References: <1324940912-18164-1-git-send-email-yanok@emcraft.com> <1324940912-18164-3-git-send-email-yanok@emcraft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20111226142234.GH8722@opensource.wolfsonmicro.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Richard Zhao <richard.zhao@linaro.org>, davej@redhat.com, linaro-dev@lists.linaro.org, arnd@arndb.de, mark.langsdorf@calxeda.com, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, rdunlap@xenotime.net, cpufreq@vger.kernel.org, grant.likely@secretlab.ca, bryanh@codeaurora.org, eric.miao@linaro.org, kernel@pengutronix.de, jamie@jamieiles.com, linux@arm.linux.org.uk, davidb@codeaurora.org, shawn.guo@linaro.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1324940912-18164-3-git-send-email-yanok@emcraft.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ilya Yanok <yanok@emcraft.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sasha_d@emcraft.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 26, 2011 at 02:22:34PM +0000, Mark Brown wrote:
-> On Mon, Dec 26, 2011 at 09:44:52PM +0800, Richard Zhao wrote:
-> > On Mon, Dec 26, 2011 at 11:10:30AM +0000, Mark Brown wrote:
-> 
-> Fix your mailer to word wrap properly please.
-If you mean last mail I sent, I didn't see anything wrong. I use
-mutt.
-> 
-> > > The *call* is there in the regulator subsystem, it's just that none of
-> > > the drivers back it up with an actual implementation yet.  Which turns
-> > > out to be a good thing as cpufreq can't currently understand variable
-> > > latencies and the governors don't deal well with non-trivial latencies
-> > > anyway.
-> 
-> > but clk API don't have such calls. and many SoCs only adjust clk
-> > frequencies, using one single voltage.
-> 
-> I've not suggested doing this in the clock API, only for the regulator.
-> For the clocks it's less clear that it's useful as you don't have the
-> bulk operations and it's much rarer to need them.
-> 
-> > > The problem with device tree is that once you've defined a binding
-> > > you're stuck with it, it's very hard to change - witness all the magic
-> > > number based stuff with the interrupt bindings for example
-> 
-> > So what's your suggestion? We can not set transition_latency to set
-> > random number.
-> 
-> As I've repeatedly said I think you should define it to be the latency
-> for the SoC only, not for the regulators.
-Sometimes, regulators are in SoC too. To avoid confusion, I'll use below:
-clk-trans-latency = <61036>;
+Hi Ilya,
 
-Thanks
-Richard
+On 12/27/11 01:08, Ilya Yanok wrote:
+> This patch adds support for TeeJet Mt.Ventoux board based on TAM3517
+> SOM. Supported devices:
+>  - Serial
+>  - Ethernet
+>  - NAND
+>  - USB host
+>  - LCD
+>  - Touchscreen
+>  - CAN controller
+>  - ADC128S converter
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Signed-off-by: Ilya Yanok <yanok@emcraft.com>
+> ---
+> Requires updated machine-type file, recently posted AM35xx-EMAC patch
+> and "Disable PM init on AM35{05,17} patch.
 > 
+>  arch/arm/mach-omap2/Kconfig                   |    6 +
+>  arch/arm/mach-omap2/Makefile                  |    1 +
+>  arch/arm/mach-omap2/board-am3517_mt_ventoux.c |  708 +++++++++++++++++++++++++
+>  arch/arm/plat-omap/include/plat/uncompress.h  |    1 +
+>  4 files changed, 716 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/mach-omap2/board-am3517_mt_ventoux.c
 
+[...]
+
+> diff --git a/arch/arm/mach-omap2/board-am3517_mt_ventoux.c b/arch/arm/mach-omap2/board-am3517_mt_ventoux.c
+> new file mode 100644
+> index 0000000..d4501d9
+> --- /dev/null
+> +++ b/arch/arm/mach-omap2/board-am3517_mt_ventoux.c
+
+[...]
+
+> +/*
+> + * use fake regulator for vdds_dsi as we can't find this pin inside
+> + * AM3517 datasheet.
+> + */
+> +static struct regulator_consumer_supply mt_ventoux_vdds_dsi_supply[] = {
+> +	REGULATOR_SUPPLY("vdds_dsi", "omapdss"),
+> +	REGULATOR_SUPPLY("vdds_dsi", "omapdss_dsi.0"),
+> +};
+
+Although the TRM states that there is a vdds_dsi signal,
+it looks, from the datasheet, that VDDSHV is used to power the DSS.
+Either way, it can't be switched off, I think...
+Therefore, depending on your board wiring, you can leave it as fixed
+regulator or bind to a supply on TPS65023.
+
+[...]
+
+> +static struct i2c_board_info __initdata mt_ventoux_i2c1_devices[] = {
+> +	{
+> +		I2C_BOARD_INFO("tps65023", 0x48),
+> +		.flags = I2C_CLIENT_WAKE,
+> +		.platform_data = &mt_ventoux_regulator_data[0],
+> +	},
+> +        {
+> +                I2C_BOARD_INFO("24c02", 0x50),
+> +        },
+> +};
+
+Here (and may be in some other places) you have spaces for
+indentation. Can it be tabs instead for uniformity (and file size)?
+
+> +
+> +static struct i2c_board_info __initdata mt_ventoux_i2c2_devices[] = {
+> +        {
+> +                I2C_BOARD_INFO("24c02", 0x50),
+> +        },
+> +};
+
+also here...
+
+[...]
+
+> +#if defined(CONFIG_TOUCHSCREEN_ADS7846)
+
+Can't the ADS7846 be module?
+
+> +static struct ads7846_platform_data tsc2046_config __initdata = {
+> +	.x_max			= 0x0fff,
+> +	.y_max			= 0x0fff,
+> +	.x_plate_ohms		= 180,
+> +	.pressure_max		= 255,
+> +	.debounce_max		= 30,
+> +	.debounce_tol		= 10,
+> +	.debounce_rep		= 1,
+> +	.keep_vref_on		= 1,
+> +	.settle_delay_usecs	= 100,
+> +};
+> +#endif
+
+[...]
+
+> +static void __init mt_ventoux_init(void)
+> +{
+> +	omap3_mux_init(board_mux, OMAP_PACKAGE_CBB);
+> +	mt_ventoux_i2c_init();
+> +	platform_add_devices(mt_ventoux_devices, ARRAY_SIZE(mt_ventoux_devices));
+> +	mt_ventoux_serial_init();
+> +	omap_sdrc_init(NULL, NULL);
+> +
+> +	mt_ventoux_display_init();
+> +
+> +	/* Configure EHCI ports */
+> +	omap_mux_init_gpio(USB_PHY1_RESET, OMAP_PIN_OUTPUT);
+> +	usbhs_init(&usbhs_bdata);
+> +
+> +	/* NAND */
+> +	omap_nand_flash_init(NAND_BUSWIDTH_16, mt_ventoux_nand_partitions,
+> +			     ARRAY_SIZE(mt_ventoux_nand_partitions));
+> +
+> +	/* touchscreen */
+> +	omap_mux_init_gpio(TS_IRQ_PIN, OMAP_PIN_INPUT);
+> +	omap_ads7846_init(1, TS_IRQ_PIN, 310, &tsc2046_config);
+
+Here you call omap_ads7846_init() irregardless to
+CONFIG_TOUCHSCREEN_ADS7846, but the tsc2046_config is defined only
+if it is enabled...
+I think, either remove the #ifdef CONFIG_TOUCHSCREEN_ADS7846
+or move the above to a separate function like
+mt_ventoux_touch_init() and provide a static inline version of it
+in case the CONFIG_TOUCHSCREEN_ADS7846 is not enabled (just like you
+did for adc128s_init()).
+Otherwise, various rand_configs will fail...
+
+> +
+> +	/* Ethernet */
+> +	am35xx_ethernet_init(MCX_MDIO_FREQUENCY, 1);
+> +
+> +	/* MMC init */
+> +	omap_mux_init_gpio(SD_CARD_CD, OMAP_PIN_INPUT);
+> +	omap2_hsmmc_init(mmc);
+> +
+> +	/* ADC128S022 init */
+> +	adc128s_init();
+
+I think you are missing the __init annotation in the adc128s_init()
+function definition (just noticed after snipping).
+
+> +}
+
+[...]
+
+
+-- 
+Regards,
+Igor.
