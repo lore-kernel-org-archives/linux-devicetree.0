@@ -1,114 +1,42 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH V5 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Tue, 27 Dec 2011 23:05:41 +0800
-Message-ID: <20111227150539.GA15132@S2101-09.ap.freescale.net>
-References: <1324974262-30963-1-git-send-email-richard.zhao@linaro.org>
- <1324974262-30963-5-git-send-email-richard.zhao@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] Input: mpu3050: add of_match table for device-tree probing
+Date: Tue, 27 Dec 2011 10:07:42 -0600
+Message-ID: <4EF9ED4E.6000408@gmail.com>
+References: <1324607992-2919-1-git-send-email-olof@lixom.net> <20111223092246.GA7120@core.coreip.homeip.net> <CAOesGMiGJmc6FhsDcsmROUgoLD4eDFKK=LE7yYjkJn1O7oiL8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1324974262-30963-5-git-send-email-richard.zhao@linaro.org>
-Sender: cpufreq-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, arnd@arndb.de, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, rob.herring@calxeda.com, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, linaro-dev@lists.linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMiGJmc6FhsDcsmROUgoLD4eDFKK=LE7yYjkJn1O7oiL8Q@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
-
-On Tue, Dec 27, 2011 at 04:24:19PM +0800, Richard Zhao wrote:
-> The driver get cpu operation point table from device tree cpu0 node,
-> and adjusts operating points using clk and regulator APIs.
+On 12/23/2011 09:58 AM, Olof Johansson wrote:
+> Hi,
 > 
-> It support single core and multi-core ARM SoCs. But currently it assume
-> all cores share the same frequency and voltage.
+> On Fri, Dec 23, 2011 at 1:22 AM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>> Hi Olof,
+>>
+>> On Thu, Dec 22, 2011 at 06:39:52PM -0800, Olof Johansson wrote:
+>>> Adding invn,mpu3050 as the initial id.
+>>>
+>>
+>> I believe you also need to add this to
+>> Documentation/devicetree/bindings/input/
 > 
-> Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
-> Reviewed-by: Jamie Iles <jamie@jamieiles.com>
-> Reviewed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> ---
->  .../devicetree/bindings/cpufreq/clk-reg-cpufreq    |   21 ++
->  drivers/cpufreq/Kconfig                            |   10 +
->  drivers/cpufreq/Makefile                           |    2 +
->  drivers/cpufreq/clk-reg-cpufreq.c                  |  302 ++++++++++++++++++++
->  4 files changed, 335 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/clk-reg-cpufreq
->  create mode 100644 drivers/cpufreq/clk-reg-cpufreq.c
-> 
+> For simple i2c devices that only have a name, address and possibly an
+> interrupt, there's no need to document a binding (it hasn't been done
+> in the past for the vast majority of those devices).
 
-[...]
+But then how do you find out if there is a existing binding for a device
+without searching in the kernel source tree? The binding docs are
+planned to be moved out as they are not Linux specific. There needs to
+be 1 location to find binding information.
 
-> +static struct cpufreq_driver clk_reg_cpufreq_driver = {
-> +	.flags = CPUFREQ_STICKY,
-> +	.verify = clk_reg_verify_speed,
-> +	.target = clk_reg_set_target,
-> +	.get = clk_reg_get_speed,
-> +	.init = clk_reg_cpufreq_init,
-> +	.exit = clk_reg_cpufreq_exit,
-> +	.name = "clk-reg",
-> +};
-> +
-> +static u32 max_freq = UINT_MAX / 1000; /* kHz */
-> +module_param(max_freq, uint, 0);
-> +MODULE_PARM_DESC(max_freq, "max cpu frequency in unit of kHz");
-> +
+I do wonder if we should have a more structured registry or database of
+bindings than free form text files...
 
-Have you tried to pass this param from kernel cmdline?  What's the
-syntax if we want to pass a 800 MHz max_freq?
-
-And I played this driver on imx6q with pm-qa [1] cpufreq test suit from
-Linaro PMWG.
-
-### cpufreq_01:
-### test the cpufreq framework is available for frequency
-### https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cpufreq_01
-###
-cpufreq_01.0/cpu0: checking 'scaling_available_frequencies' exists...       fail
-cpufreq_01.0/cpu1: checking 'scaling_available_frequencies' exists...       fail
-cpufreq_01.0/cpu2: checking 'scaling_available_frequencies' exists...       fail
-cpufreq_01.0/cpu3: checking 'scaling_available_frequencies' exists...       fail
-
-### cpufreq_05:
-### test 'ondemand' and 'conservative' trigger correctly the configuration directory
-### https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cpufreq_05
-###
-cpufreq_05.0: checking 'ondemand' directory exists...                       pass
-cpufreq_05.1: checking 'conservative' directory exists...                   pass
-cpufreq_05.2: checking 'ondemand' directory is not there...                 pass
-cpufreq_05.3: checking 'conservative' directory is not there...             pass
-cpufreq_05.4: checking 'ondemand' directory exists...                       fail
-cpufreq_05.5: checking 'conservative' directory exists...                   pass
-
-The cpufreq_01 can be easily fixed with the following change.
-
-8<-----
-@@ -146,6 +150,11 @@ static int clk_reg_cpufreq_exit(struct cpufreq_policy *policy)
-        return 0;
- }
-
-+static struct freq_attr *clk_reg_cpufreq_attr[] = {
-+       &cpufreq_freq_attr_scaling_available_freqs,
-+       NULL,
-+};
-+
- static struct cpufreq_driver clk_reg_cpufreq_driver = {
-        .flags = CPUFREQ_STICKY,
-        .verify = clk_reg_verify_speed,
-@@ -153,10 +162,15 @@ static struct cpufreq_driver clk_reg_cpufreq_driver = {
-        .get = clk_reg_get_speed,
-        .init = clk_reg_cpufreq_init,
-        .exit = clk_reg_cpufreq_exit,
-+       .attr = clk_reg_cpufreq_attr,
-        .name = "clk-reg",
- };
------>8
-
-And I have not looked into the second one deeply, but maybe you
-want to :)
-
--- 
-Regards,
-Shawn
-
-[1] git://git.linaro.org/people/dlezcano/pm-qa.git
-
+Rob
