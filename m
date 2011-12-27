@@ -1,13 +1,12 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt/i2c: Enumerate some of the known trivial i2c devices
-Date: Tue, 27 Dec 2011 15:41:03 -0600
-Message-ID: <4EFA3B6F.2050409@gmail.com>
-References: <1325013526-8239-1-git-send-email-olof@lixom.net>
+From: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH] of/pdt: fix section mismatch warning
+Date: Tue, 27 Dec 2011 23:04:08 +0100
+Message-ID: <20111227220408.GA18932@merkur.ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1325013526-8239-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,87 +16,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T2xvZiwKCk9uIDEyLzI3LzIwMTEgMDE6MTggUE0sIE9sb2YgSm9oYW5zc29uIHdyb3RlOgo+IEJh
-c2VkIG9uIHJlY2VudCBkaXNjdXNzaW9ucywgd2UgYXBwYXJhbnRseSB3YW50IHRvIGRvIGJpbmRp
-bmdzIGV2ZW4gZm9yCj4gdHJpdmlhbCBpMmMgZGV2aWNlcywgZXZlbiB0aG91Z2ggdGhleSBoYXZl
-IGZvciB5ZWFycyBqdXN0IGJlZW4gYWRkZWQuIFNvCj4gc3RhcnQgYSB0YWJsZSBvZiB0aGUgY3Vy
-cmVudGx5IGtub3duIG9uZXMgZm9yIG90aGVycyB0byBiZSBhZGRlZCB0bwo+IG92ZXIgdGltZS4K
-PiAKPiAoSSBhbSBpbnRlbnRpb25hbGx5IGxldHRpbmcgbGluZXMgZ28gb3ZlciA4MCBjaGFyYWN0
-ZXJzIHRvIG1ha2UgaXQgZWFzaWVyCj4gdG8gc29ydCB0aGUgZmlsZSkuCj4gCj4gCj4gU2lnbmVk
-LW9mZi1ieTogT2xvZiBKb2hhbnNzb24gPG9sb2ZAbGl4b20ubmV0PgoKQXBwbGllZC4gVGhhbmtz
-IQoKUm9iCgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMvdHJpdmlhbC1kZXZp
-Y2VzLnR4dCAgICB8ICAgNTggKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlcyBjaGFuZ2Vk
-LCA1OCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0
-Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pMmMv
-dHJpdmlhbC1kZXZpY2VzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
-MmMvdHJpdmlhbC1kZXZpY2VzLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAw
-MDAwMC4uMWE4NWY5OAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvaTJjL3RyaXZpYWwtZGV2aWNlcy50eHQKPiBAQCAtMCwwICsxLDU4IEBA
-Cj4gK1RoaXMgaXMgYSBsaXN0IG9mIHRyaXZpYWwgaTJjIGRldmljZXMgdGhhdCBoYXZlIHNpbXBs
-ZSBkZXZpY2UgdHJlZQo+ICtiaW5kaW5ncywgY29uc2lzdGluZyBvbmx5IG9mIGEgY29tcGF0aWJs
-ZSBmaWVsZCwgYW4gYWRkcmVzcyBhbmQKPiArcG9zc2libHkgYW4gaW50ZXJydXB0IGxpbmUuCj4g
-Kwo+ICtJZiBhIGRldmljZSBuZWVkcyBtb3JlIHNwZWNpZmljIGJpbmRpbmdzLCBzdWNoIGFzIHBy
-b3BlcnRpZXMgdG8KPiArZGVzY3JpYmUgc29tZSBhc3BlY3Qgb2YgaXQsIHRoZXJlIG5lZWRzIHRv
-IGJlIGEgc3BlY2lmaWMgYmluZGluZwo+ICtkb2N1bWVudCBmb3IgaXQganVzdCBsaWtlIGFueSBv
-dGhlciBkZXZpY2VzLgo+ICsKPiArCj4gK0NvbXBhdGlibGUJCVZlbmRvciAvIENoaXAKPiArPT09
-PT09PT09PQkJPT09PT09PT09PT09PQo+ICthZCxhZDc0MTQJCVNNQnVzL0kyQyBEaWdpdGFsIFRl
-bXBlcmF0dXJlIFNlbnNvciBpbiA2LVBpbiBTT1Qgd2l0aCBTTUJ1cyBBbGVydCBhbmQgT3ZlciBU
-ZW1wZXJhdHVyZSBQaW4KPiArYWQsYWRtOTI0MAkJQURNOTI0MDogIENvbXBsZXRlIFN5c3RlbSBI
-YXJkd2FyZSBNb25pdG9yIGZvciB1UHJvY2Vzc29yLUJhc2VkIFN5c3RlbXMKPiArYWRpLGFkdDc0
-NjEJCSsvLTFDIFRETSBFeHRlbmRlZCBUZW1wIFJhbmdlIEkuQwo+ICthZHQ3NDYxCQkJKy8tMUMg
-VERNIEV4dGVuZGVkIFRlbXAgUmFuZ2UgSS5DCj4gK2F0LDI0YzA4CQlpMmMgc2VyaWFsIGVlcHJv
-bSAgKDI0Y3h4KQo+ICthdG1lbCwyNGMwMgkJaTJjIHNlcmlhbCBlZXByb20gICgyNGN4eCkKPiAr
-Y2F0YWx5c3QsMjRjMzIJCWkyYyBzZXJpYWwgZWVwcm9tCj4gK2RhbGxhcyxkczEzMDcJCTY0IHgg
-OCwgU2VyaWFsLCBJMkMgUmVhbC1UaW1lIENsb2NrCj4gK2RhbGxhcyxkczEzMzgJCUkyQyBSVEMg
-d2l0aCA1Ni1CeXRlIE5WIFJBTQo+ICtkYWxsYXMsZHMxMzM5CQlJMkMgU2VyaWFsIFJlYWwtVGlt
-ZSBDbG9jawo+ICtkYWxsYXMsZHMxMzQwCQlJMkMgUlRDIHdpdGggVHJpY2tsZSBDaGFyZ2VyCj4g
-K2RhbGxhcyxkczEzNzQJCUkyQywgMzItQml0IEJpbmFyeSBDb3VudGVyIFdhdGNoZG9nIFJUQyB3
-aXRoIFRyaWNrbGUgQ2hhcmdlciBhbmQgUmVzZXQgSW5wdXQvT3V0cHV0Cj4gK2RhbGxhcyxkczE2
-MzEJCUhpZ2gtUHJlY2lzaW9uIERpZ2l0YWwgVGhlcm1vbWV0ZXIKPiArZGFsbGFzLGRzMTY4MgkJ
-VG90YWwtRWxhcHNlZC1UaW1lIFJlY29yZGVyIHdpdGggQWxhcm0KPiArZGFsbGFzLGRzMTc3NQkJ
-VGlueSBEaWdpdGFsIFRoZXJtb21ldGVyIGFuZCBUaGVybW9zdGF0Cj4gK2RhbGxhcyxkczMyMzIJ
-CUV4dHJlbWVseSBBY2N1cmF0ZSBJwrJDIFJUQyB3aXRoIEludGVncmF0ZWQgQ3J5c3RhbCBhbmQg
-U1JBTQo+ICtkYWxsYXMsZHM0NTEwCQlDUFUgU3VwZXJ2aXNvciB3aXRoIE5vbnZvbGF0aWxlIE1l
-bW9yeSBhbmQgUHJvZ3JhbW1hYmxlIEkvTwo+ICtkYWxsYXMsZHM3NQkJRGlnaXRhbCBUaGVybW9t
-ZXRlciBhbmQgVGhlcm1vc3RhdAo+ICtkaWFsb2csZGE5MDUzCQlEQTkwNTM6IGZsZXhpYmxlIHN5
-c3RlbSBsZXZlbCBQTUlDIHdpdGggbXVsdGljb3JlIHN1cHBvcnQKPiArZXBzb24scng4MDI1CQlI
-aWdoLVN0YWJpbGl0eS4gSTJDLUJ1cyBJTlRFUkZBQ0UgUkVBTCBUSU1FIENMT0NLIE1PRFVMRQo+
-ICtlcHNvbixyeDg1ODEJCUkyQy1CVVMgSU5URVJGQUNFIFJFQUwgVElNRSBDTE9DSyBNT0RVTEUK
-PiArZnNsLG1hZzMxMTAJCU1BRzMxMTA6IFh0cmluc2ljIEhpZ2ggQWNjdXJhY3ksIDNEIE1hZ25l
-dG9tZXRlcgo+ICtmc2wsbWMxMzg5MgkJTUMxMzg5MjogUG93ZXIgTWFuYWdlbWVudCBJbnRlZ3Jh
-dGVkIENpcmN1aXQgKFBNSUMpIGZvciBpLk1YMzUvNTEKPiArZnNsLG1tYTg0NTAJCU1NQTg0NTBR
-OiBYdHJpbnNpYyBMb3ctcG93ZXIsIDMtYXhpcyBYdHJpbnNpYyBBY2NlbGVyb21ldGVyCj4gK2Zz
-bCxtcHIxMjEJCU1QUjEyMTogUHJveGltaXR5IENhcGFjaXRpdmUgVG91Y2ggU2Vuc29yIENvbnRy
-b2xsZXIKPiArZnNsLHNndGw1MDAwCQlTR1RMNTAwMDogVWx0cmEgTG93LVBvd2VyIEF1ZGlvIENv
-ZGVjCj4gK21heGltLGRzMTA1MAkJNSBCaXQgUHJvZ3JhbW1hYmxlLCBQdWxzZS1XaWR0aCBNb2R1
-bGF0b3IKPiArbWF4aW0sbWF4MTIzNwkJTG93LVBvd2VyLCA0LS8xMi1DaGFubmVsLCAyLVdpcmUg
-U2VyaWFsLCAxMi1CaXQgQURDcwo+ICttYXhpbSxtYXg2NjI1CQk5LUJpdC8xMi1CaXQgVGVtcGVy
-YXR1cmUgU2Vuc29ycyB3aXRoIEnCskMtQ29tcGF0aWJsZSBTZXJpYWwgSW50ZXJmYWNlCj4gK21j
-LHJ2MzAyOWMyCQlSZWFsIFRpbWUgQ2xvY2sgTW9kdWxlIHdpdGggSTJDLUJ1cwo+ICtuYXRpb25h
-bCxsbTc1CQlJMkMgVEVNUCBTRU5TT1IKPiArbmF0aW9uYWwsbG04MAkJU2VyaWFsIEludGVyZmFj
-ZSBBQ1BJLUNvbXBhdGlibGUgTWljcm9wcm9jZXNzb3IgU3lzdGVtIEhhcmR3YXJlIE1vbml0b3IK
-PiArbmF0aW9uYWwsbG05MgkJwrEwLjMzwrBDIEFjY3VyYXRlLCAxMi1CaXQgKyBTaWduIFRlbXBl
-cmF0dXJlIFNlbnNvciBhbmQgVGhlcm1hbCBXaW5kb3cgQ29tcGFyYXRvciB3aXRoIFR3by1XaXJl
-IEludGVyZmFjZQo+ICtueHAscGNhOTU1NgkJT2N0YWwgU01CdXMgYW5kIEkyQyByZWdpc3RlcmVk
-IGludGVyZmFjZQo+ICtueHAscGNhOTU1NwkJOC1iaXQgSTJDLWJ1cyBhbmQgU01CdXMgSS9PIHBv
-cnQgd2l0aCByZXNldAo+ICtueHAscGNmODU2MwkJUmVhbC10aW1lIGNsb2NrL2NhbGVuZGFyCj4g
-K292dGksb3Y1NjQyCQlPVjU2NDI6IENvbG9yIENNT1MgUVNYR0EgKDUtbWVnYXBpeGVsKSBJbWFn
-ZSBTZW5zb3Igd2l0aCBPbW5pQlNJIGFuZCBFbWJlZGRlZCBUcnVlRm9jdXMKPiArcGVyaWNvbSxw
-dDdjNDMzOAlSZWFsLXRpbWUgQ2xvY2sgTW9kdWxlCj4gK3BseCxwZXg4NjQ4CQk0OC1MYW5lLCAx
-Mi1Qb3J0IFBDSSBFeHByZXNzIEdlbiAyICg1LjAgR1QvcykgU3dpdGNoCj4gK3JhbXRyb24sMjRj
-NjQJCWkyYyBzZXJpYWwgZWVwcm9tICAoMjRjeHgpCj4gK3JpY29oLHJzNWMzNzJhCQlJMkMgYnVz
-IFNFUklBTCBJTlRFUkZBQ0UgUkVBTC1USU1FIENMT0NLIElDCj4gK3NhbXN1bmcsMjRhZDB4ZDEJ
-UzUyNEFEMFhGMSAoMTI4Sy8yNTZLLWJpdCBTZXJpYWwgRUVQUk9NIGZvciBMb3cgUG93ZXIpCj4g
-K3N0LW1pY3JvLDI0YzI1NgkJaTJjIHNlcmlhbCBlZXByb20gICgyNGN4eCkKPiArc3RtLG00MXQw
-MAkJU2VyaWFsIEFjY2VzcyBUSU1FS0VFUEVSCj4gK3N0bSxtNDF0NjIJCVNlcmlhbCByZWFsLXRp
-bWUgY2xvY2sgKFJUQykgd2l0aCBhbGFybQo+ICtzdG0sbTQxdDgwCQlNNDFUODAgLSBTRVJJQUwg
-QUNDRVNTIFJUQyBXSVRIIEFMQVJNUwo+ICt0aSx0c2MyMDAzCQlJMkMgVG91Y2gtU2NyZWVuIENv
-bnRyb2xsZXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMu
-b3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1k
-aXNjdXNzCg==
+>From faff5f5b55c50e8ea06b62bd6b97f30d38a2da3a Mon Sep 17 00:00:00 2001
+From: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
+Date: Tue, 27 Dec 2011 22:58:40 +0100
+Subject: [PATCH] of/pdt: fix section mismatch warning
+
+Fix the following section mismatch warning - seen when building sparc32:
+
+WARNING: vmlinux.o(.text+0x1ff9c0): Section mismatch in reference from the function kernel_tree_alloc() to the function .init.text:prom_early_alloc()
+The function kernel_tree_alloc() references
+the function __init prom_early_alloc().
+This is often because kernel_tree_alloc lacks a __init
+annotation or the annotation of prom_early_alloc is wrong.
+
+prom_early_alloc() is annotated __init, and users of
+kernel_tree_alloc() is also annotated __init.
+So simply match the annoation of these to fix the warning.
+
+Signed-off-by: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+---
+ drivers/of/pdt.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/of/pdt.c b/drivers/of/pdt.c
+index bc5b399..07cc1d6 100644
+--- a/drivers/of/pdt.c
++++ b/drivers/of/pdt.c
+@@ -229,7 +229,7 @@ static struct device_node * __init of_pdt_build_tree(struct device_node *parent,
+ 	return ret;
+ }
+ 
+-static void *kernel_tree_alloc(u64 size, u64 align)
++static void * __init kernel_tree_alloc(u64 size, u64 align)
+ {
+ 	return prom_early_alloc(size);
+ }
+-- 
+1.6.0.6
