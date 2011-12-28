@@ -1,59 +1,74 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Input: tegra-kbc - add device tree bindings
-Date: Tue, 27 Dec 2011 23:10:37 -0800
-Message-ID: <CAOesGMg7dC8RRST7z1E3-dFD_Cr3fTwqhEP8V1NnXEiHFZvnGg@mail.gmail.com>
-References: <1325053170-6984-1-git-send-email-olof@lixom.net>
-	<1325053170-6984-2-git-send-email-olof@lixom.net>
-	<20111228064832.GA29273@core.coreip.homeip.net>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v5 2/2] input: samsung-keypad: Add device tree support
+Date: Tue, 27 Dec 2011 23:28:38 -0800
+Message-ID: <CAOesGMic39gaYt9rsyebBJDS=cKAmmOP1BdunzAEiL+wcf0HKQ@mail.gmail.com>
+References: <1318264197-6698-1-git-send-email-thomas.abraham@linaro.org>
+	<1318264197-6698-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20111228064832.GA29273-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1318264197-6698-3-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Tue, Dec 27, 2011 at 10:48 PM, Dmitry Torokhov
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Olof,
->
-> On Tue, Dec 27, 2011 at 10:19:29PM -0800, Olof Johansson wrote:
->> This adds a simple device tree binding to the tegra keyboard control=
-ler.
->>
->> Also, mark the default keymap as __devinitdata since it is not refer=
-enced
->> after boot, and shorten the name to not have to avoid line wraps.
->
-> No, let's keep the names prefixed to match the rest of the driver(s).
+I came across this searching for other proposed device tree bindings
+based on what I wanted to do for Tegra.
 
-Sure, if you prefer.
+Comments below.
 
->> +
->> + =A0 =A0 pdata =3D devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KER=
-NEL);
->
-> Error handling is missing. I also dislike devm_* facilities as it cau=
-ses
-> inconsistencies in the way we handle releasing of resources: some of
-> them will be released automatically while others need t be released
-> manually. I prefer having consistent model.
+On Mon, Oct 10, 2011 at 9:29 AM, Thomas Abraham
+<thomas.abraham@linaro.org> wrote:
 
-I disagree -- I think the devm allocators are an excellent invention
-instead of open-coding the error handling, which tends to be error
-prone and just adds special cases just like you explained below.
+> +- Keys represented as child nodes: Each key connected to the keypad
+> + =A0controller is represented as a child node to the keypad controll=
+er
+> + =A0device node and should include the following properties.
+> + =A0- keypad,row: the row number to which the key is connected.
+> + =A0- keypad,column: the column number to which the key is connected=
+=2E
+> + =A0- linux,code: the key-code to be reported when the key is presse=
+d
+> + =A0 =A0and released.
 
-But, it's your subsystem and with that being said...
+[...]
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 key_1 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,row =3D <0>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,column =3D <3>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 linux,code =3D <2>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 key_2 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,row =3D <0>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,column =3D <4>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 linux,code =3D <3>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 key_3 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,row =3D <0>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,column =3D <5>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 linux,code =3D <4>;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
 
-> Does the patch below still work for you?
 
-=2E.. sure, if you're happy I'm happy -- it gets the work done, couldn'=
-t
-ask for more. No need to argue the details further. :)
+The above is good if all you want to specify is a few keys. If you
+want a full keyboard specification, it gets very verbose.
+
+I would prefer a simpler binding, something along the lines of:
+
+linux,keymap =3D < row col code ... >;
+
+Where it's just an array of the above, so your example would be:
+linux,keymap =3D < 0 3 2
+                 0 4 3
+                 0 5 4 >;
+
+Same amount of data, it would be more or less as easy to read but a
+_much_ more compact representation when you need to provide 100+ keys.
 
 
 -Olof
