@@ -1,53 +1,54 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] Input: tegra-kbc - add default chromeos map
-Date: Tue, 27 Dec 2011 23:33:13 -0800
-Message-ID: <CAOesGMheQqYjpDRaf6TTce2YEcD4hkTzS2JTdoCe3ue6+dBhDQ@mail.gmail.com>
-References: <1325053170-6984-1-git-send-email-olof@lixom.net>
-	<1325053170-6984-3-git-send-email-olof@lixom.net>
-	<20111228065013.GB29273@core.coreip.homeip.net>
+From: Sylwester Nawrocki <snjw23@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
+ domain infrastructure
+Date: Wed, 28 Dec 2011 12:09:07 +0100
+Message-ID: <4EFAF8D3.9050204@gmail.com>
+References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>	<1323704789-23923-2-git-send-email-thomas.abraham@linaro.org>	<1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>	<4EFA5154.9060606@gmail.com> <CAJuYYwTPqCdgzK+bcikNiowHxq33yAuf6B695ZZfCp2pYooxEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20111228065013.GB29273-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJuYYwTPqCdgzK+bcikNiowHxq33yAuf6B695ZZfCp2pYooxEw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Thomas,
 
-On Tue, Dec 27, 2011 at 10:50 PM, Dmitry Torokhov
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Dec 27, 2011 at 10:19:30PM -0800, Olof Johansson wrote:
->> This adds a simple way to specify the ChromeOS-specific keyboard map
->> instead of the "standard" map that is used on other Tegra devices such
->> as Harmony-with-keyboard and Seaboard.
+On 12/28/2011 06:25 AM, Thomas Abraham wrote:
+>>> +
+>>> +static struct exynos4_pm_domain exynos4_pd_gps = {
+>>> +     .base = (void __iomem *)S5P_PMU_GPS_CONF,
+>>> +     .name = "pd-gps",
+>>> +     .pd = {
+>>> +             .power_off = exynos4_pd_power_off,
+>>> +             .power_on = exynos4_pd_power_on,
+>>> +     },
+>>> +};
 >>
->> I expect the number of different keyboard layouts to be quite limited,
->> and not many should be added over time. So instead of encoding the layout
->> in the device tree, with all the can of worms that entails w.r.t. agreeing
->> on a suitable binding, just add a property to specify that this is the
->> map to be used, and include it in the driver.
->>
->> If, over time, the number of mappings increase, the binding can be
->> updated to include a custom map as a new property, without having to
->> worry about backwards compatibility on existing devices.
->>
->
-> I'd rather we did not make shortcuts and did the proper DT binding.
-> Samsung folks want the similar thing so making a generic DT keymap
-> parser and using it in the driver would be the best way.
+>> I'm not sure if arch/arm/mach-exynos/pm.c is the right place to add this.
+>> IMHO it would be much better to put PD in separate file, pm-runtime.c
+>> or something like this.
+> 
+> Ok. I will move this to a new file pm-runtime.c.
 
-Ok, fair point. I found the last posted version of the samsung driver
-in my archives so I'll continue the discussion there (see separate
-followup there).
+Thanks.
 
-> Another option is to simply loading proper keymap by the early
-> userspace.
+>> Can we assume various exynos versions will have same S5P_PMU_*_CONF
+>> addresses? For old s3c64xx SoCs such assumption could be valid but I'm
+>> a bit uncertain about Exynos series.
+> 
+> The addresses could be different, but it can be mapped to a
+> S5P_PMU_*_CONF. Maybe I did not understand your question here.
 
-I would prefer to do it in hardware, mostly because I don't want to
-have to add the keymaps to all possible distros I'd be interested in
-running on this hardware. :)
+I meant that for handling the newer SoCs (e.g. exynos5) at runtime we might need
+to create new power domain definitions. That's why I suggested new file
+for runtime PM. mach-shmobile has even separate compilation unit per SoC,
+with register definitions put directly in C file. I'm not sure we need separate
+pm-exynos4.c, pm-exynos5.c... For now your patch looks good.
 
+--
 
--Olof
+Regards,
+Sylwester
