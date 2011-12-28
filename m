@@ -1,81 +1,18 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH 1/2] PM / Domains: Add OF support
-Date: Wed, 28 Dec 2011 10:40:05 +0530
-Message-ID: <CAJuYYwT4bW0mMeUb18_WacaybQZskPsiqm6wvfMZOMk3U8UO4w@mail.gmail.com>
-References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>
-	<201112262013.19995.rjw@sisk.pl>
-	<20111226192424.GN8722@opensource.wolfsonmicro.com>
-	<201112262144.42211.rjw@sisk.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201112262144.42211.rjw@sisk.pl>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, patches@linaro.org
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: [PATCH 0/2] Input: tegra-kbc - configure through device tree
+Date: Tue, 27 Dec 2011 21:10:22 -0800
+Message-ID: <1325049024-7588-1-git-send-email-olof@lixom.net>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark, Rafael,
+The following two patches add device-tree bindings and probing to tegra-kbc,
+and they also provide a simplified way of specifying the, to date, only known
+non-default keymap.
 
-On 27 December 2011 02:14, Rafael J. Wysocki <rjw@sisk.pl> wrote:
-> On Monday, December 26, 2011, Mark Brown wrote:
->> On Mon, Dec 26, 2011 at 08:13:19PM +0100, Rafael J. Wysocki wrote:
->> > On Monday, December 12, 2011, Thomas Abraham wrote:
->>
->> > > A device node pointer is added to generic pm domain structure to=
- associate
->> > > the domain with a node in the device tree.
->>
->> > That sounds fine except for one thing: PM domains are not devices,=
- so adding
->> > "device node" pointers to them is kind of confusing. =A0Perhaps th=
-ere should be
->> > something like struct dt_node, representing a more general device =
-tree node?
->>
->> There's struct of_node which is exactly that, though practically
->> speaking you need a device if you're going to bind automatically to
->> something from the device tree in a sensible fashion and there is ac=
-tual
->> hardware under there so a device does make some sense.
 
-In patch 2/2 of this series, the platform code looks for nodes in
-device tree that represent a power domain. When a power domain node is
-found, a generic power domain is instantiated with pm_genpd_init()
-using the information available from the node in device tree. There is
-no automatic binding required in this case. The power domain node does
-represent a hardware that manages the power domain.
+Regards,
 
->>
->> This is in part compatibility with the existing Exynos code which us=
-es
->> devices to probe the domains for non-DT systems.
->
-> Well, that's not a general case, though.
->
-> It doesn't feel approporiate to use a "device node" pointer for somet=
-hing
-> that's not based on struct device, at least not a generic level, so I=
- wonder
-> if there's a different way.
-
-A device node pointer or of_node pointer is a simple pointer to a
-instance of a node in device tree. All nodes in a device tree need not
-represent a corresponding 'struct device'. A node in device tree can
-described a hardware feature such as a power domain supported in the
-hardware.
-
-The addition of device tree support for generic power domains in this
-patchset is generic for all platforms. The platform code instantiates
-generic power domains from device tree with the of_node pointer
-assigned to 'struct generic_pm_domain'. Then, in
-__pm_genpd_add_device(), given a of_node pointer (to gen_pd), it is
-possible to find a matching power domain to select.
-
-Thanks,
-Thomas.
-
->
-> Thanks,
-> Rafael
+-Olof
