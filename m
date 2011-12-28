@@ -1,76 +1,107 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PULL] Devicetree for 3.3
-Date: Wed, 28 Dec 2011 08:45:30 -0600
-Message-ID: <4EFB2B8A.9010902@gmail.com>
+From: Sylwester Nawrocki <snjw23@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
+ domain infrastructure
+Date: Wed, 28 Dec 2011 19:58:11 +0100
+Message-ID: <4EFB66C3.4040504@gmail.com>
+References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org> <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org> <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+Hi Thomas,
 
-Please pull device tree updates for 3.3. Pretty much a random collection
-of minor changes. I'm including i2c-designware DT binding support here
-as I've gotten no response from Ben.
+On 12/12/2011 04:46 PM, Thomas Abraham wrote:
+> The generic power domain infrastructure is used to control the power domains
+> available on Exynos4. For non-dt platforms, the power domains are statically
+> instantiated. For dt platforms, the power domain nodes found in the device
+> tree are instantiated.
+> 
+> Cc: Kukjin Kim <kgene.kim@samsung.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+> This patch is mainly derived from Mark Brown's work on generic power domain
+> support for s3c64xx platforms. The existing exynos4 power domain implementation
+> is not removed in this patch. The devices are not yet registered with the power
+> domains for non-dt platforms.
+> 
+>  arch/arm/mach-exynos/Kconfig |    1 +
+>  arch/arm/mach-exynos/pm.c    |  179 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 180 insertions(+), 0 deletions(-)
+> 
+[...]
+> +
+> +static struct exynos4_pm_domain exynos4_pd_gps = {
+> +	.base = (void __iomem *)S5P_PMU_GPS_CONF,
+> +	.name = "pd-gps",
+> +	.pd = {
+> +		.power_off = exynos4_pd_power_off,
+> +		.power_on = exynos4_pd_power_on,
+> +	},
+> +};
+> +
+> +static struct exynos4_pm_domain *exynos4_pm_domains[] = {
+> +	&exynos4_pd_mfc,
+> +	&exynos4_pd_g3d,
+> +	&exynos4_pd_lcd0,
+> +	&exynos4_pd_lcd1,
+> +	&exynos4_pd_tv,
+> +	&exynos4_pd_cam,
+> +	&exynos4_pd_gps,
+> +};
+> +
+> +static __init void exynos4_pm_init_power_domain(void)
+> +{
+> +	int idx;
+> +	struct device_node *np;
+> +
+> +#ifdef CONFIG_OF
+> +	if (!of_have_populated_dt())
+> +		goto no_dt;
+> +
+> +	for_each_compatible_node(np, NULL, "samsung,exynos4210-pd") {
+> +		struct exynos4_pm_domain *pd;
+> +
+> +		pd = kzalloc(sizeof(*pd), GFP_KERNEL);
+> +		if (!pd) {
+> +			pr_err("exynos4_pm_init_power_domain: memalloc "
+> +					"failed\n");
+> +			return;
+> +		}
+> +
+> +		if (of_get_property(np, "samsung,exynos4210-pd-off", NULL))
+> +			pd->is_off = true;
+> +		pd->name = np->name;
+> +		pd->base = of_iomap(np, 0);
 
-Rob
+Sorry, I haven't reviewed your patch carefully enough. So for dt platforms
+pd->base is initialized from "reg" property, directly from each power domain's
+DT node. Only the static power domain instantiation for non-dt platforms would
+possibly need some code modifications when new SoCs are added.
 
-The following changes since commit 384703b8e6cd4c8ef08512e596024e028c91c339:
+Would be nice to have a relevant patch for *.dts files in this series too. :)
 
-  Linux 3.2-rc6 (2011-12-16 18:36:26 -0800)
+> +		pd->pd.power_off = exynos4_pd_power_off;
+> +		pd->pd.power_on = exynos4_pd_power_on;
+> +		pd->pd.of_node = np;
+> +		pm_genpd_init(&pd->pd, NULL, false);
+> +	}
+> +	return;
+> +#endif /* CONFIG_OF */
+> +
+> +no_dt:
+> +	for (idx = 0; idx < ARRAY_SIZE(exynos4_pm_domains); idx++)
+> +		pm_genpd_init(&exynos4_pm_domains[idx]->pd, NULL,
+> +				exynos4_pm_domains[idx]->is_off);
+> +}
 
-are available in the git repository at:
-  git://sources.calxeda.com/kernel/linux.git for-grant
-
-Benoit Cousson (1):
-      of/base: Take NULL string into account for property with multiple
-strings
-
-David Daney (1):
-      OF/device-tree: Add some entries to vendor-prefixes.txt
-
-Dong Aisheng (1):
-      dt: reform for_each_property to for_each_property_of_node
-
-Olof Johansson (1):
-      dt/i2c: Enumerate some of the known trivial i2c devices
-
-Rob Herring (3):
-      i2c-designware: add OF binding support
-      dt: add empty of_get_node/of_put_node functions
-      irq: check domain hwirq range for DT translate
-
-Sam Ravnborg (1):
-      of/pdt: fix section mismatch warning
-
-Uwe Kleine-K=F6nig (1):
-      ARM/of: allow *machine_desc.dt_compat to be const
-
- .../devicetree/bindings/i2c/i2c-designware.txt     |   22 ++++++++
- .../devicetree/bindings/i2c/trivial-devices.txt    |   58
-++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    3 +
- arch/arm/include/asm/mach/arch.h                   |    2 +-
- drivers/i2c/busses/i2c-designware-platdrv.c        |   12 ++++
- drivers/of/base.c                                  |   10 ++--
- drivers/of/fdt.c                                   |    4 +-
- drivers/of/pdt.c                                   |    2 +-
- include/linux/of.h                                 |   33 ++++++------
- include/linux/of_fdt.h                             |    4 +-
- kernel/irq/irqdomain.c                             |    3 +
- 11 files changed, 124 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-designware.txt
- create mode 100644
-Documentation/devicetree/bindings/i2c/trivial-devices.txt
+--
+Thanks,
+Sylwester
