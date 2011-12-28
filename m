@@ -1,74 +1,53 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v5 2/2] input: samsung-keypad: Add device tree support
-Date: Tue, 27 Dec 2011 23:28:38 -0800
-Message-ID: <CAOesGMic39gaYt9rsyebBJDS=cKAmmOP1BdunzAEiL+wcf0HKQ@mail.gmail.com>
-References: <1318264197-6698-1-git-send-email-thomas.abraham@linaro.org>
-	<1318264197-6698-3-git-send-email-thomas.abraham@linaro.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] Input: tegra-kbc - add default chromeos map
+Date: Tue, 27 Dec 2011 23:33:13 -0800
+Message-ID: <CAOesGMheQqYjpDRaf6TTce2YEcD4hkTzS2JTdoCe3ue6+dBhDQ@mail.gmail.com>
+References: <1325053170-6984-1-git-send-email-olof@lixom.net>
+	<1325053170-6984-3-git-send-email-olof@lixom.net>
+	<20111228065013.GB29273@core.coreip.homeip.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1318264197-6698-3-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, grant.likely@secretlab.ca, linux-input@vger.kernel.org, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jy0922.shim@samsung.com, dh09.lee@samsung.com, patches@linaro.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20111228065013.GB29273-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-I came across this searching for other proposed device tree bindings
-based on what I wanted to do for Tegra.
+On Tue, Dec 27, 2011 at 10:50 PM, Dmitry Torokhov
+<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Dec 27, 2011 at 10:19:30PM -0800, Olof Johansson wrote:
+>> This adds a simple way to specify the ChromeOS-specific keyboard map
+>> instead of the "standard" map that is used on other Tegra devices such
+>> as Harmony-with-keyboard and Seaboard.
+>>
+>> I expect the number of different keyboard layouts to be quite limited,
+>> and not many should be added over time. So instead of encoding the layout
+>> in the device tree, with all the can of worms that entails w.r.t. agreeing
+>> on a suitable binding, just add a property to specify that this is the
+>> map to be used, and include it in the driver.
+>>
+>> If, over time, the number of mappings increase, the binding can be
+>> updated to include a custom map as a new property, without having to
+>> worry about backwards compatibility on existing devices.
+>>
+>
+> I'd rather we did not make shortcuts and did the proper DT binding.
+> Samsung folks want the similar thing so making a generic DT keymap
+> parser and using it in the driver would be the best way.
 
-Comments below.
+Ok, fair point. I found the last posted version of the samsung driver
+in my archives so I'll continue the discussion there (see separate
+followup there).
 
-On Mon, Oct 10, 2011 at 9:29 AM, Thomas Abraham
-<thomas.abraham@linaro.org> wrote:
+> Another option is to simply loading proper keymap by the early
+> userspace.
 
-> +- Keys represented as child nodes: Each key connected to the keypad
-> + =A0controller is represented as a child node to the keypad controll=
-er
-> + =A0device node and should include the following properties.
-> + =A0- keypad,row: the row number to which the key is connected.
-> + =A0- keypad,column: the column number to which the key is connected=
-=2E
-> + =A0- linux,code: the key-code to be reported when the key is presse=
-d
-> + =A0 =A0and released.
-
-[...]
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 key_1 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,row =3D <0>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,column =3D <3>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 linux,code =3D <2>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 key_2 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,row =3D <0>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,column =3D <4>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 linux,code =3D <3>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 key_3 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,row =3D <0>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 keypad,column =3D <5>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 linux,code =3D <4>;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
-
-
-The above is good if all you want to specify is a few keys. If you
-want a full keyboard specification, it gets very verbose.
-
-I would prefer a simpler binding, something along the lines of:
-
-linux,keymap =3D < row col code ... >;
-
-Where it's just an array of the above, so your example would be:
-linux,keymap =3D < 0 3 2
-                 0 4 3
-                 0 5 4 >;
-
-Same amount of data, it would be more or less as easy to read but a
-_much_ more compact representation when you need to provide 100+ keys.
+I would prefer to do it in hardware, mostly because I don't want to
+have to add the keymaps to all possible distros I'd be interested in
+running on this hardware. :)
 
 
 -Olof
