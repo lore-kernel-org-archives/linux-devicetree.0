@@ -1,215 +1,138 @@
-From: Sylwester Nawrocki <snjw23@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
- domain infrastructure
-Date: Wed, 28 Dec 2011 00:14:28 +0100
-Message-ID: <4EFA5154.9060606@gmail.com>
-References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org> <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org> <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: Re: [PATCH V5 4/7] cpufreq: add clk-reg cpufreq driver
+Date: Wed, 28 Dec 2011 09:24:05 +0800
+Message-ID: <20111228012404.GK15863@b20223-02.ap.freescale.net>
+References: <1324974262-30963-1-git-send-email-richard.zhao@linaro.org>
+ <1324974262-30963-5-git-send-email-richard.zhao@linaro.org>
+ <20111227150539.GA15132@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20111227150539.GA15132@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@freescale.com>
+Cc: Richard Zhao <richard.zhao@linaro.org>, linux@arm.linux.org.uk, arnd@arndb.de, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, rdunlap@xenotime.net, eric.miao@linaro.org, rob.herring@calxeda.com, kernel@pengutronix.de, davej@redhat.com, jamie@jamieiles.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-On 12/12/2011 04:46 PM, Thomas Abraham wrote:
-> The generic power domain infrastructure is used to control the power domains
-> available on Exynos4. For non-dt platforms, the power domains are statically
-> instantiated. For dt platforms, the power domain nodes found in the device
-> tree are instantiated.
+On Tue, Dec 27, 2011 at 11:05:41PM +0800, Shawn Guo wrote:
+> Hi Richard,
 > 
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
-> This patch is mainly derived from Mark Brown's work on generic power domain
-> support for s3c64xx platforms. The existing exynos4 power domain implementation
-> is not removed in this patch. The devices are not yet registered with the power
-> domains for non-dt platforms.
+> On Tue, Dec 27, 2011 at 04:24:19PM +0800, Richard Zhao wrote:
+> > The driver get cpu operation point table from device tree cpu0 node,
+> > and adjusts operating points using clk and regulator APIs.
+> > 
+> > It support single core and multi-core ARM SoCs. But currently it assume
+> > all cores share the same frequency and voltage.
+> > 
+> > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+> > Reviewed-by: Jamie Iles <jamie@jamieiles.com>
+> > Reviewed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> > ---
+> >  .../devicetree/bindings/cpufreq/clk-reg-cpufreq    |   21 ++
+> >  drivers/cpufreq/Kconfig                            |   10 +
+> >  drivers/cpufreq/Makefile                           |    2 +
+> >  drivers/cpufreq/clk-reg-cpufreq.c                  |  302 ++++++++++++++++++++
+> >  4 files changed, 335 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/cpufreq/clk-reg-cpufreq
+> >  create mode 100644 drivers/cpufreq/clk-reg-cpufreq.c
+> > 
 > 
->  arch/arm/mach-exynos/Kconfig |    1 +
->  arch/arm/mach-exynos/pm.c    |  179 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 180 insertions(+), 0 deletions(-)
+> [...]
 > 
-> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-> index 0afcc3b..c1f77c7 100644
-> --- a/arch/arm/mach-exynos/Kconfig
-> +++ b/arch/arm/mach-exynos/Kconfig
-> @@ -29,6 +29,7 @@ config CPU_EXYNOS4210
->  	default y
->  	depends on ARCH_EXYNOS4
->  	select SAMSUNG_DMADEV
-> +	select PM_GENERIC_DOMAINS
->  	select ARM_CPU_SUSPEND if PM
->  	select S5P_PM if PM
->  	select S5P_SLEEP if PM
-> diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
-> index 4093fea..a471ea6 100644
-> --- a/arch/arm/mach-exynos/pm.c
-> +++ b/arch/arm/mach-exynos/pm.c
-> @@ -20,6 +20,10 @@
->  #include <linux/io.h>
->  #include <linux/err.h>
->  #include <linux/clk.h>
-> +#include <linux/slab.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/delay.h>
-> +#include <linux/of_address.h>
->  
->  #include <asm/cacheflush.h>
->  #include <asm/hardware/cache-l2x0.h>
-> @@ -37,6 +41,13 @@
->  #include <mach/pm-core.h>
->  #include <mach/pmu.h>
->  
-> +struct exynos4_pm_domain {
-> +	void __iomem *base;
-> +	char const *name;
-> +	bool is_off;
-> +	struct generic_pm_domain pd;
+> > +static struct cpufreq_driver clk_reg_cpufreq_driver = {
+> > +	.flags = CPUFREQ_STICKY,
+> > +	.verify = clk_reg_verify_speed,
+> > +	.target = clk_reg_set_target,
+> > +	.get = clk_reg_get_speed,
+> > +	.init = clk_reg_cpufreq_init,
+> > +	.exit = clk_reg_cpufreq_exit,
+> > +	.name = "clk-reg",
+> > +};
+> > +
+> > +static u32 max_freq = UINT_MAX / 1000; /* kHz */
+> > +module_param(max_freq, uint, 0);
+> > +MODULE_PARM_DESC(max_freq, "max cpu frequency in unit of kHz");
+> > +
+> 
+> Have you tried to pass this param from kernel cmdline?  What's the
+> syntax if we want to pass a 800 MHz max_freq?
+clk-reg-cpufreq.max_freq=800000
+> 
+> And I played this driver on imx6q with pm-qa [1] cpufreq test suit from
+> Linaro PMWG.
+> 
+> ### cpufreq_01:
+> ### test the cpufreq framework is available for frequency
+> ### https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cpufreq_01
+> ###
+> cpufreq_01.0/cpu0: checking 'scaling_available_frequencies' exists...       fail
+> cpufreq_01.0/cpu1: checking 'scaling_available_frequencies' exists...       fail
+> cpufreq_01.0/cpu2: checking 'scaling_available_frequencies' exists...       fail
+> cpufreq_01.0/cpu3: checking 'scaling_available_frequencies' exists...       fail
+hmm, scaling_available_frequencies is nice-to-have feature. I'm glad to
+add it.
+> 
+> ### cpufreq_05:
+> ### test 'ondemand' and 'conservative' trigger correctly the configuration directory
+> ### https://wiki.linaro.org/WorkingGroups/PowerManagement/Doc/QA/Scripts#cpufreq_05
+> ###
+> cpufreq_05.0: checking 'ondemand' directory exists...                       pass
+> cpufreq_05.1: checking 'conservative' directory exists...                   pass
+> cpufreq_05.2: checking 'ondemand' directory is not there...                 pass
+> cpufreq_05.3: checking 'conservative' directory is not there...             pass
+> cpufreq_05.4: checking 'ondemand' directory exists...                       fail
+> cpufreq_05.5: checking 'conservative' directory exists...                   pass
+I past fail part script here:
+    switch_ondemand cpu0
+    switch_conservative cpu1
+    check "'ondemand' directory exists" "test -d $CPU_PATH/cpufreq/ondemand"
+    check "'conservative' directory exists" "test -d $CPU_PATH/cpufreq/conservative"
+This driver assume all cpu cores to share the same freq and voltage. The affected
+cpu is all other cpus. They also share one single governor. The test case does not
+suit this driver and not for most arm multi-core cpus I guess.
+> 
+> The cpufreq_01 can be easily fixed with the following change.
+> 
+> 8<-----
+> @@ -146,6 +150,11 @@ static int clk_reg_cpufreq_exit(struct cpufreq_policy *policy)
+>         return 0;
+>  }
+> 
+> +static struct freq_attr *clk_reg_cpufreq_attr[] = {
+> +       &cpufreq_freq_attr_scaling_available_freqs,
+> +       NULL,
 > +};
 > +
->  static struct sleep_save exynos4_set_clksrc[] = {
->  	{ .reg = S5P_CLKSRC_MASK_TOP			, .val = 0x00000001, },
->  	{ .reg = S5P_CLKSRC_MASK_CAM			, .val = 0x11111111, },
-> @@ -285,12 +296,172 @@ static struct sysdev_driver exynos4_pm_driver = {
->  	.add		= exynos4_pm_add,
+>  static struct cpufreq_driver clk_reg_cpufreq_driver = {
+>         .flags = CPUFREQ_STICKY,
+>         .verify = clk_reg_verify_speed,
+> @@ -153,10 +162,15 @@ static struct cpufreq_driver clk_reg_cpufreq_driver = {
+>         .get = clk_reg_get_speed,
+>         .init = clk_reg_cpufreq_init,
+>         .exit = clk_reg_cpufreq_exit,
+> +       .attr = clk_reg_cpufreq_attr,
+>         .name = "clk-reg",
 >  };
->  
-> +static int exynos4_pd_power_on(struct generic_pm_domain *domain)
-> +{
-> +	struct exynos4_pm_domain *pd;
-> +	void __iomem *base;
-> +	u32 timeout;
-> +
-> +	pd = container_of(domain, struct exynos4_pm_domain, pd);
-> +	base = pd->base;
-> +
-> +	__raw_writel(S5P_INT_LOCAL_PWR_EN, base);
-> +
-> +	/* Wait max 1ms */
-> +	timeout = 10;
-> +	while ((__raw_readl(base + 0x4) & S5P_INT_LOCAL_PWR_EN)
-> +					!= S5P_INT_LOCAL_PWR_EN) {
-> +		if (!timeout) {
-> +			pr_err("Power domain %s enable failed\n", domain->name);
-> +			return -ETIMEDOUT;
-> +		}
-> +		timeout--;
-> +		udelay(100);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int exynos4_pd_power_off(struct generic_pm_domain *domain)
-> +{
-> +	struct exynos4_pm_domain *pd;
-> +	void __iomem *base;
-> +	u32 timeout;
-> +
-> +	pd = container_of(domain, struct exynos4_pm_domain, pd);
-> +	base = pd->base;
-> +
-> +	__raw_writel(0, base);
-> +
-> +	/* Wait max 1ms */
-> +	timeout = 10;
-> +	while (__raw_readl(base + 0x4) & S5P_INT_LOCAL_PWR_EN) {
-> +		if (!timeout) {
-> +			pr_err("Power domain %s disable failed\n", domain->name);
-> +			return -ETIMEDOUT;
-> +		}
-> +		timeout--;
-> +		udelay(100);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static struct exynos4_pm_domain exynos4_pd_mfc = {
-> +	.base = (void __iomem *)S5P_PMU_MFC_CONF,
-> +	.name = "pd-mfc",
-> +	.pd = {
-> +		.power_off = exynos4_pd_power_off,
-> +		.power_on = exynos4_pd_power_on,
-> +	},
-> +};
-> +
-> +static struct exynos4_pm_domain exynos4_pd_g3d = {
-> +	.base = (void __iomem *)S5P_PMU_G3D_CONF,
-> +	.name = "pd-g3d",
-> +	.pd = {
-> +		.power_off = exynos4_pd_power_off,
-> +		.power_on = exynos4_pd_power_on,
-> +	},
-> +};
-> +
-> +static struct exynos4_pm_domain exynos4_pd_lcd0 = {
-> +	.base = (void __iomem *)S5P_PMU_LCD0_CONF,
-> +	.name = "pd-lcd0",
-> +	.pd = {
-> +		.power_off = exynos4_pd_power_off,
-> +		.power_on = exynos4_pd_power_on,
-> +	},
-> +};
-> +
-> +static struct exynos4_pm_domain exynos4_pd_lcd1 = {
-> +	.base = (void __iomem *)S5P_PMU_LCD1_CONF,
-> +	.name = "pd-lcd1",
-> +	.pd = {
-> +		.power_off = exynos4_pd_power_off,
-> +		.power_on = exynos4_pd_power_on,
-> +	},
-> +};
-> +
-> +static struct exynos4_pm_domain exynos4_pd_tv = {
-> +	.base = (void __iomem *)S5P_PMU_TV_CONF,
-> +	.name = "pd-tv",
-> +	.pd = {
-> +		.power_off = exynos4_pd_power_off,
-> +		.power_on = exynos4_pd_power_on,
-> +	},
-> +};
-> +
-> +static struct exynos4_pm_domain exynos4_pd_cam = {
-> +	.base = (void __iomem *)S5P_PMU_CAM_CONF,
-> +	.name = "pd-cam",
-> +	.pd = {
-> +		.power_off = exynos4_pd_power_off,
-> +		.power_on = exynos4_pd_power_on,
-> +	},
-> +};
-> +
-> +static struct exynos4_pm_domain exynos4_pd_gps = {
-> +	.base = (void __iomem *)S5P_PMU_GPS_CONF,
-> +	.name = "pd-gps",
-> +	.pd = {
-> +		.power_off = exynos4_pd_power_off,
-> +		.power_on = exynos4_pd_power_on,
-> +	},
-> +};
+> ----->8
+quite right.
 
-I'm not sure if arch/arm/mach-exynos/pm.c is the right place to add this.
-IMHO it would be much better to put PD in separate file, pm-runtime.c
-or something like this.
+Thanks
+Richard
+> 
+> And I have not looked into the second one deeply, but maybe you
+> want to :)
+> 
+> -- 
+> Regards,
+> Shawn
+> 
+> [1] git://git.linaro.org/people/dlezcano/pm-qa.git
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-Can we assume various exynos versions will have same S5P_PMU_*_CONF
-addresses? For old s3c64xx SoCs such assumption could be valid but I'm
-a bit uncertain about Exynos series.
-
-IMHO the proper way to proceed would be to convert Samsung power domains
-to generic power domains and then add device tree support. Rather than
-doing a sort of work around. Much of the conversion to genpd work have
-been already done [1]. We would perhaps just need to drop the clock gating
-as there seem to be no agreement about this.
-
-[1]. http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg07431.html
-
---
-
-Thanks,
-Sylwester
