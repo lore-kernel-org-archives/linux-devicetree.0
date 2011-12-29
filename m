@@ -1,175 +1,167 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] Input: keyboard - add device tree bindings for simple key matrixes
-Date: Wed, 28 Dec 2011 15:37:37 -0800
-Message-ID: <CAOesGMjpN8yqOmTvXfcNqVpMTwf90wct5tOBNErR1F9rtHAXRg@mail.gmail.com>
-References: <1325112771-31941-1-git-send-email-olof@lixom.net>
-	<4EFBA698.6080601@gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
+ mappings
+Date: Thu, 29 Dec 2011 10:46:48 +0800
+Message-ID: <20111229024647.GA11309@S2100-06.ap.freescale.net>
+References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
+ <1324402840-32451-3-git-send-email-b29396@freescale.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC6057885077F82@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4EFBA698.6080601-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7FE21149F4667147B645348EC6057885077F82-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 28, 2011 at 3:30 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> Olof,
->
-> On 12/28/2011 04:52 PM, Olof Johansson wrote:
->> From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> This adds a basic device tree binding for simple key matrix data.
->>
->> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
->> ---
->>
->> Based on email exchange this morning, this is a first cut at a share=
-d
->> definition and helper function to parse and fill in the keymap data.
->>
->> Instead of doing the direct parsing into the final keymap format, I
->> chose to fill in the pdata-equivalent since that is how the OF pdata
->> fillers work right now if code is to be kept common with the legacy
->> platform_device probe interface.
->>
->> This is a prerequisite for a revised version of the tegra-kbc device
->> tree support that I will repost separately once this interface is st=
-able.
->>
->>
->> -Olof
->>
->> =A0.../devicetree/bindings/input/matrix-keymap.txt =A0 =A0| =A0 35 +=
-+++++++++++
->> =A0include/linux/input/matrix_keypad.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 55 ++++++++++++++++++++
->> =A02 files changed, 90 insertions(+), 0 deletions(-)
->> =A0create mode 100644 Documentation/devicetree/bindings/input/matrix=
--keymap.txt
->>
->> diff --git a/Documentation/devicetree/bindings/input/matrix-keymap.t=
-xt b/Documentation/devicetree/bindings/input/matrix-keymap.txt
->> new file mode 100644
->> index 0000000..894f786
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/input/matrix-keymap.txt
->> @@ -0,0 +1,35 @@
->> +For matrix keyboards there are two kinds of layout bindings using
->> +linux key codes.
->> +
->> +Required properties:
->> +- compatible: "matrix-keyboard-controller"
->
-> Seems like this is not really needed. You've already matched the node
-> before you call matrix_keyboard_of_fill_keymap.
+On Tue, Dec 27, 2011 at 02:41:25PM +0000, Dong Aisheng-B29396 wrote:
+[...]
+> > You could have nested sub-nodes, say something like:
+> > 
+> > iomuxc@020e0000 {
+> >     compatible = "fsl,imx6q-iomuxc";
+> >     reg = <0x020e0000 0x4000>;
+> >     fsl,pins {
+> >         ... // fsl-specific pin properties
+> >     };
+> >     fsl,groups {
+> >         ... // fsl-specific group properties
+> >     };
+> >     fsl,functions {
+> >         ... // fsl-specific mux function properties
+> >     };
+> >     pinmux-usage {
+> >         // standardized pinmux "table" properties
+> >         sd4 { // pin group name
+> >             function = "sdio4"; // this function active on it
+> >             ...
+> >         };
+> >         ...
+> >     }
+> >     ...
+> > }
+> > 
+> Yes, I could do that.
+> The extra effort is that we have to manually exclude one pinmux-usage
+> node in pinmux driver since originally i take the child node count of
+> iomuxc as the function count since all child nodes are functions,
+> that why I firstly took the mapping node out of iomuxc, in addition
+> the old way i used seems to be more brief and clear.
+> 
+Stephen suggested you put all the function nodes under node
+'fsl,functions' (not sure prefix fsl is necessary).  In that case,
+of_get_child_count() on 'fsl,functions' still get you the function
+count you want, right?
 
-The view I had when adding a compatible field was that the controllers
-that use this binding essentially inherits and extends it, so having
-this as a common compatible seems like the right thing to do. It also
-gives an easy reference ('see binding for
-"matrix-keyboard-controller"' from the other binding, etc).
+But we do not bother with it, if we do not have pinmux-usage at all.
+See below ...
 
->> +
->> +For simple keyboards with just a few buttons, you can specify each =
-key
->> +as a subnode of the keyboard controller, with the following
->> +properties:
->> +
->> +- keypad,row: the row number to which the key is connected.
->> +- keypad,column: the column number to which the key is connected.
->> +- linux,code: the key-code to be reported when the key is pressed
->> + =A0and released.
->> +
->> +Example:
->> +
->> + =A0 =A0 key_1 {
->> + =A0 =A0 =A0 =A0 =A0 =A0 keypad,row =3D <0>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 keypad,column =3D <3>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 linux,code =3D <2>;
->> + =A0 =A0 };
->> +
->> +
->> +For a more complex keyboard, such as a full laptop, a more compact
->> +binding can be used instead, with the following property directly i=
-n
->> +the keyboard controller node:
->> +
->> +- linux,keymap: an array of 3-cell entries containing the equivalen=
-t
->> + =A0of the three separate properties above: row, column and linux
->> + =A0key-code.
->> +
->> +Example:
->> + =A0 =A0 linux,keymap =3D < 0 3 2
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A00 4 5 >;
->> diff --git a/include/linux/input/matrix_keypad.h b/include/linux/inp=
-ut/matrix_keypad.h
->> index fe7c4b9..ff13cd3 100644
->> --- a/include/linux/input/matrix_keypad.h
->> +++ b/include/linux/input/matrix_keypad.h
->> @@ -3,6 +3,7 @@
->>
->> =A0#include <linux/types.h>
->> =A0#include <linux/input.h>
->> +#include <linux/of.h>
->>
->> =A0#define MATRIX_MAX_ROWS =A0 =A0 =A0 =A0 =A0 =A0 =A032
->> =A0#define MATRIX_MAX_COLS =A0 =A0 =A0 =A0 =A0 =A0 =A032
->> @@ -106,4 +107,58 @@ matrix_keypad_build_keymap(const struct matrix_=
-keymap_data *keymap_data,
->> =A0 =A0 =A0 __clear_bit(KEY_RESERVED, keybit);
->> =A0}
->>
->> +#ifdef CONFIG_OF
->> +static inline struct matrix_keymap_data *
->> +matrix_keyboard_of_fill_keymap(struct device_node *np)
->> +{
->
-> Seems a bit large to inline.
+> I tried adding pinmux-usage as a sub node of iomuxc and got two issues:
+> Taking imx6q as an example:
+> iomuxc@020e0000 {
+>         uart4 {
+>                 func-name = "uart4";
+>                 grp-name = "uart4grp";
+>                 grp-pins = <107 108>;
+>                 num-pins = <2>;
+>                 grp-mux = <4 4>;
+>                 num-mux = <2>;
+>         };
+> 
+>         sd4 {
+>                 func-name = "sd4";
+>                 grp-name = "sd4grp";
+>                 grp-pins = <170 171 180 181 182 183 184 185 186 187>;
+>                 num-pins = <10>;
+>                 grp-mux = <0 0 1 1 1 1 1 1 1 1>;
+>                 num-mux = <10>;
+>         };
+> 
+>         pinmux-mapping {
+>                 uart4 {
+>                         function = "uart4";
+>                         dev = <&uart4>;
+>                 };
+> 
+>                 usdhc4 {
+> /*			    ctrl-dev-name = "20e0000.iomuxc"; */
+>                         function = "sd4";
+>                         dev = <&usdhc4>;
+>                 };
+>         };
+> };
+> 
+> If we remove ctrl-dev-name and get it from its parent node in drivers as
+> you suggested,
+> first, since this work will be done in the common API (pinmux_of_register_mappings
+> Requires pass the pinmux mapping node to it for construct the mapping table)
+> It will introduce a restriction that all platforms should define this node
+> under their pinctrl device node.
+> Second, it seems we cannot get its parent node device or device name in driver
+> (can only get node Name which is not sufficient for construct the pin map table
+> required by pinctrl core) and current device tree subsystem seems do not support
+> get its associated device from a device node.
+> We may not be able to construct ctrl-dev-name or ctrl-dev for struct pinmux_map.
+> I'm not sure if I missed something, if missed please let me know.
+> To support it, we may need to add support for converting device node
+> to device. Not sure it's applicable since I still have not tried it.
+> 
+> The same issue applies to dev using a phandle.
+> 
+We do not bother with it, if we do not have pinmux-usage at all.
+See below ...
 
-It's pushing the limits for it, yes. Dmitry, should I start a shared C
-file for this? If so, where? drivers/input/keyboard/keymap.c?
+[...]
 
->> + =A0 =A0 struct matrix_keymap_data *kd;
->> + =A0 =A0 struct device_node *knp;
->> + =A0 =A0 int proplen =3D 0, i;
->> + =A0 =A0 u32 *keymap, row, col, key_code;
->> + =A0 =A0 const __be32 *prop =3D of_get_property(np, "linux,keymap",=
- &proplen);
->> +
->> + =A0 =A0 if (!of_device_is_compatible(np, "matrix-keyboard-controll=
-er"))
->> + =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
->> +
->> + =A0 =A0 kd =3D kmalloc(sizeof(*kd), GFP_KERNEL);
->> + =A0 =A0 if (!kd)
->> + =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
->> + =A0 =A0 kd->keymap_size =3D proplen / 3;
->> +
->> + =A0 =A0 for_each_child_of_node(np, knp)
->> + =A0 =A0 =A0 =A0 =A0 =A0 kd->keymap_size++;
->> +
->> + =A0 =A0 keymap =3D kzalloc(kd->keymap_size * sizeof(u32), GFP_KERN=
-EL);
->> + =A0 =A0 if (!keymap) {
->> + =A0 =A0 =A0 =A0 =A0 =A0 kfree(kd);
->> + =A0 =A0 =A0 =A0 =A0 =A0 return NULL;
->> + =A0 =A0 }
->
-> Looks like memory leaks would be very likely. Is the caller expected =
-to
-> free these? If so, a matching free function should be provided. Perha=
-ps
-> trying to keep platform_data compatibility is not the best approach i=
-f
-> it would simplify this.
+> I was ever thought putting a phandle of pinmux function in each device,
+> Then pinmux mapping table seems not need anymore. Like:
+> 
+> usdhc4: usdhc@0219c000 { /* uSDHC4 */
+>         compatible = "fsl,imx6q-usdhc";
+> 	....
+>         pinmux = <&pinmux-sd4>;
+> };
+> 
+> iomuxc@020e0000 {
+>         pinmux-sd4 : sd4 {
+>                 func-name = "sd4";
+>                 grp-name = "sd4grp";
+>                 grp-pins = <170 171 180 181 182 183 184 185 186 187>;
+>                 num-pins = <10>;
+>                 grp-mux = <0 0 1 1 1 1 1 1 1 1>;
+>                 num-mux = <10>;
+>         };
+> 
+> It is a pure hw point of view to define node.
 
-Yes, caller is expected to free. Dmitry doesn't like devm_alloc so I
-guess having a free function could be a decent idea (I had it
-open-coded in the driver that uses this, will switch that over too).
+That's the way we should go for.  This is exactly the same thing that
+clk and regulator DT support is doing.  And right, in that way, we do
+not need pinmux mapping for DT at all.
 
+> And it may need to implement a of_pinmux_get.
 
--Olof
+To make the pinmux api generic for both dt and non-dt users, the pinmux
+client driver should still see/call pinmux_get, something like
+of_pinmux_get should be sorted out behind pinmux_get.
+
+> But what about the pin maps without device associated?
+> 
+Do we have such cases?
+
+-- 
+Regards,
+Shawn
