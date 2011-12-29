@@ -1,102 +1,38 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PULL] Devicetree for 3.3
-Date: Wed, 28 Dec 2011 21:53:08 -0700
-Message-ID: <CACxGe6tM9dGGccUhhOEsah+8P=1XjYVh=KXy8J+V0pVVdoZrDA@mail.gmail.com>
-References: <4EFB2B8A.9010902@gmail.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 1/2] Input: tegra-kbc - add device tree bindings
+Date: Wed, 28 Dec 2011 22:00:06 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17755DC8CE@HQMAIL01.nvidia.com>
+References: <1325053170-6984-1-git-send-email-olof@lixom.net>
+ <1325053170-6984-2-git-send-email-olof@lixom.net>
+ <20111228064832.GA29273@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4EFB2B8A.9010902-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20111228064832.GA29273-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Merged, thanks.
+Dmitry Torokhov wrote at Tuesday, December 27, 2011 11:49 PM:
+> On Tue, Dec 27, 2011 at 10:19:29PM -0800, Olof Johansson wrote:
+> > This adds a simple device tree binding to the tegra keyboard controller.
+...
+> > +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> 
+> Error handling is missing. I also dislike devm_* facilities as it causes
+> inconsistencies in the way we handle releasing of resources: some of
+> them will be released automatically while others need t be released
+> manually. I prefer having consistent model.
 
-g.
+I have to say that I also disagree here. Weren't the devm_* function
+specifically added to allow people not to write all the error-handling
+code themselves. Forcing everyone not to use them doesn't seem right.
+There have been a ton of patches throughout the kernel converting drivers
+to use devm_* and at the same time removing and simplifying error
+handling.
 
-On Wed, Dec 28, 2011 at 7:45 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Grant,
->
-> Please pull device tree updates for 3.3. Pretty much a random collection
-> of minor changes. I'm including i2c-designware DT binding support here
-> as I've gotten no response from Ben.
->
-> Rob
->
-> The following changes since commit 384703b8e6cd4c8ef08512e596024e028c91c3=
-39:
->
-> =A0Linux 3.2-rc6 (2011-12-16 18:36:26 -0800)
->
-> are available in the git repository at:
-> =A0git://sources.calxeda.com/kernel/linux.git for-grant
->
-> Benoit Cousson (1):
-> =A0 =A0 =A0of/base: Take NULL string into account for property with multi=
-ple
-> strings
->
-> David Daney (1):
-> =A0 =A0 =A0OF/device-tree: Add some entries to vendor-prefixes.txt
->
-> Dong Aisheng (1):
-> =A0 =A0 =A0dt: reform for_each_property to for_each_property_of_node
->
-> Olof Johansson (1):
-> =A0 =A0 =A0dt/i2c: Enumerate some of the known trivial i2c devices
->
-> Rob Herring (3):
-> =A0 =A0 =A0i2c-designware: add OF binding support
-> =A0 =A0 =A0dt: add empty of_get_node/of_put_node functions
-> =A0 =A0 =A0irq: check domain hwirq range for DT translate
->
-> Sam Ravnborg (1):
-> =A0 =A0 =A0of/pdt: fix section mismatch warning
->
-> Uwe Kleine-K=F6nig (1):
-> =A0 =A0 =A0ARM/of: allow *machine_desc.dt_compat to be const
->
-> =A0.../devicetree/bindings/i2c/i2c-designware.txt =A0 =A0 | =A0 22 ++++++=
-++
-> =A0.../devicetree/bindings/i2c/trivial-devices.txt =A0 =A0| =A0 58
-> ++++++++++++++++++++
-> =A0.../devicetree/bindings/vendor-prefixes.txt =A0 =A0 =A0 =A0| =A0 =A03 +
-> =A0arch/arm/include/asm/mach/arch.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |=
- =A0 =A02 +-
-> =A0drivers/i2c/busses/i2c-designware-platdrv.c =A0 =A0 =A0 =A0| =A0 12 ++=
-++
-> =A0drivers/of/base.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0| =A0 10 ++--
-> =A0drivers/of/fdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 | =A0 =A04 +-
-> =A0drivers/of/pdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 | =A0 =A02 +-
-> =A0include/linux/of.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 | =A0 33 ++++++------
-> =A0include/linux/of_fdt.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 | =A0 =A04 +-
-> =A0kernel/irq/irqdomain.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 | =A0 =A03 +
-> =A011 files changed, 124 insertions(+), 29 deletions(-)
-> =A0create mode 100644 Documentation/devicetree/bindings/i2c/i2c-designwar=
-e.txt
-> =A0create mode 100644
-> Documentation/devicetree/bindings/i2c/trivial-devices.txt
-
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+-- 
+nvpublic
