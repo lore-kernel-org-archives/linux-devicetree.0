@@ -1,52 +1,46 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Input: tegra-kbc - add device tree bindings
-Date: Thu, 29 Dec 2011 01:23:08 -0800
-Message-ID: <20111229092308.GA3397@core.coreip.homeip.net>
-References: <1325053170-6984-1-git-send-email-olof@lixom.net>
- <1325053170-6984-2-git-send-email-olof@lixom.net>
- <20111228064832.GA29273@core.coreip.homeip.net>
- <74CDBE0F657A3D45AFBB94109FB122FF17755DC8CE@HQMAIL01.nvidia.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 1/4] block: xsysace: Don't use NO_IRQ
+Date: Thu, 29 Dec 2011 10:27:12 +0100
+Message-ID: <4EFC3270.9020109@monstr.eu>
+References: <1324477932-19262-1-git-send-email-monstr@monstr.eu>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17755DC8CE-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1324477932-19262-1-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 28, 2011 at 10:00:06PM -0800, Stephen Warren wrote:
-> Dmitry Torokhov wrote at Tuesday, December 27, 2011 11:49 PM:
-> > On Tue, Dec 27, 2011 at 10:19:29PM -0800, Olof Johansson wrote:
-> > > This adds a simple device tree binding to the tegra keyboard controller.
-> ...
-> > > +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> > 
-> > Error handling is missing. I also dislike devm_* facilities as it causes
-> > inconsistencies in the way we handle releasing of resources: some of
-> > them will be released automatically while others need t be released
-> > manually. I prefer having consistent model.
+Michal Simek wrote:
+> Drivers shouldn't use NO_IRQ. Microblaze and PPC
+> define NO_IRQ as 0 and this reference will be removed
+> in near future.
 > 
-> I have to say that I also disagree here. Weren't the devm_* function
-> specifically added to allow people not to write all the error-handling
-> code themselves.
+> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+> CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> CC: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> CC: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/block/xsysace.c |   10 +++++-----
+>  1 files changed, 5 insertions(+), 5 deletions(-)
 
-I guess they were. Unfortunately they also introduce inconsistency in
-the way resources are tracked and freed since some of them support
-devm_* facilities while others don't. I might be OK with drivers that
-use one model for all resources but this patch was mixing the two.
+Grant: Can you give me your ACK?
 
-devm_* facilities are also not free; you are saving on error handling
-code but pay with memory footprint required to implement tracking.
-
-> Forcing everyone not to use them doesn't seem right.
-> There have been a ton of patches throughout the kernel converting drivers
-> to use devm_* and at the same time removing and simplifying error
-> handling.
->
-
-Thanks.
-
+Thanks,
+Michal
 -- 
-Dmitry
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
