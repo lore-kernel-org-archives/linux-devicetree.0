@@ -1,20 +1,13 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Thu, 29 Dec 2011 10:46:48 +0800
-Message-ID: <20111229024647.GA11309@S2100-06.ap.freescale.net>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-3-git-send-email-b29396@freescale.com>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885077F82@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PULL] Devicetree for 3.3
+Date: Wed, 28 Dec 2011 21:53:08 -0700
+Message-ID: <CACxGe6tM9dGGccUhhOEsah+8P=1XjYVh=KXy8J+V0pVVdoZrDA@mail.gmail.com>
+References: <4EFB2B8A.9010902@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7FE21149F4667147B645348EC6057885077F82-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <4EFB2B8A.9010902-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,144 +17,86 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 27, 2011 at 02:41:25PM +0000, Dong Aisheng-B29396 wrote:
-[...]
-> > You could have nested sub-nodes, say something like:
-> > 
-> > iomuxc@020e0000 {
-> >     compatible = "fsl,imx6q-iomuxc";
-> >     reg = <0x020e0000 0x4000>;
-> >     fsl,pins {
-> >         ... // fsl-specific pin properties
-> >     };
-> >     fsl,groups {
-> >         ... // fsl-specific group properties
-> >     };
-> >     fsl,functions {
-> >         ... // fsl-specific mux function properties
-> >     };
-> >     pinmux-usage {
-> >         // standardized pinmux "table" properties
-> >         sd4 { // pin group name
-> >             function = "sdio4"; // this function active on it
-> >             ...
-> >         };
-> >         ...
-> >     }
-> >     ...
-> > }
-> > 
-> Yes, I could do that.
-> The extra effort is that we have to manually exclude one pinmux-usage
-> node in pinmux driver since originally i take the child node count of
-> iomuxc as the function count since all child nodes are functions,
-> that why I firstly took the mapping node out of iomuxc, in addition
-> the old way i used seems to be more brief and clear.
-> 
-Stephen suggested you put all the function nodes under node
-'fsl,functions' (not sure prefix fsl is necessary).  In that case,
-of_get_child_count() on 'fsl,functions' still get you the function
-count you want, right?
+Merged, thanks.
 
-But we do not bother with it, if we do not have pinmux-usage at all.
-See below ...
+g.
 
-> I tried adding pinmux-usage as a sub node of iomuxc and got two issues:
-> Taking imx6q as an example:
-> iomuxc@020e0000 {
->         uart4 {
->                 func-name = "uart4";
->                 grp-name = "uart4grp";
->                 grp-pins = <107 108>;
->                 num-pins = <2>;
->                 grp-mux = <4 4>;
->                 num-mux = <2>;
->         };
-> 
->         sd4 {
->                 func-name = "sd4";
->                 grp-name = "sd4grp";
->                 grp-pins = <170 171 180 181 182 183 184 185 186 187>;
->                 num-pins = <10>;
->                 grp-mux = <0 0 1 1 1 1 1 1 1 1>;
->                 num-mux = <10>;
->         };
-> 
->         pinmux-mapping {
->                 uart4 {
->                         function = "uart4";
->                         dev = <&uart4>;
->                 };
-> 
->                 usdhc4 {
-> /*			    ctrl-dev-name = "20e0000.iomuxc"; */
->                         function = "sd4";
->                         dev = <&usdhc4>;
->                 };
->         };
-> };
-> 
-> If we remove ctrl-dev-name and get it from its parent node in drivers as
-> you suggested,
-> first, since this work will be done in the common API (pinmux_of_register_mappings
-> Requires pass the pinmux mapping node to it for construct the mapping table)
-> It will introduce a restriction that all platforms should define this node
-> under their pinctrl device node.
-> Second, it seems we cannot get its parent node device or device name in driver
-> (can only get node Name which is not sufficient for construct the pin map table
-> required by pinctrl core) and current device tree subsystem seems do not support
-> get its associated device from a device node.
-> We may not be able to construct ctrl-dev-name or ctrl-dev for struct pinmux_map.
-> I'm not sure if I missed something, if missed please let me know.
-> To support it, we may need to add support for converting device node
-> to device. Not sure it's applicable since I still have not tried it.
-> 
-> The same issue applies to dev using a phandle.
-> 
-We do not bother with it, if we do not have pinmux-usage at all.
-See below ...
+On Wed, Dec 28, 2011 at 7:45 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Grant,
+>
+> Please pull device tree updates for 3.3. Pretty much a random collection
+> of minor changes. I'm including i2c-designware DT binding support here
+> as I've gotten no response from Ben.
+>
+> Rob
+>
+> The following changes since commit 384703b8e6cd4c8ef08512e596024e028c91c3=
+39:
+>
+> =A0Linux 3.2-rc6 (2011-12-16 18:36:26 -0800)
+>
+> are available in the git repository at:
+> =A0git://sources.calxeda.com/kernel/linux.git for-grant
+>
+> Benoit Cousson (1):
+> =A0 =A0 =A0of/base: Take NULL string into account for property with multi=
+ple
+> strings
+>
+> David Daney (1):
+> =A0 =A0 =A0OF/device-tree: Add some entries to vendor-prefixes.txt
+>
+> Dong Aisheng (1):
+> =A0 =A0 =A0dt: reform for_each_property to for_each_property_of_node
+>
+> Olof Johansson (1):
+> =A0 =A0 =A0dt/i2c: Enumerate some of the known trivial i2c devices
+>
+> Rob Herring (3):
+> =A0 =A0 =A0i2c-designware: add OF binding support
+> =A0 =A0 =A0dt: add empty of_get_node/of_put_node functions
+> =A0 =A0 =A0irq: check domain hwirq range for DT translate
+>
+> Sam Ravnborg (1):
+> =A0 =A0 =A0of/pdt: fix section mismatch warning
+>
+> Uwe Kleine-K=F6nig (1):
+> =A0 =A0 =A0ARM/of: allow *machine_desc.dt_compat to be const
+>
+> =A0.../devicetree/bindings/i2c/i2c-designware.txt =A0 =A0 | =A0 22 ++++++=
+++
+> =A0.../devicetree/bindings/i2c/trivial-devices.txt =A0 =A0| =A0 58
+> ++++++++++++++++++++
+> =A0.../devicetree/bindings/vendor-prefixes.txt =A0 =A0 =A0 =A0| =A0 =A03 +
+> =A0arch/arm/include/asm/mach/arch.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 |=
+ =A0 =A02 +-
+> =A0drivers/i2c/busses/i2c-designware-platdrv.c =A0 =A0 =A0 =A0| =A0 12 ++=
+++
+> =A0drivers/of/base.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0| =A0 10 ++--
+> =A0drivers/of/fdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 | =A0 =A04 +-
+> =A0drivers/of/pdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 | =A0 =A02 +-
+> =A0include/linux/of.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 | =A0 33 ++++++------
+> =A0include/linux/of_fdt.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 | =A0 =A04 +-
+> =A0kernel/irq/irqdomain.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 | =A0 =A03 +
+> =A011 files changed, 124 insertions(+), 29 deletions(-)
+> =A0create mode 100644 Documentation/devicetree/bindings/i2c/i2c-designwar=
+e.txt
+> =A0create mode 100644
+> Documentation/devicetree/bindings/i2c/trivial-devices.txt
 
-[...]
 
-> I was ever thought putting a phandle of pinmux function in each device,
-> Then pinmux mapping table seems not need anymore. Like:
-> 
-> usdhc4: usdhc@0219c000 { /* uSDHC4 */
->         compatible = "fsl,imx6q-usdhc";
-> 	....
->         pinmux = <&pinmux-sd4>;
-> };
-> 
-> iomuxc@020e0000 {
->         pinmux-sd4 : sd4 {
->                 func-name = "sd4";
->                 grp-name = "sd4grp";
->                 grp-pins = <170 171 180 181 182 183 184 185 186 187>;
->                 num-pins = <10>;
->                 grp-mux = <0 0 1 1 1 1 1 1 1 1>;
->                 num-mux = <10>;
->         };
-> 
-> It is a pure hw point of view to define node.
 
-That's the way we should go for.  This is exactly the same thing that
-clk and regulator DT support is doing.  And right, in that way, we do
-not need pinmux mapping for DT at all.
+-- =
 
-> And it may need to implement a of_pinmux_get.
-
-To make the pinmux api generic for both dt and non-dt users, the pinmux
-client driver should still see/call pinmux_get, something like
-of_pinmux_get should be sorted out behind pinmux_get.
-
-> But what about the pin maps without device associated?
-> 
-Do we have such cases?
-
--- 
-Regards,
-Shawn
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
