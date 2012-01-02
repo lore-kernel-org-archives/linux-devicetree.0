@@ -1,119 +1,45 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: [PATCHv3 3/3] ARM: picoxcell: use new Synopsys Designware GPIO binding
-Date: Mon,  2 Jan 2012 12:53:18 +0000
-Message-ID: <1325508798-25439-4-git-send-email-jamie@jamieiles.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCHv3 1/3] gpio: add a driver for the Synopsys DesignWare
+ APB GPIO block
+Date: Mon, 2 Jan 2012 13:25:00 +0000
+Message-ID: <20120102132500.GB18443@sirena.org.uk>
 References: <1325508798-25439-1-git-send-email-jamie@jamieiles.com>
+ <1325508798-25439-2-git-send-email-jamie@jamieiles.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1325508798-25439-1-git-send-email-jamie@jamieiles.com>
+Content-Disposition: inline
+In-Reply-To: <1325508798-25439-2-git-send-email-jamie@jamieiles.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linus.walleij@stericsson.com, robherring2@gmail.com, Jamie Iles <jamie@jamieiles.com>
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linus.walleij@stericsson.com
 List-Id: devicetree@vger.kernel.org
 
-Use the DesignWare specific binding rather than the generic binding
-which isn't supported in mainline.
+On Mon, Jan 02, 2012 at 12:53:16PM +0000, Jamie Iles wrote:
+> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
+> and can be configured to provide multiple banks of GPIO pins.
+> 
+> v3:	- depend on rather than select IRQ_DOMAIN
+> 	- split IRQ support into a separate patch
+> v2:	- use Rob Herring's irqdomain in generic irq chip patches
+> 	- use reg property to indicate bank index
+> 	- support irqs on both edges based on LinusW's u300 driver
 
-Signed-off-by: Jamie Iles <jamie@jamieiles.com>
----
- arch/arm/boot/dts/picoxcell-pc3x2.dtsi |   19 ++++++++-----------
- arch/arm/boot/dts/picoxcell-pc3x3.dtsi |   28 +++++++++++-----------------
- 2 files changed, 19 insertions(+), 28 deletions(-)
+Put stuff like this after the ---, it shouldn't end up in git history.
 
-diff --git a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-index f0a8c20..a247812 100644
---- a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-+++ b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-@@ -169,28 +169,25 @@
- 				reg = <0x20000 0x1000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				reg-io-width = <4>;
- 
- 				banka: gpio-controller@0 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <8>;
--
--					regoffset-dat = <0x50>;
--					regoffset-set = <0x00>;
--					regoffset-dirout = <0x04>;
-+					nr-gpio = <8>;
-+					reg = <0>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					interrupt-parent = <&vic1>;
-+					interrupts = <0 1 2 3 4 5 6 7>;
- 				};
- 
- 				bankb: gpio-controller@1 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <8>;
--
--					regoffset-dat = <0x54>;
--					regoffset-set = <0x0c>;
--					regoffset-dirout = <0x10>;
-+					nr-gpio = <8>;
-+					reg = <1>;
- 				};
- 			};
- 
-diff --git a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-index daa962d..96f049f 100644
---- a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-+++ b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-@@ -252,39 +252,33 @@
- 				reg = <0x20000 0x1000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				reg-io-width = <4>;
- 
- 				banka: gpio-controller@0 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
-+					reg = <0>;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <8>;
--
--					regoffset-dat = <0x50>;
--					regoffset-set = <0x00>;
--					regoffset-dirout = <0x04>;
-+					nr-gpio = <8>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					interrupt-parent = <&vic1>;
-+					interrupts = <0 1 2 3 4 5 6 7>;
- 				};
- 
- 				bankb: gpio-controller@1 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
-+					reg = <1>;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <16>;
--
--					regoffset-dat = <0x54>;
--					regoffset-set = <0x0c>;
--					regoffset-dirout = <0x10>;
-+					nr-gpio = <16>;
- 				};
- 
--				bankd: gpio-controller@2 {
-+				bankd: gpio-controller@3 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
-+					reg = <3>;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <30>;
--
--					regoffset-dat = <0x5c>;
--					regoffset-set = <0x24>;
--					regoffset-dirout = <0x28>;
-+					nr-gpio = <30>;
- 				};
- 			};
- 
--- 
-1.7.5.4
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +interrupt.  Shall be set to 2.  The first cell defines the interrupt number,
+> +the second encodes the triger flags encoded as:
+
+> +	bits[3:0] trigger type and level flags.
+> +		1 = low-to-high edge triggered
+> +		2 = high-to-low edge triggered
+> +		4 = active high level-sensitive
+> +		8 = active low level-sensitive
+
+This looks like a straight mapping of the Linux constants to device
+tree.  This seems sensible and reasonable and since we're forced to use
+magic numbers by the binding it'd be really good if we could standardise
+on using this for new drivers to reduce the pain for people writing and
+reading device tree bindings.  To help with that could you factor this
+out into a separate document that other drivers can reference?
