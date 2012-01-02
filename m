@@ -1,209 +1,62 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: pl061: convert to use generic irq chip
-Date: Mon, 2 Jan 2012 01:54:33 -0700
-Message-ID: <20120102085433.GJ18381@ponder.secretlab.ca>
-References: <1323876538-20406-8-git-send-email-robherring2@gmail.com>
- <1324327927-6886-1-git-send-email-robherring2@gmail.com>
+Subject: Re: [PATCH] staging:iio: ak8975: add of_match table for device-tree
+ probing
+Date: Mon, 2 Jan 2012 01:58:27 -0700
+Message-ID: <20120102085827.GK18381@ponder.secretlab.ca>
+References: <1324608402-3241-1-git-send-email-olof@lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1324327927-6886-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1324608402-3241-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 19, 2011 at 02:52:07PM -0600, Rob Herring wrote:
-> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+On Thu, Dec 22, 2011 at 06:46:42PM -0800, Olof Johansson wrote:
+> Just like isl29018; trivial addition. Using both asahi-kasei,ak8975 and
+> the non-prefixed version (I couldn't figure out if Asahi Kasei had a
+> stock symbol to use, I only found numerical indexes for their stock info).
 > 
-> Convert the pl061 irq_chip code to use the generic irq chip code.
+> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> ---
+>  drivers/staging/iio/magnetometer/ak8975.c |    8 ++++++++
+>  1 files changed, 8 insertions(+), 0 deletions(-)
 > 
-> This has the side effect of using 32-bit accesses rather than 8-bit
-> accesses to interrupt registers. The h/w TRM and testing seem to indicate
-> this is fine.
-> 
-> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Linus Walleij <linus.ml.walleij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> diff --git a/drivers/staging/iio/magnetometer/ak8975.c b/drivers/staging/iio/magnetometer/ak8975.c
+> index 3158f12..d5ddac3 100644
+> --- a/drivers/staging/iio/magnetometer/ak8975.c
+> +++ b/drivers/staging/iio/magnetometer/ak8975.c
+> @@ -564,9 +564,17 @@ static const struct i2c_device_id ak8975_id[] = {
+>  
+>  MODULE_DEVICE_TABLE(i2c, ak8975_id);
+>  
+> +static const struct of_device_id ak8975_of_match[] = {
+> +	{ .compatible = "asahi-kasei,ak8975", },
+> +	{ .compatible = "ak8975", },
 
-What does this apply against?  It doesn't apply cleanly.
+Unless there is a really good reason for it, drop the non-prefixed version.
+
+Otherwise it looks okay by me.
 
 g.
 
-> ---
-> v2:
-> - put struct irq_chip_generic pointer into struct pl061_gpio instead of domain
-> ptr.
-> 
->  drivers/gpio/Kconfig      |    1 +
->  drivers/gpio/gpio-pl061.c |   74 ++++++++++++++++-----------------------------
->  2 files changed, 27 insertions(+), 48 deletions(-)
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 8482a23..4d433e2 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -138,6 +138,7 @@ config GPIO_MXS
->  config GPIO_PL061
->  	bool "PrimeCell PL061 GPIO support"
->  	depends on ARM_AMBA
-> +	select GENERIC_IRQ_CHIP
->  	help
->  	  Say yes here to support the PrimeCell PL061 GPIO device
->  
-> diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
-> index fe19dec..96ff6b2 100644
-> --- a/drivers/gpio/gpio-pl061.c
-> +++ b/drivers/gpio/gpio-pl061.c
-> @@ -50,10 +50,10 @@ struct pl061_gpio {
->  	 * the IRQ code simpler.
->  	 */
->  	spinlock_t		lock;		/* GPIO registers */
-> -	spinlock_t		irq_lock;	/* IRQ registers */
->  
->  	void __iomem		*base;
->  	int			irq_base;
-> +	struct irq_chip_generic	*irq_gc;
->  	struct gpio_chip	gc;
->  };
->  
-> @@ -125,40 +125,10 @@ static int pl061_to_irq(struct gpio_chip *gc, unsigned offset)
->  	return chip->irq_base + offset;
->  }
->  
-> -/*
-> - * PL061 GPIO IRQ
-> - */
-> -static void pl061_irq_disable(struct irq_data *d)
-> -{
-> -	struct pl061_gpio *chip = irq_data_get_irq_chip_data(d);
-> -	int offset = d->irq - chip->irq_base;
-> -	unsigned long flags;
-> -	u8 gpioie;
-> -
-> -	spin_lock_irqsave(&chip->irq_lock, flags);
-> -	gpioie = readb(chip->base + GPIOIE);
-> -	gpioie &= ~(1 << offset);
-> -	writeb(gpioie, chip->base + GPIOIE);
-> -	spin_unlock_irqrestore(&chip->irq_lock, flags);
-> -}
-> -
-> -static void pl061_irq_enable(struct irq_data *d)
-> -{
-> -	struct pl061_gpio *chip = irq_data_get_irq_chip_data(d);
-> -	int offset = d->irq - chip->irq_base;
-> -	unsigned long flags;
-> -	u8 gpioie;
-> -
-> -	spin_lock_irqsave(&chip->irq_lock, flags);
-> -	gpioie = readb(chip->base + GPIOIE);
-> -	gpioie |= 1 << offset;
-> -	writeb(gpioie, chip->base + GPIOIE);
-> -	spin_unlock_irqrestore(&chip->irq_lock, flags);
-> -}
-> -
->  static int pl061_irq_type(struct irq_data *d, unsigned trigger)
->  {
-> -	struct pl061_gpio *chip = irq_data_get_irq_chip_data(d);
-> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-> +	struct pl061_gpio *chip = gc->private;
->  	int offset = d->irq - chip->irq_base;
->  	unsigned long flags;
->  	u8 gpiois, gpioibe, gpioiev;
-> @@ -166,7 +136,7 @@ static int pl061_irq_type(struct irq_data *d, unsigned trigger)
->  	if (offset < 0 || offset >= PL061_GPIO_NR)
->  		return -EINVAL;
->  
-> -	spin_lock_irqsave(&chip->irq_lock, flags);
-> +	raw_spin_lock_irqsave(&gc->lock, flags);
->  
->  	gpioiev = readb(chip->base + GPIOIEV);
->  
-> @@ -195,18 +165,11 @@ static int pl061_irq_type(struct irq_data *d, unsigned trigger)
->  
->  	writeb(gpioiev, chip->base + GPIOIEV);
->  
-> -	spin_unlock_irqrestore(&chip->irq_lock, flags);
-> +	raw_spin_unlock_irqrestore(&gc->lock, flags);
->  
->  	return 0;
->  }
->  
-> -static struct irq_chip pl061_irqchip = {
-> -	.name		= "GPIO",
-> -	.irq_enable	= pl061_irq_enable,
-> -	.irq_disable	= pl061_irq_disable,
-> -	.irq_set_type	= pl061_irq_type,
-> -};
-> -
->  static void pl061_irq_handler(unsigned irq, struct irq_desc *desc)
->  {
->  	struct list_head *chip_list = irq_get_handler_data(irq);
-> @@ -232,6 +195,25 @@ static void pl061_irq_handler(unsigned irq, struct irq_desc *desc)
->  	chained_irq_exit(irqchip, desc);
->  }
->  
-> +static void __init pl061_init_gc(struct pl061_gpio *chip, int irq_base)
-> +{
-> +	struct irq_chip_type *ct;
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ak8975_of_match);
 > +
-> +	chip->irq_gc = irq_alloc_generic_chip("gpio-pl061", 1, irq_base,
-> +					      chip->base, handle_simple_irq);
-> +	chip->irq_gc->private = chip;
-> +
-> +	ct = chip->irq_gc->chip_types;
-> +	ct->chip.irq_mask = irq_gc_mask_clr_bit;
-> +	ct->chip.irq_unmask = irq_gc_mask_set_bit;
-> +	ct->chip.irq_set_type = pl061_irq_type;
-> +	ct->chip.irq_set_wake = irq_gc_set_wake;
-> +	ct->regs.mask = GPIOIE;
-> +
-> +	irq_setup_generic_chip(chip->irq_gc, IRQ_MSK(PL061_GPIO_NR),
-> +			       IRQ_GC_INIT_NESTED_LOCK, IRQ_NOREQUEST, 0);
-> +}
-> +
->  static int pl061_probe(struct amba_device *dev, const struct amba_id *id)
->  {
->  	struct pl061_platform_data *pdata;
-> @@ -269,7 +251,6 @@ static int pl061_probe(struct amba_device *dev, const struct amba_id *id)
->  	}
->  
->  	spin_lock_init(&chip->lock);
-> -	spin_lock_init(&chip->irq_lock);
->  	INIT_LIST_HEAD(&chip->list);
->  
->  	chip->gc.direction_input = pl061_direction_input;
-> @@ -293,6 +274,8 @@ static int pl061_probe(struct amba_device *dev, const struct amba_id *id)
->  	if (chip->irq_base <= 0)
->  		return 0;
->  
-> +	pl061_init_gc(chip, chip->irq_base);
-> +
->  	writeb(0, chip->base + GPIOIE); /* disable irqs */
->  	irq = dev->irq[0];
->  	if (irq < 0) {
-> @@ -321,11 +304,6 @@ static int pl061_probe(struct amba_device *dev, const struct amba_id *id)
->  			else
->  				pl061_direction_input(&chip->gc, i);
->  		}
-> -
-> -		irq_set_chip_and_handler(i + chip->irq_base, &pl061_irqchip,
-> -					 handle_simple_irq);
-> -		set_irq_flags(i+chip->irq_base, IRQF_VALID);
-> -		irq_set_chip_data(i + chip->irq_base, chip);
->  	}
->  
->  	return 0;
+>  static struct i2c_driver ak8975_driver = {
+>  	.driver = {
+>  		.name	= "ak8975",
+> +		.of_match_table = ak8975_of_match,
+>  	},
+>  	.probe		= ak8975_probe,
+>  	.remove		= __devexit_p(ak8975_remove),
 > -- 
-> 1.7.5.4
+> 1.7.8.GIT
 > 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
