@@ -1,56 +1,97 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] Input: mpu3050: add of_match table for device-tree
- probing
-Date: Mon, 2 Jan 2012 01:42:43 -0700
-Message-ID: <20120102084243.GH18381@ponder.secretlab.ca>
-References: <1324607992-2919-1-git-send-email-olof@lixom.net>
- <20111223092246.GA7120@core.coreip.homeip.net>
- <CAOesGMiGJmc6FhsDcsmROUgoLD4eDFKK=LE7yYjkJn1O7oiL8Q@mail.gmail.com>
- <4EF9ED4E.6000408@gmail.com>
- <CAOesGMjDUYqP3iFzBz06sxyhjMGD4Znxvps4JxCxky56Hxy-PQ@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/6] drivers/gpio/gpio-tegra.c: use
+ devm_request_and_ioremap
+Date: Mon, 2 Jan 2012 01:44:39 -0700
+Message-ID: <20120102084439.GI18381@ponder.secretlab.ca>
+References: <1324994491-21828-1-git-send-email-julia@diku.dk>
+ <1324994491-21828-2-git-send-email-julia@diku.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMjDUYqP3iFzBz06sxyhjMGD4Znxvps4JxCxky56Hxy-PQ@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org
+In-Reply-To: <1324994491-21828-2-git-send-email-julia-dAYI7NvHqcQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 27, 2011 at 09:14:31AM -0800, Olof Johansson wrote:
-> On Tue, Dec 27, 2011 at 8:07 AM, Rob Herring <robherring2@gmail.com> wrote:
-> > On 12/23/2011 09:58 AM, Olof Johansson wrote:
-> >> Hi,
-> >>
-> >> On Fri, Dec 23, 2011 at 1:22 AM, Dmitry Torokhov
-> >> <dmitry.torokhov@gmail.com> wrote:
-> >>> Hi Olof,
-> >>>
-> >>> On Thu, Dec 22, 2011 at 06:39:52PM -0800, Olof Johansson wrote:
-> >>>> Adding invn,mpu3050 as the initial id.
-> >>>>
-> >>>
-> >>> I believe you also need to add this to
-> >>> Documentation/devicetree/bindings/input/
-> >>
-> >> For simple i2c devices that only have a name, address and possibly an
-> >> interrupt, there's no need to document a binding (it hasn't been done
-> >> in the past for the vast majority of those devices).
-> >
-> > But then how do you find out if there is a existing binding for a device
-> > without searching in the kernel source tree?
-> 
-> That's a silly question, since today that is exactly what you do to
-> find out, since the Documentation/devicetree isn't the canonical
-> location for _all_ bindings anyway -- some are in ePAPR, some are in
-> the old IEEE1275 docs, and some are based on whatever the vendor that
-> first introduced the device chose (Apple, and some other vendors,
-> mostly PowerPC ones).
+On Tue, Dec 27, 2011 at 03:01:26PM +0100, Julia Lawall wrote:
+> From: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
 
-I would like to keep a list of new bindings though, but I agree with the
-argument that a lot of bindings don't need a separate file with a whole
-bunch of meaningless boilerplate.
+Merged, thanks.
 
 g.
 
+> 
+> Reimplement a call to devm_request_mem_region followed by a call to ioremap
+> or ioremap_nocache by a call to devm_request_and_ioremap.
+> 
+> The semantic patch that makes this transformation is as follows:
+> (http://coccinelle.lip6.fr/)
+> 
+> // <smpl>
+> @nm@
+> expression myname;
+> identifier i;
+> @@
+> 
+> struct platform_driver i = { .driver = { .name = myname } };
+> 
+> @@
+> expression dev,res,size;
+> expression nm.myname;
+> @@
+> 
+> -if (!devm_request_mem_region(dev, res->start, size,
+> -                              \(res->name\|dev_name(dev)\|myname\))) {
+> -   ...
+> -   return ...;
+> -}
+> ... when != res->start
+> (
+> -devm_ioremap(dev,res->start,size)
+> +devm_request_and_ioremap(dev,res)
+> |
+> -devm_ioremap_nocache(dev,res->start,size)
+> +devm_request_and_ioremap(dev,res)
+> )
+> ... when any
+>     when != res->start
+> // </smpl>
+> 
+> Signed-off-by: Julia Lawall <julia-dAYI7NvHqcQ@public.gmane.org>
+> 
+> ---
+>  drivers/gpio/gpio-tegra.c |    9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+> index 61044c8..bdc2937 100644
+> --- a/drivers/gpio/gpio-tegra.c
+> +++ b/drivers/gpio/gpio-tegra.c
+> @@ -361,14 +361,7 @@ static int __devinit tegra_gpio_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	if (!devm_request_mem_region(&pdev->dev, res->start,
+> -				     resource_size(res),
+> -				     dev_name(&pdev->dev))) {
+> -		dev_err(&pdev->dev, "Couldn't request MEM resource\n");
+> -		return -ENODEV;
+> -	}
+> -
+> -	regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+> +	regs = devm_request_and_ioremap(&pdev->dev, res);
+>  	if (!regs) {
+>  		dev_err(&pdev->dev, "Couldn't ioremap regs\n");
+>  		return -ENODEV;
+> 
