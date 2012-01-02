@@ -1,119 +1,48 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: [PATCHv4 4/4] ARM: picoxcell: use new Synopsys Designware GPIO binding
-Date: Mon,  2 Jan 2012 15:14:08 +0000
-Message-ID: <1325517248-32032-4-git-send-email-jamie@jamieiles.com>
-References: <1325517248-32032-1-git-send-email-jamie@jamieiles.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1325517248-32032-1-git-send-email-jamie@jamieiles.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linus.walleij@stericsson.com, robherring2@gmail.com, broonie@opensource.wolfsonmicro.com, Jamie Iles <jamie@jamieiles.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: add picochip vendor prefix
+Date: Mon, 02 Jan 2012 09:41:49 -0600
+Message-ID: <4F01D03D.7020908@gmail.com>
+References: <1325513466-29124-1-git-send-email-jamie@jamieiles.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1325513466-29124-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use the DesignWare specific binding rather than the generic binding
-which isn't supported in mainline.
+On 01/02/2012 08:11 AM, Jamie Iles wrote:
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> ---
 
-Signed-off-by: Jamie Iles <jamie@jamieiles.com>
----
- arch/arm/boot/dts/picoxcell-pc3x2.dtsi |   19 ++++++++-----------
- arch/arm/boot/dts/picoxcell-pc3x3.dtsi |   28 +++++++++++-----------------
- 2 files changed, 19 insertions(+), 28 deletions(-)
+Applied.
 
-diff --git a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-index f0a8c20..a247812 100644
---- a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-+++ b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-@@ -169,28 +169,25 @@
- 				reg = <0x20000 0x1000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				reg-io-width = <4>;
- 
- 				banka: gpio-controller@0 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <8>;
--
--					regoffset-dat = <0x50>;
--					regoffset-set = <0x00>;
--					regoffset-dirout = <0x04>;
-+					nr-gpio = <8>;
-+					reg = <0>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					interrupt-parent = <&vic1>;
-+					interrupts = <0 1 2 3 4 5 6 7>;
- 				};
- 
- 				bankb: gpio-controller@1 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <8>;
--
--					regoffset-dat = <0x54>;
--					regoffset-set = <0x0c>;
--					regoffset-dirout = <0x10>;
-+					nr-gpio = <8>;
-+					reg = <1>;
- 				};
- 			};
- 
-diff --git a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-index daa962d..96f049f 100644
---- a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-+++ b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-@@ -252,39 +252,33 @@
- 				reg = <0x20000 0x1000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				reg-io-width = <4>;
- 
- 				banka: gpio-controller@0 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
-+					reg = <0>;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <8>;
--
--					regoffset-dat = <0x50>;
--					regoffset-set = <0x00>;
--					regoffset-dirout = <0x04>;
-+					nr-gpio = <8>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					interrupt-parent = <&vic1>;
-+					interrupts = <0 1 2 3 4 5 6 7>;
- 				};
- 
- 				bankb: gpio-controller@1 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
-+					reg = <1>;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <16>;
--
--					regoffset-dat = <0x54>;
--					regoffset-set = <0x0c>;
--					regoffset-dirout = <0x10>;
-+					nr-gpio = <16>;
- 				};
- 
--				bankd: gpio-controller@2 {
-+				bankd: gpio-controller@3 {
- 					compatible = "snps,dw-apb-gpio-bank";
- 					gpio-controller;
-+					reg = <3>;
- 					#gpio-cells = <2>;
--					gpio-generic,nr-gpio = <30>;
--
--					regoffset-dat = <0x5c>;
--					regoffset-set = <0x24>;
--					regoffset-dirout = <0x28>;
-+					nr-gpio = <30>;
- 				};
- 			};
- 
--- 
-1.7.5.4
+Rob
+
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index afb9bff..77f40f0 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -28,6 +28,7 @@ national	National Semiconductor
+>  nintendo	Nintendo
+>  nvidia	NVIDIA
+>  nxp	NXP Semiconductors
+> +picochip	Picochip Ltd
+>  powervr	Imagination Technologies
+>  qcom	Qualcomm, Inc.
+>  ramtron	Ramtron International
