@@ -1,45 +1,91 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Sun, 01 Jan 2012 09:22:23 -0600
-Message-ID: <4F007A2F.5010303@gmail.com>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-3-git-send-email-b29396@freescale.com>
- <CACRpkdbLMW-SXnr6hbpwMqG=-a0wmYtU+YnyR8uLsndUp=UBgQ@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
+ domain infrastructure
+Date: Mon, 2 Jan 2012 07:44:09 +0530
+Message-ID: <CAJuYYwQbTJTRdsa9WpQuCtSTYacbrcP3CVBFaAYHP1jLPky10A@mail.gmail.com>
+References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>
+	<1323704789-23923-2-git-send-email-thomas.abraham@linaro.org>
+	<1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
+	<4EFB66C3.4040504@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdbLMW-SXnr6hbpwMqG=-a0wmYtU+YnyR8uLsndUp=UBgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4EFB66C3.4040504@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <snjw23@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/01/2012 08:07 AM, Linus Walleij wrote:
-> On Tue, Dec 20, 2011 at 6:40 PM, Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> 
->> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Sylwester,
+
+On 29 December 2011 00:28, Sylwester Nawrocki <snjw23@gmail.com> wrote:
+> Hi Thomas,
+>
+> On 12/12/2011 04:46 PM, Thomas Abraham wrote:
+>> The generic power domain infrastructure is used to control the power=
+ domains
+>> available on Exynos4. For non-dt platforms, the power domains are st=
+atically
+>> instantiated. For dt platforms, the power domain nodes found in the =
+device
+>> tree are instantiated.
 >>
->> This patch provies a common API for driver to use to register pinmux
->> mappings from dts file. It is needed for dt support.
-> 
-> Overall I feel lost in this discussion due to limited exposure to
-> device tree concepts. If I get Stephen Warrens and one of the
-> DT people's (Rob, Grant) ACK on this I'll be happy to merge it.
-> 
-> Until then, I guess it will need to be refined for the next kernel
-> cycle.
+>> Cc: Kukjin Kim <kgene.kim@samsung.com>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: Grant Likely <grant.likely@secretlab.ca>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>> This patch is mainly derived from Mark Brown's work on generic power=
+ domain
+>> support for s3c64xx platforms. The existing exynos4 power domain imp=
+lementation
+>> is not removed in this patch. The devices are not yet registered wit=
+h the power
+>> domains for non-dt platforms.
+>>
+>> =A0arch/arm/mach-exynos/Kconfig | =A0 =A01 +
+>> =A0arch/arm/mach-exynos/pm.c =A0 =A0| =A0179 +++++++++++++++++++++++=
++++++++++++++++++++
+>> =A02 files changed, 180 insertions(+), 0 deletions(-)
 
-Yes. As Stephen has commented, this still needs a bit of work on the
-binding.
+[...]
 
-Rob
+> Sorry, I haven't reviewed your patch carefully enough. So for dt plat=
+forms
+> pd->base is initialized from "reg" property, directly from each power=
+ domain's
+> DT node. Only the static power domain instantiation for non-dt platfo=
+rms would
+> possibly need some code modifications when new SoCs are added.
+>
+> Would be nice to have a relevant patch for *.dts files in this series=
+ too. :)
+
+The following is a snippet from the dts file used for testing.
+
+   [...]
+
+   lcd0:power-domain-lcd0 {
+            compatible =3D "samsung,exynos4210-pd";
+            reg =3D <0x10023C00 0x10>;
+   };
+
+   [...]
+
+   fimd0:display-controller {
+            compatible =3D "samsung,exynos4-fimd";
+            [...]
+            pd =3D <&lcd0>;
+   };
+
+The fimd (display controller) driver would then do the following.
+
+parp =3D of_get_property(pdev->dev.of_node, "pd", NULL);
+pd_np =3D of_find_node_by_phandle(be32_to_cpup(parp));
+pm_genpd_of_add_device(pd_np, &pdev->dev);
+
+The lookup is based on the node pointer of the power domain.
+
+Thanks,
+Thomas.
