@@ -1,15 +1,19 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/6] ARM: at91/gpio: add DT support
-Date: Tue, 03 Jan 2012 17:25:32 +0100
-Message-ID: <4F032BFC.40408@atmel.com>
-References: <85d531b5686e5eff623bed9618f802198409905f.1323975517.git.nicolas.ferre@atmel.com>
- <876f676ec80d2db927e379654be76171ca496422.1323975517.git.nicolas.ferre@atmel.com>
- <20111216101147.GA3230@totoro>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v3] Input: keyboard - add device tree bindings for
+ simple key matrixes
+Date: Tue, 3 Jan 2012 16:29:30 +0000
+Message-ID: <20120103162929.GY2914@n2100.arm.linux.org.uk>
+References: <1325184146-3527-1-git-send-email-olof@lixom.net>
+ <1325484557-27695-1-git-send-email-olof@lixom.net>
+ <CAPnjgZ1ngJrqB5FgOZDmc-H9KBE0-W75rqTHEPX4D+q0FjYumg@mail.gmail.com>
+ <20120103154317.GA27061@quad.lixom.net>
+ <CAPnjgZ3xN8+Ve28bcg1OQ4mv5rWvA-9ijP57UsuMQ5D1d=7Xxw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20111216101147.GA3230@totoro>
+Content-Disposition: inline
+In-Reply-To: <CAPnjgZ3xN8+Ve28bcg1OQ4mv5rWvA-9ijP57UsuMQ5D1d=7Xxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,202 +23,18 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/16/2011 11:11 AM, Jamie Iles :
-> Hi Nicolas, Jean-Christophe,
-> 
-> This looks pretty good to me, but a couple of minor comments inline.
-> 
-> Jamie
-> 
-> On Thu, Dec 15, 2011 at 08:16:05PM +0100, Nicolas Ferre wrote:
->> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->>
->> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
-> [...]
->> diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
->> index 7ffb893..edb453a 100644
->> --- a/arch/arm/mach-at91/gpio.c
->> +++ b/arch/arm/mach-at91/gpio.c
->> @@ -21,6 +21,7 @@
->>  #include <linux/module.h>
->>  #include <linux/io.h>
->>  #include <linux/irqdomain.h>
->> +#include <linux/of_address.h>
->>  
->>  #include <mach/hardware.h>
->>  #include <mach/at91_pio.h>
->> @@ -624,40 +625,122 @@ static void at91_gpiolib_dbg_show(struct seq_file *s, struct gpio_chip *chip)
->>  	}
->>  }
->>  
->> +#ifdef CONFIG_OF_GPIO
->> +static void __init of_at91_gpio_init_one(struct device_node *np)
->> +{
->> +	int alias_id;
->> +	struct at91_gpio_chip *at91_gpio;
->> +	const unsigned int *intspec;
->> +
->> +	if (!np)
->> +		return;
->> +
->> +	alias_id = of_alias_get_id(np, "gpio");
->> +	if (alias_id >= MAX_GPIO_BANKS) {
->> +		pr_err("at91_gpio, failed alias id(%d) > MAX_GPIO_BANKS(%d), ignoring.\n",
->> +								alias_id, MAX_GPIO_BANKS);
->> +		return;
->> +	}
->> +
->> +	at91_gpio = &gpio_chip[alias_id];
->> +	at91_gpio->chip.base = alias_id * at91_gpio->chip.ngpio;
->> +
->> +	at91_gpio->regbase = of_iomap(np, 0);
->> +	if (!at91_gpio->regbase) {
->> +		pr_err("at91_gpio.%d, failed to map registers, ignoring.\n",
->> +								alias_id);
->> +		return;
->> +	}
->> +
->> +	/* Get the interrupts property */
->> +	intspec = of_get_property(np, "interrupts", NULL);
->> +	BUG_ON(!intspec);
->> +	at91_gpio->id = be32_to_cpup(intspec);
-> 
-> Use of_property_read_u32()?  Also, BUG_ON() seems a bit harsh, better to 
-> print a warning and return an error.
-> 
->> +
->> +	at91_gpio->clock = clk_get_sys(NULL, at91_gpio->chip.label);
->> +	if (!at91_gpio->clock) {
->> +		pr_err("at91_gpio.%d, failed to get clock, ignoring.\n",
->> +								alias_id);
->> +		return;
-> 
-> Perhaps	unmap the regs here?
-> 
->> +	}
->> +
->> +	/* enable PIO controller's clock */
->> +	clk_enable(at91_gpio->clock);
-> 
-> Missing return value check.
-> 
->> +
->> +	at91_gpio->chip.of_node = np;
->> +	gpio_banks = max(gpio_banks, alias_id + 1);
->> +}
->> +
->> +static int __init of_at91_gpio_init(void)
->> +{
->> +	struct device_node *np = NULL;
->> +
->> +	/*
->> +	 * This isn't ideal, but it gets things hooked up until this
->> +	 * driver is converted into a platform_device
->> +	 */
->> +	do {
->> +		np = of_find_compatible_node(np, NULL, "atmel,at91rm9200-gpio");
->> +
->> +		of_at91_gpio_init_one(np);
->> +	} while (np);
-> 
-> for_each_compatible_node9)?
-> 
->> +
->> +	return gpio_banks > 0 ? 0 : -EINVAL;
->> +}
->> +#else
->> +static int __init of_at91_gpio_init(void)
->> +{
->> +	return -EINVAL;
->> +}
->> +#endif
->> +
->> +static void __init at91_gpio_init_one(int i, u32 regbase, int id)
->> +{
->> +	struct at91_gpio_chip *at91_gpio = &gpio_chip[i];
->> +
->> +	at91_gpio->chip.base = i * at91_gpio->chip.ngpio;
->> +	at91_gpio->id = id;
->> +
->> +	at91_gpio->regbase = ioremap(regbase, 512);
->> +	if (!at91_gpio->regbase) {
->> +		pr_err("at91_gpio.%d, failed to map registers, ignoring.\n", i);
->> +		return;
->> +	}
->> +
->> +	at91_gpio->clock = clk_get_sys(NULL, at91_gpio->chip.label);
->> +	if (!at91_gpio->clock) {
->> +		pr_err("at91_gpio.%d, failed to get clock, ignoring.\n", i);
->> +		return;
->> +	}
->> +
->> +	/* enable PIO controller's clock */
->> +	clk_enable(at91_gpio->clock);
-> 
-> Missing return value check?
-> 
->> +	gpio_banks = max(gpio_banks, i + 1);
->> +}
->> +
->>  /*
->>   * Called from the processor-specific init to enable GPIO pin support.
->>   */
->>  void __init at91_gpio_init(struct at91_gpio_bank *data, int nr_banks)
->>  {
->> -	unsigned		i;
->> +	unsigned i;
->>  	struct at91_gpio_chip *at91_gpio, *last = NULL;
->>  
->>  	BUG_ON(nr_banks > MAX_GPIO_BANKS);
->>  
->> -	gpio_banks = nr_banks;
->> +	if (of_at91_gpio_init() < 0) {
->> +		/* no GPIO controller found in device tree */
->> +		for (i = 0; i < nr_banks; i++)
->> +			at91_gpio_init_one(i, data[i].regbase, data[i].id);
->> +	}
->>  
->> -	for (i = 0; i < nr_banks; i++) {
->> +	for (i = 0; i < gpio_banks; i++) {
->>  		at91_gpio = &gpio_chip[i];
->>  
->> -		at91_gpio->id = data[i].id;
->> -		at91_gpio->chip.base = i * 32;
->> -
->> -		at91_gpio->regbase = ioremap(data[i].regbase, 512);
->> -		if (!at91_gpio->regbase) {
->> -			pr_err("at91_gpio.%d, failed to map registers, ignoring.\n", i);
->> -			continue;
->> -		}
->> -
->> -		at91_gpio->clock = clk_get_sys(NULL, at91_gpio->chip.label);
->> -		if (!at91_gpio->clock) {
->> -			pr_err("at91_gpio.%d, failed to get clock, ignoring.\n", i);
->> -			continue;
->> -		}
->> -
->> -		/* enable PIO controller's clock */
->> -		clk_enable(at91_gpio->clock);
->> -
->> -		/* AT91SAM9263_ID_PIOCDE groups PIOC, PIOD, PIOE */
->> +		/*
->> +		 * GPIO controller are grouped on some SoC:
->> +		 * PIOC, PIOD and PIOE can share the same IRQ line
->> +		 */
->>  		if (last && last->id == at91_gpio->id)
->>  			last->next = at91_gpio;
->>  		last = at91_gpio;
->> -- 
+On Tue, Jan 03, 2012 at 08:22:21AM -0800, Simon Glass wrote:
+> Can the Linux key codes fit in 8 bits?
 
-Ok Jamie, Thanks for your comments: I will address all of them in a
-second revision of this patch that I will post real-soon-now...
+That depends on your point of view.
 
-Best regards,
--- 
-Nicolas Ferre
+If you hack on X, then the answer is yes and you ignore the squeels of
+your users when certain key presses get misinterpreted.  (The Psion LX
+platform, otherwise known as the Netbook Pro, suffered with this problem.)
+
+If you are a kernel hacker, the answer is no, because key codes currently
+go all the way to 0x300.
