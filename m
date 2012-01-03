@@ -1,19 +1,21 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
- domain infrastructure
-Date: Tue, 3 Jan 2012 13:53:28 +0530
-Message-ID: <CAJuYYwSGYnyq+hEbgpyvFoAB9LWWLhD2URaWsCC4vMyZwRQVbg@mail.gmail.com>
-References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>
- <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org>
- <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
- <4EFB66C3.4040504@gmail.com>
- <CAJuYYwQbTJTRdsa9WpQuCtSTYacbrcP3CVBFaAYHP1jLPky10A@mail.gmail.com>
- <4F022D7D.3060802@gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
+Date: Tue, 3 Jan 2012 09:06:25 +0000
+Message-ID: <20120103090625.GA2914@n2100.arm.linux.org.uk>
+References: <1324537753-30590-1-git-send-email-richard.zhao@linaro.org>
+ <1324537753-30590-5-git-send-email-richard.zhao@linaro.org>
+ <20111223131851.GB13175@sirena.org.uk> <20111224085539.GA1892@richard-laptop>
+ <20111224122411.GA13778@sirena.org.uk> <20111224132831.GB1803@richard-laptop>
+ <20111224134227.GA20908@opensource.wolfsonmicro.com>
+ <20111224155227.GC1803@richard-laptop>
+ <20111226111030.GC8722@opensource.wolfsonmicro.com>
+ <20111226134449.GA4259@richard-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F022D7D.3060802-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20111226134449.GA4259@richard-laptop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,65 +25,25 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Sylwester Nawrocki <snjw23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rjw-KKrjLPT3xs0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Mon, Dec 26, 2011 at 09:44:52PM +0800, Richard Zhao wrote:
+> On Mon, Dec 26, 2011 at 11:10:30AM +0000, Mark Brown wrote:
+> > The *call* is there in the regulator subsystem, it's just that none of
+> > the drivers back it up with an actual implementation yet.  Which turns
+> > out to be a good thing as cpufreq can't currently understand variable
+> > latencies and the governors don't deal well with non-trivial latencies
+> > anyway.
+> but clk API don't have such calls. and many SoCs only adjust clk frequencies, using
+> one single voltage.
 
-On 3 January 2012 03:49, Sylwester Nawrocki <snjw23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Thomas,
->
-> thank you for clarifying.
->
-> On 01/02/2012 03:14 AM, Thomas Abraham wrote:
->>
->> The following is a snippet from the dts file used for testing.
->>
->> =A0 =A0[...]
->>
->> =A0 =A0lcd0:power-domain-lcd0 {
->> =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,exynos4210-pd";
->> =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x10023C00 0x10>;
->> =A0 =A0};
->>
->> =A0 =A0[...]
->>
->> =A0 =A0fimd0:display-controller {
->> =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,exynos4-fimd";
->> =A0 =A0 =A0 =A0 =A0 =A0 [...]
->> =A0 =A0 =A0 =A0 =A0 =A0 pd =3D <&lcd0>;
->> =A0 =A0};
->>
->> The fimd (display controller) driver would then do the following.
->>
->> parp =3D of_get_property(pdev->dev.of_node, "pd", NULL);
->> pd_np =3D of_find_node_by_phandle(be32_to_cpup(parp));
->> pm_genpd_of_add_device(pd_np, &pdev->dev);
->
-> Sounds interesting. Currently it's platform code that adds devices to
-> a corresponding power domain. But doing it at drivers might be more
-> convenient for avoiding device/driver/power domain registration
-> synchronization issues, especially that knowledge about power domain
-> existence may be contained directly in DT description, not needing
-> drivers to carry platform specific data.
->
-> BTW, I have a feeling that "samsung" is a bit longish prefix for the bind=
-ings.
-> Didn't you initially consider "sec" for instance ? Probably it is already
-> too late for changing that though.
+That's because it's often not known - especially in the case of PLLs,
+data sheets don't tend to specify how long it takes for the PLL to relock
+after a requested change.  If it's important that the PLL be locked,
+there will be a bit to poll (or they'll cause the CPU itself to stall
+while the PLL is not locked.)
 
-I had not thought of "sec". I agree that "sec" would have been better
-as it is shorter and represents bindings specific to Samsung
-Electronics. But it is not intuitive at the same time. If there is
-greater consensus on using "sec", we could try and request for a
-change but looks difficult to get through.
-
-Thanks,
-Thomas.
-
->
->> The lookup is based on the node pointer of the power domain.
->
-> Thanks,
-> Sylwester
+So, for these kinds of situations, how do you suggest that the clk API
+provides this information?
