@@ -1,49 +1,59 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Tue, 3 Jan 2012 09:06:25 +0000
-Message-ID: <20120103090625.GA2914@n2100.arm.linux.org.uk>
-References: <1324537753-30590-1-git-send-email-richard.zhao@linaro.org>
- <1324537753-30590-5-git-send-email-richard.zhao@linaro.org>
- <20111223131851.GB13175@sirena.org.uk> <20111224085539.GA1892@richard-laptop>
- <20111224122411.GA13778@sirena.org.uk> <20111224132831.GB1803@richard-laptop>
- <20111224134227.GA20908@opensource.wolfsonmicro.com>
- <20111224155227.GC1803@richard-laptop>
- <20111226111030.GC8722@opensource.wolfsonmicro.com>
- <20111226134449.GA4259@richard-laptop>
+From: Igor Grinberg <grinberg@compulab.co.il>
+Subject: Re: [PATCH 2/2] mt_ventoux: support for TeeJet Mt.Ventoux board
+Date: Tue, 03 Jan 2012 11:48:06 +0200
+Message-ID: <4F02CED6.8090709@compulab.co.il>
+References: <1324940912-18164-1-git-send-email-yanok@emcraft.com> <1324940912-18164-3-git-send-email-yanok@emcraft.com> <4EF97A41.7050605@compulab.co.il> <4EFA4E9C.30307@emcraft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111226134449.GA4259@richard-laptop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EFA4E9C.30307@emcraft.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ilya Yanok <yanok@emcraft.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sasha_d@emcraft.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 26, 2011 at 09:44:52PM +0800, Richard Zhao wrote:
-> On Mon, Dec 26, 2011 at 11:10:30AM +0000, Mark Brown wrote:
-> > The *call* is there in the regulator subsystem, it's just that none of
-> > the drivers back it up with an actual implementation yet.  Which turns
-> > out to be a good thing as cpufreq can't currently understand variable
-> > latencies and the governors don't deal well with non-trivial latencies
-> > anyway.
-> but clk API don't have such calls. and many SoCs only adjust clk frequencies, using
-> one single voltage.
+Hi Ilya,
 
-That's because it's often not known - especially in the case of PLLs,
-data sheets don't tend to specify how long it takes for the PLL to relock
-after a requested change.  If it's important that the PLL be locked,
-there will be a bit to poll (or they'll cause the CPU itself to stall
-while the PLL is not locked.)
+On 12/28/11 01:02, Ilya Yanok wrote:
+> On 27.12.2011 11:56, Igor Grinberg wrote:
+>>> +/*
+>>> + * use fake regulator for vdds_dsi as we can't find this pin inside
+>>> + * AM3517 datasheet.
+>>> + */
+>>> +static struct regulator_consumer_supply mt_ventoux_vdds_dsi_supply[] = {
+>>> +	REGULATOR_SUPPLY("vdds_dsi", "omapdss"),
+>>> +	REGULATOR_SUPPLY("vdds_dsi", "omapdss_dsi.0"),
+>>> +};
+>>
+>> Although the TRM states that there is a vdds_dsi signal,
+>> it looks, from the datasheet, that VDDSHV is used to power the DSS.
+>> Either way, it can't be switched off, I think...
+>> Therefore, depending on your board wiring, you can leave it as fixed
+>> regulator or bind to a supply on TPS65023.
+> 
+> I will forward this info to hardware guys and ask about wiring. For now
+> I will leave it as is. Thanks for this information it turned to be some
+> kind of mystery. It would be great if you could give some pointer to the
+> datasheet regarding VDDSHV and DSS.
 
-So, for these kinds of situations, how do you suggest that the clk API
-provides this information?
+Well, there is no direct pointer to that information, but
+I've found these facts:
+1) the "Ball Characteristics" tables state that the DSS related pins
+   (and also many others) are powered by the VDDSHV.
+2) the estimated power consumption of VDDSHV is the largest after the
+   VDD_CORE, which is typical for DSS, but it is also one of the largest
+   power domains, so I guess this cannot be a valid argument ;-)
+3) On the "Voltage domains" diagram, only the VDD_CORE is exposed and
+   DSS is not listed in it, but there are other domains which are not
+   exposed... (this only can exclude the DSS from VDD_CORE, but not
+   absolutely, as datasheets can have mistakes or just not give that piece
+   of information).
+
+Still, it is a guess and not verified information.
+
+[...]
+
+-- 
+Regards,
+Igor.
