@@ -1,57 +1,39 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Tue, 3 Jan 2012 20:26:25 +0000
-Message-ID: <20120103202624.GG2843@opensource.wolfsonmicro.com>
-References: <20111224085539.GA1892@richard-laptop>
- <20111224122411.GA13778@sirena.org.uk>
- <20111224132831.GB1803@richard-laptop>
- <20111224134227.GA20908@opensource.wolfsonmicro.com>
- <20111224155227.GC1803@richard-laptop>
- <20111226111030.GC8722@opensource.wolfsonmicro.com>
- <20111226134449.GA4259@richard-laptop>
- <20120103090625.GA2914@n2100.arm.linux.org.uk>
- <CAH8gqwVHc9ROQYZNe6b-cUN0ycWhYj8=vJ0geBXUCYN1+XENQA@mail.gmail.com>
- <20120103134709.GS2914@n2100.arm.linux.org.uk>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Input: tegra-kbc - add device tree bindings
+Date: Tue, 3 Jan 2012 12:58:39 -0800
+Message-ID: <CAOesGMg_MKGenRyTa9PkSLvV3CsWxYcY=sGb5awPQn=9Ng8ENQ@mail.gmail.com>
+References: <1325053170-6984-1-git-send-email-olof@lixom.net>
+	<1325053170-6984-2-git-send-email-olof@lixom.net>
+	<20120102081828.GB18381@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120103134709.GS2914@n2100.arm.linux.org.uk>
-Sender: cpufreq-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Richard Zhao <richard.zhao@linaro.org>, arnd@arndb.de, mark.langsdorf@calxeda.com, linaro-dev@lists.linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, bryanh@codeaurora.org, cpufreq@vger.kernel.org, grant.likely@secretlab.ca, rdunlap@xenotime.net, eric.miao@linaro.org, rob.herring@calxeda.com, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, davidb@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120102081828.GB18381-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rakesh Iyer <riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2012 at 01:47:09PM +0000, Russell King - ARM Linux wrote:
-> On Tue, Jan 03, 2012 at 09:25:30PM +0800, Richard Zhao wrote:
+On Mon, Jan 2, 2012 at 12:18 AM, Grant Likely <grant.likely@secretlab.c=
+a> wrote:
 
-> > In latest v6 version, I get clk transition latency from dt property, and get
-> > regulator transition latency from regulator API.
-> > Could you please help review other arm common changes in v6 version?
+> I'd like to see a "tegra," prefix on these custom properties, but oth=
+erwise
+> the binding looks okay to me. =A0You should also consider a '-ms' suf=
+fix on
+> the millisecond properties.
 
-> You didn't get my point: how do you specify a clock transition latency
-> for a clock with a PLL when the data sheets don't tell you what that is,
-> and they instead give you a bit to poll?
+Ok, I added "nvidia," prefix for the properties, and pushed down the
+linux,fn-keymap binding to this level (but I left the implementation
+as a FIXME).
 
-I'd rather suspect you'll find there are actually specs for these things
-but they're hidden in the electrical characteristics which don't tend to
-go into the published datasheets (though ).  Not useful if we don't
-actually see them though.
+> Otherwise;
+>
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-> Do you:
+Thanks, added and I'll repost the patch together with the shared
+binding in a bit.
 
-> (a) make up some number and hope that it's representative
-> (b) not specify any transition latency
 
-These are the traditional approaches, pioneered by essentially every
-existing cpufreq driver (well, "make up" is a bit harsh - usually the
-numbers are measured, though possibly only on a limited set of systems).
-
-> (c) think about the problem _now_ and define what it means for a clock
->     without a transition latency.
-
-This would be nice, in both the clock and cpufreq code (the cpufreq code
-is pretty limited here in that it assumes an equal transition latency
-for all transitions which isn't the case usually).  You can generally do
-something useful with measurement, probably we can arrange to measure
-the times we're seeing on the actua system or something.
+-Olof
