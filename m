@@ -1,77 +1,258 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Tue, 3 Jan 2012 13:47:09 +0000
-Message-ID: <20120103134709.GS2914@n2100.arm.linux.org.uk>
-References: <20111223131851.GB13175@sirena.org.uk>
-	<20111224085539.GA1892@richard-laptop>
-	<20111224122411.GA13778@sirena.org.uk>
-	<20111224132831.GB1803@richard-laptop>
-	<20111224134227.GA20908@opensource.wolfsonmicro.com>
-	<20111224155227.GC1803@richard-laptop>
-	<20111226111030.GC8722@opensource.wolfsonmicro.com>
-	<20111226134449.GA4259@richard-laptop>
-	<20120103090625.GA2914@n2100.arm.linux.org.uk>
-	<CAH8gqwVHc9ROQYZNe6b-cUN0ycWhYj8=vJ0geBXUCYN1+XENQA@mail.gmail.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 03/12] mfd: twl-core: Add initial DT support for twl4030/twl6030
+Date: Tue, 3 Jan 2012 15:09:49 +0100
+Message-ID: <4F030C2D.3000808@ti.com>
+References: <1324565806-31142-1-git-send-email-b-cousson@ti.com> <1324565806-31142-4-git-send-email-b-cousson@ti.com> <20120102090454.GO18381@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAH8gqwVHc9ROQYZNe6b-cUN0ycWhYj8=vJ0geBXUCYN1+XENQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120102090454.GO18381-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2012 at 09:25:30PM +0800, Richard Zhao wrote:
-> Hi Russel,
-> =
+On 1/2/2012 10:04 AM, Grant Likely wrote:
+> On Thu, Dec 22, 2011 at 03:56:37PM +0100, Benoit Cousson wrote:
+>> Add initial device-tree support for twl familly chips.
+>> The current version is missing the regulator entries due
+>> to the lack of DT regulator bindings for the moment.
+>> Only the simple sub-modules that do not depend on
+>> platform_data information can be initialized properly.
+>>
+>> Add irqdomain support.
+>>
+>> Add documentation for the Texas Instruments TWL Integrated Chip.
+>>
+>> Signed-off-by: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
+>> Cc: Balaji T K<balajitk-l0cyMroinI0@public.gmane.org>
+>> Cc: Graeme Gregory<gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+>> Cc: Samuel Ortiz<sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> ---
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index f1391c2..f0de088 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -200,6 +200,7 @@ config MENELAUS
+>>   config TWL4030_CORE
+>>   	bool "Texas Instruments TWL4030/TWL5030/TWL6030/TPS659x0 Support"
+>>   	depends on I2C=y&&  GENERIC_HARDIRQS
+>> +	select IRQ_DOMAIN
+> 
+> As discussed on linux-next, this breaks powerpc.  Drivers cannot select
+> IRQ_DOMAIN, it can only be selected by architectures.  Drivers must depend
+> on it instead.
 
-> On 3 January 2012 17:06, Russell King - ARM Linux
-> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > On Mon, Dec 26, 2011 at 09:44:52PM +0800, Richard Zhao wrote:
-> >> On Mon, Dec 26, 2011 at 11:10:30AM +0000, Mark Brown wrote:
-> >> > The *call* is there in the regulator subsystem, it's just that none =
-of
-> >> > the drivers back it up with an actual implementation yet. =A0Which t=
-urns
-> >> > out to be a good thing as cpufreq can't currently understand variable
-> >> > latencies and the governors don't deal well with non-trivial latenci=
-es
-> >> > anyway.
-> >> but clk API don't have such calls. and many SoCs only adjust clk frequ=
-encies, using
-> >> one single voltage.
-> >
-> > That's because it's often not known - especially in the case of PLLs,
-> > data sheets don't tend to specify how long it takes for the PLL to relo=
-ck
-> > after a requested change. =A0If it's important that the PLL be locked,
-> > there will be a bit to poll (or they'll cause the CPU itself to stall
-> > while the PLL is not locked.)
-> >
-> > So, for these kinds of situations, how do you suggest that the clk API
-> > provides this information?
-> In latest v6 version, I get clk transition latency from dt property, and =
-get
-> regulator transition latency from regulator API.
-> Could you please help review other arm common changes in v6 version?
+OK, good to know. The previous version was already breaking non-ARM platform because the IRQ_DOMAIN was not defined, hence this update.
+I was able to check that this patch was fixing at least x86... but did not have any way to check the PPC build.
 
-You didn't get my point: how do you specify a clock transition latency
-for a clock with a PLL when the data sheets don't tell you what that is,
-and they instead give you a bit to poll?
+To be honest, I did not fully understand that this flag was there because some arch does not support IRQ domain yet and thus it should be selected at arch level.
 
-Do you:
+Samuel,
+Here is the updated version, and hopefully the last one, including Grant's fix.
 
-(a) make up some number and hope that it's representative
-(b) not specify any transition latency
-(c) think about the problem _now_ and define what it means for a clock
-    without a transition latency.
+Thanks,
+Benoit
+
+---
+>From c213f7c905a1ec66f6d394db2f6ff4c1cd74b991 Mon Sep 17 00:00:00 2001
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Date: Mon, 29 Aug 2011 16:20:23 +0200
+Subject: [PATCH v5 03/12] mfd: twl-core: Add initial DT support for twl4030/twl6030
+
+Add initial device-tree support for twl familly chips.
+The current version is missing the regulator entries due
+to the lack of DT regulator bindings for the moment.
+Only the simple sub-modules that do not depend on
+platform_data information can be initialized properly.
+
+Add irqdomain support.
+
+Add documentation for the Texas Instruments TWL Integrated Chip.
+
+Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+Cc: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+[grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org: Fix IRQ_DOMAIN dependency in kconfig]
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+ .../devicetree/bindings/mfd/twl-familly.txt        |   47 ++++++++++++++++++
+ drivers/mfd/Kconfig                                |    2 +-
+ drivers/mfd/twl-core.c                             |   51 +++++++++++++++++++-
+ 3 files changed, 98 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/twl-familly.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/twl-familly.txt b/Documentation/devicetree/bindings/mfd/twl-familly.txt
+new file mode 100644
+index 0000000..ff4cacd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/twl-familly.txt
+@@ -0,0 +1,47 @@
++Texas Instruments TWL family
++
++The TWLs are Integrated Power Management Chips.
++Some version might contain much more analog function like
++USB transceiver or Audio amplifier.
++These chips are connected to an i2c bus.
++
++
++Required properties:
++- compatible : Must be "ti,twl4030";
++  For Integrated power-management/audio CODEC device used in OMAP3
++  based boards
++- compatible : Must be "ti,twl6030";
++  For Integrated power-management used in OMAP4 based boards
++- interrupts : This i2c device has an IRQ line connected to the main SoC
++- interrupt-controller : Since the twl support several interrupts internally,
++  it is considered as an interrupt controller cascaded to the SoC one.
++- #interrupt-cells = <1>;
++- interrupt-parent : The parent interrupt controller.
++
++Optional node:
++- Child nodes contain in the twl. The twl family is made of several variants
++  that support a different number of features.
++  The children nodes will thus depend of the capability of the variant.
++
++
++Example:
++/*
++ * Integrated Power Management Chip
++ * http://www.ti.com/lit/ds/symlink/twl6030.pdf
++ */
++twl@48 {
++    compatible = "ti,twl6030";
++    reg = <0x48>;
++    interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
++    interrupt-controller;
++    #interrupt-cells = <1>;
++    interrupt-parent = <&gic>;
++    #address-cells = <1>;
++    #size-cells = <0>;
++
++    twl_rtc {
++        compatible = "ti,twl_rtc";
++        interrupts = <11>;
++        reg = <0>;
++    };
++};
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index f1391c2..09fea20 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -199,7 +199,7 @@ config MENELAUS
+ 
+ config TWL4030_CORE
+ 	bool "Texas Instruments TWL4030/TWL5030/TWL6030/TPS659x0 Support"
+-	depends on I2C=y && GENERIC_HARDIRQS
++	depends on I2C=y && GENERIC_HARDIRQS && IRQ_DOMAIN
+ 	help
+ 	  Say yes here if you have TWL4030 / TWL6030 family chip on your board.
+ 	  This core driver provides register access and IRQ handling
+diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
+index bfbd660..698bf0d 100644
+--- a/drivers/mfd/twl-core.c
++++ b/drivers/mfd/twl-core.c
+@@ -34,6 +34,11 @@
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
++#include <linux/device.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/irqdomain.h>
+ 
+ #include <linux/regulator/machine.h>
+ 
+@@ -144,6 +149,9 @@
+ 
+ #define TWL_MODULE_LAST TWL4030_MODULE_LAST
+ 
++#define TWL4030_NR_IRQS    8
++#define TWL6030_NR_IRQS    20
++
+ /* Base Address defns for twl4030_map[] */
+ 
+ /* subchip/slave 0 - USB ID */
+@@ -255,6 +263,7 @@ struct twl_client {
+ 
+ static struct twl_client twl_modules[TWL_NUM_SLAVES];
+ 
++static struct irq_domain domain;
+ 
+ /* mapping the module id to slave id and base address */
+ struct twl_mapping {
+@@ -1183,14 +1192,48 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	int				status;
+ 	unsigned			i;
+ 	struct twl4030_platform_data	*pdata = client->dev.platform_data;
++	struct device_node		*node = client->dev.of_node;
+ 	u8 temp;
+ 	int ret = 0;
++	int nr_irqs = TWL4030_NR_IRQS;
++
++	if ((id->driver_data) & TWL6030_CLASS)
++		nr_irqs = TWL6030_NR_IRQS;
++
++	if (node && !pdata) {
++		/*
++		 * XXX: Temporary pdata until the information is correctly
++		 * retrieved by every TWL modules from DT.
++		 */
++		pdata = devm_kzalloc(&client->dev,
++				     sizeof(struct twl4030_platform_data),
++				     GFP_KERNEL);
++		if (!pdata)
++			return -ENOMEM;
++	}
+ 
+ 	if (!pdata) {
+ 		dev_dbg(&client->dev, "no platform data?\n");
+ 		return -EINVAL;
+ 	}
+ 
++	status = irq_alloc_descs(-1, pdata->irq_base, nr_irqs, 0);
++	if (IS_ERR_VALUE(status)) {
++		dev_err(&client->dev, "Fail to allocate IRQ descs\n");
++		return status;
++	}
++
++	pdata->irq_base = status;
++	pdata->irq_end = pdata->irq_base + nr_irqs;
++
++	domain.irq_base = pdata->irq_base;
++	domain.nr_irq = nr_irqs;
++#ifdef CONFIG_OF_IRQ
++	domain.of_node = of_node_get(node);
++	domain.ops = &irq_domain_simple_ops;
++#endif
++	irq_domain_add(&domain);
++
+ 	if (i2c_check_functionality(client->adapter, I2C_FUNC_I2C) == 0) {
+ 		dev_dbg(&client->dev, "can't talk I2C?\n");
+ 		return -EIO;
+@@ -1270,7 +1313,13 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		twl_i2c_write_u8(TWL4030_MODULE_INTBR, temp, REG_GPPUPDCTR1);
+ 	}
+ 
+-	status = add_children(pdata, id->driver_data);
++#ifdef CONFIG_OF_DEVICE
++	if (node)
++		status = of_platform_populate(node, NULL, NULL, &client->dev);
++	else
++#endif
++		status = add_children(pdata, id->driver_data);
++
+ fail:
+ 	if (status < 0)
+ 		twl_remove(client);
+-- 
+1.7.0.4
+
+
+
+
+ 
