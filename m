@@ -1,41 +1,78 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 1/3] of/base: Take NULL string into account for property
- with multiple strings
-Date: Tue, 3 Jan 2012 15:15:05 +0100
-Message-ID: <4F030D69.5010709@ti.com>
-References: <1323095036-3739-1-git-send-email-b-cousson@ti.com> <1323095036-3739-2-git-send-email-b-cousson@ti.com> <4EEF4401.1060303@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EEF4401.1060303@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: grant.likely@secretlab.ca
-Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [RFC PATCH 0/9] Remove useless on_each_cpu return value
+Date: Tue,  3 Jan 2012 16:19:04 +0200
+Message-ID: <1325600353-10895-1-git-send-email-gilad@benyossef.com>
+Return-path: <linux-alpha-owner@vger.kernel.org>
+Sender: linux-alpha-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Gilad Ben-Yossef <gilad@benyossef.com>, Michal Nazarewicz <mina86@mina86.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Richard Henderson <rth@twiddle.net>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Russell
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+on_each_cpu() returns as its own return value the return value of 
+smp_call_function(). smp_call_function() in turn returns a hard 
+coded value of zero.
 
-On 12/19/2011 3:02 PM, Rob Herring wrote:
-> On 12/05/2011 08:23 AM, Benoit Cousson wrote:
->> The current implementation just ignore any NULL string inserted in a
->> multiple strings property.
->> In some cases we can have a property with a fix number of strings but
->> not necessarily used, like for example in a list of valid pinmux modes.
->>
->>   prop = "uart_rx", "uart_tx", "", "", "safe_mode";
->>
->> Do no skip NULL string and take them into account in
->> of_property_read_string_index and of_property_count_strings.
->>
->> Reported-by: Tony Lindgren<tony@atomide.com>
->> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
->> Cc: Grant Likely<grant.likely@secretlab.ca>
->> Cc: Rob Herring<rob.herring@calxeda.com>
->
-> Applied. The others need Grant's agreement.
+Some callers to on_each_cpu() waste cycles and bloat code space
+by checking the return value to on_each_cpu(), probably for 
+historical reasons.
 
-New year gentle ping.
+This patch set refactors callers to not test on_each_cpu()
+(fixed) return value and then refactors on_each_cpu to
+return void to avoid confusing future users.
 
-Thanks,
-Benoit
+In other words, this patch aims to delete 18 source code lines
+while not changing any functionality :-)
+
+I tested as best as I could the x86 changes and compiled some
+of the others, but I don't have access to all the needed hardware
+for testing. Reviewers and testers welcome!
+
+CC: Michal Nazarewicz <mina86@mina86.com>
+CC: David Airlie <airlied@linux.ie>
+CC: dri-devel@lists.freedesktop.org
+CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+CC: Paul Mackerras <paulus@samba.org>
+CC: Grant Likely <grant.likely@secretlab.ca>
+CC: Rob Herring <rob.herring@calxeda.com>
+CC: linuxppc-dev@lists.ozlabs.org
+CC: devicetree-discuss@lists.ozlabs.org
+CC: Richard Henderson <rth@twiddle.net>
+CC: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+CC: Matt Turner <mattst88@gmail.com>
+CC: linux-alpha@vger.kernel.org
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: x86@kernel.org
+CC: Tony Luck <tony.luck@intel.com>
+CC: Fenghua Yu <fenghua.yu@intel.com>
+CC: linux-ia64@vger.kernel.org
+CC: Will Deacon <will.deacon@arm.com>
+CC: Peter Zijlstra <a.p.zijlstra@chello.nl>
+CC: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: linux-arm-kernel@lists.infradead.org
+
+Gilad Ben-Yossef (9):
+  arm: avoid using on_each_cpu hard coded ret value
+  ia64: avoid using on_each_cpu hard coded ret value
+  x86: avoid using on_each_cpu hard coded ret value
+  alpha: avoid using on_each_cpu hard coded ret value
+  ppc: avoid using on_each_cpu hard coded ret value
+  agp: avoid using on_each_cpu hard coded ret value
+  drm: avoid using on_each_cpu hard coded ret value
+  smp: refactor on_each_cpu to void returning func
+  x86: refactor wbinvd_on_all_cpus to void function
+
+ arch/alpha/kernel/smp.c      |    7 ++-----
+ arch/arm/kernel/perf_event.c |    2 +-
+ arch/ia64/kernel/perfmon.c   |   12 ++----------
+ arch/powerpc/kernel/rtas.c   |    3 +--
+ arch/x86/include/asm/smp.h   |    5 ++---
+ arch/x86/lib/cache-smp.c     |    4 ++--
+ drivers/char/agp/generic.c   |    3 +--
+ drivers/gpu/drm/drm_cache.c  |    3 +--
+ include/linux/smp.h          |    7 +++----
+ kernel/smp.c                 |    6 ++----
+ 10 files changed, 17 insertions(+), 35 deletions(-)
+
