@@ -1,95 +1,59 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 04/10] rtc: rtc-twl: Add DT support for RTC inside
- twl4030/twl6030
-Date: Wed, 4 Jan 2012 11:13:09 -0700
-Message-ID: <20120104181309.GK15503@ponder.secretlab.ca>
-References: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
- <1323439361-1647-5-git-send-email-b-cousson@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [REPOST RFC PATCH 2/3] of_gpio: Add new helpers for easily
+ requesting lots of GPIOs
+Date: Wed, 4 Jan 2012 11:49:43 -0700
+Message-ID: <20120104184943.GW15503@ponder.secretlab.ca>
+References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
+ <1323800614-12642-3-git-send-email-Kyle.D.Moffett@boeing.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1323439361-1647-5-git-send-email-b-cousson-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1323800614-12642-3-git-send-email-Kyle.D.Moffett@boeing.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kyle Moffett <Kyle.D.Moffett@boeing.com>
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 09, 2011 at 03:02:35PM +0100, Benoit Cousson wrote:
-> Add the DT support for the TI rtc-twl present in the twl4030
-> and twl6030 devices.
+On Tue, Dec 13, 2011 at 01:23:33PM -0500, Kyle Moffett wrote:
+> Mirroring the new gpio_request_array() interface, we add several a few
+> helper functions for operating on entire arrays of GPIOs.
 > 
-> Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
+> Also, to make it easier to write various combinations of "of_get_gpio()"
+> followed by "gpio_request()", add several other new inline wrappers.
+> 
+> Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
 > ---
->  Documentation/devicetree/bindings/rtc/twl-rtc.txt |   12 ++++++++++++
->  drivers/rtc/rtc-twl.c                             |   10 ++++++++--
->  2 files changed, 20 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/twl-rtc.txt
+>  drivers/of/gpio.c       |   96 +++++++++++++++++++++++++++++
+>  include/linux/of_gpio.h |  154 +++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 250 insertions(+), 0 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/twl-rtc.txt b/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-> new file mode 100644
-> index 0000000..596e0c9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-> @@ -0,0 +1,12 @@
-> +* TI twl RTC
-> +
-> +The TWL family (twl4030/6030) contains a RTC.
-> +
-> +Required properties:
-> +- compatible : Should be twl4030-rtc
-> +
-> +Examples:
-> +
-> +rtc@0 {
-> +    compatible = "ti,twl4030-rtc";
-> +};
-> diff --git a/drivers/rtc/rtc-twl.c b/drivers/rtc/rtc-twl.c
-> index 20687d5..d43b4f6 100644
-> --- a/drivers/rtc/rtc-twl.c
-> +++ b/drivers/rtc/rtc-twl.c
-> @@ -550,6 +550,11 @@ static int twl_rtc_resume(struct platform_device *pdev)
->  #define twl_rtc_resume  NULL
->  #endif
+> diff --git a/drivers/of/gpio.c b/drivers/of/gpio.c
+> index f349aaf..4c04f2f 100644
+> --- a/drivers/of/gpio.c
+> +++ b/drivers/of/gpio.c
+> @@ -83,6 +83,47 @@ err0:
+>  EXPORT_SYMBOL(of_get_named_gpio_flags);
 >  
-> +static const struct of_device_id twl_rtc_of_match[] = {
-> +	{.compatible = "ti,twl4030-rtc", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, twl_rtc_of_match);
->  MODULE_ALIAS("platform:twl_rtc");
->  
->  static struct platform_driver twl4030rtc_driver = {
-> @@ -559,8 +564,9 @@ static struct platform_driver twl4030rtc_driver = {
->  	.suspend	= twl_rtc_suspend,
->  	.resume		= twl_rtc_resume,
->  	.driver		= {
-> -		.owner	= THIS_MODULE,
-> -		.name	= "twl_rtc",
-> +		.owner		= THIS_MODULE,
-> +		.name		= "twl_rtc",
-> +		.of_match_table = twl_rtc_of_match,
->  	},
->  };
->  
-> -- 
-> 1.7.0.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  /**
+> + * of_get_gpio_array_flags() - Get array of gpios to use with GPIO API
+> + * @np:		device node to get GPIOs from
+> + * @of_gpios:	array of "struct of_gpio" to select which GPIOs to look up
+> + * @of_flags:	array of "enum of_gpio_flags" to be filled in (may be NULL)
+> + * @gpios:	array of "struct gpio" to be filled in
+> + * @num:	the number of GPIOs to look up
+> + *
+> + * Takes a constant array of "struct of_gpio" and looks up each item in the
+> + * indicated device-node.  The results are stored into the @gpios array,
+> + * along with the optional GPIO "label" and "flags" values from the "of_gpio"
+> + * structure.
+> + *
+> + * If an array of @of_flags is provided then any flags from the translate
+> + * function will be stored into the corresponding element there.
+> + */
+
+That seems overly complex to me.  How many gpios are you expecting to
+request?  If it is less than a handful, then I think letting the
+driver call of_get_request() multiple times would still be simpler.
+
+g.
