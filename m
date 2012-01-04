@@ -1,60 +1,56 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] gpio: tegra: Parameterize the number of banks
-Date: Wed, 4 Jan 2012 15:00:36 -0700
-Message-ID: <CACxGe6tyZKW37sGiDauvikU70ZVLHFVrXjBPJk2Kgee1Rj3sbg@mail.gmail.com>
-References: <1325702378-20863-1-git-send-email-swarren@nvidia.com>
- <1325702378-20863-6-git-send-email-swarren@nvidia.com> <4F04AE71.2090203@gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F145E@HQMAIL01.nvidia.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] ARM: at91/gpio: add DT support
+Date: Wed, 4 Jan 2012 22:04:32 +0000
+Message-ID: <20120104220432.GJ11810@n2100.arm.linux.org.uk>
+References: <876f676ec80d2db927e379654be76171ca496422.1323975517.git.nicolas.ferre@atmel.com>
+ <1325615688-16860-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17761F145E-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1325615688-16860-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 4, 2012 at 1:00 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wro=
-te:
-> Rob Herring wrote at Wednesday, January 04, 2012 12:54 PM:
->> On 01/04/2012 12:39 PM, Stephen Warren wrote:
->> > Tegra20's GPIO controller has 7 banks, and Tegra30's controller ha=
-s 8
->> > banks. Allow the number of banks to be configured at run-time by t=
-he
->> > device tree.
-> ...
->> > diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.tx=
-t
-> ...
->> > =A0Required properties:
->> > =A0- compatible : "nvidia,tegra20-gpio"
->> > =A0- reg : Physical base address and length of the controller's re=
-gisters.
->> > +- nvidia,num-banks : The number of GPIO banks. This should be 7 f=
-or
->> > + =A0Tegra20 and 8 for Tegra30. This must match the number of inte=
-rrupt
->> > + =A0specifiers in the interrupts property.
->>
->> You can determine the number of banks based on the compatible proper=
-ty
->> rather than needing an additional property.
->
-> That's certainly possible.
->
-> However, if say nvidia,tegraNNN-gpio has 9 banks, we then have to
-> explicitly edit the driver to know that, whereas by using a property,
-> we wouldn't have to change the driver at all to support a future GPIO
-> controller. So, isn't it better to explicitly represent this in DT?
->
-> Note that I have no idea how many GPIO banks our future chips will ha=
-ve,
-> so this might not turn out to save any work at all, but perhaps.
+On Tue, Jan 03, 2012 at 07:34:48PM +0100, Nicolas Ferre wrote:
+> +	at91_gpio->clock = clk_get_sys(NULL, at91_gpio->chip.label);
+> +	if (!at91_gpio->clock) {
+> +		pr_err("at91_gpio.%d, failed to get clock, ignoring.\n",
+> +								alias_id);
+> +		goto ioremap_err;
+> +	}
+> +
+> +	/* enable PIO controller's clock */
+> +	if(clk_enable(at91_gpio->clock)) {
+> +		pr_err("at91_gpio.%d, failed to enable clock, ignoring.\n",
+> +								alias_id);
+> +		goto clk_err;
+> +	}
 
-It's an engineering/design decision that requires taste and instinct.
-Either approach is fine, you decide which one will be the best in the
-long term.
+No new code should be added to the kernel which uses clk_enable() without
+using clk_prepare() first.  Ditto clk_disable() and clk_unprepare().
 
-g.
+> +	at91_gpio->clock = clk_get_sys(NULL, at91_gpio->chip.label);
+> +	if (!at91_gpio->clock) {
+> +		pr_err("at91_gpio.%d, failed to get clock, ignoring.\n", i);
+> +		goto ioremap_err;
+> +	}
+> +
+> +	if(clk_enable(at91_gpio->clock)) {
+> +		pr_err("at91_gpio.%d, failed to enable clock, ignoring.\n", i);
+> +		goto clk_err;
+> +	}
+
+I've seen this code somewhere before...  Couldn't this be separated out into
+a helper function?
