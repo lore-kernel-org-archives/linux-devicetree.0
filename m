@@ -1,64 +1,52 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: imx6q: add support for IRAM
-Date: Wed, 4 Jan 2012 12:12:07 +0100
-Message-ID: <CACRpkdZ6q2T5aV7GncT+Uk2p69zH0RKDFzpAPTnn9_n=Wm5a2g@mail.gmail.com>
-References: <1324898123-13973-1-git-send-email-jason.chen@linaro.org>
- <20111226134129.GA9014@S2100-06.ap.freescale.net>
- <20120103091015.GD2914@n2100.arm.linux.org.uk>
- <20120103124355.GC13477@S2100-06.ap.freescale.net>
- <20120103124136.GQ2914@n2100.arm.linux.org.uk>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH v2 02/10] i2c: OMAP: Add DT support for i2c controller
+Date: Wed, 4 Jan 2012 14:36:24 +0100
+Message-ID: <4F0455D8.7060904@ti.com>
+References: <1323439361-1647-1-git-send-email-b-cousson@ti.com> <1323439361-1647-3-git-send-email-b-cousson@ti.com> <87hb14q7vj.fsf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120103124136.GQ2914-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Chen <jason.chen-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <87hb14q7vj.fsf@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kevin Hilman <khilman@ti.com>
+Cc: tony@atomide.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ben Dooks <ben-linux@fluff.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 3, 2012 at 1:41 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Tue, Jan 03, 2012 at 08:43:56PM +0800, Shawn Guo wrote:
->> On Tue, Jan 03, 2012 at 09:10:15AM +0000, Russell King - ARM Linux wrote:
->> > Why is this even specific to fsl? =A0Isn't it something that could be
->> > specified in a totally generic way?
->> >
->> > As I showed with my original set of sram patches, there is not much
->> > specific about this on-board RAM: what is specific is how a SoC uses
->> > it, and that's up to the rest of the SoC code.
->> >
->> As I have not seen any news/updates about the sram consolidation series
->> since May, I did not bring up it here. =A0So what's the state of the
->> series? =A0If it shows up on some stable branch, we would be happy to
->> base the work here on it.
+Hi Kevin,
+
+On 12/14/2011 2:06 AM, Kevin Hilman wrote:
+> Benoit Cousson<b-cousson@ti.com>  writes:
 >
-> I have no idea; as I've already said, I lost total interest in it.
+>> Add initial DT support to retrieve the frequency using a
+>> DT attribute instead of the pdata pointer if of_node exist.
+>>
+>> Add documentation for omap i2c controller binding.
+>>
+>> Based on original patches from Manju and Grant.
+>>
+>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>> Cc: Ben Dooks<ben-linux@fluff.org>
 >
-> What I _am_ saying though is that rather than defining some platform
-> specific bindings and continuing that idiotic state of affairs, we
-> have the chance to do things properly now: define a standard set of
-> DT bindings to describe on-board SRAM.
+> This seems indepenent from the rest of the series, and I can queue up
+> for merge via the I2C tree.
 >
-> That's something which can be done with or without the sram
-> consolidation stuff.
+> Benoit, please confirm that we shouldn't have any problems if this patch
+> goes independently.
+>
+> Grant/Rob, with your ack on the bindings, I can queue this up for the
+> I2C maintainers along with some other OMAP I2C changes for v3.3.
 
-I second this. It's just a piece of RAM, it should be described
-the same way irrespective of system or even OS.
+I removed the nasty bindings and got the Reviewed-by: from Rob for the 
+v4 [1].
 
-On-chip RAM is yet another area where platforms and their
-maintainers sometimes think they are very different - just like
-everyone else.
+Could you take it in your branch? I've just tried merging your 
+for_3.3/i2c/misc on top of my for_3.3/3_omap_dt_i2c_twl branch and 
+tested it successfully on OMAP4 DT boot.
 
-(This connects to the other IRAM patch floating on the list.)
+Thanks,
+Benoit
 
-Yours,
-Linus Walleij
+
+[1] http://lkml.org/lkml/2011/12/22/176
+
