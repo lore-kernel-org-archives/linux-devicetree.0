@@ -1,118 +1,75 @@
-From: David Vrabel <david.vrabel@citrix.com>
-Subject: Re: [PATCH v6 6/9] ARM: vexpress: Motherboard RS1 memory map support
-Date: Wed, 4 Jan 2012 16:35:45 +0000
-Message-ID: <4F047FE1.5030002@citrix.com>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
- <1323957761-13553-7-git-send-email-pawel.moll@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1323957761-13553-7-git-send-email-pawel.moll@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/6] ARM: tegra: Remove use of TEGRA_GPIO_TO_IRQ
+Date: Wed,  4 Jan 2012 11:39:33 -0700
+Message-ID: <1325702378-20863-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/12/11 14:02, Pawel Moll wrote:
-> This patch adds support for RS1 memory map based Versatile Express
-> motherboard.
-> 
-[...]
-> --- a/arch/arm/mach-vexpress/include/mach/debug-macro.S
-> +++ b/arch/arm/mach-vexpress/include/mach/debug-macro.S
-> @@ -10,12 +10,41 @@
->   * published by the Free Software Foundation.
->   */
->  
-> -#define DEBUG_LL_UART_OFFSET	0x00009000
-> +#define DEBUG_LL_PHYS_BASE		0x10000000
-> +#define DEBUG_LL_UART_OFFSET		0x00009000
-> +
-> +#define DEBUG_LL_PHYS_BASE_RS1		0x1c000000
-> +#define DEBUG_LL_UART_OFFSET_RS1	0x00090000
-> +
-> +#define DEBUG_LL_VIRT_BASE		0xf8000000
->  
->  		.macro	addruart,rp,rv,tmp
-> -		mov	\rp, #DEBUG_LL_UART_OFFSET
-> -		orr	\rv, \rp, #0xf8000000	@ virtual base
-> -		orr	\rp, \rp, #0x10000000	@ physical base
-> +
-> +		@ Check the MMU state
-> +#if defined(CONFIG_MMU)
-> +		mrc	p15, 0, \tmp, c1, c0	@ SCTRL
-> +		tst	\tmp, #1		@ MMU enabled?
-> +		moveq	\tmp, #DEBUG_LL_PHYS_BASE
-> +		movne	\tmp, #DEBUG_LL_VIRT_BASE
-> +#else
-> +		mov	\tmp, #DEBUG_LL_PHYS_BASE
-> +#endif
-> +
-> +		@ PL011 present in "original" place?
-> +		orr	\tmp, \tmp, #DEBUG_LL_UART_OFFSET
-> +		ldr	\tmp, [\tmp, #0xfe0]	@ PeriphID0
+Replace compile-time usage of TEGRA_GPIO_TO_IRQ with run-time calls to
+gpio_to_irq(). This will allow the base IRQ number for the Tegra GPIO
+driver to be dynamically allocated in a later patch.
 
-This doesn't work with CONFIG_EARLY_PRINTK=y on a system with the RS1
-memory map.   __create_page_tables has only mapped the single physical
-page at 0x1c090000 and thus the test for the UART in the other memory
-map faults.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+This series is 3.4 material (obviously I guess!)
 
-I made it work with this hack, but I'm not sure what the correct
-solution would be.
+ arch/arm/mach-tegra/board-harmony.c  |    2 +-
+ arch/arm/mach-tegra/board-seaboard.c |    5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mach-vexpress/include/mach/debug-macro.S
-b/arch/arm/mach-vexpress/include/mach/debug-macro.S
-index 8010ff9..af443b4 100644
---- a/arch/arm/mach-vexpress/include/mach/debug-macro.S
-+++ b/arch/arm/mach-vexpress/include/mach/debug-macro.S
-@@ -30,6 +30,7 @@
- 		mov	\tmp, #DEBUG_LL_PHYS_BASE
- #endif
-
-+#if 0
- 		@ PL011 present in "original" place?
- 		orr	\tmp, \tmp, #DEBUG_LL_UART_OFFSET
- 		ldr	\tmp, [\tmp, #0xfe0]	@ PeriphID0
-@@ -39,11 +40,12 @@
- 		moveq	\rp, #DEBUG_LL_UART_OFFSET
- 		orreq	\rv, \rp, #DEBUG_LL_VIRT_BASE
- 		orreq	\rp, \rp, #DEBUG_LL_PHYS_BASE
-+#endif
-
--		@ RS1 memory map
--		movne	\rp, #DEBUG_LL_UART_OFFSET_RS1
--		orrne	\rv, \rp, #DEBUG_LL_VIRT_BASE
--		orrne	\rp, \rp, #DEBUG_LL_PHYS_BASE_RS1
-+       		@ RS1 memory map
-+		mov	\rp, #DEBUG_LL_UART_OFFSET_RS1
-+		mov	\rv, \rp, #DEBUG_LL_VIRT_BASE
-+		orr	\rp, \rp, #DEBUG_LL_PHYS_BASE_RS1
-
- 		.endm
-
-> +		teq	\tmp, #0x11		@ PL011
-> +
-> +		@ Original memory map
-> +		moveq	\rp, #DEBUG_LL_UART_OFFSET
-> +		orreq	\rv, \rp, #DEBUG_LL_VIRT_BASE
-> +		orreq	\rp, \rp, #DEBUG_LL_PHYS_BASE
-> +
-> +		@ RS1 memory map
-> +		movne	\rp, #DEBUG_LL_UART_OFFSET_RS1
-> +		orrne	\rv, \rp, #DEBUG_LL_VIRT_BASE
-> +		orrne	\rp, \rp, #DEBUG_LL_PHYS_BASE_RS1
-> +
->  		.endm
->  
->  #include <asm/hardware/debug-pl01x.S>
-
-David
+diff --git a/arch/arm/mach-tegra/board-harmony.c b/arch/arm/mach-tegra/board-harmony.c
+index 789bdc9..c00aadb 100644
+--- a/arch/arm/mach-tegra/board-harmony.c
++++ b/arch/arm/mach-tegra/board-harmony.c
+@@ -101,7 +101,6 @@ static struct wm8903_platform_data harmony_wm8903_pdata = {
+ static struct i2c_board_info __initdata wm8903_board_info = {
+ 	I2C_BOARD_INFO("wm8903", 0x1a),
+ 	.platform_data = &harmony_wm8903_pdata,
+-	.irq = TEGRA_GPIO_TO_IRQ(TEGRA_GPIO_CDC_IRQ),
+ };
+ 
+ static void __init harmony_i2c_init(void)
+@@ -111,6 +110,7 @@ static void __init harmony_i2c_init(void)
+ 	platform_device_register(&tegra_i2c_device3);
+ 	platform_device_register(&tegra_i2c_device4);
+ 
++	wm8903_board_info.irq = gpio_to_irq(TEGRA_GPIO_CDC_IRQ);
+ 	i2c_register_board_info(0, &wm8903_board_info, 1);
+ }
+ 
+diff --git a/arch/arm/mach-tegra/board-seaboard.c b/arch/arm/mach-tegra/board-seaboard.c
+index ebac65f..d669847 100644
+--- a/arch/arm/mach-tegra/board-seaboard.c
++++ b/arch/arm/mach-tegra/board-seaboard.c
+@@ -159,7 +159,6 @@ static struct platform_device *seaboard_devices[] __initdata = {
+ 
+ static struct i2c_board_info __initdata isl29018_device = {
+ 	I2C_BOARD_INFO("isl29018", 0x44),
+-	.irq = TEGRA_GPIO_TO_IRQ(TEGRA_GPIO_ISL29018_IRQ),
+ };
+ 
+ static struct i2c_board_info __initdata adt7461_device = {
+@@ -183,7 +182,6 @@ static struct wm8903_platform_data wm8903_pdata = {
+ static struct i2c_board_info __initdata wm8903_device = {
+ 	I2C_BOARD_INFO("wm8903", 0x1a),
+ 	.platform_data = &wm8903_pdata,
+-	.irq = TEGRA_GPIO_TO_IRQ(TEGRA_GPIO_CDC_IRQ),
+ };
+ 
+ static int seaboard_ehci_init(void)
+@@ -214,7 +212,10 @@ static void __init seaboard_i2c_init(void)
+ 	gpio_request(TEGRA_GPIO_ISL29018_IRQ, "isl29018");
+ 	gpio_direction_input(TEGRA_GPIO_ISL29018_IRQ);
+ 
++	isl29018_device.irq = gpio_to_irq(TEGRA_GPIO_ISL29018_IRQ);
+ 	i2c_register_board_info(0, &isl29018_device, 1);
++
++	wm8903_device.irq = gpio_to_irq(TEGRA_GPIO_CDC_IRQ);
+ 	i2c_register_board_info(0, &wm8903_device, 1);
+ 
+ 	i2c_register_board_info(3, &adt7461_device, 1);
+-- 
+1.7.0.4
