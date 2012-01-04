@@ -1,59 +1,47 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [REPOST RFC PATCH 2/3] of_gpio: Add new helpers for easily
- requesting lots of GPIOs
-Date: Wed, 4 Jan 2012 11:49:43 -0700
-Message-ID: <20120104184943.GW15503@ponder.secretlab.ca>
-References: <1323800614-12642-1-git-send-email-Kyle.D.Moffett@boeing.com>
- <1323800614-12642-3-git-send-email-Kyle.D.Moffett@boeing.com>
+Subject: Re: [RFC 1/8] gpio/microblaze: Eliminate duplication of
+ of_get_named_gpio_flags()
+Date: Wed, 4 Jan 2012 11:30:57 -0700
+Message-ID: <20120104183057.GU15503@ponder.secretlab.ca>
+References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
+ <1320801583-12774-2-git-send-email-grant.likely@secretlab.ca>
+ <4EF1B36A.8050304@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1323800614-12642-3-git-send-email-Kyle.D.Moffett@boeing.com>
+In-Reply-To: <4EF1B36A.8050304@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kyle Moffett <Kyle.D.Moffett@boeing.com>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+To: Michal Simek <monstr@monstr.eu>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 13, 2011 at 01:23:33PM -0500, Kyle Moffett wrote:
-> Mirroring the new gpio_request_array() interface, we add several a few
-> helper functions for operating on entire arrays of GPIOs.
+On Wed, Dec 21, 2011 at 11:22:34AM +0100, Michal Simek wrote:
+> Grant Likely wrote:
+> >of_reset_gpio_handle() is largely a cut-and-paste copy of
+> >of_get_named_gpio_flags(). There really isn't any reason for the
+> >split, so this patch deletes the duplicate function
+> >
+> >Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> >Cc: Michal Simek <monstr@monstr.eu>
+> >---
+> > arch/microblaze/kernel/reset.c |   43 +--------------------------------------
+> > 1 files changed, 2 insertions(+), 41 deletions(-)
 > 
-> Also, to make it easier to write various combinations of "of_get_gpio()"
-> followed by "gpio_request()", add several other new inline wrappers.
+> Sorry for taking to long.
 > 
-> Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
-> ---
->  drivers/of/gpio.c       |   96 +++++++++++++++++++++++++++++
->  include/linux/of_gpio.h |  154 +++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 250 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/gpio.c b/drivers/of/gpio.c
-> index f349aaf..4c04f2f 100644
-> --- a/drivers/of/gpio.c
-> +++ b/drivers/of/gpio.c
-> @@ -83,6 +83,47 @@ err0:
->  EXPORT_SYMBOL(of_get_named_gpio_flags);
->  
->  /**
-> + * of_get_gpio_array_flags() - Get array of gpios to use with GPIO API
-> + * @np:		device node to get GPIOs from
-> + * @of_gpios:	array of "struct of_gpio" to select which GPIOs to look up
-> + * @of_flags:	array of "enum of_gpio_flags" to be filled in (may be NULL)
-> + * @gpios:	array of "struct gpio" to be filled in
-> + * @num:	the number of GPIOs to look up
-> + *
-> + * Takes a constant array of "struct of_gpio" and looks up each item in the
-> + * indicated device-node.  The results are stored into the @gpios array,
-> + * along with the optional GPIO "label" and "flags" values from the "of_gpio"
-> + * structure.
-> + *
-> + * If an array of @of_flags is provided then any flags from the translate
-> + * function will be stored into the corresponding element there.
-> + */
+> Tested and applied to microblaze tree.
 
-That seems overly complex to me.  How many gpios are you expecting to
-request?  If it is less than a handful, then I think letting the
-driver call of_get_request() multiple times would still be simpler.
+I'd rather take this one through the gpio tree if that is okay.
 
 g.
+
+> 
+> Thanks,
+> Michal
+> 
+> -- 
+> Michal Simek, Ing. (M.Eng)
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+> Microblaze U-BOOT custodian
