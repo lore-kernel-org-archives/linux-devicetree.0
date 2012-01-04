@@ -1,150 +1,97 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 3/3] of/irq: Add interrupts-names property to name an irq
- resource
-Date: Wed, 4 Jan 2012 00:17:49 -0700
-Message-ID: <20120104071749.GA15503@ponder.secretlab.ca>
-References: <1323095036-3739-1-git-send-email-b-cousson@ti.com>
- <1323095036-3739-4-git-send-email-b-cousson@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
+ domain infrastructure
+Date: Wed, 04 Jan 2012 16:29:41 +0900
+Message-ID: <000a01cccab2$a1c42ec0$e54c8c40$%kim@samsung.com>
+References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>
+ <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org>
+ <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
+ <4EFB66C3.4040504@gmail.com>
+ <CAJuYYwQbTJTRdsa9WpQuCtSTYacbrcP3CVBFaAYHP1jLPky10A@mail.gmail.com>
+ <4F022D7D.3060802@gmail.com>
+ <CAJuYYwSGYnyq+hEbgpyvFoAB9LWWLhD2URaWsCC4vMyZwRQVbg@mail.gmail.com>
+ <20120104070038.GA15445@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1323095036-3739-4-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20120104070038.GA15445@ponder.secretlab.ca>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Grant Likely' <grant.likely@secretlab.ca>, 'Thomas Abraham' <thomas.abraham@linaro.org>
+Cc: 'Sylwester Nawrocki' <snjw23@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, broonie@opensource.wolfsonmicro.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2011 at 03:23:56PM +0100, Benoit Cousson wrote:
-> In a HW system, resources in general have name to identify them.
-> The is the case as well for IORESOURCE_IRQ resources filled by DT
-> "interrupts" entries.
-> The current DT mechanism is relying on the "interrupts" order to identify
-> the proper resource. This is error prone and not the natural way to
-> retrieve an information in general.
+Grant Likely wrote:
+>=20
+> On Tue, Jan 03, 2012 at 01:53:28PM +0530, Thomas Abraham wrote:
+> > Hi Sylwester,
+> >
+> > On 3 January 2012 03:49, Sylwester Nawrocki <snjw23@gmail.com> wrot=
+e:
+> > > Hi Thomas,
+> > >
+> > > thank you for clarifying.
+> > >
+> > > On 01/02/2012 03:14 AM, Thomas Abraham wrote:
+> > >>
+> > >> The following is a snippet from the dts file used for testing.
+> > >>
+> > >> =A0 =A0[...]
+> > >>
+> > >> =A0 =A0lcd0:power-domain-lcd0 {
+> > >> =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,exynos4210-pd";
+> > >> =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x10023C00 0x10>;
+> > >> =A0 =A0};
+> > >>
+> > >> =A0 =A0[...]
+> > >>
+> > >> =A0 =A0fimd0:display-controller {
+> > >> =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,exynos4-fimd";
+> > >> =A0 =A0 =A0 =A0 =A0 =A0 [...]
+> > >> =A0 =A0 =A0 =A0 =A0 =A0 pd =3D <&lcd0>;
+> > >> =A0 =A0};
+> > >>
+> > >> The fimd (display controller) driver would then do the following=
+=2E
+> > >>
+> > >> parp =3D of_get_property(pdev->dev.of_node, "pd", NULL);
+> > >> pd_np =3D of_find_node_by_phandle(be32_to_cpup(parp));
+> > >> pm_genpd_of_add_device(pd_np, &pdev->dev);
+> > >
+> > > Sounds interesting. Currently it's platform code that adds device=
+s to
+> > > a corresponding power domain. But doing it at drivers might be mo=
+re
+> > > convenient for avoiding device/driver/power domain registration
+> > > synchronization issues, especially that knowledge about power dom=
+ain
+> > > existence may be contained directly in DT description, not needin=
+g
+> > > drivers to carry platform specific data.
+> > >
+> > > BTW, I have a feeling that "samsung" is a bit longish prefix for =
+the
+> bindings.
+> > > Didn't you initially consider "sec" for instance ? Probably it is
+> already
+> > > too late for changing that though.
+> >
+> > I had not thought of "sec". I agree that "sec" would have been bett=
+er
+> > as it is shorter and represents bindings specific to Samsung
+> > Electronics. But it is not intuitive at the same time. If there is
+> > greater consensus on using "sec", we could try and request for a
+> > change but looks difficult to get through.
+>=20
+> Don't bother.  'samsung,' is fine.
+>=20
+Same here :)
 
-I do not agree with this assessment.  interrupt property order has
-worked quite well for a very long time.  There are some uses cases
-that want to access it by-name, but I expect accessing by-index to
-continue to be the preferred method.  I'm going to drop this paragraph
-from the commit text.
+Thanks.
 
-> Moreover, the resource does support a name and an API is available to
-> allow a driver to retrieve the resource using the name instead of an
-> index.
-> 
-> Add a interrupts-names property to allow the possiblity to provide a name
-> to any interrupts entries.
-> If the name is available, use it to name the resource, otherwise
-> keep the legacy device full name.
-> 
-> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> ---
->  .../devicetree/bindings/interrupts-names.txt       |   50 ++++++++++++++++++++
->  drivers/of/irq.c                                   |   11 ++++-
->  2 files changed, 60 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupts-names.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupts-names.txt b/Documentation/devicetree/bindings/interrupts-names.txt
-> new file mode 100644
-> index 0000000..d9a796d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupts-names.txt
-> @@ -0,0 +1,50 @@
-> +interrupts-names property
-> +
-> +In a HW system, physical resources in general have name to identify them.
-> +The is the case as well for interrupt lines.
-> +The current DT mechanism is relying on the "interrupts" order to identify
-> +the proper resource. The interrupts-names is adding the possiblity to
-> +provide a name to interrupts entries.
-> +
-> +Usage:
-> +
-> +This attribute must be used along with a regular interrupts entry. If not
-> +it will be simply ignored.
-
-This documentation is pretty much identical to the reg-names property
-description.  I'll merge the two into a single file.
-
-> +
-> +
-> +Example:
-> +
-> +
-> +l4-abe {
-> +	compatible = "simple-bus";
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	ranges = <0 0 0x48000000 0x00001000>, /* MPU path */
-> +		 <1 0 0x49000000 0x00001000>; /* L3 path */
-> +	mcasp {
-> +		compatible = "ti,mcasp";
-> +		reg = <0 0x10 0x10>, <0 0x20 0x10>,
-> +		      <1 0x10 0x10>, <1 0x20 0x10>;
-> +		reg-names = "mpu", "dat",
-> +			    "dma", "dma_dat";
-> +		interrupts = <11>, <12>;
-> +		interrupts-names = "rx", "tx";
-
-Nitpick: I'm going to change the property name to "interrupt-names"
-(dropping the 's' from interrupts).  After playing with the clock
-binding (clocks vs. clock-names) and looking at what could be done
-with the gpio binding (gpios vs. gpio-names), I think it 'feels' more
-consistent to drop the s.
-
-Merged, thanks.
-
-> +	};
-> +
-> +	timer {
-> +		compatible = "ti,timer";
-> +		reg = <0 0x40 0x10>, <1 0x40 0x10>;
-> +		reg-names = "mpu", "dma";
-> +	};
-> +};
-> +
-> +
-> +usb {
-> +	compatible = "ti,usb-host";
-> +	reg = <0x4a064000 0x800>, <0x4a064800 0x200>,
-> +	      <0x4a064c00 0x200>;
-> +	reg-names = "config", "ohci", "ehci";
-> +	interrupts = <14>, <15>;
-> +	interrupts-names = "ohci", "ehci";
-> +};
-> +
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 19c0115..604b53f 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -346,9 +346,18 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
->  	/* Only dereference the resource if both the
->  	 * resource and the irq are valid. */
->  	if (r && irq != NO_IRQ) {
-> +		const char *name = NULL;
-> +
-> +		/*
-> +		 * Get optional "interrupts-names" property to add a name
-> +		 * to the resource.
-> +		 */
-> +		of_property_read_string_index(dev, "interrupts-names", index,
-> +					      &name);
-> +
->  		r->start = r->end = irq;
->  		r->flags = IORESOURCE_IRQ;
-> -		r->name = dev->full_name;
-> +		r->name = name ? name : dev->full_name;
->  	}
->  
->  	return irq;
-> -- 
-> 1.7.0.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
