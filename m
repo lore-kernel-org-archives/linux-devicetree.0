@@ -1,102 +1,84 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/3] arm/dts: OMAP: Remove bootargs node from board files
-Date: Wed, 4 Jan 2012 13:08:19 -0700
-Message-ID: <20120104200819.GI15503@ponder.secretlab.ca>
-References: <y>
- <1323190149-6492-3-git-send-email-b-cousson@ti.com>
+Subject: Re: [PATCH 1/3] ARM: OMAP2+: kconfig: Enable devicetree by default
+ for OMAP2+ systems
+Date: Wed, 4 Jan 2012 13:11:11 -0700
+Message-ID: <CACxGe6sAEs4H4FR75psy74x9V3mbp6wAdryJbDu8HBZ4tMmyvw@mail.gmail.com>
+References: <1323190149-6492-2-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1323190149-6492-3-git-send-email-b-cousson@ti.com>
+In-Reply-To: <1323190149-6492-2-git-send-email-b-cousson@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 06, 2011 at 05:49:08PM +0100, Benoit Cousson wrote:
-> Since 3.2, the CONFIG_ARM_ATAG_DTB_COMPAT config allows
-> an old bootloader to still use ATAG to provide cmdline.
-> 
-> Remove chosen/bootargs from the DTS board files.
-> 
+On Tue, Dec 6, 2011 at 9:49 AM, Benoit Cousson <b-cousson@ti.com> wrote=
+:
+> devicetree will become the mandatory boot method for OMAP2+.
+> In order to avoid cluttering the OMAP code with #ifdef CONFIG_OF,
+> select USE_OF by default for every OMAP2+ systems.
+> Select as well the APPENDED_DTB and ATAG_DTB_COMPAT to allow legacy
+> boot loader to keep working properly.
+>
+> Enable PROC_DEVICETREE as well.
+>
 > Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Tony Lindgren <tony@atomide.com>
 
 Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
 > ---
->  arch/arm/boot/dts/omap3-beagle.dts |    9 ---------
->  arch/arm/boot/dts/omap4-panda.dts  |    9 ---------
->  arch/arm/boot/dts/omap4-sdp.dts    |    9 ---------
->  3 files changed, 0 insertions(+), 27 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-> index 9486be6..9f72cd4 100644
-> --- a/arch/arm/boot/dts/omap3-beagle.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle.dts
-> @@ -13,15 +13,6 @@
->  	model = "TI OMAP3 BeagleBoard";
->  	compatible = "ti,omap3-beagle", "ti,omap3";
->  
-> -	/*
-> -	 * Since the initial device tree board file does not create any
-> -	 * devices (MMC, network...), the only way to boot is to provide a
-> -	 * ramdisk.
-> -	 */
-> -	chosen {
-> -		bootargs = "root=/dev/ram0 rw console=ttyO2,115200n8 initrd=0x81600000,20M ramdisk_size=20480 no_console_suspend debug earlyprintk";
-> -	};
-> -
->  	memory {
->  		device_type = "memory";
->  		reg = <0x80000000 0x20000000>; /* 512 MB */
-> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-> index c702657..9755ad5 100644
-> --- a/arch/arm/boot/dts/omap4-panda.dts
-> +++ b/arch/arm/boot/dts/omap4-panda.dts
-> @@ -13,15 +13,6 @@
->  	model = "TI OMAP4 PandaBoard";
->  	compatible = "ti,omap4-panda", "ti,omap4430", "ti,omap4";
->  
-> -	/*
-> -	 * Since the initial device tree board file does not create any
-> -	 * devices (MMC, network...), the only way to boot is to provide a
-> -	 * ramdisk.
-> -	 */
-> -	chosen {
-> -		bootargs = "root=/dev/ram0 rw console=ttyO2,115200n8 initrd=0x81600000,20M ramdisk_size=20480 no_console_suspend debug";
-> -	};
-> -
->  	memory {
->  		device_type = "memory";
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-> index 066e28c..63c6b2b 100644
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -13,15 +13,6 @@
->  	model = "TI OMAP4 SDP board";
->  	compatible = "ti,omap4-sdp", "ti,omap4430", "ti,omap4";
->  
-> -	/*
-> -	 * Since the initial device tree board file does not create any
-> -	 * devices (MMC, network...), the only way to boot is to provide a
-> -	 * ramdisk.
-> -	 */
-> -	chosen {
-> -		bootargs = "root=/dev/ram0 rw console=ttyO2,115200n8 initrd=0x81600000,20M ramdisk_size=20480 no_console_suspend debug";
-> -	};
-> -
->  	memory {
->  		device_type = "memory";
->  		reg = <0x80000000 0x40000000>; /* 1 GB */
-> -- 
+> =A0arch/arm/mach-omap2/Kconfig | =A0 =A01 -
+> =A0arch/arm/plat-omap/Kconfig =A0| =A0 =A04 ++++
+> =A02 files changed, 4 insertions(+), 1 deletions(-)
+>
+> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfi=
+g
+> index e1293aa..056a812 100644
+> --- a/arch/arm/mach-omap2/Kconfig
+> +++ b/arch/arm/mach-omap2/Kconfig
+> @@ -109,7 +109,6 @@ comment "OMAP Board Type"
+> =A0config MACH_OMAP_GENERIC
+> =A0 =A0 =A0 =A0bool "Generic OMAP2+ board"
+> =A0 =A0 =A0 =A0depends on ARCH_OMAP2PLUS
+> - =A0 =A0 =A0 select USE_OF
+> =A0 =A0 =A0 =A0default y
+> =A0 =A0 =A0 =A0help
+> =A0 =A0 =A0 =A0 =A0Support for generic TI OMAP2+ boards using Flatten=
+ed Device Tree.
+> diff --git a/arch/arm/plat-omap/Kconfig b/arch/arm/plat-omap/Kconfig
+> index aa59f42..74f41dc 100644
+> --- a/arch/arm/plat-omap/Kconfig
+> +++ b/arch/arm/plat-omap/Kconfig
+> @@ -24,6 +24,10 @@ config ARCH_OMAP2PLUS
+> =A0 =A0 =A0 =A0select CLKDEV_LOOKUP
+> =A0 =A0 =A0 =A0select GENERIC_IRQ_CHIP
+> =A0 =A0 =A0 =A0select OMAP_DM_TIMER
+> + =A0 =A0 =A0 select USE_OF
+> + =A0 =A0 =A0 select ARM_APPENDED_DTB
+> + =A0 =A0 =A0 select ARM_ATAG_DTB_COMPAT
+> + =A0 =A0 =A0 select PROC_DEVICETREE
+> =A0 =A0 =A0 =A0help
+> =A0 =A0 =A0 =A0 =A0"Systems based on OMAP2, OMAP3 or OMAP4"
+>
+> --
 > 1.7.0.4
-> 
-> 
+>
+>
 > _______________________________________________
 > linux-arm-kernel mailing list
 > linux-arm-kernel@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
