@@ -1,52 +1,118 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 6/6] mmc: sdhci-s3c: Add device tree support
-Date: Wed, 04 Jan 2012 16:37:25 +0100
-Message-ID: <4F047235.2090503@samsung.com>
-References: <1320266163-15292-1-git-send-email-thomas.abraham@linaro.org>
- <1320266163-15292-7-git-send-email-thomas.abraham@linaro.org>
- <20111107211726.GC28491@ponder.secretlab.ca>
- <CAJuYYwSfC5t6xs-TDT2wBOj1RbQYSpH0wjo9uBcYf7bGyi0t9g@mail.gmail.com>
+From: David Vrabel <david.vrabel@citrix.com>
+Subject: Re: [PATCH v6 6/9] ARM: vexpress: Motherboard RS1 memory map support
+Date: Wed, 4 Jan 2012 16:35:45 +0000
+Message-ID: <4F047FE1.5030002@citrix.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-7-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwSfC5t6xs-TDT2wBOj1RbQYSpH0wjo9uBcYf7bGyi0t9g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>, kgene.kim@samsung.com
-Cc: Grant Likely <grant.likely@secretlab.ca>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1323957761-13553-7-git-send-email-pawel.moll@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kgene, Thomas
-
-On 11/08/2011 04:23 PM, Thomas Abraham wrote:
-> Hi Grant,
+On 15/12/11 14:02, Pawel Moll wrote:
+> This patch adds support for RS1 memory map based Versatile Express
+> motherboard.
 > 
-> On 8 November 2011 02:47, Grant Likely <grant.likely@secretlab.ca> wrote:
->> On Thu, Nov 03, 2011 at 02:06:03AM +0530, Thomas Abraham wrote:
->>> Add device tree based discovery support for Samsung's sdhci controller
->>>
->>> Cc: Ben Dooks <ben-linux@fluff.org>
->>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->>> ---
->>> +Example:
->>> +     sdhci@12530000 {
->>> +             compatible = "samsung,exynos4210-sdhci";
->>> +             reg = <0x12530000 0x100>;
->>> +             interrupts = <139>;
->>> +             samsung,sdhci-bus-width = <4>;
->>> +             linux,mmc_cap_4_bit_data;
->>
->> Following on from my reply on patch 5, this is an example of exactly
->> what I'm talking about.  This node both sets bus-width to '4', and
->> sets the 4_bit_data flag.  Don't you think that the driver would be
->> smart enough to set the 4_bit_data flag when the bus width was set to
->> 4?
-> 
-> Yes, that is true. I will modify the driver based on your comments and
-> resubmit this patch.
+[...]
+> --- a/arch/arm/mach-vexpress/include/mach/debug-macro.S
+> +++ b/arch/arm/mach-vexpress/include/mach/debug-macro.S
+> @@ -10,12 +10,41 @@
+>   * published by the Free Software Foundation.
+>   */
+>  
+> -#define DEBUG_LL_UART_OFFSET	0x00009000
+> +#define DEBUG_LL_PHYS_BASE		0x10000000
+> +#define DEBUG_LL_UART_OFFSET		0x00009000
+> +
+> +#define DEBUG_LL_PHYS_BASE_RS1		0x1c000000
+> +#define DEBUG_LL_UART_OFFSET_RS1	0x00090000
+> +
+> +#define DEBUG_LL_VIRT_BASE		0xf8000000
+>  
+>  		.macro	addruart,rp,rv,tmp
+> -		mov	\rp, #DEBUG_LL_UART_OFFSET
+> -		orr	\rv, \rp, #0xf8000000	@ virtual base
+> -		orr	\rp, \rp, #0x10000000	@ physical base
+> +
+> +		@ Check the MMU state
+> +#if defined(CONFIG_MMU)
+> +		mrc	p15, 0, \tmp, c1, c0	@ SCTRL
+> +		tst	\tmp, #1		@ MMU enabled?
+> +		moveq	\tmp, #DEBUG_LL_PHYS_BASE
+> +		movne	\tmp, #DEBUG_LL_VIRT_BASE
+> +#else
+> +		mov	\tmp, #DEBUG_LL_PHYS_BASE
+> +#endif
+> +
+> +		@ PL011 present in "original" place?
+> +		orr	\tmp, \tmp, #DEBUG_LL_UART_OFFSET
+> +		ldr	\tmp, [\tmp, #0xfe0]	@ PeriphID0
 
-Are we going to have those patches in 3.3-rc1 or only in 3.4 ?
+This doesn't work with CONFIG_EARLY_PRINTK=y on a system with the RS1
+memory map.   __create_page_tables has only mapped the single physical
+page at 0x1c090000 and thus the test for the UART in the other memory
+map faults.
 
---
-Regards,
-Sylwester
+I made it work with this hack, but I'm not sure what the correct
+solution would be.
+
+diff --git a/arch/arm/mach-vexpress/include/mach/debug-macro.S
+b/arch/arm/mach-vexpress/include/mach/debug-macro.S
+index 8010ff9..af443b4 100644
+--- a/arch/arm/mach-vexpress/include/mach/debug-macro.S
++++ b/arch/arm/mach-vexpress/include/mach/debug-macro.S
+@@ -30,6 +30,7 @@
+ 		mov	\tmp, #DEBUG_LL_PHYS_BASE
+ #endif
+
++#if 0
+ 		@ PL011 present in "original" place?
+ 		orr	\tmp, \tmp, #DEBUG_LL_UART_OFFSET
+ 		ldr	\tmp, [\tmp, #0xfe0]	@ PeriphID0
+@@ -39,11 +40,12 @@
+ 		moveq	\rp, #DEBUG_LL_UART_OFFSET
+ 		orreq	\rv, \rp, #DEBUG_LL_VIRT_BASE
+ 		orreq	\rp, \rp, #DEBUG_LL_PHYS_BASE
++#endif
+
+-		@ RS1 memory map
+-		movne	\rp, #DEBUG_LL_UART_OFFSET_RS1
+-		orrne	\rv, \rp, #DEBUG_LL_VIRT_BASE
+-		orrne	\rp, \rp, #DEBUG_LL_PHYS_BASE_RS1
++       		@ RS1 memory map
++		mov	\rp, #DEBUG_LL_UART_OFFSET_RS1
++		mov	\rv, \rp, #DEBUG_LL_VIRT_BASE
++		orr	\rp, \rp, #DEBUG_LL_PHYS_BASE_RS1
+
+ 		.endm
+
+> +		teq	\tmp, #0x11		@ PL011
+> +
+> +		@ Original memory map
+> +		moveq	\rp, #DEBUG_LL_UART_OFFSET
+> +		orreq	\rv, \rp, #DEBUG_LL_VIRT_BASE
+> +		orreq	\rp, \rp, #DEBUG_LL_PHYS_BASE
+> +
+> +		@ RS1 memory map
+> +		movne	\rp, #DEBUG_LL_UART_OFFSET_RS1
+> +		orrne	\rv, \rp, #DEBUG_LL_VIRT_BASE
+> +		orrne	\rp, \rp, #DEBUG_LL_PHYS_BASE_RS1
+> +
+>  		.endm
+>  
+>  #include <asm/hardware/debug-pl01x.S>
+
+David
