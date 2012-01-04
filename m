@@ -1,97 +1,47 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 2/2] ARM: Exynos: Hook up power domains to generic power
- domain infrastructure
-Date: Wed, 04 Jan 2012 16:29:41 +0900
-Message-ID: <000a01cccab2$a1c42ec0$e54c8c40$%kim@samsung.com>
-References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>
- <1323704789-23923-2-git-send-email-thomas.abraham@linaro.org>
- <1323704789-23923-3-git-send-email-thomas.abraham@linaro.org>
- <4EFB66C3.4040504@gmail.com>
- <CAJuYYwQbTJTRdsa9WpQuCtSTYacbrcP3CVBFaAYHP1jLPky10A@mail.gmail.com>
- <4F022D7D.3060802@gmail.com>
- <CAJuYYwSGYnyq+hEbgpyvFoAB9LWWLhD2URaWsCC4vMyZwRQVbg@mail.gmail.com>
- <20120104070038.GA15445@ponder.secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/3] of/base: Take NULL string into account for property
+ with multiple strings
+Date: Wed, 4 Jan 2012 00:34:39 -0700
+Message-ID: <20120104073439.GB15503@ponder.secretlab.ca>
+References: <1323095036-3739-1-git-send-email-b-cousson@ti.com>
+ <1323095036-3739-2-git-send-email-b-cousson@ti.com>
+ <4EEF4401.1060303@gmail.com>
+ <4F030D69.5010709@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20120104070038.GA15445@ponder.secretlab.ca>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Grant Likely' <grant.likely@secretlab.ca>, 'Thomas Abraham' <thomas.abraham@linaro.org>
-Cc: 'Sylwester Nawrocki' <snjw23@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, rjw@sisk.pl, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, broonie@opensource.wolfsonmicro.com, patches@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F030D69.5010709@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
->=20
-> On Tue, Jan 03, 2012 at 01:53:28PM +0530, Thomas Abraham wrote:
-> > Hi Sylwester,
+On Tue, Jan 03, 2012 at 03:15:05PM +0100, Cousson, Benoit wrote:
+> Hi Grant,
+> 
+> On 12/19/2011 3:02 PM, Rob Herring wrote:
+> >On 12/05/2011 08:23 AM, Benoit Cousson wrote:
+> >>The current implementation just ignore any NULL string inserted in a
+> >>multiple strings property.
+> >>In some cases we can have a property with a fix number of strings but
+> >>not necessarily used, like for example in a list of valid pinmux modes.
+> >>
+> >>  prop = "uart_rx", "uart_tx", "", "", "safe_mode";
+> >>
+> >>Do no skip NULL string and take them into account in
+> >>of_property_read_string_index and of_property_count_strings.
+> >>
+> >>Reported-by: Tony Lindgren<tony@atomide.com>
+> >>Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+> >>Cc: Grant Likely<grant.likely@secretlab.ca>
+> >>Cc: Rob Herring<rob.herring@calxeda.com>
 > >
-> > On 3 January 2012 03:49, Sylwester Nawrocki <snjw23@gmail.com> wrot=
-e:
-> > > Hi Thomas,
-> > >
-> > > thank you for clarifying.
-> > >
-> > > On 01/02/2012 03:14 AM, Thomas Abraham wrote:
-> > >>
-> > >> The following is a snippet from the dts file used for testing.
-> > >>
-> > >> =A0 =A0[...]
-> > >>
-> > >> =A0 =A0lcd0:power-domain-lcd0 {
-> > >> =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,exynos4210-pd";
-> > >> =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x10023C00 0x10>;
-> > >> =A0 =A0};
-> > >>
-> > >> =A0 =A0[...]
-> > >>
-> > >> =A0 =A0fimd0:display-controller {
-> > >> =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "samsung,exynos4-fimd";
-> > >> =A0 =A0 =A0 =A0 =A0 =A0 [...]
-> > >> =A0 =A0 =A0 =A0 =A0 =A0 pd =3D <&lcd0>;
-> > >> =A0 =A0};
-> > >>
-> > >> The fimd (display controller) driver would then do the following=
-=2E
-> > >>
-> > >> parp =3D of_get_property(pdev->dev.of_node, "pd", NULL);
-> > >> pd_np =3D of_find_node_by_phandle(be32_to_cpup(parp));
-> > >> pm_genpd_of_add_device(pd_np, &pdev->dev);
-> > >
-> > > Sounds interesting. Currently it's platform code that adds device=
-s to
-> > > a corresponding power domain. But doing it at drivers might be mo=
-re
-> > > convenient for avoiding device/driver/power domain registration
-> > > synchronization issues, especially that knowledge about power dom=
-ain
-> > > existence may be contained directly in DT description, not needin=
-g
-> > > drivers to carry platform specific data.
-> > >
-> > > BTW, I have a feeling that "samsung" is a bit longish prefix for =
-the
-> bindings.
-> > > Didn't you initially consider "sec" for instance ? Probably it is
-> already
-> > > too late for changing that though.
-> >
-> > I had not thought of "sec". I agree that "sec" would have been bett=
-er
-> > as it is shorter and represents bindings specific to Samsung
-> > Electronics. But it is not intuitive at the same time. If there is
-> > greater consensus on using "sec", we could try and request for a
-> > change but looks difficult to get through.
->=20
-> Don't bother.  'samsung,' is fine.
->=20
-Same here :)
+> >Applied. The others need Grant's agreement.
+> 
+> New year gentle ping.
 
-Thanks.
+merged both; should appear in linux-next tomorrow.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+g.
+
