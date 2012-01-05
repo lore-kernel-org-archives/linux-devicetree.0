@@ -1,38 +1,40 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: at91: pit add DT support
-Date: Thu, 5 Jan 2012 15:34:29 +0000
-Message-ID: <20120105153429.GD10530@page>
-References: <1325771308-19770-1-git-send-email-nicolas.ferre@atmel.com>
- <1325784348-29481-1-git-send-email-nicolas.ferre@atmel.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 1/2] PM / Domains: Add OF support
+Date: Thu, 5 Jan 2012 21:12:43 +0530
+Message-ID: <CAJuYYwT6bKgqn5y62Pi4Z3wyWq=1HtxtOMOv8kEUZs3kD3HR9g@mail.gmail.com>
+References: <1323704789-23923-1-git-send-email-thomas.abraham@linaro.org>
+	<201112282317.54291.rjw@sisk.pl>
+	<CAJuYYwQp7gfuovd8kKEe_D+ACyq4OafxZRW_G=U_9zCMOy+prA@mail.gmail.com>
+	<201201032330.58602.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1325784348-29481-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201201032330.58602.rjw@sisk.pl>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2012 at 06:25:48PM +0100, Nicolas Ferre wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> 
-> Retreive registers address and IRQ from device tree entry. Fall back
-> to built-in values if an error occurs.
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: change error path and interrupts property handling]
-> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Hi Rafael,
 
-Reviewed-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+On 4 January 2012 04:00, Rafael J. Wysocki <rjw@sisk.pl> wrote:
+[...]
 
-Jamie
+>> The 'struct device_node' is a representation of a instance of a device
+>> tree node. It can represent nodes that are not devices. Hence, it can
+>> be used to represent a power domain in a device tree and also included
+>> in the 'struct generic_pm_domain'.
+>
+> OK, so please address my second comment regarding the $subject patch,
+> i.e. that you might add a wrapper around the original
+> __pm_genpd_add_device() instead of modifying __pm_genpd_add_device()
+> itself.
+
+Thanks. I will prepare and submit the updated patch.
+
+Regards,
+Thomas.
+
+>
+> Thanks,
+> Rafael
