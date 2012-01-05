@@ -1,37 +1,79 @@
-From: Jamie Iles <jamie@jamieiles.com>
-Subject: Re: [PATCHv5 1/4] of: document common interrupt controller details
-Date: Thu, 5 Jan 2012 14:09:52 +0000
-Message-ID: <20120105140952.GE4641@page>
-References: <1325726619-31796-1-git-send-email-jamie@jamieiles.com>
- <1325726619-31796-2-git-send-email-jamie@jamieiles.com>
- <4F05AE79.6050108@gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: at91: pit add DT support
+Date: Thu, 05 Jan 2012 15:50:09 +0100
+Message-ID: <4F05B8A1.2010003@atmel.com>
+References: <1318799895-5121-4-git-send-email-plagnioj@jcrosoft.com>
+ <1325771308-19770-1-git-send-email-nicolas.ferre@atmel.com>
+ <20120105120049.GB4641@page>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F05AE79.6050108@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Jamie Iles <jamie@jamieiles.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linus.walleij@stericsson.com, broonie@opensource.wolfsonmicro.com, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120105120049.GB4641@page>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2012 at 08:06:49AM -0600, Rob Herring wrote:
-> On 01/04/2012 07:23 PM, Jamie Iles wrote:
-> > It's common for interrupt controllers to need to encode interrupt
-> > trigger types and the Linux specific types seem common.  Document these
-> > in a centralized place so that they don't get reinvented each time a new
-> > controller is added.
-> > 
-> > Suggested-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > Cc: Rob Herring <rob.herring@calxeda.com>
-> > Signed-off-by: Jamie Iles <jamie@jamieiles.com>
+On 01/05/2012 01:00 PM, Jamie Iles :
+> Hi Nicolas, Jean-Christophe,
 > 
-> I can take this if you want. Doesn't really matter as it is all going to
-> Grant anyway.
+> On Thu, Jan 05, 2012 at 02:48:28PM +0100, Nicolas Ferre wrote:
+>> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>>
+>> Retreive registers address and IRQ from device tree entry. Fall back
+>> to built-in values if an error occurs.
+>>
+>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: change error path and interrupts property handling]
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+> [...]
+>> diff --git a/arch/arm/mach-at91/at91sam926x_time.c 
+>> b/arch/arm/mach-at91/at91sam926x_time.c
+>> index d89ead7..5d4c308 100644
+>> --- a/arch/arm/mach-at91/at91sam926x_time.c
+>> +++ b/arch/arm/mach-at91/at91sam926x_time.c
+>> @@ -14,6 +14,8 @@
+> [...]
+>> +static int __init of_at91sam926x_pit_init(void)
+>> +{
+>> +	struct device_node *np;
+>> +
+>> +	np = of_find_matching_node(NULL, timer_ids);
+>> +	if (!np)
+>> +		goto err;
+>> +
+>> +	pit_base_addr = of_iomap(np, 0);
+>> +	if (!pit_base_addr)
+>> +		goto node_err;
+>> +
+>> +	/* Get the interrupts property */
+>> +	if (of_property_read_u32(np, "interrupts", &at91sam926x_pit_irq.irq))
+>> +		goto ioremap_err;
+> 
+> I think you want:
+> 
+> 	at91sam926x_pit_irq.irq = irq_of_parse_and_map(np, 0);
+> 
+> to make sure the IRQ is converted to a Linux IRQ and not a hwirq.
 
-OK, whatever is easiest for you.  I guess it's too late for the GPIO 
-driver to go into 3.3(?) but this is probably fine to go in now for 
-other drivers to base on...
+Yes, that definitively makes sense. BTW, without a DT entry, how should
+I map a hwirq, with the irq_domain_to_irq() helper? But I will need
+access to the interrupt controller "struct irq_domain"...
 
-Jamie
+> Other than that looks fine to me.
+
+Thanks a lot for your review, Jamie.
+
+Best regards,
+-- 
+Nicolas Ferre
