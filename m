@@ -1,83 +1,70 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [GIT PULL] devicetree changes for v3.3
-Date: Thu, 5 Jan 2012 00:11:25 -0700
-Message-ID: <CACxGe6udggDJ2QCRXGKzPwHUwzPsFLPZ1Ogc-Negx9z=UHEntg@mail.gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 5/6] gpio: tegra: Dynamically allocate IRQ base, and
+ support DT
+Date: Thu, 5 Jan 2012 08:23:06 +0100
+Message-ID: <20120105072306.GA3980@avionic-0098.mockup.avionic-design.de>
+References: <1325702378-20863-1-git-send-email-swarren@nvidia.com>
+ <1325702378-20863-5-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1325702378-20863-5-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
 
-Please pull the following device tree changes queued up for 3.3.
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There is a signed tag for this pull request: devicetree-for-linus-20120104
+* Stephen Warren wrote:
+> @@ -343,6 +344,16 @@ static int __devinit tegra_gpio_probe(struct platfor=
+m_device *pdev)
+>  	int i;
+>  	int j;
+> =20
+> +	irq_domain.irq_base =3D irq_alloc_descs(-1, 0, TEGRA_NR_GPIOS, 0);
+> +	if (irq_domain.irq_base < 0) {
+> +		dev_err(&pdev->dev, "Couldn't allocate IRQ numbers\n");
+> +		return -ENODEV;
+> +	}
+> +	irq_domain.nr_irq =3D TEGRA_NR_GPIOS;
+> +	irq_domain.ops =3D &irq_domain_simple_ops;
+> +	irq_domain.of_node =3D pdev->dev.of_node;
+> +	irq_domain_add(&irq_domain);
 
-The following changes since commit 805a6af8dba5dfdd35ec35dc52ec0122400b2610:
+I was wondering: except for setting the nr_irq field this is pretty much wh=
+at
+irq_domain_add_simple() does. While I get that you need access to the domain
+later on and cannot use the helper, I'm still wondering why the nr_irq field
+is not initialized by irq_domain_add_simple().
 
-  Linux 3.2 (2012-01-04 15:55:44 -0800)
+I have a driver for a GPIO/IRQ expander that does exactly the same and was
+always wondering why the irq_data.hwirq field isn't properly setup, and
+irq_domain.nr_irq being 0 seems to be exactly the reason. So am I supposed =
+to
+not use irq_domain_add_simple() in this case or should we rather update the
+helper to take a nr_irq parameter that can be used to initialize the nr_irq
+field?
 
-are available in the git repository at:
-  git://git.secretlab.ca/git/linux-2.6 devicetree/merge
+Thierry
 
-Benoit Cousson (1):
-      of/base: Take NULL string into account for property with multiple str=
-ings
+P.S.: sorry for hijacking
 
-David Daney (1):
-      OF/device-tree: Add some entries to vendor-prefixes.txt
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature
 
-Dong Aisheng (1):
-      dt: reform for_each_property to for_each_property_of_node
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-Fabio Estevam (1):
-      ARM: prom.h: Fix build error by removing unneeded header file
+iEYEARECAAYFAk8FT9oACgkQZ+BJyKLjJp+f7gCgpfvZAC/ERlLDht/P6iXt0bzG
+dtIAn0Nx7gbLeaODJfRRjLUtGLKuT9NG
+=Lwq4
+-----END PGP SIGNATURE-----
 
-Olof Johansson (1):
-      dt/i2c: Enumerate some of the known trivial i2c devices
-
-Rob Herring (3):
-      i2c-designware: add OF binding support
-      dt: add empty of_get_node/of_put_node functions
-      irq: check domain hwirq range for DT translate
-
-Sam Ravnborg (1):
-      of/pdt: fix section mismatch warning
-
-Uwe Kleine-K=F6nig (1):
-      ARM/of: allow *machine_desc.dt_compat to be const
-
- .../devicetree/bindings/i2c/i2c-designware.txt     |   22 ++++++++
- .../devicetree/bindings/i2c/trivial-devices.txt    |   58 ++++++++++++++++=
-++++
- .../devicetree/bindings/vendor-prefixes.txt        |    3 +
- arch/arm/include/asm/mach/arch.h                   |    2 +-
- arch/arm/include/asm/prom.h                        |    1 -
- drivers/i2c/busses/i2c-designware-platdrv.c        |   12 ++++
- drivers/of/base.c                                  |   10 ++--
- drivers/of/fdt.c                                   |    5 +-
- drivers/of/pdt.c                                   |    2 +-
- include/linux/of.h                                 |   33 ++++++------
- include/linux/of_fdt.h                             |    4 +-
- kernel/irq/irqdomain.c                             |    3 +
- 12 files changed, 125 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-designware.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/trivial-devices.t=
-xt
-
-
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+--n8g4imXOkfNTN/H1--
