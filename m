@@ -1,80 +1,47 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] fsl/mpic: Document and use the "big-endian" device-tree
- flag
-Date: Thu, 05 Jan 2012 10:08:24 +1100
-Message-ID: <1325718504.23910.11.camel@pasglop>
-References: <1324571123-11577-1-git-send-email-Kyle.D.Moffett@boeing.com>
-	 <4F04DF50.4070201@xenotime.net>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCHv4 2/4] gpio: add a driver for the Synopsys DesignWare APB
+ GPIO block
+Date: Thu, 5 Jan 2012 01:22:00 +0000
+Message-ID: <20120105012200.GA4641@page>
+References: <1325517248-32032-1-git-send-email-jamie@jamieiles.com>
+ <1325517248-32032-2-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4F04DF50.4070201@xenotime.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: Kyle Moffett <Kyle.D.Moffett@boeing.com>, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Mackerras <paulus@samba.org>, Kumar Gala <galak@kernel.crashing.org>, Lucas De Marchi <lucas.demarchi@profusion.mobi>, Stuart Yoder <stuart.yoder@freescale.com>, Josh Boyer <jwboyer@linux.vnet.ibm.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1325517248-32032-2-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-01-04 at 15:22 -0800, Randy Dunlap wrote:
-> On 12/22/2011 08:25 AM, Kyle Moffett wrote:
-> > The MPIC code checks for a "big-endian" property and sets the flag
-> > MPIC_BIG_ENDIAN if one is present.  Unfortunately, the PowerQUICC-III
-> > compatible device-tree does not specify it, so all of the board ports
-> > need to manually set that flag when calling mpic_alloc().
-> > 
-> > Document the flag and add it to the pq3 device tree.  Existing code
-> > will still need to pass the MPIC_BIG_ENDIAN flag because their dtb may
-> > not have this property, but new platforms shouldn't need to do so.
-> > 
-> > Signed-off-by: Kyle Moffett <Kyle.D.Moffett@boeing.com>
+On Mon, Jan 02, 2012 at 03:14:06PM +0000, Jamie Iles wrote:
+> The Synopsys DesignWare block is used in some ARM devices (picoxcell)
+> and can be configured to provide multiple banks of GPIO pins.
 > 
-> Grant, are you merging this patch?
-> I don't think I should merge the patch to arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi.
-
-Best is to leave the whole lot to me. It's not like mpic is used
-anywhere else ...
-
-Cheers,
-Ben.
-
-> > --
-> >  .../devicetree/bindings/powerpc/fsl/mpic.txt       |    9 ++++++++-
-> >  arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi            |    1 +
-> >  2 files changed, 9 insertions(+), 1 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt b/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-> > index 2cf38bd..ebafba2 100644
-> > --- a/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/mpic.txt
-> > @@ -56,7 +56,14 @@ PROPERTIES
-> >            to the client.  The presence of this property also mandates
-> >            that any initialization related to interrupt sources shall
-> >            be limited to sources explicitly referenced in the device tree.
-> > -       
-> > +
-> > +  - big-endian
-> > +      Usage: optional
-> > +      Value type: <empty>
-> > +          If present the MPIC will be assumed to be big-endian.  Some
-> > +          device-trees omit this property on MPIC nodes even when the MPIC is
-> > +          in fact big-endian, so certain boards override this property.
-> > +
-> >  INTERRUPT SPECIFIER DEFINITION
-> >  
-> >    Interrupt specifiers consists of 4 cells encoded as
-> > diff --git a/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi b/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-> > index 5c80460..47f2b67 100644
-> > --- a/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-> > +++ b/arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi
-> > @@ -39,6 +39,7 @@ mpic: pic@40000 {
-> >  	reg = <0x40000 0x40000>;
-> >  	compatible = "fsl,mpic";
-> >  	device_type = "open-pic";
-> > +	big-endian;
-> >  };
-> >  
-> >  timer@41100 {
+> v3:	- depend on rather than select IRQ_DOMAIN
+> 	- split IRQ support into a separate patch
+> v2:	- use Rob Herring's irqdomain in generic irq chip patches
+> 	- use reg property to indicate bank index
+> 	- support irqs on both edges based on LinusW's u300 driver
 > 
-> 
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 
+Hmm, what I have here doesn't play nicely with sparsely populated banks 
+e.g. A, C, D.  Fixed series to follow.
 
+Thanks,
+
+Jamie
