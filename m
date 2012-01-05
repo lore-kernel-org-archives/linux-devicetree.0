@@ -1,87 +1,45 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
-Date: Thu, 5 Jan 2012 11:09:24 -0700
-Message-ID: <20120105180924.GE22653@ponder.secretlab.ca>
-References: <1324019153-13316-1-git-send-email-hvaibhav@ti.com>
- <79CD15C6BA57404B839C016229A409A80719AC@DBDE01.ent.ti.com>
- <4F05ABAF.8080702@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F05ABAF.8080702@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "Hiremath, Vaibhav" <hvaibhav@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] fsl/mpic: Document and use the "big-endian" device-tree
+ flag
+Date: Thu, 5 Jan 2012 12:35:30 -0600
+Message-ID: <DE2E2CDA-D373-4E48-82EA-B8E1F05236D9@kernel.crashing.org>
+References: <1324571123-11577-1-git-send-email-Kyle.D.Moffett@boeing.com>
+Mime-Version: 1.0 (Apple Message framework v1251.1)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1324571123-11577-1-git-send-email-Kyle.D.Moffett-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Kyle Moffett <Kyle.D.Moffett-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lucas De Marchi <lucas.demarchi-Y3ZbgMPKUGA34EUeqzHoZw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 05, 2012 at 02:54:55PM +0100, Cousson, Benoit wrote:
-> Hi Vaibhav,
-> 
-> On 1/5/2012 12:18 PM, Hiremath, Vaibhav wrote:
-> >>From: Hiremath, Vaibhav
-> >>Sent: Friday, December 16, 2011 12:36 PM
-> >>To: linux-omap@vger.kernel.org
-> >>Cc: tony@atomide.com; linux-arm-kernel@lists.infradead.org; devicetree-
-> >>discuss@lists.ozlabs.org; grant.likely@secretlab.ca; Cousson, Benoit;
-> >>Hiremath, Vaibhav
-> >>Subject: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
-> >>
-> >>Add OMAP3 EVM (OMAP3530, AM/DM37x) DTS file to use the omap3.dtsi SoC file,
-> >>along with memory node information.
-> >>
-> >>Signed-off-by: Vaibhav Hiremath<hvaibhav@ti.com>
-> >>---
-> >>Boot tested it on AM/DM37x EVM, kernel parses the info correctly.
-> >>
-> >>  arch/arm/boot/dts/omap3-evm.dts |   20 ++++++++++++++++++++
-> >>  1 files changed, 20 insertions(+), 0 deletions(-)
-> >>  create mode 100644 arch/arm/boot/dts/omap3-evm.dts
-> >>
-> >>diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-
-> >>evm.dts
-> >>new file mode 100644
-> >>index 0000000..2eee16e
-> >>--- /dev/null
-> >>+++ b/arch/arm/boot/dts/omap3-evm.dts
-> >>@@ -0,0 +1,20 @@
-> >>+/*
-> >>+ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-> >>+ *
-> >>+ * This program is free software; you can redistribute it and/or modify
-> >>+ * it under the terms of the GNU General Public License version 2 as
-> >>+ * published by the Free Software Foundation.
-> >>+ */
-> >>+/dts-v1/;
-> >>+
-> >>+/include/ "omap3.dtsi"
-> >>+
-> >>+/ {
-> >>+	model = "TI OMAP3 EVM (OMAP3530, AM/DM37x)";
-> >>+	compatible = "ti,omap3-evm", "ti,omap3";
-> >>+
-> >>+	memory {
-> >>+		device_type = "memory";
-> >>+		reg =<0x80000000 0x10000000>; /* 256 MB */
-> >>+	};
-> >>+};
-> >Can this merged? OR anybody has any comments here?
-> 
-> I guess that with Rob or Grant's ack, Tony should be able to merge it.
-> That being said, since it is outside mach-omap, I'm not sure what
-> the right path is.
-> I can add it in my DTS series, but that one will have dependencies
-> with the i2c driver DT adaptation.
-> 
-> FWIW, Acked-by: Benoit Cousson <b-cousson@ti.com>
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+On Dec 22, 2011, at 10:25 AM, Kyle Moffett wrote:
 
+> The MPIC code checks for a "big-endian" property and sets the flag
+> MPIC_BIG_ENDIAN if one is present.  Unfortunately, the PowerQUICC-III
+> compatible device-tree does not specify it, so all of the board ports
+> need to manually set that flag when calling mpic_alloc().
 > 
-> Regards,
-> Benoit
+> Document the flag and add it to the pq3 device tree.  Existing code
+> will still need to pass the MPIC_BIG_ENDIAN flag because their dtb may
+> not have this property, but new platforms shouldn't need to do so.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Signed-off-by: Kyle Moffett <Kyle.D.Moffett-X8CqP27nNzzQT0dZR+AlfA@public.gmane.org>
+> ---
+> .../devicetree/bindings/powerpc/fsl/mpic.txt       |    9 ++++++++-
+> arch/powerpc/boot/dts/fsl/pq3-mpic.dtsi            |    1 +
+> 2 files changed, 9 insertions(+), 1 deletions(-)
+
+need to update arch/powerpc/boot/dts/fsl/qoriq-mpic.dtsi
+
+- k
