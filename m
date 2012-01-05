@@ -1,76 +1,47 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
-Date: Thu, 5 Jan 2012 14:54:55 +0100
-Message-ID: <4F05ABAF.8080702@ti.com>
-References: <1324019153-13316-1-git-send-email-hvaibhav@ti.com> <79CD15C6BA57404B839C016229A409A80719AC@DBDE01.ent.ti.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux mappings
+Date: Thu, 5 Jan 2012 21:59:51 +0800
+Message-ID: <CAA+hA=TMoj9uCuSCBf1J3a_sJ5HpGZwB3Ua769OKFeoLVMooyg@mail.gmail.com>
+References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
+	<1324402840-32451-3-git-send-email-b29396@freescale.com>
+	<CACRpkdbLMW-SXnr6hbpwMqG=-a0wmYtU+YnyR8uLsndUp=UBgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <79CD15C6BA57404B839C016229A409A80719AC@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbLMW-SXnr6hbpwMqG=-a0wmYtU+YnyR8uLsndUp=UBgQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, cjb@laptop.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vaibhav,
-
-On 1/5/2012 12:18 PM, Hiremath, Vaibhav wrote:
->> From: Hiremath, Vaibhav
->> Sent: Friday, December 16, 2011 12:36 PM
->> To: linux-omap@vger.kernel.org
->> Cc: tony@atomide.com; linux-arm-kernel@lists.infradead.org; devicetree-
->> discuss@lists.ozlabs.org; grant.likely@secretlab.ca; Cousson, Benoit;
->> Hiremath, Vaibhav
->> Subject: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
+On Sun, Jan 1, 2012 at 10:07 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Dec 20, 2011 at 6:40 PM, Dong Aisheng <b29396@freescale.com> wrote:
+>
+>> From: Dong Aisheng <dong.aisheng@linaro.org>
 >>
->> Add OMAP3 EVM (OMAP3530, AM/DM37x) DTS file to use the omap3.dtsi SoC file,
->> along with memory node information.
->>
->> Signed-off-by: Vaibhav Hiremath<hvaibhav@ti.com>
->> ---
->> Boot tested it on AM/DM37x EVM, kernel parses the info correctly.
->>
->>   arch/arm/boot/dts/omap3-evm.dts |   20 ++++++++++++++++++++
->>   1 files changed, 20 insertions(+), 0 deletions(-)
->>   create mode 100644 arch/arm/boot/dts/omap3-evm.dts
->>
->> diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-
->> evm.dts
->> new file mode 100644
->> index 0000000..2eee16e
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/omap3-evm.dts
->> @@ -0,0 +1,20 @@
->> +/*
->> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +/dts-v1/;
->> +
->> +/include/ "omap3.dtsi"
->> +
->> +/ {
->> +	model = "TI OMAP3 EVM (OMAP3530, AM/DM37x)";
->> +	compatible = "ti,omap3-evm", "ti,omap3";
->> +
->> +	memory {
->> +		device_type = "memory";
->> +		reg =<0x80000000 0x10000000>; /* 256 MB */
->> +	};
->> +};
-> Can this merged? OR anybody has any comments here?
+>> This patch provies a common API for driver to use to register pinmux
+>> mappings from dts file. It is needed for dt support.
+>
+> Overall I feel lost in this discussion due to limited exposure to
+> device tree concepts. If I get Stephen Warrens and one of the
+> DT people's (Rob, Grant) ACK on this I'll be happy to merge it.
+>
+> Until then, I guess it will need to be refined for the next kernel
+> cycle.
+>
+Yes, i refined the patch and sent out again.
+The main issue formerly discussed are where to place the pinmux map
+for binding.
+The new found is that if we use the way as regulator does on dt binding,
+it seems we do not need define pinmux map in dts file since the device node
+relationship already reflects it.
+I'm not sure if it's suitable for pinctrl subsystem,
+but I tried that way in the new patch i sent.
+However, it still have a few issues that it does not support hog_on_boot via
+dt and does not support multi groups since the usage is a little
+different without
+pinmux map.
+We may still need some discussion on how to cover that two issue.
 
-I guess that with Rob or Grant's ack, Tony should be able to merge it.
-That being said, since it is outside mach-omap, I'm not sure what the 
-right path is.
-I can add it in my DTS series, but that one will have dependencies with 
-the i2c driver DT adaptation.
-
-FWIW, Acked-by: Benoit Cousson <b-cousson@ti.com>
-
-Regards,
-Benoit
+Regards
+Dong Aisheng
