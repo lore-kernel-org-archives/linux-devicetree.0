@@ -1,92 +1,82 @@
-From: Igor Grinberg <grinberg@compulab.co.il>
-Subject: Re: [PATCH 1/2] mt_ventoux: very basic support for TeeJet Mt.Ventoux
- board
-Date: Thu, 05 Jan 2012 10:40:21 +0200
-Message-ID: <4F0561F5.4020700@compulab.co.il>
-References: <1324940912-18164-1-git-send-email-yanok@emcraft.com> <1324940912-18164-2-git-send-email-yanok@emcraft.com> <20120104195412.GG15503@ponder.secretlab.ca>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 03/10] mfd: twl-core: Add initial DT support for
+ twl4030/twl6030
+Date: Thu, 5 Jan 2012 11:21:21 +0100
+Message-ID: <4F0579A1.2080102@ti.com>
+References: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
+ <1323439361-1647-4-git-send-email-b-cousson@ti.com>
+ <20120104181224.GJ15503@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120104195412.GG15503@ponder.secretlab.ca>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Ilya Yanok <yanok@emcraft.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sasha_d@emcraft.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120104181224.GJ15503-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Grant,
 
-On 01/04/12 21:54, Grant Likely wrote:
-> On Tue, Dec 27, 2011 at 12:08:31AM +0100, Ilya Yanok wrote:
->> Very basic support for TeeJet Mt.Ventoux board. Able to boot via
->> board-generic and ramdisk/initramfs, however most of peripherals are
->> not supported. Produces tons of twl4030 related errors as this board
->> doesn't have twl4030 installed.
+On 1/4/2012 7:12 PM, Grant Likely wrote:
+> On Fri, Dec 09, 2011 at 03:02:34PM +0100, Benoit Cousson wrote:
+
+[...]
+
+>> @@ -1183,22 +1187,53 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>>   	int				status;
+>>   	unsigned			i;
+>>   	struct twl4030_platform_data	*pdata = client->dev.platform_data;
+>> +	struct device_node		*node = client->dev.of_node;
+>>   	u8 temp;
+>>   	int ret = 0;
 >>
->> Signed-off-by: Ilya Yanok <yanok@emcraft.com>
-> 
-> Comment below, but otherwise:
-> 
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+>> +	if (node&&  !pdata) {
+>> +		/*
+>> +		 * XXX: Temporary fake pdata until the information
+>> +		 * is correctly retrieved by every TWL modules from DT.
+>> +		 */
+>> +		pdata = kzalloc(sizeof(struct twl4030_platform_data),
+>> +				GFP_KERNEL);
+>
+> devm_kzalloc() so that it gets cleaned up on remove.
 
-Though nothing fundamentally different in regard to DT, but
-there is a v3 of this patch set available at [1]
+Yep, it was already updated like that in the v4.
 
-> 
->> ---
->>  arch/arm/boot/dts/am3517_mt_ventoux.dts |   27 +++++++++++++++++++++++++++
->>  1 files changed, 27 insertions(+), 0 deletions(-)
->>  create mode 100644 arch/arm/boot/dts/am3517_mt_ventoux.dts
->>
->> diff --git a/arch/arm/boot/dts/am3517_mt_ventoux.dts b/arch/arm/boot/dts/am3517_mt_ventoux.dts
->> new file mode 100644
->> index 0000000..5eb26d7
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/am3517_mt_ventoux.dts
->> @@ -0,0 +1,27 @@
->> +/*
->> + * Copyright (C) 2011 Ilya Yanok, EmCraft Systems
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +/dts-v1/;
+>> +		if (!pdata) {
+>> +			status = -ENOMEM;
+>> +			goto exit;
+>> +		}
 >> +
->> +/include/ "omap3.dtsi"
->> +
->> +/ {
->> +	model = "TeeJet Mt.Ventoux";
->> +	compatible = "teejet,mt_ventoux", "ti,omap3";
->> +
->> +	memory {
->> +		device_type = "memory";
->> +		reg = <0x80000000 0x10000000>; /* 256 MB */
->> +	};
->> +
->> +	/* AM35xx doesn't have IVA */
-> 
-> Perhaps the AM35xx should have a separate .dtsi file?
+>> +		/*
+>> +		 * XXX: For the moment the IRQs for TWL seems to be encoded in
+>> +		 * the global OMAP space. That should be cleaned to allow
+>> +		 * dynamically adding a new IRQ controller.
+>> +		 */
+>> +		if ((id->driver_data)&  TWL6030_CLASS) {
+>> +			pdata->irq_base = TWL6030_IRQ_BASE;
+>> +			pdata->irq_end = pdata->irq_base + TWL6030_BASE_NR_IRQS;
+>> +		} else {
+>> +			pdata->irq_base = TWL4030_IRQ_BASE;
+>> +			pdata->irq_end = pdata->irq_base + TWL4030_BASE_NR_IRQS;
+>> +		}
+>> +		irq_domain_add_simple(node, pdata->irq_base);
+>
+> Yes, you'll want a follow-up patch to convert to dynamically allocated
+> irqs... but I've got to merge the final irq_domain work first.  :-)
 
-In that case there is a possibility you will get multiple
-<SoC>.dtsi files with the same copy/pasted "disable" stuff.
-Of course this is better than having multiple board files doing this.
+Yes. I already have a version based on Rob's series, but did not push it 
+since Rob was not confident with the merge of that feature for 3.3.
 
-What do you think on splitting the whole thing into <IP>.dtsi files,
-Like I have explained here [2]?
+> Acked-by: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-> 
->> +	soc {
->> +		iva {
->> +			status = "disabled";
->> +		};
->> +	};
->> +};
-
-[1] http://www.spinics.net/lists/linux-omap/msg62185.html
-[2] http://www.spinics.net/lists/linux-omap/msg61975.html
-
-
--- 
-Regards,
-Igor.
+Thanks,
+Benoit
