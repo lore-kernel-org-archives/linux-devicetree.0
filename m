@@ -1,55 +1,92 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [RFC 1/8] gpio/microblaze: Eliminate duplication of
- of_get_named_gpio_flags()
-Date: Thu, 05 Jan 2012 08:28:23 +0100
-Message-ID: <4F055117.7060901@monstr.eu>
-References: <1320801583-12774-1-git-send-email-grant.likely@secretlab.ca>
- <1320801583-12774-2-git-send-email-grant.likely@secretlab.ca>
- <4EF1B36A.8050304@monstr.eu> <20120104183057.GU15503@ponder.secretlab.ca>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Igor Grinberg <grinberg@compulab.co.il>
+Subject: Re: [PATCH 1/2] mt_ventoux: very basic support for TeeJet Mt.Ventoux
+ board
+Date: Thu, 05 Jan 2012 10:40:21 +0200
+Message-ID: <4F0561F5.4020700@compulab.co.il>
+References: <1324940912-18164-1-git-send-email-yanok@emcraft.com> <1324940912-18164-2-git-send-email-yanok@emcraft.com> <20120104195412.GG15503@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120104183057.GU15503-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120104195412.GG15503@ponder.secretlab.ca>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Ilya Yanok <yanok@emcraft.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sasha_d@emcraft.com
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> On Wed, Dec 21, 2011 at 11:22:34AM +0100, Michal Simek wrote:
->> Grant Likely wrote:
->>> of_reset_gpio_handle() is largely a cut-and-paste copy of
->>> of_get_named_gpio_flags(). There really isn't any reason for the
->>> split, so this patch deletes the duplicate function
->>>
->>> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>> Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
->>> ---
->>> arch/microblaze/kernel/reset.c |   43 +--------------------------------------
->>> 1 files changed, 2 insertions(+), 41 deletions(-)
->> Sorry for taking to long.
+Hi Grant,
+
+On 01/04/12 21:54, Grant Likely wrote:
+> On Tue, Dec 27, 2011 at 12:08:31AM +0100, Ilya Yanok wrote:
+>> Very basic support for TeeJet Mt.Ventoux board. Able to boot via
+>> board-generic and ramdisk/initramfs, however most of peripherals are
+>> not supported. Produces tons of twl4030 related errors as this board
+>> doesn't have twl4030 installed.
 >>
->> Tested and applied to microblaze tree.
+>> Signed-off-by: Ilya Yanok <yanok@emcraft.com>
 > 
-> I'd rather take this one through the gpio tree if that is okay.
+> Comment below, but otherwise:
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-OK. Please do.
+Though nothing fundamentally different in regard to DT, but
+there is a v3 of this patch set available at [1]
 
-Thanks,
-Michal
+> 
+>> ---
+>>  arch/arm/boot/dts/am3517_mt_ventoux.dts |   27 +++++++++++++++++++++++++++
+>>  1 files changed, 27 insertions(+), 0 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/am3517_mt_ventoux.dts
+>>
+>> diff --git a/arch/arm/boot/dts/am3517_mt_ventoux.dts b/arch/arm/boot/dts/am3517_mt_ventoux.dts
+>> new file mode 100644
+>> index 0000000..5eb26d7
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/am3517_mt_ventoux.dts
+>> @@ -0,0 +1,27 @@
+>> +/*
+>> + * Copyright (C) 2011 Ilya Yanok, EmCraft Systems
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +/dts-v1/;
+>> +
+>> +/include/ "omap3.dtsi"
+>> +
+>> +/ {
+>> +	model = "TeeJet Mt.Ventoux";
+>> +	compatible = "teejet,mt_ventoux", "ti,omap3";
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0x80000000 0x10000000>; /* 256 MB */
+>> +	};
+>> +
+>> +	/* AM35xx doesn't have IVA */
+> 
+> Perhaps the AM35xx should have a separate .dtsi file?
+
+In that case there is a possibility you will get multiple
+<SoC>.dtsi files with the same copy/pasted "disable" stuff.
+Of course this is better than having multiple board files doing this.
+
+What do you think on splitting the whole thing into <IP>.dtsi files,
+Like I have explained here [2]?
+
+> 
+>> +	soc {
+>> +		iva {
+>> +			status = "disabled";
+>> +		};
+>> +	};
+>> +};
+
+[1] http://www.spinics.net/lists/linux-omap/msg62185.html
+[2] http://www.spinics.net/lists/linux-omap/msg61975.html
+
 
 -- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+Regards,
+Igor.
