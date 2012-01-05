@@ -1,68 +1,424 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] gpio: tegra: Dynamically allocate IRQ base, and
- support DT
-Date: Thu, 5 Jan 2012 13:17:36 +0000
-Message-ID: <20120105131736.GC4641@page>
-References: <1325702378-20863-1-git-send-email-swarren@nvidia.com>
- <1325702378-20863-5-git-send-email-swarren@nvidia.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux mappings
+Date: Thu, 5 Jan 2012 21:47:48 +0800
+Message-ID: <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
+References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
+	<1324402840-32451-3-git-send-email-b29396@freescale.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
+	<7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1325702378-20863-5-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Stephen,
 
-On Wed, Jan 04, 2012 at 11:39:37AM -0700, Stephen Warren wrote:
-> Enhance the driver to dynamically allocate the base IRQ number, and
-> create an IRQ domain for itself. The use of an IRQ domain ensures that
-> any device tree node interrupts properties are correctly parsed.
-> 
-> Describe interrupt-related properties in the device tree binding docs,
-> and the contents of "child" node interrupts property.
-> 
-> Update tegra*.dtsi to specify the required interrupt-related properties.
-> 
-> Finally, remove the definition of TEGRA_GPIO_TO_IRQ; this macro no longer
-> gives correct results since the IRQ numbers for GPIOs are dynamically
-> allocated.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> This patch depends on:
-> http://ftp.arm.linux.org.uk/pub/armlinux/kernel/git-cur/linux-2.6-arm.git
-> devel-stable c87fb57346fc7653ace98769f148e0dcd88ac1ee
-> ---
->  .../devicetree/bindings/gpio/gpio_nvidia.txt       |   12 +++++++++
->  arch/arm/boot/dts/tegra20.dtsi                     |    2 +
->  arch/arm/boot/dts/tegra30.dtsi                     |    2 +
->  arch/arm/mach-tegra/include/mach/gpio-tegra.h      |    2 -
->  drivers/gpio/gpio-tegra.c                          |   25 ++++++++++++++-----
->  5 files changed, 34 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> index 50b363c..d114e19 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-> @@ -8,6 +8,16 @@ Required properties:
->    second cell is used to specify optional parameters:
->    - bit 0 specifies polarity (0 for normal, 1 for inverted)
->  - gpio-controller : Marks the device node as a GPIO controller.
-> +- #interrupt-cells : Should be 2.
-> +  The first cell is the GPIO number.
-> +  The second cell is used to specify flags:
-> +    bits[3:0] trigger type and level flags:
-> +      1 = low-to-high edge triggered.
-> +      2 = high-to-low edge triggered.
-> +      4 = active high level-sensitive.
-> +      8 = active low level-sensitive.
-> +      Valid combinations are 1, 2, 3, 4, 8.
+On Sun, Dec 25, 2011 at 11:37 AM, Stephen Warren <swarren@nvidia.com> w=
+rote:
+> Dong Aisheng-B29396 wrote at Thursday, December 22, 2011 1:18 AM:
+> ...
+>> Up to here I understand that your propose is co-locate pinmux Resour=
+ce within device
+>> Node definitions and define pinmux maps in the iomuxc device node.
+>> (If I understand wrongly, please let me know)
+>> It's just like:
+>> Sdhci1: sdhci@1000 {
+>> =A0 =A0 compatible =3D "...";
+>> =A0 =A0 regs =3D <...>;
+>> =A0 =A0 pinmux =3D <&pmx>;
+>> =A0 =A0 pinmux-usage =3D {
+>> =A0 =A0 =A0 =A0 // Some representation of the pins/groups/functions =
+used
+>> =A0 =A0 =A0 =A0 // by just this HW block.
+>> =A0 =A0 };
+>> };
+>>
+>> iomuxc@020e0000 {
+>> =A0 =A0 compatible =3D "fsl,imx6-pinmux";
+>> =A0 =A0 usage {
+>> =A0 =A0 =A0 =A0 sd4 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 dev =3D <&sdhci1>;
+>> =A0 =A0 =A0 =A0 };
+>> =A0 =A0 =A0 =A0 sd3 {
+>> =A0 =A0 =A0 =A0 =A0 =A0 dev =3D <&sdhci2>;
+>> =A0 =A0 =A0 =A0 };
+>> =A0 =A0 =A0 =A0 ...
+>> =A0 =A0 };
+>> };
+>> My concern is that would pass the effort to each driver to handle pi=
+nmux-usage.
+>
+> See a little above for what I was thinking.
+>
+> That said, we could =A0probably handle a standardized pinmux-usage pr=
+operty
+> in each driver without impacting each driver too much; it's just that=
+ the
+> core driver code, or the pinctrl code, would have to scan all device =
+nodes
+> for this property and act on it, rather than the drivers for each nod=
+e,
+> rather like regs/interrupts are handled by core code and converted to
+> device resources.
+>
+> ...
+>> The same question applies to clock and regulator: does each device n=
+eed
+>> Define its clock and regulator properties?
+>
+> Yes, in those cases I believe each device does contain a phandle to t=
+he
+> resources it uses.
+>
 
-It looks to me like the tegra gpio driver can do IRQ_TYPE_EDGE_BOTH so I 
-would expect 12 to be a valid combination too no?
+I tried this way that each device node contains a phandle named
+'pinmux' pointing
+to a specific pinmux function. When the device calling pinmux_get we wi=
+ll
+find the pinmux function and its pinctrl device via this phandle, then
+we can construct
+a pinmux map to use for this device.
+Then we do not need define pinmux map table in dts file any more.
+This looks better than before from hw point of vew in define device nod=
+es.
 
-Jamie
+I paste the initial patch here for your review to see if it's ok.
+However there're still two issues:
+1) since we still do not have a standardized pinmux function
+definition(it looks not easy to define since it varies on different
+platforms and pinctrl core also does not require a standardized
+function, not sure if we should define one)
+we can not get pin group info via dt in a standardized way for
+construct pinmux map.
+That means we do not support parsing multi pin groups for one function =
+from dt.
+However it will not affect the function in most case since board dts
+file usually know which pin group for which function and usually one
+pin group are defined.
+I still do not see if any requirement of multi pin groups are needed vi=
+a dt.
+2) we still do not support hog_on_boot due to we do not have pinmux
+map tables in dt and it varies a bit
+on the using from non-dt platform,
+I'm still trying to figuring out a way to cover this issue.
+If you have any good suggestion please let me know.
+
+=46rom 651113ff5909cd054396e97f25f386f846046a55 Mon Sep 17 00:00:00 200=
+1
+=46rom: Dong Aisheng <b29396@freescale.com>
+Date: Thu, 5 Jan 2012 21:11:08 +0800
+Subject: [PATCH 1/1] pinctrl: add dt binding support for pinmux mapping=
+s
+
+Since dt already has the pinmux map information in dts file, it does
+not have a pinmux maps table registered in machine code as non-dt
+platfrom does. Instead, it will create a pinmux map for each device
+dynamically by parsing the device node when calling pinmux_get.
+
+To support this, each device wanting to use a pinmux function should
+define a phandle named 'pinmux' pointing to a specific pinmux function
+under its device node. And the pinmux function nodes should be defined
+under the pinctrl device it belongs to.
+
+The pinmux core will use this phandle to find the pinmux function
+name and the pinctrl device this function belongs to to construct
+a pinmux map for this device to use.
+
+The constraints are that we still do not support parsing multi groups
+for a function via dt, that means only first group will be used.
+Usually this does not affect the pinmux to work well via dt since the
+board dts file knows which pin group for which function and we do not
+need to define more than one useless groups for that function.
+
+Another constraint is that we still do not support hog_on_boot via dt
+since dt does not have a pinmux map table and we need to create it
+dynamically. We still need to find a good way to cover this issue.
+
+Signed-off-by: Dong Aisheng <b29396@freescale.com>
+---
+ .../devicetree/bindings/pinctrl/pinctrl.txt        |   49 ++++++++++++=
+++
+ arch/arm/boot/dts/imx6q-sabreauto.dts              |   24 +++++++
+ drivers/pinctrl/core.c                             |   69 ++++++++++++=
+++++++++
+ drivers/pinctrl/core.h                             |    2 +
+ drivers/pinctrl/pinmux.c                           |   27 +++++++-
+ 5 files changed, 169 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl.t=
+xt
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl.txt
+b/Documentation/devicetree/bindings/pinctrl/pinctrl.txt
+new file mode 100644
+index 0000000..013e733
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl.txt
+@@ -0,0 +1,49 @@
++The pin control subsystem
++
++The pin control subsystem supports parsing pinmux map from device tree=
+=2E
++To support this, each device wanting to use a pinmux function should
++define a phandle named 'pinmux' pointing to a specific pinmux function
++under its device node. And the pinmux function nodes should be defined
++under the pinctrl device it belongs to.
++
++The pinmux core will use this phandle to find the pinmux function
++name and the pinctrl device this function belongs to to construct
++a pinmux map for this device to use.
++
++Examples:
++soc {
++	aips-bus@02000000 { /* AIPS1 */
++		iomuxc@020e0000 {
++			pinctrl_uart4: uart4 {
++				func-name =3D "uart4";
++				grp-name =3D "uart4grp";
++				grp-pins =3D <107 108>;
++				num-pins =3D <2>;
++				grp-mux =3D <4 4>;
++				num-mux =3D <2>;
++			};
++
++			pinctrl_sd4: sd4 {
++				func-name =3D "sd4";
++				grp-name =3D "sd4grp";
++				grp-pins =3D <170 171 180 181 182 183 184 185 186 187>;
++				num-pins =3D <10>;
++				grp-mux =3D <0 0 1 1 1 1 1 1 1 1>;
++				num-mux =3D <10>;
++			};
++		};
++	};
++
++	aips-bus@02100000 { /* AIPS2 */
++		usdhc@0219c000 { /* uSDHC4 */
++			fsl,card-wired;
++			status =3D "okay";
++			pinmux =3D <&pinctrl_sd4>;
++		};
++
++		uart3: uart@021f0000 { /* UART4 */
++			status =3D "okay";
++			pinmux =3D <&pinctrl_uart4>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6q-sabreauto.dts
+b/arch/arm/boot/dts/imx6q-sabreauto.dts
+index 072974e..0863b1d 100644
+--- a/arch/arm/boot/dts/imx6q-sabreauto.dts
++++ b/arch/arm/boot/dts/imx6q-sabreauto.dts
+@@ -26,6 +26,28 @@
+ 	};
+
+ 	soc {
++		aips-bus@02000000 { /* AIPS1 */
++			iomuxc@020e0000 {
++				pinctrl_uart4: uart4 {
++					func-name =3D "uart4";
++					grp-name =3D "uart4grp";
++					grp-pins =3D <107 108>;
++					num-pins =3D <2>;
++					grp-mux =3D <4 4>;
++					num-mux =3D <2>;
++				};
++
++				pinctrl_sd4: sd4 {
++					func-name =3D "sd4";
++					grp-name =3D "sd4grp";
++					grp-pins =3D <170 171 180 181 182 183 184 185 186 187>;
++					num-pins =3D <10>;
++					grp-mux =3D <0 0 1 1 1 1 1 1 1 1>;
++					num-mux =3D <10>;
++				};
++			};
++		};
++
+ 		aips-bus@02100000 { /* AIPS2 */
+ 			enet@02188000 {
+ 				phy-mode =3D "rgmii";
+@@ -42,10 +64,12 @@
+ 			usdhc@0219c000 { /* uSDHC4 */
+ 				fsl,card-wired;
+ 				status =3D "okay";
++				pinmux =3D <&pinctrl_sd4>;
+ 			};
+
+ 			uart3: uart@021f0000 { /* UART4 */
+ 				status =3D "okay";
++				pinmux =3D <&pinctrl_uart4>;
+ 			};
+ 		};
+ 	};
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 39f393b..09de5fa 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -20,6 +20,7 @@
+ #include <linux/err.h>
+ #include <linux/list.h>
+ #include <linux/mutex.h>
++#include <linux/of_device.h>
+ #include <linux/spinlock.h>
+ #include <linux/sysfs.h>
+ #include <linux/debugfs.h>
+@@ -48,6 +49,74 @@ void *pinctrl_dev_get_drvdata(struct pinctrl_dev *pc=
+tldev)
+ EXPORT_SYMBOL_GPL(pinctrl_dev_get_drvdata);
+
+ /**
++ * of_get_pinctrl_dev_from_dev() - look up pin controller device via d=
+t
++ * @dev: a device pointer
++ * @map: the pinmux map returned
++ *
++ * Looks up a pin control device matching a certain device name and re=
+turn
++ * a pinmux map constructed from dt info.
++ */
++struct pinctrl_dev *of_get_pinctrl_dev_from_dev(struct device *dev,
++						struct pinmux_map **map)
++{
++	struct pinctrl_dev *pctldev =3D NULL;
++	struct device_node *pinmux_np;
++	struct device_node *pinctrl_np;
++	struct pinmux_map *p;
++	bool found =3D false;
++	char str[16];
++
++	if (!dev || !dev->of_node)
++		return NULL;
++
++	dev_dbg(dev, "find pinctrl dev and pinmux map from device tree\n");
++
++	pinmux_np =3D of_parse_phandle(dev->of_node, "pinmux", 0);
++	if (!pinmux_np) {
++		dev_err(dev, "unable to get the phandle pinmux\n");
++		return NULL;
++	}
++
++	/* pinmux function nodes should be subnodes of pinctrl device */
++	pinctrl_np =3D of_get_parent(pinmux_np);
++	if (!pinctrl_np)
++		return NULL;
++
++	mutex_lock(&pinctrldev_list_mutex);
++	list_for_each_entry(pctldev, &pinctrldev_list, node) {
++		if (pctldev->dev->of_node =3D=3D pinctrl_np) {
++			found =3D true;
++			break;
++		}
++	}
++	mutex_unlock(&pinctrldev_list_mutex);
++
++	if (found) {
++		/*
++		 * construct a pinmux map from device tree for this device
++		 * Note: for dt we do not specify the pin group, instead we
++		 * use the first group as default.
++		 */
++		p =3D devm_kzalloc(dev, sizeof(struct pinmux_map), GFP_KERNEL);
++		if (!p)
++			return NULL;
++		*map =3D p;
++		snprintf(str, 15, "map_%s", pinmux_np->name);
++		p->name =3D kstrdup(str, GFP_KERNEL);
++		if (!p->name)
++			return NULL;
++		p->function =3D pinmux_np->name;
++		p->ctrl_dev =3D pctldev->dev;
++		p->dev =3D dev;
++		dev_dbg(dev, "found pinctrl: %s  map: %s function %s dev %s\n",
++			dev_name(p->ctrl_dev), p->name,
++			p->function, dev_name(dev));
++	}
++
++	return found ? pctldev : NULL;
++}
++
++/**
+  * get_pinctrl_dev_from_dev() - look up pin controller device
+  * @dev: a device pointer, this may be NULL but then devname needs to =
+be
+  *	defined instead
+diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+index 5375582..6077508 100644
+--- a/drivers/pinctrl/core.h
++++ b/drivers/pinctrl/core.h
+@@ -69,6 +69,8 @@ struct pin_desc {
+
+ struct pinctrl_dev *get_pinctrl_dev_from_dev(struct device *dev,
+ 					     const char *dev_name);
++struct pinctrl_dev *of_get_pinctrl_dev_from_dev(struct device *dev,
++						struct pinmux_map **map);
+ struct pin_desc *pin_desc_get(struct pinctrl_dev *pctldev, unsigned in=
+t pin);
+ int pin_get_from_name(struct pinctrl_dev *pctldev, const char *name);
+ int pinctrl_get_device_gpio_range(unsigned gpio,
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 432feb6..cc1b32a 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -20,6 +20,7 @@
+ #include <linux/err.h>
+ #include <linux/list.h>
+ #include <linux/mutex.h>
++#include <linux/of_device.h>
+ #include <linux/spinlock.h>
+ #include <linux/string.h>
+ #include <linux/sysfs.h>
+@@ -696,7 +697,7 @@ static void pinmux_free_groups(struct pinmux *pmx)
+ struct pinmux *pinmux_get(struct device *dev, const char *name)
+ {
+
+-	struct pinmux_map const *map =3D NULL;
++	struct pinmux_map *map =3D NULL;
+ 	struct pinctrl_dev *pctldev =3D NULL;
+ 	const char *devname =3D NULL;
+ 	struct pinmux *pmx;
+@@ -727,7 +728,29 @@ struct pinmux *pinmux_get(struct device *dev,
+const char *name)
+ 	pmx->func_selector =3D UINT_MAX;
+ 	INIT_LIST_HEAD(&pmx->groups);
+
+-	/* Iterate over the pinmux maps to locate the right ones */
++	/*
++	 * do a dt based lookup first to see if we can find a pinctrl device
++	 * and a pinmux map for a specific device. If not found fallback
++	 * to search the pinmux_maps as before.
++	 */
++	pctldev =3D of_get_pinctrl_dev_from_dev(dev, &map);
++	if (pctldev) {
++		ret =3D pinmux_enable_muxmap(pctldev, pmx, dev,
++					   devname, map);
++		if (ret) {
++			pinmux_free_groups(pmx);
++			kfree(pmx);
++			return ERR_PTR(ret);
++		}
++		num_maps++;
++	}
++
++	/*
++	 * Iterate over the pinmux maps to locate the right ones
++	 * Note: if we're using dt binding, we do not have a predefined pinmu=
+x
++	 * maps table registered in machine code as non-dt platfrom does.
++	 * Then, pinmux_maps_num is 0 by default.
++	 */
+ 	for (i =3D 0; i < pinmux_maps_num; i++) {
+ 		map =3D &pinmux_maps[i];
+ 		found_map =3D false;
+--=20
+1.7.0.4
+
+
+Regards
+Dong Aisheng
