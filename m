@@ -1,210 +1,61 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: at91: pit add DT support
-Date: Fri, 06 Jan 2012 09:47:37 -0600
-Message-ID: <4F071799.3030200@gmail.com>
-References: <1325784348-29481-1-git-send-email-nicolas.ferre@atmel.com>
- <1325866830-13259-1-git-send-email-nicolas.ferre@atmel.com>
+From: David Brown <davidb@codeaurora.org>
+Subject: Re: [PATCH] irqdomain: Initialize number of IRQs for simple domains
+Date: Fri, 6 Jan 2012 08:07:44 -0800
+Message-ID: <20120106160744.GA7687@codeaurora.org>
+References: <1325860112-22051-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1325866830-13259-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1325860112-22051-1-git-send-email-thierry.reding@avionic-design.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Grant Likely <grant.likely@secretlab.ca>, Daniel Walker <dwalker@fifo99.com>, Jamie Iles <jamie@jamieiles.com>, Russell King <linux@arm.linux.org.uk>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "open list:ARM/QUALCOMM MSM..." <linux-arm-msm@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Barry Song <baohua.song@csr.com>, Thomas Gleixner <tglx@linutronix.de>, "open list:OMAP SUPPORT" <linux-omap@vger.kernel.org>, Andrew Victor <linux@maxim.org.za>, "open list:ARM/ATMEL AT91RM9..." <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, Bryan Huntsman <bryanh@codeaurora.org>, Richard Zhao <richard.zhao>
 List-Id: devicetree@vger.kernel.org
 
-On 01/06/2012 10:20 AM, Nicolas Ferre wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> 
-> Retreive registers address and IRQ from device tree entry. Fall back
-> to built-in values if an error occurs.
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: change error path and interrupts property handling]
-> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v4: - change of_at91sam926x_pit_init() return value usage logic as
->       suggested by Rob Herring
->     - irq_of_parse_and_map() returns 0 on error: change test according to 
->       Grant Likely note.
-> 
-> v3: - use irq_of_parse_and_map() for handling irq numbers specified by DT.
->       Correction proposed by Jamie Iles.
-> 
-> v2: - new specification of irq numbers in DT (due to modification of AIC code)
->     - new error path in of_at91sam926x_pit_init()
->     - fall back to built-in values if an error occurs
->     - use of of_property_read_u32() to get irq property
-> 
->  .../devicetree/bindings/arm/atmel-at91.txt         |    8 +++
->  arch/arm/boot/dts/at91sam9g20.dtsi                 |    5 ++
->  arch/arm/boot/dts/at91sam9g45.dtsi                 |    6 ++
->  arch/arm/mach-at91/at91sam926x_time.c              |   60 ++++++++++++++++++--
->  4 files changed, 73 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> new file mode 100644
-> index 0000000..380f711
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> @@ -0,0 +1,8 @@
-> +Atmel AT91 device tree bindings.
-> +================================
-> +
-> +PIT Timer required properties:
-> +- compatible: Should be "atmel,at91sam9260-pit"
-> +- reg: Should contain registers location and length
-> +- interrupts: Should contain interrupt for the PIT which is the IRQ line
-> +  shared across all System Controller members.
-> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-> index ea942b5..e10842a 100644
-> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-> @@ -57,6 +57,11 @@
->  				reg = <0xfffff000 0x200>;
->  			};
+On Fri, Jan 06, 2012 at 03:28:25PM +0100, Thierry Reding wrote:
+> diff --git a/arch/arm/mach-msm/board-msm8x60.c b/arch/arm/mach-msm/board-msm8x60.c
+> index 0a11342..a50c7e2 100644
+> --- a/arch/arm/mach-msm/board-msm8x60.c
+> +++ b/arch/arm/mach-msm/board-msm8x60.c
+> @@ -84,8 +84,11 @@ static void __init msm8x60_dt_init(void)
 >  
-> +			pit: timer@fffffd30 {
-> +				compatible = "atmel,at91sam9260-pit";
-> +				reg = <0xfffffd30 0xf>;
-> +				interrupts = <1 4>;
-> +			};
->  
->  			pioA: gpio@fffff400 {
->  				compatible = "atmel,at91rm9200-gpio";
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-> index ebc9617..28a678f 100644
-> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -58,6 +58,12 @@
->  				reg = <0xfffff000 0x200>;
->  			};
->  
-> +			pit: timer@fffffd30 {
-> +				compatible = "atmel,at91sam9260-pit";
-> +				reg = <0xfffffd30 0xf>;
-> +				interrupts = <1 4>;
-> +			};
-> +
->  			dma: dma-controller@ffffec00 {
->  				compatible = "atmel,at91sam9g45-dma";
->  				reg = <0xffffec00 0x200>;
-> diff --git a/arch/arm/mach-at91/at91sam926x_time.c b/arch/arm/mach-at91/at91sam926x_time.c
-> index d89ead7..802fea3 100644
-> --- a/arch/arm/mach-at91/at91sam926x_time.c
-> +++ b/arch/arm/mach-at91/at91sam926x_time.c
-> @@ -14,6 +14,9 @@
->  #include <linux/kernel.h>
->  #include <linux/clk.h>
->  #include <linux/clockchips.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
->  
->  #include <asm/mach/time.h>
->  
-> @@ -133,7 +136,8 @@ static irqreturn_t at91sam926x_pit_interrupt(int irq, void *dev_id)
->  static struct irqaction at91sam926x_pit_irq = {
->  	.name		= "at91_tick",
->  	.flags		= IRQF_SHARED | IRQF_DISABLED | IRQF_TIMER | IRQF_IRQPOLL,
-> -	.handler	= at91sam926x_pit_interrupt
-> +	.handler	= at91sam926x_pit_interrupt,
-> +	.irq		= AT91_ID_SYS,
->  };
->  
->  static void at91sam926x_pit_reset(void)
-> @@ -149,6 +153,49 @@ static void at91sam926x_pit_reset(void)
->  	pit_write(AT91_PIT_MR, (pit_cycle - 1) | AT91_PIT_PITEN);
->  }
->  
-> +#ifdef CONFIG_OF
-> +static struct of_device_id timer_ids[] = {
-> +	{ .compatible = "atmel,at91sam9260-pit" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static int __init of_at91sam926x_pit_init(void)
-> +{
-> +	struct device_node	*np;
-> +	int			ret;
-> +
-> +	np = of_find_matching_node(NULL, timer_ids);
-> +	if (!np)
-> +		goto err;
-> +
-> +	pit_base_addr = of_iomap(np, 0);
-> +	if (!pit_base_addr)
-> +		goto node_err;
-> +
-> +	/* Get the interrupts property */
-> +	ret = irq_of_parse_and_map(np, 0);
-> +	if (!ret)
-> +		goto ioremap_err;
-> +	at91sam926x_pit_irq.irq = ret;
-> +
-> +	of_node_put(np);
-> +
-> +	return 0;
-> +
-> +ioremap_err:
-> +	iounmap(pit_base_addr);
-> +node_err:
-> +	of_node_put(np);
-> +err:
-> +	return -EINVAL;
-> +}
-> +#else
-> +static int __init of_at91sam926x_pit_init(void)
-> +{
-> +	return -EINVAL;
-> +}
-> +#endif
-> +
->  /*
->   * Set up both clocksource and clockevent support.
->   */
-> @@ -177,7 +224,7 @@ static void __init at91sam926x_pit_init(void)
->  	clocksource_register_hz(&pit_clk, pit_rate);
->  
->  	/* Set up irq handler */
-> -	setup_irq(AT91_ID_SYS, &at91sam926x_pit_irq);
-> +	setup_irq(at91sam926x_pit_irq.irq, &at91sam926x_pit_irq);
->  
->  	/* Set up and register clockevents */
->  	pit_clkevt.mult = div_sc(pit_rate, NSEC_PER_SEC, pit_clkevt.shift);
-> @@ -193,10 +240,11 @@ static void at91sam926x_pit_suspend(void)
->  
->  void __init at91sam926x_ioremap_pit(u32 addr)
->  {
-> -	pit_base_addr = ioremap(addr, 16);
-> -
-> -	if (!pit_base_addr)
-> -		panic("Impossible to ioremap PIT\n");
-> +	if (of_at91sam926x_pit_init() < 0) {
-> +		pit_base_addr = ioremap(addr, 16);
-> +		if (!pit_base_addr)
-> +			panic("Impossible to ioremap PIT\n");
+>  	node = of_find_matching_node_by_address(NULL, msm_dt_gic_match,
+>  			MSM8X60_QGIC_DIST_PHYS);
+> -	if (node)
+> -		irq_domain_add_simple(node, GIC_SPI_START);
+> +	if (node) {
+> +		struct irq_domain *domain = irq_domain_add_simple(node,
+> +				GIC_SPI_START, NR_MSM_IRQS);
+> +		WARN_ON(IS_ERR(domain));
 > +	}
-
-This is not what I meant. I meant call either at91sam926x_ioremap_pit or
-of_at91sam926x_pit_init. Don't nest the calls and keep the OF and non-OF
-init somewhat separate. The fact that you are passing in the physical
-address and then ignoring it for the OF case is what I have issue with.
-
-Rob
-
->  }
 >  
->  struct sys_timer at91sam926x_timer = {
+>  	if (of_machine_is_compatible("qcom,msm8660-surf")) {
+>  		printk(KERN_INFO "Init surf UART registers\n");
+
+This is probably a consequence of MSM not really being "simple", but
+just using that.  However, NR_MSM_IRQS is only the number of IRQs on
+the MSM core.  There are also GPIO irqs, and potentially board IRQs
+(the board has an I2C-based chip with a bunch of IRQ lines on it).
+
+The only define that captures this now is 'NR_IRQS', even though we're
+trying to get rid of that.
+
+Ultimately, the correct answer will be to get the various interrupt
+controllers using their own domains, but for now, this needs to be a
+larger value to avoid missing a bunch of the interrupts.
+
+David
+
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
