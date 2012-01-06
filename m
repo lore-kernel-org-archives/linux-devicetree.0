@@ -1,223 +1,66 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: at91: pit add DT support
-Date: Fri, 06 Jan 2012 18:28:13 +0100
-Message-ID: <4F072F2D.20806@atmel.com>
-References: <1325784348-29481-1-git-send-email-nicolas.ferre@atmel.com>
- <1325866830-13259-1-git-send-email-nicolas.ferre@atmel.com>
- <4F071799.3030200@gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH V2 1/4] i2c: tegra: Add __devinit/exit to probe/remove
+Date: Fri, 6 Jan 2012 09:45:01 -0800
+Message-ID: <CAOesGMjx0nA5Y_Cv8ECBcZP45EyR5BPUNXEapCN3JjdWTjpo8A@mail.gmail.com>
+References: <1324189772-26914-1-git-send-email-swarren@nvidia.com>
+	<20111220015634.GA27789@quad.lixom.net>
+	<CAM=Q2cs8K4vraWPNqervcmxEqUGiAbng+44+L9OhD3ijPw9tAA@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF176BE92E21@HQMAIL01.nvidia.com>
+	<20120106162615.GA8441@trinity.fluff.org>
+	<74CDBE0F657A3D45AFBB94109FB122FF177EE39E15@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F071799.3030200-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE39E15-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/06/2012 04:47 PM, Rob Herring :
-> On 01/06/2012 10:20 AM, Nicolas Ferre wrote:
->> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+On Fri, Jan 6, 2012 at 8:47 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wro=
+te:
+> Ben Dooks wrote at Friday, January 06, 2012 9:26 AM:
+>> On Tue, Dec 20, 2011 at 01:47:29PM -0800, Stephen Warren wrote:
+>> > Shubhrajyoti Datta wrote at Monday, December 19, 2011 11:15 PM:
+>> > ...
+>> > > Hi Stephen ,
+>> > > could you check this one also
+>> > > thanks.
+>> > >
+>> > > From: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
+>> > > Date: Tue, 20 Dec 2011 11:40:51 +0530
+>> > > Subject: [PATCH] I2C : tegra : devexit in remove
+>> > >
+>> > > Adding I2C __devexxit in remove
+>> > >
+>> > > Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> > > Signed-off-by: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
+>> >
+>> > Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> >
+>> > Ben or Olof,
+>> >
+>> > > - =A0 =A0 =A0 .remove =A0=3D tegra_i2c_remove,
+>> > > + =A0 =A0 =A0 .remove =A0=3D__devexit_p(tegra_i2c_remove),
+>> >
+>> > When you apply this, can you fix it up to add a space after the =3D=
+ in
+>> > the modified line? If you want, I can post an updated version to d=
+o that.
 >>
->> Retreive registers address and IRQ from device tree entry. Fall back
->> to built-in values if an error occurs.
+>> Let me know if you want anything applying or a pull-request processe=
+d.
 >>
->> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: change error path and interrupts property handling]
->> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> Reviewed-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
->> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> ---
->> v4: - change of_at91sam926x_pit_init() return value usage logic as
->>       suggested by Rob Herring
->>     - irq_of_parse_and_map() returns 0 on error: change test according to 
->>       Grant Likely note.
+>> I think once fixed the patches would be fine and I ack them:
 >>
->> v3: - use irq_of_parse_and_map() for handling irq numbers specified by DT.
->>       Correction proposed by Jamie Iles.
->>
->> v2: - new specification of irq numbers in DT (due to modification of AIC code)
->>     - new error path in of_at91sam926x_pit_init()
->>     - fall back to built-in values if an error occurs
->>     - use of of_property_read_u32() to get irq property
->>
->>  .../devicetree/bindings/arm/atmel-at91.txt         |    8 +++
->>  arch/arm/boot/dts/at91sam9g20.dtsi                 |    5 ++
->>  arch/arm/boot/dts/at91sam9g45.dtsi                 |    6 ++
->>  arch/arm/mach-at91/at91sam926x_time.c              |   60 ++++++++++++++++++--
->>  4 files changed, 73 insertions(+), 6 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
->> new file mode 100644
->> index 0000000..380f711
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
->> @@ -0,0 +1,8 @@
->> +Atmel AT91 device tree bindings.
->> +================================
->> +
->> +PIT Timer required properties:
->> +- compatible: Should be "atmel,at91sam9260-pit"
->> +- reg: Should contain registers location and length
->> +- interrupts: Should contain interrupt for the PIT which is the IRQ line
->> +  shared across all System Controller members.
->> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
->> index ea942b5..e10842a 100644
->> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
->> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
->> @@ -57,6 +57,11 @@
->>  				reg = <0xfffff000 0x200>;
->>  			};
->>  
->> +			pit: timer@fffffd30 {
->> +				compatible = "atmel,at91sam9260-pit";
->> +				reg = <0xfffffd30 0xf>;
->> +				interrupts = <1 4>;
->> +			};
->>  
->>  			pioA: gpio@fffff400 {
->>  				compatible = "atmel,at91rm9200-gpio";
->> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
->> index ebc9617..28a678f 100644
->> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
->> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
->> @@ -58,6 +58,12 @@
->>  				reg = <0xfffff000 0x200>;
->>  			};
->>  
->> +			pit: timer@fffffd30 {
->> +				compatible = "atmel,at91sam9260-pit";
->> +				reg = <0xfffffd30 0xf>;
->> +				interrupts = <1 4>;
->> +			};
->> +
->>  			dma: dma-controller@ffffec00 {
->>  				compatible = "atmel,at91sam9g45-dma";
->>  				reg = <0xffffec00 0x200>;
->> diff --git a/arch/arm/mach-at91/at91sam926x_time.c b/arch/arm/mach-at91/at91sam926x_time.c
->> index d89ead7..802fea3 100644
->> --- a/arch/arm/mach-at91/at91sam926x_time.c
->> +++ b/arch/arm/mach-at91/at91sam926x_time.c
->> @@ -14,6 +14,9 @@
->>  #include <linux/kernel.h>
->>  #include <linux/clk.h>
->>  #include <linux/clockchips.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->>  
->>  #include <asm/mach/time.h>
->>  
->> @@ -133,7 +136,8 @@ static irqreturn_t at91sam926x_pit_interrupt(int irq, void *dev_id)
->>  static struct irqaction at91sam926x_pit_irq = {
->>  	.name		= "at91_tick",
->>  	.flags		= IRQF_SHARED | IRQF_DISABLED | IRQF_TIMER | IRQF_IRQPOLL,
->> -	.handler	= at91sam926x_pit_interrupt
->> +	.handler	= at91sam926x_pit_interrupt,
->> +	.irq		= AT91_ID_SYS,
->>  };
->>  
->>  static void at91sam926x_pit_reset(void)
->> @@ -149,6 +153,49 @@ static void at91sam926x_pit_reset(void)
->>  	pit_write(AT91_PIT_MR, (pit_cycle - 1) | AT91_PIT_PITEN);
->>  }
->>  
->> +#ifdef CONFIG_OF
->> +static struct of_device_id timer_ids[] = {
->> +	{ .compatible = "atmel,at91sam9260-pit" },
->> +	{ /* sentinel */ }
->> +};
->> +
->> +static int __init of_at91sam926x_pit_init(void)
->> +{
->> +	struct device_node	*np;
->> +	int			ret;
->> +
->> +	np = of_find_matching_node(NULL, timer_ids);
->> +	if (!np)
->> +		goto err;
->> +
->> +	pit_base_addr = of_iomap(np, 0);
->> +	if (!pit_base_addr)
->> +		goto node_err;
->> +
->> +	/* Get the interrupts property */
->> +	ret = irq_of_parse_and_map(np, 0);
->> +	if (!ret)
->> +		goto ioremap_err;
->> +	at91sam926x_pit_irq.irq = ret;
->> +
->> +	of_node_put(np);
->> +
->> +	return 0;
->> +
->> +ioremap_err:
->> +	iounmap(pit_base_addr);
->> +node_err:
->> +	of_node_put(np);
->> +err:
->> +	return -EINVAL;
->> +}
->> +#else
->> +static int __init of_at91sam926x_pit_init(void)
->> +{
->> +	return -EINVAL;
->> +}
->> +#endif
->> +
->>  /*
->>   * Set up both clocksource and clockevent support.
->>   */
->> @@ -177,7 +224,7 @@ static void __init at91sam926x_pit_init(void)
->>  	clocksource_register_hz(&pit_clk, pit_rate);
->>  
->>  	/* Set up irq handler */
->> -	setup_irq(AT91_ID_SYS, &at91sam926x_pit_irq);
->> +	setup_irq(at91sam926x_pit_irq.irq, &at91sam926x_pit_irq);
->>  
->>  	/* Set up and register clockevents */
->>  	pit_clkevt.mult = div_sc(pit_rate, NSEC_PER_SEC, pit_clkevt.shift);
->> @@ -193,10 +240,11 @@ static void at91sam926x_pit_suspend(void)
->>  
->>  void __init at91sam926x_ioremap_pit(u32 addr)
->>  {
->> -	pit_base_addr = ioremap(addr, 16);
->> -
->> -	if (!pit_base_addr)
->> -		panic("Impossible to ioremap PIT\n");
->> +	if (of_at91sam926x_pit_init() < 0) {
->> +		pit_base_addr = ioremap(addr, 16);
->> +		if (!pit_base_addr)
->> +			panic("Impossible to ioremap PIT\n");
->> +	}
-> 
-> This is not what I meant. I meant call either at91sam926x_ioremap_pit or
-> of_at91sam926x_pit_init. Don't nest the calls and keep the OF and non-OF
-> init somewhat separate. The fact that you are passing in the physical
-> address and then ignoring it for the OF case is what I have issue with.
+>> Acked-by: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+>
+> Olof, since you took the original through the Tegra tree, I think it
+> makes sense for us to take this fix through there too, and for 3.3?
+> The patch above is http://patchwork.ozlabs.org/patch/132349/
 
-I see...
+Yep, will do.
 
-I did not understand this way because I was so obsessed by the fact to
-not introduce another interface to the PIT.
 
-But it is true that as our future SoCs will only rely on DT to get PIT
-data, we will not have the knowledge of its physical address: this is
-speaking in favor of what you are saying -> I should keep those init
-separated and called from the <soc_name>_ioremap_registers() functions.
-
-Jean-Christophe, do you agree with this? If yes, I have already the
-patch ready and will send a v5 of this one...
-
-Bye,
--- 
-Nicolas Ferre
+-Olof
