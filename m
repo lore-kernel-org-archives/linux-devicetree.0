@@ -1,16 +1,13 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: Device tree bindings for linux ramoops use
-Date: Fri, 6 Jan 2012 16:58:23 +0000
-Message-ID: <20120106165823.GB3466@page>
-References: <CAOesGMiKBQM61DkLFoTcvMFWV2UCgomLQYDX65_Tkmtoy_hGCg@mail.gmail.com>
- <4F06A120.8080505@firmworks.com>
- <CAOesGMgstHqtTo0X9Y-SSU+VTUxYRrXW=3h=EhH-biMeDXik8g@mail.gmail.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] irqdomain: Initialize number of IRQs for simple domains
+Date: Fri, 6 Jan 2012 17:58:43 +0100
+Message-ID: <4F072843.6050306@ti.com>
+References: <1325860112-22051-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgstHqtTo0X9Y-SSU+VTUxYRrXW=3h=EhH-biMeDXik8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1325860112-22051-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,61 +17,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "open list:ARM/ATMEL AT91RM9..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?ISO-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, OMAP SUPPORT <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "open list:ARM/QUALCOMM MSM..." <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2012 at 08:28:51AM -0800, Olof Johansson wrote:
-> On Thu, Jan 5, 2012 at 11:22 PM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
-> >
-> > On 1/5/2012 6:39 PM, Olof Johansson wrote:
-> >>
-> >> Hi,
-> >>
-> >> I'm considering how to best describe the data that ramoops needs in
-> >> the device tree.
-> >>
-> >> The idea is really about describing a memory area that is (likely to
-> >> be) nonvolatile across reboots. Said area is not to be included in the
-> >> regular memory map of the system (i.e. not covered by /memory).
-> >>
-> >> I have a few options on where to do it. It's not really a hardware
-> >> device per se, so it's a gray area for the device tree alltogether.
-> >>
-> >> How about something like?
-> >>
-> >> compatible = "linux,ramoops"
-> >> linux,ramoops-start =<start address of preserved ram>
-> >> linux,ramoops-size = ...
-> >> linux,ramoops-record-size = ...
-> >> linux,ramoops-include-oopses = ... (this one is a bit of a corner
-> >> case, it's truly a software setting -- probably leave it out)
-> >>
-> >> Anybody have a better idea?
-> >
-> >
-> > If it is addressable, it should appear as a device node underneath the node
-> > that creates the address space in which it appears, and the start and size
-> > should be described by a "reg" property.
-> 
-> A yes, of course.
-> 
-> I got on the wrong track due to the lack of use of resources in the
-> linux platform_driver.
+Hi Thierry,
 
-But you still need some ramoops specific configuration though right?  
-Could this be represented with a generic binding for the onchip RAM as 
-has already proposed then inside the chosen node something like:
+On 1/6/2012 3:28 PM, Thierry Reding wrote:
+> The irq_domain_add() function needs the number of interrupts in the
+> domain to properly initialize them. In addition the allocated domain
+> is now returned by the irq_domain_{add,generate}_simple() helpers.
 
-	chosen {
-		ramoops {
-			linux,ramoops-record-size = <12>;
-			linux,ramoops-include-oopses = <1>;
-			/* phandle to ram, offset, size */
-			linux,ramoops-ram = <&iram 0x1000 0x200>;
-		};
-	};
+[...]
 
-to decouple the runtime configuration from the hardware binding?
+> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+> index d587560..bf67781 100644
+> --- a/arch/arm/mach-omap2/board-generic.c
+> +++ b/arch/arm/mach-omap2/board-generic.c
+> @@ -66,8 +66,11 @@ static struct of_device_id intc_match[] __initdata = {
+>   static void __init omap_generic_init(void)
+>   {
+>   	struct device_node *node = of_find_matching_node(NULL, intc_match);
+> -	if (node)
+> -		irq_domain_add_simple(node, 0);
+> +	if (node) {
+> +		struct irq_domain *domain;
+> +		domain = irq_domain_add_simple(node, 0, INTCPS_NR_IRQS);
 
-Jamie
+The number of interrupts will depend on the OMAP generation. That one is 
+just valid for the 3430 INTC controller.
+Since the previous code was using zero, I guess that using 0 there 
+should be fine.
+
+Moreover, that piece of code should not exist anymore on 3.3 if the 
+series I sent last month to leverage Rob's DT interrupt init is merged [1].
+
+I've just ping Rob and Grant on that series to get a status.
+
+Regards,
+Benoit
+
+
+[1] http://www.spinics.net/lists/linux-omap/msg62124.html
