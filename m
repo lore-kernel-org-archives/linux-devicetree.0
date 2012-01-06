@@ -1,46 +1,28 @@
 From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Fri, 6 Jan 2012 21:14:14 +0800
-Message-ID: <20120106131411.GA6372@S2101-09.ap.freescale.net>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-3-git-send-email-b29396@freescale.com>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
+Subject: Re: [PATCH V6 2/7] arm/imx: cpufreq: remove loops_per_jiffy
+ recalculate for smp
+Date: Fri, 6 Jan 2012 21:19:03 +0800
+Message-ID: <20120106131901.GC4790@S2101-09.ap.freescale.net>
+References: <1325213769-11752-1-git-send-email-richard.zhao@linaro.org>
+ <1325213769-11752-3-git-send-email-richard.zhao@linaro.org>
+ <20120106005649.GQ2414@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <cpufreq-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng-B29396 <B29396@freescale.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Dong Aisheng <dongas86@gmail.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>
+In-Reply-To: <20120106005649.GQ2414@b20223-02.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Richard Zhao <richard.zhao@freescale.com>
+Cc: kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux@arm.linux.org.uk, arnd@arndb.de, mark.langsdorf@calxeda.com, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, bryanh@codeaurora.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, rdunlap@xenotime.net, eric.miao@linaro.org, jamie@jamieiles.com, davej@redhat.com, davidb@codeaurora.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2012 at 11:33:54AM +0000, Dong Aisheng-B29396 wrote:
-> In board dts file:
-> usdhc@0219c000 { /* uSDHC4 */
->         fsl,card-wired;
->         status = "okay";
->         pinmux = <&pinctrl_sd4>;
-
-Would it be more proper to have the phandle named as 'pinctrl' than
-'pinmux'?
-
-> };
+On Fri, Jan 06, 2012 at 08:56:50AM +0800, Richard Zhao wrote:
+> Hi Sascha & Shawn,
+> 
+> Could you look and ack the patch?
+> 
+The patch looks good to me.  But it really depends on how the patch #1
+looks to Russell.
 
 -- 
 Regards,
