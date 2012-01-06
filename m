@@ -1,15 +1,16 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 Subject: Re: Device tree bindings for linux ramoops use
-Date: Fri, 06 Jan 2012 06:49:10 -1000
-Message-ID: <4F072606.8050004@firmworks.com>
+Date: Fri, 6 Jan 2012 16:58:23 +0000
+Message-ID: <20120106165823.GB3466@page>
 References: <CAOesGMiKBQM61DkLFoTcvMFWV2UCgomLQYDX65_Tkmtoy_hGCg@mail.gmail.com>
- <4F06F662.2020803@gmail.com>
- <CAOesGMi3Wc3Bdx5UdXHUxXxv-pMSAhS6VagHaAm6OpA_GFrjAg@mail.gmail.com>
+ <4F06A120.8080505@firmworks.com>
+ <CAOesGMgstHqtTo0X9Y-SSU+VTUxYRrXW=3h=EhH-biMeDXik8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOesGMi3Wc3Bdx5UdXHUxXxv-pMSAhS6VagHaAm6OpA_GFrjAg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMgstHqtTo0X9Y-SSU+VTUxYRrXW=3h=EhH-biMeDXik8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,73 +21,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/6/2012 6:33 AM, Olof Johansson wrote:
-> Hi,
->
-> On Fri, Jan 6, 2012 at 5:25 AM, Rob Herring<robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>  wrote:
->> On 01/05/2012 10:39 PM, Olof Johansson wrote:
->>> Hi,
->>>
->>> I'm considering how to best describe the data that ramoops needs in
->>> the device tree.
->>>
->>> The idea is really about describing a memory area that is (likely to
->>> be) nonvolatile across reboots. Said area is not to be included in the
->>> regular memory map of the system (i.e. not covered by /memory).
->>>
->>> I have a few options on where to do it. It's not really a hardware
->>> device per se, so it's a gray area for the device tree alltogether.
->>>
->>> How about something like?
->>>
->>> compatible = "linux,ramoops"
->>> linux,ramoops-start =<start address of preserved ram>
->>> linux,ramoops-size = ...
->>> linux,ramoops-record-size = ...
->>> linux,ramoops-include-oopses = ... (this one is a bit of a corner
->>> case, it's truly a software setting -- probably leave it out)
->>>
->>> Anybody have a better idea?
->>
->> Since all those settings are already settable on the kernel command as
->> module parameters, can't you use that? Perhaps we need the bootloader to
->> append cmd line options rather than replace as I think u-boot does.
->
-> I'm not so sure that's a good idea. The command line will snowball
-> into a 2KB string pretty quickly if we start doing that. It's already
-> crazy long on our systems here.
->
->
->> There is a need for a (typically) on-chip RAM binding which then gets
->> carved up into multiple uses. These could be properties of the RAM binding.
->
-> Sounds like describing it in a separate memory node is a good start,
-> and then possibly partitions underneath there.
->
-> So, even for the case of nonvolatile-memory, it could be done with a
-> device node in parallel with the memory nodes on the system, and then
-> possibly the ramoops node underneath of there. For iram, similarly the
-> main iram range is covered by the iram device node, and if you need to
-> partition it further, do it with subnodes similar to how mtd bindings
-> work. Sounds reasonable, no?
+On Fri, Jan 06, 2012 at 08:28:51AM -0800, Olof Johansson wrote:
+> On Thu, Jan 5, 2012 at 11:22 PM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
+> >
+> > On 1/5/2012 6:39 PM, Olof Johansson wrote:
+> >>
+> >> Hi,
+> >>
+> >> I'm considering how to best describe the data that ramoops needs in
+> >> the device tree.
+> >>
+> >> The idea is really about describing a memory area that is (likely to
+> >> be) nonvolatile across reboots. Said area is not to be included in the
+> >> regular memory map of the system (i.e. not covered by /memory).
+> >>
+> >> I have a few options on where to do it. It's not really a hardware
+> >> device per se, so it's a gray area for the device tree alltogether.
+> >>
+> >> How about something like?
+> >>
+> >> compatible = "linux,ramoops"
+> >> linux,ramoops-start =<start address of preserved ram>
+> >> linux,ramoops-size = ...
+> >> linux,ramoops-record-size = ...
+> >> linux,ramoops-include-oopses = ... (this one is a bit of a corner
+> >> case, it's truly a software setting -- probably leave it out)
+> >>
+> >> Anybody have a better idea?
+> >
+> >
+> > If it is addressable, it should appear as a device node underneath the node
+> > that creates the address space in which it appears, and the start and size
+> > should be described by a "reg" property.
+> 
+> A yes, of course.
+> 
+> I got on the wrong track due to the lack of use of resources in the
+> linux platform_driver.
 
-Yes.  That is exactly what I do for memory mapped FLASH.  One or more 
-top-level (child of the root) nodes describe all of the addressable 
-FLASH.  Then subordinate nodes describe partitions that are used for 
-specific purposes.
+But you still need some ramoops specific configuration though right?  
+Could this be represented with a generic binding for the onchip RAM as 
+has already proposed then inside the chosen node something like:
 
-If there are multiple identical FLASH chips that are treated as a 
-combined space, it sometimes makes sense to have a single top-level 
-FLASH node, as with /memory, instead of multiple nodes.
+	chosen {
+		ramoops {
+			linux,ramoops-record-size = <12>;
+			linux,ramoops-include-oopses = <1>;
+			/* phandle to ram, offset, size */
+			linux,ramoops-ram = <&iram 0x1000 0x200>;
+		};
+	};
 
->
->
-> -Olof
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
+to decouple the runtime configuration from the hardware binding?
+
+Jamie
