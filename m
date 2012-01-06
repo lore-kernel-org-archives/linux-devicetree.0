@@ -1,79 +1,59 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v2 0/5] ARM: OMAP2+: Interrupt controllers adaptation
- to DT
-Date: Fri, 6 Jan 2012 17:38:53 +0100
-Message-ID: <4F07239D.8000607@ti.com>
-References: <1324388398-2683-1-git-send-email-b-cousson@ti.com> <4EF44DFF.4090300@ti.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH V2 1/4] i2c: tegra: Add __devinit/exit to probe/remove
+Date: Fri, 6 Jan 2012 08:47:11 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF177EE39E15@HQMAIL01.nvidia.com>
+References: <1324189772-26914-1-git-send-email-swarren@nvidia.com>
+ <20111220015634.GA27789@quad.lixom.net>
+ <CAM=Q2cs8K4vraWPNqervcmxEqUGiAbng+44+L9OhD3ijPw9tAA@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF176BE92E21@HQMAIL01.nvidia.com>
+ <20120106162615.GA8441@trinity.fluff.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EF44DFF.4090300@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: rob.herring@calxeda.com, Grant Likely <grant.likely@secretlab.ca>
-Cc: tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120106162615.GA8441-SMNkleLxa3Z6Wcw2j4pizdi2O/JbrIOy@public.gmane.org>
+Content-Language: en-US
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob/Grant,
+Ben Dooks wrote at Friday, January 06, 2012 9:26 AM:
+> On Tue, Dec 20, 2011 at 01:47:29PM -0800, Stephen Warren wrote:
+> > Shubhrajyoti Datta wrote at Monday, December 19, 2011 11:15 PM:
+> > ...
+> > > Hi Stephen ,
+> > > could you check this one also
+> > > thanks.
+> > >
+> > > From: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
+> > > Date: Tue, 20 Dec 2011 11:40:51 +0530
+> > > Subject: [PATCH] I2C : tegra : devexit in remove
+> > >
+> > > Adding I2C __devexxit in remove
+> > >
+> > > Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > Signed-off-by: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
+> >
+> > Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >
+> > Ben or Olof,
+> >
+> > > -       .remove  = tegra_i2c_remove,
+> > > +       .remove  =__devexit_p(tegra_i2c_remove),
+> >
+> > When you apply this, can you fix it up to add a space after the = in
+> > the modified line? If you want, I can post an updated version to do that.
+> 
+> Let me know if you want anything applying or a pull-request processed.
+> 
+> I think once fixed the patches would be fine and I ack them:
+> 
+> Acked-by: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 
-Gentle ping on that series too. This should the last one:-)
+Olof, since you took the original through the Tegra tree, I think it
+makes sense for us to take this fix through there too, and for 3.3?
+The patch above is http://patchwork.ozlabs.org/patch/132349/
 
-Thanks,
-Benoit
-
-On 12/23/2011 10:46 AM, Cousson, Benoit wrote:
-> Hi Rob,
->
-> Are you OK with that update?
->
-> Thanks,
-> Benoit
->
-> On 12/20/2011 2:39 PM, Benoit Cousson wrote:
->> Hi Tony and Rob,
->>
->> Here is the series to take advantage of the new DT interrupt init
->> mechanism.
->> Thanks to Marc's CONFIG_MULTI_IRQ_HANDLER series, OMAP4 just has to
->> use the
->> default GIC binding and does not need some OMAP specific hacks anymore.
->> OMAP2 and 3 are using a simple interrupt controller that can thus expose
->> a simpler binding.
->>
->> This update, compared to v1 [1], is introducing the IRQ domain for the
->> OMAP2&3 INTC by default for both DT and none-DT build.
->> Please note that in the near future that code can even be simplier
->> with the
->> introduction of the domain support inside generic irq chip.
->>
->> This series is based on lo/dt branch to get the needed cleanup and
->> fixes for
->> OMAP.
->>
->> The series is available here for reference:
->> git://gitorious.org/omap-pm/linux.git for_3.3/2_dt_irq
->>
->> Regards,
->> Benoit
->>
->> [1] http://www.spinics.net/lists/linux-omap/msg61152.html
->>
->>
->> Benoit Cousson (5):
->> arm/dts: OMAP4: Update DTS file with new GIC bindings
->> ARM: OMAP2/3: intc: Add irqdomain support
->> ARM: OMAP2/3: intc: Add DT support for TI interrupt controller
->> arm/dts: OMAP3: Add interrupt-controller bindings for INTC
->> ARM: OMAP2+: board-generic: Use of_irq_init API
->>
->> .../devicetree/bindings/arm/omap/intc.txt | 27 +++++++++++
->> arch/arm/boot/dts/omap3.dtsi | 6 ++-
->> arch/arm/boot/dts/omap4.dtsi | 3 +-
->> arch/arm/mach-omap2/board-generic.c | 30 +++++++------
->> arch/arm/mach-omap2/common.h | 10 ++++
->> arch/arm/mach-omap2/irq.c | 48 ++++++++++++++++++--
->> 6 files changed, 103 insertions(+), 21 deletions(-)
->> create mode 100644 Documentation/devicetree/bindings/arm/omap/intc.txt
->>
->
-
+-- 
+nvpublic
