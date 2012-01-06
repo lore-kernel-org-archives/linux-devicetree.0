@@ -1,45 +1,31 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 7/9] arm/tegra: emc: device tree bindings
-Date: Thu, 5 Jan 2012 16:01:05 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17761F18A6@HQMAIL01.nvidia.com>
-References: <1324599468-12845-1-git-send-email-olof@lixom.net>
- <1324599468-12845-8-git-send-email-olof@lixom.net>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: Re: [PATCH V6 0/7] add a generic cpufreq driver
+Date: Fri, 6 Jan 2012 08:53:37 +0800
+Message-ID: <20120106005336.GP2414@b20223-02.ap.freescale.net>
+References: <1325213769-11752-1-git-send-email-richard.zhao@linaro.org>
+ <cc3e6f12-92d8-4467-b3ad-23cbe6440fee@email.android.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1324599468-12845-8-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cc3e6f12-92d8-4467-b3ad-23cbe6440fee@email.android.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: linux@arm.linux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, arnd@arndb.de, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, rob.herring@calxeda.com, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, davej@redhat.com, jamie@jamieiles.com, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Thursday, December 22, 2011 5:18 PM:
-> Device tree bindings for the EMC tables on tegra.
-...
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt
-...
-> +Embedded Memory Controller ram-code table
-...
-> +- name : Should be emc-tables
-> +- nvidia,ram-code : the binary representation of the ram-code board strappings
-> +  for which this node (and children) are valid.
-...
-> +Embedded Memory Controller configuration table
-...
-> +- name : Should be emc-table
-> +- compatible : Should contain "nvidia,tegra20-emc-table".
-> +- reg : either an opaque enumerator to tell different tables apart, or
-...
+On Thu, Jan 05, 2012 at 06:16:54AM +0800, Richard Zhao wrote:
+> hi Russell,
+> 
+> May I have your ACK, you merge it?
+Russell, ping
+> 
+> Thanks
+> Richard
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-One more thought:
-
-For consistency, should the "emc-tables" node also require a compatible
-value? I suppose the existence of an "nvidia,ram-code" property is quite
-likely to be indication enough that the node is compatible, but I wonder
-if we shouldn't require and check an explicit compatible value at this
-level too?
-
--- 
-nvpublic
