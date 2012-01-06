@@ -1,66 +1,93 @@
 From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH V2 1/4] i2c: tegra: Add __devinit/exit to probe/remove
-Date: Fri, 6 Jan 2012 09:45:01 -0800
-Message-ID: <CAOesGMjx0nA5Y_Cv8ECBcZP45EyR5BPUNXEapCN3JjdWTjpo8A@mail.gmail.com>
-References: <1324189772-26914-1-git-send-email-swarren@nvidia.com>
-	<20111220015634.GA27789@quad.lixom.net>
-	<CAM=Q2cs8K4vraWPNqervcmxEqUGiAbng+44+L9OhD3ijPw9tAA@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF176BE92E21@HQMAIL01.nvidia.com>
-	<20120106162615.GA8441@trinity.fluff.org>
-	<74CDBE0F657A3D45AFBB94109FB122FF177EE39E15@HQMAIL01.nvidia.com>
+Subject: Re: Device tree bindings for linux ramoops use
+Date: Fri, 6 Jan 2012 09:47:22 -0800
+Message-ID: <CAOesGMi54byaL6K_aJU0rm9yLMX-GngydyyjHpYC9_2BvQwEoA@mail.gmail.com>
+References: <CAOesGMiKBQM61DkLFoTcvMFWV2UCgomLQYDX65_Tkmtoy_hGCg@mail.gmail.com>
+ <4F06A120.8080505@firmworks.com>
+ <CAOesGMgstHqtTo0X9Y-SSU+VTUxYRrXW=3h=EhH-biMeDXik8g@mail.gmail.com>
+ <20120106165823.GB3466@page>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE39E15-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120106165823.GB3466@page>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 6, 2012 at 8:47 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wro=
-te:
-> Ben Dooks wrote at Friday, January 06, 2012 9:26 AM:
->> On Tue, Dec 20, 2011 at 01:47:29PM -0800, Stephen Warren wrote:
->> > Shubhrajyoti Datta wrote at Monday, December 19, 2011 11:15 PM:
->> > ...
->> > > Hi Stephen ,
->> > > could you check this one also
->> > > thanks.
->> > >
->> > > From: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
->> > > Date: Tue, 20 Dec 2011 11:40:51 +0530
->> > > Subject: [PATCH] I2C : tegra : devexit in remove
->> > >
->> > > Adding I2C __devexxit in remove
->> > >
->> > > Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> > > Signed-off-by: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
+On Fri, Jan 6, 2012 at 8:58 AM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
+> On Fri, Jan 06, 2012 at 08:28:51AM -0800, Olof Johansson wrote:
+>> On Thu, Jan 5, 2012 at 11:22 PM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
 >> >
->> > Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> > On 1/5/2012 6:39 PM, Olof Johansson wrote:
+>> >>
+>> >> Hi,
+>> >>
+>> >> I'm considering how to best describe the data that ramoops needs in
+>> >> the device tree.
+>> >>
+>> >> The idea is really about describing a memory area that is (likely to
+>> >> be) nonvolatile across reboots. Said area is not to be included in the
+>> >> regular memory map of the system (i.e. not covered by /memory).
+>> >>
+>> >> I have a few options on where to do it. It's not really a hardware
+>> >> device per se, so it's a gray area for the device tree alltogether.
+>> >>
+>> >> How about something like?
+>> >>
+>> >> compatible =3D "linux,ramoops"
+>> >> linux,ramoops-start =3D<start address of preserved ram>
+>> >> linux,ramoops-size =3D ...
+>> >> linux,ramoops-record-size =3D ...
+>> >> linux,ramoops-include-oopses =3D ... (this one is a bit of a corner
+>> >> case, it's truly a software setting -- probably leave it out)
+>> >>
+>> >> Anybody have a better idea?
 >> >
->> > Ben or Olof,
 >> >
->> > > - =A0 =A0 =A0 .remove =A0=3D tegra_i2c_remove,
->> > > + =A0 =A0 =A0 .remove =A0=3D__devexit_p(tegra_i2c_remove),
->> >
->> > When you apply this, can you fix it up to add a space after the =3D=
- in
->> > the modified line? If you want, I can post an updated version to d=
-o that.
+>> > If it is addressable, it should appear as a device node underneath the=
+ node
+>> > that creates the address space in which it appears, and the start and =
+size
+>> > should be described by a "reg" property.
 >>
->> Let me know if you want anything applying or a pull-request processe=
-d.
+>> A yes, of course.
 >>
->> I think once fixed the patches would be fine and I ack them:
->>
->> Acked-by: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+>> I got on the wrong track due to the lack of use of resources in the
+>> linux platform_driver.
 >
-> Olof, since you took the original through the Tegra tree, I think it
-> makes sense for us to take this fix through there too, and for 3.3?
-> The patch above is http://patchwork.ozlabs.org/patch/132349/
+> But you still need some ramoops specific configuration though right?
+> Could this be represented with a generic binding for the onchip RAM as
+> has already proposed then inside the chosen node something like:
+>
+> =A0 =A0 =A0 =A0chosen {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0ramoops {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0linux,ramoops-record-size =
+=3D <12>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0linux,ramoops-include-oops=
+es =3D <1>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0/* phandle to ram, offset,=
+ size */
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0linux,ramoops-ram =3D <&ir=
+am 0x1000 0x200>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
+> =A0 =A0 =A0 =A0};
+>
+> to decouple the runtime configuration from the hardware binding?
 
-Yep, will do.
+Only the ramoops-include-oopses is really the runtime configuration,
+so that alone in /chosen could be a good idea. But I would rather have
+the "partition" described as a device with a compatible field that the
+driver can bind against.
 
 
 -Olof
