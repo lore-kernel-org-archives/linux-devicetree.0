@@ -1,91 +1,58 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Thu, 5 Jan 2012 17:05:46 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
-	<1324402840-32451-3-git-send-email-b29396@freescale.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 7/9] arm/tegra: emc: device tree bindings
+Date: Thu, 5 Jan 2012 17:20:36 -0800
+Message-ID: <CAOesGMjeVm_PcsBnxfKX9Oe96QUaCsJrvuESCRZq5vwq9gD5xA@mail.gmail.com>
+References: <1324599468-12845-1-git-send-email-olof@lixom.net>
+	<1324599468-12845-8-git-send-email-olof@lixom.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF17761F18A6@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <dongas86@gmail.com>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17761F18A6-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dong Aisheng wrote at Thursday, January 05, 2012 6:48 AM:
-> On Sun, Dec 25, 2011 at 11:37 AM, Stephen Warren <swarren@nvidia.com> wrote:
-> > Dong Aisheng-B29396 wrote at Thursday, December 22, 2011 1:18 AM:
-...
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl.txt
-...
-> +Examples:
-> +soc {
-> +	aips-bus@02000000 { /* AIPS1 */
-> +		iomuxc@020e0000 {
-> +			pinctrl_uart4: uart4 {
-> +				func-name = "uart4";
-> +				grp-name = "uart4grp";
-> +				grp-pins = <107 108>;
-> +				num-pins = <2>;
-> +				grp-mux = <4 4>;
-> +				num-mux = <2>;
-> +			};
+On Thu, Jan 5, 2012 at 4:01 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wro=
+te:
+> Olof Johansson wrote at Thursday, December 22, 2011 5:18 PM:
+>> Device tree bindings for the EMC tables on tegra.
+> ...
+>> diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt
+> ...
+>> +Embedded Memory Controller ram-code table
+> ...
+>> +- name : Should be emc-tables
+>> +- nvidia,ram-code : the binary representation of the ram-code board=
+ strappings
+>> + =A0for which this node (and children) are valid.
+> ...
+>> +Embedded Memory Controller configuration table
+> ...
+>> +- name : Should be emc-table
+>> +- compatible : Should contain "nvidia,tegra20-emc-table".
+>> +- reg : either an opaque enumerator to tell different tables apart,=
+ or
+> ...
+>
+> One more thought:
+>
+> For consistency, should the "emc-tables" node also require a compatib=
+le
+> value? I suppose the existence of an "nvidia,ram-code" property is qu=
+ite
+> likely to be indication enough that the node is compatible, but I won=
+der
+> if we shouldn't require and check an explicit compatible value at thi=
+s
+> level too?
 
-Before I get too far into reviewing this path, could you explain the
-above node in a little more detail; what it is and what the properties
-define?
+I can add it, it's trivial to add another check in
+tegra_emc_ramcode_devnode, but I don't think there's much need to
+bother. As long as nothing else is added that uses nvidia,ram-code as
+a property we'll be OK, and we can control that.
 
-I'm confused because the node has properties for function name and
-group name which make sense to define the mux setting for that group.
-However, I'm not sure what the grp-pins/num-pins/grp-mux/num-mux
-properties are for; if those properties define the available mux options
-and for the group and set of pins included in the group, I think the node
-is representing too many things in one place. I'd expect to see:
 
-a) Either data in the pinctrl driver or separate DT nodes to define each
-available pin group, mux function, etc.; the definition of what the SoC
-itself can do.
-
-b) The configuration of each pin group that's used by the particular board.
-All that's relevant here is the mux selection for each pin groups; things
-like which pins are included in each group are defined by the SoC not the
-board and hence wouldn't be included in a per-board node.
-
-Thanks for enlightening me!
-
-> +
-> +			pinctrl_sd4: sd4 {
-> +				func-name = "sd4";
-> +				grp-name = "sd4grp";
-> +				grp-pins = <170 171 180 181 182 183 184 185 186 187>;
-> +				num-pins = <10>;
-> +				grp-mux = <0 0 1 1 1 1 1 1 1 1>;
-> +				num-mux = <10>;
-> +			};
-> +		};
-> +	};
-> +
-> +	aips-bus@02100000 { /* AIPS2 */
-> +		usdhc@0219c000 { /* uSDHC4 */
-> +			fsl,card-wired;
-> +			status = "okay";
-> +			pinmux = <&pinctrl_sd4>;
-> +		};
-> +
-> +		uart3: uart@021f0000 { /* UART4 */
-> +			status = "okay";
-> +			pinmux = <&pinctrl_uart4>;
-> +		};
-> +	};
-> +};
-
--- 
-nvpublic
+-Olof
