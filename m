@@ -1,61 +1,63 @@
-From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] irqdomain: Initialize number of IRQs for simple domains
-Date: Fri, 6 Jan 2012 17:58:43 +0100
-Message-ID: <4F072843.6050306@ti.com>
-References: <1325860112-22051-1-git-send-email-thierry.reding@avionic-design.de>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
+ mappings
+Date: Fri, 6 Jan 2012 09:23:35 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF177EE39E40@HQMAIL01.nvidia.com>
+References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
+ <1324402840-32451-3-git-send-email-b29396@freescale.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC6057885077F82@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F1887@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC605788507F615@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1325860112-22051-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "open list:ARM/ATMEL AT91RM9..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?ISO-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, OMAP SUPPORT <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "open list:ARM/QUALCOMM MSM..." <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7FE21149F4667147B645348EC605788507F615@039-SN2MPN1-013.039d.mgd.msft.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Dong Aisheng-B29396 wrote at Friday, January 06, 2012 3:51 AM:
+> Stephen Warren wrote at Friday, January 06, 2012 7:38 AM:
+> > Dong Aisheng-B29396 wrote at Tuesday, December 27, 2011 7:41 AM:
+...
+> > > But what about the pin maps without device associated?
+> >
+> > Indeed; that's why I'd tend towards defining a table of pinmux usage in the
+> > pinmux node, and having other devices refer to that table.
+>
+> Currently we still prefer to use device node relationship to reflect the pinmux
+> map if we can since as you said pinmux map is little depending on the pinctrl
+> subsystem implementation.
+> And I'm trying to do it now.
+> 
+> > Still, if the pinmux definitions are in the device nodes, we could simply make
+> > the pinmux controller have such a definition itself too, for the "system hog"
+> > case.
+>
+> Yes, that way I think is like:
+> iomuxc@020e0000 {
+>         pinctrl_uart4: uart4 {
+>                 grp-pins = <107 108>;
+>                 grp-mux = <4 4>;
+> 		   hog_on_boot;
+>         };
+> }
 
-On 1/6/2012 3:28 PM, Thierry Reding wrote:
-> The irq_domain_add() function needs the number of interrupts in the
-> domain to properly initialize them. In addition the allocated domain
-> is now returned by the irq_domain_{add,generate}_simple() helpers.
+If pinmux usage is defined in each individual device node, and the "hog"
+setup is included in the pinmux controller's own device node, then there's
+no need for a "hog_on_boot" property; any pinmux setup node that's inside
+the pinmux controller node would automatically be a "hog" entry, and
+could be activated as soon as the pinmux controller was probed and
+registered with the pinctrl subsystem.
 
-[...]
+(as a minor nit, DT usually uses - not _ in property names, so that would
+be "hog-on-boot").
 
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> index d587560..bf67781 100644
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -66,8 +66,11 @@ static struct of_device_id intc_match[] __initdata = {
->   static void __init omap_generic_init(void)
->   {
->   	struct device_node *node = of_find_matching_node(NULL, intc_match);
-> -	if (node)
-> -		irq_domain_add_simple(node, 0);
-> +	if (node) {
-> +		struct irq_domain *domain;
-> +		domain = irq_domain_add_simple(node, 0, INTCPS_NR_IRQS);
-
-The number of interrupts will depend on the OMAP generation. That one is 
-just valid for the 3430 INTC controller.
-Since the previous code was using zero, I guess that using 0 there 
-should be fine.
-
-Moreover, that piece of code should not exist anymore on 3.3 if the 
-series I sent last month to leverage Rob's DT interrupt init is merged [1].
-
-I've just ping Rob and Grant on that series to get a status.
-
-Regards,
-Benoit
-
-
-[1] http://www.spinics.net/lists/linux-omap/msg62124.html
+-- 
+nvpublic
