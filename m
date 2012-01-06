@@ -1,13 +1,15 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Device tree bindings for linux ramoops use
-Date: Fri, 06 Jan 2012 07:25:54 -0600
-Message-ID: <4F06F662.2020803@gmail.com>
-References: <CAOesGMiKBQM61DkLFoTcvMFWV2UCgomLQYDX65_Tkmtoy_hGCg@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: at91: pit add DT support
+Date: Fri, 06 Jan 2012 14:36:42 +0100
+Message-ID: <4F06F8EA.30104@atmel.com>
+References: <1325771308-19770-1-git-send-email-nicolas.ferre@atmel.com>
+ <1325784348-29481-1-git-send-email-nicolas.ferre@atmel.com>
+ <4F05D2F3.40704@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOesGMiKBQM61DkLFoTcvMFWV2UCgomLQYDX65_Tkmtoy_hGCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <4F05D2F3.40704-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,53 +19,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/05/2012 10:39 PM, Olof Johansson wrote:
-> Hi,
-> 
-> I'm considering how to best describe the data that ramoops needs in
-> the device tree.
-> 
-> The idea is really about describing a memory area that is (likely to
-> be) nonvolatile across reboots. Said area is not to be included in the
-> regular memory map of the system (i.e. not covered by /memory).
-> 
-> I have a few options on where to do it. It's not really a hardware
-> device per se, so it's a gray area for the device tree alltogether.
-> 
-> How about something like?
-> 
-> compatible = "linux,ramoops"
-> linux,ramoops-start = <start address of preserved ram>
-> linux,ramoops-size = ...
-> linux,ramoops-record-size = ...
-> linux,ramoops-include-oopses = ... (this one is a bit of a corner
-> case, it's truly a software setting -- probably leave it out)
-> 
-> Anybody have a better idea?
+On 01/05/2012 05:42 PM, Rob Herring :
+> On 01/05/2012 11:25 AM, Nicolas Ferre wrote:
+>> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>>
+>> Retreive registers address and IRQ from device tree entry. Fall back
+>> to built-in values if an error occurs.
+>>
+>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: change error path and interrupts property handling]
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+>> v3: - use irq_of_parse_and_map() for handling irq numbers specified by DT.
+>>       Correction proposed by Jamie Iles.
+>>
+>> v2: - new specification of irq numbers in DT (due to modification of AIC code)
+>>     - new error path in of_at91sam926x_pit_init()
+>>     - fall back to built-in values if an error occurs
+>>     - use of of_property_read_u32() to get irq property
+>>
+>>  .../devicetree/bindings/arm/atmel-at91.txt         |    8 +++
+>>  arch/arm/boot/dts/at91sam9g20.dtsi                 |    5 ++
+>>  arch/arm/boot/dts/at91sam9g45.dtsi                 |    6 ++
+>>  arch/arm/mach-at91/at91sam926x_time.c              |   53 +++++++++++++++++++-
+>>  4 files changed, 70 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
 
-Since all those settings are already settable on the kernel command as
-module parameters, can't you use that? Perhaps we need the bootloader to
-append cmd line options rather than replace as I think u-boot does.
+[..]
 
-There is a need for a (typically) on-chip RAM binding which then gets
-carved up into multiple uses. These could be properties of the RAM binding.
+>> --- a/arch/arm/mach-at91/at91sam926x_time.c
+>> +++ b/arch/arm/mach-at91/at91sam926x_time.c
 
-Rob
+[..]
 
-> I could do a platform-specific binding that describes the nonvolatile
-> ram area as a separate "device", and then have some platform code that
-> translates that into the ramoops platform pdata parameters (since it
-> can't really be assumed that ramoops has ownership of the whole
-> area/device). That seems pretty awkward too though, and I'm not sure
-> it buys us a whole lot.
+>>  void __init at91sam926x_ioremap_pit(u32 addr)
+>>  {
+>> +	if (!of_at91sam926x_pit_init())
+>> +		return;
 > 
+> This seems backwards to me. I don't have the ioremap changes in my tree,
+> but shouldn't the caller of at91sam926x_ioremap_pit be changed to
+> something like this:
 > 
-> -Olof
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 	if (of_at91sam926x_pit_init() < 0)
+> 		at91sam926x_ioremap_pit(addr);
+
+Yes, you are right, it will be more readable the other way around.
+
+I repost another revision now.
+
+> Otherwise,
+> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+Thanks for your review.
+
+Best regards,
+-- 
+Nicolas Ferre
