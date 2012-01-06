@@ -1,15 +1,15 @@
 From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v3] ARM: at91: pit add DT support
-Date: Fri, 06 Jan 2012 14:36:42 +0100
-Message-ID: <4F06F8EA.30104@atmel.com>
+Date: Fri, 06 Jan 2012 14:37:41 +0100
+Message-ID: <4F06F925.1030204@atmel.com>
 References: <1325771308-19770-1-git-send-email-nicolas.ferre@atmel.com>
  <1325784348-29481-1-git-send-email-nicolas.ferre@atmel.com>
- <4F05D2F3.40704@gmail.com>
+ <20120105180028.GB22653@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F05D2F3.40704-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20120105180028.GB22653-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,12 +19,12 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/05/2012 05:42 PM, Rob Herring :
-> On 01/05/2012 11:25 AM, Nicolas Ferre wrote:
+On 01/05/2012 07:00 PM, Grant Likely :
+> On Thu, Jan 05, 2012 at 06:25:48PM +0100, Nicolas Ferre wrote:
 >> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 >>
 >> Retreive registers address and IRQ from device tree entry. Fall back
@@ -56,26 +56,16 @@ On 01/05/2012 05:42 PM, Rob Herring :
 
 [..]
 
->>  void __init at91sam926x_ioremap_pit(u32 addr)
->>  {
->> +	if (!of_at91sam926x_pit_init())
->> +		return;
+>> +	/* Get the interrupts property */
+>> +	ret = irq_of_parse_and_map(np, 0);
+>> +	if (ret <= 0)
+>> +		goto ioremap_err;
 > 
-> This seems backwards to me. I don't have the ioremap changes in my tree,
-> but shouldn't the caller of at91sam926x_ioremap_pit be changed to
-> something like this:
+> if (!ret)
 > 
-> 	if (of_at91sam926x_pit_init() < 0)
-> 		at91sam926x_ioremap_pit(addr);
+> The DT irq functions return 0 on failure.
 
-Yes, you are right, it will be more readable the other way around.
-
-I repost another revision now.
-
-> Otherwise,
-> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-Thanks for your review.
+Ok, modified in new revision.
 
 Best regards,
 -- 
