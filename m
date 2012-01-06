@@ -1,53 +1,50 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Device tree bindings for linux ramoops use
-Date: Thu, 5 Jan 2012 20:39:50 -0800
-Message-ID: <CAOesGMiKBQM61DkLFoTcvMFWV2UCgomLQYDX65_Tkmtoy_hGCg@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
+ mappings
+Date: Fri, 6 Jan 2012 13:27:51 +0800
+Message-ID: <20120106052748.GA4790@S2101-09.ap.freescale.net>
+References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
+ <1324402840-32451-3-git-send-email-b29396@freescale.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
+ <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Dong Aisheng <dongas86@gmail.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 05, 2012 at 05:05:46PM -0800, Stephen Warren wrote:
+> I'm confused because the node has properties for function name and
+> group name which make sense to define the mux setting for that group.
+> However, I'm not sure what the grp-pins/num-pins/grp-mux/num-mux
+> properties are for; if those properties define the available mux options
+> and for the group and set of pins included in the group, I think the node
+> is representing too many things in one place. I'd expect to see:
+> 
+> a) Either data in the pinctrl driver
 
-I'm considering how to best describe the data that ramoops needs in
-the device tree.
+For imx, I'm against this.
 
-The idea is really about describing a memory area that is (likely to
-be) nonvolatile across reboots. Said area is not to be included in the
-regular memory map of the system (i.e. not covered by /memory).
+> or separate DT nodes to define each
+> available pin group, mux function, etc.; the definition of what the SoC
+> itself can do.
 
-I have a few options on where to do it. It's not really a hardware
-device per se, so it's a gray area for the device tree alltogether.
+This works for me.  But we do not necessarily need to enumerate all
+the possible groups from the beginning.  Instead, we can add the groups
+incrementally.
 
-How about something like?
+Regards,
+Shawn
 
-compatible = "linux,ramoops"
-linux,ramoops-start = <start address of preserved ram>
-linux,ramoops-size = ...
-linux,ramoops-record-size = ...
-linux,ramoops-include-oopses = ... (this one is a bit of a corner
-case, it's truly a software setting -- probably leave it out)
-
-Anybody have a better idea?
-
-I could do a platform-specific binding that describes the nonvolatile
-ram area as a separate "device", and then have some platform code that
-translates that into the ramoops platform pdata parameters (since it
-can't really be assumed that ramoops has ownership of the whole
-area/device). That seems pretty awkward too though, and I'm not sure
-it buys us a whole lot.
-
-
--Olof
+> 
+> b) The configuration of each pin group that's used by the particular board.
+> All that's relevant here is the mux selection for each pin groups; things
+> like which pins are included in each group are defined by the SoC not the
+> board and hence wouldn't be included in a per-board node.
