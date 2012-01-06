@@ -1,14 +1,11 @@
-From: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5 v2] drivers: power: Rename bq20z75 to sbs-battery
-Date: Fri, 6 Jan 2012 05:29:15 +0400
-Message-ID: <20120106012915.GA27391@oksana.dev.rtsoft.ru>
-References: <1323136249-4134-1-git-send-email-rklein@nvidia.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Device tree bindings for linux ramoops use
+Date: Thu, 5 Jan 2012 20:39:50 -0800
+Message-ID: <CAOesGMiKBQM61DkLFoTcvMFWV2UCgomLQYDX65_Tkmtoy_hGCg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1323136249-4134-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,20 +15,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 05, 2011 at 05:50:45PM -0800, Rhyland Klein wrote:
-> This driver for the bq20z75 implemented the register spec defined
-> by the SBS standard. As this is not unique to this the TI part this
-> was originally written for, we can generalize this driver to
-> show its support for any SBS compliant battery.
-> 
-> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi,
 
-All five applied, thank you!
+I'm considering how to best describe the data that ramoops needs in
+the device tree.
 
--- 
-Anton Vorontsov
-Email: cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+The idea is really about describing a memory area that is (likely to
+be) nonvolatile across reboots. Said area is not to be included in the
+regular memory map of the system (i.e. not covered by /memory).
+
+I have a few options on where to do it. It's not really a hardware
+device per se, so it's a gray area for the device tree alltogether.
+
+How about something like?
+
+compatible = "linux,ramoops"
+linux,ramoops-start = <start address of preserved ram>
+linux,ramoops-size = ...
+linux,ramoops-record-size = ...
+linux,ramoops-include-oopses = ... (this one is a bit of a corner
+case, it's truly a software setting -- probably leave it out)
+
+Anybody have a better idea?
+
+I could do a platform-specific binding that describes the nonvolatile
+ram area as a separate "device", and then have some platform code that
+translates that into the ramoops platform pdata parameters (since it
+can't really be assumed that ramoops has ownership of the whole
+area/device). That seems pretty awkward too though, and I'm not sure
+it buys us a whole lot.
+
+
+-Olof
