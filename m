@@ -1,14 +1,15 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: Device tree bindings for linux ramoops use
-Date: Fri, 6 Jan 2012 08:33:25 -0800
-Message-ID: <CAOesGMi3Wc3Bdx5UdXHUxXxv-pMSAhS6VagHaAm6OpA_GFrjAg@mail.gmail.com>
-References: <CAOesGMiKBQM61DkLFoTcvMFWV2UCgomLQYDX65_Tkmtoy_hGCg@mail.gmail.com>
- <4F06F662.2020803@gmail.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: OMAP2+: kconfig: Enable devicetree by default
+ for OMAP2+ systems
+Date: Fri, 6 Jan 2012 17:37:17 +0100
+Message-ID: <4F07233D.5000001@ti.com>
+References: <1323190149-6492-2-git-send-email-b-cousson@ti.com>
+ <CACxGe6sAEs4H4FR75psy74x9V3mbp6wAdryJbDu8HBZ4tMmyvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F06F662.2020803-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CACxGe6sAEs4H4FR75psy74x9V3mbp6wAdryJbDu8HBZ4tMmyvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,58 +19,25 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Marco Stornelli <marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Jan 6, 2012 at 5:25 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 01/05/2012 10:39 PM, Olof Johansson wrote:
->> Hi,
+On 1/4/2012 9:11 PM, Grant Likely wrote:
+> On Tue, Dec 6, 2011 at 9:49 AM, Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>  wrote:
+>> devicetree will become the mandatory boot method for OMAP2+.
+>> In order to avoid cluttering the OMAP code with #ifdef CONFIG_OF,
+>> select USE_OF by default for every OMAP2+ systems.
+>> Select as well the APPENDED_DTB and ATAG_DTB_COMPAT to allow legacy
+>> boot loader to keep working properly.
 >>
->> I'm considering how to best describe the data that ramoops needs in
->> the device tree.
+>> Enable PROC_DEVICETREE as well.
 >>
->> The idea is really about describing a memory area that is (likely to
->> be) nonvolatile across reboots. Said area is not to be included in the
->> regular memory map of the system (i.e. not covered by /memory).
->>
->> I have a few options on where to do it. It's not really a hardware
->> device per se, so it's a gray area for the device tree alltogether.
->>
->> How about something like?
->>
->> compatible = "linux,ramoops"
->> linux,ramoops-start = <start address of preserved ram>
->> linux,ramoops-size = ...
->> linux,ramoops-record-size = ...
->> linux,ramoops-include-oopses = ... (this one is a bit of a corner
->> case, it's truly a software setting -- probably leave it out)
->>
->> Anybody have a better idea?
+>> Signed-off-by: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
+>> Cc: Tony Lindgren<tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 >
-> Since all those settings are already settable on the kernel command as
-> module parameters, can't you use that? Perhaps we need the bootloader to
-> append cmd line options rather than replace as I think u-boot does.
+> Acked-by: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-I'm not so sure that's a good idea. The command line will snowball
-into a 2KB string pretty quickly if we start doing that. It's already
-crazy long on our systems here.
+Thanks for the reviews.
 
-
-> There is a need for a (typically) on-chip RAM binding which then gets
-> carved up into multiple uses. These could be properties of the RAM binding.
-
-Sounds like describing it in a separate memory node is a good start,
-and then possibly partitions underneath there.
-
-So, even for the case of nonvolatile-memory, it could be done with a
-device node in parallel with the memory nodes on the system, and then
-possibly the ramoops node underneath of there. For iram, similarly the
-main iram range is covered by the iram device node, and if you need to
-partition it further, do it with subnodes similar to how mtd bindings
-work. Sounds reasonable, no?
-
-
--Olof
+Benoit
