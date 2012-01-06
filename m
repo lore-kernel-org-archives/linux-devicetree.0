@@ -1,15 +1,13 @@
 From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: at91: pit add DT support
-Date: Fri, 06 Jan 2012 14:37:41 +0100
-Message-ID: <4F06F925.1030204@atmel.com>
-References: <1325771308-19770-1-git-send-email-nicolas.ferre@atmel.com>
- <1325784348-29481-1-git-send-email-nicolas.ferre@atmel.com>
- <20120105180028.GB22653@ponder.secretlab.ca>
+Subject: [PATCH v4] ARM: at91: pit add DT support
+Date: Fri,  6 Jan 2012 17:20:30 +0100
+Message-ID: <1325866830-13259-1-git-send-email-nicolas.ferre@atmel.com>
+References: <1325784348-29481-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120105180028.GB22653-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1325784348-29481-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,54 +17,186 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/05/2012 07:00 PM, Grant Likely :
-> On Thu, Jan 05, 2012 at 06:25:48PM +0100, Nicolas Ferre wrote:
->> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->>
->> Retreive registers address and IRQ from device tree entry. Fall back
->> to built-in values if an error occurs.
->>
->> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: change error path and interrupts property handling]
->> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
->> v3: - use irq_of_parse_and_map() for handling irq numbers specified by DT.
->>       Correction proposed by Jamie Iles.
->>
->> v2: - new specification of irq numbers in DT (due to modification of AIC code)
->>     - new error path in of_at91sam926x_pit_init()
->>     - fall back to built-in values if an error occurs
->>     - use of of_property_read_u32() to get irq property
->>
->>  .../devicetree/bindings/arm/atmel-at91.txt         |    8 +++
->>  arch/arm/boot/dts/at91sam9g20.dtsi                 |    5 ++
->>  arch/arm/boot/dts/at91sam9g45.dtsi                 |    6 ++
->>  arch/arm/mach-at91/at91sam926x_time.c              |   53 +++++++++++++++++++-
->>  4 files changed, 70 insertions(+), 2 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 
-[..]
+Retreive registers address and IRQ from device tree entry. Fall back
+to built-in values if an error occurs.
 
->> --- a/arch/arm/mach-at91/at91sam926x_time.c
->> +++ b/arch/arm/mach-at91/at91sam926x_time.c
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+[nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: change error path and interrupts property handling]
+Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+v4: - change of_at91sam926x_pit_init() return value usage logic as
+      suggested by Rob Herring
+    - irq_of_parse_and_map() returns 0 on error: change test according to 
+      Grant Likely note.
 
-[..]
+v3: - use irq_of_parse_and_map() for handling irq numbers specified by DT.
+      Correction proposed by Jamie Iles.
 
->> +	/* Get the interrupts property */
->> +	ret = irq_of_parse_and_map(np, 0);
->> +	if (ret <= 0)
->> +		goto ioremap_err;
-> 
-> if (!ret)
-> 
-> The DT irq functions return 0 on failure.
+v2: - new specification of irq numbers in DT (due to modification of AIC code)
+    - new error path in of_at91sam926x_pit_init()
+    - fall back to built-in values if an error occurs
+    - use of of_property_read_u32() to get irq property
 
-Ok, modified in new revision.
+ .../devicetree/bindings/arm/atmel-at91.txt         |    8 +++
+ arch/arm/boot/dts/at91sam9g20.dtsi                 |    5 ++
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |    6 ++
+ arch/arm/mach-at91/at91sam926x_time.c              |   60 ++++++++++++++++++--
+ 4 files changed, 73 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+new file mode 100644
+index 0000000..380f711
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+@@ -0,0 +1,8 @@
++Atmel AT91 device tree bindings.
++================================
++
++PIT Timer required properties:
++- compatible: Should be "atmel,at91sam9260-pit"
++- reg: Should contain registers location and length
++- interrupts: Should contain interrupt for the PIT which is the IRQ line
++  shared across all System Controller members.
+diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
+index ea942b5..e10842a 100644
+--- a/arch/arm/boot/dts/at91sam9g20.dtsi
++++ b/arch/arm/boot/dts/at91sam9g20.dtsi
+@@ -57,6 +57,11 @@
+ 				reg = <0xfffff000 0x200>;
+ 			};
+ 
++			pit: timer@fffffd30 {
++				compatible = "atmel,at91sam9260-pit";
++				reg = <0xfffffd30 0xf>;
++				interrupts = <1 4>;
++			};
+ 
+ 			pioA: gpio@fffff400 {
+ 				compatible = "atmel,at91rm9200-gpio";
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index ebc9617..28a678f 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -58,6 +58,12 @@
+ 				reg = <0xfffff000 0x200>;
+ 			};
+ 
++			pit: timer@fffffd30 {
++				compatible = "atmel,at91sam9260-pit";
++				reg = <0xfffffd30 0xf>;
++				interrupts = <1 4>;
++			};
++
+ 			dma: dma-controller@ffffec00 {
+ 				compatible = "atmel,at91sam9g45-dma";
+ 				reg = <0xffffec00 0x200>;
+diff --git a/arch/arm/mach-at91/at91sam926x_time.c b/arch/arm/mach-at91/at91sam926x_time.c
+index d89ead7..802fea3 100644
+--- a/arch/arm/mach-at91/at91sam926x_time.c
++++ b/arch/arm/mach-at91/at91sam926x_time.c
+@@ -14,6 +14,9 @@
+ #include <linux/kernel.h>
+ #include <linux/clk.h>
+ #include <linux/clockchips.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ 
+ #include <asm/mach/time.h>
+ 
+@@ -133,7 +136,8 @@ static irqreturn_t at91sam926x_pit_interrupt(int irq, void *dev_id)
+ static struct irqaction at91sam926x_pit_irq = {
+ 	.name		= "at91_tick",
+ 	.flags		= IRQF_SHARED | IRQF_DISABLED | IRQF_TIMER | IRQF_IRQPOLL,
+-	.handler	= at91sam926x_pit_interrupt
++	.handler	= at91sam926x_pit_interrupt,
++	.irq		= AT91_ID_SYS,
+ };
+ 
+ static void at91sam926x_pit_reset(void)
+@@ -149,6 +153,49 @@ static void at91sam926x_pit_reset(void)
+ 	pit_write(AT91_PIT_MR, (pit_cycle - 1) | AT91_PIT_PITEN);
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id timer_ids[] = {
++	{ .compatible = "atmel,at91sam9260-pit" },
++	{ /* sentinel */ }
++};
++
++static int __init of_at91sam926x_pit_init(void)
++{
++	struct device_node	*np;
++	int			ret;
++
++	np = of_find_matching_node(NULL, timer_ids);
++	if (!np)
++		goto err;
++
++	pit_base_addr = of_iomap(np, 0);
++	if (!pit_base_addr)
++		goto node_err;
++
++	/* Get the interrupts property */
++	ret = irq_of_parse_and_map(np, 0);
++	if (!ret)
++		goto ioremap_err;
++	at91sam926x_pit_irq.irq = ret;
++
++	of_node_put(np);
++
++	return 0;
++
++ioremap_err:
++	iounmap(pit_base_addr);
++node_err:
++	of_node_put(np);
++err:
++	return -EINVAL;
++}
++#else
++static int __init of_at91sam926x_pit_init(void)
++{
++	return -EINVAL;
++}
++#endif
++
+ /*
+  * Set up both clocksource and clockevent support.
+  */
+@@ -177,7 +224,7 @@ static void __init at91sam926x_pit_init(void)
+ 	clocksource_register_hz(&pit_clk, pit_rate);
+ 
+ 	/* Set up irq handler */
+-	setup_irq(AT91_ID_SYS, &at91sam926x_pit_irq);
++	setup_irq(at91sam926x_pit_irq.irq, &at91sam926x_pit_irq);
+ 
+ 	/* Set up and register clockevents */
+ 	pit_clkevt.mult = div_sc(pit_rate, NSEC_PER_SEC, pit_clkevt.shift);
+@@ -193,10 +240,11 @@ static void at91sam926x_pit_suspend(void)
+ 
+ void __init at91sam926x_ioremap_pit(u32 addr)
+ {
+-	pit_base_addr = ioremap(addr, 16);
+-
+-	if (!pit_base_addr)
+-		panic("Impossible to ioremap PIT\n");
++	if (of_at91sam926x_pit_init() < 0) {
++		pit_base_addr = ioremap(addr, 16);
++		if (!pit_base_addr)
++			panic("Impossible to ioremap PIT\n");
++	}
+ }
+ 
+ struct sys_timer at91sam926x_timer = {
 -- 
-Nicolas Ferre
+1.7.5.4
