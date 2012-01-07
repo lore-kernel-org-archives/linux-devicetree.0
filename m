@@ -1,260 +1,280 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Sat, 7 Jan 2012 21:54:48 +0800
-Message-ID: <20120107135445.GI4790@S2101-09.ap.freescale.net>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-3-git-send-email-b29396@freescale.com>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
+From: Sylwester Nawrocki <snjw23@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: Exynos: Hook up power domains to generic
+ power domain infrastructure
+Date: Sat, 07 Jan 2012 15:44:30 +0100
+Message-ID: <4F085A4E.3010200@gmail.com>
+References: <1325931055-14486-1-git-send-email-thomas.abraham@linaro.org> <1325931055-14486-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1325931055-14486-3-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rjw@sisk.pl, kyungmin.park@samsung.com, s.nawrocki@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2012 at 10:03:07AM -0800, Stephen Warren wrote:
-> I see now.
-> 
-> I'd definitely be inclined to drop the num-pins and num-mux properties;
-> The values are just len(grp-pins)/4. You can still check that
-> len(grp-pins)==len(grp-mux) if you want to catch typos etc.
-> 
-+1
+Hi Thomas,
 
-> So, this does appear to be conflating the two things: The definition of
-> what pins are in a pingroup, and the mux function for a particular
-> setting of that pingroup. I think you need separate nodes for this.
-> 
-At least for imx, we do not have mux function setting for pingroup.
-Instead, it only applies to individual pin.
+thank you for working on this. I have a few comments below..
 
-> Without separate nodes, there will eventually be a lot of duplication.
-> A made-up example of the same uart4grp allowing either of two functions
-> uart3, uart4 to be muxed out onto it:
+On 01/07/2012 11:10 AM, Thomas Abraham wrote:
+> Add support for generic power domain for Exynos4 platforms and remove the
+> Samsung specific power domain control for Exynos4.
 > 
-> aips-bus@02000000 { /* AIPS1 */
-> 	iomuxc@020e0000 {
-> 		pinctrl_uart4_3: uart4@option_3 {
-> 			func-name = "uart3";
-> 			grp-name = "uart4grp";
+> The generic power domain infrastructure is used to control the power domains
+> available on Exynos4. For non-dt platforms, the power domains are statically
+> instantiated. For dt platforms, the power domain nodes found in the device
+> tree are instantiated.
+> 
+> Cc: Rafael J. Wysocki<rjw@sisk.pl>
+> Cc: Kukjin Kim<kgene.kim@samsung.com>
+> Cc: Kyungmin Park<kyungmin.park@samsung.com>
+> Cc: Rob Herring<rob.herring@calxeda.com>
+> Cc: Grant Likely<grant.likely@secretlab.ca>
+> Signed-off-by: Thomas Abraham<thomas.abraham@linaro.org>
+> ---
+> This patch is mainly derived from Mark Brown's work on generic power domain
+> support for s3c64xx platforms.
+> 
+>   arch/arm/mach-exynos/Kconfig               |   10 +--
+>   arch/arm/mach-exynos/Makefile              |    2 +-
+>   arch/arm/mach-exynos/dev-pd.c              |  139 ---------------------
+>   arch/arm/mach-exynos/mach-nuri.c           |   11 --
+>   arch/arm/mach-exynos/mach-origen.c         |   14 --
+>   arch/arm/mach-exynos/mach-smdkv310.c       |   12 --
+>   arch/arm/mach-exynos/mach-universal_c210.c |   17 ---
+>   arch/arm/mach-exynos/pm_domains.c          |  183 ++++++++++++++++++++++++++++
+>   8 files changed, 185 insertions(+), 203 deletions(-)
+>   delete mode 100644 arch/arm/mach-exynos/dev-pd.c
+>   create mode 100644 arch/arm/mach-exynos/pm_domains.c
+> 
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index e931924..5dec134 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -32,6 +32,7 @@ config CPU_EXYNOS4210
+>   	select ARM_CPU_SUSPEND if PM
+>   	select S5P_PM if PM
+>   	select S5P_SLEEP if PM
+> +	select PM_GENERIC_DOMAINS
+>   	help
+>   	  Enable EXYNOS4210 CPU support
+> 
+...
+> diff --git a/arch/arm/mach-exynos/pm_domains.c b/arch/arm/mach-exynos/pm_domains.c
+> new file mode 100644
+> index 0000000..95a7c55
+> --- /dev/null
+> +++ b/arch/arm/mach-exynos/pm_domains.c
+> @@ -0,0 +1,183 @@
+> +/*
+> + * Exynos4 Generic power domain support.
+> + *
+> + * Copyright (c) 2011 Samsung Electronics Co., Ltd.
 
-With phandle in dts reflecting the mapping, neither func-name nor
-grp-name should be needed, and both can just be dropped, IMO.
+2012 ?
 
-> 			grp-pins = <107 108>;
-> 			num-pins = <2>;
-> 			grp-mux = <3 3>;
-> 			num-mux = <2>;
-> 		};
-> 		pinctrl_uart4_4: uart4@option_4 {
-> 			func-name = "uart4";
-> 			grp-name = "uart4grp";
-> 			grp-pins = <107 108>;
-> 			num-pins = <2>;
-> 			grp-mux = <3 3>;
-> 			num-mux = <2>;
-> 		};
-> 	}
-> };
-> 
-> Now I understand that initially you aren't going to type out the complete
-> list of every available option into imx6q.dtsi because it's probably huge,
-> but the binding does need to allow you to do so without duplicating a lot
-> of data, because eventually you'll get boards that use a larger and larger
-> subset of all the options, so the number you need to represent at once in
-> imx6q.dtsi will grow.
-> 
-> So I think you need to model the IMX pinmux controller's bindings more on
-> how the pinctrl subsystem represents objects; separate definitions of pins,
-> groups of pins, functions, and board settings. Something more like:
-> 
-> imx6q.dtsi:
-> 
-> aips-bus@02000000 { /* AIPS1 */
-> 	iomuxc@020e0000 {
-> 		/* FIXME: Perhaps need pin nodes here to name them too */
+> + *		http://www.samsung.com
+> + *
+> + * Implementation of Exynos4 specific power domain control which is used in
+> + * conjunction with runtime-pm. Support for both device-tree and non-device-tree
+> + * based power domain support is included.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +#include<linux/io.h>
+> +#include<linux/err.h>
+> +#include<linux/slab.h>
+> +#include<linux/pm_domain.h>
+> +#include<linux/delay.h>
+> +#include<linux/of_address.h>
+> +
+> +#include<mach/regs-pmu.h>
+> +#include<plat/devs.h>
+> +
+> +/*
+> + * Exynos4 specific wrapper around the generic power domain
+> + */
+> +struct exynos4_pm_domain {
+> +	void __iomem *base;
+> +	char const *name;
+> +	bool is_off;
+> +	struct generic_pm_domain pd;
+> +};
+> +
+> +static int exynos4_pd_power(struct generic_pm_domain *domain, bool power_on)
+> +{
+> +	struct exynos4_pm_domain *pd;
+> +	void __iomem *base;
+> +	u32 timeout, pwr;
+> +	char *op;
+> +
+> +	pd = container_of(domain, struct exynos4_pm_domain, pd);
+> +	base = pd->base;
+> +
+> +	pwr = (power_on) ? S5P_INT_LOCAL_PWR_EN : 0;
 
-No, it's been listed in imx pinctrl driver.
+Is there any value in parentheses around 'power_on' ? 
 
-> 
-> 		/* A node per group of pins. Each lists the group name, and
-> 		 * the list of pins in the group */
-> 		foogrp: group@100 {
-> 			grp-name = "foogrp";
-> 			grp-pins = <100 101>;
-> 		};
-> 		bargrp: group@102 {
-> 			grp-name = "bargrp";
-> 			grp-pins = <102 103>;
-> 		};
-> 		bazgrp: group@104 {
-> 			grp-name = "bargrp";
-> 			grp-pins = <104 105>;
-> 		};
+> +	__raw_writel(pwr, base);
+> +
+> +	/* Wait max 1ms */
+> +	timeout = 10;
+> +
+> +	while ((__raw_readl(base + 0x4)&  S5P_INT_LOCAL_PWR_EN)	!= pwr) {
+> +		if (!timeout) {
+> +			op = (power_on) ? "enable" : "disable";
+> +			pr_err("Power domain %s %s failed\n", op, domain->name);
 
-I agree that we should define pingroups in <soc>.dtsi, but the mux
-setting needs to be under the pingroup node too.  See comment below ...
+How about just:
+       pr_err("%s power domain state change (%d) failed\n",
+              domain->name, power_on);
+?
+> +			return -ETIMEDOUT;
+> +		}
+> +		timeout--;
+> +		cpu_relax();
 
-> 		/* A node per function that can be muxed onto pin groups,
-> 		 * each listing the function name, the set of groups it can
-> 		 * be muxed onto, and the mux selector value to program into
-> 		 * the groups' mux control register to select it */
-> 		uart3func: func@0 {
-> 			func-name = "uart3";
-> 			/* Length of locations and mux-value must match */
-> 			locations = <&foogrp &bargrp>;
-> 			mux-value = <0 4>;
+Does cpu_relax() make any difference here ?
 
-This can be easily broken for imx.  As the mux setting applies to
-individual pin rather than pingroup, it's very valid for foogrp to
-have pin 100 muxed on mode 0 while pin 101 on mode 1.  That said,
-it's not necessarily true that we always have all the pins in
-particular pingroup muxed on the same setting for given function.
+> +		usleep_range(80, 100);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int exynos4_pd_power_on(struct generic_pm_domain *domain)
+> +{
+> +	return exynos4_pd_power(domain, true);
+> +}
+> +
+> +static int exynos4_pd_power_off(struct generic_pm_domain *domain)
+> +{
+> +	return exynos4_pd_power(domain, false);
+> +}
+> +
+> +
+> +#define EXYNOS4_GPD(PD, BASE, NAME)			\
+> +static struct exynos4_pm_domain PD = {			\
+> +	.base = (void __iomem *)BASE,			\
+> +	.name = NAME,					\
+> +	.pd = {						\
+> +		.power_off = exynos4_pd_power_off,	\
+> +		.power_on = exynos4_pd_power_on,	\
+> +	},						\
+> +}
+> +
+> +EXYNOS4_GPD(exynos4_pd_mfc, S5P_PMU_MFC_CONF, "pd-mfc");
+> +EXYNOS4_GPD(exynos4_pd_g3d, S5P_PMU_G3D_CONF, "pd-g3d");
+> +EXYNOS4_GPD(exynos4_pd_lcd0, S5P_PMU_LCD0_CONF, "pd-lcd0");
+> +EXYNOS4_GPD(exynos4_pd_lcd1, S5P_PMU_LCD1_CONF, "pd-lcd1");
+> +EXYNOS4_GPD(exynos4_pd_tv, S5P_PMU_TV_CONF, "pd-tv");
+> +EXYNOS4_GPD(exynos4_pd_cam, S5P_PMU_CAM_CONF, "pd-cam");
+> +EXYNOS4_GPD(exynos4_pd_gps, S5P_PMU_GPS_CONF, "pd-gps");
+> +
+> +static struct exynos4_pm_domain *exynos4_pm_domains[] = {
+> +	&exynos4_pd_mfc,
+> +	&exynos4_pd_g3d,
+> +	&exynos4_pd_lcd0,
+> +	&exynos4_pd_lcd1,
+> +	&exynos4_pd_tv,
+> +	&exynos4_pd_cam,
+> +	&exynos4_pd_gps,
+> +};
+> +
+> +static __init int exynos4_pm_init_power_domain(void)
+> +{
+> +	int idx;
+> +	struct device_node *np;
+> +
+> +#ifdef CONFIG_OF
+> +	if (!of_have_populated_dt())
+> +		goto no_dt;
+> +
+> +	for_each_compatible_node(np, NULL, "samsung,exynos4210-pd") {
+> +		struct exynos4_pm_domain *pd;
+> +
+> +		pd = kzalloc(sizeof(*pd), GFP_KERNEL);
+> +		if (!pd) {
+> +			pr_err("exynos4_pm_init_power_domain: failed to "
+> +					"allocate memory for domain\n");
 
-> 		};
-> 		uart4func: func@1 {
-> 			func-name = "uart4";
-> 			locations = <&bargrp &bazgrp>;
-> 			mux-value = <6 3>;
-> 		};
+nit: what about:
+			pr_err("%s: failed to allocate memory for domain\n",
+				__func__);
+?
+> +			return -ENOMEM;
+> +		}
+> +
+> +		if (of_get_property(np, "samsung,exynos4210-pd-off", NULL))
+> +			pd->is_off = true;
+> +		pd->name = np->name;
+> +		pd->base = of_iomap(np, 0);
+> +		pd->pd.power_off = exynos4_pd_power_off;
+> +		pd->pd.power_on = exynos4_pd_power_on;
+> +		pd->pd.of_node = np;
+> +		pm_genpd_init(&pd->pd, NULL, false);
+> +	}
+> +	return 0;
+> +#endif /* CONFIG_OF */
+> +
+> + no_dt:
+> +	for (idx = 0; idx<  ARRAY_SIZE(exynos4_pm_domains); idx++)
+> +		pm_genpd_init(&exynos4_pm_domains[idx]->pd, NULL,
+> +				exynos4_pm_domains[idx]->is_off);
+> +
+> +#ifdef CONFIG_S5P_DEV_FIMD0
+> +	if (pm_genpd_add_device(&exynos4_pd_lcd0.pd,&s5p_device_fimd0.dev))
+> +		pr_info("error in adding fimd0 to lcd0 power domain\n");
+> +#endif
+> +#ifdef CONFIG_S5P_DEV_TV
+> +	if (pm_genpd_add_device(&exynos4_pd_tv.pd,&s5p_device_hdmi.dev))
+> +		pr_info("error in adding hdmi to tv power domain\n");
+> +	if (pm_genpd_add_device(&exynos4_pd_tv.pd,&s5p_device_mixer.dev))
+> +		pr_info("error in adding mixer to tv power domain\n");
+> +#endif
+> +#ifdef CONFIG_S5P_DEV_MFC
+> +	if (pm_genpd_add_device(&exynos4_pd_mfc.pd,&s5p_device_mfc.dev))
+> +		pr_info("error in adding mfc to mfc power domain\n");
+> +#endif
+> +#ifdef CONFIG_S5P_DEV_FIMC0
+> +	if (pm_genpd_add_device(&exynos4_pd_cam.pd,&s5p_device_fimc0.dev))
+> +		pr_info("error in adding fimc0 to cam power domain\n");
+> +#endif
+> +#ifdef CONFIG_S5P_DEV_FIMC1
+> +	if (pm_genpd_add_device(&exynos4_pd_cam.pd,&s5p_device_fimc1.dev))
+> +		pr_info("error in adding fimc1 to cam power domain\n");
+> +#endif
+> +#ifdef CONFIG_S5P_DEV_FIMC2
+> +	if (pm_genpd_add_device(&exynos4_pd_cam.pd,&s5p_device_fimc2.dev))
+> +		pr_info("error in adding fimc2 to cam power domain\n");
+> +#endif
+> +#ifdef CONFIG_S5P_DEV_FIMC3
+> +	if (pm_genpd_add_device(&exynos4_pd_cam.pd,&s5p_device_fimc3.dev))
+> +		pr_info("error in adding fimc3 to cam power domain\n");
+> +#endif
+> +#ifdef CONFIG_S5P_DEV_CSIS0
+> +	if (pm_genpd_add_device(&exynos4_pd_cam.pd,&s5p_device_mipi_csis0.dev))
+> +		pr_info("error in adding csis0 to cam power domain\n");
+> +#endif
 
-I prefer to have function node defined in <board>.dtsi, since it's
-all about defining phandle to the correct pingroup, which should be
-decided by board design.
+Could you add CSIS1 as well ? Some boards will be using both MIPI-CSI receivers.
 
-> 	}
-> };
-> 
-> Or, instead of separate locations and mux-value properties with matching
-> lengths, perhaps a node for each location:
-> 
-> 		uart3func: func@0 {
-> 			func-name = "uart3";
-> 			location@0 {
-> 				location = <&foogrp>;
-> 				mux-value = <0>;
-> 			};
-> 			location@1 {
-> 				location = <&bargrp>;
-> 				mux-value = <4>;
-> 			};
-> 		};
-> 
-> That's more long-winded, but might be more easily extensible if we need
-> to add more properties later.
-> 
-> Now in the board's .dts file, you need to specify for each device the
-> list of pinmux groups the device needs to use, and the function to
-> select for each group. Perhaps something like:
-> 
-> board.dts:
-> 
-> usdhc@0219c000 { /* uSDHC4 */
->         fsl,card-wired;
->         status = "okay";
->         pinmux = <&foogrp &uart3func &bazgrp &uart4func>;
-> };
-> 
-> I haven't convinced myself that's actually a good binding, but I think
-> it does represent the data required for muxing. Some potential issues
-> as before:
-> 
-> * Do we need to add flags to each entry in the list; GPIO/interrupt do?
-> 
-What's that for right now?  I guess we can add it later when we see
-the need.
+> +	return 0;
+> +}
+> +arch_initcall(exynos4_pm_init_power_domain);
+> +
+> +static __init int exynos4_pm_late_initcall(void)
+> +{
+> +	pm_genpd_poweroff_unused();
+> +	return 0;
+> +}
+> +late_initcall(exynos4_pm_late_initcall);
 
-> * Should "pinmux" be a node, and the configuration of each group be a
-> separate sub-node, so we can add more properties to each "table" entry
-> in the future, e.g. pin config parameters?
-> 
-I do not think it's necessary. 'pinctrl' phandle works perfectly fine
-to me at least for now.  How pinconf support should be added into
-pinctrl subsystem is still up in the air to me.
+--
 
-> * For Tegra, I elected to put the definitions of pins, groups, and
-> functions into the driver rather than in the device tree.
-
-IMO, we do not want to do this for imx, as I'm scared of the size
-of Tegra pinctrl patches.  If we go this way for imx, we will have
-even bigger patches.
-
-> This avoids
-> parsing a heck of a lot of data from device tree. That means there isn't
-> any per-function node that can be referred to by phandle. Does it make
-> sense to refer to groups and functions by string name or integer ID
-> instead of phandle? Perhaps:
-> 
-> usdhc@0219c000 { /* uSDHC4 */
-> 	fsl,card-wired;
-> 	status = "okay";
-> 	pinmux = {
-> 		group@0 {
-> 			group = "foo";
-> 			function = "uart3";
-> 			/* You could add pin config options here too */
-> 		};
-> 		group@1 {
-> 			group = "baz";
-> 			function = "uart4";
-> 		};
-> 	};
-> };
-> 
-> I guess referring to things by name isn't that idiomatic for device tree.
-> Using integers here would be fine too, so long as dtc gets support for
-> named constants:
-> 
-> imx6q.dtsi:
-> 
-> /define/ IMX_PINGRP_FOO 0
-> /define/ IMX_PINGRP_BAR 1
-> /define/ IMX_PINGRP_BAZ 2
-> /define/ IMX_PINFUNC_UART3 0
-> /define/ IMX_PINFUNC_UART4 1
-> ...
-> 
-> board .dts:
-> 
-> usdhc@0219c000 { /* uSDHC4 */
-> 	fsl,card-wired;
-> 	status = "okay";
-> 	pinmux = {
-> 		group@0 {
-> 			group = <IMX_PINGRP_FOO>;
-> 			function = <IMX_PINFUNC_UART3>;
-> 			/* You could add pin config options here too */
-> 		};
-> 		group@1 {
-> 			group = <IMX_PINGRP_BAZ>;
-> 			function = <IMX_PINFUNC_UART4>;
-> 		};
-> 	};
-> };
-> 
-Doing this does not change the fact that this is bound with Linux
-driver details.  That said, if the indexing of either pingrp array
-or pinfunc array changes in the driver, the binding is broken.
-
--- 
 Regards,
-Shawn
+Sylwester
