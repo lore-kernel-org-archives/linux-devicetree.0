@@ -1,13 +1,23 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH] irqdomain: Initialize number of IRQs for simple domains
-Date: Sat, 7 Jan 2012 12:47:01 +0100
-Message-ID: <20120107114701.GA3698@avionic-0098.mockup.avionic-design.de>
-References: <1325860112-22051-1-git-send-email-thierry.reding@avionic-design.de>
- <20120107055817.GG4790@S2101-09.ap.freescale.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
+ mappings
+Date: Sat, 7 Jan 2012 21:54:48 +0800
+Message-ID: <20120107135445.GI4790@S2101-09.ap.freescale.net>
+References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
+ <1324402840-32451-3-git-send-email-b29396@freescale.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
+ <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7023479018965448395=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120107055817.GG4790-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,125 +27,234 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Daniel Walker <dwalker-zu3NM2574RrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:ARM/QUALCOMM MSM..." <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "open list:OMAP SUPPORT" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, "open list:ARM/ATMEL AT91RM9..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 06, 2012 at 10:03:07AM -0800, Stephen Warren wrote:
+> I see now.
+> 
+> I'd definitely be inclined to drop the num-pins and num-mux properties;
+> The values are just len(grp-pins)/4. You can still check that
+> len(grp-pins)==len(grp-mux) if you want to catch typos etc.
+> 
++1
 
---===============7023479018965448395==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
-Content-Disposition: inline
+> So, this does appear to be conflating the two things: The definition of
+> what pins are in a pingroup, and the mux function for a particular
+> setting of that pingroup. I think you need separate nodes for this.
+> 
+At least for imx, we do not have mux function setting for pingroup.
+Instead, it only applies to individual pin.
 
+> Without separate nodes, there will eventually be a lot of duplication.
+> A made-up example of the same uart4grp allowing either of two functions
+> uart3, uart4 to be muxed out onto it:
+> 
+> aips-bus@02000000 { /* AIPS1 */
+> 	iomuxc@020e0000 {
+> 		pinctrl_uart4_3: uart4@option_3 {
+> 			func-name = "uart3";
+> 			grp-name = "uart4grp";
 
---sdtB3X0nJg68CQEu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With phandle in dts reflecting the mapping, neither func-name nor
+grp-name should be needed, and both can just be dropped, IMO.
 
-* Shawn Guo wrote:
-> On Fri, Jan 06, 2012 at 03:28:25PM +0100, Thierry Reding wrote:
-[...]
-> > diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-im=
-x6q.c
-> > index c257281..9ed7812 100644
-> > --- a/arch/arm/mach-imx/mach-imx6q.c
-> > +++ b/arch/arm/mach-imx/mach-imx6q.c
-> > @@ -95,9 +95,11 @@ static int __init imx6q_gpio_add_irq_domain(struct d=
-evice_node *np,
-> >  				struct device_node *interrupt_parent)
-> >  {
-> >  	static int gpio_irq_base =3D MXC_GPIO_IRQ_START + ARCH_NR_GPIOS;
-> > +	struct irq_domain *domain;
-> > =20
-> >  	gpio_irq_base -=3D 32;
-> > -	irq_domain_add_simple(np, gpio_irq_base);
-> > +	domain =3D irq_domain_add_simple(np, gpio_irq_base, 32);
-> > +	WARN_ON(IS_ERR(domain));
->=20
-> Why do we handle the error in a different pattern that is used for
-> all above?
+> 			grp-pins = <107 108>;
+> 			num-pins = <2>;
+> 			grp-mux = <3 3>;
+> 			num-mux = <2>;
+> 		};
+> 		pinctrl_uart4_4: uart4@option_4 {
+> 			func-name = "uart4";
+> 			grp-name = "uart4grp";
+> 			grp-pins = <107 108>;
+> 			num-pins = <2>;
+> 			grp-mux = <3 3>;
+> 			num-mux = <2>;
+> 		};
+> 	}
+> };
+> 
+> Now I understand that initially you aren't going to type out the complete
+> list of every available option into imx6q.dtsi because it's probably huge,
+> but the binding does need to allow you to do so without duplicating a lot
+> of data, because eventually you'll get boards that use a larger and larger
+> subset of all the options, so the number you need to represent at once in
+> imx6q.dtsi will grow.
+> 
+> So I think you need to model the IMX pinmux controller's bindings more on
+> how the pinctrl subsystem represents objects; separate definitions of pins,
+> groups of pins, functions, and board settings. Something more like:
+> 
+> imx6q.dtsi:
+> 
+> aips-bus@02000000 { /* AIPS1 */
+> 	iomuxc@020e0000 {
+> 		/* FIXME: Perhaps need pin nodes here to name them too */
 
-Because I wasn't paying attention =3D) It should be returning an error of
-course. With the changes that Grant requested, domain will be NULL on error
-and I guess returning -ENOMEM would be fine here (and in the above hunks).
+No, it's been listed in imx pinctrl driver.
 
-It is of course different behaviour because the code would previously
-continue execution and ignore the error, but I guess that's okay since
-without the IRQ domain being registered the board will not work properly
-anyway.
+> 
+> 		/* A node per group of pins. Each lists the group name, and
+> 		 * the list of pins in the group */
+> 		foogrp: group@100 {
+> 			grp-name = "foogrp";
+> 			grp-pins = <100 101>;
+> 		};
+> 		bargrp: group@102 {
+> 			grp-name = "bargrp";
+> 			grp-pins = <102 103>;
+> 		};
+> 		bazgrp: group@104 {
+> 			grp-name = "bargrp";
+> 			grp-pins = <104 105>;
+> 		};
 
-> I just made a small change on top of yours.  Can you please consider
-> to amend it to your patch if it looks sane to you?
->=20
-> diff --git a/arch/arm/plat-mxc/include/mach/irqs.h b/arch/arm/plat-mxc/in=
-clude/mach/irqs.h
-> index 2fda5aa..70376e0 100644
-> --- a/arch/arm/plat-mxc/include/mach/irqs.h
-> +++ b/arch/arm/plat-mxc/include/mach/irqs.h
-> @@ -13,19 +13,20 @@
->=20
->  #include <asm-generic/gpio.h>
->=20
-> +#define GIC_NUM_IRQS           160
-> +#define TZIC_NUM_IRQS          128
-> +#define AVIC_NUM_IRQS          64
-> +
->  /*
-> - * SoCs with GIC interrupt controller have 160 IRQs, those with TZIC
-> - * have 128 IRQs, and those with AVIC have 64.
-> - *
->   * To support single image, the biggest number should be defined on
->   * top of the list.
->   */
->  #if defined CONFIG_ARM_GIC
-> -#define MXC_INTERNAL_IRQS      160
-> +#define MXC_INTERNAL_IRQS      GIC_NUM_IRQS
->  #elif defined CONFIG_MXC_TZIC
-> -#define MXC_INTERNAL_IRQS      128
-> +#define MXC_INTERNAL_IRQS      TZIC_NUM_IRQS
->  #else
-> -#define MXC_INTERNAL_IRQS      64
-> +#define MXC_INTERNAL_IRQS      AVIC_NUM_IRQS
->  #endif
->=20
->  #define MXC_GPIO_IRQ_START     MXC_INTERNAL_IRQS
-> @@ -54,7 +55,6 @@
->  /* REVISIT: Add IPU irqs on IMX51 */
->=20
->  #define NR_IRQS                        (MXC_IPU_IRQ_START + MX3_IPU_IRQS)
-> -#define TZIC_NUM_IRQS          128
->=20
->  extern int imx_irq_set_priority(unsigned char irq, unsigned char prio);
->=20
+I agree that we should define pingroups in <soc>.dtsi, but the mux
+setting needs to be under the pingroup node too.  See comment below ...
 
-Looks good. I'll add it to the patch along with the other requested changes.
+> 		/* A node per function that can be muxed onto pin groups,
+> 		 * each listing the function name, the set of groups it can
+> 		 * be muxed onto, and the mux selector value to program into
+> 		 * the groups' mux control register to select it */
+> 		uart3func: func@0 {
+> 			func-name = "uart3";
+> 			/* Length of locations and mux-value must match */
+> 			locations = <&foogrp &bargrp>;
+> 			mux-value = <0 4>;
 
-Thanks,
-Thierry
+This can be easily broken for imx.  As the mux setting applies to
+individual pin rather than pingroup, it's very valid for foogrp to
+have pin 100 muxed on mode 0 while pin 101 on mode 1.  That said,
+it's not necessarily true that we always have all the pins in
+particular pingroup muxed on the same setting for given function.
 
---sdtB3X0nJg68CQEu
-Content-Type: application/pgp-signature
+> 		};
+> 		uart4func: func@1 {
+> 			func-name = "uart4";
+> 			locations = <&bargrp &bazgrp>;
+> 			mux-value = <6 3>;
+> 		};
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+I prefer to have function node defined in <board>.dtsi, since it's
+all about defining phandle to the correct pingroup, which should be
+decided by board design.
 
-iEYEARECAAYFAk8IMLUACgkQZ+BJyKLjJp/1yACeLArWDcm5QPj8vFgF/qTcC+gy
-24YAn2JrUyS0g+M3WPv/ZB2+Qe5pOuYc
-=GNXE
------END PGP SIGNATURE-----
+> 	}
+> };
+> 
+> Or, instead of separate locations and mux-value properties with matching
+> lengths, perhaps a node for each location:
+> 
+> 		uart3func: func@0 {
+> 			func-name = "uart3";
+> 			location@0 {
+> 				location = <&foogrp>;
+> 				mux-value = <0>;
+> 			};
+> 			location@1 {
+> 				location = <&bargrp>;
+> 				mux-value = <4>;
+> 			};
+> 		};
+> 
+> That's more long-winded, but might be more easily extensible if we need
+> to add more properties later.
+> 
+> Now in the board's .dts file, you need to specify for each device the
+> list of pinmux groups the device needs to use, and the function to
+> select for each group. Perhaps something like:
+> 
+> board.dts:
+> 
+> usdhc@0219c000 { /* uSDHC4 */
+>         fsl,card-wired;
+>         status = "okay";
+>         pinmux = <&foogrp &uart3func &bazgrp &uart4func>;
+> };
+> 
+> I haven't convinced myself that's actually a good binding, but I think
+> it does represent the data required for muxing. Some potential issues
+> as before:
+> 
+> * Do we need to add flags to each entry in the list; GPIO/interrupt do?
+> 
+What's that for right now?  I guess we can add it later when we see
+the need.
 
---sdtB3X0nJg68CQEu--
+> * Should "pinmux" be a node, and the configuration of each group be a
+> separate sub-node, so we can add more properties to each "table" entry
+> in the future, e.g. pin config parameters?
+> 
+I do not think it's necessary. 'pinctrl' phandle works perfectly fine
+to me at least for now.  How pinconf support should be added into
+pinctrl subsystem is still up in the air to me.
 
---===============7023479018965448395==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> * For Tegra, I elected to put the definitions of pins, groups, and
+> functions into the driver rather than in the device tree.
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+IMO, we do not want to do this for imx, as I'm scared of the size
+of Tegra pinctrl patches.  If we go this way for imx, we will have
+even bigger patches.
 
---===============7023479018965448395==--
+> This avoids
+> parsing a heck of a lot of data from device tree. That means there isn't
+> any per-function node that can be referred to by phandle. Does it make
+> sense to refer to groups and functions by string name or integer ID
+> instead of phandle? Perhaps:
+> 
+> usdhc@0219c000 { /* uSDHC4 */
+> 	fsl,card-wired;
+> 	status = "okay";
+> 	pinmux = {
+> 		group@0 {
+> 			group = "foo";
+> 			function = "uart3";
+> 			/* You could add pin config options here too */
+> 		};
+> 		group@1 {
+> 			group = "baz";
+> 			function = "uart4";
+> 		};
+> 	};
+> };
+> 
+> I guess referring to things by name isn't that idiomatic for device tree.
+> Using integers here would be fine too, so long as dtc gets support for
+> named constants:
+> 
+> imx6q.dtsi:
+> 
+> /define/ IMX_PINGRP_FOO 0
+> /define/ IMX_PINGRP_BAR 1
+> /define/ IMX_PINGRP_BAZ 2
+> /define/ IMX_PINFUNC_UART3 0
+> /define/ IMX_PINFUNC_UART4 1
+> ...
+> 
+> board .dts:
+> 
+> usdhc@0219c000 { /* uSDHC4 */
+> 	fsl,card-wired;
+> 	status = "okay";
+> 	pinmux = {
+> 		group@0 {
+> 			group = <IMX_PINGRP_FOO>;
+> 			function = <IMX_PINFUNC_UART3>;
+> 			/* You could add pin config options here too */
+> 		};
+> 		group@1 {
+> 			group = <IMX_PINGRP_BAZ>;
+> 			function = <IMX_PINFUNC_UART4>;
+> 		};
+> 	};
+> };
+> 
+Doing this does not change the fact that this is bound with Linux
+driver details.  That said, if the indexing of either pingrp array
+or pinfunc array changes in the driver, the binding is broken.
+
+-- 
+Regards,
+Shawn
