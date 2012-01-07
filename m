@@ -1,121 +1,85 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v2 2/7] fdt: Add function to allow aliases to refer
-	to multiple nodes
-Date: Thu, 12 Jan 2012 11:00:13 -0800
-Message-ID: <1326394818-32227-3-git-send-email-sjg@chromium.org>
-References: <1326394818-32227-1-git-send-email-sjg@chromium.org>
+From: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [GIT PULL] devicetree changes for v3.3
+Date: Sat, 7 Jan 2012 12:41:25 -0800
+Message-ID: <CA+55aFzWaKBQU-XRYtu0WGq1328nX3hbHDjcn3etOTPsyA=xcw@mail.gmail.com>
+References: <CACxGe6udggDJ2QCRXGKzPwHUwzPsFLPZ1Ogc-Negx9z=UHEntg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1326394818-32227-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6udggDJ2QCRXGKzPwHUwzPsFLPZ1Ogc-Negx9z=UHEntg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some devices can deal with multiple compatible properties. The devices
-need to know which nodes to bind to which features. For example an
-I2C driver which supports two different controller types will want to
-know which type it is dealing with in each case.
+On Wed, Jan 4, 2012 at 11:11 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+rote:
+> Hi Linus,
+>
+> Please pull the following device tree changes queued up for 3.3.
+>
+> There is a signed tag for this pull request: devicetree-for-linus-20120104
+>
+> The following changes since commit 805a6af8dba5dfdd35ec35dc52ec0122400b26=
+10:
+>
+> =A0Linux 3.2 (2012-01-04 15:55:44 -0800)
+>
+> are available in the git repository at:
+> =A0git://git.secretlab.ca/git/linux-2.6 devicetree/merge
 
-The new fdtdec_add_aliases_for_id() function deals with this by allowing
-the driver to search for additional compatible nodes for a different ID.
-It can then detect the new ones and perform appropriate processing.
+Ok, so I pulled the tags, but only because I noticed that you mentioned it.
 
-Another option considered was to return a tuple (node offset, compat id)
-and have the function be passed a list of compatible IDs. This is more
-overhead for the common case though. We may add such a function later if
-more drivers in U-Boot require it.
+It would have been much more convenient if you had just named the tag
+in the pull request directly, so that it would have said
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
+> are available in the git repository at:
+> =A0git://git.secretlab.ca/git/linux-2.6 devicetree-for-linus-20120104
 
- include/fdtdec.h |   15 +++++++++++++++
- lib/fdtdec.c     |   16 ++++++++++++----
- 2 files changed, 27 insertions(+), 4 deletions(-)
+and then my normal "cut-and-paste the pull request line" JustWorks(tm).
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index bd2222c..e6d63f9 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -200,6 +200,21 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- 			enum fdt_compat_id id, int *node_list, int maxcount);
- 
- /*
-+ * This function is similar to fdtdec_find_aliases_for_id() except that it
-+ * adds to the node_list that is passed in. Any 0 elements are considered
-+ * available for allocation - others are considered already used and are
-+ * skipped.
-+ *
-+ * You can use this by calling fdtdec_find_aliases_for_id() with an
-+ * uninitialised array, then setting the elements that are returned to -1,
-+ * say, then calling this function, perhaps with a different compat id.
-+ * Any elements you get back that are >0 are new nodes added by the call
-+ * to this function.
-+ */
-+int fdtdec_add_aliases_for_id(const void *blob, const char *name,
-+			enum fdt_compat_id id, int *node_list, int maxcount);
-+
-+/*
-  * Get the name for a compatible ID
-  *
-  * @param id		Compatible ID to look for
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index daf2c7e..ddd56b9 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -151,10 +151,18 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 	return node;
- }
- 
--/* TODO: Can we tighten this code up a little? */
- int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- 			enum fdt_compat_id id, int *node_list, int maxcount)
- {
-+	memset(node_list, '\0', sizeof(*node_list) * maxcount);
-+
-+	return fdtdec_add_aliases_for_id(blob, name, id, node_list, maxcount);
-+}
-+
-+/* TODO: Can we tighten this code up a little? */
-+int fdtdec_add_aliases_for_id(const void *blob, const char *name,
-+			enum fdt_compat_id id, int *node_list, int maxcount)
-+{
- 	int name_len = strlen(name);
- 	int nodes[maxcount];
- 	int num_found = 0;
-@@ -184,8 +192,6 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- 		       __func__, name);
- 
- 	/* Now find all the aliases */
--	memset(node_list, '\0', sizeof(*node_list) * maxcount);
--
- 	for (offset = fdt_first_property_offset(blob, alias_node);
- 			offset > 0;
- 			offset = fdt_next_property_offset(blob, offset)) {
-@@ -232,11 +238,13 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- 		 * it as done.
- 		 */
- 		if (fdtdec_get_is_enabled(blob, node)) {
-+			if (node_list[number])
-+				continue;
- 			node_list[number] = node;
- 			if (number >= num_found)
- 				num_found = number + 1;
- 		}
--		nodes[j] = 0;
-+		nodes[found] = 0;
- 	}
- 
- 	/* Add any nodes not mentioned by an alias */
--- 
-1.7.7.3
+Of course, since you use those ugly tag names, I then end up editing
+the first line so that the shortlog doesn't fill up with random crud,
+so I'd actually prefer for the tag-name to not have that silly date in
+it. The tag itself is dated, so the date information actually does
+exist inside of it - and if I pull the signed tag, it will then exist
+hidden in the merge too (and can be shown using the new "git show
+--show-signature" thing):
+
+  commit 02550d61f49266930e674286379d3601006b2893
+  merged tag 'devicetree-for-linus-20120104'
+  gpg: Signature made Wed 04 Jan 2012 11:07:51 PM PST using RSA key ID 760F=
+D901
+  gpg: Good signature from "Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>"
+  Merge: 2d51daaa615e c89810acbcf4
+  Author: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+  Date:   Sat Jan 7 12:18:52 2012 -0800
+
+      Merge tag 'devicetree-for-linus' of git://git.secretlab.ca/git/linux-=
+2.6
+
+      devicetree/next changes queued for v3.3 merge window
+
+      * tag 'devicetree-for-linus-20120104' of
+git://git.secretlab.ca/git/linux-2.6:
+        ARM: prom.h: Fix build error by removing unneeded header file
+        irq: check domain hwirq range for DT translate
+        dt: add empty of_get_node/of_put_node functions
+        of/pdt: fix section mismatch warning
+  ...
+
+so for a *really* nice pull request, I'd actually have preferred the
+tag to just be named "devicetree-for-linus" (and the next time you
+send me a pull request, you just overwrite it - use the "-f" flag for
+git tag to say that you want to force the overwrite).
+
+                      Linus
