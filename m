@@ -1,139 +1,69 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH v2 1/2] PM / Domains: Add OF support
-Date: Sun, 8 Jan 2012 22:23:18 +0100
-Message-ID: <201201082223.18603.rjw@sisk.pl>
-References: <1325931055-14486-1-git-send-email-thomas.abraham@linaro.org> <1325931055-14486-2-git-send-email-thomas.abraham@linaro.org>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 03/12] mfd: twl-core: Add initial DT support for
+ twl4030/twl6030
+Date: Mon, 9 Jan 2012 00:38:20 +0100
+Message-ID: <20120108233820.GH13679@sortiz-mobl>
+References: <1324565806-31142-1-git-send-email-b-cousson@ti.com>
+ <1324565806-31142-4-git-send-email-b-cousson@ti.com>
+ <20120102090454.GO18381@ponder.secretlab.ca>
+ <4F030C2D.3000808@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-2"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1325931055-14486-2-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, s.nawrocki@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F030C2D.3000808-l0cyMroinI0@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, January 07, 2012, Thomas Abraham wrote:
-> A device node pointer is added to generic pm domain structure to associate
-> the domain with a node in the device tree. The platform code parses the
-> device tree to find available nodes representing the generic power domain,
-> instantiates the available domains and initializes them by calling
-> pm_genpd_init().
-> 
-> Nodes representing the devices include a phandle of the power domain to
-> which it belongs. As these devices get instantiated, the driver code
-> checkes for availability of a power domain phandle, converts the phandle
-> to a device node and uses the new pm_genpd_of_add_device() api to
-> associate the device with a power domain.
-> 
-> pm_genpd_of_add_device() runs through its list of registered power domains
-> and matches the OF node of the domain with the one specified as the
-> parameter. If a match is found, the device is associated with the matched
-> domain.
-> 
-> Cc: Rafael J. Wysocki <rjw@sisk.pl>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+Hi Benoit,
 
-I can take this patch for 3.4, but your [2/2] depends on it, so I'm not
-sure how to handle that.  If you want me to take the other patch too,
-it'll need ACKs from the Exynos maintaniers.
-
-Thanks,
-Rafael
-
-
-> ---
->  drivers/base/power/domain.c |   32 ++++++++++++++++++++++++++++++++
->  include/linux/pm_domain.h   |   12 ++++++++++++
->  2 files changed, 44 insertions(+), 0 deletions(-)
+On Tue, Jan 03, 2012 at 03:09:49PM +0100, Cousson, Benoit wrote:
+> On 1/2/2012 10:04 AM, Grant Likely wrote:
+> > On Thu, Dec 22, 2011 at 03:56:37PM +0100, Benoit Cousson wrote:
+> >> Add initial device-tree support for twl familly chips.
+> >> The current version is missing the regulator entries due
+> >> to the lack of DT regulator bindings for the moment.
+> >> Only the simple sub-modules that do not depend on
+> >> platform_data information can be initialized properly.
+> >>
+> >> Add irqdomain support.
+> >>
+> >> Add documentation for the Texas Instruments TWL Integrated Chip.
+> >>
+> >> Signed-off-by: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
+> >> Cc: Balaji T K<balajitk-l0cyMroinI0@public.gmane.org>
+> >> Cc: Graeme Gregory<gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+> >> Cc: Samuel Ortiz<sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> >> ---
+> >> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> >> index f1391c2..f0de088 100644
+> >> --- a/drivers/mfd/Kconfig
+> >> +++ b/drivers/mfd/Kconfig
+> >> @@ -200,6 +200,7 @@ config MENELAUS
+> >>   config TWL4030_CORE
+> >>   	bool "Texas Instruments TWL4030/TWL5030/TWL6030/TPS659x0 Support"
+> >>   	depends on I2C=y&&  GENERIC_HARDIRQS
+> >> +	select IRQ_DOMAIN
+> > 
+> > As discussed on linux-next, this breaks powerpc.  Drivers cannot select
+> > IRQ_DOMAIN, it can only be selected by architectures.  Drivers must depend
+> > on it instead.
 > 
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index 92e6a90..9ee1f7b 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -1171,6 +1171,38 @@ int __pm_genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
->  }
->  
->  /**
-> + * __pm_genpd_of_add_device - Add a device to an I/O PM domain.
-> + * @genpd_node: Device tree node pointer representing a PM domain to which the
-> + *   the device is added to.
-> + * @dev: Device to be added.
-> + * @td: Set of PM QoS timing parameters to attach to the device.
-> + */
-> +int __pm_genpd_of_add_device(struct device_node *genpd_node, struct device *dev,
-> +			     struct gpd_timing_data *td)
-> +{
-> +	struct generic_pm_domain *genpd = NULL, *gpd;
-> +
-> +	dev_dbg(dev, "%s()\n", __func__);
-> +
-> +	if (IS_ERR_OR_NULL(genpd_node) || IS_ERR_OR_NULL(dev))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&gpd_list_lock);
-> +	list_for_each_entry(gpd, &gpd_list, gpd_list_node) {
-> +		if (gpd->of_node == genpd_node) {
-> +			genpd = gpd;
-> +			break;
-> +		}
-> +	}
-> +	mutex_unlock(&gpd_list_lock);
-> +
-> +	if (!genpd)
-> +		return -EINVAL;
-> +
-> +	return __pm_genpd_add_device(genpd, dev, td);
-> +}
-> +
-> +/**
->   * pm_genpd_remove_device - Remove a device from an I/O PM domain.
->   * @genpd: PM domain to remove the device from.
->   * @dev: Device to be removed.
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index a03a0ad..e3ff875 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -11,6 +11,7 @@
->  
->  #include <linux/device.h>
->  #include <linux/err.h>
-> +#include <linux/of.h>
->  
->  enum gpd_status {
->  	GPD_STATE_ACTIVE = 0,	/* PM domain is active */
-> @@ -70,6 +71,7 @@ struct generic_pm_domain {
->  	s64 break_even_ns;	/* Power break even for the entire domain. */
->  	s64 max_off_time_ns;	/* Maximum allowed "suspended" time. */
->  	ktime_t power_off_time;
-> +	struct device_node *of_node; /* Node in device tree */
->  };
->  
->  static inline struct generic_pm_domain *pd_to_genpd(struct dev_pm_domain *pd)
-> @@ -117,12 +119,22 @@ extern int __pm_genpd_add_device(struct generic_pm_domain *genpd,
->  				 struct device *dev,
->  				 struct gpd_timing_data *td);
->  
-> +extern int __pm_genpd_of_add_device(struct device_node *genpd_node,
-> +				    struct device *dev,
-> +				    struct gpd_timing_data *td);
-> +
->  static inline int pm_genpd_add_device(struct generic_pm_domain *genpd,
->  				      struct device *dev)
->  {
->  	return __pm_genpd_add_device(genpd, dev, NULL);
->  }
->  
-> +static inline int pm_genpd_of_add_device(struct device_node *genpd_node,
-> +					 struct device *dev)
-> +{
-> +	return __pm_genpd_of_add_device(genpd_node, dev, NULL);
-> +}
-> +
->  extern int pm_genpd_remove_device(struct generic_pm_domain *genpd,
->  				  struct device *dev);
->  extern int pm_genpd_add_subdomain(struct generic_pm_domain *genpd,
+> OK, good to know. The previous version was already breaking non-ARM platform because the IRQ_DOMAIN was not defined, hence this update.
+> I was able to check that this patch was fixing at least x86... but did not have any way to check the PPC build.
 > 
+> To be honest, I did not fully understand that this flag was there because some arch does not support IRQ domain yet and thus it should be selected at arch level.
+> 
+> Samuel,
+> Here is the updated version, and hopefully the last one, including Grant's fix.
+> 
+Thanks, I applied it now.
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
