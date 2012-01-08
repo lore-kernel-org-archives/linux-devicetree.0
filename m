@@ -1,61 +1,88 @@
-From: Richard Zhao <richard.zhao@linaro.org>
-Subject: Re: [RFC PATCH v3 3/5] pinctrl: imx: add pinctrl imx driver
-Date: Sun, 8 Jan 2012 21:05:44 +0800
-Message-ID: <20120108130542.GC2203@richard-laptop>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-4-git-send-email-b29396@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1324402840-32451-4-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, w.sang@pengutronix.de, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, cjb@laptop.org, devicetree-discuss@lists.ozlabs.org, shawn.guo@freescale.com
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [RFC PATCH v2 0/9] Remove useless on_each_cpu return value
+Date: Sun,  8 Jan 2012 15:32:20 +0200
+Message-ID: <1326029549-2794-1-git-send-email-gilad@benyossef.com>
+Return-path: <linux-ia64-owner@vger.kernel.org>
+Sender: linux-ia64-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Gilad Ben-Yossef <gilad@benyossef.com>, Michal Nazarewicz <mina86@mina86.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Richard Henderson <rth@twiddle.net>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Russell
 List-Id: devicetree@vger.kernel.org
 
-[snip]
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-imx53.c
-> @@ -0,0 +1,443 @@
-> +/*
-> + * imx53 pinctrl driver based on imx pinmux core
-> + *
-> + * Copyright (C) 2011 Freescale Semiconductor, Inc.
-> + * Copyright (C) 2011 Linaro, Inc.
-> + *
-> + * Author: Dong Aisheng <dong.aisheng@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/err.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +
-> +#include "pinctrl-imx-core.h"
-> +
-> +#define IMX53_IOMUXC_MUX_OFFSET 0x20
-> +#define IMX53_IOMUXC_MAXPIN	(23*23)
-> +
-> +enum imx_imx53_pinctrl_pads {
-> +	MX53_GPIO_19 = 0,
-> +	MX53_KEY_COL0 = 1,
-> +	MX53_KEY_ROW0 = 2,
-> +	MX53_KEY_COL1 = 3,
-> +	MX53_KEY_ROW1 = 4,
-> +	MX53_KEY_COL2 = 5,
-> +	MX53_KEY_ROW2 = 6,
-...
-Why not describe it in dts and make this file generic for imx?
-One node for one pad, it'll be easy to extend pad properties. You know
-the pad may set pull up/down, open drain, drive strenth, daisy chain etc.
-The features have to be supported, to make your model usefull.
+on_each_cpu() returns as its own return value the return value of
+smp_call_function(). smp_call_function() in turn returns a hard
+coded value of zero.
 
-Thanks
-Richard
+Some callers to on_each_cpu() waste cycles and bloat code space
+by checking the return value to on_each_cpu(), probably for
+historical reasons.
+
+This patch set refactors callers to not test on_each_cpu()
+(fixed) return value and then refactors on_each_cpu to
+return void to avoid confusing future users.
+
+In other words, this patch aims to delete 18 source code lines
+while not changing any functionality :-)
+
+I tested as best as I could the x86 changes and compiled some
+of the others, but I don't have access to all the needed hardware
+for testing. Reviewers and testers welcome!
+
+The only change from the first version is the addition of a 
+proper Signed-off-by line.
+
+This patch set is also available on branch on_each_cpu_ret_v2
+at git://github.com/gby/linux.git
+
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Reviewed-by: Michal Nazarewicz <mina86@mina86.com>
+CC: Michal Nazarewicz <mina86@mina86.com>
+CC: David Airlie <airlied@linux.ie>
+CC: dri-devel@lists.freedesktop.org
+CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+CC: Paul Mackerras <paulus@samba.org>
+CC: Grant Likely <grant.likely@secretlab.ca>
+CC: Rob Herring <rob.herring@calxeda.com>
+CC: linuxppc-dev@lists.ozlabs.org
+CC: devicetree-discuss@lists.ozlabs.org
+CC: Richard Henderson <rth@twiddle.net>
+CC: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+CC: Matt Turner <mattst88@gmail.com>
+CC: linux-alpha@vger.kernel.org
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: x86@kernel.org
+CC: Tony Luck <tony.luck@intel.com>
+CC: Fenghua Yu <fenghua.yu@intel.com>
+CC: linux-ia64@vger.kernel.org
+CC: Will Deacon <will.deacon@arm.com>
+CC: Peter Zijlstra <a.p.zijlstra@chello.nl>
+CC: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: linux-arm-kernel@lists.infradead.org
+
+
+Gilad Ben-Yossef (9):
+  arm: avoid using on_each_cpu hard coded ret value
+  ia64: avoid using on_each_cpu hard coded ret value
+  x86: avoid using on_each_cpu hard coded ret value
+  alpha: avoid using on_each_cpu hard coded ret value
+  ppc: avoid using on_each_cpu hard coded ret value
+  agp: avoid using on_each_cpu hard coded ret value
+  drm: avoid using on_each_cpu hard coded ret value
+  smp: refactor on_each_cpu to void returning func
+  x86: refactor wbinvd_on_all_cpus to void function
+
+ arch/alpha/kernel/smp.c      |    7 ++-----
+ arch/arm/kernel/perf_event.c |    2 +-
+ arch/ia64/kernel/perfmon.c   |   12 ++----------
+ arch/powerpc/kernel/rtas.c   |    3 +--
+ arch/x86/include/asm/smp.h   |    5 ++---
+ arch/x86/lib/cache-smp.c     |    4 ++--
+ drivers/char/agp/generic.c   |    3 +--
+ drivers/gpu/drm/drm_cache.c  |    3 +--
+ include/linux/smp.h          |    7 +++----
+ kernel/smp.c                 |    6 ++----
+ 10 files changed, 17 insertions(+), 35 deletions(-)
+
