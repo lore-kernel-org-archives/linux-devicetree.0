@@ -1,53 +1,83 @@
-From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: Re: [RFC PATCH v2 1/9] arm: avoid using on_each_cpu hard coded ret value
-Date: Sun, 8 Jan 2012 18:25:24 +0200
-Message-ID: <CAOtvUMddvPVQTaUQAmGOgx9Wz18ewVWG5nRouYaDuFWe13pX4g@mail.gmail.com>
-References: <1326029549-2794-1-git-send-email-gilad@benyossef.com>
-	<1326029549-2794-2-git-send-email-gilad@benyossef.com>
-	<20120108161212.GD21765@n2100.arm.linux.org.uk>
+From: Aneesh V <aneesh@ti.com>
+Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF
+ and DDR
+Date: Sun, 08 Jan 2012 18:23:23 +0100
+Message-ID: <4F09D10B.7010807@ti.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com> <4EEFC23A.30201@gmail.com> <20111219233559.GW6464@atomide.com> <4EF0671B.7090508@ti.com> <4EF0824A.9060208@ti.com> <4EF096C9.1070808@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120108161212.GD21765@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EF096C9.1070808@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 8, 2012 at 6:12 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
+Hi,
 
-<SNIP>
-
->> diff --git a/arch/arm/kernel/perf_event.c b/arch/arm/kernel/perf_eve=
-nt.c
->> index 5bb91bf..6e9acb7 100644
->> --- a/arch/arm/kernel/perf_event.c
->> +++ b/arch/arm/kernel/perf_event.c
->> @@ -616,7 +616,7 @@ static int __init
->> =A0cpu_pmu_reset(void)
->> =A0{
->> =A0 =A0 =A0 if (cpu_pmu && cpu_pmu->reset)
->> - =A0 =A0 =A0 =A0 =A0 =A0 return on_each_cpu(cpu_pmu->reset, NULL, 1=
-);
->> + =A0 =A0 =A0 =A0 =A0 =A0 on_each_cpu(cpu_pmu->reset, NULL, 1);
+On Tuesday 20 December 2011 03:08 PM, Aneesh V wrote:
+> Hi Benoit
 >
-> There's not much to review here...
+> On Tuesday 20 December 2011 06:10 PM, Cousson, Benoit wrote:
+>> Hi Aneesh,
+>>
+>
+> <snip>
+>
+>>>>> In general, is it really feasible to parse the DTB before DDR is
+>>>>> initialized?
+>>>>
+>>>> Changing timings is still needed for DVFS during runtime.
+>>>>
+>>>> But we can boot to userspace with bootloader set timings, so I'm
+>>>
+>>> As far as I understand, in the current out-of-tree DVFS implementation
+>>> for OMAP, DVFS can start even before user-space.
+>>
+>> Maybe it is the case, but that does not mean it should.
+>> We can potentially delay the DVFS init until the user-space is started.
+>> This should not be considered as a big constraint.
+>>
+>>>> thinking that maybe these timings should be just set by loadable
+>>>> modules. Just the configuration of which timings to select should
+>>>> be passed via DT. Something in compatible like:
+>>>>
+>>>> .compatible = "ti,omap3630", "sdram-micron-mt46h32m32lf-6";
+>>>>
+>>>> And that should allow the SDRC driver to only accept timings for
+>>>> "sdram-micron-mt46h32m32lf-6".
+>>>
+>>> Do you mean one module per memory device and have all timing data in
+>>> the respective module? Wouldn't this clutter the kernel proper with all
+>>> these tables. By having the timing data in DT, it can be eventually
+>>> moved out of kernel eventually, right?
+>>
+>> Yes, that's the theory, but referring to Olof's point, this is not
+>> necessarily the goal of DT to store all the information that are not
+>> board dependent.
+>> In this case, each DDR will have it sets of well known AC timings data
+>> that will never depend of the board config. In this case, storing that
+>> inside DT might not be the best solution.
+>>
+>> In fact we always had the same kind of discussion for the pinmux data
+>> and for the clock data...
+>>
+>> The conclusion being that most of the static data does not have to be in
+>> the DTS.
+>> But since Linus was complaining about the huge amount of data inside the
+>> kernel, it is not obvious what the best solution is:-)
+>
+> Hmm.. I get the point now. Linus' complaint is what I had in mind too.
+> My humble opinion is to have such data in DTS but re-use it as much as
+> possible. That is, we could have something like a "sdram-micron-
+> mt46h32m32lf-6.dtsi"(as you suggested before) that can be included by
+> board level DTS files. I think the fact that dts files are organized at
+> arch level today is limiting such re-use. Please correct me if I am
+> wrong.
 
-Oh, I've introduced fatal bugs with less... :-)
+Gentle reminder on this one. Are we aligned on having the DDR timings
+in device tree?
 
-Thanks for the review.
-Gilad
-
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-gilad@benyossef.com
-Israel Cell: +972-52-8260388
-US Cell: +1-973-8260388
-http://benyossef.com
-
-"Unfortunately, cache misses are an equal opportunity pain provider."
--- Mike Galbraith, LKML
+br,
+Aneesh
