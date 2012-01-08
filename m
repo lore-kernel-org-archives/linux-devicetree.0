@@ -1,83 +1,139 @@
-From: Aneesh V <aneesh@ti.com>
-Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF
- and DDR
-Date: Sun, 08 Jan 2012 18:23:23 +0100
-Message-ID: <4F09D10B.7010807@ti.com>
-References: <1324303533-17458-1-git-send-email-aneesh@ti.com> <4EEFC23A.30201@gmail.com> <20111219233559.GW6464@atomide.com> <4EF0671B.7090508@ti.com> <4EF0824A.9060208@ti.com> <4EF096C9.1070808@ti.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH v2 1/2] PM / Domains: Add OF support
+Date: Sun, 8 Jan 2012 22:23:18 +0100
+Message-ID: <201201082223.18603.rjw@sisk.pl>
+References: <1325931055-14486-1-git-send-email-thomas.abraham@linaro.org> <1325931055-14486-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-2"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4EF096C9.1070808@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1325931055-14486-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, s.nawrocki@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Saturday, January 07, 2012, Thomas Abraham wrote:
+> A device node pointer is added to generic pm domain structure to associate
+> the domain with a node in the device tree. The platform code parses the
+> device tree to find available nodes representing the generic power domain,
+> instantiates the available domains and initializes them by calling
+> pm_genpd_init().
+> 
+> Nodes representing the devices include a phandle of the power domain to
+> which it belongs. As these devices get instantiated, the driver code
+> checkes for availability of a power domain phandle, converts the phandle
+> to a device node and uses the new pm_genpd_of_add_device() api to
+> associate the device with a power domain.
+> 
+> pm_genpd_of_add_device() runs through its list of registered power domains
+> and matches the OF node of the domain with the one specified as the
+> parameter. If a match is found, the device is associated with the matched
+> domain.
+> 
+> Cc: Rafael J. Wysocki <rjw@sisk.pl>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 
-On Tuesday 20 December 2011 03:08 PM, Aneesh V wrote:
-> Hi Benoit
->
-> On Tuesday 20 December 2011 06:10 PM, Cousson, Benoit wrote:
->> Hi Aneesh,
->>
->
-> <snip>
->
->>>>> In general, is it really feasible to parse the DTB before DDR is
->>>>> initialized?
->>>>
->>>> Changing timings is still needed for DVFS during runtime.
->>>>
->>>> But we can boot to userspace with bootloader set timings, so I'm
->>>
->>> As far as I understand, in the current out-of-tree DVFS implementation
->>> for OMAP, DVFS can start even before user-space.
->>
->> Maybe it is the case, but that does not mean it should.
->> We can potentially delay the DVFS init until the user-space is started.
->> This should not be considered as a big constraint.
->>
->>>> thinking that maybe these timings should be just set by loadable
->>>> modules. Just the configuration of which timings to select should
->>>> be passed via DT. Something in compatible like:
->>>>
->>>> .compatible = "ti,omap3630", "sdram-micron-mt46h32m32lf-6";
->>>>
->>>> And that should allow the SDRC driver to only accept timings for
->>>> "sdram-micron-mt46h32m32lf-6".
->>>
->>> Do you mean one module per memory device and have all timing data in
->>> the respective module? Wouldn't this clutter the kernel proper with all
->>> these tables. By having the timing data in DT, it can be eventually
->>> moved out of kernel eventually, right?
->>
->> Yes, that's the theory, but referring to Olof's point, this is not
->> necessarily the goal of DT to store all the information that are not
->> board dependent.
->> In this case, each DDR will have it sets of well known AC timings data
->> that will never depend of the board config. In this case, storing that
->> inside DT might not be the best solution.
->>
->> In fact we always had the same kind of discussion for the pinmux data
->> and for the clock data...
->>
->> The conclusion being that most of the static data does not have to be in
->> the DTS.
->> But since Linus was complaining about the huge amount of data inside the
->> kernel, it is not obvious what the best solution is:-)
->
-> Hmm.. I get the point now. Linus' complaint is what I had in mind too.
-> My humble opinion is to have such data in DTS but re-use it as much as
-> possible. That is, we could have something like a "sdram-micron-
-> mt46h32m32lf-6.dtsi"(as you suggested before) that can be included by
-> board level DTS files. I think the fact that dts files are organized at
-> arch level today is limiting such re-use. Please correct me if I am
-> wrong.
+I can take this patch for 3.4, but your [2/2] depends on it, so I'm not
+sure how to handle that.  If you want me to take the other patch too,
+it'll need ACKs from the Exynos maintaniers.
 
-Gentle reminder on this one. Are we aligned on having the DDR timings
-in device tree?
+Thanks,
+Rafael
 
-br,
-Aneesh
+
+> ---
+>  drivers/base/power/domain.c |   32 ++++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h   |   12 ++++++++++++
+>  2 files changed, 44 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 92e6a90..9ee1f7b 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -1171,6 +1171,38 @@ int __pm_genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
+>  }
+>  
+>  /**
+> + * __pm_genpd_of_add_device - Add a device to an I/O PM domain.
+> + * @genpd_node: Device tree node pointer representing a PM domain to which the
+> + *   the device is added to.
+> + * @dev: Device to be added.
+> + * @td: Set of PM QoS timing parameters to attach to the device.
+> + */
+> +int __pm_genpd_of_add_device(struct device_node *genpd_node, struct device *dev,
+> +			     struct gpd_timing_data *td)
+> +{
+> +	struct generic_pm_domain *genpd = NULL, *gpd;
+> +
+> +	dev_dbg(dev, "%s()\n", __func__);
+> +
+> +	if (IS_ERR_OR_NULL(genpd_node) || IS_ERR_OR_NULL(dev))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&gpd_list_lock);
+> +	list_for_each_entry(gpd, &gpd_list, gpd_list_node) {
+> +		if (gpd->of_node == genpd_node) {
+> +			genpd = gpd;
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&gpd_list_lock);
+> +
+> +	if (!genpd)
+> +		return -EINVAL;
+> +
+> +	return __pm_genpd_add_device(genpd, dev, td);
+> +}
+> +
+> +/**
+>   * pm_genpd_remove_device - Remove a device from an I/O PM domain.
+>   * @genpd: PM domain to remove the device from.
+>   * @dev: Device to be removed.
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index a03a0ad..e3ff875 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -11,6 +11,7 @@
+>  
+>  #include <linux/device.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+>  
+>  enum gpd_status {
+>  	GPD_STATE_ACTIVE = 0,	/* PM domain is active */
+> @@ -70,6 +71,7 @@ struct generic_pm_domain {
+>  	s64 break_even_ns;	/* Power break even for the entire domain. */
+>  	s64 max_off_time_ns;	/* Maximum allowed "suspended" time. */
+>  	ktime_t power_off_time;
+> +	struct device_node *of_node; /* Node in device tree */
+>  };
+>  
+>  static inline struct generic_pm_domain *pd_to_genpd(struct dev_pm_domain *pd)
+> @@ -117,12 +119,22 @@ extern int __pm_genpd_add_device(struct generic_pm_domain *genpd,
+>  				 struct device *dev,
+>  				 struct gpd_timing_data *td);
+>  
+> +extern int __pm_genpd_of_add_device(struct device_node *genpd_node,
+> +				    struct device *dev,
+> +				    struct gpd_timing_data *td);
+> +
+>  static inline int pm_genpd_add_device(struct generic_pm_domain *genpd,
+>  				      struct device *dev)
+>  {
+>  	return __pm_genpd_add_device(genpd, dev, NULL);
+>  }
+>  
+> +static inline int pm_genpd_of_add_device(struct device_node *genpd_node,
+> +					 struct device *dev)
+> +{
+> +	return __pm_genpd_of_add_device(genpd_node, dev, NULL);
+> +}
+> +
+>  extern int pm_genpd_remove_device(struct generic_pm_domain *genpd,
+>  				  struct device *dev);
+>  extern int pm_genpd_add_subdomain(struct generic_pm_domain *genpd,
+> 
