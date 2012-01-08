@@ -1,57 +1,53 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC PATCH v2 8/9] smp: refactor on_each_cpu to void returning
-	func
-Date: Sun, 8 Jan 2012 16:14:01 +0000
-Message-ID: <20120108161401.GE21765@n2100.arm.linux.org.uk>
-References: <1326029549-2794-1-git-send-email-gilad@benyossef.com> <1326029549-2794-9-git-send-email-gilad@benyossef.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: Re: [RFC PATCH v2 1/9] arm: avoid using on_each_cpu hard coded ret value
+Date: Sun, 8 Jan 2012 18:25:24 +0200
+Message-ID: <CAOtvUMddvPVQTaUQAmGOgx9Wz18ewVWG5nRouYaDuFWe13pX4g@mail.gmail.com>
+References: <1326029549-2794-1-git-send-email-gilad@benyossef.com>
+	<1326029549-2794-2-git-send-email-gilad@benyossef.com>
+	<20120108161212.GD21765@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1326029549-2794-9-git-send-email-gilad@benyossef.com>
+In-Reply-To: <20120108161212.GD21765@n2100.arm.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Richard Henderson <rth@twiddle.net>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, linux-arm-kernel@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Paul Mackerras <paulus@samba.org>, Ingo Molnar <mingo@elte.hu>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 08, 2012 at 03:32:28PM +0200, Gilad Ben-Yossef wrote:
-> on_each_cpu returns the retunr value of smp_call_function
-> which is hard coded to 0.
-> 
-> Refactor on_each_cpu to a void function and the few callers
-> that check the return value to save compares and branches.
-> 
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> Reviewed-by: Michal Nazarewicz <mina86@mina86.com>
-> CC: David Airlie <airlied@linux.ie>
-> CC: dri-devel@lists.freedesktop.org
-> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> CC: Paul Mackerras <paulus@samba.org>
-> CC: Grant Likely <grant.likely@secretlab.ca>
-> CC: Rob Herring <rob.herring@calxeda.com>
-> CC: linuxppc-dev@lists.ozlabs.org
-> CC: devicetree-discuss@lists.ozlabs.org
-> CC: Richard Henderson <rth@twiddle.net>
-> CC: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-> CC: Matt Turner <mattst88@gmail.com>
-> CC: linux-alpha@vger.kernel.org
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: Ingo Molnar <mingo@redhat.com>
-> CC: "H. Peter Anvin" <hpa@zytor.com>
-> CC: x86@kernel.org
-> CC: Tony Luck <tony.luck@intel.com>
-> CC: Fenghua Yu <fenghua.yu@intel.com>
-> CC: linux-ia64@vger.kernel.org
-> CC: Will Deacon <will.deacon@arm.com>
-> CC: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> CC: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-> CC: Russell King <linux@arm.linux.org.uk>
+On Sun, Jan 8, 2012 at 6:12 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
 
-As there's only one place in the ARM code where we look at the return
-value, and you've patched that away in patch 1, this looks fine.  I've
-not checked for users outside of arch/arm, so:
+<SNIP>
 
-Acked-by: Russell King <rmk+kernel@arm.linux.org.uk>
+>> diff --git a/arch/arm/kernel/perf_event.c b/arch/arm/kernel/perf_eve=
+nt.c
+>> index 5bb91bf..6e9acb7 100644
+>> --- a/arch/arm/kernel/perf_event.c
+>> +++ b/arch/arm/kernel/perf_event.c
+>> @@ -616,7 +616,7 @@ static int __init
+>> =A0cpu_pmu_reset(void)
+>> =A0{
+>> =A0 =A0 =A0 if (cpu_pmu && cpu_pmu->reset)
+>> - =A0 =A0 =A0 =A0 =A0 =A0 return on_each_cpu(cpu_pmu->reset, NULL, 1=
+);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 on_each_cpu(cpu_pmu->reset, NULL, 1);
+>
+> There's not much to review here...
 
-Thanks.
+Oh, I've introduced fatal bugs with less... :-)
+
+Thanks for the review.
+Gilad
+
+
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
+gilad@benyossef.com
+Israel Cell: +972-52-8260388
+US Cell: +1-973-8260388
+http://benyossef.com
+
+"Unfortunately, cache misses are an equal opportunity pain provider."
+-- Mike Galbraith, LKML
