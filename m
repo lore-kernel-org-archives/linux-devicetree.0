@@ -1,58 +1,160 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: Re: [RFC PATCH v3 3/5] pinctrl: imx: add pinctrl imx driver
-Date: Mon, 9 Jan 2012 10:17:03 +0800
-Message-ID: <20120109021702.GV2414@b20223-02.ap.freescale.net>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-4-git-send-email-b29396@freescale.com>
- <20120108130542.GC2203@richard-laptop>
- <20120109020848.GF1835@S2101-09.ap.freescale.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: RFC: option to toggle dtc checks on and off
+Date: Mon, 9 Jan 2012 13:41:29 +1100
+Message-ID: <20120109024129.GH5628@truffala.fritz.box>
+References: <20111028051525.GA7215@truffala.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120109020848.GF1835@S2101-09.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Richard Zhao <richard.zhao@linaro.org>, linus.walleij@stericsson.com, s.hauer@pengutronix.de, w.sang@pengutronix.de, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, shawn.guo@freescale.com, kernel@pengutronix.de, cjb@laptop.org, Dong Aisheng <b29396@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20111028051525.GA7215-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: jdl-CYoMK+44s/E@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 09, 2012 at 10:08:51AM +0800, Shawn Guo wrote:
-> On Sun, Jan 08, 2012 at 09:05:44PM +0800, Richard Zhao wrote:
-> > > +enum imx_imx53_pinctrl_pads {
-> > > +	MX53_GPIO_19 = 0,
-> > > +	MX53_KEY_COL0 = 1,
-> > > +	MX53_KEY_ROW0 = 2,
-> > > +	MX53_KEY_COL1 = 3,
-> > > +	MX53_KEY_ROW1 = 4,
-> > > +	MX53_KEY_COL2 = 5,
-> > > +	MX53_KEY_ROW2 = 6,
-> > ...
-> > Why not describe it in dts and make this file generic for imx?
-> > One node for one pad,
-> 
-> Doing this will bloat the device tree dramatically.  Actually I had
-> a patch doing so before the pinctrl subsystem was born, but it
-> concerned Grant a lot for that reason and thus died.
-are you against describing pad in dts or one node per pad?
-one node per pad is just a tip to extend pad property, to support
-other features (pinconf in your word).
-> 
-> > it'll be easy to extend pad properties. You know
-> > the pad may set pull up/down, open drain, drive strenth, daisy chain etc.
-> > The features have to be supported, to make your model usefull.
-> > 
-> As Aisheng mentioned, the pinconf support will be added later.
-I expect pinconf come together, and get a ready-to-use patch series.
+Jon, I was hoping I'd get some comment on this patch eventually.
 
-Thanks
-Richard
+On Fri, Oct 28, 2011 at 04:15:25PM +1100, David Gibson wrote:
+> Here is a draft patch which adds a -C option to dtc, allowing
+> individual semantic checks to be turned on and off.  It also allows
+> indivudual checks to be set as triggering either warnings or errors.
 > 
-> -- 
-> Regards,
-> Shawn
+> I have a couple of concerns about it in its present form.  First, the
+> current syntax is that "-C -checkname" disables a check, "-C
+> checkname" turns a check on as a warning and "-C +checkname" turns it
+> on as an error.  I'm not convinced this is a great syntax.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Second, turning on a check will force on all prerequisite checks for
+> it.  Turning a check off will disable all checks for which it is a
+> prerequisite.  This seems necessary, since a check can't safely be
+> executed without having first checked its prereqs, but this could have
+> some very non-obvious effects from the command line.
 > 
+> Index: dtc/checks.c
+> ===================================================================
+> --- dtc.orig/checks.c	2011-04-11 13:47:41.000000000 +1000
+> +++ dtc/checks.c	2011-10-28 14:42:31.846917479 +1100
+> @@ -644,6 +644,69 @@ static struct check *check_table[] = {
+>  	&obsolete_chosen_interrupt_controller,
+>  };
+>  
+> +static void set_check_level(struct check *c, int level)
+> +{
+> +	int i;
+> +
+> +	fprintf(stderr, "Setting '%s' check level to %d\n",
+> +		c->name, level);
+> +
+> +	if (level > c->level) {
+> +		/* Raising level, also raise it for prereqs */
+> +		for (i = 0; i < c->num_prereqs; i++)
+> +			set_check_level(c->prereq[i], level);
+> +	}
+> +
+> +	if (level < c->level) {
+> +		/* Lowering level, also lower it for things this is
+> +		 * the prereq for */
+> +		for (i = 0; i < ARRAY_SIZE(check_table); i++) {
+> +			struct check *cc = check_table[i];
+> +			int j;
+> +
+> +			for (j = 0; j < cc->num_prereqs; j++)
+> +				if (cc->prereq[j] == c)
+> +					set_check_level(cc, level);
+> +		}
+> +	}
+> +
+> +	c->level = level;
+> +}
+> +
+> +void parse_checks_option(const char *optarg)
+> +{
+> +	int i;
+> +	const char *name;
+> +	int level;
+> +
+> +	switch (optarg[0]) {
+> +	case '-':
+> +		level = IGNORE;
+> +		name = optarg + 1;
+> +		break;
+> +
+> +	case '+':
+> +		level = ERROR;
+> +		name = optarg + 1;
+> +		break;
+> +
+> +	default:
+> +		level = WARN;
+> +		name = optarg;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(check_table); i++) {
+> +		struct check *c = check_table[i];
+> +
+> +		if (streq(c->name, name)) {
+> +			set_check_level(c, level);
+> +			return;
+> +		}
+> +	}
+> +
+> +	die("Unrecognized check name \"%s\"\n", name);
+> +}
+> +
+>  void process_checks(int force, struct boot_info *bi)
+>  {
+>  	struct node *dt = bi->dt;
+> Index: dtc/dtc.c
+> ===================================================================
+> --- dtc.orig/dtc.c	2011-07-18 09:20:15.000000000 +1000
+> +++ dtc/dtc.c	2011-10-28 14:43:34.743229363 +1100
+> @@ -111,7 +111,7 @@ int main(int argc, char *argv[])
+>  	minsize    = 0;
+>  	padsize    = 0;
+>  
+> -	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:s")) != EOF) {
+> +	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:sC:")) != EOF) {
+>  		switch (opt) {
+>  		case 'I':
+>  			inform = optarg;
+> @@ -162,6 +162,10 @@ int main(int argc, char *argv[])
+>  			sort = 1;
+>  			break;
+>  
+> +		case 'C':
+> +			parse_checks_option(optarg);
+> +			break;
+> +
+>  		case 'h':
+>  		default:
+>  			usage();
+> Index: dtc/dtc.h
+> ===================================================================
+> --- dtc.orig/dtc.h	2011-10-12 09:56:55.000000000 +1100
+> +++ dtc/dtc.h	2011-10-28 14:42:31.846917479 +1100
+> @@ -225,6 +225,7 @@ void sort_tree(struct boot_info *bi);
+>  
+>  /* Checks */
+>  
+> +void parse_checks_option(const char *optarg);
+>  void process_checks(int force, struct boot_info *bi);
+>  
+>  /* Flattened trees */
+> 
+> 
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
