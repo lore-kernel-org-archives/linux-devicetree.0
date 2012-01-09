@@ -1,59 +1,27 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [RFC PATCH v3 3/5] pinctrl: imx: add pinctrl imx driver
-Date: Mon, 9 Jan 2012 14:32:12 +0800
-Message-ID: <20120109063136.GI1835@S2101-09.ap.freescale.net>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-4-git-send-email-b29396@freescale.com>
- <20120108130542.GC2203@richard-laptop>
- <20120109020848.GF1835@S2101-09.ap.freescale.net>
- <20120109021702.GV2414@b20223-02.ap.freescale.net>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH] x86: convert to generic irq_domain
+Date: Mon, 9 Jan 2012 09:19:44 +0100
+Message-ID: <20120109081944.GB3121@linutronix.de>
+References: <1324099129-28832-1-git-send-email-robherring2@gmail.com>
+ <20111219144940.GI20801@linutronix.de>
+ <4EFDD740.5080303@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120109021702.GV2414@b20223-02.ap.freescale.net>
+In-Reply-To: <4EFDD740.5080303@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@freescale.com>
-Cc: Richard Zhao <richard.zhao@linaro.org>, linus.walleij@stericsson.com, s.hauer@pengutronix.de, w.sang@pengutronix.de, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, shawn.guo@freescale.com, kernel@pengutronix.de, cjb@laptop.org, Dong Aisheng <b29396@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 09, 2012 at 10:17:03AM +0800, Richard Zhao wrote:
-> On Mon, Jan 09, 2012 at 10:08:51AM +0800, Shawn Guo wrote:
-> > On Sun, Jan 08, 2012 at 09:05:44PM +0800, Richard Zhao wrote:
-> > > > +enum imx_imx53_pinctrl_pads {
-> > > > +	MX53_GPIO_19 = 0,
-> > > > +	MX53_KEY_COL0 = 1,
-> > > > +	MX53_KEY_ROW0 = 2,
-> > > > +	MX53_KEY_COL1 = 3,
-> > > > +	MX53_KEY_ROW1 = 4,
-> > > > +	MX53_KEY_COL2 = 5,
-> > > > +	MX53_KEY_ROW2 = 6,
-> > > ...
-> > > Why not describe it in dts and make this file generic for imx?
-> > > One node for one pad,
-> > 
-> > Doing this will bloat the device tree dramatically.  Actually I had
-> > a patch doing so before the pinctrl subsystem was born, but it
-> > concerned Grant a lot for that reason and thus died.
-> are you against describing pad in dts or one node per pad?
-> one node per pad is just a tip to extend pad property, to support
-> other features (pinconf in your word).
+* Rob Herring | 2011-12-30 09:22:40 [-0600]:
 
-I definitely want to describe pinconf in device tree, though what's
-the best interface for pinctrl client driver to talk to pinconf is
-still vague to me.
+>Any update on testing this?
 
-> > 
-> > > it'll be easy to extend pad properties. You know
-> > > the pad may set pull up/down, open drain, drive strenth, daisy chain etc.
-> > > The features have to be supported, to make your model usefull.
-> > > 
-> > As Aisheng mentioned, the pinconf support will be added later.
-> I expect pinconf come together, and get a ready-to-use patch series.
-> 
-As I was educated by Linus.W, we can not drink ocean and we need to
-split big chunk of work into pieces and achieve it step by step.
+Just got back from vacation, will do this soon.
 
--- 
-Regards,
-Shawn
+>
+>Rob
+
+Sebastian
