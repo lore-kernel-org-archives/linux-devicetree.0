@@ -1,41 +1,47 @@
-From: Tabi Timur-B04825 <B04825@freescale.com>
-Subject: Re: [PATCH v2 09/10] arm/dts: omap3-beagle: Add twl4030 and i2c
- EEPROM
-Date: Mon, 9 Jan 2012 23:24:42 +0000
-Message-ID: <CAOZdJXU9w1O69ZgNEmgUZfezXEyn1JTyZxgmmLXAb3-mtJLnOA@mail.gmail.com>
-References: <1323439361-1647-1-git-send-email-b-cousson@ti.com>
-	<1323439361-1647-10-git-send-email-b-cousson@ti.com>
+From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: initial device tree support
+Date: Mon, 9 Jan 2012 23:26:38 +0000
+Message-ID: <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
+References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1323439361-1647-10-git-send-email-b-cousson@ti.com>
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1316596786-2539-1-git-send-email-dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Content-Language: en-US
-Content-ID: <B4EED714ED150A41A6C9E97EF2E66DEC@freescale.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: "tony@atomide.com" <tony@atomide.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-ID: <9583510F753D9841A913C9092DAE49AF-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?iso-8859-2?Q?Pawe=B3_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 9, 2011 at 8:02 AM, Benoit Cousson <b-cousson@ti.com> wrote=
-:
+On Wed, Sep 21, 2011 at 4:19 AM, Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 >
-> + =A0 =A0 =A0 eeprom@50 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,eeprom";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x50>;
-> + =A0 =A0 =A0 };
+> =A0 =A0 =A0* edid -- It should be possible to have a fairly generic bindi=
+ng
+> =A0 =A0 =A0 =A0for EDID interfaces, but none seems to exist yet. =A0Discu=
+ssion
+> =A0 =A0 =A0 =A0is needed regarding what form this should take.
+>
+> =A0 =A0 =A0 =A0This might more appropriately be called "ddc" (or some
+> =A0 =A0 =A0 =A0variation on that), since EDID seems only to describe the
+> =A0 =A0 =A0 =A0format of the ID data retrievable via this interface; not =
+the
+> =A0 =A0 =A0 =A0interface itself.
 
-Why is this "ti,"?  For EDID, isn't the I2C device actually on the
-monitor itself, and DVI cable just connects to the I2C bus?
+Has there been any progress on this issue?  I'm looking to add EDID
+support to a PowerPC device tree.  A TI developer is using
+"ti,eeprom", but I'm not sure that's a good choice.
 
-The reason I ask is that I'm trying to do the same thing for a PowerPC
-board.  I need to defined an EDID I2C node.
+-- =
 
---=20
 Timur Tabi
 Linux kernel developer at Freescale
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
