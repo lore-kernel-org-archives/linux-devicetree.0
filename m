@@ -1,160 +1,117 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: RFC: option to toggle dtc checks on and off
-Date: Mon, 9 Jan 2012 13:41:29 +1100
-Message-ID: <20120109024129.GH5628@truffala.fritz.box>
-References: <20111028051525.GA7215@truffala.fritz.box>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF and DDR
+Date: Sun, 8 Jan 2012 21:42:25 -0800
+Message-ID: <CAOesGMjFmM=gXddvFzW+BYqOedySjPVZ6hjwsF-F40Wr9BvSLg@mail.gmail.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com>
+	<4EEFC23A.30201@gmail.com>
+	<20111219233559.GW6464@atomide.com>
+	<4EF0671B.7090508@ti.com>
+	<4EF0824A.9060208@ti.com>
+	<4EF096C9.1070808@ti.com>
+	<4F09D10B.7010807@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20111028051525.GA7215-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F09D10B.7010807@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Aneesh V <aneesh@ti.com>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Jon, I was hoping I'd get some comment on this patch eventually.
+Hi,
 
-On Fri, Oct 28, 2011 at 04:15:25PM +1100, David Gibson wrote:
-> Here is a draft patch which adds a -C option to dtc, allowing
-> individual semantic checks to be turned on and off.  It also allows
-> indivudual checks to be set as triggering either warnings or errors.
-> 
-> I have a couple of concerns about it in its present form.  First, the
-> current syntax is that "-C -checkname" disables a check, "-C
-> checkname" turns a check on as a warning and "-C +checkname" turns it
-> on as an error.  I'm not convinced this is a great syntax.
-> 
-> Second, turning on a check will force on all prerequisite checks for
-> it.  Turning a check off will disable all checks for which it is a
-> prerequisite.  This seems necessary, since a check can't safely be
-> executed without having first checked its prereqs, but this could have
-> some very non-obvious effects from the command line.
-> 
-> Index: dtc/checks.c
-> ===================================================================
-> --- dtc.orig/checks.c	2011-04-11 13:47:41.000000000 +1000
-> +++ dtc/checks.c	2011-10-28 14:42:31.846917479 +1100
-> @@ -644,6 +644,69 @@ static struct check *check_table[] = {
->  	&obsolete_chosen_interrupt_controller,
->  };
->  
-> +static void set_check_level(struct check *c, int level)
-> +{
-> +	int i;
-> +
-> +	fprintf(stderr, "Setting '%s' check level to %d\n",
-> +		c->name, level);
-> +
-> +	if (level > c->level) {
-> +		/* Raising level, also raise it for prereqs */
-> +		for (i = 0; i < c->num_prereqs; i++)
-> +			set_check_level(c->prereq[i], level);
-> +	}
-> +
-> +	if (level < c->level) {
-> +		/* Lowering level, also lower it for things this is
-> +		 * the prereq for */
-> +		for (i = 0; i < ARRAY_SIZE(check_table); i++) {
-> +			struct check *cc = check_table[i];
-> +			int j;
-> +
-> +			for (j = 0; j < cc->num_prereqs; j++)
-> +				if (cc->prereq[j] == c)
-> +					set_check_level(cc, level);
-> +		}
-> +	}
-> +
-> +	c->level = level;
-> +}
-> +
-> +void parse_checks_option(const char *optarg)
-> +{
-> +	int i;
-> +	const char *name;
-> +	int level;
-> +
-> +	switch (optarg[0]) {
-> +	case '-':
-> +		level = IGNORE;
-> +		name = optarg + 1;
-> +		break;
-> +
-> +	case '+':
-> +		level = ERROR;
-> +		name = optarg + 1;
-> +		break;
-> +
-> +	default:
-> +		level = WARN;
-> +		name = optarg;
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(check_table); i++) {
-> +		struct check *c = check_table[i];
-> +
-> +		if (streq(c->name, name)) {
-> +			set_check_level(c, level);
-> +			return;
-> +		}
-> +	}
-> +
-> +	die("Unrecognized check name \"%s\"\n", name);
-> +}
-> +
->  void process_checks(int force, struct boot_info *bi)
->  {
->  	struct node *dt = bi->dt;
-> Index: dtc/dtc.c
-> ===================================================================
-> --- dtc.orig/dtc.c	2011-07-18 09:20:15.000000000 +1000
-> +++ dtc/dtc.c	2011-10-28 14:43:34.743229363 +1100
-> @@ -111,7 +111,7 @@ int main(int argc, char *argv[])
->  	minsize    = 0;
->  	padsize    = 0;
->  
-> -	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:s")) != EOF) {
-> +	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:sC:")) != EOF) {
->  		switch (opt) {
->  		case 'I':
->  			inform = optarg;
-> @@ -162,6 +162,10 @@ int main(int argc, char *argv[])
->  			sort = 1;
->  			break;
->  
-> +		case 'C':
-> +			parse_checks_option(optarg);
-> +			break;
-> +
->  		case 'h':
->  		default:
->  			usage();
-> Index: dtc/dtc.h
-> ===================================================================
-> --- dtc.orig/dtc.h	2011-10-12 09:56:55.000000000 +1100
-> +++ dtc/dtc.h	2011-10-28 14:42:31.846917479 +1100
-> @@ -225,6 +225,7 @@ void sort_tree(struct boot_info *bi);
->  
->  /* Checks */
->  
-> +void parse_checks_option(const char *optarg);
->  void process_checks(int force, struct boot_info *bi);
->  
->  /* Flattened trees */
-> 
-> 
+On Sun, Jan 8, 2012 at 9:23 AM, Aneesh V <aneesh@ti.com> wrote:
+> Hi,
+>
+>
+> On Tuesday 20 December 2011 03:08 PM, Aneesh V wrote:
+>>
+>> Hi Benoit
+>>
+>> On Tuesday 20 December 2011 06:10 PM, Cousson, Benoit wrote:
+>>>
+>>> Hi Aneesh,
+>>>
+>>
+>> <snip>
+>>
+>>>>>> In general, is it really feasible to parse the DTB before DDR is
+>>>>>> initialized?
+>>>>>
+>>>>>
+>>>>> Changing timings is still needed for DVFS during runtime.
+>>>>>
+>>>>> But we can boot to userspace with bootloader set timings, so I'm
+>>>>
+>>>>
+>>>> As far as I understand, in the current out-of-tree DVFS implementation
+>>>> for OMAP, DVFS can start even before user-space.
+>>>
+>>>
+>>> Maybe it is the case, but that does not mean it should.
+>>> We can potentially delay the DVFS init until the user-space is started.
+>>> This should not be considered as a big constraint.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Or at least until ramdisk is available, and store the tables there.
+It's a matter of seconds, delaying DVFS initialization until then
+shouldn't be the end of the world.
+
+>>>
+>>>>> thinking that maybe these timings should be just set by loadable
+>>>>> modules. Just the configuration of which timings to select should
+>>>>> be passed via DT. Something in compatible like:
+>>>>>
+>>>>> .compatible = "ti,omap3630", "sdram-micron-mt46h32m32lf-6";
+>>>>>
+>>>>> And that should allow the SDRC driver to only accept timings for
+>>>>> "sdram-micron-mt46h32m32lf-6".
+>>>>
+>>>>
+>>>> Do you mean one module per memory device and have all timing data in
+>>>> the respective module? Wouldn't this clutter the kernel proper with all
+>>>> these tables. By having the timing data in DT, it can be eventually
+>>>> moved out of kernel eventually, right?
+>>>
+>>>
+>>> Yes, that's the theory, but referring to Olof's point, this is not
+>>> necessarily the goal of DT to store all the information that are not
+>>> board dependent.
+>>> In this case, each DDR will have it sets of well known AC timings data
+>>> that will never depend of the board config. In this case, storing that
+>>> inside DT might not be the best solution.
+>>>
+>>> In fact we always had the same kind of discussion for the pinmux data
+>>> and for the clock data...
+>>>
+>>> The conclusion being that most of the static data does not have to be in
+>>> the DTS.
+>>> But since Linus was complaining about the huge amount of data inside the
+>>> kernel, it is not obvious what the best solution is:-)
+>>
+>>
+>> Hmm.. I get the point now. Linus' complaint is what I had in mind too.
+>> My humble opinion is to have such data in DTS but re-use it as much as
+>> possible. That is, we could have something like a "sdram-micron-
+>> mt46h32m32lf-6.dtsi"(as you suggested before) that can be included by
+>> board level DTS files. I think the fact that dts files are organized at
+>> arch level today is limiting such re-use. Please correct me if I am
+>> wrong.
+>
+>
+> Gentle reminder on this one. Are we aligned on having the DDR timings
+> in device tree?
+
+I didn't revisit the thread until today, unfortunately, but the
+approach suggested by Tony sounds quite intriguing: Only encode the
+memory chip id, and have the driver request firmware (not a module)
+for that model that contains the SPD (if it isn't provided by the
+memory module itself, which it rarely is on embedded platforms). That
+data can then be parsed by the kernel like regular SPD.
+
+As a second-best option, encoding in SPD format in the device-tree
+through dtsi files sounds like a reasonable approach: the format is
+already standardized and drivers who can already deal with i2c-based
+SPD data can just use it (with some minor changes).
+
+
+-Olof
