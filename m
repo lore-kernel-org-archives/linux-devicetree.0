@@ -1,67 +1,77 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [RFC PATCH 1/9] arm: avoid using on_each_cpu hard coded ret value
-Date: Mon, 9 Jan 2012 09:28:15 +0100
-Message-ID: <20120109082815.GB14252@pengutronix.de>
-References: <1325600353-10895-1-git-send-email-gilad@benyossef.com>
- <1325600353-10895-2-git-send-email-gilad@benyossef.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH] irqdomain: Initialize number of IRQs for simple domains
+Date: Mon, 9 Jan 2012 10:03:12 +0100
+Message-ID: <20120109090311.GA10040@avionic-0098.mockup.avionic-design.de>
+References: <1325860112-22051-1-git-send-email-thierry.reding@avionic-design.de>
+ <4F072843.6050306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1325600353-10895-2-git-send-email-gilad@benyossef.com>
+In-Reply-To: <4F072843.6050306@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, devicetree-discuss@lists.ozlabs.org, Will Deacon <will.deacon@arm.com>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@secretlab.ca>, Paul Mackerras <paulus@samba.org>, Rob Herring <rob.herring@calxeda.com>, Arnaldo Carvalho de Melo <acme@ghostprotocols.net>, Ingo Molnar <mingo@elte.hu>, linux-arm-kernel@lists.infradead.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Daniel Walker <dwalker@fifo99.com>, Russell King <linux@arm.linux.org.uk>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, David Brown <davidb@codeaurora.org>, "open list:ARM/QUALCOMM MSM..." <linux-arm-msm@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Barry Song <baohua.song@csr.com>, Thomas Gleixner <tglx@linutronix.de>, OMAP SUPPORT <linux-omap@vger.kernel.org>, Andrew Victor <linux@maxim.org.za>, "open list:ARM/ATMEL AT91RM9..." <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, Bryan Huntsman <bryanh@codeaurora.org>, Richard Zhao <richard.zhao@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2012 at 04:19:05PM +0200, Gilad Ben-Yossef wrote:
-> on_each_cpu always returns a hard coded return code of zero.
->=20
-> Removing all tests based on this return value saves run time
-> cycles for compares and code bloat for branches.
->=20
-> Cc: Michal Nazarewicz <mina86@mina86.com>
-> CC: Will Deacon <will.deacon@arm.com>
-> CC: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> CC: Paul Mackerras <paulus@samba.org>
-> CC: Ingo Molnar <mingo@elte.hu>
-> CC: Arnaldo Carvalho de Melo <acme@ghostprotocols.net>
-> CC: Russell King <linux@arm.linux.org.uk>
-> CC: Grant Likely <grant.likely@secretlab.ca>
-> CC: Rob Herring <rob.herring@calxeda.com>
-> CC: linux-arm-kernel@lists.infradead.org
-> CC: devicetree-discuss@lists.ozlabs.org
-> ---
->  arch/arm/kernel/perf_event.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
->=20
-> diff --git a/arch/arm/kernel/perf_event.c b/arch/arm/kernel/perf_even=
-t.c
-> index 88b0941..bfd58d8 100644
-> --- a/arch/arm/kernel/perf_event.c
-> +++ b/arch/arm/kernel/perf_event.c
-> @@ -617,7 +617,7 @@ static int __init
->  cpu_pmu_reset(void)
->  {
->  	if (cpu_pmu && cpu_pmu->reset)
-> -		return on_each_cpu(cpu_pmu->reset, NULL, 1);
-> +		on_each_cpu(cpu_pmu->reset, NULL, 1);
->  	return 0;
->  }
->  arch_initcall(cpu_pmu_reset);
-This patch results in no binary change for my test build with SMP=3Dn a=
-nd
-it saves one instruction on SMP=3Dy.
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
-Uwe
+* Cousson, Benoit wrote:
+> Hi Thierry,
+>=20
+> On 1/6/2012 3:28 PM, Thierry Reding wrote:
+> >The irq_domain_add() function needs the number of interrupts in the
+> >domain to properly initialize them. In addition the allocated domain
+> >is now returned by the irq_domain_{add,generate}_simple() helpers.
+>=20
+> [...]
+>=20
+> >diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/b=
+oard-generic.c
+> >index d587560..bf67781 100644
+> >--- a/arch/arm/mach-omap2/board-generic.c
+> >+++ b/arch/arm/mach-omap2/board-generic.c
+> >@@ -66,8 +66,11 @@ static struct of_device_id intc_match[] __initdata =
+=3D {
+> >  static void __init omap_generic_init(void)
+> >  {
+> >  	struct device_node *node =3D of_find_matching_node(NULL, intc_match);
+> >-	if (node)
+> >-		irq_domain_add_simple(node, 0);
+> >+	if (node) {
+> >+		struct irq_domain *domain;
+> >+		domain =3D irq_domain_add_simple(node, 0, INTCPS_NR_IRQS);
+>=20
+> The number of interrupts will depend on the OMAP generation. That
+> one is just valid for the 3430 INTC controller.
+> Since the previous code was using zero, I guess that using 0 there
+> should be fine.
+>=20
+> Moreover, that piece of code should not exist anymore on 3.3 if the
+> series I sent last month to leverage Rob's DT interrupt init is
+> merged [1].
+>=20
+> I've just ping Rob and Grant on that series to get a status.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Okay, so I guess we should wait for you patch to go in first and I'll update
+this patch on top of that. I assume we can coordinate things in linux-next?
+
+Thierry
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEARECAAYFAk8KrU8ACgkQZ+BJyKLjJp+TRgCfZOrAsza8BDBWyon6uCOjTrsW
+V6IAnjIkRPQSQTh5AThunw4n4ZK1La8m
+=eQ7B
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
