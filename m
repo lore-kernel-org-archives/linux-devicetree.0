@@ -1,72 +1,42 @@
 From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Mon, 9 Jan 2012 09:56:27 +0800
-Message-ID: <20120109015625.GE1835@S2101-09.ap.freescale.net>
-References: <1324402840-32451-3-git-send-email-b29396@freescale.com>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
- <20120107135445.GI4790@S2101-09.ap.freescale.net>
- <20120108125156.GB2203@richard-laptop>
+Subject: Re: [RFC PATCH v3 3/5] pinctrl: imx: add pinctrl imx driver
+Date: Mon, 9 Jan 2012 10:08:51 +0800
+Message-ID: <20120109020848.GF1835@S2101-09.ap.freescale.net>
+References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
+ <1324402840-32451-4-git-send-email-b29396@freescale.com>
+ <20120108130542.GC2203@richard-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120108125156.GB2203@richard-laptop>
+In-Reply-To: <20120108130542.GC2203@richard-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Richard Zhao <richard.zhao@linaro.org>
-Cc: Stephen Warren <swarren@nvidia.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, "cjb@laptop.org" <cjb@laptop.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <dongas86@gmail.com>
+Cc: Dong Aisheng <b29396@freescale.com>, linux-kernel@vger.kernel.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, w.sang@pengutronix.de, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, cjb@laptop.org, devicetree-discuss@lists.ozlabs.org, shawn.guo@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 08, 2012 at 08:51:59PM +0800, Richard Zhao wrote:
-...
-> > > So, this does appear to be conflating the two things: The definition of
-> > > what pins are in a pingroup, and the mux function for a particular
-> > > setting of that pingroup. I think you need separate nodes for this.
-> > > 
-> > At least for imx, we do not have mux function setting for pingroup.
-> > Instead, it only applies to individual pin.
-> I think it depends on function definition of pinmux driver. For the
-> imx example patch, it's one-to-one.
+On Sun, Jan 08, 2012 at 09:05:44PM +0800, Richard Zhao wrote:
+> > +enum imx_imx53_pinctrl_pads {
+> > +	MX53_GPIO_19 = 0,
+> > +	MX53_KEY_COL0 = 1,
+> > +	MX53_KEY_ROW0 = 2,
+> > +	MX53_KEY_COL1 = 3,
+> > +	MX53_KEY_ROW1 = 4,
+> > +	MX53_KEY_COL2 = 5,
+> > +	MX53_KEY_ROW2 = 6,
+> ...
+> Why not describe it in dts and make this file generic for imx?
+> One node for one pad,
 
-It should depend on particular imx soc pinmux design rather than
-pinmux driver.  If it's always one-to-one case, we do not need
-pinmux at all.  Aisheng's patch just did not enumerate all the groups
-for given function.  Instead, it puts a couple simple examples there
-for demonstration.
+Doing this will bloat the device tree dramatically.  Actually I had
+a patch doing so before the pinctrl subsystem was born, but it
+concerned Grant a lot for that reason and thus died.
 
-...
-
-> > > 		uart4func: func@1 {
-> > > 			func-name = "uart4";
-> > > 			locations = <&bargrp &bazgrp>;
-> > > 			mux-value = <6 3>;
-> > > 		};
-> > 
-> > I prefer to have function node defined in <board>.dtsi, since it's
-> > all about defining phandle to the correct pingroup, which should be
-> > decided by board design.
-> group and function are one-to-one mapped for imx.
-
-Again, it's not the case.
-
-> So if you put function
-> in board dts, why not put pin group there too?
-
-If we put pingroup data in <board>.dts, the data will be likely get
-duplicated a lot in different board dts files.  For example, if
-imx6q-sabrelite chooses the same pingroup for usdhc3 and usdhc4 as
-imx6q-arm2, the pingroup data will be duplicated between imx6q-arm2.dts
-and imx6q-sabrelite.dts.
-
-On the contrary, putting pingroup data in <soc>.dtsi and having function
-node in <board>.dts with phandle pointing to the correct pingroup will
-help avoid such data duplication.
+> it'll be easy to extend pad properties. You know
+> the pad may set pull up/down, open drain, drive strenth, daisy chain etc.
+> The features have to be supported, to make your model usefull.
+> 
+As Aisheng mentioned, the pinconf support will be added later.
 
 -- 
 Regards,
