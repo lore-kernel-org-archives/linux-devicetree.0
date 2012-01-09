@@ -1,66 +1,54 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v2 1/5] arm/dts: OMAP4: Update DTS file with new GIC bindings
-Date: Mon, 9 Jan 2012 14:31:44 +0100
-Message-ID: <4F0AEC40.3040200@ti.com>
-References: <1324388398-2683-1-git-send-email-b-cousson@ti.com> <1324388398-2683-2-git-send-email-b-cousson@ti.com> <20120106211558.GA7457@ponder.secretlab.ca> <4F07680E.8000404@gmail.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: [GIT PULL] ARM: OMAP2+: Interrupt controllers adaptation to DT
+Date: Mon, 9 Jan 2012 14:57:17 +0100
+Message-ID: <4F0AF23D.9040103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F07680E.8000404@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/6/2012 10:30 PM, Rob Herring wrote:
-> On 01/06/2012 03:15 PM, Grant Likely wrote:
->> On Tue, Dec 20, 2011 at 02:39:54PM +0100, Benoit Cousson wrote:
->>> The GIC binding was updated in 3.2 and expect 3 interrupt-cells.
->>> - Update the #interrupt-cells
->>> - interrupt-parent seems to be needed as well for the top level GIC
->>
->> Hmmm... it shouldn't be.  If it is then it is a bug.
-> 
-> I think this is an old comment which I fixed in 3.2, so interrupt-parent
-> can be removed.
+Hi Tony,
 
-I've just tried, and indeed, it works now.
+If this is not too late, could you please pull the OMAP interrupt controllers adaptation to device tree?
 
-Please find below the patch updated accordingly.
+This series is based on your lo/dt branch to get the DTS and board cleanup.
 
 Thanks,
 Benoit
 
----
->From f9ebe0ff11e7cbbba0d7499420ff2f358e44a297 Mon Sep 17 00:00:00 2001
-From: Benoit Cousson <b-cousson@ti.com>
-Date: Fri, 25 Nov 2011 12:11:52 +0100
-Subject: [PATCH v3 1/5] arm/dts: OMAP4: Update DTS file with new GIC bindings
 
-The GIC binding was updated in 3.2 and expects 3 interrupt-cells.
-- Update the #interrupt-cells
+The following changes since commit 40c0591f0a349ec074357e05c6ab1a3bc951807c:
+  Benoit Cousson (1):
+        ARM: OMAP2+: kconfig: Enable devicetree by default for OMAP2+ systems
 
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-Acked-by: Rob Herring <rob.herring@calxeda.com>
----
- arch/arm/boot/dts/omap4.dtsi |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+are available in the git repository at:
 
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 4c61c82..4b2bff1 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -95,7 +95,7 @@
- 		gic: interrupt-controller@48241000 {
- 			compatible = "arm,cortex-a9-gic";
- 			interrupt-controller;
--			#interrupt-cells = <1>;
-+			#interrupt-cells = <3>;
- 			reg = <0x48241000 0x1000>,
- 			      <0x48240100 0x0100>;
- 		};
--- 
-1.7.0.4
+  git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.3/dt_irq
 
+Benoit Cousson (5):
+      arm/dts: OMAP4: Update DTS file with new GIC bindings
+      ARM: OMAP2/3: intc: Add irqdomain support
+      ARM: OMAP2/3: intc: Add DT support for TI interrupt controller
+      arm/dts: OMAP3: Add interrupt-controller bindings for INTC
+      ARM: OMAP2+: board-generic: Use of_irq_init API
 
+ .../devicetree/bindings/arm/omap/intc.txt          |   27 +++++++++++
+ arch/arm/boot/dts/omap3.dtsi                       |    6 ++-
+ arch/arm/boot/dts/omap4.dtsi                       |    2 +-
+ arch/arm/mach-omap2/board-generic.c                |   30 +++++++------
+ arch/arm/mach-omap2/common.h                       |   10 ++++
+ arch/arm/mach-omap2/irq.c                          |   48 ++++++++++++++++++--
+ 6 files changed, 102 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/intc.txt
