@@ -1,11 +1,15 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2] dtc: Implement -d option to write out a dependency file
-Date: Tue, 10 Jan 2012 10:12:48 -0700
-Message-ID: <1326215568-30700-1-git-send-email-swarren@nvidia.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [RFC v2 4/9] of: add clock providers
+Date: Tue, 10 Jan 2012 21:33:38 +0000
+Message-ID: <20120110213338.GD3226@page>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1323727329-4989-4-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,196 +19,66 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This will allow callers to rebuild .dtb files when any of the /include/d
-.dtsi files are modified, not just the top-level .dts file.
+Hi Grant,
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v2: Replaced fputs/fputc with fprintf
+On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
+> Based on work by Ben Herrenschmidt and Jeremy Kerr, this patch adds an
+> of_clk_get function to allow platforms to retrieve clock data from the
+> device tree.
+> 
+> Platform register a provider through of_clk_add_provider, which will be
+> called when a device references the provider's OF node for a clock
+> reference.
+[...]
+> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
+> new file mode 100644
+> index 0000000..9a75342
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
+> @@ -0,0 +1,21 @@
+> +Binding for simple fixed-rate clock sources.
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/fixed-clock.txt
 
-This is an updated patch for dtc itself. Once it's accepted, I'll repost
-the equivalent kernel patch.
+This appears to reference itself?
 
- Documentation/manual.txt |    3 +++
- dtc.c                    |   20 +++++++++++++++++++-
- srcpos.c                 |    4 ++++
- srcpos.h                 |    1 +
- tests/dependencies.cmp   |    1 +
- tests/dependencies.dts   |    6 ++++++
- tests/deps_inc1.dtsi     |    1 +
- tests/deps_inc2.dtsi     |    1 +
- tests/run_tests.sh       |    4 ++++
- 9 files changed, 40 insertions(+), 1 deletions(-)
- create mode 100644 tests/dependencies.cmp
- create mode 100644 tests/dependencies.dts
- create mode 100644 tests/deps_inc1.dtsi
- create mode 100644 tests/deps_inc2.dtsi
+> +
+> +Required properties:
+> +- compatible : shall be "fixed-clock".
+> +- #clock-cells : from common clock binding; shall be set to 0.
+> +- clock-frequency : frequency of clock in Hz. May be multiple cells.
+> +
+> +Optional properties:
+> +- gpios : From common gpio binding; gpio connection to clock enable pin.
 
-diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-index 14508f3..989c589 100644
---- a/Documentation/manual.txt
-+++ b/Documentation/manual.txt
-@@ -106,6 +106,9 @@ Options:
-     -O <output_format>
- 	The generated output format, as listed above.
- 
-+    -d <dependency_filename>
-+	Generate a dependency file during compilation.
-+
-     -q
- 	Quiet: -q suppress warnings, -qq errors, -qqq all
- 
-diff --git a/dtc.c b/dtc.c
-index 15d2fc2..7a0c605 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -71,6 +71,7 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t\t\tasm - assembler source\n");
- 	fprintf(stderr, "\t-V <output version>\n");
- 	fprintf(stderr, "\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n", DEFAULT_FDT_VERSION);
-+	fprintf(stderr, "\t-d <output dependency file>\n");
- 	fprintf(stderr, "\t-R <number>\n");
- 	fprintf(stderr, "\t\tMake space for <number> reserve map entries (relevant for \n\t\tdtb and asm output only)\n");
- 	fprintf(stderr, "\t-S <bytes>\n");
-@@ -99,6 +100,7 @@ int main(int argc, char *argv[])
- 	const char *inform = "dts";
- 	const char *outform = "dts";
- 	const char *outname = "-";
-+	const char *depname = NULL;
- 	int force = 0, sort = 0;
- 	const char *arg;
- 	int opt;
-@@ -111,7 +113,7 @@ int main(int argc, char *argv[])
- 	minsize    = 0;
- 	padsize    = 0;
- 
--	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:s")) != EOF) {
-+	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:vH:s")) != EOF) {
- 		switch (opt) {
- 		case 'I':
- 			inform = optarg;
-@@ -125,6 +127,9 @@ int main(int argc, char *argv[])
- 		case 'V':
- 			outversion = strtol(optarg, NULL, 0);
- 			break;
-+		case 'd':
-+			depname = optarg;
-+			break;
- 		case 'R':
- 			reservenum = strtol(optarg, NULL, 0);
- 			break;
-@@ -185,6 +190,14 @@ int main(int argc, char *argv[])
- 	fprintf(stderr, "DTC: %s->%s  on file \"%s\"\n",
- 		inform, outform, arg);
- 
-+	if (depname) {
-+		depfile = fopen(depname, "w");
-+		if (!depfile)
-+			die("Couldn't open dependency file %s: %s\n", depname,
-+			    strerror(errno));
-+		fprintf(depfile, "%s:", outname);
-+	}
-+
- 	if (streq(inform, "dts"))
- 		bi = dt_from_source(arg);
- 	else if (streq(inform, "fs"))
-@@ -194,6 +207,11 @@ int main(int argc, char *argv[])
- 	else
- 		die("Unknown input format \"%s\"\n", inform);
- 
-+	if (depfile) {
-+		fputc('\n', depfile);
-+		fclose(depfile);
-+	}
-+
- 	if (cmdline_boot_cpuid != -1)
- 		bi->boot_cpuid_phys = cmdline_boot_cpuid;
- 
-diff --git a/srcpos.c b/srcpos.c
-index 2dbc874..36a38e9 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -40,6 +40,7 @@ static char *dirname(const char *path)
- 	return NULL;
- }
- 
-+FILE *depfile; /* = NULL */
- struct srcfile_state *current_srcfile; /* = NULL */
- 
- /* Detect infinite include recursion. */
-@@ -67,6 +68,9 @@ FILE *srcfile_relative_open(const char *fname, char **fullnamep)
- 			    strerror(errno));
- 	}
- 
-+	if (depfile)
-+		fprintf(depfile, " %s", fullname);
-+
- 	if (fullnamep)
- 		*fullnamep = fullname;
- 	else
-diff --git a/srcpos.h b/srcpos.h
-index bd7966e..ce980ca 100644
---- a/srcpos.h
-+++ b/srcpos.h
-@@ -30,6 +30,7 @@ struct srcfile_state {
- 	struct srcfile_state *prev;
- };
- 
-+extern FILE *depfile; /* = NULL */
- extern struct srcfile_state *current_srcfile; /* = NULL */
- 
- FILE *srcfile_relative_open(const char *fname, char **fullnamep);
-diff --git a/tests/dependencies.cmp b/tests/dependencies.cmp
-new file mode 100644
-index 0000000..bcd9432
---- /dev/null
-+++ b/tests/dependencies.cmp
-@@ -0,0 +1 @@
-+dependencies.test.dtb: dependencies.dts deps_inc1.dtsi deps_inc2.dtsi
-diff --git a/tests/dependencies.dts b/tests/dependencies.dts
-new file mode 100644
-index 0000000..2cfe31b
---- /dev/null
-+++ b/tests/dependencies.dts
-@@ -0,0 +1,6 @@
-+/dts-v1/;
-+
-+/include/ "deps_inc1.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/deps_inc1.dtsi b/tests/deps_inc1.dtsi
-new file mode 100644
-index 0000000..5c607dc
---- /dev/null
-+++ b/tests/deps_inc1.dtsi
-@@ -0,0 +1 @@
-+/include/ "deps_inc2.dtsi"
-diff --git a/tests/deps_inc2.dtsi b/tests/deps_inc2.dtsi
-new file mode 100644
-index 0000000..710cecc
---- /dev/null
-+++ b/tests/deps_inc2.dtsi
-@@ -0,0 +1 @@
-+/* Empty */
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index da6f970..b96f6d8 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -353,6 +353,10 @@ dtc_tests () {
-     run_sh_test dtc-fatal.sh -I dts -O dtb nosuchfile.dts
-     run_sh_test dtc-fatal.sh -I dtb -O dtb nosuchfile.dtb
-     run_sh_test dtc-fatal.sh -I fs -O dtb nosuchfile
-+
-+    # Dependencies
-+    run_dtc_test -I dts -O dtb -o dependencies.test.dtb -d dependencies.test.d dependencies.dts
-+    run_wrap_test cmp dependencies.test.d dependencies.cmp
- }
- 
- cmp_tests () {
--- 
-1.7.0.4
+This seems a little odd to me to have in the common binding, but I'm not 
+that familiar with too many platforms.
+
+> +- clock-output-names : From common clock binding
+> +
+> +Example:
+> +	clock {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <1000000000>;
+> +	};
+
+I wonder if this should have an optional clock consumer with a standard 
+name for parenting?  For example, on picoxcell there is a fixed 200MHz 
+APB clock that is really a PLL from a 20MHz reference input and I'd like 
+to represent that in the clock tree.
+
+I'm about to start trying to get this and Mike's common struct clk 
+patches working on picoxcell, and the one thing I'm not understanding at 
+the moment is how to handle the tree itself.  Currently I was planning 
+on iterating over all clocks and finding a named input clock "ref" or 
+"input" perhaps.  This would be fine for picoxcell, but I guess more 
+complicated chips may need something else.
+
+Jamie
