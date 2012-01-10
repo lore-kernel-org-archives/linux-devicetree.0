@@ -1,130 +1,48 @@
-From: David Vrabel <david.vrabel@citrix.com>
-Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
- tile (TC1 variant)
-Date: Tue, 10 Jan 2012 14:21:16 +0000
-Message-ID: <4F0C495C.4000103@citrix.com>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
- <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2] irqdomain: Initialize number of IRQs for simple
+ domains
+Date: Tue, 10 Jan 2012 23:41:12 +0800
+Message-ID: <20120110154109.GB27831@S2101-09.ap.freescale.net>
+References: <1326191059-26411-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1326191059-26411-1-git-send-email-thierry.reding@avionic-design.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Barry Song <baohua.song@csr.com>, Thomas Gleixner <tglx@linutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Jamie Iles <jamie@jamieiles.com>, "open list:ARM/ATMEL AT91RM9..." <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, open list:ARM/QUALCOM
 List-Id: devicetree@vger.kernel.org
 
-On 15/12/11 14:02, Pawel Moll wrote:
-> This patch adds Device Tree file for the CoreTile Express A15x2
-> (V2P-CA15) with Test Chip 1.
-
-This doesn't work as-is with the software model as accessing some of the
-peripherals that aren't modeled will cause an exception.  Is it worth
-having a device tree file suitable for the models? Or are the models too
-configurable for this to be workable?
-
-> As the chip's GIC has 160 interrupt inputs and equivalent SMM
-> (FPGA) has GIC synthesised with 256 interrupts, NR_IRQS is
-> increased.
+On Tue, Jan 10, 2012 at 11:24:11AM +0100, Thierry Reding wrote:
+> The irq_domain_add() function needs the number of interrupts in the
+> domain to properly initialize them. In addition the allocated domain
+> is now returned by the irq_domain_{add,generate}_simple() helpers.
 > 
-[...]
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-[...]
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x40000000>;
-> +	};
+> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> Acked-by: David Brown <davidb@codeaurora.org>
+> ---
+> Note: This patch should not be applied yet. There is a conflict with a
+>       pending patch[0] by Benoit Cousson that will obsolete the OMAP2
+>       hunk in this patch.
+> 
+>       [0]: http://www.spinics.net/lists/linux-omap/msg62124.html
+> 
+> Changes in v2:
+>  - Don't use ERR_PTR, keep the WARN_ON(1) and return NULL as requested
+>    by Grant Likely.
+>  - Integrate i.MX cleanup patch by Shawn Guo.
+> 
+...
+>  arch/arm/mach-imx/imx51-dt.c          |   13 +++++++++++--
+>  arch/arm/mach-imx/imx53-dt.c          |   13 +++++++++++--
+>  arch/arm/mach-imx/mach-imx6q.c        |    6 +++++-
+...
+>  arch/arm/plat-mxc/include/mach/irqs.h |   13 +++++++------
+>  arch/arm/plat-mxc/tzic.c              |    2 --
 
-If CONFIG_ARM_ATAG_DTB_COMPAT is enabled the device tree will end up
-with two nodes describing the memory ("memory" and "memory@80000000" in
-this case).
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
 
->From 22cc6a3410077b99d81e42c4d7f4e29eab6070e3 Mon Sep 17 00:00:00 2001
-From: David Vrabel <david.vrabel@citrix.com>
-Date: Mon, 9 Jan 2012 16:13:19 +0000
-Subject: [PATCH] ARM: vexpress: rename device tree "memory@..." nodes to
-"memory"
-
-If CONFIG_ARM_ATAG_DTB_COMPAT enabled it expects the memory
-information to be in a node named "memory".  If the memory is
-described in a different node, the device tree will end up with two
-nodes describing the memory.
-
-Signed-off-by: David Vrabel <david.vrabel@citrix.com>
----
- arch/arm/boot/dts/vexpress-v2p-aem-v7a.dts  |    2 +-
- arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts |    2 +-
- arch/arm/boot/dts/vexpress-v2p-ca5s.dts     |    2 +-
- arch/arm/boot/dts/vexpress-v2p-ca9.dts      |    2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/vexpress-v2p-aem-v7a.dts
-b/arch/arm/boot/dts/vexpress-v2p-aem-v7a.dts
-index 064132e..6667936 100644
---- a/arch/arm/boot/dts/vexpress-v2p-aem-v7a.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-aem-v7a.dts
-@@ -33,7 +33,7 @@
- 		};
- 	};
-
--	memory@80000000 {
-+	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-index 02cada5..0d82ac8 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
-@@ -43,7 +43,7 @@
- 		};
- 	};
-
--	memory@80000000 {
-+	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-index da26a13..e4c3935 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
-@@ -45,7 +45,7 @@
- 		};
- 	};
-
--	memory@80000000 {
-+	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x40000000>;
- 	};
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-index 84542e7..d4aa1cc 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
-@@ -59,7 +59,7 @@
- 		};
- 	};
-
--	memory@60000000 {
-+	memory {
- 		device_type = "memory";
- 		reg = <0x60000000 0x40000000>;
- 	};
--- 
-1.7.2.5
-
-David
+Regards,
+Shawn
