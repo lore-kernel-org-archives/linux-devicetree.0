@@ -1,160 +1,93 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH] of: Support CONFIG_CMDLINE_EXTEND config option
-Date: Mon,  9 Jan 2012 16:54:13 -0800
-Message-ID: <1326156853-24840-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Doug Anderson <dianders@chromium.org>, devicetree-discuss@lists-ozlabs.org
+From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: initial device tree support
+Date: Tue, 10 Jan 2012 02:24:08 +0000
+Message-ID: <4F0BA146.807@freescale.com>
+References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
+ <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
+ <4F0B897A.20502@firmworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F0B897A.20502-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Content-Language: en-US
+Content-ID: <4A4FCEB56925534EA39AC1C86DFDFF17-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: =?utf-8?B?UGF3ZcWCIE1vbGw=?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The old logic assumes CMDLINE_FROM_BOOTLOADER vs. CMDLINE_FORCE and
-ignores CMDLINE_EXTEND.  Here's the old logic:
+Mitch Bradley wrote:
 
-- CONFIG_CMDLINE_FORCE=true
-    CONFIG_CMDLINE
-- dt bootargs=non-empty:
-    dt bootargs
-- dt bootargs=empty, @data is non-empty string
-    @data is left unchanged
-- dt bootargs=empty, @data is empty string
-    CONFIG_CMDLINE (or "" if that's not defined)
+> The way it works for many "graphics cards" is that the display hardware
+> subsystem includes an I2C (also called "SMBUS") interface that connects to
+> the EDID ROM on the monitor. In this model, the EDID interface is not a
+> standalone device, but rather a feature of the display device.
+>
+> In that scenario, the EDID-reading code is just part of the display
+> driver, so you don't need a separate device node.
 
-The old logic would also not honor CONFIG_CMDLINE_FORCE if there was no
-"chosen" attribute in the device tree.
+On the system I'm supporting, the I2C bus is not part of the video 
+hardware.  The EDID "device" is not even on a dedicated bus -- it's on a 
+shared I2C bus with other devices.
 
-The new logic is now documented in of_fdt.h and is copied here for
-reference:
+> If the display hardware does not include a dedicated I2C interface
+> intended for EDID, then I think what you need is a way to associate an
+> external I2C interface with the display driver for that hardware. The
+> interpretation of the data as EDID is not really part of the hardware
+> interface, but rather a function of the display driver. Therefore, I think
+> the right way to look at this is not to have a binding for "EDID
+> interfaces", but rather a convention for associating a specific instance
+> of an I2C interface with a display driver.
 
-- CONFIG_CMDLINE_FORCE=true
-    CONFIG_CMDLINE
-- CONFIG_CMDLINE_EXTEND=true
-    CONFIG_CMDLINE + dt bootargs (even if dt bootargs are empty)
-- CMDLINE_FROM_BOOTLOADER=true, dt bootargs=non-empty:
-    dt bootargs
-- CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is non-empty string
-    @data is left unchanged
-- CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is empty string
-    CONFIG_CMDLINE (or "" if that's not defined)
+I don't think that's going to work for me.  Reading the EDID data is a 
+platform function, not a video driver function.  I'm adding platform code 
+to read the EDID data.
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
-CC: devicetree-discuss@lists-ozlabs.org
-CC: Grant Likely <grant.likely@secretlab.ca>
-CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
----
- drivers/of/fdt.c       |   56 ++++++++++++++++++++++++++++++++++-------------
- include/linux/of_fdt.h |   19 ++++++++++++++++
- 2 files changed, 59 insertions(+), 16 deletions(-)
+We can't really make it generic, either, even though it's using address 
+0x50 like everyone else.  On my platform, for instance, I need to enable 
+the EDID interface via an FPGA, perform the I2C read, and then disable the 
+EDID interface.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index ea2bd1b..577f3a9 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -664,6 +664,29 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 	return 0;
- }
- 
-+/*
-+ * Convert configs to something easy to use in C code
-+ */
-+#if defined(CONFIG_CMDLINE_FORCE)
-+static const int overwrite_incoming_cmdline = 1;
-+static const int read_dt_cmdline;
-+static const int concat_cmdline;
-+#elif defined(CONFIG_CMDLINE_EXTEND)
-+static const int overwrite_incoming_cmdline = 1;
-+static const int read_dt_cmdline = 1;
-+static const int concat_cmdline = 1;
-+#else /* CMDLINE_FROM_BOOTLOADER */
-+static const int overwrite_incoming_cmdline;
-+static const int read_dt_cmdline = 1;
-+static const int concat_cmdline;
-+#endif
-+
-+#ifdef CONFIG_CMDLINE
-+static const char *config_cmdline = CONFIG_CMDLINE;
-+#else
-+static const char *config_cmdline = "";
-+#endif
-+
- int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data)
- {
-@@ -672,28 +695,29 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
- 
-+	/* Make sure cmdline default is set early to handle case of no chosen */
-+	if (data && (overwrite_incoming_cmdline || !((char *)data)[0]))
-+		strlcpy(data, config_cmdline, COMMAND_LINE_SIZE);
-+
- 	if (depth != 1 || !data ||
- 	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
- 		return 0;
- 
- 	early_init_dt_check_for_initrd(node);
- 
--	/* Retrieve command line */
--	p = of_get_flat_dt_prop(node, "bootargs", &l);
--	if (p != NULL && l > 0)
--		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
--
--	/*
--	 * CONFIG_CMDLINE is meant to be a default in case nothing else
--	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
--	 * is set in which case we override whatever was found earlier.
--	 */
--#ifdef CONFIG_CMDLINE
--#ifndef CONFIG_CMDLINE_FORCE
--	if (!((char *)data)[0])
--#endif
--		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#endif /* CONFIG_CMDLINE */
-+	/* Retrieve command line unless forcing */
-+	if (read_dt_cmdline) {
-+		p = of_get_flat_dt_prop(node, "bootargs", &l);
-+		if (p != NULL && l > 0) {
-+			if (concat_cmdline) {
-+				strlcat(data, " ", COMMAND_LINE_SIZE);
-+				strlcat(data, p, min_t(int, (int)l,
-+						       COMMAND_LINE_SIZE));
-+			} else
-+				strlcpy(data, p, min_t(int, (int)l,
-+						       COMMAND_LINE_SIZE));
-+		}
-+	}
- 
- 	pr_debug("Command line is: %s\n", (char*)data);
- 
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index ed136ad..346d6c7 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -91,6 +91,25 @@ extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern int of_flat_dt_match(unsigned long node, const char *const *matches);
- extern unsigned long of_get_flat_dt_root(void);
- 
-+/*
-+ * early_init_dt_scan_chosen - scan the device tree for ramdisk and bootargs
-+ *
-+ * The boot arguments will be placed into the memory pointed to by @data.
-+ * That memory should be COMMAND_LINE_SIZE big and initialized to be a valid
-+ * (possibly empty) string.  Logic for what will be in @data after this
-+ * function finishes:
-+ *
-+ * - CONFIG_CMDLINE_FORCE=true
-+ *     CONFIG_CMDLINE
-+ * - CONFIG_CMDLINE_EXTEND=true
-+ *     CONFIG_CMDLINE + dt bootargs (even if dt bootargs are empty)
-+ * - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=non-empty:
-+ *     dt bootargs
-+ * - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is non-empty string
-+ *     @data is left unchanged
-+ * - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is empty string
-+ *     CONFIG_CMDLINE (or "" if that's not defined)
-+ */
- extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern void early_init_dt_check_for_initrd(unsigned long node);
+> The obvious way to do that would be to have a property in the display
+> driver whose value is the phandle of an i2c device node. The display
+> driver can then use that to read and interpret the EDID bytes.
+
+Hmmm.... now that I think about it, I can create platform-specific "EDID 
+enable" and "EDID disable" functions, and let the video driver do the I2C 
+load generically, using a phandle.
+
+> In my opinion, pushing the EDID abstraction into a node by itself is not
+> worthwhile.
+
+Well, I have to create an I2C device node in order to get any I2C working.
+
+> The EDID spec says that you read either 128 or 256 bytes from
+> an I2C device at I2C address 0x50; you hardly need an abstraction for
+> that, given that you have a "read from I2C" method.
+> The right level of abstraction at the device node level is "this hardware
+> implements an I2C bus master", for which there is already a binding. Then
+> all you need is a reference to that device from a display device node.
+>
+> The display device driver will need to interpret the EDID data in an
+> device-dependent manner. That is inherent in the fact that the driver for
+> the given display hardware must map the EDID description of the monitor
+> into display-hardware-dependent timing settings.
+>
+> Some I2C interfaces are implemented by bit-banging GPIOs, while others use
+> dedicated hardware protocol engines. The display driver need not know or
+> care about that, as it should be hidden by the i2c bus abstraction.
+
+This gives me something to think about.  Thanks.
+
 -- 
-1.7.3.1
+Timur Tabi
+Linux kernel developer at Freescale
