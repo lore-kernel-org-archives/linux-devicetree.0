@@ -1,15 +1,18 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [RFC v2 4/9] of: add clock providers
-Date: Tue, 10 Jan 2012 21:33:38 +0000
-Message-ID: <20120110213338.GD3226@page>
-References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 REPOST] dtc: Add support for named integer constants
+Date: Tue, 10 Jan 2012 13:54:30 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
+References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
+ <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
+ <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1323727329-4989-4-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,66 +22,78 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+John, David,
 
-On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
-> Based on work by Ben Herrenschmidt and Jeremy Kerr, this patch adds an
-> of_clk_get function to allow platforms to retrieve clock data from the
-> device tree.
+What can we do to reach consensus on expanding dtc to handle named
+constants, or in general any future direction to extend the syntax with
+expressions etc.?
+
+Will either of you be attending Linaro Connect or ELC 2012 in February
+by any chance? We could get together and talk this through in person if
+you are...
+
+Thanks for any kind of discussion!
+
+Stephen Warren wrote at Thursday, January 05, 2012 2:27 PM:
+> Simon Glass wrote at Tuesday, January 03, 2012 5:46 PM:
+> > On Mon, Dec 12, 2011 at 12:23 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > > Simon Glass wrote at Monday, December 12, 2011 1:19 PM:
+> > >> On Mon, Dec 12, 2011 at 12:04 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > >> > You may define constants as follows:
+> > >> >
+> > >> > /define/ TWO 2;
+> > >> > /define/ FOUR 4;
+> > >> > /define/ OTHER FOUR;
+> > >> >
+> > >> > And properties may use these values as follows:
+> > >> >
+> > >> > foo = <1 TWO 3 FOUR 5>;
+> > >> >
+> > >> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > >> > ---
+> > >> > I posted this back in early September. I'd like to ask again that this
+> > >> > feature be merged into dtc; there are many situations where it'd allow
+> > >> > .dts files to be simplified.
+> > >>
+> > >> Yes I agree, it is very useful.
+> > >>
+> > >> I get conflicts with this - does it need a rebase?
+> > >
+> > > Yes, I should have mentioned this patch is still based on the same commit
+> > > it was 3 months ago, and HEAD has moved forward since. If it's deemed
+> > > conceptually acceptable, I'll rebase it to HEAD.
+> > >
+> > > (For reference, it's based on ed8fee1 "Add missing tests to .gitignore".)
+> >
+> > I haven't seen any other comments. Is this going in? Constants would be useful.
 > 
-> Platform register a provider through of_clk_add_provider, which will be
-> called when a device references the provider's OF node for a clock
-> reference.
-[...]
-> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
-> new file mode 100644
-> index 0000000..9a75342
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
-> @@ -0,0 +1,21 @@
-> +Binding for simple fixed-rate clock sources.
+> I took a quick look at rebasing this on HEAD today. There are some non-
+> trivial conflicts with Anton's recent patch to support variable-sized
+> elements in arrays. In particular, my patch relied on the cellval token,
+> allowing it to reference a symbol or a literal, but Anton's patch has
+> removed that token from the grammar.
+> 
+> So, I'm still willing to rebase my patch, but given the non-trivial nature
+> of doing so, I'd like prior confirmation from Jon and David that the syntax
+> is acceptable, and so my work won't be in vain.
+> 
+> For reference, here's the test .dts file from my patch:
+> 
+> +/dts-v1/;
 > +
-> +This binding uses the common clock binding[1].
+> +/define/ VAR1 0xdeadbeef;
+> +/define/ VAR2 VAR1;
 > +
-> +[1] Documentation/devicetree/bindings/clock/fixed-clock.txt
-
-This appears to reference itself?
-
+> +/ {
+> +	var1 = <VAR1>;
+> +	var2 = <VAR2>;
+> +};
 > +
-> +Required properties:
-> +- compatible : shall be "fixed-clock".
-> +- #clock-cells : from common clock binding; shall be set to 0.
-> +- clock-frequency : frequency of clock in Hz. May be multiple cells.
-> +
-> +Optional properties:
-> +- gpios : From common gpio binding; gpio connection to clock enable pin.
+> +/define/ OTHER 0xdeadbeef;
 
-This seems a little odd to me to have in the common binding, but I'm not 
-that familiar with too many platforms.
-
-> +- clock-output-names : From common clock binding
-> +
-> +Example:
-> +	clock {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <1000000000>;
-> +	};
-
-I wonder if this should have an optional clock consumer with a standard 
-name for parenting?  For example, on picoxcell there is a fixed 200MHz 
-APB clock that is really a PLL from a 20MHz reference input and I'd like 
-to represent that in the clock tree.
-
-I'm about to start trying to get this and Mike's common struct clk 
-patches working on picoxcell, and the one thing I'm not understanding at 
-the moment is how to handle the tree itself.  Currently I was planning 
-on iterating over all clocks and finding a named input clock "ref" or 
-"input" perhaps.  This would be fine for picoxcell, but I guess more 
-complicated chips may need something else.
-
-Jamie
+-- 
+nvpublic
