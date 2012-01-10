@@ -1,40 +1,25 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 2/2] Kbuild: Use dtc's -d (dependency) option
-Date: Tue, 10 Jan 2012 11:12:22 +0800
-Message-ID: <20120110031220.GC23362@S2101-09.ap.freescale.net>
-References: <1326134295-15547-1-git-send-email-swarren@nvidia.com>
- <1326134295-15547-2-git-send-email-swarren@nvidia.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH] video: s3c-fb: Add device tree support
+Date: Tue, 10 Jan 2012 04:52:20 +0000
+Message-ID: <20120110045219.GA5433@sirena.org.uk>
+References: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1326134295-15547-2-git-send-email-swarren@nvidia.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Michal Marek <mmarek@suse.cz>, Jon Loeliger <jdl@jdl.com>, David Gibson <david@gibson.dropbear.id.au>, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, Aurelien Jacquiot <a-jacquiot@ti.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, microblaze-uclinux@itee.uq.edu.au, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev@lists.ozlabs.org, linux@lists.openrisc.net, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, FlorianSchandinat@gmx.de, jg1.han@samsung.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, patches@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 09, 2012 at 11:38:15AM -0700, Stephen Warren wrote:
-> This hooks dtc into Kbuild's dependency system.
-> 
-> Thus, for example, "make dtbs" will rebuild tegra-harmony.dtb if only
-> tegra20.dtsi has changed yet tegra-harmony.dts has not. The previous
-> lack of this feature recently caused me to have very confusing "git
-> bisect" results.
-> 
-> For ARM, it's obvious what to add to $(targets). I'm not familiar enough
-> with other architectures to know what to add there. Powerpc appears to
-> already add various .dtb files into $(targets), but the other archs may
-> need something added to $(targets) to work.
-> 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+On Tue, Jan 10, 2012 at 01:31:47AM +0530, Thomas Abraham wrote:
 
-Though I did not look into the patches deeply, I know the problem very
-well and it annoys me a lot.  It's great that we have patches to fix
-it, so
+> +Required properties:
 
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
+> +- gpios: The gpios used to interface with the external LCD panel.
 
--- 
-Regards,
-Shawn
+This isn't terribly informative for the user - which GPIOs and in what
+order are they specified?  Looking at the code it looks like pin mux
+configuration so just some wording saying it's a list of pins to be used
+for the framebuffer function.
