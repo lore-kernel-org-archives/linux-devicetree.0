@@ -1,68 +1,139 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: Re: [RFC PATCH v3 3/5] pinctrl: imx: add pinctrl imx driver
-Date: Tue, 10 Jan 2012 16:38:43 +0800
-Message-ID: <20120110083842.GA2414@b20223-02.ap.freescale.net>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-4-git-send-email-b29396@freescale.com>
- <20120108130542.GC2203@richard-laptop>
- <20120109020848.GF1835@S2101-09.ap.freescale.net>
- <20120109021702.GV2414@b20223-02.ap.freescale.net>
- <20120109063136.GI1835@S2101-09.ap.freescale.net>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2] of: Change logic to overwrite cmd_line with
+ CONFIG_CMDLINE
+Date: Tue, 10 Jan 2012 20:10:10 +1100
+Message-ID: <1326186610.23910.52.camel@pasglop>
+References: <1316494215.7975.29.camel@pasglop>
+ <20110920045510.GA31886@ponder.secretlab.ca>
+ <CAD=FV=UVo-vCe-s9tdXq_Od3jJnJ58Nx=4f-S3XfWBfDhxoXMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120109063136.GI1835@S2101-09.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Richard Zhao <richard.zhao@linaro.org>, linus.walleij@stericsson.com, s.hauer@pengutronix.de, w.sang@pengutronix.de, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, shawn.guo@freescale.com, kernel@pengutronix.de, cjb@laptop.org, Dong Aisheng <b29396@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAD=FV=UVo-vCe-s9tdXq_Od3jJnJ58Nx=4f-S3XfWBfDhxoXMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 09, 2012 at 02:32:12PM +0800, Shawn Guo wrote:
-> On Mon, Jan 09, 2012 at 10:17:03AM +0800, Richard Zhao wrote:
-> > On Mon, Jan 09, 2012 at 10:08:51AM +0800, Shawn Guo wrote:
-> > > On Sun, Jan 08, 2012 at 09:05:44PM +0800, Richard Zhao wrote:
-> > > > > +enum imx_imx53_pinctrl_pads {
-> > > > > +	MX53_GPIO_19 = 0,
-> > > > > +	MX53_KEY_COL0 = 1,
-> > > > > +	MX53_KEY_ROW0 = 2,
-> > > > > +	MX53_KEY_COL1 = 3,
-> > > > > +	MX53_KEY_ROW1 = 4,
-> > > > > +	MX53_KEY_COL2 = 5,
-> > > > > +	MX53_KEY_ROW2 = 6,
-> > > > ...
-> > > > Why not describe it in dts and make this file generic for imx?
-> > > > One node for one pad,
-> > > 
-> > > Doing this will bloat the device tree dramatically.  Actually I had
-> > > a patch doing so before the pinctrl subsystem was born, but it
-> > > concerned Grant a lot for that reason and thus died.
-> > are you against describing pad in dts or one node per pad?
-> > one node per pad is just a tip to extend pad property, to support
-> > other features (pinconf in your word).
-> 
-> I definitely want to describe pinconf in device tree, though what's
-> the best interface for pinctrl client driver to talk to pinconf is
-> still vague to me.
-> 
-> > > 
-> > > > it'll be easy to extend pad properties. You know
-> > > > the pad may set pull up/down, open drain, drive strenth, daisy chain etc.
-> > > > The features have to be supported, to make your model usefull.
-> > > > 
-> > > As Aisheng mentioned, the pinconf support will be added later.
-> > I expect pinconf come together, and get a ready-to-use patch series.
-> > 
-> As I was educated by Linus.W, we can not drink ocean and we need to
-> split big chunk of work into pieces and achieve it step by step.
-Sure, we can not drink out the ocean :). But if people can not use it
-in real case, how do we verify the driver? How do we know the driver
-goes in the right way?
+On Fri, 2012-01-06 at 16:48 -0800, Doug Anderson wrote:
+> I know this is a long-dead thread, but I was a little curious about
+> the motivation here.
 
-Thanks
-Richard
+Hi ! Sorry, I planned to reply earlier and then forgot about it...
+
+> I'm looking at trying to support CONFIG_CMDLINE_EXTEND (an ARM
+> Kconfig) in this function and don't know in which cases I should look
+> at the CONFIG_CMDLINE and in which cases I should use whatever
+> happened to be in data before the function was called.
+
+I'll have a look later (gotta run soon) but basically, the reason I did
+that logic change is that in some specific circumstances and firmware
+version, I end up writing the user-specified command line in the global
+prior to actually booting the kernel :-)
+
+So in that case, I really don't want CONFIG_CMDLINE to take over because
+there's nothing in the device-tree, the user -did- specify something but
+not via the device-tree.
+
+Now, that's a bit of an oddball scenario but I felt that the logic
+change was harmless.
+
+For those interested in gory details, it's when doing the OPAL takeover
+on some machines with the version 1 of OPAL firmware. We basically boot
+under pHyp normally (pSeries hypervisor) and do a magic hcall which
+relocates the kernel to contiguous physical memory and re-starts it with
+a flat device-tree.
+
+The takeover mechanism didn't provide me with a way for passing a
+command line in that fdt. So I had to do it from prom_init (still
+running under pHyp context), change the kernel global before it gets
+relocated.
+
+Cheers,
+Ben.
+
+
+> Here's the definition in the KConfig:
+> <http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=blob;f=arch/arm/Kconfig;h=24626b0419ee97e963e68329a8eb6769360b46ea;hb=HEAD#l1984>
 > 
-> -- 
-> Regards,
-> Shawn
+> Which case do you have CONFIG_CMDLINE defined but not CMDLINE_FORCE?
+> In those cases, do you happen to have CONFIG_CMDLINE_EXTEND or
+> CMDLINE_FROM_BOOTLOADER defined?
 > 
+> Thanks much!
+> 
+> -Doug
+> 
+> ---
+> 
+> On Mon, Sep 19, 2011 at 9:55 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> >
+> > On Tue, Sep 20, 2011 at 02:50:15PM +1000, Benjamin Herrenschmidt wrote:
+> > > We used to overwrite with CONFIG_CMDLINE if we found a chosen
+> > > node but failed to get bootargs out of it or they were empty,
+> > > unless CONFIG_CMDLINE_FORCE is set.
+> > >
+> > > Instead change that to overwrite if "data" is non empty after
+> > > the bootargs check. It allows arch code to have other mechanisms
+> > > to retrieve the command line prior to parsing the device-tree.
+> > >
+> > > Note: CONFIG_CMDLINE_FORCE case should ideally be handled elsewhere
+> > > as it won't work as it-is if the device-tree has no /chosen node
+> > >
+> > > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> > > CC: devicetree-discuss-w3QoH2/gNlk/bJ5BZ2RsiQ@public.gmane.org
+> > > CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> >
+> > Looks okay to me.
+> >
+> > Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> >
+> > > ---
+> > >  drivers/of/fdt.c |    7 ++++++-
+> > >  1 files changed, 6 insertions(+), 1 deletions(-)
+> > >
+> > > v2. Use "data" instead of "cmd_line" so it works on archs like
+> > > mips who don't pass cmd_line to that function to start with, also
+> > > add a comment explaining the mechanism.
+> > >
+> > > (resent with right list address as well while at it)
+> > >
+> > > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > > index 65200af..323b722 100644
+> > > --- a/drivers/of/fdt.c
+> > > +++ b/drivers/of/fdt.c
+> > > @@ -681,9 +681,14 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+> > >       if (p != NULL && l > 0)
+> > >               strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
+> > >
+> > > +     /*
+> > > +      * CONFIG_CMDLINE is meant to be a default in case nothing else
+> > > +      * managed to set the command line, unless CONFIG_CMDLINE_FORCE
+> > > +      * is set in which case we override whatever was found earlier.
+> > > +      */
+> > >  #ifdef CONFIG_CMDLINE
+> > >  #ifndef CONFIG_CMDLINE_FORCE
+> > > -     if (p == NULL || l == 0 || (l == 1 && (*p) == 0))
+> > > +     if (!data[0])
+> > >  #endif
+> > >               strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+> > >  #endif /* CONFIG_CMDLINE */
+> > > --
+> > > 1.7.4.1
+> > >
+> > >
+> > >
+> > >
+> > _______________________________________________
+> > devicetree-discuss mailing list
+> > devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > https://lists.ozlabs.org/listinfo/devicetree-discuss
