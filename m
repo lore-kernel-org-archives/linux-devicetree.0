@@ -1,54 +1,97 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3 3/5] pinctrl: imx: add pinctrl imx driver
-Date: Tue, 10 Jan 2012 11:43:28 +0100
-Message-ID: <CACRpkdZ=G+=Aq49r9VYa1ZGMg=Sy3Dy3kHNbbcFRp-Hn6y1ZqQ@mail.gmail.com>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-4-git-send-email-b29396@freescale.com>
- <20120108130542.GC2203@richard-laptop>
- <20120109020848.GF1835@S2101-09.ap.freescale.net>
- <20120109021702.GV2414@b20223-02.ap.freescale.net>
- <20120109063136.GI1835@S2101-09.ap.freescale.net>
- <20120110083842.GA2414@b20223-02.ap.freescale.net>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2] irqdomain: Initialize number of IRQs for simple
+ domains
+Date: Tue, 10 Jan 2012 11:44:35 +0100
+Message-ID: <20120110104435.GA10617@avionic-0098.mockup.avionic-design.de>
+References: <1326191059-26411-1-git-send-email-thierry.reding@avionic-design.de>
+ <20120110103905.GC3226@page>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120110083842.GA2414-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120110103905.GC3226@page>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Barry Song <baohua.song@csr.com>, Thomas Gleixner <tglx@linutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, "open list:ARM/ATMEL AT91RM9..." <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, open list:ARM/QUALCOMM
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2012 at 9:38 AM, Richard Zhao
-<richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Mon, Jan 09, 2012 at 02:32:12PM +0800, Shawn Guo wrote:
->> As I was educated by Linus.W, we can not drink ocean and we need to
->> split big chunk of work into pieces and achieve it step by step.
-> Sure, we can not drink out the ocean :). But if people can not use it
-> in real case, how do we verify the driver? How do we know the driver
-> goes in the right way?
 
-If you prefer to do a big upfront design of the entire driver then please
-by all means do that.
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What we need to know right now is what you need from the pin
-controller core to do that. We have a (custom) pinconf API now,
-does it fit the bill?
+* Jamie Iles wrote:
+> Hi Thierry,
+>=20
+> On Tue, Jan 10, 2012 at 11:24:11AM +0100, Thierry Reding wrote:
+> > The irq_domain_add() function needs the number of interrupts in the
+> > domain to properly initialize them. In addition the allocated domain
+> > is now returned by the irq_domain_{add,generate}_simple() helpers.
+> >=20
+> > Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> > Acked-by: David Brown <davidb@codeaurora.org>
+> > ---
+> > Note: This patch should not be applied yet. There is a conflict with a
+> >       pending patch[0] by Benoit Cousson that will obsolete the OMAP2
+> >       hunk in this patch.
+> >=20
+> >       [0]: http://www.spinics.net/lists/linux-omap/msg62124.html
+>=20
+> I also have a patch in Russell's tracker to remove one of the calls for=
+=20
+> versatile (for the VIC) that is no longer needed.
 
-I have spent some time on generic pin config, it was not much
-commented so if it helps you please ACK the patches.
+Okay, I'll take a note. I guess it is okay for this patch to go in only aft=
+er
+the conflicting patches have all been applied. I'm assuming that sooner or
+later those patches will land in linux-next and I can rebase this patch on
+top, right?
 
-Next from discussions with Stpehen I've sort of figured out that
-we need a config mapping table of sorts and then a means to activate
-entries of that table at runtime. I'm trying to come up with something
-for this.
+> > diff --git a/arch/arm/mach-imx/imx51-dt.c b/arch/arm/mach-imx/imx51-dt.c
+> > index e6bad17..811ce88 100644
+> > --- a/arch/arm/mach-imx/imx51-dt.c
+> > +++ b/arch/arm/mach-imx/imx51-dt.c
+> > @@ -47,7 +47,12 @@ static const struct of_dev_auxdata imx51_auxdata_loo=
+kup[] __initconst =3D {
+> >  static int __init imx51_tzic_add_irq_domain(struct device_node *np,
+> >  				struct device_node *interrupt_parent)
+> >  {
+> > -	irq_domain_add_simple(np, 0);
+> > +	struct irq_domain *domain;
+> > +
+> > +	domain =3D irq_domain_add_simple(np, 0, TZIC_NUM_IRQS);
+> > +	if (!domain)
+> > +		return -ENOMEM;
+> > +
+> >  	return 0;
+> >  }
+>=20
+> A real nit, but could this be written as:
+>=20
+> 	return irq_domain_add_simple(np, 0, TZIC_NUM_IRQS) ? 0 : -ENOMEM;
+>=20
+> to make it a little more concise (and the same for the others)?  Not a=20
+> big deal though, so either way:
+>=20
+> Reviewed-by: Jamie Iles <jamie@jamieiles.com>
 
-Yours,
+Yes, I can do that.
+
+Thanks,
+Thierry
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEARECAAYFAk8MFpMACgkQZ+BJyKLjJp/WdQCfdRvbIK29QwAps9EH7L0QFHKx
+tLYAoJlM7Q1QyLrTQu5eNnwFfHhEdlfB
+=IFCD
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
