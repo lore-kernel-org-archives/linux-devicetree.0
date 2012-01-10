@@ -1,33 +1,56 @@
-From: Dong Aisheng-B29396 <B29396@freescale.com>
-Subject: RE: [RFC PATCH v3 3/5] pinctrl: imx: add pinctrl imx driver
-Date: Tue, 10 Jan 2012 10:55:59 +0000
-Message-ID: <7FE21149F4667147B645348EC605788508B006@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
-	<1324402840-32451-4-git-send-email-b29396@freescale.com>
-	<20120108130542.GC2203@richard-laptop>
-	<20120109020848.GF1835@S2101-09.ap.freescale.net>
-	<20120109021702.GV2414@b20223-02.ap.freescale.net>
-	<20120109063136.GI1835@S2101-09.ap.freescale.net>
-	<20120110083842.GA2414@b20223-02.ap.freescale.net>
- <CACRpkdZ=G+=Aq49r9VYa1ZGMg=Sy3Dy3kHNbbcFRp-Hn6y1ZqQ@mail.gmail.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: initial device tree support
+Date: Tue, 10 Jan 2012 11:04:33 +0000
+Message-ID: <20120110110433.GA2336@linaro.org>
+References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
+ <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ=G+=Aq49r9VYa1ZGMg=Sy3Dy3kHNbbcFRp-Hn6y1ZqQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Zhao Richard-B20223 <B20223@freescale.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@linaro.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "w.sang@pengutronix.de" <w.sang@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, Guo Shawn-R65073 <r65073@freescale.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Pawe? Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Next from discussions with Stpehen I've sort of figured out that we need a
-> config mapping table of sorts and then a means to activate entries of that table
-> at runtime. I'm trying to come up with something for this.
+On Mon, Jan 09, 2012 at 11:26:38PM +0000, Tabi Timur-B04825 wrote:
+> On Wed, Sep 21, 2011 at 4:19 AM, Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >
+> > ? ? ?* edid -- It should be possible to have a fairly generic binding
+> > ? ? ? ?for EDID interfaces, but none seems to exist yet. ?Discussion
+> > ? ? ? ?is needed regarding what form this should take.
+> >
+> > ? ? ? ?This might more appropriately be called "ddc" (or some
+> > ? ? ? ?variation on that), since EDID seems only to describe the
+> > ? ? ? ?format of the ID data retrievable via this interface; not the
+> > ? ? ? ?interface itself.
 > 
-Good to hear this.
-I did not catch up your steps before, so I did not give much comment on the pinctrl core.
-I would try to do it if I can now.
+> Has there been any progress on this issue?  I'm looking to add EDID
+> support to a PowerPC device tree.  A TI developer is using
+> "ti,eeprom", but I'm not sure that's a good choice.
 
-Regards
-Dong Aisheng
+It turns out that because of the way things are wired up on vexpress, the
+EDID is not really usable; so I wasn't planning to do anything about it.
+
+
+I don't really know enough about this field to comment on whether it's
+genuinely useful to have a specific binding for EDID.  If it's enough
+to reference the appropriate I2C bus node from the display device node,
+then I guess we don't necessarily need to worry about having a separate
+binding.
+
+If it makes no sense to attempt make EDID access fully generic, that
+would sound like the right approach.
+
+Cheers
+---Dave
