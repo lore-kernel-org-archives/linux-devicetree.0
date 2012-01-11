@@ -1,12 +1,19 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: libfdt: Activate testcase for appending properties
-Date: Wed, 11 Jan 2012 23:41:32 +1100
-Message-ID: <20120111124132.GJ4935@truffala.fritz.box>
+Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer constants
+Date: Thu, 12 Jan 2012 00:00:56 +1100
+Message-ID: <20120111130056.GK4935@truffala.fritz.box>
+References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
+ <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
+ <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -16,53 +23,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit a31e3ef83bfce62d07695355e5f06cd4d0e44b86 introduced new libfdt
-functions to append to existing properties.  It also included a test case
-for this, but neglected to update the Makefile and run_tests.sh script
-to actually build and execute this testcase.
+On Tue, Jan 10, 2012 at 01:54:30PM -0800, Stephen Warren wrote:
+> John, David,
+> 
+> What can we do to reach consensus on expanding dtc to handle named
+> constants, or in general any future direction to extend the syntax with
+> expressions etc.?
 
-This patch corrects the oversight.
+Hrm, so, I'm not at all keen to add a named constant syntax without at
+least having an outline of what a future macro/function syntax would
+look like.  The latter is almost certain to permit the former as a
+subcase, and I'd really rather not end up with two different syntaxes
+for constants.
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
----
- tests/Makefile.tests |    1 +
- tests/run_tests.sh   |    4 ++++
- 2 files changed, 5 insertions(+), 0 deletions(-)
+Unfortunately, much as I'd like to get all these extended features
+into dtc, it's not my main job, so I don't have a lot of time to
+ponder the possibilities.
 
-diff --git a/tests/Makefile.tests b/tests/Makefile.tests
-index 215a8c5..3f92074 100644
---- a/tests/Makefile.tests
-+++ b/tests/Makefile.tests
-@@ -12,6 +12,7 @@ LIB_TESTS_L = get_mem_rsv \
- 	sw_tree1 \
- 	move_and_save mangle-layout nopulate \
- 	open_pack rw_tree1 set_name setprop del_property del_node \
-+	appendprop1 appendprop2 \
- 	string_escapes references path-references phandle_format \
- 	boot-cpuid incbin \
- 	extra-terminating-null \
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index da6f970..c72b9d2 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -178,6 +178,10 @@ libfdt_tests () {
-     run_test rw_tree1
-     tree1_tests rw_tree1.test.dtb
-     tree1_tests_rw rw_tree1.test.dtb
-+    run_test appendprop1
-+    run_test appendprop2 appendprop1.test.dtb
-+    run_dtc_test -I dts -O dtb -o appendprop.test.dtb appendprop.dts
-+    run_test dtbs_equal_ordered appendprop2.test.dtb appendprop.test.dtb
- 
-     for basetree in test_tree1.dtb sw_tree1.test.dtb rw_tree1.test.dtb; do
- 	run_test nopulate $basetree
--- 
-1.7.7.3
+> Will either of you be attending Linaro Connect or ELC 2012 in February
+> by any chance? We could get together and talk this through in person if
+> you are...
 
+Not for me, I'm afraid.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
