@@ -1,21 +1,14 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3 3/5] pinctrl: imx: add pinctrl imx driver
-Date: Wed, 11 Jan 2012 10:28:43 +0100
-Message-ID: <CACRpkdbUX-s8hM_Gk=XiwUufAzGz479L_t8vg77ek1KwPCKa_Q@mail.gmail.com>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
- <1324402840-32451-4-git-send-email-b29396@freescale.com>
- <20120108130542.GC2203@richard-laptop>
- <20120109020848.GF1835@S2101-09.ap.freescale.net>
- <20120109021702.GV2414@b20223-02.ap.freescale.net>
- <20120109063136.GI1835@S2101-09.ap.freescale.net>
- <20120110083842.GA2414@b20223-02.ap.freescale.net>
- <CACRpkdZ=G+=Aq49r9VYa1ZGMg=Sy3Dy3kHNbbcFRp-Hn6y1ZqQ@mail.gmail.com>
- <20120110135147.GB26599@S2101-09.ap.freescale.net>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] video: s3c-fb: Add device tree support
+Date: Wed, 11 Jan 2012 16:34:28 +0530
+Message-ID: <CAJuYYwRSO9OuiLNddOa+KLSkGwOAp3yHcrQZXSk_k2+oxtEDPQ@mail.gmail.com>
+References: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
+ <20120110045219.GA5433@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120110135147.GB26599-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <20120110045219.GA5433-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,40 +18,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2012 at 2:51 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Jan 10, 2012 at 11:43:28AM +0100, Linus Walleij wrote:
->> What we need to know right now is what you need from the pin
->> controller core to do that. We have a (custom) pinconf API now,
->> does it fit the bill?
->>
-> Hmm, I do not think it fits right away, as I do not think it's sensible
-> to have pinctrl client drivers call pin_config_set() directly.
+Hi Mark,
 
-OK that's more or less what Stephen said too so I'm cooking a
-config table ala pinmux with string identifiers.
+On 10 January 2012 10:22, Mark Brown
+<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Tue, Jan 10, 2012 at 01:31:47AM +0530, Thomas Abraham wrote:
+>
+>> +Required properties:
+>
+>> +- gpios: The gpios used to interface with the external LCD panel.
+>
+> This isn't terribly informative for the user - which GPIOs and in what
+> order are they specified? =A0Looking at the code it looks like pin mux
+> configuration so just some wording saying it's a list of pins to be used
+> for the framebuffer function.
 
->> I have spent some time on generic pin config, it was not much
->> commented so if it helps you please ACK the patches.
->>
-> Since the ARM community is the one who is most interested in pinctrl
-> subsystem so far, I guess copying LAKML will help collect more comments
-> and various tags. =A0(For example, I'm interested in pinctrl, but I do
-> not track LKML as close as I do for LAKML).
+Ok. I will modify the sentence to mean that it is list of gpios used
+by framebuffer controller for data/timing interface with the lcd
+panel. Thanks for your review.
 
-True. I'll fix that.
-
->> Next from discussions with Stpehen I've sort of figured out that
->> we need a config mapping table of sorts and then a means to activate
->> entries of that table at runtime. I'm trying to come up with something
->> for this.
->>
-> That's something we are waiting for pinconf being usable for imx.
-
-I'll fix something, please review when it appears!
-
-Thanks,
-Linus Walleij
+Regards,
+Thomas.
