@@ -1,20 +1,21 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v2 REPOST] dtc: Add support for named integer constants
-Date: Wed, 11 Jan 2012 13:36:46 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5@HQMAIL01.nvidia.com>
-References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
- <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
- <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
- <20120111130056.GK4935@truffala.fritz.box> <E1RkzJs-000590-4s@jdl.com>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: initial device tree support
+Date: Wed, 11 Jan 2012 15:37:23 -0600
+Message-ID: <4F0E0113.9090703@freescale.com>
+References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
+ <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
+ <4F0B897A.20502@firmworks.com>
+ <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
+ <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
+ <4F0CD7BC.7080409@freescale.com> <4F0D2F90.8020801@firmworks.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A770@HQMAIL01.nvidia.com>
+ <4F0DF1E6.40602@freescale.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A777@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E1RkzJs-000590-4s-CYoMK+44s/E@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A777-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,50 +25,29 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jon Loeliger wrote at Wednesday, January 11, 2012 7:38 AM:
-> > On Tue, Jan 10, 2012 at 01:54:30PM -0800, Stephen Warren wrote:
-> > > John, David,
-> > >
-> > > What can we do to reach consensus on expanding dtc to handle named
-> > > constants, or in general any future direction to extend the syntax with
-> > > expressions etc.?
-> >
-> > Hrm, so, I'm not at all keen to add a named constant syntax without at
-> > least having an outline of what a future macro/function syntax would
-> > look like.
-> 
-> Which is where I thought it was left earlier...? :-)
-> And it's not just what the macro/function syntax will look like,
-> but also how these will play into a more generalized expression
-> handling mechanism.  Defining something one-off now that doesn't
-> fit well into a long term plan is less than ideal.
-> 
-> Yes, I know that is tantamount to requiring the whole, larger
-> picture be solved first.  But Dave is right -- at least an outline
-> of the direction.  Seriously, the lexical problems can form some
-> of the nastiest gotchas if we're not careful from the onset.
+Stephen Warren wrote:
+> For monitors attached to user-accessible connectors, whenever the 
+> user physically plugs in a new monitor, you need to read the EDID 
+> since it could be a new monitor. DVI and HDMI have explicit hotplug 
+> detect lines to trigger this. I'm not sure how it works for VGA; 
+> perhaps you have to manually reprobe.
 
-So that all makes sense.
+We're using DVI, but it turns out that the interrupt signal on the video encoder (TFP410) is not connected to anything on our board, so I can't receive any interrupts.  The only way I would be able to tell is to create a kernel timer to poll the TFP410 through I2C, which I really don't want to do.
 
-My question is: How can we get consensus on what we want that complete
-future syntax to be? IIRC, Jon has a branch that implements a proposal,
-and David at least posted a different proposal if not actual code that
-implemented it. We're not missing proposals, but rather a mechanism to
-decide between them?
+> Of course, if this thread is talking about built-in LCD displays 
+> where the connectivity is fixed, this is a non-issue, but it's still 
+> a relevant general design discussion; hopefully whatever solution 
+> that's picked would work for DVI/HDMI even if you're dealing with 
+> LCDs right now.
 
-For what it's worth, I'd tend towards a simple expression-based syntax
-where property values can be calculated with C-style expressions. Basic
-math stuff like ( ) + - * / & | ~ << >> and some basic string handling
-operations (str(int) and concatenation). I think that'd cover the vast
-majority of use-cases wouldn't it? For more advanced stuff like loops
-to synthesize multiple nodes, it seems like writing a custom script to
-generate the .dts file and then passing the result to dtc would be more
-modular, and not require us to create a whole new Turing-complete
-language in dtc?
+My board supports both LVDS and DVI, and the LVDS is connected to a built-in display, so I need to support both hotplug and non-hotplug.
+
+I also noticed that the I2C interface is not enabled until after the console opens the framebuffer.  That means it's impossible for EDID data to be available before the console switches to the video device.  That doesn't seem right.
 
 -- 
-nvpublic
+Timur Tabi
+Linux kernel developer at Freescale
