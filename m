@@ -1,17 +1,13 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: RFC: option to toggle dtc checks on and off
-Date: Wed, 11 Jan 2012 13:38:12 +0000
-Message-ID: <20120111133812.GJ3226@page>
-References: <20111028051525.GA7215@truffala.fritz.box>
- <20120109024129.GH5628@truffala.fritz.box>
- <E1RkFso-00007g-Ue@jdl.com>
- <20120111121941.GI4935@truffala.fritz.box>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: libfdt: Activate testcase for appending properties
+Date: Wed, 11 Jan 2012 08:28:23 -0600
+Message-ID: <E1RkzA7-00057j-5e@jdl.com>
+References: <20120111124132.GJ4935@truffala.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120111121941.GI4935-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-reply-to: <20120111124132.GJ4935-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,33 +21,15 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2012 at 11:19:41PM +1100, David Gibson wrote:
-> On Mon, Jan 09, 2012 at 08:07:30AM -0600, Jon Loeliger wrote:
-> > > Jon, I was hoping I'd get some comment on this patch eventually.
-> > 
-> > Sorry/ .
-> > 
-> > > On Fri, Oct 28, 2011 at 04:15:25PM +1100, David Gibson wrote:
-> > > > Here is a draft patch which adds a -C option to dtc, allowing
-> > > > individual semantic checks to be turned on and off.  It also allows
-> > > > indivudual checks to be set as triggering either warnings or errors.
-> > 
-> > Turning checks on and off:  good.
-> > 
-> > > > I have a couple of concerns about it in its present form.  First, the
-> > > > current syntax is that "-C -checkname" disables a check, "-C
-> > > > checkname" turns a check on as a warning and "-C +checkname" turns it
-> > > > on as an error.  I'm not convinced this is a great syntax.
-> > 
-> > Yeah, that's sub-obtimal.
-> > What about using something like "-E checkname" and "-W checkname"?
+> Commit a31e3ef83bfce62d07695355e5f06cd4d0e44b86 introduced new libfdt
+> functions to append to existing properties.  It also included a test case
+> for this, but neglected to update the Makefile and run_tests.sh script
+> to actually build and execute this testcase.
 > 
-> Yeah, I though of that too.  Can't remeber why I didn't go that way.
-> Gets a bit weird if you specify both -E foo and -W foo, but "last one
-> wins" is probably still a reasonable way of deciding that.  Any
-> thoughts for an option to turn a check off completely?
+> This patch corrects the oversight.
+> 
+> Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-How about the way that GCC handles warnings: -Wcheckname to enable, 
--Wno-checkname to disable?
+Applied.  Thanks.
 
-Jamie
+jdl
