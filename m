@@ -1,20 +1,24 @@
-From: "David VomLehn (dvomlehn)" <dvomlehn-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v2 REPOST] dtc: Add support for named integer constants
-Date: Wed, 11 Jan 2012 16:10:52 -0600
-Message-ID: <7A9214B0DEB2074FBCA688B30B04400D03AD6CD4@XMB-RCD-208.cisco.com>
-References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
- <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
- <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
- <20120111130056.GK4935@truffala.fritz.box> <E1RkzJs-000590-4s@jdl.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
+ mappings
+Date: Thu, 12 Jan 2012 07:01:12 +0800
+Message-ID: <20120111230110.GE20968@S2101-09.ap.freescale.net>
+References: <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
+ <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC605788508AC65@039-SN2MPN1-013.039d.mgd.msft.net>
+ <20120110130511.GA26599@S2101-09.ap.freescale.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A74D@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-In-Reply-To: <E1RkzJs-000590-4s-CYoMK+44s/E@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A74D-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,72 +28,50 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Even if everyone can't make it, how about a BoF session at ELC 2012? I
-haven't had any time to contribute recently, but am tremendously
-interested in moving this forward.
+On Wed, Jan 11, 2012 at 11:41:56AM -0800, Stephen Warren wrote:
+> Shawn Guo wrote at Tuesday, January 10, 2012 6:05 AM:
+> > On Tue, Jan 10, 2012 at 08:21:05AM +0000, Dong Aisheng-B29396 wrote:
+> > > Here what I wonder is that do we need to allow the platform to use a func-name
+> > > property in their pinmux func node or pinmux group node to specify the name.
+> > 
+> > I do not see the necessity.
+> > 
+> > > If it is allowed, then it could be flexible for soc to define their names.
+> > > If not there may be limitations on their node names since we can only get it from
+> > > the node name.
+> > 
+> > To me, the node name is perfectly fine to be used for that purpose.
+> 
+> I'd prefer if we could use integers over strings if at all possible, but
+> that does have a dependency on dtc getting a syntax to define named
+> constants, or the kernel pre-processing the .dts files before passing
+> them to dtc.
+> 
+> But if we have to use strings, I will point out that the pin names I
+> chose for Tegra may not be suitable as DT node names; I don't /think/
+> the DT node names can contain spaces, but I chose to name the Tegra
+> pinctrl pins after both their pin name and GPIO name so that it's
+> easier to correlate the two:
+> 
+>         PINCTRL_PIN(TEGRA_PIN_SDIO3_CLK_PA6, "SDIO3_CLK PA6"),
+> 
+> Now, I could change that, but I'd prefer not to.
+> 
+Hmm, we are talking about function name and pingroup name instead of
+individual pin name. In your pinctrl-tegra20.c, they are .name and
+.groups as below.
 
-> -----Original Message-----
-> From: devicetree-discuss-bounces+dvomlehn=cisco.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->
-[mailto:devicetree-discuss-bounces+dvomlehn=cisco.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org]
-> On Behalf Of Jon Loeliger
-> Sent: Wednesday, January 11, 2012 6:38 AM
-> To: David Gibson
-> Cc: Devicetree Discuss
-> Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer
-> constants
-> 
-> > On Tue, Jan 10, 2012 at 01:54:30PM -0800, Stephen Warren wrote:
-> > > John, David,
-> > >
-> > > What can we do to reach consensus on expanding dtc to handle named
-> > > constants, or in general any future direction to extend the syntax
-> with
-> > > expressions etc.?
-> >
-> > Hrm, so, I'm not at all keen to add a named constant syntax without
-> at
-> > least having an outline of what a future macro/function syntax would
-> > look like.
-> 
-> Which is where I thought it was left earlier...? :-)
-> And it's not just what the macro/function syntax will look like,
-> but also how these will play into a more generalized expression
-> handling mechanism.  Defining something one-off now that doesn't
-> fit well into a long term plan is less than ideal.
-> 
-> Yes, I know that is tantamount to requiring the whole, larger
-> picture be solved first.  But Dave is right -- at least an outline
-> of the direction.  Seriously, the lexical problems can form some
-> of the nastiest gotchas if we're not careful from the onset.
-> 
-> > The latter is almost certain to permit the former as a subcase, and
-> > I'd really rather not end up with two different syntaxes for
-> > constants.
-> 
-> Exactly.
-> 
-> > Unfortunately, much as I'd like to get all these extended features
-> > into dtc,
-> 
-> Agreed....
-> 
-> > > Will either of you be attending Linaro Connect or ELC 2012 in
-> February
-> > > by any chance? We could get together and talk this through in
-> person if
-> > > you are...
-> >
-> > Not for me, I'm afraid.
-> 
-> Only if they are in Austin. :-)  Which is to say "Sorry, no."
-> 
-> jdl
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+#define FUNCTION(fname)                                \
+       {                                               \
+               .name = #fname,                         \
+               .groups = fname##_groups,               \
+               .ngroups = ARRAY_SIZE(fname##_groups),  \
+       }
+
+-- 
+Regards,
+Shawn
