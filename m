@@ -1,19 +1,17 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer constants
-Date: Thu, 12 Jan 2012 00:00:56 +1100
-Message-ID: <20120111130056.GK4935@truffala.fritz.box>
-References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
- <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
- <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: RFC: option to toggle dtc checks on and off
+Date: Wed, 11 Jan 2012 13:38:12 +0000
+Message-ID: <20120111133812.GJ3226@page>
+References: <20111028051525.GA7215@truffala.fritz.box>
+ <20120109024129.GH5628@truffala.fritz.box>
+ <E1RkFso-00007g-Ue@jdl.com>
+ <20120111121941.GI4935@truffala.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <20120111121941.GI4935-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,35 +21,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2012 at 01:54:30PM -0800, Stephen Warren wrote:
-> John, David,
+On Wed, Jan 11, 2012 at 11:19:41PM +1100, David Gibson wrote:
+> On Mon, Jan 09, 2012 at 08:07:30AM -0600, Jon Loeliger wrote:
+> > > Jon, I was hoping I'd get some comment on this patch eventually.
+> > 
+> > Sorry/ .
+> > 
+> > > On Fri, Oct 28, 2011 at 04:15:25PM +1100, David Gibson wrote:
+> > > > Here is a draft patch which adds a -C option to dtc, allowing
+> > > > individual semantic checks to be turned on and off.  It also allows
+> > > > indivudual checks to be set as triggering either warnings or errors.
+> > 
+> > Turning checks on and off:  good.
+> > 
+> > > > I have a couple of concerns about it in its present form.  First, the
+> > > > current syntax is that "-C -checkname" disables a check, "-C
+> > > > checkname" turns a check on as a warning and "-C +checkname" turns it
+> > > > on as an error.  I'm not convinced this is a great syntax.
+> > 
+> > Yeah, that's sub-obtimal.
+> > What about using something like "-E checkname" and "-W checkname"?
 > 
-> What can we do to reach consensus on expanding dtc to handle named
-> constants, or in general any future direction to extend the syntax with
-> expressions etc.?
+> Yeah, I though of that too.  Can't remeber why I didn't go that way.
+> Gets a bit weird if you specify both -E foo and -W foo, but "last one
+> wins" is probably still a reasonable way of deciding that.  Any
+> thoughts for an option to turn a check off completely?
 
-Hrm, so, I'm not at all keen to add a named constant syntax without at
-least having an outline of what a future macro/function syntax would
-look like.  The latter is almost certain to permit the former as a
-subcase, and I'd really rather not end up with two different syntaxes
-for constants.
+How about the way that GCC handles warnings: -Wcheckname to enable, 
+-Wno-checkname to disable?
 
-Unfortunately, much as I'd like to get all these extended features
-into dtc, it's not my main job, so I don't have a lot of time to
-ponder the possibilities.
-
-> Will either of you be attending Linaro Connect or ELC 2012 in February
-> by any chance? We could get together and talk this through in person if
-> you are...
-
-Not for me, I'm afraid.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Jamie
