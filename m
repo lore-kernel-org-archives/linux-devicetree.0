@@ -1,72 +1,49 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Wed, 11 Jan 2012 14:58:32 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7FD@HQMAIL01.nvidia.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788508AC65@039-SN2MPN1-013.039d.mgd.msft.net>
- <20120110130511.GA26599@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A74D@HQMAIL01.nvidia.com>
- <20120111230110.GE20968@S2101-09.ap.freescale.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH V2] dtc: Implement -d option to write out a dependency file
+Date: Thu, 12 Jan 2012 10:07:07 +1100
+Message-ID: <20120111230707.GN4935@truffala.fritz.box>
+References: <1326215568-30700-1-git-send-email-swarren@nvidia.com>
+ <20120110233324.GB4935@truffala.fritz.box>
+ <E1RkzBe-00058J-Vo@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120111230110.GE20968@S2101-09.ap.freescale.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Dong Aisheng <dongas86@gmail.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1RkzBe-00058J-Vo-CYoMK+44s/E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote at Wednesday, January 11, 2012 4:01 PM:
-> On Wed, Jan 11, 2012 at 11:41:56AM -0800, Stephen Warren wrote:
-> > Shawn Guo wrote at Tuesday, January 10, 2012 6:05 AM:
-> > > On Tue, Jan 10, 2012 at 08:21:05AM +0000, Dong Aisheng-B29396 wrote:
-> > > > Here what I wonder is that do we need to allow the platform to use a func-name
-> > > > property in their pinmux func node or pinmux group node to specify the name.
-> > >
-> > > I do not see the necessity.
-> > >
-> > > > If it is allowed, then it could be flexible for soc to define their names.
-> > > > If not there may be limitations on their node names since we can only get it from
-> > > > the node name.
-> > >
-> > > To me, the node name is perfectly fine to be used for that purpose.
-> >
-> > I'd prefer if we could use integers over strings if at all possible, but
-> > that does have a dependency on dtc getting a syntax to define named
-> > constants, or the kernel pre-processing the .dts files before passing
-> > them to dtc.
-> >
-> > But if we have to use strings, I will point out that the pin names I
-> > chose for Tegra may not be suitable as DT node names; I don't /think/
-> > the DT node names can contain spaces, but I chose to name the Tegra
-> > pinctrl pins after both their pin name and GPIO name so that it's
-> > easier to correlate the two:
-> >
-> >         PINCTRL_PIN(TEGRA_PIN_SDIO3_CLK_PA6, "SDIO3_CLK PA6"),
-> >
-> > Now, I could change that, but I'd prefer not to.
->
-> Hmm, we are talking about function name and pingroup name instead of
-> individual pin name. In your pinctrl-tegra20.c, they are .name and
-> .groups as below.
+On Wed, Jan 11, 2012 at 08:29:58AM -0600, Jon Loeliger wrote:
+> > On Tue, Jan 10, 2012 at 10:12:48AM -0700, Stephen Warren wrote:
+> > > This will allow callers to rebuild .dtb files when any of the /include/d
+> > > .dtsi files are modified, not just the top-level .dts file.
+> > > 
+> > > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > 
+> > Nice.
+> > 
+> > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> > 
+> > Jon, please apply.
+> 
+> Will do with a patch for the DTC repo.
 
-OK, I guess that's true; my function and group names are just [a-z0-9].
-
-> #define FUNCTION(fname)                                \
->        {                                               \
->                .name = #fname,                         \
->                .groups = fname##_groups,               \
->                .ngroups = ARRAY_SIZE(fname##_groups),  \
->        }
+Uh.. this patch is for the dtc repo, he sent it in addition to the one
+against the kernel version.
 
 -- 
-nvpublic
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
