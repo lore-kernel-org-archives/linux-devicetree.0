@@ -1,37 +1,135 @@
-From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Tue, 10 Jan 2012 18:02:51 -0600
-Message-ID: <4F0CD1AB.5010407@freescale.com>
-References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
- <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
- <4F0B897A.20502@firmworks.com>
- <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
- <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A59C@HQMAIL01.nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A59C-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: [PATCH V2] dtc: Implement -d option to write out a dependency file
+Date: Tue, 10 Jan 2012 17:27:52 -0700
+Message-ID: <1326241672-9168-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Marek <mmarek@suse.cz>
+Cc: Jon Loeliger <jdl@jdl.com>, David Gibson <david@gibson.dropbear.id.au>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote:
-> Shouldn't there be an I2C bus mux driver to handle this? The kernel
-> already has support for bus muxes controller over I2C. 
+This will allow callers to rebuild .dtb files when any of the /include/d
+.dtsi files are modified, not just the top-level .dts file.
 
-Ah, I did not know that.  I'll look into it.  Thanks.
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+Michal, this patch is a dependency for the kbuild changes that use it;
+http://www.spinics.net/lists/linux-kbuild/msg05883.html
+I think it makes sense to apply both this patch, and that patch, to the
+kbuild tree. Do you agree?
 
+v2: Replace fputs/fputc with fprintf
+
+This patch has been blessed for application to upstream dtc. Here, I'm
+simply applying the same thing to the code in the Linux kernel tree,
+resolving some conflicts. See:
+http://lists.ozlabs.org/pipermail/devicetree-discuss/2012-January/011172.html
+
+ scripts/dtc/dtc.c    |   21 ++++++++++++++++++++-
+ scripts/dtc/srcpos.c |    4 ++++
+ scripts/dtc/srcpos.h |    1 +
+ 3 files changed, 25 insertions(+), 1 deletions(-)
+
+diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
+index cbc0193..451c92d 100644
+--- a/scripts/dtc/dtc.c
++++ b/scripts/dtc/dtc.c
+@@ -71,6 +71,7 @@ static void  __attribute__ ((noreturn)) usage(void)
+ 	fprintf(stderr, "\t\t\tasm - assembler source\n");
+ 	fprintf(stderr, "\t-V <output version>\n");
+ 	fprintf(stderr, "\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n", DEFAULT_FDT_VERSION);
++	fprintf(stderr, "\t-d <output dependency file>\n");
+ 	fprintf(stderr, "\t-R <number>\n");
+ 	fprintf(stderr, "\t\tMake space for <number> reserve map entries (relevant for \n\t\tdtb and asm output only)\n");
+ 	fprintf(stderr, "\t-S <bytes>\n");
+@@ -99,6 +100,7 @@ int main(int argc, char *argv[])
+ 	const char *inform = "dts";
+ 	const char *outform = "dts";
+ 	const char *outname = "-";
++	const char *depname = NULL;
+ 	int force = 0, check = 0, sort = 0;
+ 	const char *arg;
+ 	int opt;
+@@ -111,7 +113,8 @@ int main(int argc, char *argv[])
+ 	minsize    = 0;
+ 	padsize    = 0;
+ 
+-	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fcqb:vH:s")) != EOF) {
++	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fcqb:vH:s"))
++			!= EOF) {
+ 		switch (opt) {
+ 		case 'I':
+ 			inform = optarg;
+@@ -125,6 +128,9 @@ int main(int argc, char *argv[])
+ 		case 'V':
+ 			outversion = strtol(optarg, NULL, 0);
+ 			break;
++		case 'd':
++			depname = optarg;
++			break;
+ 		case 'R':
+ 			reservenum = strtol(optarg, NULL, 0);
+ 			break;
+@@ -188,6 +194,14 @@ int main(int argc, char *argv[])
+ 	fprintf(stderr, "DTC: %s->%s  on file \"%s\"\n",
+ 		inform, outform, arg);
+ 
++	if (depname) {
++		depfile = fopen(depname, "w");
++		if (!depfile)
++			die("Couldn't open dependency file %s: %s\n", depname,
++			    strerror(errno));
++		fprintf(depfile, "%s:", outname);
++	}
++
+ 	if (streq(inform, "dts"))
+ 		bi = dt_from_source(arg);
+ 	else if (streq(inform, "fs"))
+@@ -197,6 +211,11 @@ int main(int argc, char *argv[])
+ 	else
+ 		die("Unknown input format \"%s\"\n", inform);
+ 
++	if (depfile) {
++		fputc('\n', depfile);
++		fclose(depfile);
++	}
++
+ 	if (cmdline_boot_cpuid != -1)
+ 		bi->boot_cpuid_phys = cmdline_boot_cpuid;
+ 
+diff --git a/scripts/dtc/srcpos.c b/scripts/dtc/srcpos.c
+index 2dbc874..36a38e9 100644
+--- a/scripts/dtc/srcpos.c
++++ b/scripts/dtc/srcpos.c
+@@ -40,6 +40,7 @@ static char *dirname(const char *path)
+ 	return NULL;
+ }
+ 
++FILE *depfile; /* = NULL */
+ struct srcfile_state *current_srcfile; /* = NULL */
+ 
+ /* Detect infinite include recursion. */
+@@ -67,6 +68,9 @@ FILE *srcfile_relative_open(const char *fname, char **fullnamep)
+ 			    strerror(errno));
+ 	}
+ 
++	if (depfile)
++		fprintf(depfile, " %s", fullname);
++
+ 	if (fullnamep)
+ 		*fullnamep = fullname;
+ 	else
+diff --git a/scripts/dtc/srcpos.h b/scripts/dtc/srcpos.h
+index bd7966e..ce980ca 100644
+--- a/scripts/dtc/srcpos.h
++++ b/scripts/dtc/srcpos.h
+@@ -30,6 +30,7 @@ struct srcfile_state {
+ 	struct srcfile_state *prev;
+ };
+ 
++extern FILE *depfile; /* = NULL */
+ extern struct srcfile_state *current_srcfile; /* = NULL */
+ 
+ FILE *srcfile_relative_open(const char *fname, char **fullnamep);
 -- 
-Timur Tabi
-Linux kernel developer at Freescale
+1.7.0.4
