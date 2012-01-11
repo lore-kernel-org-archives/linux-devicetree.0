@@ -1,95 +1,72 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] video: s3c-fb: Add device tree support
-Date: Wed, 11 Jan 2012 16:41:33 +0530
-Message-ID: <CAJuYYwTAtFxDtnDOrOKLwbi+CKZ7CMPZ5QMvQ2=mR4_36qAYPQ@mail.gmail.com>
-References: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
-	<004401ccd041$c2f66100$48e32300$%han@samsung.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: RFC: option to toggle dtc checks on and off
+Date: Wed, 11 Jan 2012 23:19:41 +1100
+Message-ID: <20120111121941.GI4935@truffala.fritz.box>
+References: <20111028051525.GA7215@truffala.fritz.box>
+ <20120109024129.GH5628@truffala.fritz.box>
+ <E1RkFso-00007g-Ue@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <004401ccd041$c2f66100$48e32300$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1RkFso-00007g-Ue-CYoMK+44s/E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Mr. Han,
+On Mon, Jan 09, 2012 at 08:07:30AM -0600, Jon Loeliger wrote:
+> > Jon, I was hoping I'd get some comment on this patch eventually.
+> 
+> Sorry/ .
+> 
+> > On Fri, Oct 28, 2011 at 04:15:25PM +1100, David Gibson wrote:
+> > > Here is a draft patch which adds a -C option to dtc, allowing
+> > > individual semantic checks to be turned on and off.  It also allows
+> > > indivudual checks to be set as triggering either warnings or errors.
+> 
+> Turning checks on and off:  good.
+> 
+> > > I have a couple of concerns about it in its present form.  First, the
+> > > current syntax is that "-C -checkname" disables a check, "-C
+> > > checkname" turns a check on as a warning and "-C +checkname" turns it
+> > > on as an error.  I'm not convinced this is a great syntax.
+> 
+> Yeah, that's sub-obtimal.
+> What about using something like "-E checkname" and "-W checkname"?
 
-On 11 January 2012 14:46, Jingoo Han <jg1.han@samsung.com> wrote:
-> Hi, Thomas.
->
->> -----Original Message-----
->> From: Thomas Abraham [mailto:thomas.abraham@linaro.org]
->> Sent: Tuesday, January 10, 2012 5:02 AM
->> To: linux-fbdev@vger.kernel.org; devicetree-discuss@lists.ozlabs.org
->> Cc: FlorianSchandinat@gmx.de; grant.likely@secretlab.ca; rob.herring=
-@calxeda.com; linux-arm-
->> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; kgene=
-=2Ekim@samsung.com;
->> jg1.han@samsung.com; patches@linaro.org
->> Subject: [PATCH] video: s3c-fb: Add device tree support
->>
->> Add device tree based discovery support for Samsung's display contro=
-ller.
->>
->> Cc: Grant Likely <grant.likely@secretlab.ca>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->> ---
->> =A0.../devicetree/bindings/fb/samsung-fb.txt =A0 =A0 =A0 =A0 =A0| =A0=
-103 ++++++++++
->> =A0drivers/video/s3c-fb.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 | =A0209 +++++++++++++++++++-
->> =A02 files changed, 304 insertions(+), 8 deletions(-)
->> =A0create mode 100644 Documentation/devicetree/bindings/fb/samsung-f=
-b.txt
->>
->> [...]
->>
->> +- samsung,fimd-bpp: Specifies the bits per pixel. Two values should=
- be
->> + =A0specified in the following order.
->> + =A0 =A0- max-bpp: maximum required bpp for the overlay.
->> + =A0 =A0- default-bpp: bpp supported by the overlay.
->> [...]
->> + =A0 =A0 =A0 =A0 =A0 =A0 fimd-overlay0 {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,fimd-htiming =3D <=
-64 16 48 1024>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,fimd-vtiming =3D <=
-64 16 3 600>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,fimd-bpp =3D <24 3=
-2>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 };
->> +
->> + =A0 =A0 =A0 =A0 =A0 =A0 fimd-overlay1 {
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,fimd-htiming =3D <=
-64 16 48 200>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,fimd-vtiming =3D <=
-64 16 3 100>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,fimd-bpp =3D <16 3=
-2>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 };
->> + =A0 =A0 };
-> In the above 'samsung-fb.txt', the order is defined as max-bpp and de=
-fault-bpp.
-> However, <24 32> and <16 32> seems to be wrong.
-> It should be <32 24> and <32 16>, respectively.
-> Max bpp would be 32bpp in s3c-fb.
+Yeah, I though of that too.  Can't remeber why I didn't go that way.
+Gets a bit weird if you specify both -E foo and -W foo, but "last one
+wins" is probably still a reasonable way of deciding that.  Any
+thoughts for an option to turn a check off completely?
 
-You are right. I will change the order in the documentation as
-default-bpp and then max-bpp. Thanks for correction.
+> > > Second, turning on a check will force on all prerequisite checks for
+> > > it.  Turning a check off will disable all checks for which it is a
+> > > prerequisite.  This seems necessary, since a check can't safely be
+> > > executed without having first checked its prereqs, but this could have
+> > > some very non-obvious effects from the command line.
+> 
+> Hmm...  That seems like maybe a small matter of documentation...?
 
-Regards,
-Thomas.
+I guess.  Might be worth printing a message for each check implicitly
+enabled or disabled, too.
 
->
-> Best regards,
-> Jingoo Han
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
-ng-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
+> And in which order do you apply the cmd line options for their implications?
+> Last one takes precedence?
+
+That was what I had in mind.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
