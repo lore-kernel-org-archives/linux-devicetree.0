@@ -1,110 +1,132 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Thu, 12 Jan 2012 07:56:36 +0800
-Message-ID: <20120111235634.GG20968@S2101-09.ap.freescale.net>
-References: <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
- <20120107135445.GI4790@S2101-09.ap.freescale.net>
- <20120108125156.GB2203@richard-laptop>
- <20120109015625.GE1835@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A6FB@HQMAIL01.nvidia.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: Initial DT clock bindings
+Date: Wed, 11 Jan 2012 15:57:20 -0800
+Message-ID: <CAPnjgZ2siCQq45ug-_HC3RtgULSZVreVL-LWjgHsQ0Ak9qE9Bw@mail.gmail.com>
+References: <1323727236-4811-1-git-send-email-grant.likely@secretlab.ca>
+ <4EE6859F.2040807@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A6FB@HQMAIL01.nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Richard Zhao <richard.zhao@linaro.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, "cjb@laptop.org" <cjb@laptop.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <dongas86@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4EE6859F.2040807-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2012 at 10:37:36AM -0800, Stephen Warren wrote:
-> Shawn Guo wrote at Sunday, January 08, 2012 6:56 PM:
-> > On Sun, Jan 08, 2012 at 08:51:59PM +0800, Richard Zhao wrote:
-> > ...
-> > > > > So, this does appear to be conflating the two things: The definition of
-> > > > > what pins are in a pingroup, and the mux function for a particular
-> > > > > setting of that pingroup. I think you need separate nodes for this.
-> > > > >
-> > > > At least for imx, we do not have mux function setting for pingroup.
-> > > > Instead, it only applies to individual pin.
-> > > I think it depends on function definition of pinmux driver. For the
-> > > imx example patch, it's one-to-one.
-> > 
-> > It should depend on particular imx soc pinmux design rather than
-> > pinmux driver.  If it's always one-to-one case, we do not need
-> > pinmux at all.  Aisheng's patch just did not enumerate all the groups
-> > for given function.  Instead, it puts a couple simple examples there
-> > for demonstration.
-> > 
-> > ...
-> > 
-> > > > > 		uart4func: func@1 {
-> > > > > 			func-name = "uart4";
-> > > > > 			locations = <&bargrp &bazgrp>;
-> > > > > 			mux-value = <6 3>;
-> > > > > 		};
-> > > >
-> > > > I prefer to have function node defined in <board>.dtsi, since it's
-> > > > all about defining phandle to the correct pingroup, which should be
-> > > > decided by board design.
-> > > group and function are one-to-one mapped for imx.
-> > 
-> > Again, it's not the case.
-> > 
-> > > So if you put function
-> > > in board dts, why not put pin group there too?
-> > 
-> > If we put pingroup data in <board>.dts, the data will be likely get
-> > duplicated a lot in different board dts files.  For example, if
-> > imx6q-sabrelite chooses the same pingroup for usdhc3 and usdhc4 as
-> > imx6q-arm2, the pingroup data will be duplicated between imx6q-arm2.dts
-> > and imx6q-sabrelite.dts.
-> > 
-> > On the contrary, putting pingroup data in <soc>.dtsi and having function
-> > node in <board>.dts with phandle pointing to the correct pingroup will
-> > help avoid such data duplication.
-> 
-> Oh, when I wrote in my first mail today that I'd expand on one of my
-> points when responding to Richard Zhao's email, I actually meant when
-> responding to this email. Sorry for the confusion!
-> 
-> So, I don't agree with putting the "combinations" in the SoC .dtsi file,
-> since that could grow it into a huge file that contains a lot of nodes
-> that are used on some board somewhere, but typically not the "current"
-> board that's including it.
-> 
-> However, I do see that there are probably lots of common combinations
-> that get re-used across multiple boards, and you might want a common
-> place to put those definitions so they don't need to be cut/paste
-> everywhere.
-> 
-> So, why not create specific include files (.dtsi files) for each of those
-> combinations? Each include could define one particular common combination
-> of pin mux usage, or perhaps even a set of them if they're commonly used
-> together. Each board file would include the SoC .dtsi file, the relevant
-> set of "pinmux config" .dtsi files, and then include anything custom to
-> that board.
+Hi Grant,
 
-This is somehow overkilled to me.  Doing this will create a big mount
-of .dtsi files to bloat folder arch/arm/boot/dts.  Putting the
-'combinations' in <soc>.dtsi seems perfect fine to me.
+On Mon, Dec 12, 2011 at 2:52 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 12/12/2011 04:00 PM, Grant Likely wrote:
+>> Hi everyone,
+>>
+>> Here's my second posting of initial device tree bindings for clocks. =A0=
+I'm
+>> a lot happier with how this is looking now, and Versatile is pretty much
+>> entirely converted. =A0In fact, the realview, integrator and vexpress pl=
+atforms
+>> are pretty close now too. =A0Just for fun I went and converted Highbank =
+also.
+>
+> Thanks! I'll give it a spin.
+>
+>> There is still stuff to clean up, and I want to add test cases for the n=
+ew
+>> clock framework, but otherwise I think it is pretty complete. =A0There a=
+re
+>> some changes to the binding documentation that you'll want to pay attent=
+ion
+>> to.
+>>
+>> This series is based on v3.2-rc5 plus the of_parse_phandle_args() patches
+>> that I posted a couple of hours ago.
+>>
+> Where? I'm not seeing them on devicetree-discuss.
+>
+> Can you publish this series on your git tree?
+>
+> Rob
 
-Regards,
-Shawn
+I am trying to find this series - I cannot see it on the mailing list.
+Can you please repost it or provide a pointer?
 
-> Remember, that include files simply get merged into the device
-> tree, so you can easily add based definitions (like) regs for e.g. an
-> SDHCI controller in a SoC .dtsi file, the pinmux properties in a .dtsi
-> file specific to SHDCI controller 3, and then e.g. CD/WP/power GPIOs in
-> the final board .dts file.
-> 
-> Following this model, we can initially just put the pinmux config into
-> each board file, then factor it out into new .dtsi files as/when we see
-> duplication. We get to start off simple, then clean up by refactoring as
-> we go.
+Thanks,
+Simon
+
+>
+>>
+>> =A0.../devicetree/bindings/clock/clock-bindings.txt =A0 | =A0114 +++++++=
+++++
+>> =A0.../devicetree/bindings/clock/fixed-clock.txt =A0 =A0 =A0| =A0 21 ++
+>> =A0arch/arm/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 | =A0 =A01 +
+>> =A0arch/arm/boot/dts/highbank.dts =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 32 +++-
+>> =A0arch/arm/boot/dts/testcases/tests-phandle.dtsi =A0 =A0 | =A0 =A02 +
+>> =A0arch/arm/boot/dts/versatile-ab.dts =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
+=A0 79 ++++++++
+>> =A0arch/arm/common/timer-sp.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 | =A0 72 ++++++-
+>> =A0arch/arm/include/asm/hardware/timer-sp.h =A0 =A0 =A0 =A0 =A0 | =A0 =
+=A02 +
+>> =A0arch/arm/mach-highbank/clock.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 19 --
+>> =A0arch/arm/mach-highbank/core.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0| =A0 =A01 -
+>> =A0arch/arm/mach-highbank/highbank.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+| =A0 13 +-
+>> =A0arch/arm/mach-highbank/include/mach/clkdev.h =A0 =A0 =A0 | =A0 11 +
+>> =A0arch/arm/mach-integrator/impd1.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+| =A0 30 +---
+>> =A0arch/arm/mach-integrator/include/mach/clkdev.h =A0 =A0 | =A0 19 --
+>> =A0arch/arm/mach-integrator/integrator_cp.c =A0 =A0 =A0 =A0 =A0 | =A0 21=
+ +--
+>> =A0arch/arm/mach-realview/core.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0| =A0 22 +--
+>> =A0arch/arm/mach-realview/include/mach/clkdev.h =A0 =A0 =A0 | =A0 10 -
+>> =A0arch/arm/mach-versatile/core.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 | =A0 61 +------
+>> =A0arch/arm/mach-versatile/include/mach/clkdev.h =A0 =A0 =A0| =A0 10 -
+>> =A0arch/arm/mach-versatile/versatile_dt.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =
+39 ++++-
+>> =A0arch/arm/mach-vexpress/include/mach/clkdev.h =A0 =A0 =A0 | =A0 =A09 -
+>> =A0arch/arm/mach-zynq/include/mach/clkdev.h =A0 =A0 =A0 =A0 =A0 | =A0 10=
+ -
+>> =A0arch/arm/plat-versatile/clock.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0| =A0151 ++++++++++++++
+>> =A0arch/arm/plat-versatile/include/plat/clock.h =A0 =A0 =A0 | =A0 34 ++++
+>> =A0drivers/clk/clkdev.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 | =A0 =A09 +
+>> =A0drivers/of/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 | =A0 =A06 +
+>> =A0drivers/of/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0| =A0 =A01 +
+>> =A0drivers/of/base.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0| =A0 36 ++++
+>> =A0drivers/of/clock.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 | =A0208 ++++++++++++++++++++
+>> =A0drivers/of/selftest.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0| =A0 29 +++
+>> =A0include/linux/of.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 | =A0 =A03 +
+>> =A0include/linux/of_clk.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 | =A0 41 ++++
+>> =A032 files changed, 893 insertions(+), 223 deletions(-)
+>>
+>> _______________________________________________
+>> devicetree-discuss mailing list
+>> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
