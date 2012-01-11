@@ -1,42 +1,56 @@
-From: Ilya Yanok <yanok@emcraft.com>
-Subject: Re: [PATCH 2/2] mt_ventoux: support for TeeJet Mt.Ventoux board
-Date: Thu, 12 Jan 2012 00:04:14 +0400
-Message-ID: <4F0DEB3E.6060809@emcraft.com>
-References: <1324940912-18164-1-git-send-email-yanok@emcraft.com> <1324940912-18164-3-git-send-email-yanok@emcraft.com> <4EF97A41.7050605@compulab.co.il> <4EFA4E9C.30307@emcraft.com> <4F02CED6.8090709@compulab.co.il>
+From: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: initial device tree support
+Date: Wed, 11 Jan 2012 14:17:19 -0600
+Message-ID: <4F0DEE4F.3080103@freescale.com>
+References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
+ <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
+ <4F0B897A.20502@firmworks.com>
+ <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
+ <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
+ <4F0CD7BC.7080409@freescale.com> <4F0D2F90.8020801@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F02CED6.8090709@compulab.co.il>
-Sender: linux-omap-owner@vger.kernel.org
-To: Igor Grinberg <grinberg@compulab.co.il>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sasha_d@emcraft.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F0D2F90.8020801-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Igor,
+Mitch Bradley wrote:
 
-On 03.01.2012 13:48, Igor Grinberg wrote:
->> I will forward this info to hardware guys and ask about wiring. For now
->> I will leave it as is. Thanks for this information it turned to be some
->> kind of mystery. It would be great if you could give some pointer to the
->> datasheet regarding VDDSHV and DSS.
+> I think that would not be a good design.  Presence and location of EDID 
+> data is not something that a generic I2C driver should know.  It's the 
+> video controller that knows that EDID exists, where it is located 
+> (device ID 0x50 and addresses within that device), and what it means.
+
+But the video driver does not know what I2C *bus* it's on.  I have been unable to come up with a way to obtain the proper i2c_adapter object to use when looking for EDID data.  
+
+>>  That won't work if I have multiple video controllers, since I won't know which EDID data goes with which video controller.  I tried adding a call to i2c_add_driver() in my framebuffer driver, but the I2C probe function was called *after* the framebuffer's probe function, so that doesn't help me.
 > 
-> Well, there is no direct pointer to that information, but
-> I've found these facts:
-> 1) the "Ball Characteristics" tables state that the DSS related pins
->    (and also many others) are powered by the VDDSHV.
-> 2) the estimated power consumption of VDDSHV is the largest after the
->    VDD_CORE, which is typical for DSS, but it is also one of the largest
->    power domains, so I guess this cannot be a valid argument ;-)
-> 3) On the "Voltage domains" diagram, only the VDD_CORE is exposed and
->    DSS is not listed in it, but there are other domains which are not
->    exposed... (this only can exclude the DSS from VDD_CORE, but not
->    absolutely, as datasheets can have mistakes or just not give that piece
->    of information).
-> 
-> Still, it is a guess and not verified information.
+> Then there needs to be some sort of ordering or dependency to ensure 
+> that the I2C driver is activated before the framebuffer driver tries to 
+> use it.
 
-Yes, I understand. Thanks for sharing you thoughts!
+I don't know how to do that, either.
 
-Regards, Ilya.
+> Either way, you need platform-dependent functions to do the switching, 
+> and you need to select the appropriate channel.  Personally, I don't see 
+> the advantage of using the mux device in this case.  It's just adding 
+> complexity with no payback.
 
+I'm always in favor of doing things the simpler way.
+
+
+-- 
+Timur Tabi
+Linux kernel developer at Freescale
