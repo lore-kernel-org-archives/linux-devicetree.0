@@ -1,88 +1,64 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Tue, 10 Jan 2012 20:43:28 -1000
-Message-ID: <4F0D2F90.8020801@firmworks.com>
-References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
- <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
- <4F0B897A.20502@firmworks.com>
- <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
- <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
- <4F0CD7BC.7080409@freescale.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: RE: [PATCH] video: s3c-fb: Add device tree support
+Date: Wed, 11 Jan 2012 18:16:54 +0900
+Message-ID: <004401ccd041$c2f66100$48e32300$%han@samsung.com>
+References: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F0CD7BC.7080409-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/10/2012 2:28 PM, Timur Tabi wrote:
-> Mitch Bradley wrote:
->> It seems to me that having the framebuffer driver handle the EDID
->> "driver" function is exactly the right thing.  The framebuffer driver is
->> the only thing that cares about EDID information.  Given a phandle
->> reference to an I2C interface, the "driver" is just "call the I2C read
->> routine" - plus, in your case, toggling the GPIO pin.
+Hi, Thomas.
+
+> -----Original Message-----
+> From: Thomas Abraham [mailto:thomas.abraham@linaro.org]
+> Sent: Tuesday, January 10, 2012 5:02 AM
+> To: linux-fbdev@vger.kernel.org; devicetree-discuss@lists.ozlabs.org
+> Cc: FlorianSchandinat@gmx.de; grant.likely@secretlab.ca; rob.herring@calxeda.com; linux-arm-
+> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; kgene.kim@samsung.com;
+> jg1.han@samsung.com; patches@linaro.org
+> Subject: [PATCH] video: s3c-fb: Add device tree support
+> 
+> Add device tree based discovery support for Samsung's display controller.
+> 
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  .../devicetree/bindings/fb/samsung-fb.txt          |  103 ++++++++++
+>  drivers/video/s3c-fb.c                             |  209 +++++++++++++++++++-
+>  2 files changed, 304 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/fb/samsung-fb.txt
+> 
+> [...]
 >
-> Do you think I should have the I2C probe function read the EDID data, and then store it in some global variable?
+> +- samsung,fimd-bpp: Specifies the bits per pixel. Two values should be
+> +  specified in the following order.
+> +    - max-bpp: maximum required bpp for the overlay.
+> +    - default-bpp: bpp supported by the overlay.
+> [...]
+> +		fimd-overlay0 {
+> +			samsung,fimd-htiming = <64 16 48 1024>;
+> +			samsung,fimd-vtiming = <64 16 3 600>;
+> +			samsung,fimd-bpp = <24 32>;
+> +		};
+> +
+> +		fimd-overlay1 {
+> +			samsung,fimd-htiming = <64 16 48 200>;
+> +			samsung,fimd-vtiming = <64 16 3 100>;
+> +			samsung,fimd-bpp = <16 32>;
+> +		};
+> +	};
+In the above 'samsung-fb.txt', the order is defined as max-bpp and default-bpp.
+However, <24 32> and <16 32> seems to be wrong.
+It should be <32 24> and <32 16>, respectively.
+Max bpp would be 32bpp in s3c-fb.
 
-I think that would not be a good design.  Presence and location of EDID 
-data is not something that a generic I2C driver should know.  It's the 
-video controller that knows that EDID exists, where it is located 
-(device ID 0x50 and addresses within that device), and what it means.
-
->  That won't work if I have multiple video controllers, since I won't know which EDID data goes with which video controller.  I tried adding a call to i2c_add_driver() in my framebuffer driver, but the I2C probe function was called *after* the framebuffer's probe function, so that doesn't help me.
-
-Then there needs to be some sort of ordering or dependency to ensure 
-that the I2C driver is activated before the framebuffer driver tries to 
-use it.
-
->
->> That GPIO pin thing is annoying, but not sufficiently complex or common
->> that it warrants having a separate EDID driver.  You could define a
->> platform-specific property to tell your framebuffer driver that it needs
->> to do that GPIO thing.  It's a hack, but the GPIO thing is inherently a
->> hack, so there will be some ugliness somewhere as a result.
->
-> I have two platform-specific functions, "enabled_edid" and "disable_edid", that I call before/after calling fb_ddc_read().  This seems to work well, and I already have a mechanism for calling platform-specific functions from the framebuffer driver.
->
-> However, Stephen Warren said I should be using the I2C mux feature instead.
->
-
-I2C mux is a plausible solution, as is your enable/disable thing.  At 
-some level they are equivalent.  I2C mux is a formalization of your 
-solution, in which the mux device's select method must be written to 
-perform the function of your enable/disable edid functions.
-
-Either way, you need platform-dependent functions to do the switching, 
-and you need to select the appropriate channel.  Personally, I don't see 
-the advantage of using the mux device in this case.  It's just adding 
-complexity with no payback.  If there were several channels that needed 
-to be accessed in an interspersed fashion, the mux device would  be much 
-cleaner.  But in this case, there is a single "back channel" that only 
-needs to be accessed once and can subsequently be ignored.  The video 
-driver can grab a lock, call enable_edid(), read out the EDID data into 
-an array, call disable_edid(), release the lock, and that is it.  The 
-other users of that I2C bus can ignore the hidden EDID.
-
-But, as I said, either way is okay.  They are pretty much equivalent at 
-a fundamental level.  You must have the platform-dependent function to 
-do the switching, and you must have a reference to an underlying I2C 
-bus.  If you go the mux route, every other user of that I2C bus must 
-also use the mux device, selecting the other channel.  That propagates 
-the knowledge of this "hidden" EDID ROM farther than it would otherwise 
-have to go.  It probably also means you would want a device node to 
-represent the fact that the I2C bus is muxed, to instantiate the i2c_mux 
-driver.  I think that doing a binding for i2c_mux is a can of worms, 
-because of the need to represent the platform-dependent "how to select" 
-functionality.
+Best regards,
+Jingoo Han
