@@ -1,183 +1,88 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] of: Support CONFIG_CMDLINE_EXTEND config option
-Date: Wed, 11 Jan 2012 16:03:02 +1100
-Message-ID: <1326258182.23910.105.camel@pasglop>
-References: <1326156853-24840-1-git-send-email-dianders@chromium.org>
-	 <4F0CF61F.50705@gmail.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: vexpress: initial device tree support
+Date: Tue, 10 Jan 2012 20:43:28 -1000
+Message-ID: <4F0D2F90.8020801@firmworks.com>
+References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
+ <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
+ <4F0B897A.20502@firmworks.com>
+ <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
+ <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
+ <4F0CD7BC.7080409@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F0CF61F.50705@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Doug Anderson <dianders@chromium.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F0CD7BC.7080409-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2012-01-10 at 20:38 -0600, Rob Herring wrote:
-> On 01/09/2012 06:54 PM, Doug Anderson wrote:
-> > The old logic assumes CMDLINE_FROM_BOOTLOADER vs. CMDLINE_FORCE and
-> > ignores CMDLINE_EXTEND.  Here's the old logic:
-> > 
-> > - CONFIG_CMDLINE_FORCE=true
-> >     CONFIG_CMDLINE
-> > - dt bootargs=non-empty:
-> >     dt bootargs
-> > - dt bootargs=empty, @data is non-empty string
-> >     @data is left unchanged
-> > - dt bootargs=empty, @data is empty string
-> >     CONFIG_CMDLINE (or "" if that's not defined)
-> > 
-> > The old logic would also not honor CONFIG_CMDLINE_FORCE if there was no
-> > "chosen" attribute in the device tree.
-> > 
-> > The new logic is now documented in of_fdt.h and is copied here for
-> > reference:
-> > 
-> > - CONFIG_CMDLINE_FORCE=true
-> >     CONFIG_CMDLINE
-> > - CONFIG_CMDLINE_EXTEND=true
-> >     CONFIG_CMDLINE + dt bootargs (even if dt bootargs are empty)
-> > - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=non-empty:
-> >     dt bootargs
-> > - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is non-empty string
-> >     @data is left unchanged
-> > - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is empty string
-> >     CONFIG_CMDLINE (or "" if that's not defined)
-> >
-So if CONFIG_CMDLINE_EXTEND=true, dt_bootargs is empty, and @data is non
-empty, I want CONFIG_CMDLINE + @data..
+On 1/10/2012 2:28 PM, Timur Tabi wrote:
+> Mitch Bradley wrote:
+>> It seems to me that having the framebuffer driver handle the EDID
+>> "driver" function is exactly the right thing.  The framebuffer driver is
+>> the only thing that cares about EDID information.  Given a phandle
+>> reference to an I2C interface, the "driver" is just "call the I2C read
+>> routine" - plus, in your case, toggling the GPIO pin.
+>
+> Do you think I should have the I2C probe function read the EDID data, and then store it in some global variable?
 
-Now the logic...
+I think that would not be a good design.  Presence and location of EDID 
+data is not something that a generic I2C driver should know.  It's the 
+video controller that knows that EDID exists, where it is located 
+(device ID 0x50 and addresses within that device), and what it means.
 
-> > +/*
-> > + * Convert configs to something easy to use in C code
-> > + */
-> > +#if defined(CONFIG_CMDLINE_FORCE)
-> > +static const int overwrite_incoming_cmdline = 1;
-> > +static const int read_dt_cmdline;
-> > +static const int concat_cmdline;
-> > +#elif defined(CONFIG_CMDLINE_EXTEND)
-> > +static const int overwrite_incoming_cmdline = 1;
-> > +static const int read_dt_cmdline = 1;
-> > +static const int concat_cmdline = 1;
-> > +#else /* CMDLINE_FROM_BOOTLOADER */
-> > +static const int overwrite_incoming_cmdline;
-> > +static const int read_dt_cmdline = 1;
-> > +static const int concat_cmdline;
-> > +#endif
-> > +
-> > +#ifdef CONFIG_CMDLINE
-> > +static const char *config_cmdline = CONFIG_CMDLINE;
-> > +#else
-> > +static const char *config_cmdline = "";
-> > +#endif
-> > +
-> >  int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
-> >  				     int depth, void *data)
-> >  {
-> > @@ -672,28 +695,29 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
-> >  
-> >  	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
-> >  
-> > +	/* Make sure cmdline default is set early to handle case of no chosen */
-> > +	if (data && (overwrite_incoming_cmdline || !((char *)data)[0]))
-> > +		strlcpy(data, config_cmdline, COMMAND_LINE_SIZE);
-> > +
+>  That won't work if I have multiple video controllers, since I won't know which EDID data goes with which video controller.  I tried adding a call to i2c_add_driver() in my framebuffer driver, but the I2C probe function was called *after* the framebuffer's probe function, so that doesn't help me.
 
-That means that if CONFIG_CMDLINE_EXTEND is set, it will overwrite
-whatever is in data. So in my case of user command line coming via
-"data" in the first place, I'm not going to get the expected behaviour.
+Then there needs to be some sort of ordering or dependency to ensure 
+that the I2C driver is activated before the framebuffer driver tries to 
+use it.
 
-You can probably fix that by doing
+>
+>> That GPIO pin thing is annoying, but not sufficiently complex or common
+>> that it warrants having a separate EDID driver.  You could define a
+>> platform-specific property to tell your framebuffer driver that it needs
+>> to do that GPIO thing.  It's a hack, but the GPIO thing is inherently a
+>> hack, so there will be some ugliness somewhere as a result.
+>
+> I have two platform-specific functions, "enabled_edid" and "disable_edid", that I call before/after calling fb_ddc_read().  This seems to work well, and I already have a mechanism for calling platform-specific functions from the framebuffer driver.
+>
+> However, Stephen Warren said I should be using the I2C mux feature instead.
+>
 
-	if (data && ((overwrite_incoming_cmdline && !concat_cmdline) || ...
+I2C mux is a plausible solution, as is your enable/disable thing.  At 
+some level they are equivalent.  I2C mux is a formalization of your 
+solution, in which the mux device's select method must be written to 
+perform the function of your enable/disable edid functions.
 
-But we are losing the point of having those variables instead of
-CONFIG_* in the first place.
+Either way, you need platform-dependent functions to do the switching, 
+and you need to select the appropriate channel.  Personally, I don't see 
+the advantage of using the mux device in this case.  It's just adding 
+complexity with no payback.  If there were several channels that needed 
+to be accessed in an interspersed fashion, the mux device would  be much 
+cleaner.  But in this case, there is a single "back channel" that only 
+needs to be accessed once and can subsequently be ignored.  The video 
+driver can grab a lock, call enable_edid(), read out the EDID data into 
+an array, call disable_edid(), release the lock, and that is it.  The 
+other users of that I2C bus can ignore the hidden EDID.
 
-Additionally...
-
-> >  	if (depth != 1 || !data ||
-> >  	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
-> >  		return 0;
-> >  
-> >  	early_init_dt_check_for_initrd(node);
-> >  
-> > -	/* Retrieve command line */
-> > -	p = of_get_flat_dt_prop(node, "bootargs", &l);
-> > -	if (p != NULL && l > 0)
-> > -		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
-> > -
-> > -	/*
-> > -	 * CONFIG_CMDLINE is meant to be a default in case nothing else
-> > -	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
-> > -	 * is set in which case we override whatever was found earlier.
-> > -	 */
-> > -#ifdef CONFIG_CMDLINE
-> > -#ifndef CONFIG_CMDLINE_FORCE
-> > -	if (!((char *)data)[0])
-> > -#endif
-> > -		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
-> > -#endif /* CONFIG_CMDLINE */
-> > +	/* Retrieve command line unless forcing */
-> > +	if (read_dt_cmdline) {
-> > +		p = of_get_flat_dt_prop(node, "bootargs", &l);
-> > +		if (p != NULL && l > 0) {
-> > +			if (concat_cmdline) {
-> > +				strlcat(data, " ", COMMAND_LINE_SIZE);
-> > +				strlcat(data, p, min_t(int, (int)l,
-> > +						       COMMAND_LINE_SIZE));
-> > +			} else
-> > +				strlcpy(data, p, min_t(int, (int)l,
-> > +						       COMMAND_LINE_SIZE));
-> > +		}
-> > +	}
-
-So if you have CONFIG_CMDLINE_EXTEND, and have a command line in the
-device-tree, you just read it, concat with what's in data but ...
-
-the next node in the device-tree will hit the initial code above again
-which will overwrite what you just did with the content of
-CONFIG_CMDLINE (unless /chosen is the last node in the device-tree,
-probably why it might have worked for you once).
-
-It can still work ... as long as once you've hit the command line above,
-you clear overwrite_incoming_cmdline. You may also clear read_dt_cmdline
-for good measure.
-
-Cheers,
-Ben.
-
-> >  	pr_debug("Command line is: %s\n", (char*)data);
-> >  
-> > diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> > index ed136ad..346d6c7 100644
-> > --- a/include/linux/of_fdt.h
-> > +++ b/include/linux/of_fdt.h
-> > @@ -91,6 +91,25 @@ extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
-> >  extern int of_flat_dt_match(unsigned long node, const char *const *matches);
-> >  extern unsigned long of_get_flat_dt_root(void);
-> >  
-> > +/*
-> > + * early_init_dt_scan_chosen - scan the device tree for ramdisk and bootargs
-> > + *
-> > + * The boot arguments will be placed into the memory pointed to by @data.
-> > + * That memory should be COMMAND_LINE_SIZE big and initialized to be a valid
-> > + * (possibly empty) string.  Logic for what will be in @data after this
-> > + * function finishes:
-> > + *
-> > + * - CONFIG_CMDLINE_FORCE=true
-> > + *     CONFIG_CMDLINE
-> > + * - CONFIG_CMDLINE_EXTEND=true
-> > + *     CONFIG_CMDLINE + dt bootargs (even if dt bootargs are empty)
-> > + * - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=non-empty:
-> > + *     dt bootargs
-> > + * - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is non-empty string
-> > + *     @data is left unchanged
-> > + * - CMDLINE_FROM_BOOTLOADER=true, dt bootargs=empty, @data is empty string
-> > + *     CONFIG_CMDLINE (or "" if that's not defined)
-> > + */
-> >  extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
-> >  				     int depth, void *data);
-> >  extern void early_init_dt_check_for_initrd(unsigned long node);
+But, as I said, either way is okay.  They are pretty much equivalent at 
+a fundamental level.  You must have the platform-dependent function to 
+do the switching, and you must have a reference to an underlying I2C 
+bus.  If you go the mux route, every other user of that I2C bus must 
+also use the mux device, selecting the other channel.  That propagates 
+the knowledge of this "hidden" EDID ROM farther than it would otherwise 
+have to go.  It probably also means you would want a device node to 
+represent the fact that the I2C bus is muxed, to instantiate the i2c_mux 
+driver.  I think that doing a binding for i2c_mux is a can of worms, 
+because of the need to represent the platform-dependent "how to select" 
+functionality.
