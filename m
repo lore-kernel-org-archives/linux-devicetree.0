@@ -1,49 +1,47 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH V2] dtc: Implement -d option to write out a dependency file
-Date: Thu, 12 Jan 2012 10:07:07 +1100
-Message-ID: <20120111230707.GN4935@truffala.fritz.box>
-References: <1326215568-30700-1-git-send-email-swarren@nvidia.com>
- <20120110233324.GB4935@truffala.fritz.box>
- <E1RkzBe-00058J-Vo@jdl.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1RkzBe-00058J-Vo-CYoMK+44s/E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 2/4] ARM: dt: tegra: Modify I2S nodes to match binding
+Date: Wed, 11 Jan 2012 16:09:55 -0700
+Message-ID: <1326323397-23931-2-git-send-email-swarren@nvidia.com>
+References: <1326323397-23931-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1326323397-23931-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2012 at 08:29:58AM -0600, Jon Loeliger wrote:
-> > On Tue, Jan 10, 2012 at 10:12:48AM -0700, Stephen Warren wrote:
-> > > This will allow callers to rebuild .dtb files when any of the /include/d
-> > > .dtsi files are modified, not just the top-level .dts file.
-> > > 
-> > > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > 
-> > Nice.
-> > 
-> > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-> > 
-> > Jon, please apply.
-> 
-> Will do with a patch for the DTC repo.
+Adjust the dma-channel property name to match the binding implemented by
+the driver. The binding was implemented and documented in a
+separate change to the ASoC tree.
 
-Uh.. this patch is for the dtc repo, he sent it in addition to the one
-against the kernel version.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v2: Adjusted property name to match comments during review of ASoC-side
+changes.
+---
+ arch/arm/boot/dts/tegra20.dtsi |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 0a5d092..b8e27a3 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -69,14 +69,14 @@
+ 		compatible = "nvidia,tegra20-i2s";
+ 		reg = <0x70002800 0x200>;
+ 		interrupts = < 0 13 0x04 >;
+-		dma-channel = < 2 >;
++		nvidia,dma-request-selector = < &apbdma 2 >;
+ 	};
+ 
+ 	i2s@70002a00 {
+ 		compatible = "nvidia,tegra20-i2s";
+ 		reg = <0x70002a00 0x200>;
+ 		interrupts = < 0 3 0x04 >;
+-		dma-channel = < 1 >;
++		nvidia,dma-request-selector = < &apbdma 1 >;
+ 	};
+ 
+ 	das@70000c00 {
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.0.4
