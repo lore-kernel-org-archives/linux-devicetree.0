@@ -1,85 +1,88 @@
-From: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [GIT PULL] devicetree changes for v3.3
-Date: Sat, 7 Jan 2012 12:41:25 -0800
-Message-ID: <CA+55aFzWaKBQU-XRYtu0WGq1328nX3hbHDjcn3etOTPsyA=xcw@mail.gmail.com>
-References: <CACxGe6udggDJ2QCRXGKzPwHUwzPsFLPZ1Ogc-Negx9z=UHEntg@mail.gmail.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC v2 4/9] of: add clock providers
+Date: Thu, 12 Jan 2012 12:16:22 -0700
+Message-ID: <CACxGe6u6ujS2TVXBmmTFdvn3e+rpnroXoswRtsw89+Mk9HGHwg@mail.gmail.com>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+ <20120110213338.GD3226@page> <CACxGe6vqb8AZcZb5WMvfmLsUZH7=SEtBrJCSfsFmDYpKX42MzA@mail.gmail.com>
+ <20120112100702.GM3226@page> <CAJOA=zPUA56R=vt9MKyhgdyLU96aD_TweZ6BnJy2w3mCVC4Dzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6udggDJ2QCRXGKzPwHUwzPsFLPZ1Ogc-Negx9z=UHEntg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJOA=zPUA56R=vt9MKyhgdyLU96aD_TweZ6BnJy2w3mCVC4Dzg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Turquette, Mike" <mturquette@ti.com>
+Cc: Jamie Iles <jamie@jamieiles.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 4, 2012 at 11:11 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> w=
+On Thu, Jan 12, 2012 at 11:44 AM, Turquette, Mike <mturquette@ti.com> w=
 rote:
-> Hi Linus,
+> On Thu, Jan 12, 2012 at 2:07 AM, Jamie Iles <jamie@jamieiles.com> wro=
+te:
+>> On Wed, Jan 11, 2012 at 09:46:58PM -0700, Grant Likely wrote:
+>>> On Tue, Jan 10, 2012 at 2:33 PM, Jamie Iles <jamie@jamieiles.com> w=
+rote:
+>>> > On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
+>>> > I'm about to start trying to get this and Mike's common struct cl=
+k
+>>> > patches working on picoxcell, and the one thing I'm not understan=
+ding at
+>>> > the moment is how to handle the tree itself. =A0Currently I was p=
+lanning
+>>> > on iterating over all clocks and finding a named input clock "ref=
+" or
+>>> > "input" perhaps. =A0This would be fine for picoxcell, but I guess=
+ more
+>>> > complicated chips may need something else.
+>>>
+>>> It might be useful to have something like of_irq_init() for setting=
+ up
+>>> initial clocks, but the solution feels inelegant to me. =A0I suspec=
+t
+>>> that there will be end up being intertwined init order dependencies
+>>> between clocks and irqs and other early setup stuff that could be
+>>> handled better. =A0Again, I need to think about this some more. =A0=
+There
+>>> might need to be something like an of_early_probe() call that accep=
+ts
+>>> a match table of compatible values and setup functions with some lo=
+gic
+>>> or data to resolve dependencies. =A0The trick will be to not end up=
+ with
+>>> something complex. =A0I'll need to think about this more...
+>>
+>> Yes, probably not an easy problem to solve, especially for the platf=
+orms
+>> where the parent can change at runtime.
+>>
+>> I wonder if an of_clk_init() could take a platform callback, so that
+>> of_clk_init() goes of and creates a struct clk for each clk in the D=
+T,
+>> then for each registered clock calls a platform specific callback wh=
+ich
+>> returns the parent (if any). =A0It feels like a fairly platform spec=
+ific
+>> problem to me.
 >
-> Please pull the following device tree changes queued up for 3.3.
+> Based on Thomas' feedback I'm removing the requirement for clocks to
+> be registered in-order with clk_init(). =A0Any clock that cannot reso=
+lve
+> it's parent within clk_init() (via the .get_parent callback, or
+> otherwise having .parent statically initialized) will be put into an
+> orphaned clocks list, which will be walked every time a new clock is
+> registered. =A0Hurray for n^2 solutions.
 >
-> There is a signed tag for this pull request: devicetree-for-linus-20120104
->
-> The following changes since commit 805a6af8dba5dfdd35ec35dc52ec0122400b26=
-10:
->
-> =A0Linux 3.2 (2012-01-04 15:55:44 -0800)
->
-> are available in the git repository at:
-> =A0git://git.secretlab.ca/git/linux-2.6 devicetree/merge
+> Does the above help with the of_clk_init problems?
 
-Ok, so I pulled the tags, but only because I noticed that you mentioned it.
+It does.
 
-It would have been much more convenient if you had just named the tag
-in the pull request directly, so that it would have said
+> One final data point: I certainly plan on allowing for statically
+> allocated clocks to live alongside DT clocks. =A0In fact the clock tr=
+ees
+> on OMAP are so large that there is some discussion about having some
+> of the clocks statically allocated and some in DT, but I don't know
+> what that split looks like right now. =A0I don't enjoy the idea of
+> packing 200+ of any entity into a .dts blob.
 
-> are available in the git repository at:
-> =A0git://git.secretlab.ca/git/linux-2.6 devicetree-for-linus-20120104
-
-and then my normal "cut-and-paste the pull request line" JustWorks(tm).
-
-Of course, since you use those ugly tag names, I then end up editing
-the first line so that the shortlog doesn't fill up with random crud,
-so I'd actually prefer for the tag-name to not have that silly date in
-it. The tag itself is dated, so the date information actually does
-exist inside of it - and if I pull the signed tag, it will then exist
-hidden in the merge too (and can be shown using the new "git show
---show-signature" thing):
-
-  commit 02550d61f49266930e674286379d3601006b2893
-  merged tag 'devicetree-for-linus-20120104'
-  gpg: Signature made Wed 04 Jan 2012 11:07:51 PM PST using RSA key ID 760F=
-D901
-  gpg: Good signature from "Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>"
-  Merge: 2d51daaa615e c89810acbcf4
-  Author: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-  Date:   Sat Jan 7 12:18:52 2012 -0800
-
-      Merge tag 'devicetree-for-linus' of git://git.secretlab.ca/git/linux-=
-2.6
-
-      devicetree/next changes queued for v3.3 merge window
-
-      * tag 'devicetree-for-linus-20120104' of
-git://git.secretlab.ca/git/linux-2.6:
-        ARM: prom.h: Fix build error by removing unneeded header file
-        irq: check domain hwirq range for DT translate
-        dt: add empty of_get_node/of_put_node functions
-        of/pdt: fix section mismatch warning
-  ...
-
-so for a *really* nice pull request, I'd actually have preferred the
-tag to just be named "devicetree-for-linus" (and the next time you
-send me a pull request, you just overwrite it - use the "-f" flag for
-git tag to say that you want to force the overwrite).
-
-                      Linus
+I'm okay with that.
