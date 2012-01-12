@@ -1,50 +1,128 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH] USB: EHCI: Don't use NO_IRQ in xilinx ehci driver
-Date: Thu, 12 Jan 2012 10:56:00 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1201121055370.1384-100000@iolanthe.rowland.org>
-References: <1326356777-24135-1-git-send-email-monstr@monstr.eu>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/15] ARM: smp_twd: add device tree support
+Date: Thu, 12 Jan 2012 10:27:21 -0600
+Message-ID: <4F0F09E9.3040101@gmail.com>
+References: <1326287334-1905-1-git-send-email-marc.zyngier@arm.com>
+ <1326287334-1905-5-git-send-email-marc.zyngier@arm.com>
+ <4F0DF9B3.3080804@gmail.com> <4F0EEFEA.1020305@arm.com>
+ <4F0EFF79.8060606@gmail.com> <4F0F03B5.5040300@arm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1326356777-24135-1-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F0F03B5.5040300-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Jan 2012, Michal Simek wrote:
+Adding devicetree-discuss since we are talking bindings...
 
-> Drivers shouldn't use NO_IRQ. This driver is used
-> by Microblaze and PPC. PPC defines NO_IRQ as 0
-> and Microblaze has removed it.
+On 01/12/2012 10:00 AM, Marc Zyngier wrote:
+> On 12/01/12 15:42, Rob Herring wrote:
+>> On 01/12/2012 08:36 AM, Marc Zyngier wrote:
+>>> Hi Rob,
+>>>
+>>> On 11/01/12 21:05, Rob Herring wrote:
+>>>> On 01/11/2012 07:08 AM, Marc Zyngier wrote:
+>>>>> Add bindings to support DT discovery of the ARM Timer Watchdog
+>>>>> (aka TWD). Only the timer side is converted by this patch.
+>>>>>
+>>>>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>>>> Signed-off-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/arm/twd.txt |   29 +++++++++++
+>>>>>  arch/arm/include/asm/smp_twd.h                |    1 +
+>>>>>  arch/arm/kernel/smp_twd.c                     |   68 ++++++++++++++++++++-----
+>>>>>  3 files changed, 85 insertions(+), 13 deletions(-)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/arm/twd.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/arm/twd.txt b/Documentation/devicetree/bindings/arm/twd.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..a9d5587
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/arm/twd.txt
+>>>>> @@ -0,0 +1,29 @@
+>>>>> +* ARM Timer Watchdog
+>>>>> +
+>>>>> +ARM 11MP, Cortex-A5 and Cortex-A9 are often associated with a per-core
+>>>>> +Timer-Watchdog (aka TWD), which provides both a per-cpu local timer
+>>>>> +and watchdog.
+>>>>> +
+>>>>> +The TWD is usually attached to a GIC to deliver its two per-processor
+>>>>> +interrupts.
+>>>>> +
+>>>>> +Main node required properties:
+>>>>> +
+>>>>> +- compatible : Should be one of:
+>>>>> +	"arm,cortex-a9-twd"
+>>>>> +	"arm,cortex-a5-twd"
+>>>>> +	"arm,arm11mp-twd"
+>>>>> +	"arm,smp-twd"
+>>>>> +
+>>>>> +- interrupts : Two interrupts to each core, the first one for the
+>>>>> +  timer, the second one for the watchdog.
+>>>>> +
+>>>>> +- reg : Specify the base address and the size of the TWD.
+>>>>> +
+>>>>> +Example:
+>>>>> +
+>>>>> +	twd@2c000600 {
+>>>>> +		compatible = "arm,arm11mp-twd", "arm,smp-twd";
+>>>>> +		reg = <0x2c000600 0x100>;
+>>>>> +		interrupts = <1 13 0xf01 1 14 0xf01>;
+>>>>> +	};
+>>>>
+>>>> Why not split the watchdog and timer into 2 nodes? It may not matter
+>>>> since there is no driver for the timer. If there was, we would have a
+>>>> problem as you can't match 2 drivers to 1 node.
+>>>
+>>> Don't we hit the opposite problem - two nodes with the same address?
+>>
+>> No, because the timer is at 0x600-0x61f and the watchdog is at
+>> 0x620-0x63f. There's no DT requirement on address range start or size.
+>>
+>> However, the current watchdog driver includes 0x20 in its register
+>> offsets, so changing the base address would require a change to the
+>> driver (but that shouldn't really influence the decision).
 > 
-> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-> CC: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-> CC: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
-> CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> CC: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
->  drivers/usb/host/ehci-xilinx-of.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+> Well, that's what triggered my question. On the other hand, I do not see
+> any in-tree user of the mpcore_wdt driver, so I suppose we could change
+> this register offset without too much harm.
 > 
-> diff --git a/drivers/usb/host/ehci-xilinx-of.c b/drivers/usb/host/ehci-xilinx-of.c
-> index 32793ce..9c2cc46 100644
-> --- a/drivers/usb/host/ehci-xilinx-of.c
-> +++ b/drivers/usb/host/ehci-xilinx-of.c
-> @@ -183,7 +183,7 @@ static int __devinit ehci_hcd_xilinx_of_probe(struct platform_device *op)
->  	}
->  
->  	irq = irq_of_parse_and_map(dn, 0);
-> -	if (irq == NO_IRQ) {
-> +	if (!irq) {
->  		printk(KERN_ERR "%s: irq_of_parse_and_map failed\n", __FILE__);
->  		rv = -EBUSY;
->  		goto err_irq;
+> How about something like:
+> 
+> 	twd-timer@2c000600 {
+> 		compatible = "arm,arm11mp-twd", "arm,smp-twd";
+> 		reg = <0x2c000600 0x20>;
+> 		interrupts = <1 13 0xf01>;
+> 	};
+> 
+> 	twd-watchdog@2c000620 {
+> 		compatible = "arm,arm11mp-wd", "arm,smp-wd";
+> 		reg = <0x2c000620 0x20>;
+> 		interrupts = <1 14 0xf01>;
 
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+BTW, are these really edge triggered?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 	};
+> 
+> I'm not sure about the compatible strings for the watchdog though. Any
+> better idea?
+
+Some reason I did arm,smp-twd and arm-cortex-a9-wdt for highbank.dts
+which wasn't very consistent.
+
+How about *-twd-timer and *-twd-wdt?
+
+Probably we should drop the generic "arm-smp-*" versions.
+
+Rob
