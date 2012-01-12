@@ -1,22 +1,18 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Wed, 11 Jan 2012 14:47:27 -1000
-Message-ID: <4F0E2D9F.5080909@firmworks.com>
-References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
- <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
- <4F0B897A.20502@firmworks.com>
- <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
- <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
- <4F0CD7BC.7080409@freescale.com> <4F0D2F90.8020801@firmworks.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A770@HQMAIL01.nvidia.com>
- <4F0E1843.7030207@firmworks.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A848@HQMAIL01.nvidia.com>
- <4F0E2B95.7070402@firmworks.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: RFC: option to toggle dtc checks on and off
+Date: Thu, 12 Jan 2012 14:17:14 +1100
+Message-ID: <20120112031714.GQ4935@truffala.fritz.box>
+References: <20111028051525.GA7215@truffala.fritz.box>
+ <20120109024129.GH5628@truffala.fritz.box>
+ <E1RkFso-00007g-Ue@jdl.com>
+ <20120111121941.GI4935@truffala.fritz.box>
+ <20120111133812.GJ3226@page>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F0E2B95.7070402-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120111133812.GJ3226@page>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,65 +22,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-More nits picked below ...
+On Wed, Jan 11, 2012 at 01:38:12PM +0000, Jamie Iles wrote:
+> On Wed, Jan 11, 2012 at 11:19:41PM +1100, David Gibson wrote:
+> > On Mon, Jan 09, 2012 at 08:07:30AM -0600, Jon Loeliger wrote:
+> > > > Jon, I was hoping I'd get some comment on this patch eventually.
+> > > 
+> > > Sorry/ .
+> > > 
+> > > > On Fri, Oct 28, 2011 at 04:15:25PM +1100, David Gibson wrote:
+> > > > > Here is a draft patch which adds a -C option to dtc, allowing
+> > > > > individual semantic checks to be turned on and off.  It also allows
+> > > > > indivudual checks to be set as triggering either warnings or errors.
+> > > 
+> > > Turning checks on and off:  good.
+> > > 
+> > > > > I have a couple of concerns about it in its present form.  First, the
+> > > > > current syntax is that "-C -checkname" disables a check, "-C
+> > > > > checkname" turns a check on as a warning and "-C +checkname" turns it
+> > > > > on as an error.  I'm not convinced this is a great syntax.
+> > > 
+> > > Yeah, that's sub-obtimal.
+> > > What about using something like "-E checkname" and "-W checkname"?
+> > 
+> > Yeah, I though of that too.  Can't remeber why I didn't go that way.
+> > Gets a bit weird if you specify both -E foo and -W foo, but "last one
+> > wins" is probably still a reasonable way of deciding that.  Any
+> > thoughts for an option to turn a check off completely?
+> 
+> How about the way that GCC handles warnings: -Wcheckname to enable, 
+> -Wno-checkname to disable?
 
+Perhaps.  What should the semantics of -Wno-foo be when "foo" is an
+error level check by default?
 
- >
- > i2c1: i2c@7000c000 {
- >      #address-cells =<1>;
- >      #size-cells =<0>;
- >      compatible = "nvidia,tegra20-i2c";
- >      reg =<0x7000C000 0x100>;
- >      interrupts =<0 38 0x04>;
- > };
- >
- > mux@0 {
-
-The name "i2cmux" might be more evocative.
-
- >      #address-cells =<1>;
- >      #size-cells =<0>;
- >      compatible = "nvidia,tegra20-i2c";
- >      parent-bus =<&i2c1>;
- >      gpios =<&gpio 100 0&gpio 101 0>;
- >      gpio-values-idle =<0>; /* bitmask of values */
- >
- >      bus@0 {
-
-Since this implements the i2c bus abstraction, the name should be "i2c"
-
- >          #address-cells =<1>;
- >          #size-cells =<0>;
- >          /*
- >           * The GPIO values to set as a bitmask.
- >           * Formatted like gpio-i2cmux.c's mux->data.values[i].
- >           * Or name this gpio-values?
- >           */
- >          reg =<1>;
- >
- >          wm8903: wm8903@1a {
- >              compatible = "wlf,wm8903";
- >              reg =<0x1a>;
- >              ...
- >          };
- >      };
- >
- >      bus@1 {
-
-Ditto, name should be "i2c"
-
- >          #address-cells =<1>;
- >          #size-cells =<0>;
- >          reg =<2>;
- >
- >          light-sensor@44 {
- >              compatible = "isil,isl29018";
- >              reg =<0x44>;
- >              ...
- >          };
- >      };
- > };
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
