@@ -1,69 +1,69 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Thu, 12 Jan 2012 13:10:04 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17801D1DE3@HQMAIL01.nvidia.com>
-References: <1324402840-32451-3-git-send-email-b29396@freescale.com>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
- <20120107135445.GI4790@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A6E5@HQMAIL01.nvidia.com>
- <20120112033941.GH20968@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF17801D1DCC@HQMAIL01.nvidia.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 7/9] arm/tegra: emc: device tree bindings
+Date: Thu, 12 Jan 2012 13:48:10 -0800
+Message-ID: <CAPnjgZ2vLiNWTweDduMgpEF-Jeucszvef20p3abv0kk6Pj3XTA@mail.gmail.com>
+References: <1324599468-12845-1-git-send-email-olof@lixom.net>
+	<1324599468-12845-8-git-send-email-olof@lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17801D1DCC@HQMAIL01.nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Richard Zhao <richard.zhao@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1324599468-12845-8-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote at Thursday, January 12, 2012 1:47 PM:
-> Shawn Guo wrote at Wednesday, January 11, 2012 8:40 PM:
-> > On Wed, Jan 11, 2012 at 10:17:40AM -0800, Stephen Warren wrote:
-> ...
-> > > So, my position is that:
-> > >
-> > > * Something (either the pinctrl driver, or the SoC .dtsi file) should
-> > > enumerate all available muxable entities that exist in the SoC (pins for
-> > > IMX, groups for Tegra).
-> >
-> > Yes, we enumerate all available pins in pinctrl driver for imx.
-> >
-> > > * Something (either the pinctrl driver, or the SoC .dtsi file) should
-> > > enumerate all the available functions that can be assigned to a muxable
-> > > entity.
-> >
-> > In theory, yes.  But I hope you would agree we do not need to
-> > necessarily do this for case like imx.
-> 
-> Discussing just the Linux driver internals right now; ignoring device
-> tree:
-> 
-> Pinctrl won't let you use a function on a pin/group if that function
-> isn't enumerated and doesn't list that pin/group as a valid location
-> for that function. Given that, I'm not sure how you can avoid enumerating
-> all functions and their legal locations?
+Hi Olof,
 
-Or you can cheat a little:
+On Thu, Dec 22, 2011 at 4:17 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> Device tree bindings for the EMC tables on tegra.
+>
+> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> ---
+> =A0.../devicetree/bindings/arm/tegra/emc.txt =A0 =A0 =A0 =A0 =A0| =A0=
+100 ++++++++++++++++++++
+> =A0arch/arm/boot/dts/tegra20.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 | =A0 =A07 ++
+> =A02 files changed, 107 insertions(+), 0 deletions(-)
+> =A0create mode 100644 Documentation/devicetree/bindings/arm/tegra/emc=
+=2Etxt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt b/Do=
+cumentation/devicetree/bindings/arm/tegra/emc.txt
+> new file mode 100644
+> index 0000000..09335f8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/tegra/emc.txt
+> @@ -0,0 +1,100 @@
+> +Embedded Memory Controller
+> +
+> +Properties:
+> +- name : Should be emc
+> +- #address-cells : Should be 1
+> +- #size-cells : Should be 0
+> +- compatible : Should contain "nvidia,tegra20-emc".
+> +- reg : Offset and length of the register set for the device
+> +- nvidia,use-ram-code : If present, the sub-nodes will be addressed
+> + =A0and chosen using the ramcode board selector. If omitted, only on=
+e
+> + =A0set of tables can be present and said tables will be used
+> + =A0irrespective of ram-code configuration.
+> +
+> +Child device nodes describe the memory settings for different config=
+urations and clock rates.
+> +
+> +Example:
+> +
+> + =A0 =A0 =A0 emc@7000f400 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D < 1 >;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D < 0 >;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "nvidia,tegra20-emc";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x7000f4000 0x200>;
 
-Define 8 functions named func0, func1, func2, ... func7. Tell pinctrl
-that each function is a legal option on every pin. That way, you've
-enumerated all the valid functions, and so satisfied pinctrl's error-
-checking, yet kept a tiny list of functions. That'd have the bonus side-
-effect that the function IDs map very directly to what I assume is in
-your HW manuals too!
+Minor point - that should be 0x7000f400.
 
-I wonder if I shouldn't have done that for Tegra. The main reason I didn't
-is because the old Tegra pinmux driver didn't.
-
--- 
-nvpublic
+Regards,
+SImon
