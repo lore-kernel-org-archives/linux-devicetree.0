@@ -1,69 +1,75 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 7/9] arm/tegra: emc: device tree bindings
-Date: Thu, 12 Jan 2012 13:48:10 -0800
-Message-ID: <CAPnjgZ2vLiNWTweDduMgpEF-Jeucszvef20p3abv0kk6Pj3XTA@mail.gmail.com>
-References: <1324599468-12845-1-git-send-email-olof@lixom.net>
-	<1324599468-12845-8-git-send-email-olof@lixom.net>
+From: Kevin Hilman <khilman@ti.com>
+Subject: Re: [PATCH V6 4/7] cpufreq: add clk-reg cpufreq driver
+Date: Thu, 12 Jan 2012 14:52:20 -0800
+Message-ID: <874nw0sfdn.fsf@ti.com>
+References: <1325213769-11752-1-git-send-email-richard.zhao@linaro.org>
+	<1325213769-11752-5-git-send-email-richard.zhao@linaro.org>
+	<87aa5t25ad.fsf@ti.com>
+	<20120112082300.GF2414@b20223-02.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1324599468-12845-8-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20120112082300.GF2414@b20223-02.ap.freescale.net> (Richard
+	Zhao's message of "Thu, 12 Jan 2012 16:23:01 +0800")
+Sender: cpufreq-owner@vger.kernel.org
+To: Richard Zhao <richard.zhao@freescale.com>
+Cc: linux@arm.linux.org.uk, arnd@arndb.de, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, linaro-dev@lists.linaro.org, rob.herring@calxeda.com, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+Richard Zhao <richard.zhao@freescale.com> writes:
 
-On Thu, Dec 22, 2011 at 4:17 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> Device tree bindings for the EMC tables on tegra.
+> On Wed, Jan 11, 2012 at 03:22:34PM -0800, Kevin Hilman wrote:
+>> Richard Zhao <richard.zhao@linaro.org> writes:
+>> 
+>> > The driver get cpu operation point table from device tree cpu0 node,
+>> 
+>> Since we already have an existing OPP infrastructure in the kernel,
+>> seems like  this driver should get OPPs by asking the OPP layer.
 >
-> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
-> =A0.../devicetree/bindings/arm/tegra/emc.txt =A0 =A0 =A0 =A0 =A0| =A0=
-100 ++++++++++++++++++++
-> =A0arch/arm/boot/dts/tegra20.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | =A0 =A07 ++
-> =A02 files changed, 107 insertions(+), 0 deletions(-)
-> =A0create mode 100644 Documentation/devicetree/bindings/arm/tegra/emc=
-=2Etxt
->
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt b/Do=
-cumentation/devicetree/bindings/arm/tegra/emc.txt
-> new file mode 100644
-> index 0000000..09335f8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/tegra/emc.txt
-> @@ -0,0 +1,100 @@
-> +Embedded Memory Controller
-> +
-> +Properties:
-> +- name : Should be emc
-> +- #address-cells : Should be 1
-> +- #size-cells : Should be 0
-> +- compatible : Should contain "nvidia,tegra20-emc".
-> +- reg : Offset and length of the register set for the device
-> +- nvidia,use-ram-code : If present, the sub-nodes will be addressed
-> + =A0and chosen using the ramcode board selector. If omitted, only on=
-e
-> + =A0set of tables can be present and said tables will be used
-> + =A0irrespective of ram-code configuration.
-> +
-> +Child device nodes describe the memory settings for different config=
-urations and clock rates.
-> +
-> +Example:
-> +
-> + =A0 =A0 =A0 emc@7000f400 {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D < 1 >;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D < 0 >;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "nvidia,tegra20-emc";
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x7000f4000 0x200>;
+> When I created the patch, there's only omap cpufreq driver using
+> OPP. If it depends on OPP, it might prevent users who have not
+> adopted OPP from using the driver.
 
-Minor point - that should be 0x7000f400.
+Then they should probably adopt to OPP, since it was created exactly for
+this purpose.   What this patch creates is an alternate way of adding
+OPPs using the device tree.  
 
-Regards,
-SImon
+The point is using a static list of OPPs from boot time simply doesn't
+work.  You need the ability to dynamically add/remove OPPs at runtime to
+adjust for various operating conditons (or HW bugs) as well as for
+thermal considerations.   The OPP layer provides this.
+
+A generic driver should get available OPPs using the OPP layer.
+
+The DT can certainly be used at boot time to create the initial list of
+OPPs, but as the list of available OPPs changes at runtime, the only way
+to track that is to use the OPP layer.
+
+
+>> This approach assumes the OPP layer is static at boot time and not
+>> changing, however that's not the case in practice.
+>> 
+>> The OPP layer could be extended to read boot-time OPPs from DT if
+>> desired, but since the OPPs are also populated/enabled/disabled
+>> dynamicaly on some platforms (e.g. OMAP), I think the any generic
+>> CPUfreq driver should use the OPP interface and not DT directly.
+>> 
+>> > and adjusts operating points using clk and regulator APIs.
+>> 
+>> For a generic driver, the regulator used should also be configurable.
+>> 
+>> For example, this driver currently assumes a regulator named "cpu" for
+>> all instances.   If you had separate clusters with independent voltage
+>> control, you'd likely have a separate regulator for each cluster.
+> The driver, for now, assumes all cpu cores uses the same clk and voltage.
+> It's correct for most arm multi-core SoC.
+
+Sure, but a "generic" driver such as the one proposed is not just for
+ARM, and not just for today's SoCs.  
+flexible enough
+
+> Do you have real case to need different voltage/clk?
+
+Sure, any system with independently scalable CPUs/clusters.
+
+Kevin
