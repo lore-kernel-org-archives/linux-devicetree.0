@@ -1,75 +1,63 @@
-From: Kevin Hilman <khilman@ti.com>
-Subject: Re: [PATCH V6 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Thu, 12 Jan 2012 14:52:20 -0800
-Message-ID: <874nw0sfdn.fsf@ti.com>
-References: <1325213769-11752-1-git-send-email-richard.zhao@linaro.org>
-	<1325213769-11752-5-git-send-email-richard.zhao@linaro.org>
-	<87aa5t25ad.fsf@ti.com>
-	<20120112082300.GF2414@b20223-02.ap.freescale.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH V2] dtc: Implement -d option to write out a dependency file
+Date: Fri, 13 Jan 2012 10:11:36 +1100
+Message-ID: <20120112231136.GY4935@truffala.fritz.box>
+References: <1326215568-30700-1-git-send-email-swarren@nvidia.com>
+ <20120110233324.GB4935@truffala.fritz.box>
+ <E1RkzBe-00058J-Vo@jdl.com>
+ <20120111230707.GN4935@truffala.fritz.box>
+ <E1RlKdQ-00037v-IU@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <20120112082300.GF2414@b20223-02.ap.freescale.net> (Richard
-	Zhao's message of "Thu, 12 Jan 2012 16:23:01 +0800")
-Sender: cpufreq-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@freescale.com>
-Cc: linux@arm.linux.org.uk, arnd@arndb.de, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, rdunlap@xenotime.net, eric.miao@linaro.org, kernel@pengutronix.de, jamie@jamieiles.com, davej@redhat.com, linaro-dev@lists.linaro.org, rob.herring@calxeda.com, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1RlKdQ-00037v-IU-CYoMK+44s/E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Richard Zhao <richard.zhao@freescale.com> writes:
+On Thu, Jan 12, 2012 at 07:24:04AM -0600, Jon Loeliger wrote:
+> > On Wed, Jan 11, 2012 at 08:29:58AM -0600, Jon Loeliger wrote:
+> > > > On Tue, Jan 10, 2012 at 10:12:48AM -0700, Stephen Warren wrote:
+> > > > > This will allow callers to rebuild .dtb files when any of the /include/d
+> > > > > .dtsi files are modified, not just the top-level .dts file.
+> > > > > 
+> > > > > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > > 
+> > > > Nice.
+> > > > 
+> > > > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> > > > 
+> > > > Jon, please apply.
+> > > 
+> > > Will do with a patch for the DTC repo.
+> > 
+> > Uh.. this patch is for the dtc repo, he sent it in addition to the one
+> > against the kernel version.
+> 
+> I did not receive this patch for the DTC repo.
+> I have this patch for the kernel only on the arm list.
+> 
+> I'm not saying he didn't do the worl, nor am I saying he
+> didn't post such a past.  I'm saying *I* don't have it!
 
-> On Wed, Jan 11, 2012 at 03:22:34PM -0800, Kevin Hilman wrote:
->> Richard Zhao <richard.zhao@linaro.org> writes:
->> 
->> > The driver get cpu operation point table from device tree cpu0 node,
->> 
->> Since we already have an existing OPP infrastructure in the kernel,
->> seems like  this driver should get OPPs by asking the OPP layer.
->
-> When I created the patch, there's only omap cpufreq driver using
-> OPP. If it depends on OPP, it might prevent users who have not
-> adopted OPP from using the driver.
+Um.. so, the mail I was replying to you above, was for the dtc repo
+and you were on the recipient list.  Given the frequency with which I
+need to resend my own patches, I'm beginning to wonder if your mail
+system is dropping things, Jon..
 
-Then they should probably adopt to OPP, since it was created exactly for
-this purpose.   What this patch creates is an alternate way of adding
-OPPs using the device tree.  
-
-The point is using a static list of OPPs from boot time simply doesn't
-work.  You need the ability to dynamically add/remove OPPs at runtime to
-adjust for various operating conditons (or HW bugs) as well as for
-thermal considerations.   The OPP layer provides this.
-
-A generic driver should get available OPPs using the OPP layer.
-
-The DT can certainly be used at boot time to create the initial list of
-OPPs, but as the list of available OPPs changes at runtime, the only way
-to track that is to use the OPP layer.
-
-
->> This approach assumes the OPP layer is static at boot time and not
->> changing, however that's not the case in practice.
->> 
->> The OPP layer could be extended to read boot-time OPPs from DT if
->> desired, but since the OPPs are also populated/enabled/disabled
->> dynamicaly on some platforms (e.g. OMAP), I think the any generic
->> CPUfreq driver should use the OPP interface and not DT directly.
->> 
->> > and adjusts operating points using clk and regulator APIs.
->> 
->> For a generic driver, the regulator used should also be configurable.
->> 
->> For example, this driver currently assumes a regulator named "cpu" for
->> all instances.   If you had separate clusters with independent voltage
->> control, you'd likely have a separate regulator for each cluster.
-> The driver, for now, assumes all cpu cores uses the same clk and voltage.
-> It's correct for most arm multi-core SoC.
-
-Sure, but a "generic" driver such as the one proposed is not just for
-ARM, and not just for today's SoCs.  
-flexible enough
-
-> Do you have real case to need different voltage/clk?
-
-Sure, any system with independently scalable CPUs/clusters.
-
-Kevin
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
