@@ -1,8 +1,8 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 13/20] tegra: usb: fdt: Add USB definitions for Tegra2
- Seaboard
-Date: Wed, 11 Jan 2012 20:33:02 -0800
-Message-ID: <1326342789-5781-14-git-send-email-sjg@chromium.org>
+Subject: [PATCH v4 12/20] tegra: usb: fdt: Add additional device tree
+ definitions for USB ports
+Date: Wed, 11 Jan 2012 20:33:01 -0800
+Message-ID: <1326342789-5781-13-git-send-email-sjg@chromium.org>
 References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,50 +22,47 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Remy Bohmer <linux-SYUVB/VFmdasTnJN9+BGXg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We set up two USB ports, one of which can be host or device.
-For some reason the kernel version does enable both ports.
+This adds clock references to the USB part of the device tree for U-Boot.
+
+The USB timing information may vary between boards sometimes, but for
+now we hard-code it in C. This is because all current T2x boards use
+the same values, we will deal with T3x later and we first need to agree
+on the format for this timing information in the fdt and may in fact
+decide that it has no place there.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-Changes in v2:
-- Use "okay" instead of "ok" for fdt node status
-- Remove 0x from fdt aliases
 
-Changes in v3:
-- Remove "okay" from nodes since this is the default anyway
-- Fix device tree indenting with tabs instead of spaces
-- Disable USB2 which is not used on Seaboard
+ arch/arm/dts/tegra20.dtsi |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
- board/nvidia/dts/tegra2-seaboard.dts |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
-
-diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
-index dde5d03..7a4ecae 100644
---- a/board/nvidia/dts/tegra2-seaboard.dts
-+++ b/board/nvidia/dts/tegra2-seaboard.dts
-@@ -11,6 +11,12 @@
- 		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk1p3 rw rootwait";
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+index 68eae12..ca7b523 100644
+--- a/arch/arm/dts/tegra20.dtsi
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -176,6 +176,7 @@
+ 		reg = <0xc5000000 0x4000>;
+ 		interrupts = < 52 >;
+ 		phy_type = "utmi";
++		clocks = <&periph_clk 22>;	// PERIPH_ID_USBD
  	};
  
-+	aliases {
-+		/* This defines the order of our USB ports */
-+		usb0 = "/usb@c5008000";
-+		usb1 = "/usb@c5000000";
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = < 0x00000000 0x40000000 >;
-@@ -32,5 +38,10 @@
- 
- 	usb@c5000000 {
- 		nvidia,vbus-gpio = <&gpio 24 0>; /* PD0 */
-+		support-host-mode;
-+	};
-+
-+	usb@c5004000 {
-+		status = "disabled";
+ 	usb@c5004000 {
+@@ -183,6 +184,7 @@
+ 		reg = <0xc5004000 0x4000>;
+ 		interrupts = < 53 >;
+ 		phy_type = "ulpi";
++		clocks = <&periph_clk 58>;	// PERIPH_ID_USB2
  	};
+ 
+ 	usb@c5008000 {
+@@ -190,6 +192,7 @@
+ 		reg = <0xc5008000 0x4000>;
+ 		interrupts = < 129 >;
+ 		phy_type = "utmi";
++		clocks = <&periph_clk 59>;	// PERIPH_ID_USB3
+ 	};
+ 
  };
 -- 
 1.7.7.3
