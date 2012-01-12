@@ -1,21 +1,15 @@
-From: Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>
-Subject: Re: [PATCH] ARM: vexpress: initial device tree support
-Date: Thu, 12 Jan 2012 12:24:06 +0000
-Message-ID: <20120112122406.GG7180@jl-vm1.vm.bytemark.co.uk>
-References: <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
- <4F0B897A.20502@firmworks.com>
- <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
- <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
- <4F0CD7BC.7080409@freescale.com> <4F0D2F90.8020801@firmworks.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A770@HQMAIL01.nvidia.com>
- <4F0DF1E6.40602@freescale.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A777@HQMAIL01.nvidia.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH V2] dtc: Implement -d option to write out a dependency file
+Date: Thu, 12 Jan 2012 07:24:04 -0600
+Message-ID: <E1RlKdQ-00037v-IU@jdl.com>
+References: <1326215568-30700-1-git-send-email-swarren@nvidia.com>
+ <20120110233324.GB4935@truffala.fritz.box> <E1RkzBe-00058J-Vo@jdl.com>
+ <20120111230707.GN4935@truffala.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A777-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+In-reply-to: <20120111230707.GN4935-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,58 +19,34 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: =?utf-8?B?UGF3ZcWC?= Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote:
-> Timur Tabi wrote at Wednesday, January 11, 2012 1:33 PM:
-> > Stephen Warren wrote:
-> > > Well, the EDID needs to be read on every hotplug event, so it's certainly
-> > > not a one-time thing.
+> On Wed, Jan 11, 2012 at 08:29:58AM -0600, Jon Loeliger wrote:
+> > > On Tue, Jan 10, 2012 at 10:12:48AM -0700, Stephen Warren wrote:
+> > > > This will allow callers to rebuild .dtb files when any of the /include/d
+> > > > .dtsi files are modified, not just the top-level .dts file.
+> > > > 
+> > > > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > > 
+> > > Nice.
+> > > 
+> > > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> > > 
+> > > Jon, please apply.
 > > 
-> > What is the hotplug event that triggers an EDID read?
+> > Will do with a patch for the DTC repo.
 > 
-> For monitors attached to user-accessible connectors, whenever the user
-> physically plugs in a new monitor, you need to read the EDID since it
-> could be a new monitor. DVI and HDMI have explicit hotplug detect lines
-> to trigger this. I'm not sure how it works for VGA; perhaps you have to
-> manually reprobe.
+> Uh.. this patch is for the dtc repo, he sent it in addition to the one
+> against the kernel version.
 
-For VGA, some ports have load sensors (same with S-video, TV out).
-It's good if those are exposed in the driver :)
+I did not receive this patch for the DTC repo.
+I have this patch for the kernel only on the arm list.
 
-Also if you detect DDC1 signal from an old monitor, you'll easily know
-when it stops.  Many send DDC1 when nothing is received over DDC2
-after a timeout (I vaguely recall 2 seconds or 120 vsyncs.)
+I'm not saying he didn't do the worl, nor am I saying he
+didn't post such a past.  I'm saying *I* don't have it!
 
-If the VGA monitor responds on DDC2 at all (note that surprisingly
-many VGA cables are missing the wires so it's not a given), you can
-repeatedly probe it with a short command, not even reading anything,
-just an address probe.  Or you can read a short range of bytes to
-verify it's the same model and serial number.  Be careful in both
-cases to prevent contact bounce from turning into an EDID write
-though.
+Request 3: Please send this patch to *me* for the DTC repo! :-)
 
-On VGA (or DVI-A sometimes) the fact they switch between DDC1 and DDC2
-on detecting the I2C clock transitions is, I suspect, why some video
-drivers think they need to wiggle the GPIOs first before sending the
-EDID transactions.
-
-> Of course, if this thread is talking about built-in LCD displays where
-> the connectivity is fixed, this is a non-issue, but it's still a relevant
-> general design discussion; hopefully whatever solution that's picked would
-> work for DVI/HDMI even if you're dealing with LCDs right now.
-
-Userspace occasionally wants to talk over DDC to DVI/HDMI as well.
-Either to retrieve extended EDID, or to send/receive DDC/CI commands,
-or to do its own version of the VGA monitor change detection described
-above.
-
-For all the above reasons I think the DDC/EDID support in the kernel
-should be moving gently towards a (very small) DDC/EDID mini-subsystem
-shared by video drivers.  I.e. it should be exposed as a well-known
-I2C bus name, and if it's GPIO bit-banging I2C, that should be exposed
-as well.
-
--- Jamie
+jdl
