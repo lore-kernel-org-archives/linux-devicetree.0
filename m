@@ -1,86 +1,60 @@
-From: Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Thu, 12 Jan 2012 07:45:30 +0000
-Message-ID: <7FE21149F4667147B645348EC605788508E6E3@039-SN2MPN1-013.039d.mgd.msft.net>
-References: <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
- <20120107135445.GI4790@S2101-09.ap.freescale.net>
- <20120108125156.GB2203@richard-laptop>
- <20120109015625.GE1835@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A6FB@HQMAIL01.nvidia.com>
- <20120111235634.GG20968@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A83A@HQMAIL01.nvidia.com>
- <20120112040345.GA21802@S2101-09.ap.freescale.net>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: Re: [PATCH V6 4/7] cpufreq: add clk-reg cpufreq driver
+Date: Thu, 12 Jan 2012 16:23:01 +0800
+Message-ID: <20120112082300.GF2414@b20223-02.ap.freescale.net>
+References: <1325213769-11752-1-git-send-email-richard.zhao@linaro.org>
+ <1325213769-11752-5-git-send-email-richard.zhao@linaro.org>
+ <87aa5t25ad.fsf@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120112040345.GA21802-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87aa5t25ad.fsf@ti.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Kevin Hilman <khilman@ti.com>
+Cc: Richard Zhao <richard.zhao@linaro.org>, linux@arm.linux.org.uk, arnd@arndb.de, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, rdunlap@xenotime.net, eric.miao@linaro.org, rob.herring@calxeda.com, kernel@pengutronix.de, davej@redhat.com, jamie@jamieiles.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
-> Sent: Thursday, January 12, 2012 12:04 PM
-> To: Stephen Warren
-> Cc: Richard Zhao; linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org; s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; Simon
-> Glass (sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org); cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org; Dong Aisheng-B29396; devicetree-
-> discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Dong Aisheng
-> Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
-> mappings
-> Importance: High
+On Wed, Jan 11, 2012 at 03:22:34PM -0800, Kevin Hilman wrote:
+> Richard Zhao <richard.zhao@linaro.org> writes:
 > 
-> On Wed, Jan 11, 2012 at 03:59:26PM -0800, Stephen Warren wrote:
-> > Shawn Guo wrote at Wednesday, January 11, 2012 4:57 PM:
-> > > This is somehow overkilled to me.  Doing this will create a big
-> > > mount of .dtsi files to bloat folder arch/arm/boot/dts.  Putting the
-> > > 'combinations' in <soc>.dtsi seems perfect fine to me.
-> >
-> > I see a couple problems with that approach:
-> >
-> > 1) <soc>.dtsi gets very bloated,
+> > The driver get cpu operation point table from device tree cpu0 node,
 > 
-> In theory, it's possible.  But in the real world, I do not think this will be an
-> issue.  From the experience from working on previous imx platforms, the mux
-> chosen on Freescale reference design board will likely be reused on custom
-> boards much.
+> Since we already have an existing OPP infrastructure in the kernel,
+> seems like  this driver should get OPPs by asking the OPP layer.
+When I created the patch, there's only omap cpufreq driver using
+OPP. If it depends on OPP, it might prevent users who have not
+adopted OPP from using the driver.
 > 
-I'm don't think it's a big issue.
-If we really find it getting very bloated, we will refine it later.
+> This approach assumes the OPP layer is static at boot time and not
+> changing, however that's not the case in practice.
+> 
+> The OPP layer could be extended to read boot-time OPPs from DT if
+> desired, but since the OPPs are also populated/enabled/disabled
+> dynamicaly on some platforms (e.g. OMAP), I think the any generic
+> CPUfreq driver should use the OPP interface and not DT directly.
+> 
+> > and adjusts operating points using clk and regulator APIs.
+> 
+> For a generic driver, the regulator used should also be configurable.
+> 
+> For example, this driver currently assumes a regulator named "cpu" for
+> all instances.   If you had separate clusters with independent voltage
+> control, you'd likely have a separate regulator for each cluster.
+The driver, for now, assumes all cpu cores uses the same clk and voltage.
+It's correct for most arm multi-core SoC.
+Do you have real case to need different voltage/clk?
+And the regulator will be specified in dts after cpu convert from sys
+device to normal device.
 
-> > and wastes space containing board-
-> > specific data for boards other than the "current" one.
+Thanks
+Richard
 > 
-> Technically, it's not the board specific data, because what pins can be put
-> together consisting of a function is really soc specific.
+> Kevin
 > 
-Yes, it's true.
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-> >
-> > 2) We need to invent some more complex DT format so you can reference
-> > these canned combinations from the device drivers, rather than simply
-> > enumerating the mux value for each pin/group.
-> 
-> Sorry, I do not get that.
-> 
-> Regards,
-> Shawn
-> 
-> >
-> > You could put the combination .dtsi files in arch/arm/boot/dts/<soc>
-> > to maintain some extra order.
