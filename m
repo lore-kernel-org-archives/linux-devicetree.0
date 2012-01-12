@@ -1,8 +1,8 @@
 From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v2 3/7] tegra: fdt: Add extra I2C bindings for
-	U-Boot
-Date: Thu, 12 Jan 2012 11:00:14 -0800
-Message-ID: <1326394818-32227-4-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 2/7] fdt: Add function to allow aliases to refer
+	to multiple nodes
+Date: Thu, 12 Jan 2012 11:00:13 -0800
+Message-ID: <1326394818-32227-3-git-send-email-sjg@chromium.org>
 References: <1326394818-32227-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,62 +19,103 @@ List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
 Sender: u-boot-bounces@lists.denx.de
 Errors-To: u-boot-bounces@lists.denx.de
 To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add U-Boot's peripheral clock information to the Tegra20 device tree file.
+Some devices can deal with multiple compatible properties. The devices
+need to know which nodes to bind to which features. For example an
+I2C driver which supports two different controller types will want to
+know which type it is dealing with in each case.
+
+The new fdtdec_add_aliases_for_id() function deals with this by allowing
+the driver to search for additional compatible nodes for a different ID.
+It can then detect the new ones and perform appropriate processing.
+
+Another option considered was to return a tuple (node offset, compat id)
+and have the function be passed a list of compatible IDs. This is more
+overhead for the common case though. We may add such a function later if
+more drivers in U-Boot require it.
 
 Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
-Changes in v2:
-- Adjust definitions to fit new peripheral clock bindings
-- Change 'speed' to 'clock-frequency'
-- Remove u-boot,pinmux binding (sadly)
 
- arch/arm/dts/tegra20.dtsi |   10 +++++++++-
- 1 files changed, 9 insertions(+), 1 deletions(-)
+ include/fdtdec.h |   15 +++++++++++++++
+ lib/fdtdec.c     |   16 ++++++++++++----
+ 2 files changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-index ca7b523..963cf27 100644
---- a/arch/arm/dts/tegra20.dtsi
-+++ b/arch/arm/dts/tegra20.dtsi
-@@ -45,6 +45,8 @@
- 		compatible = "nvidia,tegra20-i2c";
- 		reg = <0x7000C000 0x100>;
- 		interrupts = < 70 >;
-+		clock-frequency = <100000>;
-+		clocks = <&periph_clk 12>;	// PERIPH_ID_I2C1
- 	};
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index bd2222c..e6d63f9 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -200,6 +200,21 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
+ 			enum fdt_compat_id id, int *node_list, int maxcount);
  
- 	i2c@7000c400 {
-@@ -53,6 +55,8 @@
- 		compatible = "nvidia,tegra20-i2c";
- 		reg = <0x7000C400 0x100>;
- 		interrupts = < 116 >;
-+		clock-frequency = <100000>;
-+		clocks = <&periph_clk 54>;	// PERIPH_ID_I2C2
- 	};
+ /*
++ * This function is similar to fdtdec_find_aliases_for_id() except that it
++ * adds to the node_list that is passed in. Any 0 elements are considered
++ * available for allocation - others are considered already used and are
++ * skipped.
++ *
++ * You can use this by calling fdtdec_find_aliases_for_id() with an
++ * uninitialised array, then setting the elements that are returned to -1,
++ * say, then calling this function, perhaps with a different compat id.
++ * Any elements you get back that are >0 are new nodes added by the call
++ * to this function.
++ */
++int fdtdec_add_aliases_for_id(const void *blob, const char *name,
++			enum fdt_compat_id id, int *node_list, int maxcount);
++
++/*
+  * Get the name for a compatible ID
+  *
+  * @param id		Compatible ID to look for
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index daf2c7e..ddd56b9 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -151,10 +151,18 @@ int fdtdec_next_alias(const void *blob, const char *name,
+ 	return node;
+ }
  
- 	i2c@7000c500 {
-@@ -61,14 +65,18 @@
- 		compatible = "nvidia,tegra20-i2c";
- 		reg = <0x7000C500 0x100>;
- 		interrupts = < 124 >;
-+		clock-frequency = <100000>;
-+		clocks = <&periph_clk 67>;	// PERIPH_ID_I2C3
- 	};
+-/* TODO: Can we tighten this code up a little? */
+ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
+ 			enum fdt_compat_id id, int *node_list, int maxcount)
+ {
++	memset(node_list, '\0', sizeof(*node_list) * maxcount);
++
++	return fdtdec_add_aliases_for_id(blob, name, id, node_list, maxcount);
++}
++
++/* TODO: Can we tighten this code up a little? */
++int fdtdec_add_aliases_for_id(const void *blob, const char *name,
++			enum fdt_compat_id id, int *node_list, int maxcount)
++{
+ 	int name_len = strlen(name);
+ 	int nodes[maxcount];
+ 	int num_found = 0;
+@@ -184,8 +192,6 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
+ 		       __func__, name);
  
- 	i2c@7000d000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		compatible = "nvidia,tegra20-i2c";
-+		compatible = "nvidia,tegra20-i2c-dvc";
- 		reg = <0x7000D000 0x200>;
- 		interrupts = < 85 >;
-+		clock-frequency = <100000>;
-+		clocks = <&periph_clk 47>;	// PERIPH_ID_DVC_I2C
- 	};
+ 	/* Now find all the aliases */
+-	memset(node_list, '\0', sizeof(*node_list) * maxcount);
+-
+ 	for (offset = fdt_first_property_offset(blob, alias_node);
+ 			offset > 0;
+ 			offset = fdt_next_property_offset(blob, offset)) {
+@@ -232,11 +238,13 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
+ 		 * it as done.
+ 		 */
+ 		if (fdtdec_get_is_enabled(blob, node)) {
++			if (node_list[number])
++				continue;
+ 			node_list[number] = node;
+ 			if (number >= num_found)
+ 				num_found = number + 1;
+ 		}
+-		nodes[j] = 0;
++		nodes[found] = 0;
+ 	}
  
- 	i2s@70002800 {
+ 	/* Add any nodes not mentioned by an alias */
 -- 
 1.7.7.3
