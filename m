@@ -1,88 +1,114 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC v2 4/9] of: add clock providers
-Date: Thu, 12 Jan 2012 12:16:22 -0700
-Message-ID: <CACxGe6u6ujS2TVXBmmTFdvn3e+rpnroXoswRtsw89+Mk9HGHwg@mail.gmail.com>
-References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
- <20120110213338.GD3226@page> <CACxGe6vqb8AZcZb5WMvfmLsUZH7=SEtBrJCSfsFmDYpKX42MzA@mail.gmail.com>
- <20120112100702.GM3226@page> <CAJOA=zPUA56R=vt9MKyhgdyLU96aD_TweZ6BnJy2w3mCVC4Dzg@mail.gmail.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 7/9] arm/tegra: emc: device tree bindings
+Date: Thu, 12 Jan 2012 12:03:33 -0800
+Message-ID: <CAPnjgZ2p63C1UNr_RxCcwKjjqJFXzZppXD14hXh85zXH35POrw@mail.gmail.com>
+References: <1324599468-12845-1-git-send-email-olof@lixom.net>
+	<1324599468-12845-8-git-send-email-olof@lixom.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF17761F18A6@HQMAIL01.nvidia.com>
+	<CAOesGMjeVm_PcsBnxfKX9Oe96QUaCsJrvuESCRZq5vwq9gD5xA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJOA=zPUA56R=vt9MKyhgdyLU96aD_TweZ6BnJy2w3mCVC4Dzg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Turquette, Mike" <mturquette@ti.com>
-Cc: Jamie Iles <jamie@jamieiles.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMjeVm_PcsBnxfKX9Oe96QUaCsJrvuESCRZq5vwq9gD5xA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2012 at 11:44 AM, Turquette, Mike <mturquette@ti.com> w=
+Hi Olof,
+
+On Thu, Jan 5, 2012 at 5:20 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Thu, Jan 5, 2012 at 4:01 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
 rote:
-> On Thu, Jan 12, 2012 at 2:07 AM, Jamie Iles <jamie@jamieiles.com> wro=
-te:
->> On Wed, Jan 11, 2012 at 09:46:58PM -0700, Grant Likely wrote:
->>> On Tue, Jan 10, 2012 at 2:33 PM, Jamie Iles <jamie@jamieiles.com> w=
-rote:
->>> > On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
->>> > I'm about to start trying to get this and Mike's common struct cl=
-k
->>> > patches working on picoxcell, and the one thing I'm not understan=
-ding at
->>> > the moment is how to handle the tree itself. =A0Currently I was p=
-lanning
->>> > on iterating over all clocks and finding a named input clock "ref=
-" or
->>> > "input" perhaps. =A0This would be fine for picoxcell, but I guess=
- more
->>> > complicated chips may need something else.
->>>
->>> It might be useful to have something like of_irq_init() for setting=
- up
->>> initial clocks, but the solution feels inelegant to me. =A0I suspec=
-t
->>> that there will be end up being intertwined init order dependencies
->>> between clocks and irqs and other early setup stuff that could be
->>> handled better. =A0Again, I need to think about this some more. =A0=
-There
->>> might need to be something like an of_early_probe() call that accep=
-ts
->>> a match table of compatible values and setup functions with some lo=
-gic
->>> or data to resolve dependencies. =A0The trick will be to not end up=
- with
->>> something complex. =A0I'll need to think about this more...
+>> Olof Johansson wrote at Thursday, December 22, 2011 5:18 PM:
+>>> Device tree bindings for the EMC tables on tegra.
+>> ...
+>>> diff --git a/Documentation/devicetree/bindings/arm/tegra/emc.txt
+>> ...
+>>> +Embedded Memory Controller ram-code table
+>> ...
+>>> +- name : Should be emc-tables
+>>> +- nvidia,ram-code : the binary representation of the ram-code boar=
+d strappings
+>>> + =A0for which this node (and children) are valid.
+>> ...
+>>> +Embedded Memory Controller configuration table
+>> ...
+>>> +- name : Should be emc-table
+>>> +- compatible : Should contain "nvidia,tegra20-emc-table".
+>>> +- reg : either an opaque enumerator to tell different tables apart=
+, or
+>> ...
 >>
->> Yes, probably not an easy problem to solve, especially for the platf=
-orms
->> where the parent can change at runtime.
+>> One more thought:
 >>
->> I wonder if an of_clk_init() could take a platform callback, so that
->> of_clk_init() goes of and creates a struct clk for each clk in the D=
-T,
->> then for each registered clock calls a platform specific callback wh=
-ich
->> returns the parent (if any). =A0It feels like a fairly platform spec=
-ific
->> problem to me.
+>> For consistency, should the "emc-tables" node also require a compati=
+ble
+>> value? I suppose the existence of an "nvidia,ram-code" property is q=
+uite
+>> likely to be indication enough that the node is compatible, but I wo=
+nder
+>> if we shouldn't require and check an explicit compatible value at th=
+is
+>> level too?
 >
-> Based on Thomas' feedback I'm removing the requirement for clocks to
-> be registered in-order with clk_init(). =A0Any clock that cannot reso=
-lve
-> it's parent within clk_init() (via the .get_parent callback, or
-> otherwise having .parent statically initialized) will be put into an
-> orphaned clocks list, which will be walked every time a new clock is
-> registered. =A0Hurray for n^2 solutions.
+> I can add it, it's trivial to add another check in
+> tegra_emc_ramcode_devnode, but I don't think there's much need to
+> bother. As long as nothing else is added that uses nvidia,ram-code as
+> a property we'll be OK, and we can control that.
+
+I am looking at maybe bringing this into U-Boot.
+
+Do you have an example of the ram-code table? Would it look something l=
+ike this?
+
+emc@7000f400 {
+	#address-cells =3D < 1 >;
+	#size-cells =3D < 0 >;
+	compatible =3D "nvidia,tegra20-emc";
+	reg =3D <0x7000f4000 0x200>;
+	nvidia,use-ram-code;
+
+	emc-tables@0 {
+		nvidia,ram-code =3D <0>;
+		compatible =3D "nvidia,tegra20-emc-tables";
+		emc-table@166000 {
+			reg =3D <166000>;
+			compatible =3D "nvidia,tegra20-emc-table";
+			clock-frequency =3D < 166000 >;
+			nvidia,emc-registers =3D < 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+						0 0 0 0 0 0 0 0 0 0 0 0 0 0
+						0 0 0 0 0 0 0 0 0 0 0 0 0 0
+						0 0 0 0 >;
+		};
+	};
+	emc-tables@1 {
+		nvidia,ram-code =3D <1>;
+		compatible =3D "nvidia,tegra20-emc-tables";
+		emc-table@333000 {
+			reg =3D <333000>;
+			compatible =3D "nvidia,tegra20-emc-table";
+			clock-frequency =3D < 333000 >;
+			nvidia,emc-registers =3D < 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+						0 0 0 0 0 0 0 0 0 0 0 0 0 0
+						0 0 0 0 0 0 0 0 0 0 0 0 0 0
+						0 0 0 0 >;
+		};
+	};
+	... @2, @3 follow
+};
+
+Also, can/should we be able to specify a frequency to override the stra=
+pping?
+
+Regards,
+Simon
+
 >
-> Does the above help with the of_clk_init problems?
-
-It does.
-
-> One final data point: I certainly plan on allowing for statically
-> allocated clocks to live alongside DT clocks. =A0In fact the clock tr=
-ees
-> on OMAP are so large that there is some discussion about having some
-> of the clocks statically allocated and some in DT, but I don't know
-> what that split looks like right now. =A0I don't enjoy the idea of
-> packing 200+ of any entity into a .dts blob.
-
-I'm okay with that.
+>
+> -Olof
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
