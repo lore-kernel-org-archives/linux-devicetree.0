@@ -1,20 +1,21 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer constants
-Date: Wed, 11 Jan 2012 14:05:28 -1000
-Message-ID: <4F0E23C8.8030009@firmworks.com>
-References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
- <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
- <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
- <20120111130056.GK4935@truffala.fritz.box> <E1RkzJs-000590-4s@jdl.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5@HQMAIL01.nvidia.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH] ARM: vexpress: initial device tree support
+Date: Wed, 11 Jan 2012 16:15:39 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A848@HQMAIL01.nvidia.com>
+References: <1316596786-2539-1-git-send-email-dave.martin@linaro.org>
+ <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
+ <4F0B897A.20502@firmworks.com>
+ <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
+ <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
+ <4F0CD7BC.7080409@freescale.com> <4F0D2F90.8020801@firmworks.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A770@HQMAIL01.nvidia.com>
+ <4F0E1843.7030207@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <4F0E1843.7030207-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,52 +25,170 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: =?iso-8859-2?Q?Pawe=B3_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I find it ironic that the very first device tree implementation, dating 
-back to 1989, was built around a Turing complete language.
+Mitch Bradley wrote at Wednesday, January 11, 2012 4:16 PM:
+> On 1/11/2012 10:29 AM, Stephen Warren wrote:
+> > Mitch Bradley wrote at Tuesday, January 10, 2012 11:43 PM:
+> >> On 1/10/2012 2:28 PM, Timur Tabi wrote:
+> >>> Mitch Bradley wrote:
+> > ...
+> >>>> That GPIO pin thing is annoying, but not sufficiently complex or common
+> >>>> that it warrants having a separate EDID driver.  You could define a
+> >>>> platform-specific property to tell your framebuffer driver that it needs
+> >>>> to do that GPIO thing.  It's a hack, but the GPIO thing is inherently a
+> >>>> hack, so there will be some ugliness somewhere as a result.
+> >>>
+> >>> I have two platform-specific functions, "enabled_edid" and "disable_edid", that I call
+> before/after
+> >>> calling fb_ddc_read().  This seems to work well, and I already have a mechanism for calling
+> platform-
+> >>> specific functions from the framebuffer driver.
+> >>>
+> >>> However, Stephen Warren said I should be using the I2C mux feature instead.
+> >>
+> >> I2C mux is a plausible solution, as is your enable/disable thing.  At
+> >> some level they are equivalent.  I2C mux is a formalization of your
+> >> solution, in which the mux device's select method must be written to
+> >> perform the function of your enable/disable edid functions.
+> >>
+> >> Either way, you need platform-dependent functions to do the switching,
+> >> and you need to select the appropriate channel.  Personally, I don't see
+> >> the advantage of using the mux device in this case.
+> >
+> > The main advantage I see is that you explicitly don't need any platform-
+> > specific functions to do the switching; you end up with platform-agnostic
+> > code (the I2C GPIO mux driver) and platform-specific configuration for
+> > that driver (the GPIO ID to use).
+> 
+> 
+> Oh, I didn't know about the I2C GPIO Mux driver.  I was looking at
+> i2c-mux.c .  I now see gpio-i2cmux.c, which indeed seems to do the right
+> thing.
+> 
+> > The display driver just talks to the
+> > I2C API for the DDC I2C bus, and doesn't do anything to switch between
+> > the busses; the I2C GPIO mux driver does all that internally. Thus, the
+> > display driver will work fine on boards that don't need this muxing with
+> > zero changes; the board simply wouldn't register the mux driver.
+> >
+> >> It's just adding
+> >> complexity with no payback.  If there were several channels that needed
+> >> to be accessed in an interspersed fashion, the mux device would  be much
+> >> cleaner.  But in this case, there is a single "back channel" that only
+> >> needs to be accessed once and can subsequently be ignored.
+> >
+> > Well, the EDID needs to be read on every hotplug event, so it's certainly
+> > not a one-time thing.
+> >
+> >> The video
+> >> driver can grab a lock, call enable_edid(), read out the EDID data into
+> >> an array, call disable_edid(), release the lock, and that is it.  The
+> >> other users of that I2C bus can ignore the hidden EDID.
+> >
+> > Other I2C users/devices also shouldn't be impacted by the mux; they
+> > would continue to use the existing I2C APIs for the bus their devices
+> > are attached to, and not know about the mux.
+> 
+> If other devices that are on the same bus as the EDID don't use the mux,
+> how does one ensure that the GPIO is restored to the non-EDID
+> setting when the display driver is finished?
 
-On 1/11/2012 11:36 AM, Stephen Warren wrote:
-> Jon Loeliger wrote at Wednesday, January 11, 2012 7:38 AM:
->>> On Tue, Jan 10, 2012 at 01:54:30PM -0800, Stephen Warren wrote:
->>>> John, David,
->>>>
->>>> What can we do to reach consensus on expanding dtc to handle named
->>>> constants, or in general any future direction to extend the syntax with
->>>> expressions etc.?
->>>
->>> Hrm, so, I'm not at all keen to add a named constant syntax without at
->>> least having an outline of what a future macro/function syntax would
->>> look like.
->>
->> Which is where I thought it was left earlier...? :-)
->> And it's not just what the macro/function syntax will look like,
->> but also how these will play into a more generalized expression
->> handling mechanism.  Defining something one-off now that doesn't
->> fit well into a long term plan is less than ideal.
->>
->> Yes, I know that is tantamount to requiring the whole, larger
->> picture be solved first.  But Dave is right -- at least an outline
->> of the direction.  Seriously, the lexical problems can form some
->> of the nastiest gotchas if we're not careful from the onset.
->
-> So that all makes sense.
->
-> My question is: How can we get consensus on what we want that complete
-> future syntax to be? IIRC, Jon has a branch that implements a proposal,
-> and David at least posted a different proposal if not actual code that
-> implemented it. We're not missing proposals, but rather a mechanism to
-> decide between them?
->
-> For what it's worth, I'd tend towards a simple expression-based syntax
-> where property values can be calculated with C-style expressions. Basic
-> math stuff like ( ) + - * /&  | ~<<  >>  and some basic string handling
-> operations (str(int) and concatenation). I think that'd cover the vast
-> majority of use-cases wouldn't it? For more advanced stuff like loops
-> to synthesize multiple nodes, it seems like writing a custom script to
-> generate the .dts file and then passing the result to dtc would be more
-> modular, and not require us to create a whole new Turing-complete
-> language in dtc?
->
+The I2C busses are set up like this:
+
+                bus 0        bus 1
+I2C controller -------> mux ------> dev a, dev b, dev c, ...
+                           \------> dev x, dev y, dev z, ...
+                             bus 2
+
+Thus all devices are on a child I2C bus of the mux and none on the raw
+HW bus exposed by the I2C controller itself.
+
+The I2C core will always call gpiomux_select before each transaction,
+which will set the GPIOs appropriately for bus 1 or bus 2, depending
+on which device is being communicated with.
+
+> Perhaps I'm missing something, but it appears to me that the model is to
+> set the correct GPIO state before each use, instead of a
+> save-set-use-restore model.
+
+That's true, but the select action happens implicitly inside the I2C
+core for any and all transactions, AIUI, so the two modes are equivalent.
+
+> In any case, if there is a good way to instantiate the GPIO mux device
+> from the device tree, it certainly provides a ready-made solution.  Each
+> device that is on the bus in question would have a device node that is a
+> child of the GPIO mux node, and the display driver could have a
+> phandle-valued property pointing to the mux node, plus a property
+> declaring the selection value (or perhaps a single 2-cell property with
+> phandle, selection-value).
+
+That's probably the difficult part.
+
+For an I2C mux that is controlled via I2C, you can just add the mux
+node as a child of the I2C controller, since it has an I2C address,
+and so putting it there makes sense.
+
+But for an I2C mux that's controlled using GPIOs or pinmux, there's no
+I2C address so I guess the mux shouldn't be directly underneath the I2C
+controller.
+
+Perhaps the DT binding for such an I2C mux can refer to the parent I2C
+controller by phandle?
+
+Inside the I2C mux DT node, I think we can have a child node for each
+bus, and then use standard I2C child node addressing for all the nodes
+within these bus nodes.
+
+Perhaps:
+
+i2c1: i2c@7000c000 {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    compatible = "nvidia,tegra20-i2c";
+    reg = <0x7000C000 0x100>;
+    interrupts = <0 38 0x04>;
+};
+
+mux@0 {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    compatible = "nvidia,tegra20-i2c";
+    parent-bus = <&i2c1>;
+    gpios = <&gpio 100 0 &gpio 101 0>;
+    gpio-values-idle = <0>; /* bitmask of values */
+
+    bus@0 {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        /*
+         * The GPIO values to set as a bitmask.
+         * Formatted like gpio-i2cmux.c's mux->data.values[i].
+         * Or name this gpio-values?
+         */
+        reg = <1>;
+
+        wm8903: wm8903@1a {
+            compatible = "wlf,wm8903";
+            reg = <0x1a>;
+            ...
+        };
+    };
+
+    bus@1 {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        reg = <2>;
+
+        light-sensor@44 {
+            compatible = "isil,isl29018";
+            reg = <0x44>;
+            ...
+        };
+    };
+};
+
+-- 
+nvpublic
