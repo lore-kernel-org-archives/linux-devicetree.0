@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 11/20] tegra: fdt: Add clock bindings
-Date: Wed, 11 Jan 2012 20:33:00 -0800
-Message-ID: <1326342789-5781-12-git-send-email-sjg@chromium.org>
+Subject: [PATCH v4 01/20] fdt: Tidy up a few fdtdec problems
+Date: Wed, 11 Jan 2012 20:32:50 -0800
+Message-ID: <1326342789-5781-2-git-send-email-sjg@chromium.org>
 References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,118 +21,131 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a basic binding for the oscillator and peripheral clocks. The
-second cell is the clock number, defined as the bit number within the clock
-enable register if the peripheral clock.
-
-This uses the RFC clock bindings from Grant Likely so may change later:
-
-https://lkml.org/lkml/2011/12/12/498
+This fixes five trivial issues in fdtdec.c:
+1. fdtdec_get_is_enabled() doesn't really need a default value
+2. The fdt must be word-aligned, since otherwise it will fail on ARM
+3. The compat_names[] array is missing its first element. This is needed
+only because the first fdt_compat_id is defined to be invalid.
+4. Added a header prototype for fdtdec_next_compatible()
+5. Change fdtdec_next_alias() to only increment its 'upto' parameter
+on success, to make the display error messages in the caller easier.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-Changes in v4:
-- Add clock bindings for Tegra2x
 
- arch/arm/dts/tegra20.dtsi                      |   27 ++++++++++++
- doc/device-tree-bindings/clock/tegra-periphclk |   51 ++++++++++++++++++++++++
- 2 files changed, 78 insertions(+), 0 deletions(-)
- create mode 100644 doc/device-tree-bindings/clock/tegra-periphclk
+ include/fdtdec.h |   23 +++++++++++++++++++----
+ lib/fdtdec.c     |   22 ++++++++++++++++------
+ 2 files changed, 35 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-index 6146d24..68eae12 100644
---- a/arch/arm/dts/tegra20.dtsi
-+++ b/arch/arm/dts/tegra20.dtsi
-@@ -4,6 +4,33 @@
- 	compatible = "nvidia,tegra20";
- 	interrupt-parent = <&intc>;
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 3a15f55..01badd4 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -82,6 +82,21 @@ int fdtdec_next_alias(const void *blob, const char *name,
+ 		enum fdt_compat_id id, int *upto);
  
-+	clocks = <&osc_clk>;
-+	clock-names = "osc_clk";
-+	clock-ranges;
+ /**
++ * Find the next compatible node for a peripheral.
++ *
++ * Do the first call with node = 0. This function will return a pointer to
++ * the next compatible node. Next time you call this function, pass the
++ * value returned, and the next node will be provided.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Start node for search
++ * @param id		Compatible ID to look for (enum fdt_compat_id)
++ * @return offset of next compatible node, or -FDT_ERR_NOTFOUND if no more
++ */
++int fdtdec_next_compatible(const void *blob, int node,
++		enum fdt_compat_id id);
 +
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/* The frequency of this clock is board-specific */
-+		osc_clk: oscclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+		};
-+
-+		/*
-+		 * This node provides clocks to all peripherals. We don't
-+		 * enumerate the clock names for now since there are no
-+		 * users of this information.
-+		 */
-+		periph_clk: periphclk {
-+			compatible = "tegra,periphclk";
-+			#clock-cells = <1>;
-+			clocks = <&osc_clk>;
-+			reg = <0x60006000 400>;
-+		};
-+	};
-+
- 	intc: interrupt-controller@50041000 {
- 		compatible = "nvidia,tegra20-gic";
- 		interrupt-controller;
-diff --git a/doc/device-tree-bindings/clock/tegra-periphclk b/doc/device-tree-bindings/clock/tegra-periphclk
-new file mode 100644
-index 0000000..8d21e4d
---- /dev/null
-+++ b/doc/device-tree-bindings/clock/tegra-periphclk
-@@ -0,0 +1,51 @@
-+Clock controllers
-+
-+(there isn't yet a binding in Linux, so this describes what is in U-Boot)
-+
-+The device node for a clock controller is as described in the document
-+"Open Firmware Recommended Practice : Universal Serial Bus" with the
-+following modifications and additions :
-+
-+This is based on Grant Likely's proposed patch for clock bindings.
-+
-+Required properties :
-+ - compatible : Should be "tegra,periphclk" for peripheral clock controller
-+ - clocks : Should contain a single phandle pointing to the oscillator clock
-+
-+Peripherals which refer to a clock should have a property called "clocks" with
-+two cells: phandle of the peripheral clock and the clock ID number (which
-+is the bit number in the peripheral clock controller enable register numbered
-+from 0).
-+
-+Example:
-+
-+clocks {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	/* The frequency of this clock is board-specific */
-+	osc_clk: oscclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
++/**
+  * Look up an address property in a node and return it as an address.
+  * The property must hold either one address with no trailing data or
+  * one address with a length. This is only tested on 32-bit machines.
+@@ -112,14 +127,14 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+  * Checks whether a node is enabled.
+  * This looks for a 'status' property. If this exists, then returns 1 if
+  * the status is 'ok' and 0 otherwise. If there is no status property,
+- * it returns the default value.
++ * it returns 1 on the assumption that anything mentioned should be enabled
++ * by default.
+  *
+  * @param blob	FDT blob
+  * @param node	node to examine
+- * @param default_val	default value to return if no 'status' property exists
+- * @return integer value 0/1, if found, or default_val if not
++ * @return integer value 0 (not enabled) or 1 (enabled)
+  */
+-int fdtdec_get_is_enabled(const void *blob, int node, int default_val);
++int fdtdec_get_is_enabled(const void *blob, int node);
+ 
+ /**
+  * Checks whether we have a valid fdt available to control U-Boot, and panic
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 3852038..846ec3f 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -33,6 +33,7 @@ DECLARE_GLOBAL_DATA_PTR;
+  */
+ #define COMPAT(id, name) name
+ static const char * const compat_names[COMPAT_COUNT] = {
++	COMPAT(UNKNOWN, "<none>"),
+ };
+ 
+ const char *fdtdec_get_compatible(enum fdt_compat_id id)
+@@ -89,14 +90,21 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+ 	return default_val;
+ }
+ 
+-int fdtdec_get_is_enabled(const void *blob, int node, int default_val)
++int fdtdec_get_is_enabled(const void *blob, int node)
+ {
+ 	const char *cell;
+ 
 +	/*
-+	 * This node provides clocks to all peripherals. We don't
-+	 * enumerate the clock names for now since there are no
-+	 * users of this information.
++	 * It should say "okay", so only allow that. Some fdts use "ok" but
++	 * this is a bug. Please fix your device tree source file. See here
++	 * for discussion:
++	 *
++	 * http://www.mail-archive.com/u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org/msg71598.html
 +	 */
-+	periph_clk: periphclk {
-+		compatible = "tegra,periphclk";
-+		#clock-cells = <1>;
-+		clocks = <&osc_clk>;
-+		reg = <0x60006000 400>;
-+	};
-+};
-+
-+usb@c5004000 {
-+	compatible = "nvidia,tegra20-ehci", "usb-ehci";
-+	reg = <0xc5004000 0x4000>;
-+	interrupts = < 53 >;
-+	phy_type = "ulpi";
-+	clocks = <&periph_clk 58>;	// PERIPH_ID_USB2
-+};
+ 	cell = fdt_getprop(blob, node, "status", NULL);
+ 	if (cell)
+-		return 0 == strcmp(cell, "ok");
+-	return default_val;
++		return 0 == strcmp(cell, "okay");
++	return 1;
+ }
+ 
+ enum fdt_compat_id fd_dec_lookup(const void *blob, int node)
+@@ -127,14 +135,16 @@ int fdtdec_next_alias(const void *blob, const char *name,
+ 	/* snprintf() is not available */
+ 	assert(strlen(name) < MAX_STR_LEN);
+ 	sprintf(str, "%.*s%d", MAX_STR_LEN, name, *upto);
+-	(*upto)++;
+ 	node = find_alias_node(blob, str);
+ 	if (node < 0)
+ 		return node;
+ 	err = fdt_node_check_compatible(blob, node, compat_names[id]);
+ 	if (err < 0)
+ 		return err;
+-	return err ? -FDT_ERR_NOTFOUND : node;
++	if (err)
++		return -FDT_ERR_NOTFOUND;
++	(*upto)++;
++	return node;
+ }
+ 
+ /* TODO: Can we tighten this code up a little? */
+@@ -254,7 +264,7 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
+ int fdtdec_check_fdt(void)
+ {
+ 	/* We must have an fdt */
+-	if (fdt_check_header(gd->fdt_blob))
++	if (((uintptr_t)gd->fdt_blob & 3) || fdt_check_header(gd->fdt_blob))
+ 		panic("No valid fdt found - please append one to U-Boot\n"
+ 			"binary or define CONFIG_OF_EMBED\n");
+ 	return 0;
 -- 
 1.7.7.3
