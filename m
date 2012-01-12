@@ -1,8 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 08/20] fdt: Add staging area for device tree binding
- documentation
-Date: Wed, 11 Jan 2012 20:32:57 -0800
-Message-ID: <1326342789-5781-9-git-send-email-sjg@chromium.org>
+Subject: [PATCH v4 11/20] tegra: fdt: Add clock bindings
+Date: Wed, 11 Jan 2012 20:33:00 -0800
+Message-ID: <1326342789-5781-12-git-send-email-sjg@chromium.org>
 References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,42 +21,118 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a directory to hold device tree binding files, to permit easy review
-of this material in U-Boot patches.
+This adds a basic binding for the oscillator and peripheral clocks. The
+second cell is the clock number, defined as the bit number within the clock
+enable register if the peripheral clock.
+
+This uses the RFC clock bindings from Grant Likely so may change later:
+
+https://lkml.org/lkml/2011/12/12/498
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 Changes in v4:
-- Add staging area for device tree bindings used in U-Boot
+- Add clock bindings for Tegra2x
 
- doc/device-tree-bindings/README |   19 +++++++++++++++++++
- 1 files changed, 19 insertions(+), 0 deletions(-)
- create mode 100644 doc/device-tree-bindings/README
+ arch/arm/dts/tegra20.dtsi                      |   27 ++++++++++++
+ doc/device-tree-bindings/clock/tegra-periphclk |   51 ++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+), 0 deletions(-)
+ create mode 100644 doc/device-tree-bindings/clock/tegra-periphclk
 
-diff --git a/doc/device-tree-bindings/README b/doc/device-tree-bindings/README
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+index 6146d24..68eae12 100644
+--- a/arch/arm/dts/tegra20.dtsi
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -4,6 +4,33 @@
+ 	compatible = "nvidia,tegra20";
+ 	interrupt-parent = <&intc>;
+ 
++	clocks = <&osc_clk>;
++	clock-names = "osc_clk";
++	clock-ranges;
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/* The frequency of this clock is board-specific */
++		osc_clk: oscclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++		};
++
++		/*
++		 * This node provides clocks to all peripherals. We don't
++		 * enumerate the clock names for now since there are no
++		 * users of this information.
++		 */
++		periph_clk: periphclk {
++			compatible = "tegra,periphclk";
++			#clock-cells = <1>;
++			clocks = <&osc_clk>;
++			reg = <0x60006000 400>;
++		};
++	};
++
+ 	intc: interrupt-controller@50041000 {
+ 		compatible = "nvidia,tegra20-gic";
+ 		interrupt-controller;
+diff --git a/doc/device-tree-bindings/clock/tegra-periphclk b/doc/device-tree-bindings/clock/tegra-periphclk
 new file mode 100644
-index 0000000..84e8cba
+index 0000000..8d21e4d
 --- /dev/null
-+++ b/doc/device-tree-bindings/README
-@@ -0,0 +1,19 @@
-+Device Tree Bindings Staging Area
-+=================================
++++ b/doc/device-tree-bindings/clock/tegra-periphclk
+@@ -0,0 +1,51 @@
++Clock controllers
 +
-+This directory contains device tree bindings for U-Boot.
++(there isn't yet a binding in Linux, so this describes what is in U-Boot)
 +
-+These follow along with Linux kernel bindings, with a few additions. By
-+adding the files here, U-Boot patches can clearly show thees additions.
-+This makes it easier for device tree people to review these additions in
-+patches sent to the U-Boot mailing list.
++The device node for a clock controller is as described in the document
++"Open Firmware Recommended Practice : Universal Serial Bus" with the
++following modifications and additions :
 +
-+The intent is not to commit these files to U-Boot, or at least only
-+temporarily, Rather we hope that the files will be stored in another
-+repo (shared with Linux) which is brought in as needed. Failing that,
-+changes here will be  commited to the Linux
-+Documentation/devicetree/bindings/ directory.
++This is based on Grant Likely's proposed patch for clock bindings.
 +
++Required properties :
++ - compatible : Should be "tegra,periphclk" for peripheral clock controller
++ - clocks : Should contain a single phandle pointing to the oscillator clock
 +
-+sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-+11-Jan-12
++Peripherals which refer to a clock should have a property called "clocks" with
++two cells: phandle of the peripheral clock and the clock ID number (which
++is the bit number in the peripheral clock controller enable register numbered
++from 0).
++
++Example:
++
++clocks {
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	/* The frequency of this clock is board-specific */
++	osc_clk: oscclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++	};
++
++	/*
++	 * This node provides clocks to all peripherals. We don't
++	 * enumerate the clock names for now since there are no
++	 * users of this information.
++	 */
++	periph_clk: periphclk {
++		compatible = "tegra,periphclk";
++		#clock-cells = <1>;
++		clocks = <&osc_clk>;
++		reg = <0x60006000 400>;
++	};
++};
++
++usb@c5004000 {
++	compatible = "nvidia,tegra20-ehci", "usb-ehci";
++	reg = <0xc5004000 0x4000>;
++	interrupts = < 53 >;
++	phy_type = "ulpi";
++	clocks = <&periph_clk 58>;	// PERIPH_ID_USB2
++};
 -- 
 1.7.7.3
