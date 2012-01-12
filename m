@@ -1,213 +1,149 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2 REPOST] dtc: Implement -d option to write out a dependency
- file
-Date: Thu, 12 Jan 2012 10:25:28 -0700
-Message-ID: <1326389128-8670-1-git-send-email-swarren@nvidia.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 04/15] ARM: smp_twd: add device tree support
+Date: Thu, 12 Jan 2012 17:58:30 +0000
+Message-ID: <4F0F1F46.6060804@arm.com>
+References: <1326287334-1905-1-git-send-email-marc.zyngier@arm.com>
+ <1326287334-1905-5-git-send-email-marc.zyngier@arm.com>
+ <4F0DF9B3.3080804@gmail.com> <4F0EEFEA.1020305@arm.com>
+ <4F0EFF79.8060606@gmail.com> <4F0F03B5.5040300@arm.com>
+ <4F0F09E9.3040101@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F0F09E9.3040101@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This will allow callers to rebuild .dtb files when any of the /include/d
-.dtsi files are modified, not just the top-level .dts file.
+On 12/01/12 16:27, Rob Herring wrote:
+> Adding devicetree-discuss since we are talking bindings...
+> 
+> On 01/12/2012 10:00 AM, Marc Zyngier wrote:
+>> On 12/01/12 15:42, Rob Herring wrote:
+>>> On 01/12/2012 08:36 AM, Marc Zyngier wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On 11/01/12 21:05, Rob Herring wrote:
+>>>>> On 01/11/2012 07:08 AM, Marc Zyngier wrote:
+>>>>>> Add bindings to support DT discovery of the ARM Timer Watchdog
+>>>>>> (aka TWD). Only the timer side is converted by this patch.
+>>>>>>
+>>>>>> Cc: Rob Herring <rob.herring@calxeda.com>
+>>>>>> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/arm/twd.txt |   29 +++++++++++
+>>>>>>  arch/arm/include/asm/smp_twd.h                |    1 +
+>>>>>>  arch/arm/kernel/smp_twd.c                     |   68 ++++++++++++++++++++-----
+>>>>>>  3 files changed, 85 insertions(+), 13 deletions(-)
+>>>>>>  create mode 100644 Documentation/devicetree/bindings/arm/twd.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/arm/twd.txt b/Documentation/devicetree/bindings/arm/twd.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..a9d5587
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/arm/twd.txt
+>>>>>> @@ -0,0 +1,29 @@
+>>>>>> +* ARM Timer Watchdog
+>>>>>> +
+>>>>>> +ARM 11MP, Cortex-A5 and Cortex-A9 are often associated with a per-core
+>>>>>> +Timer-Watchdog (aka TWD), which provides both a per-cpu local timer
+>>>>>> +and watchdog.
+>>>>>> +
+>>>>>> +The TWD is usually attached to a GIC to deliver its two per-processor
+>>>>>> +interrupts.
+>>>>>> +
+>>>>>> +Main node required properties:
+>>>>>> +
+>>>>>> +- compatible : Should be one of:
+>>>>>> +	"arm,cortex-a9-twd"
+>>>>>> +	"arm,cortex-a5-twd"
+>>>>>> +	"arm,arm11mp-twd"
+>>>>>> +	"arm,smp-twd"
+>>>>>> +
+>>>>>> +- interrupts : Two interrupts to each core, the first one for the
+>>>>>> +  timer, the second one for the watchdog.
+>>>>>> +
+>>>>>> +- reg : Specify the base address and the size of the TWD.
+>>>>>> +
+>>>>>> +Example:
+>>>>>> +
+>>>>>> +	twd@2c000600 {
+>>>>>> +		compatible = "arm,arm11mp-twd", "arm,smp-twd";
+>>>>>> +		reg = <0x2c000600 0x100>;
+>>>>>> +		interrupts = <1 13 0xf01 1 14 0xf01>;
+>>>>>> +	};
+>>>>>
+>>>>> Why not split the watchdog and timer into 2 nodes? It may not matter
+>>>>> since there is no driver for the timer. If there was, we would have a
+>>>>> problem as you can't match 2 drivers to 1 node.
+>>>>
+>>>> Don't we hit the opposite problem - two nodes with the same address?
+>>>
+>>> No, because the timer is at 0x600-0x61f and the watchdog is at
+>>> 0x620-0x63f. There's no DT requirement on address range start or size.
+>>>
+>>> However, the current watchdog driver includes 0x20 in its register
+>>> offsets, so changing the base address would require a change to the
+>>> driver (but that shouldn't really influence the decision).
+>>
+>> Well, that's what triggered my question. On the other hand, I do not see
+>> any in-tree user of the mpcore_wdt driver, so I suppose we could change
+>> this register offset without too much harm.
+>>
+>> How about something like:
+>>
+>> 	twd-timer@2c000600 {
+>> 		compatible = "arm,arm11mp-twd", "arm,smp-twd";
+>> 		reg = <0x2c000600 0x20>;
+>> 		interrupts = <1 13 0xf01>;
+>> 	};
+>>
+>> 	twd-watchdog@2c000620 {
+>> 		compatible = "arm,arm11mp-wd", "arm,smp-wd";
+>> 		reg = <0x2c000620 0x20>;
+>> 		interrupts = <1 14 0xf01>;
+> 
+> BTW, are these really edge triggered?
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
----
-v2: Replaced fputs/fputc with fprintf.
-v2 repost: Add David's ack.
+Yes (on the 11MPcore):
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0360f/CCHFHDJH.html
 
-This patch is for the dtc repository. I'm reposting it because Jon said it
-didn't make it directly to him the first time around.
+Other cores may be configured differently (A9 has some PPIs configured
+as level-low, and others configured edge-rising):
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0407g/CCHEIGIC.html
 
- Documentation/manual.txt |    3 +++
- dtc.c                    |   20 +++++++++++++++++++-
- srcpos.c                 |    4 ++++
- srcpos.h                 |    1 +
- tests/dependencies.cmp   |    1 +
- tests/dependencies.dts   |    6 ++++++
- tests/deps_inc1.dtsi     |    1 +
- tests/deps_inc2.dtsi     |    1 +
- tests/run_tests.sh       |    4 ++++
- 9 files changed, 40 insertions(+), 1 deletions(-)
- create mode 100644 tests/dependencies.cmp
- create mode 100644 tests/dependencies.dts
- create mode 100644 tests/deps_inc1.dtsi
- create mode 100644 tests/deps_inc2.dtsi
+All that is probably very SoC specific anyway.
 
-diff --git a/Documentation/manual.txt b/Documentation/manual.txt
-index 14508f3..989c589 100644
---- a/Documentation/manual.txt
-+++ b/Documentation/manual.txt
-@@ -106,6 +106,9 @@ Options:
-     -O <output_format>
- 	The generated output format, as listed above.
- 
-+    -d <dependency_filename>
-+	Generate a dependency file during compilation.
-+
-     -q
- 	Quiet: -q suppress warnings, -qq errors, -qqq all
- 
-diff --git a/dtc.c b/dtc.c
-index 15d2fc2..7a0c605 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -71,6 +71,7 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t\t\tasm - assembler source\n");
- 	fprintf(stderr, "\t-V <output version>\n");
- 	fprintf(stderr, "\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n", DEFAULT_FDT_VERSION);
-+	fprintf(stderr, "\t-d <output dependency file>\n");
- 	fprintf(stderr, "\t-R <number>\n");
- 	fprintf(stderr, "\t\tMake space for <number> reserve map entries (relevant for \n\t\tdtb and asm output only)\n");
- 	fprintf(stderr, "\t-S <bytes>\n");
-@@ -99,6 +100,7 @@ int main(int argc, char *argv[])
- 	const char *inform = "dts";
- 	const char *outform = "dts";
- 	const char *outname = "-";
-+	const char *depname = NULL;
- 	int force = 0, sort = 0;
- 	const char *arg;
- 	int opt;
-@@ -111,7 +113,7 @@ int main(int argc, char *argv[])
- 	minsize    = 0;
- 	padsize    = 0;
- 
--	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:s")) != EOF) {
-+	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:vH:s")) != EOF) {
- 		switch (opt) {
- 		case 'I':
- 			inform = optarg;
-@@ -125,6 +127,9 @@ int main(int argc, char *argv[])
- 		case 'V':
- 			outversion = strtol(optarg, NULL, 0);
- 			break;
-+		case 'd':
-+			depname = optarg;
-+			break;
- 		case 'R':
- 			reservenum = strtol(optarg, NULL, 0);
- 			break;
-@@ -185,6 +190,14 @@ int main(int argc, char *argv[])
- 	fprintf(stderr, "DTC: %s->%s  on file \"%s\"\n",
- 		inform, outform, arg);
- 
-+	if (depname) {
-+		depfile = fopen(depname, "w");
-+		if (!depfile)
-+			die("Couldn't open dependency file %s: %s\n", depname,
-+			    strerror(errno));
-+		fprintf(depfile, "%s:", outname);
-+	}
-+
- 	if (streq(inform, "dts"))
- 		bi = dt_from_source(arg);
- 	else if (streq(inform, "fs"))
-@@ -194,6 +207,11 @@ int main(int argc, char *argv[])
- 	else
- 		die("Unknown input format \"%s\"\n", inform);
- 
-+	if (depfile) {
-+		fputc('\n', depfile);
-+		fclose(depfile);
-+	}
-+
- 	if (cmdline_boot_cpuid != -1)
- 		bi->boot_cpuid_phys = cmdline_boot_cpuid;
- 
-diff --git a/srcpos.c b/srcpos.c
-index 2dbc874..36a38e9 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -40,6 +40,7 @@ static char *dirname(const char *path)
- 	return NULL;
- }
- 
-+FILE *depfile; /* = NULL */
- struct srcfile_state *current_srcfile; /* = NULL */
- 
- /* Detect infinite include recursion. */
-@@ -67,6 +68,9 @@ FILE *srcfile_relative_open(const char *fname, char **fullnamep)
- 			    strerror(errno));
- 	}
- 
-+	if (depfile)
-+		fprintf(depfile, " %s", fullname);
-+
- 	if (fullnamep)
- 		*fullnamep = fullname;
- 	else
-diff --git a/srcpos.h b/srcpos.h
-index bd7966e..ce980ca 100644
---- a/srcpos.h
-+++ b/srcpos.h
-@@ -30,6 +30,7 @@ struct srcfile_state {
- 	struct srcfile_state *prev;
- };
- 
-+extern FILE *depfile; /* = NULL */
- extern struct srcfile_state *current_srcfile; /* = NULL */
- 
- FILE *srcfile_relative_open(const char *fname, char **fullnamep);
-diff --git a/tests/dependencies.cmp b/tests/dependencies.cmp
-new file mode 100644
-index 0000000..bcd9432
---- /dev/null
-+++ b/tests/dependencies.cmp
-@@ -0,0 +1 @@
-+dependencies.test.dtb: dependencies.dts deps_inc1.dtsi deps_inc2.dtsi
-diff --git a/tests/dependencies.dts b/tests/dependencies.dts
-new file mode 100644
-index 0000000..2cfe31b
---- /dev/null
-+++ b/tests/dependencies.dts
-@@ -0,0 +1,6 @@
-+/dts-v1/;
-+
-+/include/ "deps_inc1.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/deps_inc1.dtsi b/tests/deps_inc1.dtsi
-new file mode 100644
-index 0000000..5c607dc
---- /dev/null
-+++ b/tests/deps_inc1.dtsi
-@@ -0,0 +1 @@
-+/include/ "deps_inc2.dtsi"
-diff --git a/tests/deps_inc2.dtsi b/tests/deps_inc2.dtsi
-new file mode 100644
-index 0000000..710cecc
---- /dev/null
-+++ b/tests/deps_inc2.dtsi
-@@ -0,0 +1 @@
-+/* Empty */
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index da6f970..b96f6d8 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -353,6 +353,10 @@ dtc_tests () {
-     run_sh_test dtc-fatal.sh -I dts -O dtb nosuchfile.dts
-     run_sh_test dtc-fatal.sh -I dtb -O dtb nosuchfile.dtb
-     run_sh_test dtc-fatal.sh -I fs -O dtb nosuchfile
-+
-+    # Dependencies
-+    run_dtc_test -I dts -O dtb -o dependencies.test.dtb -d dependencies.test.d dependencies.dts
-+    run_wrap_test cmp dependencies.test.d dependencies.cmp
- }
- 
- cmp_tests () {
+> 
+>> 	};
+>>
+>> I'm not sure about the compatible strings for the watchdog though. Any
+>> better idea?
+> 
+> Some reason I did arm,smp-twd and arm-cortex-a9-wdt for highbank.dts
+> which wasn't very consistent.
+> 
+> How about *-twd-timer and *-twd-wdt?
+
+Fine by me.
+
+> Probably we should drop the generic "arm-smp-*" versions.
+
+Agreed. I'll respin this patch series and add the necessary updates to
+the affected platforms' DTS.
+
+Thanks,
+
+	M.
 -- 
-1.7.0.4
+Jazz is not dead. It just smells funny...
