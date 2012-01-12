@@ -1,114 +1,75 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Wed, 11 Jan 2012 15:59:26 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A83A@HQMAIL01.nvidia.com>
-References: <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
- <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
- <20120107135445.GI4790@S2101-09.ap.freescale.net>
- <20120108125156.GB2203@richard-laptop>
- <20120109015625.GE1835@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A6FB@HQMAIL01.nvidia.com>
- <20120111235634.GG20968@S2101-09.ap.freescale.net>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer constants
+Date: Wed, 11 Jan 2012 14:05:28 -1000
+Message-ID: <4F0E23C8.8030009@firmworks.com>
+References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
+ <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
+ <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
+ <20120111130056.GK4935@truffala.fritz.box> <E1RkzJs-000590-4s@jdl.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120111235634.GG20968@S2101-09.ap.freescale.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Richard Zhao <richard.zhao@linaro.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, "cjb@laptop.org" <cjb@laptop.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <dongas86@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote at Wednesday, January 11, 2012 4:57 PM:
-> On Wed, Jan 11, 2012 at 10:37:36AM -0800, Stephen Warren wrote:
-> > Shawn Guo wrote at Sunday, January 08, 2012 6:56 PM:
-> > > On Sun, Jan 08, 2012 at 08:51:59PM +0800, Richard Zhao wrote:
-> > > ...
-> > > > > > So, this does appear to be conflating the two things: The definition of
-> > > > > > what pins are in a pingroup, and the mux function for a particular
-> > > > > > setting of that pingroup. I think you need separate nodes for this.
-> > > > > >
-> > > > > At least for imx, we do not have mux function setting for pingroup.
-> > > > > Instead, it only applies to individual pin.
-> > > > I think it depends on function definition of pinmux driver. For the
-> > > > imx example patch, it's one-to-one.
-> > >
-> > > It should depend on particular imx soc pinmux design rather than
-> > > pinmux driver.  If it's always one-to-one case, we do not need
-> > > pinmux at all.  Aisheng's patch just did not enumerate all the groups
-> > > for given function.  Instead, it puts a couple simple examples there
-> > > for demonstration.
-> > >
-> > > ...
-> > >
-> > > > > > 		uart4func: func@1 {
-> > > > > > 			func-name = "uart4";
-> > > > > > 			locations = <&bargrp &bazgrp>;
-> > > > > > 			mux-value = <6 3>;
-> > > > > > 		};
-> > > > >
-> > > > > I prefer to have function node defined in <board>.dtsi, since it's
-> > > > > all about defining phandle to the correct pingroup, which should be
-> > > > > decided by board design.
-> > > > group and function are one-to-one mapped for imx.
-> > >
-> > > Again, it's not the case.
-> > >
-> > > > So if you put function
-> > > > in board dts, why not put pin group there too?
-> > >
-> > > If we put pingroup data in <board>.dts, the data will be likely get
-> > > duplicated a lot in different board dts files.  For example, if
-> > > imx6q-sabrelite chooses the same pingroup for usdhc3 and usdhc4 as
-> > > imx6q-arm2, the pingroup data will be duplicated between imx6q-arm2.dts
-> > > and imx6q-sabrelite.dts.
-> > >
-> > > On the contrary, putting pingroup data in <soc>.dtsi and having function
-> > > node in <board>.dts with phandle pointing to the correct pingroup will
-> > > help avoid such data duplication.
-> >
-> > Oh, when I wrote in my first mail today that I'd expand on one of my
-> > points when responding to Richard Zhao's email, I actually meant when
-> > responding to this email. Sorry for the confusion!
-> >
-> > So, I don't agree with putting the "combinations" in the SoC .dtsi file,
-> > since that could grow it into a huge file that contains a lot of nodes
-> > that are used on some board somewhere, but typically not the "current"
-> > board that's including it.
-> >
-> > However, I do see that there are probably lots of common combinations
-> > that get re-used across multiple boards, and you might want a common
-> > place to put those definitions so they don't need to be cut/paste
-> > everywhere.
-> >
-> > So, why not create specific include files (.dtsi files) for each of those
-> > combinations? Each include could define one particular common combination
-> > of pin mux usage, or perhaps even a set of them if they're commonly used
-> > together. Each board file would include the SoC .dtsi file, the relevant
-> > set of "pinmux config" .dtsi files, and then include anything custom to
-> > that board.
-> 
-> This is somehow overkilled to me.  Doing this will create a big mount
-> of .dtsi files to bloat folder arch/arm/boot/dts.  Putting the
-> 'combinations' in <soc>.dtsi seems perfect fine to me.
+I find it ironic that the very first device tree implementation, dating 
+back to 1989, was built around a Turing complete language.
 
-I see a couple problems with that approach:
-
-1) <soc>.dtsi gets very bloated, and wastes space containing board-
-specific data for boards other than the "current" one.
-
-2) We need to invent some more complex DT format so you can reference
-these canned combinations from the device drivers, rather than simply
-enumerating the mux value for each pin/group.
-
-You could put the combination .dtsi files in arch/arm/boot/dts/<soc> to
-maintain some extra order.
-
--- 
-nvpublic
+On 1/11/2012 11:36 AM, Stephen Warren wrote:
+> Jon Loeliger wrote at Wednesday, January 11, 2012 7:38 AM:
+>>> On Tue, Jan 10, 2012 at 01:54:30PM -0800, Stephen Warren wrote:
+>>>> John, David,
+>>>>
+>>>> What can we do to reach consensus on expanding dtc to handle named
+>>>> constants, or in general any future direction to extend the syntax with
+>>>> expressions etc.?
+>>>
+>>> Hrm, so, I'm not at all keen to add a named constant syntax without at
+>>> least having an outline of what a future macro/function syntax would
+>>> look like.
+>>
+>> Which is where I thought it was left earlier...? :-)
+>> And it's not just what the macro/function syntax will look like,
+>> but also how these will play into a more generalized expression
+>> handling mechanism.  Defining something one-off now that doesn't
+>> fit well into a long term plan is less than ideal.
+>>
+>> Yes, I know that is tantamount to requiring the whole, larger
+>> picture be solved first.  But Dave is right -- at least an outline
+>> of the direction.  Seriously, the lexical problems can form some
+>> of the nastiest gotchas if we're not careful from the onset.
+>
+> So that all makes sense.
+>
+> My question is: How can we get consensus on what we want that complete
+> future syntax to be? IIRC, Jon has a branch that implements a proposal,
+> and David at least posted a different proposal if not actual code that
+> implemented it. We're not missing proposals, but rather a mechanism to
+> decide between them?
+>
+> For what it's worth, I'd tend towards a simple expression-based syntax
+> where property values can be calculated with C-style expressions. Basic
+> math stuff like ( ) + - * /&  | ~<<  >>  and some basic string handling
+> operations (str(int) and concatenation). I think that'd cover the vast
+> majority of use-cases wouldn't it? For more advanced stuff like loops
+> to synthesize multiple nodes, it seems like writing a custom script to
+> generate the .dts file and then passing the result to dtc would be more
+> modular, and not require us to create a whole new Turing-complete
+> language in dtc?
+>
