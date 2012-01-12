@@ -1,22 +1,12 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH] ARM: vexpress: initial device tree support
-Date: Thu, 12 Jan 2012 08:52:05 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17801D1C9C@HQMAIL01.nvidia.com>
-References: <CAOZdJXXPJEaFO-ymvb_TsTJ6W2T7_aWXA=9RZprVmKBOn9cu8A@mail.gmail.com>
- <4F0B897A.20502@firmworks.com>
- <20120110122252.GA7180@jl-vm1.vm.bytemark.co.uk>
- <4F0CB485.9010106@freescale.com> <4F0CBD46.2010909@firmworks.com>
- <4F0CD7BC.7080409@freescale.com> <4F0D2F90.8020801@firmworks.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A770@HQMAIL01.nvidia.com>
- <4F0E1843.7030207@firmworks.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A848@HQMAIL01.nvidia.com>
- <20120112120920.GF7180@jl-vm1.vm.bytemark.co.uk>
+Subject: [PATCH V2 REPOST] dtc: Implement -d option to write out a dependency
+ file
+Date: Thu, 12 Jan 2012 10:25:28 -0700
+Message-ID: <1326389128-8670-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120112120920.GF7180-DqlFc3psUjeg7Qil/0GVWOc42C6kRsbE@public.gmane.org>
-Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,51 +16,198 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Lokier <jamie-yetKDKU6eevNLxjTenLetw@public.gmane.org>
-Cc: =?iso-8859-2?Q?Pawe=B3_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-CfjtxxwdHycX+EX/Zwu52A@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jamie Lokier wrote at Thursday, January 12, 2012 5:09 AM:
-> Stephen Warren wrote:
-> > Mitch Bradley wrote at Wednesday, January 11, 2012 4:16 PM:
-> > > Perhaps I'm missing something, but it appears to me that the model is to
-> > > set the correct GPIO state before each use, instead of a
-> > > save-set-use-restore model.
-> >
-> > That's true, but the select action happens implicitly inside the I2C
-> > core for any and all transactions, AIUI, so the two modes are equivalent.
-> 
-> If there is some reason why it would be desirable to deselect
-> the DDC I2C bus after transactions, that could be added as an option
-> to the GPIO I2C mux, but I can't think of a reason.
+This will allow callers to rebuild .dtb files when any of the /include/d
+.dtsi files are modified, not just the top-level .dts file.
 
-The feature is already in the GPIO I2C mux driver.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+---
+v2: Replaced fputs/fputc with fprintf.
+v2 repost: Add David's ack.
 
-> > For an I2C mux that is controlled via I2C, you can just add the mux
-> > node as a child of the I2C controller, since it has an I2C address,
-> > and so putting it there makes sense.
-> 
-> Only if the mux's I2C slave is on the near side of the mux so that
-> it's always addressable regardless of mux state, and if it's on the
-> same I2C.
+This patch is for the dtc repository. I'm reposting it because Jon said it
+didn't make it directly to him the first time around.
 
-True. Do any I2C I2C muxes not work like that though?
+ Documentation/manual.txt |    3 +++
+ dtc.c                    |   20 +++++++++++++++++++-
+ srcpos.c                 |    4 ++++
+ srcpos.h                 |    1 +
+ tests/dependencies.cmp   |    1 +
+ tests/dependencies.dts   |    6 ++++++
+ tests/deps_inc1.dtsi     |    1 +
+ tests/deps_inc2.dtsi     |    1 +
+ tests/run_tests.sh       |    4 ++++
+ 9 files changed, 40 insertions(+), 1 deletions(-)
+ create mode 100644 tests/dependencies.cmp
+ create mode 100644 tests/dependencies.dts
+ create mode 100644 tests/deps_inc1.dtsi
+ create mode 100644 tests/deps_inc2.dtsi
 
-> > But for an I2C mux that's controlled using GPIOs or pinmux, there's no
-> > I2C address so I guess the mux shouldn't be directly underneath the I2C
-> > controller.
-> 
-> It's connected to: (a) an I2C, and (b) a GPIO.
-> 
-> It can't be child of both, but I don't see why the GPIO can't be
-> referred by phandle and the I2C it's muxing be the direct parent.
-> That seems more natural to me.
-
-That'd be nice, bus a GPIO I2C mux isn't an addressable device on the
-I2C bus; it has no I2C accessible registers or functionality. Since
-there's no I2C address, I don't think we can make it a child of the I2C
-bus without breaking existing semantics of the reg property for I2C
-child nodes.
-
+diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+index 14508f3..989c589 100644
+--- a/Documentation/manual.txt
++++ b/Documentation/manual.txt
+@@ -106,6 +106,9 @@ Options:
+     -O <output_format>
+ 	The generated output format, as listed above.
+ 
++    -d <dependency_filename>
++	Generate a dependency file during compilation.
++
+     -q
+ 	Quiet: -q suppress warnings, -qq errors, -qqq all
+ 
+diff --git a/dtc.c b/dtc.c
+index 15d2fc2..7a0c605 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -71,6 +71,7 @@ static void  __attribute__ ((noreturn)) usage(void)
+ 	fprintf(stderr, "\t\t\tasm - assembler source\n");
+ 	fprintf(stderr, "\t-V <output version>\n");
+ 	fprintf(stderr, "\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n", DEFAULT_FDT_VERSION);
++	fprintf(stderr, "\t-d <output dependency file>\n");
+ 	fprintf(stderr, "\t-R <number>\n");
+ 	fprintf(stderr, "\t\tMake space for <number> reserve map entries (relevant for \n\t\tdtb and asm output only)\n");
+ 	fprintf(stderr, "\t-S <bytes>\n");
+@@ -99,6 +100,7 @@ int main(int argc, char *argv[])
+ 	const char *inform = "dts";
+ 	const char *outform = "dts";
+ 	const char *outname = "-";
++	const char *depname = NULL;
+ 	int force = 0, sort = 0;
+ 	const char *arg;
+ 	int opt;
+@@ -111,7 +113,7 @@ int main(int argc, char *argv[])
+ 	minsize    = 0;
+ 	padsize    = 0;
+ 
+-	while ((opt = getopt(argc, argv, "hI:O:o:V:R:S:p:fqb:vH:s")) != EOF) {
++	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:vH:s")) != EOF) {
+ 		switch (opt) {
+ 		case 'I':
+ 			inform = optarg;
+@@ -125,6 +127,9 @@ int main(int argc, char *argv[])
+ 		case 'V':
+ 			outversion = strtol(optarg, NULL, 0);
+ 			break;
++		case 'd':
++			depname = optarg;
++			break;
+ 		case 'R':
+ 			reservenum = strtol(optarg, NULL, 0);
+ 			break;
+@@ -185,6 +190,14 @@ int main(int argc, char *argv[])
+ 	fprintf(stderr, "DTC: %s->%s  on file \"%s\"\n",
+ 		inform, outform, arg);
+ 
++	if (depname) {
++		depfile = fopen(depname, "w");
++		if (!depfile)
++			die("Couldn't open dependency file %s: %s\n", depname,
++			    strerror(errno));
++		fprintf(depfile, "%s:", outname);
++	}
++
+ 	if (streq(inform, "dts"))
+ 		bi = dt_from_source(arg);
+ 	else if (streq(inform, "fs"))
+@@ -194,6 +207,11 @@ int main(int argc, char *argv[])
+ 	else
+ 		die("Unknown input format \"%s\"\n", inform);
+ 
++	if (depfile) {
++		fputc('\n', depfile);
++		fclose(depfile);
++	}
++
+ 	if (cmdline_boot_cpuid != -1)
+ 		bi->boot_cpuid_phys = cmdline_boot_cpuid;
+ 
+diff --git a/srcpos.c b/srcpos.c
+index 2dbc874..36a38e9 100644
+--- a/srcpos.c
++++ b/srcpos.c
+@@ -40,6 +40,7 @@ static char *dirname(const char *path)
+ 	return NULL;
+ }
+ 
++FILE *depfile; /* = NULL */
+ struct srcfile_state *current_srcfile; /* = NULL */
+ 
+ /* Detect infinite include recursion. */
+@@ -67,6 +68,9 @@ FILE *srcfile_relative_open(const char *fname, char **fullnamep)
+ 			    strerror(errno));
+ 	}
+ 
++	if (depfile)
++		fprintf(depfile, " %s", fullname);
++
+ 	if (fullnamep)
+ 		*fullnamep = fullname;
+ 	else
+diff --git a/srcpos.h b/srcpos.h
+index bd7966e..ce980ca 100644
+--- a/srcpos.h
++++ b/srcpos.h
+@@ -30,6 +30,7 @@ struct srcfile_state {
+ 	struct srcfile_state *prev;
+ };
+ 
++extern FILE *depfile; /* = NULL */
+ extern struct srcfile_state *current_srcfile; /* = NULL */
+ 
+ FILE *srcfile_relative_open(const char *fname, char **fullnamep);
+diff --git a/tests/dependencies.cmp b/tests/dependencies.cmp
+new file mode 100644
+index 0000000..bcd9432
+--- /dev/null
++++ b/tests/dependencies.cmp
+@@ -0,0 +1 @@
++dependencies.test.dtb: dependencies.dts deps_inc1.dtsi deps_inc2.dtsi
+diff --git a/tests/dependencies.dts b/tests/dependencies.dts
+new file mode 100644
+index 0000000..2cfe31b
+--- /dev/null
++++ b/tests/dependencies.dts
+@@ -0,0 +1,6 @@
++/dts-v1/;
++
++/include/ "deps_inc1.dtsi"
++
++/ {
++};
+diff --git a/tests/deps_inc1.dtsi b/tests/deps_inc1.dtsi
+new file mode 100644
+index 0000000..5c607dc
+--- /dev/null
++++ b/tests/deps_inc1.dtsi
+@@ -0,0 +1 @@
++/include/ "deps_inc2.dtsi"
+diff --git a/tests/deps_inc2.dtsi b/tests/deps_inc2.dtsi
+new file mode 100644
+index 0000000..710cecc
+--- /dev/null
++++ b/tests/deps_inc2.dtsi
+@@ -0,0 +1 @@
++/* Empty */
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index da6f970..b96f6d8 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -353,6 +353,10 @@ dtc_tests () {
+     run_sh_test dtc-fatal.sh -I dts -O dtb nosuchfile.dts
+     run_sh_test dtc-fatal.sh -I dtb -O dtb nosuchfile.dtb
+     run_sh_test dtc-fatal.sh -I fs -O dtb nosuchfile
++
++    # Dependencies
++    run_dtc_test -I dts -O dtb -o dependencies.test.dtb -d dependencies.test.d dependencies.dts
++    run_wrap_test cmp dependencies.test.d dependencies.cmp
+ }
+ 
+ cmp_tests () {
 -- 
-nvpublic
+1.7.0.4
