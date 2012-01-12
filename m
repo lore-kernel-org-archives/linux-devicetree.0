@@ -1,60 +1,50 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: Re: [PATCH V6 4/7] cpufreq: add clk-reg cpufreq driver
-Date: Thu, 12 Jan 2012 16:23:01 +0800
-Message-ID: <20120112082300.GF2414@b20223-02.ap.freescale.net>
-References: <1325213769-11752-1-git-send-email-richard.zhao@linaro.org>
- <1325213769-11752-5-git-send-email-richard.zhao@linaro.org>
- <87aa5t25ad.fsf@ti.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH] USB: EHCI: Don't use NO_IRQ in xilinx ehci driver
+Date: Thu, 12 Jan 2012 09:26:17 +0100
+Message-ID: <1326356777-24135-1-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87aa5t25ad.fsf@ti.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Kevin Hilman <khilman@ti.com>
-Cc: Richard Zhao <richard.zhao@linaro.org>, linux@arm.linux.org.uk, arnd@arndb.de, patches@linaro.org, marc.zyngier@arm.com, catalin.marinas@arm.com, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, rdunlap@xenotime.net, eric.miao@linaro.org, rob.herring@calxeda.com, kernel@pengutronix.de, davej@redhat.com, jamie@jamieiles.com, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2012 at 03:22:34PM -0800, Kevin Hilman wrote:
-> Richard Zhao <richard.zhao@linaro.org> writes:
-> 
-> > The driver get cpu operation point table from device tree cpu0 node,
-> 
-> Since we already have an existing OPP infrastructure in the kernel,
-> seems like  this driver should get OPPs by asking the OPP layer.
-When I created the patch, there's only omap cpufreq driver using
-OPP. If it depends on OPP, it might prevent users who have not
-adopted OPP from using the driver.
-> 
-> This approach assumes the OPP layer is static at boot time and not
-> changing, however that's not the case in practice.
-> 
-> The OPP layer could be extended to read boot-time OPPs from DT if
-> desired, but since the OPPs are also populated/enabled/disabled
-> dynamicaly on some platforms (e.g. OMAP), I think the any generic
-> CPUfreq driver should use the OPP interface and not DT directly.
-> 
-> > and adjusts operating points using clk and regulator APIs.
-> 
-> For a generic driver, the regulator used should also be configurable.
-> 
-> For example, this driver currently assumes a regulator named "cpu" for
-> all instances.   If you had separate clusters with independent voltage
-> control, you'd likely have a separate regulator for each cluster.
-The driver, for now, assumes all cpu cores uses the same clk and voltage.
-It's correct for most arm multi-core SoC.
-Do you have real case to need different voltage/clk?
-And the regulator will be specified in dts after cpu convert from sys
-device to normal device.
+Drivers shouldn't use NO_IRQ. This driver is used
+by Microblaze and PPC. PPC defines NO_IRQ as 0
+and Microblaze has removed it.
 
-Thanks
-Richard
-> 
-> Kevin
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+CC: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+CC: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
+CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+CC: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ drivers/usb/host/ehci-xilinx-of.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
+diff --git a/drivers/usb/host/ehci-xilinx-of.c b/drivers/usb/host/ehci-xilinx-of.c
+index 32793ce..9c2cc46 100644
+--- a/drivers/usb/host/ehci-xilinx-of.c
++++ b/drivers/usb/host/ehci-xilinx-of.c
+@@ -183,7 +183,7 @@ static int __devinit ehci_hcd_xilinx_of_probe(struct platform_device *op)
+ 	}
+ 
+ 	irq = irq_of_parse_and_map(dn, 0);
+-	if (irq == NO_IRQ) {
++	if (!irq) {
+ 		printk(KERN_ERR "%s: irq_of_parse_and_map failed\n", __FILE__);
+ 		rv = -EBUSY;
+ 		goto err_irq;
+-- 
+1.7.5.4
