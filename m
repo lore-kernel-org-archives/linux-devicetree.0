@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 1/6] fdt: Add debugging to fdtdec_get_int/addr()
-Date: Fri, 13 Jan 2012 15:10:51 -0800
-Message-ID: <1326496256-5559-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH 4/6] tegra: fdt: Add NAND definitions to fdt
+Date: Fri, 13 Jan 2012 15:10:54 -0800
+Message-ID: <1326496256-5559-5-git-send-email-sjg@chromium.org>
 References: <1326496256-5559-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,59 +18,40 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The new debugging shows the value of integers and addresses read
-from the device tree.
+Add a flash node to handle the NAND, including memory timings and
+page / block size information.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- lib/fdtdec.c |   22 ++++++++++++++++------
- 1 files changed, 16 insertions(+), 6 deletions(-)
+ board/nvidia/dts/tegra2-seaboard.dts |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
 
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index f08bfca..5d97e2a 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -77,11 +77,16 @@ fdt_addr_t fdtdec_get_addr(const void *blob, int node,
- 	const fdt_addr_t *cell;
- 	int len;
- 
--	debug("get_addr: %s\n", prop_name);
-+	debug("%s: %s\n", __func__, prop_name);
- 	cell = fdt_getprop(blob, node, prop_name, &len);
- 	if (cell && (len == sizeof(fdt_addr_t) ||
--			len == sizeof(fdt_addr_t) * 2))
--		return fdt_addr_to_cpu(*cell);
-+			len == sizeof(fdt_addr_t) * 2)) {
-+		fdt_addr_t addr = fdt_addr_to_cpu(*cell);
+diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
+index 33260a4..cc9abe2 100644
+--- a/board/nvidia/dts/tegra2-seaboard.dts
++++ b/board/nvidia/dts/tegra2-seaboard.dts
+@@ -125,4 +125,19 @@
+ 				0x00000000 0x00000000 0x00000000 0x00000000 >;
+ 		};
+ 	};
 +
-+		debug("%p\n", (void *)addr);
-+		return addr;
-+	}
-+	debug("(not found)\n");
- 	return FDT_ADDR_T_NONE;
- }
- 
-@@ -91,10 +96,15 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
- 	const s32 *cell;
- 	int len;
- 
--	debug("get_size: %s\n", prop_name);
-+	debug("%s: %s: ", __func__, prop_name);
- 	cell = fdt_getprop(blob, node, prop_name, &len);
--	if (cell && len >= sizeof(s32))
--		return fdt32_to_cpu(cell[0]);
-+	if (cell && len >= sizeof(s32)) {
-+		s32 val = fdt32_to_cpu(cell[0]);
-+
-+		debug("%#x (%d)\n", val, val);
-+		return val;
-+	}
-+	debug("(not found)\n");
- 	return default_val;
- }
- 
++	nand-controller@0x70008000 {
++		wp-gpios = <&gpio 59 0>;		/* PH3 */
++		width = <8>;
++		nvidia,timing = <26 100 20 80 20 10 12 10 70>;
++		nand@0 {
++			compatible = "hynix,hy27uf4g2b", "nand-flash";
++			page-data-bytes = <2048>;
++			tag-ecc-bytes = <4>;
++			tag-bytes = <20>;
++			data-ecc-bytes = <36>;
++			skipped-spare-bytes = <4>;
++			page-spare-bytes = <64>;
++		};
++	};
+ };
 -- 
 1.7.7.3
