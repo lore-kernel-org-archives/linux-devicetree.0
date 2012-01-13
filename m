@@ -1,87 +1,74 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v2 4/5] arm/dts: OMAP3: Add interrupt-controller bindings
- for INTC
-Date: Fri, 13 Jan 2012 12:03:07 +0100
-Message-ID: <4F100F6B.2050303@ti.com>
-References: <1324388398-2683-1-git-send-email-b-cousson@ti.com> <1324388398-2683-5-git-send-email-b-cousson@ti.com> <79CD15C6BA57404B839C016229A409A8317A43FC@DBDE01.ent.ti.com>
+From: Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH] USB: EHCI: Don't use NO_IRQ in xilinx ehci driver
+Date: Fri, 13 Jan 2012 12:27:22 +0100
+Message-ID: <4F10151A.8000209@petalogix.com>
+References: <Pine.LNX.4.44L0.1201121055370.1384-100000@iolanthe.rowland.org>
+Reply-To: michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <79CD15C6BA57404B839C016229A409A8317A43FC@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1201121055370.1384-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vaibhav,
-
-On 1/13/2012 7:14 AM, Hiremath, Vaibhav wrote:
-> On Tue, Dec 20, 2011 at 19:09:57, Cousson, Benoit wrote:
-
-[...]
-
->> +++ b/arch/arm/boot/dts/omap3.dtsi
->> @@ -54,10 +54,12 @@
->>   		ranges;
->>   		ti,hwmods = "l3_main";
+Alan Stern wrote:
+> On Thu, 12 Jan 2012, Michal Simek wrote:
+> 
+>> Drivers shouldn't use NO_IRQ. This driver is used
+>> by Microblaze and PPC. PPC defines NO_IRQ as 0
+>> and Microblaze has removed it.
 >>
->> -		intc: interrupt-controller@1 {
->> -			compatible = "ti,omap3-intc";
->> +		intc: interrupt-controller@48200000 {
->> +			compatible = "ti,omap2-intc";
->>   			interrupt-controller;
->>   			#interrupt-cells =<1>;
->> +			ti,intc-size =<96>;
-> Can we configure/change this field in platform specific .dts file?
-> OR
-> Is there condition based configuration possible in DT?
+>> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+>> CC: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+>> CC: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
+>> CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> CC: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> ---
+>>  drivers/usb/host/ehci-xilinx-of.c |    2 +-
+>>  1 files changed, 1 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/usb/host/ehci-xilinx-of.c b/drivers/usb/host/ehci-xilinx-of.c
+>> index 32793ce..9c2cc46 100644
+>> --- a/drivers/usb/host/ehci-xilinx-of.c
+>> +++ b/drivers/usb/host/ehci-xilinx-of.c
+>> @@ -183,7 +183,7 @@ static int __devinit ehci_hcd_xilinx_of_probe(struct platform_device *op)
+>>  	}
+>>  
+>>  	irq = irq_of_parse_and_map(dn, 0);
+>> -	if (irq == NO_IRQ) {
+>> +	if (!irq) {
+>>  		printk(KERN_ERR "%s: irq_of_parse_and_map failed\n", __FILE__);
+>>  		rv = -EBUSY;
+>>  		goto err_irq;
+> 
+> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 
-I'm not sure to fully understand how your two options differ.
-Otherwise, yes the DT it can be configured, that why I exposed this 
-attribute.
-The intc code was already supporting the ti81xx with 128 lines as well, 
-hence the need to make it configurable.
-The other option was two handle that in the driver with 2 different 
-compatible strings.
+Thanks Alan.
 
-> To be specific,
->
-> I am adding support for AM335x EVM (using all your DT support patches),
-> The device is considered as OMAP3 variant and when it comes to INTC support,
-> I need to configure it to value "128", rest everything is same
-> (including base add).
->
-> Can I do something like
->
-> File - am335x-evm.dts
->
-> /include/ "omap3.dtsi"
->
-> ....
-> Again change the specific fields of " intc: interrupt-controller"?
+I have seen that Grant sent the same patch to lkml too.
+Here is the thread: http://lkml.org/lkml/2012/1/11/342
 
-Yes.
+Grant: How fast do you think you are able to merge your patches?
 
-> ....
->
-> How can this be handled?
+Currently I have remove NO_IRQ from Microblaze and we use this driver which
+means that driver compilation failed right now. That's why I would like to fix asap.
 
-After the include, you can redefine the node and the hierarchy:
+Thanks,
+Michal
 
-+	ocp {
-+		intc: interrupt-controller@48200000 {
-+			ti,intc-size = <128>;
-+		};
-...
-
-or use the label directly:
-
-+&intc: {
-+	ti,intc-size =<128>;
-+}
-
-You can have a look at the way i2c or twl are using the include so far.
-
-Regards,
-Benoit
+-- 
+Michal Simek, Ing. (M.Eng)
+PetaLogix - Linux Solutions for a Reconfigurable World
+w: www.petalogix.com p: +61-7-30090663,+42-0-721842854 f: +61-7-30090663
