@@ -1,84 +1,50 @@
-From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Subject: RE: [PATCH v2 4/5] arm/dts: OMAP3: Add interrupt-controller
- bindings for INTC
-Date: Fri, 13 Jan 2012 06:14:17 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A8317A43FC@DBDE01.ent.ti.com>
-References: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
- <1324388398-2683-5-git-send-email-b-cousson@ti.com>
+From: Heiko Schocher <hs@denx.de>
+Subject: Re: [PATCH v2 3/7] tegra: fdt: Add extra I2C bindings for
+ U-Boot
+Date: Fri, 13 Jan 2012 07:31:23 +0100
+Message-ID: <4F0FCFBB.3070407@denx.de>
+References: <1326394818-32227-1-git-send-email-sjg@chromium.org>
+	<1326394818-32227-4-git-send-email-sjg@chromium.org>
+Reply-To: hs@denx.de
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1324388398-2683-5-git-send-email-b-cousson@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tony@atomide.com" <tony@atomide.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-reply-to: <1326394818-32227-4-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 20, 2011 at 19:09:57, Cousson, Benoit wrote:
-> Update the DTS with the proper information required by the
-> INTC bindings.
+Hello Simon,
+
+Simon Glass wrote:
+> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
 > 
-> - Add the number of interrupt lines
-> - Add the reg and the compatible entries.
-> 
-> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Simon Glass <sjg@chromium.org>
 > ---
->  arch/arm/boot/dts/omap3.dtsi |    6 ++++--
->  1 files changed, 4 insertions(+), 2 deletions(-)
+> Changes in v2:
+> - Adjust definitions to fit new peripheral clock bindings
+> - Change 'speed' to 'clock-frequency'
+> - Remove u-boot,pinmux binding (sadly)
 > 
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index d202bb5..6866dc7 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -54,10 +54,12 @@
->  		ranges;
->  		ti,hwmods = "l3_main";
->  
-> -		intc: interrupt-controller@1 {
-> -			compatible = "ti,omap3-intc";
-> +		intc: interrupt-controller@48200000 {
-> +			compatible = "ti,omap2-intc";
->  			interrupt-controller;
->  			#interrupt-cells = <1>;
-> +			ti,intc-size = <96>;
-Can we configure/change this field in platform specific .dts file?
-OR
-Is there condition based configuration possible in DT?
+>  arch/arm/dts/tegra20.dtsi |   10 +++++++++-
 
-To be specific,
+Hmm.. we have no such a directory in the u-boot source tree ... ?
+I think, this patch is for the linux tree?
 
-I am adding support for AM335x EVM (using all your DT support patches),
-The device is considered as OMAP3 variant and when it comes to INTC support,
-I need to configure it to value "128", rest everything is same 
-(including base add).
+[...]
 
-Can I do something like
-
-File - am335x-evm.dts
-
-/include/ "omap3.dtsi"
-
-....
-Again change the specific fields of " intc: interrupt-controller"?
-....
-
-How can this be handled?
-
-Thanks,
-Vaibhav
-> +			reg = <0x48200000 0x1000>;
->  		};
->  	};
->  };
-> -- 
-> 1.7.0.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
