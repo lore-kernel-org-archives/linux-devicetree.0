@@ -1,99 +1,68 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Fri, 13 Jan 2012 10:33:21 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17801D1FAB@HQMAIL01.nvidia.com>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
-	<1324402840-32451-3-git-send-email-b29396@freescale.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
-	<CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC605788508AC65@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF177EE3A76A@HQMAIL01.nvidia.com>
- <CAA+hA=RCmctmQJU4-k7YhzQDMi8KuyisBqOFhuMd3RV4_E=gCA@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] USB: EHCI: Don't use NO_IRQ in xilinx ehci driver
+Date: Fri, 13 Jan 2012 11:39:10 -0700
+Message-ID: <20120113183910.GB22767@ponder.secretlab.ca>
+References: <Pine.LNX.4.44L0.1201121055370.1384-100000@iolanthe.rowland.org>
+ <4F10151A.8000209@petalogix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAA+hA=RCmctmQJU4-k7YhzQDMi8KuyisBqOFhuMd3RV4_E=gCA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <dongas86@gmail.com>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F10151A.8000209-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dong Aisheng wrote at Friday, January 13, 2012 10:12 AM:
-> On Thu, Jan 12, 2012 at 4:17 AM, Stephen Warren <swarren@nvidia.com> wrote:
-> ...
-> >> To keep consistency as the currently design of pinctrl subsystem and also meet
-> >> the dt design philosophy, we still do not introduce a pinmux map in dt.
-> >> Instead, we choose to scan all the device node with a 'pinmux' phandle to construct
-> >> a pinmux map table before register the pin controller device(here we may also scan
-> >> the hog_on_boot node) and I guess it's easy to do that.
-> > ...
-> >> (Without scan the device node to construct the pinmux map table, we can only get the map
-> >> Information when we run the pinmux_get.
-> >> See: https://lkml.org/lkml/2012/1/5/153
-> >> So no pinmux map table exists and we surely do not want to see that the sysfs exporting
-> >> pinmux map information works in dt but unwork in non-dt)
+On Fri, Jan 13, 2012 at 12:27:22PM +0100, Michal Simek wrote:
+> Alan Stern wrote:
+> >On Thu, 12 Jan 2012, Michal Simek wrote:
 > >
-> > Hmmm. I'm not sure that the pinctrl code should actively scan all nodes
-> > in the device tree for pin mux properties. That seems a little invasive;
-> > how does pinctrl know which nodes it really should be looking at, and
-> > which nodes are random internal parts of some device's custom binding?
+> >>Drivers shouldn't use NO_IRQ. This driver is used
+> >>by Microblaze and PPC. PPC defines NO_IRQ as 0
+> >>and Microblaze has removed it.
+> >>
+> >>Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+> >>CC: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+> >>CC: Greg Kroah-Hartman <gregkh-l3A5Bk7waGM@public.gmane.org>
+> >>CC: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> >>CC: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >>CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> >>---
+> >> drivers/usb/host/ehci-xilinx-of.c |    2 +-
+> >> 1 files changed, 1 insertions(+), 1 deletions(-)
+> >>
+> >>diff --git a/drivers/usb/host/ehci-xilinx-of.c b/drivers/usb/host/ehci-xilinx-of.c
+> >>index 32793ce..9c2cc46 100644
+> >>--- a/drivers/usb/host/ehci-xilinx-of.c
+> >>+++ b/drivers/usb/host/ehci-xilinx-of.c
+> >>@@ -183,7 +183,7 @@ static int __devinit ehci_hcd_xilinx_of_probe(struct platform_device *op)
+> >> 	}
+> >> 	irq = irq_of_parse_and_map(dn, 0);
+> >>-	if (irq == NO_IRQ) {
+> >>+	if (!irq) {
+> >> 		printk(KERN_ERR "%s: irq_of_parse_and_map failed\n", __FILE__);
+> >> 		rv = -EBUSY;
+> >> 		goto err_irq;
 > >
-> > Personally, I think I'd be OK with the sysfs pinctrl map file only
-> > containing the map entries for devices that had used the pinctrl API,
-> > and hence only parsing the pinmux properties in pinmux_get().
-> >
-> > However, we could perhaps do better by registering a bus notifier, and
-> > pro-actively parsing the top-level DT node (if there is one) for every
-> > device that is created. That way, the mapping would be parsed as soon
-> > as the device was created (or perhaps after probe?).
->
-> After refer to usb bus notifier, usb core will register a bus notifier.
-> When a new usb bus is registered, it will notify the usb core for a
-> new bus added.
+> >Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 > 
-> So i guess you mean pinctrl core provides a notifier to handle the map
-> creation when new map is found during parsing each device node, right?
-
-Yes.
-
-> But it seems parsing of device node and creation of device is at the very early
-> stage when call of_platform_populate in .init_machine code and pinctrl subsystem
-> may still have not change to run to register a bus notifier.
-
-That's possible. There are some early initcalls that might work out
-fine for this, but...
-
-> And i'm not sure it's the right place for of_platform.c to handle
-> pinmux things when create new devices.
-
-So of_device_alloc(), which is called by of_platform_populate() for each
-device, already parses basic DT content such as reg and interrupts, and
-converts them to Linux resources. I'd consider parsing any pinmux properties
-and registering them with the pinctrl subsystem to be of a similar nature,
-so adding some code to of_device_alloc() that calls a core pinmux function
-to parse the DT node seems reasonable to me.
-
-> I wonder it may not work for pinmux map case.
-> If pinctrl core does not provide notifier, who else can be the right
-> one to privide it?
+> Thanks Alan.
 > 
-> > The only case this
-> > might not cover is DT nodes for which the kernel doesn't actually have
-> > a driver, and hence no device is created.
->
-> Per my understanding, the device creation should be independent on the driver.
-> I don't know why no device is created if not have a driver.
-> Did i miss something?
+> I have seen that Grant sent the same patch to lkml too.
+> Here is the thread: http://lkml.org/lkml/2012/1/11/342
+> 
+> Grant: How fast do you think you are able to merge your patches?
 
-Yes, I think the device gets created irrespective, so this isn't actually a problem
+Ignore my patch.  It won't go in until 3.4
 
--- 
-nvpublic
+g.
