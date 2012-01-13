@@ -1,11 +1,11 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: [PATCH 2/2] versatile: dt: register interrupt controllers from dt
-Date: Fri, 13 Jan 2012 00:44:01 +0000
-Message-ID: <1326415441-17695-3-git-send-email-jamie@jamieiles.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] Full DT IRQ support for versatile
+Date: Thu, 12 Jan 2012 18:20:37 -0700
+Message-ID: <CACxGe6v-gkW+pDP-2hTcf7WqeMBtx+H80Xymj7SqS8nqin9qUA@mail.gmail.com>
 References: <1326415441-17695-1-git-send-email-jamie@jamieiles.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <1326415441-17695-1-git-send-email-jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
@@ -17,121 +17,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Switch the versatile_dt board to instantiate both interrupt controllers
-from the device tree using the of_irq_init() helper.
+On Thu, Jan 12, 2012 at 5:43 PM, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org> wrote:
+> These patches move versatile over to instantiating both interrupt
+> controllers from the device tree. =A0I've tested this in qemu for both DT
+> and non-DT platforms but only with an initramfs. =A0I've seen interrupts
+> generated on both controllers for both boot methods.
+>
+> Grant, Rob, this makes use of irqdomain again as I'm not sure what the
+> replacement is going to look like yet. =A0versatile works with DT in
+> mainline, but that's kind of lucky... =A0I know there's been patches to
+> make irq_domain_add_simple() return the irq_domain and can rebase if
+> needed.
 
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Signed-off-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
----
- arch/arm/mach-versatile/core.c         |   27 ++++++++-------------------
- arch/arm/mach-versatile/core.h         |    1 +
- arch/arm/mach-versatile/versatile_dt.c |   15 ++++++++++++++-
- 3 files changed, 23 insertions(+), 20 deletions(-)
+I posted the patches for finishing up irq_domain migration yesterday.
+irq_domain_add_simple() can trivially be changed to
+irq_domain_add_legacy. I'll try out these
+patches on top of my irqdomain/next branch
 
-diff --git a/arch/arm/mach-versatile/core.c b/arch/arm/mach-versatile/core.c
-index cbcda61..1ad2447 100644
---- a/arch/arm/mach-versatile/core.c
-+++ b/arch/arm/mach-versatile/core.c
-@@ -86,27 +86,9 @@ static struct fpga_irq_data sic_irq = {
- #define PIC_MASK	0
- #endif
- 
--/* Lookup table for finding a DT node that represents the vic instance */
--static const struct of_device_id vic_of_match[] __initconst = {
--	{ .compatible = "arm,versatile-vic", },
--	{}
--};
--
--static const struct of_device_id sic_of_match[] __initconst = {
--	{ .compatible = "arm,versatile-sic", },
--	{}
--};
--
--void __init versatile_init_irq(void)
-+void __init versatile_route_irqs(void)
- {
--	vic_init(VA_VIC_BASE, IRQ_VIC_START, ~0, 0);
--	irq_domain_generate_simple(vic_of_match, VERSATILE_VIC_BASE, IRQ_VIC_START);
--
- 	writel(~0, VA_SIC_BASE + SIC_IRQ_ENABLE_CLEAR);
--
--	fpga_irq_init(IRQ_VICSOURCE31, ~PIC_MASK, &sic_irq);
--	irq_domain_generate_simple(sic_of_match, VERSATILE_SIC_BASE, IRQ_SIC_START);
--
- 	/*
- 	 * Interrupts on secondary controller from 0 to 8 are routed to
- 	 * source 31 on PIC.
-@@ -117,6 +99,13 @@ void __init versatile_init_irq(void)
- 	writel(PIC_MASK, VA_SIC_BASE + SIC_INT_PIC_ENABLE);
- }
- 
-+void __init versatile_init_irq(void)
-+{
-+	versatile_route_irqs();
-+	vic_init(VA_VIC_BASE, IRQ_VIC_START, ~0, 0);
-+	fpga_irq_init(IRQ_VICSOURCE31, ~PIC_MASK, &sic_irq);
-+}
-+
- static struct map_desc versatile_io_desc[] __initdata = {
- 	{
- 		.virtual	=  IO_ADDRESS(VERSATILE_SYS_BASE),
-diff --git a/arch/arm/mach-versatile/core.h b/arch/arm/mach-versatile/core.h
-index 2ef2f55..1117e32 100644
---- a/arch/arm/mach-versatile/core.h
-+++ b/arch/arm/mach-versatile/core.h
-@@ -29,6 +29,7 @@ extern void __init versatile_init(void);
- extern void __init versatile_init_early(void);
- extern void __init versatile_init_irq(void);
- extern void __init versatile_map_io(void);
-+extern void __init versatile_route_irqs(void);
- extern struct sys_timer versatile_timer;
- extern void versatile_restart(char, const char *);
- extern unsigned int mmc_status(struct device *dev);
-diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
-index ae5ad3c..abb310d 100644
---- a/arch/arm/mach-versatile/versatile_dt.c
-+++ b/arch/arm/mach-versatile/versatile_dt.c
-@@ -27,6 +27,7 @@
- #include <asm/hardware/vic.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-+#include <plat/fpga-irq.h>
- 
- #include "core.h"
- 
-@@ -36,6 +37,18 @@ static void __init versatile_dt_init(void)
- 			     versatile_auxdata_lookup, NULL);
- }
- 
-+static const struct of_device_id versatile_intc_of_match[] = {
-+	{ .compatible = "arm,versatile-vic", .data = vic_of_init, },
-+	{ .compatible = "arm,versatile-sic", .data = sic_of_init, },
-+	{ /* Sentinel */ }
-+};
-+
-+static void __init versatile_dt_init_irq(void)
-+{
-+	versatile_route_irqs();
-+	of_irq_init(versatile_intc_of_match);
-+}
-+
- static const char *versatile_dt_match[] __initconst = {
- 	"arm,versatile-ab",
- 	"arm,versatile-pb",
-@@ -45,7 +58,7 @@ static const char *versatile_dt_match[] __initconst = {
- DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile (Device Tree Support)")
- 	.map_io		= versatile_map_io,
- 	.init_early	= versatile_init_early,
--	.init_irq	= versatile_init_irq,
-+	.init_irq	= versatile_dt_init_irq,
- 	.handle_irq	= vic_handle_irq,
- 	.timer		= &versatile_timer,
- 	.init_machine	= versatile_dt_init,
--- 
-1.7.5.4
+g.
+
+>
+> Jamie Iles (2):
+> =A0versatile: sic: add device tree bindings
+> =A0versatile: dt: register interrupt controllers from dt
+>
+> =A0.../devicetree/bindings/arm/versatile-sic.txt =A0 =A0 =A0| =A0 27 ++++=
+++++++
+> =A0arch/arm/mach-versatile/core.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0 27 +++-------
+> =A0arch/arm/mach-versatile/core.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0 =A01 +
+> =A0arch/arm/mach-versatile/versatile_dt.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0 1=
+5 +++++-
+> =A0arch/arm/plat-versatile/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0| =A0 =A01 +
+> =A0arch/arm/plat-versatile/fpga-irq.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
+=A0 51 +++++++++++++++++++-
+> =A0arch/arm/plat-versatile/include/plat/fpga-irq.h =A0 =A0| =A0 =A06 ++
+> =A07 files changed, 106 insertions(+), 22 deletions(-)
+> =A0create mode 100644 Documentation/devicetree/bindings/arm/versatile-sic=
+.txt
+>
+> --
+> 1.7.5.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+-- =
+
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
