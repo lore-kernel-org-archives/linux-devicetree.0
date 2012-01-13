@@ -1,118 +1,61 @@
-From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Subject: RE: [PATCH v2 4/5] arm/dts: OMAP3: Add interrupt-controller
- bindings for INTC
-Date: Fri, 13 Jan 2012 14:27:34 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A8317A5112@DBDE01.ent.ti.com>
-References: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
- <1324388398-2683-5-git-send-email-b-cousson@ti.com>
- <79CD15C6BA57404B839C016229A409A8317A43FC@DBDE01.ent.ti.com>
- <4F100F6B.2050303@ti.com>
- <79CD15C6BA57404B839C016229A409A8317A4E77@DBDE01.ent.ti.com>
- <4F102B24.7090302@ti.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH v2 3/7] tegra: fdt: Add extra I2C bindings for
+ U-Boot
+Date: Fri, 13 Jan 2012 07:02:44 -0800
+Message-ID: <CAPnjgZ0OsvqNJdxCCJLyrqfnO1ruCZo1d=0M38UumwW2FiUk1A@mail.gmail.com>
+References: <1326394818-32227-1-git-send-email-sjg@chromium.org>
+ <1326394818-32227-4-git-send-email-sjg@chromium.org>
+ <4F0FCFBB.3070407@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F102B24.7090302@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F0FCFBB.3070407-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: hs-ynQEQJNshbs@public.gmane.org
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2012 at 18:31:24, Cousson, Benoit wrote:
-> On 1/13/2012 1:31 PM, Hiremath, Vaibhav wrote:
-> > On Fri, Jan 13, 2012 at 16:33:07, Cousson, Benoit wrote:
-> >> Hi Vaibhav,
-> >>
-> >> On 1/13/2012 7:14 AM, Hiremath, Vaibhav wrote:
-> >>> On Tue, Dec 20, 2011 at 19:09:57, Cousson, Benoit wrote:
-> >>
-> >> [...]
-> >>
-> >>>> +++ b/arch/arm/boot/dts/omap3.dtsi
-> >>>> @@ -54,10 +54,12 @@
-> >>>>    		ranges;
-> >>>>    		ti,hwmods = "l3_main";
-> >>>>
-> >>>> -		intc: interrupt-controller@1 {
-> >>>> -			compatible = "ti,omap3-intc";
-> >>>> +		intc: interrupt-controller@48200000 {
-> >>>> +			compatible = "ti,omap2-intc";
-> >>>>    			interrupt-controller;
-> >>>>    			#interrupt-cells =<1>;
-> >>>> +			ti,intc-size =<96>;
-> >>> Can we configure/change this field in platform specific .dts file?
-> >>> OR
-> >>> Is there condition based configuration possible in DT?
-> >>
-> >> I'm not sure to fully understand how your two options differ.
-> >> Otherwise, yes the DT it can be configured, that why I exposed this
-> >> attribute.
-> >> The intc code was already supporting the ti81xx with 128 lines as well,
-> >> hence the need to make it configurable.
-> >
-> > I wanted to use DT configuration completely here, using existing
-> > omap_init_irq.
-> > And I personally think, lets not use different implementation only because
-> > number of interrupts are different.
-> 
-> Sure, that was the goal of that binding. Anyway, my point was that the 
-> driver was already generic enough to handle OMAP2, OMAP3 and TI81xx.
-> 
-> >> The other option was two handle that in the driver with 2 different
-> >> compatible strings.
-> >>
-> >>> To be specific,
-> >>>
-> >>> I am adding support for AM335x EVM (using all your DT support patches),
-> >>> The device is considered as OMAP3 variant and when it comes to INTC support,
-> >>> I need to configure it to value "128", rest everything is same
-> >>> (including base add).
-> >>>
-> >>> Can I do something like
-> >>>
-> >>> File - am335x-evm.dts
-> >>>
-> >>> /include/ "omap3.dtsi"
-> >>>
-> >>> ....
-> >>> Again change the specific fields of " intc: interrupt-controller"?
-> >>
-> >> Yes.
-> >>
-> >>> ....
-> >>>
-> >>> How can this be handled?
-> >>
-> >> After the include, you can redefine the node and the hierarchy:
-> >>
-> >> +	ocp {
-> >> +		intc: interrupt-controller@48200000 {
-> >> +			ti,intc-size =<128>;
-> >> +		};
-> >> ...
-> >>
-> >> or use the label directly:
-> >>
-> >> +&intc: {
-> >> +	ti,intc-size =<128>;
-> >> +}
-> >>
-> >> You can have a look at the way i2c or twl are using the include so far.
-> >>
-> > Thanks, I will trying this now...
-> > And if it works, then I can submit the patches...
-> 
-> Well, it should in theory :-)
-> 
+Hi Heiko,
 
-Thanks Benoit, it is working. Submitting patches now...
+On Thu, Jan 12, 2012 at 10:31 PM, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
+> Hello Simon,
+>
+> Simon Glass wrote:
+>> Add U-Boot's peripheral clock information to the Tegra20 device tree fil=
+e.
+>>
+>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> - Adjust definitions to fit new peripheral clock bindings
+>> - Change 'speed' to 'clock-frequency'
+>> - Remove u-boot,pinmux binding (sadly)
+>>
+>> =A0arch/arm/dts/tegra20.dtsi | =A0 10 +++++++++-
+>
+> Hmm.. we have no such a directory in the u-boot source tree ... ?
+> I think, this patch is for the linux tree?
 
-Thanks,
-Vaibhav
+No, it's for a future U-Boot :-) It builds on USB series (which brings
+in the basic device tree file).
 
-> Regards,
-> Benoit
-> 
+Regards,
+Simon
 
+>
+> [...]
+>
+> bye,
+> Heiko
+> --
+> DENX Software Engineering GmbH, =A0 =A0 MD: Wolfgang Denk & Detlev Zundel
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
