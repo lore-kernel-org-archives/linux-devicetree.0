@@ -1,8 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 01/20] fdt: Add function to locate an array in the device
- tree
-Date: Fri, 13 Jan 2012 13:35:16 -0800
-Message-ID: <1326490535-3461-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 19/20] tegra: fdt: Add EMC data for Tegra2 Seaboard
+Date: Fri, 13 Jan 2012 13:35:34 -0800
+Message-ID: <1326490535-3461-20-git-send-email-sjg@chromium.org>
 References: <1326490535-3461-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,74 +18,103 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-fdtdec_locate_array() locates an integer array but does not copy it. This
-saves the caller having to allocated wasted space.
+This adds timings for T20 and T25 Seaboards, using the bindings found here:
 
-Access to array elements should be through the fdt32_to_cpu() macro.
+http://patchwork.ozlabs.org/patch/132928/
+
+We supply both full speed options for normal running, and half speed options
+for testing / development.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-Changes in v2:
-- Add new fdtdec_locate_array() function
 
- include/fdtdec.h |   19 +++++++++++++++++++
- lib/fdtdec.c     |   11 +++++++++++
- 2 files changed, 30 insertions(+), 0 deletions(-)
+ board/nvidia/dts/tegra2-seaboard.dts |   73 ++++++++++++++++++++++++++++++++++
+ 1 files changed, 73 insertions(+), 0 deletions(-)
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index 82264d4..42744f9 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -251,6 +251,25 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
- 		u32 *array, int count);
+diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
+index d2cc428..b114f5f 100644
+--- a/board/nvidia/dts/tegra2-seaboard.dts
++++ b/board/nvidia/dts/tegra2-seaboard.dts
+@@ -54,4 +54,77 @@
+ 		status = "disabled";
+ 	};
  
- /**
-+ * Look up a property in a node and return a pointer to its contents as a
-+ * unsigned int array of given length. The property must have at least enough
-+ * data for the array ('count' cells). It may have more, but this will be
-+ * ignored. The data is not copied.
-+ *
-+ * Note that you must access elements of the array with fdt32_to_cpu(),
-+ * since the elements will be big endian even on a little endian machine.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @param count		number of array elements
-+ * @return pointer to array if found, or NULL if the property is not
-+ *		found or there is not enough data
-+ */
-+const u32 *fdtdec_locate_array(const void *blob, int node,
-+			       const char *prop_name, int count);
++	emc@7000f400 {
++		emc-table@166500 {
++			reg = <166500>;
++			compatible = "nvidia,tegra20-emc-table";
++			clock-frequency = < 166500 >;
++			nvidia,emc-registers = < 0x0000000a 0x00000021
++				0x00000008 0x00000003 0x00000004 0x00000004
++				0x00000002 0x0000000c 0x00000003 0x00000003
++				0x00000002 0x00000001 0x00000004 0x00000005
++				0x00000004 0x00000009 0x0000000d 0x000004df
++				0x00000000 0x00000003 0x00000003 0x00000003
++				0x00000003 0x00000001 0x0000000a 0x000000c8
++				0x00000003 0x00000006 0x00000004 0x0000000f
++				0x00000002 0x00000000 0x00000000 0x00000002
++				0x00000000 0x00000000 0x00000083 0xa04004ae
++				0x007fd010 0x00000000 0x00000000 0x00000000
++				0x00000000 0x00000000 0x00000000 0x00000000 >;
++		};
++		emc-table@333000 {
++			reg = <333000>;
++			compatible = "nvidia,tegra20-emc-table";
++			clock-frequency = < 333000 >;
++			nvidia,emc-registers = < 0x00000014 0x00000041
++				0x0000000f 0x00000005 0x00000004 0x00000005
++				0x00000003 0x0000000c 0x00000005 0x00000005
++				0x00000003 0x00000001 0x00000004 0x00000005
++				0x00000004 0x00000009 0x0000000d 0x000009ff
++				0x00000000 0x00000003 0x00000003 0x00000005
++				0x00000005 0x00000001 0x0000000f 0x000000c8
++				0x00000003 0x0000000c 0x00000006 0x0000000f
++				0x00000002 0x00000000 0x00000000 0x00000002
++				0x00000000 0x00000000 0x00000083 0xe034048b
++				0x007e8010 0x00000000 0x00000000 0x00000000
++				0x00000000 0x00000000 0x00000000 0x00000000>;
++		};
 +
-+/**
-  * Look up a boolean property in a node and return it.
-  *
-  * A boolean properly is true if present in the device tree and false if not
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 3330edf..f1af878 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -341,6 +341,17 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
- 	return err;
- }
- 
-+const u32 *fdtdec_locate_array(const void *blob, int node,
-+			       const char *prop_name, int count)
-+{
-+	const u32 *cell;
-+	int err;
++		emc-table@190000 {
++			reg = < 190000 >;
++			compatible = "nvidia,tegra20-emc-table";
++			clock-frequency = < 190000 >;
++			nvidia,emc-registers = < 0x0000000c 0x00000026
++				0x00000009 0x00000003 0x00000004 0x00000004
++				0x00000002 0x0000000c 0x00000003 0x00000003
++				0x00000002 0x00000001 0x00000004 0x00000005
++				0x00000004 0x00000009 0x0000000d 0x0000059f
++				0x00000000 0x00000003 0x00000003 0x00000003
++				0x00000003 0x00000001 0x0000000b 0x000000c8
++				0x00000003 0x00000007 0x00000004 0x0000000f
++				0x00000002 0x00000000 0x00000000 0x00000002
++				0x00000000 0x00000000 0x00000083 0xa06204ae
++				0x007dc010 0x00000000 0x00000000 0x00000000
++				0x00000000 0x00000000 0x00000000 0x00000000 >;
++		};
++		emc-table@380000 {
++			reg = < 380000 >;
++			compatible = "nvidia,tegra20-emc-table";
++			clock-frequency = < 380000 >;
++			nvidia,emc-registers = < 0x00000017 0x0000004b
++				0x00000012 0x00000006 0x00000004 0x00000005
++				0x00000003 0x0000000c 0x00000006 0x00000006
++				0x00000003 0x00000001 0x00000004 0x00000005
++				0x00000004 0x00000009 0x0000000d 0x00000b5f
++				0x00000000 0x00000003 0x00000003 0x00000006
++				0x00000006 0x00000001 0x00000011 0x000000c8
++				0x00000003 0x0000000e 0x00000007 0x0000000f
++				0x00000002 0x00000000 0x00000000 0x00000002
++				0x00000000 0x00000000 0x00000083 0xe044048b
++				0x007d8010 0x00000000 0x00000000 0x00000000
++				0x00000000 0x00000000 0x00000000 0x00000000 >;		emc-table@190000 {
++		};
++	};
++};
 +
-+	cell = get_prop_check_min_len(blob, node, prop_name,
-+				      sizeof(u32) * count, &err);
-+	return err ? NULL : cell;
-+}
-+
- int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
- {
- 	const s32 *cell;
+ };
 -- 
 1.7.7.3
