@@ -1,72 +1,45 @@
-From: Sylwester Nawrocki <snjw23@gmail.com>
-Subject: Re: [PATCH] video: s3c-fb: Add device tree support
-Date: Fri, 13 Jan 2012 22:03:00 +0100
-Message-ID: <4F109C04.5090600@gmail.com>
-References: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] versatile: sic: add device tree bindings
+Date: Fri, 13 Jan 2012 21:19:58 +0000
+Message-ID: <20120113211958.GE1068@n2100.arm.linux.org.uk>
+References: <1326415441-17695-1-git-send-email-jamie@jamieiles.com>
+ <1326415441-17695-2-git-send-email-jamie@jamieiles.com>
+ <20120113022932.GB25999@ponder.secretlab.ca> <20120113103554.GE14007@page>
+ <20120113210041.GD22767@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, jg1.han@samsung.com, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120113210041.GD22767-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/2012 09:01 PM, Thomas Abraham wrote:
->
-> +	for (idx = 0; idx<  nr_gpios; idx++) {
-> +		gpio = of_get_gpio(dev->of_node, idx);
-> +		if (!gpio_is_valid(gpio)) {
-> +			dev_err(dev, "invalid gpio[%d]: %d\n", idx, gpio);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (!request)
-> +			continue;
-> +
-> +		ret = gpio_request(gpio, "fimd");
+On Fri, Jan 13, 2012 at 02:00:41PM -0700, Grant Likely wrote:
+> Let me look at it a bit.  You can leave the initialization loop in
+> fpga_irq_init() for now.  I'm looking at adding a mask field to
+> irq_domain_add_legacy in addition to the host_data pointer.  I also
+> want to investigate replacing fpga_irq with generic-chip.c.  The
+> problem I've currently got though is that irq_domain_add_legacy() can
+> currently support any number of irqs, but adding a simple mask
+> argument will limit it to 32.  That won't work for large irq
+> controllers like the gic.
 
-Is it how it normally is supposed to be done, i.e. configuring a gpio
-_before_ it has been requested ? of_get_gpio() indirectly touches the
-gpio controller and gpio_request() doesn't seem to serve its purpose
-in this case, i.e. if there is situation like:
+The easy answer is not to register the IRQs which don't actually exist
+or we don't want to be used out of the set of 32.
 
-driver A                        driver B
+However, the problem comes with:
 
-of_get_gpio(nodeA, gpioA);
-                                of_get_gpio(nodeB, gpioA);
-gpio_request(gpioA);
-                                gpio_request(gpioB);
+#define PIC_MASK        0xFFD00000
 
-driver B will end up with configuration of gpioA from nodeA, not from 
-nodeB. 
-
-As there are few drivers doing that I must be missing something,
-not sure what..
-I realize the GPIO number needs to be known in order for a GPIO to be
-requested. Shouldn't of_get_gpio() be extended to allow locking gpio
-controller's module and marking a GPIO as requested in advance ?
-
-> +		if (ret) {
-> +			dev_err(dev, "gpio [%d] request failed\n", gpio);
-> +			goto gpio_free;
-> +		}
-> +		sfb->gpios[idx] = gpio;
-> +	}
-> +	return 0;
-> +
-> +gpio_free:
-> +	while (--idx>= 0)
-> +		gpio_free(sfb->gpios[idx]);
-> +	return ret;
-> +}
-> +
-> +static void s3c_fb_dt_free_gpios(struct s3c_fb *sfb)
-> +{
-> +	unsigned int idx, nr_gpio;
-> +
-> +	nr_gpio = sfb->pdata->win[0]->max_bpp + 4;
-> +	for (idx = 0; idx<  nr_gpio; idx++)
-> +		gpio_free(sfb->gpios[idx]);
-> +}
+where we have an IRQ23 but no IRQ22.
