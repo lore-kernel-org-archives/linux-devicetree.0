@@ -1,79 +1,92 @@
-From: Sylwester Nawrocki <snjw23@gmail.com>
-Subject: Re: [PATCH] video: s3c-fb: Add device tree support
-Date: Fri, 13 Jan 2012 22:30:15 +0100
-Message-ID: <4F10A267.2020608@gmail.com>
-References: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org> <4F109C04.5090600@gmail.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 01/20] fdt: Add function to locate an array in the device
+ tree
+Date: Fri, 13 Jan 2012 13:35:16 -0800
+Message-ID: <1326490535-3461-2-git-send-email-sjg@chromium.org>
+References: <1326490535-3461-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4F109C04.5090600@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-fbdev@vger.kernel.org, FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, jg1.han@samsung.com, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326490535-3461-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2012 10:03 PM, Sylwester Nawrocki wrote:
-> On 01/09/2012 09:01 PM, Thomas Abraham wrote:
->>
->> +	for (idx = 0; idx<   nr_gpios; idx++) {
->> +		gpio = of_get_gpio(dev->of_node, idx);
->> +		if (!gpio_is_valid(gpio)) {
->> +			dev_err(dev, "invalid gpio[%d]: %d\n", idx, gpio);
->> +			return -EINVAL;
->> +		}
->> +
->> +		if (!request)
->> +			continue;
->> +
->> +		ret = gpio_request(gpio, "fimd");
-> 
-> Is it how it normally is supposed to be done, i.e. configuring a gpio
-> _before_ it has been requested ? of_get_gpio() indirectly touches the
-> gpio controller and gpio_request() doesn't seem to serve its purpose
-> in this case, i.e. if there is situation like:
-> 
-> driver A                        driver B
-> 
-> of_get_gpio(nodeA, gpioA);
->                                  of_get_gpio(nodeB, gpioA);
-> gpio_request(gpioA);
->                                  gpio_request(gpioB);
-                                               s/B/A
-> 
-> driver B will end up with configuration of gpioA from nodeA, not from
-> nodeB.
- 
-ugh, I put it wrong, it should instead read:
+fdtdec_locate_array() locates an integer array but does not copy it. This
+saves the caller having to allocated wasted space.
 
-"driver A will end up with configuration of gpioA from nodeB, not from
-nodeA."
+Access to array elements should be through the fdt32_to_cpu() macro.
+
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes in v2:
+- Add new fdtdec_locate_array() function
+
+ include/fdtdec.h |   19 +++++++++++++++++++
+ lib/fdtdec.c     |   11 +++++++++++
+ 2 files changed, 30 insertions(+), 0 deletions(-)
+
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 82264d4..42744f9 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -251,6 +251,25 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
+ 		u32 *array, int count);
  
-> As there are few drivers doing that I must be missing something,
-> not sure what..
-> I realize the GPIO number needs to be known in order for a GPIO to be
-> requested. Shouldn't of_get_gpio() be extended to allow locking gpio
-> controller's module and marking a GPIO as requested in advance ?
-> 
->> +		if (ret) {
->> +			dev_err(dev, "gpio [%d] request failed\n", gpio);
->> +			goto gpio_free;
->> +		}
->> +		sfb->gpios[idx] = gpio;
->> +	}
->> +	return 0;
->> +
->> +gpio_free:
->> +	while (--idx>= 0)
->> +		gpio_free(sfb->gpios[idx]);
->> +	return ret;
->> +}
->> +
->> +static void s3c_fb_dt_free_gpios(struct s3c_fb *sfb)
->> +{
->> +	unsigned int idx, nr_gpio;
->> +
->> +	nr_gpio = sfb->pdata->win[0]->max_bpp + 4;
->> +	for (idx = 0; idx<   nr_gpio; idx++)
->> +		gpio_free(sfb->gpios[idx]);
->> +}
+ /**
++ * Look up a property in a node and return a pointer to its contents as a
++ * unsigned int array of given length. The property must have at least enough
++ * data for the array ('count' cells). It may have more, but this will be
++ * ignored. The data is not copied.
++ *
++ * Note that you must access elements of the array with fdt32_to_cpu(),
++ * since the elements will be big endian even on a little endian machine.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param count		number of array elements
++ * @return pointer to array if found, or NULL if the property is not
++ *		found or there is not enough data
++ */
++const u32 *fdtdec_locate_array(const void *blob, int node,
++			       const char *prop_name, int count);
++
++/**
+  * Look up a boolean property in a node and return it.
+  *
+  * A boolean properly is true if present in the device tree and false if not
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 3330edf..f1af878 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -341,6 +341,17 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
+ 	return err;
+ }
+ 
++const u32 *fdtdec_locate_array(const void *blob, int node,
++			       const char *prop_name, int count)
++{
++	const u32 *cell;
++	int err;
++
++	cell = get_prop_check_min_len(blob, node, prop_name,
++				      sizeof(u32) * count, &err);
++	return err ? NULL : cell;
++}
++
+ int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
+ {
+ 	const s32 *cell;
+-- 
+1.7.7.3
