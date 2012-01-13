@@ -1,41 +1,54 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v2 4/9] of: add clock providers
-Date: Fri, 13 Jan 2012 08:05:21 -0600
-Message-ID: <4F103A21.1050403@gmail.com>
-References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
- <20120113135036.GC17029@S2101-09.ap.freescale.net>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
+ mappings
+Date: Fri, 13 Jan 2012 22:23:22 +0800
+Message-ID: <20120113142319.GA1810@S2101-09.ap.freescale.net>
+References: <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC605788508AC65@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A76A@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC605788508E7B0@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF17801D1DD6@HQMAIL01.nvidia.com>
+ <20120113035506.GB12184@S2101-09.ap.freescale.net>
+ <7FE21149F4667147B645348EC605788508FD9C@039-SN2MPN1-013.039d.mgd.msft.net>
+ <20120113133552.GB17029@S2101-09.ap.freescale.net>
+ <4F10362D.3020507@stericsson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120113135036.GC17029-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F10362D.3020507@stericsson.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@stericsson.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Stephen Warren <swarren@nvidia.com>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2012 07:50 AM, Shawn Guo wrote:
-> On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
->> +==Clock providers==
->> +
->> +Required properties:
->> +#clock-cells:	   Number of cells in a clock specifier; typically will be
->> +		   set to 1
+On Fri, Jan 13, 2012 at 02:48:29PM +0100, Linus Walleij wrote:
+> On 01/13/2012 02:35 PM, Shawn Guo wrote:
+> >My guess is that Linus.W did not get any chance to take the dt case
+> >into account with his first design of pinctrl core.  But I guess he
+> >is open to any reasonable change to pinctrl core for dt adoption.
+> >Linus?
 > 
-> Shouldn't it be 0 typically, which means it represents only one clock
-> in the node?
+> Any patches welcome.
 > 
+> However we cannot *require* DT for pinctrl to work, there
+> are archs that do not use DT and these must also be able
+> to use pinctrl. For example arch/blackfin have expressed
+> interest IIRC.
+> 
+Definitely.
 
-We have no idea what will be typical. I would say: Typically 0 for nodes
-with a single clock output and 1 for nodes with multiple clock outputs.
+> Then the question of whether to also support mixed configs
+> where some callers get data from DT and some from
+> platform data. I suspect that this is necessary for the
+> single kernel goal.
+> 
+Yes.  Right now, imx3, imx5 and imx6 have supported single kernel
+image.  We probably can not convert these three platforms all over
+to pinctrl subsystem at one time.  So we definitely need that
+support to make the conversion/merge them one by one possible.
 
-Rob
+-- 
+Regards,
+Shawn
