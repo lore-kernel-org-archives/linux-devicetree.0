@@ -1,77 +1,41 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux mappings
-Date: Sat, 14 Jan 2012 01:11:41 +0800
-Message-ID: <CAA+hA=RCmctmQJU4-k7YhzQDMi8KuyisBqOFhuMd3RV4_E=gCA@mail.gmail.com>
-References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
-	<1324402840-32451-3-git-send-email-b29396@freescale.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
-	<CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC605788508AC65@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF177EE3A76A@HQMAIL01.nvidia.com>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V6 4/7] cpufreq: add clk-reg cpufreq driver
+Date: Fri, 13 Jan 2012 18:16:18 +0100
+Message-ID: <4F1066E2.1020804@ti.com>
+References: <1325213769-11752-1-git-send-email-richard.zhao@linaro.org>
+	<1325213769-11752-5-git-send-email-richard.zhao@linaro.org>
+	<87aa5t25ad.fsf@ti.com>
+	<20120112082300.GF2414@b20223-02.ap.freescale.net>
+	<874nw0sfdn.fsf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A76A@HQMAIL01.nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <874nw0sfdn.fsf-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, eric.miao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, davej-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2012 at 4:17 AM, Stephen Warren <swarren@nvidia.com> wrote:
-...
->> To keep consistency as the currently design of pinctrl subsystem and also meet
->> the dt design philosophy, we still do not introduce a pinmux map in dt.
->> Instead, we choose to scan all the device node with a 'pinmux' phandle to construct
->> a pinmux map table before register the pin controller device(here we may also scan
->> the hog_on_boot node) and I guess it's easy to do that.
-> ...
->> (Without scan the device node to construct the pinmux map table, we can only get the map
->> Information when we run the pinmux_get.
->> See: https://lkml.org/lkml/2012/1/5/153
->> So no pinmux map table exists and we surely do not want to see that the sysfs exporting
->> pinmux map information works in dt but unwork in non-dt)
->
-> Hmmm. I'm not sure that the pinctrl code should actively scan all nodes
-> in the device tree for pin mux properties. That seems a little invasive;
-> how does pinctrl know which nodes it really should be looking at, and
-> which nodes are random internal parts of some device's custom binding?
->
-> Personally, I think I'd be OK with the sysfs pinctrl map file only
-> containing the map entries for devices that had used the pinctrl API,
-> and hence only parsing the pinmux properties in pinmux_get().
->
-> However, we could perhaps do better by registering a bus notifier, and
-> pro-actively parsing the top-level DT node (if there is one) for every
-> device that is created. That way, the mapping would be parsed as soon
-> as the device was created (or perhaps after probe?).
->
-After refer to usb bus notifier, usb core will register a bus notifier.
-When a new usb bus is registered, it will notify the usb core for a
-new bus added.
+On 1/12/2012 11:52 PM, Kevin Hilman wrote:
+> Richard Zhao<richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>  writes:
 
-So i guess you mean pinctrl core provides a notifier to handle the map
-creation when new map is found during parsing each device node, right?
-But it seems parsing of device node and creation of device is at the very early
-stage when call of_platform_populate in .init_machine code and pinctrl subsystem
-may still have not change to run to register a bus notifier.
-And i'm not sure it's the right place for of_platform.c to handle
-pinmux things when create new devices.
-I wonder it may not work for pinmux map case.
-If pinctrl core does not provide notifier, who else can be the right
-one to privide it?
+[...]
 
-> The only case this
-> might not cover is DT nodes for which the kernel doesn't actually have
-> a driver, and hence no device is created.
+>> Do you have real case to need different voltage/clk?
 >
-Per my understanding, the device creation should be independent on the driver.
-I don't know why no device is created if not have a driver.
-Did i miss something?
+> Sure, any system with independently scalable CPUs/clusters.
 
-Regards
-Dong Aisheng
+AFAIK, in the ARM SoC world there is a least the MSM8660 that does 
+support that today.
+
+Regards,
+Benoit
