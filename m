@@ -1,48 +1,118 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 4/9] of: add clock providers
-Date: Fri, 13 Jan 2012 22:38:36 +0800
-Message-ID: <20120113143832.GA1940@S2101-09.ap.freescale.net>
-References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
- <20120113135036.GC17029@S2101-09.ap.freescale.net>
- <4F103A21.1050403@gmail.com>
+From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Subject: RE: [PATCH v2 4/5] arm/dts: OMAP3: Add interrupt-controller
+ bindings for INTC
+Date: Fri, 13 Jan 2012 14:27:34 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A8317A5112@DBDE01.ent.ti.com>
+References: <1324388398-2683-1-git-send-email-b-cousson@ti.com>
+ <1324388398-2683-5-git-send-email-b-cousson@ti.com>
+ <79CD15C6BA57404B839C016229A409A8317A43FC@DBDE01.ent.ti.com>
+ <4F100F6B.2050303@ti.com>
+ <79CD15C6BA57404B839C016229A409A8317A4E77@DBDE01.ent.ti.com>
+ <4F102B24.7090302@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F103A21.1050403-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F102B24.7090302@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2012 at 08:05:21AM -0600, Rob Herring wrote:
-> On 01/13/2012 07:50 AM, Shawn Guo wrote:
-> > On Mon, Dec 12, 2011 at 03:02:04PM -0700, Grant Likely wrote:
-> >> +==Clock providers==
-> >> +
-> >> +Required properties:
-> >> +#clock-cells:	   Number of cells in a clock specifier; typically will be
-> >> +		   set to 1
-> > 
-> > Shouldn't it be 0 typically, which means it represents only one clock
-> > in the node?
-> > 
+On Fri, Jan 13, 2012 at 18:31:24, Cousson, Benoit wrote:
+> On 1/13/2012 1:31 PM, Hiremath, Vaibhav wrote:
+> > On Fri, Jan 13, 2012 at 16:33:07, Cousson, Benoit wrote:
+> >> Hi Vaibhav,
+> >>
+> >> On 1/13/2012 7:14 AM, Hiremath, Vaibhav wrote:
+> >>> On Tue, Dec 20, 2011 at 19:09:57, Cousson, Benoit wrote:
+> >>
+> >> [...]
+> >>
+> >>>> +++ b/arch/arm/boot/dts/omap3.dtsi
+> >>>> @@ -54,10 +54,12 @@
+> >>>>    		ranges;
+> >>>>    		ti,hwmods = "l3_main";
+> >>>>
+> >>>> -		intc: interrupt-controller@1 {
+> >>>> -			compatible = "ti,omap3-intc";
+> >>>> +		intc: interrupt-controller@48200000 {
+> >>>> +			compatible = "ti,omap2-intc";
+> >>>>    			interrupt-controller;
+> >>>>    			#interrupt-cells =<1>;
+> >>>> +			ti,intc-size =<96>;
+> >>> Can we configure/change this field in platform specific .dts file?
+> >>> OR
+> >>> Is there condition based configuration possible in DT?
+> >>
+> >> I'm not sure to fully understand how your two options differ.
+> >> Otherwise, yes the DT it can be configured, that why I exposed this
+> >> attribute.
+> >> The intc code was already supporting the ti81xx with 128 lines as well,
+> >> hence the need to make it configurable.
+> >
+> > I wanted to use DT configuration completely here, using existing
+> > omap_init_irq.
+> > And I personally think, lets not use different implementation only because
+> > number of interrupts are different.
 > 
-> We have no idea what will be typical. I would say: Typically 0 for nodes
-> with a single clock output and 1 for nodes with multiple clock outputs.
+> Sure, that was the goal of that binding. Anyway, my point was that the 
+> driver was already generic enough to handle OMAP2, OMAP3 and TI81xx.
 > 
-That's definitely better to me.
+> >> The other option was two handle that in the driver with 2 different
+> >> compatible strings.
+> >>
+> >>> To be specific,
+> >>>
+> >>> I am adding support for AM335x EVM (using all your DT support patches),
+> >>> The device is considered as OMAP3 variant and when it comes to INTC support,
+> >>> I need to configure it to value "128", rest everything is same
+> >>> (including base add).
+> >>>
+> >>> Can I do something like
+> >>>
+> >>> File - am335x-evm.dts
+> >>>
+> >>> /include/ "omap3.dtsi"
+> >>>
+> >>> ....
+> >>> Again change the specific fields of " intc: interrupt-controller"?
+> >>
+> >> Yes.
+> >>
+> >>> ....
+> >>>
+> >>> How can this be handled?
+> >>
+> >> After the include, you can redefine the node and the hierarchy:
+> >>
+> >> +	ocp {
+> >> +		intc: interrupt-controller@48200000 {
+> >> +			ti,intc-size =<128>;
+> >> +		};
+> >> ...
+> >>
+> >> or use the label directly:
+> >>
+> >> +&intc: {
+> >> +	ti,intc-size =<128>;
+> >> +}
+> >>
+> >> You can have a look at the way i2c or twl are using the include so far.
+> >>
+> > Thanks, I will trying this now...
+> > And if it works, then I can submit the patches...
+> 
+> Well, it should in theory :-)
+> 
 
--- 
-Regards,
-Shawn
+Thanks Benoit, it is working. Submitting patches now...
+
+Thanks,
+Vaibhav
+
+> Regards,
+> Benoit
+> 
+
