@@ -1,74 +1,87 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] versatile: sic: add device tree bindings
-Date: Fri, 13 Jan 2012 10:58:34 +0000
-Message-ID: <20120113105834.GF14007@page>
-References: <1326415441-17695-1-git-send-email-jamie@jamieiles.com>
- <1326415441-17695-2-git-send-email-jamie@jamieiles.com>
- <20120113104842.GS1068@n2100.arm.linux.org.uk>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH v2 4/5] arm/dts: OMAP3: Add interrupt-controller bindings
+ for INTC
+Date: Fri, 13 Jan 2012 12:03:07 +0100
+Message-ID: <4F100F6B.2050303@ti.com>
+References: <1324388398-2683-1-git-send-email-b-cousson@ti.com> <1324388398-2683-5-git-send-email-b-cousson@ti.com> <79CD15C6BA57404B839C016229A409A8317A43FC@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120113104842.GS1068-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A8317A43FC@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tony@atomide.com" <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2012 at 10:48:42AM +0000, Russell King - ARM Linux wrote:
-> On Fri, Jan 13, 2012 at 12:44:00AM +0000, Jamie Iles wrote:
-> > +#ifdef CONFIG_OF
-> > +int __init sic_of_init(struct device_node *np, struct device_node *parent)
-> > +{
-> > +	struct fpga_irq_data *sic_data = kzalloc(sizeof(*sic_data), GFP_KERNEL);
-> > +	int err = -ENOMEM, irq;
-> > +
-> > +	if (WARN_ON(!sic_data))
-> > +		return err;
-> > +
-> > +	sic_data->base = of_iomap(np, 0);
-> > +	if (WARN_ON(!sic_data->base))
-> > +		goto out_free_data;
-> > +
-> > +	irq = irq_of_parse_and_map(np, 0);
-> > +	if (irq < 0)
-> > +		goto out_free_data;
-> > +
-> > +	sic_data->irq_start = irq_alloc_descs(-1, 0, 32, numa_node_id());
-> > +	if (WARN_ON(sic_data->irq_start < 0)) {
-> > +		err = sic_data->irq_start;
-> > +		goto out_unmap;
-> > +	}
-> > +	sic_data->domain.of_node = of_node_get(np);
-> > +
-> > +	fpga_irq_init(irq, ~0, sic_data);
-> 
-> I notice that you completely ignore the validity mask, and initialize all
-> 32 interrupts.  This is wrong.  You don't think I put the validity mask
-> there just to obfuscate the code?
+Hi Vaibhav,
 
-OK, that is wrong.  The validity mask is used for the non-DT platforms, 
-for the DT one I'll add a property stating the valid mask:
+On 1/13/2012 7:14 AM, Hiremath, Vaibhav wrote:
+> On Tue, Dec 20, 2011 at 19:09:57, Cousson, Benoit wrote:
 
-	arm,valid-irq-mask = <0x001fffff>;
+[...]
 
-to the node in the trees.
+>> +++ b/arch/arm/boot/dts/omap3.dtsi
+>> @@ -54,10 +54,12 @@
+>>   		ranges;
+>>   		ti,hwmods = "l3_main";
+>>
+>> -		intc: interrupt-controller@1 {
+>> -			compatible = "ti,omap3-intc";
+>> +		intc: interrupt-controller@48200000 {
+>> +			compatible = "ti,omap2-intc";
+>>   			interrupt-controller;
+>>   			#interrupt-cells =<1>;
+>> +			ti,intc-size =<96>;
+> Can we configure/change this field in platform specific .dts file?
+> OR
+> Is there condition based configuration possible in DT?
 
-> And this shouldn't be called 'sic' at all.  It may be the secondary
-> interrupt controller on the Versatile, but it's also the PIC, SIC and
-> CIC on Integrator platforms.  Calling anything in this file (which is
-> entirely separate of any platform) 'sic' is _wrong_.
+I'm not sure to fully understand how your two options differ.
+Otherwise, yes the DT it can be configured, that why I exposed this 
+attribute.
+The intc code was already supporting the ti81xx with 128 lines as well, 
+hence the need to make it configurable.
+The other option was two handle that in the driver with 2 different 
+compatible strings.
 
-OK, I didn't know that.  So fpga-irq is an appropriate name (is it 
-always an FPGA?) and arm,versatile-fpga-irq OK for a compatible string?
+> To be specific,
+>
+> I am adding support for AM335x EVM (using all your DT support patches),
+> The device is considered as OMAP3 variant and when it comes to INTC support,
+> I need to configure it to value "128", rest everything is same
+> (including base add).
+>
+> Can I do something like
+>
+> File - am335x-evm.dts
+>
+> /include/ "omap3.dtsi"
+>
+> ....
+> Again change the specific fields of " intc: interrupt-controller"?
 
-Jamie
+Yes.
+
+> ....
+>
+> How can this be handled?
+
+After the include, you can redefine the node and the hierarchy:
+
++	ocp {
++		intc: interrupt-controller@48200000 {
++			ti,intc-size = <128>;
++		};
+...
+
+or use the label directly:
+
++&intc: {
++	ti,intc-size =<128>;
++}
+
+You can have a look at the way i2c or twl are using the include so far.
+
+Regards,
+Benoit
