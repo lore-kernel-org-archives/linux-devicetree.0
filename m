@@ -1,138 +1,60 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Subject: Re: [PATCH 1/2] versatile: sic: add device tree bindings
-Date: Fri, 13 Jan 2012 10:35:54 +0000
-Message-ID: <20120113103554.GE14007@page>
+Date: Fri, 13 Jan 2012 10:48:42 +0000
+Message-ID: <20120113104842.GS1068@n2100.arm.linux.org.uk>
 References: <1326415441-17695-1-git-send-email-jamie@jamieiles.com>
  <1326415441-17695-2-git-send-email-jamie@jamieiles.com>
- <20120113022932.GB25999@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20120113022932.GB25999-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1326415441-17695-2-git-send-email-jamie@jamieiles.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jamie Iles <jamie@jamieiles.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2012 at 07:29:32PM -0700, Grant Likely wrote:
-> On Fri, Jan 13, 2012 at 12:44:00AM +0000, Jamie Iles wrote:
-> > @@ -53,6 +59,10 @@ void __init fpga_irq_init(int parent_irq, u32 
-> > valid, struct fpga_irq_data *f)
-> >  	f->chip.irq_ack = fpga_irq_mask;
-> >  	f->chip.irq_mask = fpga_irq_mask;
-> >  	f->chip.irq_unmask = fpga_irq_unmask;
-> > +	f->domain.irq_base = f->irq_start;
-> > +	f->domain.nr_irq = 32;
-> > +	f->domain.ops = &irq_domain_simple_ops;
-> > +	irq_domain_add(&f->domain);
-> >  
-> >  	if (parent_irq != -1) {
-> >  		irq_set_handler_data(parent_irq, f);
-> > @@ -70,3 +80,40 @@ void __init fpga_irq_init(int parent_irq, u32 valid, struct fpga_irq_data *f)
-> >  		}
-> >  	}
-> >  }
-> 
-> There is a loop in fpga_irq_init() that sets up all the irqs, but with
-> the introduction of the full irq_domain, that can be moved out to the
-> .map irq_domain ops function.  The irq_domain will call it to set up
-> each irq when it is requested.
+On Fri, Jan 13, 2012 at 12:44:00AM +0000, Jamie Iles wrote:
+> +#ifdef CONFIG_OF
+> +int __init sic_of_init(struct device_node *np, struct device_node *parent)
+> +{
+> +	struct fpga_irq_data *sic_data = kzalloc(sizeof(*sic_data), GFP_KERNEL);
+> +	int err = -ENOMEM, irq;
+> +
+> +	if (WARN_ON(!sic_data))
+> +		return err;
+> +
+> +	sic_data->base = of_iomap(np, 0);
+> +	if (WARN_ON(!sic_data->base))
+> +		goto out_free_data;
+> +
+> +	irq = irq_of_parse_and_map(np, 0);
+> +	if (irq < 0)
+> +		goto out_free_data;
+> +
+> +	sic_data->irq_start = irq_alloc_descs(-1, 0, 32, numa_node_id());
+> +	if (WARN_ON(sic_data->irq_start < 0)) {
+> +		err = sic_data->irq_start;
+> +		goto out_unmap;
+> +	}
+> +	sic_data->domain.of_node = of_node_get(np);
+> +
+> +	fpga_irq_init(irq, ~0, sic_data);
 
-That's not quite working for me - I have the following .map() function:
+I notice that you completely ignore the validity mask, and initialize all
+32 interrupts.  This is wrong.  You don't think I put the validity mask
+there just to obfuscate the code?
 
-static int sic_irq_map(struct irq_domain *d, unsigned int virq,
-		       irq_hw_number_t hw)
-{
-	struct fpga_irq_data *f = d->host_data;
-
-	irq_set_chip_data(virq, f);
-	irq_set_chip_and_handler(virq, &f->chip, handle_level_irq);
-	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
-
-	return 0;
-}
-
-but when irq_domain_add_legacy() iterates over the irq's I haven't had 
-chance to set the host_data.  The patch below works for me, not sure 
-what you think.
-
-I've also exported irq_domain_simple_xlate() so I can use that for the 
-sic ops, I'll post that patch later.
-
-Jamie
-
-8<----
-
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 92928e2..e948490 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -121,11 +121,23 @@ struct irq_domain {
- };
- 
- #ifdef CONFIG_IRQ_DOMAIN
--struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
--					 unsigned int size,
--					 unsigned int first_irq,
--					 irq_hw_number_t first_hwirq,
--					 struct irq_domain_ops *ops);
-+struct irq_domain *irq_domain_add_legacy_data(struct device_node *of_node,
-+					      unsigned int size,
-+					      unsigned int first_irq,
-+					      irq_hw_number_t first_hwirq,
-+					      struct irq_domain_ops *ops,
-+					      void *host_data);
-+static inline struct irq_domain *
-+irq_domain_add_legacy(struct device_node *of_node,
-+		      unsigned int size,
-+		      unsigned int first_irq,
-+		      irq_hw_number_t first_hwirq,
-+		      struct irq_domain_ops *ops)
-+{
-+	return irq_domain_add_legacy_data(of_node, size, first_irq,
-+					  first_hwirq, ops, NULL);
-+}
-+
- struct irq_domain *irq_domain_add_linear(struct device_node *of_node,
- 					 unsigned int size,
- 					 struct irq_domain_ops *ops);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 67b28f6..2fd00a4 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -75,11 +75,12 @@ static struct irq_domain *irq_domain_add(struct device_node *of_node,
-  * for all legacy interrupts except 0 (which is always the invalid irq for
-  * a legacy controller).
-  */
--struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
--					 unsigned int size,
--					 unsigned int first_irq,
--					 irq_hw_number_t first_hwirq,
--					 struct irq_domain_ops *ops)
-+struct irq_domain *irq_domain_add_legacy_data(struct device_node *of_node,
-+					      unsigned int size,
-+					      unsigned int first_irq,
-+					      irq_hw_number_t first_hwirq,
-+					      struct irq_domain_ops *ops,
-+					      void *host_data)
- {
- 	struct irq_domain *domain;
- 	unsigned int i;
-@@ -87,6 +88,7 @@ struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
- 	domain = irq_domain_alloc(of_node, IRQ_DOMAIN_MAP_LEGACY, ops);
- 	if (!domain)
- 		return NULL;
-+	domain->host_data = host_data;
- 
- 	mutex_lock(&irq_domain_mutex);
- 	/* Verify that all the irqs are available */
+And this shouldn't be called 'sic' at all.  It may be the secondary
+interrupt controller on the Versatile, but it's also the PIC, SIC and
+CIC on Integrator platforms.  Calling anything in this file (which is
+entirely separate of any platform) 'sic' is _wrong_.
