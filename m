@@ -1,71 +1,119 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/6] gpio: tegra: Parameterize the number of banks
-Date: Sat, 14 Jan 2012 09:15:54 -0600
-Message-ID: <4F119C2A.6020107@gmail.com>
-References: <1325702378-20863-1-git-send-email-swarren@nvidia.com> <1325702378-20863-6-git-send-email-swarren@nvidia.com> <4F04AE71.2090203@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17761F145E@HQMAIL01.nvidia.com> <CACxGe6tyZKW37sGiDauvikU70ZVLHFVrXjBPJk2Kgee1Rj3sbg@mail.gmail.com> <4F05DCDB.40806@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17801D2039@HQMAIL01.nvidia.com>
+From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
+ mappings
+Date: Sun, 15 Jan 2012 01:58:03 +0800
+Message-ID: <CAA+hA=TKNS+rYZ34Ev9ebRF12CEfBQQY71E+GUKNJoWHZTgLWw@mail.gmail.com>
+References: <1324402840-32451-1-git-send-email-b29396@freescale.com>
+ <1324402840-32451-3-git-send-email-b29396@freescale.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF176BE92F00@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC6057885075542@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF176CC743EF@HQMAIL01.nvidia.com>
+ <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
+ <7FE21149F4667147B645348EC605788508AC65@039-SN2MPN1-013.039d.mgd.msft.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A76A@HQMAIL01.nvidia.com>
+ <CAA+hA=RCmctmQJU4-k7YhzQDMi8KuyisBqOFhuMd3RV4_E=gCA@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17801D1FAB@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17801D2039-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17801D1FAB-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Olof Johansson (olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org)" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "Colin Cross (ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org)" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2012 02:55 PM, Stephen Warren wrote:
-> Rob Herring wrote at Thursday, January 05, 2012 10:25 AM:
->> On 01/04/2012 04:00 PM, Grant Likely wrote:
->>> On Wed, Jan 4, 2012 at 1:00 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>> Rob Herring wrote at Wednesday, January 04, 2012 12:54 PM:
->>>>> On 01/04/2012 12:39 PM, Stephen Warren wrote:
->>>>>> Tegra20's GPIO controller has 7 banks, and Tegra30's controller has 8
->>>>>> banks. Allow the number of banks to be configured at run-time by the
->>>>>> device tree.
->>>> ...
->>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
->>>> ...
->>>>>>  Required properties:
->>>>>>  - compatible : "nvidia,tegra20-gpio"
->>>>>>  - reg : Physical base address and length of the controller's registers.
->>>>>> +- nvidia,num-banks : The number of GPIO banks. This should be 7 for
->>>>>> +  Tegra20 and 8 for Tegra30. This must match the number of interrupt
->>>>>> +  specifiers in the interrupts property.
->>>>>
->>>>> You can determine the number of banks based on the compatible property
->>>>> rather than needing an additional property.
->>>>
->>>> That's certainly possible.
->>>>
->>>> However, if say nvidia,tegraNNN-gpio has 9 banks, we then have to
->>>> explicitly edit the driver to know that, whereas by using a property,
->>>> we wouldn't have to change the driver at all to support a future GPIO
->>>> controller. So, isn't it better to explicitly represent this in DT?
->>>>
->>>> Note that I have no idea how many GPIO banks our future chips will have,
->>>> so this might not turn out to save any work at all, but perhaps.
->>>
->>> It's an engineering/design decision that requires taste and instinct.
->>> Either approach is fine, you decide which one will be the best in the
->>> long term.
+On Sat, Jan 14, 2012 at 2:33 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Dong Aisheng wrote at Friday, January 13, 2012 10:12 AM:
+>> On Thu, Jan 12, 2012 at 4:17 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> ...
+>> >> To keep consistency as the currently design of pinctrl subsystem and also meet
+>> >> the dt design philosophy, we still do not introduce a pinmux map in dt.
+>> >> Instead, we choose to scan all the device node with a 'pinmux' phandle to construct
+>> >> a pinmux map table before register the pin controller device(here we may also scan
+>> >> the hog_on_boot node) and I guess it's easy to do that.
+>> > ...
+>> >> (Without scan the device node to construct the pinmux map table, we can only get the map
+>> >> Information when we run the pinmux_get.
+>> >> See: https://lkml.org/lkml/2012/1/5/153
+>> >> So no pinmux map table exists and we surely do not want to see that the sysfs exporting
+>> >> pinmux map information works in dt but unwork in non-dt)
+>> >
+>> > Hmmm. I'm not sure that the pinctrl code should actively scan all nodes
+>> > in the device tree for pin mux properties. That seems a little invasive;
+>> > how does pinctrl know which nodes it really should be looking at, and
+>> > which nodes are random internal parts of some device's custom binding?
+>> >
+>> > Personally, I think I'd be OK with the sysfs pinctrl map file only
+>> > containing the map entries for devices that had used the pinctrl API,
+>> > and hence only parsing the pinmux properties in pinmux_get().
+>> >
+>> > However, we could perhaps do better by registering a bus notifier, and
+>> > pro-actively parsing the top-level DT node (if there is one) for every
+>> > device that is created. That way, the mapping would be parsed as soon
+>> > as the device was created (or perhaps after probe?).
 >>
->> Agreed. I'm really fine with it either way.
+>> After refer to usb bus notifier, usb core will register a bus notifier.
+>> When a new usb bus is registered, it will notify the usb core for a
+>> new bus added.
 >>
->> Trying to predict future h/w is a bit pointless IMO. H/w designers
->> always find new ways to do things differently. i.MX family has gpio
->> interrupts hooked up 3 different ways for example. How would you handle
->> the case that the banks are sparsely implemented?
->>
->> Is adding support for a different number of banks every couple of years
->> really an issue? It's much more important to have properties for which
->> change with every board.
-> 
-> Thinking about this some more, I'm tempted to rework this patch to remove
-> the extra DT property and just "detect" the number of banks based on the
-> length of the interrupts property, (well, actually the number of IRQ
-> resources that the platform device has) since each bank has its own
-> interrupt. Does anyone disagree with doing that?
+>> So i guess you mean pinctrl core provides a notifier to handle the map
+>> creation when new map is found during parsing each device node, right?
+>
+> Yes.
+>
+>> But it seems parsing of device node and creation of device is at the very early
+>> stage when call of_platform_populate in .init_machine code and pinctrl subsystem
+>> may still have not change to run to register a bus notifier.
+>
+> That's possible. There are some early initcalls that might work out
+> fine for this,
+Ok, looks .init_machine is the level of ARCH_INIT, will try a earlier one.
+and we may add that init function in pinctrl core if it's reasonable.
 
-Sounds fine too me.
+> but...
+but what?
 
-Rob
+>
+>> And i'm not sure it's the right place for of_platform.c to handle
+>> pinmux things when create new devices.
+>
+> So of_device_alloc(), which is called by of_platform_populate() for each
+> device, already parses basic DT content such as reg and interrupts, and
+> converts them to Linux resources. I'd consider parsing any pinmux properties
+> and registering them with the pinctrl subsystem to be of a similar nature,
+> so adding some code to of_device_alloc() that calls a core pinmux function
+> to parse the DT node seems reasonable to me.
+>
+It's not perfect to me since pinmux map looks not the pure hw
+conception like reg/int.
+but i wonder if we can find a better way, (scanning?)
+
+>> I wonder it may not work for pinmux map case.
+>> If pinctrl core does not provide notifier, who else can be the right
+>> one to privide it?
+>>
+>> > The only case this
+>> > might not cover is DT nodes for which the kernel doesn't actually have
+>> > a driver, and hence no device is created.
+>>
+>> Per my understanding, the device creation should be independent on the driver.
+>> I don't know why no device is created if not have a driver.
+>> Did i miss something?
+>
+> Yes, I think the device gets created irrespective, so this isn't actually a problem
+>
+> --
+> nvpublic
+>
