@@ -1,49 +1,53 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [RFC v2 4/9] of: add clock providers
-Date: Sat, 14 Jan 2012 13:40:47 +0800
-Message-ID: <20120114054043.GA3073@S2101-09.ap.freescale.net>
-References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
- <20120110213338.GD3226@page>
- <CACxGe6vqb8AZcZb5WMvfmLsUZH7=SEtBrJCSfsFmDYpKX42MzA@mail.gmail.com>
- <20120113124659.GA17029@S2101-09.ap.freescale.net>
- <CAJOA=zNGM=743zyantezVk-5q_VmJc92iGBGR8fQM4LY5jxMVQ@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [git pull] a couple more device tree changes for v3.3
+Date: Fri, 13 Jan 2012 22:51:16 -0700
+Message-ID: <CACxGe6uN5YRcwLLfrMqWghSv0V7X7-6VW=Ey_P5QpVwQNaUMvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJOA=zNGM=743zyantezVk-5q_VmJc92iGBGR8fQM4LY5jxMVQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Turquette, Mike" <mturquette@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Jamie Iles <jamie@jamieiles.com>, Sascha Hauer <kernel@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2012 at 08:30:30PM -0800, Turquette, Mike wrote:
-...
-> I had envisioned fixed clocks as being clocks whose rates could never
-> change; obviously this is mostly useful for root clocks like
-> oscillators and whatnot.
-> 
-> There is nothing wrong with using fixed clock for sgtl5000-sys-mclk,
-> but it's rate *can* change if it's parent rate ever changes.  This may
-> be very unlikely on your platform, in which case again it is OK to use
-> fixed clock here if you want to.
-> 
-> However... I'm inclined to say that sgtl5000-sys-mclk is good
-> candidate for a dummy clock: it follows it's parent rate, doesn't
-> gate, doesn't divide it's parent rate, only has one input.  There
-> isn't a common dummy clock in the v4 patches, but there is in v5.  The
-> key difference between the fixed rate clock and the dummy clock is
-> that the dummy clock looks at clk->parent->rate in it's .get_rate,
-> whereas a fixed rate clock will have it's rate cached in struct
-> clk_fixed.
-> 
-> Thoughts?
-> 
-I would say this modeling looks all sane to me, except both the
-fixed-clock soc-26m-clk and dummy-clock sgtl5000-sys-mclk in this
-case have a gate which is controlled by gpio.
+Hi Linus,
+
+Here are a couple more device tree changes that I'd really like to get
+into v3.3.  This sorts out driver resource decoding for some ARM
+platforms using the device tree.
+
+Thanks,
+g.
+
+The following changes since commit 2145199c4f0db7c517dd788abec301dc84b91bd0:
+
+  Merge branch 'drm-fixes' of
+git://people.freedesktop.org/~airlied/linux (2012-01-13 20:48:42
+-0800)
+
+are available in the git repository at:
+
+  git://git.secretlab.ca/git/linux-2.6 devicetree-for-linus
+
+Benoit Cousson (2):
+      of/address: Add reg-names property to name an iomem resource
+      of/irq: Add interrupts-names property to name an irq resource
+
+ .../devicetree/bindings/resource-names.txt         |   54 ++++++++++++++++++++
+ drivers/of/address.c                               |   16 ++++--
+ drivers/of/irq.c                                   |   11 ++++-
+ 3 files changed, 75 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/resource-names.txt
+
 
 -- 
-Regards,
-Shawn
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
