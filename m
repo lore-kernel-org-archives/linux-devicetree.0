@@ -1,112 +1,184 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Sat, 14 Jan 2012 09:22:15 +0800
-Message-ID: <20120114012213.GD1810@S2101-09.ap.freescale.net>
-References: <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
- <20120107135445.GI4790@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A6E5@HQMAIL01.nvidia.com>
- <20120112033941.GH20968@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF17801D1DCC@HQMAIL01.nvidia.com>
- <20120113034558.GA12184@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF17801D1F9D@HQMAIL01.nvidia.com>
+From: "Turquette, Mike" <mturquette@ti.com>
+Subject: Re: [RFC v2 4/9] of: add clock providers
+Date: Fri, 13 Jan 2012 20:30:30 -0800
+Message-ID: <CAJOA=zNGM=743zyantezVk-5q_VmJc92iGBGR8fQM4LY5jxMVQ@mail.gmail.com>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+ <20120110213338.GD3226@page> <CACxGe6vqb8AZcZb5WMvfmLsUZH7=SEtBrJCSfsFmDYpKX42MzA@mail.gmail.com>
+ <20120113124659.GA17029@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17801D1F9D-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120113124659.GA17029@S2101-09.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Jamie Iles <jamie@jamieiles.com>, Sascha Hauer <kernel@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2012 at 10:16:36AM -0800, Stephen Warren wrote:
-...
-> For reference, that message is:
-> 
-> Linusw wrote:
-> > On Mon, Dec 5, 2011 at 3:43 AM, Dong Aisheng <dongas86 <at> gmail.com> wrote:
-> > > My current plan is to define all (might be frequently) used functoin
-> > > and groups for the exist upstreamed board like 53 Loco and etc, is
-> > > that ok?
-> >
-> > Yes, but do it in respective board file, so if we say, one day
-> > stops to support a certain board we can just delete that board
-> > file and be done with it.
-> >
-> > Plus this gives us a nice separation as we move toward
-> > device trees. (I think.)
-> 
-> My interpretation of what Dong wrote there is "I'm only going to define
-> the functions and groups that are actually in use by upstream boards,
-> not everything the SoC supports". However, your (Shawn's) references to
-> the email, it sounds like you're interpreting what Dong wrong as "I'm
-> going to define some virtual groups that don't exist in HW but represent
-> common use-cases of the HW".
-> 
-Then what does the word 'groups' in Dong's sentence means with your
-understanding, considering there is no HW level pingroup on imx?
-
-> Admittedly, the wording of Linusw's actually seems to agree more with how
-> you're interpreting what Dong said, but in that case, I don't think his
-> reply makes sense - the whole purpose of the mux mapping table is to
-> represent the board-specific configuration. If we're going to circumvent
-> it, we should completely remove it from the pinctrl subsystem, rather than
-> having some boards avoid using it by creating virtual pin groups instead.
-> 
-IMO, it's a compromise.  It still makes sense to have concept of
-pingroup in pinctrl subsystem, because platforms like Tegra have
-the HW pingroup.
-
-> > > > For imx6q example, we have 193 pins as the muxable entities, and for
-> > > > each of those pin, there are 8 alternative functions.  Let's see what
-> > > > we will have if we enumerate all the available functions for each pin.
+On Fri, Jan 13, 2012 at 4:47 AM, Shawn Guo <shawn.guo@linaro.org> wrote=
+:
+> On Wed, Jan 11, 2012 at 09:46:58PM -0700, Grant Likely wrote:
 > ...
-> > > > We simply do not want to over bloat imx6q pinctrl driver with such
-> > > > enumeration.
-> > >
-> > > Yes, I see you'd end up with a huge number of function definitions here.
-> > >
-> > > You may be able to avoid this by changing the way you name/number the
-> > > functions though.
-> > >
-> > > The example above has a unique function name for every individual signal.
-> > > instead, can you name functions based on the controller they connect to?
-> > >
-> > > So, instead of having:
-> > >
-> > > IMX6Q_PAD_SD2_DAT1__USDHC2_DAT1
-> > > IMX6Q_PAD_SD2_DAT2__USDHC2_DAT2
-> > > IMX6Q_PAD_SD2_DAT3__USDHC2_DAT3
-> > > IMX6Q_PAD_SD2_DAT4__USDHC2_DAT4
-> > >
-> > > Can you replace this with a single:
-> > >
-> > > IMX_FUNC_USDHC2
-> >
-> > So all 'enum imx6q_pad_*' goes away, and instead, we define macros
-> > IMX_FUNC_* at controller basis, correct?
-> 
-> Yes, something like that. The best set to choose probably differs based
-> on the SoC and its mux capabilities. But thinking more, if you're going
-> along this kind of route, I'd prefer to just define the "func0", "func1",
-> ... "func7" functions that represent the raw HW selection instead.
-> 
-In this case, I do not see any point to define them, since it does not
-make too much difference than integer 0, 1, ..., 7.
+>> >> +Required properties:
+>> >> +- compatible : shall be "fixed-clock".
+>> >> +- #clock-cells : from common clock binding; shall be set to 0.
+>> >> +- clock-frequency : frequency of clock in Hz. May be multiple ce=
+lls.
+>> >> +
+>> >> +Optional properties:
+>> >> +- gpios : From common gpio binding; gpio connection to clock ena=
+ble pin.
+>> >
+>> > This seems a little odd to me to have in the common binding, but I=
+'m not
+>> > that familiar with too many platforms.
+>> >
+>> >> +- clock-output-names : From common clock binding
+>> >> +
+>> >> +Example:
+>> >> + =A0 =A0 clock {
+>> >> + =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "fixed-clock";
+>> >> + =A0 =A0 =A0 =A0 =A0 =A0 #clock-cells =3D <0>;
+>> >> + =A0 =A0 =A0 =A0 =A0 =A0 clock-frequency =3D <1000000000>;
+>> >> + =A0 =A0 };
+>> >
+>> > I wonder if this should have an optional clock consumer with a sta=
+ndard
+>> > name for parenting? =A0For example, on picoxcell there is a fixed =
+200MHz
+>> > APB clock that is really a PLL from a 20MHz reference input and I'=
+d like
+>> > to represent that in the clock tree.
+>>
+>> If it depends on a parent clock, then it really isn't a fixed clock,
+>> is it (from the perspective of the OS). =A0The point of this binding=
+ is
+>> a trivial way to describe clocks that don't change. =A0If that
+>> assumption doesn't hold true, then this binding isn't suitable for
+>> that clock. =A0As you point out, even the gpio enable feature is pus=
+hing
+>> things a bit.
+>>
+> I recently ran into a use case perfectly fitting into this discussion=
+=2E
+>
+> We have audio codec sgtl5000 on imx51-babbage board requiring a 26 MH=
+z
+> clock input to its SYS_MCLK pin. =A0The board has a 26 MHz oscillator=
+ with
+> a gpio control that outputs 26M_OSC_CLK. =A0And this clock goes throu=
+gh a
+> 3-state buffer component with another gpio control, and then goes to
+> sgtl5000 SYS_MCLK pin. =A0The following is what I have in my mind to
+> describe them in device tree.
+>
+> soc_26m_clk: soc-26m-clk {
+> =A0 =A0 =A0 =A0compatible =3D "fixed-clock";
+> =A0 =A0 =A0 =A0#clock-cells =3D <0>;
+> =A0 =A0 =A0 =A0clock-frequency =3D <26000000>;
+> =A0 =A0 =A0 =A0clock-output-names =3D "soc-26m-clk";
+> =A0 =A0 =A0 =A0gpios =3D <&gpio3 1 0>;
+> };
+>
+> sgtl5000_clk: sgtl5000-sys-mclk {
+> =A0 =A0 =A0 =A0#clock-cells =3D <0>;
+> =A0 =A0 =A0 =A0gpios =3D <&gpio4 26 0>;
+> =A0 =A0 =A0 =A0clocks =3D <&soc_26m_clk>;
+> =A0 =A0 =A0 =A0clock-names =3D "soc-26m-clk";
+> =A0 =A0 =A0 =A0clock-output-names =3D "sgtl5000-sys-mclk";
+> };
+>
+> codec: sgtl5000@0a {
+> =A0 =A0 =A0 =A0compatible =3D "fsl,sgtl5000";
+> =A0 =A0 =A0 =A0reg =3D <0x0a>;
+> =A0 =A0 =A0 =A0clocks =3D <&sgtl5000_clk>;
+> =A0 =A0 =A0 =A0clock-names =3D "sgtl5000-sys-mclk";
+> };
+>
+> The sgtl5000-sys-mclk is a clock with fixed rate, but the rate is rea=
+lly
+> defined by its parent soc-26m-clk, which is anothe fixed-rate clock. =
+=A0We
+> have no doubt that soc-26m-clk is a "fixed-clock". =A0Is sgtl5000-sys=
+-mclk
+> a "fixed-clock"? =A0The following is the "fixed-clock" defined by Mik=
+e's
+> implementation.
+>
+> /*
+> =A0* DOC: basic fixed-rate clock that cannot gate
+> =A0*
+> =A0* Traits of this clock:
+> =A0* prepare - clock never gates. =A0clk_prepare & clk_unprepare do n=
+othing
+> =A0* enable - clock never gates. =A0clk_enable & clk_disable do nothi=
+ng
+> =A0* rate - rate is always a fixed value. =A0No clk_set_rate support
+> =A0* parent - fixed parent. =A0No clk_set_parent support
+> =A0*
+> =A0* note: parent can be NULL, which implies that this clock is a roo=
+t clock.
+> =A0*/
+> struct clk_hw_ops clk_hw_fixed_ops =3D {
+> =A0 =A0 =A0 .recalc_rate =3D clk_hw_fixed_recalc_rate,
+> =A0 =A0 =A0 .get_parent =3D clk_hw_fixed_get_parent,
+> };
+>
+> It says that the "fixed-clock" can have a fixed parent. =A0So I shoul=
+d
+> probably add compatible =3D "fixed-clock" for node sgtl5000-sys-mclk =
+too.
+> Then should I add clock-frequency property for it too? =A0I'm not sur=
+e
+> about that, since the frequency is really defined by its parent. =A0I=
+OW,
+> should the clock-frequency property for "fixed-clock" be optional? =A0=
+On
+> the other hand, let clock-frequency property be optional seems a litt=
+le
+> illogical to the concept of "fixed-clock". =A0So I'm really confused =
+here.
 
--- 
-Regards,
-Shawn
+I had envisioned fixed clocks as being clocks whose rates could never
+change; obviously this is mostly useful for root clocks like
+oscillators and whatnot.
+
+There is nothing wrong with using fixed clock for sgtl5000-sys-mclk,
+but it's rate *can* change if it's parent rate ever changes.  This may
+be very unlikely on your platform, in which case again it is OK to use
+fixed clock here if you want to.
+
+However... I'm inclined to say that sgtl5000-sys-mclk is good
+candidate for a dummy clock: it follows it's parent rate, doesn't
+gate, doesn't divide it's parent rate, only has one input.  There
+isn't a common dummy clock in the v4 patches, but there is in v5.  The
+key difference between the fixed rate clock and the dummy clock is
+that the dummy clock looks at clk->parent->rate in it's .get_rate,
+whereas a fixed rate clock will have it's rate cached in struct
+clk_fixed.
+
+Thoughts?
+
+Mike
+
+> With the proper clock support, I would expect that sgtl5000 driver on=
+ly
+> needs to make the following two calls to have its clock enabled.
+>
+> =A0 =A0 =A0 =A0mclk =3D clk_get(&dev, "sgtl5000-sys-mclk");
+> =A0 =A0 =A0 =A0clk_prepare_enable(mclk);
+>
+> But looking at the current fixed-clock implementation, there is even
+> no clk_enable operation for fixed-clock. =A0How can we control the cl=
+ock
+> with gpio?
+>
+> All I'm saying is that we need some level of alignment between clock
+> binding and common-clk implementation.
+>
+> Regards,
+> Shawn
+>
+>> That said, I'm open to extending this binding if something can be
+>> defined that will have a lot of use cases.
