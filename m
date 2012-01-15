@@ -1,13 +1,14 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 03/17] fdt: Correct GPIO name access in fdtdec
-Date: Sat, 14 Jan 2012 16:47:15 -0800
-Message-ID: <1326588449-1794-4-git-send-email-sjg@chromium.org>
-References: <1326588449-1794-1-git-send-email-sjg@chromium.org>
+From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH] x86: convert to generic irq_domain
+Date: Sun, 15 Jan 2012 17:35:38 +0100
+Message-ID: <20120115163538.GA19026@linutronix.de>
+References: <1324099129-28832-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326588449-1794-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1324099129-28832-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,38 +18,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This was missing an fdt32_to_cpu() call so got the name pointer wrong.
-If the GPIO module looks at it, this would cause a problem.
+* Rob Herring | 2011-12-16 23:18:49 [-0600]:
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>
+>This is needed to avoid struct collisions with the generic irq_domain
+>support being added to kernel/irq/generic-chip.c.
+>
+>Boot tested, but not on a DT enabled platform.
+
+If you add this piece into your patch:
+
+>From 34d9bb9b582136c8412e14ad870c8aaaa28c9e15 Mon Sep 17 00:00:00 2001
+From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Date: Sun, 15 Jan 2012 16:52:13 +0100
+Subject: [PATCH] fixup of "x86: convert to generic irq_domain"
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 ---
- lib/fdtdec.c |    3 ++-
- 1 files changed, 2 insertions(+), 1 deletions(-)
+ arch/x86/Kconfig             |    1 +
+ arch/x86/kernel/devicetree.c |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index bcb2343..f7d0c95 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -418,7 +418,7 @@ static int fdtdec_decode_gpios(const void *blob, int node,
- 	}
- 
- 	/* We will use the name to tag the GPIO */
--	name = fdt_string(blob, prop->nameoff);
-+	name = fdt_string(blob, fdt32_to_cpu(prop->nameoff));
- 	cell = (u32 *)prop->data;
- 	len /= sizeof(u32) * 3;		/* 3 cells per GPIO record */
- 	if (len > max_count) {
-@@ -444,6 +444,7 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
- 
- 	debug("%s: %s\n", __func__, prop_name);
- 	gpio->gpio = FDT_GPIO_NONE;
-+	gpio->name = NULL;
- 	err = fdtdec_decode_gpios(blob, node, prop_name, gpio, 1);
- 	return err == 1 ? 0 : err;
- }
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index d6f1e91..0d74f88 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -397,6 +397,7 @@ config X86_INTEL_CE
+ 	select X86_REBOOTFIXUPS
+ 	select OF
+ 	select OF_EARLY_FLATTREE
++	select IRQ_DOMAIN
+ 	---help---
+ 	  Select for the Intel CE media processor (CE4100) SOC.
+ 	  This option compiles in support for the CE4100 SOC for settop
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index 5632e5b..41eb2a7 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -4,6 +4,7 @@
+ #include <linux/bootmem.h>
+ #include <linux/export.h>
+ #include <linux/io.h>
++#include <linux/irqdomain.h>
+ #include <linux/interrupt.h>
+ #include <linux/list.h>
+ #include <linux/of.h>
 -- 
-1.7.7.3
+
+you add my acked-by to it.
+
+Sebastian
