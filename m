@@ -1,8 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 01/17] fdt: Add function to look up a phandle's register
- address
-Date: Sat, 14 Jan 2012 16:47:13 -0800
-Message-ID: <1326588449-1794-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH 15/17] tegra: fdt: Add LCD definitions for Seaboard
+Date: Sat, 14 Jan 2012 16:47:27 -0800
+Message-ID: <1326588449-1794-16-git-send-email-sjg@chromium.org>
 References: <1326588449-1794-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,60 +21,43 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a commonly-used requirement, so add a function to support it
-easily.
+The Seaboard has a 1366x768 16bpp LCD. The backlight is controlled
+by one of the PWMs.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- include/fdtdec.h |   13 +++++++++++++
- lib/fdtdec.c     |   11 +++++++++++
- 2 files changed, 24 insertions(+), 0 deletions(-)
+ board/nvidia/dts/tegra2-seaboard.dts |   21 +++++++++++++++++++++
+ 1 files changed, 21 insertions(+), 0 deletions(-)
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index e705124..81ce3f6 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -239,6 +239,19 @@ const char *fdtdec_get_compatible(enum fdt_compat_id id);
- int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name);
- 
- /**
-+ * Look up a phandle and follow it to its node. Then return the register
-+ * address of that node as a pointer. This can be used to access the
-+ * peripheral directly.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @return pointer to node's register address
-+ */
-+void *fdtdec_lookup_phandle_reg(const void *blob, int node,
-+		const char *prop_name);
+diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
+index b847215..710b254 100644
+--- a/board/nvidia/dts/tegra2-seaboard.dts
++++ b/board/nvidia/dts/tegra2-seaboard.dts
+@@ -210,4 +210,25 @@
+ 				 00  00  00  11  00  00  00  00
+ 				 00  00  00  00  00  00  00  00];
+ 	};
 +
-+/**
-  * Look up a property in a node and return its contents in an integer
-  * array of given length. The property must have at least enough data for
-  * the array (4*count bytes). It may have more, but this will be ignored.
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 48abf02..bcb2343 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -311,6 +311,17 @@ int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name)
- 	return lookup;
- }
- 
-+void *fdtdec_lookup_phandle_reg(const void *blob, int node,
-+		const char *prop_name)
-+{
-+	int lookup;
++	display@0x54200000 {
++		pwfm = <&pwfm2>;
++		frame-buffer = <0x2f680000>;
++		backlight-enable-gpio = <&gpio 28 0>;		/* PD4 */
++		lvds-shutdown-gpio = <&gpio 10 0>;		/* PB2 */
++		backlight-vdd-gpio = <&gpio 176 0>;		/* PW0 */
++		panel-vdd-gpio = <&gpio 22 0>;			/* PC6 */
++		panel-timings = <4 203 17 15>;
 +
-+	lookup = fdtdec_lookup_phandle(blob, node, prop_name);
-+	if (lookup < 0)
-+		return NULL;
-+	return (void *)fdtdec_get_addr(blob, lookup, "reg");
-+}
++		lcd {
++			compatible = "generic,lcd";
++			width = <1366>;
++			height = <768>;
++			bits-per-pixel = <16>;
++			pixel-clock = <70600000>;
 +
- /**
-  * Look up a property in a node and check that it has a minimum length.
-  *
++			horiz-timing = <11 58 58 58>;
++			vert-timing = <1 4 4 4>;
++		};
++	};
+ };
 -- 
 1.7.7.3
