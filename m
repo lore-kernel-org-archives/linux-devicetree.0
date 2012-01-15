@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 02/17] fdt: Add header guard to fdtdec.h
-Date: Sat, 14 Jan 2012 16:47:14 -0800
-Message-ID: <1326588449-1794-3-git-send-email-sjg@chromium.org>
+Subject: [PATCH 03/17] fdt: Correct GPIO name access in fdtdec
+Date: Sat, 14 Jan 2012 16:47:15 -0800
+Message-ID: <1326588449-1794-4-git-send-email-sjg@chromium.org>
 References: <1326588449-1794-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,30 +21,34 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This makes it easier to include this header from other headers.
+This was missing an fdt32_to_cpu() call so got the name pointer wrong.
+If the GPIO module looks at it, this would cause a problem.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- include/fdtdec.h |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ lib/fdtdec.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index 81ce3f6..f60c969 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -19,6 +19,8 @@
-  * MA 02111-1307 USA
-  */
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index bcb2343..f7d0c95 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -418,7 +418,7 @@ static int fdtdec_decode_gpios(const void *blob, int node,
+ 	}
  
-+#ifndef __fdtdec_h
-+#define __fdtdec_h
+ 	/* We will use the name to tag the GPIO */
+-	name = fdt_string(blob, prop->nameoff);
++	name = fdt_string(blob, fdt32_to_cpu(prop->nameoff));
+ 	cell = (u32 *)prop->data;
+ 	len /= sizeof(u32) * 3;		/* 3 cells per GPIO record */
+ 	if (len > max_count) {
+@@ -444,6 +444,7 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
  
- /*
-  * This file contains convenience functions for decoding useful and
-@@ -371,3 +373,4 @@ int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
-  */
- const u8 *fdtdec_locate_byte_array(const void *blob, int node,
- 			     const char *prop_name, int count);
-+#endif
+ 	debug("%s: %s\n", __func__, prop_name);
+ 	gpio->gpio = FDT_GPIO_NONE;
++	gpio->name = NULL;
+ 	err = fdtdec_decode_gpios(blob, node, prop_name, gpio, 1);
+ 	return err == 1 ? 0 : err;
+ }
 -- 
 1.7.7.3
