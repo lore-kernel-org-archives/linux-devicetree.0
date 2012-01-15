@@ -1,45 +1,81 @@
-From: Michal Marek <mmarek@suse.cz>
-Subject: Re: [PATCH 2/2] Kbuild: Use dtc's -d (dependency) option
-Date: Sat, 14 Jan 2012 23:51:29 +0100
-Message-ID: <4F1206F1.5090405@suse.cz>
-References: <1326134295-15547-1-git-send-email-swarren@nvidia.com>  <1326134295-15547-2-git-send-email-swarren@nvidia.com> <1326310587.2535.291.camel@deneb.redhat.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 01/17] fdt: Add function to look up a phandle's register
+ address
+Date: Sat, 14 Jan 2012 16:47:13 -0800
+Message-ID: <1326588449-1794-2-git-send-email-sjg@chromium.org>
+References: <1326588449-1794-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1326310587.2535.291.camel@deneb.redhat.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Mark Salter <msalter@redhat.com>, Stephen Warren <swarren@nvidia.com>
-Cc: Jon Loeliger <jdl@jdl.com>, David Gibson <david@gibson.dropbear.id.au>, Russell King <linux@arm.linux.org.uk>, Aurelien Jacquiot <a-jacquiot@ti.com>, Michal Simek <monstr@monstr.eu>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-c6x-dev@linux-c6x.org, microblaze-uclinux@itee.uq.edu.au, linux@openrisc.net, linuxppc-dev@lists.ozlabs.org, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326588449-1794-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11.1.2012 20:36, Mark Salter wrote:
-> On Mon, 2012-01-09 at 11:38 -0700, Stephen Warren wrote:
->> This hooks dtc into Kbuild's dependency system.
->>
->> Thus, for example, "make dtbs" will rebuild tegra-harmony.dtb if only
->> tegra20.dtsi has changed yet tegra-harmony.dts has not. The previous
->> lack of this feature recently caused me to have very confusing "git
->> bisect" results.
->>
->> For ARM, it's obvious what to add to $(targets). I'm not familiar enough
->> with other architectures to know what to add there. Powerpc appears to
->> already add various .dtb files into $(targets), but the other archs may
->> need something added to $(targets) to work.
->>
->> Signed-off-by: Stephen Warren <swarren@nvidia.com>
->>
-> 
-> Acked-by: Mark Salter <msalter@redhat.com>
-> 
-> For the arch/c6x bit.
+This is a commonly-used requirement, so add a function to support it
+easily.
 
-As the C6X port has been merged in this merge window, I can't easily
-apply this patch to my kbuild branch and at the same time please Linus
-by basing the pull request on a tagged release. So I'm going to drop the
-arch/c6x part to keep the kbuild branch "pretty" and let either Mark or
-Stephen send the patch to Linus directly, once he has merged the kbuild
-branch. Would that work?
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ include/fdtdec.h |   13 +++++++++++++
+ lib/fdtdec.c     |   11 +++++++++++
+ 2 files changed, 24 insertions(+), 0 deletions(-)
 
-Thanks,
-Michal
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index e705124..81ce3f6 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -239,6 +239,19 @@ const char *fdtdec_get_compatible(enum fdt_compat_id id);
+ int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name);
+ 
+ /**
++ * Look up a phandle and follow it to its node. Then return the register
++ * address of that node as a pointer. This can be used to access the
++ * peripheral directly.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @return pointer to node's register address
++ */
++void *fdtdec_lookup_phandle_reg(const void *blob, int node,
++		const char *prop_name);
++
++/**
+  * Look up a property in a node and return its contents in an integer
+  * array of given length. The property must have at least enough data for
+  * the array (4*count bytes). It may have more, but this will be ignored.
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 48abf02..bcb2343 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -311,6 +311,17 @@ int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name)
+ 	return lookup;
+ }
+ 
++void *fdtdec_lookup_phandle_reg(const void *blob, int node,
++		const char *prop_name)
++{
++	int lookup;
++
++	lookup = fdtdec_lookup_phandle(blob, node, prop_name);
++	if (lookup < 0)
++		return NULL;
++	return (void *)fdtdec_get_addr(blob, lookup, "reg");
++}
++
+ /**
+  * Look up a property in a node and check that it has a minimum length.
+  *
+-- 
+1.7.7.3
