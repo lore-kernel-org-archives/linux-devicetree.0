@@ -1,75 +1,62 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH] x86: convert to generic irq_domain
-Date: Sun, 15 Jan 2012 17:35:38 +0100
-Message-ID: <20120115163538.GA19026@linutronix.de>
-References: <1324099129-28832-1-git-send-email-robherring2@gmail.com>
+From: Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>
+Subject: Re: [PATCH v2] [INCREMENTAL] Input: tegra-kbc - add device tree support
+Date: Mon, 16 Jan 2012 13:31:50 +0200
+Message-ID: <CALq1K=LShfkwyfx+G3rqp9OdHzRoZzXremr2tH7guJTLZaqbRw@mail.gmail.com>
+References: <1325639956-27502-1-git-send-email-olof@lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1324099129-28832-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1325639956-27502-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring | 2011-12-16 23:18:49 [-0600]:
-
->From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+On Wed, Jan 4, 2012 at 03:19, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
 >
->This is needed to avoid struct collisions with the generic irq_domain
->support being added to kernel/irq/generic-chip.c.
+> This is an incremental patch updating to the revised bindings for mat=
+rix keyboards.
 >
->Boot tested, but not on a DT enabled platform.
+> This includes an optional "linux,fn-keymap" binding that is not yet i=
+mplemented,
+> that will be used to specify the Fn-key modifier layout if needed.
+>
+> New for v2:
+> * Removed references to "matrix-keyboard-controller" compatible value=
+s
+> * Rebased to be incremental on top of previous patch.
+>
+> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> ---
+>
+> Dmitry,
+>
+> Here's an incremental patch to go on top of your next branch.
+>
+> Regards,
+>
+> -Olof
+> ---
+> =C2=A0.../devicetree/bindings/input/tegra-kbc.txt =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0| =C2=A0 17 ++++++++++-----
+> =C2=A0drivers/input/keyboard/tegra-kbc.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 | =C2=A0 21 +++++++++++++++----
+> =C2=A02 files changed, 27 insertions(+), 11 deletions(-)
 
-If you add this piece into your patch:
+=46or any reasons this patch is missing from for-next branch and the
+absence of the lines below prevents from linux-next-20120116 build
+(and previous too).
+> + =C2=A0 =C2=A0 =C2=A0 u32 prop;
+> + =C2=A0 =C2=A0 =C2=A0 int i;
 
->From 34d9bb9b582136c8412e14ad870c8aaaa28c9e15 Mon Sep 17 00:00:00 2001
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Date: Sun, 15 Jan 2012 16:52:13 +0100
-Subject: [PATCH] fixup of "x86: convert to generic irq_domain"
+http://git.kernel.org/?p=3Dlinux/kernel/git/next/linux-next.git;a=3Dblo=
+b;f=3Ddrivers/input/keyboard/tegra-kbc.c;h=3Da136e2e832beff1e740c8c9a79=
+ad850b01fe14c2;hb=3Drefs/heads/stable#l589
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
----
- arch/x86/Kconfig             |    1 +
- arch/x86/kernel/devicetree.c |    1 +
- 2 files changed, 2 insertions(+), 0 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d6f1e91..0d74f88 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -397,6 +397,7 @@ config X86_INTEL_CE
- 	select X86_REBOOTFIXUPS
- 	select OF
- 	select OF_EARLY_FLATTREE
-+	select IRQ_DOMAIN
- 	---help---
- 	  Select for the Intel CE media processor (CE4100) SOC.
- 	  This option compiles in support for the CE4100 SOC for settop
-diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index 5632e5b..41eb2a7 100644
---- a/arch/x86/kernel/devicetree.c
-+++ b/arch/x86/kernel/devicetree.c
-@@ -4,6 +4,7 @@
- #include <linux/bootmem.h>
- #include <linux/export.h>
- #include <linux/io.h>
-+#include <linux/irqdomain.h>
- #include <linux/interrupt.h>
- #include <linux/list.h>
- #include <linux/of.h>
--- 
-
-you add my acked-by to it.
-
-Sebastian
+--
+Leon Romanovsky | Independent Linux Consultant
+=C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0www.leon.nu=C2=A0| leon-2ukJVAZIZ/Y@public.gmane.org
