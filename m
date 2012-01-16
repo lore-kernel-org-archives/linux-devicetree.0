@@ -1,129 +1,326 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer constants
-Date: Mon, 16 Jan 2012 12:54:21 +1100
-Message-ID: <20120116015421.GC4512@truffala.fritz.box>
-References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
- <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
- <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
- <20120111130056.GK4935@truffala.fritz.box>
- <E1RkzJs-000590-4s@jdl.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5@HQMAIL01.nvidia.com>
+From: Dong Aisheng-B29396 <B29396@freescale.com>
+Subject: RE: Pinmux bindings proposal
+Date: Mon, 16 Jan 2012 12:50:02 +0000
+Message-ID: <7FE21149F4667147B645348EC6057885091DEA@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 11, 2012 at 01:36:46PM -0800, Stephen Warren wrote:
-> Jon Loeliger wrote at Wednesday, January 11, 2012 7:38 AM:
-> > > On Tue, Jan 10, 2012 at 01:54:30PM -0800, Stephen Warren wrote:
-> > > > John, David,
-> > > >
-> > > > What can we do to reach consensus on expanding dtc to handle named
-> > > > constants, or in general any future direction to extend the syntax with
-> > > > expressions etc.?
-> > >
-> > > Hrm, so, I'm not at all keen to add a named constant syntax without at
-> > > least having an outline of what a future macro/function syntax would
-> > > look like.
-> > 
-> > Which is where I thought it was left earlier...? :-)
-> > And it's not just what the macro/function syntax will look like,
-> > but also how these will play into a more generalized expression
-> > handling mechanism.  Defining something one-off now that doesn't
-> > fit well into a long term plan is less than ideal.
-> > 
-> > Yes, I know that is tantamount to requiring the whole, larger
-> > picture be solved first.  But Dave is right -- at least an outline
-> > of the direction.  Seriously, the lexical problems can form some
-> > of the nastiest gotchas if we're not careful from the onset.
+> -----Original Message-----
+> From: Stephen Warren [mailto:swarren@nvidia.com]
+> Sent: Saturday, January 14, 2012 4:40 AM
+> To: Dong Aisheng-B29396; linus.walleij@stericsson.com; s.hauer@pengutronix.de;
+> rob.herring@calxeda.com; kernel@pengutronix.de; cjb@laptop.org; Simon Glass
+> (sjg@chromium.org); Dong Aisheng
+> Cc: linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree-discuss@lists.ozlabs.org
+> Subject: Pinmux bindings proposal
+> Importance: High
 > 
-> So that all makes sense.
+> I thought a bit more about pinmux DT bindings. I came up with something that I
+> like well enough, and is pretty similar to the binding that Dong posted recently.
+> I think it'll work for both Tegra's and IMX's needs.
+> Please take a look!
 > 
-> My question is: How can we get consensus on what we want that complete
-> future syntax to be?
+Thanks for doing this. :-)
+A few comments:
 
-Um.. try to make a detailed proposal (synthesised from earlier ones)
-that enough people are happy with (Jon and myself for starters).
+> Note: I've used named constants below just to make this easier to read.
+> We still don't have a solution to actually use named constants in dtc yet.
+> 
+> tegra20.dtsi:
+> 
+> / {
+>         tegra_pmx: pinmux@70000000 {
+>                 compatible = "nvidia,tegra20-pinmux";
+>                 reg = <0x70000014 0x10   /* Tri-state registers */
+>                        0x70000080 0x20   /* Mux registers */
+>                        0x700000a0 0x14   /* Pull-up/down registers */
+>                        0x70000868 0xa8>; /* Pad control registers */
+>         };
+> 
+>         sdhci@c8000200 {
+>                 compatible = "nvidia,tegra20-sdhci";
+>                 reg = <0xc8000200 0x200>;
+>                 interrupts = <0 15 0x04>;
+>         };
+> };
+> 
+> tegra-harmony.dts:
+> 
+> /{
+>         sdhci@c8000200 {
+>                 cd-gpios = <&gpio 69 0>; /* gpio PI5 */
+>                 wp-gpios = <&gpio 57 0>; /* gpio PH1 */
+>                 power-gpios = <&gpio 155 0>; /* gpio PT3 */
+> 
+>                 /*
+>                  * A list of named configurations that this device needs.
+>                  * Format is a list of <"name" &phandle_of_pmx_configuration>
+>                  *
+>                  * Multiple "name"s are needed e.g. to support active/suspend,
+>                  * or whatever device-defined states are appropriate. The
+>                  * device defines which names are needed, just like a device
+>                  * defines which regulators, clocks, GPIOs, interrupts, ...
+>                  * it needs.
+>                  *
+>                  * This example shows a 1:1 relation between name and phandle.
+>                  * We might want a 1:n relation, so that we can blend multiple
+>                  * pre-defined sets of data together, e.g. one pre-defined set
+>                  * for the pin mux configuration, another for the pin config
+>                  * settings, both being put into the single "default" setting
+>                  * for this one device.
+>                  *
+>                  * A pinmux controller can contain this property too, to
+>                  * define "hogged" or "system" pin mux configuration.
+>                  *
+>                  * Note: Mixing strings and integers in a property seems
+>                  * unusual. However, I have seen other bindings floating
+>                  * around that are starting to do this...
+>                  */
+>                 pinmux =
+>                         <"default" &pmx_sdhci_active>
+>                         <"suspend" &pmx_sdhci_suspend>;
+> 
+>                 /* 1:n example: */
+>                 pinmux =
+>                         <"default" &pmx_sdhci_mux_a>
+>                         <"default" &pmx_sdhci_pincfg_a>
+>                         <"suspend" &pmx_sdhci_mux_a>
+>                         <"suspend" &pmx_sdhci_pincfg_a_suspend>;
+> 
+>                 /*
+>                  * Alternative: One property for each required state. But,
+>                  * how does pinctrl core know which properties to parse?
+>                  * Every property named "pinctrl*" seems a little too far-
+>                  * reaching. Perhaps if we used vendor-name "pinmux", that'd
+>                  * be OK, i.e. pinmux,default and pinmux,suspend?
 
-> IIRC, Jon has a branch that implements a proposal,
-> and David at least posted a different proposal if not actual code that
-> implemented it. We're not missing proposals, but rather a mechanism to
-> decide between them?
+It we support whatever device-defined states, it's meaningless to use one property
+For each required state since pinctrl core does not know the property name the
+customer defined.
 
-Well.. that's not entirely true.  The proposed expression syntax was
-essentially identical between Jon's proposal and mine (though the
-implementation of it is quite different).  Jon's proposal includes
-loops and "functions", mine started with just expressions.  I had in
-mind some sort of macro language to allow making use of those
-expressions.  I'm not sure quite what that would look like (or even if
-it would be implemented withing dtc, or use an external helper like
-cpp).  So there's really only one proposal that covers the full space,
-it's just I don't like it that much.
+>                  */
+>                 pinmux = <&pmx_sdhci_active>;
+>                 pinmux-suspend <&pmx_sdhci_suspend>;
+> 
+>                 /* 1:n example: */
+>                 pinmux = <&pmx_sdhci_mux_a &pmx_sdhci_pincfg_a>
+This looks ok to me since the mux and pincfg usually is 1 to 1.
+And if we do not have a pincfg for a pinmux we can find a way to tell the pinctl
+core, maybe just set pincfg phandle to 0.
 
-> For what it's worth, I'd tend towards a simple expression-based syntax
-> where property values can be calculated with C-style expressions. Basic
-> math stuff like ( ) + - * / & | ~ << >> and some basic string handling
-> operations (str(int) and concatenation).
+>                 pinmux-suspend = <&pmx_sdhci_mux_a &pmx_sdhci_pincfg_a_suspend>;
+> 
+>                 /*
+>                  * The actual definition of the complete state of the
+>                  * pinmux as required by some driver.
+>                  *
+>                  * These can be either directly in the device node, or
+>                  * somewhere in tegra20.dtsi in order to provide pre-
+>                  * selected/common configurations. Hence, they're referred
+>                  * to by phandle above.
+>                  */
+>                 pmx_sdhci_active: {
+>                         /*
+>                          * Pin mux settings. Mandatory?
+Mandatory for what?
 
-Ok.  Well, I should de-bitrot and re-propose my integer expression
-patch, which covered most of that.  I also intended basic string
-operations as you suggest, though I can't remember if I made a start
-on that.
+>                          * Not mandatory if the 1:1 mentioned above is
+>                          * extended to 1:n.
+>                          *
+>                          * Format is <&pmx_controller_phandle muxable_entity_id
+>                          * selected_function>.
+>                          *
+>                          * The pmx phandle is required since there may be more
+>                          * than one pinmux controller in the system. Even if
+>                          * this node is inside the pinmux controller itself, I
+>                          * think it's simpler to just always have this field
+>                          * present in the binding for consistency.
+>                          *
+>                          * Alternative: Format is <&pmx_controller_phandle
+>                          * pmx_controller_specific_data>. In this case, the
+>                          * pmx controller needs to define #pinmux-mux-cells,
+>                          * and provide the pinctrl core with a mapping
+>                          * function to handle the rest of the data in the
+>                          * property. This is how GPIOs and interrupts work.
+>                          * However, this will probably interact badly with
+>                          * wanting to parse the entire pinmux map early in
+>                          * boot, when perhaps the pinctrl core is initialized,
+>                          * but the pinctrl driver itself is not.
+>                          */
+>                         mux =
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>
+>                                 /* Syntax example */
+>                                 <&foo_pmx FOO_PMX_PG_X FOO_PMX_MUX_0>;
+I'm still think how do we construct the pinmux map for such binding.
+The format you're using is:
+<&pmx_controller_phandle muxable_entity_id selected_function>
+For contruct pinmux map, we need to know at least 3 things for a device:
+a) pinctrl device b) function name c) group name.
+For a, we can get it from this binding.
+But for b and c, since they are constants, how to convert to name string?
 
-I think applying that would be reasonably safe as it is.  If we go
-with Jon's proposal or something like it in the end, we'll need to
-reimplement most of the expression evaluation (to do delayed instead
-of parse-time evaluation).  But I'm much less worried about having to
-rework code - even substantially - than I am about user-visible syntax
-regressions.
+>                         /*
+>                          * Pin configuration settings. Optional.
+>                          *
+>                          * Format is <&pmx_controller_phandle muxable_entity_id
+>                          * configuration_option configuration_value>.
+>                          */
+>                         config =
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTA
+> TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTD
+> TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTA
+> TEGRA_PMX_CONF_SLEW_RATE 4>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTD
+> TEGRA_PMX_CONF_SLEW_RATE 8>;
+>                         /*
+>                          * Perhaps allow additional custom properties here to
+>                          * express things we haven't thought of. The pinctrl
+>                          * drivers would be responsible for parsing them.
+>                          */
+>                 };
+>                 pmx_sdhci_standby: {
+>                         mux =
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>;
+>                         config =
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTA
+> TEGRA_PMX_CONF_TRISTATE 1>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTD
+> TEGRA_PMX_CONF_TRISTATE 1>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTA
+> TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTD
+> TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTA
+> TEGRA_PMX_CONF_SLEW_RATE 4>
+>                                 <&tegra_pmx TEGRA_PMX_PG_DTD
+> TEGRA_PMX_CONF_SLEW_RATE 8>;
+>                 };
+>         };
+> };
+> 
+> Integer IDs for "muxable entities": Pins on IMX, pin groups on Tegra:
+> 
+If "muxable entities" is pins on IMX, I'm wondering how we define the predefined
+Functions and groups or if we still need to do that.
 
-> I think that'd cover the vast
-> majority of use-cases wouldn't it?
+>     TEGRA_PMX_PG_DTA
+>     TEGRA_PMX_PG_DTD
+> 
+> Each individual pinmux driver's bindings needs to define what each integer ID
+> represents.
+> 
+Does it mean both pinmux driver and soc.dtsi file need define those macros if dtc
+Supports constants?
 
-Not quite.  Expressions are interesting of themselves, but not all
-that useful.  It's functions or macros plus expressions which gets us
-close to where we want to be.  So expressions gives a little as it is,
-a lot more for people already running their dts through cpp.  To
-really make progress, we still want a proposal for a standard function
-or macro syntax for dtc.  And, obviously, a decision whether to go
-with functions or macros.  I like macros, because I think they give a
-lot of flexibility with minimal conceptual complexity.  Jon's proposal
-is based on functions.  I didn't like his proposal very much as a
-whole, but I should take another look and see what I think of the
-function syntax in isolation.
+> Integer IDs for the "mux functions". Note that these are the raw values written
+> into hardware, not any driver-defined abstraction, and not any kind of "virtual
+> group" that's been invented to make OEMs life easier:
+> 
+>     TEGRA_PMX_MUX_0
+>     TEGRA_PMX_MUX_1
+>     ...
+>     TEGRA_PMX_MUX_3 (for Tegra, 7 for IMX)
+> 
+> Since these are the raw IDs that go into HW, there's no need to specify each
+> ID's meanings in the binding.
+> 
+> Integer IDs for "pin config parameters":
+> 
+>     TEGRA_PMX_CONF_TRISTATE
+>     TEGRA_PMX_CONF_DRIVE_STRENGTH
+>     TEGRA_PMX_CONF_SLEW_RATE
+> 
+> Each individual pinmux driver's bindings needs to define what each integer ID
+> represents, and what the legal "value"s are for each one.
+> 
+> Advantages:
+> 
+> * Provides for both mux settings and "pin configuration".
+> 
+> * Allows the "pinmux configuration" nodes to be part of the SoC .dtsi
+>   file if desired to provide pre-defined pinmux configurations to
+>   choose from.
+> 
+> * Allows the "pinmux configuration" nodes to be part of the per-device
+>   node if you don't want to use pre-defined configurations.
+> 
+> * When pre-defined configurations are present, if you need something
+>   custom, you can do it easily.
+> 
+> * Can augment pre-defined configurations by listing n nodes for each
+>   "name"d pinmux configuration, e.g. to add one extra pin config
+>   value.
+> 
+> * Parsing is still quite simple:
+>   1) Parse "pinmux" property in device node to get phandle.
+>   2) Parse "mux" property in the node reference by the phandle,
+>      splitting into a list of pmx phandle, entity, mux func.
+>   3) For each entry, pass entity, function to the appropriate mux
+>      driver. (For U-Boot, this might mean check that the phandle
+>      points at the expected place, and ignore the entry if not?)
+>  4) Mux driver simply converts "muxable entity" to the register
+>     address, write the "function" value straight to the register.
+> 
+> Disadvantages:
+> 
+> * If you're not using pre-defined configurations, you still have to dump
+>   all the pinmux configuration into a sub-node of the device node, and
+>   have a property point at it using a phandle. This is slightly more
+>   complex than simply putting the mux/config properties right into the
+>   device node. However, it additionally allows one to have multiple
+>   "name"d configurations (e.g. for suspend) very easily, and isn't overly
+>   complex, so I can live with this.
+I don't think the sub-node of the device node is a good place to define
+Custom configurations.
+Putting those things into device node will make its size big and also not look good.
+Since it uses phandle, why not put it under pinctrl device node in board dts file?
+It may also work.
 
-> For more advanced stuff like loops
-> to synthesize multiple nodes, it seems like writing a custom script to
-> generate the .dts file and then passing the result to dtc would be more
-> modular, and not require us to create a whole new Turing-complete
-> language in dtc?
-
-Perhaps.  One of the reasons that I'm so doggedly conservative and
-picky about new dtc syntax is that small languages have a tendency to
-grow to Turing completeness, whether you intend it originally or not.
-I'm ok with that happening, but I'd really like to make sure that when
-and if it happens, we arrive at a decent Turing complete language, not
-a horrible one.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+> 
+> Changes to pinctrl subsystem:
+> 
+> Very little, I think:
+> 
+> * Need to pass raw function IDs through to the driver instead of the driver
+>   defining some logical table. Actually, this is just a change to individual
+>   drivers, since they can define the functions "func0", "func1", ... "funcn"
+>   as I mentioned before.
+> 
+> * Need to add the code to actually parse this of course.
+> 
+> One additional thought: If dtc does grow named constants, we can provide HW-
+> function-based names for the mux functions, e.g.:
+> 
+> TEGRA_PMX_DTA_RSVD0 0
+> TEGRA_PMX_DTA_SDIO2 1
+> TEGRA_PMX_DTA_VI    2
+> TEGRA_PMX_DTA_RSVD3 3
+> 
+> TEGRA_PMX_DTF_I2C3  0
+> TEGRA_PMX_DTF_RSVD1 1
+> TEGRA_PMX_DTF_VI    2
+> TEGRA_PMX_DTF_RSVD3 3
+> ...
+> 
+> That'd allow the .dts to include functionality-based named for the mux function
+> selection, but the .dtb to still include the raw HW mux field values. And this
+> is something completely within the control of the SoC .dtsi file; if you don't
+> like it, you don't have to do it.
+> 
+> --
+> nvpublic
+> 
