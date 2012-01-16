@@ -1,119 +1,177 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer constants
-Date: Mon, 16 Jan 2012 08:41:22 -0600
-Message-ID: <E1RmnkQ-0006W9-OT@jdl.com>
-References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
- <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
- <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
- <20120111130056.GK4935@truffala.fritz.box> <E1RkzJs-000590-4s@jdl.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5@HQMAIL01.nvidia.com>
- <20120116015421.GC4512@truffala.fritz.box>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux mappings
+Date: Mon, 16 Jan 2012 17:08:57 +0100
+Message-ID: <CACRpkdYmxQd7aaRhs+xc5nizC7OjwRzsduq-28kVTLjhTGjVZw@mail.gmail.com>
+References: <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
+	<7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
+	<20120107135445.GI4790@S2101-09.ap.freescale.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF177EE3A6E5@HQMAIL01.nvidia.com>
+	<20120112033941.GH20968@S2101-09.ap.freescale.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF17801D1DCC@HQMAIL01.nvidia.com>
+	<20120113034558.GA12184@S2101-09.ap.freescale.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF17801D1F9D@HQMAIL01.nvidia.com>
+	<20120114012213.GD1810@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20120116015421.GC4512-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120114012213.GD1810@S2101-09.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Stephen Warren <swarren@nvidia.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Richard Zhao <richard.zhao@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <dongas86@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> 
-> > For what it's worth, I'd tend towards a simple expression-based syntax
-> > where property values can be calculated with C-style expressions. Basic
-> > math stuff like ( ) + - * / & | ~ << >> and some basic string handling
-> > operations (str(int) and concatenation).
-> 
-> ...
->
-> I think applying that would be reasonably safe as it is.  If we go
-> with Jon's proposal or something like it in the end, we'll need to
-> reimplement most of the expression evaluation (to do delayed instead
-> of parse-time evaluation).  But I'm much less worried about having to
-> rework code - even substantially - than I am about user-visible syntax
-> regressions.
+On Sat, Jan 14, 2012 at 2:22 AM, Shawn Guo <shawn.guo@linaro.org> wrote=
+:
+> On Fri, Jan 13, 2012 at 10:16:36AM -0800, Stephen Warren wrote:
+>> Admittedly, the wording of Linusw's actually seems to agree more wit=
+h how
+>> you're interpreting what Dong said, but in that case, I don't think =
+his
+>> reply makes sense - the whole purpose of the mux mapping table is to
+>> represent the board-specific configuration. If we're going to circum=
+vent
+>> it, we should completely remove it from the pinctrl subsystem, rathe=
+r than
+>> having some boards avoid using it by creating virtual pin groups ins=
+tead.
+>>
+> IMO, it's a compromise. =A0It still makes sense to have concept of
+> pingroup in pinctrl subsystem, because platforms like Tegra have
+> the HW pingroup.
 
-Even with that piece, there are substanial lexical and parsing
-issues that complicate things.  Bare numbers, or expressions,
-next to each other without syntactic glue can cause parsing fits. :-)
+I'm not able to follow this discussion, it's too much stuff here that I=
+ don't
+quite grasp :-(
 
-> > I think that'd cover the vast
-> > majority of use-cases wouldn't it?
-> 
-> Not quite.  Expressions are interesting of themselves, but not all
-> that useful.  It's functions or macros plus expressions which gets us
-> close to where we want to be.  So expressions gives a little as it is,
+The pinctrl idea of a group is defined in Documentation/pinctrl.txt:
 
-That's the difficult and slippery slope here.  Being able to write
-    (FOO << (12 + 2))
-is nice, but it would be nicer and more useful to represent
-    (FOO << ((i) + 2))
-where (i) was actually parameterized or iterated in some way.
 
-> a lot more for people already running their dts through cpp.  To
-> really make progress, we still want a proposal for a standard function
-> or macro syntax for dtc.  And, obviously, a decision whether to go
-> with functions or macros.  I like macros, because I think they give a
-> lot of flexibility with minimal conceptual complexity.  Jon's proposal
-> is based on functions.  I didn't like his proposal very much as a
-> whole, but I should take another look and see what I think of the
-> function syntax in isolation.
+---------------------8<---------------------------8<-------------------=
+----------
 
-It might also be instructive to isolate my expression parsing
-for its lexical and syntactic changes and work towards introducing
-those, perhaps in isolation, as a first step.
+Pin groups
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-The key there WRT your interest, Stephen, is that it can capture
-the use of apparent variables or #define'd-equivalent symbols within
-the expression handling.  (David's version did not.)
+Many controllers need to deal with groups of pins, so the pin controlle=
+r
+subsystem has a mechanism for enumerating groups of pins and retrieving=
+ the
+actual enumerated pins that are part of a certain group.
 
-> > For more advanced stuff like loops to synthesize multiple nodes, it
-> > seems like writing a custom script to generate the .dts file and
-> > then passing the result to dtc would be more modular, and not
-> > require us to create a whole new Turing-complete language in dtc?
-> 
-> Perhaps. 
+=46or example, say that we have a group of pins dealing with an SPI int=
+erface
+on { 0, 8, 16, 24 }, and a group of pins dealing with an I2C interface =
+on pins
+on { 24, 25 }.
 
-OK.  Let's explore that approach.  We'll write a, say, Python collection
-of code-objects for each, what?, device.  Place them all in a large library.
-Your "device tree source" effectively now becomes a "main" that starts
-instantiating librarified devices, adding a litle glue to emit some
-one-off property or two.
+These two groups are presented to the pin control subsystem by implemen=
+ting
+some generic pinctrl_ops like this:
 
-That could work.  But is it now OK that the construction of the device
-tree source file is tied to Python?  Do we make the kernel builds now
-reliant upon Python too?  Or Perl?  But wasn't that shot down *again*?
-Hans wants shell.  Lotte likes Lua.  Suki plays with Python.  Willi
-is happy again.  Adolf builds his DTS with Perl.  No one uses Tcl.
-Everyone just checks-in their *generated* DTS results anyway.  It'll
-be a war without tears.
+#include <linux/pinctrl/pinctrl.h>
 
-Or how do you see this working?
+struct foo_group {
+        const char *name;
+        const unsigned int *pins;
+        const unsigned num_pins;
+};
 
-> .. One of the reasons that I'm so doggedly conservative and
-> picky about new dtc syntax is that small languages have a tendency to
-> grow to Turing completeness, whether you intend it originally or not.
+static const unsigned int spi0_pins[] =3D { 0, 8, 16, 24 };
+static const unsigned int i2c0_pins[] =3D { 24, 25 };
 
-Isn't that someone's observation...?  Behind every flat-file there is
-a Turing-complete language trying to get out.
+static const struct foo_group foo_groups[] =3D {
+        {
+                .name =3D "spi0_grp",
+                .pins =3D spi0_pins,
+                .num_pins =3D ARRAY_SIZE(spi0_pins),
+        },
+        {
+                .name =3D "i2c0_grp",
+                .pins =3D i2c0_pins,
+                .num_pins =3D ARRAY_SIZE(i2c0_pins),
+        },
+};
 
-> I'm ok with that happening, but I'd really like to make sure that when
-> and if it happens, we arrive at a decent Turing complete language, not
-> a horrible one.
+static int foo_list_groups(struct pinctrl_dev *pctldev, unsigned select=
+or)
+{
+        if (selector >=3D ARRAY_SIZE(foo_groups))
+                return -EINVAL;
+        return 0;
+}
 
-Name two decent ones. :-)  C and ..., and ....  See?  There isn't another!
+static const char *foo_get_group_name(struct pinctrl_dev *pctldev,
+                                       unsigned selector)
+{
+        return foo_groups[selector].name;
+}
 
-Never mind.
+static int foo_get_group_pins(struct pinctrl_dev *pctldev, unsigned sel=
+ector,
+                               unsigned ** const pins,
+                               unsigned * const num_pins)
+{
+        *pins =3D (unsigned *) foo_groups[selector].pins;
+        *num_pins =3D foo_groups[selector].num_pins;
+        return 0;
+}
 
-jdl
+static struct pinctrl_ops foo_pctrl_ops =3D {
+        .list_groups =3D foo_list_groups,
+        .get_group_name =3D foo_get_group_name,
+        .get_group_pins =3D foo_get_group_pins,
+};
+
+
+static struct pinctrl_desc foo_desc =3D {
+       ...
+       .pctlops =3D &foo_pctrl_ops,
+};
+
+The pin control subsystem will call the .list_groups() function repeate=
+dly
+beginning on 0 until it returns non-zero to determine legal selectors, =
+then
+it will call the other functions to retrieve the name and pins of the g=
+roup.
+Maintaining the data structure of the groups is up to the driver, this =
+is
+just a simple example - in practice you may need more entries in your g=
+roup
+structure, for example specific register ranges associated with each gr=
+oup
+and so on.
+
+---------------------8<---------------------------8<-------------------=
+----------
+
+
+As you can see none of the text above claims that the group is
+about hardware-defined groups or anything like that. The groups
+are just that - a group of pins, an abstract concept of a group.
+It could be drawn i UML even... maybe I'll do that for my
+ELC presentation :-)
+
+Then when we come to pinmux, which is slightly different
+involving the definitions of a function and mappings between
+functions and one or more pin groups as per above, which is
+something completely different and seems to be what you're
+discussing here?
+
+=46or hardware that does handle pins in groups there are
+special functions that can be used in the drivers like
+configuring a whole group (which falls back to iterating
+over pins if there is no such callback, showing again that
+this is a theoretical concept) so if the hardware handles
+pins in groups its a good idea to match group definitions
+1-to-1 with these, but for hardware that doesn't there is
+some freedom of how to use the groups.
+
+I don't know if this helps though the discussion here seems
+a bit contended :-/
+
+Yours,
+Linus Walleij
