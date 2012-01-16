@@ -1,177 +1,84 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux mappings
-Date: Mon, 16 Jan 2012 17:08:57 +0100
-Message-ID: <CACRpkdYmxQd7aaRhs+xc5nizC7OjwRzsduq-28kVTLjhTGjVZw@mail.gmail.com>
-References: <CAA+hA=RBqpSmntS2h+6xMQuRvSRHenmDgrYSSzMXHtOCpU+HCQ@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF17761F18F8@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
-	<20120107135445.GI4790@S2101-09.ap.freescale.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF177EE3A6E5@HQMAIL01.nvidia.com>
-	<20120112033941.GH20968@S2101-09.ap.freescale.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF17801D1DCC@HQMAIL01.nvidia.com>
-	<20120113034558.GA12184@S2101-09.ap.freescale.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF17801D1F9D@HQMAIL01.nvidia.com>
-	<20120114012213.GD1810@S2101-09.ap.freescale.net>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] x86: convert to generic irq_domain
+Date: Mon, 16 Jan 2012 09:16:03 -0700
+Message-ID: <20120116161603.GD4223@ponder.secretlab.ca>
+References: <1324099129-28832-1-git-send-email-robherring2@gmail.com>
+ <20120115163538.GA19026@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120114012213.GD1810@S2101-09.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Stephen Warren <swarren@nvidia.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Richard Zhao <richard.zhao@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <dongas86@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120115163538.GA19026-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 14, 2012 at 2:22 AM, Shawn Guo <shawn.guo@linaro.org> wrote=
-:
-> On Fri, Jan 13, 2012 at 10:16:36AM -0800, Stephen Warren wrote:
->> Admittedly, the wording of Linusw's actually seems to agree more wit=
-h how
->> you're interpreting what Dong said, but in that case, I don't think =
-his
->> reply makes sense - the whole purpose of the mux mapping table is to
->> represent the board-specific configuration. If we're going to circum=
-vent
->> it, we should completely remove it from the pinctrl subsystem, rathe=
-r than
->> having some boards avoid using it by creating virtual pin groups ins=
-tead.
->>
-> IMO, it's a compromise. =A0It still makes sense to have concept of
-> pingroup in pinctrl subsystem, because platforms like Tegra have
-> the HW pingroup.
+On Sun, Jan 15, 2012 at 05:35:38PM +0100, Sebastian Andrzej Siewior wrote:
+> * Rob Herring | 2011-12-16 23:18:49 [-0600]:
+> 
+> >From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> >
+> >This is needed to avoid struct collisions with the generic irq_domain
+> >support being added to kernel/irq/generic-chip.c.
+> >
+> >Boot tested, but not on a DT enabled platform.
+> 
+> If you add this piece into your patch:
+> 
+> From 34d9bb9b582136c8412e14ad870c8aaaa28c9e15 Mon Sep 17 00:00:00 2001
+> From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> Date: Sun, 15 Jan 2012 16:52:13 +0100
+> Subject: [PATCH] fixup of "x86: convert to generic irq_domain"
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 
-I'm not able to follow this discussion, it's too much stuff here that I=
- don't
-quite grasp :-(
+It's a little late for 3.3, and I've got a major rework to irq_domain
+almost ready which will get merged in 3.4.  I'll rework the patch on
+top of that series and get you to retest.
 
-The pinctrl idea of a group is defined in Documentation/pinctrl.txt:
+g.
 
-
----------------------8<---------------------------8<-------------------=
-----------
-
-Pin groups
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-Many controllers need to deal with groups of pins, so the pin controlle=
-r
-subsystem has a mechanism for enumerating groups of pins and retrieving=
- the
-actual enumerated pins that are part of a certain group.
-
-=46or example, say that we have a group of pins dealing with an SPI int=
-erface
-on { 0, 8, 16, 24 }, and a group of pins dealing with an I2C interface =
-on pins
-on { 24, 25 }.
-
-These two groups are presented to the pin control subsystem by implemen=
-ting
-some generic pinctrl_ops like this:
-
-#include <linux/pinctrl/pinctrl.h>
-
-struct foo_group {
-        const char *name;
-        const unsigned int *pins;
-        const unsigned num_pins;
-};
-
-static const unsigned int spi0_pins[] =3D { 0, 8, 16, 24 };
-static const unsigned int i2c0_pins[] =3D { 24, 25 };
-
-static const struct foo_group foo_groups[] =3D {
-        {
-                .name =3D "spi0_grp",
-                .pins =3D spi0_pins,
-                .num_pins =3D ARRAY_SIZE(spi0_pins),
-        },
-        {
-                .name =3D "i2c0_grp",
-                .pins =3D i2c0_pins,
-                .num_pins =3D ARRAY_SIZE(i2c0_pins),
-        },
-};
-
-static int foo_list_groups(struct pinctrl_dev *pctldev, unsigned select=
-or)
-{
-        if (selector >=3D ARRAY_SIZE(foo_groups))
-                return -EINVAL;
-        return 0;
-}
-
-static const char *foo_get_group_name(struct pinctrl_dev *pctldev,
-                                       unsigned selector)
-{
-        return foo_groups[selector].name;
-}
-
-static int foo_get_group_pins(struct pinctrl_dev *pctldev, unsigned sel=
-ector,
-                               unsigned ** const pins,
-                               unsigned * const num_pins)
-{
-        *pins =3D (unsigned *) foo_groups[selector].pins;
-        *num_pins =3D foo_groups[selector].num_pins;
-        return 0;
-}
-
-static struct pinctrl_ops foo_pctrl_ops =3D {
-        .list_groups =3D foo_list_groups,
-        .get_group_name =3D foo_get_group_name,
-        .get_group_pins =3D foo_get_group_pins,
-};
-
-
-static struct pinctrl_desc foo_desc =3D {
-       ...
-       .pctlops =3D &foo_pctrl_ops,
-};
-
-The pin control subsystem will call the .list_groups() function repeate=
-dly
-beginning on 0 until it returns non-zero to determine legal selectors, =
-then
-it will call the other functions to retrieve the name and pins of the g=
-roup.
-Maintaining the data structure of the groups is up to the driver, this =
-is
-just a simple example - in practice you may need more entries in your g=
-roup
-structure, for example specific register ranges associated with each gr=
-oup
-and so on.
-
----------------------8<---------------------------8<-------------------=
-----------
-
-
-As you can see none of the text above claims that the group is
-about hardware-defined groups or anything like that. The groups
-are just that - a group of pins, an abstract concept of a group.
-It could be drawn i UML even... maybe I'll do that for my
-ELC presentation :-)
-
-Then when we come to pinmux, which is slightly different
-involving the definitions of a function and mappings between
-functions and one or more pin groups as per above, which is
-something completely different and seems to be what you're
-discussing here?
-
-=46or hardware that does handle pins in groups there are
-special functions that can be used in the drivers like
-configuring a whole group (which falls back to iterating
-over pins if there is no such callback, showing again that
-this is a theoretical concept) so if the hardware handles
-pins in groups its a good idea to match group definitions
-1-to-1 with these, but for hardware that doesn't there is
-some freedom of how to use the groups.
-
-I don't know if this helps though the discussion here seems
-a bit contended :-/
-
-Yours,
-Linus Walleij
+> ---
+>  arch/x86/Kconfig             |    1 +
+>  arch/x86/kernel/devicetree.c |    1 +
+>  2 files changed, 2 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index d6f1e91..0d74f88 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -397,6 +397,7 @@ config X86_INTEL_CE
+>  	select X86_REBOOTFIXUPS
+>  	select OF
+>  	select OF_EARLY_FLATTREE
+> +	select IRQ_DOMAIN
+>  	---help---
+>  	  Select for the Intel CE media processor (CE4100) SOC.
+>  	  This option compiles in support for the CE4100 SOC for settop
+> diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+> index 5632e5b..41eb2a7 100644
+> --- a/arch/x86/kernel/devicetree.c
+> +++ b/arch/x86/kernel/devicetree.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/bootmem.h>
+>  #include <linux/export.h>
+>  #include <linux/io.h>
+> +#include <linux/irqdomain.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/list.h>
+>  #include <linux/of.h>
+> -- 
+> 
+> you add my acked-by to it.
+> 
+> Sebastian
