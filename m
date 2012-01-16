@@ -1,62 +1,129 @@
-From: Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>
-Subject: Re: [PATCH v2] [INCREMENTAL] Input: tegra-kbc - add device tree support
-Date: Mon, 16 Jan 2012 13:31:50 +0200
-Message-ID: <CALq1K=LShfkwyfx+G3rqp9OdHzRoZzXremr2tH7guJTLZaqbRw@mail.gmail.com>
-References: <1325639956-27502-1-git-send-email-olof@lixom.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer constants
+Date: Mon, 16 Jan 2012 12:54:21 +1100
+Message-ID: <20120116015421.GC4512@truffala.fritz.box>
+References: <1323720257-23847-1-git-send-email-swarren@nvidia.com>
+ <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
+ <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
+ <20120111130056.GK4935@truffala.fritz.box>
+ <E1RkzJs-000590-4s@jdl.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1325639956-27502-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, riyer-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 4, 2012 at 03:19, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->
-> This is an incremental patch updating to the revised bindings for mat=
-rix keyboards.
->
-> This includes an optional "linux,fn-keymap" binding that is not yet i=
-mplemented,
-> that will be used to specify the Fn-key modifier layout if needed.
->
-> New for v2:
-> * Removed references to "matrix-keyboard-controller" compatible value=
-s
-> * Rebased to be incremental on top of previous patch.
->
-> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> ---
->
-> Dmitry,
->
-> Here's an incremental patch to go on top of your next branch.
->
-> Regards,
->
-> -Olof
-> ---
-> =C2=A0.../devicetree/bindings/input/tegra-kbc.txt =C2=A0 =C2=A0 =C2=A0=
- =C2=A0| =C2=A0 17 ++++++++++-----
-> =C2=A0drivers/input/keyboard/tegra-kbc.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 | =C2=A0 21 +++++++++++++++----
-> =C2=A02 files changed, 27 insertions(+), 11 deletions(-)
+On Wed, Jan 11, 2012 at 01:36:46PM -0800, Stephen Warren wrote:
+> Jon Loeliger wrote at Wednesday, January 11, 2012 7:38 AM:
+> > > On Tue, Jan 10, 2012 at 01:54:30PM -0800, Stephen Warren wrote:
+> > > > John, David,
+> > > >
+> > > > What can we do to reach consensus on expanding dtc to handle named
+> > > > constants, or in general any future direction to extend the syntax with
+> > > > expressions etc.?
+> > >
+> > > Hrm, so, I'm not at all keen to add a named constant syntax without at
+> > > least having an outline of what a future macro/function syntax would
+> > > look like.
+> > 
+> > Which is where I thought it was left earlier...? :-)
+> > And it's not just what the macro/function syntax will look like,
+> > but also how these will play into a more generalized expression
+> > handling mechanism.  Defining something one-off now that doesn't
+> > fit well into a long term plan is less than ideal.
+> > 
+> > Yes, I know that is tantamount to requiring the whole, larger
+> > picture be solved first.  But Dave is right -- at least an outline
+> > of the direction.  Seriously, the lexical problems can form some
+> > of the nastiest gotchas if we're not careful from the onset.
+> 
+> So that all makes sense.
+> 
+> My question is: How can we get consensus on what we want that complete
+> future syntax to be?
 
-=46or any reasons this patch is missing from for-next branch and the
-absence of the lines below prevents from linux-next-20120116 build
-(and previous too).
-> + =C2=A0 =C2=A0 =C2=A0 u32 prop;
-> + =C2=A0 =C2=A0 =C2=A0 int i;
+Um.. try to make a detailed proposal (synthesised from earlier ones)
+that enough people are happy with (Jon and myself for starters).
 
-http://git.kernel.org/?p=3Dlinux/kernel/git/next/linux-next.git;a=3Dblo=
-b;f=3Ddrivers/input/keyboard/tegra-kbc.c;h=3Da136e2e832beff1e740c8c9a79=
-ad850b01fe14c2;hb=3Drefs/heads/stable#l589
+> IIRC, Jon has a branch that implements a proposal,
+> and David at least posted a different proposal if not actual code that
+> implemented it. We're not missing proposals, but rather a mechanism to
+> decide between them?
 
---
-Leon Romanovsky | Independent Linux Consultant
-=C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0www.leon.nu=C2=A0| leon-2ukJVAZIZ/Y@public.gmane.org
+Well.. that's not entirely true.  The proposed expression syntax was
+essentially identical between Jon's proposal and mine (though the
+implementation of it is quite different).  Jon's proposal includes
+loops and "functions", mine started with just expressions.  I had in
+mind some sort of macro language to allow making use of those
+expressions.  I'm not sure quite what that would look like (or even if
+it would be implemented withing dtc, or use an external helper like
+cpp).  So there's really only one proposal that covers the full space,
+it's just I don't like it that much.
+
+> For what it's worth, I'd tend towards a simple expression-based syntax
+> where property values can be calculated with C-style expressions. Basic
+> math stuff like ( ) + - * / & | ~ << >> and some basic string handling
+> operations (str(int) and concatenation).
+
+Ok.  Well, I should de-bitrot and re-propose my integer expression
+patch, which covered most of that.  I also intended basic string
+operations as you suggest, though I can't remember if I made a start
+on that.
+
+I think applying that would be reasonably safe as it is.  If we go
+with Jon's proposal or something like it in the end, we'll need to
+reimplement most of the expression evaluation (to do delayed instead
+of parse-time evaluation).  But I'm much less worried about having to
+rework code - even substantially - than I am about user-visible syntax
+regressions.
+
+> I think that'd cover the vast
+> majority of use-cases wouldn't it?
+
+Not quite.  Expressions are interesting of themselves, but not all
+that useful.  It's functions or macros plus expressions which gets us
+close to where we want to be.  So expressions gives a little as it is,
+a lot more for people already running their dts through cpp.  To
+really make progress, we still want a proposal for a standard function
+or macro syntax for dtc.  And, obviously, a decision whether to go
+with functions or macros.  I like macros, because I think they give a
+lot of flexibility with minimal conceptual complexity.  Jon's proposal
+is based on functions.  I didn't like his proposal very much as a
+whole, but I should take another look and see what I think of the
+function syntax in isolation.
+
+> For more advanced stuff like loops
+> to synthesize multiple nodes, it seems like writing a custom script to
+> generate the .dts file and then passing the result to dtc would be more
+> modular, and not require us to create a whole new Turing-complete
+> language in dtc?
+
+Perhaps.  One of the reasons that I'm so doggedly conservative and
+picky about new dtc syntax is that small languages have a tendency to
+grow to Turing completeness, whether you intend it originally or not.
+I'm ok with that happening, but I'd really like to make sure that when
+and if it happens, we arrive at a decent Turing complete language, not
+a horrible one.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
