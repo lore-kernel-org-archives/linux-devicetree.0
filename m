@@ -1,108 +1,105 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Pinmux bindings proposal
-Date: Mon, 16 Jan 2012 11:28:08 -0700
-Message-ID: <20120116182808.GG4223@ponder.secretlab.ca>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+From: "Turquette, Mike" <mturquette@ti.com>
+Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF and DDR
+Date: Mon, 16 Jan 2012 11:15:33 -0800
+Message-ID: <CAJOA=zNuVQ9zjhmA5Uc=ksOM2Q7AE4g9ddPDJ3e+QPnUfui4wA@mail.gmail.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com>
+ <4EEFC23A.30201@gmail.com> <20111219233559.GW6464@atomide.com>
+ <4EF0671B.7090508@ti.com> <4EF0824A.9060208@ti.com> <4EF096C9.1070808@ti.com>
+ <4F09D10B.7010807@ti.com> <CAOesGMjFmM=gXddvFzW+BYqOedySjPVZ6hjwsF-F40Wr9BvSLg@mail.gmail.com>
+ <4F1087C9.6030908@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F1087C9.6030908@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Aneesh V <aneesh@ti.com>
+Cc: Olof Johansson <olof@lixom.net>, "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vishwanath Sripathy <vishwanath.bs@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2012 at 12:39:42PM -0800, Stephen Warren wrote:
-> I thought a bit more about pinmux DT bindings. I came up with something
-> that I like well enough, and is pretty similar to the binding that Dong
-> posted recently. I think it'll work for both Tegra's and IMX's needs.
-> Please take a look!
-> 
-> Note: I've used named constants below just to make this easier to read.
-> We still don't have a solution to actually use named constants in dtc yet.
-> 
-> tegra20.dtsi:
-> 
-> / {
->         tegra_pmx: pinmux@70000000 {
->                 compatible = "nvidia,tegra20-pinmux";
->                 reg = <0x70000014 0x10   /* Tri-state registers */
->                        0x70000080 0x20   /* Mux registers */
->                        0x700000a0 0x14   /* Pull-up/down registers */
->                        0x70000868 0xa8>; /* Pad control registers */
->         };
-> 
->         sdhci@c8000200 {
->                 compatible = "nvidia,tegra20-sdhci";
->                 reg = <0xc8000200 0x200>;
->                 interrupts = <0 15 0x04>;
->         };
-> };
-> 
-> tegra-harmony.dts:
-> 
-> /{
->         sdhci@c8000200 {
->                 cd-gpios = <&gpio 69 0>; /* gpio PI5 */
->                 wp-gpios = <&gpio 57 0>; /* gpio PH1 */
->                 power-gpios = <&gpio 155 0>; /* gpio PT3 */
-> 
->                 /*
->                  * A list of named configurations that this device needs.
->                  * Format is a list of <"name" &phandle_of_pmx_configuration>
->                  *
->                  * Multiple "name"s are needed e.g. to support active/suspend,
->                  * or whatever device-defined states are appropriate. The
->                  * device defines which names are needed, just like a device
->                  * defines which regulators, clocks, GPIOs, interrupts, ...
->                  * it needs.
->                  *
->                  * This example shows a 1:1 relation between name and phandle.
->                  * We might want a 1:n relation, so that we can blend multiple
->                  * pre-defined sets of data together, e.g. one pre-defined set
->                  * for the pin mux configuration, another for the pin config
->                  * settings, both being put into the single "default" setting
->                  * for this one device.
->                  *
->                  * A pinmux controller can contain this property too, to
->                  * define "hogged" or "system" pin mux configuration.
->                  *
->                  * Note: Mixing strings and integers in a property seems
->                  * unusual. However, I have seen other bindings floating
->                  * around that are starting to do this...
->                  */
->                 pinmux =
->                         <"default" &pmx_sdhci_active>
->                         <"suspend" &pmx_sdhci_suspend>;
-> 
->                 /* 1:n example: */
->                 pinmux =
->                         <"default" &pmx_sdhci_mux_a>
->                         <"default" &pmx_sdhci_pincfg_a>
->                         <"suspend" &pmx_sdhci_mux_a>
->                         <"suspend" &pmx_sdhci_pincfg_a_suspend>;
+On Fri, Jan 13, 2012 at 11:36 AM, Aneesh V <aneesh@ti.com> wrote:
+> Hi Olof,
+>
+>
+> On Monday 09 January 2012 11:12 AM, Olof Johansson wrote:
+>>
+>> Hi,
+>>
+>> On Sun, Jan 8, 2012 at 9:23 AM, Aneesh V<aneesh@ti.com> =A0wrote:
+>>>
+>>> Hi,
+>>>
+>>>
+>>> On Tuesday 20 December 2011 03:08 PM, Aneesh V wrote:
+>>>>
+>>>>
+>>>> Hi Benoit
+>>>>
+>>>> On Tuesday 20 December 2011 06:10 PM, Cousson, Benoit wrote:
+>>>>>
+>>>>>
+>>>>> Hi Aneesh,
+>>>>>
+>>>>
+>>>> <snip>
+>>>>
+>>>>>>>> In general, is it really feasible to parse the DTB before DDR =
+is
+>>>>>>>> initialized?
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> Changing timings is still needed for DVFS during runtime.
+>>>>>>>
+>>>>>>> But we can boot to userspace with bootloader set timings, so I'=
+m
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> As far as I understand, in the current out-of-tree DVFS implemen=
+tation
+>>>>>> for OMAP, DVFS can start even before user-space.
+>>>>>
+>>>>>
+>>>>>
+>>>>> Maybe it is the case, but that does not mean it should.
+>>>>> We can potentially delay the DVFS init until the user-space is st=
+arted.
+>>>>> This should not be considered as a big constraint.
+>>
+>>
+>> Or at least until ramdisk is available, and store the tables there.
+>> It's a matter of seconds, delaying DVFS initialization until then
+>> shouldn't be the end of the world.
+>
+>
+> It's not about power savings, here is what I understand from
+> discussion with power management folks. In our current architecture
+> drivers can set frequency constraints with clock framework and this m=
+ay
+> in turn initiate frequency scaling and this can happen before user
+> space. Perhaps we could forbid this too. But I am not sure if the
+> benefit is worth the trouble.
 
+Jumping through these kinds of hoops causes me to really question what
+it is we're trying to achieve.  There is already the case where clock
+event code needs statically allocated clocks for setup before DT data
+is available, and in this example at least some subset of mem timings
+must be done in bootloader prior to DT data availability again.  Some
+times these situations are unavoidable, but I feel uneasy about
+splitting data up across multiple sources.  Hunting bugs in such data
+is going to be painful.
 
-Yeah, don't do this.  Mixing phandle, string and cell values in a
-property gets messy and could become troublesome to parse.  I've
-backed away from it in the clk binding.
+And delaying DVFS (at least for the parts affecting mem) until
+userspace is loaded doesn't seem great to me either.  We're basically
+pushing back feature readiness (with respect to boot sequence) in the
+name of organizing data in a pretty way... but it's not a pretty
+solution since the data will have to be "split" as shown above.
 
-pinumx-* is better, but I'm not thrilled with it and I avoided that
-pattern too for the latest iteration of the clk binding.  I prefer
-using a "pinmux" + "pinmux-names" pair of properties when dealing with
-an array of like objects (ie. reg, interrupts, clks, etc), but that
-might not fit well since each setting has multiple state nodes.
-
-> 
->                 /*
->                  * Alternative: One property for each required state. But,
->                  * how does pinctrl core know which properties to parse?
->                  * Every property named "pinctrl*" seems a little too far-
->                  * reaching. Perhaps if we used vendor-name "pinmux", that'd
->                  * be OK, i.e. pinmux,default and pinmux,suspend?
-
-It isn't actually a vendor name, so don't use a ','.  "pinmux-" prefix
-is fine.
-
-g.
+Regards,
+Mike
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
