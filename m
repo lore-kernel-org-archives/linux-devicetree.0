@@ -1,66 +1,104 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH v2 1/2] PM / Domains: Add OF support
-Date: Tue, 17 Jan 2012 21:45:35 +0100
-Message-ID: <201201172145.35407.rjw@sisk.pl>
-References: <1325931055-14486-1-git-send-email-thomas.abraham@linaro.org> <201201082223.18603.rjw@sisk.pl> <001e01ccd4e8$d04b03a0$70e10ae0$%kim@samsung.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [RFC v2 4/9] of: add clock providers
+Date: Tue, 17 Jan 2012 12:44:23 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17801D2353@HQMAIL01.nvidia.com>
+References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <001e01ccd4e8$d04b03a0$70e10ae0$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, s.nawrocki@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, January 17, 2012, Kukjin Kim wrote:
-> Rafael J. Wysocki wrote:
-> > 
-> > On Saturday, January 07, 2012, Thomas Abraham wrote:
-> > > A device node pointer is added to generic pm domain structure to
-> > associate
-> > > the domain with a node in the device tree. The platform code parses the
-> > > device tree to find available nodes representing the generic power
-> > domain,
-> > > instantiates the available domains and initializes them by calling
-> > > pm_genpd_init().
-> > >
-> > > Nodes representing the devices include a phandle of the power domain to
-> > > which it belongs. As these devices get instantiated, the driver code
-> > > checkes for availability of a power domain phandle, converts the phandle
-> > > to a device node and uses the new pm_genpd_of_add_device() api to
-> > > associate the device with a power domain.
-> > >
-> > > pm_genpd_of_add_device() runs through its list of registered power
-> > domains
-> > > and matches the OF node of the domain with the one specified as the
-> > > parameter. If a match is found, the device is associated with the
-> > matched
-> > > domain.
-> > >
-> > > Cc: Rafael J. Wysocki <rjw@sisk.pl>
-> > > Cc: Rob Herring <rob.herring@calxeda.com>
-> > > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> > 
-> > I can take this patch for 3.4, but your [2/2] depends on it, so I'm not
-> > sure how to handle that.  If you want me to take the other patch too,
-> > it'll need ACKs from the Exynos maintaniers.
-> > 
-> Hi Rafael,
+Grant Likely wrote at Monday, December 12, 2011 3:02 PM:
+> Based on work by Ben Herrenschmidt and Jeremy Kerr, this patch adds an
+> of_clk_get function to allow platforms to retrieve clock data from the
+> device tree.
 > 
-> Basically, looks ok to me.
-> 
-> But it would be good if [v3 2/2] patch of this series (this patch) could be
-> applied in samsung tree to avoid conflicts as it modifies many files. I
-> don't want to make a trouble when sending my tree to upstream. Of course, as
-> you said, this have a dependency with [v2 1/2]. So if you're ok, let me
-> create topic branch will have both(1/2 and 2/2) to merge in your tree.
-> 
-> How do you think?
+> Platform register a provider through of_clk_add_provider, which will be
+> called when a device references the provider's OF node for a clock
+> reference.
+...
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+...
+> +==Example==
+> +
+> +    /* external oscillator */
+> +    osc: oscillator {
+> +        compatible = "fixed-clock";
+> +        #clock-cells = <1>;
+> +        clock-frequency  = <32678>;
+> +        clock-output-names = "osc";
+> +    };
+> +
+> +    /* phase-locked-loop device, generates a higher frequency clock
+> +     * from the external oscillator reference */
+> +    pll: pll@4c000 {
+> +        compatible = "vendor,some-pll-interface"
+> +        #clock-cells = <1>;
+> +        clocks = <&osc 0>;
+> +        clock-names = "ref";
+> +        reg = <0x4c000 0x1000>;
+> +        clock-output-names = "pll", "pll-switched";
+> +    };
+> +
+> +    /* UART, using the low frequency oscillator for the baud clock,
+> +     * and the high frequency switched PLL output for register
+> +     * clocking */
+> +    uart@a000 {
+> +        compatible = "fsl,imx-uart";
+> +        reg = <0xa000 0x1000>;
+> +        interrupts = <33>;
+> +        clocks = <&osc 0>, <&pll 1>;
+> +        clock-names = "baud", "register";
+> +    };
+> +
+> +This DT fragment defines three devices: an external oscillator to provide a
+> +low-frequency reference clock, a PLL device to generate a higher frequency
+> +clock signal, and a UART.
+> +
+> +* The oscillator is fixed-frequency, and provides one clock output, named "osc".
+> +* The PLL is both a clock provider and a clock consumer. It uses the clock
+> +  signal generated by the external oscillator, and provides two output signals
+> +  ("pll" and "pll-switched").
+> +* The UART has its baud clock connected the external oscillator and its
+> +  register clock connected to the PLL clock (the "pll-switched" signal)
 
-That would work for me too.
+In the example above, the UART's register clock's parent is the PLL, and
+the PLL's parent is the OSC. Is the intention to have this parenting set
+up automatically by the core OF clock code, or is this something that each
+individual driver needs to set up itself.
 
-Thanks,
-Rafael
+In other words, does the UART driver need to do something like:
+
+clk_reg = clk_get(dev, "register");
+clk_parent = of_clk_get_by_name(np, "register);
+clk_set_parent(clk_reg, clk_parent);
+
+Or will that all happen transparently within just the of_clk_get_by_name
+call?
+
+(I suppose this question makes slightly more sense for the PLL itself,
+since both the upstream and downstream clocks are represented in the PLL
+node, whereas the UART's node only represents the clock consumer side,
+so the above code isn't really possible automatically).
+
+Somewhat related to this: How does dynamic reparenting interact with
+the DT clock binding; is the DT just the default/initial clock setup,
+and anything beyond that needs a custom binding and code in the consumer?
+
+I'm thinking of say a system with 1 I2S controller, and both an internal
+and external I2S clock source, where perhaps the internal source needs
+to be used to capture from an I2S interface on one set of pins (e.g.
+analog mic) but the other clock source needs to be used to capture from
+I2S on another set of pins (e.g. digital baseband unit connection).
+(This example is theoretical, but I'm sure there are other dynamic clock
+cases in practice).
+
+-- 
+nvpublic
