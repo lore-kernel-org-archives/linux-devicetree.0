@@ -1,77 +1,86 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 6/9] tegra: fdt: Add keyboard definitions for Seaboard
-Date: Mon, 16 Jan 2012 22:11:19 -0800
-Message-ID: <1326780682-10260-7-git-send-email-sjg@chromium.org>
+From: Mike Frysinger <vapier@gentoo.org>
+Subject: Re: [PATCH v3 1/9] fdt: Add fdtdec functions to read byte
+	array
+Date: Tue, 17 Jan 2012 01:30:46 -0500
+Message-ID: <201201170130.48257.vapier@gentoo.org>
 References: <1326780682-10260-1-git-send-email-sjg@chromium.org>
+	<1326780682-10260-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326780682-10260-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1343217175=="
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1326780682-10260-2-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: devicetree-discuss@lists.ozlabs.org
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Anton Staff <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--===============1343217175==
+Content-Type: multipart/signed;
+  boundary="nextPart3535076.lsCtaQ1Pv3";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 
-Seaboard uses a QUERTY keyboard. We add key codes for this to
-enable key scanning to work.
+--nextPart3535076.lsCtaQ1Pv3
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v2:
-- Remove status = "okay" since this is the default anyway
+On Tuesday 17 January 2012 01:11:14 Simon Glass wrote:
+> From: Anton Staff <robotboy@chromium.org>
+>=20
+> Sometimes we don't need a full cell for each value. This provides
+> a simple function to read a byte array, both with and without
+> copying it.
+>=20
+> Signed-off-by: Simon Glass <sjg@chromium.org>
 
-Changes in v3:
-- Move to new Linux device tree mapping for Tegra keyboard
+seems like getting s-o-b from Anton should be fairly easy ;)
 
- board/nvidia/dts/tegra2-seaboard.dts |   27 +++++++++++++++++++++++++++
- 1 files changed, 27 insertions(+), 0 deletions(-)
+(there's a few other patches in this series with that problem)
+=2Dmike
 
-diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
-index cc9abe2..a720992 100644
---- a/board/nvidia/dts/tegra2-seaboard.dts
-+++ b/board/nvidia/dts/tegra2-seaboard.dts
-@@ -140,4 +140,31 @@
- 			page-spare-bytes = <64>;
- 		};
- 	};
-+
-+	kbc@7000e200 {
-+		linux,keymap = <0x00020011 0x0003001f 0x0004001e 0x0005002c
-+			0x000701d0 0x0107007d 0x02060064 0x02070038 0x03000006
-+			0x03010005 0x03020013 0x03030012 0x03040021 0x03050020
-+			0x0306002d 0x04000008 0x04010007 0x04020014 0x04030023
-+			0x04040022 0x0405002f 0x0406002e 0x04070039 0x0500000a
-+			0x05010009 0x05020016 0x05030015 0x05040024 0x05050031
-+			0x05060030 0x0507002b 0x0600000c 0x0601000b 0x06020018
-+			0x06030017 0x06040026 0x06050025 0x06060033 0x06070032
-+			0x0701000d 0x0702001b 0x0703001c 0x0707008b 0x08040036
-+			0x0805002a 0x09050061 0x0907001d 0x0b00001a 0x0b010019
-+			0x0b020028 0x0b030027 0x0b040035 0x0b050034 0x0c000044
-+			0x0c010043 0x0c02000e 0x0c030004 0x0c040003 0x0c050067
-+			0x0c0600d2 0x0c070077 0x0d00006e 0x0d01006f 0x0d030068
-+			0x0d04006d 0x0d05006a 0x0d06006c 0x0d070069 0x0e000057
-+			0x0e010058 0x0e020042 0x0e030010 0x0e04003e 0x0e05003d
-+			0x0e060002 0x0e070041 0x0f000001 0x0f010029 0x0f02003f
-+			0x0f03000f 0x0f04003b 0x0f05003c 0x0f06003a 0x0f070040
-+			0x14000047 0x15000049 0x15010048 0x1502004b 0x1504004f
-+			0x16010062 0x1602004d 0x1603004c 0x16040051 0x16050050
-+			0x16070052 0x1b010037 0x1b03004a 0x1b04004e 0x1b050053
-+			0x1c050073 0x1d030066 0x1d04006b 0x1d0500e0 0x1d060072
-+			0x1d0700e1 0x1e000045 0x1e010046 0x1e020071
-+			0x1f04008a>;
-+		linux,fn-keymap = <0x05040002>;
-+	};
- };
--- 
-1.7.7.3
+--nextPart3535076.lsCtaQ1Pv3
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (GNU/Linux)
+
+iQIcBAABAgAGBQJPFRWYAAoJEEFjO5/oN/WBcoUP/052EFN5TXCLPlwkpyu4ppn4
+QsNFoSvsBDkp6KRqHxhRC1ZoFEWHu5zNWZP5IxbcNr5mHv17jq59HBvNovfvCqTH
+xJ+f3H1PCV/xArXwoSnxk/6/7SUxVMkmGckyXaFz66xPqdBRRsV7NDFbTHTfCj8H
+sGhcr1/SRva4fyvlEVXi7fQFu+dMT3+4gtgOjbiLqMamLQuY58rVV/UlVU3f3MyR
+0vMksKVh74K96/Q92cIHj845WwxiAGKAr8IGXXyucl8tn2hwLza0a9lB8JHigWXj
+C+vtLqY/dc/fMT7LN9Th0vUAkDPE3GJkTncXdJ3nDi5ZLNNtpPjpu2DPQwDOdm91
+qiTG4z7Fh2/bMNjQTQS+FZuUbrmJ6LcqjEfZwDawWHEBDs7sSNw/Hxh1Arsj6SK1
+oQORhiUtQ5//2dGJWYbDJ2eTmbfR+C7aS9TYAxyeJH7860ohMJGs+xcYHMpQJsPj
+KaxZVZP0IM/3VuQnRbKv8jUyN+yRIhqtGR2JEfrbbMyFRK6N5tzxQn71X5m1675d
+AYxopSUAdlW8uCrN9/IkJJbe6U96pxsC927xqh5iSmC6ZB2/0KrOmwKbqN6a/dES
+v8A86r26GNQ035SjD6N6dry1OT5vHBYO/zepecqKQHA8D2M1jkGzm3cmaIlOBtnM
+uRj4KYXpnekcpkK8GWF8
+=+8gu
+-----END PGP SIGNATURE-----
+
+--nextPart3535076.lsCtaQ1Pv3--
+
+--===============1343217175==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+U-Boot mailing list
+U-Boot@lists.denx.de
+http://lists.denx.de/mailman/listinfo/u-boot
+
+--===============1343217175==--
