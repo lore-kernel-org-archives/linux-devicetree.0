@@ -1,49 +1,70 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 1/9] fdt: Add fdtdec functions to read byte array
-Date: Mon, 16 Jan 2012 23:11:58 -0800
-Message-ID: <CAPnjgZ1L0wqwxoM0__+kxPazAF+xco5Vg99X22VByijNGTxF2w@mail.gmail.com>
-References: <1326780682-10260-1-git-send-email-sjg@chromium.org>
- <1326780682-10260-2-git-send-email-sjg@chromium.org>
- <201201170130.48257.vapier@gentoo.org>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v2 1/2] PM / Domains: Add OF support
+Date: Tue, 17 Jan 2012 16:22:47 +0900
+Message-ID: <001e01ccd4e8$d04b03a0$70e10ae0$%kim@samsung.com>
+References: <1325931055-14486-1-git-send-email-thomas.abraham@linaro.org>
+ <1325931055-14486-2-git-send-email-thomas.abraham@linaro.org>
+ <201201082223.18603.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201201170130.48257.vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <201201082223.18603.rjw@sisk.pl>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "'Rafael J. Wysocki'" <rjw@sisk.pl>, 'Thomas Abraham' <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, s.nawrocki@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Rafael J. Wysocki wrote:
+> 
+> On Saturday, January 07, 2012, Thomas Abraham wrote:
+> > A device node pointer is added to generic pm domain structure to
+> associate
+> > the domain with a node in the device tree. The platform code parses the
+> > device tree to find available nodes representing the generic power
+> domain,
+> > instantiates the available domains and initializes them by calling
+> > pm_genpd_init().
+> >
+> > Nodes representing the devices include a phandle of the power domain to
+> > which it belongs. As these devices get instantiated, the driver code
+> > checkes for availability of a power domain phandle, converts the phandle
+> > to a device node and uses the new pm_genpd_of_add_device() api to
+> > associate the device with a power domain.
+> >
+> > pm_genpd_of_add_device() runs through its list of registered power
+> domains
+> > and matches the OF node of the domain with the one specified as the
+> > parameter. If a match is found, the device is associated with the
+> matched
+> > domain.
+> >
+> > Cc: Rafael J. Wysocki <rjw@sisk.pl>
+> > Cc: Rob Herring <rob.herring@calxeda.com>
+> > Cc: Grant Likely <grant.likely@secretlab.ca>
+> > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> 
+> I can take this patch for 3.4, but your [2/2] depends on it, so I'm not
+> sure how to handle that.  If you want me to take the other patch too,
+> it'll need ACKs from the Exynos maintaniers.
+> 
+Hi Rafael,
 
-On Mon, Jan 16, 2012 at 10:30 PM, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org> wrote:
-> On Tuesday 17 January 2012 01:11:14 Simon Glass wrote:
->> From: Anton Staff <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>
->> Sometimes we don't need a full cell for each value. This provides
->> a simple function to read a byte array, both with and without
->> copying it.
->>
->> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
-> seems like getting s-o-b from Anton should be fairly easy ;)
->
+Basically, looks ok to me.
 
-I have the jellybeans ready. I will make a list of those I need - it
-is a pretty long list now. Does patchwork pick it up automatically if
-they reply to the list?
+But it would be good if [v3 2/2] patch of this series (this patch) could be
+applied in samsung tree to avoid conflicts as it modifies many files. I
+don't want to make a trouble when sending my tree to upstream. Of course, as
+you said, this have a dependency with [v2 1/2]. So if you're ok, let me
+create topic branch will have both(1/2 and 2/2) to merge in your tree.
 
-Regards,
-Simon
+How do you think?
 
-> (there's a few other patches in this series with that problem)
-> -mike
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
