@@ -1,61 +1,104 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [RFC PATCH v3 2/5] pinctrl: add dt binding support for pinmux
- mappings
-Date: Tue, 17 Jan 2012 10:32:11 +0800
-Message-ID: <20120117023206.GA11756@S2101-09.ap.freescale.net>
-References: <7FE21149F4667147B645348EC605788507F698@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E6B@HQMAIL01.nvidia.com>
- <20120107135445.GI4790@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A6E5@HQMAIL01.nvidia.com>
- <20120112033941.GH20968@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF17801D1DCC@HQMAIL01.nvidia.com>
- <20120113034558.GA12184@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF17801D1F9D@HQMAIL01.nvidia.com>
- <20120114012213.GD1810@S2101-09.ap.freescale.net>
- <CACRpkdYmxQd7aaRhs+xc5nizC7OjwRzsduq-28kVTLjhTGjVZw@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH] video: s3c-fb: Add device tree support
+Date: Tue, 17 Jan 2012 10:44:26 +0530
+Message-ID: <CAJuYYwSt7KM0_DiChsDmy9aD9s6Q48FqcM6gD1otXBYfk67m+g@mail.gmail.com>
+References: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
+	<4F109C04.5090600@gmail.com>
+	<4F10A267.2020608@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYmxQd7aaRhs+xc5nizC7OjwRzsduq-28kVTLjhTGjVZw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@nvidia.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Richard Zhao <richard.zhao@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <dongas86@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4F10A267.2020608@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <snjw23@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, jg1.han@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2012 at 05:08:57PM +0100, Linus Walleij wrote:
-...
-> As you can see none of the text above claims that the group is
-> about hardware-defined groups or anything like that. The groups
-> are just that - a group of pins, an abstract concept of a group.
+Hi Sylwester,
 
-Ok, the thing gets clarified.  The concept of group is a abstract at
-software level.  It does not necessarily require a pin group defined
-by raw hardware underneath, which is basically my argument.
+On 14 January 2012 03:00, Sylwester Nawrocki <snjw23@gmail.com> wrote:
+> On 01/13/2012 10:03 PM, Sylwester Nawrocki wrote:
+>> On 01/09/2012 09:01 PM, Thomas Abraham wrote:
+>>>
+>>> + =A0 =A0for (idx =3D 0; idx< =A0 nr_gpios; idx++) {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0gpio =3D of_get_gpio(dev->of_node, idx);
+>>> + =A0 =A0 =A0 =A0 =A0 =A0if (!gpio_is_valid(gpio)) {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "invalid gpio=
+[%d]: %d\n", idx, gpio);
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0}
+>>> +
+>>> + =A0 =A0 =A0 =A0 =A0 =A0if (!request)
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0continue;
+>>> +
+>>> + =A0 =A0 =A0 =A0 =A0 =A0ret =3D gpio_request(gpio, "fimd");
+>>
+>> Is it how it normally is supposed to be done, i.e. configuring a gpi=
+o
+>> _before_ it has been requested ? of_get_gpio() indirectly touches th=
+e
+>> gpio controller and gpio_request() doesn't seem to serve its purpose
+>> in this case, i.e. if there is situation like:
+>>
+>> driver A =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0driver B
+>>
+>> of_get_gpio(nodeA, gpioA);
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0o=
+f_get_gpio(nodeB, gpioA);
+>> gpio_request(gpioA);
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0g=
+pio_request(gpioB);
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 s/B/A
+>>
+>> driver B will end up with configuration of gpioA from nodeA, not fro=
+m
+>> nodeB.
+>
+> ugh, I put it wrong, it should instead read:
+>
+> "driver A will end up with configuration of gpioA from nodeB, not fro=
+m
+> nodeA."
+>
+>> As there are few drivers doing that I must be missing something,
+>> not sure what..
+>> I realize the GPIO number needs to be known in order for a GPIO to b=
+e
+>> requested. Shouldn't of_get_gpio() be extended to allow locking gpio
+>> controller's module and marking a GPIO as requested in advance ?
+>>
+>>> + =A0 =A0 =A0 =A0 =A0 =A0if (ret) {
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "gpio [%d] re=
+quest failed\n", gpio);
+>>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto gpio_free;
+>>> + =A0 =A0 =A0 =A0 =A0 =A0}
+>>> + =A0 =A0 =A0 =A0 =A0 =A0sfb->gpios[idx] =3D gpio;
+>>> + =A0 =A0}
+>>> + =A0 =A0return 0;
+>>> +
+>>> +gpio_free:
+>>> + =A0 =A0while (--idx>=3D 0)
+>>> + =A0 =A0 =A0 =A0 =A0 =A0gpio_free(sfb->gpios[idx]);
+>>> + =A0 =A0return ret;
+>>> +}
+>>> +
+>>> +static void s3c_fb_dt_free_gpios(struct s3c_fb *sfb)
+>>> +{
+>>> + =A0 =A0unsigned int idx, nr_gpio;
+>>> +
+>>> + =A0 =A0nr_gpio =3D sfb->pdata->win[0]->max_bpp + 4;
+>>> + =A0 =A0for (idx =3D 0; idx< =A0 nr_gpio; idx++)
+>>> + =A0 =A0 =A0 =A0 =A0 =A0gpio_free(sfb->gpios[idx]);
+>>> +}
+>
 
-> It could be drawn i UML even... maybe I'll do that for my
-> ELC presentation :-)
-> 
-> Then when we come to pinmux, which is slightly different
-> involving the definitions of a function and mappings between
-> functions and one or more pin groups as per above, which is
-> something completely different and seems to be what you're
-> discussing here?
-> 
-> For hardware that does handle pins in groups there are
-> special functions that can be used in the drivers like
-> configuring a whole group (which falls back to iterating
-> over pins if there is no such callback, showing again that
-> this is a theoretical concept) so if the hardware handles
-> pins in groups its a good idea to match group definitions
-> 1-to-1 with these, but for hardware that doesn't there is
-> some freedom of how to use the groups.
-> 
-> I don't know if this helps though the discussion here seems
-> a bit contended :-/
-> 
-It does help to me.  Thanks, Linus.
+Yes, I agree that there is a problem here. DT bindings for
+pinmux/pinconfig would solve this. But the sequence of of_get_gpio()
+and gpio_request() in the above code will stay even when using the dt
+bindings for pinmux/pinconfig. There will be only incremental changes
+required to adapt to dt bindings for pinmux/pinconfig.
 
--- 
-Regards,
-Shawn
+Thanks,
+Thomas.
