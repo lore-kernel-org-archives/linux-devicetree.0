@@ -1,179 +1,95 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: Pinmux bindings proposal
-Date: Tue, 17 Jan 2012 22:13:24 +0800
-Message-ID: <20120117141322.GA31687@S2101-09.ap.freescale.net>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885091DEA@039-SN2MPN1-013.039d.mgd.msft.net>
- <20120117082334.GA31295@S2101-09.ap.freescale.net>
- <7FE21149F4667147B645348EC6057885092D56@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Mike Frysinger <vapier@gentoo.org>
+Subject: Re: [PATCH v3 1/9] fdt: Add fdtdec functions to read byte
+	array
+Date: Tue, 17 Jan 2012 10:52:10 -0500
+Message-ID: <201201171052.12019.vapier@gentoo.org>
+References: <1326780682-10260-1-git-send-email-sjg@chromium.org>
+	<201201170130.48257.vapier@gentoo.org>
+	<CAPnjgZ1L0wqwxoM0__+kxPazAF+xco5Vg99X22VByijNGTxF2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7FE21149F4667147B645348EC6057885092D56@039-SN2MPN1-013.039d.mgd.msft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng-B29396 <B29396@freescale.com>
-Cc: Stephen Warren <swarren@nvidia.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: multipart/mixed; boundary="===============0984595474=="
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <CAPnjgZ1L0wqwxoM0__+kxPazAF+xco5Vg99X22VByijNGTxF2w@mail.gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, devicetree-discuss@lists.ozlabs.org, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2012 at 09:46:42AM +0000, Dong Aisheng-B29396 wrote:
-...
-> I guess Stephen's idea is to retrieving the function name and group name
-> From the pinctrl driver since Tagre prefers to define those things in driver
-> Rather than in board file or soc.dts file.
-> But it does not fit for IMX since we define it in soc.dts.
-> 
-Hmm, when he came up with this proposal and said it should work for
-Tegra, I assume he plans to move those from Tegra pinctrl driver into
-device tree.  Stephen?
+--===============0984595474==
+Content-Type: multipart/signed;
+  boundary="nextPart2257003.ybLARdRGKc";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 
-...
+--nextPart2257003.ybLARdRGKc
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-> > Considering the different pinctrl configurations for the same client device
-> > usually share the same pinmux and only pinconf varies. 
-> I have the same doubts before.
-> Is there a real case that device has the different pinmux in different state?
-> Stephen?
-> 
-> > It may worth introducing
-> > another level phandle reference.  Something like the following:
-> > 
-> > 	pinmux_sdhci: pinmux-sdhci {
-> > 		mux =
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>;
-> > 	};
-> > 
-> > 	pinconf_sdhci_active: pinconf-sdhci-active {
-> > 		config =
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_SLEW_RATE 4>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_SLEW_RATE 8>;
-> > 	};
-> > 
-> > 	pinconf_sdhci_suspend: pinconf-sdhci-suspend {
-> > 		config =
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 1>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 1>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_SLEW_RATE 4>
-> > 			<&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_SLEW_RATE 8>;
-> > 	};
-> > 
-> The config makes sense to me.
-> The only question is how to get group name to match with the predefined groups.
-> 
-I still incline to say there should not be any predefined groups for
-DT case, if we choose to find the group in use only when pinmux_get()
-gets called.  Even if you insist to have a global scanning on device
-tree for all groups to create the pinmux mapping table, those predefined
-groups can only be created by your scanning code, so you should know
-how the name comes from device tree, and you should be able to recreate
-the name when you are trying to matching the name in the table you
-created before.
+On Tuesday 17 January 2012 02:11:58 Simon Glass wrote:
+> On Mon, Jan 16, 2012 at 10:30 PM, Mike Frysinger wrote:
+> > On Tuesday 17 January 2012 01:11:14 Simon Glass wrote:
+> >> From: Anton Staff <robotboy@chromium.org>
+> >>=20
+> >> Sometimes we don't need a full cell for each value. This provides
+> >> a simple function to read a byte array, both with and without
+> >> copying it.
+> >>=20
+> >> Signed-off-by: Simon Glass <sjg@chromium.org>
+> >=20
+> > seems like getting s-o-b from Anton should be fairly easy ;)
+>=20
+> I have the jellybeans ready. I will make a list of those I need - it
+> is a pretty long list now. Does patchwork pick it up automatically if
+> they reply to the list?
 
-> Besides per pin group configuration support, we may also want per pin configuration
-> Support as the latest patch sent by Linus.
-> http://www.spinics.net/lists/arm-kernel/msg155712.html
-> 
-This binding proposal has covered both pin and group configuration,
-as the second parameter of 'config' property could be either a pin
-or group which depends the on whether the configurable entity at HW
-level is a pin or group.
+i believe it does if they reply to the patch in question.  at least, it sho=
+uld=20
+be easy to check (have him reply and then d/l it via patchwork).
+=2Dmike
 
-...
+--nextPart2257003.ybLARdRGKc
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
-> > > If "muxable entities" is pins on IMX, I'm wondering how we define the
-> > > predefined Functions and groups or if we still need to do that.
-> > >
-> > Let's put this in the example below.
-> > 
-> > 	pinmux_usdhc1: pinmux-usdhc1 {
-> > 		mux = <IMX6Q_PAD_SD1_DAT1 0>
-> > 		      <IMX6Q_PAD_SD1_DAT2 0>
-> > 		      ...
-> > 	};
-> > 
-> Yes, I agree.
-> And in this way we're still using virtual groups.
-> It has no big difference as we did before like:
-> pinmux-groups {
->         uart4grp: group@0 {
->                 grp-name = "uart4grp";
->                 grp-pins = <107 108>;
->                 grp-mux = <4 4>;
->         };
-> 
->         sd4grp: group@1 {
->                 grp-name = "sd4grp";
->                 grp-pins = <170 171 180 181 182 183 184 185 186 187>;
->                 grp-mux = <0 0 1 1 1 1 1 1 1 1>;
->         };
-> };
-> 
-You are right.  They are fundamentally same and just in different
-format.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (GNU/Linux)
 
-> The real problem is do we need to support individual pin mux
-> Or still using virtual pin group?
-> For the way Stephen proposed, we can only support individual pin mux
-> Since IMX pins are not grouped together in HW.
-> 
-I do not see any problem here.  If you look at the first column of
-'mux' property of node pinmux-usdhc1, it is a group of pins for usdhc1.
-Isn't it one virtual pin group for usdhc1?
+iQIcBAABAgAGBQJPFZkrAAoJEEFjO5/oN/WB5qQQAJm4MQ/SjyeXKM3SPWN8J6/K
+lfP05fikV7lXTc+PoD5HGH3r1aFeBNXcsgf/gQTbxjDK/VS+2W/arFSFCk8xwCdm
+2nSzJh+bW9J7xJKB/3zC6w5ErEvbvxKBJ4idU5drFMwxlj3uVfbKQOuqvOWYMJ8s
+3LBO8evtOirOIixBKMbzP4D0v6RJJh1BscbjcLv44xoBUAQVZCglfbHuEidQ8Mwq
+THoj8/JtZ3QE6rvmKBg/tNXL+arewCCoUYwPh6mFpp+uBv1eKfzjJrlCv940UqCx
+lOcEtd5yoyHdzGfhQ2FA5KN51HE4PBxyah0Y2/h+NV8Im8sJT13TlnICwbsrzYLj
+px6hz9HKCXtVBHje5xFjl2J2TRxpr8fXZH5y8GodxbUwEbD22IXswf2jo/L0zhRj
+TuWFr7dsPFr5EIYulEECpZb9GSuoifuHpQKJShx8K2iqsfsPjVbahQ8UVwTxRWjz
+1uOml4WAXsLFrki7TwwZnU1d6aRoWKevOaedEyfNlcz5IBuuHPZHGUSHYTC0wQ31
+AP6/3of0pYeoHA7nSlBB7m7aosJDNsdSa5Tv+7J1eegAQk1xxGt2oBFCsx07pHqL
+WdPQKRLUhsOiSJuONUtPblUIfezpYerwpTku3mG5/KZWONSFZrZk83pjCtwH6bdB
+vihOZs6nlgsnQ0asZh53
+=CaBH
+-----END PGP SIGNATURE-----
 
-> > 	pinconf_usdhc1_50mhz: pinconf-usdhc1-50mhz {
-> > 		config = <IMX6Q_PAD_SD1_DAT1 IMX6Q_PAD_CONF_ALL 0x834>
-> > 			 <IMX6Q_PAD_SD1_DAT2 IMX6Q_PAD_CONF_ALL 0x834>
-> > 			 ...
-> > 	};
-> > 
-> > 	pinconf_usdhc1_100mhz: pinconf-usdhc1-100mhz {
-> > 		config = <IMX6Q_PAD_SD1_DAT1 IMX6Q_PAD_CONF_ALL 0x330>
-> > 			 <IMX6Q_PAD_SD1_DAT2 IMX6Q_PAD_CONF_ALL 0x330>
-> > 			 ...
-> > 	};
-> > 
-> > 	pinconf_usdhc1_200mhz: pinconf-usdhc1-200mhz {
-> > 		config = <IMX6Q_PAD_SD1_DAT1 IMX6Q_PAD_CONF_ALL 0x334>
-> > 			 <IMX6Q_PAD_SD1_DAT2 IMX6Q_PAD_CONF_ALL 0x334>
-> > 			 ...
-> > 	};
-> > 
-> > 	pinctrl_usdhc1_50mhz: pinctrl-usdhc1-50mhz {
-> > 		pinmux = <&pinmux_usdhc1>;
-> > 		pinconf = <&pinconf_usdhc1_50mhz>;
-> > 	};
-> > 
-> > 	pinctrl_usdhc1_100mhz: pinctrl-usdhc1-100mhz {
-> > 		pinmux = <&pinmux_usdhc1>;
-> > 		pinconf = <&pinconf_usdhc1_100mhz>;
-> > 	};
-> > 
-> > 	pinctrl_usdhc1_200mhz: pinctrl-usdhc1-200mhz {
-> > 		pinmux = <&pinmux_usdhc1>;
-> > 		pinconf = <&pinconf_usdhc1_200mhz>;
-> > 	};
-> > 
-> > 	usdhc@02190000 { /* uSDHC1 */
-> > 		...
-> > 		pinctrl = <&usdhc1_50mhz>, <&usdhc1_100mhz>, <&usdhc1_200mhz>;
-> > 		pinctrl-names = "usdhc1-50mhz", "usdhc1-100mhz", "usdhc1-200mhz";
-> > 	};
-> > 
-> > In this example, we have 3 functions/states for client device usdhc1, "usdhc1-
-> > 50mhz", "usdhc1-100mhz", and "usdhc1-200mhz".  The group is being defined by
-> > enumerating the pins in property 'mux' of node pinmux_usdhc1.
-> > 
-> Yes, It's still under development by Linus.
-> The last patch Linus sent still does not support state change for specific device.
-> But the method is ok to me.
-> 
-Yes, we need per device state switch.
+--nextPart2257003.ybLARdRGKc--
 
--- 
-Regards,
-Shawn
+--===============0984595474==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+U-Boot mailing list
+U-Boot@lists.denx.de
+http://lists.denx.de/mailman/listinfo/u-boot
+
+--===============0984595474==--
