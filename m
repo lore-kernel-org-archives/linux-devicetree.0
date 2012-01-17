@@ -1,95 +1,67 @@
-From: Mike Frysinger <vapier@gentoo.org>
-Subject: Re: [PATCH v3 1/9] fdt: Add fdtdec functions to read byte
-	array
-Date: Tue, 17 Jan 2012 10:52:10 -0500
-Message-ID: <201201171052.12019.vapier@gentoo.org>
-References: <1326780682-10260-1-git-send-email-sjg@chromium.org>
-	<201201170130.48257.vapier@gentoo.org>
-	<CAPnjgZ1L0wqwxoM0__+kxPazAF+xco5Vg99X22VByijNGTxF2w@mail.gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: Re: [PATCH 2/2] Kbuild: Use dtc's -d (dependency) option
+Date: Tue, 17 Jan 2012 09:20:47 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17801D2255@HQMAIL01.nvidia.com>
+References: <1326134295-15547-1-git-send-email-swarren@nvidia.com>
+	<1326134295-15547-2-git-send-email-swarren@nvidia.com>
+	<1326310587.2535.291.camel@deneb.redhat.com> <4F1206F1.5090405@suse.cz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0984595474=="
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CAPnjgZ1L0wqwxoM0__+kxPazAF+xco5Vg99X22VByijNGTxF2w@mail.gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, devicetree-discuss@lists.ozlabs.org, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bounces@lists.openrisc.net>
+In-Reply-To: <4F1206F1.5090405@suse.cz>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Michal Marek <mmarek@suse.cz>, Mark Salter <msalter@redhat.com>
+Cc: Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, "linux-c6x-dev@linux-c6x.org" <linux-c6x-dev@linux-c6x.org>, Arnd Bergmann <arnd@arndb.de>, Aurelien Jacquiot <a-jacquiot@ti.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linux@openrisc.net" <linux@openrisc.net>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Paul Mackerras <paulus@samba.org>, "microblaze-uclinux@itee.uq.edu.au" <microblaze-uclinux@itee.uq.edu.au>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Gibson <david@gibson.dropbear.id.>
 List-Id: devicetree@vger.kernel.org
 
---===============0984595474==
-Content-Type: multipart/signed;
-  boundary="nextPart2257003.ybLARdRGKc";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+Michal Marek wrote at Saturday, January 14, 2012 3:51 PM:
+> On 11.1.2012 20:36, Mark Salter wrote:
+> > On Mon, 2012-01-09 at 11:38 -0700, Stephen Warren wrote:
+> >> This hooks dtc into Kbuild's dependency system.
+> >>
+> >> Thus, for example, "make dtbs" will rebuild tegra-harmony.dtb if only
+> >> tegra20.dtsi has changed yet tegra-harmony.dts has not. The previous
+> >> lack of this feature recently caused me to have very confusing "git
+> >> bisect" results.
+> >>
+> >> For ARM, it's obvious what to add to $(targets). I'm not familiar enough
+> >> with other architectures to know what to add there. Powerpc appears to
+> >> already add various .dtb files into $(targets), but the other archs may
+> >> need something added to $(targets) to work.
+> >>
+> >> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> >>
+> >
+> > Acked-by: Mark Salter <msalter@redhat.com>
+> >
+> > For the arch/c6x bit.
+> 
+> As the C6X port has been merged in this merge window, I can't easily
+> apply this patch to my kbuild branch and at the same time please Linus
+> by basing the pull request on a tagged release. So I'm going to drop the
+> arch/c6x part to keep the kbuild branch "pretty" and let either Mark or
+> Stephen send the patch to Linus directly, once he has merged the kbuild
+> branch. Would that work?
 
---nextPart2257003.ybLARdRGKc
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+I was assuming my patches were for 3.4 rather than 3.3, since it's pretty
+late for new features in 3.3. In that case, there wouldn't be an issue,
+right?
 
-On Tuesday 17 January 2012 02:11:58 Simon Glass wrote:
-> On Mon, Jan 16, 2012 at 10:30 PM, Mike Frysinger wrote:
-> > On Tuesday 17 January 2012 01:11:14 Simon Glass wrote:
-> >> From: Anton Staff <robotboy@chromium.org>
-> >>=20
-> >> Sometimes we don't need a full cell for each value. This provides
-> >> a simple function to read a byte array, both with and without
-> >> copying it.
-> >>=20
-> >> Signed-off-by: Simon Glass <sjg@chromium.org>
-> >=20
-> > seems like getting s-o-b from Anton should be fairly easy ;)
->=20
-> I have the jellybeans ready. I will make a list of those I need - it
-> is a pretty long list now. Does patchwork pick it up automatically if
-> they reply to the list?
+If you do want to go ahead and push my patches into 3.3, your proposal
+looks fine to me. Mark, do you want me to push the patch to Linus, or
+do you want to pick it up?
 
-i believe it does if they reply to the patch in question.  at least, it sho=
-uld=20
-be easy to check (have him reply and then d/l it via patchwork).
-=2Dmike
+Thanks.
 
---nextPart2257003.ybLARdRGKc
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (GNU/Linux)
-
-iQIcBAABAgAGBQJPFZkrAAoJEEFjO5/oN/WB5qQQAJm4MQ/SjyeXKM3SPWN8J6/K
-lfP05fikV7lXTc+PoD5HGH3r1aFeBNXcsgf/gQTbxjDK/VS+2W/arFSFCk8xwCdm
-2nSzJh+bW9J7xJKB/3zC6w5ErEvbvxKBJ4idU5drFMwxlj3uVfbKQOuqvOWYMJ8s
-3LBO8evtOirOIixBKMbzP4D0v6RJJh1BscbjcLv44xoBUAQVZCglfbHuEidQ8Mwq
-THoj8/JtZ3QE6rvmKBg/tNXL+arewCCoUYwPh6mFpp+uBv1eKfzjJrlCv940UqCx
-lOcEtd5yoyHdzGfhQ2FA5KN51HE4PBxyah0Y2/h+NV8Im8sJT13TlnICwbsrzYLj
-px6hz9HKCXtVBHje5xFjl2J2TRxpr8fXZH5y8GodxbUwEbD22IXswf2jo/L0zhRj
-TuWFr7dsPFr5EIYulEECpZb9GSuoifuHpQKJShx8K2iqsfsPjVbahQ8UVwTxRWjz
-1uOml4WAXsLFrki7TwwZnU1d6aRoWKevOaedEyfNlcz5IBuuHPZHGUSHYTC0wQ31
-AP6/3of0pYeoHA7nSlBB7m7aosJDNsdSa5Tv+7J1eegAQk1xxGt2oBFCsx07pHqL
-WdPQKRLUhsOiSJuONUtPblUIfezpYerwpTku3mG5/KZWONSFZrZk83pjCtwH6bdB
-vihOZs6nlgsnQ0asZh53
-=CaBH
------END PGP SIGNATURE-----
-
---nextPart2257003.ybLARdRGKc--
-
---===============0984595474==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-U-Boot mailing list
-U-Boot@lists.denx.de
-http://lists.denx.de/mailman/listinfo/u-boot
-
---===============0984595474==--
+-- 
+nvpublic
