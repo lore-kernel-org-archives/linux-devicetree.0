@@ -1,104 +1,50 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] video: s3c-fb: Add device tree support
-Date: Tue, 17 Jan 2012 10:44:26 +0530
-Message-ID: <CAJuYYwSt7KM0_DiChsDmy9aD9s6Q48FqcM6gD1otXBYfk67m+g@mail.gmail.com>
-References: <1326139307-25112-1-git-send-email-thomas.abraham@linaro.org>
-	<4F109C04.5090600@gmail.com>
-	<4F10A267.2020608@gmail.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 5/9] tegra: fdt: Add keyboard controller definition
+Date: Mon, 16 Jan 2012 22:11:18 -0800
+Message-ID: <1326780682-10260-6-git-send-email-sjg@chromium.org>
+References: <1326780682-10260-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4F10A267.2020608@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <snjw23@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, jg1.han@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326780682-10260-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+From: Anton Staff <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-On 14 January 2012 03:00, Sylwester Nawrocki <snjw23@gmail.com> wrote:
-> On 01/13/2012 10:03 PM, Sylwester Nawrocki wrote:
->> On 01/09/2012 09:01 PM, Thomas Abraham wrote:
->>>
->>> + =A0 =A0for (idx =3D 0; idx< =A0 nr_gpios; idx++) {
->>> + =A0 =A0 =A0 =A0 =A0 =A0gpio =3D of_get_gpio(dev->of_node, idx);
->>> + =A0 =A0 =A0 =A0 =A0 =A0if (!gpio_is_valid(gpio)) {
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "invalid gpio=
-[%d]: %d\n", idx, gpio);
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -EINVAL;
->>> + =A0 =A0 =A0 =A0 =A0 =A0}
->>> +
->>> + =A0 =A0 =A0 =A0 =A0 =A0if (!request)
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0continue;
->>> +
->>> + =A0 =A0 =A0 =A0 =A0 =A0ret =3D gpio_request(gpio, "fimd");
->>
->> Is it how it normally is supposed to be done, i.e. configuring a gpi=
-o
->> _before_ it has been requested ? of_get_gpio() indirectly touches th=
-e
->> gpio controller and gpio_request() doesn't seem to serve its purpose
->> in this case, i.e. if there is situation like:
->>
->> driver A =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0driver B
->>
->> of_get_gpio(nodeA, gpioA);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0o=
-f_get_gpio(nodeB, gpioA);
->> gpio_request(gpioA);
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0g=
-pio_request(gpioB);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0 s/B/A
->>
->> driver B will end up with configuration of gpioA from nodeA, not fro=
-m
->> nodeB.
->
-> ugh, I put it wrong, it should instead read:
->
-> "driver A will end up with configuration of gpioA from nodeB, not fro=
-m
-> nodeA."
->
->> As there are few drivers doing that I must be missing something,
->> not sure what..
->> I realize the GPIO number needs to be known in order for a GPIO to b=
-e
->> requested. Shouldn't of_get_gpio() be extended to allow locking gpio
->> controller's module and marking a GPIO as requested in advance ?
->>
->>> + =A0 =A0 =A0 =A0 =A0 =A0if (ret) {
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "gpio [%d] re=
-quest failed\n", gpio);
->>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto gpio_free;
->>> + =A0 =A0 =A0 =A0 =A0 =A0}
->>> + =A0 =A0 =A0 =A0 =A0 =A0sfb->gpios[idx] =3D gpio;
->>> + =A0 =A0}
->>> + =A0 =A0return 0;
->>> +
->>> +gpio_free:
->>> + =A0 =A0while (--idx>=3D 0)
->>> + =A0 =A0 =A0 =A0 =A0 =A0gpio_free(sfb->gpios[idx]);
->>> + =A0 =A0return ret;
->>> +}
->>> +
->>> +static void s3c_fb_dt_free_gpios(struct s3c_fb *sfb)
->>> +{
->>> + =A0 =A0unsigned int idx, nr_gpio;
->>> +
->>> + =A0 =A0nr_gpio =3D sfb->pdata->win[0]->max_bpp + 4;
->>> + =A0 =A0for (idx =3D 0; idx< =A0 nr_gpio; idx++)
->>> + =A0 =A0 =A0 =A0 =A0 =A0gpio_free(sfb->gpios[idx]);
->>> +}
->
+The Tegra keyboard controller provides a simple interface to a matrix
+keyboard.
 
-Yes, I agree that there is a problem here. DT bindings for
-pinmux/pinconfig would solve this. But the sequence of of_get_gpio()
-and gpio_request() in the above code will stay even when using the dt
-bindings for pinmux/pinconfig. There will be only incremental changes
-required to adapt to dt bindings for pinmux/pinconfig.
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
 
-Thanks,
-Thomas.
+ arch/arm/dts/tegra20.dtsi |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+index 33d6972..3d435aa 100644
+--- a/arch/arm/dts/tegra20.dtsi
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -216,4 +216,9 @@
+ 		compatible = "nvidia,tegra20-nand";
+ 		reg = <0x70008000 0x100>;
+ 	};
++
++	kbc@7000e200 {
++		compatible = "nvidia,tegra20-kbc";
++		reg = <0x7000e200 0x0078>;
++	};
+ };
+-- 
+1.7.7.3
