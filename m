@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 5/9] tegra: fdt: Add keyboard controller definition
-Date: Mon, 16 Jan 2012 22:11:18 -0800
-Message-ID: <1326780682-10260-6-git-send-email-sjg@chromium.org>
+Subject: [PATCH v3 1/9] fdt: Add fdtdec functions to read byte array
+Date: Mon, 16 Jan 2012 22:11:14 -0800
+Message-ID: <1326780682-10260-2-git-send-email-sjg@chromium.org>
 References: <1326780682-10260-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,28 +23,90 @@ List-Id: devicetree@vger.kernel.org
 
 From: Anton Staff <robotboy-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-The Tegra keyboard controller provides a simple interface to a matrix
-keyboard.
+Sometimes we don't need a full cell for each value. This provides
+a simple function to read a byte array, both with and without
+copying it.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
+Changes in v2:
+- Use correct name for get_prop_check_min_len() function
 
- arch/arm/dts/tegra20.dtsi |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+ include/fdtdec.h |   32 ++++++++++++++++++++++++++++++++
+ lib/fdtdec.c     |   24 ++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-index 33d6972..3d435aa 100644
---- a/arch/arm/dts/tegra20.dtsi
-+++ b/arch/arm/dts/tegra20.dtsi
-@@ -216,4 +216,9 @@
- 		compatible = "nvidia,tegra20-nand";
- 		reg = <0x70008000 0x100>;
- 	};
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 64e2f88..9fd4e38 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -325,3 +325,35 @@ int fdtdec_setup_gpio(struct fdt_gpio_state *gpio);
+  * @return
+  */
+ int fdtdec_decode_periph_id(const void *blob, int node);
 +
-+	kbc@7000e200 {
-+		compatible = "nvidia,tegra20-kbc";
-+		reg = <0x7000e200 0x0078>;
-+	};
- };
++/*
++ * Look up a property in a node and return its contents in a byte
++ * array of given length. The property must have at least enough data for
++ * the array (count bytes). It may have more, but this will be ignored.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param array		array to fill with data
++ * @param count		number of array elements
++ * @return 0 if ok, or -FDT_ERR_MISSING if the property is not found,
++ *		or -FDT_ERR_BADLAYOUT if not enough data
++ */
++int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
++		u8 *array, int count);
++
++/**
++ * Look up a property in a node and return a pointer to its contents as a
++ * byte array of given length. The property must have at least enough data
++ * for the array (count bytes). It may have more, but this will be ignored.
++ * The data is not copied.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param count		number of array elements
++ * @return pointer to byte array if found, or NULL if the property is not
++ *		found or there is not enough data
++ */
++const u8 *fdtdec_locate_byte_array(const void *blob, int node,
++			     const char *prop_name, int count);
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index db377c7..140310d 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -462,3 +462,27 @@ int fdtdec_decode_periph_id(const void *blob, int node)
+ 
+ 	return cell[1];
+ }
++
++int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
++		u8 *array, int count)
++{
++	const u8 *cell;
++	int err;
++
++	cell = get_prop_check_min_len(blob, node, prop_name, count, &err);
++	if (!err)
++		memcpy(array, cell, count);
++	return err;
++}
++
++const u8 *fdtdec_locate_byte_array(const void *blob, int node,
++			     const char *prop_name, int count)
++{
++	const u8 *cell;
++	int err;
++
++	cell = get_prop_check_min_len(blob, node, prop_name, count, &err);
++	if (err)
++		return NULL;
++	return cell;
++}
 -- 
 1.7.7.3
