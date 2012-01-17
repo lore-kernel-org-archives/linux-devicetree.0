@@ -1,165 +1,110 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC v2 7/9] arm/dt: Common plat-versatile support for icst and
- sp804 based system clocks
-Date: Tue, 17 Jan 2012 15:59:17 -0700
-Message-ID: <CACxGe6skBjDEKwnmYqCFJURBg79CRc=0maSAshUeUf78GLTczA@mail.gmail.com>
+From: "Turquette, Mike" <mturquette@ti.com>
+Subject: Re: [RFC v2 4/9] of: add clock providers
+Date: Tue, 17 Jan 2012 15:37:12 -0800
+Message-ID: <CAJOA=zMgGsZKGQ-EfSnXDY_WoFrzG6XPZtuxANFKqdL8CAaYrw@mail.gmail.com>
 References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-7-git-send-email-grant.likely@secretlab.ca> <74CDBE0F657A3D45AFBB94109FB122FF17801D2363@HQMAIL01.nvidia.com>
+ <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+ <74CDBE0F657A3D45AFBB94109FB122FF17801D2353@HQMAIL01.nvidia.com> <CACxGe6vC7DBW0w6LhRTg_fi5bZ2aHxwFY2DNbT6KFcUmoYpNYA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17801D2363@HQMAIL01.nvidia.com>
+In-Reply-To: <CACxGe6vC7DBW0w6LhRTg_fi5bZ2aHxwFY2DNbT6KFcUmoYpNYA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Mike Turquette <mturquette@ti.com>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Stephen Warren <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2012 at 2:05 PM, Stephen Warren <swarren@nvidia.com> wr=
-ote:
-> Grant Likely wrote at Monday, December 12, 2011 3:02 PM:
-> ...
->> diff --git a/arch/arm/plat-versatile/clock.c b/arch/arm/plat-versati=
-le/clock.c
-> ...
->> +void __init versatile_dt_icst_clk_setup(struct device_node *np)
->> +{
->> + =A0 =A0 const struct of_device_id *match;
->> + =A0 =A0 struct icst_of_clk *icst;
->> + =A0 =A0 const struct icst_params *params;
->> + =A0 =A0 u32 ref, vd_range[2], rd_range[2], vco_offset, lock_offset=
-;
->> + =A0 =A0 __iomem void * base;
->> +
->> + =A0 =A0 /*
->> + =A0 =A0 =A0* Only try to drive clocks that we know how to control.
->> + =A0 =A0 =A0* ie. attached to an ARM Versatile block of system regi=
-sters
->> + =A0 =A0 =A0*/
->> + =A0 =A0 if (!of_device_is_compatible(np->parent, "arm,versatile-sy=
-s-regs"))
->> + =A0 =A0 =A0 =A0 =A0 =A0 return;
-> ...
->> + =A0 =A0 base =3D of_iomap(np->parent, 0);
+On Tue, Jan 17, 2012 at 2:47 PM, Grant Likely <grant.likely@secretlab.c=
+a> wrote:
+> On Tue, Jan 17, 2012 at 1:44 PM, Stephen Warren <swarren@nvidia.com> =
+wrote:
+>> In other words, does the UART driver need to do something like:
+>>
+>> clk_reg =3D clk_get(dev, "register");
+>> clk_parent =3D of_clk_get_by_name(np, "register);
+>> clk_set_parent(clk_reg, clk_parent);
+>>
+>> Or will that all happen transparently within just the of_clk_get_by_=
+name
+>> call?
+>>
+>> (I suppose this question makes slightly more sense for the PLL itsel=
+f,
+>> since both the upstream and downstream clocks are represented in the=
+ PLL
+>> node, whereas the UART's node only represents the clock consumer sid=
+e,
+>> so the above code isn't really possible automatically).
 >
-> Is this pattern (that of "re-using" a parent node's registers) someth=
-ing
-> legitimate that you'd expect to see wide-spread use?
+> The intent is that device only interacts with the leaf device. =A0If =
+the
+> clocks are arranged into a hierarchy, then the clock driver is
+> responsible for any interactions with the parent clock. =A0Requiring =
+the
+> driver to manipulate parent clocks directly defeats the purpose of
+> having a clock abstraction.
 
-Yes, it is completely legitimate.  In this particular case, the
-binding must specifically state that the child node uses the parent
-node's reg region, and that would place strict limits on where this
-binding can be used.
+I don't think that we can get rid of all instances of drivers knowing
+a bit about hierarchy.  I think we can get rid of most, but there are
+cases where it is valid for a driver to know some of the details.
+More on that below.
 
-> I ask because Tegra's CAR (Clock And Reset) HW module controls all th=
-e
-> clocks in the system. The registers for the various clocks are often
-> inter-mingled, so it's not possible to give each clock a node with a
-> reg property, since they'd all overlap and conflict. Instead, should =
-we
-> do something like the following, coupled with the above pattern in th=
-e
-> per-clock drivers:
+>> Somewhat related to this: How does dynamic reparenting interact with
+>> the DT clock binding; is the DT just the default/initial clock setup=
+,
+>> and anything beyond that needs a custom binding and code in the cons=
+umer?
 >
-> car@60006000 {
-> =A0 =A0compatible =3D "nvidia,tegra20-car";
-> =A0 =A0reg =3D < 0x60006000 0x1000 >;
->
-> =A0 =A0osc@0 {
-> =A0 =A0 =A0 =A0compatible =3D "nvidia,tegra20-clk-osc";
-> =A0 =A0};
-> =A0 =A0pll_p@1 {
-> =A0 =A0 =A0 =A0compatible =3D "nvidia,tegra20-clk-pll";
-> =A0 =A0 =A0 =A0pll_id =3D <0>;
-> =A0 =A0};
-> =A0 =A0pll_c@2 {
-> =A0 =A0 =A0 =A0compatible =3D "nvidia,tegra20-clk-pll";
-> =A0 =A0 =A0 =A0pll_id =3D <1>;
-> =A0 =A0};
-> =A0 =A0...
-> };
+> As far as the clock binding goes, it only describes provider/consumer
+> relationships. =A0The fact that such relationships may resolve to a
+> hierarchy is beyond what the binding describes. =A0If a clock has
+> multiple possible parents, then that specific clock binding should
+> document how the multiple parent clocks are described and the clock
+> driver is responsible for implementing the correct behaviour.
 
-Sure, that's fine.
+It also deserves to be said that the DT data says nothing about which
+of the possible parents _should_ be the input to a mux clock.  It's
+pretty common to want to make changes to hierarchy after taking a
+device out of reset, since the reset values for a clock management IP
+might be pretty conservative.  So someone, somewhere must know some
+details about hierarchy and set things up correctly.  Maybe a "clock
+driver" can do this, but for specific IPs such as the audio example
+below it makes sense for that driver to have the knowledge.
 
+> Similarly, the DT clock binding provides no generic mechanism for
+> walking up the clock tree. =A0That behaviour must also be implemented=
+ by
+> each specific clock driver.
 >
-> Similar, we have many "peripheral" clocks; leaf nodes that are the cl=
-ocks
-> for UART, I2C, SPI, ... that are all controlled in a very similar fas=
-hion.
-> I can see a couple of alternative ways of representing this:
->
-> a)
->
-> One big node with a ton of clock inputs and outputs:
->
-> =A0 =A0periphclk {
-> =A0 =A0 =A0 =A0compatible =3D "nvidia,tegra20-clk-periphs";
-> =A0 =A0 =A0 =A0#clock-cells =3D <1>;
-> =A0 =A0 =A0 =A0/*
-> =A0 =A0 =A0 =A0 * This ends up listing almost all clocks in the syste=
-m;
-> =A0 =A0 =A0 =A0 * most are usable as a source for /some/ peripheral c=
+>> I'm thinking of say a system with 1 I2S controller, and both an inte=
+rnal
+>> and external I2S clock source, where perhaps the internal source nee=
+ds
+>> to be used to capture from an I2S interface on one set of pins (e.g.
+>> analog mic) but the other clock source needs to be used to capture f=
+rom
+>> I2S on another set of pins (e.g. digital baseband unit connection).
+>> (This example is theoretical, but I'm sure there are other dynamic c=
 lock
-> =A0 =A0 =A0 =A0 */
-> =A0 =A0 =A0 =A0clocks =3D <&pll_p 0> <&pll_c 0> <&pll_m 0 ...>;
-> =A0 =A0 =A0 =A0clock-names =3D "pll_p", "pll_c", "pll_m", ...;
-> =A0 =A0 =A0 =A0/* And there are maybe 50 of these */
-> =A0 =A0 =A0 =A0clock-output-names =3D "uart1", "uart2", "i2c1", "i2c2=
-", "spi1", ...;
-> =A0 =A0};
+>> cases in practice).
 >
-> Simon Glass proposed something similar to this on the U-Boot mailing
-> list for Tegra's peripheral clocks (since he's working on upstreaming
-> Tegra USB support and adding device tree at the same time, and needs
-> to parameterize clock IDs in the device tree, since he's not using
-> AUXDATA). I'm worried that the huge number of peripheral clocks in th=
-e
-> above binding would be unwieldy.
+> That is a reasonable example. =A0In this case, the i2c controller wou=
+ld
+> include both in its clocks property, and the binding would document
+> when and why each clock source is used.
 
-You've got a lot of latitude here.  This is fine, and I think for a
-lot of cases, particularly if there is a kind of 'clock nexus' in an
-soc, that it is an excellent option.  You can also have one node per
-clock, or you can do something in between where clocks get logically
-grouped together based on the system design.  It is also true that
-there is no need to expose every soc clock in the dts.  Only the leaf
-clocks provided to devices need to appear.  Internal intermediary
-clocks can, and probably should, be hidden from the devices.
+I'm confused on this point.  How does the binding "document when and
+why each clock is used"?  In the case where this I2S controller
+expects to dynamically switch roles at run-time (analog mic versus
+baseband) then clk_set_parent must still be invoked by the driver.  To
+be clear I'm imagining the above example like:
 
-> I'm also unclear how to know which of
-> the "clock-names" is the parent for each of the "clock-output-names",
-> or if this isn't something the current clock bindings are supports to
-> address. Each peripclk is an independent mux, divider, and gate.
+i_I2S   e_I2S
+   \       /
+    I2S_mux
+        |
+I2S controller IP
 
-The common binding doesn't say anything about this.  It is entirely up
-to the specific clock device binding to specify how consumed clocks
-map to produced clocks.
-
->
-> b)
->
-> A node for each peripheral clock:
->
-> =A0 =A0uart1@0 {
-> =A0 =A0 =A0 =A0compatible =3D "nvidia,tegra20-clk-uart";
-> =A0 =A0 =A0 =A0clocks =3D <&pll_p 0>;
-> =A0 =A0 =A0 =A0clock-names =3D "clk";
-> =A0 =A0};
->
-> =A0 =A0uart2@1 {
-> =A0 =A0 =A0 =A0compatible =3D "nvidia,tegra20-clk-uart";
-> =A0 =A0 =A0 =A0clocks =3D <&pll_p 0>;
-> =A0 =A0 =A0 =A0clock-names =3D "clk";
-> =A0 =A0};
->
-> =A0 =A0i2s@2 {
-> =A0 =A0 =A0 =A0compatible =3D "nvidia,tegra20-clk-i2s";
-> =A0 =A0 =A0 =A0clocks =3D <&audio_clk 0>;
-> =A0 =A0 =A0 =A0clock-names =3D "clk";
-> =A0 =A0};
->
-> etc.
-
-My primary worry here is that it will result in an unwieldy number of
-nodes in a hurry.
-
-g.
+Regards,
+Mike
