@@ -1,104 +1,134 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [RFC v2 4/9] of: add clock providers
-Date: Tue, 17 Jan 2012 12:44:23 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17801D2353@HQMAIL01.nvidia.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC v2 7/9] arm/dt: Common plat-versatile support for icst and
+ sp804 based system clocks
+Date: Tue, 17 Jan 2012 13:05:42 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17801D2363@HQMAIL01.nvidia.com>
 References: <1323727329-4989-1-git-send-email-grant.likely@secretlab.ca>
- <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+ <1323727329-4989-7-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1323727329-4989-4-git-send-email-grant.likely@secretlab.ca>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1323727329-4989-7-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Mike Turquette <mturquette@ti.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Grant Likely wrote at Monday, December 12, 2011 3:02 PM:
-> Based on work by Ben Herrenschmidt and Jeremy Kerr, this patch adds an
-> of_clk_get function to allow platforms to retrieve clock data from the
-> device tree.
-> 
-> Platform register a provider through of_clk_add_provider, which will be
-> called when a device references the provider's OF node for a clock
-> reference.
 ...
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> diff --git a/arch/arm/plat-versatile/clock.c b/arch/arm/plat-versatile/clock.c
 ...
-> +==Example==
+> +void __init versatile_dt_icst_clk_setup(struct device_node *np)
+> +{
+> +	const struct of_device_id *match;
+> +	struct icst_of_clk *icst;
+> +	const struct icst_params *params;
+> +	u32 ref, vd_range[2], rd_range[2], vco_offset, lock_offset;
+> +	__iomem void * base;
 > +
-> +    /* external oscillator */
-> +    osc: oscillator {
-> +        compatible = "fixed-clock";
-> +        #clock-cells = <1>;
-> +        clock-frequency  = <32678>;
-> +        clock-output-names = "osc";
-> +    };
-> +
-> +    /* phase-locked-loop device, generates a higher frequency clock
-> +     * from the external oscillator reference */
-> +    pll: pll@4c000 {
-> +        compatible = "vendor,some-pll-interface"
-> +        #clock-cells = <1>;
-> +        clocks = <&osc 0>;
-> +        clock-names = "ref";
-> +        reg = <0x4c000 0x1000>;
-> +        clock-output-names = "pll", "pll-switched";
-> +    };
-> +
-> +    /* UART, using the low frequency oscillator for the baud clock,
-> +     * and the high frequency switched PLL output for register
-> +     * clocking */
-> +    uart@a000 {
-> +        compatible = "fsl,imx-uart";
-> +        reg = <0xa000 0x1000>;
-> +        interrupts = <33>;
-> +        clocks = <&osc 0>, <&pll 1>;
-> +        clock-names = "baud", "register";
-> +    };
-> +
-> +This DT fragment defines three devices: an external oscillator to provide a
-> +low-frequency reference clock, a PLL device to generate a higher frequency
-> +clock signal, and a UART.
-> +
-> +* The oscillator is fixed-frequency, and provides one clock output, named "osc".
-> +* The PLL is both a clock provider and a clock consumer. It uses the clock
-> +  signal generated by the external oscillator, and provides two output signals
-> +  ("pll" and "pll-switched").
-> +* The UART has its baud clock connected the external oscillator and its
-> +  register clock connected to the PLL clock (the "pll-switched" signal)
+> +	/*
+> +	 * Only try to drive clocks that we know how to control.
+> +	 * ie. attached to an ARM Versatile block of system registers
+> +	 */
+> +	if (!of_device_is_compatible(np->parent, "arm,versatile-sys-regs"))
+> +		return;
+...
+> +	base = of_iomap(np->parent, 0);
 
-In the example above, the UART's register clock's parent is the PLL, and
-the PLL's parent is the OSC. Is the intention to have this parenting set
-up automatically by the core OF clock code, or is this something that each
-individual driver needs to set up itself.
+Is this pattern (that of "re-using" a parent node's registers) something
+legitimate that you'd expect to see wide-spread use?
 
-In other words, does the UART driver need to do something like:
+I ask because Tegra's CAR (Clock And Reset) HW module controls all the
+clocks in the system. The registers for the various clocks are often
+inter-mingled, so it's not possible to give each clock a node with a
+reg property, since they'd all overlap and conflict. Instead, should we
+do something like the following, coupled with the above pattern in the
+per-clock drivers:
 
-clk_reg = clk_get(dev, "register");
-clk_parent = of_clk_get_by_name(np, "register);
-clk_set_parent(clk_reg, clk_parent);
+car@60006000 {
+    compatible = "nvidia,tegra20-car";
+    reg = < 0x60006000 0x1000 >;
 
-Or will that all happen transparently within just the of_clk_get_by_name
-call?
+    osc@0 {
+        compatible = "nvidia,tegra20-clk-osc";
+    };
+    pll_p@1 {
+        compatible = "nvidia,tegra20-clk-pll";
+        pll_id = <0>;
+    };
+    pll_c@2 {
+        compatible = "nvidia,tegra20-clk-pll";
+        pll_id = <1>;
+    };
+    ...
+};
 
-(I suppose this question makes slightly more sense for the PLL itself,
-since both the upstream and downstream clocks are represented in the PLL
-node, whereas the UART's node only represents the clock consumer side,
-so the above code isn't really possible automatically).
+Similar, we have many "peripheral" clocks; leaf nodes that are the clocks
+for UART, I2C, SPI, ... that are all controlled in a very similar fashion.
+I can see a couple of alternative ways of representing this:
 
-Somewhat related to this: How does dynamic reparenting interact with
-the DT clock binding; is the DT just the default/initial clock setup,
-and anything beyond that needs a custom binding and code in the consumer?
+a)
 
-I'm thinking of say a system with 1 I2S controller, and both an internal
-and external I2S clock source, where perhaps the internal source needs
-to be used to capture from an I2S interface on one set of pins (e.g.
-analog mic) but the other clock source needs to be used to capture from
-I2S on another set of pins (e.g. digital baseband unit connection).
-(This example is theoretical, but I'm sure there are other dynamic clock
-cases in practice).
+One big node with a ton of clock inputs and outputs:
+
+    periphclk {
+        compatible = "nvidia,tegra20-clk-periphs";
+        #clock-cells = <1>;
+        /*
+         * This ends up listing almost all clocks in the system;
+         * most are usable as a source for /some/ peripheral clock
+         */
+        clocks = <&pll_p 0> <&pll_c 0> <&pll_m 0 ...>;
+        clock-names = "pll_p", "pll_c", "pll_m", ...;
+        /* And there are maybe 50 of these */
+        clock-output-names = "uart1", "uart2", "i2c1", "i2c2", "spi1", ...;
+    };
+
+Simon Glass proposed something similar to this on the U-Boot mailing
+list for Tegra's peripheral clocks (since he's working on upstreaming
+Tegra USB support and adding device tree at the same time, and needs
+to parameterize clock IDs in the device tree, since he's not using
+AUXDATA). I'm worried that the huge number of peripheral clocks in the
+above binding would be unwieldy. I'm also unclear how to know which of
+the "clock-names" is the parent for each of the "clock-output-names",
+or if this isn't something the current clock bindings are supports to
+address. Each peripclk is an independent mux, divider, and gate.
+
+b)
+
+A node for each peripheral clock:
+
+    uart1@0 {
+        compatible = "nvidia,tegra20-clk-uart";
+        clocks = <&pll_p 0>;
+        clock-names = "clk";
+    };
+
+    uart2@1 {
+        compatible = "nvidia,tegra20-clk-uart";
+        clocks = <&pll_p 0>;
+        clock-names = "clk";
+    };
+
+    i2s@2 {
+        compatible = "nvidia,tegra20-clk-i2s";
+        clocks = <&audio_clk 0>;
+        clock-names = "clk";
+    };
+
+etc.
+
+Thanks for cluing me in!
 
 -- 
 nvpublic
