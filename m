@@ -1,242 +1,291 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v3 1/2] fdt: Add fdtdec_find_aliases() to deal with
-	alias nodes
-Date: Tue, 17 Jan 2012 10:20:50 -0800
-Message-ID: <1326824452-14786-2-git-send-email-sjg@chromium.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 2/2] fdt: Add tests for fdtdec
+Date: Tue, 17 Jan 2012 10:20:51 -0800
+Message-ID: <1326824452-14786-3-git-send-email-sjg@chromium.org>
 References: <1326824452-14786-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1326824452-14786-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326824452-14786-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren pointed out that we should use nodes whether or not they
-have an alias in the /aliases section. The aliases section specifies the
-order so far as it can, but is not essential. Operating without alisses
-is useful when the enumerated order of nodes does not matter (admittedly
-rare in U-Boot).
+The fdtdec_find_aliases_for_id() function is complicated enough that
+it really should have some tests. This does not necessarily need to be
+committed to U-Boot, but it might be useful.
 
-This is considerably more complex, and it is important to keep this
-complexity out of driver code. This patch creates a function
-fdtdec_find_aliases() which returns an ordered list of node offsets
-for a particular compatible ID, taking account of alias nodes.
+(note there are a few minor inconsistencies with this patch which will be
+cleaned up when the USB series is applied)
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 Changes in v2:
-- Allow gaps in the list returned to the caller
-- Improve alias checking algorithm to reduce run time
-- Rename function to fdtdec_find_aliases_for_id()
-- Skip nodes marked as disabled
+- Add test_fdtdec command to test fdtdec_find_aliases_for_id()
 
 Changes in v3:
-- Change 'continue' to 'break' in last loop, since we are done anyway
-- Fix typos and add two assert() checks
+- Change fdtdec-test.c to fdtdec_test.c to fit better with U-Boot conventions
+- Remove varargs declaration (hang-over from previous implementation)
+- Use COMPAT_UNKNOWN instead of COMPAT_NVIDIA_TEGRA20_I2C for test
 
- include/fdtdec.h |   47 ++++++++++++++++++++++
- lib/fdtdec.c     |  116 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 163 insertions(+), 0 deletions(-)
+ lib/Makefile      |    1 +
+ lib/fdtdec_test.c |  226 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 227 insertions(+), 0 deletions(-)
+ create mode 100644 lib/fdtdec_test.c
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index d871cdd..492431c 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -126,3 +126,50 @@ int fdtdec_get_is_enabled(const void *blob, int node, int default_val);
-  * if not.
-  */
- int fdtdec_check_fdt(void);
+diff --git a/lib/Makefile b/lib/Makefile
+index 35ba7ff..b938549 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -39,6 +39,7 @@ COBJS-y += crc32.o
+ COBJS-y += display_options.o
+ COBJS-y += errno.o
+ COBJS-$(CONFIG_OF_CONTROL) += fdtdec.o
++COBJS-$(CONFIG_TEST_FDTDEC) += fdtdec_test.o
+ COBJS-$(CONFIG_GZIP) += gunzip.o
+ COBJS-y += hashtable.o
+ COBJS-$(CONFIG_LMB) += lmb.o
+diff --git a/lib/fdtdec_test.c b/lib/fdtdec_test.c
+new file mode 100644
+index 0000000..497be8e
+--- /dev/null
++++ b/lib/fdtdec_test.c
+@@ -0,0 +1,226 @@
++/*
++ * Some very basic tests for fdtdec, accessed through test_fdtdec command.
++ * They are easiest to use with sandbox.
++ *
++ * Copyright (c) 2011 The Chromium OS Authors.
++ * See file CREDITS for list of people who contributed to this
++ * project.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
++ */
++
++#include <common.h>
++#include <fdtdec.h>
++#include <libfdt.h>
++#include <malloc.h>
++#include <os.h>
++
++/* The size of our test fdt blob */
++#define FDT_SIZE	(16 * 1024)
 +
 +/**
-+ * Find the nodes for a peripheral and return a list of them in the correct
-+ * order. This is used to enumerate all the peripherals of a certain type.
++ * Check if an operation failed, and if so, print an error
 + *
-+ * To use this, optionally set up a /aliases node with alias properties for
-+ * a peripheral. For example, for usb you could have:
++ * @param oper_name	Name of operation
++ * @param err		Error code to check
 + *
-+ * aliases {
-+ *		usb0 = "/ehci@c5008000";
-+ *		usb1 = "/ehci@c5000000";
-+ * };
-+ *
-+ * Pass "usb" as the name to this function and will return a list of two
-+ * nodes offsets: /ehci@c5008000 and ehci@c5000000.
-+ *
-+ * All nodes returned will match the compatible ID, as it is assumed that
-+ * all peripherals use the same driver.
-+ *
-+ * If no alias node is found, then the node list will be returned in the
-+ * order found in the fdt. If the aliases mention a node which doesn't
-+ * exist, then this will be ignored. If nodes are found with no aliases,
-+ * they will be added in any order.
-+ *
-+ * If there is a gap in the aliases, then this function return a 0 node at
-+ * that position. The return value will also count these gaps.
-+ *
-+ * This function checks node properties and will not return nodes which are
-+ * marked disabled (status = "disabled").
-+ *
-+ * @param blob		FDT blob to use
-+ * @param name		Root name of alias to search for
-+ * @param id		Compatible ID to look for
-+ * @param node_list	Place to put list of found nodes
-+ * @param maxcount	Maximum number of nodes to find
-+ * @return number of nodes found on success, FTD_ERR_... on error
++ * @return 0 if ok, -1 if there was an error
 + */
-+int fdtdec_find_aliases_for_id(const void *blob, const char *name,
-+			enum fdt_compat_id id, int *node_list, int maxcount);
++static int fdt_checkerr(const char *oper_name, int err)
++{
++	if (err) {
++		printf("%s: %s: %s\n", __func__, oper_name, fdt_strerror(err));
++		return -1;
++	}
++
++	return 0;
++}
++
++/**
++ * Check the result of an operation and if incorrect, print an error
++ *
++ * @param oper_name	Name of operation
++ * @param expected	Expected value
++ * @param value		Actual value
++ *
++ * @return 0 if ok, -1 if there was an error
++ */
++static int checkval(const char *oper_name, int expected, int value)
++{
++	if (expected != value) {
++		printf("%s: %s: expected %d, but returned %d\n", __func__,
++		       oper_name, expected, value);
++		return -1;
++	}
++
++	return 0;
++}
++
++#define CHECK(op)	if (fdt_checkerr(#op, op)) return -1
++#define CHECKVAL(op, expected)	\
++	if (checkval(#op, expected, op)) \
++		return -1
++#define CHECKOK(op)	CHECKVAL(op, 0)
++
++/* maximum number of nodes / aliases to generate */
++#define MAX_NODES	20
 +
 +/*
-+ * Get the name for a compatible ID
++ * Make a test fdt
 + *
-+ * @param id		Compatible ID to look for
-+ * @return compatible string for that id
++ * @param fdt		Device tree pointer
++ * @param size		Size of device tree blob
++ * @param aliases	Specifies alias assignments. Format is a list of items
++ *			separated by space. Items are #a where
++ *				# is the alias number
++ *				a is the node to point to
++ * @param nodes		Specifies nodes to generate (a=0, b=1), upper case
++ *			means to create a disabled node
 + */
-+const char *fdtdec_get_compatible(enum fdt_compat_id id);
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 0f87163..55d5bdf 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -35,6 +35,13 @@ DECLARE_GLOBAL_DATA_PTR;
- static const char * const compat_names[COMPAT_COUNT] = {
- };
- 
-+const char *fdtdec_get_compatible(enum fdt_compat_id id)
++static int make_fdt(void *fdt, int size, const char *aliases,
++		    const char *nodes)
 +{
-+	/* We allow reading of the 'unknown' ID for testing purposes */
-+	assert(id >= 0 && id < COMPAT_COUNT);
-+	return compat_names[id];
++	char name[20], value[20];
++	const char *s;
++	int fd;
++
++	CHECK(fdt_create(fdt, size));
++	CHECK(fdt_finish_reservemap(fdt));
++	CHECK(fdt_begin_node(fdt, ""));
++
++	CHECK(fdt_begin_node(fdt, "aliases"));
++	for (s = aliases; *s;) {
++		sprintf(name, "i2c%c", *s);
++		sprintf(value, "/i2c%d@0", s[1] - 'a');
++		CHECK(fdt_property_string(fdt, name, value));
++		s += 2 + (s[2] != '\0');
++	}
++	CHECK(fdt_end_node(fdt));
++
++	for (s = nodes; *s; s++) {
++		sprintf(value, "i2c%d@0", (*s & 0xdf) - 'A');
++		CHECK(fdt_begin_node(fdt, value));
++		CHECK(fdt_property_string(fdt, "compatible",
++			fdtdec_get_compatible(COMPAT_UNKNOWN)));
++		if (*s <= 'Z')
++			CHECK(fdt_property_string(fdt, "status", "disabled"));
++		CHECK(fdt_end_node(fdt));
++	}
++
++	CHECK(fdt_end_node(fdt));
++	CHECK(fdt_finish(fdt));
++	CHECK(fdt_pack(fdt));
++#if defined(DEBUG) && defined(CONFIG_SANDBOX)
++	fd = os_open("/tmp/fdtdec-text.dtb", OS_O_CREAT | OS_O_WRONLY);
++	if (fd == -1) {
++		printf("Could not open .dtb file to write\n");
++		return -1;
++	}
++	os_write(fd, fdt, size);
++	os_close(fd);
++#endif
++	return 0;
 +}
 +
- /**
-  * Look in the FDT for an alias with the given name and return its node.
-  *
-@@ -132,6 +139,115 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 	return err ? -FDT_ERR_NOTFOUND : node;
- }
- 
-+/* TODO: Can we tighten this code up a little? */
-+int fdtdec_find_aliases_for_id(const void *blob, const char *name,
-+			enum fdt_compat_id id, int *node_list, int maxcount)
++static int run_test(const char *aliases, const char *nodes, const char *expect)
 +{
-+	int name_len = strlen(name);
-+	int nodes[maxcount];
-+	int num_found = 0;
-+	int offset, node;
-+	int alias_node;
-+	int count;
-+	int i, j;
++	int list[MAX_NODES];
++	const char *s;
++	void *blob;
++	int i;
 +
-+	/* find the alias node if present */
-+	alias_node = fdt_path_offset(blob, "/aliases");
++	blob = malloc(FDT_SIZE);
++	if (!blob) {
++		printf("%s: out of memory\n", __func__);
++		return 1;
++	}
++
++	printf("aliases=%s, nodes=%s, expect=%s: ", aliases, nodes, expect);
++	CHECKVAL(make_fdt(blob, FDT_SIZE, aliases, nodes), 0);
++	CHECKVAL(fdtdec_find_aliases_for_id(blob, "i2c",
++			COMPAT_UNKNOWN,
++			list, ARRAY_SIZE(list)), strlen(expect));
++
++	/* Check we got the right ones */
++	for (i = 0, s = expect; *s; s++, i++) {
++		int want = *s;
++		const char *name;
++		int got = ' ';
++
++		name = list[i] ? fdt_get_name(blob, list[i], NULL) : NULL;
++		if (name)
++			got = name[3] + 'a' - '0';
++
++		if (got != want) {
++			printf("Position %d: Expected '%c', got '%c' ('%s')\n",
++			       i, want, got, name);
++			return 1;
++		}
++	}
++
++	printf("pass\n");
++	return 0;
++}
++
++static int do_test_fdtdec(cmd_tbl_t *cmdtp, int flag, int argc,
++			  char * const argv[])
++{
++	/* basic tests */
++	CHECKOK(run_test("", "", ""));
++	CHECKOK(run_test("1e 3d", "", ""));
 +
 +	/*
-+	 * start with nothing, and we can assume that the root node can't
-+	 * match
++	 * 'a' represents 0, 'b' represents 1, etc.
++	 * The first character is the alias number, the second is the node
++	 * number. So the params mean:
++	 * 0a 1b	: point alias 0 to node 0 (a), alias 1 to node 1(b)
++	 * ab		: to create nodes 0 and 1 (a and b)
++	 * ab		: we expect the function to return two nodes, in
++	 *		  the order 0, 1
 +	 */
-+	memset(nodes, '\0', sizeof(nodes));
++	CHECKOK(run_test("0a 1b", "ab", "ab"));
 +
-+	/* First find all the compatible nodes */
-+	for (node = count = 0; node >= 0 && count < maxcount;) {
-+		node = fdtdec_next_compatible(blob, node, id);
-+		if (node >= 0)
-+			nodes[count++] = node;
-+	}
-+	if (node >= 0)
-+		debug("%s: warning: maxcount exceeded with alias '%s'\n",
-+		       __func__, name);
++	CHECKOK(run_test("0a 1c", "ab", "ab"));
++	CHECKOK(run_test("1c", "ab", "ab"));
++	CHECKOK(run_test("1b", "ab", "ab"));
++	CHECKOK(run_test("0b", "ab", "ba"));
++	CHECKOK(run_test("0b 2d", "dbc", "bcd"));
++	CHECKOK(run_test("0d 3a 1c 2b", "dbac", "dcba"));
 +
-+	/* Now find all the aliases */
-+	memset(node_list, '\0', sizeof(*node_list) * maxcount);
++	/* things with holes */
++	CHECKOK(run_test("1b 3d", "dbc", "cb d"));
++	CHECKOK(run_test("1e 3d", "dbc", "bc d"));
 +
-+	for (offset = fdt_first_property_offset(blob, alias_node);
-+			offset > 0;
-+			offset = fdt_next_property_offset(blob, offset)) {
-+		const struct fdt_property *prop;
-+		const char *path;
-+		int number;
-+		int found;
++	/* no aliases */
++	CHECKOK(run_test("", "dbac", "dbac"));
 +
-+		node = 0;
-+		prop = fdt_get_property_by_offset(blob, offset, NULL);
-+		path = fdt_string(blob, fdt32_to_cpu(prop->nameoff));
-+		if (prop->len && 0 == strncmp(path, name, name_len))
-+			node = fdt_path_offset(blob, prop->data);
-+		if (node <= 0)
-+			continue;
++	/* disabled nodes */
++	CHECKOK(run_test("0d 3a 1c 2b", "dBac", "dc a"));
++	CHECKOK(run_test("0b 2d", "DBc", "c"));
++	CHECKOK(run_test("0b 4d 2c", "DBc", "  c"));
 +
-+		/* Get the alias number */
-+		number = simple_strtoul(path + name_len, NULL, 10);
-+		if (number < 0 || number >= maxcount) {
-+			debug("%s: warning: alias '%s' is out of range\n",
-+			       __func__, path);
-+			continue;
-+		}
++	/* conflicting aliases - first one gets it */
++	CHECKOK(run_test("2a 1a 0a", "a", "  a"));
++	CHECKOK(run_test("0a 1a 2a", "a", "a"));
 +
-+		/* Make sure the node we found is actually in our list! */
-+		found = -1;
-+		for (j = 0; j < count; j++)
-+			if (nodes[j] == node) {
-+				found = j;
-+				break;
-+			}
-+
-+		if (found == -1) {
-+			debug("%s: warning: alias '%s' points to a node "
-+				"'%s' that is missing or is not compatible "
-+				" with '%s'\n", __func__, path,
-+				fdt_get_name(blob, node, NULL),
-+			       compat_names[id]);
-+			continue;
-+		}
-+
-+		/*
-+		 * Add this node to our list in the right place, and mark
-+		 * it as done.
-+		 */
-+		if (fdtdec_get_is_enabled(blob, node)) {
-+			node_list[number] = node;
-+			if (number >= num_found)
-+				num_found = number + 1;
-+		}
-+		nodes[j] = 0;
-+	}
-+
-+	/* Add any nodes not mentioned by an alias */
-+	for (i = j = 0; i < maxcount; i++) {
-+		if (!node_list[i]) {
-+			for (; j < maxcount; j++)
-+				if (nodes[j] &&
-+					fdtdec_get_is_enabled(blob, nodes[j]))
-+					break;
-+
-+			/* Have we run out of nodes to add? */
-+			if (j == maxcount)
-+				break;
-+
-+			assert(!node_list[i]);
-+			node_list[i] = nodes[j++];
-+			if (i >= num_found)
-+				num_found = i + 1;
-+		}
-+	}
-+
-+	return num_found;
++	printf("Test passed\n");
++	return 0;
 +}
 +
- /*
-  * This function is a little odd in that it accesses global data. At some
-  * point if the architecture board.c files merge this will make more sense.
++U_BOOT_CMD(
++	test_fdtdec, 3, 1, do_test_fdtdec,
++	"test_fdtdec",
++	"Run tests for fdtdec library");
 -- 
 1.7.7.3
