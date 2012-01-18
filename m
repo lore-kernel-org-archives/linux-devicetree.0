@@ -1,123 +1,94 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] ARM: introducing DT topology
-Date: Wed, 18 Jan 2012 18:04:53 +0000
-Message-ID: <20120118180453.GN1068@n2100.arm.linux.org.uk>
-References: <1326897408-11204-1-git-send-email-lorenzo.pieralisi@arm.com>
- <20120118162423.GK1068@n2100.arm.linux.org.uk>
- <20120118175028.GD9691@e102568-lin.cambridge.arm.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: Pinmux bindings proposal
+Date: Wed, 18 Jan 2012 11:00:38 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1780DAAE7C@HQMAIL01.nvidia.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+ <20120114070858.GG1810@S2101-09.ap.freescale.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF17801D22C7@HQMAIL01.nvidia.com>
+ <20120118033209.GB563@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120118175028.GD9691-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120118033209.GB563@S2101-09.ap.freescale.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2012 at 05:50:28PM +0000, Lorenzo Pieralisi wrote:
-> I agree with you Russell, that's 100% valid on a single cluster. But on
-> a multi-cluster (eg dual-cluster) the MPIDR might be wired like this:
-> 
-> MPIDR[15:8] - cluster id
-> MPIDR[7:0] - core id
-> 
-> no hyperthreading
-> 
-> * CLUSTER 0 *
->                        MPIDR[23:16]   MPIDR[15:8]    MPIDR[7:0]
-> HWCPU0: MPIDR=0x0          0x0            0x0           0x0
-> HWCPU1: MPIDR=0x1          0x0            0x0           0x1 
-> 
-> * CLUSTER 1 *
-> 
-> HWCPU2: MPIDR=0x100        0x0            0x1           0x0               
-> HWCPU3: MPIDR=0x101        0x0            0x1           0x1  
-> 
-> MPIDR is not a sequential index anymore, that's what I am going on about. 
+Shawn Guo wrote at Tuesday, January 17, 2012 8:32 PM:
+> On Tue, Jan 17, 2012 at 10:47:14AM -0800, Stephen Warren wrote:
+> > Shawn Guo wrote at Saturday, January 14, 2012 12:09 AM:
+> > > On Fri, Jan 13, 2012 at 12:39:42PM -0800, Stephen Warren wrote:
+...
+> > > >                 /*
+> > > >                  * The actual definition of the complete state of the
+> > > >                  * pinmux as required by some driver.
+> > > >                  *
+> > > >                  * These can be either directly in the device node, or
+> > > >                  * somewhere in tegra20.dtsi in order to provide pre-
+> > > >                  * selected/common configurations. Hence, they're referred
+> > > >                  * to by phandle above.
+> > > >                  */
+> > > >                 pmx_sdhci_active: {
+> > > >                         /*
+> > > >                          * Pin mux settings. Mandatory?
+> > > >                          * Not mandatory if the 1:1 mentioned above is
+> > > >                          * extended to 1:n.
+> > > >                          *
+> > > >                          * Format is <&pmx_controller_phandle muxable_entity_id
+> > > >                          * selected_function>.
+> > > >                          *
+> > > >                          * The pmx phandle is required since there may be more
+> > > >                          * than one pinmux controller in the system. Even if
+> > > >                          * this node is inside the pinmux controller itself, I
+> > > >                          * think it's simpler to just always have this field
+> > > >                          * present in the binding for consistency.
+> > > >                          *
+> > >
+> > > I prefer to just put such nodes inside pinctrl controller itself and
+> > > drop those phandles.
+> >
+> > My rationale here:
+> >
+> > Forcing those nodes to be inside the controller node forces us to store
+> > any board-specific custom configurations or overrides in the controller
+> > node too; I'd simply prefer the flexibility to put them anywhere.
+>
+> Hmm, this type of flexibility does not make too much point to me.  On
+> the contrary, it's good to have a centralized place for these nodes,
+> so that they can be well organized and people can find them easily.
 
-And that's no problem to the boot code.  Assuming cluster 0 CPU 0 is the
-boot CPU, then:
+I still would really rather have the flexibility to just put the nodes
+anywhere.
 
-cpu_logical_map() would need to be initialized as {0x000, 0x001, 0x100,
-0x101}.
+However, I don't think we lose any functionality by forcing the nodes
+to be inside the pin controller's node. And as you say, we do get to
+remove the phandle from the mux and config properties then too, which
+very marginally simplifies parsing.
 
-> And yes, code like cpu_resume, that relies on MPIDR[7:0] to be unique
-> needs patching, since that just takes into account the first affinity
-> level, which can have same values for different CPUs in the system if
-> they belong to different clusters.
+One other concern I had was a device that needed to configure the pin
+mux on two different pin controllers (think the main SoC and some complex
+chip attached to one of the SoC's external busses). Ideally, there'd be
+a Linux device for each end of the bus, and each would configure the
+respective chip's pinmux. However, I can certainly foresee cases where
+there's only a Linux device for the main SoC, and it'd need to configure
+both chips' pinmux. Still, I think we can deal with that easily enough,
+since that device's pinctrl property can simply use the 1:n feature, and
+have multiple entries pointing at both chip's pinctrl device:
 
-That's going to be very painful to deal with, because of the restricted
-environment we have there.  I guess we need to build some kind of
-reverse table in memory somewhere which contains MPIDR mask+MPIDR value+
-CPU array index.  Not nice at all.
+foo@c8000200 {
+   ...
+   pinctrl = <&pinmux_soc_xxx> <&pinmux_otherchip_xxx>
+             <&pinmux_soc_xxx_suspend> <&pinmux_otherchip_xxx_suspend>;
+   pinctrl-entries = <2 2>;
+   pinctrl-names = "active", "suspend";
+};
 
-> > > This hypothesis is not valid when the concept of cluster is introduced since
-> > > the MPIDR cannot be represented as a single index and interrupt controller
-> > > CPU interfaces might be wired with a numbering scheme following per-SoC
-> > > design parameters which cannot be extrapolated easily through generic functions
-> > > by the primary CPU.
-> > 
-> > So what you're saying is that the GIC CPU index may not be the CPU number
-> > given by MPIDR?
-> 
-> Yes, that's correct. Taking the same example as above:
-> 
-> MPIDR[15:8] - cluster id
-> MPIDR[7:0] - core id
-> 
-> no hyperthreading
-> 
-> * CLUSTER 0 *
->                          MPIDR[15:8]    MPIDR[7:0]  GIC-CPU-ID
-> 		       
-> HWCPU0: MPIDR=0x0            0x0           0x0          0x0
-> HWCPU1: MPIDR=0x1            0x0           0x1          0x1 
-> 
-> * CLUSTER 1 *
-> 
-> HWCPU2: MPIDR=0x100          0x1           0x0          0x2     
-> HWCPU3: MPIDR=0x101          0x1           0x1          0x3
-> 
-> There is just one GIC distributor shared across all clusters.
+So, I can live with requiring the pin configuration nodes to be underneath
+the relevant pin controller's node, and removing the phandle from the
+mux and config properties in the pin configuration nodes.
 
-Right, so what we need is a kernel logical CPU id to GIC id mapping,
-which you have in your patch.  You call it cpuif_logical_map() but
-as it's specific to GIC, I wonder if it would be better called
-gic_logical_map().
-
-> > > Furthermore, relying on the MPIDR to be wired according to real topology
-> > > levels might turn out to be an unreliable solution, hence a SW
-> > > representation is needed to override possibly incorrect MPIDR register
-> > > values.
-> > 
-> > This sounds like you're saying that the contents of MPIDR might be buggy
-> > sometime in the future?  Do we actually know of any situations where the
-> > information in there is currently wrong (outside of the development lab)?
-> > If not, it's not something we should cater for until it's actually happened,
-> > and then the pain should be felt by those silly enough to allow the chip
-> > to go out the door.
-> 
-> I share your view Russell. Having said that: MPIDR is IMPLEMENTATION DEFINED.
-
-I'll assume you mean that it's left to the implementation to set MPIDR
-appropriately, and you're expecting implementations to make mistakes
-with it.
-
-Tell me: would you tolerate people making mistakes when they implement
-an ARM CPU which results in the ISA almost being followed except some
-op-codes having bits switched?
-
-If not, then why would you tolerate wrong MPIDR values?  That's precisely
-the same kind of bug.  And if we go adding work-arounds now, before
-there's a problem, there will be no incentive for people to fix the
-hardware bugs during their initial implementation testing.
+-- 
+nvpublic
