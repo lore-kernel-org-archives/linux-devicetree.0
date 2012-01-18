@@ -1,51 +1,233 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Pinmux bindings proposal
-Date: Wed, 18 Jan 2012 12:47:18 +0800
-Message-ID: <20120118044716.GD563@S2101-09.ap.freescale.net>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885091DEA@039-SN2MPN1-013.039d.mgd.msft.net>
- <20120117082334.GA31295@S2101-09.ap.freescale.net>
- <7FE21149F4667147B645348EC6057885092D56@039-SN2MPN1-013.039d.mgd.msft.net>
- <20120117141322.GA31687@S2101-09.ap.freescale.net>
- <7FE21149F4667147B645348EC6057885093AD9@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Ramneek Mehresh <ramneek.mehresh@freescale.com>
+Subject: [PATCH] powerpc/85xx:Add usb controller version info
+Date: Wed, 18 Jan 2012 11:10:48 +0530
+Message-ID: <1326865248-3333-1-git-send-email-ramneek.mehresh@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7FE21149F4667147B645348EC6057885093AD9-RL0Hj/+nBVDYdknt8GnhQq4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dong Aisheng-B29396 <B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree-discuss@lists.ozlabs.org, Ramneek Mehresh <ramneek.mehresh@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2012 at 03:44:59AM +0000, Dong Aisheng-B29396 wrote:
-...
-> > > The real problem is do we need to support individual pin mux Or still
-> > > using virtual pin group?
-> > > For the way Stephen proposed, we can only support individual pin mux
-> > > Since IMX pins are not grouped together in HW.
-> > >
-> > I do not see any problem here.  If you look at the first column of 'mux'
-> > property of node pinmux-usdhc1, it is a group of pins for usdhc1.
-> > Isn't it one virtual pin group for usdhc1?
-> > 
-> If we treat the whole pins in 'mux' property as a group,
-> There may be potential inconsistent issue since Tegra will treat each
-> One in the list of 'mux' as a group.
-> And it would be a problem for pinctrl core to parse it in a standard way.
-> 
-Based on my understanding, the 'group' given by 'mux' property may be
-a group of pin/group defined by hardware, or mixing of the two.
+Add usb controller version info for the following:
+MPC8536, P1010, P1020, P1021, P1022, P1023, P2020, P2041,
+P3041, P3060, P5020
 
+Signed-off-by: Ramneek Mehresh <ramneek.mehresh@freescale.com>
+---
+Applies on git://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git
+(branch next)
+
+ arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi |    4 ++--
+ arch/powerpc/boot/dts/fsl/p1010si-post.dtsi   |    3 +++
+ arch/powerpc/boot/dts/fsl/p1020si-post.dtsi   |    6 ++++++
+ arch/powerpc/boot/dts/fsl/p1021si-post.dtsi   |    3 +++
+ arch/powerpc/boot/dts/fsl/p1022si-post.dtsi   |    6 ++++++
+ arch/powerpc/boot/dts/fsl/p1023si-post.dtsi   |    3 +++
+ arch/powerpc/boot/dts/fsl/p2020si-post.dtsi   |    3 +++
+ arch/powerpc/boot/dts/fsl/p2041si-post.dtsi   |    2 ++
+ arch/powerpc/boot/dts/fsl/p3041si-post.dtsi   |    2 ++
+ arch/powerpc/boot/dts/fsl/p3060si-post.dtsi   |    6 ++++++
+ arch/powerpc/boot/dts/fsl/p5020si-post.dtsi   |    2 ++
+ 11 files changed, 38 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
+index 89af626..88026e5 100644
+--- a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
+@@ -202,7 +202,7 @@
+ /include/ "pq3-etsec1-timer-0.dtsi"
+ 
+ 	usb@22000 {
+-		compatible = "fsl,mpc8536-usb2-mph", "fsl-usb2-mph";
++		compatible = "fsl-usb2-mph-v1.2", "fsl,mpc8536-usb2-mph", "fsl-usb2-mph";
+ 		reg = <0x22000 0x1000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -210,7 +210,7 @@
+ 	};
+ 
+ 	usb@23000 {
+-		compatible = "fsl,mpc8536-usb2-mph", "fsl-usb2-mph";
++		compatible = "fsl-usb2-mph-v1.2", "fsl,mpc8536-usb2-mph", "fsl-usb2-mph";
+ 		reg = <0x23000 0x1000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
+index bd9e163..8245931 100644
+--- a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
+@@ -156,6 +156,9 @@
+ 
+ /include/ "pq3-dma-0.dtsi"
+ /include/ "pq3-usb2-dr-0.dtsi"
++	usb@22000 {
++		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
++	};
+ /include/ "pq3-esdhc-0.dtsi"
+ 	sdhc@2e000 {
+ 		fsl,sdhci-auto-cmd12;
+diff --git a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+index fc924c5..10c75ca 100644
+--- a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
+@@ -142,7 +142,13 @@
+ 
+ /include/ "pq3-dma-0.dtsi"
+ /include/ "pq3-usb2-dr-0.dtsi"
++	usb@22000 {
++		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
++	};
+ /include/ "pq3-usb2-dr-1.dtsi"
++	usb@23000 {
++		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
++	};
+ 
+ /include/ "pq3-esdhc-0.dtsi"
+ /include/ "pq3-sec3.3-0.dtsi"
+diff --git a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+index 38ba54d..f157ffd 100644
+--- a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
+@@ -142,6 +142,9 @@
+ 
+ /include/ "pq3-dma-0.dtsi"
+ /include/ "pq3-usb2-dr-0.dtsi"
++	usb@22000 {
++		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
++	};
+ 
+ /include/ "pq3-esdhc-0.dtsi"
+ /include/ "pq3-sec3.3-0.dtsi"
+diff --git a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+index 16239b1..acb933e 100644
+--- a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
+@@ -199,7 +199,13 @@
+ 
+ /include/ "pq3-dma-0.dtsi"
+ /include/ "pq3-usb2-dr-0.dtsi"
++	usb@22000 {
++		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
++	};
+ /include/ "pq3-usb2-dr-1.dtsi"
++	usb@23000 {
++		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
++	};
+ 
+ /include/ "pq3-esdhc-0.dtsi"
+ 	sdhc@2e000 {
+diff --git a/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
+index b06bb4c..941fa15 100644
+--- a/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
+@@ -142,6 +142,9 @@
+ 
+ /include/ "pq3-dma-0.dtsi"
+ /include/ "pq3-usb2-dr-0.dtsi"
++	usb@22000 {
++		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
++	};
+ 
+ 	crypto: crypto@300000 {
+ 		compatible = "fsl,sec-v4.2", "fsl,sec-v4.0";
+diff --git a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
+index c041050..6772299 100644
+--- a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
+@@ -171,6 +171,9 @@
+ 
+ /include/ "pq3-dma-0.dtsi"
+ /include/ "pq3-usb2-dr-0.dtsi"
++	usb@22000 {
++		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
++	};
+ /include/ "pq3-etsec1-0.dtsi"
+ /include/ "pq3-etsec1-timer-0.dtsi"
+ 
+diff --git a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+index 234a399..531eab8 100644
+--- a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+@@ -309,12 +309,14 @@
+ /include/ "qoriq-gpio-0.dtsi"
+ /include/ "qoriq-usb2-mph-0.dtsi"
+ 		usb0: usb@210000 {
++			compatible = "fsl-usb2-mph-v1.6", "fsl,mpc85xx-usb2-mph", "fsl-usb2-mph";
+ 			phy_type = "utmi";
+ 			port0;
+ 		};
+ 
+ /include/ "qoriq-usb2-dr-0.dtsi"
+ 		usb1: usb@211000 {
++			compatible = "fsl-usb2-dr-v1.6", "fsl,mpc85xx-usb2-dr", "fsl-usb2-dr";
+ 			dr_mode = "host";
+ 			phy_type = "utmi";
+ 		};
+diff --git a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+index d41d08d..af4ebc8 100644
+--- a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+@@ -336,12 +336,14 @@
+ /include/ "qoriq-gpio-0.dtsi"
+ /include/ "qoriq-usb2-mph-0.dtsi"
+ 		usb0: usb@210000 {
++			compatible = "fsl-usb2-mph-v1.6", "fsl-usb2-mph";
+ 			phy_type = "utmi";
+ 			port0;
+ 		};
+ 
+ /include/ "qoriq-usb2-dr-0.dtsi"
+ 		usb1: usb@211000 {
++			compatible = "fsl-usb2-dr-v1.6", "fsl,mpc85xx-usb2-dr", "fsl-usb2-dr";
+ 			dr_mode = "host";
+ 			phy_type = "utmi";
+ 		};
+diff --git a/arch/powerpc/boot/dts/fsl/p3060si-post.dtsi b/arch/powerpc/boot/dts/fsl/p3060si-post.dtsi
+index a63edd1..b3e5692 100644
+--- a/arch/powerpc/boot/dts/fsl/p3060si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p3060si-post.dtsi
+@@ -291,6 +291,12 @@
+ /include/ "qoriq-duart-1.dtsi"
+ /include/ "qoriq-gpio-0.dtsi"
+ /include/ "qoriq-usb2-mph-0.dtsi"
++	usb@210000 {
++		compatible = "fsl-usb2-mph-v2.2", "fsl,mpc85xx-usb2-mph", "fsl-usb2-mph";
++	};
+ /include/ "qoriq-usb2-dr-0.dtsi"
++	usb@211000 {
++		compatible = "fsl-usb2-dr-v2.2", "fsl,mpc85xx-usb2-dr", "fsl-usb2-dr";
++	};
+ /include/ "qoriq-sec4.1-0.dtsi"
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
+index 914074b..64b6abe 100644
+--- a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
+@@ -339,12 +339,14 @@
+ /include/ "qoriq-gpio-0.dtsi"
+ /include/ "qoriq-usb2-mph-0.dtsi"
+ 		usb0: usb@210000 {
++			compatible = "fsl-usb2-mph-v1.6", "fsl,mpc85xx-usb2-mph", "fsl-usb2-mph";
+ 			phy_type = "utmi";
+ 			port0;
+ 		};
+ 
+ /include/ "qoriq-usb2-dr-0.dtsi"
+ 		usb1: usb@211000 {
++			compatible = "fsl-usb2-dr-v1.6", "fsl,mpc85xx-usb2-dr", "fsl-usb2-dr";
+ 			dr_mode = "host";
+ 			phy_type = "utmi";
+ 		};
 -- 
-Regards,
-Shawn
+1.7.1
