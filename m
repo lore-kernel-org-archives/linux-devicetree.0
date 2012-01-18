@@ -1,47 +1,85 @@
 From: Stephen Warren <swarren@nvidia.com>
 Subject: RE: Pinmux bindings proposal
-Date: Wed, 18 Jan 2012 11:52:27 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1780DAAEB8@HQMAIL01.nvidia.com>
+Date: Wed, 18 Jan 2012 12:02:21 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1780DAAEBB@HQMAIL01.nvidia.com>
 References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <CAJuYYwSNuMAcjaTNeCq=LmeP8KrvGNjcn1FP6VY0NarEhkY_aA@mail.gmail.com>
+ <20120116182808.GG4223@ponder.secretlab.ca>
+ <20120118141329.GA22818@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwSNuMAcjaTNeCq=LmeP8KrvGNjcn1FP6VY0NarEhkY_aA@mail.gmail.com>
+In-Reply-To: <20120118141329.GA22818@atomide.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
+To: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>
 Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Thomas Abraham wrote at Wednesday, January 18, 2012 5:16 AM:
-> On 14 January 2012 02:09, Stephen Warren <swarren@nvidia.com> wrote:
-> > I thought a bit more about pinmux DT bindings. I came up with something
-> > that I like well enough, and is pretty similar to the binding that Dong
-> > posted recently. I think it'll work for both Tegra's and IMX's needs.
-> > Please take a look!
-...
-> The pinmux_get() function checks if there is an active user of the
-> pinmux and declines requests if the pinmux has been taken. With the dt
-> bindings that you have listed, can such a check be still enforced.
+Tony Lindgren wrote at Wednesday, January 18, 2012 7:13 AM:
+> * Grant Likely <grant.likely@secretlab.ca> [120116 09:55]:
+> > On Fri, Jan 13, 2012 at 12:39:42PM -0800, Stephen Warren wrote:
+> > >                 pinmux =
+> > >                         <"default" &pmx_sdhci_active>
+> > >                         <"suspend" &pmx_sdhci_suspend>;
+> > >
+> > >                 /* 1:n example: */
+> > >                 pinmux =
+> > >                         <"default" &pmx_sdhci_mux_a>
+> > >                         <"default" &pmx_sdhci_pincfg_a>
+> > >                         <"suspend" &pmx_sdhci_mux_a>
+> > >                         <"suspend" &pmx_sdhci_pincfg_a_suspend>;
+> >
+> >
+> > Yeah, don't do this.  Mixing phandle, string and cell values in a
+> > property gets messy and could become troublesome to parse.  I've
+> > backed away from it in the clk binding.
+> 
+> Yup, that's because the string is embedded directly into the mixed
+> mode array and will likely make the following data unaligned. That
+> means it's extremely flakey to parse, and will lead into horrible
+> errors if you have typos in the .dts file.. Tried that and gave up
+> on it.
+> 
+> I think I've found a way to avoid using names at all, assuming we set
+> each pin as a phandle for the drivers to use :)
 
-I believe so.
+I'd prefer not to do that for my platforms, for the reason Shawn points
+out in his reply to yours.
 
-I see these bindings as simply providing the data to populate the same
-pinmux mapping table that's currently used by the pinctrl subsystem.
-therefore, there are no changes to the operation of the pinctrl subsystem
-(beyond a little extra code to parse the map from DT instead of receiving
-a static table from a board file), and no changes to the way drivers
-use the pinctrl APIs. Hence, all that error-checking will still operate
-as-is.
+However, I believe the bindings I proposed are flexible enough to allow
+you to do exactly this for your platforms without requiring that everyone
+do it.
 
-> Also, will it be possible to support runtime pinmuxing with the above
-> listed dt bindings?
+Recall my proposal was:
 
-Yes, the pinctrl/pinctrl-names properties allow defining a set of names
-states, just like the mapping table does, and a driver can get one,
-release it, then get a different named state, etc.
+pmx_sdhci_standby: pinctrl@0 {
+    /* Format is <&pmx_controller_phandle muxable_entity_id
+     * selected_function>.
+     */
+    mux =
+        <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
+        <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>;
+    config =
+        <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 1>
+        <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 1>
+        <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
+        <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
+        <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_SLEW_RATE 4>
+        <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_SLEW_RATE 8>;
+};
+
+(Note that I think we've agreed to remove the first cell above, &tegra_pmx,
+now by requiring such nodes exist as children of the pin controller.)
+
+My assertion is that the common pinmux bindings define that the
+Interpretation of muxable_entity_id is left up to the binding of the
+specific pin controller. Hence, I can says "it's an integer, and here
+is the list of valid values and what they mean", and you can say "it's
+a phandle, which must refer to one of the per-pin nodes defined by the
+pin controller".
+
+Does that work for you?
 
 -- 
 nvpublic
