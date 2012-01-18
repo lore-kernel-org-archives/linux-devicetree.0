@@ -1,56 +1,43 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 06/20] tegra: fdt: Add Tegra2x device tree file from
- kernel
-Date: Wed, 18 Jan 2012 15:24:17 -0700
-Message-ID: <4F174691.1040007@nvidia.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: Re: [PATCH v4 07/20] tegra: fdt: Add device tree file for
+ Tegra2 Seaboard from kernel
+Date: Wed, 18 Jan 2012 15:28:11 -0700
+Message-ID: <4F17477B.1030408@nvidia.com>
 References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
- <1326342789-5781-7-git-send-email-sjg@chromium.org>
+	<1326342789-5781-8-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326342789-5781-7-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1326342789-5781-8-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <TWarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
 List-Id: devicetree@vger.kernel.org
 
 On 01/11/2012 09:32 PM, Simon Glass wrote:
 > This was taken from commit b48c54e2 at:
 > git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
 > 
-> config.mk is updated to provide this file to boards through the
-> built-in mechanism:
-> 
-> /include/ ARCH_CPU_DTS
-> 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Simon Glass <sjg@chromium.org>
 
-> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-...
-> +	i2c@7000d000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "nvidia,tegra20-i2c";
-> +		reg = <0x7000D000 0x200>;
-> +		interrupts = < 85 >;
-> +	};
+> diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
 
-This is slightly out-of-date now; in next-20120118, that node's
-compatible flag is nvidia,tegra20-i2c-dvc. The HW register layout is
-somewhat different for this I2C controller, and the different compatible
-flag is how the driver this.
-
-Still, you can always apply that fix in a later patch before you add I2C
-support.
+This is also somewhat out-of-date w.r.t. the latest in kernel tag
+next-20120118. It's probably not too much of an issue, so this is
+probably fine to apply as-is. U-Boot may benefit from the addition of
+many status="disable" properties, and clock-frequency properties for the
+I2C nodes. It'd be good to keep U-Boot up-to-date with the kernel as
+much as possible. Of course, there are ongoing changes being queued for
+the kernel as work is done too...
 
 -- 
 nvpublic
