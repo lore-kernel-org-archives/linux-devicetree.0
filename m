@@ -1,33 +1,35 @@
 From: Vaibhav Hiremath <hvaibhav@ti.com>
-Subject: [PATCH] arm/dts: Add support for TI AM3517/05 EVM board
-Date: Wed, 18 Jan 2012 12:29:46 +0530
-Message-ID: <1326869986-18517-1-git-send-email-hvaibhav@ti.com>
+Subject: [PATCH 2/2] arm/dts: Add support for TI AM335x EVM board
+Date: Wed, 18 Jan 2012 12:43:59 +0530
+Message-ID: <1326870839-19951-2-git-send-email-hvaibhav@ti.com>
+References: <1326870839-19951-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1326870839-19951-1-git-send-email-hvaibhav@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: devicetree-discuss@lists.ozlabs.org
 Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vaibhav Hiremath <hvaibhav@ti.com>, Benoit Cousson <b-cousson@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Add AM3517 EVM (AM3517/05) DTS file to use the omap3.dtsi SoC file,
-along with memory node and basic i2c information.
+Add AM335x EVM DTS file to use the omap3.dtsi SoC file,
+along with memory node and i2c information.
 
 Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
 Cc: Benoit Cousson <b-cousson@ti.com>
 Cc: Grant Likely <grant.likely@secretlab.ca>
 Cc: Tony Lindgren <tony@atomide.com>
 ---
- arch/arm/boot/dts/am3517-evm.dts |   32 ++++++++++++++++++++++++++++++++
- 1 files changed, 32 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/am3517-evm.dts
+ arch/arm/boot/dts/am335x-evm.dts |   39 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 39 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/am335x-evm.dts
 
-diff --git a/arch/arm/boot/dts/am3517-evm.dts b/arch/arm/boot/dts/am3517-evm.dts
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
 new file mode 100644
-index 0000000..474f760
+index 0000000..8cc877f
 --- /dev/null
-+++ b/arch/arm/boot/dts/am3517-evm.dts
-@@ -0,0 +1,32 @@
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -0,0 +1,39 @@
 +/*
 + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
 + *
@@ -40,13 +42,20 @@ index 0000000..474f760
 +/include/ "omap3.dtsi"
 +
 +/ {
-+	model = "TI AM3517 EVM (AM3517/05)";
-+	compatible = "ti,am3517-evm", "ti,omap3";
++	model = "TI AM335x EVM";
++	compatible = "ti,am335x-evm", "ti,am33xx", "ti,omap3";
 +
 +	memory {
 +		device_type = "memory";
 +		reg = <0x80000000 0x10000000>; /* 256 MB */
 +	};
++};
++
++&intc {
++	/*
++	 * AM33XX family of devices have 128 interrupts
++	 */
++	ti,intc-size = <128>;
 +};
 +
 +&i2c1 {
