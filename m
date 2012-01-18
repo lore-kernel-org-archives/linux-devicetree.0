@@ -1,78 +1,73 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Pinmux bindings proposal
-Date: Wed, 18 Jan 2012 08:29:43 -0800
-Message-ID: <20120118162943.GC22818@atomide.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <20120116182808.GG4223@ponder.secretlab.ca>
- <20120118141329.GA22818@atomide.com>
- <CAAQ0ZWTtYz3Lg7=Xz29m07j_k8yA95hn6cyk92SAJ4iGJRT_gw@mail.gmail.com>
- <20120118153256.GB22818@atomide.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH 4/5] ARM: gic: add cpuif topology description
+Date: Wed, 18 Jan 2012 17:17:46 +0000
+Message-ID: <20120118171746.GC9691@e102568-lin.cambridge.arm.com>
+References: <1326897408-11204-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1326897408-11204-5-git-send-email-lorenzo.pieralisi@arm.com>
+ <4F16EB24.4000701@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F16EB24.4000701@gmail.com>
 Content-Disposition: inline
-In-Reply-To: <20120118153256.GB22818-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Vincent Guittot <vincent.guittot@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-KiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPiBbMTIwMTE4IDA3OjAwXToKPiAqIFNo
-YXduIEd1byA8c2hhd24uZ3VvQGxpbmFyby5vcmc+IFsxMjAxMTggMDU6NTddOgo+ID4gT24gMTgg
-SmFudWFyeSAyMDEyIDIyOjEzLCBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPiB3cm90
-ZToKPiA+ID4gSGksCj4gPiA+Cj4gPiA+ICogR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2Vj
-cmV0bGFiLmNhPiBbMTIwMTE2IDA5OjU1XToKPiA+ID4+IE9uIEZyaSwgSmFuIDEzLCAyMDEyIGF0
-IDEyOjM5OjQyUE0gLTA4MDAsIFN0ZXBoZW4gV2FycmVuIHdyb3RlOgo+ID4gPj4gPiDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCBwaW5tdXggPQo+ID4gPj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCA8ImRlZmF1bHQiICZwbXhfc2RoY2lfYWN0aXZlPgo+ID4gPj4gPiDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8InN1c3BlbmQiICZwbXhfc2RoY2lfc3Vz
-cGVuZD47Cj4gPiA+PiA+Cj4gPiA+PiA+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC8qIDE6biBl
-eGFtcGxlOiAqLwo+ID4gPj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBwaW5tdXggPQo+ID4g
-Pj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8ImRlZmF1bHQiICZwbXhf
-c2RoY2lfbXV4X2E+Cj4gPiA+PiA+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IDwiZGVmYXVsdCIgJnBteF9zZGhjaV9waW5jZmdfYT4KPiA+ID4+ID4gwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgPCJzdXNwZW5kIiAmcG14X3NkaGNpX211eF9hPgo+ID4gPj4g
-PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8InN1c3BlbmQiICZwbXhfc2Ro
-Y2lfcGluY2ZnX2Ffc3VzcGVuZD47Cj4gPiA+Pgo+ID4gPj4KPiA+ID4+IFllYWgsIGRvbid0IGRv
-IHRoaXMuIMKgTWl4aW5nIHBoYW5kbGUsIHN0cmluZyBhbmQgY2VsbCB2YWx1ZXMgaW4gYQo+ID4g
-Pj4gcHJvcGVydHkgZ2V0cyBtZXNzeSBhbmQgY291bGQgYmVjb21lIHRyb3VibGVzb21lIHRvIHBh
-cnNlLiDCoEkndmUKPiA+ID4+IGJhY2tlZCBhd2F5IGZyb20gaXQgaW4gdGhlIGNsayBiaW5kaW5n
-Lgo+ID4gPgo+ID4gPiBZdXAsIHRoYXQncyBiZWNhdXNlIHRoZSBzdHJpbmcgaXMgZW1iZWRkZWQg
-ZGlyZWN0bHkgaW50byB0aGUgbWl4ZWQKPiA+ID4gbW9kZSBhcnJheSBhbmQgd2lsbCBsaWtlbHkg
-bWFrZSB0aGUgZm9sbG93aW5nIGRhdGEgdW5hbGlnbmVkLiBUaGF0Cj4gPiA+IG1lYW5zIGl0J3Mg
-ZXh0cmVtZWx5IGZsYWtleSB0byBwYXJzZSwgYW5kIHdpbGwgbGVhZCBpbnRvIGhvcnJpYmxlCj4g
-PiA+IGVycm9ycyBpZiB5b3UgaGF2ZSB0eXBvcyBpbiB0aGUgLmR0cyBmaWxlLi4gVHJpZWQgdGhh
-dCBhbmQgZ2F2ZSB1cAo+ID4gPiBvbiBpdC4KPiA+ID4KPiA+ID4gSSB0aGluayBJJ3ZlIGZvdW5k
-IGEgd2F5IHRvIGF2b2lkIHVzaW5nIG5hbWVzIGF0IGFsbCwgYXNzdW1pbmcgd2Ugc2V0Cj4gPiA+
-IGVhY2ggcGluIGFzIGEgcGhhbmRsZSBmb3IgdGhlIGRyaXZlcnMgdG8gdXNlIDopCj4gPiA+Cj4g
-PiBUaGUgcHJvYmxlbSB3aXRoIGRvaW5nIHRoYXQgaXMgd2Ugd2lsbCBoYXZlIHRvIHJlcHJlc2Vu
-dCBlYWNoIHBpbiBhcyBhCj4gPiBub2RlIGluIGRldmljZSB0cmVlLiAgRm9yIGlteDZxIGNhc2Us
-IHdlIGhhdmUgMTk3IHBpbnMuICBEb2luZyBzbyB3aWxsCj4gPiBibG9hdCB0aGUgZGV2aWNlIHRy
-ZWUuCj4gCj4gU3VyZSB0aGVyZSdzIHNvbWUgb3ZlcmhlYWQuIEkndmUgZ290IGl0IHdvcmtpbmcg
-d2l0aCAyMjAgcGlucywgaXQncwo+IG5vdCB0b28gYmFkIGFzIHRocmVyZSdzIG5vdCBtdWNoIHN0
-cmluZyBwYXJzaW5nIGludm9sdmVkLgo+IAo+IEkgZG9uJ3QgaGF2ZSBhbGwgdGhlIGRldmljZXMg
-bWFwcGluZyB0aGUgcGlucyB0aG91Z2guIFRoZSAuZHRiIGZvcgo+IG9tYXA0IGlzIGFib3V0IDI1
-ayBub3cuCj4gCj4gSWYgd2Ugd2FudGVkIHRvIGF2b2lkIGFkZGluZyBwaGFuZGxlcyBmb3IgZWFj
-aCBwaW4sIHRoZW4gd2UgY291bGQgZG86Cj4gCj4gc2VyaWFsQDB4NDgwMjAwMDAgewo+IAljb21w
-YXRpYmxlID0gInRpLDgyNTAiOwo+IAlyZWcgPSA8MHg0ODAyMDAwMCAweDEwMD47Cj4gCXJlZy1z
-aGlmdCA9IDwyPjsKPiAJaW50ZXJydXB0cyA9IDwxMDY+Owo+IAo+IAkvKiBjb250cm9sbGVyLCBv
-ZmZzZXQsIHZhbHVlICovCj4gCXBpbnMgPSA8Jm11eDEgMHhhYmNkIDB4MTAKPiAgICAgICAgICAg
-ICAgICAgJm11eDEgMHhhYmNmIDB4MD47Cj4gfTsKPiAKPiBCdXQgdGhlbiB0aGUgLmR0cyBmaWxl
-IGJlY29tZXMgYW4gdW5yZWFkYWJsZSBtYXRyaXggdW5sZXNzIHdlIGhhdmUKPiBhIHByZXByb2Nl
-c3Nvci4uCgpGb3Jnb3QgdG8gbWVudGlvbiB0aGF0IGFzIGxvbmcgYXMgd2UgYWxsIHN0YW5kYXJk
-aXplIHRvIHVzZSBzb21ldGhpbmcKY29tbW9uIGZvciAjcGluLWFyZ3MgYW5kIG9mX3BhcnNlX3Bo
-YW5kbGVfd2l0aF9hcmdzKCksIHRoZSBwaW4gbWFwcGluZwpjb3VsZCBkZXBlbmQgb24gdGhlIHBp
-bm11eCBkcml2ZXIgZm9yIHNlbGVjdGluZyB3aGV0aGVyIG9yIG5vdCB0byB1c2UKYSBwaGFuZGxl
-IGZvciBlYWNoIHBpbi4KClRvbnkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRp
-c2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8v
-ZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Wed, Jan 18, 2012 at 03:54:12PM +0000, Rob Herring wrote:
+> On 01/18/2012 08:36 AM, Lorenzo Pieralisi wrote:
+> > In order to set up a proper logical to per-cpu interrupt controller IF
+> > mapping, the GIC interrupt controller device tree bindings must be enhanced
+> > to define the CPU IF id for all present CPUs.
+> > GIC CPU IF ids are needed to send interprocessor IPIs and to set affinity
+> > levels. Since the way CPU IF ids are wired depends on the specific
+> > system design, they cannot be extrapolated or probed in HW by the boot
+> > CPU, so a binding to define them is needed to set-up the system properly.
+> > 
+> > This patch adds a logical map of per-cpu interrupt controller identifiers.
+> > The newly introduced per-cpu IF map has to be initialized by the GIC
+> > driver so that interprocessor interrupts and affinity levels can be set
+> > accordingly in an SMP system, with a proper 1:1 relation between per-cpu
+> > IF ids and logical cpu indexes.
+> > 
+> > This patch adds a function that parses the device tree properties and
+> > initializes the cpu interfaces ids properly according to the latest GIC
+> > device tree bindings.
+> > 
+> > If CONFIG_OF is not enabled, per-cpu CPU IF mappings are defined as
+> > cpu_logical_map(), leaving the current functionality unchanged.
+> > 
+> 
+> What if CONFIG_OF is enabled, but the DTB is not updated? That needs to
+> work.
+> 
+
+That's a fair point, I have to cater for that, point taken, I will rework it.  
+
+> I really don't get this. Furthermore, DT bindings are not supposed to
+> evolve. They need to be complete enough that they don't need frequent
+> updates for existing h/w. We discussed GIC bindings at length for 3+
+> months. The binding had sub nodes for cpu interfaces at one point, but
+> got rid of them. Then support for cpu interfaces at different addresses
+> was added. Those times were the time to bring-up issues like this. We
+> can't keep changing the binding.
+
+We are updating it, not changing it and we can change it if it does not 
+describe all HW features we need, I hope.
+This patch does not re-introduce GIC CPU IF addresses. It just adds a
+GIC CPU IF id which is required to associate software generated IRQs to a 
+given CPU. ARM mandates that those CPU ids should be wired sequentially,
+but it depends on design parameters, so it is important to have the capability  
+to define them through DT.
+
+Lorenzo
