@@ -1,119 +1,71 @@
-From: Ramneek Mehresh <ramneek.mehresh@freescale.com>
-Subject: [PATCH] powerpc/85xx:Add dr_mode property in USB nodes
-Date: Wed, 18 Jan 2012 12:18:46 +0530
-Message-ID: <1326869326-4271-1-git-send-email-ramneek.mehresh@freescale.com>
+From: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] arm/dts: omap3-evm: Add i2c and twl4030 support
+Date: Wed, 18 Jan 2012 12:25:39 +0530
+Message-ID: <1326869739-27652-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree-discuss@lists.ozlabs.org, Ramneek Mehresh <ramneek.mehresh@freescale.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add usb2 controller node for P1020RDB, P2020RDB, P2020DS, P1021MDS
+Add support for TWL4030, which is interfaced on i2c1 bus.
+Also add clock frequencies for other i2c instances(2 & 3)
+required for client-device exist on OMAP3EVM board.
 
-Signed-off-by: Ramneek Mehresh <ramneek.mehresh@freescale.com>
+Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
+Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 ---
-Applies on git://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git
-(branch next)
+ arch/arm/boot/dts/omap3-evm.dts |   28 ++++++++++++++++++++++++++++
+ 1 files changed, 28 insertions(+), 0 deletions(-)
 
- arch/powerpc/boot/dts/p1020rdb.dtsi |    2 ++
- arch/powerpc/boot/dts/p1021mds.dts  |    3 ++-
- arch/powerpc/boot/dts/p2020ds.dtsi  |    3 ++-
- arch/powerpc/boot/dts/p2020rdb.dts  |    3 ++-
- 4 files changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/boot/dts/p1020rdb.dtsi b/arch/powerpc/boot/dts/p1020rdb.dtsi
-index 17559c4..1fb7e0e 100644
---- a/arch/powerpc/boot/dts/p1020rdb.dtsi
-+++ b/arch/powerpc/boot/dts/p1020rdb.dtsi
-@@ -190,6 +190,7 @@
- 
- 	usb@22000 {
- 		phy_type = "ulpi";
-+		dr_mode = "host";
+diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
+index 2eee16e..530bdc0 100644
+--- a/arch/arm/boot/dts/omap3-evm.dts
++++ b/arch/arm/boot/dts/omap3-evm.dts
+@@ -18,3 +18,31 @@
+ 		reg = <0x80000000 0x10000000>; /* 256 MB */
  	};
- 
- 	/* USB2 is shared with localbus. It is used
-@@ -197,6 +198,7 @@
- 	   appropriate device-tree fixup done by uboot */
- 	usb@23000 {
- 		phy_type = "ulpi";
-+		dr_mode = "host";
- 	};
- 
- 	mdio@24000 {
-diff --git a/arch/powerpc/boot/dts/p1021mds.dts b/arch/powerpc/boot/dts/p1021mds.dts
-index d954079..97116f1 100644
---- a/arch/powerpc/boot/dts/p1021mds.dts
-+++ b/arch/powerpc/boot/dts/p1021mds.dts
-@@ -1,7 +1,7 @@
- /*
-  * P1021 MDS Device Tree Source
-  *
-- * Copyright 2010 Freescale Semiconductor Inc.
-+ * Copyright 2010,2012 Freescale Semiconductor Inc.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-@@ -151,6 +151,7 @@
- 
- 		usb@22000 {
- 			phy_type = "ulpi";
-+			dr_mode = "host";
- 		};
- 
- 		mdio@24000 {
-diff --git a/arch/powerpc/boot/dts/p2020ds.dtsi b/arch/powerpc/boot/dts/p2020ds.dtsi
-index c1cf6ce..d3b939c 100644
---- a/arch/powerpc/boot/dts/p2020ds.dtsi
-+++ b/arch/powerpc/boot/dts/p2020ds.dtsi
-@@ -1,7 +1,7 @@
- /*
-  * P2020DS Device Tree Source stub (no addresses or top-level ranges)
-  *
-- * Copyright 2011 Freescale Semiconductor Inc.
-+ * Copyright 2011-2012 Freescale Semiconductor Inc.
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -134,6 +134,7 @@
- &board_soc {
- 	usb@22000 {
- 		phy_type = "ulpi";
-+		dr_mode = "host";
- 	};
- 
- 	mdio@24520 {
-diff --git a/arch/powerpc/boot/dts/p2020rdb.dts b/arch/powerpc/boot/dts/p2020rdb.dts
-index 26759a5..eb8a6aa 100644
---- a/arch/powerpc/boot/dts/p2020rdb.dts
-+++ b/arch/powerpc/boot/dts/p2020rdb.dts
-@@ -1,7 +1,7 @@
- /*
-  * P2020 RDB Device Tree Source
-  *
-- * Copyright 2009-2011 Freescale Semiconductor Inc.
-+ * Copyright 2009-2012 Freescale Semiconductor Inc.
-  *
-  * This program is free software; you can redistribute  it and/or modify it
-  * under  the terms of  the GNU General  Public License as published by the
-@@ -197,6 +197,7 @@
- 
- 		usb@22000 {
- 			phy_type = "ulpi";
-+			dr_mode = "host";
- 		};
- 
- 		mdio@24520 {
+ };
++
++&i2c1 {
++	clock-frequency = <2600000>;
++
++	twl: twl@48 {
++		reg = <0x48>;
++		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
++		interrupt-parent = <&intc>;
++	};
++};
++
++/include/ "twl4030.dtsi"
++
++&i2c2 {
++	clock-frequency = <400000>;
++};
++
++&i2c3 {
++	clock-frequency = <400000>;
++
++	/*
++	 * TVP5146 Video decoder-in for analog input support.
++	 */
++	tvp5146@5C {
++		compatible = "ti,tvp5146m2";
++		reg = <0x5C>;
++	};
++};
 -- 
-1.7.1
+1.7.0.4
