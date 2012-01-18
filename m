@@ -1,40 +1,60 @@
-From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] powerpc/85xx:Enable USB2 controller node for P1020RDB
-Date: Wed, 18 Jan 2012 08:26:15 -0600
-Message-ID: <6C99EDF2-07C6-451D-9069-E41EA7B7324F@kernel.crashing.org>
-References: <1326865839-3612-1-git-send-email-ramneek.mehresh@freescale.com>
-Mime-Version: 1.0 (Apple Message framework v1251.1)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326865839-3612-1-git-send-email-ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: Pinmux bindings proposal
+Date: Wed, 18 Jan 2012 22:30:28 +0800
+Message-ID: <CAAQ0ZWTtYz3Lg7=Xz29m07j_k8yA95hn6cyk92SAJ4iGJRT_gw@mail.gmail.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+	<20120116182808.GG4223@ponder.secretlab.ca>
+	<20120118141329.GA22818@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120118141329.GA22818@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <dongas86@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 18 January 2012 22:13, Tony Lindgren <tony@atomide.com> wrote:
+> Hi,
+>
+> * Grant Likely <grant.likely@secretlab.ca> [120116 09:55]:
+>> On Fri, Jan 13, 2012 at 12:39:42PM -0800, Stephen Warren wrote:
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 pinmux =3D
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"default" &pmx_sd=
+hci_active>
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"suspend" &pmx_sd=
+hci_suspend>;
+>> >
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* 1:n example: */
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 pinmux =3D
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"default" &pmx_sd=
+hci_mux_a>
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"default" &pmx_sd=
+hci_pincfg_a>
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"suspend" &pmx_sd=
+hci_mux_a>
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"suspend" &pmx_sd=
+hci_pincfg_a_suspend>;
+>>
+>>
+>> Yeah, don't do this. =A0Mixing phandle, string and cell values in a
+>> property gets messy and could become troublesome to parse. =A0I've
+>> backed away from it in the clk binding.
+>
+> Yup, that's because the string is embedded directly into the mixed
+> mode array and will likely make the following data unaligned. That
+> means it's extremely flakey to parse, and will lead into horrible
+> errors if you have typos in the .dts file.. Tried that and gave up
+> on it.
+>
+> I think I've found a way to avoid using names at all, assuming we set
+> each pin as a phandle for the drivers to use :)
+>
+The problem with doing that is we will have to represent each pin as a
+node in device tree.  For imx6q case, we have 197 pins.  Doing so will
+bloat the device tree.
 
-On Jan 17, 2012, at 11:50 PM, Ramneek Mehresh wrote:
-
-> Enable USB2 controller node for P1020RDB. USB2 controller is used only
-> when board boots from SPI or SD as it is muxed with eLBC
-> 
-> Signed-off-by: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> Applies on git://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git
-> (branch next)
-> 
-> arch/powerpc/boot/dts/p1020rdb.dtsi |   11 ++++-------
-> 1 files changed, 4 insertions(+), 7 deletions(-)
-
-applied to merge
-
-- k
+--=20
+Regards,
+Shawn
