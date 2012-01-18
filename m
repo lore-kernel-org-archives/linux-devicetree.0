@@ -1,83 +1,41 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] arm:omap2:board-generic: Add DT support for AM33xx
- devices
-Date: Wed, 18 Jan 2012 13:58:28 -0700
-Message-ID: <20120118205828.GM4223@ponder.secretlab.ca>
-References: <1326870839-19951-1-git-send-email-hvaibhav@ti.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 01/20] fdt: Tidy up a few fdtdec problems
+Date: Wed, 18 Jan 2012 14:58:47 -0700
+Message-ID: <4F174097.8010408@nvidia.com>
+References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
+ <1326342789-5781-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1326870839-19951-1-git-send-email-hvaibhav@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vaibhav Hiremath <hvaibhav@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326342789-5781-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2012 at 12:43:58PM +0530, Vaibhav Hiremath wrote:
-> Although we consider am33xx device under omap34xx family of devices,
-> there is indeed difference between them, for example,
+On 01/11/2012 09:32 PM, Simon Glass wrote:
+> This fixes five trivial issues in fdtdec.c:
+> 1. fdtdec_get_is_enabled() doesn't really need a default value
+> 2. The fdt must be word-aligned, since otherwise it will fail on ARM
+> 3. The compat_names[] array is missing its first element. This is needed
+> only because the first fdt_compat_id is defined to be invalid.
+> 4. Added a header prototype for fdtdec_next_compatible()
+> 5. Change fdtdec_next_alias() to only increment its 'upto' parameter
+> on success, to make the display error messages in the caller easier.
 > 
->       - Initial required mapping (->map_io)
->       - Early init (->init_early)
-> 	Here, the whole sequence/data is different than omap3,
-> 	For example, clock/hwmod/power/voltage data.
->       - clock event/source timer (name and instances)
-> 
-> So, this patch adds seperate machine descriptor for AM33XX family
-> of devices in board-generic.c file.
-> 
-> Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
-> CC: Benoit Cousson <b-cousson@ti.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Tony Lindgren <tony@atomide.com>
-> ---
-> Tested it on AM335x-EVM, AM37xEVM and AM3517EVM.
-> 
->  arch/arm/mach-omap2/board-generic.c |   19 +++++++++++++++++++
->  1 files changed, 19 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> index f7b4b24..2faecc8 100644
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -106,6 +106,25 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
->  MACHINE_END
->  #endif
-> 
-> +#if defined(CONFIG_SOC_OMAPAM33XX)
-> +static const char *am33xx_boards_compat[] __initdata = {
-> +	"ti,am33xx",
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Don't forget to add the new compatible values to
-Documentation/device-tree/bindings.
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+(only because I commented on this before; I'm not an FDT maintainer here)
 
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(AM33XX_DT, "Generic AM33XX (Flattened Device Tree)")
-> +	.atag_offset	= 0x100,
-
-Unneeded for DT booting.
-
-Otherwise, you can add:
-
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-
-> +	.reserve	= omap_reserve,
-> +	.map_io		= am33xx_map_io,
-> +	.init_early	= am33xx_init_early,
-> +	.init_irq	= omap_init_irq,
-> +	.handle_irq	= omap3_intc_handle_irq,
-> +	.init_machine	= omap_generic_init,
-> +	.timer		= &omap3_am33xx_timer,
-> +	.dt_compat	= am33xx_boards_compat,
-> +MACHINE_END
-> +#endif
-> +
->  #if defined(CONFIG_ARCH_OMAP4)
->  static const char *omap4_boards_compat[] __initdata = {
->  	"ti,omap4",
-> --
-> 1.7.0.4
-> 
+-- 
+nvpublic
