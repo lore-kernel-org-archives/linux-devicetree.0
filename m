@@ -1,60 +1,82 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: Pinmux bindings proposal
-Date: Wed, 18 Jan 2012 22:30:28 +0800
-Message-ID: <CAAQ0ZWTtYz3Lg7=Xz29m07j_k8yA95hn6cyk92SAJ4iGJRT_gw@mail.gmail.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
-	<20120116182808.GG4223@ponder.secretlab.ca>
-	<20120118141329.GA22818@atomide.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH 0/5] ARM: introducing DT topology
+Date: Wed, 18 Jan 2012 14:36:43 +0000
+Message-ID: <1326897408-11204-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120118141329.GA22818@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng <dongas86@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Vincent Guittot <vincent.guittot@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 January 2012 22:13, Tony Lindgren <tony@atomide.com> wrote:
-> Hi,
->
-> * Grant Likely <grant.likely@secretlab.ca> [120116 09:55]:
->> On Fri, Jan 13, 2012 at 12:39:42PM -0800, Stephen Warren wrote:
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 pinmux =3D
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"default" &pmx_sd=
-hci_active>
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"suspend" &pmx_sd=
-hci_suspend>;
->> >
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* 1:n example: */
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 pinmux =3D
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"default" &pmx_sd=
-hci_mux_a>
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"default" &pmx_sd=
-hci_pincfg_a>
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"suspend" &pmx_sd=
-hci_mux_a>
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <"suspend" &pmx_sd=
-hci_pincfg_a_suspend>;
->>
->>
->> Yeah, don't do this. =A0Mixing phandle, string and cell values in a
->> property gets messy and could become troublesome to parse. =A0I've
->> backed away from it in the clk binding.
->
-> Yup, that's because the string is embedded directly into the mixed
-> mode array and will likely make the following data unaligned. That
-> means it's extremely flakey to parse, and will lead into horrible
-> errors if you have typos in the .dts file.. Tried that and gave up
-> on it.
->
-> I think I've found a way to avoid using names at all, assuming we set
-> each pin as a phandle for the drivers to use :)
->
-The problem with doing that is we will have to represent each pin as a
-node in device tree.  For imx6q case, we have 197 pins.  Doing so will
-bloat the device tree.
+The introduction of multi-cluster ARM systems in SoC designs requires the kernel
+to become cluster aware, so that it can be booted on every CPU in the system
+and it can build an appropriate representation of topology levels.
 
---=20
-Regards,
-Shawn
+Current code in the kernel, in particular the boot sequence, hinges upon a
+sequential mapping of MPIDR values for cpus and related interrupt
+controller CPU interfaces to logical cpu indexing. 
+This hypothesis is not valid when the concept of cluster is introduced since
+the MPIDR cannot be represented as a single index and interrupt controller
+CPU interfaces might be wired with a numbering scheme following per-SoC
+design parameters which cannot be extrapolated easily through generic functions
+by the primary CPU.
+
+Furthermore, relying on the MPIDR to be wired according to real topology levels
+might turn out to be an unreliable solution, hence a SW representation is
+needed to override possibly incorrect MPIDR register values.
+
+Through the device tree and relative bindings, the kernel is provided
+with HW values for MPIDR registers, interrupt controller CPU interfaces and
+with a topology representation of hierarchy levels and connection between cores.
+
+The device tree bindings allow to boot the Linux kernel on a multi-cluster
+system without relying on platform specific hook to identify the number of CPUs
+and interrupt controller wiring definition.
+
+The patchset has been tested against:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/cmarinas/linux-arm-arch.git master
+
+to boot an 8-core dual-cluster system on every possible CPU and to describe
+the relative cpu topology according to the affinity levels.
+
+Compile tested against linux-next, with a dependency on the following patch:
+
+http://www.spinics.net/lists/arm-kernel/msg155873.html
+
+Documentation of new device tree bindings is provided in the corresponding
+patches and provided for discussion.
+
+Lorenzo Pieralisi (5):
+  ARM: kernel: add device tree init map function
+  ARM: kernel: add cpu logical map DT init in setup_arch
+  ARM: kernel: add logical mappings look-up
+  ARM: gic: add cpuif topology description
+  ARM: kernel: build CPU topology from DT
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |   42 +++++
+ Documentation/devicetree/bindings/arm/gic.txt      |   69 ++++++++
+ Documentation/devicetree/bindings/arm/topology.txt |  167 ++++++++++++++++++++
+ arch/arm/common/gic.c                              |   94 +++++++++++-
+ arch/arm/include/asm/prom.h                        |    2 +
+ arch/arm/include/asm/smp_plat.h                    |   12 ++
+ arch/arm/kernel/devtree.c                          |   40 +++++
+ arch/arm/kernel/setup.c                            |    1 +
+ arch/arm/kernel/topology.c                         |  110 +++++++++++---
+ 9 files changed, 513 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/topology.txt
+
+-- 
+1.7.4.4
