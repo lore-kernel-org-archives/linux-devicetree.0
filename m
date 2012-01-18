@@ -1,14 +1,18 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] ARM: introducing DT topology
-Date: Wed, 18 Jan 2012 16:24:23 +0000
-Message-ID: <20120118162423.GK1068@n2100.arm.linux.org.uk>
-References: <1326897408-11204-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Pinmux bindings proposal
+Date: Wed, 18 Jan 2012 08:29:43 -0800
+Message-ID: <20120118162943.GC22818@atomide.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+ <20120116182808.GG4223@ponder.secretlab.ca>
+ <20120118141329.GA22818@atomide.com>
+ <CAAQ0ZWTtYz3Lg7=Xz29m07j_k8yA95hn6cyk92SAJ4iGJRT_gw@mail.gmail.com>
+ <20120118153256.GB22818@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1326897408-11204-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20120118153256.GB22818-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,51 +22,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2012 at 02:36:43PM +0000, Lorenzo Pieralisi wrote:
-> Current code in the kernel, in particular the boot sequence, hinges upon a
-> sequential mapping of MPIDR values for cpus and related interrupt
-> controller CPU interfaces to logical cpu indexing. 
-
-I don't believe it does.  What it does rely upon is having cpu_logical_map()
-correctly setup for the logical-to-hardware mapping - which, if it's
-different, should be done in smp_init_cpus(), taking note that logical
-CPU 0 is _always_ the boot CPU.  (That's a restriction caused by the
-way suspend/resume unplugs all but the lowest numbered logical online
-CPU.)
-
-So, with the code today, there's nothing in the code which prevents this
-from happening:
-
-a) you boot on h/w CPU 1, which becomes logical CPU 0.
-b) you boot h/w CPU 3 as logical CPU 1.
-c) you boot h/w CPU 0 as logical CPU 2.
-d) you boot h/w CPU 2 as logical CPU 3.
-
-You just need to ensure that cpu_logical_map() contains the array
-{1, 3, 0, 2} instead of the default (because we _have_ to have a
-default) of {1, 0, 2, 3}.
-
-> This hypothesis is not valid when the concept of cluster is introduced since
-> the MPIDR cannot be represented as a single index and interrupt controller
-> CPU interfaces might be wired with a numbering scheme following per-SoC
-> design parameters which cannot be extrapolated easily through generic functions
-> by the primary CPU.
-
-So what you're saying is that the GIC CPU index may not be the CPU number
-given by MPIDR?
-
-> Furthermore, relying on the MPIDR to be wired according to real topology
-> levels might turn out to be an unreliable solution, hence a SW
-> representation is needed to override possibly incorrect MPIDR register
-> values.
-
-This sounds like you're saying that the contents of MPIDR might be buggy
-sometime in the future?  Do we actually know of any situations where the
-information in there is currently wrong (outside of the development lab)?
-If not, it's not something we should cater for until it's actually happened,
-and then the pain should be felt by those silly enough to allow the chip
-to go out the door.
+KiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPiBbMTIwMTE4IDA3OjAwXToKPiAqIFNo
+YXduIEd1byA8c2hhd24uZ3VvQGxpbmFyby5vcmc+IFsxMjAxMTggMDU6NTddOgo+ID4gT24gMTgg
+SmFudWFyeSAyMDEyIDIyOjEzLCBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPiB3cm90
+ZToKPiA+ID4gSGksCj4gPiA+Cj4gPiA+ICogR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2Vj
+cmV0bGFiLmNhPiBbMTIwMTE2IDA5OjU1XToKPiA+ID4+IE9uIEZyaSwgSmFuIDEzLCAyMDEyIGF0
+IDEyOjM5OjQyUE0gLTA4MDAsIFN0ZXBoZW4gV2FycmVuIHdyb3RlOgo+ID4gPj4gPiDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCBwaW5tdXggPQo+ID4gPj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCA8ImRlZmF1bHQiICZwbXhfc2RoY2lfYWN0aXZlPgo+ID4gPj4gPiDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8InN1c3BlbmQiICZwbXhfc2RoY2lfc3Vz
+cGVuZD47Cj4gPiA+PiA+Cj4gPiA+PiA+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC8qIDE6biBl
+eGFtcGxlOiAqLwo+ID4gPj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCBwaW5tdXggPQo+ID4g
+Pj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8ImRlZmF1bHQiICZwbXhf
+c2RoY2lfbXV4X2E+Cj4gPiA+PiA+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IDwiZGVmYXVsdCIgJnBteF9zZGhjaV9waW5jZmdfYT4KPiA+ID4+ID4gwqAgwqAgwqAgwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgPCJzdXNwZW5kIiAmcG14X3NkaGNpX211eF9hPgo+ID4gPj4g
+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8InN1c3BlbmQiICZwbXhfc2Ro
+Y2lfcGluY2ZnX2Ffc3VzcGVuZD47Cj4gPiA+Pgo+ID4gPj4KPiA+ID4+IFllYWgsIGRvbid0IGRv
+IHRoaXMuIMKgTWl4aW5nIHBoYW5kbGUsIHN0cmluZyBhbmQgY2VsbCB2YWx1ZXMgaW4gYQo+ID4g
+Pj4gcHJvcGVydHkgZ2V0cyBtZXNzeSBhbmQgY291bGQgYmVjb21lIHRyb3VibGVzb21lIHRvIHBh
+cnNlLiDCoEkndmUKPiA+ID4+IGJhY2tlZCBhd2F5IGZyb20gaXQgaW4gdGhlIGNsayBiaW5kaW5n
+Lgo+ID4gPgo+ID4gPiBZdXAsIHRoYXQncyBiZWNhdXNlIHRoZSBzdHJpbmcgaXMgZW1iZWRkZWQg
+ZGlyZWN0bHkgaW50byB0aGUgbWl4ZWQKPiA+ID4gbW9kZSBhcnJheSBhbmQgd2lsbCBsaWtlbHkg
+bWFrZSB0aGUgZm9sbG93aW5nIGRhdGEgdW5hbGlnbmVkLiBUaGF0Cj4gPiA+IG1lYW5zIGl0J3Mg
+ZXh0cmVtZWx5IGZsYWtleSB0byBwYXJzZSwgYW5kIHdpbGwgbGVhZCBpbnRvIGhvcnJpYmxlCj4g
+PiA+IGVycm9ycyBpZiB5b3UgaGF2ZSB0eXBvcyBpbiB0aGUgLmR0cyBmaWxlLi4gVHJpZWQgdGhh
+dCBhbmQgZ2F2ZSB1cAo+ID4gPiBvbiBpdC4KPiA+ID4KPiA+ID4gSSB0aGluayBJJ3ZlIGZvdW5k
+IGEgd2F5IHRvIGF2b2lkIHVzaW5nIG5hbWVzIGF0IGFsbCwgYXNzdW1pbmcgd2Ugc2V0Cj4gPiA+
+IGVhY2ggcGluIGFzIGEgcGhhbmRsZSBmb3IgdGhlIGRyaXZlcnMgdG8gdXNlIDopCj4gPiA+Cj4g
+PiBUaGUgcHJvYmxlbSB3aXRoIGRvaW5nIHRoYXQgaXMgd2Ugd2lsbCBoYXZlIHRvIHJlcHJlc2Vu
+dCBlYWNoIHBpbiBhcyBhCj4gPiBub2RlIGluIGRldmljZSB0cmVlLiAgRm9yIGlteDZxIGNhc2Us
+IHdlIGhhdmUgMTk3IHBpbnMuICBEb2luZyBzbyB3aWxsCj4gPiBibG9hdCB0aGUgZGV2aWNlIHRy
+ZWUuCj4gCj4gU3VyZSB0aGVyZSdzIHNvbWUgb3ZlcmhlYWQuIEkndmUgZ290IGl0IHdvcmtpbmcg
+d2l0aCAyMjAgcGlucywgaXQncwo+IG5vdCB0b28gYmFkIGFzIHRocmVyZSdzIG5vdCBtdWNoIHN0
+cmluZyBwYXJzaW5nIGludm9sdmVkLgo+IAo+IEkgZG9uJ3QgaGF2ZSBhbGwgdGhlIGRldmljZXMg
+bWFwcGluZyB0aGUgcGlucyB0aG91Z2guIFRoZSAuZHRiIGZvcgo+IG9tYXA0IGlzIGFib3V0IDI1
+ayBub3cuCj4gCj4gSWYgd2Ugd2FudGVkIHRvIGF2b2lkIGFkZGluZyBwaGFuZGxlcyBmb3IgZWFj
+aCBwaW4sIHRoZW4gd2UgY291bGQgZG86Cj4gCj4gc2VyaWFsQDB4NDgwMjAwMDAgewo+IAljb21w
+YXRpYmxlID0gInRpLDgyNTAiOwo+IAlyZWcgPSA8MHg0ODAyMDAwMCAweDEwMD47Cj4gCXJlZy1z
+aGlmdCA9IDwyPjsKPiAJaW50ZXJydXB0cyA9IDwxMDY+Owo+IAo+IAkvKiBjb250cm9sbGVyLCBv
+ZmZzZXQsIHZhbHVlICovCj4gCXBpbnMgPSA8Jm11eDEgMHhhYmNkIDB4MTAKPiAgICAgICAgICAg
+ICAgICAgJm11eDEgMHhhYmNmIDB4MD47Cj4gfTsKPiAKPiBCdXQgdGhlbiB0aGUgLmR0cyBmaWxl
+IGJlY29tZXMgYW4gdW5yZWFkYWJsZSBtYXRyaXggdW5sZXNzIHdlIGhhdmUKPiBhIHByZXByb2Nl
+c3Nvci4uCgpGb3Jnb3QgdG8gbWVudGlvbiB0aGF0IGFzIGxvbmcgYXMgd2UgYWxsIHN0YW5kYXJk
+aXplIHRvIHVzZSBzb21ldGhpbmcKY29tbW9uIGZvciAjcGluLWFyZ3MgYW5kIG9mX3BhcnNlX3Bo
+YW5kbGVfd2l0aF9hcmdzKCksIHRoZSBwaW4gbWFwcGluZwpjb3VsZCBkZXBlbmQgb24gdGhlIHBp
+bm11eCBkcml2ZXIgZm9yIHNlbGVjdGluZyB3aGV0aGVyIG9yIG5vdCB0byB1c2UKYSBwaGFuZGxl
+IGZvciBlYWNoIHBpbi4KClRvbnkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRp
+c2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8v
+ZGV2aWNldHJlZS1kaXNjdXNzCg==
