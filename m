@@ -1,14 +1,15 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 01/20] fdt: Tidy up a few fdtdec problems
-Date: Wed, 18 Jan 2012 14:58:47 -0700
-Message-ID: <4F174097.8010408@nvidia.com>
+Subject: Re: [PATCH v4 02/20] fdt: Add functions to access phandles, arrays
+ and bools
+Date: Wed, 18 Jan 2012 15:01:40 -0700
+Message-ID: <4F174144.8080709@nvidia.com>
 References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
- <1326342789-5781-2-git-send-email-sjg@chromium.org>
+ <1326342789-5781-3-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326342789-5781-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1326342789-5781-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,14 +24,10 @@ Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Device
 List-Id: devicetree@vger.kernel.org
 
 On 01/11/2012 09:32 PM, Simon Glass wrote:
-> This fixes five trivial issues in fdtdec.c:
-> 1. fdtdec_get_is_enabled() doesn't really need a default value
-> 2. The fdt must be word-aligned, since otherwise it will fail on ARM
-> 3. The compat_names[] array is missing its first element. This is needed
-> only because the first fdt_compat_id is defined to be invalid.
-> 4. Added a header prototype for fdtdec_next_compatible()
-> 5. Change fdtdec_next_alias() to only increment its 'upto' parameter
-> on success, to make the display error messages in the caller easier.
+> Add a function to look up a property which is a phandle in a node, and
+> another to read a fixed-length integer array from an fdt property.
+> Also add a function to read boolean properties, although there is no
+> actual boolean type in U-Boot.
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
