@@ -1,75 +1,42 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Pawel Moll <pawel.moll@arm.com>
 Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
  tile (TC1 variant)
-Date: Thu, 19 Jan 2012 07:34:17 -0600
-Message-ID: <4F181BD9.20401@gmail.com>
+Date: Thu, 19 Jan 2012 13:43:14 +0000
+Message-ID: <1326980594.32197.67.camel@hornet.cambridge.arm.com>
 References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
  <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
  <4F0C495C.4000103@citrix.com>
  <1326979652.32197.66.camel@hornet.cambridge.arm.com>
+ <4F181BD9.20401@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326979652.32197.66.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F181BD9.20401@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2012 07:27 AM, Pawel Moll wrote:
-> On Tue, 2012-01-10 at 14:21 +0000, David Vrabel wrote:
->> On 15/12/11 14:02, Pawel Moll wrote:
->>> This patch adds Device Tree file for the CoreTile Express A15x2
->>> (V2P-CA15) with Test Chip 1.
->>
->> This doesn't work as-is with the software model as accessing some of the
->> peripherals that aren't modeled will cause an exception.  Is it worth
->> having a device tree file suitable for the models? Or are the models too
->> configurable for this to be workable?
-> 
-> The model as you have it doesn't exactly represent the board for a
-> number of reasons, mainly because there was no hardware design when the
-> model was created, so some of the solution was best-guessed by the model
-> people. Anyway, current A15 model can't be considered a 1-to-1
-> equivalent of the VE board. The plan is that the models will be shipped
-> with their own DTSes. I'll work on that in the following months, I can
-> keep you updated (and use as a beta tester ;-) if you want.
-> 
->>> As the chip's GIC has 160 interrupt inputs and equivalent SMM
->>> (FPGA) has GIC synthesised with 256 interrupts, NR_IRQS is
->>> increased.
->>>
->> [...]
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
->> [...]
->>> +	memory@80000000 {
->>> +		device_type = "memory";
->>> +		reg = <0x80000000 0x40000000>;
->>> +	};
->>
->> If CONFIG_ARM_ATAG_DTB_COMPAT is enabled the device tree will end up
->> with two nodes describing the memory ("memory" and "memory@80000000" in
->> this case).
-> 
-> You're right - the skeleton.dtsi contains "memory" mode... Funnily
-> enough originally I was using that name, but then Rob Herring suggested
-> changing it to @80000000, which seemed reasonable.
-> 
-> Now I wonder - is the "memory" node special and should not contain
-> "@address", or the skelton shouldn't contain the empty "memory" node...
-> 
-
-Hummm... I guess you should just use "memory" if you are using
-skeleton.dtsi.
-
-Rob
+T24gVGh1LCAyMDEyLTAxLTE5IGF0IDEzOjM0ICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiA+
+IFlvdSdyZSByaWdodCAtIHRoZSBza2VsZXRvbi5kdHNpIGNvbnRhaW5zICJtZW1vcnkiIG1vZGUu
+Li4gRnVubmlseQo+ID4gZW5vdWdoIG9yaWdpbmFsbHkgSSB3YXMgdXNpbmcgdGhhdCBuYW1lLCBi
+dXQgdGhlbiBSb2IgSGVycmluZyBzdWdnZXN0ZWQKPiA+IGNoYW5naW5nIGl0IHRvIEA4MDAwMDAw
+MCwgd2hpY2ggc2VlbWVkIHJlYXNvbmFibGUuCj4gPiAKPiA+IE5vdyBJIHdvbmRlciAtIGlzIHRo
+ZSAibWVtb3J5IiBub2RlIHNwZWNpYWwgYW5kIHNob3VsZCBub3QgY29udGFpbgo+ID4gIkBhZGRy
+ZXNzIiwgb3IgdGhlIHNrZWx0b24gc2hvdWxkbid0IGNvbnRhaW4gdGhlIGVtcHR5ICJtZW1vcnki
+IG5vZGUuLi4KPiA+IAo+IAo+IEh1bW1tLi4uIEkgZ3Vlc3MgeW91IHNob3VsZCBqdXN0IHVzZSAi
+bWVtb3J5IiBpZiB5b3UgYXJlIHVzaW5nCj4gc2tlbGV0b24uZHRzaS4KCldlbGwsIEkgZG9uJ3Qg
+bWluZCBfbm90XyB1c2luZyBza2VsZXRvbiwgYnV0IEkgaGFkIGFuIGltcHJlc3Npb24gdGhlCmdl
+bmVyYWwgcG9saWN5IHdhcyB0byB1c2UgaXQ/CgpQYXdlxYIKCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
