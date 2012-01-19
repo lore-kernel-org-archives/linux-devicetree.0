@@ -1,66 +1,160 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v4 10/20] tegra: fdt: Add additional USB binding
-Date: Thu, 19 Jan 2012 09:33:19 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB0D4@HQMAIL01.nvidia.com>
-References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
-	<1326342789-5781-11-git-send-email-sjg@chromium.org>
-	<4F174C3E.2090403@nvidia.com>	<20120119053523.GB27447@quad.lixom.net>
-	<CAPnjgZ0JAyV8+0kLv=EcM-AhBxE-YSyG-Y7rYPS8PhOAOnq6dw@mail.gmail.com>
-	<CAOesGMjCxryS+3yQZqCP3JYeHpCbUuNHM+rtDBoOQjF6rwLv5g@mail.gmail.com>
-	<CAPnjgZ10mwQJ7RubrO_VFdHF+39cHOjLPmQNbYBeERjTWJMU4Q@mail.gmail.com>
- <CAOesGMhOe6enf9BFgpCbvEgtT3F-p5rEsxp8=PG57sxBaQvawQ@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Pinmux bindings proposal
+Date: Thu, 19 Jan 2012 23:08:09 +0530
+Message-ID: <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+ <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
+ <20120119165607.GG22818@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMhOe6enf9BFgpCbvEgtT3F-p5rEsxp8=PG57sxBaQvawQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120119165607.GG22818-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Thursday, January 19, 2012 12:13 AM:
-> On Wed, Jan 18, 2012 at 10:59 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrot=
-e:
-> > Hi Olof,
-> >
-> > On Wed, Jan 18, 2012 at 10:41 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> w=
-rote:
-> >> Hi,
-> >>
-> >> On Wed, Jan 18, 2012 at 9:55 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wr=
-ote:
-> >>
-> >>>> fsl-usb.txt uses "dr_mode" here, which might make sense to reuse=
- given some of
-> >>>> the shared IP in question for device mode:
-> >>>>
-> >>>> =A0- dr_mode : indicates the working mode for "fsl-usb2-dr" comp=
-atible
-> >>>> =A0 controllers. =A0Can be "host", "peripheral", or "otg". =A0De=
-fault to
-> >>>> =A0 "host" if not defined for backward compatibility.
-> >>>
-> >>> What does 'dr' mean?
-> >>
-> >> After some searching, it looks like it means "dual-role", which se=
-ems
-> >> appropriate terminology for the tegra SoC as well.
-> >
-> > Thanks for looking that up.
-> >
-> > Well maybe, but it could mean data reverse mode or distinctive
-> > ring...I like Stephen's nice device-tree-friendly naming and
-> > explanation :-) Are we stuck with this?
->=20
-> I think there's value in staying common with similar bindings on othe=
-r
-> platforms, yes. Sorry. :)
+Hi Tony,
 
-Ack from me too. If there's an existing convention, I'd prefer to stick
-with it. Sorry, I should have looked this up before coming up with
-something new.
+On 19 January 2012 22:26, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120119 04:37]:
+>>
+>> The io-pad controller (gpio/pinmux/pinconfig) can be represented in a
+>> dtsi file as below. There could be multiple io-pad controllers
+>> supported in the system.
+>
+> FYI we too have too mux controller instances on omap4. That seems to
+> work just fine thanks to the "pinctrl: make it possible to add multiple m=
+aps"
+> patch by Linus W.
+>
+>> pctrl0: pinctrl@11400000 {
+>> =A0 =A0 =A0 =A0compatible =3D "samsung,exynos4210-pinctrl";
+>> =A0 =A0 =A0 =A0reg =3D <0x11400000 0x1000>;
+>> =A0 =A0 =A0 =A0interrupts =3D <.......>;
+>> =A0 =A0 =A0 =A0pin-banks =3D <....>;
+>> =A0 =A0 =A0 =A0[... other properties TBD ...]
+>> =A0 =A0 =A0 =A0#pinctrl-cells =3D <5>;
+>> };
+>>
+>> Each such node instantiates one instance of the pin-controller device.
+>> The 'struct pinctrl_dev' should include a new member 'struct of_node'
+>> to point to the corresponding pin-controller node in dt which
+>> instantiated the controller. The pinctrl_register() function called
+>> from drivers/pinctrl/pinctrl-xyz.c then registers the pin-controller
+>> instance.
+>
+> Looks similar to what I have too.
+>
+>> * Specifying the pinmux/pinconfig settings in dts files:
+>>
+>> Device nodes which require specific pinmux/pinconfig settings should
+>> include information about the required settings. For example, a i2c
+>> controller node in dts file is listed below.
+>>
+>> i2c0: i2c@18000000 {
+>> =A0 =A0 =A0 =A0 [... other properties ...]
+>> =A0 =A0 =A0 =A0 pinctrl-active =3D <&pctrl0 5 0 2 3 0>,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<&pctrl0 5 1 =
+2 3 0>;
+>> =A0 =A0 =A0 =A0 pinctrl-suspend =3D <&pctrl0 5 0 2 0 0>,
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <&pctrl0=
+ 5 1 2 0 0>;
+>> };
+>
+> Maybe we should have just the active/suspend/off flags in the
+> same array? Otherwise we'll end up unnecessarily repeating the
+> the pin information. See the pins + #pin-args example I posted,
+> which is otherwise similar.
 
---=20
-nvpublic
+Yes, I agree. That would be better.
+
+>
+>> In the example above, the specifier of pinctrl-* is specific for
+>> Samsung io-pad controllers. Its format/syntax would be mainly
+>> dependent on the io-pad controller used, the above is only an example
+>> for Samsung io-pad controller. In the above node, the format of the
+>> pinctrl-* specifier is
+>>
+>> property-name =3D <phandle of the pin-controller
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin bank within t=
+he pin-controller
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin number within=
+ the pin-bank
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin-mux function =
+number
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pull up/down conf=
+ig
+>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0drive strength co=
+nfig>;
+>
+> Are these all just bits in one register? If so, let's say you
+> have 16-bits per pin, we might be able to share the generic
+> pinmux-simple.c driver I have almost ready..
+
+no, these get written to different registers, one for pinmux, one for
+pull up/down and one for drive strength. It would be helpful of your
+pinmux-simple.c can support writes to multiple registers also.
+
+>
+> The format would then be
+>
+> =A0 =A0 =A0 =A0#pin-args <4>;
+> =A0 =A0 =A0 =A0...
+>
+> =A0 =A0 =A0 =A0/* =A0 =A0controller =A0offset on =A0 idle off */
+> =A0 =A0 =A0 =A0pins =3D <&pinctrl0 0x0030 0x15 0x15 0x7>;
+>
+>> * Using the pinmux/pinconfig specifier in device nodes to configure hard=
+ware.
+>>
+>> A driver (for a device instantiated from device tree) would require
+>> code to be made aware of the pinmux/pinconfig options available. The
+>> typical sequence in a probe function would be as below.
+>>
+>> (a) call of_get_named_gpio() to get the gpio number. In case of
+>> Samsung pinctrl driver, the pinctrl driver itself provides the gpiolib
+>> functionality and it attaches a gpio specifier translator with the
+>> gpio_chip. This translator is capable of translating the pinctrl-* and
+>> returning a gpio number.
+>>
+>> (b) gpio_request() the gpio number obtained in step (a) above.
+>>
+>> (c) Repeat steps (a) and (b) until all the gpios required by the
+>> driver are requested. In case a request fails, give up all the
+>> successfully requested gpio and return failure.
+>
+> Can't the driver do this to request the gpio pins that you
+> can get from DT and pinmux? Even if you need to do dynamic pinmuxing
+> to GPIO pins for wake-up events, you can do that from the driver
+> as long as you get the GPIO number for the pin from mux code.
+
+Yes, it is the driver that finds out the gpio number from dt and
+requests it. Maybe, I did not understand your point here.
+
+With the approach that I mentioned in the previous email, there are no
+pinmux, pin groups or pin desc tables built from dt. Each device node
+specifies what needs to configured (pinmux,pinconfig) and the code
+using that device node uses pinctrl driver to get those
+pinmux/pinconfig values written to the hardware registers.
+
+Does the dt support for pinmux/pinconfig that you are developing build
+the pinmux, pin groups or pin desc tables? Do drivers have to call
+pinmux_{get/put}() or pin_config_set() functions even in dt case?
+
+Thanks,
+Thomas.
+
+>
+> Regards,
+>
+> Tony
