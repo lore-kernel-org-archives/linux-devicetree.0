@@ -1,48 +1,49 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
- tile (TC1 variant)
-Date: Thu, 19 Jan 2012 08:01:44 -0600
-Message-ID: <4F182248.7070209@gmail.com>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
- <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
- <4F0C495C.4000103@citrix.com>
- <1326979652.32197.66.camel@hornet.cambridge.arm.com>
- <4F181BD9.20401@gmail.com>
- <1326980594.32197.67.camel@hornet.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326980594.32197.67.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Aneesh V <aneesh@ti.com>
+Subject: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF and DDR
+Date: Thu, 19 Jan 2012 19:58:38 +0530
+Message-ID: <1326983321-319-1-git-send-email-aneesh@ti.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1324303533-17458-1-git-send-email-aneesh@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Aneesh V <aneesh@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2012 07:43 AM, Pawel Moll wrote:
-> On Thu, 2012-01-19 at 13:34 +0000, Rob Herring wrote:
->>> You're right - the skeleton.dtsi contains "memory" mode... Funnily
->>> enough originally I was using that name, but then Rob Herring suggested
->>> changing it to @80000000, which seemed reasonable.
->>>
->>> Now I wonder - is the "memory" node special and should not contain
->>> "@address", or the skelton shouldn't contain the empty "memory" node...
->>>
->>
->> Hummm... I guess you should just use "memory" if you are using
->> skeleton.dtsi.
-> 
-> Well, I don't mind _not_ using skeleton, but I had an impression the
-> general policy was to use it?
+This is an RFC to add new device tree bindings for DDR memories and
+EMIF - TI's DDR SDRAM controller. 
 
-Either way is fine. I don't really think it buys you much.
+The first patch adds bindings for DDR memories. Currently,
+we have added properties for only DDR3 and LPDDR2 memories.
+However, the binding can be easily extended to describe
+other types such as DDR2 in the future.
 
-Rob
+The second patch provides the bindings for the EMIF controller.
+
+The final patch provides DT data for EMIF controller instances
+in OMAP4 and LPDDR2 memories attached to them on various boards.
+
+Thanks to Rajendra for answering my numerous queries on device tree.
+
+This is a re-post of the RFC that was posted to devicetree-discuss ml,
+now sent to a larger audience and looping out an internal list.
+Please ignore the previous version.
+
+Aneesh V (3):
+  dt: device tree bindings for DDR memories
+  dt: device tree bindings for TI's EMIF sdram controller
+  arm/dts: EMIF and lpddr2 device tree data for OMAP4 boards
+
+ Documentation/devicetree/bindings/ddr/ddr.txt      |  114 ++++++++++++++++++++
+ .../devicetree/bindings/ddr/ddr_timings.txt        |   62 +++++++++++
+ .../bindings/memory-controllers/ti/emif.txt        |   64 +++++++++++
+ arch/arm/boot/dts/omap-common-devices.dtsi         |   63 +++++++++++
+ arch/arm/boot/dts/omap4-panda.dts                  |   13 +++
+ arch/arm/boot/dts/omap4-sdp.dts                    |   13 +++
+ arch/arm/boot/dts/omap4.dtsi                       |   19 ++++
+ 7 files changed, 348 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ddr/ddr.txt
+ create mode 100644 Documentation/devicetree/bindings/ddr/ddr_timings.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+ create mode 100644 arch/arm/boot/dts/omap-common-devices.dtsi
+
