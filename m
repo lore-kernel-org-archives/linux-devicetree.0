@@ -1,191 +1,49 @@
-From: Aneesh V <aneesh@ti.com>
-Subject: [RFC v3 PATCH 3/3] arm/dts: EMIF and lpddr2 device tree data for OMAP4 boards
-Date: Thu, 19 Jan 2012 20:02:01 +0530
-Message-ID: <1326983521-373-4-git-send-email-aneesh@ti.com>
-References: <1326983521-373-1-git-send-email-aneesh@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1326983521-373-1-git-send-email-aneesh@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Aneesh V <aneesh@ti.com>, Rajendra Nayak <rnayak@ti.com>, Benoit Cousson <b-cousson@ti.com>, Olof Johansson <olof@lixom.net>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
+ tile (TC1 variant)
+Date: Thu, 19 Jan 2012 14:51:12 +0000
+Message-ID: <1326984672.32197.68.camel@hornet.cambridge.arm.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
+ <4F0C495C.4000103@citrix.com>
+ <1326979652.32197.66.camel@hornet.cambridge.arm.com>
+ <4F181BD9.20401@gmail.com>
+ <1326980594.32197.67.camel@hornet.cambridge.arm.com>
+ <4F182248.7070209@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F182248.7070209@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Device tree data for the EMIF sdram controllers in OMAP4
-and LPDDR memory devices attached to OMAP4 boards.
-
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>
-Cc: Olof Johansson <olof@lixom.net>
-Signed-off-by: Aneesh V <aneesh@ti.com>
----
-Changes in RFC v3:
-* Fixed review comments from RFC v2
----
- arch/arm/boot/dts/elpida_ecb240abacn.dtsi |   65 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/omap4-panda.dts         |   13 ++++++
- arch/arm/boot/dts/omap4-sdp.dts           |   13 ++++++
- arch/arm/boot/dts/omap4.dtsi              |   19 ++++++++
- 4 files changed, 110 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/elpida_ecb240abacn.dtsi
-
-diff --git a/arch/arm/boot/dts/elpida_ecb240abacn.dtsi b/arch/arm/boot/dts/elpida_ecb240abacn.dtsi
-new file mode 100644
-index 0000000..2384233
---- /dev/null
-+++ b/arch/arm/boot/dts/elpida_ecb240abacn.dtsi
-@@ -0,0 +1,65 @@
-+/*
-+ * Common devices used in different OMAP boards
-+ */
-+
-+/ {
-+	elpida_ECB240ABACN: lpddr2 {
-+		compatible 	= "Elpida,ECB240ABACN","jedec,lpddr2-s4";
-+		density		= <2048>;
-+		io-width	= <32>;
-+
-+		tRPab-min-tck	= <3>;
-+		tRCD-min-tck	= <3>;
-+		tWR-min-tck	= <3>;
-+		tRASmin-min-tck	= <3>;
-+		tRRD-min-tck	= <2>;
-+		tWTR-min-tck	= <2>;
-+		tXP-min-tck	= <2>;
-+		tRTP-min-tck	= <2>;
-+		tCKE-min-tck	= <3>;
-+		tCKESR-min-tck	= <3>;
-+		tFAW-min-tck	= <8>;
-+
-+		timings_elpida_ECB240ABACN_400mhz: lpddr2-timings@0 {
-+			compatible 	= "jedec,lpddr2-timings";
-+			min-freq	= <10000000>;
-+			max-freq	= <400000000>;
-+			tRPab		= <21000>;
-+			tRCD		= <18000>;
-+			tWR		= <15000>;
-+			tRAS-min	= <42000>;
-+			tRRD		= <10000>;
-+			tWTR		= <7500>;
-+			tXP		= <7500>;
-+			tRTP		= <7500>;
-+			tCKESR		= <15000>;
-+			tDQSCK-max 	= <5500>;
-+			tFAW		= <50000>;
-+			tZQCS		= <90000>;
-+			tZQCL		= <360000>;
-+			tZQinit		= <1000000>;
-+			tRAS-max-ns	= <70000>;
-+		};
-+
-+		timings_elpida_ECB240ABACN_200mhz: lpddr2-timings@1 {
-+			compatible 	= "jedec,lpddr2-timings";
-+			min-freq	= <10000000>;
-+			max-freq	= <200000000>;
-+			tRPab		= <21000>;
-+			tRCD		= <18000>;
-+			tWR		= <15000>;
-+			tRAS-min	= <42000>;
-+			tRRD		= <10000>;
-+			tWTR		= <10000>;
-+			tXP		= <7500>;
-+			tRTP		= <7500>;
-+			tCKESR		= <15000>;
-+			tDQSCK-max 	= <5500>;
-+			tFAW		= <50000>;
-+			tZQCS		= <90000>;
-+			tZQCL		= <360000>;
-+			tZQinit		= <1000000>;
-+			tRAS-max-ns	= <70000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index c702657..9b46802 100644
---- a/arch/arm/boot/dts/omap4-panda.dts
-+++ b/arch/arm/boot/dts/omap4-panda.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- /include/ "omap4.dtsi"
-+/include/ "elpida_ecb240abacn.dtsi"
- 
- / {
- 	model = "TI OMAP4 PandaBoard";
-@@ -26,4 +27,16 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x40000000>; /* 1 GB */
- 	};
-+
-+	ocp {
-+		emif1: emif@0x4c000000 {
-+			cs1-used;
-+			device-handle = <&elpida_ECB240ABACN>;
-+		};
-+
-+		emif2: emif@0x4d000000 {
-+			cs1-used;
-+			device-handle = <&elpida_ECB240ABACN>;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 066e28c..896d682 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- /include/ "omap4.dtsi"
-+/include/ "elpida_ecb240abacn.dtsi"
- 
- / {
- 	model = "TI OMAP4 SDP board";
-@@ -26,4 +27,16 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x40000000>; /* 1 GB */
- 	};
-+
-+	ocp {
-+		emif1: emif@0x4c000000 {
-+			cs1-used;
-+			device-handle = <&elpida_ECB240ABACN>;
-+		};
-+
-+		emif2: emif@0x4d000000 {
-+			cs1-used;
-+			device-handle = <&elpida_ECB240ABACN>;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index e8fe75f..bd57229 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -127,5 +127,24 @@
- 			ti,hwmods = "uart4";
- 			clock-frequency = <48000000>;
- 		};
-+
-+		emif1: emif@0x4c000000 {
-+			compatible	= "ti,emif-4d";
-+			ti,hwmods	= "emif1";
-+			phy-type	= <1>;
-+			hw-caps-read-idle-ctrl;
-+			hw-caps-ll-interface;
-+			hw-caps-temp-alert;
-+		};
-+
-+		emif2: emif@0x4d000000 {
-+			compatible	= "ti,emif-4d";
-+			ti,hwmods	= "emif2";
-+			phy-type	= <1>;
-+			hw-caps-read-idle-ctrl;
-+			hw-caps-ll-interface;
-+			hw-caps-temp-alert;
-+		};
-+
- 	};
- };
--- 
-1.7.1
-
+T24gVGh1LCAyMDEyLTAxLTE5IGF0IDE0OjAxICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBP
+biAwMS8xOS8yMDEyIDA3OjQzIEFNLCBQYXdlbCBNb2xsIHdyb3RlOgo+ID4gT24gVGh1LCAyMDEy
+LTAxLTE5IGF0IDEzOjM0ICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiA+Pj4gWW91J3JlIHJp
+Z2h0IC0gdGhlIHNrZWxldG9uLmR0c2kgY29udGFpbnMgIm1lbW9yeSIgbW9kZS4uLiBGdW5uaWx5
+Cj4gPj4+IGVub3VnaCBvcmlnaW5hbGx5IEkgd2FzIHVzaW5nIHRoYXQgbmFtZSwgYnV0IHRoZW4g
+Um9iIEhlcnJpbmcgc3VnZ2VzdGVkCj4gPj4+IGNoYW5naW5nIGl0IHRvIEA4MDAwMDAwMCwgd2hp
+Y2ggc2VlbWVkIHJlYXNvbmFibGUuCj4gPj4+Cj4gPj4+IE5vdyBJIHdvbmRlciAtIGlzIHRoZSAi
+bWVtb3J5IiBub2RlIHNwZWNpYWwgYW5kIHNob3VsZCBub3QgY29udGFpbgo+ID4+PiAiQGFkZHJl
+c3MiLCBvciB0aGUgc2tlbHRvbiBzaG91bGRuJ3QgY29udGFpbiB0aGUgZW1wdHkgIm1lbW9yeSIg
+bm9kZS4uLgo+ID4+Pgo+ID4+Cj4gPj4gSHVtbW0uLi4gSSBndWVzcyB5b3Ugc2hvdWxkIGp1c3Qg
+dXNlICJtZW1vcnkiIGlmIHlvdSBhcmUgdXNpbmcKPiA+PiBza2VsZXRvbi5kdHNpLgo+ID4gCj4g
+PiBXZWxsLCBJIGRvbid0IG1pbmQgX25vdF8gdXNpbmcgc2tlbGV0b24sIGJ1dCBJIGhhZCBhbiBp
+bXByZXNzaW9uIHRoZQo+ID4gZ2VuZXJhbCBwb2xpY3kgd2FzIHRvIHVzZSBpdD8KPiAKPiBFaXRo
+ZXIgd2F5IGlzIGZpbmUuIEkgZG9uJ3QgcmVhbGx5IHRoaW5rIGl0IGJ1eXMgeW91IG11Y2guCgpP
+aywgL2luY2x1ZGUvICJza2VsZXRvbi5kdHNpIiBpcyBnb25lIHRoZW4gOi0pCgpDaGVlcnMhCgpQ
+YXdlxYIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
