@@ -1,38 +1,93 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [RFC v3 PATCH 1/3] dt: device tree bindings for DDR memories
-Date: Thu, 19 Jan 2012 11:31:09 -0800
-Message-ID: <CAOesGMikm8szKR_yyeV-4NbnknCLG3z9N_sj+zydyu+cosj-Tg@mail.gmail.com>
-References: <1326983521-373-1-git-send-email-aneesh@ti.com>
-	<1326983521-373-2-git-send-email-aneesh@ti.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: Re: [PATCH v2 2/7] fdt: Add function to allow aliases to
+ refer to multiple nodes
+Date: Thu, 19 Jan 2012 13:49:01 -0700
+Message-ID: <4F1881BD.2050704@nvidia.com>
+References: <1326394818-32227-1-git-send-email-sjg@chromium.org>
+	<1326394818-32227-3-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1326983521-373-2-git-send-email-aneesh@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Aneesh V <aneesh@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajendra Nayak <rnayak@ti.com>, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1326394818-32227-3-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <TWarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 01/12/2012 12:00 PM, Simon Glass wrote:
+> Some devices can deal with multiple compatible properties. The devices
+> need to know which nodes to bind to which features. For example an
+> I2C driver which supports two different controller types will want to
+> know which type it is dealing with in each case.
+> 
+> The new fdtdec_add_aliases_for_id() function deals with this by allowing
+> the driver to search for additional compatible nodes for a different ID.
+> It can then detect the new ones and perform appropriate processing.
+> 
+> Another option considered was to return a tuple (node offset, compat id)
+> and have the function be passed a list of compatible IDs. This is more
+> overhead for the common case though. We may add such a function later if
+> more drivers in U-Boot require it.
 
-Sorry for the delay in responding, I know you pinged me about it yesterday.
+> +int fdtdec_add_aliases_for_id(const void *blob, const char *name,
+> +			enum fdt_compat_id id, int *node_list, int maxcount)
+...
+> @@ -232,11 +238,13 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
+>  		 * it as done.
+>  		 */
+>  		if (fdtdec_get_is_enabled(blob, node)) {
+> +			if (node_list[number])
+> +				continue;
+>  			node_list[number] = node;
+>  			if (number >= num_found)
+>  				num_found = number + 1;
+>  		}
+> -		nodes[j] = 0;
+> +		nodes[found] = 0;
+>  	}
+>  
+>  	/* Add any nodes not mentioned by an alias */
 
-On Thu, Jan 19, 2012 at 6:31 AM, Aneesh V <aneesh@ti.com> wrote:
-> device tree bindings for LPDDR2 SDRAM memories compliant
-> to JESD209-2 standard.
->
-> The 'lpddr2' binding in-turn uses another binding 'lpddr2-timings'
-> for specifying the AC timing parameters of the memory device at
-> different speed-bins.
+Aren't those two changes really bug-fixes to the underlying patch rather
+than part of this enhancement?
 
-As I just commented on the thread with Mike, I think we would be
-better off sticking to embedding a standard JEDEC SPD structure in the
-device tree. It's not large (128-256 bytes depending on memory type),
-and it's clearly defined and used all over the industry.
+I'm not convinced this patch is correct in all cases. It'll probably
+work fine for simply device-trees though. Consider the following case:
 
-It also has the benefit of reusing parsing code if you ever end up
-with a system that uses DIMMs for memory, thus needing to parse the
-SPD on said modules.
+4 device nodes
+A: compat=i2c alias for usb0
+B: compat=i2c no alias
+C: compat=i2c alias for usb2
+D: compat=i2cx alias for usb1
 
+First, we search for all compat=i2c, the list comes back:
 
--Olof
+0=A
+1=B
+2=C
+
+Then we search for all compat=i2cx, the list comes back:
+
+-1
+-1
+-1
+D
+
+So D's alias of 1 isn't honored even though if both IDs were searched
+for together, it would have been.
+
+Also, what about the scenario where a driver searches for both
+nvidia,tegra20-i2c then later nvidia,tegra30-i2c, given that all the DT
+nodes are probably compatible with both?
+
+-- 
+nvpublic
