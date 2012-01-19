@@ -1,49 +1,108 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
- tile (TC1 variant)
-Date: Thu, 19 Jan 2012 14:51:12 +0000
-Message-ID: <1326984672.32197.68.camel@hornet.cambridge.arm.com>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
- <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
- <4F0C495C.4000103@citrix.com>
- <1326979652.32197.66.camel@hornet.cambridge.arm.com>
- <4F181BD9.20401@gmail.com>
- <1326980594.32197.67.camel@hornet.cambridge.arm.com>
- <4F182248.7070209@gmail.com>
+From: David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 6/9] ARM: vexpress: Motherboard RS1 memory map support
+Date: Thu, 19 Jan 2012 16:46:56 +0000
+Message-ID: <4F184900.8050901@citrix.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>	
+ <1323957761-13553-7-git-send-email-pawel.moll@arm.com>	
+ <4F047FE1.5030002@citrix.com>
+ <1326979266.32197.60.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F182248.7070209@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326979266.32197.60.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDEyLTAxLTE5IGF0IDE0OjAxICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBP
-biAwMS8xOS8yMDEyIDA3OjQzIEFNLCBQYXdlbCBNb2xsIHdyb3RlOgo+ID4gT24gVGh1LCAyMDEy
-LTAxLTE5IGF0IDEzOjM0ICswMDAwLCBSb2IgSGVycmluZyB3cm90ZToKPiA+Pj4gWW91J3JlIHJp
-Z2h0IC0gdGhlIHNrZWxldG9uLmR0c2kgY29udGFpbnMgIm1lbW9yeSIgbW9kZS4uLiBGdW5uaWx5
-Cj4gPj4+IGVub3VnaCBvcmlnaW5hbGx5IEkgd2FzIHVzaW5nIHRoYXQgbmFtZSwgYnV0IHRoZW4g
-Um9iIEhlcnJpbmcgc3VnZ2VzdGVkCj4gPj4+IGNoYW5naW5nIGl0IHRvIEA4MDAwMDAwMCwgd2hp
-Y2ggc2VlbWVkIHJlYXNvbmFibGUuCj4gPj4+Cj4gPj4+IE5vdyBJIHdvbmRlciAtIGlzIHRoZSAi
-bWVtb3J5IiBub2RlIHNwZWNpYWwgYW5kIHNob3VsZCBub3QgY29udGFpbgo+ID4+PiAiQGFkZHJl
-c3MiLCBvciB0aGUgc2tlbHRvbiBzaG91bGRuJ3QgY29udGFpbiB0aGUgZW1wdHkgIm1lbW9yeSIg
-bm9kZS4uLgo+ID4+Pgo+ID4+Cj4gPj4gSHVtbW0uLi4gSSBndWVzcyB5b3Ugc2hvdWxkIGp1c3Qg
-dXNlICJtZW1vcnkiIGlmIHlvdSBhcmUgdXNpbmcKPiA+PiBza2VsZXRvbi5kdHNpLgo+ID4gCj4g
-PiBXZWxsLCBJIGRvbid0IG1pbmQgX25vdF8gdXNpbmcgc2tlbGV0b24sIGJ1dCBJIGhhZCBhbiBp
-bXByZXNzaW9uIHRoZQo+ID4gZ2VuZXJhbCBwb2xpY3kgd2FzIHRvIHVzZSBpdD8KPiAKPiBFaXRo
-ZXIgd2F5IGlzIGZpbmUuIEkgZG9uJ3QgcmVhbGx5IHRoaW5rIGl0IGJ1eXMgeW91IG11Y2guCgpP
-aywgL2luY2x1ZGUvICJza2VsZXRvbi5kdHNpIiBpcyBnb25lIHRoZW4gOi0pCgpDaGVlcnMhCgpQ
-YXdlxYIKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On 19/01/12 13:21, Pawel Moll wrote:
+> Hi,
+> 
+> Sorry about loooong delay - I've been on holiday.
+> 
+> On Wed, 2012-01-04 at 16:35 +0000, David Vrabel wrote:
+>> On 15/12/11 14:02, Pawel Moll wrote:
+>>> This patch adds support for RS1 memory map based Versatile Express
+>>> motherboard.
+>>>
+>> [...]
+>>> --- a/arch/arm/mach-vexpress/include/mach/debug-macro.S
+>>> +++ b/arch/arm/mach-vexpress/include/mach/debug-macro.S
+>>> @@ -10,12 +10,41 @@
+>>>   * published by the Free Software Foundation.
+>>>   */
+>>>  
+>>> -#define DEBUG_LL_UART_OFFSET	0x00009000
+>>> +#define DEBUG_LL_PHYS_BASE		0x10000000
+>>> +#define DEBUG_LL_UART_OFFSET		0x00009000
+>>> +
+>>> +#define DEBUG_LL_PHYS_BASE_RS1		0x1c000000
+>>> +#define DEBUG_LL_UART_OFFSET_RS1	0x00090000
+>>> +
+>>> +#define DEBUG_LL_VIRT_BASE		0xf8000000
+>>>  
+>>>  		.macro	addruart,rp,rv,tmp
+>>> -		mov	\rp, #DEBUG_LL_UART_OFFSET
+>>> -		orr	\rv, \rp, #0xf8000000	@ virtual base
+>>> -		orr	\rp, \rp, #0x10000000	@ physical base
+>>> +
+>>> +		@ Check the MMU state
+>>> +#if defined(CONFIG_MMU)
+>>> +		mrc	p15, 0, \tmp, c1, c0	@ SCTRL
+>>> +		tst	\tmp, #1		@ MMU enabled?
+>>> +		moveq	\tmp, #DEBUG_LL_PHYS_BASE
+>>> +		movne	\tmp, #DEBUG_LL_VIRT_BASE
+>>> +#else
+>>> +		mov	\tmp, #DEBUG_LL_PHYS_BASE
+>>> +#endif
+>>> +
+>>> +		@ PL011 present in "original" place?
+>>> +		orr	\tmp, \tmp, #DEBUG_LL_UART_OFFSET
+>>> +		ldr	\tmp, [\tmp, #0xfe0]	@ PeriphID0
+>>
+>> This doesn't work with CONFIG_EARLY_PRINTK=y on a system with the RS1
+>> memory map.  
+> 
+> It does for me:
+> 
+> # zcat /proc/config.gz | grep EARLY_PRINTK
+> CONFIG_EARLY_PRINTK=y
+> # cat /proc/device-tree/motherboard/arm,v2m-memory-map && echo
+> rs1     
+> #
+
+earlyprintk needs to be on the kernel command line to enable it.
+Without this option it will work fine.
+
+> Can you tell me what exactly is going wrong in your case? Does it hang
+> without any warning? Do you get at least part of the boot log? Can you
+> send me (privately probably) your kernel config?
+
+The only output is from the zImage decompressor.
+
+It's a synchronous data fault and DFAR is 0xf8009fe0.
+
+>>  __create_page_tables has only mapped the single physical
+>> page at 0x1c090000 and thus the test for the UART in the other memory
+>> map faults.
+> 
+> I investigated this when writing the code and I vaguely remember it was
+> fine, partly by accident. I'll dig in again and let you know my
+> findings.
+
+It's also a problem when running as a guest under a hypervisor as there
+won't be any stage 2 translation table entries for non-existent peripherals.
+
+I think there needs to be someway of finding out from the DTB which UART
+to use.
+
+David
