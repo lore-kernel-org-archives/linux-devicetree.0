@@ -1,96 +1,49 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: Pinmux bindings proposal
-Date: Thu, 19 Jan 2012 02:57:28 -0800
-Message-ID: <20120119105728.GE22818@atomide.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <20120116182808.GG4223@ponder.secretlab.ca>
- <20120118141329.GA22818@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1780DAAEBB@HQMAIL01.nvidia.com>
+From: Aneesh V <aneesh@ti.com>
+Subject: Re: [RFC v2 PATCH 1/3] dt: device tree bindings for DDR memories
+Date: Thu, 19 Jan 2012 17:48:52 +0530
+Message-ID: <4F180A2C.8060405@ti.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com>	<1324303533-17458-2-git-send-email-aneesh@ti.com> <CAOesGMjOybCbu1Bgxe0Te=XANVOqOPcaDOL_6c4=pVCxzu9ZnA@mail.gmail.com> <4EF034C0.9070401@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1780DAAEBB@HQMAIL01.nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4EF034C0.9070401@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajendra Nayak <rnayak@ti.com>, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-* Stephen Warren <swarren@nvidia.com> [120118 11:29]:
-> Tony Lindgren wrote at Wednesday, January 18, 2012 7:13 AM:
-> 
-> I'd prefer not to do that for my platforms, for the reason Shawn points
-> out in his reply to yours.
-> 
-> However, I believe the bindings I proposed are flexible enough to allow
-> you to do exactly this for your platforms without requiring that everyone
-> do it.
+Hi Olof,
 
-Well I can easily use one phandle per pinmux controller instance
-instead of one phandle per pin, so let's plan on doing that.
- 
-> Recall my proposal was:
+On Tuesday 20 December 2011 12:39 PM, Aneesh V wrote:
+> Hi Olof,
+>
+> On Monday 19 December 2011 10:22 PM, Olof Johansson wrote:
+>> Hi,
+>>
+>> Some comments below, but also a more general question: How much of
+>> this generic data makes sense to encode in the device tree? Final
+>> hardware configuration usually has to take into consideration board
+>> layout/signal delays, etc, and that's not part of this binding.
 
-Yes I think that's pretty close to what I'm using, just few
-minor comments below.
- 
-> pmx_sdhci_standby: pinctrl@0 {
->     /* Format is <&pmx_controller_phandle muxable_entity_id
->      * selected_function>.
->      */
->     mux =
->         <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
->         <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>;
+When I was looking at your comments again for fixing them, I just
+realized that I hadn't answered part of this question. In the recent
+OMAPs, memory chips are stacked on to the OMAP, hence board layout etc
+doesn't figure in the equation. The only board level details that we
+need to program the memory controller are the details about the memory
+device itself, which is what this binding is targeting.
 
-Assuming this is describing the pins a driver is using, how
-about calling it pins?
+>
+> The JEDEC specifies base values for all timing parameters. But Vendors
+> can improve on these timings and provide better values. Using device
+> specific timing values therefore provides scope for optimization.
+>
+> Everything that I have encoded here is needed by our driver to
+> re-configure our SDRAM controller during DVFS. In fact, I have not
+> listed all AC timing parameters in the spec in this binding, leaving
+> the rest for future users to add if they need them.
+>
 
-That's because you might want to do all the muxing in a
-bootloader, but still need to tell how many pins you're using
-for MMC on a device. So it actually has a wider meaning than just
-mux.
 
-Also, we need to standardize on some name to use for parsing pins
-using of_parse_phandle_with_args, and I suggested #pin-args.
-
->     config =
->         <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 1>
->         <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 1>
->         <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
->         <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
->         <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_SLEW_RATE 4>
->         <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_SLEW_RATE 8>;
-> };
-
-Here I don't quite understand how config is different from pins/mux
-above? It seems to set the driver/pull stuff, but why don't you
-just make #pin-args larger and have a wider pin array?
-
-Something like:
-
-	pins =
-	<&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1 TEGRA_PMX_CONF_TRISTATE 1
-	 &tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1 TEGRA_PMX_CONF_TRISTATE 1>;
-
-and in the parent set #pin-args to 3.
- 
-> (Note that I think we've agreed to remove the first cell above, &tegra_pmx,
-> now by requiring such nodes exist as children of the pin controller.)
-
-Sorry I don't quite follow, can you please maybe repost a complete
-.dts entry for your pin controller and one driver entry?
- 
-> My assertion is that the common pinmux bindings define that the
-> Interpretation of muxable_entity_id is left up to the binding of the
-> specific pin controller. Hence, I can says "it's an integer, and here
-> is the list of valid values and what they mean", and you can say "it's
-> a phandle, which must refer to one of the per-pin nodes defined by the
-> pin controller".
-> 
-> Does that work for you?
-
-Yes it does, other than the comments above.
-
-Regards,
-
-Tony
+br,
+Aneesh
