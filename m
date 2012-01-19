@@ -1,53 +1,74 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [RFC PATCH 0/5] ARM: introducing DT topology
-Date: Thu, 19 Jan 2012 12:18:32 +0000
-Message-ID: <20120119121832.GD9268@arm.com>
+Date: Thu, 19 Jan 2012 12:23:36 +0000
+Message-ID: <20120119122336.GY1068@n2100.arm.linux.org.uk>
 References: <1326897408-11204-1-git-send-email-lorenzo.pieralisi@arm.com>
  <20120118162423.GK1068@n2100.arm.linux.org.uk>
  <20120118175028.GD9691@e102568-lin.cambridge.arm.com>
  <20120118180453.GN1068@n2100.arm.linux.org.uk>
+ <20120119121832.GD9268@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120118180453.GN1068@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20120119121832.GD9268-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2012 at 06:04:53PM +0000, Russell King - ARM Linux wrote:
-> On Wed, Jan 18, 2012 at 05:50:28PM +0000, Lorenzo Pieralisi wrote:
-> > > This sounds like you're saying that the contents of MPIDR might be buggy
-> > > sometime in the future?  Do we actually know of any situations where the
-> > > information in there is currently wrong (outside of the development lab)?
-> > > If not, it's not something we should cater for until it's actually happened,
-> > > and then the pain should be felt by those silly enough to allow the chip
-> > > to go out the door.
+On Thu, Jan 19, 2012 at 12:18:32PM +0000, Catalin Marinas wrote:
+> On Wed, Jan 18, 2012 at 06:04:53PM +0000, Russell King - ARM Linux wrote:
+> > On Wed, Jan 18, 2012 at 05:50:28PM +0000, Lorenzo Pieralisi wrote:
+> > > > This sounds like you're saying that the contents of MPIDR might be buggy
+> > > > sometime in the future?  Do we actually know of any situations where the
+> > > > information in there is currently wrong (outside of the development lab)?
+> > > > If not, it's not something we should cater for until it's actually happened,
+> > > > and then the pain should be felt by those silly enough to allow the chip
+> > > > to go out the door.
+> > > 
+> > > I share your view Russell. Having said that: MPIDR is IMPLEMENTATION DEFINED.
 > > 
-> > I share your view Russell. Having said that: MPIDR is IMPLEMENTATION DEFINED.
+> > I'll assume you mean that it's left to the implementation to set MPIDR
+> > appropriately, and you're expecting implementations to make mistakes
+> > with it.
 > 
-> I'll assume you mean that it's left to the implementation to set MPIDR
-> appropriately, and you're expecting implementations to make mistakes
-> with it.
+> I think what Lorenzo means is that MPIDR is indeed a mandated register
+> with certain bits specified by the ARM ARM. However, the affinity bits
+> are left to the implementation. The ARM ARM makes recommendations and
+> gives some examples but they are not mandatory. An implementer is under
+> no legal obligation to follow the examples. It is not that unlikely that
+> someone in the future may use a different cluster/processor counting
+> scheme than ours. Also in the context of virtualisation, the lower
+> affinity field may be used for virtual CPUs counting).
 
-I think what Lorenzo means is that MPIDR is indeed a mandated register
-with certain bits specified by the ARM ARM. However, the affinity bits
-are left to the implementation. The ARM ARM makes recommendations and
-gives some examples but they are not mandatory. An implementer is under
-no legal obligation to follow the examples. It is not that unlikely that
-someone in the future may use a different cluster/processor counting
-scheme than ours. Also in the context of virtualisation, the lower
-affinity field may be used for virtual CPUs counting).
+So what you're saying is that the definition of this register has become
+soo loose that it's completely useless.  Oh what a really great move.
 
--- 
-Catalin
+Your designers really need their heads bashed against a brick wall to
+knock some sense into them over stuff like this.  It's exactly this
+kind of idiotic 'infinite flexibility' that Linus had a moan about
+last year.
+
+What it means is that we need _more_ code to support whatever
+manufacturers come up in their scheme of things - rather than having
+a standard way to represent these details, which software can parse
+in a consistent way.
+
+Instead, we have something that's effectively mandated to be present
+but is basically useless because no software can parse it properly
+without specific information from the manufacturer, and even then
+its not guaranteed.
+
+Well done ARM Ltd.  Again.
+
+Stop doing this.
