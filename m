@@ -1,165 +1,66 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Pinmux bindings proposal
-Date: Thu, 19 Jan 2012 18:40:12 +0530
-Message-ID: <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v6 6/9] ARM: vexpress: Motherboard RS1 memory map support
+Date: Thu, 19 Jan 2012 13:21:06 +0000
+Message-ID: <1326979266.32197.60.camel@hornet.cambridge.arm.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-7-git-send-email-pawel.moll@arm.com>
+ <4F047FE1.5030002@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F047FE1.5030002@citrix.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14 January 2012 02:09, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> I thought a bit more about pinmux DT bindings. I came up with something
-> that I like well enough, and is pretty similar to the binding that Dong
-> posted recently. I think it'll work for both Tegra's and IMX's needs.
-> Please take a look!
->
-> Note: I've used named constants below just to make this easier to read.
-> We still don't have a solution to actually use named constants in dtc yet.
->
-
-[...]
-
-For Samsung io-pad controllers, I had been considering a dt approach
-which has been described below. Kindly review and any comments will be
-helpful.
-
-
-* Main points to be considered:
-
-All Samsung SoC's use a io-pad controller that includes gpio, pinmux
-and pinconfig functionality in a single controller, i.e. there is a
-single intermixed address space for gpio/pinmux/pinconfig portions in
-the controller. Additionally, all the drivers for the Samsung SoC's
-setup pinmux/pinconfig in its probe function (and in resume if
-required).
-
-
-* IO Pad controllers in dts file:
-
-The io-pad controller (gpio/pinmux/pinconfig) can be represented in a
-dtsi file as below. There could be multiple io-pad controllers
-supported in the system.
-
-pctrl0: pinctrl@11400000 {
-       compatible = "samsung,exynos4210-pinctrl";
-       reg = <0x11400000 0x1000>;
-       interrupts = <.......>;
-       pin-banks = <....>;
-       [... other properties TBD ...]
-       #pinctrl-cells = <5>;
-};
-
-Each such node instantiates one instance of the pin-controller device.
-The 'struct pinctrl_dev' should include a new member 'struct of_node'
-to point to the corresponding pin-controller node in dt which
-instantiated the controller. The pinctrl_register() function called
-from drivers/pinctrl/pinctrl-xyz.c then registers the pin-controller
-instance.
-
-
-* Specifying the pinmux/pinconfig settings in dts files:
-
-Device nodes which require specific pinmux/pinconfig settings should
-include information about the required settings. For example, a i2c
-controller node in dts file is listed below.
-
-i2c0: i2c@18000000 {
-        [... other properties ...]
-        pinctrl-active = <&pctrl0 5 0 2 3 0>,
-                             <&pctrl0 5 1 2 3 0>;
-        pinctrl-suspend = <&pctrl0 5 0 2 0 0>,
-                                <&pctrl0 5 1 2 0 0>;
-};
-
-In the example above, the specifier of pinctrl-* is specific for
-Samsung io-pad controllers. Its format/syntax would be mainly
-dependent on the io-pad controller used, the above is only an example
-for Samsung io-pad controller. In the above node, the format of the
-pinctrl-* specifier is
-
-property-name = <phandle of the pin-controller
-                           pin bank within the pin-controller
-                           pin number within the pin-bank
-                           pin-mux function number
-                           pull up/down config
-                           drive strength config>;
-
-
-* Using the pinmux/pinconfig specifier in device nodes to configure hardware.
-
-A driver (for a device instantiated from device tree) would require
-code to be made aware of the pinmux/pinconfig options available. The
-typical sequence in a probe function would be as below.
-
-(a) call of_get_named_gpio() to get the gpio number. In case of
-Samsung pinctrl driver, the pinctrl driver itself provides the gpiolib
-functionality and it attaches a gpio specifier translator with the
-gpio_chip. This translator is capable of translating the pinctrl-* and
-returning a gpio number.
-
-(b) gpio_request() the gpio number obtained in step (a) above.
-
-(c) Repeat steps (a) and (b) until all the gpios required by the
-driver are requested. In case a request fails, give up all the
-successfully requested gpio and return failure.
-
-(d) For all entries in pinctrl-* property, use
-of_parse_phandles_with_args() and get the pinctrl node pointer and the
-pinctrl specifier. As an example, the i2c driver would do the
-following, incrementing pin-index parameter for each call.
-
-ret = of_parse_phandle_with_args(i2c_np, "pinctrl-active",
-"#pinctrl-cells", pin-index, &pctrl_np, &pctrl_specifier);
-
-(e) There should be a new api in pinctrl subsystem whose signature
-could be something like
-
-int pinctrl_dt_parse_and_set_mux_cfg(struct device_node *, const void *);
-
-For each iteration of step (d) in the driver, this new api will be
-called. The value of pctrl_np and pctrl_specifier obtained from step
-(d) is passed as a parameters to this new api. This api will do the
-following
-
-(e1) Find the pin-controller (struct pinctrl_dev) that has a
-device_node pointer which is same as the first parameter. To recap, it
-was mentioned above that: "The 'struct pinctrl_dev' should include a
-new member 'struct of_node' to point to the corresponding
-pin-controller node in dt which instantiated the controller."
-
-(e2) A new callback 'xlate_pinctrl' is required in 'struct
-pinctrl_ops' which can translate the second parameter of
-'pinctrl_dt_parse_and_set_mux_cfg' function. From the pin controller
-found in step (e1), call pinctrl_dev->desc->pctlops->xlate_pinctrl
-passing the second parameter of 'pinctrl_dt_parse_and_set_mux_cfg'
-function. The pin-controller specific translator function will
-translate the parameter and program the hardware registers. The
-xlate_pinctrl is specific to each pin-controller is it knows how to
-decode the specifier and program the registers.
-
-
-The above method may have some elements that are specific to Samsung
-io-pad controller. But the main requirement for the above procedure
-from the pinctrl subsystem is the new API
-'pinctrl_dt_parse_and_set_mux_cfg' and related additions to 'struct
-pinctrl_dev' and ''struct pinctrl_ops'. These additions are generic
-and any io-pad controller could use it.
-
-Thanks for any feedback.
-
-Regards,
-Thomas.
+SGksCgpTb3JyeSBhYm91dCBsb29vb25nIGRlbGF5IC0gSSd2ZSBiZWVuIG9uIGhvbGlkYXkuCgpP
+biBXZWQsIDIwMTItMDEtMDQgYXQgMTY6MzUgKzAwMDAsIERhdmlkIFZyYWJlbCB3cm90ZToKPiBP
+biAxNS8xMi8xMSAxNDowMiwgUGF3ZWwgTW9sbCB3cm90ZToKPiA+IFRoaXMgcGF0Y2ggYWRkcyBz
+dXBwb3J0IGZvciBSUzEgbWVtb3J5IG1hcCBiYXNlZCBWZXJzYXRpbGUgRXhwcmVzcwo+ID4gbW90
+aGVyYm9hcmQuCj4gPiAKPiBbLi4uXQo+ID4gLS0tIGEvYXJjaC9hcm0vbWFjaC12ZXhwcmVzcy9p
+bmNsdWRlL21hY2gvZGVidWctbWFjcm8uUwo+ID4gKysrIGIvYXJjaC9hcm0vbWFjaC12ZXhwcmVz
+cy9pbmNsdWRlL21hY2gvZGVidWctbWFjcm8uUwo+ID4gQEAgLTEwLDEyICsxMCw0MSBAQAo+ID4g
+ICAqIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLgo+ID4gICAqLwo+
+ID4gIAo+ID4gLSNkZWZpbmUgREVCVUdfTExfVUFSVF9PRkZTRVQJMHgwMDAwOTAwMAo+ID4gKyNk
+ZWZpbmUgREVCVUdfTExfUEhZU19CQVNFCQkweDEwMDAwMDAwCj4gPiArI2RlZmluZSBERUJVR19M
+TF9VQVJUX09GRlNFVAkJMHgwMDAwOTAwMAo+ID4gKwo+ID4gKyNkZWZpbmUgREVCVUdfTExfUEhZ
+U19CQVNFX1JTMQkJMHgxYzAwMDAwMAo+ID4gKyNkZWZpbmUgREVCVUdfTExfVUFSVF9PRkZTRVRf
+UlMxCTB4MDAwOTAwMDAKPiA+ICsKPiA+ICsjZGVmaW5lIERFQlVHX0xMX1ZJUlRfQkFTRQkJMHhm
+ODAwMDAwMAo+ID4gIAo+ID4gIAkJLm1hY3JvCWFkZHJ1YXJ0LHJwLHJ2LHRtcAo+ID4gLQkJbW92
+CVxycCwgI0RFQlVHX0xMX1VBUlRfT0ZGU0VUCj4gPiAtCQlvcnIJXHJ2LCBccnAsICMweGY4MDAw
+MDAwCUAgdmlydHVhbCBiYXNlCj4gPiAtCQlvcnIJXHJwLCBccnAsICMweDEwMDAwMDAwCUAgcGh5
+c2ljYWwgYmFzZQo+ID4gKwo+ID4gKwkJQCBDaGVjayB0aGUgTU1VIHN0YXRlCj4gPiArI2lmIGRl
+ZmluZWQoQ09ORklHX01NVSkKPiA+ICsJCW1yYwlwMTUsIDAsIFx0bXAsIGMxLCBjMAlAIFNDVFJM
+Cj4gPiArCQl0c3QJXHRtcCwgIzEJCUAgTU1VIGVuYWJsZWQ/Cj4gPiArCQltb3ZlcQlcdG1wLCAj
+REVCVUdfTExfUEhZU19CQVNFCj4gPiArCQltb3ZuZQlcdG1wLCAjREVCVUdfTExfVklSVF9CQVNF
+Cj4gPiArI2Vsc2UKPiA+ICsJCW1vdglcdG1wLCAjREVCVUdfTExfUEhZU19CQVNFCj4gPiArI2Vu
+ZGlmCj4gPiArCj4gPiArCQlAIFBMMDExIHByZXNlbnQgaW4gIm9yaWdpbmFsIiBwbGFjZT8KPiA+
+ICsJCW9ycglcdG1wLCBcdG1wLCAjREVCVUdfTExfVUFSVF9PRkZTRVQKPiA+ICsJCWxkcglcdG1w
+LCBbXHRtcCwgIzB4ZmUwXQlAIFBlcmlwaElEMAo+IAo+IFRoaXMgZG9lc24ndCB3b3JrIHdpdGgg
+Q09ORklHX0VBUkxZX1BSSU5USz15IG9uIGEgc3lzdGVtIHdpdGggdGhlIFJTMQo+IG1lbW9yeSBt
+YXAuICAKCkl0IGRvZXMgZm9yIG1lOgoKIyB6Y2F0IC9wcm9jL2NvbmZpZy5neiB8IGdyZXAgRUFS
+TFlfUFJJTlRLCkNPTkZJR19FQVJMWV9QUklOVEs9eQojIGNhdCAvcHJvYy9kZXZpY2UtdHJlZS9t
+b3RoZXJib2FyZC9hcm0sdjJtLW1lbW9yeS1tYXAgJiYgZWNobwpyczEgICAgIAojCgpDYW4geW91
+IHRlbGwgbWUgd2hhdCBleGFjdGx5IGlzIGdvaW5nIHdyb25nIGluIHlvdXIgY2FzZT8gRG9lcyBp
+dCBoYW5nCndpdGhvdXQgYW55IHdhcm5pbmc/IERvIHlvdSBnZXQgYXQgbGVhc3QgcGFydCBvZiB0
+aGUgYm9vdCBsb2c/IENhbiB5b3UKc2VuZCBtZSAocHJpdmF0ZWx5IHByb2JhYmx5KSB5b3VyIGtl
+cm5lbCBjb25maWc/Cgo+ICBfX2NyZWF0ZV9wYWdlX3RhYmxlcyBoYXMgb25seSBtYXBwZWQgdGhl
+IHNpbmdsZSBwaHlzaWNhbAo+IHBhZ2UgYXQgMHgxYzA5MDAwMCBhbmQgdGh1cyB0aGUgdGVzdCBm
+b3IgdGhlIFVBUlQgaW4gdGhlIG90aGVyIG1lbW9yeQo+IG1hcCBmYXVsdHMuCgpJIGludmVzdGln
+YXRlZCB0aGlzIHdoZW4gd3JpdGluZyB0aGUgY29kZSBhbmQgSSB2YWd1ZWx5IHJlbWVtYmVyIGl0
+IHdhcwpmaW5lLCBwYXJ0bHkgYnkgYWNjaWRlbnQuIEknbGwgZGlnIGluIGFnYWluIGFuZCBsZXQg
+eW91IGtub3cgbXkKZmluZGluZ3MuCgpUaGFua3MgZm9yIHRyeWluZyB0aGlzIG91dCEKClBhd2XF
+ggoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsCg==
