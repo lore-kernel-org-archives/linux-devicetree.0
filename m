@@ -1,169 +1,54 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: Pinmux bindings proposal
-Date: Fri, 20 Jan 2012 00:08:10 +0530
-Message-ID: <CAJuYYwQouBDP6dL0B8QOaF0_JsbR7fysySZ5ebcF4op9aTQqbQ@mail.gmail.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
-	<CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
-	<20120119165607.GG22818@atomide.com>
-	<CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
-	<20120119182019.GI22818@atomide.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [RFC v2 PATCH 0/3] dt: device tree bindings and data for EMIF and DDR
+Date: Thu, 19 Jan 2012 11:26:55 -0800
+Message-ID: <CAOesGMgrfZpGhKx1yHir6WEELm5ntG5GJD3YccOvVO+HhZc6NQ@mail.gmail.com>
+References: <1324303533-17458-1-git-send-email-aneesh@ti.com>
+	<4EEFC23A.30201@gmail.com>
+	<20111219233559.GW6464@atomide.com>
+	<4EF0671B.7090508@ti.com>
+	<4EF0824A.9060208@ti.com>
+	<4EF096C9.1070808@ti.com>
+	<4F09D10B.7010807@ti.com>
+	<CAOesGMjFmM=gXddvFzW+BYqOedySjPVZ6hjwsF-F40Wr9BvSLg@mail.gmail.com>
+	<4F1087C9.6030908@ti.com>
+	<CAJOA=zNuVQ9zjhmA5Uc=ksOM2Q7AE4g9ddPDJ3e+QPnUfui4wA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120119182019.GI22818@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAJOA=zNuVQ9zjhmA5Uc=ksOM2Q7AE4g9ddPDJ3e+QPnUfui4wA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Turquette, Mike" <mturquette@ti.com>
+Cc: Aneesh V <aneesh@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vishwanath Sripathy <vishwanath.bs@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19 January 2012 23:50, Tony Lindgren <tony@atomide.com> wrote:
-> * Thomas Abraham <thomas.abraham@linaro.org> [120119 09:05]:
->>
->> On 19 January 2012 22:26, Tony Lindgren <tony@atomide.com> wrote:
->> > * Thomas Abraham <thomas.abraham@linaro.org> [120119 04:37]:
->> >>
->> >> i2c0: i2c@18000000 {
->> >> =A0 =A0 =A0 =A0 [... other properties ...]
->> >> =A0 =A0 =A0 =A0 pinctrl-active =3D <&pctrl0 5 0 2 3 0>,
->> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<&pctr=
-l0 5 1 2 3 0>;
->> >> =A0 =A0 =A0 =A0 pinctrl-suspend =3D <&pctrl0 5 0 2 0 0>,
->> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <=
-&pctrl0 5 1 2 0 0>;
->> >> };
->> >
->> > Maybe we should have just the active/suspend/off flags in the
->> > same array? Otherwise we'll end up unnecessarily repeating the
->> > the pin information. See the pins + #pin-args example I posted,
->> > which is otherwise similar.
->>
->> Yes, I agree. That would be better.
->
-> OK great.
->
->> >
->> >> In the example above, the specifier of pinctrl-* is specific for
->> >> Samsung io-pad controllers. Its format/syntax would be mainly
->> >> dependent on the io-pad controller used, the above is only an exa=
-mple
->> >> for Samsung io-pad controller. In the above node, the format of t=
-he
->> >> pinctrl-* specifier is
->> >>
->> >> property-name =3D <phandle of the pin-controller
->> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin bank w=
-ithin the pin-controller
->> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin number=
- within the pin-bank
->> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin-mux fu=
-nction number
->> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pull up/do=
-wn config
->> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0drive stre=
-ngth config>;
->> >
->> > Are these all just bits in one register? If so, let's say you
->> > have 16-bits per pin, we might be able to share the generic
->> > pinmux-simple.c driver I have almost ready..
->>
->> no, these get written to different registers, one for pinmux, one fo=
-r
->> pull up/down and one for drive strength. It would be helpful of your
->> pinmux-simple.c can support writes to multiple registers also.
->
-> Hmm yeah that should be doable, and actually we have the old legacy
-> omap1510 set up with three different registers per pin..
->
-> The question is: Do we want to add the on/idle/off modes for each
-> pin in .dts, or do we want to have the driver set the dynamic muxing
-> flags separately?
->
+Hi,
 
-It would be better to include the pin muxing and config options in the
-node of a device. So a i2c device node would have pin mux and pin
-config options listed in its node. But this means, each board dts file
-would have to repeat this information. On the other hand, describing
-mux and config options for each pin in a SoC dtsi file would be too
-much of information. I would go with the first option.
+On Mon, Jan 16, 2012 at 11:15 AM, Turquette, Mike <mturquette@ti.com> w=
+rote:
+
+> And delaying DVFS (at least for the parts affecting mem) until
+> userspace is loaded doesn't seem great to me either. =A0We're basical=
+ly
+> pushing back feature readiness (with respect to boot sequence) in the
+> name of organizing data in a pretty way... but it's not a pretty
+> solution since the data will have to be "split" as shown above.
+
+Ok, so let's put the JEDEC SPD data in the device tree then. But I
+fail to see how that changes the "split"? There's still two sources of
+configuration, one from firmware used at boot and one from a data
+structure that the kernel uses.
+
+I do think sticking to an existing well-defined data structure such as
+SPD data is to be preferred over doing an open-coded new binding. This
+way, some platforms that might or might not have SPD in hardware can
+use the same code paths (i.e. a board that has memory on a DIMM
+instead of soldered down, or that uses soldered-down SPD).
 
 
->> > The format would then be
->> >
->> > =A0 =A0 =A0 =A0#pin-args <4>;
->> > =A0 =A0 =A0 =A0...
->> >
->> > =A0 =A0 =A0 =A0/* =A0 =A0controller =A0offset on =A0 idle off */
->> > =A0 =A0 =A0 =A0pins =3D <&pinctrl0 0x0030 0x15 0x15 0x7>;
->> >
->> >> * Using the pinmux/pinconfig specifier in device nodes to configu=
-re hardware.
->> >>
->> >> A driver (for a device instantiated from device tree) would requi=
-re
->> >> code to be made aware of the pinmux/pinconfig options available. =
-The
->> >> typical sequence in a probe function would be as below.
->> >>
->> >> (a) call of_get_named_gpio() to get the gpio number. In case of
->> >> Samsung pinctrl driver, the pinctrl driver itself provides the gp=
-iolib
->> >> functionality and it attaches a gpio specifier translator with th=
-e
->> >> gpio_chip. This translator is capable of translating the pinctrl-=
-* and
->> >> returning a gpio number.
->> >>
->> >> (b) gpio_request() the gpio number obtained in step (a) above.
->> >>
->> >> (c) Repeat steps (a) and (b) until all the gpios required by the
->> >> driver are requested. In case a request fails, give up all the
->> >> successfully requested gpio and return failure.
->> >
->> > Can't the driver do this to request the gpio pins that you
->> > can get from DT and pinmux? Even if you need to do dynamic pinmuxi=
-ng
->> > to GPIO pins for wake-up events, you can do that from the driver
->> > as long as you get the GPIO number for the pin from mux code.
->>
->> Yes, it is the driver that finds out the gpio number from dt and
->> requests it. Maybe, I did not understand your point here.
->
-> Oh ok, sorry I misunderstood thinking you want to do all that in the
-> pinmux driver..
->
->> With the approach that I mentioned in the previous email, there are =
-no
->> pinmux, pin groups or pin desc tables built from dt. Each device nod=
-e
->> specifies what needs to configured (pinmux,pinconfig) and the code
->> using that device node uses pinctrl driver to get those
->> pinmux/pinconfig values written to the hardware registers.
->>
->> Does the dt support for pinmux/pinconfig that you are developing bui=
-ld
->> the pinmux, pin groups or pin desc tables? Do drivers have to call
->> pinmux_{get/put}() or pin_config_set() functions even in dt case?
->
-> Yeah the pinmux/pingroups and functions are built from the DT. Driver=
-s
-> would have to still call pinmux_get and set right now. But some of th=
-is
-> could probably be automatically done using runtime PM?
->
-
-I would like to understand the need for populating the
-pinmux/pingroups tables from dt. The question here is when we have
-something like
-
-pins =3D <&pinctrl0 0x0030 0x15 0x15 0x7>;
-
-which specifies the values that need to be written to the hardware
-registers, would populating pinmux/pingroup tables from dt required.
-The SoC specific pinctrl driver can provide a way (with the help of
-pinctrl core) to translate these values and write to corresponding
-hardware registers. Is there any particular reason for populating the
-pinmux/pingroups tables from dt?
-
-Thanks,
-Thomas.
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
