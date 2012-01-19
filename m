@@ -1,16 +1,16 @@
 From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v4 08/20] fdt: Add staging area for device tree
-	binding documentation
-Date: Thu, 19 Jan 2012 15:52:14 -0800
-Message-ID: <CAPnjgZ11huAjErvzTrao2Gy4+=FLCESFXwKSEApyBfA1kGuLLw@mail.gmail.com>
+Subject: Re: [PATCH v4 12/20] tegra: usb: fdt: Add additional
+ device tree definitions for USB ports
+Date: Thu, 19 Jan 2012 15:53:48 -0800
+Message-ID: <CAPnjgZ1PhBmDh7_C9jF78Qi2RW7SHtco=ho9LN_WGJihY1=P-Q@mail.gmail.com>
 References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
-	<1326342789-5781-9-git-send-email-sjg@chromium.org>
-	<4F1747EE.6020805@nvidia.com>
+	<1326342789-5781-13-git-send-email-sjg@chromium.org>
+	<4F17619A.7060108@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4F1747EE.6020805@nvidia.com>
+In-Reply-To: <4F17619A.7060108@nvidia.com>
 List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
 	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
 List-Archive: <http://lists.denx.de/pipermail/u-boot>
@@ -26,30 +26,25 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Stephen,
 
-On Wed, Jan 18, 2012 at 2:30 PM, Stephen Warren <swarren@nvidia.com> wrote:
-> On 01/11/2012 09:32 PM, Simon Glass wrote:
->> Add a directory to hold device tree binding files, to permit easy review
->> of this material in U-Boot patches.
+On Wed, Jan 18, 2012 at 4:19 PM, Stephen Warren <swarren@nvidia.com> wrote:
+> On 01/11/2012 09:33 PM, Simon Glass wrote:
+>> This adds clock references to the USB part of the device tree for U-Boot.
 >>
->> Signed-off-by: Simon Glass <sjg@chromium.org>
+>> The USB timing information may vary between boards sometimes, but for
+>> now we hard-code it in C. This is because all current T2x boards use
+>> the same values, we will deal with T3x later and we first need to agree
+>> on the format for this timing information in the fdt and may in fact
+>> decide that it has no place there.
 >
->> diff --git a/doc/device-tree-bindings/README b/doc/device-tree-bindings/=
-README
+>> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
 >
->> +The intent is not to commit these files to U-Boot, or at least only
->> +temporarily, Rather we hope that the files will be stored in another
->> +repo (shared with Linux) which is brought in as needed. Failing that,
->> +changes here will be =A0commited to the Linux
->> +Documentation/devicetree/bindings/ directory.
+>> + =A0 =A0 =A0 =A0 =A0 =A0 clocks =3D <&periph_clk 22>; =A0 =A0 =A0// PER=
+IPH_ID_USBD
 >
-> Given there is no shared repo right now, I'd assert we should be
-> specific and explicitly state that the intent /is/ to check in the
-> binding documentation here, and mirror the kernel tree.
->
-> But, the patch is fine to me as-is if you wish.
+> Typically /* */ rather than // I think
 
-I'm fine with this too, it probably is more sensible if the U-Boot PTB
-don't mind.
+Yes will fix. Looking forward to your symbolic stuff so that I can
+remove the comment.
 
 Regards,
 Simon
