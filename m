@@ -1,114 +1,67 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: Pinmux bindings proposal
-Date: Thu, 19 Jan 2012 08:56:07 -0800
-Message-ID: <20120119165607.GG22818@atomide.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
+From: David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
+ tile (TC1 variant)
+Date: Thu, 19 Jan 2012 17:00:56 +0000
+Message-ID: <4F184C48.2050505@citrix.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>	
+ <1323957761-13553-10-git-send-email-pawel.moll@arm.com>	
+ <4F0C495C.4000103@citrix.com>	
+ <1326979652.32197.66.camel@hornet.cambridge.arm.com>	
+ <4F181BD9.20401@gmail.com>	
+ <1326980594.32197.67.camel@hornet.cambridge.arm.com>	
+ <4F182248.7070209@gmail.com>
+ <1326984672.32197.68.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Stephen Warren <swarren@nvidia.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326984672.32197.68.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Thomas Abraham <thomas.abraham@linaro.org> [120119 04:37]:
+On 19/01/12 14:51, Pawel Moll wrote:
+> On Thu, 2012-01-19 at 14:01 +0000, Rob Herring wrote:
+>> On 01/19/2012 07:43 AM, Pawel Moll wrote:
+>>> On Thu, 2012-01-19 at 13:34 +0000, Rob Herring wrote:
+>>>>> You're right - the skeleton.dtsi contains "memory" mode... Funnily
+>>>>> enough originally I was using that name, but then Rob Herring suggested
+>>>>> changing it to @80000000, which seemed reasonable.
+>>>>>
+>>>>> Now I wonder - is the "memory" node special and should not contain
+>>>>> "@address", or the skelton shouldn't contain the empty "memory" node...
+>>>>>
+>>>>
+>>>> Hummm... I guess you should just use "memory" if you are using
+>>>> skeleton.dtsi.
+>>>
+>>> Well, I don't mind _not_ using skeleton, but I had an impression the
+>>> general policy was to use it?
+>>
+>> Either way is fine. I don't really think it buys you much.
 > 
-> The io-pad controller (gpio/pinmux/pinconfig) can be represented in a
-> dtsi file as below. There could be multiple io-pad controllers
-> supported in the system.
+> Ok, /include/ "skeleton.dtsi" is gone then :-)
 
-FYI we too have too mux controller instances on omap4. That seems to
-work just fine thanks to the "pinctrl: make it possible to add multiple maps"
-patch by Linus W.
- 
-> pctrl0: pinctrl@11400000 {
->        compatible = "samsung,exynos4210-pinctrl";
->        reg = <0x11400000 0x1000>;
->        interrupts = <.......>;
->        pin-banks = <....>;
->        [... other properties TBD ...]
->        #pinctrl-cells = <5>;
-> };
-> 
-> Each such node instantiates one instance of the pin-controller device.
-> The 'struct pinctrl_dev' should include a new member 'struct of_node'
-> to point to the corresponding pin-controller node in dt which
-> instantiated the controller. The pinctrl_register() function called
-> from drivers/pinctrl/pinctrl-xyz.c then registers the pin-controller
-> instance.
+The problem wasn't with including skeleton.dtsi.  With
+CONFIG_ARM_ATAG_DTB_COMPAT the zImage decompressor modifies the appended
+DTB using information from the ATAGs (see atags_to_fdt()).
 
-Looks similar to what I have too. 
- 
-> * Specifying the pinmux/pinconfig settings in dts files:
-> 
-> Device nodes which require specific pinmux/pinconfig settings should
-> include information about the required settings. For example, a i2c
-> controller node in dts file is listed below.
-> 
-> i2c0: i2c@18000000 {
->         [... other properties ...]
->         pinctrl-active = <&pctrl0 5 0 2 3 0>,
->                              <&pctrl0 5 1 2 3 0>;
->         pinctrl-suspend = <&pctrl0 5 0 2 0 0>,
->                                 <&pctrl0 5 1 2 0 0>;
-> };
+If there's an ATAG giving the amount of RAM the DTB's "memory" node is
+replaced with a new one.  Since the vexpress DTBs don't have a "memory"
+node it's added and the DTB ends up with two nodes describing memory.
 
-Maybe we should have just the active/suspend/off flags in the
-same array? Otherwise we'll end up unnecessarily repeating the
-the pin information. See the pins + #pin-args example I posted,
-which is otherwise similar.
- 
-> In the example above, the specifier of pinctrl-* is specific for
-> Samsung io-pad controllers. Its format/syntax would be mainly
-> dependent on the io-pad controller used, the above is only an example
-> for Samsung io-pad controller. In the above node, the format of the
-> pinctrl-* specifier is
-> 
-> property-name = <phandle of the pin-controller
->                            pin bank within the pin-controller
->                            pin number within the pin-bank
->                            pin-mux function number
->                            pull up/down config
->                            drive strength config>;
+I don't expect any real production vexpress system to use this config
+options -- we're using it now when running as a guest under Xen because
+Xen doesn't (yet) support device tree and we're using ATAGs to tell the
+guest how much RAM it's been allocated.
 
-Are these all just bits in one register? If so, let's say you
-have 16-bits per pin, we might be able to share the generic
-pinmux-simple.c driver I have almost ready.. 
-
-The format would then be
-
-	#pin-args <4>;
-	...
-
-	/*    controller  offset on   idle off */
-	pins = <&pinctrl0 0x0030 0x15 0x15 0x7>;
- 
-> * Using the pinmux/pinconfig specifier in device nodes to configure hardware.
-> 
-> A driver (for a device instantiated from device tree) would require
-> code to be made aware of the pinmux/pinconfig options available. The
-> typical sequence in a probe function would be as below.
-> 
-> (a) call of_get_named_gpio() to get the gpio number. In case of
-> Samsung pinctrl driver, the pinctrl driver itself provides the gpiolib
-> functionality and it attaches a gpio specifier translator with the
-> gpio_chip. This translator is capable of translating the pinctrl-* and
-> returning a gpio number.
-> 
-> (b) gpio_request() the gpio number obtained in step (a) above.
-> 
-> (c) Repeat steps (a) and (b) until all the gpios required by the
-> driver are requested. In case a request fails, give up all the
-> successfully requested gpio and return failure.
-
-Can't the driver do this to request the gpio pins that you
-can get from DT and pinmux? Even if you need to do dynamic pinmuxing
-to GPIO pins for wake-up events, you can do that from the driver
-as long as you get the GPIO number for the pin from mux code.
-
-Regards,
-
-Tony
+David
