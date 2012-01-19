@@ -1,49 +1,55 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] tegra: fdt: Add extra I2C bindings for U-Boot
-Date: Thu, 19 Jan 2012 13:51:45 -0700
-Message-ID: <4F188261.4060607@nvidia.com>
-References: <1326394818-32227-1-git-send-email-sjg@chromium.org>
- <1326394818-32227-4-git-send-email-sjg@chromium.org>
+From: Aneesh V <aneesh@ti.com>
+Subject: Re: [RFC v3 PATCH 1/3] dt: device tree bindings for DDR memories
+Date: Fri, 20 Jan 2012 02:26:38 +0530
+Message-ID: <4F188386.3080507@ti.com>
+References: <1326983521-373-1-git-send-email-aneesh@ti.com>	<1326983521-373-2-git-send-email-aneesh@ti.com> <CAOesGMikm8szKR_yyeV-4NbnknCLG3z9N_sj+zydyu+cosj-Tg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326394818-32227-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMikm8szKR_yyeV-4NbnknCLG3z9N_sj+zydyu+cosj-Tg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajendra Nayak <rnayak@ti.com>, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2012 12:00 PM, Simon Glass wrote:
-> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
+Hi Olof,
 
-> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-> index ca7b523..963cf27 100644
-> --- a/arch/arm/dts/tegra20.dtsi
-> +++ b/arch/arm/dts/tegra20.dtsi
-> @@ -45,6 +45,8 @@
->  		compatible = "nvidia,tegra20-i2c";
->  		reg = <0x7000C000 0x100>;
->  		interrupts = < 70 >;
-> +		clock-frequency = <100000>;
+On Friday 20 January 2012 01:01 AM, Olof Johansson wrote:
+> Hi,
+>
+> Sorry for the delay in responding, I know you pinged me about it yesterday.
+>
+> On Thu, Jan 19, 2012 at 6:31 AM, Aneesh V<aneesh@ti.com>  wrote:
+>> device tree bindings for LPDDR2 SDRAM memories compliant
+>> to JESD209-2 standard.
+>>
+>> The 'lpddr2' binding in-turn uses another binding 'lpddr2-timings'
+>> for specifying the AC timing parameters of the memory device at
+>> different speed-bins.
+>
+> As I just commented on the thread with Mike, I think we would be
+> better off sticking to embedding a standard JEDEC SPD structure in the
+> device tree. It's not large (128-256 bytes depending on memory type),
+> and it's clearly defined and used all over the industry.
+>
+> It also has the benefit of reusing parsing code if you ever end up
+> with a system that uses DIMMs for memory, thus needing to parse the
+> SPD on said modules.
 
-That's board-specific information. I'd rather not include it in the SoC
-.dtsi file even as a default; that way, it forces people to think about
-the correct value and put it in their board file, whereas including a
-default means people probably won't think about it.
+I did mention in the previous thread why SPD doesn't work for us ([1] 
+and [2]). Let me repeat the key points here.
 
-> +		clocks = <&periph_clk 12>;	// PERIPH_ID_I2C1
+1. I couldn't find an SPD addendum for LPDDR2 from the JEDEC website.
+2. This seems to indicate that SPD is not used for LPDDR2 devices.
+3. I tried to see if I can fit the DDR3 or DDR2 SPD for our needs. But
+some of the AC timing parameters needed by our controller are not
+available in those layouts.
 
-Of course, that'll need updating based on the resolution of the clock
-binding thread I started.
+I don't see any option other than defining a new binding for LPDDR2.
 
--- 
-nvpublic
+br,
+Aneesh
+
+[1] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg61250.html
+[2] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg60473.html
