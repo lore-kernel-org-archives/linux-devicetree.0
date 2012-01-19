@@ -1,111 +1,169 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
 Subject: Re: Pinmux bindings proposal
-Date: Thu, 19 Jan 2012 10:20:19 -0800
-Message-ID: <20120119182019.GI22818@atomide.com>
+Date: Fri, 20 Jan 2012 00:08:10 +0530
+Message-ID: <CAJuYYwQouBDP6dL0B8QOaF0_JsbR7fysySZ5ebcF4op9aTQqbQ@mail.gmail.com>
 References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
- <20120119165607.GG22818@atomide.com>
- <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
+	<CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
+	<20120119165607.GG22818@atomide.com>
+	<CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
+	<20120119182019.GI22818@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120119182019.GI22818@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-KiBUaG9tYXMgQWJyYWhhbSA8dGhvbWFzLmFicmFoYW1AbGluYXJvLm9yZz4gWzEyMDExOSAwOTow
-NV06Cj4gCj4gT24gMTkgSmFudWFyeSAyMDEyIDIyOjI2LCBUb255IExpbmRncmVuIDx0b255QGF0
-b21pZGUuY29tPiB3cm90ZToKPiA+ICogVGhvbWFzIEFicmFoYW0gPHRob21hcy5hYnJhaGFtQGxp
-bmFyby5vcmc+IFsxMjAxMTkgMDQ6MzddOgo+ID4+Cj4gPj4gaTJjMDogaTJjQDE4MDAwMDAwIHsK
-PiA+PiDCoCDCoCDCoCDCoCBbLi4uIG90aGVyIHByb3BlcnRpZXMgLi4uXQo+ID4+IMKgIMKgIMKg
-IMKgIHBpbmN0cmwtYWN0aXZlID0gPCZwY3RybDAgNSAwIDIgMyAwPiwKPiA+PiDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoDwmcGN0cmwwIDUgMSAyIDMgMD47Cj4g
-Pj4gwqAgwqAgwqAgwqAgcGluY3RybC1zdXNwZW5kID0gPCZwY3RybDAgNSAwIDIgMCAwPiwKPiA+
-PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8JnBjdHJs
-MCA1IDEgMiAwIDA+Owo+ID4+IH07Cj4gPgo+ID4gTWF5YmUgd2Ugc2hvdWxkIGhhdmUganVzdCB0
-aGUgYWN0aXZlL3N1c3BlbmQvb2ZmIGZsYWdzIGluIHRoZQo+ID4gc2FtZSBhcnJheT8gT3RoZXJ3
-aXNlIHdlJ2xsIGVuZCB1cCB1bm5lY2Vzc2FyaWx5IHJlcGVhdGluZyB0aGUKPiA+IHRoZSBwaW4g
-aW5mb3JtYXRpb24uIFNlZSB0aGUgcGlucyArICNwaW4tYXJncyBleGFtcGxlIEkgcG9zdGVkLAo+
-ID4gd2hpY2ggaXMgb3RoZXJ3aXNlIHNpbWlsYXIuCj4gCj4gWWVzLCBJIGFncmVlLiBUaGF0IHdv
-dWxkIGJlIGJldHRlci4KCk9LIGdyZWF0LgogCj4gPgo+ID4+IEluIHRoZSBleGFtcGxlIGFib3Zl
-LCB0aGUgc3BlY2lmaWVyIG9mIHBpbmN0cmwtKiBpcyBzcGVjaWZpYyBmb3IKPiA+PiBTYW1zdW5n
-IGlvLXBhZCBjb250cm9sbGVycy4gSXRzIGZvcm1hdC9zeW50YXggd291bGQgYmUgbWFpbmx5Cj4g
-Pj4gZGVwZW5kZW50IG9uIHRoZSBpby1wYWQgY29udHJvbGxlciB1c2VkLCB0aGUgYWJvdmUgaXMg
-b25seSBhbiBleGFtcGxlCj4gPj4gZm9yIFNhbXN1bmcgaW8tcGFkIGNvbnRyb2xsZXIuIEluIHRo
-ZSBhYm92ZSBub2RlLCB0aGUgZm9ybWF0IG9mIHRoZQo+ID4+IHBpbmN0cmwtKiBzcGVjaWZpZXIg
-aXMKPiA+Pgo+ID4+IHByb3BlcnR5LW5hbWUgPSA8cGhhbmRsZSBvZiB0aGUgcGluLWNvbnRyb2xs
-ZXIKPiA+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHBpbiBiYW5r
-IHdpdGhpbiB0aGUgcGluLWNvbnRyb2xsZXIKPiA+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoHBpbiBudW1iZXIgd2l0aGluIHRoZSBwaW4tYmFuawo+ID4+IMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgcGluLW11eCBmdW5jdGlvbiBudW1i
-ZXIKPiA+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHB1bGwgdXAv
-ZG93biBjb25maWcKPiA+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oGRyaXZlIHN0cmVuZ3RoIGNvbmZpZz47Cj4gPgo+ID4gQXJlIHRoZXNlIGFsbCBqdXN0IGJpdHMg
-aW4gb25lIHJlZ2lzdGVyPyBJZiBzbywgbGV0J3Mgc2F5IHlvdQo+ID4gaGF2ZSAxNi1iaXRzIHBl
-ciBwaW4sIHdlIG1pZ2h0IGJlIGFibGUgdG8gc2hhcmUgdGhlIGdlbmVyaWMKPiA+IHBpbm11eC1z
-aW1wbGUuYyBkcml2ZXIgSSBoYXZlIGFsbW9zdCByZWFkeS4uCj4gCj4gbm8sIHRoZXNlIGdldCB3
-cml0dGVuIHRvIGRpZmZlcmVudCByZWdpc3RlcnMsIG9uZSBmb3IgcGlubXV4LCBvbmUgZm9yCj4g
-cHVsbCB1cC9kb3duIGFuZCBvbmUgZm9yIGRyaXZlIHN0cmVuZ3RoLiBJdCB3b3VsZCBiZSBoZWxw
-ZnVsIG9mIHlvdXIKPiBwaW5tdXgtc2ltcGxlLmMgY2FuIHN1cHBvcnQgd3JpdGVzIHRvIG11bHRp
-cGxlIHJlZ2lzdGVycyBhbHNvLgogCkhtbSB5ZWFoIHRoYXQgc2hvdWxkIGJlIGRvYWJsZSwgYW5k
-IGFjdHVhbGx5IHdlIGhhdmUgdGhlIG9sZCBsZWdhY3kKb21hcDE1MTAgc2V0IHVwIHdpdGggdGhy
-ZWUgZGlmZmVyZW50IHJlZ2lzdGVycyBwZXIgcGluLi4KClRoZSBxdWVzdGlvbiBpczogRG8gd2Ug
-d2FudCB0byBhZGQgdGhlIG9uL2lkbGUvb2ZmIG1vZGVzIGZvciBlYWNoCnBpbiBpbiAuZHRzLCBv
-ciBkbyB3ZSB3YW50IHRvIGhhdmUgdGhlIGRyaXZlciBzZXQgdGhlIGR5bmFtaWMgbXV4aW5nCmZs
-YWdzIHNlcGFyYXRlbHk/Cgo+ID4gVGhlIGZvcm1hdCB3b3VsZCB0aGVuIGJlCj4gPgo+ID4gwqAg
-wqAgwqAgwqAjcGluLWFyZ3MgPDQ+Owo+ID4gwqAgwqAgwqAgwqAuLi4KPiA+Cj4gPiDCoCDCoCDC
-oCDCoC8qIMKgIMKgY29udHJvbGxlciDCoG9mZnNldCBvbiDCoCBpZGxlIG9mZiAqLwo+ID4gwqAg
-wqAgwqAgwqBwaW5zID0gPCZwaW5jdHJsMCAweDAwMzAgMHgxNSAweDE1IDB4Nz47Cj4gPgo+ID4+
-ICogVXNpbmcgdGhlIHBpbm11eC9waW5jb25maWcgc3BlY2lmaWVyIGluIGRldmljZSBub2RlcyB0
-byBjb25maWd1cmUgaGFyZHdhcmUuCj4gPj4KPiA+PiBBIGRyaXZlciAoZm9yIGEgZGV2aWNlIGlu
-c3RhbnRpYXRlZCBmcm9tIGRldmljZSB0cmVlKSB3b3VsZCByZXF1aXJlCj4gPj4gY29kZSB0byBi
-ZSBtYWRlIGF3YXJlIG9mIHRoZSBwaW5tdXgvcGluY29uZmlnIG9wdGlvbnMgYXZhaWxhYmxlLiBU
-aGUKPiA+PiB0eXBpY2FsIHNlcXVlbmNlIGluIGEgcHJvYmUgZnVuY3Rpb24gd291bGQgYmUgYXMg
-YmVsb3cuCj4gPj4KPiA+PiAoYSkgY2FsbCBvZl9nZXRfbmFtZWRfZ3BpbygpIHRvIGdldCB0aGUg
-Z3BpbyBudW1iZXIuIEluIGNhc2Ugb2YKPiA+PiBTYW1zdW5nIHBpbmN0cmwgZHJpdmVyLCB0aGUg
-cGluY3RybCBkcml2ZXIgaXRzZWxmIHByb3ZpZGVzIHRoZSBncGlvbGliCj4gPj4gZnVuY3Rpb25h
-bGl0eSBhbmQgaXQgYXR0YWNoZXMgYSBncGlvIHNwZWNpZmllciB0cmFuc2xhdG9yIHdpdGggdGhl
-Cj4gPj4gZ3Bpb19jaGlwLiBUaGlzIHRyYW5zbGF0b3IgaXMgY2FwYWJsZSBvZiB0cmFuc2xhdGlu
-ZyB0aGUgcGluY3RybC0qIGFuZAo+ID4+IHJldHVybmluZyBhIGdwaW8gbnVtYmVyLgo+ID4+Cj4g
-Pj4gKGIpIGdwaW9fcmVxdWVzdCgpIHRoZSBncGlvIG51bWJlciBvYnRhaW5lZCBpbiBzdGVwIChh
-KSBhYm92ZS4KPiA+Pgo+ID4+IChjKSBSZXBlYXQgc3RlcHMgKGEpIGFuZCAoYikgdW50aWwgYWxs
-IHRoZSBncGlvcyByZXF1aXJlZCBieSB0aGUKPiA+PiBkcml2ZXIgYXJlIHJlcXVlc3RlZC4gSW4g
-Y2FzZSBhIHJlcXVlc3QgZmFpbHMsIGdpdmUgdXAgYWxsIHRoZQo+ID4+IHN1Y2Nlc3NmdWxseSBy
-ZXF1ZXN0ZWQgZ3BpbyBhbmQgcmV0dXJuIGZhaWx1cmUuCj4gPgo+ID4gQ2FuJ3QgdGhlIGRyaXZl
-ciBkbyB0aGlzIHRvIHJlcXVlc3QgdGhlIGdwaW8gcGlucyB0aGF0IHlvdQo+ID4gY2FuIGdldCBm
-cm9tIERUIGFuZCBwaW5tdXg/IEV2ZW4gaWYgeW91IG5lZWQgdG8gZG8gZHluYW1pYyBwaW5tdXhp
-bmcKPiA+IHRvIEdQSU8gcGlucyBmb3Igd2FrZS11cCBldmVudHMsIHlvdSBjYW4gZG8gdGhhdCBm
-cm9tIHRoZSBkcml2ZXIKPiA+IGFzIGxvbmcgYXMgeW91IGdldCB0aGUgR1BJTyBudW1iZXIgZm9y
-IHRoZSBwaW4gZnJvbSBtdXggY29kZS4KPiAKPiBZZXMsIGl0IGlzIHRoZSBkcml2ZXIgdGhhdCBm
-aW5kcyBvdXQgdGhlIGdwaW8gbnVtYmVyIGZyb20gZHQgYW5kCj4gcmVxdWVzdHMgaXQuIE1heWJl
-LCBJIGRpZCBub3QgdW5kZXJzdGFuZCB5b3VyIHBvaW50IGhlcmUuCgpPaCBvaywgc29ycnkgSSBt
-aXN1bmRlcnN0b29kIHRoaW5raW5nIHlvdSB3YW50IHRvIGRvIGFsbCB0aGF0IGluIHRoZQpwaW5t
-dXggZHJpdmVyLi4KIAo+IFdpdGggdGhlIGFwcHJvYWNoIHRoYXQgSSBtZW50aW9uZWQgaW4gdGhl
-IHByZXZpb3VzIGVtYWlsLCB0aGVyZSBhcmUgbm8KPiBwaW5tdXgsIHBpbiBncm91cHMgb3IgcGlu
-IGRlc2MgdGFibGVzIGJ1aWx0IGZyb20gZHQuIEVhY2ggZGV2aWNlIG5vZGUKPiBzcGVjaWZpZXMg
-d2hhdCBuZWVkcyB0byBjb25maWd1cmVkIChwaW5tdXgscGluY29uZmlnKSBhbmQgdGhlIGNvZGUK
-PiB1c2luZyB0aGF0IGRldmljZSBub2RlIHVzZXMgcGluY3RybCBkcml2ZXIgdG8gZ2V0IHRob3Nl
-Cj4gcGlubXV4L3BpbmNvbmZpZyB2YWx1ZXMgd3JpdHRlbiB0byB0aGUgaGFyZHdhcmUgcmVnaXN0
-ZXJzLgo+IAo+IERvZXMgdGhlIGR0IHN1cHBvcnQgZm9yIHBpbm11eC9waW5jb25maWcgdGhhdCB5
-b3UgYXJlIGRldmVsb3BpbmcgYnVpbGQKPiB0aGUgcGlubXV4LCBwaW4gZ3JvdXBzIG9yIHBpbiBk
-ZXNjIHRhYmxlcz8gRG8gZHJpdmVycyBoYXZlIHRvIGNhbGwKPiBwaW5tdXhfe2dldC9wdXR9KCkg
-b3IgcGluX2NvbmZpZ19zZXQoKSBmdW5jdGlvbnMgZXZlbiBpbiBkdCBjYXNlPwoKWWVhaCB0aGUg
-cGlubXV4L3Bpbmdyb3VwcyBhbmQgZnVuY3Rpb25zIGFyZSBidWlsdCBmcm9tIHRoZSBEVC4gRHJp
-dmVycwp3b3VsZCBoYXZlIHRvIHN0aWxsIGNhbGwgcGlubXV4X2dldCBhbmQgc2V0IHJpZ2h0IG5v
-dy4gQnV0IHNvbWUgb2YgdGhpcwpjb3VsZCBwcm9iYWJseSBiZSBhdXRvbWF0aWNhbGx5IGRvbmUg
-dXNpbmcgcnVudGltZSBQTT8KCkNoZWVycywKClRvbnkKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApk
-ZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5v
-cmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On 19 January 2012 23:50, Tony Lindgren <tony@atomide.com> wrote:
+> * Thomas Abraham <thomas.abraham@linaro.org> [120119 09:05]:
+>>
+>> On 19 January 2012 22:26, Tony Lindgren <tony@atomide.com> wrote:
+>> > * Thomas Abraham <thomas.abraham@linaro.org> [120119 04:37]:
+>> >>
+>> >> i2c0: i2c@18000000 {
+>> >> =A0 =A0 =A0 =A0 [... other properties ...]
+>> >> =A0 =A0 =A0 =A0 pinctrl-active =3D <&pctrl0 5 0 2 3 0>,
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<&pctr=
+l0 5 1 2 3 0>;
+>> >> =A0 =A0 =A0 =A0 pinctrl-suspend =3D <&pctrl0 5 0 2 0 0>,
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <=
+&pctrl0 5 1 2 0 0>;
+>> >> };
+>> >
+>> > Maybe we should have just the active/suspend/off flags in the
+>> > same array? Otherwise we'll end up unnecessarily repeating the
+>> > the pin information. See the pins + #pin-args example I posted,
+>> > which is otherwise similar.
+>>
+>> Yes, I agree. That would be better.
+>
+> OK great.
+>
+>> >
+>> >> In the example above, the specifier of pinctrl-* is specific for
+>> >> Samsung io-pad controllers. Its format/syntax would be mainly
+>> >> dependent on the io-pad controller used, the above is only an exa=
+mple
+>> >> for Samsung io-pad controller. In the above node, the format of t=
+he
+>> >> pinctrl-* specifier is
+>> >>
+>> >> property-name =3D <phandle of the pin-controller
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin bank w=
+ithin the pin-controller
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin number=
+ within the pin-bank
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin-mux fu=
+nction number
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pull up/do=
+wn config
+>> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0drive stre=
+ngth config>;
+>> >
+>> > Are these all just bits in one register? If so, let's say you
+>> > have 16-bits per pin, we might be able to share the generic
+>> > pinmux-simple.c driver I have almost ready..
+>>
+>> no, these get written to different registers, one for pinmux, one fo=
+r
+>> pull up/down and one for drive strength. It would be helpful of your
+>> pinmux-simple.c can support writes to multiple registers also.
+>
+> Hmm yeah that should be doable, and actually we have the old legacy
+> omap1510 set up with three different registers per pin..
+>
+> The question is: Do we want to add the on/idle/off modes for each
+> pin in .dts, or do we want to have the driver set the dynamic muxing
+> flags separately?
+>
+
+It would be better to include the pin muxing and config options in the
+node of a device. So a i2c device node would have pin mux and pin
+config options listed in its node. But this means, each board dts file
+would have to repeat this information. On the other hand, describing
+mux and config options for each pin in a SoC dtsi file would be too
+much of information. I would go with the first option.
+
+
+>> > The format would then be
+>> >
+>> > =A0 =A0 =A0 =A0#pin-args <4>;
+>> > =A0 =A0 =A0 =A0...
+>> >
+>> > =A0 =A0 =A0 =A0/* =A0 =A0controller =A0offset on =A0 idle off */
+>> > =A0 =A0 =A0 =A0pins =3D <&pinctrl0 0x0030 0x15 0x15 0x7>;
+>> >
+>> >> * Using the pinmux/pinconfig specifier in device nodes to configu=
+re hardware.
+>> >>
+>> >> A driver (for a device instantiated from device tree) would requi=
+re
+>> >> code to be made aware of the pinmux/pinconfig options available. =
+The
+>> >> typical sequence in a probe function would be as below.
+>> >>
+>> >> (a) call of_get_named_gpio() to get the gpio number. In case of
+>> >> Samsung pinctrl driver, the pinctrl driver itself provides the gp=
+iolib
+>> >> functionality and it attaches a gpio specifier translator with th=
+e
+>> >> gpio_chip. This translator is capable of translating the pinctrl-=
+* and
+>> >> returning a gpio number.
+>> >>
+>> >> (b) gpio_request() the gpio number obtained in step (a) above.
+>> >>
+>> >> (c) Repeat steps (a) and (b) until all the gpios required by the
+>> >> driver are requested. In case a request fails, give up all the
+>> >> successfully requested gpio and return failure.
+>> >
+>> > Can't the driver do this to request the gpio pins that you
+>> > can get from DT and pinmux? Even if you need to do dynamic pinmuxi=
+ng
+>> > to GPIO pins for wake-up events, you can do that from the driver
+>> > as long as you get the GPIO number for the pin from mux code.
+>>
+>> Yes, it is the driver that finds out the gpio number from dt and
+>> requests it. Maybe, I did not understand your point here.
+>
+> Oh ok, sorry I misunderstood thinking you want to do all that in the
+> pinmux driver..
+>
+>> With the approach that I mentioned in the previous email, there are =
+no
+>> pinmux, pin groups or pin desc tables built from dt. Each device nod=
+e
+>> specifies what needs to configured (pinmux,pinconfig) and the code
+>> using that device node uses pinctrl driver to get those
+>> pinmux/pinconfig values written to the hardware registers.
+>>
+>> Does the dt support for pinmux/pinconfig that you are developing bui=
+ld
+>> the pinmux, pin groups or pin desc tables? Do drivers have to call
+>> pinmux_{get/put}() or pin_config_set() functions even in dt case?
+>
+> Yeah the pinmux/pingroups and functions are built from the DT. Driver=
+s
+> would have to still call pinmux_get and set right now. But some of th=
+is
+> could probably be automatically done using runtime PM?
+>
+
+I would like to understand the need for populating the
+pinmux/pingroups tables from dt. The question here is when we have
+something like
+
+pins =3D <&pinctrl0 0x0030 0x15 0x15 0x7>;
+
+which specifies the values that need to be written to the hardware
+registers, would populating pinmux/pingroup tables from dt required.
+The SoC specific pinctrl driver can provide a way (with the help of
+pinctrl core) to translate these values and write to corresponding
+hardware registers. Is there any particular reason for populating the
+pinmux/pingroups tables from dt?
+
+Thanks,
+Thomas.
