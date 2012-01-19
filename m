@@ -1,152 +1,111 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2] gpio: tegra: Parameterize the number of banks
-Date: Thu, 19 Jan 2012 11:16:35 -0700
-Message-ID: <1326996995-23096-1-git-send-email-swarren@nvidia.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Pinmux bindings proposal
+Date: Thu, 19 Jan 2012 10:20:19 -0800
+Message-ID: <20120119182019.GI22818@atomide.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+ <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
+ <20120119165607.GG22818@atomide.com>
+ <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tegra20's GPIO controller has 7 banks, and Tegra30's controller has 8
-banks. Allow the number of banks to be configured at run-time by the
-device tree.
-
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-This patch depends on:
-http://ftp.arm.linux.org.uk/pub/armlinux/kernel/git-cur/linux-2.6-arm.git
-devel-stable 44986ab056076e9dc9fb9f8b4729afef7fa72616
-
-This is a replacement for:
-http://patchwork.ozlabs.org/patch/134321/
-
-v2: Determine # banks by the number of interrupt properties rather than
-adding a custom property for this.
----
- .../devicetree/bindings/gpio/gpio_nvidia.txt       |    8 ++-
- drivers/gpio/gpio-tegra.c                          |   42 +++++++++++++++----
- 2 files changed, 38 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-index d114e19..023c952 100644
---- a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
-@@ -1,9 +1,11 @@
--NVIDIA Tegra 2 GPIO controller
-+NVIDIA Tegra GPIO controller
- 
- Required properties:
--- compatible : "nvidia,tegra20-gpio"
-+- compatible : "nvidia,tegra<chip>-gpio"
- - reg : Physical base address and length of the controller's registers.
--- interrupts : The interrupt outputs from the controller.
-+- interrupts : The interrupt outputs from the controller. For Tegra20,
-+  there should be 7 interrupts specified, and for Tegra30, there should
-+  be 8 interrupts specified.
- - #gpio-cells : Should be two. The first cell is the pin number and the
-   second cell is used to specify optional parameters:
-   - bit 0 specifies polarity (0 for normal, 1 for inverted)
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index bc923c7..98f3980 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -77,7 +77,8 @@ struct tegra_gpio_bank {
- 
- static struct irq_domain irq_domain;
- static void __iomem *regs;
--static struct tegra_gpio_bank tegra_gpio_banks[7];
-+static u32 tegra_gpio_bank_count;
-+static struct tegra_gpio_bank *tegra_gpio_banks;
- 
- static inline void tegra_gpio_writel(u32 val, u32 reg)
- {
-@@ -274,7 +275,7 @@ void tegra_gpio_resume(void)
- 
- 	local_irq_save(flags);
- 
--	for (b = 0; b < ARRAY_SIZE(tegra_gpio_banks); b++) {
-+	for (b = 0; b < tegra_gpio_bank_count; b++) {
- 		struct tegra_gpio_bank *bank = &tegra_gpio_banks[b];
- 
- 		for (p = 0; p < ARRAY_SIZE(bank->oe); p++) {
-@@ -297,7 +298,7 @@ void tegra_gpio_suspend(void)
- 	int p;
- 
- 	local_irq_save(flags);
--	for (b = 0; b < ARRAY_SIZE(tegra_gpio_banks); b++) {
-+	for (b = 0; b < tegra_gpio_bank_count; b++) {
- 		struct tegra_gpio_bank *bank = &tegra_gpio_banks[b];
- 
- 		for (p = 0; p < ARRAY_SIZE(bank->oe); p++) {
-@@ -338,23 +339,46 @@ static struct lock_class_key gpio_lock_class;
- 
- static int __devinit tegra_gpio_probe(struct platform_device *pdev)
- {
-+	int irq_base;
- 	struct resource *res;
- 	struct tegra_gpio_bank *bank;
- 	int gpio;
- 	int i;
- 	int j;
- 
--	irq_domain.irq_base = irq_alloc_descs(-1, 0, TEGRA_NR_GPIOS, 0);
--	if (irq_domain.irq_base < 0) {
-+	for (;;) {
-+		res = platform_get_resource(pdev, IORESOURCE_IRQ, tegra_gpio_bank_count);
-+		if (!res)
-+			break;
-+		tegra_gpio_bank_count++;
-+	}
-+	if (!tegra_gpio_bank_count) {
-+		dev_err(&pdev->dev, "Missing IRQ resource\n");
-+		return -ENODEV;
-+	}
-+
-+	tegra_gpio_chip.ngpio = tegra_gpio_bank_count * 32;
-+
-+	tegra_gpio_banks = devm_kzalloc(&pdev->dev,
-+			tegra_gpio_bank_count * sizeof(*tegra_gpio_banks),
-+			GFP_KERNEL);
-+	if (!tegra_gpio_banks) {
-+		dev_err(&pdev->dev, "Couldn't allocate bank structure\n");
-+		return -ENODEV;
-+	}
-+
-+	irq_base = irq_alloc_descs(-1, 0, tegra_gpio_chip.ngpio, 0);
-+	if (irq_base < 0) {
- 		dev_err(&pdev->dev, "Couldn't allocate IRQ numbers\n");
- 		return -ENODEV;
- 	}
--	irq_domain.nr_irq = TEGRA_NR_GPIOS;
-+	irq_domain.irq_base = irq_base;
-+	irq_domain.nr_irq = tegra_gpio_chip.ngpio;
- 	irq_domain.ops = &irq_domain_simple_ops;
- 	irq_domain.of_node = pdev->dev.of_node;
- 	irq_domain_add(&irq_domain);
- 
--	for (i = 0; i < ARRAY_SIZE(tegra_gpio_banks); i++) {
-+	for (i = 0; i < tegra_gpio_bank_count; i++) {
- 		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
- 		if (!res) {
- 			dev_err(&pdev->dev, "Missing IRQ resource\n");
-@@ -391,7 +415,7 @@ static int __devinit tegra_gpio_probe(struct platform_device *pdev)
- 
- 	gpiochip_add(&tegra_gpio_chip);
- 
--	for (gpio = 0; gpio < TEGRA_NR_GPIOS; gpio++) {
-+	for (gpio = 0; gpio < tegra_gpio_chip.ngpio; gpio++) {
- 		int irq = irq_domain_to_irq(&irq_domain, gpio);
- 		/* No validity check; all Tegra GPIOs are valid IRQs */
- 
-@@ -404,7 +428,7 @@ static int __devinit tegra_gpio_probe(struct platform_device *pdev)
- 		set_irq_flags(irq, IRQF_VALID);
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(tegra_gpio_banks); i++) {
-+	for (i = 0; i < tegra_gpio_bank_count; i++) {
- 		bank = &tegra_gpio_banks[i];
- 
- 		irq_set_chained_handler(bank->irq, tegra_gpio_irq_handler);
--- 
-1.7.0.4
+KiBUaG9tYXMgQWJyYWhhbSA8dGhvbWFzLmFicmFoYW1AbGluYXJvLm9yZz4gWzEyMDExOSAwOTow
+NV06Cj4gCj4gT24gMTkgSmFudWFyeSAyMDEyIDIyOjI2LCBUb255IExpbmRncmVuIDx0b255QGF0
+b21pZGUuY29tPiB3cm90ZToKPiA+ICogVGhvbWFzIEFicmFoYW0gPHRob21hcy5hYnJhaGFtQGxp
+bmFyby5vcmc+IFsxMjAxMTkgMDQ6MzddOgo+ID4+Cj4gPj4gaTJjMDogaTJjQDE4MDAwMDAwIHsK
+PiA+PiDCoCDCoCDCoCDCoCBbLi4uIG90aGVyIHByb3BlcnRpZXMgLi4uXQo+ID4+IMKgIMKgIMKg
+IMKgIHBpbmN0cmwtYWN0aXZlID0gPCZwY3RybDAgNSAwIDIgMyAwPiwKPiA+PiDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoDwmcGN0cmwwIDUgMSAyIDMgMD47Cj4g
+Pj4gwqAgwqAgwqAgwqAgcGluY3RybC1zdXNwZW5kID0gPCZwY3RybDAgNSAwIDIgMCAwPiwKPiA+
+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCA8JnBjdHJs
+MCA1IDEgMiAwIDA+Owo+ID4+IH07Cj4gPgo+ID4gTWF5YmUgd2Ugc2hvdWxkIGhhdmUganVzdCB0
+aGUgYWN0aXZlL3N1c3BlbmQvb2ZmIGZsYWdzIGluIHRoZQo+ID4gc2FtZSBhcnJheT8gT3RoZXJ3
+aXNlIHdlJ2xsIGVuZCB1cCB1bm5lY2Vzc2FyaWx5IHJlcGVhdGluZyB0aGUKPiA+IHRoZSBwaW4g
+aW5mb3JtYXRpb24uIFNlZSB0aGUgcGlucyArICNwaW4tYXJncyBleGFtcGxlIEkgcG9zdGVkLAo+
+ID4gd2hpY2ggaXMgb3RoZXJ3aXNlIHNpbWlsYXIuCj4gCj4gWWVzLCBJIGFncmVlLiBUaGF0IHdv
+dWxkIGJlIGJldHRlci4KCk9LIGdyZWF0LgogCj4gPgo+ID4+IEluIHRoZSBleGFtcGxlIGFib3Zl
+LCB0aGUgc3BlY2lmaWVyIG9mIHBpbmN0cmwtKiBpcyBzcGVjaWZpYyBmb3IKPiA+PiBTYW1zdW5n
+IGlvLXBhZCBjb250cm9sbGVycy4gSXRzIGZvcm1hdC9zeW50YXggd291bGQgYmUgbWFpbmx5Cj4g
+Pj4gZGVwZW5kZW50IG9uIHRoZSBpby1wYWQgY29udHJvbGxlciB1c2VkLCB0aGUgYWJvdmUgaXMg
+b25seSBhbiBleGFtcGxlCj4gPj4gZm9yIFNhbXN1bmcgaW8tcGFkIGNvbnRyb2xsZXIuIEluIHRo
+ZSBhYm92ZSBub2RlLCB0aGUgZm9ybWF0IG9mIHRoZQo+ID4+IHBpbmN0cmwtKiBzcGVjaWZpZXIg
+aXMKPiA+Pgo+ID4+IHByb3BlcnR5LW5hbWUgPSA8cGhhbmRsZSBvZiB0aGUgcGluLWNvbnRyb2xs
+ZXIKPiA+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHBpbiBiYW5r
+IHdpdGhpbiB0aGUgcGluLWNvbnRyb2xsZXIKPiA+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oCDCoCDCoCDCoCDCoCDCoHBpbiBudW1iZXIgd2l0aGluIHRoZSBwaW4tYmFuawo+ID4+IMKgIMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgcGluLW11eCBmdW5jdGlvbiBudW1i
+ZXIKPiA+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHB1bGwgdXAv
+ZG93biBjb25maWcKPiA+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
+oGRyaXZlIHN0cmVuZ3RoIGNvbmZpZz47Cj4gPgo+ID4gQXJlIHRoZXNlIGFsbCBqdXN0IGJpdHMg
+aW4gb25lIHJlZ2lzdGVyPyBJZiBzbywgbGV0J3Mgc2F5IHlvdQo+ID4gaGF2ZSAxNi1iaXRzIHBl
+ciBwaW4sIHdlIG1pZ2h0IGJlIGFibGUgdG8gc2hhcmUgdGhlIGdlbmVyaWMKPiA+IHBpbm11eC1z
+aW1wbGUuYyBkcml2ZXIgSSBoYXZlIGFsbW9zdCByZWFkeS4uCj4gCj4gbm8sIHRoZXNlIGdldCB3
+cml0dGVuIHRvIGRpZmZlcmVudCByZWdpc3RlcnMsIG9uZSBmb3IgcGlubXV4LCBvbmUgZm9yCj4g
+cHVsbCB1cC9kb3duIGFuZCBvbmUgZm9yIGRyaXZlIHN0cmVuZ3RoLiBJdCB3b3VsZCBiZSBoZWxw
+ZnVsIG9mIHlvdXIKPiBwaW5tdXgtc2ltcGxlLmMgY2FuIHN1cHBvcnQgd3JpdGVzIHRvIG11bHRp
+cGxlIHJlZ2lzdGVycyBhbHNvLgogCkhtbSB5ZWFoIHRoYXQgc2hvdWxkIGJlIGRvYWJsZSwgYW5k
+IGFjdHVhbGx5IHdlIGhhdmUgdGhlIG9sZCBsZWdhY3kKb21hcDE1MTAgc2V0IHVwIHdpdGggdGhy
+ZWUgZGlmZmVyZW50IHJlZ2lzdGVycyBwZXIgcGluLi4KClRoZSBxdWVzdGlvbiBpczogRG8gd2Ug
+d2FudCB0byBhZGQgdGhlIG9uL2lkbGUvb2ZmIG1vZGVzIGZvciBlYWNoCnBpbiBpbiAuZHRzLCBv
+ciBkbyB3ZSB3YW50IHRvIGhhdmUgdGhlIGRyaXZlciBzZXQgdGhlIGR5bmFtaWMgbXV4aW5nCmZs
+YWdzIHNlcGFyYXRlbHk/Cgo+ID4gVGhlIGZvcm1hdCB3b3VsZCB0aGVuIGJlCj4gPgo+ID4gwqAg
+wqAgwqAgwqAjcGluLWFyZ3MgPDQ+Owo+ID4gwqAgwqAgwqAgwqAuLi4KPiA+Cj4gPiDCoCDCoCDC
+oCDCoC8qIMKgIMKgY29udHJvbGxlciDCoG9mZnNldCBvbiDCoCBpZGxlIG9mZiAqLwo+ID4gwqAg
+wqAgwqAgwqBwaW5zID0gPCZwaW5jdHJsMCAweDAwMzAgMHgxNSAweDE1IDB4Nz47Cj4gPgo+ID4+
+ICogVXNpbmcgdGhlIHBpbm11eC9waW5jb25maWcgc3BlY2lmaWVyIGluIGRldmljZSBub2RlcyB0
+byBjb25maWd1cmUgaGFyZHdhcmUuCj4gPj4KPiA+PiBBIGRyaXZlciAoZm9yIGEgZGV2aWNlIGlu
+c3RhbnRpYXRlZCBmcm9tIGRldmljZSB0cmVlKSB3b3VsZCByZXF1aXJlCj4gPj4gY29kZSB0byBi
+ZSBtYWRlIGF3YXJlIG9mIHRoZSBwaW5tdXgvcGluY29uZmlnIG9wdGlvbnMgYXZhaWxhYmxlLiBU
+aGUKPiA+PiB0eXBpY2FsIHNlcXVlbmNlIGluIGEgcHJvYmUgZnVuY3Rpb24gd291bGQgYmUgYXMg
+YmVsb3cuCj4gPj4KPiA+PiAoYSkgY2FsbCBvZl9nZXRfbmFtZWRfZ3BpbygpIHRvIGdldCB0aGUg
+Z3BpbyBudW1iZXIuIEluIGNhc2Ugb2YKPiA+PiBTYW1zdW5nIHBpbmN0cmwgZHJpdmVyLCB0aGUg
+cGluY3RybCBkcml2ZXIgaXRzZWxmIHByb3ZpZGVzIHRoZSBncGlvbGliCj4gPj4gZnVuY3Rpb25h
+bGl0eSBhbmQgaXQgYXR0YWNoZXMgYSBncGlvIHNwZWNpZmllciB0cmFuc2xhdG9yIHdpdGggdGhl
+Cj4gPj4gZ3Bpb19jaGlwLiBUaGlzIHRyYW5zbGF0b3IgaXMgY2FwYWJsZSBvZiB0cmFuc2xhdGlu
+ZyB0aGUgcGluY3RybC0qIGFuZAo+ID4+IHJldHVybmluZyBhIGdwaW8gbnVtYmVyLgo+ID4+Cj4g
+Pj4gKGIpIGdwaW9fcmVxdWVzdCgpIHRoZSBncGlvIG51bWJlciBvYnRhaW5lZCBpbiBzdGVwIChh
+KSBhYm92ZS4KPiA+Pgo+ID4+IChjKSBSZXBlYXQgc3RlcHMgKGEpIGFuZCAoYikgdW50aWwgYWxs
+IHRoZSBncGlvcyByZXF1aXJlZCBieSB0aGUKPiA+PiBkcml2ZXIgYXJlIHJlcXVlc3RlZC4gSW4g
+Y2FzZSBhIHJlcXVlc3QgZmFpbHMsIGdpdmUgdXAgYWxsIHRoZQo+ID4+IHN1Y2Nlc3NmdWxseSBy
+ZXF1ZXN0ZWQgZ3BpbyBhbmQgcmV0dXJuIGZhaWx1cmUuCj4gPgo+ID4gQ2FuJ3QgdGhlIGRyaXZl
+ciBkbyB0aGlzIHRvIHJlcXVlc3QgdGhlIGdwaW8gcGlucyB0aGF0IHlvdQo+ID4gY2FuIGdldCBm
+cm9tIERUIGFuZCBwaW5tdXg/IEV2ZW4gaWYgeW91IG5lZWQgdG8gZG8gZHluYW1pYyBwaW5tdXhp
+bmcKPiA+IHRvIEdQSU8gcGlucyBmb3Igd2FrZS11cCBldmVudHMsIHlvdSBjYW4gZG8gdGhhdCBm
+cm9tIHRoZSBkcml2ZXIKPiA+IGFzIGxvbmcgYXMgeW91IGdldCB0aGUgR1BJTyBudW1iZXIgZm9y
+IHRoZSBwaW4gZnJvbSBtdXggY29kZS4KPiAKPiBZZXMsIGl0IGlzIHRoZSBkcml2ZXIgdGhhdCBm
+aW5kcyBvdXQgdGhlIGdwaW8gbnVtYmVyIGZyb20gZHQgYW5kCj4gcmVxdWVzdHMgaXQuIE1heWJl
+LCBJIGRpZCBub3QgdW5kZXJzdGFuZCB5b3VyIHBvaW50IGhlcmUuCgpPaCBvaywgc29ycnkgSSBt
+aXN1bmRlcnN0b29kIHRoaW5raW5nIHlvdSB3YW50IHRvIGRvIGFsbCB0aGF0IGluIHRoZQpwaW5t
+dXggZHJpdmVyLi4KIAo+IFdpdGggdGhlIGFwcHJvYWNoIHRoYXQgSSBtZW50aW9uZWQgaW4gdGhl
+IHByZXZpb3VzIGVtYWlsLCB0aGVyZSBhcmUgbm8KPiBwaW5tdXgsIHBpbiBncm91cHMgb3IgcGlu
+IGRlc2MgdGFibGVzIGJ1aWx0IGZyb20gZHQuIEVhY2ggZGV2aWNlIG5vZGUKPiBzcGVjaWZpZXMg
+d2hhdCBuZWVkcyB0byBjb25maWd1cmVkIChwaW5tdXgscGluY29uZmlnKSBhbmQgdGhlIGNvZGUK
+PiB1c2luZyB0aGF0IGRldmljZSBub2RlIHVzZXMgcGluY3RybCBkcml2ZXIgdG8gZ2V0IHRob3Nl
+Cj4gcGlubXV4L3BpbmNvbmZpZyB2YWx1ZXMgd3JpdHRlbiB0byB0aGUgaGFyZHdhcmUgcmVnaXN0
+ZXJzLgo+IAo+IERvZXMgdGhlIGR0IHN1cHBvcnQgZm9yIHBpbm11eC9waW5jb25maWcgdGhhdCB5
+b3UgYXJlIGRldmVsb3BpbmcgYnVpbGQKPiB0aGUgcGlubXV4LCBwaW4gZ3JvdXBzIG9yIHBpbiBk
+ZXNjIHRhYmxlcz8gRG8gZHJpdmVycyBoYXZlIHRvIGNhbGwKPiBwaW5tdXhfe2dldC9wdXR9KCkg
+b3IgcGluX2NvbmZpZ19zZXQoKSBmdW5jdGlvbnMgZXZlbiBpbiBkdCBjYXNlPwoKWWVhaCB0aGUg
+cGlubXV4L3Bpbmdyb3VwcyBhbmQgZnVuY3Rpb25zIGFyZSBidWlsdCBmcm9tIHRoZSBEVC4gRHJp
+dmVycwp3b3VsZCBoYXZlIHRvIHN0aWxsIGNhbGwgcGlubXV4X2dldCBhbmQgc2V0IHJpZ2h0IG5v
+dy4gQnV0IHNvbWUgb2YgdGhpcwpjb3VsZCBwcm9iYWJseSBiZSBhdXRvbWF0aWNhbGx5IGRvbmUg
+dXNpbmcgcnVudGltZSBQTT8KCkNoZWVycywKClRvbnkKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApk
+ZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5v
+cmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
