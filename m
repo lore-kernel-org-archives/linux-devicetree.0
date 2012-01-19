@@ -1,106 +1,152 @@
-From: Nicolas Pitre <nico@fluxnic.net>
-Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
- tile (TC1 variant)
-Date: Thu, 19 Jan 2012 13:09:11 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1201191305180.19587@xanadu.home>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
- <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
- <4F0C495C.4000103@citrix.com>
- <1326979652.32197.66.camel@hornet.cambridge.arm.com>
- <4F181BD9.20401@gmail.com>
- <1326980594.32197.67.camel@hornet.cambridge.arm.com>
- <4F182248.7070209@gmail.com>
- <1326984672.32197.68.camel@hornet.cambridge.arm.com>
- <4F184C48.2050505@citrix.com>
- <1326994035.13748.7.camel@hornet.cambridge.arm.com>
- <20120119175053.GE10404@n2100.arm.linux.org.uk>
- <CACxGe6tWCd83qcfAv8=x3mdGNHR6xEnS=Gyq=bnWxRw22M4QXA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="Boundary_(ID_+zxPdOKvUcOB4Ap2Mlkoow)"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <CACxGe6tWCd83qcfAv8=x3mdGNHR6xEnS=Gyq=bnWxRw22M4QXA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Pawel Moll <pawel.moll@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2] gpio: tegra: Parameterize the number of banks
+Date: Thu, 19 Jan 2012 11:16:35 -0700
+Message-ID: <1326996995-23096-1-git-send-email-swarren@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Tegra20's GPIO controller has 7 banks, and Tegra30's controller has 8
+banks. Allow the number of banks to be configured at run-time by the
+device tree.
 
---Boundary_(ID_+zxPdOKvUcOB4Ap2Mlkoow)
-Content-type: TEXT/PLAIN; charset=iso-8859-1
-Content-transfer-encoding: 8BIT
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+This patch depends on:
+http://ftp.arm.linux.org.uk/pub/armlinux/kernel/git-cur/linux-2.6-arm.git
+devel-stable 44986ab056076e9dc9fb9f8b4729afef7fa72616
 
-On Thu, 19 Jan 2012, Grant Likely wrote:
+This is a replacement for:
+http://patchwork.ozlabs.org/patch/134321/
 
-> On Thu, Jan 19, 2012 at 10:50 AM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
-> > On Thu, Jan 19, 2012 at 05:27:15PM +0000, Pawel Moll wrote:
-> >> On Thu, 2012-01-19 at 17:00 +0000, David Vrabel wrote:
-> >> > The problem wasn't with including skeleton.dtsi.
-> >>
-> >> Including as it is creates two device_type="memory" nodes, one with
-> >> regs=<0 0>, which is definitely wrong.
-> >>
-> >> > With
-> >> > CONFIG_ARM_ATAG_DTB_COMPAT the zImage decompressor modifies the appended
-> >> > DTB using information from the ATAGs (see atags_to_fdt()).
-> >> >
-> >> > If there's an ATAG giving the amount of RAM the DTB's "memory" node is
-> >> > replaced with a new one.  Since the vexpress DTBs don't have a "memory"
-> >> > node it's added and the DTB ends up with two nodes describing memory.
-> >>
-> >> The "memory@address" node name is in my opinion perfectly legal - p. 3.4
-> >> of the DT spec says "The name component of the node name (see 2.2.1)
-> >> shall be memory.". So the decompressor code may be wrong in looking for
-> >> adress-less "memory" node...
-> >
-> > I don't think you can expect such early code to properly parse a DT tree
-> > with a variability in how memory stuff is declared into that DT tree.
-> >
-> > What if you have two memory nodes specified in the DT file, and the
-> > ATAG data contains one?
-> 
-> Yes, just because it is technically legal doesn't make it okay.  The
-> pragmatic approach here is that the skeleton.dtsi file calls the node
-> "memory", so this .dts file must do the same.
-> 
-> > The more I look at this, the more I'm convinced that Grant's idea that
-> > DT should entirely override ATAGs all the way to the kernel proper was
-> > the wrong solution - at least in the kernel, if we had both available,
-> > we could make a choice there, and have the full DT library to be able
-> > to manipulate the DT blob.
-> 
-> Hey!  I was originally lobbying for the dt pointer carried by an ATAG.
->  Nico conviced me otherwise.  :-)
+v2: Determine # banks by the number of interrupt properties rather than
+adding a custom property for this.
+---
+ .../devicetree/bindings/gpio/gpio_nvidia.txt       |    8 ++-
+ drivers/gpio/gpio-tegra.c                          |   42 +++++++++++++++----
+ 2 files changed, 38 insertions(+), 12 deletions(-)
 
-Hey!  I was originally lobbying for people to have a fully DT aware 
-bootloader if they wanted to play with DT, otherwise there is no 
-incentive for updated bootloaders.  But someone else convinced me 
-otherwise.  :-)
-
-Mixed bags always have loose ends.
-
-
-Nicolas
-
---Boundary_(ID_+zxPdOKvUcOB4Ap2Mlkoow)
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---Boundary_(ID_+zxPdOKvUcOB4Ap2Mlkoow)--
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
+index d114e19..023c952 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio_nvidia.txt
+@@ -1,9 +1,11 @@
+-NVIDIA Tegra 2 GPIO controller
++NVIDIA Tegra GPIO controller
+ 
+ Required properties:
+-- compatible : "nvidia,tegra20-gpio"
++- compatible : "nvidia,tegra<chip>-gpio"
+ - reg : Physical base address and length of the controller's registers.
+-- interrupts : The interrupt outputs from the controller.
++- interrupts : The interrupt outputs from the controller. For Tegra20,
++  there should be 7 interrupts specified, and for Tegra30, there should
++  be 8 interrupts specified.
+ - #gpio-cells : Should be two. The first cell is the pin number and the
+   second cell is used to specify optional parameters:
+   - bit 0 specifies polarity (0 for normal, 1 for inverted)
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index bc923c7..98f3980 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -77,7 +77,8 @@ struct tegra_gpio_bank {
+ 
+ static struct irq_domain irq_domain;
+ static void __iomem *regs;
+-static struct tegra_gpio_bank tegra_gpio_banks[7];
++static u32 tegra_gpio_bank_count;
++static struct tegra_gpio_bank *tegra_gpio_banks;
+ 
+ static inline void tegra_gpio_writel(u32 val, u32 reg)
+ {
+@@ -274,7 +275,7 @@ void tegra_gpio_resume(void)
+ 
+ 	local_irq_save(flags);
+ 
+-	for (b = 0; b < ARRAY_SIZE(tegra_gpio_banks); b++) {
++	for (b = 0; b < tegra_gpio_bank_count; b++) {
+ 		struct tegra_gpio_bank *bank = &tegra_gpio_banks[b];
+ 
+ 		for (p = 0; p < ARRAY_SIZE(bank->oe); p++) {
+@@ -297,7 +298,7 @@ void tegra_gpio_suspend(void)
+ 	int p;
+ 
+ 	local_irq_save(flags);
+-	for (b = 0; b < ARRAY_SIZE(tegra_gpio_banks); b++) {
++	for (b = 0; b < tegra_gpio_bank_count; b++) {
+ 		struct tegra_gpio_bank *bank = &tegra_gpio_banks[b];
+ 
+ 		for (p = 0; p < ARRAY_SIZE(bank->oe); p++) {
+@@ -338,23 +339,46 @@ static struct lock_class_key gpio_lock_class;
+ 
+ static int __devinit tegra_gpio_probe(struct platform_device *pdev)
+ {
++	int irq_base;
+ 	struct resource *res;
+ 	struct tegra_gpio_bank *bank;
+ 	int gpio;
+ 	int i;
+ 	int j;
+ 
+-	irq_domain.irq_base = irq_alloc_descs(-1, 0, TEGRA_NR_GPIOS, 0);
+-	if (irq_domain.irq_base < 0) {
++	for (;;) {
++		res = platform_get_resource(pdev, IORESOURCE_IRQ, tegra_gpio_bank_count);
++		if (!res)
++			break;
++		tegra_gpio_bank_count++;
++	}
++	if (!tegra_gpio_bank_count) {
++		dev_err(&pdev->dev, "Missing IRQ resource\n");
++		return -ENODEV;
++	}
++
++	tegra_gpio_chip.ngpio = tegra_gpio_bank_count * 32;
++
++	tegra_gpio_banks = devm_kzalloc(&pdev->dev,
++			tegra_gpio_bank_count * sizeof(*tegra_gpio_banks),
++			GFP_KERNEL);
++	if (!tegra_gpio_banks) {
++		dev_err(&pdev->dev, "Couldn't allocate bank structure\n");
++		return -ENODEV;
++	}
++
++	irq_base = irq_alloc_descs(-1, 0, tegra_gpio_chip.ngpio, 0);
++	if (irq_base < 0) {
+ 		dev_err(&pdev->dev, "Couldn't allocate IRQ numbers\n");
+ 		return -ENODEV;
+ 	}
+-	irq_domain.nr_irq = TEGRA_NR_GPIOS;
++	irq_domain.irq_base = irq_base;
++	irq_domain.nr_irq = tegra_gpio_chip.ngpio;
+ 	irq_domain.ops = &irq_domain_simple_ops;
+ 	irq_domain.of_node = pdev->dev.of_node;
+ 	irq_domain_add(&irq_domain);
+ 
+-	for (i = 0; i < ARRAY_SIZE(tegra_gpio_banks); i++) {
++	for (i = 0; i < tegra_gpio_bank_count; i++) {
+ 		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+ 		if (!res) {
+ 			dev_err(&pdev->dev, "Missing IRQ resource\n");
+@@ -391,7 +415,7 @@ static int __devinit tegra_gpio_probe(struct platform_device *pdev)
+ 
+ 	gpiochip_add(&tegra_gpio_chip);
+ 
+-	for (gpio = 0; gpio < TEGRA_NR_GPIOS; gpio++) {
++	for (gpio = 0; gpio < tegra_gpio_chip.ngpio; gpio++) {
+ 		int irq = irq_domain_to_irq(&irq_domain, gpio);
+ 		/* No validity check; all Tegra GPIOs are valid IRQs */
+ 
+@@ -404,7 +428,7 @@ static int __devinit tegra_gpio_probe(struct platform_device *pdev)
+ 		set_irq_flags(irq, IRQF_VALID);
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(tegra_gpio_banks); i++) {
++	for (i = 0; i < tegra_gpio_bank_count; i++) {
+ 		bank = &tegra_gpio_banks[i];
+ 
+ 		irq_set_chained_handler(bank->irq, tegra_gpio_irq_handler);
+-- 
+1.7.0.4
