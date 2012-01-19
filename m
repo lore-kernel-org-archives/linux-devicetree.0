@@ -1,104 +1,52 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH] ARM: tegra: Define Tegra20 CAR binding
-Date: Thu, 19 Jan 2012 09:17:40 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB0CA@HQMAIL01.nvidia.com>
-References: <1326342789-5781-12-git-send-email-sjg@chromium.org>
- <1326932212-30346-1-git-send-email-swarren@nvidia.com>
- <20120119053143.GA27447@quad.lixom.net>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
+ tile (TC1 variant)
+Date: Thu, 19 Jan 2012 17:27:15 +0000
+Message-ID: <1326994035.13748.7.camel@hornet.cambridge.arm.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
+ <4F0C495C.4000103@citrix.com>
+ <1326979652.32197.66.camel@hornet.cambridge.arm.com>
+ <4F181BD9.20401@gmail.com>
+ <1326980594.32197.67.camel@hornet.cambridge.arm.com>
+ <4F182248.7070209@gmail.com>
+ <1326984672.32197.68.camel@hornet.cambridge.arm.com>
+ <4F184C48.2050505@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120119053143.GA27447-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F184C48.2050505@citrix.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Wednesday, January 18, 2012 10:32 PM:
-> On Wed, Jan 18, 2012 at 05:16:52PM -0700, Stephen Warren wrote:
-> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra20-car.txt
-> > +* NVIDIA Tegra20 Clock And Reset Controller
-> > +
-> > +This binding uses the common clock binding:
-> > +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +
-> > +The CAR (Clock And Reset) Controller on Tegra is the HW module responsible
-> > +for muxing and gating Tegra's clocks, and setting their rates.
-> > +
-> > +Required properties :
-> > +- compatible : Should be "nvidia,<chip>-car"
-> > +- reg : Should contain CAR registers location and length
-> > +- clocks : Should contain phandle and clock specifiers for two clocks:
-> > +  the 32 KHz "32k_in", and the board-specific oscillator "osc".
-> > +- clock-names : Should contain a list of strings, with values "32k_in",
-> > +  and "osc".
-> 
-> Hmm. I'd prefer to just ditch the notion of "clock-names" in the cases
-> where it isn't strictly necessary. Just because some vendors don't want
-> to define an order between their clocks doesn't mean it's a good idea
-> for everybody to use that model. In this case, just declaring that the
-> two clocks refs have to be to those two clocks in that order should
-> be sufficient.
-
-OK, that seems reasonable. I'm happy using of_clk_get() rather than
-of_clk_get_by_name(). I guess that means we should just avoid any
-discussion of clock-output-names too.
-
-> > +- #clock-cells : Should be 1.
-> > +  In clock consumers, this cell represents the clock ID exposed by the CAR.
-> > +  For a list of valid values, see the clock-output-names property.
-> > +
-> > +Optional properties :
-> > +- clock-output-names : Should contain a list of strings defining the clocks
-> > +  that the CAR provides. The list of names and clock IDs is below. The IDs
-> > +  may be used in clock specifiers. The names should be listed in this clock-
-> > +  output-names property, sorted in ID order, if this property is present.
-> > +
-> > +  The first 96 clocks are numbered to match the bits in the CAR's CLK_OUT_ENB
-> > +  registers. Later, subsequent IDs will be assigned to all other clocks the
-> > +  CAR controls.
-> 
-> Aren't these names hardcoded per SoC? If so, they can be derived from the
-> compatible field + output number without having a table in the device tree.
->
-> If anything, you might want to enumerate the allowed/expected values, but
-> actually putting them in a property seems overkill.
-
-Yes, the set of clocks is hard-coded per SoC, and the clock is uniquely
-identified by compatible+id.
-
-clock-output-names doesn't actually serve any functional purpose in
-Grant's common clock bindings patches; it's more of a documentation
-thing. As such, yes, I can remove the suggestion to actually put the
-table into the device tree, and rework the binding to simply define
-what the mapping is independently.
-
-...
-> > +Example:
-> > +
-> > +clocks {
-> > +	clk_32k: oscillator@0 {
-> 
-> If it has a unit addres (@<x>) it needs a reg property with the same base
-> address.
-
-I thought everything needed a unit address period? Is the rule more like
-the unit address is optional, but if present must match reg, so I can
-simply remove @0 and @1 here? I guess that makes a lot more sense.
-
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <32768>;
-> > +	};
-> > +
-> > +	osc: oscillator@1 {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <12000000>;
-> > +	};
-> > +};
-
--- 
-nvpublic
+T24gVGh1LCAyMDEyLTAxLTE5IGF0IDE3OjAwICswMDAwLCBEYXZpZCBWcmFiZWwgd3JvdGU6Cj4g
+VGhlIHByb2JsZW0gd2Fzbid0IHdpdGggaW5jbHVkaW5nIHNrZWxldG9uLmR0c2kuICAKCkluY2x1
+ZGluZyBhcyBpdCBpcyBjcmVhdGVzIHR3byBkZXZpY2VfdHlwZT0ibWVtb3J5IiBub2Rlcywgb25l
+IHdpdGgKcmVncz08MCAwPiwgd2hpY2ggaXMgZGVmaW5pdGVseSB3cm9uZy4KCj4gV2l0aAo+IENP
+TkZJR19BUk1fQVRBR19EVEJfQ09NUEFUIHRoZSB6SW1hZ2UgZGVjb21wcmVzc29yIG1vZGlmaWVz
+IHRoZSBhcHBlbmRlZAo+IERUQiB1c2luZyBpbmZvcm1hdGlvbiBmcm9tIHRoZSBBVEFHcyAoc2Vl
+IGF0YWdzX3RvX2ZkdCgpKS4KPiAKPiBJZiB0aGVyZSdzIGFuIEFUQUcgZ2l2aW5nIHRoZSBhbW91
+bnQgb2YgUkFNIHRoZSBEVEIncyAibWVtb3J5IiBub2RlIGlzCj4gcmVwbGFjZWQgd2l0aCBhIG5l
+dyBvbmUuICBTaW5jZSB0aGUgdmV4cHJlc3MgRFRCcyBkb24ndCBoYXZlIGEgIm1lbW9yeSIKPiBu
+b2RlIGl0J3MgYWRkZWQgYW5kIHRoZSBEVEIgZW5kcyB1cCB3aXRoIHR3byBub2RlcyBkZXNjcmli
+aW5nIG1lbW9yeS4KClRoZSAibWVtb3J5QGFkZHJlc3MiIG5vZGUgbmFtZSBpcyBpbiBteSBvcGlu
+aW9uIHBlcmZlY3RseSBsZWdhbCAtIHAuIDMuNApvZiB0aGUgRFQgc3BlYyBzYXlzICJUaGUgbmFt
+ZSBjb21wb25lbnQgb2YgdGhlIG5vZGUgbmFtZSAoc2VlIDIuMi4xKQpzaGFsbCBiZSBtZW1vcnku
+Ii4gU28gdGhlIGRlY29tcHJlc3NvciBjb2RlIG1heSBiZSB3cm9uZyBpbiBsb29raW5nIGZvcgph
+ZHJlc3MtbGVzcyAibWVtb3J5IiBub2RlLi4uCgpPbmUgd2F5IG9yIHRoZSBvdGhlciwgSSdsbCBn
+ZXQgdGhpcyBmaXhlZC4KClRoYW5rcyBmb3IgbGV0dGluZyBtZSBrbm93IQoKUGF3ZcWCCgoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
