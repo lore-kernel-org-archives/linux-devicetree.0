@@ -1,15 +1,24 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Pinmux bindings proposal
-Date: Thu, 19 Jan 2012 23:08:09 +0530
-Message-ID: <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
- <20120119165607.GG22818@atomide.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15
+ core tile (TC1 variant)
+Date: Thu, 19 Jan 2012 17:50:53 +0000
+Message-ID: <20120119175053.GE10404@n2100.arm.linux.org.uk>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
+ <4F0C495C.4000103@citrix.com>
+ <1326979652.32197.66.camel@hornet.cambridge.arm.com>
+ <4F181BD9.20401@gmail.com>
+ <1326980594.32197.67.camel@hornet.cambridge.arm.com>
+ <4F182248.7070209@gmail.com>
+ <1326984672.32197.68.camel@hornet.cambridge.arm.com>
+ <4F184C48.2050505@citrix.com>
+ <1326994035.13748.7.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120119165607.GG22818-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1326994035.13748.7.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,142 +28,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Thu, Jan 19, 2012 at 05:27:15PM +0000, Pawel Moll wrote:
+> On Thu, 2012-01-19 at 17:00 +0000, David Vrabel wrote:
+> > The problem wasn't with including skeleton.dtsi.  
+> 
+> Including as it is creates two device_type="memory" nodes, one with
+> regs=<0 0>, which is definitely wrong.
+> 
+> > With
+> > CONFIG_ARM_ATAG_DTB_COMPAT the zImage decompressor modifies the appended
+> > DTB using information from the ATAGs (see atags_to_fdt()).
+> > 
+> > If there's an ATAG giving the amount of RAM the DTB's "memory" node is
+> > replaced with a new one.  Since the vexpress DTBs don't have a "memory"
+> > node it's added and the DTB ends up with two nodes describing memory.
+> 
+> The "memory@address" node name is in my opinion perfectly legal - p. 3.4
+> of the DT spec says "The name component of the node name (see 2.2.1)
+> shall be memory.". So the decompressor code may be wrong in looking for
+> adress-less "memory" node...
 
-On 19 January 2012 22:26, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> * Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120119 04:37]:
->>
->> The io-pad controller (gpio/pinmux/pinconfig) can be represented in a
->> dtsi file as below. There could be multiple io-pad controllers
->> supported in the system.
->
-> FYI we too have too mux controller instances on omap4. That seems to
-> work just fine thanks to the "pinctrl: make it possible to add multiple m=
-aps"
-> patch by Linus W.
->
->> pctrl0: pinctrl@11400000 {
->> =A0 =A0 =A0 =A0compatible =3D "samsung,exynos4210-pinctrl";
->> =A0 =A0 =A0 =A0reg =3D <0x11400000 0x1000>;
->> =A0 =A0 =A0 =A0interrupts =3D <.......>;
->> =A0 =A0 =A0 =A0pin-banks =3D <....>;
->> =A0 =A0 =A0 =A0[... other properties TBD ...]
->> =A0 =A0 =A0 =A0#pinctrl-cells =3D <5>;
->> };
->>
->> Each such node instantiates one instance of the pin-controller device.
->> The 'struct pinctrl_dev' should include a new member 'struct of_node'
->> to point to the corresponding pin-controller node in dt which
->> instantiated the controller. The pinctrl_register() function called
->> from drivers/pinctrl/pinctrl-xyz.c then registers the pin-controller
->> instance.
->
-> Looks similar to what I have too.
->
->> * Specifying the pinmux/pinconfig settings in dts files:
->>
->> Device nodes which require specific pinmux/pinconfig settings should
->> include information about the required settings. For example, a i2c
->> controller node in dts file is listed below.
->>
->> i2c0: i2c@18000000 {
->> =A0 =A0 =A0 =A0 [... other properties ...]
->> =A0 =A0 =A0 =A0 pinctrl-active =3D <&pctrl0 5 0 2 3 0>,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<&pctrl0 5 1 =
-2 3 0>;
->> =A0 =A0 =A0 =A0 pinctrl-suspend =3D <&pctrl0 5 0 2 0 0>,
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <&pctrl0=
- 5 1 2 0 0>;
->> };
->
-> Maybe we should have just the active/suspend/off flags in the
-> same array? Otherwise we'll end up unnecessarily repeating the
-> the pin information. See the pins + #pin-args example I posted,
-> which is otherwise similar.
+I don't think you can expect such early code to properly parse a DT tree
+with a variability in how memory stuff is declared into that DT tree.
 
-Yes, I agree. That would be better.
+What if you have two memory nodes specified in the DT file, and the
+ATAG data contains one?
 
->
->> In the example above, the specifier of pinctrl-* is specific for
->> Samsung io-pad controllers. Its format/syntax would be mainly
->> dependent on the io-pad controller used, the above is only an example
->> for Samsung io-pad controller. In the above node, the format of the
->> pinctrl-* specifier is
->>
->> property-name =3D <phandle of the pin-controller
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin bank within t=
-he pin-controller
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin number within=
- the pin-bank
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin-mux function =
-number
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pull up/down conf=
-ig
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0drive strength co=
-nfig>;
->
-> Are these all just bits in one register? If so, let's say you
-> have 16-bits per pin, we might be able to share the generic
-> pinmux-simple.c driver I have almost ready..
+The more I look at this, the more I'm convinced that Grant's idea that
+DT should entirely override ATAGs all the way to the kernel proper was
+the wrong solution - at least in the kernel, if we had both available,
+we could make a choice there, and have the full DT library to be able
+to manipulate the DT blob.
 
-no, these get written to different registers, one for pinmux, one for
-pull up/down and one for drive strength. It would be helpful of your
-pinmux-simple.c can support writes to multiple registers also.
-
->
-> The format would then be
->
-> =A0 =A0 =A0 =A0#pin-args <4>;
-> =A0 =A0 =A0 =A0...
->
-> =A0 =A0 =A0 =A0/* =A0 =A0controller =A0offset on =A0 idle off */
-> =A0 =A0 =A0 =A0pins =3D <&pinctrl0 0x0030 0x15 0x15 0x7>;
->
->> * Using the pinmux/pinconfig specifier in device nodes to configure hard=
-ware.
->>
->> A driver (for a device instantiated from device tree) would require
->> code to be made aware of the pinmux/pinconfig options available. The
->> typical sequence in a probe function would be as below.
->>
->> (a) call of_get_named_gpio() to get the gpio number. In case of
->> Samsung pinctrl driver, the pinctrl driver itself provides the gpiolib
->> functionality and it attaches a gpio specifier translator with the
->> gpio_chip. This translator is capable of translating the pinctrl-* and
->> returning a gpio number.
->>
->> (b) gpio_request() the gpio number obtained in step (a) above.
->>
->> (c) Repeat steps (a) and (b) until all the gpios required by the
->> driver are requested. In case a request fails, give up all the
->> successfully requested gpio and return failure.
->
-> Can't the driver do this to request the gpio pins that you
-> can get from DT and pinmux? Even if you need to do dynamic pinmuxing
-> to GPIO pins for wake-up events, you can do that from the driver
-> as long as you get the GPIO number for the pin from mux code.
-
-Yes, it is the driver that finds out the gpio number from dt and
-requests it. Maybe, I did not understand your point here.
-
-With the approach that I mentioned in the previous email, there are no
-pinmux, pin groups or pin desc tables built from dt. Each device node
-specifies what needs to configured (pinmux,pinconfig) and the code
-using that device node uses pinctrl driver to get those
-pinmux/pinconfig values written to the hardware registers.
-
-Does the dt support for pinmux/pinconfig that you are developing build
-the pinmux, pin groups or pin desc tables? Do drivers have to call
-pinmux_{get/put}() or pin_config_set() functions even in dt case?
-
-Thanks,
-Thomas.
-
->
-> Regards,
->
-> Tony
+Unfortunately, that's not so, so we're just going to have to accept
+that on ARM it should be "memory" if we want the ATAG code to override
+it.  Expecting the decompressor to figure out that it needs to delete
+DT nodes and all that I think is asking far too much.
