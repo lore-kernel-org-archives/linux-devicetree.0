@@ -1,93 +1,49 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: Re: [PATCH v2 2/7] fdt: Add function to allow aliases to
- refer to multiple nodes
-Date: Thu, 19 Jan 2012 13:49:01 -0700
-Message-ID: <4F1881BD.2050704@nvidia.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 3/7] tegra: fdt: Add extra I2C bindings for U-Boot
+Date: Thu, 19 Jan 2012 13:51:45 -0700
+Message-ID: <4F188261.4060607@nvidia.com>
 References: <1326394818-32227-1-git-send-email-sjg@chromium.org>
-	<1326394818-32227-3-git-send-email-sjg@chromium.org>
+ <1326394818-32227-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1326394818-32227-3-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <TWarren@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326394818-32227-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 01/12/2012 12:00 PM, Simon Glass wrote:
-> Some devices can deal with multiple compatible properties. The devices
-> need to know which nodes to bind to which features. For example an
-> I2C driver which supports two different controller types will want to
-> know which type it is dealing with in each case.
-> 
-> The new fdtdec_add_aliases_for_id() function deals with this by allowing
-> the driver to search for additional compatible nodes for a different ID.
-> It can then detect the new ones and perform appropriate processing.
-> 
-> Another option considered was to return a tuple (node offset, compat id)
-> and have the function be passed a list of compatible IDs. This is more
-> overhead for the common case though. We may add such a function later if
-> more drivers in U-Boot require it.
+> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
 
-> +int fdtdec_add_aliases_for_id(const void *blob, const char *name,
-> +			enum fdt_compat_id id, int *node_list, int maxcount)
-...
-> @@ -232,11 +238,13 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
->  		 * it as done.
->  		 */
->  		if (fdtdec_get_is_enabled(blob, node)) {
-> +			if (node_list[number])
-> +				continue;
->  			node_list[number] = node;
->  			if (number >= num_found)
->  				num_found = number + 1;
->  		}
-> -		nodes[j] = 0;
-> +		nodes[found] = 0;
->  	}
->  
->  	/* Add any nodes not mentioned by an alias */
+> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+> index ca7b523..963cf27 100644
+> --- a/arch/arm/dts/tegra20.dtsi
+> +++ b/arch/arm/dts/tegra20.dtsi
+> @@ -45,6 +45,8 @@
+>  		compatible = "nvidia,tegra20-i2c";
+>  		reg = <0x7000C000 0x100>;
+>  		interrupts = < 70 >;
+> +		clock-frequency = <100000>;
 
-Aren't those two changes really bug-fixes to the underlying patch rather
-than part of this enhancement?
+That's board-specific information. I'd rather not include it in the SoC
+.dtsi file even as a default; that way, it forces people to think about
+the correct value and put it in their board file, whereas including a
+default means people probably won't think about it.
 
-I'm not convinced this patch is correct in all cases. It'll probably
-work fine for simply device-trees though. Consider the following case:
+> +		clocks = <&periph_clk 12>;	// PERIPH_ID_I2C1
 
-4 device nodes
-A: compat=i2c alias for usb0
-B: compat=i2c no alias
-C: compat=i2c alias for usb2
-D: compat=i2cx alias for usb1
-
-First, we search for all compat=i2c, the list comes back:
-
-0=A
-1=B
-2=C
-
-Then we search for all compat=i2cx, the list comes back:
-
--1
--1
--1
-D
-
-So D's alias of 1 isn't honored even though if both IDs were searched
-for together, it would have been.
-
-Also, what about the scenario where a driver searches for both
-nvidia,tegra20-i2c then later nvidia,tegra30-i2c, given that all the DT
-nodes are probably compatible with both?
+Of course, that'll need updating based on the resolution of the clock
+binding thread I started.
 
 -- 
 nvpublic
