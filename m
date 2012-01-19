@@ -1,16 +1,16 @@
 From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v4 06/20] tegra: fdt: Add Tegra2x device tree
-	file from kernel
-Date: Thu, 19 Jan 2012 15:51:07 -0800
-Message-ID: <CAPnjgZ2Qfuhds3xK=ADiSx_7wprp-AXkreSOhZzPPFe8E54Q=g@mail.gmail.com>
+Subject: Re: [PATCH v4 08/20] fdt: Add staging area for device tree
+	binding documentation
+Date: Thu, 19 Jan 2012 15:52:14 -0800
+Message-ID: <CAPnjgZ11huAjErvzTrao2Gy4+=FLCESFXwKSEApyBfA1kGuLLw@mail.gmail.com>
 References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
-	<1326342789-5781-7-git-send-email-sjg@chromium.org>
-	<4F174691.1040007@nvidia.com>
+	<1326342789-5781-9-git-send-email-sjg@chromium.org>
+	<4F1747EE.6020805@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4F174691.1040007@nvidia.com>
+In-Reply-To: <4F1747EE.6020805@nvidia.com>
 List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
 	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
 List-Archive: <http://lists.denx.de/pipermail/u-boot>
@@ -26,49 +26,30 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Stephen,
 
-On Wed, Jan 18, 2012 at 2:24 PM, Stephen Warren <swarren@nvidia.com> wrote:
+On Wed, Jan 18, 2012 at 2:30 PM, Stephen Warren <swarren@nvidia.com> wrote:
 > On 01/11/2012 09:32 PM, Simon Glass wrote:
->> This was taken from commit b48c54e2 at:
->> git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
->>
->> config.mk is updated to provide this file to boards through the
->> built-in mechanism:
->>
->> /include/ ARCH_CPU_DTS
+>> Add a directory to hold device tree binding files, to permit easy review
+>> of this material in U-Boot patches.
 >>
 >> Signed-off-by: Simon Glass <sjg@chromium.org>
 >
->> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-> ...
->> + =A0 =A0 i2c@7000d000 {
->> + =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "nvidia,tegra20-i2c";
->> + =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x7000D000 0x200>;
->> + =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D < 85 >;
->> + =A0 =A0 };
+>> diff --git a/doc/device-tree-bindings/README b/doc/device-tree-bindings/=
+README
 >
-> This is slightly out-of-date now; in next-20120118, that node's
-> compatible flag is nvidia,tegra20-i2c-dvc. The HW register layout is
-> somewhat different for this I2C controller, and the different compatible
-> flag is how the driver this.
+>> +The intent is not to commit these files to U-Boot, or at least only
+>> +temporarily, Rather we hope that the files will be stored in another
+>> +repo (shared with Linux) which is brought in as needed. Failing that,
+>> +changes here will be =A0commited to the Linux
+>> +Documentation/devicetree/bindings/ directory.
 >
-> Still, you can always apply that fix in a later patch before you add I2C
-> support.
+> Given there is no shared repo right now, I'd assert we should be
+> specific and explicitly state that the intent /is/ to check in the
+> binding documentation here, and mirror the kernel tree.
+>
+> But, the patch is fine to me as-is if you wish.
 
-This series was original submitted 24 November, so of course things
-change. The changes you mention relate to I2C and I think I picked
-these up in the later I2C patches.
-
-But since we are chasing a moving target, I really don't want to get
-too worried about redoing all the patches every time the kernel burps
-:-) The changes you mention are not even in mainline yet and don't
-relate to USB (this series).
-
-Is it ok to adopt this sort of thinking throughout these series? As
-you know it is easy to pick up a new fdt file later and make any
-changes that are needed. I am well aware that things are still in
-flux.
+I'm fine with this too, it probably is more sensible if the U-Boot PTB
+don't mind.
 
 Regards,
 Simon
