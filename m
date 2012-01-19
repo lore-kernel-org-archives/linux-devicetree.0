@@ -1,55 +1,102 @@
-From: Aneesh V <aneesh@ti.com>
-Subject: Re: [RFC v3 PATCH 1/3] dt: device tree bindings for DDR memories
-Date: Fri, 20 Jan 2012 02:26:38 +0530
-Message-ID: <4F188386.3080507@ti.com>
-References: <1326983521-373-1-git-send-email-aneesh@ti.com>	<1326983521-373-2-git-send-email-aneesh@ti.com> <CAOesGMikm8szKR_yyeV-4NbnknCLG3z9N_sj+zydyu+cosj-Tg@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
+ tile (TC1 variant)
+Date: Thu, 19 Jan 2012 15:07:37 -0700
+Message-ID: <CACxGe6vBkOH1c3mOdY2qJbZ=miuU-WkxHZbJxBtsrhzwMGydcg@mail.gmail.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
+ <4F0C495C.4000103@citrix.com>
+ <1326979652.32197.66.camel@hornet.cambridge.arm.com>
+ <4F181BD9.20401@gmail.com>
+ <1326980594.32197.67.camel@hornet.cambridge.arm.com>
+ <4F182248.7070209@gmail.com>
+ <1326984672.32197.68.camel@hornet.cambridge.arm.com>
+ <4F184C48.2050505@citrix.com>
+ <1326994035.13748.7.camel@hornet.cambridge.arm.com>
+ <20120119175053.GE10404@n2100.arm.linux.org.uk>
+ <CACxGe6tWCd83qcfAv8=x3mdGNHR6xEnS=Gyq=bnWxRw22M4QXA@mail.gmail.com>
+ <alpine.LFD.2.02.1201191305180.19587@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMikm8szKR_yyeV-4NbnknCLG3z9N_sj+zydyu+cosj-Tg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajendra Nayak <rnayak@ti.com>, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.02.1201191305180.19587-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
-
-On Friday 20 January 2012 01:01 AM, Olof Johansson wrote:
-> Hi,
+On Thu, Jan 19, 2012 at 11:09 AM, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org> wrote:
+> On Thu, 19 Jan 2012, Grant Likely wrote:
 >
-> Sorry for the delay in responding, I know you pinged me about it yesterday.
->
-> On Thu, Jan 19, 2012 at 6:31 AM, Aneesh V<aneesh@ti.com>  wrote:
->> device tree bindings for LPDDR2 SDRAM memories compliant
->> to JESD209-2 standard.
+>> On Thu, Jan 19, 2012 at 10:50 AM, Russell King - ARM Linux
+>> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+>> > On Thu, Jan 19, 2012 at 05:27:15PM +0000, Pawel Moll wrote:
+>> >> On Thu, 2012-01-19 at 17:00 +0000, David Vrabel wrote:
+>> >> > The problem wasn't with including skeleton.dtsi.
+>> >>
+>> >> Including as it is creates two device_type=3D"memory" nodes, one with
+>> >> regs=3D<0 0>, which is definitely wrong.
+>> >>
+>> >> > With
+>> >> > CONFIG_ARM_ATAG_DTB_COMPAT the zImage decompressor modifies the app=
+ended
+>> >> > DTB using information from the ATAGs (see atags_to_fdt()).
+>> >> >
+>> >> > If there's an ATAG giving the amount of RAM the DTB's "memory" node=
+ is
+>> >> > replaced with a new one. =A0Since the vexpress DTBs don't have a "m=
+emory"
+>> >> > node it's added and the DTB ends up with two nodes describing memor=
+y.
+>> >>
+>> >> The "memory@address" node name is in my opinion perfectly legal - p. =
+3.4
+>> >> of the DT spec says "The name component of the node name (see 2.2.1)
+>> >> shall be memory.". So the decompressor code may be wrong in looking f=
+or
+>> >> adress-less "memory" node...
+>> >
+>> > I don't think you can expect such early code to properly parse a DT tr=
+ee
+>> > with a variability in how memory stuff is declared into that DT tree.
+>> >
+>> > What if you have two memory nodes specified in the DT file, and the
+>> > ATAG data contains one?
 >>
->> The 'lpddr2' binding in-turn uses another binding 'lpddr2-timings'
->> for specifying the AC timing parameters of the memory device at
->> different speed-bins.
+>> Yes, just because it is technically legal doesn't make it okay. =A0The
+>> pragmatic approach here is that the skeleton.dtsi file calls the node
+>> "memory", so this .dts file must do the same.
+>>
+>> > The more I look at this, the more I'm convinced that Grant's idea that
+>> > DT should entirely override ATAGs all the way to the kernel proper was
+>> > the wrong solution - at least in the kernel, if we had both available,
+>> > we could make a choice there, and have the full DT library to be able
+>> > to manipulate the DT blob.
+>>
+>> Hey! =A0I was originally lobbying for the dt pointer carried by an ATAG.
+>> =A0Nico conviced me otherwise. =A0:-)
 >
-> As I just commented on the thread with Mike, I think we would be
-> better off sticking to embedding a standard JEDEC SPD structure in the
-> device tree. It's not large (128-256 bytes depending on memory type),
-> and it's clearly defined and used all over the industry.
+> Hey! =A0I was originally lobbying for people to have a fully DT aware
+> bootloader if they wanted to play with DT, otherwise there is no
+> incentive for updated bootloaders. =A0But someone else convinced me
+> otherwise. =A0:-)
 >
-> It also has the benefit of reusing parsing code if you ever end up
-> with a system that uses DIMMs for memory, thus needing to parse the
-> SPD on said modules.
+> Mixed bags always have loose ends.
 
-I did mention in the previous thread why SPD doesn't work for us ([1] 
-and [2]). Let me repeat the key points here.
+Hahaha.  Having said that though, I still strongly agree with what we
+have.  Giving the kernel only one or the other avoids any weirdness
+about which the kernel should choose when both are present.  The
+bootwrapper atag-to-dt conversion is a migration and development tool,
+and it should not do any DT manipulation must be kept to a bare
+minimum.
 
-1. I couldn't find an SPD addendum for LPDDR2 from the JEDEC website.
-2. This seems to indicate that SPD is not used for LPDDR2 devices.
-3. I tried to see if I can fit the DDR3 or DDR2 SPD for our needs. But
-some of the AC timing parameters needed by our controller are not
-available in those layouts.
-
-I don't see any option other than defining a new binding for LPDDR2.
-
-br,
-Aneesh
-
-[1] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg61250.html
-[2] http://www.mail-archive.com/linux-omap@vger.kernel.org/msg60473.html
+g.
