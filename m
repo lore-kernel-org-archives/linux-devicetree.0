@@ -1,61 +1,75 @@
-From: Pawel Moll <pawel.moll@arm.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
  tile (TC1 variant)
-Date: Thu, 19 Jan 2012 13:27:32 +0000
-Message-ID: <1326979652.32197.66.camel@hornet.cambridge.arm.com>
+Date: Thu, 19 Jan 2012 07:34:17 -0600
+Message-ID: <4F181BD9.20401@gmail.com>
 References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
  <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
  <4F0C495C.4000103@citrix.com>
+ <1326979652.32197.66.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F0C495C.4000103@citrix.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>, rob.herring@calxeda.com
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326979652.32197.66.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDEyLTAxLTEwIGF0IDE0OjIxICswMDAwLCBEYXZpZCBWcmFiZWwgd3JvdGU6Cj4g
-T24gMTUvMTIvMTEgMTQ6MDIsIFBhd2VsIE1vbGwgd3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMg
-RGV2aWNlIFRyZWUgZmlsZSBmb3IgdGhlIENvcmVUaWxlIEV4cHJlc3MgQTE1eDIKPiA+IChWMlAt
-Q0ExNSkgd2l0aCBUZXN0IENoaXAgMS4KPiAKPiBUaGlzIGRvZXNuJ3Qgd29yayBhcy1pcyB3aXRo
-IHRoZSBzb2Z0d2FyZSBtb2RlbCBhcyBhY2Nlc3Npbmcgc29tZSBvZiB0aGUKPiBwZXJpcGhlcmFs
-cyB0aGF0IGFyZW4ndCBtb2RlbGVkIHdpbGwgY2F1c2UgYW4gZXhjZXB0aW9uLiAgSXMgaXQgd29y
-dGgKPiBoYXZpbmcgYSBkZXZpY2UgdHJlZSBmaWxlIHN1aXRhYmxlIGZvciB0aGUgbW9kZWxzPyBP
-ciBhcmUgdGhlIG1vZGVscyB0b28KPiBjb25maWd1cmFibGUgZm9yIHRoaXMgdG8gYmUgd29ya2Fi
-bGU/CgpUaGUgbW9kZWwgYXMgeW91IGhhdmUgaXQgZG9lc24ndCBleGFjdGx5IHJlcHJlc2VudCB0
-aGUgYm9hcmQgZm9yIGEKbnVtYmVyIG9mIHJlYXNvbnMsIG1haW5seSBiZWNhdXNlIHRoZXJlIHdh
-cyBubyBoYXJkd2FyZSBkZXNpZ24gd2hlbiB0aGUKbW9kZWwgd2FzIGNyZWF0ZWQsIHNvIHNvbWUg
-b2YgdGhlIHNvbHV0aW9uIHdhcyBiZXN0LWd1ZXNzZWQgYnkgdGhlIG1vZGVsCnBlb3BsZS4gQW55
-d2F5LCBjdXJyZW50IEExNSBtb2RlbCBjYW4ndCBiZSBjb25zaWRlcmVkIGEgMS10by0xCmVxdWl2
-YWxlbnQgb2YgdGhlIFZFIGJvYXJkLiBUaGUgcGxhbiBpcyB0aGF0IHRoZSBtb2RlbHMgd2lsbCBi
-ZSBzaGlwcGVkCndpdGggdGhlaXIgb3duIERUU2VzLiBJJ2xsIHdvcmsgb24gdGhhdCBpbiB0aGUg
-Zm9sbG93aW5nIG1vbnRocywgSSBjYW4Ka2VlcCB5b3UgdXBkYXRlZCAoYW5kIHVzZSBhcyBhIGJl
-dGEgdGVzdGVyIDstKSBpZiB5b3Ugd2FudC4KCj4gPiBBcyB0aGUgY2hpcCdzIEdJQyBoYXMgMTYw
-IGludGVycnVwdCBpbnB1dHMgYW5kIGVxdWl2YWxlbnQgU01NCj4gPiAoRlBHQSkgaGFzIEdJQyBz
-eW50aGVzaXNlZCB3aXRoIDI1NiBpbnRlcnJ1cHRzLCBOUl9JUlFTIGlzCj4gPiBpbmNyZWFzZWQu
-Cj4gPiAKPiBbLi4uXQo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvdmV4cHJlc3MtdjJwLWNhMTUtdGMxLmR0cwo+IFsuLi5dCj4gPiArCW1lbW9yeUA4MDAwMDAw
-MCB7Cj4gPiArCQlkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOwo+ID4gKwkJcmVnID0gPDB4ODAwMDAw
-MDAgMHg0MDAwMDAwMD47Cj4gPiArCX07Cj4gCj4gSWYgQ09ORklHX0FSTV9BVEFHX0RUQl9DT01Q
-QVQgaXMgZW5hYmxlZCB0aGUgZGV2aWNlIHRyZWUgd2lsbCBlbmQgdXAKPiB3aXRoIHR3byBub2Rl
-cyBkZXNjcmliaW5nIHRoZSBtZW1vcnkgKCJtZW1vcnkiIGFuZCAibWVtb3J5QDgwMDAwMDAwIiBp
-bgo+IHRoaXMgY2FzZSkuCgpZb3UncmUgcmlnaHQgLSB0aGUgc2tlbGV0b24uZHRzaSBjb250YWlu
-cyAibWVtb3J5IiBtb2RlLi4uIEZ1bm5pbHkKZW5vdWdoIG9yaWdpbmFsbHkgSSB3YXMgdXNpbmcg
-dGhhdCBuYW1lLCBidXQgdGhlbiBSb2IgSGVycmluZyBzdWdnZXN0ZWQKY2hhbmdpbmcgaXQgdG8g
-QDgwMDAwMDAwLCB3aGljaCBzZWVtZWQgcmVhc29uYWJsZS4KCk5vdyBJIHdvbmRlciAtIGlzIHRo
-ZSAibWVtb3J5IiBub2RlIHNwZWNpYWwgYW5kIHNob3VsZCBub3QgY29udGFpbgoiQGFkZHJlc3Mi
-LCBvciB0aGUgc2tlbHRvbiBzaG91bGRuJ3QgY29udGFpbiB0aGUgZW1wdHkgIm1lbW9yeSIgbm9k
-ZS4uLgoKQ2hlZXJzIQoKUGF3ZcWCCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 01/19/2012 07:27 AM, Pawel Moll wrote:
+> On Tue, 2012-01-10 at 14:21 +0000, David Vrabel wrote:
+>> On 15/12/11 14:02, Pawel Moll wrote:
+>>> This patch adds Device Tree file for the CoreTile Express A15x2
+>>> (V2P-CA15) with Test Chip 1.
+>>
+>> This doesn't work as-is with the software model as accessing some of the
+>> peripherals that aren't modeled will cause an exception.  Is it worth
+>> having a device tree file suitable for the models? Or are the models too
+>> configurable for this to be workable?
+> 
+> The model as you have it doesn't exactly represent the board for a
+> number of reasons, mainly because there was no hardware design when the
+> model was created, so some of the solution was best-guessed by the model
+> people. Anyway, current A15 model can't be considered a 1-to-1
+> equivalent of the VE board. The plan is that the models will be shipped
+> with their own DTSes. I'll work on that in the following months, I can
+> keep you updated (and use as a beta tester ;-) if you want.
+> 
+>>> As the chip's GIC has 160 interrupt inputs and equivalent SMM
+>>> (FPGA) has GIC synthesised with 256 interrupts, NR_IRQS is
+>>> increased.
+>>>
+>> [...]
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+>> [...]
+>>> +	memory@80000000 {
+>>> +		device_type = "memory";
+>>> +		reg = <0x80000000 0x40000000>;
+>>> +	};
+>>
+>> If CONFIG_ARM_ATAG_DTB_COMPAT is enabled the device tree will end up
+>> with two nodes describing the memory ("memory" and "memory@80000000" in
+>> this case).
+> 
+> You're right - the skeleton.dtsi contains "memory" mode... Funnily
+> enough originally I was using that name, but then Rob Herring suggested
+> changing it to @80000000, which seemed reasonable.
+> 
+> Now I wonder - is the "memory" node special and should not contain
+> "@address", or the skelton shouldn't contain the empty "memory" node...
+> 
+
+Hummm... I guess you should just use "memory" if you are using
+skeleton.dtsi.
+
+Rob
