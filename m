@@ -1,169 +1,202 @@
-From: Stephen Warren <swarren@nvidia.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Subject: RE: Pinmux bindings proposal
-Date: Fri, 20 Jan 2012 12:50:59 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB45E@HQMAIL01.nvidia.com>
+Date: Fri, 20 Jan 2012 13:11:28 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB475@HQMAIL01.nvidia.com>
 References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <20120116182808.GG4223@ponder.secretlab.ca>
- <20120118141329.GA22818@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1780DAAEBB@HQMAIL01.nvidia.com>
- <20120119105728.GE22818@atomide.com>
+ <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120119105728.GE22818@atomide.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony wrote at Lindgren:
-> * Stephen Warren <swarren@nvidia.com> [120118 11:29]:
-> > Tony Lindgren wrote at Wednesday, January 18, 2012 7:13 AM:
+Thomas Abraham wrote at Thursday, January 19, 2012 6:10 AM:
+> On 14 January 2012 02:09, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > I thought a bit more about pinmux DT bindings. I came up with something
+> > that I like well enough, and is pretty similar to the binding that Dong
+> > posted recently. I think it'll work for both Tegra's and IMX's needs.
+> > Please take a look!
 > >
-> > I'd prefer not to do that for my platforms, for the reason Shawn points
-> > out in his reply to yours.
-> >
-> > However, I believe the bindings I proposed are flexible enough to allow
-> > you to do exactly this for your platforms without requiring that everyone
-> > do it.
+> > Note: I've used named constants below just to make this easier to read.
+> > We still don't have a solution to actually use named constants in dtc yet.
 > 
-> Well I can easily use one phandle per pinmux controller instance
-> instead of one phandle per pin, so let's plan on doing that.
+> [...]
 > 
-> > Recall my proposal was:
+> For Samsung io-pad controllers, I had been considering a dt approach
+> which has been described below. Kindly review and any comments will be
+> helpful.
 > 
-> Yes I think that's pretty close to what I'm using, just few
-> minor comments below.
 > 
-> > pmx_sdhci_standby: pinctrl@0 {
-> >     /* Format is <&pmx_controller_phandle muxable_entity_id
-> >      * selected_function>.
-> >      */
-> >     mux =
-> >         <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
-> >         <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>;
+> * Main points to be considered:
 > 
-> Assuming this is describing the pins a driver is using, how
-> about calling it pins?
-
-It's not always pins.
-
-For a lot of HW it is pins, you're right.
-
-For Tegra20 (and IIRC some other HW), the pin mux HW actually muxes
-groups of pins; one register field sets n (1, 2, 3, ...) pins to that
-function at once. Hence, the entries are real physical groups.
-
-For some HW that controls the mux per pin, the SoC vendors wish the
-pinctrl driver to expose what I call "virtual groups" of pins, e.g. all
-the pins that are typically used together as a single I2C or SD/MMC
-interface, as a single muxable entity (a group in pinctrl parlance).
-In this case, the values listed here will be these group IDs
-
-> That's because you might want to do all the muxing in a
-> bootloader, but still need to tell how many pins you're using
-> for MMC on a device. So it actually has a wider meaning than just
-> mux.
-
-I don't think that affects the name of the property:-)
-
-I see your point about separate ownership of pins/groups and the actual
-HW register programming. The pinctrl subsystem doesn't have a concept
-of separating those two things at the moment though. I don't think its
-unreasonable to still have to write the mux values into the device tree
-and even reprogram them to the same value when Linux boots though. Do
-you see a problem with that? If there is a problem, we need to fix it
-in pinctrl too, irrespective of any device tree work.
-
-> Also, we need to standardize on some name to use for parsing pins
-> using of_parse_phandle_with_args, and I suggested #pin-args.
-
-"cells" is the suffix that's typically used rather than "args".
-
-I certainly foresee the need for a #mux-cells and a #config-cells
-Property so that pinctrl bindings/nodes can tell the core parser of
-the mux/config properties how many cells to pull out for each entry.
-
-In my binding proposal, I original assumed that every controller would
-always have group,function for mux and group,param,value for config.
-However, having #mux-cells and #config-cells is certainly a better idea.
-
-> >     config =
-> >         <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 1>
-> >         <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 1>
-> >         <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-> >         <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-> >         <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_SLEW_RATE 4>
-> >         <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_SLEW_RATE 8>;
-> > };
+> All Samsung SoC's use a io-pad controller that includes gpio, pinmux
+> and pinconfig functionality in a single controller, i.e. there is a
+> single intermixed address space for gpio/pinmux/pinconfig portions in
+> the controller. Additionally, all the drivers for the Samsung SoC's
+> setup pinmux/pinconfig in its probe function (and in resume if
+> required).
 > 
-> Here I don't quite understand how config is different from pins/mux
-> above? It seems to set the driver/pull stuff, but why don't you
-> just make #pin-args larger and have a wider pin array?
-
-The idea is that "mux" lists each pin/group that the device uses, and
-the pin mux selection for it, whereas "config" lists all the other
-configuration values that could be applied to a pin; pull-up, pull-down,
-tri-state, drive strength, ...
-
-I suppose we could lump all those into a single property like:
-
-pinctrl =
-    <MUX &tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
-    <MUX &tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>
-    <CFG &tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 1>
-    <CFG &tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 1>
-    <CFG &tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-    <CFG &tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-    <CFG &tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_SLEW_RATE 4>
-    <CFG &tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_SLEW_RATE 8>;
-
-(where e.g. MUX=0, CFG=1, both interpreted by the parsing code in the
-core pinctrl subsystem)
-
-However, I'd tend towards keeping them in separate properties, especially
-since simple chips won't have any CFG (even on Tegra, 99% of the settings
-we make are MUX not CFG) and requiring this MUX value in every mux entry
-seems wasteful.
-
-> Something like:
 > 
-> 	pins =
-> 	<&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1 TEGRA_PMX_CONF_TRISTATE 1
-> 	 &tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1 TEGRA_PMX_CONF_TRISTATE 1>;
+> * IO Pad controllers in dts file:
 > 
-> and in the parent set #pin-args to 3.
-
-That doesn't support setting a variable number of config values per pin/
-group. Tegra30 has 13 define TEGRA_PMX_CONF_* values, and requiring every
-one of those to be set for every pin/group would be a bit unwieldy,
-especially since 99% of the time we just rely on the HW defaults, and I
-imagine many other SoCs are the same.
-
-> > (Note that I think we've agreed to remove the first cell above, &tegra_pmx,
-> > now by requiring such nodes exist as children of the pin controller.)
+> The io-pad controller (gpio/pinmux/pinconfig) can be represented in a
+> dtsi file as below. There could be multiple io-pad controllers
+> supported in the system.
 > 
-> Sorry I don't quite follow, can you please maybe repost a complete
-> .dts entry for your pin controller and one driver entry?
+> pctrl0: pinctrl@11400000 {
+>        compatible = "samsung,exynos4210-pinctrl";
+>        reg = <0x11400000 0x1000>;
+>        interrupts = <.......>;
+>        pin-banks = <....>;
+>        [... other properties TBD ...]
+>        #pinctrl-cells = <5>;
+> };
+> 
+> Each such node instantiates one instance of the pin-controller device.
+> The 'struct pinctrl_dev' should include a new member 'struct of_node'
+> to point to the corresponding pin-controller node in dt which
+> instantiated the controller. The pinctrl_register() function called
+> from drivers/pinctrl/pinctrl-xyz.c then registers the pin-controller
+> instance.
+> 
 
-Yes, I'll try to do that very soon. The change is simple; from:
+Yes, that's all reasonable, and exactly what I had in mind when I wrote
+my binding proposal.
 
-mux =
-    <&tegra_pmx TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
-    <&tegra_pmx TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>;
+> * Specifying the pinmux/pinconfig settings in dts files:
+> 
+> Device nodes which require specific pinmux/pinconfig settings should
+> include information about the required settings. For example, a i2c
+> controller node in dts file is listed below.
+> 
+> i2c0: i2c@18000000 {
+>         [... other properties ...]
+>         pinctrl-active = <&pctrl0 5 0 2 3 0>,
+>                              <&pctrl0 5 1 2 3 0>;
+>         pinctrl-suspend = <&pctrl0 5 0 2 0 0>,
+>                                 <&pctrl0 5 1 2 0 0>;
+> };
 
+The idea of encoding the state names into the property names came up
+before in this thread. The problem is that it's hard for core code
+to know which properties are actually related to pinctrl and which
+aren't. reserving one name such as "pinctrl" seems reasonable, whereas
+reserving a whole class of names; everything prefixed "pinctrl-foo" is
+a little less so.
 
-to:
+If the parsing of these nodes were a direct result of a driver calling
+pinmux_get("name") or similar, this might be less relevant. However,
+there's a desire to parse all the pinmux properties/nodes up-front so
+that the pinctrl pinmux mapping table can be completely populated early
+during boot, and hence contain all pinmux information, just as if that
+mapping table were registered from static tables by a board file in the
+non DT case. So, being certain what's a pinctrl node/property without
+information on the state names drivers will use is important.
 
-mux =
-    <TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_1>
-    <TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_1>;
+> In the example above, the specifier of pinctrl-* is specific for
+> Samsung io-pad controllers. Its format/syntax would be mainly
+> dependent on the io-pad controller used, the above is only an example
+> for Samsung io-pad controller. In the above node, the format of the
+> pinctrl-* specifier is
+> 
+> property-name = <phandle of the pin-controller
+>                            pin bank within the pin-controller
+>                            pin number within the pin-bank
+>                            pin-mux function number
+>                            pull up/down config
+>                            drive strength config>;
 
-We can do this by requiring the node that contains the mux property to
-be a child of the pin controller node, so the phandle value is always
-the node's parent node.
+Yes, that seems reasonable.
+
+The only thing different between that example and my proposal is that:
+
+a) In my proposal, the property in the device nodes doesn't actually
+   contain all those fields, but a phandle to a child node of the pin
+   controller where that data is kept. This keeps all the pin mux data
+   stored under the pin controller's node for neatness.
+
+   Thus, there's 1 extra level of indirection.
+
+   This allows common sets of values to be defined and the device
+   nodes can simply reference this, rather than cut/pasting the data
+   into every board file that uses the same configuration.
+
+   (Well, I actually proposed that referenced node could be anywhere,
+   but others were insistent it should only be allowed under the pin
+   controller node)
+
+b) I didn't actually include a #pinctrl-cells property in my proposal,
+   assuming that a fixed-format would be acceptable for these properties.
+   However, I will include such a property in my V2 proposal.
+
+> * Using the pinmux/pinconfig specifier in device nodes to configure hardware.
+> 
+> A driver (for a device instantiated from device tree) would require
+> code to be made aware of the pinmux/pinconfig options available. The
+> typical sequence in a probe function would be as below.
+> 
+> (a) call of_get_named_gpio() to get the gpio number. In case of
+
+Not everything is a GPIO in all SoCs, so initiating pin mux configuration
+from of_get_named_gpio() doesn't really make sense.
+
+The pinctrl subsystem already has APIs such as pinmux_get() and
+pinmux_enable() that initiating pin mux programming, so I've been
+assuming they'd be used identically for both systems that use board
+files and systems that use DT.
+
+...
+> (d) For all entries in pinctrl-* property, use
+> of_parse_phandles_with_args() and get the pinctrl node pointer and the
+> pinctrl specifier. As an example, the i2c driver would do the
+> following, incrementing pin-index parameter for each call.
+> 
+> ret = of_parse_phandle_with_args(i2c_np, "pinctrl-active",
+> "#pinctrl-cells", pin-index, &pctrl_np, &pctrl_specifier);
+> 
+> (e) There should be a new api in pinctrl subsystem whose signature
+> could be something like
+> 
+> int pinctrl_dt_parse_and_set_mux_cfg(struct device_node *, const void *);
+> 
+> For each iteration of step (d) in the driver, this new api will be
+> called. The value of pctrl_np and pctrl_specifier obtained from step
+> (d) is passed as a parameters to this new api. This api will do the
+> following
+> 
+> (e1) Find the pin-controller (struct pinctrl_dev) that has a
+> device_node pointer which is same as the first parameter. To recap, it
+> was mentioned above that: "The 'struct pinctrl_dev' should include a
+> new member 'struct of_node' to point to the corresponding
+> pin-controller node in dt which instantiated the controller."
+> 
+> (e2) A new callback 'xlate_pinctrl' is required in 'struct
+> pinctrl_ops' which can translate the second parameter of
+> 'pinctrl_dt_parse_and_set_mux_cfg' function. From the pin controller
+> found in step (e1), call pinctrl_dev->desc->pctlops->xlate_pinctrl
+> passing the second parameter of 'pinctrl_dt_parse_and_set_mux_cfg'
+> function. The pin-controller specific translator function will
+> translate the parameter and program the hardware registers. The
+> xlate_pinctrl is specific to each pin-controller is it knows how to
+> decode the specifier and program the registers.
+
+But yes, I'd expect much of those mechanics to be used roughly as you
+describe, just initiated by other APIs; some DT-wide parsing of the
+pinmux properties at either system boot time or pin controller
+registration time, and application of the data during pinmux_get().
 
 -- 
 nvpublic
