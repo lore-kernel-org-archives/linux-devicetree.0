@@ -1,74 +1,71 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 23/31] ARM: amba: omap2: use common amba device
- initializers
-Date: Fri, 20 Jan 2012 06:37:36 -0800
-Message-ID: <20120120143736.GL22818@atomide.com>
-References: <20120120092207.GD1068@n2100.arm.linux.org.uk>
- <E1RoAnS-0005Fo-Lr@rmk-PC.arm.linux.org.uk>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Pinmux bindings proposal
+Date: Fri, 20 Jan 2012 21:47:48 +0530
+Message-ID: <CAJuYYwQ79o5JuOQfs8rSdasVg+ei4KX7tGLuDA-yysseZya9TA@mail.gmail.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+ <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
+ <20120119165607.GG22818@atomide.com>
+ <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
+ <20120119182019.GI22818@atomide.com>
+ <CAJuYYwQouBDP6dL0B8QOaF0_JsbR7fysySZ5ebcF4op9aTQqbQ@mail.gmail.com>
+ <20120120100528.GJ22818@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <E1RoAnS-0005Fo-Lr@rmk-PC.arm.linux.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, STEricsson <STEricsson_nomadik_linux@list.st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120120100528.GJ22818-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Russell King - ARM Linux <linux@arm.linux.org.uk> [120120 00:58]:
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+On 20 January 2012 15:35, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120119 10:05]:
+>> On 19 January 2012 23:50, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>>
+>> I would like to understand the need for populating the
+>> pinmux/pingroups tables from dt. The question here is when we have
+>> something like
+>>
+>> pins = <&pinctrl0 0x0030 0x15 0x15 0x7>;
+>>
+>> which specifies the values that need to be written to the hardware
+>> registers, would populating pinmux/pingroup tables from dt required.
+>> The SoC specific pinctrl driver can provide a way (with the help of
+>> pinctrl core) to translate these values and write to corresponding
+>> hardware registers. Is there any particular reason for populating the
+>> pinmux/pingroups tables from dt?
+>
+> Hmm I see. Yes it's still needed as we only want to parse the DT once
+> because it's slower unless it was one time only configuration during
+> init.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+Ok. The time spent on searching for the pin-config property can be
+reduced by having the device driver (say, i2c) keep a pointer to all
+the pinconfig properties in its node. The next time a driver needs to
+reconfigure the pins, the search time can be reduced. The time to
+parse the property values though would still be applicable. But I
+would still not opt to build pinmux/pinconfig/pindesc tables from dt.
 
-> ---
->  arch/arm/mach-omap2/emu.c |   26 ++------------------------
->  1 files changed, 2 insertions(+), 24 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/emu.c b/arch/arm/mach-omap2/emu.c
-> index 9c442e2..ce91aad 100644
-> --- a/arch/arm/mach-omap2/emu.c
-> +++ b/arch/arm/mach-omap2/emu.c
-> @@ -30,29 +30,8 @@ MODULE_AUTHOR("Alexander Shishkin");
->  #define ETB_BASE	(L4_EMU_34XX_PHYS + 0x1b000)
->  #define DAPCTL		(L4_EMU_34XX_PHYS + 0x1d000)
->  
-> -static struct amba_device omap3_etb_device = {
-> -	.dev		= {
-> -		.init_name = "etb",
-> -	},
-> -	.res		= {
-> -		.start	= ETB_BASE,
-> -		.end	= ETB_BASE + SZ_4K - 1,
-> -		.flags	= IORESOURCE_MEM,
-> -	},
-> -	.periphid	= 0x000bb907,
-> -};
-> -
-> -static struct amba_device omap3_etm_device = {
-> -	.dev		= {
-> -		.init_name = "etm",
-> -	},
-> -	.res		= {
-> -		.start	= ETM_BASE,
-> -		.end	= ETM_BASE + SZ_4K - 1,
-> -		.flags	= IORESOURCE_MEM,
-> -	},
-> -	.periphid	= 0x102bb921,
-> -};
-> +static AMBA_APB_DEVICE(omap3_etb, "etb", 0x000bb907, ETB_BASE, { }, NULL);
-> +static AMBA_APB_DEVICE(omap3_etm, "etm", 0x102bb921, ETM_BASE, { }, NULL);
->  
->  static int __init emu_init(void)
->  {
-> @@ -66,4 +45,3 @@ static int __init emu_init(void)
->  }
->  
->  subsys_initcall(emu_init);
-> -
-> -- 
-> 1.7.4.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> If you only need to set pins once during the init, then we could add
+> an option for freeing all or most pins after init. That's what we
+> have for the current mach-omap2 mux framework as only few pins need
+> to be dynamically remuxed. That will require some changes to the
+> pinctrl framework though. We would need flags for each pin from DT
+> for init_only/dynamic.
+>
+> Regards,
+>
+> Tony
+
+Thanks,
+Thomas.
