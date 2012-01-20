@@ -1,122 +1,124 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v2 2/7] fdt: Add function to allow aliases to
- refer to multiple nodes
-Date: Thu, 19 Jan 2012 16:31:43 -0800
-Message-ID: <CAPnjgZ3kAtC1Qp=iO33YipB_eW=jnbrK1aviKRjMZjpKRzbKoQ@mail.gmail.com>
-References: <1326394818-32227-1-git-send-email-sjg@chromium.org>
-	<1326394818-32227-3-git-send-email-sjg@chromium.org>
-	<4F1881BD.2050704@nvidia.com>
-	<CAPnjgZ3c6POmEoNRiz+wX8YGVzAtUyzzjXyaz9W9wepLsByoGw@mail.gmail.com>
-	<4F18B28C.4030203@nvidia.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/6] tegra: fdt: Add NAND controller binding and
+ definitions
+Date: Thu, 19 Jan 2012 18:03:10 -0700
+Message-ID: <4F18BD4E.1080702@nvidia.com>
+References: <1326496256-5559-1-git-send-email-sjg@chromium.org>
+ <1326496256-5559-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4F18B28C.4030203@nvidia.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <TWarren@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326496256-5559-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On 01/13/2012 04:10 PM, Simon Glass wrote:
+> Add a NAND controller along with a bindings file for review.
 
-On Thu, Jan 19, 2012 at 4:17 PM, Stephen Warren <swarren@nvidia.com> wrote:
-> On 01/19/2012 04:45 PM, Simon Glass wrote:
->> Hi Stephen,
->>
->> On Thu, Jan 19, 2012 at 12:49 PM, Stephen Warren <swarren@nvidia.com> wrote:
->>> On 01/12/2012 12:00 PM, Simon Glass wrote:
->>>> Some devices can deal with multiple compatible properties. The devices
->>>> need to know which nodes to bind to which features. For example an
->>>> I2C driver which supports two different controller types will want to
->>>> know which type it is dealing with in each case.
->>>>
->>>> The new fdtdec_add_aliases_for_id() function deals with this by allowing
->>>> the driver to search for additional compatible nodes for a different ID.
->>>> It can then detect the new ones and perform appropriate processing.
->>>>
->>>> Another option considered was to return a tuple (node offset, compat id)
->>>> and have the function be passed a list of compatible IDs. This is more
->>>> overhead for the common case though. We may add such a function later if
->>>> more drivers in U-Boot require it.
-> ...
->>> I'm not convinced this patch is correct in all cases. It'll probably
->>> work fine for simply device-trees though. Consider the following case:
->>>
->>> 4 device nodes
->>> A: compat=i2c alias for usb0
->>> B: compat=i2c no alias
->>> C: compat=i2c alias for usb2
->>> D: compat=i2cx alias for usb1
->>>
->>> First, we search for all compat=i2c, the list comes back:
->>>
->>> 0=A
->>> 1=B
->>> 2=C
->>>
->>> Then we search for all compat=i2cx, the list comes back:
->>>
->>> -1
->>> -1
->>> -1
->>> D
->>>
->>> So D's alias of 1 isn't honored even though if both IDs were searched
->>> for together, it would have been.
->>
->> Do we really want that behaviour? Overall I think it is a bit odd to
->> have devices with no aliases if you actually care about the ordering.
->> At least in U-Boot ordering is important. The simple fix above is to
->> provide an alias for everything, which is what we do. If we do want
->> the behaviour you suggest then I will need the change to doing it in
->> one pass.
->
-> I think that behaviour is the intended given that DT content. Despite
-> the fact that content is admittedly a little twisted and perhaps not
-> commonly useful, since this is user-supplied content in general, I don't
-> think we can simply not accept it or not implement the fairly obvious
-> intent.
->
->>> Also, what about the scenario where a driver searches for both
->>> nvidia,tegra20-i2c then later nvidia,tegra30-i2c, given that all the DT
->>> nodes are probably compatible with both?
->>
->> If all DT notes are compatible with both, why are you searching for
->> one and then the other? Why not just search for one?
->
-> I suppose one /shouldn't/ need to.
->
-> I was thinking of supporting the case where somebody only wrote
-> compatible = "nvidia,tegra30-i2c" and left out the Tegra20 variant.
-> Still, is arguably a bug, and that won't work in the kernel either since
-> we're not going around adding all the new compatible values into the
-> drivers when the devices are compatible with the existing HW anyway.
->
-> I guess if we do get some legitimate case that trips this issue, we can
-> just fix it then, since it's entirely isolated to the code and doesn't
-> impact anything externally visible etc.
+A few questions to start with:
 
-Hmmm well perhaps I should add a code comment and see how we go. It
-would be nice if this situation could be spotted. I am concerned about
-anything that is non-obvious here. Will take a look but otherwise it
-sounds like we can punt this until later (unless we decide to move to
-the one-pass option).
+> diff --git a/doc/device-tree-bindings/nand/nvidia-nand.txt b/doc/device-tree-bindings/nand/nvidia-nand.txt
 
-Anyway this is in a place by itself with unit tests so we should be
-able to fiddle if needed.
+> +NAND Flash
+> +----------
+> +
+> +(there isn't yet a generic binding in Linux, so this describes what is in
+> +U-Boot)
+> +
+> +The device node for a NAND flash device is as described in the document
+> +"Open Firmware Recommended Practice : Universal Serial Bus" with the
+> +following modifications and additions :
+> +
+> +Required properties :
+> + - compatible : Should be "manufacture,device", "nand-flash"
+> + - page-data-bytes : Number of bytes in the data area
+> + - page-spare-bytes : * Number of bytes in spare area
+> +       spare area = skipped-spare-bytes + data-ecc-bytes + tag-bytes
+> +			+ tag-ecc-bytes
+> + - skipped-spare-bytes : Number of bytes to skip at start of spare area
+> +	(these are typically used for bad block maintenance)
+> + - data-ecc-bytes : Number of ECC bytes for data area
+> + - tag-bytes :Number of tag bytes in spare area
+> + - tag-ecc-bytes : Number ECC bytes to be generated for tag bytes
 
-Regards,
-Simon
+Are any of those values really needed?
 
->
-> --
-> nvpublic
+I looked through all the NAND references I could find in the Linux
+kernel in arch/*/boot/dts/* and none of them seem to have this kind of
+information.
+
+Looking at the drivers, they execute some form of identification command
+on the NAND device which gives back a device ID, which is then looked up
+in a table of known devices to give the information above.
+
+I checked the Tegra NAND driver that's in the kernel chromeos-3.0
+branch, and it does the same thing, albeit it open-codes some of the
+identification routines rather than just calling into the common code.
+
+Judging by arch/*/boot/dts/*, it is standard practice to have a node for
+the NAND device itself though; it's used to house (optional) partition
+definitions. In the kernel,
+Documentation/devicetree/bindings/mtd/mtd-physmap.txt discusses the
+format of these partition nodes, and e.g.
+arch/powerpc/boot/dts/canyonlands.dts (amongst many) uses this on NAND.
+
+> +Nvidia NAND Controller
+> +----------------------
+> +
+> +The device node for a NAND flash controller is as described in the document
+> +"Open Firmware Recommended Practice : Universal Serial Bus" with the
+> +following modifications and additions :
+> +
+> +Optional properties:
+> +
+> +wp-gpio : GPIO of write-protect line, three cells in the format:
+> +		phandle, parameter, flags
+> +width : bus width of the NAND device in bits
+> +
+> +For now here is something specific to the Nvidia controller, with naming
+> +based on Nvidia's original (non-fdt) NAND driver:
+> +
+> + - nvidia,nand-timing : Timing parameters for the NAND. Each is in ns.
+> +	Order is: MAX_TRP_TREA, TWB, Max(tCS, tCH, tALS, tALH),
+> +	TWHR, Max(tCS, tCH, tALS, tALH), TWH, TWP, TRH, TADL
+> +
+> +	MAX_TRP_TREA is:
+> +		non-EDO mode: Max(tRP, tREA) + 6ns
+> +		EDO mode: tRP timing
+
+At first glance, it seems reasonable to have this in the NAND node; it's
+certainly impossible to probe the timing parameters. Since NAND is so
+standardized though, I wonder if there is a standard set of timing
+parameters so that we could have a standard device tree binding for this?
+
+> +Example:
+> +
+> +nand-controller@0x70008000 {
+> +	compatible = "nvidia,tegra20-nand";
+> +	wp-gpios = <&gpio 59 0>;		/* PH3 */
+> +	width = <8>;
+> +	nvidia,timing = <26 100 20 80 20 10 12 10 70>;
+> +	nand@0 {
+> +		compatible = "hynix,hy27uf4g2b", "nand-flash";
+> +		page-data-bytes = <2048>;
+> +		tag-ecc-bytes = <4>;
+> +		tag-bytes = <20>;
+> +		data-ecc-bytes = <36>;
+> +		skipped-spare-bytes = <4>;
+> +		page-spare-bytes = <64>;
+> +	};
+> +};
+
+-- 
+nvpublic
