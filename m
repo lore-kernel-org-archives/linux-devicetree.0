@@ -1,15 +1,12 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/6] tegra: fdt: Add NAND controller binding and
- definitions
-Date: Thu, 19 Jan 2012 18:03:10 -0700
-Message-ID: <4F18BD4E.1080702@nvidia.com>
-References: <1326496256-5559-1-git-send-email-sjg@chromium.org>
- <1326496256-5559-4-git-send-email-sjg@chromium.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH 00/31] Clean up amba/primecell bus support
+Date: Fri, 20 Jan 2012 09:22:07 +0000
+Message-ID: <20120120092207.GD1068@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326496256-5559-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,106 +16,83 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson <STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinidhi Kasagar <srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, Rajeev Kumar <rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org>, Jiandong Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alessandro Rubini <rubini-9wsNiZum9E8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/13/2012 04:10 PM, Simon Glass wrote:
-> Add a NAND controller along with a bindings file for review.
+This patch set cleans up the AMBA/Primecell bus support.  Contained
+within this set are:
 
-A few questions to start with:
+1. Patches 1-5 - Allocation APIs
+   It seems several places in the kernel want to allocate and register
+   amba_device structures.  Let's make this official, and common code.
+   So we introduce amba_device_alloc(), amba_device_add(), and
+   amba_device_put() APIs, which provide the necessary support safely
+   for this.
 
-> diff --git a/doc/device-tree-bindings/nand/nvidia-nand.txt b/doc/device-tree-bindings/nand/nvidia-nand.txt
+   Convert the DT, ux500, Integrator/AP and mxs code to use these APIs
+   rather than their private version.
 
-> +NAND Flash
-> +----------
-> +
-> +(there isn't yet a generic binding in Linux, so this describes what is in
-> +U-Boot)
-> +
-> +The device node for a NAND flash device is as described in the document
-> +"Open Firmware Recommended Practice : Universal Serial Bus" with the
-> +following modifications and additions :
-> +
-> +Required properties :
-> + - compatible : Should be "manufacture,device", "nand-flash"
-> + - page-data-bytes : Number of bytes in the data area
-> + - page-spare-bytes : * Number of bytes in spare area
-> +       spare area = skipped-spare-bytes + data-ecc-bytes + tag-bytes
-> +			+ tag-ecc-bytes
-> + - skipped-spare-bytes : Number of bytes to skip at start of spare area
-> +	(these are typically used for bad block maintenance)
-> + - data-ecc-bytes : Number of ECC bytes for data area
-> + - tag-bytes :Number of tag bytes in spare area
-> + - tag-ecc-bytes : Number ECC bytes to be generated for tag bytes
+2. Patches 6-17 - NO_IRQ cleanup
+   Making IRQ number 0 mean 'no irq' for the AMBA drivers and bus layer.
+   We get rid of NO_IRQ initializers in this across various platforms,
+   and make the bus layer warn if '-1' is passed in a device as an IRQ.
+   This prevents new occurances of NO_IRQ initializers for this bus type
+   going by unspotted.
 
-Are any of those values really needed?
+3. Patches 18-31 - static initializers
+   Provide a standardized set of initializers for statically declared
+   AMBA devices.  We provide two - one for the simpler APB devices,
+   and one for AHB devices.  The major difference between these two is
+   the setting of the DMA mask - APB peripherals do not have DMA
+   capability themselves.
 
-I looked through all the NAND references I could find in the Linux
-kernel in arch/*/boot/dts/* and none of them seem to have this kind of
-information.
+While updating (3), I came across new additions in Spear3xx and the
+Samsung directories which added AMBA devices, which are declared
+globally.  The Spear3xx devices are used in other files, so that's
+fine.
 
-Looking at the drivers, they execute some form of identification command
-on the NAND device which gives back a device ID, which is then looked up
-in a table of known devices to give the information above.
+Samsung devices don't seem to be - and that needs fixing (did someone
+not run checkpatch or sparse on these changes?)  Please send fixes.
 
-I checked the Tegra NAND driver that's in the kernel chromeos-3.0
-branch, and it does the same thing, albeit it open-codes some of the
-identification routines rather than just calling into the common code.
+Acks for these patches are welcome.
 
-Judging by arch/*/boot/dts/*, it is standard practice to have a node for
-the NAND device itself though; it's used to house (optional) partition
-definitions. In the kernel,
-Documentation/devicetree/bindings/mtd/mtd-physmap.txt discusses the
-format of these partition nodes, and e.g.
-arch/powerpc/boot/dts/canyonlands.dts (amongst many) uses this on NAND.
-
-> +Nvidia NAND Controller
-> +----------------------
-> +
-> +The device node for a NAND flash controller is as described in the document
-> +"Open Firmware Recommended Practice : Universal Serial Bus" with the
-> +following modifications and additions :
-> +
-> +Optional properties:
-> +
-> +wp-gpio : GPIO of write-protect line, three cells in the format:
-> +		phandle, parameter, flags
-> +width : bus width of the NAND device in bits
-> +
-> +For now here is something specific to the Nvidia controller, with naming
-> +based on Nvidia's original (non-fdt) NAND driver:
-> +
-> + - nvidia,nand-timing : Timing parameters for the NAND. Each is in ns.
-> +	Order is: MAX_TRP_TREA, TWB, Max(tCS, tCH, tALS, tALH),
-> +	TWHR, Max(tCS, tCH, tALS, tALH), TWH, TWP, TRH, TADL
-> +
-> +	MAX_TRP_TREA is:
-> +		non-EDO mode: Max(tRP, tREA) + 6ns
-> +		EDO mode: tRP timing
-
-At first glance, it seems reasonable to have this in the NAND node; it's
-certainly impossible to probe the timing parameters. Since NAND is so
-standardized though, I wonder if there is a standard set of timing
-parameters so that we could have a standard device tree binding for this?
-
-> +Example:
-> +
-> +nand-controller@0x70008000 {
-> +	compatible = "nvidia,tegra20-nand";
-> +	wp-gpios = <&gpio 59 0>;		/* PH3 */
-> +	width = <8>;
-> +	nvidia,timing = <26 100 20 80 20 10 12 10 70>;
-> +	nand@0 {
-> +		compatible = "hynix,hy27uf4g2b", "nand-flash";
-> +		page-data-bytes = <2048>;
-> +		tag-ecc-bytes = <4>;
-> +		tag-bytes = <20>;
-> +		data-ecc-bytes = <36>;
-> +		skipped-spare-bytes = <4>;
-> +		page-spare-bytes = <64>;
-> +	};
-> +};
-
--- 
-nvpublic
+ arch/arm/mach-bcmring/core.c                   |   23 +-----
+ arch/arm/mach-ep93xx/core.c                    |   46 ++---------
+ arch/arm/mach-exynos/dma.c                     |   38 ++-------
+ arch/arm/mach-integrator/core.c                |   70 +++-------------
+ arch/arm/mach-integrator/impd1.c               |    9 +--
+ arch/arm/mach-integrator/integrator_cp.c       |   49 ++---------
+ arch/arm/mach-lpc32xx/phy3250.c                |   32 +------
+ arch/arm/mach-mxs/devices.c                    |    8 +-
+ arch/arm/mach-mxs/devices/amba-duart.c         |    2 +-
+ arch/arm/mach-netx/fb.c                        |   13 +---
+ arch/arm/mach-nomadik/board-nhk8815.c          |   17 +---
+ arch/arm/mach-nomadik/cpu-8815.c               |    9 +--
+ arch/arm/mach-omap2/emu.c                      |   26 +------
+ arch/arm/mach-realview/core.h                  |   20 +----
+ arch/arm/mach-realview/realview_eb.c           |   78 +++++++++---------
+ arch/arm/mach-realview/realview_pb1176.c       |   78 +++++++++---------
+ arch/arm/mach-realview/realview_pb11mp.c       |   78 +++++++++---------
+ arch/arm/mach-realview/realview_pba8.c         |   78 +++++++++---------
+ arch/arm/mach-realview/realview_pbx.c          |   78 +++++++++---------
+ arch/arm/mach-s5p64x0/dma.c                    |   22 +----
+ arch/arm/mach-s5pc100/dma.c                    |   38 ++-------
+ arch/arm/mach-s5pv210/dma.c                    |   38 ++-------
+ arch/arm/mach-spear3xx/spear300.c              |   14 +---
+ arch/arm/mach-spear3xx/spear3xx.c              |   27 +-----
+ arch/arm/mach-spear6xx/spear6xx.c              |   10 +-
+ arch/arm/mach-u300/core.c                      |   85 ++++----------------
+ arch/arm/mach-ux500/devices-common.c           |   13 +--
+ arch/arm/mach-versatile/core.c                 |   70 ++++++++--------
+ arch/arm/mach-versatile/core.h                 |   20 +----
+ arch/arm/mach-versatile/versatile_pb.c         |   18 ++--
+ arch/arm/mach-vexpress/core.h                  |   17 ----
+ arch/arm/mach-vexpress/ct-ca9x4.c              |    8 +-
+ arch/arm/mach-vexpress/include/mach/ct-ca9x4.h |    2 +-
+ arch/arm/mach-vexpress/v2m.c                   |   20 ++--
+ drivers/amba/bus.c                             |  105 ++++++++++++++++++------
+ drivers/mmc/host/mmci.c                        |    2 +-
+ drivers/of/platform.c                          |    6 +-
+ include/linux/amba/bus.h                       |   36 ++++++++
+ 38 files changed, 488 insertions(+), 815 deletions(-)
