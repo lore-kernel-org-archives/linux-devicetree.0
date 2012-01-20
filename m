@@ -1,67 +1,103 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 06/20] tegra: fdt: Add Tegra2x device tree file from
- kernel
-Date: Thu, 19 Jan 2012 17:06:54 -0700
-Message-ID: <4F18B01E.40404@nvidia.com>
-References: <1326342789-5781-1-git-send-email-sjg@chromium.org>	<1326342789-5781-7-git-send-email-sjg@chromium.org>	<4F174691.1040007@nvidia.com>
- <CAPnjgZ2Qfuhds3xK=ADiSx_7wprp-AXkreSOhZzPPFe8E54Q=g@mail.gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: Re: [PATCH v2 2/7] fdt: Add function to allow aliases to
+ refer to multiple nodes
+Date: Thu, 19 Jan 2012 17:17:16 -0700
+Message-ID: <4F18B28C.4030203@nvidia.com>
+References: <1326394818-32227-1-git-send-email-sjg@chromium.org>	<1326394818-32227-3-git-send-email-sjg@chromium.org>	<4F1881BD.2050704@nvidia.com>
+	<CAPnjgZ3c6POmEoNRiz+wX8YGVzAtUyzzjXyaz9W9wepLsByoGw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPnjgZ2Qfuhds3xK=ADiSx_7wprp-AXkreSOhZzPPFe8E54Q=g@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <CAPnjgZ3c6POmEoNRiz+wX8YGVzAtUyzzjXyaz9W9wepLsByoGw@mail.gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <TWarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2012 04:51 PM, Simon Glass wrote:
+On 01/19/2012 04:45 PM, Simon Glass wrote:
 > Hi Stephen,
 > 
-> On Wed, Jan 18, 2012 at 2:24 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 01/11/2012 09:32 PM, Simon Glass wrote:
->>> This was taken from commit b48c54e2 at:
->>> git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
+> On Thu, Jan 19, 2012 at 12:49 PM, Stephen Warren <swarren@nvidia.com> wrote:
+>> On 01/12/2012 12:00 PM, Simon Glass wrote:
+>>> Some devices can deal with multiple compatible properties. The devices
+>>> need to know which nodes to bind to which features. For example an
+>>> I2C driver which supports two different controller types will want to
+>>> know which type it is dealing with in each case.
 >>>
->>> config.mk is updated to provide this file to boards through the
->>> built-in mechanism:
+>>> The new fdtdec_add_aliases_for_id() function deals with this by allowing
+>>> the driver to search for additional compatible nodes for a different ID.
+>>> It can then detect the new ones and perform appropriate processing.
 >>>
->>> /include/ ARCH_CPU_DTS
->>>
->>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>> Another option considered was to return a tuple (node offset, compat id)
+>>> and have the function be passed a list of compatible IDs. This is more
+>>> overhead for the common case though. We may add such a function later if
+>>> more drivers in U-Boot require it.
+...
+>> I'm not convinced this patch is correct in all cases. It'll probably
+>> work fine for simply device-trees though. Consider the following case:
 >>
->>> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
->> ...
->>> +     i2c@7000d000 {
->>> +             #address-cells = <1>;
->>> +             #size-cells = <0>;
->>> +             compatible = "nvidia,tegra20-i2c";
->>> +             reg = <0x7000D000 0x200>;
->>> +             interrupts = < 85 >;
->>> +     };
+>> 4 device nodes
+>> A: compat=i2c alias for usb0
+>> B: compat=i2c no alias
+>> C: compat=i2c alias for usb2
+>> D: compat=i2cx alias for usb1
 >>
->> This is slightly out-of-date now; in next-20120118, that node's
->> compatible flag is nvidia,tegra20-i2c-dvc. The HW register layout is
->> somewhat different for this I2C controller, and the different compatible
->> flag is how the driver this.
+>> First, we search for all compat=i2c, the list comes back:
 >>
->> Still, you can always apply that fix in a later patch before you add I2C
->> support.
+>> 0=A
+>> 1=B
+>> 2=C
+>>
+>> Then we search for all compat=i2cx, the list comes back:
+>>
+>> -1
+>> -1
+>> -1
+>> D
+>>
+>> So D's alias of 1 isn't honored even though if both IDs were searched
+>> for together, it would have been.
 > 
-> This series was original submitted 24 November, so of course things
-> change. The changes you mention relate to I2C and I think I picked
-> these up in the later I2C patches.
+> Do we really want that behaviour? Overall I think it is a bit odd to
+> have devices with no aliases if you actually care about the ordering.
+> At least in U-Boot ordering is important. The simple fix above is to
+> provide an alias for everything, which is what we do. If we do want
+> the behaviour you suggest then I will need the change to doing it in
+> one pass.
 
-As I said, as long as this is updated before the I2C support that relies
-on it (as IIRC your I2C patch series did), that's fine.
+I think that behaviour is the intended given that DT content. Despite
+the fact that content is admittedly a little twisted and perhaps not
+commonly useful, since this is user-supplied content in general, I don't
+think we can simply not accept it or not implement the fairly obvious
+intent.
+
+>> Also, what about the scenario where a driver searches for both
+>> nvidia,tegra20-i2c then later nvidia,tegra30-i2c, given that all the DT
+>> nodes are probably compatible with both?
+> 
+> If all DT notes are compatible with both, why are you searching for
+> one and then the other? Why not just search for one?
+
+I suppose one /shouldn't/ need to.
+
+I was thinking of supporting the case where somebody only wrote
+compatible = "nvidia,tegra30-i2c" and left out the Tegra20 variant.
+Still, is arguably a bug, and that won't work in the kernel either since
+we're not going around adding all the new compatible values into the
+drivers when the devices are compatible with the existing HW anyway.
+
+I guess if we do get some legitimate case that trips this issue, we can
+just fix it then, since it's entirely isolated to the code and doesn't
+impact anything externally visible etc.
 
 -- 
 nvpublic
