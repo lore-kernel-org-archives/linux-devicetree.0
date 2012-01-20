@@ -1,50 +1,72 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: Pinmux bindings proposal
-Date: Fri, 20 Jan 2012 02:05:28 -0800
-Message-ID: <20120120100528.GJ22818@atomide.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
- <20120119165607.GG22818@atomide.com>
- <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
- <20120119182019.GI22818@atomide.com>
- <CAJuYYwQouBDP6dL0B8QOaF0_JsbR7fysySZ5ebcF4op9aTQqbQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 05/31] ARM: amba: mxs: convert to use amba_device_alloc
+Date: Fri, 20 Jan 2012 20:25:39 +0800
+Message-ID: <20120120122535.GA25917@S2101-09.ap.freescale.net>
+References: <20120120092207.GD1068@n2100.arm.linux.org.uk>
+ <E1RoAhZ-0005EY-BZ@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJuYYwQouBDP6dL0B8QOaF0_JsbR7fysySZ5ebcF4op9aTQqbQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Stephen Warren <swarren@nvidia.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+In-Reply-To: <E1RoAhZ-0005EY-BZ@rmk-PC.arm.linux.org.uk>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, STEricsson <STEricsson_nomadik_linux@list.st.com>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-* Thomas Abraham <thomas.abraham@linaro.org> [120119 10:05]:
-> On 19 January 2012 23:50, Tony Lindgren <tony@atomide.com> wrote:
-> 
-> I would like to understand the need for populating the
-> pinmux/pingroups tables from dt. The question here is when we have
-> something like
-> 
-> pins = <&pinctrl0 0x0030 0x15 0x15 0x7>;
-> 
-> which specifies the values that need to be written to the hardware
-> registers, would populating pinmux/pingroup tables from dt required.
-> The SoC specific pinctrl driver can provide a way (with the help of
-> pinctrl core) to translate these values and write to corresponding
-> hardware registers. Is there any particular reason for populating the
-> pinmux/pingroups tables from dt?
+On Fri, Jan 20, 2012 at 09:24:05AM +0000, Russell King - ARM Linux wrot=
+e:
+> Convert MXS to use the new amba_device_alloc APIs.
+>=20
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> ---
+>  arch/arm/mach-mxs/devices.c |    8 +++++---
+>  1 files changed, 5 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/arm/mach-mxs/devices.c b/arch/arm/mach-mxs/devices.=
+c
+> index fe3e847..052d8dd 100644
+> --- a/arch/arm/mach-mxs/devices.c
+> +++ b/arch/arm/mach-mxs/devices.c
+> @@ -77,16 +77,18 @@ struct platform_device *__init mxs_add_platform_d=
+evice_dmamask(
+> =20
+>  int __init mxs_add_amba_device(const struct amba_device *dev)
+>  {
+> -	struct amba_device *adev =3D kmalloc(sizeof(*adev), GFP_KERNEL);
+> +	struct amba_device *adev =3D amba_device_alloc(dev->init_name,
 
-Hmm I see. Yes it's still needed as we only want to parse the DT once
-because it's slower unless it was one time only configuration during
-init.
+The 'dev->init_name' needs to be 'dev->dev.init_name'.  Otherwise, we
+see the compile error below.
 
-If you only need to set pins once during the init, then we could add
-an option for freeing all or most pins after init. That's what we
-have for the current mach-omap2 mux framework as only few pins need
-to be dynamically remuxed. That will require some changes to the
-pinctrl framework though. We would need flags for each pin from DT
-for init_only/dynamic.
+  CC      arch/arm/mach-mxs/devices.o
+arch/arm/mach-mxs/devices.c: In function =E2=80=98mxs_add_amba_device=E2=
+=80=99:
+arch/arm/mach-mxs/devices.c:80:50: error: =E2=80=98const struct amba_de=
+vice=E2=80=99 has no member named =E2=80=98init_name=E2=80=99
+
+Other than that,
+
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
 
 Regards,
+Shawn
 
-Tony
+> +		dev->res.start, resource_size(&dev->res));
+> =20
+>  	if (!adev) {
+>  		pr_err("%s: failed to allocate memory", __func__);
+>  		return -ENOMEM;
+>  	}
+> =20
+> -	*adev =3D *dev;
+> +	adev->irq[0] =3D dev->irq[0];
+> +	adev->irq[1] =3D dev->irq[1];
+> =20
+> -	return amba_device_register(adev, &iomem_resource);
+> +	return amba_device_add(adev, &iomem_resource);
+>  }
+> =20
+>  struct device mxs_apbh_bus =3D {
+> --=20
