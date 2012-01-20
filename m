@@ -1,92 +1,50 @@
-From: Viresh Kumar <viresh.kumar@st.com>
-Subject: Re: [PATCH 30/31] ARM: amba: spear: use common amba device initializers
-Date: Fri, 20 Jan 2012 15:08:32 +0530
-Message-ID: <4F193618.7070407@st.com>
-References: <20120120092207.GD1068@n2100.arm.linux.org.uk> <E1RoApj-0005GI-HJ@rmk-PC.arm.linux.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: Pinmux bindings proposal
+Date: Fri, 20 Jan 2012 02:05:28 -0800
+Message-ID: <20120120100528.GJ22818@atomide.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+ <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
+ <20120119165607.GG22818@atomide.com>
+ <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
+ <20120119182019.GI22818@atomide.com>
+ <CAJuYYwQouBDP6dL0B8QOaF0_JsbR7fysySZ5ebcF4op9aTQqbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <E1RoApj-0005GI-HJ@rmk-PC.arm.linux.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, STEricsson_nomadik_linux <STEricsson_nomadik_linux@list.st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJuYYwQouBDP6dL0B8QOaF0_JsbR7fysySZ5ebcF4op9aTQqbQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/20/2012 3:02 PM, Russell King - ARM Linux wrote:
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> ---
->  arch/arm/mach-spear3xx/spear300.c |   14 ++------------
->  arch/arm/mach-spear3xx/spear3xx.c |   27 ++++-----------------------
->  2 files changed, 6 insertions(+), 35 deletions(-)
+* Thomas Abraham <thomas.abraham@linaro.org> [120119 10:05]:
+> On 19 January 2012 23:50, Tony Lindgren <tony@atomide.com> wrote:
 > 
-> diff --git a/arch/arm/mach-spear3xx/spear300.c b/arch/arm/mach-spear3xx/spear300.c
-> index 6fdeec9..9da50e281 100644
-> --- a/arch/arm/mach-spear3xx/spear300.c
-> +++ b/arch/arm/mach-spear3xx/spear300.c
-> @@ -430,18 +430,8 @@ static struct pl061_platform_data gpio1_plat_data = {
->  	.irq_base	= SPEAR300_GPIO1_INT_BASE,
->  };
->  
-> -struct amba_device spear300_gpio1_device = {
-> -	.dev = {
-> -		.init_name = "gpio1",
-> -		.platform_data = &gpio1_plat_data,
-> -	},
-> -	.res = {
-> -		.start = SPEAR300_GPIO_BASE,
-> -		.end = SPEAR300_GPIO_BASE + SZ_4K - 1,
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	.irq = {SPEAR300_VIRQ_GPIO1},
-> -};
-> +AMBA_APB_DEVICE(spear300_gpio1, "gpio1", 0, SPEAR300_GPIO_BASE,
-> +	{SPEAR300_VIRQ_GPIO1}, &gpio1_plat_data);
->  
->  /* spear300 routines */
->  void __init spear300_init(struct pmx_mode *pmx_mode, struct pmx_dev **pmx_devs,
-> diff --git a/arch/arm/mach-spear3xx/spear3xx.c b/arch/arm/mach-spear3xx/spear3xx.c
-> index bc4f1c6..b1733c3 100644
-> --- a/arch/arm/mach-spear3xx/spear3xx.c
-> +++ b/arch/arm/mach-spear3xx/spear3xx.c
-> @@ -28,31 +28,12 @@ static struct pl061_platform_data gpio_plat_data = {
->  	.irq_base	= SPEAR3XX_GPIO_INT_BASE,
->  };
->  
-> -struct amba_device spear3xx_gpio_device = {
-> -	.dev = {
-> -		.init_name = "gpio",
-> -		.platform_data = &gpio_plat_data,
-> -	},
-> -	.res = {
-> -		.start = SPEAR3XX_ICM3_GPIO_BASE,
-> -		.end = SPEAR3XX_ICM3_GPIO_BASE + SZ_4K - 1,
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	.irq = {SPEAR3XX_IRQ_BASIC_GPIO},
-> -};
-> +AMBA_APB_DEVICE(spear3xx_gpio, "gpio", 0, SPEAR3XX_ICM3_GPIO_BASE,
-> +	{SPEAR3XX_IRQ_BASIC_GPIO}, &gpio_plat_data);
->  
->  /* uart device registration */
-> -struct amba_device spear3xx_uart_device = {
-> -	.dev = {
-> -		.init_name = "uart",
-> -	},
-> -	.res = {
-> -		.start = SPEAR3XX_ICM1_UART_BASE,
-> -		.end = SPEAR3XX_ICM1_UART_BASE + SZ_4K - 1,
-> -		.flags = IORESOURCE_MEM,
-> -	},
-> -	.irq = {SPEAR3XX_IRQ_UART},
-> -};
-> +AMBA_APB_DEVICE(spear3xx_uart, "uart", 0, SPEAR3XX_ICM1_UART_BASE,
-> +	{SPEAR3XX_IRQ_UART}, NULL);
->  
->  /* Do spear3xx familiy common initialization part here */
->  void __init spear3xx_init(void)
+> I would like to understand the need for populating the
+> pinmux/pingroups tables from dt. The question here is when we have
+> something like
+> 
+> pins = <&pinctrl0 0x0030 0x15 0x15 0x7>;
+> 
+> which specifies the values that need to be written to the hardware
+> registers, would populating pinmux/pingroup tables from dt required.
+> The SoC specific pinctrl driver can provide a way (with the help of
+> pinctrl core) to translate these values and write to corresponding
+> hardware registers. Is there any particular reason for populating the
+> pinmux/pingroups tables from dt?
 
-Acked-by: Viresh Kumar <viresh.kumar@st.com>
+Hmm I see. Yes it's still needed as we only want to parse the DT once
+because it's slower unless it was one time only configuration during
+init.
 
--- 
-viresh
+If you only need to set pins once during the init, then we could add
+an option for freeing all or most pins after init. That's what we
+have for the current mach-omap2 mux framework as only few pins need
+to be dynamically remuxed. That will require some changes to the
+pinctrl framework though. We would need flags for each pin from DT
+for init_only/dynamic.
+
+Regards,
+
+Tony
