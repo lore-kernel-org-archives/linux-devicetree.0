@@ -1,14 +1,15 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] Add fdtget utility to read property values from a
+Subject: Re: [PATCH v6 2/2] Add fdtput utility to write property values to a
  device tree
-Date: Sat, 21 Jan 2012 15:26:30 -0600
-Message-ID: <E1RoiSE-0002C5-Tf@jdl.com>
+Date: Sat, 21 Jan 2012 15:28:08 -0600
+Message-ID: <E1RoiTo-0002DJ-58@jdl.com>
 References: <1327169688-7569-2-git-send-email-sjg@chromium.org>
+ <1327169688-7569-3-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1327169688-7569-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-reply-to: <1327169688-7569-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,39 +23,53 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> This simply utility makes it easy for scripts to read values from the device
-> tree. It is written in C and uses the same libfdt as the rest of the dtc
-> package.
+> This simple utility allows writing of values into a device tree from the
+> command line. It aimes to be the opposite of fdtget.
 > 
 > What is it for:
-> - Reading fdt values from scripts
-> - Extracting fdt information within build systems
-> - Looking at particular values without having to dump the entire tree
+> - Updating fdt values when a binary blob already exists
+>    (even though source may be available it might be easier to use this
+>     utility rather than sed, etc.)
+> - Writing machine-specific fdt values within a build system
 > 
-> To use it, specify the fdt binary file on command line followed by a list of
-> node, property pairs. The utility then looks up each node, finds the property
-> and displays the value.
+> To use it, specify the fdt binary file on command line followed by the node
+> and property to set. Then, provide a list of values to put into that
+> property. Often there will be just one, but fdtput also supports arrays and
+> string lists.
 > 
-> Each value is printed on a new line.
+> fdtput does not try to guess the type of the property based on looking at
+> the arguments. Instead it always assumes that an integer is provided. To
+> indicate that you want to write a string, use -ts. You can also provide
+> hex values with -tx.
 > 
-> fdtget tries to guess the type of each property based on its contents. This
-> is not always reliable, so you can use the -t option to force fdtget to decode
-> the value as a string, or byte, etc.
-> 
-> To read from stdin, use - as the file.
+> The command line arguments are joined together into a single value. For
+> strings, a nul terminator is placed between each string when it is packed
+> into the property. To avoid this, pass the string as a single argument.
 > 
 > Usage:
-> 	fdtget <options> <dt file> [<node> <property>]...
+> 	fdtput <options> <dt file> <<node> <property> [<value>...]
 > Options:
 > 	-t <type>	Type of data
+> 	-v		Verbose: display each value decoded from command line
 > 	-h		Print this help
 > 
 > <type>	s=string, i=int, u=unsigned, x=hex
 > 	Optional modifier prefix:
 > 		hh or b=byte, h=2 byte, l=4 byte (default)
 > 
+> To read from stdin and write to stdout, use - as the file. So you can do:
+> 
+> cat somefile.dtb | fdtput -ts - /node prop "My string value" > newfile.dtb
+> 
+> This commit also adds basic tests to verify the major features.
+> 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
 Applied.
 
+Also, "make check" didn't know to build fdtput nor fdtget.  So I added
+a new ${TEST_BIN} in the top level Makefile to track which executables
+are tested.
+
+Thanks,
 jdl
