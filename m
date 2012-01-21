@@ -1,83 +1,84 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Pinmux bindings proposal
-Date: Sat, 21 Jan 2012 07:08:56 +0530
-Message-ID: <CAJuYYwS28r0xinG8xa93D5bAtZUhCFXm4-F1Q69Te4dWWTm0Yg@mail.gmail.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
- <20120119165607.GG22818@atomide.com>
- <CAJuYYwQB1pDu-JS5o3XPA1D8WbVcwbdtD43M4y7PeJNWeNXxQQ@mail.gmail.com>
- <20120119182019.GI22818@atomide.com>
- <CAJuYYwQouBDP6dL0B8QOaF0_JsbR7fysySZ5ebcF4op9aTQqbQ@mail.gmail.com>
- <20120120100528.GJ22818@atomide.com>
- <CAJuYYwQ79o5JuOQfs8rSdasVg+ei4KX7tGLuDA-yysseZya9TA@mail.gmail.com>
- <20120120175351.GL7807@atomide.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [RFC v3 PATCH 1/3] dt: device tree bindings for DDR memories
+Date: Fri, 20 Jan 2012 23:28:02 -0800
+Message-ID: <CAOesGMg01SvP1koV8GTJgeMATROZ0oP5BQSDqtmge_UZXvwZLQ@mail.gmail.com>
+References: <1326983521-373-1-git-send-email-aneesh@ti.com>
+	<1326983521-373-2-git-send-email-aneesh@ti.com>
+	<CAOesGMikm8szKR_yyeV-4NbnknCLG3z9N_sj+zydyu+cosj-Tg@mail.gmail.com>
+	<4F188386.3080507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120120175351.GL7807-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F188386.3080507@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Aneesh V <aneesh@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rajendra Nayak <rnayak@ti.com>, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 20 January 2012 23:23, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> * Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120120 16:45]:
->> On 20 January 2012 15:35, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->> > * Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120119 10:05]:
->> >> On 19 January 2012 23:50, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->> >>
->> >> I would like to understand the need for populating the
->> >> pinmux/pingroups tables from dt. The question here is when we have
->> >> something like
->> >>
->> >> pins = <&pinctrl0 0x0030 0x15 0x15 0x7>;
->> >>
->> >> which specifies the values that need to be written to the hardware
->> >> registers, would populating pinmux/pingroup tables from dt required.
->> >> The SoC specific pinctrl driver can provide a way (with the help of
->> >> pinctrl core) to translate these values and write to corresponding
->> >> hardware registers. Is there any particular reason for populating the
->> >> pinmux/pingroups tables from dt?
->> >
->> > Hmm I see. Yes it's still needed as we only want to parse the DT once
->> > because it's slower unless it was one time only configuration during
->> > init.
+On Thu, Jan 19, 2012 at 12:56 PM, Aneesh V <aneesh@ti.com> wrote:
+> Hi Olof,
+>
+>
+> On Friday 20 January 2012 01:01 AM, Olof Johansson wrote:
 >>
->> Ok. The time spent on searching for the pin-config property can be
->> reduced by having the device driver (say, i2c) keep a pointer to all
->> the pinconfig properties in its node. The next time a driver needs to
->> reconfigure the pins, the search time can be reduced. The time to
->> parse the property values though would still be applicable. But I
->> would still not opt to build pinmux/pinconfig/pindesc tables from dt.
+>> Hi,
+>>
+>> Sorry for the delay in responding, I know you pinged me about it
+>> yesterday.
+>>
+>> On Thu, Jan 19, 2012 at 6:31 AM, Aneesh V<aneesh@ti.com> =A0wrote:
+>>>
+>>> device tree bindings for LPDDR2 SDRAM memories compliant
+>>> to JESD209-2 standard.
+>>>
+>>> The 'lpddr2' binding in-turn uses another binding 'lpddr2-timings'
+>>> for specifying the AC timing parameters of the memory device at
+>>> different speed-bins.
+>>
+>>
+>> As I just commented on the thread with Mike, I think we would be
+>> better off sticking to embedding a standard JEDEC SPD structure in t=
+he
+>> device tree. It's not large (128-256 bytes depending on memory type)=
+,
+>> and it's clearly defined and used all over the industry.
+>>
+>> It also has the benefit of reusing parsing code if you ever end up
+>> with a system that uses DIMMs for memory, thus needing to parse the
+>> SPD on said modules.
 >
-> Hmm that's something to consider to save memory as the node will stay
-> there. This would allow making all the pinctrl framework data __initdata
-> in some cases. You'd probably want to copy the data into the driver in
-> some pinctrl framework struct so you could still use pinctrl framework
-> functions with this data and not have to parse the node again.
-
-Is it required to use pinctrl functions when we already have the
-hardware register values for pinmux/pinconfig in the device nodes? I
-was of the opinion that we need not use pinctrl API in case of dt
-based boot.
-
 >
-> For building the tables from dt, what I have currently is building
-> the tables without any specific knowledge about the pinmux functions.
-> I'm thinking that any further knowledge for debugging etc can be done
-> later on using user space tools to avoid storing the data in kernel.
->
+> I did mention in the previous thread why SPD doesn't work for us ([1]=
+ and
+> [2]). Let me repeat the key points here.
 
-Ok. I will go through your patches when you post them.
+Ah, sorry. Missed it in the chain of replies.
 
-Thanks,
-Thomas.
+> 1. I couldn't find an SPD addendum for LPDDR2 from the JEDEC website.
+> 2. This seems to indicate that SPD is not used for LPDDR2 devices.
+
+Bummer. I'm guessing most applications where LPDDR* is used won't be
+suitable for modular memory, so there's not the same need for SPD.
+
+> 3. I tried to see if I can fit the DDR3 or DDR2 SPD for our needs. Bu=
+t
+> some of the AC timing parameters needed by our controller are not
+> available in those layouts.
+
+Are those properties of the memory, or a combination of memory and
+board properties? I think it still makes sense for the memories that
+do have it to use the SPD format and extend with additional
+properties, at least if it's only a few additional properties needed.
+
+> I don't see any option other than defining a new binding for LPDDR2.
+
+Yeah, agreed.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
