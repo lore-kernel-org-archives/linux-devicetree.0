@@ -1,23 +1,15 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 REPOST] dtc: Add support for named integer constants
-Date: Sun, 22 Jan 2012 08:56:56 +1100
-Message-ID: <20120121215656.GN4512@truffala.fritz.box>
-References: <CAPnjgZ3Rnbu6qZponnbQ8bRgABb-58HG-yYSxRu2FZfvwPnMJw@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF1751860874@HQMAIL01.nvidia.com>
- <CAPnjgZ19s-O2m3CnrfSNLhg4hA61kKiwFym7pOTZ=C7kG+SVbA@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F17D5@HQMAIL01.nvidia.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A52D@HQMAIL01.nvidia.com>
- <20120111130056.GK4935@truffala.fritz.box>
- <E1RkzJs-000590-4s@jdl.com>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE3A7A5@HQMAIL01.nvidia.com>
- <20120116015421.GC4512@truffala.fritz.box>
- <E1RmnkQ-0006W9-OT@jdl.com>
+Subject: Re: [PATCH v6 1/2] Add fdtget utility to read property values from a
+ device tree
+Date: Sun, 22 Jan 2012 21:30:49 +1100
+Message-ID: <20120122103049.GP4512@truffala.fritz.box>
+References: <1327169688-7569-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <E1RmnkQ-0006W9-OT-CYoMK+44s/E@public.gmane.org>
+In-Reply-To: <1327169688-7569-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -27,114 +19,234 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2012 at 08:41:22AM -0600, Jon Loeliger wrote:
-> > 
-> > > For what it's worth, I'd tend towards a simple expression-based syntax
-> > > where property values can be calculated with C-style expressions. Basic
-> > > math stuff like ( ) + - * / & | ~ << >> and some basic string handling
-> > > operations (str(int) and concatenation).
-> > 
-> > ...
-> >
-> > I think applying that would be reasonably safe as it is.  If we go
-> > with Jon's proposal or something like it in the end, we'll need to
-> > reimplement most of the expression evaluation (to do delayed instead
-> > of parse-time evaluation).  But I'm much less worried about having to
-> > rework code - even substantially - than I am about user-visible syntax
-> > regressions.
+On Sat, Jan 21, 2012 at 10:14:47AM -0800, Simon Glass wrote:
+> This simply utility makes it easy for scripts to read values from the device
+> tree. It is written in C and uses the same libfdt as the rest of the dtc
+> package.
 > 
-> Even with that piece, there are substanial lexical and parsing
-> issues that complicate things.  Bare numbers, or expressions,
-> next to each other without syntactic glue can cause parsing fits. :-)
+> What is it for:
+> - Reading fdt values from scripts
+> - Extracting fdt information within build systems
+> - Looking at particular values without having to dump the entire tree
+> 
+> To use it, specify the fdt binary file on command line followed by a list of
+> node, property pairs. The utility then looks up each node, finds the property
+> and displays the value.
+> 
+> Each value is printed on a new line.
+> 
+> fdtget tries to guess the type of each property based on its contents. This
+> is not always reliable, so you can use the -t option to force fdtget to decode
+> the value as a string, or byte, etc.
+> 
+> To read from stdin, use - as the file.
+> 
+> Usage:
+> 	fdtget <options> <dt file> [<node> <property>]...
+> Options:
+> 	-t <type>	Type of data
+> 	-h		Print this help
+> 
+> <type>	s=string, i=int, u=unsigned, x=hex
+> 	Optional modifier prefix:
+> 		hh or b=byte, h=2 byte, l=4 byte (default)
+> 
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Well, my patch requires that expressions in cell lists have parens
-around them.  I think that's the only sane choice, otherwise there's
-no reasonable way to distinguish between the 1 cell construct
-<(500-300)> and the 2 cell construct <500 (-300)>.
+Um.. there are a bunch of small problems here.
 
-> > > I think that'd cover the vast
-> > > majority of use-cases wouldn't it?
-> > 
-> > Not quite.  Expressions are interesting of themselves, but not all
-> > that useful.  It's functions or macros plus expressions which gets us
-> > close to where we want to be.  So expressions gives a little as it is,
-> 
-> That's the difficult and slippery slope here.  Being able to write
->     (FOO << (12 + 2))
-> is nice, but it would be nicer and more useful to represent
->     (FOO << ((i) + 2))
-> where (i) was actually parameterized or iterated in some way.
+[snip]
+> +	if (size == -1)
+> +		size = (len % 4) == 0 ? 4 : 1;
 
-Right, exactly my point.
+If you have braces on one path of an if/else, please put them on both.
 
-> > a lot more for people already running their dts through cpp.  To
-> > really make progress, we still want a proposal for a standard function
-> > or macro syntax for dtc.  And, obviously, a decision whether to go
-> > with functions or macros.  I like macros, because I think they give a
-> > lot of flexibility with minimal conceptual complexity.  Jon's proposal
-> > is based on functions.  I didn't like his proposal very much as a
-> > whole, but I should take another look and see what I think of the
-> > function syntax in isolation.
-> 
-> It might also be instructive to isolate my expression parsing
-> for its lexical and syntactic changes and work towards introducing
-> those, perhaps in isolation, as a first step.
+> +	else if (len % size) {
+> +		fprintf(stderr, "Property length must be a multiple of "
+> +				"selected data size\n");
+> +		return -1;
+> +	}
 
-Right.  I think my expression code and your expression code were
-essentially identical syntactically (possibly modulo a slightly
-different set of implemented operators).
+[snip]
+> diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
+> new file mode 100755
+> index 0000000..f38184f
+> --- /dev/null
+> +++ b/tests/fdtget-runtest.sh
+> @@ -0,0 +1,35 @@
+> +#! /bin/sh
+> +
+> +. ./tests.sh
+> +
+> +LOG="tmp.log.$$"
+> +EXPECT="tmp.expect.$$"
+> +
+> +rm -f $TMPFILE $LOG
 
-> The key there WRT your interest, Stephen, is that it can capture
-> the use of apparent variables or #define'd-equivalent symbols within
-> the expression handling.  (David's version did not.)
+TMPFILE doesn't appear to be defined here.
 
-True, but constant definitions (as opposed to function definitions)
-would be trivial to add to my code.
+> +
+> +expect="$1"
+> +echo "$expect" >$EXPECT
+> +shift
+> +
+> +verbose_run_log "$LOG" $VALGRIND "$DTGET" "$@"
+> +ret="$?"
+> +
+> +if [ "$ret" -ne 0 -a "$expect" = "ERR" ]; then
+> +	PASS
 
-> > > For more advanced stuff like loops to synthesize multiple nodes, it
-> > > seems like writing a custom script to generate the .dts file and
-> > > then passing the result to dtc would be more modular, and not
-> > > require us to create a whole new Turing-complete language in dtc?
-> > 
-> > Perhaps. 
-> 
-> OK.  Let's explore that approach.  We'll write a, say, Python collection
-> of code-objects for each, what?, device.  Place them all in a large library.
-> Your "device tree source" effectively now becomes a "main" that starts
-> instantiating librarified devices, adding a litle glue to emit some
-> one-off property or two.
-> 
-> That could work.  But is it now OK that the construction of the device
-> tree source file is tied to Python?  Do we make the kernel builds now
-> reliant upon Python too?  Or Perl?  But wasn't that shot down *again*?
-> Hans wants shell.  Lotte likes Lua.  Suki plays with Python.  Willi
-> is happy again.  Adolf builds his DTS with Perl.  No one uses Tcl.
-> Everyone just checks-in their *generated* DTS results anyway.  It'll
-> be a war without tears.
-> 
-> Or how do you see this working?
-> 
-> > .. One of the reasons that I'm so doggedly conservative and
-> > picky about new dtc syntax is that small languages have a tendency to
-> > grow to Turing completeness, whether you intend it originally or not.
-> 
-> Isn't that someone's observation...?  Behind every flat-file there is
-> a Turing-complete language trying to get out.
-> 
-> > I'm ok with that happening, but I'd really like to make sure that when
-> > and if it happens, we arrive at a decent Turing complete language, not
-> > a horrible one.
-> 
-> Name two decent ones. :-)  C and ..., and ....  See?  There isn't another!
-> 
-> Never mind.
-> 
-> jdl
-> 
+Ugh, ugly.  I'd prefer a different option to the script, or a
+different script entirely for checking expected errors.
+
+> +fi
+> +
+> +if [ "$ret" -gt 127 ]; then
+> +    signame=$(kill -l $[ret - 128])
+
+$[] for math expressions is a bashism.  We want the test scripts to be
+plain Bourne shell.
+
+> +    FAIL "Killed by SIG$signame"
+> +fi
+> +
+> +diff $EXPECT $LOG
+
+Please use diff -u, it's much easier to read.  Also the output should
+go to null unless running in verbose mode.
+
+> +ret="$?"
+> +
+> +rm -f $LOG $EXPECT
+> +
+> +if [ "$ret" -eq 0 ]; then
+> +	PASS
+> +else
+> +	FAIL
+> +fi
+> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+> index e42154b..e6184df 100755
+> --- a/tests/run_tests.sh
+> +++ b/tests/run_tests.sh
+> @@ -83,6 +83,13 @@ asm_to_so_test () {
+>      run_wrap_test asm_to_so "$@"
+>  }
+>  
+> +run_fdtget_test () {
+> +    # run_fdtget_test name expected_output dtb_file args...
+> +    echo -n "$1:	"
+> +    shift
+> +    base_run_test sh fdtget-runtest.sh "$@"
+
+Ugh.  I hate the way you've overriden the displayed test name with a
+message.  The headings in the test output are intentionally the
+commands you need to run the tests individually, to make tracking
+things down easier in the case of failures.
+
+As it is the labels don't even distinguish between fdtget and later
+corresponding fdtput tests.
+
+> +}
+> +
+>  tree1_tests () {
+>      TREE=$1
+>  
+> @@ -402,6 +409,37 @@ dtbs_equal_tests () {
+>      cmp_tests test_tree1.dtb $WRONG_TREE1
+>  }
+>  
+> +fdtget_tests () {
+> +    file=label01.dtb
+> +    $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
+
+Should be a run_dtc_test here to catch an error in this command.
+Also, I think ${%} is a bashism.
+
+> +
+> +    # run_fdtget_test <test-name> <expected-result> <args>...
+> +    run_fdtget_test "Simple string" "MyBoardName" $file / model
+> +    run_fdtget_test "Multiple string i" "77 121 66 111 \
+> +97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
+> +108 121 78 97 109 101 0" $file / compatible
+> +    run_fdtget_test "Multiple string s" "MyBoardName MyBoardFamilyName" \
+> +	-t s $file / compatible
+> +    run_fdtget_test "Integer" "32768" $file /cpus/PowerPC,970@1 d-cache-size
+> +    run_fdtget_test "Integer hex" "8000" -tx $file \
+> +	/cpus/PowerPC,970@1 d-cache-size
+> +    run_fdtget_test "Integer list" "61 62 63 0" -tbx $file \
+> +	/randomnode tricky1
+> +    run_fdtget_test "Byte list short" "a b c d de ea ad be ef" -tbx \
+> +	$file /randomnode blob
+> +
+> +    # Here the property size is not a multiple of 4 bytes, so it should fail
+> +    run_fdtget_test "Integer list invalid" ERR -tlx \
+> +	$file /randomnode mixed
+> +    run_fdtget_test "Integer list halfword" "6162 6300 1234 0 a 0 b 0 c" -thx \
+> +	$file /randomnode mixed
+> +    run_fdtget_test "Integer list byte" \
+> +	"61 62 63 0 12 34 0 0 0 a 0 0 0 b 0 0 0 c" -thhx \
+> +	$file /randomnode mixed
+> +    run_fdtget_test "Missing property" ERR -ts \
+> +	$file /randomnode doctor-who
+> +}
+> +
+>  utilfdt_tests () {
+>      run_test utilfdt_test
+>  }
+> @@ -421,7 +459,7 @@ while getopts "vt:m" ARG ; do
+>  done
+>  
+>  if [ -z "$TESTSETS" ]; then
+> -    TESTSETS="libfdt utilfdt dtc dtbs_equal"
+> +    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget"
+>  fi
+>  
+>  # Make sure we don't have stale blobs lying around
+> @@ -441,6 +479,9 @@ for set in $TESTSETS; do
+>  	"dtbs_equal")
+>  	    dtbs_equal_tests
+>  	    ;;
+> +	"fdtget")
+> +	    fdtget_tests
+> +	    ;;
+>      esac
+>  done
+>  
+> diff --git a/tests/tests.sh b/tests/tests.sh
+> index 30ffead..d9a0524 100644
+> --- a/tests/tests.sh
+> +++ b/tests/tests.sh
+> @@ -11,6 +11,7 @@ FAIL () {
+>  }
+>  
+>  DTC=../dtc
+> +DTGET=../fdtget
+>  
+>  verbose_run () {
+>      if [ -z "$QUIET_TEST" ]; then
+> diff --git a/util.h b/util.h
+> index 730918e..c8eb45d 100644
+> --- a/util.h
+> +++ b/util.h
+> @@ -140,4 +140,14 @@ int utilfdt_write_err(const char *filename, const void *blob);
+>   */
+>  int utilfdt_decode_type(const char *fmt, int *type, int *size);
+>  
+> +/*
+> + * This is a usage message fragment for the -t option. It is the format
+> + * supported by utilfdt_decode_type.
+> + */
+> +
+> +#define USAGE_TYPE_MSG \
+> +	"<type>\ts=string, i=int, u=unsigned, x=hex\n" \
+> +	"\tOptional modifier prefix:\n" \
+> +	"\t\thh or b=byte, h=2 byte, l=4 byte (default)\n";
+> +
+>  #endif /* _UTIL_H */
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
