@@ -1,123 +1,114 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Pinmux bindings proposal V2
-Date: Mon, 23 Jan 2012 13:00:52 -0800
-Message-ID: <20120123210052.GS22818@atomide.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [RFCv2 00/14]
+Date: Mon, 23 Jan 2012 14:07:36 -0700
+Message-ID: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Milton Miller <miltonm@bga.com>, benh@kernel.crashing.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-This mostly looks pretty good to me, few more comments below.
+Hey everyone,
 
-* Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> [120120 13:51]:
-> Here's V2 of my pinmux binding proposal, after incorporating some feedback
-> from Shawn Guo and Dong Aisheng. Main changes:
+Here's the second RFC for the irq_domain patches.  I could use some
+help testing now.  I still expect there will be a few bugs.  The
+series is based on v3.3-rc1, and I've pushed it out to my git server:
+
+git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
+
+On Wed, Jan 11, 2012 at 1:22 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> Here are the patches that I've been working on to finish up the creation
+> of the generic irq_domain infrastructure.
 > 
-> 1) Require the "pin config" nodes the be children of the pinmux controller
->    node, rather than allowing them to alternatively be children of the
->    device node that's using them. This allows removal of the pin controller
->    phandle as the first entry in each specifier.
+> I'm taking a different approach that I originally intended.
+> Originally I intended to start with the basic design of irq_host from
+> powerpc, but there were some things about the implementation that I
+> didn't like, so I was going to reimplement those bits and then migrate
+> powerpc over to use it.  That was a mistake and would have resulted in
+> a lot more work.  Instead, I should have started with the powerpc
+> irq_host code, moved it to a common location, and then reworked it in
+> place.  The powerpc code is working and well tested.  It is a lot less
+> risky to use it as the starting point with a nicely bisectable series
+> of changes to make it do what other architectures need.
 
-If you really want to leave out the phandle for each mux entry, this would
-require supporting multiple "pin config" entries in a device driver node.
+[RFCv2 01/14] irq_domain: add documentation and MAINTAINERS entry.
+[RFCv2 02/14] dt: Make irqdomain less verbose
+[RFCv2 03/14] irq_domain: Make irq_domain structure match powerpc's
+[RFCv2 04/14] irq_domain: convert microblaze from irq_host to
+[RFCv2 05/14] irq_domain/powerpc: Use common irq_domain structure
+[RFCv2 06/14] irq_domain/powerpc: eliminate irq_map; use
+[RFCv2 07/14] irq_domain/powerpc: Eliminate virq_is_host()
+[RFCv2 08/14] irq_domain: Move irq_domain code from powerpc to
+[RFCv2 09/14] irqdomain: remove NO_IRQ from irq domain code
+[RFCv2 10/14] irq_domain: Remove references to old irq_host names
+[RFCv2 11/14] irq_domain: Replace irq_alloc_host() with
+[RFCv2 12/14] irq_domain: Add support for base irq and hwirq in
+[RFCv2 13/14] irq_domain: Remove 'new' irq_domain in favour of the
+[RFCv2 14/14] irq_domain: Remove irq_domain_add_simple()
 
-That's because otherwise supporting pins from multiple pinmux controller
-instances would not work. Note that we already have two pin controller
-instances starting with omap4.
-
-...
- 
->                 pmx_sdhci_active: pinconfig-sdhci-active {
->                         /*
->                          * In each of these nodes, both the mux and config
->                          * properties are optional. This node represents the
->                          * additions to pmx_sdhci that are specific to an
->                          * active state. In this case, only pin configuration
->                          * settings are different.
->                          */
->                         config =
->                                 <TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 0>
->                                 <TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 0>;
->                 };
->                 pmx_sdhci_standby: pinconfig-sdhci-standby {
->                         config =
->                                 <TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 1>
->                                 <TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 1>;
->                 };
-
-After thinking about this a bit more, I'm now thinking that we should
-probably only describe the active state in the device tree to keep things
-simple.
-
-Anything PM related could be initialized later on during the boot by the
-device driver, or even from userspace using /lib/firmware or /sys entries.
-This would cut down the device tree bloat quite a bit.
-
-Setting the initial state from device tree makes sense, but I'm afraid
-the standby and off states will require driver interaction depending on
-how the user wants to configure the system.
-
-For example, allowing a device to wake up a system might be user
-configurable option, such as "Wake up on tapping the touchscreen".
-
-Then I'd rather not use "config" at all, and just put the value for
-initial state mux register(s) in the mux to avoid repeating the same data
-multiple time. Looks like with the mux + config/mux-config option you
-need to duplicate at least TEGRA_PMX_PG_DTA.
-
-BTW, maybe the name "config" should probably be "mux-config" instead?
-
->                 /*
->                  * Each device node contains a few properties to describe
->                  * the named pinmux states that are available to it.
->                  *
->                  * The binding for the device node specifies the state names
->                  * that must be described; common examples such as "default"
->                  * or "active" and "suspend" may be universal, but the IO
->                  * protocol that a device supports may demand that more
->                  * states be defined, such as "active-12mhz", "active-50mhz",
->                  * "suspend". Drivers request these named states e.g. using
->                  * pinctrl's pinmux_get("state_name") API.
->                  *
->                  * pinctrl-names lists the available state names.
->                  *
->                  * Unlike the common clock binding, I assume here that states
->                  * are always requested by name. If we don't like that idea,
->                  * we'd could make this property optional, and add a new API
->                  * pinmux_get(state_id) to the pinctrl subsystem.
->                  */
->                 pinctrl-names = "active", "suspend";
-
-If we only allow describing the initial state in device tree, then we can
-leave out pinctrl-names, and assume the setting is always the initial bootup
-state desired.
-
-So to summarize: I suggest we'll just stick to basics to get the system
-booting and devices working using device tree. In most cases the device
-drivers should be able to configure the suspend and off states in a generic
-way using pinctrl API. Everything else, like debugging, we can probably
-do with userspace tools.
-
-This would mean just using a minimal subset of your binding, probably
-very close to what you originally suggested.
-
-Regards,
-
-Tony
+ Documentation/IRQ-domain.txt                     |  113 ++++
+ MAINTAINERS                                      |    9 +
+ arch/arm/common/gic.c                            |   97 ++--
+ arch/arm/common/vic.c                            |   16 +-
+ arch/arm/include/asm/hardware/gic.h              |    4 +-
+ arch/arm/include/asm/hardware/vic.h              |    2 +
+ arch/arm/mach-exynos/common.c                    |    2 +-
+ arch/arm/mach-imx/mach-imx6q.c                   |    3 +-
+ arch/arm/mach-msm/board-msm8x60.c                |    8 +-
+ arch/arm/mach-mx5/imx51-dt.c                     |    4 +-
+ arch/arm/mach-mx5/imx53-dt.c                     |    4 +-
+ arch/arm/mach-omap2/board-generic.c              |    2 +-
+ arch/arm/mach-prima2/irq.c                       |    2 +-
+ arch/arm/mach-versatile/core.c                   |    5 +-
+ arch/microblaze/include/asm/irq.h                |    4 +-
+ arch/microblaze/kernel/irq.c                     |    2 +-
+ arch/microblaze/kernel/setup.c                   |    2 -
+ arch/powerpc/Kconfig                             |    1 +
+ arch/powerpc/include/asm/ehv_pic.h               |    2 +-
+ arch/powerpc/include/asm/i8259.h                 |    2 +-
+ arch/powerpc/include/asm/irq.h                   |  247 +-------
+ arch/powerpc/include/asm/mpic.h                  |    2 +-
+ arch/powerpc/include/asm/xics.h                  |    2 +-
+ arch/powerpc/kernel/irq.c                        |  617 +------------------
+ arch/powerpc/platforms/512x/mpc5121_ads_cpld.c   |   12 +-
+ arch/powerpc/platforms/52xx/media5200.c          |   15 +-
+ arch/powerpc/platforms/52xx/mpc52xx_gpt.c        |   16 +-
+ arch/powerpc/platforms/52xx/mpc52xx_pic.c        |   12 +-
+ arch/powerpc/platforms/82xx/pq2ads-pci-pic.c     |   14 +-
+ arch/powerpc/platforms/85xx/socrates_fpga_pic.c  |   15 +-
+ arch/powerpc/platforms/86xx/gef_pic.c            |   15 +-
+ arch/powerpc/platforms/cell/axon_msi.c           |   29 +-
+ arch/powerpc/platforms/cell/beat_interrupt.c     |   16 +-
+ arch/powerpc/platforms/cell/interrupt.c          |   16 +-
+ arch/powerpc/platforms/cell/spider-pic.c         |   14 +-
+ arch/powerpc/platforms/embedded6xx/flipper-pic.c |   30 +-
+ arch/powerpc/platforms/embedded6xx/hlwd-pic.c    |   35 +-
+ arch/powerpc/platforms/iseries/irq.c             |   11 +-
+ arch/powerpc/platforms/powermac/pic.c            |   15 +-
+ arch/powerpc/platforms/powermac/smp.c            |    9 +-
+ arch/powerpc/platforms/ps3/interrupt.c           |   11 +-
+ arch/powerpc/platforms/wsp/opb_pic.c             |   15 +-
+ arch/powerpc/sysdev/cpm1.c                       |    9 +-
+ arch/powerpc/sysdev/cpm2_pic.c                   |   11 +-
+ arch/powerpc/sysdev/ehv_pic.c                    |   14 +-
+ arch/powerpc/sysdev/fsl_msi.c                    |   10 +-
+ arch/powerpc/sysdev/fsl_msi.h                    |    2 +-
+ arch/powerpc/sysdev/i8259.c                      |   15 +-
+ arch/powerpc/sysdev/ipic.c                       |   15 +-
+ arch/powerpc/sysdev/ipic.h                       |    2 +-
+ arch/powerpc/sysdev/mpc8xx_pic.c                 |   11 +-
+ arch/powerpc/sysdev/mpic.c                       |   17 +-
+ arch/powerpc/sysdev/mpic_msi.c                   |    2 +-
+ arch/powerpc/sysdev/mv64x60_pic.c                |   11 +-
+ arch/powerpc/sysdev/qe_lib/qe_ic.c               |   13 +-
+ arch/powerpc/sysdev/qe_lib/qe_ic.h               |    2 +-
+ arch/powerpc/sysdev/tsi108_pci.c                 |   13 +-
+ arch/powerpc/sysdev/uic.c                        |   14 +-
+ arch/powerpc/sysdev/xics/xics-common.c           |   25 +-
+ arch/powerpc/sysdev/xilinx_intc.c                |   19 +-
+ drivers/gpio/gpio-mpc8xxx.c                      |   15 +-
+ drivers/mfd/twl-core.c                           |   12 +-
+ include/linux/irqdomain.h                        |  180 ++++--
+ kernel/irq/irqdomain.c                           |  757 ++++++++++++++++++----
+ 64 files changed, 1207 insertions(+), 1414 deletions(-)
