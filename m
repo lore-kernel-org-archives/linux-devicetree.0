@@ -1,8 +1,8 @@
 From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [RFC PATCH 6/7] ARM: mtd: nand: davinci: add OF support for davinci
- nand controller
-Date: Mon, 23 Jan 2012 09:56:06 +0100
-Message-ID: <1327308967-8092-7-git-send-email-hs@denx.de>
+Subject: [RFC PATCH 1/7] ARM: davinci,
+ intc: Add OF support for TI interrupt controller
+Date: Mon, 23 Jan 2012 09:56:01 +0100
+Message-ID: <1327308967-8092-2-git-send-email-hs@denx.de>
 References: <1327308967-8092-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,227 +19,135 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add OF support for the davinci nand controller.
+Add a function to initialize the davinci interrupt controller (INTC)
+using a device tree node.
 
 Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
 ---
- .../devicetree/bindings/arm/davinci/nand.txt       |   72 ++++++++++++++++++
- drivers/mtd/nand/davinci_nand.c                    |   78 +++++++++++++++++++-
- 2 files changed, 148 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
+ .../devicetree/bindings/arm/davinci/intc.txt       |   26 ++++++++++
+ arch/arm/mach-davinci/cp_intc.c                    |   51 ++++++++++++++++++++
+ arch/arm/mach-davinci/include/mach/cp_intc.h       |    1 +
+ 3 files changed, 78 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci/intc.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
+diff --git a/Documentation/devicetree/bindings/arm/davinci/intc.txt b/Documentation/devicetree/bindings/arm/davinci/intc.txt
 new file mode 100644
-index 0000000..7e8d6db
+index 0000000..dac2f69
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-@@ -0,0 +1,72 @@
-+* Texas Instruments Davinci NAND
++++ b/Documentation/devicetree/bindings/arm/davinci/intc.txt
+@@ -0,0 +1,26 @@
++* TI Davinci Interrupt Controller
 +
-+This file provides information, what the device node for the
-+davinci nand interface contain.
++davinci are using a TI interrupt controller that can support several
++configurable number of interrupts.
 +
-+Required properties:
-+- compatible: "ti,davinci-nand";
-+- reg : contain 2 offset/length values:
-+        - offset and length for the access window
-+        - offset and length for accessing the aemif control registers
-+- id: id of the controller
++Main node required properties:
 +
-+Recommended properties :
-+- mask_ale: mask for ale
-+- mask_cle: mask for cle
-+- mask_chipsel: mask for chipselect
-+- ecc_mode: ECC mode, see NAND_ECC_* defines
-+- ecc_bits: used ECC bits
-+- options: nand options, defined in
-+           include/linux/mtd/nand.h, grep for NAND_NO_AUTOINCR
-+- bbt_options: NAND_BBT_* defines
++- compatible : should be:
++	"ti,davinci-intc"
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The type shall be a <u32> and the value shall be 1.
 +
-+Optional properties:
-+- pinmux-handle: contains a handle to configure the pinmux settings.
-+- timing-handle: contains a handle to setup aemif timing.
++  The cell contains the interrupt number in the range [0-128].
++- ti,intc-size: Number of interrupts handled by the interrupt controller.
++- reg: physical base address and size of the intc registers map.
 +
-+Example (enbw_cmc board):
-+aemif@60000000 {
-+	compatible = "ti,davinci-aemif";
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	reg = <0x68000000 0x80000>;
-+	ranges = <2 0 0x60000000 0x02000000
-+		  3 0 0x62000000 0x02000000
-+		  4 0 0x64000000 0x02000000
-+		  5 0 0x66000000 0x02000000
-+		  6 0 0x68000000 0x02000000>;
-+	nand_cs: cs3@68000000 {
-+		compatible = "ti,davinci-cs";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		/* all timings in nanoseconds */
-+		cs = <3>;
-+		asize = <0>;
-+		ta = <0>;
-+		rhold = <7>;
-+		rstrobe = <42>;
-+		rsetup = <7>;
-+		whold = <7>;
-+		wstrobe = <14>;
-+		wsetup = <7>;
-+		ew = <0>;
-+		ss = <0>;
++Example:
++
++	intc: interrupt-controller@1 {
++		compatible = "ti,davinci-intc";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		ti,intc-size = <101>;
++		reg = <0xfffee000 0x2000>;
 +	};
-+	nandflash@3,0 {
-+		compatible = "ti,davinci-nand";
-+		reg = <3 0x0 0x807ff
-+			6 0x0 0x8000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		id = <1>;
-+		mask_ale = <0>;
-+		mask_cle = <0>;
-+		mask_chipsel = <0>;
-+		ecc_mode = <2>;
-+		ecc_bits = <4>;
-+		options = <0>;
-+		bbt_options = <0x20000>;
-+		pinmux-handle = <&nand_pins>;
-+		timing-handle = <&nand_cs>;
-+	};
-+};
-diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-index 6e56615..a1946c3 100644
---- a/drivers/mtd/nand/davinci_nand.c
-+++ b/drivers/mtd/nand/davinci_nand.c
-@@ -33,9 +33,12 @@
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
- #include <linux/slab.h>
-+#include <linux/of_i2c.h>
-+#include <linux/of_device.h>
+diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+index f83152d..2c6e2e4 100644
+--- a/arch/arm/mach-davinci/cp_intc.c
++++ b/arch/arm/mach-davinci/cp_intc.c
+@@ -11,7 +11,11 @@
  
- #include <mach/nand.h>
- #include <mach/aemif.h>
-+#include <mach/mux.h>
+ #include <linux/init.h>
+ #include <linux/irq.h>
++#include <linux/irqdomain.h>
+ #include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
  
- /*
-  * This is a device driver for the NAND flash controller found on the
-@@ -518,9 +521,76 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
- 	},
- };
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id davinci_nand_of_match[] = {
-+	{.compatible = "ti,davinci-nand", },
-+	{},
-+}
-+MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
+ #include <mach/common.h>
+ #include <mach/cp_intc.h>
+@@ -175,3 +179,50 @@ void __init cp_intc_init(void)
+ 	/* Enable global interrupt */
+ 	cp_intc_write(1, CP_INTC_GLOBAL_ENABLE);
+ }
 +
-+static struct davinci_nand_pdata
-+	*nand_davinci_get_pdata(struct platform_device *pdev)
++#ifdef CONFIG_OF
++int __init dv_intc_of_init(struct device_node *node, struct device_node *parent)
 +{
-+	if ((pdev->dev.platform_data == NULL) &&
-+		(pdev->dev.of_node)) {
-+		struct device_node *tmp_np;
-+		struct davinci_nand_pdata *pdata;
-+		u32 prop;
++	struct resource res;
++	u32 nr_irqs;
 +
-+		pdata =  kzalloc(sizeof(struct davinci_nand_pdata),
-+				GFP_KERNEL);
-+		pdev->dev.platform_data = pdata;
-+		if (!pdata)
-+			return NULL;
-+		if (!of_property_read_u32(pdev->dev.of_node, "id",
-+			&prop))
-+			pdev->id = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node, "mask_ale",
-+			&prop))
-+			pdata->mask_ale = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node, "mask_cle",
-+			&prop))
-+			pdata->mask_cle = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node, "mask_chipsel",
-+			&prop))
-+			pdata->mask_chipsel = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node, "ecc_mode",
-+			&prop))
-+			pdata->ecc_mode = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node, "ecc_bits",
-+			&prop))
-+			pdata->ecc_bits = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node, "options",
-+			&prop))
-+			pdata->options = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node, "bbt_options",
-+			&prop))
-+			pdata->bbt_options = prop;
-+		tmp_np = of_parse_phandle(pdev->dev.of_node,
-+				"pinmux-handle", 0);
-+		if (tmp_np)
-+			davinci_cfg_reg_of(tmp_np);
++	if (WARN_ON(!node))
++		return -ENODEV;
 +
-+		tmp_np = of_parse_phandle(pdev->dev.of_node,
-+				"timing-handle", 0);
-+		if (tmp_np)
-+			davinci_aemif_setup_timing_of(tmp_np);
++	if (of_address_to_resource(node, 0, &res)) {
++		WARN(1, "unable to get intc registers\n");
++		return -EINVAL;
 +	}
 +
-+	return pdev->dev.platform_data;
++	davinci_soc_info.intc_base = res.start;
++	if (WARN_ON(!davinci_soc_info.intc_base))
++		return -EINVAL;
++
++	if (of_property_read_u32(node, "ti,intc-size", &nr_irqs)) {
++		WARN(1, "unable to get intc-size\n");
++		return -EINVAL;
++	}
++	davinci_soc_info.intc_irq_num = nr_irqs;
++	davinci_soc_info.intc_type = DAVINCI_INTC_TYPE_CP_INTC;
++
++	cp_intc_init();
++	irq_domain_add_simple(node, 0);
++
++	return 0;
++}
++
++static struct of_device_id irq_match[] __initdata = {
++	{ .compatible = "ti,davinci-intc", .data = dv_intc_of_init, },
++	{ }
++};
++
++void __init davinci_init_irq(void)
++{
++	of_irq_init(irq_match);
 +}
 +#else
-+#define davinci_nand_of_match NULL
-+static struct davinci_nand_pdata
-+	*nand_davinci_get_pdata(struct platform_device *pdev)
++void __init davinci_init_irq(void)
 +{
-+	return pdev->dev.platform_data;
++	cp_intc_init();
 +}
 +#endif
-+
- static int __init nand_davinci_probe(struct platform_device *pdev)
- {
--	struct davinci_nand_pdata	*pdata = pdev->dev.platform_data;
-+	struct davinci_nand_pdata	*pdata;
- 	struct davinci_nand_info	*info;
- 	struct resource			*res1;
- 	struct resource			*res2;
-@@ -530,6 +600,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
- 	uint32_t			val;
- 	nand_ecc_modes_t		ecc_mode;
+diff --git a/arch/arm/mach-davinci/include/mach/cp_intc.h b/arch/arm/mach-davinci/include/mach/cp_intc.h
+index 4e8190e..d674b95 100644
+--- a/arch/arm/mach-davinci/include/mach/cp_intc.h
++++ b/arch/arm/mach-davinci/include/mach/cp_intc.h
+@@ -52,5 +52,6 @@
+ #define CP_INTC_VECTOR_ADDR(n)		(0x2000 + (n << 2))
  
-+	pdata = nand_davinci_get_pdata(pdev);
- 	/* insist on board-specific configuration */
- 	if (!pdata)
- 		return -ENODEV;
-@@ -812,16 +883,19 @@ static int __exit nand_davinci_remove(struct platform_device *pdev)
- }
+ void __init cp_intc_init(void);
++void __init davinci_init_irq(void);
  
- static struct platform_driver nand_davinci_driver = {
-+	.probe		= nand_davinci_probe,
- 	.remove		= __exit_p(nand_davinci_remove),
- 	.driver		= {
- 		.name	= "davinci_nand",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = davinci_nand_of_match,
- 	},
- };
- MODULE_ALIAS("platform:davinci_nand");
- 
- static int __init nand_davinci_init(void)
- {
--	return platform_driver_probe(&nand_davinci_driver, nand_davinci_probe);
-+	return platform_driver_register(&nand_davinci_driver);
- }
- module_init(nand_davinci_init);
- 
+ #endif	/* __ASM_HARDWARE_CP_INTC_H */
 -- 
 1.7.7.5
