@@ -1,15 +1,14 @@
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 03/20] fdt: Add basic support for decoding GPIO
- definitions
-Date: Mon, 23 Jan 2012 11:18:56 -0700
-Message-ID: <4F1DA490.6090903@nvidia.com>
-References: <1326342789-5781-1-git-send-email-sjg@chromium.org>	<1326342789-5781-4-git-send-email-sjg@chromium.org>	<4F1744FE.4090409@nvidia.com>
- <CAPnjgZ0TCNTZjR_Fc1+UvYxyjH-a-Bxtkz60OERR7YmC5tbuug@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] tegra: fdt: Add extra I2C bindings for U-Boot
+Date: Mon, 23 Jan 2012 11:25:28 -0700
+Message-ID: <4F1DA618.9020605@nvidia.com>
+References: <1326394818-32227-1-git-send-email-sjg@chromium.org>	<1326394818-32227-4-git-send-email-sjg@chromium.org>	<4F188261.4060607@nvidia.com>
+ <CAPnjgZ0cOquTwqg4wx3Cz1+OKXUzYoBvUi2PMA7oHN=2riOHmQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPnjgZ0TCNTZjR_Fc1+UvYxyjH-a-Bxtkz60OERR7YmC5tbuug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAPnjgZ0cOquTwqg4wx3Cz1+OKXUzYoBvUi2PMA7oHN=2riOHmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,51 +19,40 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2012 10:08 AM, Simon Glass wrote:
+On 01/22/2012 10:41 AM, Simon Glass wrote:
 > Hi Stephen,
 > 
-> On Wed, Jan 18, 2012 at 2:17 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 01/11/2012 09:32 PM, Simon Glass wrote:
->>> This adds some support into fdtdec for reading GPIO definitions from
->>> the fdt. ...
-...
->>> diff --git a/include/fdtdec.h b/include/fdtdec.h
->> ...
->>> +/* GPIOs are numbered from 0 */
->>> +enum {
->>> +     FDT_GPIO_NONE = -1U,    /* an invalid GPIO used to end our list */
+> On Thu, Jan 19, 2012 at 12:51 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 01/12/2012 12:00 PM, Simon Glass wrote:
+>>> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
 >>
->> Is this due to the way U-Boot works right now, or something defined by
->> this patch? It's been pointed out that the kernel's choice to use -1 as
->> "invalid GPIO" rather than 0 was a mistake, since that prevents GPIO
->> fields being easily added to platform data structures, since you then
->> have to go and initialize every new instance to -1, rather than relying
->> on BSS initializing it to 0. I assume this is just the way U-Boot works,
->> so solving this is outside the scope of this patch.
+>>> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+>>> index ca7b523..963cf27 100644
+>>> --- a/arch/arm/dts/tegra20.dtsi
+>>> +++ b/arch/arm/dts/tegra20.dtsi
+>>> @@ -45,6 +45,8 @@
+>>>               compatible = "nvidia,tegra20-i2c";
+>>>               reg = <0x7000C000 0x100>;
+>>>               interrupts = < 70 >;
+>>> +             clock-frequency = <100000>;
+>>
+>> That's board-specific information. I'd rather not include it in the SoC
+>> .dtsi file even as a default; that way, it forces people to think about
+>> the correct value and put it in their board file, whereas including a
+>> default means people probably won't think about it.
 > 
-> It is nothing to do with U-Boot itself - we can choose any number.
+> OK I moved this into the board file - sadly this means everyone will
+> need to specify it here. Or should we have a default?
 
-Surely the value you choose for DT parsing has to align with the value
-that U-Boot's GPIO API chooses, so you can't just choose any number.
+I think I'd rather not have the default. That way, people need to think
+about the correct value to use in their board file, rather than having
+it magically work without having validated the value.
 
-> What is Linux using now / planning to use?
-
-Linux uses -1 right now, but should really have used 0. I don't think
-there's an actual plan to change this now, since the numbering scheme is
-entrenched.
-
-What Linux does isn't relevant; the numbering scheme I'm talking about
-is the internal numbering scheme within U-Boot or Linux, which are
-independent from each-other and the values in the device tree.
-
-So that said, I was wondering if U-Boot's GPIO support (covering both
-non-DT and DT cases) was new enough that it could use 0 to represent
-"invalid GPIO" rather than -1, and hence FDT_GPIO_NONE be 0 not -1. It
-probably isn't though; I guess U-Boot's GPIO numbering scheme is also
-already entrenched?
+If people disagree, we'd need to update the kernel's tegra[23]0.dtsi,
+since they assume ${board}.dts will set this property.
 
 -- 
 nvpublic
