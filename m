@@ -1,58 +1,28 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] tegra: fdt: Add extra I2C bindings for U-Boot
-Date: Mon, 23 Jan 2012 11:25:28 -0700
-Message-ID: <4F1DA618.9020605@nvidia.com>
-References: <1326394818-32227-1-git-send-email-sjg@chromium.org>	<1326394818-32227-4-git-send-email-sjg@chromium.org>	<4F188261.4060607@nvidia.com>
- <CAPnjgZ0cOquTwqg4wx3Cz1+OKXUzYoBvUi2PMA7oHN=2riOHmQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 13/31] ARM: amba: nomadik: get rid of NO_IRQ initializers
+Date: Mon, 23 Jan 2012 20:02:01 +0100
+Message-ID: <CACRpkdZ9KC2R0SZ7-h7CV01uOhj1dphwggy1ErDV3dhh7OCpqw@mail.gmail.com>
+References: <20120120092207.GD1068@n2100.arm.linux.org.uk>
+	<E1RoAkC-0005F9-GQ@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPnjgZ0cOquTwqg4wx3Cz1+OKXUzYoBvUi2PMA7oHN=2riOHmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <E1RoAkC-0005F9-GQ@rmk-PC.arm.linux.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, STEricsson <STEricsson_nomadik_linux@list.st.com>, Alessandro Rubini <rubini@unipv.it>, Linus Walleij <linus.walleij@stericsson.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2012 10:41 AM, Simon Glass wrote:
-> Hi Stephen,
-> 
-> On Thu, Jan 19, 2012 at 12:51 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 01/12/2012 12:00 PM, Simon Glass wrote:
->>> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
->>
->>> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
->>> index ca7b523..963cf27 100644
->>> --- a/arch/arm/dts/tegra20.dtsi
->>> +++ b/arch/arm/dts/tegra20.dtsi
->>> @@ -45,6 +45,8 @@
->>>               compatible = "nvidia,tegra20-i2c";
->>>               reg = <0x7000C000 0x100>;
->>>               interrupts = < 70 >;
->>> +             clock-frequency = <100000>;
->>
->> That's board-specific information. I'd rather not include it in the SoC
->> .dtsi file even as a default; that way, it forces people to think about
->> the correct value and put it in their board file, whereas including a
->> default means people probably won't think about it.
-> 
-> OK I moved this into the board file - sadly this means everyone will
-> need to specify it here. Or should we have a default?
+On Fri, Jan 20, 2012 at 10:26 AM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
 
-I think I'd rather not have the default. That way, people need to think
-about the correct value to use in their board file, rather than having
-it magically work without having validated the value.
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> ---
+> =A0arch/arm/mach-nomadik/board-nhk8815.c | =A0 =A04 ++--
+> =A01 files changed, 2 insertions(+), 2 deletions(-)
 
-If people disagree, we'd need to update the kernel's tegra[23]0.dtsi,
-since they assume ${board}.dts will set this property.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
--- 
-nvpublic
+Thanks Russell,
+Linus Walleij
