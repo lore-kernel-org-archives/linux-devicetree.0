@@ -1,70 +1,70 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: Define Tegra20 CAR binding
-Date: Mon, 23 Jan 2012 11:16:13 -0700
-Message-ID: <20120123181613.GA21122@ponder.secretlab.ca>
-References: <1326342789-5781-12-git-send-email-sjg@chromium.org>
- <1326932212-30346-1-git-send-email-swarren@nvidia.com>
- <20120119053143.GA27447@quad.lixom.net>
- <74CDBE0F657A3D45AFBB94109FB122FF1780DAB0CA@HQMAIL01.nvidia.com>
- <CAOesGMh=i3EED-XhOpwGj8Vuma3xA0WehRL1iK1LSZfEuetP6Q@mail.gmail.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 03/20] fdt: Add basic support for decoding GPIO
+ definitions
+Date: Mon, 23 Jan 2012 11:18:56 -0700
+Message-ID: <4F1DA490.6090903@nvidia.com>
+References: <1326342789-5781-1-git-send-email-sjg@chromium.org>	<1326342789-5781-4-git-send-email-sjg@chromium.org>	<4F1744FE.4090409@nvidia.com>
+ <CAPnjgZ0TCNTZjR_Fc1+UvYxyjH-a-Bxtkz60OERR7YmC5tbuug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMh=i3EED-XhOpwGj8Vuma3xA0WehRL1iK1LSZfEuetP6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Disposition: inline
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPnjgZ0TCNTZjR_Fc1+UvYxyjH-a-Bxtkz60OERR7YmC5tbuug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2012 at 11:32:04PM -0800, Olof Johansson wrote:
-> Hi,
->=20
-> On Thu, Jan 19, 2012 at 9:17 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> =
-wrote:
-> > Olof Johansson wrote at Wednesday, January 18, 2012 10:32 PM:
-> >> On Wed, Jan 18, 2012 at 05:16:52PM -0700, Stephen Warren wrote:
-> >> > diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegr=
-a20-car.txt
-> >> > +* NVIDIA Tegra20 Clock And Reset Controller
-> >> > +
-> >> > +This binding uses the common clock binding:
-> >> > +Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >> > +
-> >> > +The CAR (Clock And Reset) Controller on Tegra is the HW module =
-responsible
-> >> > +for muxing and gating Tegra's clocks, and setting their rates.
-> >> > +
-> >> > +Required properties :
-> >> > +- compatible : Should be "nvidia,<chip>-car"
-> >> > +- reg : Should contain CAR registers location and length
-> >> > +- clocks : Should contain phandle and clock specifiers for two =
-clocks:
-> >> > + =A0the 32 KHz "32k_in", and the board-specific oscillator "osc=
-".
-> >> > +- clock-names : Should contain a list of strings, with values "=
-32k_in",
-> >> > + =A0and "osc".
-> >>
-> >> Hmm. I'd prefer to just ditch the notion of "clock-names" in the c=
-ases
-> >> where it isn't strictly necessary. Just because some vendors don't=
- want
-> >> to define an order between their clocks doesn't mean it's a good i=
-dea
-> >> for everybody to use that model. In this case, just declaring that=
- the
-> >> two clocks refs have to be to those two clocks in that order shoul=
-d
-> >> be sufficient.
-> >
-> > OK, that seems reasonable. I'm happy using of_clk_get() rather than
-> > of_clk_get_by_name(). I guess that means we should just avoid any
-> > discussion of clock-output-names too.
->=20
-> Sounds good to me. Let's make sure Grant is OK with it too though.
+On 01/21/2012 10:08 AM, Simon Glass wrote:
+> Hi Stephen,
+> 
+> On Wed, Jan 18, 2012 at 2:17 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 01/11/2012 09:32 PM, Simon Glass wrote:
+>>> This adds some support into fdtdec for reading GPIO definitions from
+>>> the fdt. ...
+...
+>>> diff --git a/include/fdtdec.h b/include/fdtdec.h
+>> ...
+>>> +/* GPIOs are numbered from 0 */
+>>> +enum {
+>>> +     FDT_GPIO_NONE = -1U,    /* an invalid GPIO used to end our list */
+>>
+>> Is this due to the way U-Boot works right now, or something defined by
+>> this patch? It's been pointed out that the kernel's choice to use -1 as
+>> "invalid GPIO" rather than 0 was a mistake, since that prevents GPIO
+>> fields being easily added to platform data structures, since you then
+>> have to go and initialize every new instance to -1, rather than relying
+>> on BSS initializing it to 0. I assume this is just the way U-Boot works,
+>> so solving this is outside the scope of this patch.
+> 
+> It is nothing to do with U-Boot itself - we can choose any number.
 
-Yes, I agree.
+Surely the value you choose for DT parsing has to align with the value
+that U-Boot's GPIO API chooses, so you can't just choose any number.
 
-g.
+> What is Linux using now / planning to use?
+
+Linux uses -1 right now, but should really have used 0. I don't think
+there's an actual plan to change this now, since the numbering scheme is
+entrenched.
+
+What Linux does isn't relevant; the numbering scheme I'm talking about
+is the internal numbering scheme within U-Boot or Linux, which are
+independent from each-other and the values in the device tree.
+
+So that said, I was wondering if U-Boot's GPIO support (covering both
+non-DT and DT cases) was new enough that it could use 0 to represent
+"invalid GPIO" rather than -1, and hence FDT_GPIO_NONE be 0 not -1. It
+probably isn't though; I guess U-Boot's GPIO numbering scheme is also
+already entrenched?
+
+-- 
+nvpublic
