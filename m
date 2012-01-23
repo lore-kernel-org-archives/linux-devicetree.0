@@ -1,221 +1,180 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: RFC v2 irq_domain rework posted to linux-kernel. (Was: [RFCv2 00/14])
-Date: Mon, 23 Jan 2012 15:08:14 -0700
-Message-ID: <CACxGe6tTMSR1sRTg2qGLBD-a=M7ZHErOm_7F_kfir16ojsD=Sg@mail.gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: Pinmux bindings proposal
+Date: Mon, 23 Jan 2012 14:43:59 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178CB81BEB@HQMAIL01.nvidia.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+	<CAJuYYwQoh4_SnA9wmy4x+cG0w0hGukxTkODWtcSw_2QHYuDsrg@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF1780DAB475@HQMAIL01.nvidia.com>
+ <CAJuYYwTOW7wOTA-a4q1aL7XvnnrXWa6Cp9vRnNAmQZ-9aBHo4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJuYYwTOW7wOTA-a4q1aL7XvnnrXWa6Cp9vRnNAmQZ-9aBHo4A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Milton Miller <miltonm@bga.com>, benh@kernel.crashing.org, Shawn Guo <shawn.guo@linaro.org>, Benoit Cousson <b-cousson@ti.com>, linux-arm-kernel@lists.infradead.org, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2012 at 2:53 PM, Rob Herring <robherring2@gmail.com> wr=
-ote:
-> On 01/23/2012 03:07 PM, Grant Likely wrote:
->>
->> Hey everyone,
->>
->> Here's the second RFC for the irq_domain patches. =A0I could use som=
+Thomas Abraham wrote at Friday, January 20, 2012 6:28 PM:
+> On 21 January 2012 02:41, Stephen Warren <swarren@nvidia.com> wrote:
+> > Thomas Abraham wrote at Thursday, January 19, 2012 6:10 AM:
+> >> On 14 January 2012 02:09, Stephen Warren <swarren@nvidia.com> wrot=
+e:
+=2E..
+> >> * Specifying the pinmux/pinconfig settings in dts files:
+> >>
+> >> Device nodes which require specific pinmux/pinconfig settings shou=
+ld
+> >> include information about the required settings. For example, a i2=
+c
+> >> controller node in dts file is listed below.
+> >>
+> >> i2c0: i2c@18000000 {
+> >> =A0 =A0 =A0 =A0 [... other properties ...]
+> >> =A0 =A0 =A0 =A0 pinctrl-active =3D <&pctrl0 5 0 2 3 0>,
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0<&pctrl=
+0 5 1 2 3 0>;
+> >> =A0 =A0 =A0 =A0 pinctrl-suspend =3D <&pctrl0 5 0 2 0 0>,
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 <&=
+pctrl0 5 1 2 0 0>;
+> >> };
+> >
+> > The idea of encoding the state names into the property names came u=
+p
+> > before in this thread.
+>=20
+> Yes, I did borrow the idea of states 'active' and 'suspend' from the
+> dt binding discussions here. The current Samsung mainline dt support
+> for gpio and pinmux is using this type of encoding but did not have
+> the states.
+>=20
+> > The problem is that it's hard for core code
+> > to know which properties are actually related to pinctrl and which
+> > aren't. reserving one name such as "pinctrl" seems reasonable, wher=
+eas
+> > reserving a whole class of names; everything prefixed "pinctrl-foo"=
+ is
+> > a little less so.
+>=20
+> The basic premise with which I proposed about the dt support for pinc=
+trl was
+>=20
+> - The pinctrl core code does not have to know anything about these
+> bindings inside device nodes (of say i2c).
+>=20
+> - Device drivers (such as i2c) retrieve the value of pinctrl-*
+> property and pass on two parameters to the pinctrl code.
+>   (a) The 'struct device_node' pointer of the intended pinctrl_dev
+> instance (obtained from the phandle above).
+>   (b) The encoding that specifies the hardware register values.
+
+That seems like a bunch of extra work for device drivers, and also
+something that's only required for device tree. By having a standardize=
+d
+representation (or framework for one) of the pinctrl properties within
+each device node, then drivers can:
+
+a) Drivers don't have to do a/b above, instead the pinctrl core will
+do it.
+
+b) Drivers can use the exact same pinctrl APIs when the system booted
+using DT or not.
+
+> - Pinctrl core scans its list for all registered pinctrl_dev, matches
+> it against the 'device node' specified and selects one of the
+> pinctrl_dev. It then passes on the second parameter to the pinctrl
+> driver which decodes it and writes appropriate values to the hardware
+> registers.
+>=20
+> - pinmux/pinconfig/pindesc tables are not built from DT. There are no
+> static tables built into the SoC specific pinctrl driver.
+
+Not having any pin/group/function tables in either the driver or DT
+would be a pretty radical departure from the way the pinctrl subsystem
+works today. It'd basically make pinctrl irrelevant on DT, I think, if
+I'm understanding what you're saying correctly. I don't know if we
+really want to go down that path.
+
+Not having the pinctrl pinmux mapping table parsed up front, but instea=
+d
+deferring it until a driver called pinmux_get() might be reasonable. I'=
+m
+not totally opposed to that, but others have expressed a desire to pars=
 e
->> help testing now. =A0I still expect there will be a few bugs. =A0The
->> series is based on v3.3-rc1, and I've pushed it out to my git server=
-:
->>
->> git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
->
-> Can you post to linux-arm-kernel too so people are aware of this work
-> and stop posting dead-end irqdomain patches.
+up front, so that the pinctrl sysfs files that contain the pinmux mappi=
+ng
+table are identical for a non-DT and DT boot.
 
-Oops, I had intended to do so.  Apparently I forgot to set the subject
-line of the cover letter too.  :-(  I don't want to irritate folks
-with an immediate repost of the whole series, but I'm cc'ing the
-linux-arm-kernel list on this email.  I'll repost a v3 and include
-linux-arm-kernel before I ask Stephen to pull this stuff into
-linux-next.
+=2E..
+> >> In the example above, the specifier of pinctrl-* is specific for
+> >> Samsung io-pad controllers. Its format/syntax would be mainly
+> >> dependent on the io-pad controller used, the above is only an exam=
+ple
+> >> for Samsung io-pad controller. In the above node, the format of th=
+e
+> >> pinctrl-* specifier is
+> >>
+> >> property-name =3D <phandle of the pin-controller
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin bank wi=
+thin the pin-controller
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin number =
+within the pin-bank
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pin-mux fun=
+ction number
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0pull up/dow=
+n config
+> >> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0drive stren=
+gth config>;
+> >
+> > Yes, that seems reasonable.
+> >
+> > The only thing different between that example and my proposal is th=
+at:
+> >
+> > a) In my proposal, the property in the device nodes doesn't actuall=
+y
+> > =A0 contain all those fields, but a phandle to a child node of the =
+pin
+> > =A0 controller where that data is kept. This keeps all the pin mux =
+data
+> > =A0 stored under the pin controller's node for neatness.
+>=20
+> I am not sure if that is required. In case dt support for interrupt
+> controller such as gic, the interrupt number, type of interrupt and
+> edge/level type flags are all listed in the device node itself and no=
+t
+> under the gic device node.
 
-=46or anyone who is doing irq_domain work, please be aware of these
-patches that are probably going to be merged for v3.4.  You'll need to
-coordinate with me before your patches hit linux-next, otherwise you
-will have a build failure.  The patches can be found here:
+Yes, there's no specific need to place those nodes inside the
+pin controller's node. I intended to put them inside the individual
+device nodes for my boards. However, others have expressed a strong
+desire to only allow these nodes to be inside the pin controller node,
+and I've gone along with that in order to move the binding forward.
+While this is a little different to GPIOs and IRQs, I don't see a
+significant disadvantage to this requirement; when I started looking
+at pinmux DT months ago, I had planned on simply putting a single big
+table inside the pin controller node anyway, so this isn't so different=
+=2E
 
-http://thread.gmane.org/gmane.linux.kernel/1242692
+=2E..
+> > The pinctrl subsystem already has APIs such as pinmux_get() and
+> > pinmux_enable() that initiate pin mux programming, so I've been
+> > assuming they'd be used identically for both systems that use board
+> > files and systems that use DT.
+>=20
+> In case of DT based boot, the code that handles the device node
+> containing pinctrl-* (either device driver or platform code) need not
+> call the pinmux_get(). The encoding in the pinctrl-* (as listed above=
+)
+> is sufficient to setup the pinmux/pinconfig as required.
 
-g.
-
->
-> I tested what you had as of this morning and it works fine for me. Lo=
-oks
-> like the only diff is the VExpress code. I'm working on rebasing my
-> domain support for generic irqchip now.
->
-> Rob
->
->> On Wed, Jan 11, 2012 at 1:22 PM, Grant Likely <grant.likely@secretla=
-b.ca> wrote:
->>> Here are the patches that I've been working on to finish up the cre=
-ation
->>> of the generic irq_domain infrastructure.
->>>
->>> I'm taking a different approach that I originally intended.
->>> Originally I intended to start with the basic design of irq_host fr=
-om
->>> powerpc, but there were some things about the implementation that I
->>> didn't like, so I was going to reimplement those bits and then migr=
-ate
->>> powerpc over to use it. =A0That was a mistake and would have result=
-ed in
->>> a lot more work. =A0Instead, I should have started with the powerpc
->>> irq_host code, moved it to a common location, and then reworked it =
-in
->>> place. =A0The powerpc code is working and well tested. =A0It is a l=
-ot less
->>> risky to use it as the starting point with a nicely bisectable seri=
-es
->>> of changes to make it do what other architectures need.
->>
->> [RFCv2 01/14] irq_domain: add documentation and MAINTAINERS entry.
->> [RFCv2 02/14] dt: Make irqdomain less verbose
->> [RFCv2 03/14] irq_domain: Make irq_domain structure match powerpc's
->> [RFCv2 04/14] irq_domain: convert microblaze from irq_host to
->> [RFCv2 05/14] irq_domain/powerpc: Use common irq_domain structure
->> [RFCv2 06/14] irq_domain/powerpc: eliminate irq_map; use
->> [RFCv2 07/14] irq_domain/powerpc: Eliminate virq_is_host()
->> [RFCv2 08/14] irq_domain: Move irq_domain code from powerpc to
->> [RFCv2 09/14] irqdomain: remove NO_IRQ from irq domain code
->> [RFCv2 10/14] irq_domain: Remove references to old irq_host names
->> [RFCv2 11/14] irq_domain: Replace irq_alloc_host() with
->> [RFCv2 12/14] irq_domain: Add support for base irq and hwirq in
->> [RFCv2 13/14] irq_domain: Remove 'new' irq_domain in favour of the
->> [RFCv2 14/14] irq_domain: Remove irq_domain_add_simple()
->>
->> =A0Documentation/IRQ-domain.txt =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 | =A0113 ++++
->> =A0MAINTAINERS =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 =A0| =A0 =A09 +
->> =A0arch/arm/common/gic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0| =A0 97 ++--
->> =A0arch/arm/common/vic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0| =A0 16 +-
->> =A0arch/arm/include/asm/hardware/gic.h =A0 =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 =A04 +-
->> =A0arch/arm/include/asm/hardware/vic.h =A0 =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 =A02 +
->> =A0arch/arm/mach-exynos/common.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 =A02 +-
->> =A0arch/arm/mach-imx/mach-imx6q.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 =A03 +-
->> =A0arch/arm/mach-msm/board-msm8x60.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A08 +-
->> =A0arch/arm/mach-mx5/imx51-dt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 | =A0 =A04 +-
->> =A0arch/arm/mach-mx5/imx53-dt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 | =A0 =A04 +-
->> =A0arch/arm/mach-omap2/board-generic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0| =
-=A0 =A02 +-
->> =A0arch/arm/mach-prima2/irq.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | =A0 =A02 +-
->> =A0arch/arm/mach-versatile/core.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 =A05 +-
->> =A0arch/microblaze/include/asm/irq.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A04 +-
->> =A0arch/microblaze/kernel/irq.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 | =A0 =A02 +-
->> =A0arch/microblaze/kernel/setup.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 =A02 -
->> =A0arch/powerpc/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 | =A0 =A01 +
->> =A0arch/powerpc/include/asm/ehv_pic.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
-=A0 =A02 +-
->> =A0arch/powerpc/include/asm/i8259.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-| =A0 =A02 +-
->> =A0arch/powerpc/include/asm/irq.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0247 +-------
->> =A0arch/powerpc/include/asm/mpic.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A02 +-
->> =A0arch/powerpc/include/asm/xics.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A02 +-
->> =A0arch/powerpc/kernel/irq.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0| =A0617 +------------------
->> =A0arch/powerpc/platforms/512x/mpc5121_ads_cpld.c =A0 | =A0 12 +-
->> =A0arch/powerpc/platforms/52xx/media5200.c =A0 =A0 =A0 =A0 =A0| =A0 =
-15 +-
->> =A0arch/powerpc/platforms/52xx/mpc52xx_gpt.c =A0 =A0 =A0 =A0| =A0 16=
- +-
->> =A0arch/powerpc/platforms/52xx/mpc52xx_pic.c =A0 =A0 =A0 =A0| =A0 12=
- +-
->> =A0arch/powerpc/platforms/82xx/pq2ads-pci-pic.c =A0 =A0 | =A0 14 +-
->> =A0arch/powerpc/platforms/85xx/socrates_fpga_pic.c =A0| =A0 15 +-
->> =A0arch/powerpc/platforms/86xx/gef_pic.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- 15 +-
->> =A0arch/powerpc/platforms/cell/axon_msi.c =A0 =A0 =A0 =A0 =A0 | =A0 =
-29 +-
->> =A0arch/powerpc/platforms/cell/beat_interrupt.c =A0 =A0 | =A0 16 +-
->> =A0arch/powerpc/platforms/cell/interrupt.c =A0 =A0 =A0 =A0 =A0| =A0 =
-16 +-
->> =A0arch/powerpc/platforms/cell/spider-pic.c =A0 =A0 =A0 =A0 | =A0 14=
- +-
->> =A0arch/powerpc/platforms/embedded6xx/flipper-pic.c | =A0 30 +-
->> =A0arch/powerpc/platforms/embedded6xx/hlwd-pic.c =A0 =A0| =A0 35 +-
->> =A0arch/powerpc/platforms/iseries/irq.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
- 11 +-
->> =A0arch/powerpc/platforms/powermac/pic.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- 15 +-
->> =A0arch/powerpc/platforms/powermac/smp.c =A0 =A0 =A0 =A0 =A0 =A0| =A0=
- =A09 +-
->> =A0arch/powerpc/platforms/ps3/interrupt.c =A0 =A0 =A0 =A0 =A0 | =A0 =
-11 +-
->> =A0arch/powerpc/platforms/wsp/opb_pic.c =A0 =A0 =A0 =A0 =A0 =A0 | =A0=
- 15 +-
->> =A0arch/powerpc/sysdev/cpm1.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | =A0 =A09 +-
->> =A0arch/powerpc/sysdev/cpm2_pic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 11 +-
->> =A0arch/powerpc/sysdev/ehv_pic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 14 +-
->> =A0arch/powerpc/sysdev/fsl_msi.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 10 +-
->> =A0arch/powerpc/sysdev/fsl_msi.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 =A02 +-
->> =A0arch/powerpc/sysdev/i8259.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 15 +-
->> =A0arch/powerpc/sysdev/ipic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | =A0 15 +-
->> =A0arch/powerpc/sysdev/ipic.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | =A0 =A02 +-
->> =A0arch/powerpc/sysdev/mpc8xx_pic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-| =A0 11 +-
->> =A0arch/powerpc/sysdev/mpic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | =A0 17 +-
->> =A0arch/powerpc/sysdev/mpic_msi.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 =A02 +-
->> =A0arch/powerpc/sysdev/mv64x60_pic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 11 +-
->> =A0arch/powerpc/sysdev/qe_lib/qe_ic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
-=A0 13 +-
->> =A0arch/powerpc/sysdev/qe_lib/qe_ic.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =
-=A0 =A02 +-
->> =A0arch/powerpc/sysdev/tsi108_pci.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-| =A0 13 +-
->> =A0arch/powerpc/sysdev/uic.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0| =A0 14 +-
->> =A0arch/powerpc/sysdev/xics/xics-common.c =A0 =A0 =A0 =A0 =A0 | =A0 =
-25 +-
->> =A0arch/powerpc/sysdev/xilinx_intc.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 19 +-
->> =A0drivers/gpio/gpio-mpc8xxx.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0| =A0 15 +-
->> =A0drivers/mfd/twl-core.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 | =A0 12 +-
->> =A0include/linux/irqdomain.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0| =A0180 ++++--
->> =A0kernel/irq/irqdomain.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 | =A0757 ++++++++++++++++++----
->> =A064 files changed, 1207 insertions(+), 1414 deletions(-)
-
-
+I think drivers should call pinmux_get() in all cases. We don't want
+some drivers using pinmux_get() and only working without DT, and others
+using some different API and only working with DT. We need to hide all
+the DT/non-DT details behind the existing APIs so that drivers are as
+portable as possible.
 
 --=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+nvpublic
