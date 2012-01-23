@@ -1,270 +1,83 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [RFCv2 12/14] irq_domain: Add support for base irq and hwirq in legacy mappings
-Date: Mon, 23 Jan 2012 14:07:48 -0700
-Message-ID: <1327352870-14687-13-git-send-email-grant.likely@secretlab.ca>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [RFCv2 04/14] irq_domain: convert microblaze from irq_host to
+ irq_domain
+Date: Mon, 23 Jan 2012 14:07:40 -0700
+Message-ID: <1327352870-14687-5-git-send-email-grant.likely@secretlab.ca>
 References: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Milton Miller <miltonm@bga.com>, benh@kernel.crashing.org, Rob Herring <rob.herring@calxeda.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1327352870-14687-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for a legacy mapping where irq = (hwirq - first_hwirq + first_irq)
-so that a controller driver can allocate a fixed range of irq_descs and use
-a simple calculation to translate back and forth between linux and hw irq
-numbers.  This is needed to use an irq_domain with many of the ARM interrupt
-controller drivers that manage their own irq_desc allocations.  Ultimately
-the goal is to migrate those drivers to use the linear revmap, but doing it
-this way allows each driver to be converted separately which makes the
-migration path easier.
+Trivial change, microblaze doesn't use irq remapping yet.
 
-This patch generalizes the IRQ_DOMAIN_MAP_LEGACY method to use
-(first_irq-first_hwirq) as the offset between hwirq and linux irq number,
-and adds checks to make sure that the hwirq number does not exceed range
-assigned to the controller.
-
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 ---
- arch/powerpc/include/asm/irq.h   |    3 --
- arch/powerpc/sysdev/i8259.c      |    2 +-
- arch/powerpc/sysdev/tsi108_pci.c |    2 +-
- include/linux/irqdomain.h        |   20 +++++++++++-
- kernel/irq/irqdomain.c           |   66 ++++++++++++++++++++++++++++---------
- 5 files changed, 71 insertions(+), 22 deletions(-)
+ arch/microblaze/include/asm/irq.h |    4 ++--
+ arch/microblaze/kernel/irq.c      |    2 +-
+ arch/microblaze/kernel/setup.c    |    2 --
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
-index 728cc30..fe0b09d 100644
---- a/arch/powerpc/include/asm/irq.h
-+++ b/arch/powerpc/include/asm/irq.h
-@@ -36,9 +36,6 @@ extern atomic_t ppc_n_lost_interrupts;
- /* Total number of virq in the platform */
- #define NR_IRQS		CONFIG_NR_IRQS
- 
--/* Number of irqs reserved for the legacy controller */
--#define NUM_ISA_INTERRUPTS	16
--
- /* Same thing, used by the generic IRQ code */
- #define NR_IRQS_LEGACY		NUM_ISA_INTERRUPTS
- 
-diff --git a/arch/powerpc/sysdev/i8259.c b/arch/powerpc/sysdev/i8259.c
-index 573a73b..997df6a 100644
---- a/arch/powerpc/sysdev/i8259.c
-+++ b/arch/powerpc/sysdev/i8259.c
-@@ -263,7 +263,7 @@ void i8259_init(struct device_node *node, unsigned long intack_addr)
- 	raw_spin_unlock_irqrestore(&i8259_lock, flags);
- 
- 	/* create a legacy host */
--	i8259_host = irq_domain_add_legacy(node, &i8259_host_ops, NULL);
-+	i8259_host = irq_domain_add_legacy_isa(node, &i8259_host_ops, NULL);
- 	if (i8259_host == NULL) {
- 		printk(KERN_ERR "i8259: failed to allocate irq host !\n");
- 		return;
-diff --git a/arch/powerpc/sysdev/tsi108_pci.c b/arch/powerpc/sysdev/tsi108_pci.c
-index 1be26f4..188012c 100644
---- a/arch/powerpc/sysdev/tsi108_pci.c
-+++ b/arch/powerpc/sysdev/tsi108_pci.c
-@@ -419,7 +419,7 @@ void __init tsi108_pci_int_init(struct device_node *node)
- {
- 	DBG("Tsi108_pci_int_init: initializing PCI interrupts\n");
- 
--	pci_irq_host = irq_domain_add_legacy(node, &pci_irq_domain_ops, NULL);
-+	pci_irq_host = irq_domain_add_legacy_isa(node, &pci_irq_domain_ops, NULL);
- 	if (pci_irq_host == NULL) {
- 		printk(KERN_ERR "pci_irq_host: failed to allocate irq domain!\n");
- 		return;
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index f95553f..7fef39e 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -39,6 +39,9 @@ struct device_node;
- struct irq_domain;
- struct of_device_id;
- 
-+/* Number of irqs reserved for a legacy isa controller */
-+#define NUM_ISA_INTERRUPTS	16
-+
- /* This type is the placeholder for a hardware interrupt number. It has to
-  * be big enough to enclose whatever representation is used by a given
-  * platform.
-@@ -98,6 +101,11 @@ struct irq_domain {
- 	union {
- 		struct {
- 			unsigned int size;
-+			unsigned int first_irq;
-+			irq_hw_number_t first_hwirq;
-+		} legacy;
-+		struct {
-+			unsigned int size;
- 			unsigned int *revmap;
- 		} linear;
- 		struct radix_tree_root tree;
-@@ -117,6 +125,9 @@ struct irq_domain {
- #ifdef CONFIG_IRQ_DOMAIN
- #ifdef CONFIG_PPC
- struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
-+					 unsigned int size,
-+					 unsigned int first_irq,
-+					 irq_hw_number_t first_hwirq,
- 					 struct irq_domain_ops *ops,
- 					 void *host_data);
- struct irq_domain *irq_domain_add_linear(struct device_node *of_node,
-@@ -130,11 +141,18 @@ struct irq_domain *irq_domain_add_tree(struct device_node *of_node,
- 					 struct irq_domain_ops *ops,
- 					 void *host_data);
- 
--
- extern struct irq_domain *irq_find_host(struct device_node *node);
- extern void irq_set_default_host(struct irq_domain *host);
- extern void irq_set_virq_count(unsigned int count);
- 
-+static inline struct irq_domain *irq_domain_add_legacy_isa(
-+				struct device_node *of_node,
-+				struct irq_domain_ops *ops,
-+				void *host_data)
-+{
-+	return irq_domain_add_legacy(of_node, NUM_ISA_INTERRUPTS, 0, 0, ops,
-+				     host_data);
-+}
- 
- extern unsigned int irq_create_mapping(struct irq_domain *host,
- 				       irq_hw_number_t hwirq);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 3780816..234bda2 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -8,7 +8,8 @@
- #include <linux/slab.h>
- #include <linux/smp.h>
- 
--#define IRQ_DOMAIN_MAP_LEGACY 0 /* legacy 8259, gets irqs 1..15 */
-+#define IRQ_DOMAIN_MAP_LEGACY 0 /* driver allocated fixed range of irqs.
-+				 * ie. legacy 8259, gets irqs 1..15 */
- #define IRQ_DOMAIN_MAP_NOMAP 1 /* no fast reverse mapping */
- #define IRQ_DOMAIN_MAP_LINEAR 2 /* linear map of interrupts */
- #define IRQ_DOMAIN_MAP_TREE 3 /* radix tree */
-@@ -80,6 +81,11 @@ static struct irq_domain *irq_domain_add(struct device_node *of_node,
- /**
-  * irq_domain_add_legacy() - Allocate and register a legacy revmap irq_domain.
-  * @of_node: pointer to interrupt controller's device tree node.
-+ * @size: total number of irqs in legacy mapping
-+ * @first_irq: first number of irq block assigned to the domain
-+ * @first_hwirq: first hwirq number to use for the translation. Should normally
-+ *               be '0', but a positive integer can be used if the effective
-+ *               hwirqs numbering does not begin at zero.
-  * @ops: map/unmap domain callbacks
-  * @host_data: Controller private data pointer
-  *
-@@ -88,10 +94,13 @@ static struct irq_domain *irq_domain_add(struct device_node *of_node,
-  * a legacy controller).
-  */
- struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
-+					 unsigned int size,
-+					 unsigned int first_irq,
-+					 irq_hw_number_t first_hwirq,
- 					 struct irq_domain_ops *ops,
- 					 void *host_data)
- {
--	struct irq_domain *domain, *h;
-+	struct irq_domain *domain;
- 	unsigned int i;
- 
- 	domain = irq_domain_alloc(of_node, IRQ_DOMAIN_MAP_LEGACY, ops, host_data);
-@@ -99,33 +108,52 @@ struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
- 		return NULL;
- 
- 	mutex_lock(&irq_domain_mutex);
--	/* Make sure only one legacy controller can be created */
--	list_for_each_entry(h, &irq_domain_list, link) {
--		if (WARN_ON(h->revmap_type == IRQ_DOMAIN_MAP_LEGACY)) {
-+	/* Verify that all the irqs are available */
-+	for (i = 0; i < size; i++) {
-+		int irq = first_irq + i;
-+		struct irq_data *irq_data = irq_get_irq_data(irq);
-+
-+		if (WARN_ON(!irq_data || irq_data->domain)) {
- 			mutex_unlock(&irq_domain_mutex);
- 			of_node_put(domain->of_node);
- 			kfree(domain);
- 			return NULL;
- 		}
- 	}
-+
-+	/* Claim all of the irqs before registering a legacy domain */
-+	for (i = 0; i < size; i++) {
-+		struct irq_data *irq_data = irq_get_irq_data(first_irq + i);
-+		irq_data->hwirq = first_hwirq + i;
-+		irq_data->domain = domain;
-+	}
-+
- 	list_add(&domain->link, &irq_domain_list);
- 	mutex_unlock(&irq_domain_mutex);
- 
-+	domain->revmap_data.legacy.first_irq = first_irq;
-+	domain->revmap_data.legacy.first_hwirq = first_hwirq;
-+	domain->revmap_data.legacy.size = size;
-+
- 	/* setup us as the domain for all legacy interrupts */
--	for (i = 1; i < NUM_ISA_INTERRUPTS; i++) {
--		struct irq_data *irq_data = irq_get_irq_data(i);
--		irq_data->hwirq = i;
--		irq_data->domain = domain;
-+	for (i = 0; i < size; i++) {
-+		int irq = first_irq + i;
-+		int hwirq = first_hwirq + i;
-+
-+		/* IRQ0 gets ignored */
-+		if (!irq)
-+			continue;
- 
- 		/* Legacy flags are left to default at this point,
- 		 * one can then use irq_create_mapping() to
- 		 * explicitly change them
- 		 */
--		ops->map(domain, i, i);
-+		ops->map(domain, irq, hwirq);
- 
- 		/* Clear norequest flags */
--		irq_clear_status_flags(i, IRQ_NOREQUEST);
-+		irq_clear_status_flags(irq, IRQ_NOREQUEST);
- 	}
-+
- 	return domain;
+diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
+index a175132..7798ad1 100644
+--- a/arch/microblaze/include/asm/irq.h
++++ b/arch/microblaze/include/asm/irq.h
+@@ -39,7 +39,7 @@ static inline void irq_dispose_mapping(unsigned int virq)
+ 	return;
  }
  
-@@ -329,11 +357,13 @@ unsigned int irq_create_mapping(struct irq_domain *domain,
+-struct irq_host;
++struct irq_domain;
  
- 	/* Get a virtual interrupt number */
- 	if (domain->revmap_type == IRQ_DOMAIN_MAP_LEGACY) {
-+		unsigned first_hwirq = domain->revmap_data.legacy.first_hwirq;
-+		unsigned first_irq = domain->revmap_data.legacy.first_irq;
-+		unsigned size = domain->revmap_data.legacy.size;
- 		/* Handle legacy */
--		virq = (unsigned int)hwirq;
--		if (virq == 0 || virq >= NUM_ISA_INTERRUPTS)
-+		if (WARN_ON(hwirq < first_hwirq || hwirq >= first_hwirq + size))
- 			return 0;
--		return virq;
-+		return hwirq - first_hwirq + first_irq;
- 	} else {
- 		/* Allocate a virtual interrupt number */
- 		hint = hwirq % irq_virq_count;
-@@ -470,8 +500,12 @@ unsigned int irq_find_mapping(struct irq_domain *domain,
- 		return 0;
+ /**
+  * irq_create_mapping - Map a hardware interrupt into linux virq space
+@@ -51,7 +51,7 @@ struct irq_host;
+  * If the sense/trigger is to be specified, set_irq_type() should be called
+  * on the number returned from that call.
+  */
+-extern unsigned int irq_create_mapping(struct irq_host *host,
++extern unsigned int irq_create_mapping(struct irq_domain *host,
+ 					irq_hw_number_t hwirq);
  
- 	/* legacy -> bail early */
--	if (domain->revmap_type == IRQ_DOMAIN_MAP_LEGACY)
--		return hwirq;
-+	if (domain->revmap_type == IRQ_DOMAIN_MAP_LEGACY) {
-+		i = hwirq - domain->revmap_data.legacy.first_hwirq;
-+		if (i > domain->revmap_data.legacy.size)
-+			return 0;
-+		return i + domain->revmap_data.legacy.first_irq;
-+	}
+ #endif /* _ASM_MICROBLAZE_IRQ_H */
+diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
+index bbebcae..3f613df 100644
+--- a/arch/microblaze/kernel/irq.c
++++ b/arch/microblaze/kernel/irq.c
+@@ -51,7 +51,7 @@ next_irq:
  
- 	/* Slow path does a linear search of the map */
- 	if (hint < NUM_ISA_INTERRUPTS)
+ /* MS: There is no any advance mapping mechanism. We are using simple 32bit
+   intc without any cascades or any connection that's why mapping is 1:1 */
+-unsigned int irq_create_mapping(struct irq_host *host, irq_hw_number_t hwirq)
++unsigned int irq_create_mapping(struct irq_domain *host, irq_hw_number_t hwirq)
+ {
+ 	return hwirq + IRQ_OFFSET;
+ }
+diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
+index d4fc1a9..208cd04 100644
+--- a/arch/microblaze/kernel/setup.c
++++ b/arch/microblaze/kernel/setup.c
+@@ -52,8 +52,6 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	unflatten_device_tree();
+ 
+-	/* NOTE I think that this function is not necessary to call */
+-	/* irq_early_init(); */
+ 	setup_cpuinfo();
+ 
+ 	microblaze_cache_init();
 -- 
 1.7.5.4
