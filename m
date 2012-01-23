@@ -1,15 +1,14 @@
 From: Jerry Van Baren <gvb.uboot-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [U-Boot] [PATCH v4 02/20] fdt: Add functions to access phandles,
- arrays and bools
-Date: Sun, 22 Jan 2012 21:03:56 -0500
-Message-ID: <4F1CC00C.2030406@gmail.com>
+Subject: Re: [U-Boot] [PATCH v4 01/20] fdt: Tidy up a few fdtdec problems
+Date: Sun, 22 Jan 2012 21:03:59 -0500
+Message-ID: <4F1CC00F.4030204@gmail.com>
 References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
- <1326342789-5781-3-git-send-email-sjg@chromium.org>
+ <1326342789-5781-2-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1326342789-5781-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1326342789-5781-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -24,10 +23,14 @@ Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Device
 List-Id: devicetree@vger.kernel.org
 
 On 01/11/2012 11:32 PM, Simon Glass wrote:
-> Add a function to look up a property which is a phandle in a node, and
-> another to read a fixed-length integer array from an fdt property.
-> Also add a function to read boolean properties, although there is no
-> actual boolean type in U-Boot.
+> This fixes five trivial issues in fdtdec.c:
+> 1. fdtdec_get_is_enabled() doesn't really need a default value
+> 2. The fdt must be word-aligned, since otherwise it will fail on ARM
+> 3. The compat_names[] array is missing its first element. This is needed
+> only because the first fdt_compat_id is defined to be invalid.
+> 4. Added a header prototype for fdtdec_next_compatible()
+> 5. Change fdtdec_next_alias() to only increment its 'upto' parameter
+> on success, to make the display error messages in the caller easier.
 > 
 > Signed-off-by: Simon Glass<sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
