@@ -1,210 +1,79 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: Pinmux bindings proposal V2
-Date: Tue, 24 Jan 2012 14:29:37 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178CB81EDB@HQMAIL01.nvidia.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
- <20120123210052.GS22818@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF178CB81C0D@HQMAIL01.nvidia.com>
- <20120124012038.GT22818@atomide.com>
+From: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: Define Tegra20 CAR binding
+Date: Tue, 24 Jan 2012 14:32:32 -0800
+Message-ID: <CAMbhsRQYt7RoXTDDPxCgGG2UX5_T86saOyns_0f_Sz-p7-gMTw@mail.gmail.com>
+References: <1326342789-5781-12-git-send-email-sjg@chromium.org>
+	<1326932212-30346-1-git-send-email-swarren@nvidia.com>
+	<20120124095241.GO10446@tbergstrom-lnx.Nvidia.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF178CB81EC4@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120124012038.GT22818-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Sascha Hauer
- (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF178CB81EC4-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony Lindgren wrote at Monday, January 23, 2012 6:21 PM:
-> * Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> [120123 14:37]:
-> > Tony Lindgren wrote at Monday, January 23, 2012 2:01 PM:
-> > > This mostly looks pretty good to me, few more comments below.
-...
-> > > >                 pmx_sdhci_active: pinconfig-sdhci-active {
-> > > >                         /*
-> > > >                          * In each of these nodes, both the mux and config
-> > > >                          * properties are optional. This node represents the
-> > > >                          * additions to pmx_sdhci that are specific to an
-> > > >                          * active state. In this case, only pin configuration
-> > > >                          * settings are different.
-> > > >                          */
-> > > >                         config =
-> > > >                                 <TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 0>
-> > > >                                 <TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 0>;
-> > > >                 };
-> > > >                 pmx_sdhci_standby: pinconfig-sdhci-standby {
-> > > >                         config =
-> > > >                                 <TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_TRISTATE 1>
-> > > >                                 <TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_TRISTATE 1>;
-> > > >                 };
-> > >
-> > > After thinking about this a bit more, I'm now thinking that we should
-> > > probably only describe the active state in the device tree to keep things
-> > > simple.
-> > >
-> > > Anything PM related could be initialized later on during the boot by the
-> > > device driver, or even from userspace using /lib/firmware or /sys entries.
-> > > This would cut down the device tree bloat quite a bit.
-> >
-> > I think it makes sense to describe everything in one place. It's much
-> > easier to ensure everything is consistent and correct if you don't have
-> > to cross-check two sources of data for the same thing.
-> 
-> But we end up repeating the same bits over and over again making the device
-> tree bloated.
+On Tue, Jan 24, 2012 at 2:08 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wr=
+ote:
+> Peter De Schrijver wrote at Tuesday, January 24, 2012 2:53 AM:
+>> What about the peripheral resets which are also handled by CAR? Peri=
+pheral
+>> clock nodes also offer assert and deassert methods for the reset sig=
+nal
+>> associated with them. Those methods are used when powergating domain=
+s for
+>> example. Should we model this in the same binding?
+>
+> In most cases, I think the resets are handled purely within clock ena=
+ble
+> and disable, so there's no need to explicitly manage them or represen=
+t
+> them in the device tree. Do you agree here?
 
-What exactly gets repeated; can you please show an example?
+clk_enable could force a deasserted reset, but clk_disable cannot
+imply asserting reset.  The clocks need to be turned off for power
+management without resetting the registers.
 
-Given that each named state can reference n nodes defining part of that
-state's pinmux configuration, and some of those nodes can affect the same
-pin controller, you can easily split the overall configuration into
-"stuff that's common for all states for this device" and "stuff that's
-common between these n states of the device but not these m others" and
-"stuff that's unique to this 1 state", and hence avoid repeating any
-identical information.
+> I recall that you mentioned some power-management code might need to
+> manage reset separately though. Can you explain why a module would be
+> reset separately from disabling the clocks though?
 
-> I'm suspecting that the initial state can be used to set the PM states for
-> pins. Probably most pins can have the PM configuration set from the start.
+The TRM lists a very specific sequence of clocks, resets, clamps, and
+power for power domain gating.  Other than that, I think the only use
+for directly calling reset that ended up in the Android Tegra2 tree
+was for error recovery on HW blocks that could get locked up, probably
+I2C.
 
-Can you please explain more?
-
-> If dynamic muxing is needed, it should be for a very limited set of pins,
-> and that can be done in the drivers.
-
-(and later, saying the same thing):
-> > > If we only allow describing the initial state in device tree, then we can
-> > > leave out pinctrl-names, and assume the setting is always the initial bootup
-> > > state desired.
-> >
-> > That's true, but people have already discussed the usefulness of having
-> > multiple named states, e.g. an SDHCI controller that needs different pin
-> > configuration (perhaps drive strength or slew rate?) depending on the
-> > clock rate of the SD interface itself.
-> 
-> Yes but those too should be doable from the device drivers using pin ctrl
-> framework calls. Usually it's just few pins that needs to change dynamically.
-
-Do you mean drivers explicitly requesting that a named pin/group have
-some specific parameter set to some specific value?
-
-That would make the peripheral driver have to know specific details of
-each SoC's pin controller. This isn't an issue for one-off IP, but if
-you've got some IP block that gets re-used in 2 or 3 different SoCs each
-with a SoC-vendor-specific pin controller, then the driver is going to
-have to know those same details 3 times over, which is pretty much exactly
-what we're trying to avoid by abstracting the details out of the drivers
-and into a common binding that's handled by the pinctrl subsystem.
-
-> > > Setting the initial state from device tree makes sense, but I'm afraid
-> > > the standby and off states will require driver interaction depending on
-> > > how the user wants to configure the system.
-> > >
-> > > For example, allowing a device to wake up a system might be user
-> > > configurable option, such as "Wake up on tapping the touchscreen".
-> >
-> > That can be supported pretty easily.
-> >
-> > The driver for a simple device can require two named states: "active"
-> > and "standby". In your more complex example, the driver can require
-> > three named states: "active", "standby", "standby-wake". During suspend,
-> > it'll simply select the appropriate of the latter two states based on
-> > user request.
-> >
-> > You can even retrofit this capability to a previously simple driver that
-> > Originally did:
-> >
-> > suspend() {
-> >     pinconf_select(dev, "suspend");
-> > }
-> >
-> > To make it do the following instead:
-> >
-> > suspend() {
-> >     if (wake)
-> >         state = "suspend-wake";
-> >     else
-> >         state = "suspend-nowake";
-> >     err = pinconf_select(dev, state);
-> >     if (err < 0)
-> >         pinconf_select(dev, "suspend";
-> > }
-> >
-> > ... which should allow old device trees to work fine, but new device
-> > trees to specify a different if they need.
-> 
-> You can do just the same from a driver with something like:
-> 
-> 	...
-> 	res = pin_config_set_for_pin(pctldev, pin, PIN_STATE_SUSPEND);
-> 	...
-> 
-> As long as the pinconf/pinmux driver knows how to set PIN_STATE_SUSPEND
-> for one entry. Note that I've avoided using pin_config_set here because
-> there really should not be any string parsing needed except during driver
-> init for doing things like this during runtime..
-
-In order to implement pin_config_set_for_pin(), you still need some
-source of data defining what PIN_STATE_SUSPEND means. I has been suggested
-to defer that knowledge into each individual pin controller driver, but
-since this is probably board-specific in general, that means that each
-pin controller driver then needs to parse the data from device tree, so
-we end up with exactly the same data in device tree, just represented in
-a different way for each SoC vendor. To me, that's exactly what the pinctrl
-subsystem and common pinctrl DT bindings are trying to avoid.
-
-> > > Then I'd rather not use "config" at all, and just put the value for
-> > > initial state mux register(s) in the mux to avoid repeating the same data
-> > > multiple time. Looks like with the mux + config/mux-config option you
-> > > need to duplicate at least TEGRA_PMX_PG_DTA.
-> > >
-> > > BTW, maybe the name "config" should probably be "mux-config" instead?
-> >
-> > Mux and config are two unrelated things though. Mux is the function
-> > (signal, alternate function, mission mode, ...) that is selected for
-> > the pin/group in question. Config is anything else, but explicitly not
-> > mux, such as pull-up, pull-down, tri-state, drive-strength, etc.
-> 
-> Right, but how many registers are you really writing to? In the cases
-> I've seen it's mostly just one register. In some cases it can be three
-> tree registers per mux, but only one would change during runtime
-> potentially.
-
-For each pin group on Tegra20, there are 1, 2, or 3 registers that affect
-it. In most cases, each register contains fields that affect multiple pin
-groups. On Tegra30, there is 1:1 mapping between registers and pin groups.
-
-> > > So to summarize: I suggest we'll just stick to basics to get the system
-> > > booting and devices working using device tree. In most cases the device
-> > > drivers should be able to configure the suspend and off states in a generic
-> > > way using pinctrl API. Everything else, like debugging, we can probably
-> > > do with userspace tools.
-> >
-> > But how will they configure suspend/off states in a generic way using the
-> > pinctrl API if the pinctrl API has no way of knowing how to configure the
-> > pins in suspend...
-> 
-> We can have a set of defined states that the pinmux/pinconf drivers can
-> implement. Then have functions to get/set a mux or a mux group. And then
-> the triggering could be hooked up into pm_runtime calls just like clock
-> framework calls.
-
-Does runtime PM allow drivers to request arbitrary states, i.e. make up
-device-specific state names? I must admit I'm not at all familiar with it,
-but I'd expect it supports "active" and "inactive", whereas to support the
-SDHCI controller example that's been mentioned, it'd need to support
-"active 24MHz", "active 40MHz", "inactive" (the exact clock rates I use in
-this example may be wrong).
-
--- 
-nvpublic
+> If we do need this, I think we can just add a property to the node of
+> each device that needs such explicit management. Something like:
+>
+> tegra_car: clock@60006000 {
+> =A0 =A0compatible =3D "nvidia,tegra20-car";
+> =A0 =A0....
+> };
+>
+> foo@70007000 {
+> =A0 =A0compatible =3D "nvidia,tegra20-foo";
+> =A0 =A0regs =3D <...>;
+> =A0 =A0nvidia,car-reset-id =3D <&tegra_car 30>;
+> };
+>
+> And the driver for "foo" can ignore cell 0, and extract the cell 1 an=
+d
+> pass the value to tegra_periph_reset_assert().
+>
+> I'd expect to put the CAR phandle into the property in case we ever g=
+et
+> a more generalized reset subsystem, and need more general code to
+> interpret the property. I did the same for the Tegra APB DMA controll=
+er
+> client binding where clients need to know the "DMA select" value.
+>
+> Does that all seem reasonable?
+>
+> --
+> nvpublic
+>
