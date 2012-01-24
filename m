@@ -1,8 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 10/18] tegra: usb: fdt: Add additional device tree
- definitions for USB ports
-Date: Tue, 24 Jan 2012 15:21:04 -0800
-Message-ID: <1327447272-30182-11-git-send-email-sjg@chromium.org>
+Subject: [PATCH v5 09/18] tegra: fdt: Add clock bindings
+Date: Tue, 24 Jan 2012 15:21:03 -0800
+Message-ID: <1327447272-30182-10-git-send-email-sjg@chromium.org>
 References: <1327447272-30182-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,58 +18,121 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Remy Bohmer <linux-SYUVB/VFmdasTnJN9+BGXg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds clock references to the USB part of the device tree for U-Boot.
+This adds a basic binding for the oscillator and peripheral clocks. The
+second cell is the clock number, defined as the bit number within the clock
+enable register if the peripheral clock.
 
-The USB timing information may vary between boards sometimes, but for
-now we hard-code it in C. This is because all current T2x boards use
-the same values, we will deal with T3x later and we first need to agree
-on the format for this timing information in the fdt and may in fact
-decide that it has no place there.
+This uses the RFC clock bindings from Grant Likely so may change later:
+
+https://lkml.org/lkml/2011/12/12/498
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-Changes in v5:
-- Add dr_mode property to control host/device/otg mode
-- Add nvidia,has-legacy-mode property per review comments
-- Change device tree comment style from // to /* */
+Changes in v4:
+- Add clock bindings for Tegra2x
 
- arch/arm/dts/tegra20.dtsi |    7 +++++++
- 1 files changed, 7 insertions(+), 0 deletions(-)
+ arch/arm/dts/tegra20.dtsi                      |   27 ++++++++++++
+ doc/device-tree-bindings/clock/tegra-periphclk |   51 ++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+), 0 deletions(-)
+ create mode 100644 doc/device-tree-bindings/clock/tegra-periphclk
 
 diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-index ec75747..b2e3a40 100644
+index a9a98ea..ec75747 100644
 --- a/arch/arm/dts/tegra20.dtsi
 +++ b/arch/arm/dts/tegra20.dtsi
-@@ -176,6 +176,9 @@
- 		reg = <0xc5000000 0x4000>;
- 		interrupts = < 52 >;
- 		phy_type = "utmi";
-+		clocks = <&periph_clk 22>;	/* PERIPH_ID_USBD */
-+		dr_mode = "otg";
-+		nvidia,has-legacy-mode;
- 	};
+@@ -4,6 +4,33 @@
+ 	compatible = "nvidia,tegra20";
+ 	interrupt-parent = <&intc>;
  
- 	usb@c5004000 {
-@@ -183,6 +186,8 @@
- 		reg = <0xc5004000 0x4000>;
- 		interrupts = < 53 >;
- 		phy_type = "ulpi";
-+		clocks = <&periph_clk 58>;	/* PERIPH_ID_USB2 */
-+		dr_mode = "host";
- 	};
- 
- 	usb@c5008000 {
-@@ -190,6 +195,8 @@
- 		reg = <0xc5008000 0x4000>;
- 		interrupts = < 129 >;
- 		phy_type = "utmi";
-+		clocks = <&periph_clk 59>;	/* PERIPH_ID_USB3 */
-+		dr_mode = "otg";
- 	};
- 
- };
++	clocks = <&osc_clk>;
++	clock-names = "osc_clk";
++	clock-ranges;
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/* The frequency of this clock is board-specific */
++		osc_clk: oscclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++		};
++
++		/*
++		 * This node provides clocks to all peripherals. We don't
++		 * enumerate the clock names for now since there are no
++		 * users of this information.
++		 */
++		periph_clk: periphclk {
++			compatible = "tegra,periphclk";
++			#clock-cells = <1>;
++			clocks = <&osc_clk>;
++			reg = <0x60006000 400>;
++		};
++	};
++
+ 	intc: interrupt-controller@50041000 {
+ 		compatible = "nvidia,tegra20-gic";
+ 		interrupt-controller;
+diff --git a/doc/device-tree-bindings/clock/tegra-periphclk b/doc/device-tree-bindings/clock/tegra-periphclk
+new file mode 100644
+index 0000000..8d21e4d
+--- /dev/null
++++ b/doc/device-tree-bindings/clock/tegra-periphclk
+@@ -0,0 +1,51 @@
++Clock controllers
++
++(there isn't yet a binding in Linux, so this describes what is in U-Boot)
++
++The device node for a clock controller is as described in the document
++"Open Firmware Recommended Practice : Universal Serial Bus" with the
++following modifications and additions :
++
++This is based on Grant Likely's proposed patch for clock bindings.
++
++Required properties :
++ - compatible : Should be "tegra,periphclk" for peripheral clock controller
++ - clocks : Should contain a single phandle pointing to the oscillator clock
++
++Peripherals which refer to a clock should have a property called "clocks" with
++two cells: phandle of the peripheral clock and the clock ID number (which
++is the bit number in the peripheral clock controller enable register numbered
++from 0).
++
++Example:
++
++clocks {
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	/* The frequency of this clock is board-specific */
++	osc_clk: oscclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++	};
++
++	/*
++	 * This node provides clocks to all peripherals. We don't
++	 * enumerate the clock names for now since there are no
++	 * users of this information.
++	 */
++	periph_clk: periphclk {
++		compatible = "tegra,periphclk";
++		#clock-cells = <1>;
++		clocks = <&osc_clk>;
++		reg = <0x60006000 400>;
++	};
++};
++
++usb@c5004000 {
++	compatible = "nvidia,tegra20-ehci", "usb-ehci";
++	reg = <0xc5004000 0x4000>;
++	interrupts = < 53 >;
++	phy_type = "ulpi";
++	clocks = <&periph_clk 58>;	// PERIPH_ID_USB2
++};
 -- 
 1.7.7.3
