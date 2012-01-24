@@ -1,133 +1,34 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [RFC PATCH 6/7] ARM: mtd: nand: davinci: add OF support for
- davinci nand controller
-Date: Tue, 24 Jan 2012 08:23:46 +0100
-Message-ID: <4F1E5C82.60108@denx.de>
-References: <1327308967-8092-1-git-send-email-hs@denx.de>
- <1327308967-8092-7-git-send-email-hs@denx.de> <4F1DF465.60206@freescale.com>
-Reply-To: hs-ynQEQJNshbs@public.gmane.org
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: tegra: Remove use of TEGRA_GPIO_TO_IRQ
+Date: Tue, 24 Jan 2012 00:34:13 -0800
+Message-ID: <20120124083413.GA14484@quad.lixom.net>
+References: <1325702378-20863-1-git-send-email-swarren@nvidia.com>
+ <20120104195218.GF15503@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <4F1DF465.60206-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120104195218.GF15503-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Scott,
+Hi,
 
-Scott Wood wrote:
-> On 01/23/2012 02:56 AM, Heiko Schocher wrote:
->> diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
->> new file mode 100644
->> index 0000000..7e8d6db
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
->> @@ -0,0 +1,72 @@
->> +* Texas Instruments Davinci NAND
->> +
->> +This file provides information, what the device node for the
->> +davinci nand interface contain.
->> +
->> +Required properties:
->> +- compatible: "ti,davinci-nand";
->> +- reg : contain 2 offset/length values:
->> +        - offset and length for the access window
->> +        - offset and length for accessing the aemif control registers
->> +- id: id of the controller
+On Wed, Jan 04, 2012 at 12:52:18PM -0700, Grant Likely wrote:
+> On Wed, Jan 04, 2012 at 11:39:33AM -0700, Stephen Warren wrote:
+> > Replace compile-time usage of TEGRA_GPIO_TO_IRQ with run-time calls to
+> > gpio_to_irq(). This will allow the base IRQ number for the Tegra GPIO
+> > driver to be dynamically allocated in a later patch.
+> > 
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> What does "id of the controller" mean, specfically?  From this I can't
-> even tell if it's a number or a string, much less how to use it
-> semantically.  If it's just a "match what's in the manual" thing,
-> perhaps an alias would be better here.  Or, if it's a value with a
-> specific meaning (e.g. that you need to program into a register) use a
-> more specific name.
+> For the whole series:
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Ok, fix this. Id means here, which chipselect the controller uses.
-Maybe it is better to rename it to "chipselect" ?
 
->> +Recommended properties :
->> +- mask_ale: mask for ale
->> +- mask_cle: mask for cle
->> +- mask_chipsel: mask for chipselect
->> +- ecc_mode: ECC mode, see NAND_ECC_* defines
->> +- ecc_bits: used ECC bits
->> +- options: nand options, defined in
->> +           include/linux/mtd/nand.h, grep for NAND_NO_AUTOINCR
->> +- bbt_options: NAND_BBT_* defines
-> 
-> Binding-specific properties should have a vendor prefix.  Dashes are
-> preferred to underscores.
+Thanks, applied 1-6 to tegra for-3.4 (version 2 of patch 6).
 
-You think something like that:
 
-davinci-mask-ale
-davinci-mask-cle
-...
-
-?
-
-> Don't specify Linux internals by reference -- they could change and
-> invalidate existing device trees and non-Linux code that accepts them
-> (e.g. U-Boot).  If you want them to line up, copy the definition here,
-> and if Linux changes, write glue code to convert.  It would probably be
-> better to define specific properties for anything that must be specified
-> here (neither deteted dynamically nor defined by compatible =
-> "ti,davinci-nand").
-
-Ok, I add the defines here, and add also a comment in the dts.
-
-> Do all of these properties really belong here?  I can see providing some
-
-I think so, because this values come from existing platform code
-(grep for struct davinci_nand_pdata)
-
-> information about ECC or BBT mode, if there are multiple conventions
-> already in use (or that are reasonably justifiable for different
-> situations), as that must agree with how the flash has already been
-> programmed.  How much of the rest can vary from one "ti,davinci-nand" to
-> another?  Maybe it's obvious to someone more familiar with davinci, but
-> what does "mask for ale/cle/chipselect" mean?
-
-I mapped here just the existing platform code (=struct davinci_nand_pdata)
-to OF, so existing boards can easy switch to OF.
-
-Comment in arch/arm/mach-davinci/include/mach/nand.h says for
-mask_ale and mask_cle:
-
-/* NOTE:  boards don't need to use these address bits
- * for ALE/CLE unless they support booting from NAND.
- * They're used unless platform data overrides them.
- */
-
-It is used for addressing the ALE/CLE Signals through the address,
-used on the arch/arm/mach-davinci/board-dm646x-evm.c and
-arch/arm/mach-davinci/board-tnetv107x-evm.c board ... so I think,
-this should be also be setupable through OF ...
-
->> +	nandflash@3,0 {
-> 
-> PowerPC's ePAPR document -- not directly relevant to ARM, but contains a
-> more recently updated list of generic names than the IEEE1275
-> recommended pratice -- specifies "flash@".  If you don't want to do
-> that, "nand@" is used in many existing trees.  Why introduce a new name?
-
-There is no reason for that, change this to "nand@".
-
-Thanks for the review.
-
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+-Olof
