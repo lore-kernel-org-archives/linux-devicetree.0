@@ -1,24 +1,30 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: Define Tegra20 CAR binding
-Date: Tue, 24 Jan 2012 11:52:41 +0200
-Message-ID: <20120124095241.GO10446@tbergstrom-lnx.Nvidia.com>
-References: <1326342789-5781-12-git-send-email-sjg@chromium.org>
- <1326932212-30346-1-git-send-email-swarren@nvidia.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 19/31] ARM: amba: vexpress: get rid of private platform
+ amba_device initializer
+Date: Tue, 24 Jan 2012 14:27:47 +0000
+Message-ID: <20120124142747.GJ19798@mudshark.cambridge.arm.com>
+References: <20120120092207.GD1068@n2100.arm.linux.org.uk>
+ <E1RoAmA-0005FX-5m@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1326932212-30346-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1RoAmA-0005FX-5m@rmk-PC.arm.linux.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, STEricsson <STEricsson_nomadik_linux@list.st.com>
 List-Id: devicetree@vger.kernel.org
 
-What about the peripheral resets which are also handled by CAR? Peripheral
-clock nodes also offer assert and deassert methods for the reset signal
-associated with them. Those methods are used when powergating domains for
-example. Should we model this in the same binding?
+On Fri, Jan 20, 2012 at 09:28:50AM +0000, Russell King - ARM Linux wrote:
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> ---
+>  arch/arm/mach-vexpress/core.h     |   17 -----------------
+>  arch/arm/mach-vexpress/ct-ca9x4.c |    8 ++++----
+>  arch/arm/mach-vexpress/v2m.c      |   20 ++++++++++----------
+>  3 files changed, 14 insertions(+), 31 deletions(-)
 
-Thanks,
+Looks good to me, and I've boot-tested it on my board as well.
 
-Peter.
+Acked-by: Will Deacon <will.deacon@arm.com>
+
+Will
