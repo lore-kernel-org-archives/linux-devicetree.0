@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 13/18] fdt: Add function to return peripheral/clock ID
-Date: Tue, 24 Jan 2012 15:21:07 -0800
-Message-ID: <1327447272-30182-14-git-send-email-sjg@chromium.org>
+Subject: [PATCH v5 18/18] tegra: fdt: Enable FDT support for Seaboard
+Date: Tue, 24 Jan 2012 15:21:12 -0800
+Message-ID: <1327447272-30182-19-git-send-email-sjg@chromium.org>
 References: <1327447272-30182-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,62 +18,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A common requirement is to find the clock ID for a peripheral. This is the
-second cell of the 'clocks' property (the first being the phandle itself).
+This switches Seaboard over to use FDT for run-time config instead of
+CONFIG options. USB is the only user at present.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-Changes in v4:
-- Add fdtdec function to return peripheral ID
+Changes in v3:
+- Drop Tegra USB alignment patch as we will deal with this another way
 
- include/fdtdec.h |   13 +++++++++++++
- lib/fdtdec.c     |   13 +++++++++++++
- 2 files changed, 26 insertions(+), 0 deletions(-)
+ include/configs/seaboard.h |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index 6c0a2d1..f3115a6 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -272,3 +272,16 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
-  * @return 0 if all ok or gpio was FDT_GPIO_NONE; -1 on error
-  */
- int fdtdec_setup_gpio(struct fdt_gpio_state *gpio);
+diff --git a/include/configs/seaboard.h b/include/configs/seaboard.h
+index b6d9f7a..1dc775a 100644
+--- a/include/configs/seaboard.h
++++ b/include/configs/seaboard.h
+@@ -27,6 +27,11 @@
+ #include <asm/sizes.h>
+ #include "tegra2-common.h"
+ 
++/* Enable fdt support for Seaboard. Flash the image in u-boot-dtb.bin */
++#define CONFIG_DEFAULT_DEVICE_TREE	tegra2-seaboard
++#define CONFIG_OF_CONTROL
++#define CONFIG_OF_SEPARATE
 +
-+/**
-+ * Decode a peripheral ID from a device tree node. This may be a temporary
-+ * function depending on what happens with clocks in the Linux fdt.
-+ *
-+ * This works by looking up the peripheral's 'clocks' node and reading out
-+ * the second cell, which is the clock number / peripheral ID.
-+ *
-+ * @param blob		FDT blob to use
-+ * @param node		Node to look at
-+ * @return
-+ */
-+int fdtdec_decode_periph_id(const void *blob, int node);
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index c748cac..f999ed0 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -415,3 +415,16 @@ int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
- 		return -1;
- 	return 0;
- }
-+
-+int fdtdec_decode_periph_id(const void *blob, int node)
-+{
-+	u32 cell[2];
-+	int err;
-+
-+	err = fdtdec_get_int_array(blob, node, "clocks", cell,
-+				   ARRAY_SIZE(cell));
-+	if (err)
-+		return -1;
-+
-+	return cell[1];
-+}
+ /* High-level configuration options */
+ #define TEGRA2_SYSMEM		"mem=384M@0M nvmem=128M@384M mem=512M@512M"
+ #define V_PROMPT		"Tegra2 (SeaBoard) # "
 -- 
 1.7.7.3
