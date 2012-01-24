@@ -1,7 +1,8 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 08/18] tegra: fdt: Add additional USB binding
-Date: Tue, 24 Jan 2012 15:21:02 -0800
-Message-ID: <1327447272-30182-9-git-send-email-sjg@chromium.org>
+Subject: [PATCH v5 06/18] fdt: Add staging area for device tree binding
+ documentation
+Date: Tue, 24 Jan 2012 15:21:00 -0800
+Message-ID: <1327447272-30182-7-git-send-email-sjg@chromium.org>
 References: <1327447272-30182-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,40 +19,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a property to indicate a port which can switch between host and device
-mode.
+Add a directory to hold device tree binding files, to permit easy review
+of this material in U-Boot patches.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
+Changes in v4:
+- Add staging area for device tree bindings used in U-Boot
+
 Changes in v5:
-- Add dr_mode property to control host/device/otg mode
-- Add nvidia,has-legacy-mode property per review comments
+- Update README to indicate that we will commit fdt documentation to U-Boot
 
- doc/device-tree-bindings/usb/tegra-usb.txt |   12 ++++++++++++
- 1 files changed, 12 insertions(+), 0 deletions(-)
+ doc/device-tree-bindings/README |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+ create mode 100644 doc/device-tree-bindings/README
 
-diff --git a/doc/device-tree-bindings/usb/tegra-usb.txt b/doc/device-tree-bindings/usb/tegra-usb.txt
-index 035d63d..b7174a3 100644
---- a/doc/device-tree-bindings/usb/tegra-usb.txt
-+++ b/doc/device-tree-bindings/usb/tegra-usb.txt
-@@ -11,3 +11,15 @@ Required properties :
-  - phy_type : Should be one of "ulpi" or "utmi".
-  - nvidia,vbus-gpio : If present, specifies a gpio that needs to be
-    activated for the bus to be powered.
+diff --git a/doc/device-tree-bindings/README b/doc/device-tree-bindings/README
+new file mode 100644
+index 0000000..2ea3439
+--- /dev/null
++++ b/doc/device-tree-bindings/README
+@@ -0,0 +1,17 @@
++Device Tree Bindings Staging Area
++=================================
 +
-+Optional properties:
-+  - dr_mode : dual role mode. Indicates the working mode for
-+   nvidia,tegra20-ehci compatible controllers.  Can be "host", "peripheral",
-+   or "otg".  Default to "host" if not defined for backward compatibility.
-+      host means this is a host controller
-+      peripheral means it is device controller
-+      otg means it can operate as either ("on the go")
-+  - nvidia,has-legacy-mode : boolean indicates whether this controller can
-+    operate in legacy mode (as APX 2500 / 2600). In legacy mode some
-+    registers are accessed through the APB_MISC base address instead of
-+    the USB controller.
++This directory contains device tree bindings for U-Boot.
++
++These follow along with Linux kernel bindings, with a few additions. By
++adding the files here, U-Boot patches can clearly show thees additions.
++This makes it easier for device tree people to review these additions in
++patches sent to the U-Boot mailing list.
++
++The intent IS to commit these files to U-Boot. Hopefully at some point
++the files will be stored in another repo (shared with Linux) which is
++brought in as needed. Changes here are intended to mirror changes in the
++Linux Documentation/devicetree/bindings/ directory.
++
++sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
++17-Jan-12
 -- 
 1.7.7.3
