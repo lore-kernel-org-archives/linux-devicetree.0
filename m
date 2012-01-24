@@ -1,94 +1,236 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 21/31] ARM: amba: realview: get rid of private platform
- amba_device initializer
-Date: Tue, 24 Jan 2012 17:26:00 +0000
-Message-ID: <20120124172600.GO19798@mudshark.cambridge.arm.com>
-References: <20120120092207.GD1068@n2100.arm.linux.org.uk>
- <E1RoAmo-0005Ff-DW@rmk-PC.arm.linux.org.uk>
- <20120124160044.GM19798@mudshark.cambridge.arm.com>
- <20120124162328.GA8517@n2100.arm.linux.org.uk>
+From: Randy Dunlap <rdunlap@xenotime.net>
+Subject: Re: [RFCv2 01/14] irq_domain: add documentation and MAINTAINERS entry.
+Date: Tue, 24 Jan 2012 11:13:41 -0800
+Message-ID: <4F1F02E5.3000605@xenotime.net>
+References: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca> <1327352870-14687-2-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120124162328.GA8517@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, STEricsson <STEricsson_nomadik_linux@list.st.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1327352870-14687-2-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Milton Miller <miltonm@bga.com>, benh@kernel.crashing.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2012 at 04:23:28PM +0000, Russell King - ARM Linux wrote:
-> On Tue, Jan 24, 2012 at 04:00:44PM +0000, Will Deacon wrote:
-> > but then I see a warning during boot:
-> > 
-> > [    1.669654] ------------[ cut here ]------------
-> > [    1.684021] WARNING: at drivers/amba/bus.c:514 amba_device_add+0x1b4/0x1d0()
-> > [    1.705585] Modules linked in:
-> > [    1.715195] [<c0013a00>] (unwind_backtrace+0x0/0xfc) from [<c03d1350>] (dump_stack+0x20/0x24)
-> > [    1.741288] [<c03d1350>] (dump_stack+0x20/0x24) from [<c001f9b8>] (warn_slowpath_common+0x5c/0x74)
-> > [    1.768689] [<c001f9b8>] (warn_slowpath_common+0x5c/0x74) from [<c001f9fc>] (warn_slowpath_null+0x2c/0x34)
-> > [    1.798165] [<c001f9fc>] (warn_slowpath_null+0x2c/0x34) from [<c023dcd4>] (amba_device_add+0x1b4/0x1d0)
-> > [    1.826857] [<c023dcd4>] (amba_device_add+0x1b4/0x1d0) from [<c023dd84>] (amba_device_register+0x94/0xc4)
-> > [    1.856106] [<c023dd84>] (amba_device_register+0x94/0xc4) from [<c0551934>] (realview_pb1176_init+0x74/0xac)
-> > [    1.886120] [<c0551934>] (realview_pb1176_init+0x74/0xac) from [<c054d60c>] (customize_machine+0x24/0x30)
-> > [    1.915340] [<c054d60c>] (customize_machine+0x24/0x30) from [<c000879c>] (do_one_initcall+0x48/0x1a0)
-> > [    1.943505] [<c000879c>] (do_one_initcall+0x48/0x1a0) from [<c054b870>] (kernel_init+0x80/0x128)
-> > [    1.970378] [<c054b870>] (kernel_init+0x80/0x128) from [<c000ea78>] (kernel_thread_exit+0x0/0x8)
-> > [    1.997192] ---[ end trace 1b75b31a2719ed1e ]---
-> > 
-> > I suspect that comes from PB1176_GPIO0_IRQ being -1.
+On 01/23/2012 01:07 PM, Grant Likely wrote:
+> Documentation for irq_domain library which will be created in subsequent
+> patches.
 > 
-> It seems you've also tested the code which detects -1 IRQs too, which
-> is good.  PB1176 needs that GPIO0_IRQ fixing, but I suspect passing
-> zero may not be entirely a good thing for it as request_irq(0,...)
-> probably succeeds there.  I think that needs fixing before this warning
-> can go away.
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  Documentation/IRQ-domain.txt |  113 ++++++++++++++++++++++++++++++++++++++++++
+>  MAINTAINERS                  |    9 +++
+>  2 files changed, 122 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/IRQ-domain.txt
+> 
+> diff --git a/Documentation/IRQ-domain.txt b/Documentation/IRQ-domain.txt
+> new file mode 100644
+> index 0000000..247f32a
+> --- /dev/null
+> +++ b/Documentation/IRQ-domain.txt
+> @@ -0,0 +1,113 @@
+> +irq_domain interrupt number mapping library
+> +
+> +The current design of the Linux kernel uses a single large number
+> +space where each separate IRQ source is assigned a different number.
+> +This is simple when there is only one interrupt controller, but in
+> +systems with controllers the kernel must ensure that each one does not
 
-Yup, I actually tested this simply by checking out your devel-3.3 branch, so
-the whole series has been tested on the boards that I've mentioned.
+           with multiple interrupt controllers,
 
-> In the mean time, it's just a warning, and its saying there's something
-> wrong there which needs fixing but without anything currently broken.
-> So it's working as designed.
+> +get assigned overlapping allocations of Linux irq numbers.
 
-Right. I took a quick look at the TRM for the PB1176, and I think we do have
-an interrupt for GPIO0, it's just on the other GIC. This patch should do the
-trick, but I'm not sure what I can do to tickle the GPIO stuff anyway:
+                                                 IRQ
 
+> +
+> +The irq_alloc_desc*() and irq_free_desc*() API provides allocation of
 
-diff --git a/arch/arm/mach-realview/include/mach/irqs-pb1176.h b/arch/arm/mach-realview/include/mach/irqs-pb1176.h
-index 5c3c625..708f841 100644
---- a/arch/arm/mach-realview/include/mach/irqs-pb1176.h
-+++ b/arch/arm/mach-realview/include/mach/irqs-pb1176.h
-@@ -40,6 +40,7 @@
- #define IRQ_DC1176_L2CC                (IRQ_DC1176_GIC_START + 13)
- #define IRQ_DC1176_RTC         (IRQ_DC1176_GIC_START + 14)
- #define IRQ_DC1176_CLCD                (IRQ_DC1176_GIC_START + 15)     /* CLCD controller */
-+#define IRQ_DC1176_GPIO0       (IRQ_DC1176_GIC_START + 16)
- #define IRQ_DC1176_SSP         (IRQ_DC1176_GIC_START + 17)     /* SSP port */
- #define IRQ_DC1176_UART0       (IRQ_DC1176_GIC_START + 18)     /* UART 0 on development chip */
- #define IRQ_DC1176_UART1       (IRQ_DC1176_GIC_START + 19)     /* UART 1 on development chip */
-@@ -73,7 +74,6 @@
- #define IRQ_PB1176_DMAC                (IRQ_PB1176_GIC_START + 24)     /* DMA controller */
- #define IRQ_PB1176_RTC         (IRQ_PB1176_GIC_START + 25)     /* Real Time Clock */
- 
--#define IRQ_PB1176_GPIO0       -1
- #define IRQ_PB1176_SCTL                -1
- 
- #define NR_GIC_PB1176          2
-diff --git a/arch/arm/mach-realview/realview_pb1176.c b/arch/arm/mach-realview/realview_pb1176.c
-index 1b6e60c..b1d7caf 100644
---- a/arch/arm/mach-realview/realview_pb1176.c
-+++ b/arch/arm/mach-realview/realview_pb1176.c
-@@ -143,7 +143,7 @@ static struct pl022_ssp_controller ssp0_plat_data = {
- #define PB1176_CLCD_IRQ        { IRQ_DC1176_CLCD }
- #define SCTL_IRQ       { }
- #define PB1176_WATCHDOG_IRQ    { IRQ_DC1176_WATCHDOG }
--#define PB1176_GPIO0_IRQ       { IRQ_PB1176_GPIO0 }
-+#define PB1176_GPIO0_IRQ       { IRQ_DC1176_GPIO0 }
- #define GPIO1_IRQ      { IRQ_PB1176_GPIO1 }
- #define PB1176_RTC_IRQ { IRQ_DC1176_RTC }
- #define SCI_IRQ                { IRQ_PB1176_SCI }
+I would say:                                  APIs provide
+
+> +irq numbers, but it doesn't provide any support for reverse mapping of
+
+   IRQ numbers, but they don't provide
 
 
-Will
+> +the controller-local irq (hwirq) number into the Linux irq number
+
+                        IRQ                               IRQ
+
+> +space.
+> +
+> +The irq_domain library adds mapping between hwirq and irq numbers on
+
+                                                         IRQ
+
+> +top of the irq_alloc_desc*() API.  An irq_domain to manage mapping is
+> +preferred over interrupt controller drivers open coding their own
+> +reverse mapping scheme.
+> +
+> +irq_domain also implements translation from Device Tree interrupt
+> +specifiers to hwirq numbers, and can be easily extended to support
+> +other irq topology data sources.
+
+         IRQ
+
+> +
+> +=== irq_domain usage ===
+> +An interrupt controller driver creates and registers an irq_domain by
+> +calling one of the irq_domain_add_*() functions (each mapping method
+> +has a different allocator function, more on that later).  The function
+> +will return a pointer to the irq_domain on success.  It must provide
+
+                                                        "It" ?  The caller ?
+
+> +the allocator function with an irq_domain_ops structure with the .map
+> +callback populated as a minimum.
+> +
+> +In most cases, the irq_domain will begin empty without any mappings
+> +between hwirq and irq numbers.  Mappings are added to the irq_domain
+
+                     IRQ
+
+> +by calling irq_create_mapping() which accepts the irq_domain and a
+> +hwirq number as arguments.  If a mapping for the hwirq doesn't already
+> +exist then it will allocate a new linux irq_desc, associate it with
+
+                                     Linux
+
+> +the hwirq, and call the .map() callback so the driver can perform any
+> +required hardware setup.
+> +
+> +When an interrupt is received, irq_find_mapping() function should
+> +be used to find the Linux irq number from the hwirq number.
+
+                             IRQ
+
+> +
+> +If the driver has the Linux irq number or the irq_data pointer, and
+
+                               IRQ
+
+> +needs to know the associated hwirq number (such as in the irq_chip
+> +callbacks) then it can be directly obtained from irq_data->hwirq.
+> +
+> +=== Types of irq_domain mappings ===
+> +There are several mechanisms available for reverse mapping from hwirq
+> +to Linux irq, and each mechanism uses a different allocation function
+
+            IRQ,
+.
+> +Which reverse map type should be used depends on the use case.  Each
+> +of the reverse map types are described below:
+> +
+> +==== Linear ====
+> +irq_domain_add_linear()
+> +
+> +The linear reverse map maintains a fixed size table indexed by the
+> +hwirq number.  When a hwirq is mapped, an irq_desc is allocated for
+> +the hwirq, and the irq number is stored in the table.
+
+                      IRQ
+
+> +
+> +The Linear map is a good choice when the maximum number of hwirqs is
+> +fixed and a relatively small number (~ < 256).  The advantages of this
+> +map are fixed time lookup for irq numbers, and irq_descs are only
+
+                                 IRQ
+
+> +allocated for in-use irqs.  The disadvantage is that the table must be
+> +as large as the largest possible hwirq number.
+> +
+> +The majority of drivers should use the linear map.
+> +
+> +==== Tree ====
+> +irq_domain_add_tree()
+> +
+> +The irq_domain maintains a radix tree map from hwirq numbers to linux
+
+                                                                   Linux
+
+> +irqs.  When an hwirq is mapped, and irq_desc is allocated and the
+
+   IRQs.  When a hwirq             an
+
+> +hwirq is used as the lookup key for the radix tree.
+> +
+> +The tree map is a good choice if the hwirq number can be very large
+> +since it doesn't need to allocate a table as large as the largest
+> +hwirq number.  The disadvantage is that hwirq to irq number lookup is
+
+                                                    IRQ
+
+> +dependent on how many entries are in the table.
+> +
+> +Very few drivers should need this mapping.  At the moment, powerpc
+> +iseries is the only user.
+> +
+> +==== No Map ===-
+> +irq_domain_add_nomap()
+> +
+> +The No Map mapping is to be used when the hwirq number is
+> +programmable in the hardware.  In this case it is best to program the
+> +Linux irq number into the hardware itself so that no mapping is
+
+         IRQ
+
+> +required.  Calling irq_create_direct_mapping() will allocate a linux
+
+                                                                  Linux
+
+> +irq number and call the .map() callback so that driver can program the
+
+   IRQ
+
+> +Linux irq number into the hardware.
+
+         IRQ
+
+> +
+> +Most drivers cannot use this mapping.
+> +
+> +==== Legacy ====
+> +irq_domain_add_legacy()
+> +irq_domain_add_legacy_isa()
+> +
+> +The Legacy mapping is a special case for drivers that already have a
+> +range of irq_descs allocated for the hwirqs.  It is used when the
+> +driver cannot be immediately converted to use the linear mapping, such
+> +as when the driver is used in a system with fixed irq number
+
+                                                     IRQ
+
+> +assignments, as is typical in many embedded system board files.
+> +
+> +The legacy map assumes a contiguous range of irq numbers has already
+
+                                                IRQ
+
+> +been allocated for the controller and that the irq number can be
+
+                                                  IRQ
+
+> +calculated by adding a fixed offset to the hwirq number, and
+> +visa-versa.  The disadvantage is that it requires the interrupt
+> +controller to manage irq allocations and it requires an irq_desc to be
+
+                        IRQ
+
+> +allocated for every hwirq, even if it is unused.
+> +
+> +Drivers should only use the legacy map if they have fixed irq mappings
+
+                                                             IRQ
+
+> +(#define IRQ_* in embedded board files).  For example, ISA controllers
+> +mapped to Linux irqs 0-15 would use the legacy map.
+
+                   IRQs
+
+
+-- 
+~Randy
+*** Remember to use Documentation/SubmitChecklist when testing your code ***
