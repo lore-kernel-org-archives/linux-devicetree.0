@@ -1,29 +1,59 @@
-From: Linus Walleij <linus.walleij@stericsson.com>
-Subject: Re: [PATCH 21/31] ARM: amba: realview: get rid of private platform
- amba_device initializer
-Date: Tue, 24 Jan 2012 22:23:11 +0100
-Message-ID: <4F1F213F.9070106@stericsson.com>
-References: <20120120092207.GD1068@n2100.arm.linux.org.uk> <E1RoAmo-0005Ff-DW@rmk-PC.arm.linux.org.uk> <20120124160044.GM19798@mudshark.cambridge.arm.com> <20120124162328.GA8517@n2100.arm.linux.org.uk> <20120124172600.GO19798@mudshark.cambridge.arm.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFCv2 03/14] irq_domain: Make irq_domain structure match powerpc's
+ irq_host
+Date: Tue, 24 Jan 2012 15:38:37 -0600
+Message-ID: <4F1F24DD.5030904@gmail.com>
+References: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca> <1327352870-14687-4-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20120124172600.GO19798@mudshark.cambridge.arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, STEricsson_nomadik_linux <STEricsson_nomadik_linux@list.st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1327352870-14687-4-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Milton Miller <miltonm@bga.com>, benh@kernel.crashing.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2012 06:26 PM, Will Deacon wrote:
->
-> Right. I took a quick look at the TRM for the PB1176, and I think we do have
-> an interrupt for GPIO0, it's just on the other GIC. This patch should do the
-> trick, but I'm not sure what I can do to tickle the GPIO stuff anyway:
+On 01/23/2012 03:07 PM, Grant Likely wrote:
+> Part of the series to unify the irq remapping mechanisms in the
+> kernel.  A follow up patch will copy the powerpc implementation into
+> kernel/irq/irqdomain.c, which will be a lot easier if the structures
+> are identical.
+> 
+> Where they differ, I've chose to use the powerpc names since there is
+> a lot more code using those names.
+> 
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  arch/arm/common/gic.c     |   14 ++++----
+>  include/linux/irqdomain.h |   84 ++++++++++++++++++++++++++++++++++-----------
+>  kernel/irq/irqdomain.c    |   14 ++++----
+>  3 files changed, 78 insertions(+), 34 deletions(-)
+> 
 
-For a simple test just insert/remove the MMC card and see it
-add/remove the card (appear in console, and /proc/interrupts)
+snip...
 
-Or do you mean tickle GPIO0? That is more tricky I think...
+> @@ -126,7 +126,7 @@ void irq_dispose_mapping(unsigned int irq)
+>  }
+>  EXPORT_SYMBOL_GPL(irq_dispose_mapping);
+>  
+> -int irq_domain_simple_dt_translate(struct irq_domain *d,
+> +int irq_domain_simple_xlate(struct irq_domain *d,
+>  			    struct device_node *controller,
+>  			    const u32 *intspec, unsigned int intsize,
+>  			    unsigned long *out_hwirq, unsigned int *out_type)
 
-Yours,
-Linus Walleij
+This needs a declaration in irqdomain.h (as well as EXPORT?). There
+could be others as well, but this is the one I'm using for generic irq chip.
+
+Rob
+
+> @@ -181,7 +181,7 @@ EXPORT_SYMBOL_GPL(irq_domain_generate_simple);
+>  
+>  struct irq_domain_ops irq_domain_simple_ops = {
+>  #ifdef CONFIG_OF_IRQ
+> -	.dt_translate = irq_domain_simple_dt_translate,
+> +	.xlate = irq_domain_simple_xlate,
+>  #endif /* CONFIG_OF_IRQ */
+>  };
+>  EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
