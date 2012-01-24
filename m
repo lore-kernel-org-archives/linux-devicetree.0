@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 03/18] arm: fdt: Add skeleton device tree file from kernel
-Date: Tue, 24 Jan 2012 15:20:57 -0800
-Message-ID: <1327447272-30182-4-git-send-email-sjg@chromium.org>
+Subject: [PATCH v5 08/18] tegra: fdt: Add additional USB binding
+Date: Tue, 24 Jan 2012 15:21:02 -0800
+Message-ID: <1327447272-30182-9-git-send-email-sjg@chromium.org>
 References: <1327447272-30182-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,34 +21,37 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This was taken from commit b48c54e2 at:
-git://git.kernel.org/pub/scm/linux/kernel/git/olof/tegra.git
+This adds a property to indicate a port which can switch between host and device
+mode.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
+Changes in v5:
+- Add dr_mode property to control host/device/otg mode
+- Add nvidia,has-legacy-mode property per review comments
 
- arch/arm/dts/skeleton.dtsi |   13 +++++++++++++
- 1 files changed, 13 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/dts/skeleton.dtsi
+ doc/device-tree-bindings/usb/tegra-usb.txt |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/dts/skeleton.dtsi b/arch/arm/dts/skeleton.dtsi
-new file mode 100644
-index 0000000..b41d241
---- /dev/null
-+++ b/arch/arm/dts/skeleton.dtsi
-@@ -0,0 +1,13 @@
-+/*
-+ * Skeleton device tree; the bare minimum needed to boot; just include and
-+ * add a compatible value.  The bootloader will typically populate the memory
-+ * node.
-+ */
+diff --git a/doc/device-tree-bindings/usb/tegra-usb.txt b/doc/device-tree-bindings/usb/tegra-usb.txt
+index 035d63d..b7174a3 100644
+--- a/doc/device-tree-bindings/usb/tegra-usb.txt
++++ b/doc/device-tree-bindings/usb/tegra-usb.txt
+@@ -11,3 +11,15 @@ Required properties :
+  - phy_type : Should be one of "ulpi" or "utmi".
+  - nvidia,vbus-gpio : If present, specifies a gpio that needs to be
+    activated for the bus to be powered.
 +
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	chosen { };
-+	aliases { };
-+	memory { device_type = "memory"; reg = <0 0>; };
-+};
++Optional properties:
++  - dr_mode : dual role mode. Indicates the working mode for
++   nvidia,tegra20-ehci compatible controllers.  Can be "host", "peripheral",
++   or "otg".  Default to "host" if not defined for backward compatibility.
++      host means this is a host controller
++      peripheral means it is device controller
++      otg means it can operate as either ("on the go")
++  - nvidia,has-legacy-mode : boolean indicates whether this controller can
++    operate in legacy mode (as APX 2500 / 2600). In legacy mode some
++    registers are accessed through the APB_MISC base address instead of
++    the USB controller.
 -- 
 1.7.7.3
