@@ -1,58 +1,92 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH] ARM: tegra: Define Tegra20 CAR binding
-Date: Tue, 24 Jan 2012 14:08:54 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178CB81EC4@HQMAIL01.nvidia.com>
-References: <1326342789-5781-12-git-send-email-sjg@chromium.org>
- <1326932212-30346-1-git-send-email-swarren@nvidia.com>
- <20120124095241.GO10446@tbergstrom-lnx.Nvidia.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFCv2 13/14] irq_domain: Remove 'new' irq_domain in favour of
+ the ppc one
+Date: Tue, 24 Jan 2012 16:10:02 -0600
+Message-ID: <4F1F2C3A.3060607@gmail.com>
+References: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca> <1327352870-14687-14-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120124095241.GO10446-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1327352870-14687-14-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Milton Miller <miltonm@bga.com>, benh@kernel.crashing.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Peter De Schrijver wrote at Tuesday, January 24, 2012 2:53 AM:
-> What about the peripheral resets which are also handled by CAR? Peripheral
-> clock nodes also offer assert and deassert methods for the reset signal
-> associated with them. Those methods are used when powergating domains for
-> example. Should we model this in the same binding?
+On 01/23/2012 03:07 PM, Grant Likely wrote:
+> This patch removes the simplistic implementation of irq_domains and enables
+> the powerpc infrastructure for all irq_domain users.  The powerpc
+> infrastructure includes support for complex mappings between Linux and
+> hardware irq numbers, and can manage allocation of irq_descs.
+> 
+> This patch also converts the few users of irq_domain_add()/irq_domain_del()
+> to call irq_domain_add_legacy() instead.
+> 
+> v2: Fix removal of irq_alloc_descs() call in gic driver
+> 
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  arch/arm/common/gic.c               |   85 ++++++++-----------
+>  arch/arm/common/vic.c               |   16 +---
+>  arch/arm/include/asm/hardware/gic.h |    4 +-
+>  arch/arm/include/asm/hardware/vic.h |    2 +
+>  arch/arm/mach-exynos/common.c       |    2 +-
+>  arch/arm/mach-versatile/core.c      |    5 +-
+>  drivers/mfd/twl-core.c              |   12 +--
+>  include/linux/irqdomain.h           |   45 +---------
+>  kernel/irq/irqdomain.c              |  159 +++--------------------------------
+>  9 files changed, 69 insertions(+), 261 deletions(-)
+> 
+> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
 
-In most cases, I think the resets are handled purely within clock enable
-and disable, so there's no need to explicitly manage them or represent
-them in the device tree. Do you agree here?
+snip
 
-I recall that you mentioned some power-management code might need to
-manage reset separately though. Can you explain why a module would be
-reset separately from disabling the clocks though?
+> @@ -716,17 +708,17 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>  		gic_irqs = 1020;
+>  	gic->gic_irqs = gic_irqs;
+>  
+> -	domain->nr_irq = gic_irqs - domain->hwirq_base;
+> -	domain->irq_base = irq_alloc_descs(irq_start, 16, domain->nr_irq,
+> -					   numa_node_id());
+> -	if (IS_ERR_VALUE(domain->irq_base)) {
+> +	irq_base = irq_alloc_descs(irq_start, 16, gic_irqs - hwirq_base,
+> +				   numa_node_id());
+> +	if (IS_ERR_VALUE(irq_base)) {
+>  		WARN(1, "Cannot allocate irq_descs @ IRQ%d, assuming pre-allocated\n",
+>  		     irq_start);
+> -		domain->irq_base = irq_start;
+> +		irq_base = irq_start;
+>  	}
+> -	domain->host_data = gic;
+> -	domain->ops = &gic_irq_domain_ops;
+> -	irq_domain_add(domain);
+> +	gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
 
-If we do need this, I think we can just add a property to the node of
-each device that needs such explicit management. Something like:
+gic_irqs is wrong here. It needs 16 or 32 subtracted off. This patch
+will fix things:
 
-tegra_car: clock@60006000 {
-    compatible = "nvidia,tegra20-car";
-    ....
-};
+diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+index 44bf4e7..5fc0c97 100644
+--- a/arch/arm/common/gic.c
++++ b/arch/arm/common/gic.c
+@@ -707,8 +707,9 @@ void __init gic_init_bases(unsigned int gic_nr, int
+irq_start,
+        if (gic_irqs > 1020)
+                gic_irqs = 1020;
+        gic->gic_irqs = gic_irqs;
++       gic_irqs -= hwirq_base;
 
-foo@70007000 {
-    compatible = "nvidia,tegra20-foo";
-    regs = <...>;
-    nvidia,car-reset-id = <&tegra_car 30>;
-};
+-       irq_base = irq_alloc_descs(irq_start, 16, gic_irqs - hwirq_base,
++       irq_base = irq_alloc_descs(irq_start, 16, gic_irqs,
+                                   numa_node_id());
+        if (IS_ERR_VALUE(irq_base)) {
+                WARN(1, "Cannot allocate irq_descs @ IRQ%d, assuming
+pre-allocated\n",
 
-And the driver for "foo" can ignore cell 0, and extract the cell 1 and
-pass the value to tegra_periph_reset_assert().
-
-I'd expect to put the CAR phandle into the property in case we ever get
-a more generalized reset subsystem, and need more general code to
-interpret the property. I did the same for the Tegra APB DMA controller
-client binding where clients need to know the "DMA select" value.
-
-Does that all seem reasonable?
-
--- 
-nvpublic
+> +				    hwirq_base, &gic_irq_domain_ops, gic);
+> +	if (WARN_ON(!gic->domain))
+> +		return;
+>  
+>  	gic_chip.flags |= gic_arch_extn.flags;
+>  	gic_dist_init(gic);
