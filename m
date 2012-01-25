@@ -1,57 +1,81 @@
-From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Subject: Re: remoteproc: Load coprocessor code to the specific main memory
- location
-Date: Wed, 25 Jan 2012 18:24:28 +0200
-Message-ID: <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
-References: <4F1EE861.4030405@monstr.eu>
- <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com>
- <4F1FF870.3000105@monstr.eu>
- <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com>
- <4F200F64.9060203@monstr.eu>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] serial/efm32: add new driver
+Date: Wed, 25 Jan 2012 16:56:55 +0000
+Message-ID: <201201251656.55514.arnd@arndb.de>
+References: <20111221202847.4ffeba10@bob.linux.org.uk> <20111223204428.GI24496@pengutronix.de> <20120109103458.GD14252@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F200F64.9060203-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, "Grosen, Mark" <mgrosen-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20120109103458.GD14252@pengutronix.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@suse.de>, kernel@pengutronix.de, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2012 at 4:19 PM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> I started with pur vanilla kernel and patches from your tree
-> git://git.kernel.org/pub/scm/linux/kernel/git/ohad/remoteproc.git
-> for-next branch
-> but then I had to moved to for-next-acked-merged because in the origin
-> one were some problems.
+On Monday 09 January 2012, Uwe Kleine-K=F6nig wrote:
+> On Fri, Dec 23, 2011 at 09:44:28PM +0100, Uwe Kleine-K=F6nig wrote:
+> =20
+> > > I would suggest that you also support the "clock-frequency" and/o=
+r
+> > > "current-speed" properties that are defined for serial ports, see=
+ the
+> > > of_serial driver.
+> > I will have a look to find out what they mean and update the patch
+> > accordingly.
+> I took that look and I don't understand what they are good for in my
+> case.
+> clock-frequency is used to initialize port->uartclk (and helps settin=
+g
+> up port->custom_divisor if current-speed is given). The driver I post=
+ed
+> uses the clk API to determine the clock frequency. So shouldn't the f=
+requency
+> better be specified in the clk part of the dt? (I don't know yet how =
+a
+> dt binding for clks should/can look like, so this is a bit speculativ=
+e,
+> but I'd expect to have nothing more clk related in a device
+> specification but a reference to a clk definition.)
 
-Unlike for-next-acked-merged, the other branches aren't rebased and
-therefore have merge conflicts with 3.3 material; that's intentional.
+The binding for 8250 serial ports is documented at
+http://www.openfirmware.org/1275/bindings/devices/html/serial.html
 
-> Do you have any kernel tree with CMA just for sure?
+If you can always use the clk API to find out the base clock rate,
+that's probably fine, I was mostly trying to make sure we don't
+introduce another duplicate API for this.
 
-Not a 3.3-based one, so I recommend you to just merge Marek's branch directly.
+The "current-speed" property is used to describe the baud rate that
+should be used by the kernel for this port in order to talk to
+devices connected to the port. This is very useful if you need to
+connect the boot console to a fixed-rate device, and would get
+used instead of the 115200 default you have when nothing else
+is configured on the command line. I don't really know why
+there is no respective option to set parity or flow control
 
-I'll soon create a full-fledged 3.3 branch though, so you may want to
-wait a bit until I get to it.
+> Independant of my driver I wonder if defining current-speed should al=
+so
+> result in
+>=20
+> 	port->flags |=3D UPF_SPD_CUST;
+>=20
+> (in of_platform_serial_setup()).
 
-> What do you use for firmware replacing?
-> Just remove kernel module and load different one?
+I believe that is not needed because you don't call uart_get_divisor,
+which would be the only place that looks at this flag.
 
-If your driver boots the remote core on its ->probe() handler, then
-yes, you need to unbind and bind the device.
+> Having said that and taking into account that my driver doesn't use
+> port->custom_divisor, do you keep suggesting that I should use
+> "clock-frequency" and/or "current-speed"?
 
-One way is to unload and load the driver, but you can also use the
-bind/unbind sysfs files of your driver (echo -n device-name >
-/sys/..../{un}bind).
+clock-frequency seems to be unnecessary, but current-speed would
+still make sense. custom_divisor is simply the method that of_serial
+uses to communicate the bit rate to the 8250 base driver, but you
+could set the divisor directly.
 
-Regards,
-Ohad.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
