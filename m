@@ -1,73 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: Kconfig option for compile time build coverage (Was: Re: [PATCH] serial/efm32: add new driver)
-Date: Wed, 25 Jan 2012 16:16:26 +0000
-Message-ID: <201201251616.27019.arnd@arndb.de>
-References: <20111221202847.4ffeba10@bob.linux.org.uk> <20111223204428.GI24496@pengutronix.de> <20120109095903.GC14252@pengutronix.de>
+From: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Subject: Re: remoteproc: Load coprocessor code to the specific main memory
+ location
+Date: Wed, 25 Jan 2012 18:24:28 +0200
+Message-ID: <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
+References: <4F1EE861.4030405@monstr.eu>
+ <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com>
+ <4F1FF870.3000105@monstr.eu>
+ <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com>
+ <4F200F64.9060203@monstr.eu>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20120109095903.GC14252@pengutronix.de>
-Sender: linux-serial-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@suse.de>, kernel@pengutronix.de, linux-serial@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F200F64.9060203-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, "Grosen, Mark" <mgrosen-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 January 2012, Uwe Kleine-K=F6nig wrote:
-> On Fri, Dec 23, 2011 at 09:44:28PM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Fri, Dec 23, 2011 at 10:35:22AM +0000, Arnd Bergmann wrote:
-> > > On Thursday 22 December 2011, Uwe Kleine-K=F6nig wrote:
-> > > > [...]
-> > > > +config SERIAL_EFM32_USART
-> > > > + bool "EFM32 USART port."
-> > > > + depends on ARCH_EFM32
-> > > > + select SERIAL_CORE
-> > [...]
-> > > I would generally prefer not to make the driver depend on the
-> > > platform, so we can get better compile time coverage. I think a b=
-etter
-> > > set of dependencies would be
-> > >=20
-> > >     depends on HAVE_CLK
-> > >     depends on OF
-> > >     default ARCH_EFM32
-> > I'd prefer something like:
-> >=20
-> >       depends on HAVE_CLK
-> >       depends on ARCH_EFM32 || I_DO_BUILD_COVERAGE_TESTING
-> >=20
-> > This would make it easier for Joe User to pick the right options fo=
-r his
-> > kernel (assuming he found out to better keep I_DO_BUILD_COVERAGE_TE=
-STING
-> > disabled). [...]
->
-> What do you think about this I_DO_BUILD_COVERAGE_TESTING option? It
-> would allow testers to get all possible options enabled (though there
-> will never be an EFM32 USART port on a non-EFM32 machine I guess) and
-> still users and distribution packagers would easily keep the option o=
-ff
-> even without cluttering .config and {menu,n,x,whatever}config.
+On Wed, Jan 25, 2012 at 4:19 PM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+> I started with pur vanilla kernel and patches from your tree
+> git://git.kernel.org/pub/scm/linux/kernel/git/ohad/remoteproc.git
+> for-next branch
+> but then I had to moved to for-next-acked-merged because in the origin
+> one were some problems.
 
-Sorry for the late reply. The same topic has been discussed a lot of
-times. We have different ways to handle this in the kernel, but the
-way most common way is to use defconfig to decide which drivers to
-use on a given machine but give the user the freedom to both enable
-and disable any driver whereever possible, even if that would be
-a silly thing to do. What we do require normally is that anything
-that can be enabled is also able to be built without errors. A lot
-of drivers have dependencies on platform specific header files
-or other interfaces, so they require that platform to be enabled.
+Unlike for-next-acked-merged, the other branches aren't rebased and
+therefore have merge conflicts with 3.3 material; that's intentional.
 
-=46or all others I would not make such a restriction and I would always
-recommend to be specific in the dependencies, e.g depending on HAVE_CLK
-when you use the clock interfaces, instead of depending on other option=
-s
-that implicitly enable HAVE_CLK.
+> Do you have any kernel tree with CMA just for sure?
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not a 3.3-based one, so I recommend you to just merge Marek's branch directly.
+
+I'll soon create a full-fledged 3.3 branch though, so you may want to
+wait a bit until I get to it.
+
+> What do you use for firmware replacing?
+> Just remove kernel module and load different one?
+
+If your driver boots the remote core on its ->probe() handler, then
+yes, you need to unbind and bind the device.
+
+One way is to unload and load the driver, but you can also use the
+bind/unbind sysfs files of your driver (echo -n device-name >
+/sys/..../{un}bind).
+
+Regards,
+Ohad.
