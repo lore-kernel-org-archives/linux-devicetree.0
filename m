@@ -1,86 +1,91 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v4] serial/efm32: add new driver
-Date: Wed, 25 Jan 2012 09:41:08 +0100
-Message-ID: <20120125084108.GF6305@pengutronix.de>
-References: <20120124220522.GA10590@kroah.com>
- <1327478704-4233-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1327479959.21686.8.camel@joe2Laptop>
+From: Felipe Balbi <balbi@ti.com>
+Subject: [RFC/PATCH] usb: dwc3: omap: convert pdata to of property
+Date: Wed, 25 Jan 2012 11:11:03 +0200
+Message-ID: <1327482663-8652-1-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1327479959.21686.8.camel@joe2Laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Greg KH <greg@kroah.com>, linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@suse.de>, linux-serial@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linux USB Mailing List <linux-usb@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, Kevin Hilman <khilman@ti.com>, Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2012 at 12:25:59AM -0800, Joe Perches wrote:
-> On Wed, 2012-01-25 at 09:05 +0100, Uwe Kleine-K=F6nig wrote:
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
->=20
-> trivial comments below:
->=20
-> > diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/e=
-fm32-uart.c
-> []
-> > @@ -0,0 +1,830 @@
-> > +#if defined(CONFIG_SERIAL_EFM32_UART_CONSOLE) && defined(CONFIG_MA=
-GIC_SYSRQ)
-> > +#define SUPPORT_SYSRQ
-> > +#endif
->=20
-> #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->=20
-> > +static void efm32_uart_rx_chars(struct efm32_uart_port *efm_port,
-> > +		struct tty_struct *tty)
-> > +{
-> []
-> > +		if ((rxdata & UARTn_RXDATAX_FERR) &&
-> > +				!(rxdata & UARTn_RXDATAX_RXDATA__MASK)) {
->=20
-> Perhaps better as:
->=20
-> 		if ((rxdata & UARTn_RXDATAX_FERR) &&
-> 		    !(rxdata & UARTn_RXDATAX_RXDATA__MASK)) {
-This is how my editor does the indention. I'm sure this can be changed,
-but I want the indention only to depend on the logical structure not on
-where the opening parenthesis in the previous line is. This saves
-context changes for future patches.
-=20
-> and RXDATA__MASK with 2 underscores?  perhaps just one _?
-Yeah, I like seperating the register bit field name from that fact that
-the #define holds a mask.
-=20
-> > +static int efm32_uart_console_setup(struct console *co, char *opti=
-ons)
-> []
-> > +		for (i =3D 0; i < ARRAY_SIZE(efm32_uart_ports); ++i) {
-> > +			if (efm32_uart_ports[i]) {
-> > +				pr_warn("efm32-console: fall back to console index %u (from %h=
-hi)\n",
-> > +						i, co->index);
->=20
-> 				pr_warn("fall back to ..."
-> []
-> > +	efm_port =3D efm32_uart_ports[co->index];
-> > +	if (!efm_port) {
-> > +		pr_warn("efm32-console: No port at %d\n", co->index);
->=20
-> 		pr_warn("No port at..."
-I intentionally did that, as these two messages are related to the
-console part of the serial driver while the rest of the messages are
-about the serial/tty stuff. And I didn't like changing the definition o=
-f
-pr_fmt in the middle of the file.
+Convert our platform_data usage to OF property,
+keep the legacy pdata for a while until the complete
+conversion is done.
 
-Best regards
-Uwe
+Signed-off-by: Felipe Balbi <balbi@ti.com>
+---
+ drivers/usb/dwc3/dwc3-omap.c |   34 ++++++++++++++++++++++------------
+ 1 files changed, 22 insertions(+), 12 deletions(-)
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+index 5809bf4..71f1ace 100644
+--- a/drivers/usb/dwc3/dwc3-omap.c
++++ b/drivers/usb/dwc3/dwc3-omap.c
+@@ -46,6 +46,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/ioport.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ #include <linux/module.h>
+ 
+ #include "core.h"
+@@ -197,14 +198,18 @@ static irqreturn_t dwc3_omap_interrupt(int irq, void *_omap)
+ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
+ {
+ 	struct dwc3_omap_data	*pdata = pdev->dev.platform_data;
++	struct device_node	*node = pdev->dev.of_node;
++
+ 	struct platform_device	*dwc3;
+ 	struct dwc3_omap	*omap;
+ 	struct resource		*res;
+ 
+ 	int			devid;
++	int			size;
+ 	int			ret = -ENOMEM;
+ 	int			irq;
+ 
++	const u32		*utmi_mode;
+ 	u32			reg;
+ 
+ 	void __iomem		*base;
+@@ -269,19 +274,24 @@ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
+ 
+ 	reg = dwc3_readl(omap->base, USBOTGSS_UTMI_OTG_STATUS);
+ 
+-	if (!pdata) {
+-		dev_dbg(&pdev->dev, "missing platform data\n");
++	utmi_mode = of_get_property(node, "utmi-mode", &size);
++	if (utmi_mode && size == sizeof(*utmi_mode)) {
++		reg |= *utmi_mode;
+ 	} else {
+-		switch (pdata->utmi_mode) {
+-		case DWC3_OMAP_UTMI_MODE_SW:
+-			reg |= USBOTGSS_UTMI_OTG_STATUS_SW_MODE;
+-			break;
+-		case DWC3_OMAP_UTMI_MODE_HW:
+-			reg &= ~USBOTGSS_UTMI_OTG_STATUS_SW_MODE;
+-			break;
+-		default:
+-			dev_dbg(&pdev->dev, "UNKNOWN utmi mode %d\n",
+-					pdata->utmi_mode);
++		if (!pdata) {
++			dev_dbg(&pdev->dev, "missing platform data\n");
++		} else {
++			switch (pdata->utmi_mode) {
++			case DWC3_OMAP_UTMI_MODE_SW:
++				reg |= USBOTGSS_UTMI_OTG_STATUS_SW_MODE;
++				break;
++			case DWC3_OMAP_UTMI_MODE_HW:
++				reg &= ~USBOTGSS_UTMI_OTG_STATUS_SW_MODE;
++				break;
++			default:
++				dev_dbg(&pdev->dev, "UNKNOWN utmi mode %d\n",
++						pdata->utmi_mode);
++			}
+ 		}
+ 	}
+ 
+-- 
+1.7.8.2
+
