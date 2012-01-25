@@ -1,91 +1,78 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: [RFC/PATCH] usb: dwc3: omap: convert pdata to of property
-Date: Wed, 25 Jan 2012 11:11:03 +0200
-Message-ID: <1327482663-8652-1-git-send-email-balbi@ti.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: Define Tegra20 CAR binding
+Date: Wed, 25 Jan 2012 11:50:24 +0200
+Message-ID: <20120125095024.GD29914@tbergstrom-lnx.Nvidia.com>
+References: <1326342789-5781-12-git-send-email-sjg@chromium.org>
+ <1326932212-30346-1-git-send-email-swarren@nvidia.com>
+ <20120124095241.GO10446@tbergstrom-lnx.Nvidia.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF178CB81EC4@HQMAIL01.nvidia.com>
+ <CAMbhsRQYt7RoXTDDPxCgGG2UX5_T86saOyns_0f_Sz-p7-gMTw@mail.gmail.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF178CB81EEB@HQMAIL01.nvidia.com>
+ <CAMbhsRScz4edCr4Cxa=QbBhuYW1M3GsbKhCbFuo5Zu9PRdNfSg@mail.gmail.com>
 Mime-Version: 1.0
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linux USB Mailing List <linux-usb@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, Kevin Hilman <khilman@ti.com>, Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMbhsRScz4edCr4Cxa=QbBhuYW1M3GsbKhCbFuo5Zu9PRdNfSg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert our platform_data usage to OF property,
-keep the legacy pdata for a while until the complete
-conversion is done.
+On Tue, Jan 24, 2012 at 11:59:40PM +0100, Colin Cross wrote:
+> On Tue, Jan 24, 2012 at 2:43 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> =
+wrote:
+> > Colin Cross wrote at Tuesday, January 24, 2012 3:33 PM:
+> >> On Tue, Jan 24, 2012 at 2:08 PM, Stephen Warren <swarren-DDmLM1+adcphl2p70BpVqQ@public.gmane.org=
+m> wrote:
+> >> > Peter De Schrijver wrote at Tuesday, January 24, 2012 2:53 AM:
+> >> >> What about the peripheral resets which are also handled by CAR?=
+ Peripheral
+> >> >> clock nodes also offer assert and deassert methods for the rese=
+t signal
+> >> >> associated with them. Those methods are used when powergating d=
+omains for
+> >> >> example. Should we model this in the same binding?
+> >> >
+> >> > In most cases, I think the resets are handled purely within cloc=
+k enable
+> >> > and disable, so there's no need to explicitly manage them or rep=
+resent
+> >> > them in the device tree. Do you agree here?
+> >>
+> >> clk_enable could force a deasserted reset, but clk_disable cannot
+> >> imply asserting reset. =A0The clocks need to be turned off for pow=
+er
+> >> management without resetting the registers.
+> >
+> > Yes, I just spoke to someone off-list, and he said the same thing. =
+He
+> > went on to say that therefore even the reset removal with clk_enabl=
+e
+> > was questionable, and that drivers should explicitly manage reset
+> > removal themselves. Does that seem a reasonable stance? It'd certai=
+nly
+> > take away the somewhat asymmetric nature of reset removal just magi=
+cally
+> > working when you first enable the clocks. We'd presumably then want=
+ a
+> > common reset infra-structure and binding to match that change?
+>=20
+> In 99% of drivers reset is irrelevant, as long as the block is out of
+> reset by the time the driver starts writing to registers.  clk_enable
+> is a decent place to ensure that - it always has to be done before
+> writing to the registers, and it maps nicely to the reset bits on
+> Tegra.  It would be nice if those driver didn't need to deassert rese=
+t
+> explicitly, especially if that requires a Tegra-specific API.
 
-Signed-off-by: Felipe Balbi <balbi@ti.com>
----
- drivers/usb/dwc3/dwc3-omap.c |   34 ++++++++++++++++++++++------------
- 1 files changed, 22 insertions(+), 12 deletions(-)
+I think this could be solved by moving the drivers to runtime PM and ha=
+ndle the
+clock and reset bits in tegra platform device specific code. iirc that'=
+s the
+way it's handled in OMAP?
 
-diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
-index 5809bf4..71f1ace 100644
---- a/drivers/usb/dwc3/dwc3-omap.c
-+++ b/drivers/usb/dwc3/dwc3-omap.c
-@@ -46,6 +46,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/ioport.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- #include <linux/module.h>
- 
- #include "core.h"
-@@ -197,14 +198,18 @@ static irqreturn_t dwc3_omap_interrupt(int irq, void *_omap)
- static int __devinit dwc3_omap_probe(struct platform_device *pdev)
- {
- 	struct dwc3_omap_data	*pdata = pdev->dev.platform_data;
-+	struct device_node	*node = pdev->dev.of_node;
-+
- 	struct platform_device	*dwc3;
- 	struct dwc3_omap	*omap;
- 	struct resource		*res;
- 
- 	int			devid;
-+	int			size;
- 	int			ret = -ENOMEM;
- 	int			irq;
- 
-+	const u32		*utmi_mode;
- 	u32			reg;
- 
- 	void __iomem		*base;
-@@ -269,19 +274,24 @@ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
- 
- 	reg = dwc3_readl(omap->base, USBOTGSS_UTMI_OTG_STATUS);
- 
--	if (!pdata) {
--		dev_dbg(&pdev->dev, "missing platform data\n");
-+	utmi_mode = of_get_property(node, "utmi-mode", &size);
-+	if (utmi_mode && size == sizeof(*utmi_mode)) {
-+		reg |= *utmi_mode;
- 	} else {
--		switch (pdata->utmi_mode) {
--		case DWC3_OMAP_UTMI_MODE_SW:
--			reg |= USBOTGSS_UTMI_OTG_STATUS_SW_MODE;
--			break;
--		case DWC3_OMAP_UTMI_MODE_HW:
--			reg &= ~USBOTGSS_UTMI_OTG_STATUS_SW_MODE;
--			break;
--		default:
--			dev_dbg(&pdev->dev, "UNKNOWN utmi mode %d\n",
--					pdata->utmi_mode);
-+		if (!pdata) {
-+			dev_dbg(&pdev->dev, "missing platform data\n");
-+		} else {
-+			switch (pdata->utmi_mode) {
-+			case DWC3_OMAP_UTMI_MODE_SW:
-+				reg |= USBOTGSS_UTMI_OTG_STATUS_SW_MODE;
-+				break;
-+			case DWC3_OMAP_UTMI_MODE_HW:
-+				reg &= ~USBOTGSS_UTMI_OTG_STATUS_SW_MODE;
-+				break;
-+			default:
-+				dev_dbg(&pdev->dev, "UNKNOWN utmi mode %d\n",
-+						pdata->utmi_mode);
-+			}
- 		}
- 	}
- 
--- 
-1.7.8.2
+Cheers,
 
+Peter.=20
