@@ -1,83 +1,100 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v6 9/9] ARM: vexpress: Add Device Tree for V2P-CA15 core
- tile (TC1 variant)
-Date: Wed, 25 Jan 2012 17:43:16 +0000
-Message-ID: <1327513396.2355.28.camel@hornet.cambridge.arm.com>
-References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
- <1323957761-13553-10-git-send-email-pawel.moll@arm.com>
- <4F0C495C.4000103@citrix.com>
- <1326979652.32197.66.camel@hornet.cambridge.arm.com>
- <4F181BD9.20401@gmail.com>
- <1326980594.32197.67.camel@hornet.cambridge.arm.com>
- <4F182248.7070209@gmail.com>
- <1326984672.32197.68.camel@hornet.cambridge.arm.com>
- <4F184C48.2050505@citrix.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v4] serial/efm32: add new driver
+Date: Wed, 25 Jan 2012 19:36:37 +0100
+Message-ID: <20120125183637.GM6305@pengutronix.de>
+References: <20120124220522.GA10590@kroah.com>
+ <1327478704-4233-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <20120125155258.GB3608@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F184C48.2050505@citrix.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120125155258.GB3608@suse.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg KH <gregkh@suse.de>
+Cc: Greg KH <greg@kroah.com>, linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDEyLTAxLTE5IGF0IDE3OjAwICswMDAwLCBEYXZpZCBWcmFiZWwgd3JvdGU6Cj4g
-PiBPaywgL2luY2x1ZGUvICJza2VsZXRvbi5kdHNpIiBpcyBnb25lIHRoZW4gOi0pCj4gCj4gVGhl
-IHByb2JsZW0gd2Fzbid0IHdpdGggaW5jbHVkaW5nIHNrZWxldG9uLmR0c2kuICBXaXRoCj4gQ09O
-RklHX0FSTV9BVEFHX0RUQl9DT01QQVQgdGhlIHpJbWFnZSBkZWNvbXByZXNzb3IgbW9kaWZpZXMg
-dGhlIGFwcGVuZGVkCj4gRFRCIHVzaW5nIGluZm9ybWF0aW9uIGZyb20gdGhlIEFUQUdzIChzZWUg
-YXRhZ3NfdG9fZmR0KCkpLgo+IAo+IElmIHRoZXJlJ3MgYW4gQVRBRyBnaXZpbmcgdGhlIGFtb3Vu
-dCBvZiBSQU0gdGhlIERUQidzICJtZW1vcnkiIG5vZGUgaXMKPiByZXBsYWNlZCB3aXRoIGEgbmV3
-IG9uZS4gIFNpbmNlIHRoZSB2ZXhwcmVzcyBEVEJzIGRvbid0IGhhdmUgYSAibWVtb3J5Igo+IG5v
-ZGUgaXQncyBhZGRlZCBhbmQgdGhlIERUQiBlbmRzIHVwIHdpdGggdHdvIG5vZGVzIGRlc2NyaWJp
-bmcgbWVtb3J5LgoKQXMgaXQgdHVybmVkIG91dCBpdCB3YXMganVzdCB0aGUgInNrZWxldG9uLmR0
-c2kiIHByb2JsZW0gYWZ0ZXIgYWxsIC0gSQptZWFuIHRoZSBmYWN0IHRoYXQgdGhlcmUgd2hlcmUg
-dHdvIGRldmljZV90eXBlPSJtZW1vcnkiIG5vZGVzIGluIHRoZQp0cmVlLgoKVGhlIGRlY29tcHJl
-c3NvcidzIHNldHByb3AoKQooYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2F0YWdzX3RvX2ZkdC5j
-OjEyKSB1c2VzIGxpYmZkdCdzCmZkdF9zZXRwcm9wKCksIHdoaWNoIGNvcnJlY3RseSBpZ25vcmVz
-IHRoZSAiQDAwMDAwMDAwIiBjb21wb25lbnQgb2YgdGhlCm5vZGUgbmFtZSBhbmQgc2V0cyB0aGUg
-cmVnIHByb3BlcnR5IGFzIGV4cGVjdGVkLiBTbyBhcyBsb25nIGFzIHRoZXJlIGlzCmV4YWN0bHkg
-b25lICJtZW1vcnlbQGFkZHJlc3NdIiBub2RlIGluIHRoZSB0cmVlLApDT05GSUdfQVJNX0FUQUdf
-RFRCX0NPTVBBVCBpcyBoYXBweS4KCkkgd2lsbCByZW1vdmUgdGhlIC9pbmNsdWRlLyBmcm9tIHRo
-ZSBkdHMgZmlsZXMgZm9yIFZFIChzZWUgYmVsb3cpIGluIHRoZQp2My4zLXJjMSBiYXNlZCBzZXJp
-ZXMuCgpUaGFua3MgZm9yIHNwb3R0aW5nIHRoaXMhCgpQYXdlxYIKCmRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy92ZXhwcmVzcy12MnAtY2ExNS10YzEuZHRzIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvdmV4cHJlc3MtdjJwLWNhMTUtdGMxLmR0cwppbmRleCAwMmNhZGE1Li4yYTY5MGYyIDEwMDY0
-NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy92ZXhwcmVzcy12MnAtY2ExNS10YzEuZHRzCisrKyBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL3ZleHByZXNzLXYycC1jYTE1LXRjMS5kdHMKQEAgLTksMTMgKzks
-MTUgQEAKIAogL2R0cy12MS87CiAKLS9pbmNsdWRlLyAic2tlbGV0b24uZHRzaSIKLQogLyB7CiAJ
-bW9kZWwgPSAiVjJQLUNBMTUiOwogCWFybSxoYmkgPSA8MHgyMzc+OwogCWNvbXBhdGlibGUgPSAi
-YXJtLHZleHByZXNzLHYycC1jYTE1LHRjMSIsICJhcm0sdmV4cHJlc3MsdjJwLWNhMTUiLCAiYXJt
-LHZleHByZXNzIjsKIAlpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+OworCSNhZGRyZXNzLWNlbGxz
-ID0gPDE+OworCSNzaXplLWNlbGxzID0gPDE+OworCisJY2hvc2VuIHsgfTsKIAogCWFsaWFzZXMg
-ewogCQlzZXJpYWwwID0gJnYybV9zZXJpYWwwOwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
-dHMvdmV4cHJlc3MtdjJwLWNhNXMuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvdmV4cHJlc3MtdjJw
-LWNhNXMuZHRzCmluZGV4IGRhMjZhMTMuLmQ0YzUzMjIgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3ZleHByZXNzLXYycC1jYTVzLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy92ZXhw
-cmVzcy12MnAtY2E1cy5kdHMKQEAgLTksMTMgKzksMTUgQEAKIAogL2R0cy12MS87CiAKLS9pbmNs
-dWRlLyAic2tlbGV0b24uZHRzaSIKLQogLyB7CiAJbW9kZWwgPSAiVjJQLUNBNXMiOwogCWFybSxo
-YmkgPSA8MHgyMjU+OwogCWNvbXBhdGlibGUgPSAiYXJtLHZleHByZXNzLHYycC1jYTVzIiwgImFy
-bSx2ZXhwcmVzcyI7CiAJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsKKwkjYWRkcmVzcy1jZWxs
-cyA9IDwxPjsKKwkjc2l6ZS1jZWxscyA9IDwxPjsKKworCWNob3NlbiB7IH07CiAKIAlhbGlhc2Vz
-IHsKIAkJc2VyaWFsMCA9ICZ2Mm1fc2VyaWFsMDsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3ZleHByZXNzLXYycC1jYTkuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvdmV4cHJlc3MtdjJw
-LWNhOS5kdHMKaW5kZXggODQ1NDJlNy4uNWQ5MGNlNSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvdmV4cHJlc3MtdjJwLWNhOS5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvdmV4cHJl
-c3MtdjJwLWNhOS5kdHMKQEAgLTksMTMgKzksMTUgQEAKIAogL2R0cy12MS87CiAKLS9pbmNsdWRl
-LyAic2tlbGV0b24uZHRzaSIKLQogLyB7CiAJbW9kZWwgPSAiVjJQLUNBOSI7CiAJYXJtLGhiaSA9
-IDwweDE5MT47CiAJY29tcGF0aWJsZSA9ICJhcm0sdmV4cHJlc3MsdjJwLWNhOSIsICJhcm0sdmV4
-cHJlc3MiOwogCWludGVycnVwdC1wYXJlbnQgPSA8JmdpYz47CisJI2FkZHJlc3MtY2VsbHMgPSA8
-MT47CisJI3NpemUtY2VsbHMgPSA8MT47CisKKwljaG9zZW4geyB9OwogCiAJYWxpYXNlcyB7CiAJ
-CXNlcmlhbDAgPSAmdjJtX3NlcmlhbDA7CgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hello Greg,
+
+On Wed, Jan 25, 2012 at 07:52:58AM -0800, Greg KH wrote:
+> On Wed, Jan 25, 2012 at 09:05:04AM +0100, Uwe Kleine-K=F6nig wrote:
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> > changes since v3 (id:1326127447-20284-1-git-send-email-u.kleine-koe=
+nig@pengutronix.de)
+> >  - increase number of ports to support UART additionally to USART p=
+orts
+> >  - implement choosing route location
+> >  - implement setting stopbit config
+> >    (before one stop bit was configured and CSTOPB was set unconditi=
+onally which
+> >    is wrong. Spotted by Russell King.)
+> >  - implement break, sysrq and overflow detection
+> >  - drop unrelated changing to make patch apply on v3.3-rc1
+> >=20
+> > Hello Greg,
+> >=20
+> > On Tue, Jan 24, 2012 at 02:05:22PM -0800, Greg KH wrote:
+> > > On Mon, Jan 09, 2012 at 05:44:07PM +0100, Uwe Kleine-K=F6nig wrot=
+e:
+> > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.=
+de>
+> > > > ---
+> > > > Hello,
+> > > >=20
+> > > > changes since v2:
+> > > > - use {read,write}l_relaxed
+> > > > - rename driver to efm32-uart as USARTs and UARTs can be handle=
+d both
+> > > >   with it
+> > > > - disable TX in .stop_tx (which needs some changes related to
+> > > >   USARTn_IF_TXC)
+> > > >=20
+> > > > Best regards
+> > > > Uwe
+> > > >=20
+> > > >  .../devicetree/bindings/tty/serial/efm32-uart.txt  |   14 +
+> > > >  arch/arm/boot/dts/efm32gg-dk3750.dts               |    2 +-
+> > > >  arch/arm/mach-efm32/devices/pdev-efm32-usart.c     |    6 +-
+> > >=20
+> > > This file isn't in 3.3-rc1, so I can't apply this patch :(
+> > >=20
+> > > What tree is it supposed to be against?
+> > Sorry, I messed this up, it bases on my private development tree. T=
+hese
+> > two changes should go independant of the driver patch via an ARM tr=
+ee
+> > (if at all).
+> >=20
+> > I added a few more features in the meantime, so the options are:
+> >  - take v3 simply droping the hunks changing
+> >    arch/arm/boot/dts/efm32gg-dk3750.dts and
+> >    arch/arm/mach-efm32/devices/pdev-efm32-usart.c
+> >  - take this for 3.3
+> >  - take this for 3.4
+> >=20
+> > My preference would be of course the second option, but for me the =
+other two
+> > would be OK if you don't like taking the update that late, too.
+>=20
+> I was going to take this for the 3.4 merge, adding it to my tree now.
+> It should be ok to drop those hunks, right?
+Yeah, but if you were taking v4 then you wouldn't need to drop these hu=
+nks.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
