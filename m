@@ -1,14 +1,13 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFCv2 00/14]
-Date: Wed, 25 Jan 2012 12:51:08 -0600
-Message-ID: <4F204F1C.70908@gmail.com>
-References: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca>
- <4F1DD6DF.4080706@gmail.com> <4F200DFD.7070407@ti.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] ARM: tegra: Add clock binding to tegra-seabaord.dts
+Date: Wed, 25 Jan 2012 12:57:49 -0700
+Message-ID: <1327521469-28863-2-git-send-email-swarren@nvidia.com>
+References: <1327521469-28863-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F200DFD.7070407-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1327521469-28863-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,44 +17,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/2012 08:13 AM, Cousson, Benoit wrote:
-> On 1/23/2012 10:53 PM, Rob Herring wrote:
->> On 01/23/2012 03:07 PM, Grant Likely wrote:
->>>
->>> Hey everyone,
->>>
->>> Here's the second RFC for the irq_domain patches.  I could use some
->>> help testing now.  I still expect there will be a few bugs.  The
->>> series is based on v3.3-rc1, and I've pushed it out to my git server:
->>>
->>> git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
->>
->> Can you post to linux-arm-kernel too so people are aware of this work
->> and stop posting dead-end irqdomain patches.
-> 
-> Good point, I have two pending series that are using the
-> irq_domain_add() so far, so it will be good to have that branch pulled
-> in arm-soc.
-> 
->> I tested what you had as of this morning and it works fine for me. Looks
->> like the only diff is the VExpress code. I'm working on rebasing my
->> domain support for generic irqchip now.
-> 
-> In fact your generic irqchip should even avoid us to use
-> irq_domain_add_legacy() since both GPIO and OMAP3 intc are already using
-> the irqchip.
-> 
-> I guess you are not going to change the interface so the patches I did
-> on your previous branch to try them should be good already, isn't it?
+This provides an example of how to use the Tegra CAR clock binding in a
+board .dts file.
 
-I've got it rebased on top of Grant's tree. I will send it out soon.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+I think it makes sense to check the previous patch into the Linux kernel,
+since it's mainly just defining what the binding is. However, this patch
+is just an example and needs to be reworked to cover all boards, and add
+a PMU node for the true clk_32k source. I'm providing this patch mostly
+as an example that Simon Glass can use within U-Boot in the interim.
+---
+ arch/arm/boot/dts/tegra-seaboard.dts |   24 ++++++++++++++++++++++++
+ 1 files changed, 24 insertions(+), 0 deletions(-)
 
-One problem that still remains is it breaks x86 and any platform using
-generic irq chip, but not selecting IRQ_DOMAIN. Grant, do you plan to
-enable IRQ_DOMAIN for x86 in your series? MIPS may also need fixing.
-
-Rob
+diff --git a/arch/arm/boot/dts/tegra-seaboard.dts b/arch/arm/boot/dts/tegra-seaboard.dts
+index b55a02e..06a3cb1 100644
+--- a/arch/arm/boot/dts/tegra-seaboard.dts
++++ b/arch/arm/boot/dts/tegra-seaboard.dts
+@@ -11,6 +11,30 @@
+ 		reg = < 0x00000000 0x40000000 >;
+ 	};
+ 
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* This will eventually be a clock output from a PMU IC */
++		clk_32k: clock@0 {
++			compatible = "fixed-clock";
++			reg = <0>;
++			#clock-cells = <0>;
++			clock-frequency = <32768>;
++		};
++
++		osc: clock@1 {
++			compatible = "fixed-clock";
++			reg = <1>;
++			#clock-cells = <0>;
++			clock-frequency = <12000000>;
++		};
++	};
++
++	clock@60006000 {
++		clocks = <&clk_32k> <&osc>;
++	};
++
+ 	i2c@7000c000 {
+ 		clock-frequency = <400000>;
+ 	};
+-- 
+1.7.0.4
