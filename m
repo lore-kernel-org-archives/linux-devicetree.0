@@ -1,81 +1,54 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: remoteproc: Load coprocessor code to the specific main memory
- location
-Date: Thu, 26 Jan 2012 11:44:46 +0100
-Message-ID: <4F212E9E.9060807@monstr.eu>
-References: <4F1EE861.4030405@monstr.eu> <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com> <4F1FF870.3000105@monstr.eu> <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com> <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] scripts: dtc: fix compile warnings
+Date: Thu, 26 Jan 2012 13:20:07 +0200
+Message-ID: <1327576807-19216-1-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: mmarek-AlSwsSmVLrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ohad Ben-Cohen wrote:
-> On Wed, Jan 25, 2012 at 4:19 PM, Michal Simek <monstr@monstr.eu> wrote:
->> I started with pur vanilla kernel and patches from your tree
->> git://git.kernel.org/pub/scm/linux/kernel/git/ohad/remoteproc.git
->> for-next branch
->> but then I had to moved to for-next-acked-merged because in the origin
->> one were some problems.
-> 
-> Unlike for-next-acked-merged, the other branches aren't rebased and
-> therefore have merge conflicts with 3.3 material; that's intentional.
-> 
->> Do you have any kernel tree with CMA just for sure?
-> 
-> Not a 3.3-based one, so I recommend you to just merge Marek's branch directly.
-> 
-> I'll soon create a full-fledged 3.3 branch though, so you may want to
-> wait a bit until I get to it.
-
-I have done it and tested. It works as expected. Thanks.
-I have created region at phys addr 0x10000000 with selected size.
-I had to move carveout in resource table to be first in this area.
-Also removed that copying from kick function.
-
-
-
-I have one small problem which is that physical address is 0x10000000
-which means that firmware entry point is the same.
-In rproc_load_segments is da composed from phdr->p_paddr which is 0x10000000.
-And code is designed that this load addr is offset.
-
-Here is the code:
-	/* go through the available ELF segments */
-	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-		u32 da = phdr->p_paddr; // OFFSET 0x10000000
-		u32 memsz = phdr->p_memsz;
-
-But for my case is physical address correct and it is not offset 0x10000000.
-I have created temporary fix which substract virtual address to get correct da.
-
-u32 da = phdr->p_paddr - phdr->p_vaddr;
-
-What should be correct solution?
-
-> 
->> What do you use for firmware replacing?
->> Just remove kernel module and load different one?
-> 
-> If your driver boots the remote core on its ->probe() handler, then
-> yes, you need to unbind and bind the device.
-> 
-> One way is to unload and load the driver, but you can also use the
-> bind/unbind sysfs files of your driver (echo -n device-name >
-> /sys/..../{un}bind).
-
-ok. It also works.
-
-Thanks,
-Michal
-
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+Rml4IGZvbGxvd2luZyBjb21waWxlIHdhcm5pbmdzOgoKc2NyaXB0cy9kdGMvZmxhdHRyZWUuYzog
+SW4gZnVuY3Rpb24g4oCYZmxhdF9yZWFkX21lbV9yZXNlcnZl4oCZOgpzY3JpcHRzL2R0Yy9mbGF0
+dHJlZS5jOjcwMDoxNDogd2FybmluZzogdmFyaWFibGUg4oCYcOKAmSBzZXQgYnV0IG5vdCB1c2Vk
+CglbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0KCnNjcmlwdHMvZHRjL2R0Yy5jOiBJbiBmdW5j
+dGlvbiDigJhtYWlu4oCZOgpzY3JpcHRzL2R0Yy9kdGMuYzoxMDQ6MTc6IHdhcm5pbmc6IHZhcmlh
+YmxlIOKAmGNoZWNr4oCZIHNldCBidXQgbm90IHVzZWQKCVstV3VudXNlZC1idXQtc2V0LXZhcmlh
+YmxlXQoKU2lnbmVkLW9mZi1ieTogRmVsaXBlIEJhbGJpIDxiYWxiaUB0aS5jb20+Ci0tLQogc2Ny
+aXB0cy9kdGMvZHRjLmMgICAgICB8ICAgIDUgKy0tLS0KIHNjcmlwdHMvZHRjL2ZsYXR0cmVlLmMg
+fCAgICAyIC0tCiAyIGZpbGVzIGNoYW5nZWQsIDEgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMo
+LSkKCmRpZmYgLS1naXQgYS9zY3JpcHRzL2R0Yy9kdGMuYyBiL3NjcmlwdHMvZHRjL2R0Yy5jCmlu
+ZGV4IDQ1MWM5MmQuLjJlZjVlMmUgMTAwNjQ0Ci0tLSBhL3NjcmlwdHMvZHRjL2R0Yy5jCisrKyBi
+L3NjcmlwdHMvZHRjL2R0Yy5jCkBAIC0xMDEsNyArMTAxLDcgQEAgaW50IG1haW4oaW50IGFyZ2Ms
+IGNoYXIgKmFyZ3ZbXSkKIAljb25zdCBjaGFyICpvdXRmb3JtID0gImR0cyI7CiAJY29uc3QgY2hh
+ciAqb3V0bmFtZSA9ICItIjsKIAljb25zdCBjaGFyICpkZXBuYW1lID0gTlVMTDsKLQlpbnQgZm9y
+Y2UgPSAwLCBjaGVjayA9IDAsIHNvcnQgPSAwOworCWludCBmb3JjZSA9IDAsIHNvcnQgPSAwOwog
+CWNvbnN0IGNoYXIgKmFyZzsKIAlpbnQgb3B0OwogCUZJTEUgKm91dGYgPSBOVUxMOwpAQCAtMTQz
+LDkgKzE0Myw2IEBAIGludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pCiAJCWNhc2UgJ2Yn
+OgogCQkJZm9yY2UgPSAxOwogCQkJYnJlYWs7Ci0JCWNhc2UgJ2MnOgotCQkJY2hlY2sgPSAxOwot
+CQkJYnJlYWs7CiAJCWNhc2UgJ3EnOgogCQkJcXVpZXQrKzsKIAkJCWJyZWFrOwpkaWZmIC0tZ2l0
+IGEvc2NyaXB0cy9kdGMvZmxhdHRyZWUuYyBiL3NjcmlwdHMvZHRjL2ZsYXR0cmVlLmMKaW5kZXgg
+ZWFkMDMzMi4uMjhkMGIyMyAxMDA2NDQKLS0tIGEvc2NyaXB0cy9kdGMvZmxhdHRyZWUuYworKysg
+Yi9zY3JpcHRzL2R0Yy9mbGF0dHJlZS5jCkBAIC02OTcsNyArNjk3LDYgQEAgc3RhdGljIHN0cnVj
+dCByZXNlcnZlX2luZm8gKmZsYXRfcmVhZF9tZW1fcmVzZXJ2ZShzdHJ1Y3QgaW5idWYgKmluYikK
+IHsKIAlzdHJ1Y3QgcmVzZXJ2ZV9pbmZvICpyZXNlcnZlbGlzdCA9IE5VTEw7CiAJc3RydWN0IHJl
+c2VydmVfaW5mbyAqbmV3OwotCWNvbnN0IGNoYXIgKnA7CiAJc3RydWN0IGZkdF9yZXNlcnZlX2Vu
+dHJ5IHJlOwogCiAJLyoKQEAgLTcwNiw3ICs3MDUsNiBAQCBzdGF0aWMgc3RydWN0IHJlc2VydmVf
+aW5mbyAqZmxhdF9yZWFkX21lbV9yZXNlcnZlKHN0cnVjdCBpbmJ1ZiAqaW5iKQogCSAqCiAJICog
+Rmlyc3QgcGFzcywgY291bnQgZW50cmllcy4KIAkgKi8KLQlwID0gaW5iLT5wdHI7CiAJd2hpbGUg
+KDEpIHsKIAkJZmxhdF9yZWFkX2NodW5rKGluYiwgJnJlLCBzaXplb2YocmUpKTsKIAkJcmUuYWRk
+cmVzcyAgPSBmZHQ2NF90b19jcHUocmUuYWRkcmVzcyk7Ci0tIAoxLjcuOC4yCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3Mg
+bWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
+bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
