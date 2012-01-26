@@ -1,68 +1,66 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH] scripts: dtc: fix compile warnings
-Date: Thu, 26 Jan 2012 11:14:08 -0600
-Message-ID: <E1RqStl-0008Di-0z@jdl.com>
-References: <1327576807-19216-1-git-send-email-balbi@ti.com>
- <74CDBE0F657A3D45AFBB94109FB122FF178CB8233B@HQMAIL01.nvidia.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 21/31] ARM: amba: realview: get rid of private platform
+	amba_device initializer
+Date: Thu, 26 Jan 2012 17:25:27 +0000
+Message-ID: <20120126172527.GA12731@n2100.arm.linux.org.uk>
+References: <20120120092207.GD1068@n2100.arm.linux.org.uk> <E1RoAmo-0005Ff-DW@rmk-PC.arm.linux.org.uk> <20120124160044.GM19798@mudshark.cambridge.arm.com> <20120124162328.GA8517@n2100.arm.linux.org.uk> <20120124172600.GO19798@mudshark.cambridge.arm.com> <20120124214531.GB8517@n2100.arm.linux.org.uk> <20120125095800.GC21709@mudshark.cambridge.arm.com> <20120125102202.GU16726@n2100.arm.linux.org.uk> <20120125103906.GE21709@mudshark.cambridge.arm.com> <20120125110647.GV16726@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <74CDBE0F657A3D45AFBB94109FB122FF178CB8233B-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "mmarek-AlSwsSmVLrQ@public.gmane.org" <mmarek-AlSwsSmVLrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120125110647.GV16726@n2100.arm.linux.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, STEricsson <STEricsson_nomadik_linux@list.st.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> RmVsaXBlIEJhbGJpIHdyb3RlIGF0IFRodXJzZGF5LCBKYW51YXJ5IDI2LCAyMDEyIDQ6MjAgQU06
-> DQo+IEZpeCBmb2xsb3dpbmcgY29tcGlsZSB3YXJuaW5nczoNCj4gDQo+IHNjcmlwdHMvZHRjL2Zs
-> YXR0cmVlLmM6IEluIGZ1bmN0aW9uIOKAmGZsYXRfcmVhZF9tZW1fcmVzZXJ2ZeKAmToNCj4gc2Ny
-> aXB0cy9kdGMvZmxhdHRyZWUuYzo3MDA6MTQ6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmHDigJkgc2V0
-> IGJ1dCBub3QgdXNlZA0KPiAJWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdDQo+IA0KPiBzY3Jp
-> cHRzL2R0Yy9kdGMuYzogSW4gZnVuY3Rpb24g4oCYbWFpbuKAmToNCj4gc2NyaXB0cy9kdGMvZHRj
-> LmM6MTA0OjE3OiB3YXJuaW5nOiB2YXJpYWJsZSDigJhjaGVja+KAmSBzZXQgYnV0IG5vdCB1c2Vk
-> DQo+IAlbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEZl
-> bGlwZSBCYWxiaSA8YmFsYmlAdGkuY29tPg0KDQpJIHRoaW5rIHlvdSB3YW50IHRvIHNlbmQgdGhp
-> cyB0byB0aGUgdXBzdHJlYW0gZHRjIG1haW50YWluZXJzOyBJJ3ZlIENDJ2QNCnRoZW0gb24gdGhp
-> cyBtYWlsLg0KDQo+IC0tLQ0KPiAgc2NyaXB0cy9kdGMvZHRjLmMgICAgICB8ICAgIDUgKy0tLS0N
-> Cj4gIHNjcmlwdHMvZHRjL2ZsYXR0cmVlLmMgfCAgICAyIC0tDQo+ICAyIGZpbGVzIGNoYW5nZWQs
-> IDEgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9zY3Jp
-> cHRzL2R0Yy9kdGMuYyBiL3NjcmlwdHMvZHRjL2R0Yy5jDQo+IGluZGV4IDQ1MWM5MmQuLjJlZjVl
-> MmUgMTAwNjQ0DQo+IC0tLSBhL3NjcmlwdHMvZHRjL2R0Yy5jDQo+ICsrKyBiL3NjcmlwdHMvZHRj
-> L2R0Yy5jDQo+IEBAIC0xMDEsNyArMTAxLDcgQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKmFy
-> Z3ZbXSkNCj4gIAljb25zdCBjaGFyICpvdXRmb3JtID0gImR0cyI7DQo+ICAJY29uc3QgY2hhciAq
-> b3V0bmFtZSA9ICItIjsNCj4gIAljb25zdCBjaGFyICpkZXBuYW1lID0gTlVMTDsNCj4gLQlpbnQg
-> Zm9yY2UgPSAwLCBjaGVjayA9IDAsIHNvcnQgPSAwOw0KPiArCWludCBmb3JjZSA9IDAsIHNvcnQg
-> PSAwOw0KPiAgCWNvbnN0IGNoYXIgKmFyZzsNCj4gIAlpbnQgb3B0Ow0KPiAgCUZJTEUgKm91dGYg
-> PSBOVUxMOw0KPiBAQCAtMTQzLDkgKzE0Myw2IEBAIGludCBtYWluKGludCBhcmdjLCBjaGFyICph
-> cmd2W10pDQo+ICAJCWNhc2UgJ2YnOg0KPiAgCQkJZm9yY2UgPSAxOw0KPiAgCQkJYnJlYWs7DQo+
-> IC0JCWNhc2UgJ2MnOg0KPiAtCQkJY2hlY2sgPSAxOw0KPiAtCQkJYnJlYWs7DQo+ICAJCWNhc2Ug
-> J3EnOg0KPiAgCQkJcXVpZXQrKzsNCj4gIAkJCWJyZWFrOw0KPiBkaWZmIC0tZ2l0IGEvc2NyaXB0
-> cy9kdGMvZmxhdHRyZWUuYyBiL3NjcmlwdHMvZHRjL2ZsYXR0cmVlLmMNCj4gaW5kZXggZWFkMDMz
-> Mi4uMjhkMGIyMyAxMDA2NDQNCj4gLS0tIGEvc2NyaXB0cy9kdGMvZmxhdHRyZWUuYw0KPiArKysg
-> Yi9zY3JpcHRzL2R0Yy9mbGF0dHJlZS5jDQo+IEBAIC02OTcsNyArNjk3LDYgQEAgc3RhdGljIHN0
-> cnVjdCByZXNlcnZlX2luZm8gKmZsYXRfcmVhZF9tZW1fcmVzZXJ2ZShzdHJ1Y3QgaW5idWYgKmlu
-> YikNCj4gIHsNCj4gIAlzdHJ1Y3QgcmVzZXJ2ZV9pbmZvICpyZXNlcnZlbGlzdCA9IE5VTEw7DQo+
-> ICAJc3RydWN0IHJlc2VydmVfaW5mbyAqbmV3Ow0KPiAtCWNvbnN0IGNoYXIgKnA7DQo+ICAJc3Ry
-> dWN0IGZkdF9yZXNlcnZlX2VudHJ5IHJlOw0KPiANCj4gIAkvKg0KPiBAQCAtNzA2LDcgKzcwNSw2
-> IEBAIHN0YXRpYyBzdHJ1Y3QgcmVzZXJ2ZV9pbmZvICpmbGF0X3JlYWRfbWVtX3Jlc2VydmUoc3Ry
-> dWN0IGluYnVmICppbmIpDQo+ICAJICoNCj4gIAkgKiBGaXJzdCBwYXNzLCBjb3VudCBlbnRyaWVz
-> Lg0KPiAgCSAqLw0KPiAtCXAgPSBpbmItPnB0cjsNCj4gIAl3aGlsZSAoMSkgew0KPiAgCQlmbGF0
-> X3JlYWRfY2h1bmsoaW5iLCAmcmUsIHNpemVvZihyZSkpOw0KPiAgCQlyZS5hZGRyZXNzICA9IGZk
-> dDY0X3RvX2NwdShyZS5hZGRyZXNzKTsNCj4gLS0NCj4gMS43LjguMg0KDQotLSANCm52cHVibGlj
-> DQoNCg==
+On Wed, Jan 25, 2012 at 11:06:47AM +0000, Russell King - ARM Linux wrote:
+> Right, so with the stack of amba patches on top, it looks like this,
+> which to me looks sane.  I haven't build-tested it though.
 
-Yeah, that issue has been fixed in the main DTC repo already.
+Will,
 
-jdl
+Did you see this?  Any comment?
 
+Thanks.
 
-PS -- No point.  Nope.
+> 
+> diff --git a/arch/arm/mach-realview/include/mach/irqs-pb1176.h b/arch/arm/mach-realview/include/mach/irqs-pb1176.h
+> index 5c3c625..708f841 100644
+> --- a/arch/arm/mach-realview/include/mach/irqs-pb1176.h
+> +++ b/arch/arm/mach-realview/include/mach/irqs-pb1176.h
+> @@ -40,6 +40,7 @@
+>  #define IRQ_DC1176_L2CC		(IRQ_DC1176_GIC_START + 13)
+>  #define IRQ_DC1176_RTC		(IRQ_DC1176_GIC_START + 14)
+>  #define IRQ_DC1176_CLCD		(IRQ_DC1176_GIC_START + 15)	/* CLCD controller */
+> +#define IRQ_DC1176_GPIO0	(IRQ_DC1176_GIC_START + 16)
+>  #define IRQ_DC1176_SSP		(IRQ_DC1176_GIC_START + 17)	/* SSP port */
+>  #define IRQ_DC1176_UART0	(IRQ_DC1176_GIC_START + 18)	/* UART 0 on development chip */
+>  #define IRQ_DC1176_UART1	(IRQ_DC1176_GIC_START + 19)	/* UART 1 on development chip */
+> @@ -73,7 +74,6 @@
+>  #define IRQ_PB1176_DMAC		(IRQ_PB1176_GIC_START + 24)	/* DMA controller */
+>  #define IRQ_PB1176_RTC		(IRQ_PB1176_GIC_START + 25)	/* Real Time Clock */
+>  
+> -#define IRQ_PB1176_GPIO0	-1
+>  #define IRQ_PB1176_SCTL		-1
+>  
+>  #define NR_GIC_PB1176		2
+> diff --git a/arch/arm/mach-realview/realview_pb1176.c b/arch/arm/mach-realview/realview_pb1176.c
+> index 1b6e60c..b1d7caf 100644
+> --- a/arch/arm/mach-realview/realview_pb1176.c
+> +++ b/arch/arm/mach-realview/realview_pb1176.c
+> @@ -143,7 +143,7 @@ static struct pl022_ssp_controller ssp0_plat_data = {
+>  #define PB1176_CLCD_IRQ	{ IRQ_DC1176_CLCD }
+>  #define SCTL_IRQ	{ }
+>  #define PB1176_WATCHDOG_IRQ	{ IRQ_DC1176_WATCHDOG }
+> -#define PB1176_GPIO0_IRQ	{ IRQ_PB1176_GPIO0 }
+> +#define PB1176_GPIO0_IRQ	{ IRQ_DC1176_GPIO0 }
+>  #define GPIO1_IRQ	{ IRQ_PB1176_GPIO1 }
+>  #define PB1176_RTC_IRQ	{ IRQ_DC1176_RTC }
+>  #define SCI_IRQ		{ IRQ_PB1176_SCI }
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
