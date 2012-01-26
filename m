@@ -1,15 +1,14 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 6/6] ARM: at91/at91sam9x5: Device tree definition files
-Date: Thu, 26 Jan 2012 18:12:37 +0100
-Message-ID: <239740116657d3a3fdf89f857b1913708fc7d965.1327596859.git.nicolas.ferre@atmel.com>
-References: <1327597957-32662-1-git-send-email-nicolas.ferre@atmel.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH] scripts: dtc: fix compile warnings
+Date: Thu, 26 Jan 2012 11:14:08 -0600
+Message-ID: <E1RqStl-0008Di-0z@jdl.com>
+References: <1327576807-19216-1-git-send-email-balbi@ti.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF178CB8233B@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1327597957-32662-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <15809998b6ca8f1bf69546bfcac18301a70625ef.1327596859.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-References: <15809998b6ca8f1bf69546bfcac18301a70625ef.1327596859.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-reply-to: <74CDBE0F657A3D45AFBB94109FB122FF178CB8233B-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,267 +18,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "mmarek-AlSwsSmVLrQ@public.gmane.org" <mmarek-AlSwsSmVLrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Device tree include file for the AT91SAM9x5 SoC family.
-An additional .dtsi file is created to describe the generic
-SAM9x5 CPU Module (CM).
-Device tree source files for each Evaluation Kit that are using
-the generic CPU Module and the carrier board. The selection of
-available peripherals is done in this .dts file.
+> RmVsaXBlIEJhbGJpIHdyb3RlIGF0IFRodXJzZGF5LCBKYW51YXJ5IDI2LCAyMDEyIDQ6MjAgQU06
+> DQo+IEZpeCBmb2xsb3dpbmcgY29tcGlsZSB3YXJuaW5nczoNCj4gDQo+IHNjcmlwdHMvZHRjL2Zs
+> YXR0cmVlLmM6IEluIGZ1bmN0aW9uIOKAmGZsYXRfcmVhZF9tZW1fcmVzZXJ2ZeKAmToNCj4gc2Ny
+> aXB0cy9kdGMvZmxhdHRyZWUuYzo3MDA6MTQ6IHdhcm5pbmc6IHZhcmlhYmxlIOKAmHDigJkgc2V0
+> IGJ1dCBub3QgdXNlZA0KPiAJWy1XdW51c2VkLWJ1dC1zZXQtdmFyaWFibGVdDQo+IA0KPiBzY3Jp
+> cHRzL2R0Yy9kdGMuYzogSW4gZnVuY3Rpb24g4oCYbWFpbuKAmToNCj4gc2NyaXB0cy9kdGMvZHRj
+> LmM6MTA0OjE3OiB3YXJuaW5nOiB2YXJpYWJsZSDigJhjaGVja+KAmSBzZXQgYnV0IG5vdCB1c2Vk
+> DQo+IAlbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEZl
+> bGlwZSBCYWxiaSA8YmFsYmlAdGkuY29tPg0KDQpJIHRoaW5rIHlvdSB3YW50IHRvIHNlbmQgdGhp
+> cyB0byB0aGUgdXBzdHJlYW0gZHRjIG1haW50YWluZXJzOyBJJ3ZlIENDJ2QNCnRoZW0gb24gdGhp
+> cyBtYWlsLg0KDQo+IC0tLQ0KPiAgc2NyaXB0cy9kdGMvZHRjLmMgICAgICB8ICAgIDUgKy0tLS0N
+> Cj4gIHNjcmlwdHMvZHRjL2ZsYXR0cmVlLmMgfCAgICAyIC0tDQo+ICAyIGZpbGVzIGNoYW5nZWQs
+> IDEgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9zY3Jp
+> cHRzL2R0Yy9kdGMuYyBiL3NjcmlwdHMvZHRjL2R0Yy5jDQo+IGluZGV4IDQ1MWM5MmQuLjJlZjVl
+> MmUgMTAwNjQ0DQo+IC0tLSBhL3NjcmlwdHMvZHRjL2R0Yy5jDQo+ICsrKyBiL3NjcmlwdHMvZHRj
+> L2R0Yy5jDQo+IEBAIC0xMDEsNyArMTAxLDcgQEAgaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKmFy
+> Z3ZbXSkNCj4gIAljb25zdCBjaGFyICpvdXRmb3JtID0gImR0cyI7DQo+ICAJY29uc3QgY2hhciAq
+> b3V0bmFtZSA9ICItIjsNCj4gIAljb25zdCBjaGFyICpkZXBuYW1lID0gTlVMTDsNCj4gLQlpbnQg
+> Zm9yY2UgPSAwLCBjaGVjayA9IDAsIHNvcnQgPSAwOw0KPiArCWludCBmb3JjZSA9IDAsIHNvcnQg
+> PSAwOw0KPiAgCWNvbnN0IGNoYXIgKmFyZzsNCj4gIAlpbnQgb3B0Ow0KPiAgCUZJTEUgKm91dGYg
+> PSBOVUxMOw0KPiBAQCAtMTQzLDkgKzE0Myw2IEBAIGludCBtYWluKGludCBhcmdjLCBjaGFyICph
+> cmd2W10pDQo+ICAJCWNhc2UgJ2YnOg0KPiAgCQkJZm9yY2UgPSAxOw0KPiAgCQkJYnJlYWs7DQo+
+> IC0JCWNhc2UgJ2MnOg0KPiAtCQkJY2hlY2sgPSAxOw0KPiAtCQkJYnJlYWs7DQo+ICAJCWNhc2Ug
+> J3EnOg0KPiAgCQkJcXVpZXQrKzsNCj4gIAkJCWJyZWFrOw0KPiBkaWZmIC0tZ2l0IGEvc2NyaXB0
+> cy9kdGMvZmxhdHRyZWUuYyBiL3NjcmlwdHMvZHRjL2ZsYXR0cmVlLmMNCj4gaW5kZXggZWFkMDMz
+> Mi4uMjhkMGIyMyAxMDA2NDQNCj4gLS0tIGEvc2NyaXB0cy9kdGMvZmxhdHRyZWUuYw0KPiArKysg
+> Yi9zY3JpcHRzL2R0Yy9mbGF0dHJlZS5jDQo+IEBAIC02OTcsNyArNjk3LDYgQEAgc3RhdGljIHN0
+> cnVjdCByZXNlcnZlX2luZm8gKmZsYXRfcmVhZF9tZW1fcmVzZXJ2ZShzdHJ1Y3QgaW5idWYgKmlu
+> YikNCj4gIHsNCj4gIAlzdHJ1Y3QgcmVzZXJ2ZV9pbmZvICpyZXNlcnZlbGlzdCA9IE5VTEw7DQo+
+> ICAJc3RydWN0IHJlc2VydmVfaW5mbyAqbmV3Ow0KPiAtCWNvbnN0IGNoYXIgKnA7DQo+ICAJc3Ry
+> dWN0IGZkdF9yZXNlcnZlX2VudHJ5IHJlOw0KPiANCj4gIAkvKg0KPiBAQCAtNzA2LDcgKzcwNSw2
+> IEBAIHN0YXRpYyBzdHJ1Y3QgcmVzZXJ2ZV9pbmZvICpmbGF0X3JlYWRfbWVtX3Jlc2VydmUoc3Ry
+> dWN0IGluYnVmICppbmIpDQo+ICAJICoNCj4gIAkgKiBGaXJzdCBwYXNzLCBjb3VudCBlbnRyaWVz
+> Lg0KPiAgCSAqLw0KPiAtCXAgPSBpbmItPnB0cjsNCj4gIAl3aGlsZSAoMSkgew0KPiAgCQlmbGF0
+> X3JlYWRfY2h1bmsoaW5iLCAmcmUsIHNpemVvZihyZSkpOw0KPiAgCQlyZS5hZGRyZXNzICA9IGZk
+> dDY0X3RvX2NwdShyZS5hZGRyZXNzKTsNCj4gLS0NCj4gMS43LjguMg0KDQotLSANCm52cHVibGlj
+> DQoNCg==
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9g25ek.dts |   37 ++++++++
- arch/arm/boot/dts/at91sam9x5.dtsi   |  172 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/at91sam9x5cm.dtsi |   14 +++
- 3 files changed, 223 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91sam9g25ek.dts
- create mode 100644 arch/arm/boot/dts/at91sam9x5.dtsi
- create mode 100644 arch/arm/boot/dts/at91sam9x5cm.dtsi
+Yeah, that issue has been fixed in the main DTC repo already.
 
-diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-new file mode 100644
-index 0000000..e64eb93
---- /dev/null
-+++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-@@ -0,0 +1,37 @@
-+/*
-+ * at91sam9g25ek.dts - Device Tree file for AT91SAM9G25-EK board
-+ *
-+ *  Copyright (C) 2012 Atmel,
-+ *                2012 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+/dts-v1/;
-+/include/ "at91sam9x5.dtsi"
-+/include/ "at91sam9x5cm.dtsi"
-+
-+/ {
-+	model = "Atmel AT91SAM9G25-EK";
-+	compatible = "atmel,at91sam9g25ek", "atmel,at91sam9x5ek", "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	chosen {
-+		bootargs = "128M console=ttyS0,115200 mtdparts=atmel_nand:8M(bootstrap/uboot/kernel)ro,-(rootfs) root=/dev/mtdblock1 rw rootfstype=ubifs ubi.mtd=1 root=ubi0:rootfs";
-+	};
-+
-+	ahb {
-+		apb {
-+			dbgu: serial@fffff200 {
-+				status = "okay";
-+			};
-+
-+			usart0: serial@f801c000 {
-+				status = "okay";
-+			};
-+
-+			macb0: ethernet@f802c000 {
-+				phy-mode = "rmii";
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-new file mode 100644
-index 0000000..e91391f
---- /dev/null
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -0,0 +1,172 @@
-+/*
-+ * at91sam9x5.dtsi - Device Tree Include file for AT91SAM9x5 family SoC
-+ *                   applies to AT91SAM9G15, AT91SAM9G25, AT91SAM9G35,
-+ *                   AT91SAM9X25, AT91SAM9X35 SoC
-+ *
-+ *  Copyright (C) 2012 Atmel,
-+ *                2012 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "Atmel AT91SAM9x5 family SoC";
-+	compatible = "atmel,at91sam9x5";
-+	interrupt-parent = <&aic>;
-+
-+	aliases {
-+		serial0 = &dbgu;
-+		serial1 = &usart0;
-+		serial2 = &usart1;
-+		serial3 = &usart2;
-+		gpio0 = &pioA;
-+		gpio1 = &pioB;
-+		gpio2 = &pioC;
-+		gpio3 = &pioD;
-+		tcb0 = &tcb0;
-+		tcb1 = &tcb1;
-+	};
-+	cpus {
-+		cpu@0 {
-+			compatible = "arm,arm926ejs";
-+		};
-+	};
-+
-+	memory@20000000 {
-+		reg = <0x20000000 0x10000000>;
-+	};
-+
-+	ahb {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		apb {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			aic: interrupt-controller@fffff000 {
-+				#interrupt-cells = <2>;
-+				compatible = "atmel,at91rm9200-aic";
-+				interrupt-controller;
-+				interrupt-parent;
-+				reg = <0xfffff000 0x200>;
-+			};
-+
-+			pit: timer@fffffe30 {
-+				compatible = "atmel,at91sam9260-pit";
-+				reg = <0xfffffe30 0xf>;
-+				interrupts = <1 4>;
-+			};
-+
-+			tcb0: timer@f8008000 {
-+				compatible = "atmel,at91sam9x5-tcb";
-+				reg = <0xf8008000 0x100>;
-+				interrupts = <17 4>;
-+			};
-+
-+			tcb1: timer@f800c000 {
-+				compatible = "atmel,at91sam9x5-tcb";
-+				reg = <0xf800c000 0x100>;
-+				interrupts = <17 4>;
-+			};
-+
-+			dma0: dma-controller@ffffec00 {
-+				compatible = "atmel,at91sam9g45-dma";
-+				reg = <0xffffec00 0x200>;
-+				interrupts = <20 4>;
-+			};
-+
-+			dma1: dma-controller@ffffee00 {
-+				compatible = "atmel,at91sam9g45-dma";
-+				reg = <0xffffee00 0x200>;
-+				interrupts = <21 4>;
-+			};
-+
-+			pioA: gpio@fffff400 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffff400 0x100>;
-+				interrupts = <2 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+
-+			pioB: gpio@fffff600 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffff600 0x100>;
-+				interrupts = <2 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+
-+			pioC: gpio@fffff800 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffff800 0x100>;
-+				interrupts = <3 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+
-+			pioD: gpio@fffffa00 {
-+				compatible = "atmel,at91rm9200-gpio";
-+				reg = <0xfffffa00 0x100>;
-+				interrupts = <3 4>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+
-+			dbgu: serial@fffff200 {
-+				compatible = "atmel,at91sam9260-usart";
-+				reg = <0xfffff200 0x200>;
-+				interrupts = <1 4>;
-+				status = "disabled";
-+			};
-+
-+			usart0: serial@f801c000 {
-+				compatible = "atmel,at91sam9260-usart";
-+				reg = <0xf801c000 0x200>;
-+				interrupts = <5 4>;
-+				atmel,use-dma-rx;
-+				atmel,use-dma-tx;
-+				status = "disabled";
-+			};
-+
-+			usart1: serial@f8020000 {
-+				compatible = "atmel,at91sam9260-usart";
-+				reg = <0xf8020000 0x200>;
-+				interrupts = <6 4>;
-+				atmel,use-dma-rx;
-+				atmel,use-dma-tx;
-+				status = "disabled";
-+			};
-+
-+			usart2: serial@f8024000 {
-+				compatible = "atmel,at91sam9260-usart";
-+				reg = <0xf8024000 0x200>;
-+				interrupts = <7 4>;
-+				atmel,use-dma-rx;
-+				atmel,use-dma-tx;
-+				status = "disabled";
-+			};
-+
-+			macb0: ethernet@f802c000 {
-+				compatible = "cdns,at32ap7000-macb", "cdns,macb";
-+				reg = <0xf802c000 0x100>;
-+				interrupts = <24 4>;
-+				status = "disabled";
-+			};
-+
-+			macb1: ethernet@f8030000 {
-+				compatible = "cdns,at32ap7000-macb", "cdns,macb";
-+				reg = <0xf8030000 0x100>;
-+				interrupts = <27 4>;
-+				status = "disabled";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-new file mode 100644
-index 0000000..4ab5a77
---- /dev/null
-+++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-@@ -0,0 +1,14 @@
-+/*
-+ * at91sam9x5cm.dtsi - Device Tree Include file for AT91SAM9x5 CPU Module
-+ *
-+ *  Copyright (C) 2012 Atmel,
-+ *                2012 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+
-+/ {
-+	memory@20000000 {
-+		reg = <0x20000000 0x8000000>;
-+	};
-+};
--- 
-1.7.5.4
+jdl
+
+
+PS -- No point.  Nope.
