@@ -1,8 +1,7 @@
 From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/6] ARM: at91/at91sam9x5: clock management for at91sam9x5
- chip family
-Date: Thu, 26 Jan 2012 18:12:34 +0100
-Message-ID: <ed361827f58fb20a3e281717a3573a027d4ce928.1327596859.git.nicolas.ferre@atmel.com>
+Subject: [PATCH 6/6] ARM: at91/at91sam9x5: Device tree definition files
+Date: Thu, 26 Jan 2012 18:12:37 +0100
+Message-ID: <239740116657d3a3fdf89f857b1913708fc7d965.1327596859.git.nicolas.ferre@atmel.com>
 References: <1327597957-32662-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,207 +23,263 @@ To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR0
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Several changes to PMC have to be managed for adding this support:
-- alternate prescaler location for both MCKR and PCKR
-- alternate CSS length for PCKR
-- added cpu_is_at91sam9x5() to functional switches
-- manage UTMI bias like sam9g45 chip family
+Device tree include file for the AT91SAM9x5 SoC family.
+An additional .dtsi file is created to describe the generic
+SAM9x5 CPU Module (CM).
+Device tree source files for each Evaluation Kit that are using
+the generic CPU Module and the carrier board. The selection of
+available peripherals is done in this .dts file.
 
 Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/mach-at91/clock.c |   83 ++++++++++++++++++++++++++++++++++----------
- 1 files changed, 64 insertions(+), 19 deletions(-)
+ arch/arm/boot/dts/at91sam9g25ek.dts |   37 ++++++++
+ arch/arm/boot/dts/at91sam9x5.dtsi   |  172 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/at91sam9x5cm.dtsi |   14 +++
+ 3 files changed, 223 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91sam9g25ek.dts
+ create mode 100644 arch/arm/boot/dts/at91sam9x5.dtsi
+ create mode 100644 arch/arm/boot/dts/at91sam9x5cm.dtsi
 
-diff --git a/arch/arm/mach-at91/clock.c b/arch/arm/mach-at91/clock.c
-index aa04e22..a5291e0 100644
---- a/arch/arm/mach-at91/clock.c
-+++ b/arch/arm/mach-at91/clock.c
-@@ -48,24 +48,37 @@
-  * Chips have some kind of clocks : group them by functionality
-  */
- #define cpu_has_utmi()		(  cpu_is_at91sam9rl() \
--				|| cpu_is_at91sam9g45())
-+				|| cpu_is_at91sam9g45() \
-+				|| cpu_is_at91sam9x5())
- 
- #define cpu_has_800M_plla()	(  cpu_is_at91sam9g20() \
--				|| cpu_is_at91sam9g45())
-+				|| cpu_is_at91sam9g45() \
-+				|| cpu_is_at91sam9x5())
- 
- #define cpu_has_300M_plla()	(cpu_is_at91sam9g10())
- 
- #define cpu_has_pllb()		(!(cpu_is_at91sam9rl() \
--				|| cpu_is_at91sam9g45()))
-+				|| cpu_is_at91sam9g45() \
-+				|| cpu_is_at91sam9x5()))
- 
--#define cpu_has_upll()		(cpu_is_at91sam9g45())
-+#define cpu_has_upll()		(cpu_is_at91sam9g45() \
-+				|| cpu_is_at91sam9x5())
- 
- /* USB host HS & FS */
- #define cpu_has_uhp()		(!cpu_is_at91sam9rl())
- 
- /* USB device FS only */
- #define cpu_has_udpfs()		(!(cpu_is_at91sam9rl() \
--				|| cpu_is_at91sam9g45()))
-+				|| cpu_is_at91sam9g45() \
-+				|| cpu_is_at91sam9x5()))
+diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
+new file mode 100644
+index 0000000..e64eb93
+--- /dev/null
++++ b/arch/arm/boot/dts/at91sam9g25ek.dts
+@@ -0,0 +1,37 @@
++/*
++ * at91sam9g25ek.dts - Device Tree file for AT91SAM9G25-EK board
++ *
++ *  Copyright (C) 2012 Atmel,
++ *                2012 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++ *
++ * Licensed under GPLv2 or later.
++ */
++/dts-v1/;
++/include/ "at91sam9x5.dtsi"
++/include/ "at91sam9x5cm.dtsi"
 +
-+#define cpu_has_plladiv2()	(cpu_is_at91sam9g45() \
-+				|| cpu_is_at91sam9x5())
++/ {
++	model = "Atmel AT91SAM9G25-EK";
++	compatible = "atmel,at91sam9g25ek", "atmel,at91sam9x5ek", "atmel,at91sam9x5", "atmel,at91sam9";
 +
-+#define cpu_has_mdiv3()		(cpu_is_at91sam9g45() \
-+				|| cpu_is_at91sam9x5())
++	chosen {
++		bootargs = "128M console=ttyS0,115200 mtdparts=atmel_nand:8M(bootstrap/uboot/kernel)ro,-(rootfs) root=/dev/mtdblock1 rw rootfstype=ubifs ubi.mtd=1 root=ubi0:rootfs";
++	};
 +
-+#define cpu_has_alt_prescaler()	(cpu_is_at91sam9x5())
- 
- static LIST_HEAD(clocks);
- static DEFINE_SPINLOCK(clk_lock);
-@@ -138,13 +151,6 @@ static void pmc_uckr_mode(struct clk *clk, int is_on)
- {
- 	unsigned int uckr = at91_sys_read(AT91_CKGR_UCKR);
- 
--	if (cpu_is_at91sam9g45()) {
--		if (is_on)
--			uckr |= AT91_PMC_BIASEN;
--		else
--			uckr &= ~AT91_PMC_BIASEN;
--	}
--
- 	if (is_on) {
- 		is_on = AT91_PMC_LOCKU;
- 		at91_sys_write(AT91_CKGR_UCKR, uckr | clk->pmc_mask);
-@@ -209,11 +215,24 @@ static struct clk __init *at91_css_to_clk(unsigned long css)
- 				return &utmi_clk;
- 			else if (cpu_has_pllb())
- 				return &pllb;
-+			break;
-+		/* alternate PMC: can use master clock */
-+		case AT91_PMC_CSS_MASTER:
-+			return &mck;
- 	}
- 
- 	return NULL;
- }
- 
-+static int pmc_prescaler_divider(u32 reg)
-+{
-+	if (cpu_has_alt_prescaler()) {
-+		return 1 << ((reg & AT91_PMC_ALT_PRES) >> PMC_ALT_PRES_OFFSET);
-+	} else {
-+		return 1 << ((reg & AT91_PMC_PRES) >> PMC_PRES_OFFSET);
-+	}
-+}
++	ahb {
++		apb {
++			dbgu: serial@fffff200 {
++				status = "okay";
++			};
 +
- static void __clk_enable(struct clk *clk)
- {
- 	if (clk->parent)
-@@ -315,12 +334,22 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
- {
- 	unsigned long	flags;
- 	unsigned	prescale;
-+	unsigned long	prescale_offset, css_mask;
- 	unsigned long	actual;
- 
- 	if (!clk_is_programmable(clk))
- 		return -EINVAL;
- 	if (clk->users)
- 		return -EBUSY;
++			usart0: serial@f801c000 {
++				status = "okay";
++			};
 +
-+	if (cpu_has_alt_prescaler()) {
-+		prescale_offset = PMC_ALT_PRES_OFFSET;
-+		css_mask = AT91_PMC_ALT_PCKR_CSS;
-+	} else {
-+		prescale_offset = PMC_PRES_OFFSET;
-+		css_mask = AT91_PMC_CSS;
-+	}
++			macb0: ethernet@f802c000 {
++				phy-mode = "rmii";
++				status = "okay";
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+new file mode 100644
+index 0000000..e91391f
+--- /dev/null
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -0,0 +1,172 @@
++/*
++ * at91sam9x5.dtsi - Device Tree Include file for AT91SAM9x5 family SoC
++ *                   applies to AT91SAM9G15, AT91SAM9G25, AT91SAM9G35,
++ *                   AT91SAM9X25, AT91SAM9X35 SoC
++ *
++ *  Copyright (C) 2012 Atmel,
++ *                2012 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++ *
++ * Licensed under GPLv2 or later.
++ */
 +
- 	spin_lock_irqsave(&clk_lock, flags);
- 
- 	actual = clk->parent->rate_hz;
-@@ -329,8 +358,8 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
- 			u32	pckr;
- 
- 			pckr = at91_sys_read(AT91_PMC_PCKR(clk->id));
--			pckr &= AT91_PMC_CSS;	/* clock selection */
--			pckr |= prescale << 2;
-+			pckr &= css_mask;	/* keep clock selection */
-+			pckr |= prescale << prescale_offset;
- 			at91_sys_write(AT91_PMC_PCKR(clk->id), pckr);
- 			clk->rate_hz = actual;
- 			break;
-@@ -377,11 +406,17 @@ static void __init init_programmable_clock(struct clk *clk)
- {
- 	struct clk	*parent;
- 	u32		pckr;
-+	unsigned int	css_mask;
++/include/ "skeleton.dtsi"
 +
-+	if (cpu_has_alt_prescaler())
-+		css_mask = AT91_PMC_ALT_PCKR_CSS;
-+	else
-+		css_mask = AT91_PMC_CSS;
- 
- 	pckr = at91_sys_read(AT91_PMC_PCKR(clk->id));
--	parent = at91_css_to_clk(pckr & AT91_PMC_CSS);
-+	parent = at91_css_to_clk(pckr & css_mask);
- 	clk->parent = parent;
--	clk->rate_hz = parent->rate_hz / (1 << ((pckr & AT91_PMC_PRES) >> 2));
-+	clk->rate_hz = parent->rate_hz / pmc_prescaler_divider(pckr);
- }
- 
- #endif	/* CONFIG_AT91_PROGRAMMABLE_CLOCKS */
-@@ -663,7 +698,7 @@ int __init at91_clock_init(unsigned long main_clock)
- 	if (pll_overclock)
- 		pr_info("Clocks: PLLA overclocked, %ld MHz\n", plla.rate_hz / 1000000);
- 
--	if (cpu_is_at91sam9g45()) {
-+	if (cpu_has_plladiv2()) {
- 		mckr = at91_sys_read(AT91_PMC_MCKR);
- 		plla.rate_hz /= (1 << ((mckr & AT91_PMC_PLLADIV2) >> 12));	/* plla divisor by 2 */
- 	}
-@@ -685,6 +720,10 @@ int __init at91_clock_init(unsigned long main_clock)
- 		 * (obtain the USB High Speed 480 MHz when input is 12 MHz)
- 		 */
- 		utmi_clk.rate_hz = 40 * utmi_clk.parent->rate_hz;
++/ {
++	model = "Atmel AT91SAM9x5 family SoC";
++	compatible = "atmel,at91sam9x5";
++	interrupt-parent = <&aic>;
 +
-+		/* UTMI bias and PLL are managed at the same time */
-+		if (cpu_has_upll())
-+			utmi_clk.pmc_mask |= AT91_PMC_BIASEN;
- 	}
- 
- 	/*
-@@ -703,7 +742,7 @@ int __init at91_clock_init(unsigned long main_clock)
- 	mckr = at91_sys_read(AT91_PMC_MCKR);
- 	mck.parent = at91_css_to_clk(mckr & AT91_PMC_CSS);
- 	freq = mck.parent->rate_hz;
--	freq /= (1 << ((mckr & AT91_PMC_PRES) >> 2));				/* prescale */
-+	freq /= pmc_prescaler_divider(mckr);					/* prescale */
- 	if (cpu_is_at91rm9200()) {
- 		mck.rate_hz = freq / (1 + ((mckr & AT91_PMC_MDIV) >> 8));	/* mdiv */
- 	} else if (cpu_is_at91sam9g20()) {
-@@ -711,13 +750,19 @@ int __init at91_clock_init(unsigned long main_clock)
- 			freq / ((mckr & AT91_PMC_MDIV) >> 7) : freq;	/* mdiv ; (x >> 7) = ((x >> 8) * 2) */
- 		if (mckr & AT91_PMC_PDIV)
- 			freq /= 2;		/* processor clock division */
--	} else if (cpu_is_at91sam9g45()) {
-+	} else if (cpu_has_mdiv3()) {
- 		mck.rate_hz = (mckr & AT91_PMC_MDIV) == AT91SAM9_PMC_MDIV_3 ?
- 			freq / 3 : freq / (1 << ((mckr & AT91_PMC_MDIV) >> 8));	/* mdiv */
- 	} else {
- 		mck.rate_hz = freq / (1 << ((mckr & AT91_PMC_MDIV) >> 8));		/* mdiv */
- 	}
- 
-+	if (cpu_has_alt_prescaler()) {
-+		/* Programmable clocks can use MCK */
-+		mck.type |= CLK_TYPE_PRIMARY;
-+		mck.id = 4;
-+	}
++	aliases {
++		serial0 = &dbgu;
++		serial1 = &usart0;
++		serial2 = &usart1;
++		serial3 = &usart2;
++		gpio0 = &pioA;
++		gpio1 = &pioB;
++		gpio2 = &pioC;
++		gpio3 = &pioD;
++		tcb0 = &tcb0;
++		tcb1 = &tcb1;
++	};
++	cpus {
++		cpu@0 {
++			compatible = "arm,arm926ejs";
++		};
++	};
 +
- 	/* Register the PMC's standard clocks */
- 	for (i = 0; i < ARRAY_SIZE(standard_pmc_clocks); i++)
- 		at91_clk_add(standard_pmc_clocks[i]);
++	memory@20000000 {
++		reg = <0x20000000 0x10000000>;
++	};
++
++	ahb {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		apb {
++			compatible = "simple-bus";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			aic: interrupt-controller@fffff000 {
++				#interrupt-cells = <2>;
++				compatible = "atmel,at91rm9200-aic";
++				interrupt-controller;
++				interrupt-parent;
++				reg = <0xfffff000 0x200>;
++			};
++
++			pit: timer@fffffe30 {
++				compatible = "atmel,at91sam9260-pit";
++				reg = <0xfffffe30 0xf>;
++				interrupts = <1 4>;
++			};
++
++			tcb0: timer@f8008000 {
++				compatible = "atmel,at91sam9x5-tcb";
++				reg = <0xf8008000 0x100>;
++				interrupts = <17 4>;
++			};
++
++			tcb1: timer@f800c000 {
++				compatible = "atmel,at91sam9x5-tcb";
++				reg = <0xf800c000 0x100>;
++				interrupts = <17 4>;
++			};
++
++			dma0: dma-controller@ffffec00 {
++				compatible = "atmel,at91sam9g45-dma";
++				reg = <0xffffec00 0x200>;
++				interrupts = <20 4>;
++			};
++
++			dma1: dma-controller@ffffee00 {
++				compatible = "atmel,at91sam9g45-dma";
++				reg = <0xffffee00 0x200>;
++				interrupts = <21 4>;
++			};
++
++			pioA: gpio@fffff400 {
++				compatible = "atmel,at91rm9200-gpio";
++				reg = <0xfffff400 0x100>;
++				interrupts = <2 4>;
++				#gpio-cells = <2>;
++				gpio-controller;
++			};
++
++			pioB: gpio@fffff600 {
++				compatible = "atmel,at91rm9200-gpio";
++				reg = <0xfffff600 0x100>;
++				interrupts = <2 4>;
++				#gpio-cells = <2>;
++				gpio-controller;
++			};
++
++			pioC: gpio@fffff800 {
++				compatible = "atmel,at91rm9200-gpio";
++				reg = <0xfffff800 0x100>;
++				interrupts = <3 4>;
++				#gpio-cells = <2>;
++				gpio-controller;
++			};
++
++			pioD: gpio@fffffa00 {
++				compatible = "atmel,at91rm9200-gpio";
++				reg = <0xfffffa00 0x100>;
++				interrupts = <3 4>;
++				#gpio-cells = <2>;
++				gpio-controller;
++			};
++
++			dbgu: serial@fffff200 {
++				compatible = "atmel,at91sam9260-usart";
++				reg = <0xfffff200 0x200>;
++				interrupts = <1 4>;
++				status = "disabled";
++			};
++
++			usart0: serial@f801c000 {
++				compatible = "atmel,at91sam9260-usart";
++				reg = <0xf801c000 0x200>;
++				interrupts = <5 4>;
++				atmel,use-dma-rx;
++				atmel,use-dma-tx;
++				status = "disabled";
++			};
++
++			usart1: serial@f8020000 {
++				compatible = "atmel,at91sam9260-usart";
++				reg = <0xf8020000 0x200>;
++				interrupts = <6 4>;
++				atmel,use-dma-rx;
++				atmel,use-dma-tx;
++				status = "disabled";
++			};
++
++			usart2: serial@f8024000 {
++				compatible = "atmel,at91sam9260-usart";
++				reg = <0xf8024000 0x200>;
++				interrupts = <7 4>;
++				atmel,use-dma-rx;
++				atmel,use-dma-tx;
++				status = "disabled";
++			};
++
++			macb0: ethernet@f802c000 {
++				compatible = "cdns,at32ap7000-macb", "cdns,macb";
++				reg = <0xf802c000 0x100>;
++				interrupts = <24 4>;
++				status = "disabled";
++			};
++
++			macb1: ethernet@f8030000 {
++				compatible = "cdns,at32ap7000-macb", "cdns,macb";
++				reg = <0xf8030000 0x100>;
++				interrupts = <27 4>;
++				status = "disabled";
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+new file mode 100644
+index 0000000..4ab5a77
+--- /dev/null
++++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
+@@ -0,0 +1,14 @@
++/*
++ * at91sam9x5cm.dtsi - Device Tree Include file for AT91SAM9x5 CPU Module
++ *
++ *  Copyright (C) 2012 Atmel,
++ *                2012 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++ *
++ * Licensed under GPLv2 or later.
++ */
++
++/ {
++	memory@20000000 {
++		reg = <0x20000000 0x8000000>;
++	};
++};
 -- 
 1.7.5.4
