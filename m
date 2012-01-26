@@ -1,43 +1,24 @@
-From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFCv2 00/14]
-Date: Wed, 25 Jan 2012 17:53:29 -0500
-Message-ID: <1327532011.24169.6.camel@deneb.redhat.com>
-References: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: Pinmux bindings proposal V2
+Date: Thu, 26 Jan 2012 17:24:04 +0800
+Message-ID: <20120126092402.GC2287@S2101-09.ap.freescale.net>
+References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1327352870-14687-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>, "Sascha Hauer (s.hauer@pengutronix.de)" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, Thomas Abraham <thomas.abraham@linaro.org>, Tony Lindgren <tony@atomide.com>, "Grant Likely (grant.likely@secretlab.ca)" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2012-01-23 at 14:07 -0700, Grant Likely wrote:
-> Hey everyone,
+On Fri, Jan 20, 2012 at 02:22:20PM -0800, Stephen Warren wrote:
+> Here's V2 of my pinmux binding proposal, after incorporating some feedback
+> from Shawn Guo and Dong Aisheng. Main changes:
 > 
-> Here's the second RFC for the irq_domain patches.  I could use some
-> help testing now.  I still expect there will be a few bugs.  The
-> series is based on v3.3-rc1, and I've pushed it out to my git server:
+It looks all good to me.
 
-Hi Grant,
-
-I converted arch/c6x over to the generic irq_domain support and have not
-had any problems in testing. The c6x virtual irq support was a nearly
-identical copy of the powerpc code, so the patch I ended up with mostly
-copied what you did in arch/powerpc. The c6x patch is on the tip of:
-
-  git-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org:/git/projects/linux-c6x-upstreaming irq-testing
-
-I think this probably belongs in your series, but I can push it
-separately if not.
-
---Mark
+-- 
+Regards,
+Shawn
