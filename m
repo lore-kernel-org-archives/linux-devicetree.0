@@ -1,15 +1,18 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Pinmux bindings proposal V2
-Date: Thu, 26 Jan 2012 18:21:12 -0800
-Message-ID: <20120127022111.GK29812@atomide.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
- <CAPnjgZ3Xhebn1x1A-Vdy78DWbDd=cp0AK6tL-R1SRzS4GdF97g@mail.gmail.com>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [RFC PATCH 6/7] ARM: mtd: nand: davinci: add OF support for
+ davinci nand controller
+Date: Fri, 27 Jan 2012 07:40:00 +0100
+Message-ID: <4F2246C0.6020905@denx.de>
+References: <1327308967-8092-1-git-send-email-hs@denx.de>
+ <1327308967-8092-7-git-send-email-hs@denx.de> <4F1DF465.60206@freescale.com>
+ <4F1E5C82.60108@denx.de> <4F1F0A3E.40805@freescale.com>
+ <4F1FAAAE.2060007@denx.de> <4F21B8AC.40002@freescale.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPnjgZ3Xhebn1x1A-Vdy78DWbDd=cp0AK6tL-R1SRzS4GdF97g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-reply-to: <4F21B8AC.40002-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,100 +22,82 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Scott,
 
-* Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> [120126 09:11]:
+Scott Wood wrote:
+> On 01/25/2012 01:09 AM, Heiko Schocher wrote:
+>> Scott Wood wrote:
+>> I found the following used options:
+>>
+>> ecc_mode:
+>> NAND_ECC_NONE
+>> NAND_ECC_SOFT
+>> NAND_ECC_HW
+>> NAND_ECC_HW_SYNDROME
+>>
+>> bbt_options:
+>> NAND_BBT_USE_FLASH
+>>
+>> ecc_bits:
+>> 1
+>> 4
+>>
+>> options:
+>> NAND_BUSWIDTH_16
+>>
+>>>>> Do all of these properties really belong here?  I can see providing some
+>>>> I think so, because this values come from existing platform code
+>>>> (grep for struct davinci_nand_pdata)
+>>> The standards are a bit stricter for the device tree, since it's a more
+>>> stable interface across components -- at least that's how we've used it
+>>> on a lot of powerpc targets.  I'm not sure if that's the intent here,
+>>> but I have seen U-Boot patches for ARM hardware using them as well.
+>> Ok, so, should I introduce instead properties for the above
+>> needed parameters? 
 > 
-> On Fri, Jan 20, 2012 at 2:22 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> 
-> 1. It doesn't seem to make full use of the device tree format. For example,
-> 
->    <TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
-> 
-> would be better as something like
-> 
->     drive-strength = <5>;
-> 
-> if we could arrange it. It also reduces the need for these
-> TEGRA_PMX_CONF_DRIVE_STRENGTH defines.
+> Yes.
 
-I agree. This is something that most pinmux/pinconf drivers need to
-implement, so it's best done in a generic way.
- 
-> In tegra20.dtsi:
+Ok, I change this.
+
+>> (As this are not davinci specific parameters, are there somewhere such definitions for them?)
 > 
-> / {
-> 	&tegra_pmx {
-> 		#address-cells = <1>;
-> 		#size-cells = <0>;
-> 
-> 		/*
-> 		 * This is the first option for SDIO1. It comes out
-> 		 * on pin groups DTA and DTD. Boards can simply use this
-> 		 * phandle in the driver node to get this option. Any options
-> 		 * not used could potentially be dropped from the device tree
-> 		 * blob for space-constrained boot loaders.
-> 		 */
-> 		pmx_sdhci1_dta_dtd: sdhci1-dta-dtd@0 {
-> 			#address-cells = <1>;
-> 			#size-cells = <0>;
-> 			reg = <0>;
-> 			label = "SDIO1 on DTA, DTD (4-bit)";
-> 
-> 			/*
-> 			 * Here are the pin groups needed for this option.
-> 			 * First DTA, then DTD.
-> 			 */
-> 			pmx@dta {
-> 				reg = <PG_DTA>;
-> 				mux = <PMX_MUX_SDIO1>;
-> 				drive-strengh = <5>;
-> 				slew-rate = <4>;
+> It's controller-specific which options are changeable, and whether
+> there's a better source of information.  Most controllers don't seem to
+> need this.  I'd keep the definitions davinci specific for now.  If
+> there's enough of a common need, a common definition could be considered.
 
-Using reg for the register offsets here makes sense to me. But doesn't that
-mean that now we're back to having a node for each pin? And that is something
-we're trying to avoid because of the bloat as most systems have one register
-per pin, so this is not efficient for listing multiple pins.
+Ok, a proposal for the properties names and values:
 
-So maybe we should just use what Stephen suggested for the array of registers
-here:
+>> ecc_mode:
+>> NAND_ECC_NONE
+>> NAND_ECC_SOFT
+>> NAND_ECC_HW
+>> NAND_ECC_HW_SYNDROME
 
-				mux = <MUX_OFFSET1 INITIAL_MUX_VALUE1
-				       MUX_OFFSET2 INITIAL_MUX_VALUE2>;
+"ti,davinci-nand-ecc-mode" = "none", "soft", "hw" or "hw_syndrome"
 
-> 
-> 				/*
-> 				 * We support two states here, active
-> 				 * and standby. Properties in these child
-> 				 * nodes can override the ones at this level.
-> 				 * Drivers can move between states just by
-> 				 * making the changes in these nodes.
-> 				 */
-> 				state-active {
-> 					reg = <PMX_CONF_ACTIVE>;
-> 					tristate = <0>;
-> 				};
-> 				state-standby {
-> 					reg = <PMX_CONF_STANDBY>;
-> 					tristate = <1>;
-> 					drive-strengh = <2>;
-> 				};
-> 			};
+>> bbt_options:
+>> NAND_BBT_USE_FLASH
 
-This seems like a qood way to represent the alternative mux states for
-the muxes that need them. This is assuming the states have standard
-bindings and not some random names. I still don't know if we need them
-though. And again when we have multiple registers, we'd have to have
-either multiple entries for each pin, or use the array instead of reg.
+"ti,davinci-nand-bbt-options" = "use_flash"
 
-Maybe we need two bindings: A minimal subset of what Stephen is suggesting
-that can handle 95% of the muxes with minimal overhead, then what you're
-suggesting for the few muxes that need multiple states?
+>> ecc_bits:
+>> 1
+>> 4
 
-Regards,
+"ti,davinci-nand-ecc-bits" = "1" or "4"
 
-Tony
+>> options:
+>> NAND_BUSWIDTH_16
+
+"ti,davinci-nand-options" = "buswidth-16"
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
