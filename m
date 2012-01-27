@@ -1,178 +1,273 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v3 01/25] irq_domain: add documentation and MAINTAINERS entry.
-Date: Fri, 27 Jan 2012 14:35:55 -0700
-Message-ID: <1327700179-17454-2-git-send-email-grant.likely@secretlab.ca>
+Subject: [PATCH v3 22/25] irq_domain/x86: Convert x86 (embedded) to use common irq_domain
+Date: Fri, 27 Jan 2012 14:36:16 -0700
+Message-ID: <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca>
 References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Documentation for irq_domain library which will be created in subsequent
-patches.
+This patch removes the x86-specific definition of irq_domain and replaces
+it with the common implementation.
 
 Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Milton Miller <miltonm@bga.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 ---
- Documentation/IRQ-domain.txt |  113 ++++++++++++++++++++++++++++++++++++++++++
- MAINTAINERS                  |    9 +++
- 2 files changed, 122 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/IRQ-domain.txt
+ arch/x86/Kconfig                      |    2 +
+ arch/x86/include/asm/irq_controller.h |   12 ----
+ arch/x86/include/asm/prom.h           |   10 ---
+ arch/x86/kernel/devicetree.c          |  101 ++++++++++-----------------------
+ drivers/net/phy/mdio-gpio.c           |    4 +-
+ 5 files changed, 34 insertions(+), 95 deletions(-)
+ delete mode 100644 arch/x86/include/asm/irq_controller.h
 
-diff --git a/Documentation/IRQ-domain.txt b/Documentation/IRQ-domain.txt
-new file mode 100644
-index 0000000..247f32a
---- /dev/null
-+++ b/Documentation/IRQ-domain.txt
-@@ -0,0 +1,113 @@
-+irq_domain interrupt number mapping library
-+
-+The current design of the Linux kernel uses a single large number
-+space where each separate IRQ source is assigned a different number.
-+This is simple when there is only one interrupt controller, but in
-+systems with controllers the kernel must ensure that each one does not
-+get assigned overlapping allocations of Linux irq numbers.
-+
-+The irq_alloc_desc*() and irq_free_desc*() API provides allocation of
-+irq numbers, but it doesn't provide any support for reverse mapping of
-+the controller-local irq (hwirq) number into the Linux irq number
-+space.
-+
-+The irq_domain library adds mapping between hwirq and irq numbers on
-+top of the irq_alloc_desc*() API.  An irq_domain to manage mapping is
-+preferred over interrupt controller drivers open coding their own
-+reverse mapping scheme.
-+
-+irq_domain also implements translation from Device Tree interrupt
-+specifiers to hwirq numbers, and can be easily extended to support
-+other irq topology data sources.
-+
-+=== irq_domain usage ===
-+An interrupt controller driver creates and registers an irq_domain by
-+calling one of the irq_domain_add_*() functions (each mapping method
-+has a different allocator function, more on that later).  The function
-+will return a pointer to the irq_domain on success.  It must provide
-+the allocator function with an irq_domain_ops structure with the .map
-+callback populated as a minimum.
-+
-+In most cases, the irq_domain will begin empty without any mappings
-+between hwirq and irq numbers.  Mappings are added to the irq_domain
-+by calling irq_create_mapping() which accepts the irq_domain and a
-+hwirq number as arguments.  If a mapping for the hwirq doesn't already
-+exist then it will allocate a new linux irq_desc, associate it with
-+the hwirq, and call the .map() callback so the driver can perform any
-+required hardware setup.
-+
-+When an interrupt is received, irq_find_mapping() function should
-+be used to find the Linux irq number from the hwirq number.
-+
-+If the driver has the Linux irq number or the irq_data pointer, and
-+needs to know the associated hwirq number (such as in the irq_chip
-+callbacks) then it can be directly obtained from irq_data->hwirq.
-+
-+=== Types of irq_domain mappings ===
-+There are several mechanisms available for reverse mapping from hwirq
-+to Linux irq, and each mechanism uses a different allocation function.
-+Which reverse map type should be used depends on the use case.  Each
-+of the reverse map types are described below:
-+
-+==== Linear ====
-+irq_domain_add_linear()
-+
-+The linear reverse map maintains a fixed size table indexed by the
-+hwirq number.  When a hwirq is mapped, an irq_desc is allocated for
-+the hwirq, and the irq number is stored in the table.
-+
-+The Linear map is a good choice when the maximum number of hwirqs is
-+fixed and a relatively small number (~ < 256).  The advantages of this
-+map are fixed time lookup for irq numbers, and irq_descs are only
-+allocated for in-use irqs.  The disadvantage is that the table must be
-+as large as the largest possible hwirq number.
-+
-+The majority of drivers should use the linear map.
-+
-+==== Tree ====
-+irq_domain_add_tree()
-+
-+The irq_domain maintains a radix tree map from hwirq numbers to linux
-+irqs.  When an hwirq is mapped, and irq_desc is allocated and the
-+hwirq is used as the lookup key for the radix tree.
-+
-+The tree map is a good choice if the hwirq number can be very large
-+since it doesn't need to allocate a table as large as the largest
-+hwirq number.  The disadvantage is that hwirq to irq number lookup is
-+dependent on how many entries are in the table.
-+
-+Very few drivers should need this mapping.  At the moment, powerpc
-+iseries is the only user.
-+
-+==== No Map ===-
-+irq_domain_add_nomap()
-+
-+The No Map mapping is to be used when the hwirq number is
-+programmable in the hardware.  In this case it is best to program the
-+Linux irq number into the hardware itself so that no mapping is
-+required.  Calling irq_create_direct_mapping() will allocate a linux
-+irq number and call the .map() callback so that driver can program the
-+Linux irq number into the hardware.
-+
-+Most drivers cannot use this mapping.
-+
-+==== Legacy ====
-+irq_domain_add_legacy()
-+irq_domain_add_legacy_isa()
-+
-+The Legacy mapping is a special case for drivers that already have a
-+range of irq_descs allocated for the hwirqs.  It is used when the
-+driver cannot be immediately converted to use the linear mapping, such
-+as when the driver is used in a system with fixed irq number
-+assignments, as is typical in many embedded system board files.
-+
-+The legacy map assumes a contiguous range of irq numbers has already
-+been allocated for the controller and that the irq number can be
-+calculated by adding a fixed offset to the hwirq number, and
-+visa-versa.  The disadvantage is that it requires the interrupt
-+controller to manage irq allocations and it requires an irq_desc to be
-+allocated for every hwirq, even if it is unused.
-+
-+Drivers should only use the legacy map if they have fixed irq mappings
-+(#define IRQ_* in embedded board files).  For example, ISA controllers
-+mapped to Linux irqs 0-15 would use the legacy map.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 89b70df..d308f0f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3626,6 +3626,15 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
- F:	kernel/irq/
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 864cc6e..5c44039 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -399,6 +399,7 @@ config X86_INTEL_CE
+ 	select X86_REBOOTFIXUPS
+ 	select OF
+ 	select OF_EARLY_FLATTREE
++	select IRQ_DOMAIN
+ 	---help---
+ 	  Select for the Intel CE media processor (CE4100) SOC.
+ 	  This option compiles in support for the CE4100 SOC for settop
+@@ -2077,6 +2078,7 @@ config OLPC
+ 	select GPIOLIB
+ 	select OF
+ 	select OF_PROMTREE
++	select IRQ_DOMAIN
+ 	---help---
+ 	  Add support for detecting the unique features of the OLPC
+ 	  XO hardware.
+diff --git a/arch/x86/include/asm/irq_controller.h b/arch/x86/include/asm/irq_controller.h
+deleted file mode 100644
+index 423bbbd..0000000
+--- a/arch/x86/include/asm/irq_controller.h
++++ /dev/null
+@@ -1,12 +0,0 @@
+-#ifndef __IRQ_CONTROLLER__
+-#define __IRQ_CONTROLLER__
+-
+-struct irq_domain {
+-	int (*xlate)(struct irq_domain *h, const u32 *intspec, u32 intsize,
+-			u32 *out_hwirq, u32 *out_type);
+-	void *priv;
+-	struct device_node *controller;
+-	struct list_head l;
+-};
+-
+-#endif
+diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+index 644dd885..60bef66 100644
+--- a/arch/x86/include/asm/prom.h
++++ b/arch/x86/include/asm/prom.h
+@@ -21,7 +21,6 @@
+ #include <asm/irq.h>
+ #include <linux/atomic.h>
+ #include <asm/setup.h>
+-#include <asm/irq_controller.h>
  
-+IRQ DOMAINS (IRQ NUMBER MAPPING LIBRARY)
-+M:	Benjamin Herrenschmidt <benh@kernel.crashing.org>
-+M:	Grant Likely <grant.likely@secretlab.ca>
-+T:	git git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
-+S:	Maintained
-+F:	Documentation/IRQ-domain.txt
-+F:	include/linux/irqdomain.h
-+F:	kernel/irq/irqdomain.c
+ #ifdef CONFIG_OF
+ extern int of_ioapic;
+@@ -43,15 +42,6 @@ extern char cmd_line[COMMAND_LINE_SIZE];
+ #define pci_address_to_pio pci_address_to_pio
+ unsigned long pci_address_to_pio(phys_addr_t addr);
+ 
+-/**
+- * irq_dispose_mapping - Unmap an interrupt
+- * @virq: linux virq number of the interrupt to unmap
+- *
+- * FIXME: We really should implement proper virq handling like power,
+- * but that's going to be major surgery.
+- */
+-static inline void irq_dispose_mapping(unsigned int virq) { }
+-
+ #define HAVE_ARCH_DEVTREE_FIXUPS
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index 5282179..3ae2ced 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -4,6 +4,7 @@
+ #include <linux/bootmem.h>
+ #include <linux/export.h>
+ #include <linux/io.h>
++#include <linux/irqdomain.h>
+ #include <linux/interrupt.h>
+ #include <linux/list.h>
+ #include <linux/of.h>
+@@ -17,64 +18,14 @@
+ #include <linux/initrd.h>
+ 
+ #include <asm/hpet.h>
+-#include <asm/irq_controller.h>
+ #include <asm/apic.h>
+ #include <asm/pci_x86.h>
+ 
+ __initdata u64 initial_dtb;
+ char __initdata cmd_line[COMMAND_LINE_SIZE];
+-static LIST_HEAD(irq_domains);
+-static DEFINE_RAW_SPINLOCK(big_irq_lock);
+ 
+ int __initdata of_ioapic;
+ 
+-#ifdef CONFIG_X86_IO_APIC
+-static void add_interrupt_host(struct irq_domain *ih)
+-{
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&big_irq_lock, flags);
+-	list_add(&ih->l, &irq_domains);
+-	raw_spin_unlock_irqrestore(&big_irq_lock, flags);
+-}
+-#endif
+-
+-static struct irq_domain *get_ih_from_node(struct device_node *controller)
+-{
+-	struct irq_domain *ih, *found = NULL;
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&big_irq_lock, flags);
+-	list_for_each_entry(ih, &irq_domains, l) {
+-		if (ih->controller ==  controller) {
+-			found = ih;
+-			break;
+-		}
+-	}
+-	raw_spin_unlock_irqrestore(&big_irq_lock, flags);
+-	return found;
+-}
+-
+-unsigned int irq_create_of_mapping(struct device_node *controller,
+-				   const u32 *intspec, unsigned int intsize)
+-{
+-	struct irq_domain *ih;
+-	u32 virq, type;
+-	int ret;
+-
+-	ih = get_ih_from_node(controller);
+-	if (!ih)
+-		return 0;
+-	ret = ih->xlate(ih, intspec, intsize, &virq, &type);
+-	if (ret)
+-		return 0;
+-	if (type == IRQ_TYPE_NONE)
+-		return virq;
+-	irq_set_irq_type(virq, type);
+-	return virq;
+-}
+-EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+-
+ unsigned long pci_address_to_pio(phys_addr_t address)
+ {
+ 	/*
+@@ -354,36 +305,43 @@ static struct of_ioapic_type of_ioapic_type[] =
+ 	},
+ };
+ 
+-static int ioapic_xlate(struct irq_domain *id, const u32 *intspec, u32 intsize,
+-			u32 *out_hwirq, u32 *out_type)
++static int ioapic_xlate(struct irq_domain *domain,
++			struct device_node *controller,
++			const u32 *intspec, u32 intsize,
++			irq_hw_number_t *out_hwirq, u32 *out_type)
+ {
+-	struct mp_ioapic_gsi *gsi_cfg;
+ 	struct io_apic_irq_attr attr;
+ 	struct of_ioapic_type *it;
+-	u32 line, idx, type;
++	u32 line, idx;
++	int rc;
+ 
+-	if (intsize < 2)
++	if (WARN_ON(intsize < 2))
+ 		return -EINVAL;
+ 
+-	line = *intspec;
+-	idx = (u32) id->priv;
+-	gsi_cfg = mp_ioapic_gsi_routing(idx);
+-	*out_hwirq = line + gsi_cfg->gsi_base;
+-
+-	intspec++;
+-	type = *intspec;
++	line = intspec[0];
+ 
+-	if (type >= ARRAY_SIZE(of_ioapic_type))
++	if (intspec[1] >= ARRAY_SIZE(of_ioapic_type))
+ 		return -EINVAL;
+ 
+-	it = of_ioapic_type + type;
+-	*out_type = it->out_type;
++	it = &of_ioapic_type[intspec[1]];
+ 
++	idx = (u32) domain->host_data;
+ 	set_io_apic_irq_attr(&attr, idx, line, it->trigger, it->polarity);
+ 
+-	return io_apic_setup_irq_pin_once(*out_hwirq, cpu_to_node(0), &attr);
++	rc = io_apic_setup_irq_pin_once(irq_find_mapping(domain, line),
++					cpu_to_node(0), &attr);
++	if (rc)
++		return rc;
 +
- ISAPNP
- M:	Jaroslav Kysela <perex@perex.cz>
- S:	Maintained
++	*out_hwirq = line;
++	*out_type = it->out_type;
++	return 0;
+ }
+ 
++const struct irq_domain_ops ioapic_irq_domain_ops = {
++	.xlate = ioapic_xlate,
++};
++
+ static void __init ioapic_add_ofnode(struct device_node *np)
+ {
+ 	struct resource r;
+@@ -399,13 +357,14 @@ static void __init ioapic_add_ofnode(struct device_node *np)
+ 	for (i = 0; i < nr_ioapics; i++) {
+ 		if (r.start == mpc_ioapic_addr(i)) {
+ 			struct irq_domain *id;
++			struct mp_ioapic_gsi *gsi_cfg;
++
++			gsi_cfg = mp_ioapic_gsi_routing(i);
+ 
+-			id = kzalloc(sizeof(*id), GFP_KERNEL);
++			id = irq_domain_add_legacy(np, 32, gsi_cfg->gsi_base, 0,
++						   &ioapic_irq_domain_ops,
++						   (void*)i);
+ 			BUG_ON(!id);
+-			id->controller = np;
+-			id->xlate = ioapic_xlate;
+-			id->priv = (void *)i;
+-			add_interrupt_host(id);
+ 			return;
+ 		}
+ 	}
+diff --git a/drivers/net/phy/mdio-gpio.c b/drivers/net/phy/mdio-gpio.c
+index 50e8e5e..7189adf 100644
+--- a/drivers/net/phy/mdio-gpio.c
++++ b/drivers/net/phy/mdio-gpio.c
+@@ -255,13 +255,13 @@ static inline int __init mdio_ofgpio_init(void)
+ 	return platform_driver_register(&mdio_ofgpio_driver);
+ }
+ 
+-static inline void __exit mdio_ofgpio_exit(void)
++static inline void mdio_ofgpio_exit(void)
+ {
+ 	platform_driver_unregister(&mdio_ofgpio_driver);
+ }
+ #else
+ static inline int __init mdio_ofgpio_init(void) { return 0; }
+-static inline void __exit mdio_ofgpio_exit(void) { }
++static inline void mdio_ofgpio_exit(void) { }
+ #endif /* CONFIG_OF_GPIO */
+ 
+ static struct platform_driver mdio_gpio_driver = {
 -- 
 1.7.5.4
