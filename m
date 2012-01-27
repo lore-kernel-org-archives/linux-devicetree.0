@@ -1,22 +1,18 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Pinmux bindings proposal V2
-Date: Fri, 27 Jan 2012 09:42:32 -0800
-Message-ID: <20120127174232.GK13504@atomide.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: Pinmux bindings proposal V2
+Date: Fri, 27 Jan 2012 09:51:58 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178E123E62@HQMAIL01.nvidia.com>
 References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
- <20120123210052.GS22818@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF178CB81C0D@HQMAIL01.nvidia.com>
- <20120124012038.GT22818@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF178CB81EDB@HQMAIL01.nvidia.com>
- <20120125000407.GU22818@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF178CB82433@HQMAIL01.nvidia.com>
- <20120127020832.GJ29812@atomide.com>
- <74CDBE0F657A3D45AFBB94109FB122FF178E123E57@HQMAIL01.nvidia.com>
+ <CAPnjgZ3Xhebn1x1A-Vdy78DWbDd=cp0AK6tL-R1SRzS4GdF97g@mail.gmail.com>
+ <20120127022111.GK29812@atomide.com>
+ <CAPnjgZ2EkvTMsOkWyf4pfwRpvcvYs=WaKy5Gi8fdkAUQmvt=ig@mail.gmail.com>
+ <20120127173732.GJ13504@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF178E123E57-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <20120127173732.GJ13504-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -26,46 +22,79 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Sascha Hauer
+ (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> [120127 09:05]:
-> Tony Lindgren wrote at Thursday, January 26, 2012 7:09 PM:
-> ...
-> > I don't think we should try to pass the different possible states from
-> > device tree. The pinmux/pinconf driver should know how to deal with that,
+Tony Lindgren wrote at Friday, January 27, 2012 10:38 AM:
+...
+> So how about let's do separate static and dynamic bindings,
+> something like this:
 > 
-> Somehow, the pinctrl driver needs to know how to implement each state. In 
-> general, I believe this will be board-specific.
+> 	/*
+> 	 * Static init time only mux where
+> 	 * we only specify phandle to driver
+> 	 * and, offset of the mux, and the value.
+> 	 * These pins are discarded after init.
+> 	 *
+> 	 * Format:	  mux_ctrl      offset value
+> 	 */
+> 	pinctrl-static = <&pmx_driver1  0x0020 0x1245
+> 			   &pmx_driver2 0x0022 0x6578>;
+
+So those are direct register writes? That sounds pretty scary, and a
+royal pain to author the device tree.
+
+If we do go with this, I think we'd need a mask for each register write
+too, so you can leave certain bits unaffected; there's no reason to
+believe in general that each pin has a dedicated register only for that
+pin, or even that only pinmux/config data is in the register.
+
+This also makes it difficult to extract semantic information from the
+DT. How can the pinctrl subsystem know which pins are in use and which
+aren't here? This is relevant if some module loads later and attempts
+to claim some pins - are they already in use by another driver or not?
+
+Now individual pinctrl drivers could interpret those register values
+and know that this means pin/group "x" is programmed to mux value "y",
+but does that mean pin "x" is actually /used/, or just that the init
+table had to program value "y" because the default for that pin is "z"
+which conflicted in HW with some other mux setting that the board
+needed (e.g. muxing signal "y" to some other pin).
+
+(Put another way, this binding completely bypasses the pinctrl subsystem;
+is that OK?)
+
+> 	/*
+> 	 * Dynamic mux where the mux is kept around after
+> 	 * init and multiple states can be defined for
+> 	 * a mux as a subnode of the pinmux controller.
+> 	 *
+> 	 * Format:	   mux_phandle   initial state
+> 	 */
+> 	pinctrl-dynamic = <&pmx_sdhci    PMX_STATE_ENABLED
+> 			   &pmx_ehci_xcv PMX_STATE_ENABLED>;
 > 
-> Do you disagree with this assertion?
+> This would make pinctrl-static binding follow the same
+> standard as GPIO binding and can be parsed easily with
+> of_parse_phandle_with_args.
 > 
-> If the data is board-specific, I don't see how it can be represented
-> anywhere but the device tree.
+> Then for pinctrl-dynamic we can make a custom parser,
+> and the binding can follow the more readable format as
+> Simon posted.
 
-Agreed, for board specific things device tree is the place to put it.
- 
-> > and the driver using the mux should be able to communicate what it wants
-> > to the pinmux/pinconf driver. If people really want to be able to pass
-> > alternative mux states from device tree, they should be standard bindings
-> > for things like active/idle/suspend/off.
-> 
-> As I've mentioned before, people have asked for driver-specific states to
-> handle the case where e.g. drive strength must be adjusted based on clock
-> rates of the interface. Again, I believe that's board-specific data since
-> the actual values to use may be derived during board calibration, not
-> SoC design.
-> 
-> Do you disagree that this data may be board specific?
+I don't think there's any point in having 2 separate bindings; it's been
+hard enough to come up with /one/ binding! If we do go for raw register
+writes for the static stuff, we should just do the same for the dynamic
+stuff too.
 
-Right, but for the dynamic mux cases I've seen the alternative states
-are usually specific to the driver using the mux. That's why I'm
-suspicious of the board specific custom alternative states :)
+In fact, given this would all bypass the pinctrl subsystem entirely,
+perhaps lets not even define a standard format for pinctrl-static or
+pinctrl-dynamic, and just have each pin controller driver parse tables
+inside its own node, in a format specific to that pin controller's
+binding. I already had that working for the static case back in last
+August and would love to just apply those patches and be done with this.
 
-Anyways, do you think the pinctrl-static + pinctrl-dynamic binding
-I just posted as a reply to Simon's email would work for you?
-
-Regards,
-
-Tony
+-- 
+nvpublic
