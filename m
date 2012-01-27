@@ -1,91 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Pinmux bindings proposal
-Date: Fri, 27 Jan 2012 14:11:43 +0100
-Message-ID: <CACRpkdaRePot9qt-z3Chk-GHqHDfyu07ojKfGA2HEXxvjKn=Vg@mail.gmail.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
-	<20120116182808.GG4223@ponder.secretlab.ca>
-	<20120118141329.GA22818@atomide.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF1780DAAEBB@HQMAIL01.nvidia.com>
-	<20120119105728.GE22818@atomide.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF1780DAB45E@HQMAIL01.nvidia.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH v6 6/9] ARM: vexpress: Motherboard RS1 memory map support
+Date: Fri, 27 Jan 2012 14:02:40 +0000
+Message-ID: <1327672960.24701.55.camel@hornet.cambridge.arm.com>
+References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
+ <1323957761-13553-7-git-send-email-pawel.moll@arm.com>
+ <4F047FE1.5030002@citrix.com>
+ <1326979266.32197.60.camel@hornet.cambridge.arm.com>
+ <4F184900.8050901@citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB45E@HQMAIL01.nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F184900.8050901@citrix.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Vrabel <david.vrabel@citrix.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2012 at 9:50 PM, Stephen Warren <swarren@nvidia.com> wrote:
-
-> For Tegra20 (and IIRC some other HW), the pin mux HW actually muxes
-> groups of pins; one register field sets n (1, 2, 3, ...) pins to that
-> function at once. Hence, the entries are real physical groups.
-
-Maybe I am getting things wrong, but I've read:
-
-http://en.wiktionary.org/wiki/real
-http://en.wiktionary.org/wiki/virtual
-
-And now I am trying to address this from my understanding of
-"real" as defined in clause 1:
-
-"1. That has physical existence.
-    No one has ever seen a real unicorn."
-
-And "virtual" as defined in clause 3:
-
-"3. Of something that is simulated in a computer or on-line.
-    The virtual world of his computer game allowed character interaction."
-
-Please tell me if I have the wrong definitions in my
-head, I am not trying to play smart, I just want to understand
-why this rubs me the wrong way. So:
-
-On the Nomadik GPIO controller (not yet migrated to the pin
-control subsystem, mea culpa) pins 0,1,2,3 can be used for UART0.
-
-These four pins can also be used for GPIO, and two other
-functions.
-
-Does that make the group UART0 = {0,1,2,3} a virtual group
-in sense (3) of the wiktionary article, i.e. "simulated in a
-computer"?
-
-To me: no, not at all.
-
-Because it is a very real physical property of these pins that
-UART0 can *only* appear on these 4 pins, not 4 other pins.
-It is clear from the data sheet.
-
-And even if they could appear on other pins, the number of
-such appearances would be limited by physical factors, and
-UART0_1 = {0,1,2,3} vs UART0_2 = {4,5,6,7} wouldn't
-make it virtual. This is also a physical property, not simulated or virtual.
-
-The *only* case where I could *maybe* accept the "virtual"
-terminology would be for a phone-exchange type of
-pinmux, where say this UART could appear on any 4 pins,
-arbitrarily chosen. Still this is not fully virtual since it is
-a physical fact that the UART group has to have 4 pins,
-not 1, not 17.
-
-Notice that I don't involve the use of that group on a
-specific board in this argument, since the *silicon* limits the
-muxable properties of this group, and it is a very real
-group of pins.
-
-This is why I think it is a bad idea to try to define pins as
-being in a "real" or "virtual" group like this, where the only
-criteria for that terminology is whether each pin has its own
-control register or not.
-
-I'm all happy with "Tegra type groups" and "Tegra type pins"
-or "groups with separate control registers" or "pins with
-separate control registers" which tells us what it really is,
-"real" or "virtual" does not fit our discussion here the way
-I see it.
-
-Yours,
-Linus Walleij
+T24gVGh1LCAyMDEyLTAxLTE5IGF0IDE2OjQ2ICswMDAwLCBEYXZpZCBWcmFiZWwgd3JvdGU6Cj4g
+Pj4gIF9fY3JlYXRlX3BhZ2VfdGFibGVzIGhhcyBvbmx5IG1hcHBlZCB0aGUgc2luZ2xlIHBoeXNp
+Y2FsCj4gPj4gcGFnZSBhdCAweDFjMDkwMDAwIGFuZCB0aHVzIHRoZSB0ZXN0IGZvciB0aGUgVUFS
+VCBpbiB0aGUgb3RoZXIgbWVtb3J5Cj4gPj4gbWFwIGZhdWx0cy4KCkkgZ290IHRvIHRoZSBib3R0
+b20gb2YgdGhlIHByb2JsZW0uLi4gVGhlIG1hcHBpbmcgY3JlYXRlZCBieSB0aGUKREVCVUdfTEwg
+Y29kZSBpbiBfX2NyZWF0ZV9wYWdlX3RhYmxlcyBpcyBhY3R1YWxseSBhIHNlY3Rpb24gKDFNQikg
+c28KY292ZXJzIGJvdGggcG9zc2libGUgYWNjZXNzZXMgKDB4ZjgwMDkwMDAgYW5kIDB4ZjgwOTAw
+MDApLiBUaGUKZGlmZmVyZW5jZSBiZXR3ZWVuIG1vZGVsIGFuZCBoYXJkd2FyZSBpcyB0aGF0ICJy
+ZWFsIiBSUzEgVkUgaGFzIGEgREFQClJPTSBsb2NhdGVkIGJldHdlZW4gMHhmODAwMDAwMCBhbmQg
+MHhmODAwZmZmZiBzbyB0aGUgMHhmODAwOTAwMCBzdWNjZWVkcwoocmV0dXJuaW5nIHNvbWUgaXJy
+ZWxldmFudCBkYXRhKSwgd2hpbGUgbW9kZWwgaXMgImVtcHR5IiBpbiB0aGF0IHNwYWNlLApzbyBp
+dCBmYXVsdHMuCgpBbnl3YXksIEkgaGF2ZSBhbiBpZGVhIGhvdyB0byBzb2x2ZSAob3IgcmF0aGVy
+IHdvcmsgYXJvdW5kKSB0aGUgcHJvYmxlbQphbmQgd2lsbCBnZXQgaWYgd29ya2luZyBvbiBtb2Rl
+bHMgaW4gdGhlIG5leHQgdmVyc2lvbiBvZiB0aGUgc2VyaWVzLgpJJ2xsIHNlbmQgeW91IGEgbW9k
+aWZpZWQgdmVyc2lvbiBvZiB0aGUgcmVsZXZhbnQgcGF0Y2ggYmVmb3JlIHRoYXQgc28KeW91IGNh
+biB0ZXN0IGl0LgoKVGhhbmtzIGZvciB5b3VyIHRpbWUhCgpQYXdlxYIKCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
