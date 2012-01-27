@@ -1,17 +1,15 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Pinmux bindings proposal V2
-Date: Fri, 27 Jan 2012 15:19:46 +0800
-Message-ID: <20120127071944.GC32740@S2101-09.ap.freescale.net>
-References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
- <20120123210052.GS22818@atomide.com>
- <20120126093610.GD2287@S2101-09.ap.freescale.net>
- <20120126175122.GX22818@atomide.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] irq_domain/microblaze: Convert microblaze to use
+ irq_domains
+Date: Fri, 27 Jan 2012 08:51:29 +0100
+Message-ID: <4F225781.5010502@monstr.eu>
+References: <1327613292-20580-1-git-send-email-grant.likely@secretlab.ca>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120126175122.GX22818-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1327613292-20580-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,49 +19,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 26, 2012 at 09:51:23AM -0800, Tony Lindgren wrote:
-> Hi,
+Grant Likely wrote:
+> ***totally untested.  Don't apply yet***
 > 
-> * Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120126 00:53]:
-> > 
-> > On Mon, Jan 23, 2012 at 01:00:52PM -0800, Tony Lindgren wrote:
-> > ...
-> > > So to summarize: I suggest we'll just stick to basics to get the system
-> > > booting and devices working using device tree. In most cases the device
-> > > drivers should be able to configure the suspend and off states in a generic
-> > > way using pinctrl API. Everything else, like debugging, we can probably
-> > > do with userspace tools.
-> > > 
-> > > This would mean just using a minimal subset of your binding, probably
-> > > very close to what you originally suggested.
-> > > 
-> > IMHO, as a generic device tree binding, it should be able to cope with
-> > different use cases.  It's really free for you to use the minimal
-> > subset of the binding as your need, but we should not make the binding
-> > design just be that minimal subset to force that everyone else can
-> > only use the minimal subset.
+> Michal, I leave it to you to test this patch.  I've turned on SPARSE_IRQ, but
+> you may decide that isn't valuable.  I've compile tested it, but that's
+> about it (in fact, I had to hack head.S to get it to build because I don't have
+> an up-to-date compiler for microblaze.  It fails on an unknown opcode 'lwr')
 > 
-> The main issue I have is that the example posted in this thread repeats
-> the same registers five times for one driver entry alone in the device
-> tree data. The repeated registers are TEGRA_PMX_PG_DTA and TEGRA_PMX_PG_DTD
-> in the example.
+> This builds on top of my irq_domain tree:
+> git://git.secretlab.ca/git/linux-2.6 irqdomain/next
 > 
-> The alternative values are something that the pinmux/pinconf driver can
-> set based on state changes communicated from the driver using these pins.
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+> Cc: John Linn <john.linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/microblaze/Kconfig               |    2 +
+>  arch/microblaze/include/asm/hardirq.h |    2 +-
+>  arch/microblaze/include/asm/irq.h     |   41 +----------------------
+>  arch/microblaze/kernel/intc.c         |   58 +++++++++++++++++++-------------
+>  arch/microblaze/kernel/irq.c          |   22 ++-----------
+>  5 files changed, 41 insertions(+), 84 deletions(-)
 
-I'm against the idea that requires client device drivers call pinctrl
-APIs on pin basis.  They do not even know or care about the pins that
-they are using.  That's all pinctrl driver's business.  All client
-driver needs to do when it wants to change pinctrl setup should just
-be calling pinmux/pinconf_get/put[enable/disable](dev, "state").
+I will look at it and let you know.
 
-Regards,
-Shawn
+Thanks,
+Michal
 
-> 
-> That's why I think these alternative states should not be listed in the
-> device tree.
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
