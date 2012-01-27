@@ -1,64 +1,94 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v3 19/25] irq_domain/c6x: Use library of xlate functions
-Date: Fri, 27 Jan 2012 14:36:13 -0700
-Message-ID: <1327700179-17454-20-git-send-email-grant.likely@secretlab.ca>
+Subject: [PATCH v3 07/25] irq_domain/powerpc: Eliminate virq_is_host()
+Date: Fri, 27 Jan 2012 14:36:01 -0700
+Message-ID: <1327700179-17454-8-git-send-email-grant.likely@secretlab.ca>
 References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Mark Salter <msalter@redhat.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The c6x irq controllers don't need to define custom .xlate hooks
+There is only one user, and it is trivial to open-code.
 
 Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Mark Salter <msalter@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Milton Miller <miltonm@bga.com>
 ---
- arch/c6x/kernel/irq.c            |    1 +
- arch/c6x/platforms/megamod-pic.c |   14 +-------------
- 2 files changed, 2 insertions(+), 13 deletions(-)
+ arch/powerpc/include/asm/irq.h         |    1 -
+ arch/powerpc/kernel/irq.c              |    7 -------
+ arch/powerpc/sysdev/xics/xics-common.c |   12 ++++++------
+ 3 files changed, 6 insertions(+), 14 deletions(-)
 
-diff --git a/arch/c6x/kernel/irq.c b/arch/c6x/kernel/irq.c
-index c6b36e8..d77bcfd 100644
---- a/arch/c6x/kernel/irq.c
-+++ b/arch/c6x/kernel/irq.c
-@@ -88,6 +88,7 @@ static int core_domain_map(struct irq_domain *h, unsigned int virq,
+diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+index abdd7ef..f80f262 100644
+--- a/arch/powerpc/include/asm/irq.h
++++ b/arch/powerpc/include/asm/irq.h
+@@ -58,7 +58,6 @@ extern atomic_t ppc_n_lost_interrupts;
+ struct irq_data;
+ extern irq_hw_number_t irqd_to_hwirq(struct irq_data *d);
+ extern irq_hw_number_t virq_to_hw(unsigned int virq);
+-extern bool virq_is_host(unsigned int virq, struct irq_domain *host);
  
- static const struct irq_domain_ops core_domain_ops = {
- 	.map = core_domain_map,
-+	.xlate = irq_domain_xlate_onecell,
- };
- 
- void __init init_IRQ(void)
-diff --git a/arch/c6x/platforms/megamod-pic.c b/arch/c6x/platforms/megamod-pic.c
-index 9f35fbf..c1c4e2a 100644
---- a/arch/c6x/platforms/megamod-pic.c
-+++ b/arch/c6x/platforms/megamod-pic.c
-@@ -136,21 +136,9 @@ static int megamod_map(struct irq_domain *h, unsigned int virq,
- 	return 0;
+ /**
+  * irq_alloc_host - Allocate a new irq_domain data structure
+diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+index db5b545..9533fa7 100644
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -510,13 +510,6 @@ irq_hw_number_t virq_to_hw(unsigned int virq)
  }
+ EXPORT_SYMBOL_GPL(virq_to_hw);
  
--static int megamod_xlate(struct irq_domain *h, struct device_node *ct,
--			 const u32 *intspec, unsigned int intsize,
--			 irq_hw_number_t *out_hwirq, unsigned int *out_type)
--
+-bool virq_is_host(unsigned int virq, struct irq_domain *host)
 -{
--	/* megamod intspecs must have 1 cell */
--	BUG_ON(intsize != 1);
--	*out_hwirq = intspec[0];
--	*out_type = IRQ_TYPE_NONE;
--	return 0;
+-	struct irq_data *irq_data = irq_get_irq_data(virq);
+-	return irq_data ? irq_data->domain == host : false;
 -}
+-EXPORT_SYMBOL_GPL(virq_is_host);
 -
- static const struct irq_domain_ops megamod_domain_ops = {
- 	.map	= megamod_map,
--	.xlate	= megamod_xlate,
-+	.xlate	= irq_domain_xlate_onecell,
- };
- 
- static void __init set_megamod_mux(struct megamod_pic *pic, int src, int output)
+ static int default_irq_host_match(struct irq_domain *h, struct device_node *np)
+ {
+ 	return h->of_node != NULL && h->of_node == np;
+diff --git a/arch/powerpc/sysdev/xics/xics-common.c b/arch/powerpc/sysdev/xics/xics-common.c
+index c4b3ce1..fb2e303 100644
+--- a/arch/powerpc/sysdev/xics/xics-common.c
++++ b/arch/powerpc/sysdev/xics/xics-common.c
+@@ -212,16 +212,16 @@ void xics_migrate_irqs_away(void)
+ 		/* We can't set affinity on ISA interrupts */
+ 		if (virq < NUM_ISA_INTERRUPTS)
+ 			continue;
+-		if (!virq_is_host(virq, xics_host))
+-			continue;
+-		irq = (unsigned int)virq_to_hw(virq);
+-		/* We need to get IPIs still. */
+-		if (irq == XICS_IPI || irq == XICS_IRQ_SPURIOUS)
+-			continue;
+ 		desc = irq_to_desc(virq);
+ 		/* We only need to migrate enabled IRQS */
+ 		if (!desc || !desc->action)
+ 			continue;
++		if (desc->irq_data.domain != xics_host)
++			continue;
++		irq = desc->irq_data.hwirq;
++		/* We need to get IPIs still. */
++		if (irq == XICS_IPI || irq == XICS_IRQ_SPURIOUS)
++			continue;
+ 		chip = irq_desc_get_chip(desc);
+ 		if (!chip || !chip->irq_set_affinity)
+ 			continue;
 -- 
 1.7.5.4
