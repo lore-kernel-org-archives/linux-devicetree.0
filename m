@@ -1,65 +1,91 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: Pinmux bindings proposal
-Date: Fri, 27 Jan 2012 13:00:35 +0100
-Message-ID: <CACRpkdae58AYCYzwx8ysSDr_i0UHBfCujm2Fmnb+hx7825Lm4w@mail.gmail.com>
+Date: Fri, 27 Jan 2012 14:11:43 +0100
+Message-ID: <CACRpkdaRePot9qt-z3Chk-GHqHDfyu07ojKfGA2HEXxvjKn=Vg@mail.gmail.com>
 References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885091DEA@039-SN2MPN1-013.039d.mgd.msft.net>
- <20120117082334.GA31295@S2101-09.ap.freescale.net>
- <7FE21149F4667147B645348EC6057885092D56@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF17801D22F5@HQMAIL01.nvidia.com>
- <7FE21149F4667147B645348EC6057885095125@039-SN2MPN1-013.039d.mgd.msft.net>
- <74CDBE0F657A3D45AFBB94109FB122FF1780DAB445@HQMAIL01.nvidia.com>
+	<20120116182808.GG4223@ponder.secretlab.ca>
+	<20120118141329.GA22818@atomide.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF1780DAAEBB@HQMAIL01.nvidia.com>
+	<20120119105728.GE22818@atomide.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF1780DAB45E@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB445-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB45E@HQMAIL01.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Dong Aisheng-B29396 <B29396@freescale.com>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2012 at 9:28 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> Dong Aisheng wrote at Wednesday, January 18, 2012 4:06 AM:
->>
->> Each entry in the list is PIN rather than group.
->> So we cannot create each map for each entry in the list except we treat the PIN as
->> A group(this will cause a huge maps and predefined groups and functions).
->
-> Linusw has NAKd the idea that we should not use these "virtual groups",
-> i.e. he believes they're fine to use if you wish.
+On Fri, Jan 20, 2012 at 9:50 PM, Stephen Warren <swarren@nvidia.com> wrote:
 
-Interesting double inversion here: I NACK to NOT use groups
-this way...
+> For Tegra20 (and IIRC some other HW), the pin mux HW actually muxes
+> groups of pins; one register field sets n (1, 2, 3, ...) pins to that
+> function at once. Hence, the entries are real physical groups.
 
-The groups are not "virtual" if they share some physical
-property. Such as being used by the same device.
+Maybe I am getting things wrong, but I've read:
 
-The subsystem has callbacks to list, name and get the
-pins belonging to a group. What defines a group is up
-to the driver, it better be something that makes sense
-else the driver will likely become hard to maintain.
+http://en.wiktionary.org/wiki/real
+http://en.wiktionary.org/wiki/virtual
 
-If and only if you enable the *OPTIONAL* pinmux part
-of the pin control subsystem, there is something
-called pinmuxes, these have pins associated with them,
-and by design they have to present the pins associated
-with them by naming one or more groups.
+And now I am trying to address this from my understanding of
+"real" as defined in clause 1:
 
-It is possible that the pinmux should be able to
-contain single pins as well, Tony indicated something
-like that to me. Currently you would have to use a
-group with 1 pin in it to associate a single pin with
-a pinmux, maybe this is not so elegant, it can be
-fixed,
+"1. That has physical existence.
+    No one has ever seen a real unicorn."
+
+And "virtual" as defined in clause 3:
+
+"3. Of something that is simulated in a computer or on-line.
+    The virtual world of his computer game allowed character interaction."
+
+Please tell me if I have the wrong definitions in my
+head, I am not trying to play smart, I just want to understand
+why this rubs me the wrong way. So:
+
+On the Nomadik GPIO controller (not yet migrated to the pin
+control subsystem, mea culpa) pins 0,1,2,3 can be used for UART0.
+
+These four pins can also be used for GPIO, and two other
+functions.
+
+Does that make the group UART0 = {0,1,2,3} a virtual group
+in sense (3) of the wiktionary article, i.e. "simulated in a
+computer"?
+
+To me: no, not at all.
+
+Because it is a very real physical property of these pins that
+UART0 can *only* appear on these 4 pins, not 4 other pins.
+It is clear from the data sheet.
+
+And even if they could appear on other pins, the number of
+such appearances would be limited by physical factors, and
+UART0_1 = {0,1,2,3} vs UART0_2 = {4,5,6,7} wouldn't
+make it virtual. This is also a physical property, not simulated or virtual.
+
+The *only* case where I could *maybe* accept the "virtual"
+terminology would be for a phone-exchange type of
+pinmux, where say this UART could appear on any 4 pins,
+arbitrarily chosen. Still this is not fully virtual since it is
+a physical fact that the UART group has to have 4 pins,
+not 1, not 17.
+
+Notice that I don't involve the use of that group on a
+specific board in this argument, since the *silicon* limits the
+muxable properties of this group, and it is a very real
+group of pins.
+
+This is why I think it is a bad idea to try to define pins as
+being in a "real" or "virtual" group like this, where the only
+criteria for that terminology is whether each pin has its own
+control register or not.
+
+I'm all happy with "Tegra type groups" and "Tegra type pins"
+or "groups with separate control registers" or "pins with
+separate control registers" which tells us what it really is,
+"real" or "virtual" does not fit our discussion here the way
+I see it.
 
 Yours,
 Linus Walleij
