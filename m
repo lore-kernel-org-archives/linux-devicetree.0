@@ -1,65 +1,66 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: Pinmux bindings proposal
-Date: Fri, 27 Jan 2012 08:58:47 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178E123E3C@HQMAIL01.nvidia.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC6057885091DEA@039-SN2MPN1-013.039d.mgd.msft.net>
-	<20120117082334.GA31295@S2101-09.ap.freescale.net>
-	<7FE21149F4667147B645348EC6057885092D56@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF17801D22F5@HQMAIL01.nvidia.com>
-	<7FE21149F4667147B645348EC6057885095125@039-SN2MPN1-013.039d.mgd.msft.net>
-	<74CDBE0F657A3D45AFBB94109FB122FF1780DAB445@HQMAIL01.nvidia.com>
- <CACRpkdae58AYCYzwx8ysSDr_i0UHBfCujm2Fmnb+hx7825Lm4w@mail.gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [RFC PATCH 6/7] ARM: mtd: nand: davinci: add OF support for
+ davinci nand controller
+Date: Fri, 27 Jan 2012 11:02:51 -0600
+Message-ID: <4F22D8BB.6090801@freescale.com>
+References: <1327308967-8092-1-git-send-email-hs@denx.de>
+ <1327308967-8092-7-git-send-email-hs@denx.de> <4F1DF465.60206@freescale.com>
+ <4F1E5C82.60108@denx.de> <4F1F0A3E.40805@freescale.com>
+ <4F1FAAAE.2060007@denx.de> <4F21B8AC.40002@freescale.com>
+ <4F2246C0.6020905@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdae58AYCYzwx8ysSDr_i0UHBfCujm2Fmnb+hx7825Lm4w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F2246C0.6020905-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: hs-ynQEQJNshbs@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Linus Walleij wrote at Friday, January 27, 2012 5:01 AM:
-> On Fri, Jan 20, 2012 at 9:28 PM, Stephen Warren <swarren@nvidia.com> wrote:
-> > Dong Aisheng wrote at Wednesday, January 18, 2012 4:06 AM:
-> >>
-> >> Each entry in the list is PIN rather than group.
-> >> So we cannot create each map for each entry in the list except we treat the PIN as
-> >> A group(this will cause a huge maps and predefined groups and functions).
-> >
-> > Linusw has NAKd the idea that we should not use these "virtual groups",
-> > i.e. he believes they're fine to use if you wish.
+On 01/27/2012 12:40 AM, Heiko Schocher wrote:
+> Hello Scott,
 > 
-> Interesting double inversion here: I NACK to NOT use groups
-> this way...
+> Scott Wood wrote:
+>> On 01/25/2012 01:09 AM, Heiko Schocher wrote:
+>>> ecc_mode:
+>>> NAND_ECC_NONE
+>>> NAND_ECC_SOFT
+>>> NAND_ECC_HW
+>>> NAND_ECC_HW_SYNDROME
+> 
+> "ti,davinci-nand-ecc-mode" = "none", "soft", "hw" or "hw_syndrome"
 
-I don't think that's true.
+OK.
 
-If you did that, you would be /forcing/ people to use virtual pin groups,
-which means that the Tegra driver I proposed wouldn't be acceptable
-since it only defines groups that actually exist in HW.
+>>> bbt_options:
+>>> NAND_BBT_USE_FLASH
+> 
+> "ti,davinci-nand-bbt-options" = "use_flash"
 
-> The groups are not "virtual" if they share some physical
-> property. Such as being used by the same device.
+Just make it a boolean ti,davinci-nand-use-bbt
 
-No, that's not what a virtual group is (I'm the person who came up
-with that term, and really the only person using it, so I get to decide
-what I mean by it!) I suppose you can mean something different, but that's
-just going to be ridiculously confusing.
+>>> ecc_bits:
+>>> 1
+>>> 4
+> 
+> "ti,davinci-nand-ecc-bits" = "1" or "4"
 
-In HW, there are individual register fields. Each one of these affects
-often a single pin, but on some chips n pins at a time. A physical
-group would be precisely those groups of pins which the actual HW
-registers affect. A virtual group is a SW group that ends up affecting
-more than one of those physical groups, since when a virtual groups is
-programmed, the pinctrl driver goes and programs n register fields and
-hence affects n physical groups.
+<1> or <4>
 
-And those registers and either physical or virtual groups don't have to
-be anything to do with muxing. On Tegra, there are certainly groups that
-only affect e.g. drive strength and not mux selection.
+>>> options:
+>>> NAND_BUSWIDTH_16
+> 
+> "ti,davinci-nand-options" = "buswidth-16"
 
--- 
-nvpublic
+ti,davinci-nand-buswidth = <16>;
+
+-Scott
