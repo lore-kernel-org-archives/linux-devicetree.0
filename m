@@ -1,83 +1,65 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 1/3] ARM: dt: tegra: Enable device tree audio on PAZ00
- board.
-Date: Fri, 27 Jan 2012 08:45:47 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178E123E36@HQMAIL01.nvidia.com>
-References: <1327517363-29698-1-git-send-email-leon@leon.nu>
- <74CDBE0F657A3D45AFBB94109FB122FF178CB821B2@HQMAIL01.nvidia.com>
- <CALq1K=+1czTOPyQOU05H8psyGO5RncOHrJm+tLtzOdTLHqtVDQ@mail.gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: Pinmux bindings proposal
+Date: Fri, 27 Jan 2012 08:58:47 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178E123E3C@HQMAIL01.nvidia.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF17801D202F@HQMAIL01.nvidia.com>
+	<7FE21149F4667147B645348EC6057885091DEA@039-SN2MPN1-013.039d.mgd.msft.net>
+	<20120117082334.GA31295@S2101-09.ap.freescale.net>
+	<7FE21149F4667147B645348EC6057885092D56@039-SN2MPN1-013.039d.mgd.msft.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF17801D22F5@HQMAIL01.nvidia.com>
+	<7FE21149F4667147B645348EC6057885095125@039-SN2MPN1-013.039d.mgd.msft.net>
+	<74CDBE0F657A3D45AFBB94109FB122FF1780DAB445@HQMAIL01.nvidia.com>
+ <CACRpkdae58AYCYzwx8ysSDr_i0UHBfCujm2Fmnb+hx7825Lm4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALq1K=+1czTOPyQOU05H8psyGO5RncOHrJm+tLtzOdTLHqtVDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdae58AYCYzwx8ysSDr_i0UHBfCujm2Fmnb+hx7825Lm4w@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>
-Cc: "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org" <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-TGVvbiBSb21hbm92c2t5IHdyb3RlIGF0IEZyaWRheSwgSmFudWFyeSAyNywgMjAxMiA5OjAyIEFN
-Og0KPiBPbiBUaHUsIEphbiAyNiwgMjAxMiBhdCAwMDoyMSwgU3RlcGhlbiBXYXJyZW4gPHN3YXJy
-ZW5AbnZpZGlhLmNvbT4gd3JvdGU6DQo+ID4gTGVvbiBSb21hbm92c2t5IHdyb3RlIGF0IFdlZG5l
-c2RheSwgSmFudWFyeSAyNSwgMjAxMiAxMTo0OSBBTToNCj4gPj4gVGhpcyBwYXRjaCBhZGRzIGlu
-aXRpYWwgZGV2aWNlIHRyZWUgc3VwcG9ydCBvZiBBTEM1NjMyIHNvdW5kIGNvZGVjIGFuZA0KPiA+
-PiBtYWNoaW5lIGRyaXZlciBmb3IgUEFaMDAgYm9hcmQuIFRoZSBpbXBsZW1lbnRhdGlvbiBpcyBi
-YXNlZCBvbiB0aGUgV004OTAzIGNvZGVjLg0KPiA+DQo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC90ZWdyYS1hdWRpby1hbGM1NjMyLnR4dA0KPiA+PiBA
-QCAtMCwwICsxLDU1IEBADQo+ID4+ICtOVklESUEgVGVncmEgYXVkaW8gY29tcGxleA0KPiA+PiAr
-DQo+ID4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+PiArLSBjb21wYXRpYmxlIDogIm52aWRp
-YSx0ZWdyYS1hdWRpby1hbGM1NjMyIg0KPiA+PiArLSBudmlkaWEsbW9kZWwgOiBUaGUgdXNlci12
-aXNpYmxlIG5hbWUgb2YgdGhpcyBzb3VuZCBjb21wbGV4Lg0KPiA+PiArLSBudmlkaWEsYXVkaW8t
-cm91dGluZyA6IEEgbGlzdCBvZiB0aGUgY29ubmVjdGlvbnMgYmV0d2VlbiBhdWRpbyBjb21wb25l
-bnRzLg0KPiA+PiArIMKgRWFjaCBlbnRyeSBpcyBhIHBhaXIgb2Ygc3RyaW5ncywgdGhlIGZpcnN0
-IGJlaW5nIHRoZSBjb25uZWN0aW9uJ3Mgc2luaywNCj4gPj4gKyDCoHRoZSBzZWNvbmQgYmVpbmcg
-dGhlIGNvbm5lY3Rpb24ncyBzb3VyY2UuIFZhbGlkIG5hbWVzIGZvciBzb3VyY2VzIGFuZA0KPiA+
-PiArIMKgc2lua3MgYXJlIHRoZSBBTEM1NjMyJ3MgcGluczoNCj4gPj4gKw0KPiA+PiArIMKgQUxD
-NTYzMiBwaW5zOg0KPiA+PiArDQo+ID4+ICsgwqAqIFNQS09VVA0KPiA+PiArIMKgKiBTUEtPVVRO
-DQo+ID4+ICsgwqAqIEhQTA0KPiA+PiArIMKgKiBIUFINCj4gPj4gKyDCoCogQVVYT1VUDQo+ID4N
-Cj4gPiBNeSBjb3B5IG9mIHRoZSBBTEM1NjMyIGRhdGFzaGVldCBpbmRpY2F0ZXMgdGhlcmUgYXJl
-IGJvdGggQVVYX09VVF9QIGFuZA0KPiA+IEFVWF9PVVROIHBpbnMuIEFyZSB0aGV5IGFsd2F5cyB1
-c2VkIHRvZ2V0aGVyIHN1Y2ggdGhhdCBpdCBtYWtlcyBzZW5zZSB0bw0KPiA+IGdyb3VwIHRoZW0g
-dG9nZXRoZXIgaW4gdGhlIGRldmljZSB0cmVlIGJpbmRpbmc/DQo+IA0KPiBZb3UgYXJlIHJpZ2h0
-LCBpdCBtdXN0IGJlIHRoZSBzYW1lIGFzIFNQS09VVA0KDQpJIHRoaW5rIHRoZSBvcHBvc2l0ZTsg
-QVVYT1VUIGFuZCBTUEtPVVQgYXJlbid0IHRoZSBzYW1lIHBpbi4gSSBtZWFudA0KdGhhdCBBVVhf
-T1VUX1AgYW5kIEFVWF9PVVRfTiBhcmUgZGlmZmVyZW50IHBpbnMsIHNvIEknbSBhc2tpbmcgd2h5
-IHRoZXkncmUNCmEgc2luZ2xlIHBpbiBpbiB0aGUgYWJvdmUgcGluIGxpc3QgKGFuZCBpbiB0aGUg
-QVNvQyBjb2RlYyBkcml2ZXIpLiBJbg0KY29udHJhc3QsIFNQS09VVCBpcyByZXByZXNlbnRlZCBl
-eHBsaWNpdGx5IGFzIHR3byBwaW5zIHdoaWNoIHNlZW1zIHRvIG1ha2UNCm1vcmUgc2Vuc2UuDQoN
-Cj4gPj4gKyDCoCogTElORUlOTA0KPiA+PiArIMKgKiBMSU5FSU5SDQo+ID4+ICsgwqAqIFBIT05F
-UA0KPiA+PiArIMKgKiBQSE9ORVANCj4gPg0KPiA+IFBIT05FTg0KPiA+DQo+ID4+ICsgwqAqIE1J
-QzENCj4gPj4gKyDCoCogTUlDMg0KPiA+DQo+ID4gU2FtZSBhcyBhYm92ZTsgdGhlIGRhdGFzaGVl
-dCBsaXN0cyBNSUMxX1AsIE1JQzFfTiwgTUlDMl9QLCBNSUMyX04uDQo+ID4NCj4gPj4gKyDCoCog
-TUlDQklBUzENCj4gPj4gKyDCoCogTUlDQklBUzINCj4gPg0KPiA+IEkgb25seSBzZWUgTUlDQklB
-UzEgaW4gdGhlIGRhdGFzaGVldCwgbm90IE1JQ0JJQVMyLg0KPg0KPiBZb3UgYXJlIHJpZ2h0IGlm
-IHlvdSBhcmUgbG9va2luZyBvbiBmdW5jdGlvbiBibG9jayBvbmx5IChwYWdlIDMpLCBidXQNCj4g
-aW4gcmVnaXN0ZXIgZGVzY3JpcHRpb24geW91IGNhbiBmaW5kIHJlZmVyZW5jZSB0byBNSUNCSUFT
-MiAocmVnIDIyaCwNCj4gbWljcm9waG9uZSBjb250cm9sKS4NCg0KSSBkbyBzZWUgdGhhdCByZWdp
-c3RlciBiaXQsIGJ1dCB0aGUgcGlub3V0IGRvZXNuJ3QgaW5jbHVkZSBpdCBpbiB0aGUNCmNvZGVj
-J3Mgb3duIGRhdGFzaGVldCBub3IgdGhlIEFDMTAwIHNjaGVtYXRpY3MuIEkgc3VzcGVjdCB0aGF0
-IHRoZXJlDQpyZWFsbHkgaXMgbm8gTUlDQklBUzIgZmVhdHVyZSBhbmQgdGhlIHJlZ2lzdGVyIGRv
-Y3VtZW50YXRpb24gaXMgc2ltcGx5DQppbmNvcnJlY3QsIHBlcmhhcHMgYSBjYXJyeS1vdmVyIGZy
-b20gc29tZSBvdGhlciBjb2RlYz8gU3RpbGwsIEkgc3VwcG9zZQ0KdGhhdCBqdXN0IGluIGNhc2Ug
-dGhlIHNpZ25hbCByZWFsbHkgaXMgcm91dGVkIHRvIG9uZSBvZiB0aGUgcGlucyBsYWJlbGVkDQoi
-TkMiIGluIHRoZSBkYXRhc2hlZXQsIHRoZXJlIGlzbid0IHRvbyBtdWNoIGhhcm0gaW5jbHVkaW5n
-IGl0IGluIHRoZQ0KZHJpdmVyLCBhbmQgdGhpcyBiaW5kaW5nLg0KDQo+ID4+ICsgwqBCb2FyZCBj
-b25uZWN0b3JzOg0KLi4uDQo+ID4gRG9uJ3QgeW91IG5lZWQgIkhlYWRzZXQgTWljIiBpbiB0aGUg
-bGlzdCB0b28/DQouLi4NCj4gPj4gKyDCoCDCoCBudmlkaWEsYXVkaW8tcm91dGluZyA9DQouLi4N
-Cj4gPj4gKyDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCAiTUlDMSIs
-ICJNSUNCSUFTMSIsDQo+ID4+ICsgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgIk1JQ0JJQVMxIiwgIkhlYWRzZXQgTWljIiwNCj4gPg0KPiA+IEkgdGhpbmsgdGhvc2Ug
-bGFzdCB0d28gbGluZXMgc2hvdWxkIHJlYWQ6DQo+ID4NCj4gPiDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCJIZWFkc2V0IE1pYyIsICJNSUNCSUFTMSIsDQo+
-ID4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAiTUlDMSIs
-ICIgSGVhZHNldCBNaWMiLA0KPiA+DQo+ID4gVGhlIERBUE0gcm91dGUgdGFibGUgaW4gdGhlIGRy
-aXZlciBwcm9iYWJseSBuZWVkcyB1cGRhdGluZyB0byBzYXkgdGhlDQo+ID4gc2FtZSB0aGluZyB0
-b28uDQo+DQo+IE1pY3JvcGhvbmUgaXMgbm90IHRlc3RlZCBhdCBhbGwsIHNvIHlvdSBwcm9iYWJs
-eSByaWdodC4gSSBwcmVmZXIgdG8gYmUNCj4gY2xvc2UgYXMgcG9zc2libGUgdG8gcHJldmlvdXMg
-Ym9hcmQgaW1wbGVtZW50YXRpb24gYW5kIHByb3ZpZGUNCj4gZm9sbG93dXAgcGF0Y2hlcyB0byBj
-bGVhbiB0aGUgbWljcm9waG9uZSBwYXRoLg0KDQpJIGd1ZXNzIHRoYXQgZG9lc24ndCBhY3R1YWxs
-eSBhZmZlY3QgdGhlIHN0cnVjdHVyZSBvZiB0aGUgYmluZGluZywganVzdA0KdGhlIGRhdGEgY29u
-dGFpbmVkIGluIHRoZSBwcm9wZXJ0aWVzLCBzbyBpdCdzIG5vdCBhIGJpZyBkZWFsIGlmIGl0IGdv
-ZXMNCmluIGxpa2UgdGhpcy4gTWFyayBtaWdodCBoYXZlIGEgZGlmZmVyZW50IG9waW5pb24gdGhv
-dWdoLCBzaW5jZSBpdCdzDQphIHNpbXBsZSBmaXguLi4NCg0KLS0gDQpudnB1YmxpYw0KDQo=
+Linus Walleij wrote at Friday, January 27, 2012 5:01 AM:
+> On Fri, Jan 20, 2012 at 9:28 PM, Stephen Warren <swarren@nvidia.com> wrote:
+> > Dong Aisheng wrote at Wednesday, January 18, 2012 4:06 AM:
+> >>
+> >> Each entry in the list is PIN rather than group.
+> >> So we cannot create each map for each entry in the list except we treat the PIN as
+> >> A group(this will cause a huge maps and predefined groups and functions).
+> >
+> > Linusw has NAKd the idea that we should not use these "virtual groups",
+> > i.e. he believes they're fine to use if you wish.
+> 
+> Interesting double inversion here: I NACK to NOT use groups
+> this way...
+
+I don't think that's true.
+
+If you did that, you would be /forcing/ people to use virtual pin groups,
+which means that the Tegra driver I proposed wouldn't be acceptable
+since it only defines groups that actually exist in HW.
+
+> The groups are not "virtual" if they share some physical
+> property. Such as being used by the same device.
+
+No, that's not what a virtual group is (I'm the person who came up
+with that term, and really the only person using it, so I get to decide
+what I mean by it!) I suppose you can mean something different, but that's
+just going to be ridiculously confusing.
+
+In HW, there are individual register fields. Each one of these affects
+often a single pin, but on some chips n pins at a time. A physical
+group would be precisely those groups of pins which the actual HW
+registers affect. A virtual group is a SW group that ends up affecting
+more than one of those physical groups, since when a virtual groups is
+programmed, the pinctrl driver goes and programs n register fields and
+hence affects n physical groups.
+
+And those registers and either physical or virtual groups don't have to
+be anything to do with muxing. On Tegra, there are certainly groups that
+only affect e.g. drive strength and not mux selection.
+
+-- 
+nvpublic
