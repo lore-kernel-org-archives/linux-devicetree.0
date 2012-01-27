@@ -1,85 +1,260 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v3 04/25] irq_domain: convert microblaze from irq_host to
- irq_domain
-Date: Fri, 27 Jan 2012 14:35:58 -0700
-Message-ID: <1327700179-17454-5-git-send-email-grant.likely@secretlab.ca>
+Subject: [PATCH v3 21/25] irqdomain/powerpc: Replace custom xlate functions with library functions
+Date: Fri, 27 Jan 2012 14:36:15 -0700
+Message-ID: <1327700179-17454-22-git-send-email-grant.likely@secretlab.ca>
 References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, Michal Simek <monstr@monstr.eu>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Trivial change, microblaze doesn't use irq remapping yet.
+This patch converts a number of the powerpc drivers to use the common library
+of irq_domain xlate functions, dropping a bunch of lines in the process.
 
 Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Milton Miller <miltonm@bga.com>
 ---
- arch/microblaze/include/asm/irq.h |    4 ++--
- arch/microblaze/kernel/irq.c      |    2 +-
- arch/microblaze/kernel/setup.c    |    2 --
- 3 files changed, 3 insertions(+), 5 deletions(-)
+ arch/powerpc/platforms/powermac/pic.c |   13 +------------
+ arch/powerpc/platforms/wsp/opb_pic.c  |   13 +------------
+ arch/powerpc/sysdev/cpm2_pic.c        |   14 +-------------
+ arch/powerpc/sysdev/ipic.c            |   18 +-----------------
+ arch/powerpc/sysdev/qe_lib/qe_ic.c    |   15 +--------------
+ arch/powerpc/sysdev/tsi108_pci.c      |   11 +----------
+ arch/powerpc/sysdev/uic.c             |   14 +-------------
+ drivers/gpio/gpio-mpc8xxx.c           |   17 +----------------
+ 8 files changed, 8 insertions(+), 107 deletions(-)
 
-diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
-index a175132..7798ad1 100644
---- a/arch/microblaze/include/asm/irq.h
-+++ b/arch/microblaze/include/asm/irq.h
-@@ -39,7 +39,7 @@ static inline void irq_dispose_mapping(unsigned int virq)
- 	return;
+diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
+index 46a5f32..3af29d1 100644
+--- a/arch/powerpc/platforms/powermac/pic.c
++++ b/arch/powerpc/platforms/powermac/pic.c
+@@ -288,21 +288,10 @@ static int pmac_pic_host_map(struct irq_domain *h, unsigned int virq,
+ 	return 0;
  }
  
--struct irq_host;
-+struct irq_domain;
+-static int pmac_pic_host_xlate(struct irq_domain *h, struct device_node *ct,
+-			       const u32 *intspec, unsigned int intsize,
+-			       irq_hw_number_t *out_hwirq,
+-			       unsigned int *out_flags)
+-
+-{
+-	*out_flags = IRQ_TYPE_NONE;
+-	*out_hwirq = *intspec;
+-	return 0;
+-}
+-
+ static const struct irq_domain_ops pmac_pic_host_ops = {
+ 	.match = pmac_pic_host_match,
+ 	.map = pmac_pic_host_map,
+-	.xlate = pmac_pic_host_xlate,
++	.xlate = irq_domain_xlate_onecell;
+ };
  
- /**
-  * irq_create_mapping - Map a hardware interrupt into linux virq space
-@@ -51,7 +51,7 @@ struct irq_host;
-  * If the sense/trigger is to be specified, set_irq_type() should be called
-  * on the number returned from that call.
-  */
--extern unsigned int irq_create_mapping(struct irq_host *host,
-+extern unsigned int irq_create_mapping(struct irq_domain *host,
- 					irq_hw_number_t hwirq);
- 
- #endif /* _ASM_MICROBLAZE_IRQ_H */
-diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
-index bbebcae..3f613df 100644
---- a/arch/microblaze/kernel/irq.c
-+++ b/arch/microblaze/kernel/irq.c
-@@ -51,7 +51,7 @@ next_irq:
- 
- /* MS: There is no any advance mapping mechanism. We are using simple 32bit
-   intc without any cascades or any connection that's why mapping is 1:1 */
--unsigned int irq_create_mapping(struct irq_host *host, irq_hw_number_t hwirq)
-+unsigned int irq_create_mapping(struct irq_domain *host, irq_hw_number_t hwirq)
- {
- 	return hwirq + IRQ_OFFSET;
+ static void __init pmac_pic_probe_oldstyle(void)
+diff --git a/arch/powerpc/platforms/wsp/opb_pic.c b/arch/powerpc/platforms/wsp/opb_pic.c
+index 0c6fe0b..cb565bf 100644
+--- a/arch/powerpc/platforms/wsp/opb_pic.c
++++ b/arch/powerpc/platforms/wsp/opb_pic.c
+@@ -196,20 +196,9 @@ static int opb_host_map(struct irq_domain *host, unsigned int virq,
+ 	return 0;
  }
-diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
-index d4fc1a9..208cd04 100644
---- a/arch/microblaze/kernel/setup.c
-+++ b/arch/microblaze/kernel/setup.c
-@@ -52,8 +52,6 @@ void __init setup_arch(char **cmdline_p)
  
- 	unflatten_device_tree();
+-static int opb_host_xlate(struct irq_domain *host, struct device_node *dn,
+-		const u32 *intspec, unsigned int intsize,
+-		irq_hw_number_t *out_hwirq, unsigned int *out_type)
+-{
+-	/* Interrupt size must == 2 */
+-	BUG_ON(intsize != 2);
+-	*out_hwirq = intspec[0];
+-	*out_type = intspec[1];
+-	return 0;
+-}
+-
+ static const struct irq_domain_ops opb_host_ops = {
+ 	.map = opb_host_map,
+-	.xlate = opb_host_xlate,
++	.xlate = irq_domain_xlate_twocell,
+ };
  
--	/* NOTE I think that this function is not necessary to call */
--	/* irq_early_init(); */
- 	setup_cpuinfo();
+ irqreturn_t opb_irq_handler(int irq, void *private)
+diff --git a/arch/powerpc/sysdev/cpm2_pic.c b/arch/powerpc/sysdev/cpm2_pic.c
+index 8c9fc9c..d3be961 100644
+--- a/arch/powerpc/sysdev/cpm2_pic.c
++++ b/arch/powerpc/sysdev/cpm2_pic.c
+@@ -224,21 +224,9 @@ static int cpm2_pic_host_map(struct irq_domain *h, unsigned int virq,
+ 	return 0;
+ }
  
- 	microblaze_cache_init();
+-static int cpm2_pic_host_xlate(struct irq_domain *h, struct device_node *ct,
+-			    const u32 *intspec, unsigned int intsize,
+-			    irq_hw_number_t *out_hwirq, unsigned int *out_flags)
+-{
+-	*out_hwirq = intspec[0];
+-	if (intsize > 1)
+-		*out_flags = intspec[1];
+-	else
+-		*out_flags = IRQ_TYPE_NONE;
+-	return 0;
+-}
+-
+ static const struct irq_domain_ops cpm2_pic_host_ops = {
+ 	.map = cpm2_pic_host_map,
+-	.xlate = cpm2_pic_host_xlate,
++	.xlate = irq_domain_xlate_onetwocell,
+ };
+ 
+ void cpm2_pic_init(struct device_node *node)
+diff --git a/arch/powerpc/sysdev/ipic.c b/arch/powerpc/sysdev/ipic.c
+index 0eaaa01..b50f978 100644
+--- a/arch/powerpc/sysdev/ipic.c
++++ b/arch/powerpc/sysdev/ipic.c
+@@ -692,26 +692,10 @@ static int ipic_host_map(struct irq_domain *h, unsigned int virq,
+ 	return 0;
+ }
+ 
+-static int ipic_host_xlate(struct irq_domain *h, struct device_node *ct,
+-			   const u32 *intspec, unsigned int intsize,
+-			   irq_hw_number_t *out_hwirq, unsigned int *out_flags)
+-
+-{
+-	/* interrupt sense values coming from the device tree equal either
+-	 * LEVEL_LOW (low assertion) or EDGE_FALLING (high-to-low change)
+-	 */
+-	*out_hwirq = intspec[0];
+-	if (intsize > 1)
+-		*out_flags = intspec[1];
+-	else
+-		*out_flags = IRQ_TYPE_NONE;
+-	return 0;
+-}
+-
+ static struct irq_domain_ops ipic_host_ops = {
+ 	.match	= ipic_host_match,
+ 	.map	= ipic_host_map,
+-	.xlate	= ipic_host_xlate,
++	.xlate	= irq_domain_xlate_onetwocell,
+ };
+ 
+ struct ipic * __init ipic_init(struct device_node *node, unsigned int flags)
+diff --git a/arch/powerpc/sysdev/qe_lib/qe_ic.c b/arch/powerpc/sysdev/qe_lib/qe_ic.c
+index e9b3d5c..2fba6ef 100644
+--- a/arch/powerpc/sysdev/qe_lib/qe_ic.c
++++ b/arch/powerpc/sysdev/qe_lib/qe_ic.c
+@@ -272,23 +272,10 @@ static int qe_ic_host_map(struct irq_domain *h, unsigned int virq,
+ 	return 0;
+ }
+ 
+-static int qe_ic_host_xlate(struct irq_domain *h, struct device_node *ct,
+-			    const u32 * intspec, unsigned int intsize,
+-			    irq_hw_number_t * out_hwirq,
+-			    unsigned int *out_flags)
+-{
+-	*out_hwirq = intspec[0];
+-	if (intsize > 1)
+-		*out_flags = intspec[1];
+-	else
+-		*out_flags = IRQ_TYPE_NONE;
+-	return 0;
+-}
+-
+ static struct irq_domain_ops qe_ic_host_ops = {
+ 	.match = qe_ic_host_match,
+ 	.map = qe_ic_host_map,
+-	.xlate = qe_ic_host_xlate,
++	.xlate = irq_domain_xlate_onetwocell,
+ };
+ 
+ /* Return an interrupt vector or NO_IRQ if no interrupt is pending. */
+diff --git a/arch/powerpc/sysdev/tsi108_pci.c b/arch/powerpc/sysdev/tsi108_pci.c
+index 188012c..470c1ef 100644
+--- a/arch/powerpc/sysdev/tsi108_pci.c
++++ b/arch/powerpc/sysdev/tsi108_pci.c
+@@ -376,15 +376,6 @@ static struct irq_chip tsi108_pci_irq = {
+ 	.irq_unmask = tsi108_pci_irq_unmask,
+ };
+ 
+-static int pci_irq_host_xlate(struct irq_domain *h, struct device_node *ct,
+-			    const u32 *intspec, unsigned int intsize,
+-			    irq_hw_number_t *out_hwirq, unsigned int *out_flags)
+-{
+-	*out_hwirq = intspec[0];
+-	*out_flags = IRQ_TYPE_LEVEL_HIGH;
+-	return 0;
+-}
+-
+ static int pci_irq_host_map(struct irq_domain *h, unsigned int virq,
+ 			  irq_hw_number_t hw)
+ {	unsigned int irq;
+@@ -399,7 +390,7 @@ static int pci_irq_host_map(struct irq_domain *h, unsigned int virq,
+ 
+ static struct irq_domain_ops pci_irq_domain_ops = {
+ 	.map = pci_irq_host_map,
+-	.xlate = pci_irq_host_xlate,
++	.xlate = irq_domain_xlate_pci,
+ };
+ 
+ /*
+diff --git a/arch/powerpc/sysdev/uic.c b/arch/powerpc/sysdev/uic.c
+index 84e59c9..9203393 100644
+--- a/arch/powerpc/sysdev/uic.c
++++ b/arch/powerpc/sysdev/uic.c
+@@ -190,21 +190,9 @@ static int uic_host_map(struct irq_domain *h, unsigned int virq,
+ 	return 0;
+ }
+ 
+-static int uic_host_xlate(struct irq_domain *h, struct device_node *ct,
+-			  const u32 *intspec, unsigned int intsize,
+-			  irq_hw_number_t *out_hwirq, unsigned int *out_type)
+-
+-{
+-	/* UIC intspecs must have 2 cells */
+-	BUG_ON(intsize != 2);
+-	*out_hwirq = intspec[0];
+-	*out_type = intspec[1];
+-	return 0;
+-}
+-
+ static struct irq_domain_ops uic_host_ops = {
+ 	.map	= uic_host_map,
+-	.xlate	= uic_host_xlate,
++	.xlate	= irq_domain_xlate_twocell,
+ };
+ 
+ void uic_irq_cascade(unsigned int virq, struct irq_desc *desc)
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 149d987..e6568c1 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -296,24 +296,9 @@ static int mpc8xxx_gpio_irq_map(struct irq_domain *h, unsigned int virq,
+ 	return 0;
+ }
+ 
+-static int mpc8xxx_gpio_irq_xlate(struct irq_domain *h, struct device_node *ct,
+-				  const u32 *intspec, unsigned int intsize,
+-				  irq_hw_number_t *out_hwirq,
+-				  unsigned int *out_flags)
+-
+-{
+-	/* interrupt sense values coming from the device tree equal either
+-	 * EDGE_FALLING or EDGE_BOTH
+-	 */
+-	*out_hwirq = intspec[0];
+-	*out_flags = intspec[1];
+-
+-	return 0;
+-}
+-
+ static struct irq_domain_ops mpc8xxx_gpio_irq_ops = {
+ 	.map	= mpc8xxx_gpio_irq_map,
+-	.xlate	= mpc8xxx_gpio_irq_xlate,
++	.xlate	= irq_domain_xlate_twocell,
+ };
+ 
+ static struct of_device_id mpc8xxx_gpio_ids[] __initdata = {
 -- 
 1.7.5.4
