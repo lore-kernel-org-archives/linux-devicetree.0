@@ -1,59 +1,63 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFCv2 01/14] irq_domain: add documentation and MAINTAINERS entry.
-Date: Sat, 28 Jan 2012 10:05:25 -0700
-Message-ID: <20120128170525.GA2501@ponder.secretlab.ca>
-References: <1327352870-14687-1-git-send-email-grant.likely@secretlab.ca>
- <1327352870-14687-2-git-send-email-grant.likely@secretlab.ca>
- <4F1F02E5.3000605@xenotime.net>
+Subject: Re: [PATCH 3/3] ARM: at91/tc/clocksource: Add 32 bit variant to
+ Timer Counter
+Date: Sat, 28 Jan 2012 11:31:01 -0700
+Message-ID: <20120128183101.GE2501@ponder.secretlab.ca>
+References: <a311afe3c46da62f7a1e82d2fa933e24ad4eef7e.1326995849.git.nicolas.ferre@atmel.com>
+ <d1105b63fce5787a4717ca92ad35397923078e99.1326995849.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <4F1F02E5.3000605@xenotime.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <d1105b63fce5787a4717ca92ad35397923078e99.1326995849.git.nicolas.ferre@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, u.kleine-koenig@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2012 at 11:13:41AM -0800, Randy Dunlap wrote:
-> On 01/23/2012 01:07 PM, Grant Likely wrote:
-> > Documentation for irq_domain library which will be created in subsequent
-> > patches.
-> > 
-> > Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > ---
-> >  Documentation/IRQ-domain.txt |  113 ++++++++++++++++++++++++++++++++++++++++++
-> >  MAINTAINERS                  |    9 +++
-> >  2 files changed, 122 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/IRQ-domain.txt
-> > 
-> > diff --git a/Documentation/IRQ-domain.txt b/Documentation/IRQ-domain.txt
-> > new file mode 100644
-> > index 0000000..247f32a
-> > --- /dev/null
-> > +++ b/Documentation/IRQ-domain.txt
-> > @@ -0,0 +1,113 @@
-> > +irq_domain interrupt number mapping library
-> > +
-> > +The current design of the Linux kernel uses a single large number
-> > +space where each separate IRQ source is assigned a different number.
-> > +This is simple when there is only one interrupt controller, but in
-> > +systems with controllers the kernel must ensure that each one does not
+On Thu, Jan 19, 2012 at 07:05:12PM +0100, Nicolas Ferre wrote:
+> Some SoC have a 32 bit variant of Timer Counter Blocks. We do not
+> need the chaining of two 16 bit counters anymore for them.
 > 
->            with multiple interrupt controllers,
+> The SoC nature is deduced from the device tree "compatible" string.
+> For non-device-tree configurations, backward compatibility is maintained
+> by using the default 16 bit counter configuration.
+> 
+> This patch addresses both the atmel_tclib and its user: tcb_clksrc
+> clocksource.
+> 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-Hi Randy.  Thanks for the comments.  I've made the changes and they'll appear
-in v4 of the series.
+Looks reasonable to me.  One comment below, but otherwise:
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+
+>  static const struct of_device_id atmel_tcb_dt_ids[] = {
+>  	{
+>  		.compatible = "atmel,at91rm9200-tcb",
+> +		.data = &tcb_rm9200_config,
+> +	}, {
+> +		.compatible = "atmel,at91sam9x5-tcb",
+> +		.data = &tcb_sam9x5_config,
+>  	}, {
+>  		/* sentinel */
+>  	}
+
+Using wildcards ('x') in compatible values is strongly discouraged.
+Use specific device names instead.  You never know when a vendor may
+introduce another part number that fits with the wildcard, but isn't
+actually compatible.
+
+Use the exact device name(s) and newer devices can claim compatibility
+with the old in the .dts file.
 
 g.
