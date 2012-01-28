@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3 01/25] irq_domain: add documentation and MAINTAINERS
- entry.
-Date: Sat, 28 Jan 2012 12:59:54 -0700
-Message-ID: <CACxGe6s2TRvhjmKOaFXX3PWp9MRbUVLPh==CrXDrUqZGyGTnLA@mail.gmail.com>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-2-git-send-email-grant.likely@secretlab.ca>
- <4F243D2C.7040709@xenotime.net>
+Subject: Re: [PATCH 2/3] ARM: at91/tc: add device tree support to atmel_tclib
+Date: Sat, 28 Jan 2012 11:29:47 -0700
+Message-ID: <20120128182947.GA4053@ponder.secretlab.ca>
+References: <a311afe3c46da62f7a1e82d2fa933e24ad4eef7e.1326995849.git.nicolas.ferre@atmel.com>
+ <185a4d609becfcd60bbd15b09612160cf6ea9346.1326995849.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3637856838500890392=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F243D2C.7040709-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <185a4d609becfcd60bbd15b09612160cf6ea9346.1326995849.git.nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,56 +19,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============3637856838500890392==
-Content-Type: multipart/alternative; boundary=e89a8ff24481a11f4604b79c0eca
+On Thu, Jan 19, 2012 at 07:05:11PM +0100, Nicolas Ferre wrote:
+> Device tree support added to atmel_tclib: the generic Timer Counter
+> library. This is used by the clocksource/clockevent driver tcb_clksrc.
+> 
+> The current DT enabled platforms are also modified to use it:
+> - .dtsi files are modified to add Timer Counter Block entries
+> - alias are created to allow identification of each block
+> - clkdev lookup tables are added for clocks identification.
+> 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+...
+> diff --git a/arch/arm/mach-at91/at91sam9g45_devices.c b/arch/arm/mach-at91/at91sam9g45_devices.c
+> index 545bbe9..a0a217d 100644
+> --- a/arch/arm/mach-at91/at91sam9g45_devices.c
+> +++ b/arch/arm/mach-at91/at91sam9g45_devices.c
+> @@ -995,8 +995,25 @@ static struct platform_device at91sam9g45_tcb1_device = {
+>  	.num_resources	= ARRAY_SIZE(tcb1_resources),
+>  };
+>  
+> +#if defined(CONFIG_OF)
+> +static struct of_device_id tcb_ids[] = {
+> +	{ .compatible = "atmel,at91rm9200-tcb" },
+> +	{ /*sentinel*/ }
+> +};
+> +#endif
+> +
 
---e89a8ff24481a11f4604b79c0eca
-Content-Type: text/plain; charset=ISO-8859-1
+Where is the documentation for this new binding?  Every new binding must
+be documented in Documentation/devicetree/bindings, even if it is just a
+short file listing all the trivial (only reg and irq) bindings used by
+atmel devices.
 
-On Jan 28, 2012 10:25 AM, "Randy Dunlap" <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org> wrote:
->
-> On 01/27/2012 01:35 PM, Grant Likely wrote:
-> > Documentation for irq_domain library which will be created in subsequent
-> > patches.
->
-> I posted a lot of comments to v2 on Jan. 24.
-> Looks like they were ignored.
-
-I just hadn't gotten to them. I've made the changes since and they will be
-part of v4.
+Otherwise this looks fine and you can add my Acked-by:
 
 g.
-
---e89a8ff24481a11f4604b79c0eca
-Content-Type: text/html; charset=ISO-8859-1
-
-<p><br>
-On Jan 28, 2012 10:25 AM, &quot;Randy Dunlap&quot; &lt;<a href="mailto:rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org">rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; On 01/27/2012 01:35 PM, Grant Likely wrote:<br>
-&gt; &gt; Documentation for irq_domain library which will be created in subsequent<br>
-&gt; &gt; patches.<br>
-&gt;<br>
-&gt; I posted a lot of comments to v2 on Jan. 24.<br>
-&gt; Looks like they were ignored.</p>
-<p>I just hadn&#39;t gotten to them. I&#39;ve made the changes since and they will be part of v4.</p>
-<p>g.</p>
-
---e89a8ff24481a11f4604b79c0eca--
-
---===============3637856838500890392==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3637856838500890392==--
