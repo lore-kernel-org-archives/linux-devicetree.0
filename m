@@ -1,72 +1,189 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH v3 22/25] irq_domain/x86: Convert x86 (embedded) to use
- common irq_domain
-Date: Sat, 28 Jan 2012 17:44:05 +0100
-Message-ID: <20120128164405.GA20763@linutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 00/25] irq_domain generalization and refinement
+Date: Sat, 28 Jan 2012 12:38:26 -0600
+Message-ID: <4F2440A2.5080601@gmail.com>
 References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1327700179-17454-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Grant Likely | 2012-01-27 14:36:16 [-0700]:
+On 01/27/2012 03:35 PM, Grant Likely wrote:
+> Hey everyone,
+> =
 
->This patch removes the x86-specific definition of irq_domain and replaces
->it with the common implementation.
+> This patch series is ready for much wider consumption now.  I'd like
+> to get it into linux-next ASAP because there will be ARM board support
+> depending on it.  I'll wait a few days before I ask Stephen to pull
+> this in.
+> =
 
-I pulled your devicetree/next tree. After this patch I get:
+> Stephen/Milton/Ben, any testing you can help with here would be
+> appreciated since you've got access to a wider variety of Power
+> machines than I do.
+> =
 
-|Hierarchical RCU implementation.
-|NR_IRQS:2304 nr_irqs:256 16
-|------------[ cut here ]------------
-|WARNING: at /home/bigeasy/work/shiva/git/linux-2.6-tip/kernel/irq/irqdomain.c:114 irq_domain_add_legacy+0x75/0x150()
-|Modules linked in:
-|Pid: 0, comm: swapper/0 Not tainted 3.3.0-rc1+ #65
-|Call Trace:
-| [<c15044e0>] ? printk+0x18/0x1a
-| [<c102cdbd>] warn_slowpath_common+0x6d/0xa0
-| [<c1095575>] ? irq_domain_add_legacy+0x75/0x150
-| [<c1095575>] ? irq_domain_add_legacy+0x75/0x150
-| [<c102ce0d>] warn_slowpath_null+0x1d/0x20
-| [<c1095575>] irq_domain_add_legacy+0x75/0x150
-| [<c1714824>] x86_add_irq_domains+0x96/0xd6
-| [<c1708df2>] init_IRQ+0x8/0x33
-| [<c170557f>] start_kernel+0x191/0x2e1
-| [<c170517f>] ? loglevel+0x2b/0x2b
-| [<c1705081>] i386_start_kernel+0x81/0x86
-|---[ end trace 4eaa2a86a8e2da22 ]---
-|------------[ cut here ]------------
-|kernel BUG at /home/bigeasy/work/shiva/git/linux-2.6-tip/arch/x86/kernel/devicetree.c:367!
+> Thomas, I think it makes sense to maintain this in a separate branch
+> from other irq changes until the next merge window.  If you prefer,
+> I'm happy to maintain this branch until then.
+> =
 
-The warning is comming from this piece in irq_domain_add_legacy()
-|for (i = 0; i < size; i++) {
-|                 int irq = first_irq + i;
-|                 struct irq_data *irq_data = irq_get_irq_data(irq);
-| 
-|                 if (WARN_ON(!irq_data || irq_data->domain)) {
 
-irq_data is NULL here.
+I picked up your irqdomain/next branch and it doesn't compile:
 
-|                         mutex_unlock(&irq_domain_mutex);
-|                         of_node_put(domain->of_node);
-|                         kfree(domain);
-|                         return NULL;
-|                 }
-|         }
-| 
+  CC      kernel/irq/irqdomain.o
+kernel/irq/irqdomain.c: In function =91irq_create_mapping=92:
+kernel/irq/irqdomain.c:403:47: error: =91irq=92 undeclared (first use in
+this function)
+kernel/irq/irqdomain.c:403:47: note: each undeclared identifier is
+reported only once for each function it app
 
-This is not always the case. arch_early_irq_init() in [0] sets up the
-first 16 entries. The reminaing few (there is a toal of 24 irqs for
-first ioapic and a second ioapic) are not initialized. This happens
-later via ->xlate, ioapic_xlate() => io_apic_setup_irq_pin() =>
-alloc_irq_and_cfg_at() calls irq_set_chip_data() on demand.
+Rob
 
-[0] arch/x86/kernel/apic/io_apic.c
+> Cheers,
+> g.
+> =
 
-Sebastian
+> The following changes since commit dcd6c92267155e70a94b3927bce681ce74b80d=
+1f:
+> =
+
+>   Linux 3.3-rc1 (2012-01-19 15:04:48 -0800)
+> =
+
+> are available in the git repository at:
+>   git://git.secretlab.ca/git/linux-2.6 irqdomain/next
+> =
+
+> Grant Likely (24):
+>       irq_domain: add documentation and MAINTAINERS entry.
+>       dt: Make irqdomain less verbose
+>       irq_domain: Make irq_domain structure match powerpc's irq_host
+>       irq_domain: convert microblaze from irq_host to irq_domain
+>       irq_domain/powerpc: Use common irq_domain structure instead of irq_=
+host
+>       irq_domain/powerpc: eliminate irq_map; use irq_alloc_desc() instead
+>       irq_domain/powerpc: Eliminate virq_is_host()
+>       irq_domain: Move irq_domain code from powerpc to kernel/irq
+>       irqdomain: remove NO_IRQ from irq domain code
+>       irq_domain: Remove references to old irq_host names
+>       irq_domain: Replace irq_alloc_host() with revmap-specific initializ=
+ers
+>       irq_domain: Add support for base irq and hwirq in legacy mappings
+>       irq_domain: Remove 'new' irq_domain in favour of the ppc one
+>       irq_domain: Remove irq_domain_add_simple()
+>       irq_domain: Create common xlate functions that device drivers can u=
+se
+>       irq_domain: constify irq_domain_ops
+>       irq_domain/c6x: constify irq_domain structures
+>       irq_domain/c6x: Use library of xlate functions
+>       irq_domain/powerpc: constify irq_domain_ops
+>       irqdomain/powerpc: Replace custom xlate functions with library func=
+tions
+>       irq_domain/x86: Convert x86 (embedded) to use common irq_domain
+>       irq_domain: Include hwirq number in /proc/interrupts
+>       irq_domain: remove "hint" when allocating irq numbers
+>       irq_domain: mostly eliminate slow-path revmap lookups
+> =
+
+> Mark Salter (1):
+>       irq_domain/c6x: Convert c6x to use generic irq_domain support.
+> =
+
+>  Documentation/IRQ-domain.txt                     |  113 +++
+>  MAINTAINERS                                      |    9 +
+>  arch/arm/common/gic.c                            |   95 ++--
+>  arch/arm/common/vic.c                            |   16 +-
+>  arch/arm/include/asm/hardware/gic.h              |    4 +-
+>  arch/arm/include/asm/hardware/vic.h              |    2 +
+>  arch/arm/mach-exynos/common.c                    |    2 +-
+>  arch/arm/mach-imx/mach-imx6q.c                   |    3 +-
+>  arch/arm/mach-msm/board-msm8x60.c                |    8 +-
+>  arch/arm/mach-mx5/imx51-dt.c                     |    4 +-
+>  arch/arm/mach-mx5/imx53-dt.c                     |    4 +-
+>  arch/arm/mach-omap2/board-generic.c              |    2 +-
+>  arch/arm/mach-prima2/irq.c                       |    2 +-
+>  arch/arm/mach-versatile/core.c                   |    5 +-
+>  arch/c6x/Kconfig                                 |    1 +
+>  arch/c6x/include/asm/irq.h                       |  245 +-------
+>  arch/c6x/kernel/irq.c                            |  612 +----------------
+>  arch/c6x/platforms/megamod-pic.c                 |   25 +-
+>  arch/microblaze/include/asm/irq.h                |    4 +-
+>  arch/microblaze/kernel/irq.c                     |    2 +-
+>  arch/microblaze/kernel/setup.c                   |    2 -
+>  arch/powerpc/Kconfig                             |    1 +
+>  arch/powerpc/include/asm/ehv_pic.h               |    2 +-
+>  arch/powerpc/include/asm/i8259.h                 |    2 +-
+>  arch/powerpc/include/asm/irq.h                   |  247 +-------
+>  arch/powerpc/include/asm/mpic.h                  |    2 +-
+>  arch/powerpc/include/asm/xics.h                  |    2 +-
+>  arch/powerpc/kernel/irq.c                        |  617 +----------------
+>  arch/powerpc/platforms/512x/mpc5121_ads_cpld.c   |   12 +-
+>  arch/powerpc/platforms/52xx/media5200.c          |   15 +-
+>  arch/powerpc/platforms/52xx/mpc52xx_gpt.c        |   16 +-
+>  arch/powerpc/platforms/52xx/mpc52xx_pic.c        |   12 +-
+>  arch/powerpc/platforms/82xx/pq2ads-pci-pic.c     |   14 +-
+>  arch/powerpc/platforms/85xx/socrates_fpga_pic.c  |   15 +-
+>  arch/powerpc/platforms/86xx/gef_pic.c            |   15 +-
+>  arch/powerpc/platforms/cell/axon_msi.c           |   29 +-
+>  arch/powerpc/platforms/cell/beat_interrupt.c     |   16 +-
+>  arch/powerpc/platforms/cell/interrupt.c          |   16 +-
+>  arch/powerpc/platforms/cell/spider-pic.c         |   14 +-
+>  arch/powerpc/platforms/embedded6xx/flipper-pic.c |   30 +-
+>  arch/powerpc/platforms/embedded6xx/hlwd-pic.c    |   35 +-
+>  arch/powerpc/platforms/iseries/irq.c             |   11 +-
+>  arch/powerpc/platforms/powermac/pic.c            |   26 +-
+>  arch/powerpc/platforms/powermac/smp.c            |    9 +-
+>  arch/powerpc/platforms/ps3/interrupt.c           |   11 +-
+>  arch/powerpc/platforms/wsp/opb_pic.c             |   26 +-
+>  arch/powerpc/sysdev/cpm1.c                       |    9 +-
+>  arch/powerpc/sysdev/cpm2_pic.c                   |   23 +-
+>  arch/powerpc/sysdev/ehv_pic.c                    |   14 +-
+>  arch/powerpc/sysdev/fsl_msi.c                    |   10 +-
+>  arch/powerpc/sysdev/fsl_msi.h                    |    2 +-
+>  arch/powerpc/sysdev/i8259.c                      |   15 +-
+>  arch/powerpc/sysdev/ipic.c                       |   31 +-
+>  arch/powerpc/sysdev/ipic.h                       |    2 +-
+>  arch/powerpc/sysdev/mpc8xx_pic.c                 |   11 +-
+>  arch/powerpc/sysdev/mpic.c                       |   17 +-
+>  arch/powerpc/sysdev/mpic_msi.c                   |    2 +-
+>  arch/powerpc/sysdev/mv64x60_pic.c                |   11 +-
+>  arch/powerpc/sysdev/qe_lib/qe_ic.c               |   26 +-
+>  arch/powerpc/sysdev/qe_lib/qe_ic.h               |    2 +-
+>  arch/powerpc/sysdev/tsi108_pci.c                 |   22 +-
+>  arch/powerpc/sysdev/uic.c                        |   26 +-
+>  arch/powerpc/sysdev/xics/xics-common.c           |   28 +-
+>  arch/powerpc/sysdev/xilinx_intc.c                |   19 +-
+>  arch/x86/Kconfig                                 |    2 +
+>  arch/x86/include/asm/irq_controller.h            |   12 -
+>  arch/x86/include/asm/prom.h                      |   10 -
+>  arch/x86/kernel/devicetree.c                     |  101 +--
+>  drivers/gpio/gpio-mpc8xxx.c                      |   30 +-
+>  drivers/mfd/twl-core.c                           |   12 +-
+>  drivers/net/phy/mdio-gpio.c                      |    4 +-
+>  include/linux/irqdomain.h                        |  190 ++++--
+>  kernel/irq/irqdomain.c                           |  816 ++++++++++++++++=
++++---
+>  kernel/irq/proc.c                                |    3 +
+>  74 files changed, 1334 insertions(+), 2471 deletions(-)
+>  create mode 100644 Documentation/IRQ-domain.txt
+>  delete mode 100644 arch/x86/include/asm/irq_controller.h
+> =
+
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
