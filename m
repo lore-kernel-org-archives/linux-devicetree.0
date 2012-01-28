@@ -1,50 +1,72 @@
-From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: Re: [PATCH v3 01/25] irq_domain: add documentation and MAINTAINERS
- entry.
-Date: Sat, 28 Jan 2012 10:23:40 -0800
-Message-ID: <4F243D2C.7040709@xenotime.net>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH v3 22/25] irq_domain/x86: Convert x86 (embedded) to use
+ common irq_domain
+Date: Sat, 28 Jan 2012 17:44:05 +0100
+Message-ID: <20120128164405.GA20763@linutronix.de>
 References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-2-git-send-email-grant.likely@secretlab.ca>
+ <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1327700179-17454-2-git-send-email-grant.likely@secretlab.ca>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-15
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/27/2012 01:35 PM, Grant Likely wrote:
-> Documentation for irq_domain library which will be created in subsequent
-> patches.
+* Grant Likely | 2012-01-27 14:36:16 [-0700]:
 
-I posted a lot of comments to v2 on Jan. 24.
-Looks like they were ignored.
+>This patch removes the x86-specific definition of irq_domain and replaces
+>it with the common implementation.
 
-Please see  http://marc.info/?l=linuxppc-embedded&m=132742951211808&w=2
+I pulled your devicetree/next tree. After this patch I get:
 
+|Hierarchical RCU implementation.
+|NR_IRQS:2304 nr_irqs:256 16
+|------------[ cut here ]------------
+|WARNING: at /home/bigeasy/work/shiva/git/linux-2.6-tip/kernel/irq/irqdomain.c:114 irq_domain_add_legacy+0x75/0x150()
+|Modules linked in:
+|Pid: 0, comm: swapper/0 Not tainted 3.3.0-rc1+ #65
+|Call Trace:
+| [<c15044e0>] ? printk+0x18/0x1a
+| [<c102cdbd>] warn_slowpath_common+0x6d/0xa0
+| [<c1095575>] ? irq_domain_add_legacy+0x75/0x150
+| [<c1095575>] ? irq_domain_add_legacy+0x75/0x150
+| [<c102ce0d>] warn_slowpath_null+0x1d/0x20
+| [<c1095575>] irq_domain_add_legacy+0x75/0x150
+| [<c1714824>] x86_add_irq_domains+0x96/0xd6
+| [<c1708df2>] init_IRQ+0x8/0x33
+| [<c170557f>] start_kernel+0x191/0x2e1
+| [<c170517f>] ? loglevel+0x2b/0x2b
+| [<c1705081>] i386_start_kernel+0x81/0x86
+|---[ end trace 4eaa2a86a8e2da22 ]---
+|------------[ cut here ]------------
+|kernel BUG at /home/bigeasy/work/shiva/git/linux-2.6-tip/arch/x86/kernel/devicetree.c:367!
 
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Milton Miller <miltonm@bga.com>
-> ---
->  Documentation/IRQ-domain.txt |  113 ++++++++++++++++++++++++++++++++++++++++++
->  MAINTAINERS                  |    9 +++
->  2 files changed, 122 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/IRQ-domain.txt
+The warning is comming from this piece in irq_domain_add_legacy()
+|for (i = 0; i < size; i++) {
+|                 int irq = first_irq + i;
+|                 struct irq_data *irq_data = irq_get_irq_data(irq);
+| 
+|                 if (WARN_ON(!irq_data || irq_data->domain)) {
 
+irq_data is NULL here.
 
--- 
-~Randy
-*** Remember to use Documentation/SubmitChecklist when testing your code ***
+|                         mutex_unlock(&irq_domain_mutex);
+|                         of_node_put(domain->of_node);
+|                         kfree(domain);
+|                         return NULL;
+|                 }
+|         }
+| 
+
+This is not always the case. arch_early_irq_init() in [0] sets up the
+first 16 entries. The reminaing few (there is a toal of 24 irqs for
+first ioapic and a second ioapic) are not initialized. This happens
+later via ->xlate, ioapic_xlate() => io_apic_setup_irq_pin() =>
+alloc_irq_and_cfg_at() calls irq_set_chip_data() on demand.
+
+[0] arch/x86/kernel/apic/io_apic.c
+
+Sebastian
