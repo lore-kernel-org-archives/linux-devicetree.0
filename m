@@ -1,13 +1,15 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [FOR 3.4 PATCH 5/6] atmel/nand: add DT support
-Date: Sat, 28 Jan 2012 06:10:43 +0100
-Message-ID: <1327727444-23908-5-git-send-email-plagnioj@jcrosoft.com>
-References: <1327727444-23908-1-git-send-email-plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/3] ARM: at91/tclib: take iomem size from resource
+Date: Sat, 28 Jan 2012 08:01:10 +0100
+Message-ID: <20120128070110.GB705@game.jcrosoft.org>
+References: <1326996312-9244-1-git-send-email-nicolas.ferre@atmel.com>
+ <a311afe3c46da62f7a1e82d2fa933e24ad4eef7e.1326995849.git.nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1327727444-23908-1-git-send-email-plagnioj@jcrosoft.com>
+Content-Disposition: inline
+In-Reply-To: <a311afe3c46da62f7a1e82d2fa933e24ad4eef7e.1326995849.git.nicolas.ferre@atmel.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,292 +19,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-mtd@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, u.kleine-koenig@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-use a local copy of board informatin and fill with DT data
+On 19:05 Thu 19 Jan     , Nicolas Ferre wrote:
+> Requesting iomem region and ioremaping is now done using
+> the resource size specified instead of a constant value.
+> 
+> Each <SoC>_device.c file is modified accordingly to reflect
+> actual user interface size.
+> 
+> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+this is a fix shoud go for 3.3
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-mtd@lists.infradead.org
----
- .../devicetree/bindings/mtd/atmel-nand.txt         |   41 ++++++++
- drivers/mtd/nand/atmel_nand.c                      |  107 ++++++++++++++++----
- 2 files changed, 130 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/atmel-nand.txt
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-new file mode 100644
-index 0000000..a910ab9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-@@ -0,0 +1,41 @@
-+Atmel NAND flash
-+
-+Required properties:
-+- compatible : "atmel,at91rm9200-nand".
-+- reg : should specify localbus address and size used for the chip,
-+	and if availlable the ECC.
-+- atmel,nand-addr-offset : offset for the address latch.
-+- atmel,nand-cmd-offset : offset for the command latch.
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+  representing partitions.
-+
-+- gpios : specifies the gpio pins to control the NAND device. detect is an
-+  optional gpio and may be set to 0 if not present.
-+
-+Optional properties:
-+- nand-ecc-mode : String, operation mode of the NAND ecc mode, soft by default.
-+  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
-+  "soft_bch".
-+- nand-bus-width : 8 or 16 bus width if not present 8
-+- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
-+
-+Examples:
-+nand0: nand@40000000,0 {
-+	compatible = "atmel,at91rm9200-nand";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	reg = <0x40000000 0x10000000
-+	       0xffffe800 0x200
-+	      >;
-+	atmel,nand-addr-offset = <21>;
-+	atmel,nand-cmd-offset = <22>;
-+	nand-on-flash-bbt = <1>;
-+	nand-ecc-mode = "soft";
-+	gpios = <&pioC 13 0
-+		 &pioC 14 0
-+		 0
-+		>;
-+	partition@0 {
-+		...
-+	};
-+};
-diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-index d3bde9b..ea7643a 100644
---- a/drivers/mtd/nand/atmel_nand.c
-+++ b/drivers/mtd/nand/atmel_nand.c
-@@ -27,6 +27,10 @@
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_mtd.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
-@@ -83,7 +87,7 @@ struct atmel_nand_host {
- 	struct mtd_info		mtd;
- 	void __iomem		*io_base;
- 	dma_addr_t		io_phys;
--	struct atmel_nand_data	*board;
-+	struct atmel_nand_data	board;
- 	struct device		*dev;
- 	void __iomem		*ecc;
- 
-@@ -101,8 +105,8 @@ static int cpu_has_dma(void)
-  */
- static void atmel_nand_enable(struct atmel_nand_host *host)
- {
--	if (gpio_is_valid(host->board->enable_pin))
--		gpio_set_value(host->board->enable_pin, 0);
-+	if (gpio_is_valid(host->board.enable_pin))
-+		gpio_set_value(host->board.enable_pin, 0);
- }
- 
- /*
-@@ -110,8 +114,8 @@ static void atmel_nand_enable(struct atmel_nand_host *host)
-  */
- static void atmel_nand_disable(struct atmel_nand_host *host)
- {
--	if (gpio_is_valid(host->board->enable_pin))
--		gpio_set_value(host->board->enable_pin, 1);
-+	if (gpio_is_valid(host->board.enable_pin))
-+		gpio_set_value(host->board.enable_pin, 1);
- }
- 
- /*
-@@ -132,9 +136,9 @@ static void atmel_nand_cmd_ctrl(struct mtd_info *mtd, int cmd, unsigned int ctrl
- 		return;
- 
- 	if (ctrl & NAND_CLE)
--		writeb(cmd, host->io_base + (1 << host->board->cle));
-+		writeb(cmd, host->io_base + (1 << host->board.cle));
- 	else
--		writeb(cmd, host->io_base + (1 << host->board->ale));
-+		writeb(cmd, host->io_base + (1 << host->board.ale));
- }
- 
- /*
-@@ -145,8 +149,8 @@ static int atmel_nand_device_ready(struct mtd_info *mtd)
- 	struct nand_chip *nand_chip = mtd->priv;
- 	struct atmel_nand_host *host = nand_chip->priv;
- 
--	return gpio_get_value(host->board->rdy_pin) ^
--                !!host->board->rdy_pin_active_low;
-+	return gpio_get_value(host->board.rdy_pin) ^
-+                !!host->board.rdy_pin_active_low;
- }
- 
- static void dma_complete_func(void *completion)
-@@ -432,6 +436,54 @@ static void atmel_nand_hwctl(struct mtd_info *mtd, int mode)
- 	}
- }
- 
-+static int __devinit atmel_of_init_port(struct atmel_nand_host *host,
-+					 struct device_node *np)
-+{
-+	u32 val;
-+	int ecc_mode;
-+	struct atmel_nand_data *board = &host->board;
-+	enum of_gpio_flags flags;
-+
-+	if (of_property_read_u32(np, "atmel,nand-addr-offset", &val) == 0) {
-+		if (val >= 32) {
-+			dev_err(host->dev, "invalid addr-offset %u\n", val);
-+			return -EINVAL;
-+		}
-+		board->ale = val;
-+	}
-+
-+	if (of_property_read_u32(np, "atmel,nand-cmd-offset", &val) == 0) {
-+		if (val >= 32) {
-+			dev_err(host->dev, "invalid cmd-offset %u\n", val);
-+			return -EINVAL;
-+		}
-+		board->cle = val;
-+	}
-+
-+	ecc_mode = of_get_nand_ecc_mode(np);
-+
-+	if (ecc_mode < 0)
-+		board->ecc_mode = NAND_ECC_SOFT;
-+	else
-+		board->ecc_mode = ecc_mode;
-+
-+	board->on_flash_bbt = of_get_nand_on_flash_bbt(np);
-+
-+	if (of_get_nand_bus_width(np) == 16)
-+		board->bus_width_16 = 1;
-+
-+	board->rdy_pin = of_get_gpio_flags(np, 0, &flags);
-+	if (flags == OF_GPIO_ACTIVE_LOW)
-+		board->rdy_pin_active_low = 1;
-+	else
-+		board->rdy_pin_active_low = 0;
-+
-+	board->enable_pin = of_get_gpio(np, 1);
-+	board->det_pin = of_get_gpio(np, 2);
-+
-+	return 0;
-+}
-+
- /*
-  * Probe for the NAND device.
-  */
-@@ -442,6 +494,7 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 	struct nand_chip *nand_chip;
- 	struct resource *regs;
- 	struct resource *mem;
-+	struct mtd_part_parser_data ppdata = {};
- 	int res;
- 
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -468,8 +521,15 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 
- 	mtd = &host->mtd;
- 	nand_chip = &host->nand_chip;
--	host->board = pdev->dev.platform_data;
- 	host->dev = &pdev->dev;
-+	if (pdev->dev.of_node) {
-+		res = atmel_of_init_port(host, pdev->dev.of_node);
-+		if (res)
-+			goto err_nand_ioremap;
-+	} else {
-+		memcpy(&host->board, pdev->dev.platform_data,
-+		       sizeof(struct atmel_nand_data));
-+	}
- 
- 	nand_chip->priv = host;		/* link the private data structures */
- 	mtd->priv = nand_chip;
-@@ -480,10 +540,10 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 	nand_chip->IO_ADDR_W = host->io_base;
- 	nand_chip->cmd_ctrl = atmel_nand_cmd_ctrl;
- 
--	if (gpio_is_valid(host->board->rdy_pin))
-+	if (gpio_is_valid(host->board.rdy_pin))
- 		nand_chip->dev_ready = atmel_nand_device_ready;
- 
--	nand_chip->ecc.mode = host->board->ecc_mode;
-+	nand_chip->ecc.mode = host->board.ecc_mode;
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
- 	if (!regs && nand_chip->ecc.mode == NAND_ECC_HW) {
-@@ -508,7 +568,7 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 
- 	nand_chip->chip_delay = 20;		/* 20us command delay time */
- 
--	if (host->board->bus_width_16)	/* 16-bit bus width */
-+	if (host->board.bus_width_16)	/* 16-bit bus width */
- 		nand_chip->options |= NAND_BUSWIDTH_16;
- 
- 	nand_chip->read_buf = atmel_read_buf;
-@@ -517,15 +577,15 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, host);
- 	atmel_nand_enable(host);
- 
--	if (gpio_is_valid(host->board->det_pin)) {
--		if (gpio_get_value(host->board->det_pin)) {
-+	if (gpio_is_valid(host->board.det_pin)) {
-+		if (gpio_get_value(host->board.det_pin)) {
- 			printk(KERN_INFO "No SmartMedia card inserted.\n");
- 			res = -ENXIO;
- 			goto err_no_card;
- 		}
- 	}
- 
--	if (host->board->on_flash_bbt || on_flash_bbt) {
-+	if (host->board.on_flash_bbt || on_flash_bbt) {
- 		printk(KERN_INFO "atmel_nand: Use On Flash BBT\n");
- 		nand_chip->bbt_options |= NAND_BBT_USE_FLASH;
- 	}
-@@ -600,8 +660,9 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 	}
- 
- 	mtd->name = "atmel_nand";
--	res = mtd_device_parse_register(mtd, NULL, 0,
--			host->board->parts, host->board->num_parts);
-+	ppdata.of_node = pdev->dev.of_node;
-+	res = mtd_device_parse_register(mtd, NULL, &ppdata,
-+			host->board.parts, host->board.num_parts);
- 	if (!res)
- 		return res;
- 
-@@ -645,11 +706,21 @@ static int __exit atmel_nand_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id atmel_nand_dt_ids[] = {
-+	{ .compatible = "atmel,at91rm9200-nand" },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, atmel_nand_dt_ids);
-+#endif
-+
- static struct platform_driver atmel_nand_driver = {
- 	.remove		= __exit_p(atmel_nand_remove),
- 	.driver		= {
- 		.name	= "atmel_nand",
- 		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(atmel_nand_dt_ids),
- 	},
- };
- 
--- 
-1.7.7
+Best Regards,
+J.
