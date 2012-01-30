@@ -1,287 +1,95 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 4/7] ARM: davinci: net: davinci_emac: add OF support
-Date: Mon, 30 Jan 2012 13:22:08 -0700
-Message-ID: <20120130202208.GW28397@ponder.secretlab.ca>
-References: <1327308967-8092-1-git-send-email-hs@denx.de>
- <1327308967-8092-5-git-send-email-hs@denx.de>
+Subject: Re: [PATCH v3 22/25] irq_domain/x86: Convert x86 (embedded) to use
+ common irq_domain
+Date: Mon, 30 Jan 2012 12:58:42 -0700
+Message-ID: <20120130195842.GT28397@ponder.secretlab.ca>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
+ <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca>
+ <20120128164405.GA20763@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1327308967-8092-5-git-send-email-hs@denx.de>
-Sender: netdev-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Wolfgang Denk <wd@denx.de>
+In-Reply-To: <20120128164405.GA20763@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2012 at 09:56:04AM +0100, Heiko Schocher wrote:
-> add of support for the davinci_emac driver.
+On Sat, Jan 28, 2012 at 05:44:05PM +0100, Sebastian Andrzej Siewior wrote:
+> * Grant Likely | 2012-01-27 14:36:16 [-0700]:
 > 
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: netdev@vger.kernel.org
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: Wolfgang Denk <wd@denx.de>
-> ---
->  .../bindings/arm/davinci/davinci_emac.txt          |   46 ++++++++
->  drivers/net/ethernet/ti/davinci_emac.c             |  111 +++++++++++++++++++-
->  2 files changed, 156 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
+> >This patch removes the x86-specific definition of irq_domain and replaces
+> >it with the common implementation.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt b/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
-> new file mode 100644
-> index 0000000..4e5dc8d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
-> @@ -0,0 +1,46 @@
-> +* Texas Instruments Davinci EMAC
-> +
-> +This file provides information, what the davice node
-> +for the davinci_emac interface contain.
-> +
-> +Required properties:
-> +- compatible: "ti,davinci-emac";
-> +- reg: Offset and length of the register set for the device
-> +- ctrl_reg_offset: offset to control register
-> +- ctrl_mod_reg_offset: offset to control module register
-> +- ctrl_ram_offset: offset to control module ram
+> I pulled your devicetree/next tree. After this patch I get:
+> 
+> |Hierarchical RCU implementation.
+> |NR_IRQS:2304 nr_irqs:256 16
+> |------------[ cut here ]------------
+> |WARNING: at /home/bigeasy/work/shiva/git/linux-2.6-tip/kernel/irq/irqdomain.c:114 irq_domain_add_legacy+0x75/0x150()
+> |Modules linked in:
+> |Pid: 0, comm: swapper/0 Not tainted 3.3.0-rc1+ #65
+> |Call Trace:
+> | [<c15044e0>] ? printk+0x18/0x1a
+> | [<c102cdbd>] warn_slowpath_common+0x6d/0xa0
+> | [<c1095575>] ? irq_domain_add_legacy+0x75/0x150
+> | [<c1095575>] ? irq_domain_add_legacy+0x75/0x150
+> | [<c102ce0d>] warn_slowpath_null+0x1d/0x20
+> | [<c1095575>] irq_domain_add_legacy+0x75/0x150
+> | [<c1714824>] x86_add_irq_domains+0x96/0xd6
+> | [<c1708df2>] init_IRQ+0x8/0x33
+> | [<c170557f>] start_kernel+0x191/0x2e1
+> | [<c170517f>] ? loglevel+0x2b/0x2b
+> | [<c1705081>] i386_start_kernel+0x81/0x86
+> |---[ end trace 4eaa2a86a8e2da22 ]---
+> |------------[ cut here ]------------
+> |kernel BUG at /home/bigeasy/work/shiva/git/linux-2.6-tip/arch/x86/kernel/devicetree.c:367!
+> 
+> The warning is comming from this piece in irq_domain_add_legacy()
+> |for (i = 0; i < size; i++) {
+> |                 int irq = first_irq + i;
+> |                 struct irq_data *irq_data = irq_get_irq_data(irq);
+> | 
+> |                 if (WARN_ON(!irq_data || irq_data->domain)) {
+> 
+> irq_data is NULL here.
+> 
+> |                         mutex_unlock(&irq_domain_mutex);
+> |                         of_node_put(domain->of_node);
+> |                         kfree(domain);
+> |                         return NULL;
+> |                 }
+> |         }
+> | 
+> 
+> This is not always the case. arch_early_irq_init() in [0] sets up the
+> first 16 entries. The reminaing few (there is a toal of 24 irqs for
+> first ioapic and a second ioapic) are not initialized. This happens
+> later via ->xlate, ioapic_xlate() => io_apic_setup_irq_pin() =>
+> alloc_irq_and_cfg_at() calls irq_set_chip_data() on demand.
+> 
+> [0] arch/x86/kernel/apic/io_apic.c
 
-Should these be explicit properties, or can they be discerned from the
-compatible string (which should include the hardware version; see
-below).
+Ugh.  This isn't easy.  The legacy mapping really needs all the
+irq_desc structures to be allocated.  You could call irq_alloc_descs()
+before calling irq_domain_add_legacy(), but that causes all the
+irq_descs to be allocated (regardless of whether they are used), and
+it will break io_apic_setup_irq_pin() which also wants to call
+irq_alloc_desc().
 
-Also, any custom properties that are specific to a binding really
-should include a vendor prefix ('ti,') to avoid namespace collisions
-with common bindings.
+Ideally irq_domain support would be rolled directly into ioapic.
+That's more work though, and a greater change of breaking x86 on
+non-embedded.  Looking at the ioapic code, it seems to me that it
+could be simplified quite a bit by switching to irq_domain instead of
+using the custom irq_cfg linked list.  Faster too since it could use
+the irq_data->hwirq to go from linux irq to the hw irq number.  It
+doesn't look like it would be even that hard, but of course the devil
+is in the details and I don't have sufficient time right now to dig
+into the guts of the ioapic.  Maybe after connect, but it would help
+if you can find time to look at it.
 
-> +- hw_ram_addr: hardware ram addr
-
-Can this be added as a second tuple in the reg property?
-
-> +- ctrl_ram_size: size of control module ram
-> +- version: 1 (EMAC_VERSION_1 for DM644x)
-> +           2 (EMAC_VERSION_2 for DM646x)
-
-Don't use a version property.  Encode it into the compatible property.  ie:
-
-compatible = "ti,davinci-dm6440-emac"; or
-compatible = "ti,davinci-dm6460-emac";
-
-You'll also note that I did not use a 'x' as a wildcard.  It is always
-safer to be explicit about the part number.  And have newer parts
-claim compatibility with older ones like so:
-
-compatible = "ti,davinci-dm6443-emac", "ti,davinci-dm6440-emac"; (I am
-obviously making up numbers here.  Fill in appropriate numbers for
-your device.
-
-
-> +- phy-handle: Contains a phandle to an Ethernet PHY.
-> +              if not, davinci_emac driver defaults to 100/FULL
-> +- interrupts: interrupt mapping for the davinci emac interrupts sources:
-> +              4 sources: <Receive Threshold Interrupt
-> +			  Receive Interrupt
-> +			  Transmit Interrupt
-> +			  Miscellaneous Interrupt>
-> +- pinmux-handle: Contains a handle to configure the pinmux settings.
-> +
-> +Optional properties:
-> +- local-mac-address : 6 bytes, mac address
-> +
-> +Example (enbw_cmc board):
-> +	eth0: emac@1e20000 {
-> +		compatible = "ti,davinci-emac";
-> +		reg = <0x220000 0x4000>;
-> +		ctrl_reg_offset = <0x3000>;
-> +		ctrl_mod_reg_offset = <0x2000>;
-> +		ctrl_ram_offset = <0>;
-> +		hw_ram_addr = <0>;
-> +		ctrl_ram_size = <0x2000>;
-> +		version = <1>;
-> +		local-mac-address = [ 00 00 00 00 00 00 ];
-> +		interrupts = <33
-> +				34
-> +				35
-> +				36
-> +				>;
-> +		interrupt-parent = <&intc>;
-> +		pinmux-handle = <&emac_pins>;
-> +	};
-> diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-> index 794ac30..cad7a96 100644
-> --- a/drivers/net/ethernet/ti/davinci_emac.c
-> +++ b/drivers/net/ethernet/ti/davinci_emac.c
-> @@ -58,6 +58,12 @@
->  #include <linux/io.h>
->  #include <linux/uaccess.h>
->  #include <linux/davinci_emac.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_net.h>
-> +
-> +#include <mach/mux.h>
->  
->  #include <asm/irq.h>
->  #include <asm/page.h>
-> @@ -339,6 +345,9 @@ struct emac_priv {
->  	u32 rx_addr_type;
->  	atomic_t cur_tx;
->  	const char *phy_id;
-> +#ifdef CONFIG_OF
-> +	struct device_node *phy_node;
-> +#endif
->  	struct phy_device *phydev;
->  	spinlock_t lock;
->  	/*platform specific members*/
-> @@ -1582,6 +1591,7 @@ static int emac_dev_open(struct net_device *ndev)
->  	cpdma_ctlr_start(priv->dma);
->  
->  	priv->phydev = NULL;
-> +
->  	/* use the first phy on the bus if pdata did not give us a phy id */
->  	if (!priv->phy_id) {
->  		struct device *phy;
-> @@ -1759,6 +1769,104 @@ static const struct net_device_ops emac_netdev_ops = {
->  #endif
->  };
->  
-> +#ifdef CONFIG_OF
-> +static struct emac_platform_data
-> +	*davinci_emac_of_get_pdata(struct platform_device *pdev,
-> +	struct emac_priv *priv)
-> +{
-> +	struct device_node *np;
-> +	struct device_node *pinmux_np;
-> +	struct emac_platform_data *pdata = NULL;
-> +	const u8 *mac_addr;
-> +	u32 data;
-> +	int ret;
-> +	struct resource temp_res;
-> +	int irq;
-> +	int index = 0;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "ti,davinci-emac");
-> +	if (!np)
-> +		goto nodata;
-> +
-> +	pdata = pdev->dev.platform_data;
-> +	if (!pdata) {
-> +		pdata = kzalloc(sizeof(struct emac_platform_data), GFP_KERNEL);
-
-devm_kzalloc()
-
-> +		if (!pdata)
-> +			goto nodata;
-> +	}
-> +
-> +	mac_addr = of_get_mac_address(np);
-> +	if (mac_addr)
-> +		memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
-> +
-> +	ret = of_property_read_u32(np, "ctrl_reg_offset", &data);
-> +	if (!ret)
-> +		pdata->ctrl_reg_offset = data;
-> +
-> +	ret = of_property_read_u32(np, "ctrl_mod_reg_offset", &data);
-> +	if (!ret)
-> +		pdata->ctrl_mod_reg_offset = data;
-> +
-> +	ret = of_property_read_u32(np, "ctrl_ram_offset", &data);
-> +	if (!ret)
-> +		pdata->ctrl_ram_offset = data;
-> +
-> +	ret = of_property_read_u32(np, "hw_ram_addr", &data);
-> +	if (!ret)
-> +		pdata->hw_ram_addr = data;
-> +
-> +	ret = of_property_read_u32(np, "ctrl_ram_size", &data);
-> +	if (!ret)
-> +		pdata->ctrl_ram_size = data;
-> +
-> +	ret = of_property_read_u32(np, "rmii_en", &data);
-> +	if (!ret)
-> +		pdata->rmii_en = data;
-> +
-> +	ret = of_property_read_u32(np, "version", &data);
-> +	if (!ret)
-> +		pdata->version = data;
-> +
-> +	ret = of_property_read_u32(np, "no_bd_ram", &data);
-> +	if (!ret)
-> +		pdata->ctrl_mod_reg_offset = data;
-
-Not all these properties are mentioned in the documentation.
-
-> +
-> +	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
-> +	if (!priv->phy_node)
-> +		pdata->phy_id = "";
-> +
-> +	if (!of_address_to_resource(np, 0, &temp_res))
-> +		memcpy(&pdev->resource[0], &temp_res, sizeof(struct resource));
-
-Don't use of_address_to_resource.  The platform device resource table
-will already be populated by the core code so you don't need to call
-it here.  Besides, it is illegal for drivers to overwrite the
-pdev->resource[] table.
-
-> +
-> +	index = 0;
-> +	while (index < 4) {
-> +		irq = irq_of_parse_and_map(np, index);
-> +		if (irq > 0) {
-> +			temp_res.start = irq;
-> +			temp_res.end = irq;
-> +			temp_res.flags = IORESOURCE_IRQ;
-> +			memcpy(&pdev->resource[index + 1], &temp_res,
-> +				sizeof(struct resource));
-
-Same here, the core code will have already populated the irqs into the
-resource table for you.
-
-> +		}
-> +		index++;
-> +	}
-> +
-> +	pinmux_np = of_parse_phandle(np, "pinmux-handle", 0);
-> +	if (pinmux_np)
-> +		davinci_cfg_reg_of(pinmux_np);
-> +
-> +	pdev->dev.platform_data = pdata;
-> +nodata:
-> +	return  pdata;
-> +}
-> +#else
-> +static struct emac_platform_data
-> +	*davinci_emac_of_get_pdata(struct platform_device *pdev,
-> +	struct emac_priv *priv)
-> +{
-> +	return  pdev->dev.platform_data;
-> +}
-> +#endif
->  /**
->   * davinci_emac_probe: EMAC device probe
->   * @pdev: The DaVinci EMAC device that we are removing
-> @@ -1802,7 +1910,7 @@ static int __devinit davinci_emac_probe(struct platform_device *pdev)
->  
->  	spin_lock_init(&priv->lock);
->  
-> -	pdata = pdev->dev.platform_data;
-> +	pdata = davinci_emac_of_get_pdata(pdev, priv);
->  	if (!pdata) {
->  		dev_err(&pdev->dev, "no platform data\n");
->  		rc = -ENODEV;
-> @@ -1811,6 +1919,7 @@ static int __devinit davinci_emac_probe(struct platform_device *pdev)
->  
->  	/* MAC addr and PHY mask , RMII enable info from platform_data */
->  	memcpy(priv->mac_addr, pdata->mac_addr, 6);
-> +
-
-Nit: There are a few instances of unrelated whitespace changes in this
-patch.
+If integrated into the ioapic code, then the irq_domain linear map is
+probably the type of irq_domain to use.
 
 g.
