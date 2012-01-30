@@ -1,112 +1,287 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] spi/atmel: add DT support
-Date: Mon, 30 Jan 2012 11:56:53 -0700
-Message-ID: <20120130185653.GP28397@ponder.secretlab.ca>
-References: <1327937271-23668-1-git-send-email-plagnioj@jcrosoft.com>
-	<1327937271-23668-2-git-send-email-plagnioj@jcrosoft.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC PATCH 4/7] ARM: davinci: net: davinci_emac: add OF support
+Date: Mon, 30 Jan 2012 13:22:08 -0700
+Message-ID: <20120130202208.GW28397@ponder.secretlab.ca>
+References: <1327308967-8092-1-git-send-email-hs@denx.de>
+ <1327308967-8092-5-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1327937271-23668-2-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1327308967-8092-5-git-send-email-hs@denx.de>
+Sender: netdev-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Wolfgang Denk <wd@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2012 at 04:27:50PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> the atmel_spi use only gpio for chip select
+On Mon, Jan 23, 2012 at 09:56:04AM +0100, Heiko Schocher wrote:
+> add of support for the davinci_emac driver.
 > 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> Cc: davinci-linux-open-source@linux.davincidsp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: netdev@vger.kernel.org
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Sekhar Nori <nsekhar@ti.com>
+> Cc: Wolfgang Denk <wd@denx.de>
 > ---
->  .../devicetree/bindings/spi/spi_atmel.txt          |    6 ++++++
->  drivers/spi/spi-atmel.c                            |   13 ++++++++++++-
->  2 files changed, 18 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel.txt
+>  .../bindings/arm/davinci/davinci_emac.txt          |   46 ++++++++
+>  drivers/net/ethernet/ti/davinci_emac.c             |  111 +++++++++++++++++++-
+>  2 files changed, 156 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
+> diff --git a/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt b/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
 > new file mode 100644
-> index 0000000..7ec3d8d
+> index 0000000..4e5dc8d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-> @@ -0,0 +1,6 @@
-> +Atmel SPI device
+> +++ b/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
+> @@ -0,0 +1,46 @@
+> +* Texas Instruments Davinci EMAC
+> +
+> +This file provides information, what the davice node
+> +for the davinci_emac interface contain.
 > +
 > +Required properties:
-> +- compatible : should be "atmel,at91rm9200-spi".
-> +- reg: Address and length of the register set for the device
-> +- interrupts: Should contain macb interrupt
-> diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-> index 16d6a83..beeaa26 100644
-> --- a/drivers/spi/spi-atmel.c
-> +++ b/drivers/spi/spi-atmel.c
-> @@ -19,6 +19,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/spi/spi.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  
->  #include <asm/io.h>
->  #include <mach/board.h>
-> @@ -937,8 +938,9 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
->  	/* the spi->mode bits understood by this driver: */
->  	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
->  
-> +	master->dev.of_node = pdev->dev.of_node;
->  	master->bus_num = pdev->id;
-> -	master->num_chipselect = 4;
-> +	master->num_chipselect = master->dev.of_node ? 0 : 4;
+> +- compatible: "ti,davinci-emac";
+> +- reg: Offset and length of the register set for the device
+> +- ctrl_reg_offset: offset to control register
+> +- ctrl_mod_reg_offset: offset to control module register
+> +- ctrl_ram_offset: offset to control module ram
 
-...continuing on from my comments on patch 1; this code will need to use
-of_gpio_count() to find out how many SS lines there are.  Otherwise this patch
-looks okay to me.
+Should these be explicit properties, or can they be discerned from the
+compatible string (which should include the hardware version; see
+below).
 
->  	master->setup = atmel_spi_setup;
->  	master->transfer = atmel_spi_transfer;
->  	master->cleanup = atmel_spi_cleanup;
-> @@ -1064,11 +1066,20 @@ static int atmel_spi_resume(struct platform_device *pdev)
->  #define	atmel_spi_resume	NULL
->  #endif
->  
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id atmel_spi_dt_ids[] = {
-> +	{ .compatible = "atmel,at91rm9200-spi" },
-> +	{ /* sentinel */ }
-> +};
+Also, any custom properties that are specific to a binding really
+should include a vendor prefix ('ti,') to avoid namespace collisions
+with common bindings.
+
+> +- hw_ram_addr: hardware ram addr
+
+Can this be added as a second tuple in the reg property?
+
+> +- ctrl_ram_size: size of control module ram
+> +- version: 1 (EMAC_VERSION_1 for DM644x)
+> +           2 (EMAC_VERSION_2 for DM646x)
+
+Don't use a version property.  Encode it into the compatible property.  ie:
+
+compatible = "ti,davinci-dm6440-emac"; or
+compatible = "ti,davinci-dm6460-emac";
+
+You'll also note that I did not use a 'x' as a wildcard.  It is always
+safer to be explicit about the part number.  And have newer parts
+claim compatibility with older ones like so:
+
+compatible = "ti,davinci-dm6443-emac", "ti,davinci-dm6440-emac"; (I am
+obviously making up numbers here.  Fill in appropriate numbers for
+your device.
+
+
+> +- phy-handle: Contains a phandle to an Ethernet PHY.
+> +              if not, davinci_emac driver defaults to 100/FULL
+> +- interrupts: interrupt mapping for the davinci emac interrupts sources:
+> +              4 sources: <Receive Threshold Interrupt
+> +			  Receive Interrupt
+> +			  Transmit Interrupt
+> +			  Miscellaneous Interrupt>
+> +- pinmux-handle: Contains a handle to configure the pinmux settings.
 > +
-> +MODULE_DEVICE_TABLE(of, atmel_spi_dt_ids);
-> +#endif
+> +Optional properties:
+> +- local-mac-address : 6 bytes, mac address
+> +
+> +Example (enbw_cmc board):
+> +	eth0: emac@1e20000 {
+> +		compatible = "ti,davinci-emac";
+> +		reg = <0x220000 0x4000>;
+> +		ctrl_reg_offset = <0x3000>;
+> +		ctrl_mod_reg_offset = <0x2000>;
+> +		ctrl_ram_offset = <0>;
+> +		hw_ram_addr = <0>;
+> +		ctrl_ram_size = <0x2000>;
+> +		version = <1>;
+> +		local-mac-address = [ 00 00 00 00 00 00 ];
+> +		interrupts = <33
+> +				34
+> +				35
+> +				36
+> +				>;
+> +		interrupt-parent = <&intc>;
+> +		pinmux-handle = <&emac_pins>;
+> +	};
+> diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
+> index 794ac30..cad7a96 100644
+> --- a/drivers/net/ethernet/ti/davinci_emac.c
+> +++ b/drivers/net/ethernet/ti/davinci_emac.c
+> @@ -58,6 +58,12 @@
+>  #include <linux/io.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/davinci_emac.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_net.h>
+> +
+> +#include <mach/mux.h>
 >  
->  static struct platform_driver atmel_spi_driver = {
->  	.driver		= {
->  		.name	= "atmel_spi",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table	= of_match_ptr(atmel_spi_dt_ids),
->  	},
->  	.suspend	= atmel_spi_suspend,
->  	.resume		= atmel_spi_resume,
-> -- 
-> 1.7.7
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  #include <asm/irq.h>
+>  #include <asm/page.h>
+> @@ -339,6 +345,9 @@ struct emac_priv {
+>  	u32 rx_addr_type;
+>  	atomic_t cur_tx;
+>  	const char *phy_id;
+> +#ifdef CONFIG_OF
+> +	struct device_node *phy_node;
+> +#endif
+>  	struct phy_device *phydev;
+>  	spinlock_t lock;
+>  	/*platform specific members*/
+> @@ -1582,6 +1591,7 @@ static int emac_dev_open(struct net_device *ndev)
+>  	cpdma_ctlr_start(priv->dma);
+>  
+>  	priv->phydev = NULL;
+> +
+>  	/* use the first phy on the bus if pdata did not give us a phy id */
+>  	if (!priv->phy_id) {
+>  		struct device *phy;
+> @@ -1759,6 +1769,104 @@ static const struct net_device_ops emac_netdev_ops = {
+>  #endif
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static struct emac_platform_data
+> +	*davinci_emac_of_get_pdata(struct platform_device *pdev,
+> +	struct emac_priv *priv)
+> +{
+> +	struct device_node *np;
+> +	struct device_node *pinmux_np;
+> +	struct emac_platform_data *pdata = NULL;
+> +	const u8 *mac_addr;
+> +	u32 data;
+> +	int ret;
+> +	struct resource temp_res;
+> +	int irq;
+> +	int index = 0;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "ti,davinci-emac");
+> +	if (!np)
+> +		goto nodata;
+> +
+> +	pdata = pdev->dev.platform_data;
+> +	if (!pdata) {
+> +		pdata = kzalloc(sizeof(struct emac_platform_data), GFP_KERNEL);
 
-------------------------------------------------------------------------------
-Try before you buy = See our experts in action!
-The most comprehensive online learning library for Microsoft developers
-is just $99.99! Visual Studio, SharePoint, SQL - plus HTML5, CSS3, MVC3,
-Metro Style Apps, more. Free future releases when you subscribe now!
-http://p.sf.net/sfu/learndevnow-dev2
+devm_kzalloc()
+
+> +		if (!pdata)
+> +			goto nodata;
+> +	}
+> +
+> +	mac_addr = of_get_mac_address(np);
+> +	if (mac_addr)
+> +		memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
+> +
+> +	ret = of_property_read_u32(np, "ctrl_reg_offset", &data);
+> +	if (!ret)
+> +		pdata->ctrl_reg_offset = data;
+> +
+> +	ret = of_property_read_u32(np, "ctrl_mod_reg_offset", &data);
+> +	if (!ret)
+> +		pdata->ctrl_mod_reg_offset = data;
+> +
+> +	ret = of_property_read_u32(np, "ctrl_ram_offset", &data);
+> +	if (!ret)
+> +		pdata->ctrl_ram_offset = data;
+> +
+> +	ret = of_property_read_u32(np, "hw_ram_addr", &data);
+> +	if (!ret)
+> +		pdata->hw_ram_addr = data;
+> +
+> +	ret = of_property_read_u32(np, "ctrl_ram_size", &data);
+> +	if (!ret)
+> +		pdata->ctrl_ram_size = data;
+> +
+> +	ret = of_property_read_u32(np, "rmii_en", &data);
+> +	if (!ret)
+> +		pdata->rmii_en = data;
+> +
+> +	ret = of_property_read_u32(np, "version", &data);
+> +	if (!ret)
+> +		pdata->version = data;
+> +
+> +	ret = of_property_read_u32(np, "no_bd_ram", &data);
+> +	if (!ret)
+> +		pdata->ctrl_mod_reg_offset = data;
+
+Not all these properties are mentioned in the documentation.
+
+> +
+> +	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
+> +	if (!priv->phy_node)
+> +		pdata->phy_id = "";
+> +
+> +	if (!of_address_to_resource(np, 0, &temp_res))
+> +		memcpy(&pdev->resource[0], &temp_res, sizeof(struct resource));
+
+Don't use of_address_to_resource.  The platform device resource table
+will already be populated by the core code so you don't need to call
+it here.  Besides, it is illegal for drivers to overwrite the
+pdev->resource[] table.
+
+> +
+> +	index = 0;
+> +	while (index < 4) {
+> +		irq = irq_of_parse_and_map(np, index);
+> +		if (irq > 0) {
+> +			temp_res.start = irq;
+> +			temp_res.end = irq;
+> +			temp_res.flags = IORESOURCE_IRQ;
+> +			memcpy(&pdev->resource[index + 1], &temp_res,
+> +				sizeof(struct resource));
+
+Same here, the core code will have already populated the irqs into the
+resource table for you.
+
+> +		}
+> +		index++;
+> +	}
+> +
+> +	pinmux_np = of_parse_phandle(np, "pinmux-handle", 0);
+> +	if (pinmux_np)
+> +		davinci_cfg_reg_of(pinmux_np);
+> +
+> +	pdev->dev.platform_data = pdata;
+> +nodata:
+> +	return  pdata;
+> +}
+> +#else
+> +static struct emac_platform_data
+> +	*davinci_emac_of_get_pdata(struct platform_device *pdev,
+> +	struct emac_priv *priv)
+> +{
+> +	return  pdev->dev.platform_data;
+> +}
+> +#endif
+>  /**
+>   * davinci_emac_probe: EMAC device probe
+>   * @pdev: The DaVinci EMAC device that we are removing
+> @@ -1802,7 +1910,7 @@ static int __devinit davinci_emac_probe(struct platform_device *pdev)
+>  
+>  	spin_lock_init(&priv->lock);
+>  
+> -	pdata = pdev->dev.platform_data;
+> +	pdata = davinci_emac_of_get_pdata(pdev, priv);
+>  	if (!pdata) {
+>  		dev_err(&pdev->dev, "no platform data\n");
+>  		rc = -ENODEV;
+> @@ -1811,6 +1919,7 @@ static int __devinit davinci_emac_probe(struct platform_device *pdev)
+>  
+>  	/* MAC addr and PHY mask , RMII enable info from platform_data */
+>  	memcpy(priv->mac_addr, pdata->mac_addr, 6);
+> +
+
+Nit: There are a few instances of unrelated whitespace changes in this
+patch.
+
+g.
