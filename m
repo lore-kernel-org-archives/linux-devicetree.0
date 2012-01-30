@@ -1,56 +1,171 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] irq_domain/microblaze: Convert microblaze to use
- irq_domains
-Date: Mon, 30 Jan 2012 06:30:17 -0700
-Message-ID: <20120130133017.GE28397@ponder.secretlab.ca>
-References: <1327613292-20580-1-git-send-email-grant.likely@secretlab.ca>
- <4F268222.5030403@monstr.eu>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 3/3] ARM: at91: sam9g20 & sam9g45 add spi DT support
+Date: Mon, 30 Jan 2012 16:27:51 +0100
+Message-ID: <1327937271-23668-3-git-send-email-plagnioj@jcrosoft.com>
+References: <1327937271-23668-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F268222.5030403-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1327937271-23668-1-git-send-email-plagnioj@jcrosoft.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2012 at 12:42:26PM +0100, Michal Simek wrote:
-> Hi Grant,
-> 
-> Grant Likely wrote:
-> >***totally untested.  Don't apply yet***
-> >
-> >Michal, I leave it to you to test this patch.  I've turned on SPARSE_IRQ, but
-> >you may decide that isn't valuable.  I've compile tested it, but that's
-> >about it (in fact, I had to hack head.S to get it to build because I don't have
-> >an up-to-date compiler for microblaze.  It fails on an unknown opcode 'lwr')
-> >
-> 
-> I have looked at it and I there is problem with virq allocation in irq_create_mapping
-> which calles irq_alloc_desc(0) and then __irq_alloc_descs(-1, 0, 1, node, THIS_MODULE)
-> where bitmap_find_next_zero_area returns 0 (start = 0) which is passed to alloc_descs
-> which just return it.
-> It doesn't matter if SPARSE_IRQ is enabled or not.
-> Error log is below.
-> 
-> Can you give me hint how to fix it and what expected values are?
+at91sam9m10g45ek:
+	add dataflash support
+usb_a9g20:
+	add mmc spi support
 
-irq0 is getting allocated when it shouldn't be.  The fix is to change the
-calls in irqdomain.c from irq_alloc_desc(0) to irq_alloc_desc_from(1, 0).
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ arch/arm/boot/dts/at91sam9g20.dtsi     |   14 ++++++++++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi     |   14 ++++++++++++++
+ arch/arm/boot/dts/at91sam9m10g45ek.dts |   21 +++++++++++++++++++++
+ arch/arm/boot/dts/usb_a9g20.dts        |   11 +++++++++++
+ arch/arm/mach-at91/at91sam9260.c       |    2 ++
+ arch/arm/mach-at91/at91sam9g45.c       |    2 ++
+ 6 files changed, 64 insertions(+), 0 deletions(-)
 
-I've got the fix in my tree and I'm pushing it out to the following branch
-in a few minutes:
-
-git://git.secretlab.ca/git/linux-2.6 irqdomain/next
-
-g.
+diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
+index 2b4f7e4..1fc569b 100644
+--- a/arch/arm/boot/dts/at91sam9g20.dtsi
++++ b/arch/arm/boot/dts/at91sam9g20.dtsi
+@@ -202,6 +202,20 @@
+ 				status = "disabled";
+ 			};
+ 
++			spi0: spi@fffc8000 {
++				compatible = "atmel,at91rm9200-spi";
++				reg = <0xfffc8000 0x4000>;
++				interrupts = <12>;
++				status = "disabled";
++			};
++
++			spi1: spi@fffcc000 {
++				compatible = "atmel,at91rm9200-spi";
++				reg = <0xfffcc000 0x4000>;
++				interrupts = <13>;
++				status = "disabled";
++			};
++
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index be88fc5..9a08ab4 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -193,6 +193,20 @@
+ 				status = "disabled";
+ 			};
+ 
++			spi0: spi@fffa4000 {
++				compatible = "atmel,at91rm9200-spi";
++				reg = <0xfffa4000 0x4000>;
++				interrupts = <14>;
++				status = "disabled";
++			};
++
++			spi1: spi@fffa8000 {
++				compatible = "atmel,at91rm9200-spi";
++				reg = <0xfffa8000 0x4000>;
++				interrupts = <15>;
++				status = "disabled";
++			};
++
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+index 30d9cd7..62cb7eb 100644
+--- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
++++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+@@ -58,6 +58,27 @@
+ 				};
+ 
+ 			};
++
++			spi0: spi@fffa4000 {
++				status = "okay";
++				flash: at45db321d@0 {
++					compatible = "atmel,at45db321d", "atmel,at45", "atmel,dataflash";
++					ncs-gpio = <&pioB 3 0>;
++					spi-max-frequency = <15000000>;
++
++					partition@0 {
++						label = "U-Boot";
++						reg = <0x0 0x40000>;
++						read-only;
++					};
++
++					partition@40000 {
++						label = "Kernel";
++						reg = <0x40000 0x3c0000>;
++					};
++				};
++			};
++
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/usb_a9g20.dts b/arch/arm/boot/dts/usb_a9g20.dts
+index e6c7970..1dfb7a9 100644
+--- a/arch/arm/boot/dts/usb_a9g20.dts
++++ b/arch/arm/boot/dts/usb_a9g20.dts
+@@ -84,6 +84,17 @@
+ 				status = "okay";
+ 			};
+ 
++			spi1: spi@fffcc000 {
++				status = "okay";
++				mmc-slot@0 {
++					compatible = "mmc-spi-slot";
++					ncs-gpio = <&pioB 3 0>;
++					gpios = <&pioC 4 0   /* CD */
++						>;
++					voltage-ranges = <3200 3400>;
++					spi-max-frequency = <20000000>;
++				};
++			};
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
+index fb5ddd4..f518493 100644
+--- a/arch/arm/mach-at91/at91sam9260.c
++++ b/arch/arm/mach-at91/at91sam9260.c
+@@ -211,6 +211,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("usart", "fffd4000.serial", &usart4_clk),
+ 	CLKDEV_CON_DEV_ID("usart", "fffd8000.serial", &usart5_clk),
+ 	CLKDEV_CON_DEV_ID("hclk", "500000.ohci", &ohci_clk),
++	CLKDEV_CON_DEV_ID("spi_clk", "fffc8000.spi", &spi0_clk),
++	CLKDEV_CON_DEV_ID("spi_clk", "fffcc000.spi", &spi1_clk),
+ 	/* fake hclk clock */
+ 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
+ 	CLKDEV_CON_ID("pioA", &pioA_clk),
+diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
+index 744b357..5fab92f 100644
+--- a/arch/arm/mach-at91/at91sam9g45.c
++++ b/arch/arm/mach-at91/at91sam9g45.c
+@@ -233,6 +233,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("usart", "fff98000.serial", &usart3_clk),
+ 	CLKDEV_CON_DEV_ID("hclk", "700000.ohci", &uhphs_clk),
+ 	CLKDEV_CON_DEV_ID("ehci_clk", "800000.ehci", &uhphs_clk),
++	CLKDEV_CON_DEV_ID("spi_clk", "fffa4000.spi", &spi0_clk),
++	CLKDEV_CON_DEV_ID("spi_clk", "fffa8000.spi", &spi1_clk),
+ 	/* fake hclk clock */
+ 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &uhphs_clk),
+ 	CLKDEV_CON_ID("pioA", &pioA_clk),
+-- 
+1.7.7
