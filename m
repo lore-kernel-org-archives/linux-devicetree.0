@@ -1,44 +1,37 @@
-From: Shawn Guo <shawn.guo@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: Pinmux bindings proposal V2
-Date: Mon, 30 Jan 2012 11:13:48 +0800
-Message-ID: <20120130031346.GD10470@S2101-09.ap.freescale.net>
+Date: Mon, 30 Jan 2012 11:27:59 +0800
+Message-ID: <20120130032757.GE10470@S2101-09.ap.freescale.net>
 References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
  <CAPnjgZ3Xhebn1x1A-Vdy78DWbDd=cp0AK6tL-R1SRzS4GdF97g@mail.gmail.com>
  <20120127022111.GK29812@atomide.com>
  <CAPnjgZ2EkvTMsOkWyf4pfwRpvcvYs=WaKy5Gi8fdkAUQmvt=ig@mail.gmail.com>
+ <20120127173732.GJ13504@atomide.com>
+ <74CDBE0F657A3D45AFBB94109FB122FF178E123E62@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPnjgZ2EkvTMsOkWyf4pfwRpvcvYs=WaKy5Gi8fdkAUQmvt=ig@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Glass <sjg@chromium.org>
-Cc: Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@nvidia.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>, "Sascha Hauer (s.hauer@pengutronix.de)" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, Dong Aisheng <dongas86@gmail.com>, Thomas Abraham <thomas.abraham@linaro.org>, "Grant Likely (grant.likely@secretlab.ca)" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF178E123E62-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2012 at 07:43:36AM -0800, Simon Glass wrote:
-...
-> The cost of the pmx@dta node is about 12 bytes for the header (it
-> depends on the length of the name), and each of the properties above
-> is 16 bytes. So in total this node is 76 bytes. If we have 250 pins
-> being muxed as Tegra3 then this is about 20KB (including a bit of
-> slack for longer names). My point about being able to 'optimise out'
-> some of these remains, though, but probably not for the kernel.
-> 
-> Stephen's 'mux' property uses 12 bytes plus 8 bytes per pin/group (I
-> am removing the prefixes):
-> 
->                        mux =
->                                <PG_DTA   MUX_SDIO1>
->                                <PG_DTD   MUX_SDIO1>;
-> 
-> so 28 bytes. What I proposed would use (12 + 2 * 16) per pin/group, or
-> 44 bytes (60% bigger):
-> 
-It's not only about size but also run-time tree travelling efficiency.
-Your proposal requires every single pin show as a node in device tree.
-Looking at these for_each_node_by_*() APIs in include/linux/of.h, you
-might agree we should avoid bloating device tree with so many nodes.
+On Fri, Jan 27, 2012 at 09:51:58AM -0800, Stephen Warren wrote:
+> I don't think there's any point in having 2 separate bindings; it's been
+> hard enough to come up with /one/ binding!
+
++1
 
 -- 
 Regards,
