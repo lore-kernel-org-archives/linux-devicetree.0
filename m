@@ -1,17 +1,19 @@
 From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v6 6/9] ARM: vexpress: Motherboard RS1 memory map support
-Date: Mon, 30 Jan 2012 17:26:55 +0000
-Message-ID: <20120130172655.GF2248@linaro.org>
+Date: Mon, 30 Jan 2012 17:32:02 +0000
+Message-ID: <20120130173202.GG2248@linaro.org>
 References: <1323957761-13553-1-git-send-email-pawel.moll@arm.com>
  <1323957761-13553-7-git-send-email-pawel.moll@arm.com>
  <4F047FE1.5030002@citrix.com>
  <1326979266.32197.60.camel@hornet.cambridge.arm.com>
+ <4F184900.8050901@citrix.com>
+ <1327672960.24701.55.camel@hornet.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1326979266.32197.60.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
+In-Reply-To: <1327672960.24701.55.camel-okZbbLrgpR/YkXV2EHHjLW3o5bpOHsLO@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,83 +27,36 @@ To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2012 at 01:21:06PM +0000, Pawel Moll wrote:
-> Hi,
+On Fri, Jan 27, 2012 at 02:02:40PM +0000, Pawel Moll wrote:
+> On Thu, 2012-01-19 at 16:46 +0000, David Vrabel wrote:
+> > >>  __create_page_tables has only mapped the single physical
+> > >> page at 0x1c090000 and thus the test for the UART in the other memory
+> > >> map faults.
 > 
-> Sorry about loooong delay - I've been on holiday.
+> I got to the bottom of the problem... The mapping created by the
+> DEBUG_LL code in __create_page_tables is actually a section (1MB) so
+> covers both possible accesses (0xf8009000 and 0xf8090000). The
+> difference between model and hardware is that "real" RS1 VE has a DAP
+> ROM located between 0xf8000000 and 0xf800ffff so the 0xf8009000 succeeds
+> (returning some irrelevant data), while model is "empty" in that space,
+> so it faults.
 > 
-> On Wed, 2012-01-04 at 16:35 +0000, David Vrabel wrote:
-> > On 15/12/11 14:02, Pawel Moll wrote:
-> > > This patch adds support for RS1 memory map based Versatile Express
-> > > motherboard.
-> > > 
-> > [...]
-> > > --- a/arch/arm/mach-vexpress/include/mach/debug-macro.S
-> > > +++ b/arch/arm/mach-vexpress/include/mach/debug-macro.S
-> > > @@ -10,12 +10,41 @@
-> > >   * published by the Free Software Foundation.
-> > >   */
-> > >  
-> > > -#define DEBUG_LL_UART_OFFSET	0x00009000
-> > > +#define DEBUG_LL_PHYS_BASE		0x10000000
-> > > +#define DEBUG_LL_UART_OFFSET		0x00009000
-> > > +
-> > > +#define DEBUG_LL_PHYS_BASE_RS1		0x1c000000
-> > > +#define DEBUG_LL_UART_OFFSET_RS1	0x00090000
-> > > +
-> > > +#define DEBUG_LL_VIRT_BASE		0xf8000000
-> > >  
-> > >  		.macro	addruart,rp,rv,tmp
-> > > -		mov	\rp, #DEBUG_LL_UART_OFFSET
-> > > -		orr	\rv, \rp, #0xf8000000	@ virtual base
-> > > -		orr	\rp, \rp, #0x10000000	@ physical base
-> > > +
-> > > +		@ Check the MMU state
-> > > +#if defined(CONFIG_MMU)
-> > > +		mrc	p15, 0, \tmp, c1, c0	@ SCTRL
-> > > +		tst	\tmp, #1		@ MMU enabled?
-> > > +		moveq	\tmp, #DEBUG_LL_PHYS_BASE
-> > > +		movne	\tmp, #DEBUG_LL_VIRT_BASE
-> > > +#else
-> > > +		mov	\tmp, #DEBUG_LL_PHYS_BASE
-> > > +#endif
-> > > +
-> > > +		@ PL011 present in "original" place?
-> > > +		orr	\tmp, \tmp, #DEBUG_LL_UART_OFFSET
-> > > +		ldr	\tmp, [\tmp, #0xfe0]	@ PeriphID0
-> > 
-> > This doesn't work with CONFIG_EARLY_PRINTK=y on a system with the RS1
-> > memory map.  
+> Anyway, I have an idea how to solve (or rather work around) the problem
+> and will get if working on models in the next version of the series.
+> I'll send you a modified version of the relevant patch before that so
+> you can test it.
 > 
-> It does for me:
-> 
-> # zcat /proc/config.gz | grep EARLY_PRINTK
-> CONFIG_EARLY_PRINTK=y
-> # cat /proc/device-tree/motherboard/arm,v2m-memory-map && echo
-> rs1     
-> #
-> 
-> Can you tell me what exactly is going wrong in your case? Does it hang
-> without any warning? Do you get at least part of the boot log? Can you
-> send me (privately probably) your kernel config?
+> Thanks for your time!
 
-I had to disable this when running on the ARM fast model with your vexpress
-DT series.  I didn't debug into exactly why I had to disable it, but I
-think I was getting aborts when the kernel was probing for nonexistent
-legacy memory map location of the UART.  I don't know whether this will
-affect real hardware though... and maybe I was hitting the problem due
-to something else.
+I would be interested in that too.
 
-Anyway unless I've misunderstood something, AMBA devices are only really
-probable if there is some real bus slave at the probed address, which is
-free from nasty side-effects.
+However, I would still prefer the explicit debug UART selection route,
+since we already have to do that for many boards and I'm not sure how
+much I trust the memory maps of future tiles and models to "evolve"
+relative to what currently exists.  Are you sure it won't change again?
 
-Really we should have a way for getting this info from the device tree,
-yada yada.  (Repeating myself here, I know)
-
-In the meantime, I don't see a practical alternative to adding distinct
-lowlevel debug UART selection options for the two memory maps ...?
-
+If we rely on lucky arrangement of slaves on the bus in order to have
+a workaround, sooner or later our luck is liable to run out.
 
 Cheers
 ---Dave
