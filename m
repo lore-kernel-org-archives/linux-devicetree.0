@@ -1,58 +1,35 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: devicetree: Add .dtb files to
- arch/arm/boot/.gitignore
-Date: Tue, 31 Jan 2012 11:20:24 +0800
-Message-ID: <20120131032022.GC24681@S2101-09.ap.freescale.net>
-References: <1327945574-7977-1-git-send-email-dave.martin@linaro.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v3 00/25] irq_domain generalization and refinement
+Date: Mon, 30 Jan 2012 20:53:44 -0800
+Message-ID: <20120131045344.GA27609@quad.lixom.net>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1327945574-7977-1-git-send-email-dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2012 at 05:46:14PM +0000, Dave Martin wrote:
-> Compiled device tree blobs shouldn't be committed in the kernel
-> tree, so ideally git should ignore them.
+On Fri, Jan 27, 2012 at 02:35:54PM -0700, Grant Likely wrote:
+> Hey everyone,
 > 
-> This patch will enable ignoring of any .dtb files which appear in
-> arch/arm/boot/
+> This patch series is ready for much wider consumption now.  I'd like
+> to get it into linux-next ASAP because there will be ARM board support
+> depending on it.  I'll wait a few days before I ask Stephen to pull
+> this in.
 > 
-> Signed-off-by: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Stephen/Milton/Ben, any testing you can help with here would be
+> appreciated since you've got access to a wider variety of Power
+> machines than I do.
 
-Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This series has been:
 
-I added my ack tag on the same patch below, but it died in the end?
+Tested-by: Olof Johansson <olof@lixom.net>
 
-http://comments.gmane.org/gmane.linux.ports.arm.kernel/144097
+On powerpc/pasemi (it's the only one I still have easy access to).
 
-Regards,
-Shawn
 
-> ---
->  arch/arm/boot/.gitignore |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/.gitignore b/arch/arm/boot/.gitignore
-> index ce1c5ff..3c79f85 100644
-> --- a/arch/arm/boot/.gitignore
-> +++ b/arch/arm/boot/.gitignore
-> @@ -3,3 +3,4 @@ zImage
->  xipImage
->  bootpImage
->  uImage
-> +*.dtb
-> -- 
-> 1.7.4.1
+-Olof
