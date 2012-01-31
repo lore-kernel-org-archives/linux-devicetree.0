@@ -1,57 +1,49 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [PATCH 3/5] ASoC: Tegra+ALC5632 machine: Add device tree
- binding documentation
-Date: Tue, 31 Jan 2012 09:52:42 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178E124438@HQMAIL01.nvidia.com>
-References: <1327995040-27152-1-git-send-email-leon@leon.nu>
+From: Sergei Shtylyov <sshtylyov@ru.mvista.com>
+Subject: Re: [PATCH v3 4/6] mmc: sdhci-s3c: derive transfer width host capability
+ from max_width in platform data
+Date: Tue, 31 Jan 2012 22:12:13 +0300
+Message-ID: <4F283D0D.3050508@ru.mvista.com>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org> <1328032576-9269-5-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1327995040-27152-1-git-send-email-leon@leon.nu>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Leon Romanovsky <leon@leon.nu>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "lrg@ti.com" <lrg@ti.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "olof@lixom.net" <olof@lixom.net>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1328032576-9269-5-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, ben-linux@fluff.org, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Leon Romanovsky wrote at Tuesday, January 31, 2012 12:31 AM:
-> Document device tree binding for the tegra board with ALC5632 codec
-> according to datasheet functional block description.
+Hello.
 
-> diff --git a/Documentation/devicetree/bindings/sound/tegra-audio-alc5632.txt
+On 01/31/2012 08:56 PM, Thomas Abraham wrote:
 
-> +  ALC5632 pins:
+> max_width member in platform data can be used to derive the mmc bus transfer
+> width that can be supported by the controller.
+
+> Signed-off-by: Thomas Abraham<thomas.abraham@linaro.org>
+> ---
+>   drivers/mmc/host/sdhci-s3c.c |    8 ++++++++
+>   1 files changed, 8 insertions(+), 0 deletions(-)
+
+> diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
+> index e1b685d..a57d7a0 100644
+> --- a/drivers/mmc/host/sdhci-s3c.c
+> +++ b/drivers/mmc/host/sdhci-s3c.c
+> @@ -562,6 +562,14 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
+>   	if (pdata->cd_type == S3C_SDHCI_CD_PERMANENT)
+>   		host->mmc->caps = MMC_CAP_NONREMOVABLE;
+>
+> +	switch (pdata->max_width) {
+> +	case 8:
+> +		host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+
+    A comment like /* FALL THRU */ is needed here.
+
+> +	case 4:
+> +		host->mmc->caps |= MMC_CAP_4_BIT_DATA;
+> +		break;
+> +	}
 > +
-> +  * SPK_OUTP
-> +  * SPK_OUTN
-> +  * HP_OUT_L
-> +  * HP_OUT_R
-> +  * AUX_OUT_P
-> +  * AUX_OUT_N
 
-Sorry this is picky, but those are AUX_OUTP and AUX_OUTN in the block
-diagram in the datasheet; only 1 underscore in the name.
-
-Hmm, actually the block diagram and "pin assignment" diagram are
-inconsistent, e.g. AUX_OUTP+AUX_OUTN in the block diagram vs.
-AUX_OUT+AUX_OUTN in the pin assignment, or PHONE_N (block diagram) vs.
-PHONEN (pin assignments).
-
-Mark, do you care about this level of detail? I think we should use the
-names in the pin assignments section if we do change this patch, but I
-guess things are clear enough as it stands, so I'm not excessively
-bothered.
-
-> +  * LINE_IN_L
-> +  * LINE_IN_R
-> +  * PHONE_P
-> +  * PHONE_N
-> +  * MIC1_P
-> +  * MIC1_N
-> +  * MIC2_P
-> +  * MIC2_N
-> +  * MICBIAS1
-
--- 
-nvpublic
-
+WBR, Sergei
