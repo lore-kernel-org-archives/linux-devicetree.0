@@ -1,83 +1,64 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2 1/2] PM / Domains: Add OF support
-Date: Tue, 31 Jan 2012 14:53:05 +0900
-Message-ID: <041e01ccdfdc$9a4257a0$cec706e0$%kim@samsung.com>
-References: <1325931055-14486-1-git-send-email-thomas.abraham@linaro.org>
- <201201082223.18603.rjw@sisk.pl>
- <001e01ccd4e8$d04b03a0$70e10ae0$%kim@samsung.com>
- <201201172145.35407.rjw@sisk.pl>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 6/6] mmc: sdhci-s3c: Add device tree support
+Date: Tue, 31 Jan 2012 07:13:38 +0100
+Message-ID: <201201310713.39553.heiko@sntech.de>
+References: <1320266163-15292-1-git-send-email-thomas.abraham@linaro.org> <201201301051.22396.heiko@sntech.de> <20120130190114.GR28397@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <201201172145.35407.rjw@sisk.pl>
-Content-language: ko
+In-Reply-To: <20120130190114.GR28397@ponder.secretlab.ca>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: "'Rafael J. Wysocki'" <rjw@sisk.pl>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, s.nawrocki@samsung.com, patches@linaro.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-Rafael J. Wysocki wrote:
-> 
-> On Tuesday, January 17, 2012, Kukjin Kim wrote:
-> > Rafael J. Wysocki wrote:
-> > >
-> > > On Saturday, January 07, 2012, Thomas Abraham wrote:
-> > > > A device node pointer is added to generic pm domain structure to
-> > > associate
-> > > > the domain with a node in the device tree. The platform code parses the
-> > > > device tree to find available nodes representing the generic power
-> > > domain,
-> > > > instantiates the available domains and initializes them by calling
-> > > > pm_genpd_init().
-> > > >
-> > > > Nodes representing the devices include a phandle of the power domain to
-> > > > which it belongs. As these devices get instantiated, the driver code
-> > > > checkes for availability of a power domain phandle, converts the phandle
-> > > > to a device node and uses the new pm_genpd_of_add_device() api to
-> > > > associate the device with a power domain.
-> > > >
-> > > > pm_genpd_of_add_device() runs through its list of registered power
-> > > domains
-> > > > and matches the OF node of the domain with the one specified as the
-> > > > parameter. If a match is found, the device is associated with the
-> > > matched
-> > > > domain.
-> > > >
-> > > > Cc: Rafael J. Wysocki <rjw@sisk.pl>
-> > > > Cc: Rob Herring <rob.herring@calxeda.com>
-> > > > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > > > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> > >
-> > > I can take this patch for 3.4, but your [2/2] depends on it, so I'm not
-> > > sure how to handle that.  If you want me to take the other patch too,
-> > > it'll need ACKs from the Exynos maintaniers.
-> > >
-> > Hi Rafael,
-> >
-> > Basically, looks ok to me.
-> >
-> > But it would be good if [v3 2/2] patch of this series (this patch) could be
-> > applied in samsung tree to avoid conflicts as it modifies many files. I
-> > don't want to make a trouble when sending my tree to upstream. Of course, as
-> > you said, this have a dependency with [v2 1/2]. So if you're ok, let me
-> > create topic branch will have both(1/2 and 2/2) to merge in your tree.
-> >
-> > How do you think?
-> 
-> That would work for me too.
-> 
-Hi Rafael,
+Am Montag 30 Januar 2012, 20:01:14 schrieb Grant Likely:
+> On Mon, Jan 30, 2012 at 10:51:11AM +0100, Heiko St=FCbner wrote:
+> > Am Mittwoch, 2. November 2011, 21:36:03 schrieb Thomas Abraham:
+> >=20
+> > Hi Thomas,
+> >=20
+> > in patch 1/6:
+> > > +static struct platform_device_id sdhci_s3c_driver_ids[] =3D {
+> > > +       {
+> > > +               .name           =3D "s3c-sdhci",
+> > > +               .driver_data    =3D (kernel_ulong_t)NULL,
+> > > +       },
+> > > +       {
+> > > +               .name           =3D "exynos4-sdhci",
+> > > +               .driver_data    =3D EXYNOS4_SDHCI_DRV_DATA,
+> > > +       },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(platform, sdhci_s3c_driver_ids);
+> >=20
+> > and in patch 6/6:
+> > > +#ifdef CONFIG_OF
+> > > +static const struct of_device_id sdhci_s3c_dt_match[] =3D {
+> > > +	{ .compatible =3D "samsung,s3c6410-sdhci", },
+> > > +	{ .compatible =3D "samsung,exynos4210-sdhci",
+> > > +		.data =3D &exynos4_sdhci_drv_data },
+> > > +	{},
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, sdhci_s3c_dt_match);
+> >=20
+> > wouldn't it be better to keep the naming consistent between of and
+> > non-of? I.e. s3c-sdhci vs. s3c6410-sdhci. Since the driver is used =
+for
+> > all S3C SoCs containing hsmmc controllers I think s3c-sdhci would b=
+e
+> > preferable here.
+>=20
+> History has shown that future devices aren't always compatible with e=
+arlier
+> ones.  Compatible strings are expected to be specific to an exact dev=
+ice to
+> reduce the possibility of new hardware breaking assumptions.
+>=20
+> Instead, new hardware can either claim compatibility with older
+> compatible strings (the compatible property in the DT is a list), or
+> can have the new string added to the match table in the driver;
+> whichever option makes the most sense.
+ah, ok. Thanks for the explanation and I will keep that in mind.
 
-I created topic branch for you with your ack.
-git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v3.4-for-rafael
-
-Please merge that in your tree and if any problems, please kindly let me know.
-
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+Heiko
