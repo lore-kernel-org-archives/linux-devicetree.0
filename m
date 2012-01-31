@@ -1,40 +1,59 @@
-From: Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>
-Subject: Re: [PATCH 3/5] ASoC: Tegra+ALC5632 machine: Add device tree binding documentation
-Date: Tue, 31 Jan 2012 13:51:43 +0200
-Message-ID: <CALq1K=JbPspu2ShkfgcvQ_+cw6kxZNxe_zUdwrz3Sfn3YFv_rg@mail.gmail.com>
-References: <1327995040-27152-1-git-send-email-leon@leon.nu> <20120131112706.GE18444@opensource.wolfsonmicro.com>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: devicetree: Add .dtb files to
+ arch/arm/boot/.gitignore
+Date: Tue, 31 Jan 2012 11:52:56 +0000
+Message-ID: <20120131115256.GG2085@linaro.org>
+References: <1327945574-7977-1-git-send-email-dave.martin@linaro.org>
+ <20120131032022.GC24681@S2101-09.ap.freescale.net>
+ <20120131114659.GE2085@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120131112706.GE18444-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: lrg-l0cyMroinI0@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120131114659.GE2085-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Uwe Kleine-Konig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2012 at 13:27, Mark Brown
-<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
->
-> On Tue, Jan 31, 2012 at 09:30:40AM +0200, Leon Romanovsky wrote:
-> > Document device tree binding for the tegra board with ALC5632 codec
-> > according to datasheet functional block description.
->
-> If resending please send the documentation in the same patch as you a=
-dd
-> the binding (unless that patch is complex enough to need splitting).
->
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/sound/tegra-audio-alc5632.t=
-xt
-> > @@ -0,0 +1,57 @@
-> > +NVIDIA Tegra audio complex
->
-> This should really be more detailed, mentioning the CODEC.
-Can it be done in followup patch ? or do I need resend them all ?
+On Tue, Jan 31, 2012 at 11:46:59AM +0000, Dave Martin wrote:
+> On Tue, Jan 31, 2012 at 11:20:24AM +0800, Shawn Guo wrote:
+> > On Mon, Jan 30, 2012 at 05:46:14PM +0000, Dave Martin wrote:
+> > > Compiled device tree blobs shouldn't be committed in the kernel
+> > > tree, so ideally git should ignore them.
+> > > 
+> > > This patch will enable ignoring of any .dtb files which appear in
+> > > arch/arm/boot/
+> > > 
+> > > Signed-off-by: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > I added my ack tag on the same patch below, but it died in the end?
+> > 
+> > http://comments.gmane.org/gmane.linux.ports.arm.kernel/144097
+> 
+> I don't mind too much which patch goes in -- do we care about whether
+> other .dtb files can be included in the kernel?
+> 
+> 
+> I would suggest that it is just plain wrong for _binary_ devicetree
+> blobs to appear in the kernel tree, since there is a readily usable
+> source form for the same thing (this isn't firmware)
+> 
+> Do we think that the '.dtb' filename extension might get used foro
+> something else?
 
+Never mind, it looks like Grant merged my patch anyway.
 
-
---
-Leon Romanovsky | Independent Linux Consultant
-=C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0www.leon.nu=C2=A0| leon-2ukJVAZIZ/Y@public.gmane.org
+Cheers
+---Dave
