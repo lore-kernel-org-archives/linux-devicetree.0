@@ -1,68 +1,34 @@
-From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Subject: [PATCH] spi/spi-altera: Allow to explicitely override bus number via
- dts
-Date: Tue, 31 Jan 2012 16:54:06 +0100
-Message-ID: <1328025246-23450-1-git-send-email-tklauser@distanz.ch>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: Re: [PATCH v2] ARM: Exynos4: Add cpu-offset property in gic device
+ tree node
+Date: Tue, 31 Jan 2012 17:41:52 +0100
+Message-ID: <4F2819D0.7090002@samsung.com>
+References: <1328023789-4672-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Frederic Lambert <frdrc66-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1328023789-4672-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frederic Lambert <frdrc66-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 31.01.2012 16:29, Thomas Abraham wrote:
+> Commit db0d4db22a78 ('ARM: gic: allow GIC to support non-banked setups)
+> requires a cpu-offset property to be specified for non-banked gic
+> controllers, which is the case for Exynos4.
+>
+> Reported-by: Karol Lewandowski<k.lewandowski@samsung.com>
 
-Until now we let the code in spi.c assign us the bus number if the platform
-device didn't specify its id. This patch adds the possibility to explicitely
-specify the bus number via device tree.
+( Minor note - my email address lacks 'i' at the end, i.e. it's
+   k.lewandowsk@ :)
 
-Signed-off-by: Frederic Lambert <frdrc66-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
----
- .../devicetree/bindings/spi/spi_altera.txt         |    3 +++
- drivers/spi/spi-altera.c                           |    9 +++++++++
- 2 files changed, 12 insertions(+), 0 deletions(-)
+> Signed-off-by: Thomas Abraham<thomas.abraham@linaro.org>
+> ---
+> This patch solves the issue of boot failure with SMP enabled kernel for
+> Exynos4 device tree enabled machine.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi_altera.txt b/Documentation/devicetree/bindings/spi/spi_altera.txt
-index dda3759..3e0e921 100644
---- a/Documentation/devicetree/bindings/spi/spi_altera.txt
-+++ b/Documentation/devicetree/bindings/spi/spi_altera.txt
-@@ -2,3 +2,6 @@ Altera SPI
- 
- Required properties:
- - compatible : should be "ALTR,spi-1.0".
-+
-+Optional property:
-+- bus-number : SPI bus number
-diff --git a/drivers/spi/spi-altera.c b/drivers/spi/spi-altera.c
-index 4813a63..d5bf52b 100644
---- a/drivers/spi/spi-altera.c
-+++ b/drivers/spi/spi-altera.c
-@@ -226,6 +226,15 @@ static int __devinit altera_spi_probe(struct platform_device *pdev)
- 	if (!master)
- 		return err;
- 
-+	/* bus_num is dynamically assigned when undefined (see spi.c)  */
-+	/* look for a DTS entry to override this */
-+	if (pdev->id == -1 && pdev->dev.of_node != 0) {
-+		u32 tmp;
-+
-+		if (of_property_read_u32(pdev->dev.of_node, "bus-number", &tmp) == 0)
-+			pdev->id = tmp;
-+	}
-+
- 	/* setup the master state. */
- 	master->bus_num = pdev->id;
- 	master->num_chipselect = 16;
--- 
-1.7.5.4
+Tested-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+
+Thanks!
