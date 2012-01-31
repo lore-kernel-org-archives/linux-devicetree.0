@@ -1,91 +1,73 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [RFC PATCH 5/7] ARM: davinci: i2c: add OF support
-Date: Tue, 31 Jan 2012 08:31:26 +0100
-Message-ID: <4F2798CE.1090804@denx.de>
-References: <1327308967-8092-1-git-send-email-hs@denx.de>
- <1327308967-8092-6-git-send-email-hs@denx.de> <4F1DC480.4010603@gmail.com>
- <4F1E5B44.4090200@denx.de> <4F1E7F36.50505@samsung.com>
- <20120130201307.GV28397@ponder.secretlab.ca>
-Reply-To: hs-ynQEQJNshbs@public.gmane.org
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] irq_domain/microblaze: Convert microblaze to use
+ irq_domains
+Date: Tue, 31 Jan 2012 11:53:39 +0100
+Message-ID: <4F27C833.2020906@monstr.eu>
+References: <1327613292-20580-1-git-send-email-grant.likely@secretlab.ca>
+ <4F268222.5030403@monstr.eu> <20120130133017.GE28397@ponder.secretlab.ca>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20120130201307.GV28397-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120130133017.GE28397-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Grant,
-
 Grant Likely wrote:
-> On Tue, Jan 24, 2012 at 10:51:50AM +0100, Sylwester Nawrocki wrote:
->> Hello Heiko,
+> On Mon, Jan 30, 2012 at 12:42:26PM +0100, Michal Simek wrote:
+>> Hi Grant,
 >>
->> On 01/24/2012 08:18 AM, Heiko Schocher wrote:
->>>> On 01/23/2012 09:56 AM, Heiko Schocher wrote:
->>>>> add of support for the davinci i2c driver.
->>>>>
->>>>> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
->>>>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
->>>>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>>>> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>> Cc: Ben Dooks<ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
->>>>> Cc: Wolfram Sang<w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>>>> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
->>>>> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
->>>>> ---
->>>>>   .../devicetree/bindings/arm/davinci/i2c.txt        |   39 ++++++++++++++++++
->>>>>   drivers/i2c/busses/i2c-davinci.c                   |   43 ++++++++++++++++++++
->>>>>   2 files changed, 82 insertions(+), 0 deletions(-)
->>>>>   create mode 100644 Documentation/devicetree/bindings/arm/davinci/i2c.txt
-[...]
->> Moreover you seem to overwrite platform device name and id,
+>> Grant Likely wrote:
+>>> ***totally untested.  Don't apply yet***
+>>>
+>>> Michal, I leave it to you to test this patch.  I've turned on SPARSE_IRQ, but
+>>> you may decide that isn't valuable.  I've compile tested it, but that's
+>>> about it (in fact, I had to hack head.S to get it to build because I don't have
+>>> an up-to-date compiler for microblaze.  It fails on an unknown opcode 'lwr')
+>>>
+>> I have looked at it and I there is problem with virq allocation in irq_create_mapping
+>> which calles irq_alloc_desc(0) and then __irq_alloc_descs(-1, 0, 1, node, THIS_MODULE)
+>> where bitmap_find_next_zero_area returns 0 (start = 0) which is passed to alloc_descs
+>> which just return it.
+>> It doesn't matter if SPARSE_IRQ is enabled or not.
+>> Error log is below.
 >>
->> 		if (!of_property_read_u32(pdev->dev.of_node, "id",
->> +			&prop)) {
->> +			pdev->id = prop;
->> +			pdev->dev.init_name = kzalloc(20, GFP_KERNEL);
->> +			sprintf((char *)pdev->dev.init_name,
->> +				"i2c_davinci.%d", pdev->id);
->>
->> I'm not sure if it is a good practice.
+>> Can you give me hint how to fix it and what expected values are?
 > 
-> No, it is not good practice.  At this point the device is already
-> registered.  Changing the value of pdev->id will cause problems in the
-> core code because the /sysfs files will have already been created.
+> irq0 is getting allocated when it shouldn't be.  The fix is to change the
+> calls in irqdomain.c from irq_alloc_desc(0) to irq_alloc_desc_from(1, 0).
 > 
->> If you want to pre-define platform
->> device name (likely for the clock API to work), it might be more appropriate
->> to use OF_DEV_AUXDATA in the machine code, until there are clock bindings
->> available.
+> I've got the fix in my tree and I'm pushing it out to the following branch
+> in a few minutes:
 > 
-> Yes, use OF_DEV_AUXDATA, but *only* if you need it for hooking up
-> clocks, regulators, or similar.  Don't use it just because you want
-> the device to have a different name for cosmetic reasons.  The need
-> for AUXDATA should go away once the DT clock binding code is merged.
+> git://git.secretlab.ca/git/linux-2.6 irqdomain/next
 
-I now use OF_DEV_AUXDATA in board code, "id" nor "cell-index" used:
+ok. I have tested your new branch I have fixed and tested microblaze patch.
+I will disable SPARSE_IRQ because nothing bring to us. From my quick look it will
+just additional code.
 
-struct of_dev_auxdata enbw_cmc_auxdata_lookup[] __initdata = {
-        OF_DEV_AUXDATA("ti,davinci-i2c", 0x01c22000, "i2c_davinci.1", NULL),
-        OF_DEV_AUXDATA("ti,davinci-i2c", 0x01e28000, "i2c_davinci.2", NULL),
-        {}
-};
+The last two thing before I send updated patch is why did you choosed NR_IRQ to 64.
+We doesn't support cascades or any complicated IRQ subsystem and intc can provide just 32 lines.
 
-This is needed for hooking up clocks, see:
-arch/arm/mach-davinci/da850.c
-static struct clk_lookup da850_clks
-[...]
-        CLK("i2c_davinci.1",    NULL,           &i2c0_clk),
-[...]
-        CLK("i2c_davinci.2",    NULL,           &i2c1_clk),
+And can you see any strong reason to keep get_irq in hardirq.h. I would move it to irq.h.
 
-bye,
-Heiko
+Thanks,
+Michal
+
+
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
