@@ -1,49 +1,50 @@
-From: Sergei Shtylyov <sshtylyov@ru.mvista.com>
-Subject: Re: [PATCH v3 4/6] mmc: sdhci-s3c: derive transfer width host capability
- from max_width in platform data
-Date: Tue, 31 Jan 2012 22:12:13 +0300
-Message-ID: <4F283D0D.3050508@ru.mvista.com>
-References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org> <1328032576-9269-5-git-send-email-thomas.abraham@linaro.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 2/5] ASoC: ALC5632: Add device tree binding documentation
+Date: Tue, 31 Jan 2012 19:35:50 +0000
+Message-ID: <20120131193542.GC3429@opensource.wolfsonmicro.com>
+References: <1327994985-27101-1-git-send-email-leon@leon.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1328032576-9269-5-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, ben-linux@fluff.org, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ctP54qlpMx3WjD+/"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1327994985-27101-1-git-send-email-leon-2ukJVAZIZ/Y@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>
+Cc: lrg-l0cyMroinI0@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 01/31/2012 08:56 PM, Thomas Abraham wrote:
+--ctP54qlpMx3WjD+/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> max_width member in platform data can be used to derive the mmc bus transfer
-> width that can be supported by the controller.
+On Tue, Jan 31, 2012 at 09:29:45AM +0200, Leon Romanovsky wrote:
+> Document the device tree binding for the ALC5632 codec and update vendor
+> specific prefix for the Realtek.
 
-> Signed-off-by: Thomas Abraham<thomas.abraham@linaro.org>
-> ---
->   drivers/mmc/host/sdhci-s3c.c |    8 ++++++++
->   1 files changed, 8 insertions(+), 0 deletions(-)
+Applied, thanks.
 
-> diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
-> index e1b685d..a57d7a0 100644
-> --- a/drivers/mmc/host/sdhci-s3c.c
-> +++ b/drivers/mmc/host/sdhci-s3c.c
-> @@ -562,6 +562,14 @@ static int __devinit sdhci_s3c_probe(struct platform_device *pdev)
->   	if (pdata->cd_type == S3C_SDHCI_CD_PERMANENT)
->   		host->mmc->caps = MMC_CAP_NONREMOVABLE;
->
-> +	switch (pdata->max_width) {
-> +	case 8:
-> +		host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+--ctP54qlpMx3WjD+/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-    A comment like /* FALL THRU */ is needed here.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-> +	case 4:
-> +		host->mmc->caps |= MMC_CAP_4_BIT_DATA;
-> +		break;
-> +	}
-> +
+iQIcBAEBAgAGBQJPKEKIAAoJEBus8iNuMP3dvtYP/Rw9cYMp9KMu9MwDDh0eoBJ9
+0aVuAGSyM2XzjTfuO5R1XiIJ8tHq58kzo5q+C/fO2HlxV4WefT58NKbjLZKh9k3V
+DLapgugqBBB7EjWveBTxwhFFpyKa/o8M9nwSzOGx2S1gA4ufAfyEohUyA42lPxWe
+4cXLIqD9dO+YJLJiseag4OpSQnqwQIGNPBOMiprcoxqMI6P5Ufuo5VctK9DwPyFs
+JEORnxzy3nm4rrvdOpFKg9+9JCNIuusbo5n8g7tfP3iFsrBZZpwdulgqVt9hhQDv
+FM4JBAGQkdnzlZegqGw087ll2SRuRAZ7xrwUiPDHfFCOY4aKtgGahf7OW8QCGsZq
+/ZWVm2zyTmF4jKK0MlJsbsyTWwOeenA+SArH1dTJWtnEIV5vjnYjx97HeAFePPDO
+OM4fQYRzHJVhWTbYJNNuuVJKaixRqFCDVgHfnJx+yjq3mvvFy8/ZwJEjOHrpBTLB
+yI+eYO3Xu4FI4w5b4INHdzxkgAzUkalHUTgBi3XLVZ3IW9VIxloA844LdWYe1luK
+x/kzlb/zyN46PC6QMnEOe/ci4wI2Cqz4I2E0kM3Cje3ABi0cYeTHjWlROM+QvQCj
+7DRMp12c4FPiAOtWzklC1ef1hdJer2/LZoNF6OZPkwrVkYHleSQo0wgPo792+b1I
+RQ71if/j2JUrrcVAX7Am
+=p10I
+-----END PGP SIGNATURE-----
 
-WBR, Sergei
+--ctP54qlpMx3WjD+/--
