@@ -1,118 +1,59 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] of_spi: add generic binding support to specify ncs
- gpio in the slave
-Date: Tue, 31 Jan 2012 12:07:12 +0100
-Message-ID: <20120131110712.GI705@game.jcrosoft.org>
-References: <1327937271-23668-1-git-send-email-plagnioj@jcrosoft.com>
- <20120130185458.GO28397@ponder.secretlab.ca>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 3/5] ASoC: Tegra+ALC5632 machine: Add device tree binding
+ documentation
+Date: Tue, 31 Jan 2012 11:27:06 +0000
+Message-ID: <20120131112706.GE18444@opensource.wolfsonmicro.com>
+References: <1327995040-27152-1-git-send-email-leon@leon.nu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SNIs70sCzqvszXB4"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120130185458.GO28397-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1327995040-27152-1-git-send-email-leon-2ukJVAZIZ/Y@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>
+Cc: lrg-l0cyMroinI0@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11:54 Mon 30 Jan     , Grant Likely wrote:
-> On Mon, Jan 30, 2012 at 04:27:49PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > This will allow to use gpio for chip select with no modification in the
-> > driver binding
-> > 
-> > When use the ncs-gpio, the gpio number will be passed via the controller_data
-> > and the number of chip select will automatically increased.
-> > 
-> > When a spi master have only gpio chip select and is probe via dt check the
-> > number of chip select only when adding slave.
-> > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-> > ---
-> >  Documentation/devicetree/bindings/spi/spi-bus.txt |    9 ++++++-
-> >  drivers/of/of_spi.c                               |   27 ++++++++++++++------
-> >  drivers/spi/spi.c                                 |    2 +-
-> >  3 files changed, 28 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > index e782add..1dccf35 100644
-> > --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > @@ -21,9 +21,16 @@ assumption that board specific platform code will be used to manage
-> >  chip selects.  Individual drivers can define additional properties to
-> >  support describing the chip select layout.
-> >  
-> > +If a gpio a specified to the SPI slave and no hardware chip select is present
-> > +the reg property #address-cells and #size-cells are not needed.
-> > +
-> > +When use the ncs-gpio the gpio number will be passed via the controller_data
-> > +and the number of chip select will automatically increased.
-> > +
-> >  SPI slave nodes must be children of the SPI master node and can
-> >  contain the following properties.
-> > -- reg             - (required) chip select address of device.
-> > +- reg             - (required if no ncs-gpio) chip select address of device.
-> > +- ncs-gpio        - (required if no reg) chip select gpio of device.
-> 
-> There is already precedence for using gpios for chip selects.  The slave device
-> nodes remain as they are and it is the responsibility of the spi bus node
-> to have a gpios property with a list of SS gpios.  The order of the gpios
-> property should match the 'reg' address numbering of the child node.
-> 
-> I don't like the idea of having multiple bindings for the slave address of
-> the spi device (reg or ncs-gpio)
-> 
-> What I want to see is generic SS helper code that spi bus drivers
-> default to and correctly implement parsing of chip select gpios.
-> 
-> I'm not going to apply this patch.
-I do not want to see any of managment in the driver, I want a generic way to
-specify only gpio cs and hw and gpio cs
 
-spi1: spi@fffcc000 {
-	ncs-gpios = <&pioB 3 0>;
-	status = "okay";
-	mmc-slot@0 {
-		reg = <0>;
-		compatible = "mmc-spi-slot";
-		gpios = <&pioC 4 0   /* CD */
-			>;
-		voltage-ranges = <3200 3400>;
-		spi-max-frequency = <20000000>;
-	};
-};
+--SNIs70sCzqvszXB4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-as on atmel spi we have no HW spi the cs is 0
-if there is 3 hw cs the reg will be 3
+On Tue, Jan 31, 2012 at 09:30:40AM +0200, Leon Romanovsky wrote:
+> Document device tree binding for the tegra board with ALC5632 codec
+> according to datasheet functional block description.
 
-we have 4 hw chipselect 3 enabled and one gpio chipselect
+If resending please send the documentation in the same patch as you add
+the binding (unless that patch is complex enough to need splitting).
 
-spi1: spi@fffcc000 {
-	ncs-hw = < 0 1 1 1>;
-	ncs-gpios = <&pioB 3 0>;
-	status = "okay";
-	mmc-slot@0 {
-		reg = <3>;
-		compatible = "mmc-spi-slot";
-		gpios = <&pioC 4 0   /* CD */
-			>;
-		voltage-ranges = <3200 3400>;
-		spi-max-frequency = <20000000>;
-	};
-};
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/tegra-audio-alc5632.txt
+> @@ -0,0 +1,57 @@
+> +NVIDIA Tegra audio complex
 
-the idea is to pass the ncs_pin in the spi_device so the driver just have
-to check if the chipselect is hw or gpio and then use it the right way
+This should really be more detailed, mentioning the CODEC.
 
-Best Regards,
-J.
+--SNIs70sCzqvszXB4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPJ8/5AAoJEBus8iNuMP3dtuoP/ii46USw52pBs4MIpPohPAci
+GWkeWlln2k4FLtSLMPtf7DuzImLdKw29HX1mSe7HYQQXTP9AdC1s7qOCGNd1zHTS
+8C6B/gikVGkg72Zck5b5EbHXrHLTDvcT2T6lnN3tNWIPneMx5VHiTkOtwMBTS6lr
+sMeni5/JAg1BhEHzysL44LBsonGjC5ffFPBN+Amo+Kuyf+HYAWcxoNF/r/HEbvNd
+ZZbCf+KylKHPyj0ntYJgmt/qDdQmv9v2KefqqQ8JGiFG3/ltcxYMcXc+EGu8eM0v
+o1fvkE6ay5FnfyFlP1edHVSJF003sE1kZUaKHwPaMveSiuRj6TAJFmGb9W8F9rvf
+WqNDs53nqyZyUwHHq+EC2Ru1XvFr/2zleejGyOJatvlZzyYQPcnWDFsGgAn2eqHa
+HxqEJ6vAjpuFEQJQ92ZIcEMOiuE83LpS+N7D+zLeXtPozY264ODLDkItozqEMUYe
+RX0M6FZCNbskpvniz4NRUovC8T1XY7oRoNayKF9jZ0D12llyIItp51PL9RyAbwaX
+pjtgV0/cx3ZgB+Uxsn27BHokrBLUO94XQkW/sGy6hLjH+KbOofgV6tMWB+yX6RSu
+7n95ETJ5EN4fw1OvYgG+mLFlGO5akpCCX+yGpJRJnxohsPxYfI23yinerHqyeqmf
+1GcrXvKp7/R+/Ixu/fUc
+=n1JL
+-----END PGP SIGNATURE-----
+
+--SNIs70sCzqvszXB4--
