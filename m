@@ -1,99 +1,173 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 14/25] irq_domain: Remove irq_domain_add_simple()
-Date: Tue, 31 Jan 2012 20:45:03 +0800
-Message-ID: <20120131124500.GA28571@S2101-09.ap.freescale.net>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-15-git-send-email-grant.likely@secretlab.ca>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [RFC PATCH 7/7] ARM: davinci: add support for the am1808 based
+ enbw_cmc board
+Date: Tue, 31 Jan 2012 14:04:32 +0100
+Message-ID: <4F27E6E0.1050608@denx.de>
+References: <1327308967-8092-1-git-send-email-hs@denx.de>
+ <1327308967-8092-8-git-send-email-hs@denx.de>
+ <20120130203252.GX28397@ponder.secretlab.ca>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1327700179-17454-15-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20120130203252.GX28397-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2012 at 02:36:08PM -0700, Grant Likely wrote:
-> irq_domain_add_simple() was a stop-gap measure until complete irq_domain
-> support was complete.  This patch removes the irq_domain_add_simple()
-> interface.
+Hello Grant,
+
+Grant Likely wrote:
+> On Mon, Jan 23, 2012 at 09:56:07AM +0100, Heiko Schocher wrote:
+>> - AM1808 based board
+>> - 64 MiB DDR ram
+>> - 2 MiB Nor flash
+>> - 128 MiB NAND flash
+>> - use internal RTC
+>> - I2C support
+>> - hwmon lm75 support
+>> - UBI/UBIFS support
+>> - MMC support
+>> - USB OTG support
+>>
+>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+>> Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+>> Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
+>> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+>>
+>> ---
+>> - post this board support with USB support, even though
+>>   USB is only working with the 10 ms "workaround", posted here:
+>>   http://comments.gmane.org/gmane.linux.usb.general/54505
+>>   I see this issue also on the AM1808 TMDXEXP1808L evalboard.
+>> - MMC and USB are not using OF support yet, ideas how to port
+>>   this are welcome. I need for USB and MMC boards board
+>>   specific callbacks, how to solve this with OF support?
+
+Can you give me a hint, how to add callbacks to OF support?
+
+>>  arch/arm/boot/dts/enbw_cmc.dts                  |  286 +++++++++++++++++
+>>  arch/arm/configs/enbw_cmc_defconfig             |  125 ++++++++
+>>  arch/arm/mach-davinci/Kconfig                   |    8 +
+>>  arch/arm/mach-davinci/Makefile                  |    1 +
+>>  arch/arm/mach-davinci/board-enbw-cmc.c          |  384 +++++++++++++++++++++++
+>>  arch/arm/mach-davinci/include/mach/uncompress.h |    1 +
+>>  6 files changed, 805 insertions(+), 0 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/enbw_cmc.dts
+>>  create mode 100644 arch/arm/configs/enbw_cmc_defconfig
+>>  create mode 100644 arch/arm/mach-davinci/board-enbw-cmc.c
+>>
+>> diff --git a/arch/arm/boot/dts/enbw_cmc.dts b/arch/arm/boot/dts/enbw_cmc.dts
+>> new file mode 100644
+>> index 0000000..e5995ce
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/enbw_cmc.dts
+>> @@ -0,0 +1,286 @@
+>> +/*
+>> + * Device Tree for the EnBW CMC plattform
+>> + *
+>> + * Copyright 2011 DENX Software Engineering GmbH
+>> + * Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute  it and/or modify it
+>> + * under  the terms of  the GNU General  Public License as published by the
+>> + * Free Software Foundation;  either version 2 of the  License, or (at your
+>> + * option) any later version.
+>> + */
+>> +/dts-v1/;
+>> +/include/ "skeleton.dtsi"
+>> +
+>> +/ {
+>> +	model = "EnBW CMC";
+>> +	compatible = "enbw,cmc";
+>> +
+>> +	aliases {
+>> +		ethernet0 = &eth0;
+>> +	};
+>> +
+>> +	arm {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0 0xfffee000 0x00020000>;
+>> +		intc: interrupt-controller@1 {
+>> +			compatible = "ti,davinci-intc";
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <1>;
+>> +			ti,intc-size = <101>;
+>> +			reg = <0x0 0x2000>;
+>> +		};
+>> +	};
+>> +	soc@1c00000 {
+>> +		compatible = "ti,da8xx";
 > 
-> v2: Updated to pass in host_data pointer on irq_domain allocation.
+> As previously mentioned, using wildcard ('x') characters in compatible
+> properties is bad practice.  Always be specific and use the compatible
+> list to make sure the correct driver gets bound (assuming the device
+> is 100% register level compatible with the older one).
+
+fixed.
+
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0x0 0x01c00000 0x400000>;
+>> +
+>> +		serial0: serial@1c42000 {
+>> +			cell-index = <2>;
 > 
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Milton Miller <miltonm@bga.com>
-> ---
->  arch/arm/mach-imx/mach-imx6q.c      |    3 ++-
->  arch/arm/mach-msm/board-msm8x60.c   |    8 ++------
->  arch/arm/mach-mx5/imx51-dt.c        |    4 ++--
->  arch/arm/mach-mx5/imx53-dt.c        |    4 ++--
->  arch/arm/mach-omap2/board-generic.c |    2 +-
->  arch/arm/mach-prima2/irq.c          |    2 +-
->  drivers/mfd/twl-core.c              |    2 +-
->  include/linux/irqdomain.h           |    1 -
->  kernel/irq/irqdomain.c              |   10 ++--------
->  9 files changed, 13 insertions(+), 23 deletions(-)
+> As previously mentioned, don't use cell index.  If you *really* need
+> to assign a number to a device, then use a property in the /aliases
+> node and make sure pdev->id does *not* get modified.
+
+removed, as not needed.
+
+>> +			compatible = "ns16550a";
 > 
-...
-> --- a/arch/arm/mach-mx5/imx51-dt.c
-> +++ b/arch/arm/mach-mx5/imx51-dt.c
-> @@ -47,7 +47,7 @@ static const struct of_dev_auxdata imx51_auxdata_lookup[] __initconst = {
->  static int __init imx51_tzic_add_irq_domain(struct device_node *np,
->  				struct device_node *interrupt_parent)
->  {
-> -	irq_domain_add_simple(np, 0);
-> +	irq_domain_add_legacy(np, 32, 0, 0, &irq_domain_simple_ops, NULL);
->  	return 0;
->  }
->  
-> @@ -57,7 +57,7 @@ static int __init imx51_gpio_add_irq_domain(struct device_node *np,
->  	static int gpio_irq_base = MXC_GPIO_IRQ_START + ARCH_NR_GPIOS;
->  
->  	gpio_irq_base -= 32;
-> -	irq_domain_add_simple(np, gpio_irq_base);
-> +	irq_domain_add_legacy(np, 32, gpio_irq_base, 0, &irq_domain_simple_ops, NULL);
+> Should include a string for the specific device.  Something like:
+> 
+> 	compatible = "ti,da800", "ns16550a";
 
-The tzic on imx5 gets 128 irq lines rather than 32 here.  The current
-code will make any hwirq that is > 32 hit the WARN_ON below in
-irq_domain_legacy_revmap().
+added.
 
-	WARN_ON(hwirq < first_hwirq || hwirq >= first_hwirq + size)
+>> diff --git a/arch/arm/mach-davinci/board-enbw-cmc.c b/arch/arm/mach-davinci/board-enbw-cmc.c
+>> new file mode 100644
+>> index 0000000..4473c4a
+>> --- /dev/null
+>> +++ b/arch/arm/mach-davinci/board-enbw-cmc.c
+>> @@ -0,0 +1,384 @@
+[...]
+>> +#if defined(CONFIG_OF)
+>> +static __init void enbw_cmc_usb_init(void)
+> 
+> All the focus is on DT now.  How about making CONFIG_OF required for
+> this board?  Also, this is just another board file.  The focus should
 
-The first_hwirq is 0 and size is 32 in this case.
+fixed.
 
-Changing 32 to 128 seems fixing the problem.
+> be on creating a generic board support file for DT platforms.
 
->  
->  	return 0;
->  }
-> diff --git a/arch/arm/mach-mx5/imx53-dt.c b/arch/arm/mach-mx5/imx53-dt.c
-> index 05ebb3e..89de5d4 100644
-> --- a/arch/arm/mach-mx5/imx53-dt.c
-> +++ b/arch/arm/mach-mx5/imx53-dt.c
-> @@ -51,7 +51,7 @@ static const struct of_dev_auxdata imx53_auxdata_lookup[] __initconst = {
->  static int __init imx53_tzic_add_irq_domain(struct device_node *np,
->  				struct device_node *interrupt_parent)
->  {
-> -	irq_domain_add_simple(np, 0);
-> +	irq_domain_add_legacy(np, 32, 0, 0, &irq_domain_simple_ops, NULL);
+move the arch/arm/mach-davinci/board-enbw-cmc.c to
+arch/arm/mach-davinci/board-da850_simple.c
 
-Ditto
+and do it like
 
-Regards,
-Shawn
+arch/powerpc/platforms/52xx/mpc5200_simple.c ?
 
->  	return 0;
->  }
->  
-> @@ -61,7 +61,7 @@ static int __init imx53_gpio_add_irq_domain(struct device_node *np,
->  	static int gpio_irq_base = MXC_GPIO_IRQ_START + ARCH_NR_GPIOS;
->  
->  	gpio_irq_base -= 32;
-> -	irq_domain_add_simple(np, gpio_irq_base);
-> +	irq_domain_add_legacy(np, 32, gpio_irq_base, 0, &irq_domain_simple_ops, NULL);
->  
->  	return 0;
->  }
+and extract common nodes from arch/arm/boot/dts/enbw_cmc.dts
+to arch/arm/boot/dts/da850.dtsi?
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
