@@ -1,16 +1,16 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] irq_domain/microblaze: Convert microblaze to use
- irq_domains
-Date: Tue, 31 Jan 2012 11:53:39 +0100
-Message-ID: <4F27C833.2020906@monstr.eu>
-References: <1327613292-20580-1-git-send-email-grant.likely@secretlab.ca>
- <4F268222.5030403@monstr.eu> <20120130133017.GE28397@ponder.secretlab.ca>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] of_spi: add generic binding support to specify ncs
+ gpio in the slave
+Date: Tue, 31 Jan 2012 12:07:12 +0100
+Message-ID: <20120131110712.GI705@game.jcrosoft.org>
+References: <1327937271-23668-1-git-send-email-plagnioj@jcrosoft.com>
+ <20120130185458.GO28397@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120130133017.GE28397-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120130185458.GO28397-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,53 +21,98 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: microblaze-uclinux-rVRm/Wmeqae7NGdpmJTKYQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> On Mon, Jan 30, 2012 at 12:42:26PM +0100, Michal Simek wrote:
->> Hi Grant,
->>
->> Grant Likely wrote:
->>> ***totally untested.  Don't apply yet***
->>>
->>> Michal, I leave it to you to test this patch.  I've turned on SPARSE_IRQ, but
->>> you may decide that isn't valuable.  I've compile tested it, but that's
->>> about it (in fact, I had to hack head.S to get it to build because I don't have
->>> an up-to-date compiler for microblaze.  It fails on an unknown opcode 'lwr')
->>>
->> I have looked at it and I there is problem with virq allocation in irq_create_mapping
->> which calles irq_alloc_desc(0) and then __irq_alloc_descs(-1, 0, 1, node, THIS_MODULE)
->> where bitmap_find_next_zero_area returns 0 (start = 0) which is passed to alloc_descs
->> which just return it.
->> It doesn't matter if SPARSE_IRQ is enabled or not.
->> Error log is below.
->>
->> Can you give me hint how to fix it and what expected values are?
+On 11:54 Mon 30 Jan     , Grant Likely wrote:
+> On Mon, Jan 30, 2012 at 04:27:49PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > This will allow to use gpio for chip select with no modification in the
+> > driver binding
+> > 
+> > When use the ncs-gpio, the gpio number will be passed via the controller_data
+> > and the number of chip select will automatically increased.
+> > 
+> > When a spi master have only gpio chip select and is probe via dt check the
+> > number of chip select only when adding slave.
+> > 
+> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> > ---
+> >  Documentation/devicetree/bindings/spi/spi-bus.txt |    9 ++++++-
+> >  drivers/of/of_spi.c                               |   27 ++++++++++++++------
+> >  drivers/spi/spi.c                                 |    2 +-
+> >  3 files changed, 28 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > index e782add..1dccf35 100644
+> > --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > @@ -21,9 +21,16 @@ assumption that board specific platform code will be used to manage
+> >  chip selects.  Individual drivers can define additional properties to
+> >  support describing the chip select layout.
+> >  
+> > +If a gpio a specified to the SPI slave and no hardware chip select is present
+> > +the reg property #address-cells and #size-cells are not needed.
+> > +
+> > +When use the ncs-gpio the gpio number will be passed via the controller_data
+> > +and the number of chip select will automatically increased.
+> > +
+> >  SPI slave nodes must be children of the SPI master node and can
+> >  contain the following properties.
+> > -- reg             - (required) chip select address of device.
+> > +- reg             - (required if no ncs-gpio) chip select address of device.
+> > +- ncs-gpio        - (required if no reg) chip select gpio of device.
 > 
-> irq0 is getting allocated when it shouldn't be.  The fix is to change the
-> calls in irqdomain.c from irq_alloc_desc(0) to irq_alloc_desc_from(1, 0).
+> There is already precedence for using gpios for chip selects.  The slave device
+> nodes remain as they are and it is the responsibility of the spi bus node
+> to have a gpios property with a list of SS gpios.  The order of the gpios
+> property should match the 'reg' address numbering of the child node.
 > 
-> I've got the fix in my tree and I'm pushing it out to the following branch
-> in a few minutes:
+> I don't like the idea of having multiple bindings for the slave address of
+> the spi device (reg or ncs-gpio)
 > 
-> git://git.secretlab.ca/git/linux-2.6 irqdomain/next
+> What I want to see is generic SS helper code that spi bus drivers
+> default to and correctly implement parsing of chip select gpios.
+> 
+> I'm not going to apply this patch.
+I do not want to see any of managment in the driver, I want a generic way to
+specify only gpio cs and hw and gpio cs
 
-ok. I have tested your new branch I have fixed and tested microblaze patch.
-I will disable SPARSE_IRQ because nothing bring to us. From my quick look it will
-just additional code.
+spi1: spi@fffcc000 {
+	ncs-gpios = <&pioB 3 0>;
+	status = "okay";
+	mmc-slot@0 {
+		reg = <0>;
+		compatible = "mmc-spi-slot";
+		gpios = <&pioC 4 0   /* CD */
+			>;
+		voltage-ranges = <3200 3400>;
+		spi-max-frequency = <20000000>;
+	};
+};
 
-The last two thing before I send updated patch is why did you choosed NR_IRQ to 64.
-We doesn't support cascades or any complicated IRQ subsystem and intc can provide just 32 lines.
+as on atmel spi we have no HW spi the cs is 0
+if there is 3 hw cs the reg will be 3
 
-And can you see any strong reason to keep get_irq in hardirq.h. I would move it to irq.h.
+we have 4 hw chipselect 3 enabled and one gpio chipselect
 
-Thanks,
-Michal
+spi1: spi@fffcc000 {
+	ncs-hw = < 0 1 1 1>;
+	ncs-gpios = <&pioB 3 0>;
+	status = "okay";
+	mmc-slot@0 {
+		reg = <3>;
+		compatible = "mmc-spi-slot";
+		gpios = <&pioC 4 0   /* CD */
+			>;
+		voltage-ranges = <3200 3400>;
+		spi-max-frequency = <20000000>;
+	};
+};
 
+the idea is to pass the ncs_pin in the spi_device so the driver just have
+to check if the chipselect is hw or gpio and then use it the right way
 
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+Best Regards,
+J.
