@@ -1,58 +1,78 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] drivercore: Output common devicetree information in uevent
-Date: Wed, 1 Feb 2012 14:26:14 -0700
-Message-ID: <CACxGe6semcPXkGfEN76DezbC-sAgkczjofbjvbexM8g_8gPdBw@mail.gmail.com>
-References: <1328121545-21955-1-git-send-email-grant.likely@secretlab.ca>
- <20120201190940.GC20358@kroah.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH v2 1/2] PM / Domains: Add OF support
+Date: Wed, 1 Feb 2012 22:32:32 +0100
+Message-ID: <201202012232.32282.rjw@sisk.pl>
+References: <1325931055-14486-1-git-send-email-thomas.abraham@linaro.org> <201201172145.35407.rjw@sisk.pl> <041e01ccdfdc$9a4257a0$cec706e0$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120201190940.GC20358-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Greg Kroah-Hartman <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Frederic Lambert <frdrc66-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <041e01ccdfdc$9a4257a0$cec706e0$%kim@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, s.nawrocki@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 1, 2012 at 12:09 PM, Greg Kroah-Hartman <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Feb 01, 2012 at 11:39:04AM -0700, Grant Likely wrote:
->> When userspace needs to find a specific device, it currently isn't easy =
-to
->> resolve a /sys/devices/ path from a specific device tree node. =A0Nor is=
- it
->> easy to obtain the compatible list for devices.
->>
->> This patch generalizes the code that inserts OF_* values into the uevent
->> device attribute so that any device that is attached to an OF node will
->> have that information exported to userspace. =A0Without this patch only
->> platform devices and some powerpc-specific busses have access to this
->> data.
->>
->> The original function also creates a MODALIAS property for the compatible
->> list, but that code has not been generalized into the common case because
->> it has the potential to break module loading on a lot of bus types. =A0B=
-us
->> types are still responsible for their own MODALIAS properties.
->
-> So you are only adding new properties to be exported, not removing any
-> from any existing devices, right?
->
-> If so, I have no objection to this at all, if you want to take this
-> through your tree for 3.4, please feel free to add:
->
-> =A0 =A0 =A0 =A0Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
->
-> Or I can take it through my driver-core tree, which ever is easiest for
-> you.
+On Tuesday, January 31, 2012, Kukjin Kim wrote:
+> Rafael J. Wysocki wrote:
+> > 
+> > On Tuesday, January 17, 2012, Kukjin Kim wrote:
+> > > Rafael J. Wysocki wrote:
+> > > >
+> > > > On Saturday, January 07, 2012, Thomas Abraham wrote:
+> > > > > A device node pointer is added to generic pm domain structure to
+> > > > associate
+> > > > > the domain with a node in the device tree. The platform code parses the
+> > > > > device tree to find available nodes representing the generic power
+> > > > domain,
+> > > > > instantiates the available domains and initializes them by calling
+> > > > > pm_genpd_init().
+> > > > >
+> > > > > Nodes representing the devices include a phandle of the power domain to
+> > > > > which it belongs. As these devices get instantiated, the driver code
+> > > > > checkes for availability of a power domain phandle, converts the phandle
+> > > > > to a device node and uses the new pm_genpd_of_add_device() api to
+> > > > > associate the device with a power domain.
+> > > > >
+> > > > > pm_genpd_of_add_device() runs through its list of registered power
+> > > > domains
+> > > > > and matches the OF node of the domain with the one specified as the
+> > > > > parameter. If a match is found, the device is associated with the
+> > > > matched
+> > > > > domain.
+> > > > >
+> > > > > Cc: Rafael J. Wysocki <rjw@sisk.pl>
+> > > > > Cc: Rob Herring <rob.herring@calxeda.com>
+> > > > > Cc: Grant Likely <grant.likely@secretlab.ca>
+> > > > > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> > > >
+> > > > I can take this patch for 3.4, but your [2/2] depends on it, so I'm not
+> > > > sure how to handle that.  If you want me to take the other patch too,
+> > > > it'll need ACKs from the Exynos maintaniers.
+> > > >
+> > > Hi Rafael,
+> > >
+> > > Basically, looks ok to me.
+> > >
+> > > But it would be good if [v3 2/2] patch of this series (this patch) could be
+> > > applied in samsung tree to avoid conflicts as it modifies many files. I
+> > > don't want to make a trouble when sending my tree to upstream. Of course, as
+> > > you said, this have a dependency with [v2 1/2]. So if you're ok, let me
+> > > create topic branch will have both(1/2 and 2/2) to merge in your tree.
+> > >
+> > > How do you think?
+> > 
+> > That would work for me too.
+> > 
+> Hi Rafael,
+> 
+> I created topic branch for you with your ack.
+> git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v3.4-for-rafael
+> 
+> Please merge that in your tree and if any problems, please kindly let me know.
 
-I'll take it via the devicetree branch.  Thanks.
+Merged into linux-pm/pm-domains and into linux-pm/linux-next and pushed back.
 
-g.
+Thanks,
+Rafael
