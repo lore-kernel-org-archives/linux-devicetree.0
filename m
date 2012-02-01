@@ -1,41 +1,28 @@
-From: Vaibhav Hiremath <hvaibhav@ti.com>
-Subject: [PATCH] arm/dts: OMAP3: Add omap3evm and am335xevm support
-Date: Wed, 1 Feb 2012 11:57:00 +0530
-Message-ID: <1328077620-22411-1-git-send-email-hvaibhav@ti.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dt: Add binding for Tegra PMC
+Date: Tue, 31 Jan 2012 23:43:22 -0800
+Message-ID: <20120201074322.GH7399@quad.lixom.net>
+References: <1327527809-10179-1-git-send-email-swarren@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vaibhav Hiremath <hvaibhav@ti.com>, Benoit Cousson <b-cousson@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1327527809-10179-1-git-send-email-swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TI's OMAP3EVM and AM335xEVM are software development boards
-available for OMAP35x(AM/DM37x) and AM335x devices respectively;
-and these devices are considered under omap3 family.
+On Wed, Jan 25, 2012 at 02:43:27PM -0700, Stephen Warren wrote:
+> The Tegra PMC (Power Management Controller) interfaces with an external
+> PMU (Power Management Unit), and controls wake-up from sleep modes.
+> 
+> This initial binding is the bare minimum required to control the PMC's
+> inversion of the PMU's interrupt signal.
+> 
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Tony Lindgren <tony@atomide.com>
----
- .../devicetree/bindings/arm/omap/omap.txt          |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+Thanks, looks reasonable enough. Applied 1-3.
 
-diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-index dbdab40..ce78498 100644
---- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-+++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-@@ -41,3 +41,9 @@ Boards:
 
- - OMAP4 PandaBoard : Low cost community board
-   compatible = "ti,omap4-panda", "ti,omap4430"
-+
-+- OMAP3 EVM : Software Developement Board for OMAP35x, AM/DM37x
-+  compatible = "ti,omap3-evm", "ti,omap3"
-+
-+- AM335X EVM : Software Developement Board for AM335x
-+  compatible = "ti,am335x-evm", "ti,am33xx", "ti,omap3"
---
-1.7.0.4
-
+-Olof
