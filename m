@@ -1,66 +1,68 @@
-From: Stefano Babic <sbabic@denx.de>
-Subject: Re: [PATCH V2] mt_ventoux: support for TeeJet Mt.Ventoux board
-Date: Wed, 01 Feb 2012 11:51:16 +0100
-Message-ID: <4F291924.50702@denx.de>
-References: <1324940912-18164-3-git-send-email-yanok@emcraft.com>
- <1325027377-13484-1-git-send-email-yanok@emcraft.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1325027377-13484-1-git-send-email-yanok@emcraft.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com
-Cc: Detlev Zundel <dzu@denx.de>, Ilya Yanok <yanok@emcraft.com>, devicetree-discuss@lists.ozlabs.org, sasha_d@emcraft.com, grinberg@compulab.co.il, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH] gpio: samsung: adapt to changes in gpio specifier translator
+ function declaration
+Date: Wed, 01 Feb 2012 18:32:32 +0530
+Message-ID: <1328101352-22274-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, tushar.behera@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/12/2011 00:09, Ilya Yanok wrote:
-> This patch adds support for TeeJet Mt.Ventoux board based on TAM3517
-> SOM. Supported devices:
->  - Serial
->  - Ethernet
->  - NAND
->  - USB host
->  - LCD
->  - Touchscreen
->  - CAN controller
->  - ADC128S converter
-> 
-> Signed-off-by: Ilya Yanok <yanok@emcraft.com>
-> ---
-> 
-> Changes from V1:
-> 
->  - Fixed indentation (use tabs not spaces)
->  - Fixed over 80 characters lines
->  - Added #if defined(CONFIG_SENSORS_ADCXX_MODULE) to allow adcxx to be a
->    module.
->  - Fixes for compilation with CONFIG_TOUCHSCREEN_ADS7846!=y
->   - Added defined(CONFIG_TOUCHSCREEN_ADS7846_MODULE)
->   - Moved call to omap_ads7846_init to separate small function
->   - Register fixed regulator used for touchscreen only if the driver is
->     enabled
->  - Changed board name (MT_VENTOUX -> Mt.Ventoux)
+Commit 15c9a0acc3f7 (of: create of_phandle_args to simplify return of phandle
+parsing data) modifies the parameter list of of_xlate function pointer declaration
+in gpio_chip. Adapt the gpio specifier translate function for this change.
 
-Hi Tony,
+Reported-by: Tushar Behera <tushar.behera@linaro.org>
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+---
+ drivers/gpio/gpio-samsung.c |   23 +++++++++++++----------
+ 1 files changed, 13 insertions(+), 10 deletions(-)
 
-can I ask you about the status of these patches ? I have not seen open
-comments, do you think they can be merged in your tree ?
-
-Thanks,
-Stefano Babic
-
+diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
+index a766177..0a79a11 100644
+--- a/drivers/gpio/gpio-samsung.c
++++ b/drivers/gpio/gpio-samsung.c
+@@ -2387,27 +2387,30 @@ static struct samsung_gpio_chip exynos4_gpios_3[] = {
+ };
+ 
+ #if defined(CONFIG_ARCH_EXYNOS4) && defined(CONFIG_OF)
+-static int exynos4_gpio_xlate(struct gpio_chip *gc, struct device_node *np,
+-			      const void *gpio_spec, u32 *flags)
++static int exynos4_gpio_xlate(struct gpio_chip *gc,
++			const struct of_phandle_args *gpiospec, u32 *flags)
+ {
+-	const __be32 *gpio = gpio_spec;
+-	const u32 n = be32_to_cpup(gpio);
+-	unsigned int pin = gc->base + be32_to_cpu(gpio[0]);
++	unsigned int pin;
+ 
+ 	if (WARN_ON(gc->of_gpio_n_cells < 4))
+ 		return -EINVAL;
+ 
+-	if (n > gc->ngpio)
++	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
+ 		return -EINVAL;
+ 
+-	if (s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(be32_to_cpu(gpio[1]))))
++	if (gpiospec->args[0] > gc->ngpio)
++		return -EINVAL;
++
++	pin = gc->base + gpiospec->args[0];
++
++	if (s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(gpiospec->args[1])))
+ 		pr_warn("gpio_xlate: failed to set pin function\n");
+-	if (s3c_gpio_setpull(pin, be32_to_cpu(gpio[2])))
++	if (s3c_gpio_setpull(pin, gpiospec->args[2]))
+ 		pr_warn("gpio_xlate: failed to set pin pull up/down\n");
+-	if (s5p_gpio_set_drvstr(pin, be32_to_cpu(gpio[3])))
++	if (s5p_gpio_set_drvstr(pin, gpiospec->args[3]))
+ 		pr_warn("gpio_xlate: failed to set pin drive strength\n");
+ 
+-	return n;
++	return gpiospec->args[0];
+ }
+ 
+ static const struct of_device_id exynos4_gpio_dt_match[] __initdata = {
 -- 
-=====================================================================
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
-=====================================================================
+1.6.6.rc2
