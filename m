@@ -1,43 +1,38 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC PATCH 1/2] of: Add generic device tree DMA helpers
-Date: Tue, 31 Jan 2012 23:09:28 +0000
-Message-ID: <20120131230928.GA8394@n2100.arm.linux.org.uk>
-References: <4F22DEF2.5000807@ti.com> <20120128180602.GC2501@ponder.secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 00/25] irq_domain generalization and refinement
+Date: Tue, 31 Jan 2012 17:07:42 -0700
+Message-ID: <20120201000742.GM22611@ponder.secretlab.ca>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
+ <20120131045344.GA27609@quad.lixom.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120128180602.GC2501@ponder.secretlab.ca>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Thomas Abraham <thomas.abraham@linaro.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20120131045344.GA27609@quad.lixom.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 28, 2012 at 11:06:02AM -0700, Grant Likely wrote:
-> This makes the assumption that dma specifiers will only ever be 1
-> cell.  I think to be generally useful, the full dma specifier needs to
-> be either handed to the dma controller to get a cookie or passed back
-> to the caller in its entirety.
+On Mon, Jan 30, 2012 at 08:53:44PM -0800, Olof Johansson wrote:
+> On Fri, Jan 27, 2012 at 02:35:54PM -0700, Grant Likely wrote:
+> > Hey everyone,
+> > 
+> > This patch series is ready for much wider consumption now.  I'd like
+> > to get it into linux-next ASAP because there will be ARM board support
+> > depending on it.  I'll wait a few days before I ask Stephen to pull
+> > this in.
+> > 
+> > Stephen/Milton/Ben, any testing you can help with here would be
+> > appreciated since you've got access to a wider variety of Power
+> > machines than I do.
+> 
+> This series has been:
+> 
+> Tested-by: Olof Johansson <olof@lixom.net>
+> 
+> On powerpc/pasemi (it's the only one I still have easy access to).
 
-More to the point, who says that the DMA specifier is even an integer?
-When people are using DMA engines, it (probably) isn't an integer at
-all.  Several platforms I know of use strings for this.
+Excellent, thanks Olof!
 
-Some platforms can even select between two or more DMA engines for
-handling the same peripheral - I believe Samsung do this depending
-on their individual workloads.
-
-However, the opaque DMA engine API for requesting a channel doesn't
-lend itself well to DT, as the match data and match function are
-entirely left to the individual DMA engine driver and/or platform
-itself.
-
-As far as creating another linear number space for DMA stuff, I'd
-really suggest against that - you're going to need some additional
-code in place to manage that numberspace.  If you at least use a two-
-paid cookie, eg 'dma controller phandle + request signal' then that
-makes all the stuff we're starting to see with the IRQ subsystem,
-IRQ domains etc become completely unnecessary.
-
-I guess what I'm saying is ignore the flat number space, and go
-straight to some kind of 'dma domains' solution from the start.
+g.
