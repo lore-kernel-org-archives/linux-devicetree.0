@@ -1,38 +1,72 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v3 22/25] irq_domain/x86: Convert x86 (embedded) to use
- common irq_domain
-Date: Wed, 1 Feb 2012 15:17:05 +0100
-Message-ID: <20120201141705.GF9587@linutronix.de>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca>
- <20120128164405.GA20763@linutronix.de>
- <20120130195842.GT28397@ponder.secretlab.ca>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: Pinmux bindings proposal V2
+Date: Wed, 1 Feb 2012 22:35:34 +0800
+Message-ID: <20120201143530.GA2203@S2101-09.ap.freescale.net>
+References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120130195842.GT28397-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>, "Sascha Hauer (s.hauer@pengutronix.de)" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Dong Aisheng <dongas86@gmail.com>, Thomas Abraham <thomas.abraham@linaro.org>, Tony Lindgren <tony@atomide.com>, "Grant Likely (grant.likely@secretlab.ca)" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Grant Likely | 2012-01-30 12:58:42 [-0700]:
+Hi Stephen,
 
->Ugh.  This isn't easy.  The legacy mapping really needs all the
+I had a talk with Dong about this binding, and we think that it should
+work well for imx if we have a couple of small pieces added.
 
-Feel free to merge this patch. I don't have the time to look at this now
-so I take a look at the ioapic later.
+On Fri, Jan 20, 2012 at 02:22:20PM -0800, Stephen Warren wrote:
+...
+>                 pmx_sdhci: pinconfig-sdhci {
+>                         /*
+>                          * The mux property is a list of muxable entities
+>                          * and the mux function to select for it. The number
+>                          * of cells in each entry is the pin controller's
+>                          * #pinmux-cells property. The pin controller's
+>                          * binding defines what the cells mean. The pinctrl
+>                          * driver is responsible for mapping this data to
+>                          * the (group, function) pair required to fill in
+>                          * the pinctrl subsystem's pinmux mapping table.
+>                          */
+>                         mux =
+>                                 <TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_SDIO1>
+>                                 <TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_SDIO1>;
 
->g.
+We need a property like 'mux-unit' whose value can be either 'pin' or
+'pingroup' to reflect something you mentioned as muxable entity.
 
-Sebastian
+The reason behind this is the DT logic inside pinctrl core needs to
+know how the pinmux_map should be constructed from device tree.  In
+tegra case, the 'mux-unit' is 'pingroup', the core should construct
+pinmux_map entry for each row/element of 'mux'.  In imx case, the
+'mux-unit' will be 'pin', and we would expect core construct only
+one pinmux_map entry there, with all the pins listed in 'mux' composing
+the group that pinmux_map needs.
+
+And in case of 'mux-unit' is 'pin', we would need one more property
+'mux-name' to present the group name.  Then we have all the pieces to
+construct pinmux_map for cases like imx, where we do not define all
+those functions, groups in pinctrl driver at all.
+
+Regards,
+Shawn
+
+>                         /*
+>                          * The config property is a list of muxable entities
+>                          * and individual configuration setting. The number
+>                          * of cells in each entry is the pin controller's
+>                          * #pinconfig-cells property. The pin controller's
+>                          * binding defines what the cells mean. The pinctrl
+>                          * driver is responsible for mapping this data to
+>                          * the (group, config) pair required to fill in
+>                          * the pinctrl subsystem's pin configuration table.
+>                          */
+>                         config =
+>                                 <TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
+>                                 <TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_DRIVE_STRENGTH 5>
+>                                 <TEGRA_PMX_PG_DTA TEGRA_PMX_CONF_SLEW_RATE 4>
+>                                 <TEGRA_PMX_PG_DTD TEGRA_PMX_CONF_SLEW_RATE 8>;
+>                 };
