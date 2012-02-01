@@ -1,78 +1,39 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH v2 1/2] PM / Domains: Add OF support
-Date: Wed, 1 Feb 2012 22:32:32 +0100
-Message-ID: <201202012232.32282.rjw@sisk.pl>
-References: <1325931055-14486-1-git-send-email-thomas.abraham@linaro.org> <201201172145.35407.rjw@sisk.pl> <041e01ccdfdc$9a4257a0$cec706e0$%kim@samsung.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] drivercore: Output common devicetree information in uevent
+Date: Wed, 1 Feb 2012 14:29:35 -0700
+Message-ID: <CACxGe6uafURnPOGRNpKKXXMM06JHFoqDVqHojQdv_aeCAd_Sfg@mail.gmail.com>
+References: <1328121082-21802-1-git-send-email-grant.likely@secretlab.ca> <1328130989.28487.83.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <041e01ccdfdc$9a4257a0$cec706e0$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, s.nawrocki@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1328130989.28487.83.camel@pasglop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Tobias Klauser <tklauser@distanz.ch>, Frederic Lambert <frdrc66@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@sirena.org.uk>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <greg@kroah.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, January 31, 2012, Kukjin Kim wrote:
-> Rafael J. Wysocki wrote:
-> > 
-> > On Tuesday, January 17, 2012, Kukjin Kim wrote:
-> > > Rafael J. Wysocki wrote:
-> > > >
-> > > > On Saturday, January 07, 2012, Thomas Abraham wrote:
-> > > > > A device node pointer is added to generic pm domain structure to
-> > > > associate
-> > > > > the domain with a node in the device tree. The platform code parses the
-> > > > > device tree to find available nodes representing the generic power
-> > > > domain,
-> > > > > instantiates the available domains and initializes them by calling
-> > > > > pm_genpd_init().
-> > > > >
-> > > > > Nodes representing the devices include a phandle of the power domain to
-> > > > > which it belongs. As these devices get instantiated, the driver code
-> > > > > checkes for availability of a power domain phandle, converts the phandle
-> > > > > to a device node and uses the new pm_genpd_of_add_device() api to
-> > > > > associate the device with a power domain.
-> > > > >
-> > > > > pm_genpd_of_add_device() runs through its list of registered power
-> > > > domains
-> > > > > and matches the OF node of the domain with the one specified as the
-> > > > > parameter. If a match is found, the device is associated with the
-> > > > matched
-> > > > > domain.
-> > > > >
-> > > > > Cc: Rafael J. Wysocki <rjw@sisk.pl>
-> > > > > Cc: Rob Herring <rob.herring@calxeda.com>
-> > > > > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > > > > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> > > >
-> > > > I can take this patch for 3.4, but your [2/2] depends on it, so I'm not
-> > > > sure how to handle that.  If you want me to take the other patch too,
-> > > > it'll need ACKs from the Exynos maintaniers.
-> > > >
-> > > Hi Rafael,
-> > >
-> > > Basically, looks ok to me.
-> > >
-> > > But it would be good if [v3 2/2] patch of this series (this patch) could be
-> > > applied in samsung tree to avoid conflicts as it modifies many files. I
-> > > don't want to make a trouble when sending my tree to upstream. Of course, as
-> > > you said, this have a dependency with [v2 1/2]. So if you're ok, let me
-> > > create topic branch will have both(1/2 and 2/2) to merge in your tree.
-> > >
-> > > How do you think?
-> > 
-> > That would work for me too.
-> > 
-> Hi Rafael,
-> 
-> I created topic branch for you with your ack.
-> git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git v3.4-for-rafael
-> 
-> Please merge that in your tree and if any problems, please kindly let me know.
+On Wed, Feb 1, 2012 at 2:16 PM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> On Wed, 2012-02-01 at 11:31 -0700, Grant Likely wrote:
+>> The original function also creates a MODALIAS property for the
+>> compatible
+>> list, but that code has not been generalized into the common case
+>> because
+>> it has the potential to break module loading on a lot of bus types.
+>> Bus
+>> types are still responsible for their own MODALIAS properties.
+>>
+>> Boot tested on ARM and compile tested on PowerPC and SPARC.
+>>
+>>
+> We also want to generalize adding the devspec property that we have on
+> PCI to all devices no ?
 
-Merged into linux-pm/pm-domains and into linux-pm/linux-next and pushed back.
+The pci_show_devspec() function?  Yeah, that can be generalized, but
+haven't researched where the best place to hook it in should be.
 
-Thanks,
-Rafael
+g.
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
