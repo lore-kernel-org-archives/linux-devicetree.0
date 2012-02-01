@@ -1,41 +1,47 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 22/25] irq_domain/x86: Convert x86 (embedded) to use
- common irq_domain
-Date: Wed, 1 Feb 2012 11:06:04 -0700
-Message-ID: <CACxGe6vZxWXUG-WJFWDaoH3+PYBGWOXb291_jn9TdjrSF=p_JQ@mail.gmail.com>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca>
- <20120128164405.GA20763@linutronix.de>
- <20120130195842.GT28397@ponder.secretlab.ca>
- <20120201141705.GF9587@linutronix.de>
+From: Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Subject: Re: [PATCH] spi/spi-altera: Allow to explicitely override bus
+ number via dts
+Date: Wed, 1 Feb 2012 18:10:37 +0000
+Message-ID: <20120201181037.GB24063@sirena.org.uk>
+References: <20120201135524.GD13723@sirena.org.uk>
+ <CAMVnO+kWX=NYi+YU9H5nRc9UksCJLQUi-_Kj9UASwoiqZj9tGA@mail.gmail.com>
+ <20120201140838.GE13723@sirena.org.uk>
+ <CAMVnO+m5DTYeK9mHcciqU-y7HGP-d9FXWkvTV4ZJJLTRqjK7LQ@mail.gmail.com>
+ <20120201143558.GF13723@sirena.org.uk>
+ <CAMVnO+n2SW=e7EP-MjLbFeF7ZW6e=FwL=UdOd=cd-XN=C132Qg@mail.gmail.com>
+ <20120201150517.GG13723@sirena.org.uk>
+ <CAMVnO+kvjbxW7EdMe_YF=oSp0bR-RqaP_rPM57tyHzGKhsoNxg@mail.gmail.com>
+ <20120201154204.GH13723@sirena.org.uk>
+ <CAMVnO+nB77XOQHfL1zZLve_=z6vFk_HMF+hj=iMTAuOAYSRExA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20120201141705.GF9587@linutronix.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMVnO+nB77XOQHfL1zZLve_=z6vFk_HMF+hj=iMTAuOAYSRExA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Frederic LAMBERT <frdrc66-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 1, 2012 at 7:17 AM, Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
-> * Grant Likely | 2012-01-30 12:58:42 [-0700]:
->
->>Ugh. =A0This isn't easy. =A0The legacy mapping really needs all the
->
-> Feel free to merge this patch. I don't have the time to look at this now
-> so I take a look at the ioapic later.
+On Wed, Feb 01, 2012 at 04:52:14PM +0100, Frederic LAMBERT wrote:
 
-There's no rush here.  I can leave it as-is with IRQ_DOMAIN turned off
-for x86 for now.
+> Yes, that seems simple said like that.
+> It was thus more simple for me, at that time, to modify a specific driver
+> for a specific port (Nios2), than to modify a core used by every one.
+> Question of time, and confidence in my own capacities :-).
+> The other point being the change acceptation (and the time it takes) by the
+> community...
 
-g.
+In this case doing something generic would be easier to get merged
+(modulo the "don't do that" issue) - people are being a lot more wary
+about driver specific changes that should be generic than they used to
+be.
