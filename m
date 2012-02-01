@@ -1,55 +1,59 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 14/25] irq_domain: Remove irq_domain_add_simple()
-Date: Tue, 31 Jan 2012 17:08:48 -0700
-Message-ID: <20120201000848.GN22611@ponder.secretlab.ca>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-15-git-send-email-grant.likely@secretlab.ca>
- <20120131124500.GA28571@S2101-09.ap.freescale.net>
- <4F27E96E.9010204@gmail.com>
- <20120131135821.GA24804@S2100-06.ap.freescale.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] irq_domain: fix the irq number of imx5 tzic
+Date: Wed, 1 Feb 2012 13:46:54 +0800
+Message-ID: <1328075214-25700-1-git-send-email-shawn.guo@linaro.org>
+References: <1327700179-17454-15-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120131135821.GA24804@S2100-06.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: Rob Herring <robherring2@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1327700179-17454-15-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2012 at 09:58:22PM +0800, Shawn Guo wrote:
-> On Tue, Jan 31, 2012 at 07:15:26AM -0600, Rob Herring wrote:
-> ...
-> > >> --- a/arch/arm/mach-mx5/imx51-dt.c
-> > >> +++ b/arch/arm/mach-mx5/imx51-dt.c
-> > >> @@ -47,7 +47,7 @@ static const struct of_dev_auxdata imx51_auxdata_lookup[] __initconst = {
-> > >>  static int __init imx51_tzic_add_irq_domain(struct device_node *np,
-> > >>  				struct device_node *interrupt_parent)
-> > >>  {
-> > >> -	irq_domain_add_simple(np, 0);
-> > >> +	irq_domain_add_legacy(np, 32, 0, 0, &irq_domain_simple_ops, NULL);
-> > >>  	return 0;
-> > >>  }
-> > >>  
-> > >> @@ -57,7 +57,7 @@ static int __init imx51_gpio_add_irq_domain(struct device_node *np,
-> > >>  	static int gpio_irq_base = MXC_GPIO_IRQ_START + ARCH_NR_GPIOS;
-> > >>  
-> > >>  	gpio_irq_base -= 32;
-> > >> -	irq_domain_add_simple(np, gpio_irq_base);
-> > >> +	irq_domain_add_legacy(np, 32, gpio_irq_base, 0, &irq_domain_simple_ops, NULL);
-> > > 
-> > > The tzic on imx5 gets 128 irq lines rather than 32 here.  The current
-> > > code will make any hwirq that is > 32 hit the WARN_ON below in
-> > > irq_domain_legacy_revmap().
-> > 
-> > But this is the gpio controller code? Really this should be 4 domains,
-> > but this temp fix is probably fine until you use my generic irq chip
-> > support.
-> > 
-> Sorry.  The comment was put at the wrong place.  It should be against
-> imx51_tzic_add_irq_domain() just above.
+The tzic controller found on imx51 and imx53 gets 128 irq lines rather
+than 32.
 
-I didn't know how large the bank was, so I just assumed 32.  If it should
-be 128 then I'll change it.  Please confirm (or reply with a fixup patch)
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/mach-mx5/imx51-dt.c |    2 +-
+ arch/arm/mach-mx5/imx53-dt.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-g.
+diff --git a/arch/arm/mach-mx5/imx51-dt.c b/arch/arm/mach-mx5/imx51-dt.c
+index e1b5edf..1e03ef4 100644
+--- a/arch/arm/mach-mx5/imx51-dt.c
++++ b/arch/arm/mach-mx5/imx51-dt.c
+@@ -47,7 +47,7 @@ static const struct of_dev_auxdata imx51_auxdata_lookup[] __initconst = {
+ static int __init imx51_tzic_add_irq_domain(struct device_node *np,
+ 				struct device_node *interrupt_parent)
+ {
+-	irq_domain_add_legacy(np, 32, 0, 0, &irq_domain_simple_ops, NULL);
++	irq_domain_add_legacy(np, 128, 0, 0, &irq_domain_simple_ops, NULL);
+ 	return 0;
+ }
+ 
+diff --git a/arch/arm/mach-mx5/imx53-dt.c b/arch/arm/mach-mx5/imx53-dt.c
+index 89de5d4..fd5be0f 100644
+--- a/arch/arm/mach-mx5/imx53-dt.c
++++ b/arch/arm/mach-mx5/imx53-dt.c
+@@ -51,7 +51,7 @@ static const struct of_dev_auxdata imx53_auxdata_lookup[] __initconst = {
+ static int __init imx53_tzic_add_irq_domain(struct device_node *np,
+ 				struct device_node *interrupt_parent)
+ {
+-	irq_domain_add_legacy(np, 32, 0, 0, &irq_domain_simple_ops, NULL);
++	irq_domain_add_legacy(np, 128, 0, 0, &irq_domain_simple_ops, NULL);
+ 	return 0;
+ }
+ 
+-- 
+1.7.4.1
