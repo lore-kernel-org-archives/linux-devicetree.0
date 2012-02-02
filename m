@@ -1,49 +1,73 @@
 From: Richard Zhao <richard.zhao@linaro.org>
-Subject: Re: [PATCH v2 4/9] ARM: dts: imx6q-sabrelite: add sgtl5000 audio
- codec
-Date: Thu, 2 Feb 2012 21:49:09 +0800
-Message-ID: <20120202134907.GA3015@richard-laptop>
+Subject: Re: [PATCH v2 6/9] ARM: mx31ads: add audmux device
+Date: Thu, 2 Feb 2012 21:58:07 +0800
+Message-ID: <20120202135805.GB3015@richard-laptop>
 References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
- <1328148728-32258-5-git-send-email-richard.zhao@linaro.org>
- <CAOMZO5CxZgcO1JUZiFFJzWwLao1g7Y1_VNbsuiJOW+PH2B+FNQ@mail.gmail.com>
+ <1328148728-32258-7-git-send-email-richard.zhao@linaro.org>
+ <20120202085521.GB9773@S2101-09.ap.freescale.net>
+ <20120202091132.GD9773@S2101-09.ap.freescale.net>
+ <20120202092427.GB32403@b20223-02.ap.freescale.net>
+ <20120202130901.GE9773@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5CxZgcO1JUZiFFJzWwLao1g7Y1_VNbsuiJOW+PH2B+FNQ@mail.gmail.com>
+In-Reply-To: <20120202130901.GE9773@S2101-09.ap.freescale.net>
 Sender: linux-doc-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, shawn.guo@linaro.org, Dirk Behme <dirk.behme@de.bosch.com>, Eric Nelson <eric.nelson@boundarydevices.com>
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Richard Zhao <richard.zhao@freescale.com>, alsa-devel@alsa-project.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2012 at 09:24:57AM -0200, Fabio Estevam wrote:
-> Hi Richard,
->=20
-> On Thu, Feb 2, 2012 at 12:12 AM, Richard Zhao <richard.zhao@linaro.or=
-g> wrote:
-> > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
-> > ---
-> > =A0arch/arm/boot/dts/imx6q-sabrelite.dts | =A0 12 ++++++++++++
-> > =A01 files changed, 12 insertions(+), 0 deletions(-)
->=20
-> I would like to test your audio support patch on mx6sabrelite, but th=
-e
-> missing sound/soc/imx-sgtl5000.c does not allow me to do it.
-I have a test branch. I'll push to my linaro git  on git.linaro.org tom=
-orrow.
->=20
-> I think you would better introduce sound/soc/imx-sgtl5000.c first (on
-> separate patch series) so that people could test this patch without
-> using the imx-sgtl5000.c implementation from the Linaro kernel.
->=20
-> Without imx-sgtl5000.c in place, this patch only introduces dead code
-> at the moment.
-Each patch make sense too without sgtl5000.=20
-
-Thanks
-Richard
->=20
+On Thu, Feb 02, 2012 at 09:09:03PM +0800, Shawn Guo wrote:
+> On Thu, Feb 02, 2012 at 05:24:28PM +0800, Richard Zhao wrote:
+> > On Thu, Feb 02, 2012 at 05:11:34PM +0800, Shawn Guo wrote:
+> > > On Thu, Feb 02, 2012 at 04:55:23PM +0800, Shawn Guo wrote:
+> > > > On Thu, Feb 02, 2012 at 10:12:05AM +0800, Richard Zhao wrote:
+> > > > > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+> > > > > ---
+> > > > >  arch/arm/mach-imx/mach-mx31ads.c      |   10 ++++++++++
+> > > > >  arch/arm/plat-mxc/include/mach/mx31.h |    1 +
+> > > > >  2 files changed, 11 insertions(+), 0 deletions(-)
+> > > > > 
+> > > > Hmm, let's see who are actually using mxc_audmux_v2_configure_port().
+> > > > 
+> > > > $ git grep -n mxc_audmux_v2_configure_port arch/arm/
+> > > > arch/arm/mach-imx/eukrea_mbimxsd25-baseboard.c:246:     mxc_audmux_v2_configure_port(0,
+> > > > arch/arm/mach-imx/eukrea_mbimxsd25-baseboard.c:254:     mxc_audmux_v2_configure_port(4,
+> > > > arch/arm/mach-imx/eukrea_mbimxsd35-baseboard.c:257:     mxc_audmux_v2_configure_port(0,
+> > > > arch/arm/mach-imx/eukrea_mbimxsd35-baseboard.c:265:     mxc_audmux_v2_configure_port(3,
+> > > > arch/arm/mach-imx/mach-pcm043.c:365:    mxc_audmux_v2_configure_port(3,
+> > > > arch/arm/mach-imx/mach-pcm043.c:371:    mxc_audmux_v2_configure_port(0,
+> > I didn't grep arch/arm. where is pc043 asoc machine file?
+> 
+> It seems to be sound/soc/imx/phycore-ac97.c.
+You see, we're not famaliar with the boards.
+> 
+> > > > 
+> > > As we are moving audmux into sound/soc/imx, it makes less sense to
+> > > still keep these calls in board files.
+> > It don't corrupt git bisect. We don't have to include it in this patch.
+> 
+> It's logically part of this series.
+I don't know much about the above boards and I can not test either. I think I
+have to leave it to other volunteers. I mainly focus on audmux itself.
+> 
+> > >  Instead, I prefer to call it
+> > > from machine driver like what wm1133-ev1 does below.
+> > Maybe pass the info as asoc machine driver pdata.
+> 
+> Sounds good.
+> 
+> > >  Or we can simply
+> > > make the it a audmux-self call with 3 parameters it needs retrieved
+> > > from platform_data or device tree, so that machine driver does not
+> > > even bother with the call.  Makes sense?
+> > audux configuration may change after initial set. For example, it may use
+> > one configuration for audio playback, but use another when you connect a
+> > BT audio device.
+> 
+> Right.  I forgot this point.
+> 
+> -- 
 > Regards,
->=20
-> Fabio Estevam
+> Shawn
