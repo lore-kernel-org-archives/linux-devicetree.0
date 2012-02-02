@@ -1,76 +1,38 @@
 From: Shawn Guo <shawn.guo@linaro.org>
 Subject: Re: [PATCH v2 6/9] ARM: mx31ads: add audmux device
-Date: Thu, 2 Feb 2012 21:09:03 +0800
-Message-ID: <20120202130901.GE9773@S2101-09.ap.freescale.net>
+Date: Thu, 2 Feb 2012 21:17:18 +0800
+Message-ID: <20120202131716.GF9773@S2101-09.ap.freescale.net>
 References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
-	<1328148728-32258-7-git-send-email-richard.zhao@linaro.org>
-	<20120202085521.GB9773@S2101-09.ap.freescale.net>
-	<20120202091132.GD9773@S2101-09.ap.freescale.net>
-	<20120202092427.GB32403@b20223-02.ap.freescale.net>
+ <1328148728-32258-7-git-send-email-richard.zhao@linaro.org>
+ <20120202120900.GC7428@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120202092427.GB32403@b20223-02.ap.freescale.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
-	<mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Sender: alsa-devel-bounces@alsa-project.org
-Errors-To: alsa-devel-bounces@alsa-project.org
-To: Richard Zhao <richard.zhao@freescale.com>
-Cc: alsa-devel@alsa-project.org, kernel@pengutronix.de, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, eric.miao@linaro.org, patches@linaro.org, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20120202120900.GC7428@opensource.wolfsonmicro.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, eric.miao@linaro.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2012 at 05:24:28PM +0800, Richard Zhao wrote:
-> On Thu, Feb 02, 2012 at 05:11:34PM +0800, Shawn Guo wrote:
-> > On Thu, Feb 02, 2012 at 04:55:23PM +0800, Shawn Guo wrote:
-> > > On Thu, Feb 02, 2012 at 10:12:05AM +0800, Richard Zhao wrote:
-> > > > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
-> > > > ---
-> > > >  arch/arm/mach-imx/mach-mx31ads.c      |   10 ++++++++++
-> > > >  arch/arm/plat-mxc/include/mach/mx31.h |    1 +
-> > > >  2 files changed, 11 insertions(+), 0 deletions(-)
-> > > > 
-> > > Hmm, let's see who are actually using mxc_audmux_v2_configure_port().
-> > > 
-> > > $ git grep -n mxc_audmux_v2_configure_port arch/arm/
-> > > arch/arm/mach-imx/eukrea_mbimxsd25-baseboard.c:246:     mxc_audmux_v2_configure_port(0,
-> > > arch/arm/mach-imx/eukrea_mbimxsd25-baseboard.c:254:     mxc_audmux_v2_configure_port(4,
-> > > arch/arm/mach-imx/eukrea_mbimxsd35-baseboard.c:257:     mxc_audmux_v2_configure_port(0,
-> > > arch/arm/mach-imx/eukrea_mbimxsd35-baseboard.c:265:     mxc_audmux_v2_configure_port(3,
-> > > arch/arm/mach-imx/mach-pcm043.c:365:    mxc_audmux_v2_configure_port(3,
-> > > arch/arm/mach-imx/mach-pcm043.c:371:    mxc_audmux_v2_configure_port(0,
-> I didn't grep arch/arm. where is pc043 asoc machine file?
+On Thu, Feb 02, 2012 at 12:09:01PM +0000, Mark Brown wrote:
+> On Thu, Feb 02, 2012 at 10:12:05AM +0800, Richard Zhao wrote:
+> 
+> >  static void __init mxc_init_audio(void)
+> >  {
+> >  	imx31_add_imx_ssi(0, NULL);
+> >  	mxc_iomux_setup_multiple_pins(ssi_pins, ARRAY_SIZE(ssi_pins), "ssi");
+> > +	imx_add_platform_device("audmux-v2", 0,
+> > +				audmux_res, ARRAY_SIZE(audmux_res), NULL, 0);
+> 
+> Since the audmux is a part of the SoC silicon shouldn't the SoC just
+> register the device without individual boards having to do anything
+> (possibly conditional on ASoC being selected in Kconfig or something)?
+> It's going to be connected in exactly the same fashion on any system
+> using the SoC.
 
-It seems to be sound/soc/imx/phycore-ac97.c.
-
-> > > 
-> > As we are moving audmux into sound/soc/imx, it makes less sense to
-> > still keep these calls in board files.
-> It don't corrupt git bisect. We don't have to include it in this patch.
-
-It's logically part of this series.
-
-> >  Instead, I prefer to call it
-> > from machine driver like what wm1133-ev1 does below.
-> Maybe pass the info as asoc machine driver pdata.
-
-Sounds good.
-
-> >  Or we can simply
-> > make the it a audmux-self call with 3 parameters it needs retrieved
-> > from platform_data or device tree, so that machine driver does not
-> > even bother with the call.  Makes sense?
-> audux configuration may change after initial set. For example, it may use
-> one configuration for audio playback, but use another when you connect a
-> BT audio device.
-
-Right.  I forgot this point.
+Hmm, we are trying to save adding the device for those boards which do
+not route any audmux pins out at all.
 
 -- 
 Regards,
