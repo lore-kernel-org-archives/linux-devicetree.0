@@ -1,62 +1,49 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 6/9] ARM: mx31ads: add audmux device
-Date: Thu, 2 Feb 2012 13:26:18 +0000
-Message-ID: <20120202132618.GL7428@opensource.wolfsonmicro.com>
+From: Richard Zhao <richard.zhao@linaro.org>
+Subject: Re: [PATCH v2 4/9] ARM: dts: imx6q-sabrelite: add sgtl5000 audio
+ codec
+Date: Thu, 2 Feb 2012 21:49:09 +0800
+Message-ID: <20120202134907.GA3015@richard-laptop>
 References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
- <1328148728-32258-7-git-send-email-richard.zhao@linaro.org>
- <20120202120900.GC7428@opensource.wolfsonmicro.com>
- <20120202131716.GF9773@S2101-09.ap.freescale.net>
+ <1328148728-32258-5-git-send-email-richard.zhao@linaro.org>
+ <CAOMZO5CxZgcO1JUZiFFJzWwLao1g7Y1_VNbsuiJOW+PH2B+FNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="c8JyeaiReRNoiMDS"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120202131716.GF9773@S2101-09.ap.freescale.net>
+In-Reply-To: <CAOMZO5CxZgcO1JUZiFFJzWwLao1g7Y1_VNbsuiJOW+PH2B+FNQ@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, eric.miao@linaro.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, shawn.guo@linaro.org, Dirk Behme <dirk.behme@de.bosch.com>, Eric Nelson <eric.nelson@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 02, 2012 at 09:24:57AM -0200, Fabio Estevam wrote:
+> Hi Richard,
+>=20
+> On Thu, Feb 2, 2012 at 12:12 AM, Richard Zhao <richard.zhao@linaro.or=
+g> wrote:
+> > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+> > ---
+> > =A0arch/arm/boot/dts/imx6q-sabrelite.dts | =A0 12 ++++++++++++
+> > =A01 files changed, 12 insertions(+), 0 deletions(-)
+>=20
+> I would like to test your audio support patch on mx6sabrelite, but th=
+e
+> missing sound/soc/imx-sgtl5000.c does not allow me to do it.
+I have a test branch. I'll push to my linaro git  on git.linaro.org tom=
+orrow.
+>=20
+> I think you would better introduce sound/soc/imx-sgtl5000.c first (on
+> separate patch series) so that people could test this patch without
+> using the imx-sgtl5000.c implementation from the Linaro kernel.
+>=20
+> Without imx-sgtl5000.c in place, this patch only introduces dead code
+> at the moment.
+Each patch make sense too without sgtl5000.=20
 
---c8JyeaiReRNoiMDS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Feb 02, 2012 at 09:17:18PM +0800, Shawn Guo wrote:
-> On Thu, Feb 02, 2012 at 12:09:01PM +0000, Mark Brown wrote:
-
-> > Since the audmux is a part of the SoC silicon shouldn't the SoC just
-> > register the device without individual boards having to do anything
-> > (possibly conditional on ASoC being selected in Kconfig or something)?
-> > It's going to be connected in exactly the same fashion on any system
-> > using the SoC.
-
-> Hmm, we are trying to save adding the device for those boards which do
-> not route any audmux pins out at all.
-
-That's why I'm saying perhaps make it conditional on having ASoC built
-(or even on having the AUDMUX driver built).
-
---c8JyeaiReRNoiMDS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPKo7zAAoJEBus8iNuMP3dM00P/1qAY+Rftmm22Dga8B9vg80L
-vqNXCoDPBEFbUFUfEk9f8vLi7l7U3A8oIf38d/+9xSAXu4sdIySgdUWBOT4rgvph
-NnzFwgY/zchLZu8qunSahBjRsLjo0zEaWd+AO4lpqqiHdGpPUacsRIAQq3YJmlRb
-cpP3afumprCehuBgfegIOrQ+dgUnW9WDl9CevBHD9noHOIDs3vQoFUZmWtGskMWf
-RU8H0bWBmBbuOg7iXfeBx+rGqWKU0QYxONF0ElWITZ42oTL0KBiv99Ffg19AI1qq
-geCiC0MrpijSvak3F3X5mApVOT4CNWNpr+FF4ll1u4unW2IHFUaKyt0VDL/u1B1v
-cW9uM1dF7GabALwEgXtSDV88b0SMMp/BjFPbmM64FOsFTaAVskTHpxI1F+pwZ9Dy
-u6vTgspnbNoumP2AFodznoSsowW8iDKlZKBFfkz4b2adNAYTLRVHjj870kA/PAKh
-3nXNjwoI6ZX9lZD0dIRNbXLcbeTFHtU3bvd+hEPZcRkn0gHKo8hqBhJTSCQYcSlW
-YgVIyF+llO7XomCOEeBRkYp00WtWhnkKxmH4EtbVaXxZfvHjqDZv4I1iL3VNL4N7
-bIbRInOGJezd8LAqoGrXqutN0Ccie7OjVj1wNR45/VrHCTZJlHvHxiEoRZePn2jd
-Gq6W0vKkJ3NDMeaQ3XxW
-=cJF/
------END PGP SIGNATURE-----
-
---c8JyeaiReRNoiMDS--
+Thanks
+Richard
+>=20
+> Regards,
+>=20
+> Fabio Estevam
