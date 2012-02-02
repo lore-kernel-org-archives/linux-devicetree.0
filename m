@@ -1,99 +1,38 @@
-From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] arm/dts: OMAP3: Add omap3evm and am335xevm support
-Date: Thu, 2 Feb 2012 10:43:39 +0100
-Message-ID: <4F2A5ACB.5070002@ti.com>
-References: <1328077620-22411-1-git-send-email-hvaibhav@ti.com>
- <20120202045629.GJ15343@ponder.secretlab.ca>
- <79CD15C6BA57404B839C016229A409A8317BCD98@DBDE01.ent.ti.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 4/9] ARM: dts: imx6q-sabrelite: add sgtl5000 audio codec
+Date: Thu, 2 Feb 2012 09:24:57 -0200
+Message-ID: <CAOMZO5CxZgcO1JUZiFFJzWwLao1g7Y1_VNbsuiJOW+PH2B+FNQ@mail.gmail.com>
+References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
+	<1328148728-32258-5-git-send-email-richard.zhao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <79CD15C6BA57404B839C016229A409A8317BCD98-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1328148728-32258-5-git-send-email-richard.zhao@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Richard Zhao <richard.zhao@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, shawn.guo@linaro.org, Dirk Behme <dirk.behme@de.bosch.com>, Eric Nelson <eric.nelson@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vaibhav,
+Hi Richard,
 
-On 2/2/2012 10:34 AM, Hiremath, Vaibhav wrote:
-> On Thu, Feb 02, 2012 at 10:26:29, Grant Likely wrote:
->> On Wed, Feb 01, 2012 at 11:57:00AM +0530, Vaibhav Hiremath wrote:
->>> TI's OMAP3EVM and AM335xEVM are software development boards
->>> available for OMAP35x(AM/DM37x) and AM335x devices respectively;
->>> and these devices are considered under omap3 family.
->>>
->>> Signed-off-by: Vaibhav Hiremath<hvaibhav-l0cyMroinI0@public.gmane.org>
->>> Cc: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
->>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>> Cc: Tony Lindgren<tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->>
->> Applied, thanks.
->>
->
-> Benoit and/or Grant,
->
-> Can you also pull-in/merge all other patches which I had submitted recently?
+On Thu, Feb 2, 2012 at 12:12 AM, Richard Zhao <richard.zhao@linaro.org>=
+ wrote:
+> Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
+> ---
+> =C2=A0arch/arm/boot/dts/imx6q-sabrelite.dts | =C2=A0 12 ++++++++++++
+> =C2=A01 files changed, 12 insertions(+), 0 deletions(-)
 
-I can pull them all through Tony's tree, but I still need Grant's 
-Acked-by. So far, I have these ones ready for pull:
-  arm/dts: Add support for TI OMAP3 EVM board.
-  arm:omap2:board-generic: Add DT support for AM33xx devices
-  arm/dts: Add support for TI AM335x EVM board
+I would like to test your audio support patch on mx6sabrelite, but the
+missing sound/soc/imx-sgtl5000.c does not allow me to do it.
 
-It looks like these ones do not have the Ack:
-  arm/dts: omap3-evm: Add i2c and twl4030 support
-  arm/dts: Add support for TI AM3517/05 EVM board
+I think you would better introduce sound/soc/imx-sgtl5000.c first (on
+separate patch series) so that people could test this patch without
+using the imx-sgtl5000.c implementation from the Linaro kernel.
 
+Without imx-sgtl5000.c in place, this patch only introduces dead code
+at the moment.
 
 Regards,
-Benoit
 
-
->
-> arm/dts: omap3-evm: Add i2c and twl4030 support
-> arm/dts: Add support for TI AM3517/05 EVM board
-> arm:omap2:board-generic: Add DT support for AM33xx devices
-> arm/dts: Add support for TI AM335x EVM board
->
-> Thanks,
-> Vaibhav
->> g.
->>
->>> ---
->>>   .../devicetree/bindings/arm/omap/omap.txt          |    6 ++++++
->>>   1 files changed, 6 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
->>> index dbdab40..ce78498 100644
->>> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
->>> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
->>> @@ -41,3 +41,9 @@ Boards:
->>>
->>>   - OMAP4 PandaBoard : Low cost community board
->>>     compatible = "ti,omap4-panda", "ti,omap4430"
->>> +
->>> +- OMAP3 EVM : Software Developement Board for OMAP35x, AM/DM37x
->>> +  compatible = "ti,omap3-evm", "ti,omap3"
->>> +
->>> +- AM335X EVM : Software Developement Board for AM335x
->>> +  compatible = "ti,am335x-evm", "ti,am33xx", "ti,omap3"
->>> --
->>> 1.7.0.4
->>>
->>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->
+=46abio Estevam
