@@ -1,124 +1,127 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH] of_gpio: add support of of_gpio_named_count to be able to
- count named gpio
-Date: Thu,  2 Feb 2012 16:20:01 +0100
-Message-ID: <1328196001-22154-1-git-send-email-plagnioj@jcrosoft.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: Pinmux bindings proposal V2
+Date: Thu, 2 Feb 2012 10:36:54 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178E124AC5@HQMAIL01.nvidia.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
+ <20120201143530.GA2203@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120201143530.GA2203-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Sascha Hauer
+ (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: devicetree-discuss@lists.ozlabs.org
----
- drivers/of/gpio.c       |    9 +++++----
- include/linux/of_gpio.h |   27 +++++++++++++++++++++++++--
- 2 files changed, 30 insertions(+), 6 deletions(-)
+Shawn Guo wrote at Wednesday, February 01, 2012 7:36 AM:
+...
+> I had a talk with Dong about this binding, and we think that it should
+> work well for imx if we have a couple of small pieces added.
+> 
+> On Fri, Jan 20, 2012 at 02:22:20PM -0800, Stephen Warren wrote:
+> ...
+> >                 pmx_sdhci: pinconfig-sdhci {
+> >                         /*
+> >                          * The mux property is a list of muxable entities
+> >                          * and the mux function to select for it. The number
+> >                          * of cells in each entry is the pin controller's
+> >                          * #pinmux-cells property. The pin controller's
+> >                          * binding defines what the cells mean. The pinctrl
+> >                          * driver is responsible for mapping this data to
+> >                          * the (group, function) pair required to fill in
+> >                          * the pinctrl subsystem's pinmux mapping table.
+> >                          */
+> >                         mux =
+> >                                 <TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_SDIO1>
+> >                                 <TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_SDIO1>;
+> 
+> We need a property like 'mux-unit' whose value can be either 'pin' or
+> 'pingroup' to reflect something you mentioned as muxable entity.
 
-diff --git a/drivers/of/gpio.c b/drivers/of/gpio.c
-index 7e62d15..e034b38 100644
---- a/drivers/of/gpio.c
-+++ b/drivers/of/gpio.c
-@@ -78,8 +78,9 @@ err0:
- EXPORT_SYMBOL(of_get_named_gpio_flags);
- 
- /**
-- * of_gpio_count - Count GPIOs for a device
-+ * of_gpio_named_count - Count GPIOs for a device
-  * @np:		device node to count GPIOs for
-+ * @propname:	property name containing gpio specifier(s)
-  *
-  * The function returns the count of GPIOs specified for a node.
-  *
-@@ -93,14 +94,14 @@ EXPORT_SYMBOL(of_get_named_gpio_flags);
-  * defines four GPIOs (so this function will return 4), two of which
-  * are not specified.
-  */
--unsigned int of_gpio_count(struct device_node *np)
-+unsigned int of_gpio_named_count(struct device_node *np, const char* propname)
- {
- 	unsigned int cnt = 0;
- 
- 	do {
- 		int ret;
- 
--		ret = of_parse_phandle_with_args(np, "gpios", "#gpio-cells",
-+		ret = of_parse_phandle_with_args(np, propname, "#gpio-cells",
- 						 cnt, NULL);
- 		/* A hole in the gpios = <> counts anyway. */
- 		if (ret < 0 && ret != -EEXIST)
-@@ -109,7 +110,7 @@ unsigned int of_gpio_count(struct device_node *np)
- 
- 	return cnt;
- }
--EXPORT_SYMBOL(of_gpio_count);
-+EXPORT_SYMBOL(of_gpio_named_count);
- 
- /**
-  * of_gpio_simple_xlate - translate gpio_spec to the GPIO number and flags
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index e4e2058..1b3628d 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -53,7 +53,8 @@ static inline struct of_mm_gpio_chip *to_of_mm_gpio_chip(struct gpio_chip *gc)
- extern int of_get_named_gpio_flags(struct device_node *np,
- 		const char *list_name, int index, enum of_gpio_flags *flags);
- 
--extern unsigned int of_gpio_count(struct device_node *np);
-+extern unsigned int of_gpio_named_count(struct device_node *np,
-+					const char* propname);
- 
- extern int of_mm_gpiochip_add(struct device_node *np,
- 			      struct of_mm_gpio_chip *mm_gc);
-@@ -74,7 +75,8 @@ static inline int of_get_named_gpio_flags(struct device_node *np,
- 	return -ENOSYS;
- }
- 
--static inline unsigned int of_gpio_count(struct device_node *np)
-+static inline unsigned int of_gpio_named_count(struct device_node *np,
-+					const char* propname)
- {
- 	return 0;
- }
-@@ -92,6 +94,27 @@ static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
- #endif /* CONFIG_OF_GPIO */
- 
- /**
-+ * of_gpio_count - Count GPIOs for a device
-+ * @np:		device node to count GPIOs for
-+ *
-+ * The function returns the count of GPIOs specified for a node.
-+ *
-+ * Note that the empty GPIO specifiers counts too. For example,
-+ *
-+ * gpios = <0
-+ *          &pio1 1 2
-+ *          0
-+ *          &pio2 3 4>;
-+ *
-+ * defines four GPIOs (so this function will return 4), two of which
-+ * are not specified.
-+ */
-+static inline unsigned int of_gpio_count(struct device_node *np)
-+{
-+	return of_gpio_named_count(np, "gpios");
-+}
-+
-+/**
-  * of_get_gpio_flags() - Get a GPIO number and flags to use with GPIO API
-  * @np:		device node to get GPIO from
-  * @index:	index of the GPIO
+I'm not sure I agree; see below.
+
+> The reason behind this is the DT logic inside pinctrl core needs to
+> know how the pinmux_map should be constructed from device tree.
+
+As a general statement, yes.
+
+> In tegra case, the 'mux-unit' is 'pingroup', the core should construct
+> pinmux_map entry for each row/element of 'mux'.
+
+Yes.
+
+> In imx case, the 'mux-unit' will be 'pin',
+
+OK.
+
+Just a note: Tegra30 also has per-pin muxability. Only Tegra20 muxes pins
+in groups. (although Tegra30 does some if its pin configuration in groups)
+
+> and we would expect core construct only
+> one pinmux_map entry there, with all the pins listed in 'mux' composing
+> the group that pinmux_map needs.
+
+This is where I disagree.
+
+If the pinmux_map should only contain a single entry, wouldn't the DT
+mux property only contain a single entry?
+
+The reason being that if there's a single entry in the pinmux_map, the
+group name used in that entry must be a group that's supported directly
+by the pinctrl driver (that's just the way pinctrl works). As such, why
+not just write the device tree in terms of those groups?
+
+The only way I can see this not being true is if your pinctrl driver is
+also parsing these mux properties, and dynamically creating the groups
+that it exposes based on the list of pins in the mux property. However,
+that seems like the wrong approach; If you're dynamically defining groups
+in DT, I'd expect separate explicit driver-specific properties/nodes to
+define those groups, such that the pinctrl core's processing of the mux
+property to be identical in all cases.
+
+i.e. instead of what your "mux-unit" proposal:
+
+    pmx_sdhci: pinconfig-sdhci {
+        mux =
+            <TEGRA_PMX_PG_DTA TEGRA_PMX_MUX_SDIO1>
+            <TEGRA_PMX_PG_DTD TEGRA_PMX_MUX_SDIO1>;
+        mux-unit = "pingroup";
+        mux-name = "sdio-config-1";
+    };
+
+I'd expect something more like:
+
+    /* Standardized pinctrl properties */
+    pmx_sdhci: pinconfig-sdhci {
+        mux = <IMX_PG_SDIO_CFG_1 IMX_MUX_SDIO1>;
+    };
+
+    /*
+     * Driver-specific properties which tell the driver which potentially
+     * board-specific pin-groups to implement.
+     */
+    imx-pingroup-sdio-cfg-1 {
+        id = <IMX_PG_SDIO_CFG_1>;
+        pins = <IMX_PIN_SDIO1_CLK IMX_PIN_SDIO1_CMD IMX_PIN_SDIO1_DAT0...>;
+    };
+
+Does that make sense?
+
+> And in case of 'mux-unit' is 'pin', we would need one more property
+> 'mux-name' to present the group name.  Then we have all the pieces to
+> construct pinmux_map for cases like imx, where we do not define all
+> those functions, groups in pinctrl driver at all.
+
 -- 
-1.7.7
+nvpublic
