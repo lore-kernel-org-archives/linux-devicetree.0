@@ -1,61 +1,79 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] irq_domain: fix the irq number of imx5 tzic
-Date: Wed, 1 Feb 2012 21:58:44 -0700
-Message-ID: <20120202045844.GK15343@ponder.secretlab.ca>
-References: <1327700179-17454-15-git-send-email-grant.likely@secretlab.ca>
- <1328075214-25700-1-git-send-email-shawn.guo@linaro.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 9/9] ARM: imx6q-sabrelite: add audmux support
+Date: Thu, 2 Feb 2012 16:30:24 +0800
+Message-ID: <20120202082807.GA3653@S2101-09.ap.freescale.net>
+References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
+ <1328148728-32258-10-git-send-email-richard.zhao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1328075214-25700-1-git-send-email-shawn.guo@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1328148728-32258-10-git-send-email-richard.zhao@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Richard Zhao <richard.zhao@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, eric.miao@linaro.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2012 at 01:46:54PM +0800, Shawn Guo wrote:
-> The tzic controller found on imx51 and imx53 gets 128 irq lines rather
-> than 32.
+On Thu, Feb 02, 2012 at 10:12:08AM +0800, Richard Zhao wrote:
+> - enable audmux in dts
+> - enable audmux in Kconfig
 > 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-
-Applied, thanks.
-
-g.
-
+> Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
 > ---
->  arch/arm/mach-mx5/imx51-dt.c |    2 +-
->  arch/arm/mach-mx5/imx53-dt.c |    2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm/boot/dts/imx6q-sabrelite.dts |    4 ++++
+>  arch/arm/boot/dts/imx6q.dtsi          |    2 ++
+>  arch/arm/mach-imx/Kconfig             |    1 +
+>  3 files changed, 7 insertions(+), 0 deletions(-)
 > 
-> diff --git a/arch/arm/mach-mx5/imx51-dt.c b/arch/arm/mach-mx5/imx51-dt.c
-> index e1b5edf..1e03ef4 100644
-> --- a/arch/arm/mach-mx5/imx51-dt.c
-> +++ b/arch/arm/mach-mx5/imx51-dt.c
-> @@ -47,7 +47,7 @@ static const struct of_dev_auxdata imx51_auxdata_lookup[] __initconst = {
->  static int __init imx51_tzic_add_irq_domain(struct device_node *np,
->  				struct device_node *interrupt_parent)
->  {
-> -	irq_domain_add_legacy(np, 32, 0, 0, &irq_domain_simple_ops, NULL);
-> +	irq_domain_add_legacy(np, 128, 0, 0, &irq_domain_simple_ops, NULL);
->  	return 0;
->  }
+> diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
+> index 3a9d32c..5cd6698 100644
+> --- a/arch/arm/boot/dts/imx6q-sabrelite.dts
+> +++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
+> @@ -41,6 +41,10 @@
+>  				status = "okay";
+>  			};
 >  
-> diff --git a/arch/arm/mach-mx5/imx53-dt.c b/arch/arm/mach-mx5/imx53-dt.c
-> index 89de5d4..fd5be0f 100644
-> --- a/arch/arm/mach-mx5/imx53-dt.c
-> +++ b/arch/arm/mach-mx5/imx53-dt.c
-> @@ -51,7 +51,7 @@ static const struct of_dev_auxdata imx53_auxdata_lookup[] __initconst = {
->  static int __init imx53_tzic_add_irq_domain(struct device_node *np,
->  				struct device_node *interrupt_parent)
->  {
-> -	irq_domain_add_legacy(np, 32, 0, 0, &irq_domain_simple_ops, NULL);
-> +	irq_domain_add_legacy(np, 128, 0, 0, &irq_domain_simple_ops, NULL);
->  	return 0;
->  }
+> +			audmux@021d8000 {
+> +				status = "okay";
+> +			};
+> +
+>  			uart2: uart@021e8000 {
+>  				status = "okay";
+>  			};
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index 263e8f3..b0ae495 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -527,7 +527,9 @@
+>  			};
 >  
+>  			audmux@021d8000 {
+> +				compatible = "fsl,imx6q-audmux", "fsl,imx31-audmux";
+>  				reg = <0x021d8000 0x4000>;
+> +				status = "disabled";
+>  			};
+>  
+>  			mipi@021dc000 { /* MIPI-CSI */
+> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> index 4defb97..1aec9c1 100644
+> --- a/arch/arm/mach-imx/Kconfig
+> +++ b/arch/arm/mach-imx/Kconfig
+> @@ -835,6 +835,7 @@ comment "i.MX6 family:"
+>  config SOC_IMX6Q
+>  	bool "i.MX6 Quad support"
+>  	select ARM_CPU_SUSPEND if PM
+> +	select ARCH_MXC_AUDMUX_V2
+
+The ARCH_MXC_AUDMUX_V2 has been removed by patch #7.  Why do you select
+it here?
+
+Regards,
+Shawn
+
+>  	select ARM_GIC
+>  	select CPU_V7
+>  	select HAVE_ARM_SCU
 > -- 
-> 1.7.4.1
+> 1.7.5.4
 > 
 > 
