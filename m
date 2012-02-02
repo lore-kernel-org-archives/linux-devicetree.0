@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of_gpio: add support of of_gpio_named_count to be able
- to count named gpio
-Date: Thu, 2 Feb 2012 12:47:47 -0700
-Message-ID: <20120202194747.GW15343@ponder.secretlab.ca>
-References: <1328196001-22154-1-git-send-email-plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v2] irq_domain/microblaze: Convert microblaze to use
+ irq_domains
+Date: Thu, 2 Feb 2012 13:01:13 -0700
+Message-ID: <20120202200113.GX15343@ponder.secretlab.ca>
+References: <1328183974-3767-1-git-send-email-monstr@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1328196001-22154-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1328183974-3767-1-git-send-email-monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,121 +19,49 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2012 at 04:20:01PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+On Thu, Feb 02, 2012 at 12:59:34PM +0100, Michal Simek wrote:
+> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> 
+> Move get_irq to asm/irq.h from hardirq.h.
+> 
+> Grant: Why does your patch setup NR_IRQS to 64? It seems to me
+> pretty big value because intc support up to 32 interrupts.
+> The main problem was with get_irq function because there must
+> check status of IVR.
+> 
+> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
+> Cc: John Linn <john.linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> 
+> ---
+> diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
+> index 3f613df..ace700a 100644
+> --- a/arch/microblaze/kernel/irq.c
+> +++ b/arch/microblaze/kernel/irq.c
+> @@ -31,14 +31,13 @@ void __irq_entry do_IRQ(struct pt_regs *regs)
+>  	trace_hardirqs_off();
+>  
+>  	irq_enter();
+> -	irq = get_irq(regs);
+> +	irq = get_irq();
+>  next_irq:
+>  	BUG_ON(!irq);
+> -	/* Substract 1 because of get_irq */
+> -	generic_handle_irq(irq + IRQ_OFFSET - NO_IRQ_OFFSET);
+> +	generic_handle_irq(irq);
+>  
+> -	irq = get_irq(regs);
+> -	if (irq) {
+> +	irq = get_irq();
+> +	if (irq != -1U) {
 
-Applied, thanks.
+irq should never be -1 now with my current tree.  I've just pushed it out,
+can you take a look and try it with the original "if (!irq)" test?
 
 g.
-
-> ---
->  drivers/of/gpio.c       |    9 +++++----
->  include/linux/of_gpio.h |   27 +++++++++++++++++++++++++--
->  2 files changed, 30 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/of/gpio.c b/drivers/of/gpio.c
-> index 7e62d15..e034b38 100644
-> --- a/drivers/of/gpio.c
-> +++ b/drivers/of/gpio.c
-> @@ -78,8 +78,9 @@ err0:
->  EXPORT_SYMBOL(of_get_named_gpio_flags);
->  
->  /**
-> - * of_gpio_count - Count GPIOs for a device
-> + * of_gpio_named_count - Count GPIOs for a device
->   * @np:		device node to count GPIOs for
-> + * @propname:	property name containing gpio specifier(s)
->   *
->   * The function returns the count of GPIOs specified for a node.
->   *
-> @@ -93,14 +94,14 @@ EXPORT_SYMBOL(of_get_named_gpio_flags);
->   * defines four GPIOs (so this function will return 4), two of which
->   * are not specified.
->   */
-> -unsigned int of_gpio_count(struct device_node *np)
-> +unsigned int of_gpio_named_count(struct device_node *np, const char* propname)
->  {
->  	unsigned int cnt = 0;
->  
->  	do {
->  		int ret;
->  
-> -		ret = of_parse_phandle_with_args(np, "gpios", "#gpio-cells",
-> +		ret = of_parse_phandle_with_args(np, propname, "#gpio-cells",
->  						 cnt, NULL);
->  		/* A hole in the gpios = <> counts anyway. */
->  		if (ret < 0 && ret != -EEXIST)
-> @@ -109,7 +110,7 @@ unsigned int of_gpio_count(struct device_node *np)
->  
->  	return cnt;
->  }
-> -EXPORT_SYMBOL(of_gpio_count);
-> +EXPORT_SYMBOL(of_gpio_named_count);
->  
->  /**
->   * of_gpio_simple_xlate - translate gpio_spec to the GPIO number and flags
-> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-> index e4e2058..1b3628d 100644
-> --- a/include/linux/of_gpio.h
-> +++ b/include/linux/of_gpio.h
-> @@ -53,7 +53,8 @@ static inline struct of_mm_gpio_chip *to_of_mm_gpio_chip(struct gpio_chip *gc)
->  extern int of_get_named_gpio_flags(struct device_node *np,
->  		const char *list_name, int index, enum of_gpio_flags *flags);
->  
-> -extern unsigned int of_gpio_count(struct device_node *np);
-> +extern unsigned int of_gpio_named_count(struct device_node *np,
-> +					const char* propname);
->  
->  extern int of_mm_gpiochip_add(struct device_node *np,
->  			      struct of_mm_gpio_chip *mm_gc);
-> @@ -74,7 +75,8 @@ static inline int of_get_named_gpio_flags(struct device_node *np,
->  	return -ENOSYS;
->  }
->  
-> -static inline unsigned int of_gpio_count(struct device_node *np)
-> +static inline unsigned int of_gpio_named_count(struct device_node *np,
-> +					const char* propname)
->  {
->  	return 0;
->  }
-> @@ -92,6 +94,27 @@ static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
->  #endif /* CONFIG_OF_GPIO */
->  
->  /**
-> + * of_gpio_count - Count GPIOs for a device
-> + * @np:		device node to count GPIOs for
-> + *
-> + * The function returns the count of GPIOs specified for a node.
-> + *
-> + * Note that the empty GPIO specifiers counts too. For example,
-> + *
-> + * gpios = <0
-> + *          &pio1 1 2
-> + *          0
-> + *          &pio2 3 4>;
-> + *
-> + * defines four GPIOs (so this function will return 4), two of which
-> + * are not specified.
-> + */
-> +static inline unsigned int of_gpio_count(struct device_node *np)
-> +{
-> +	return of_gpio_named_count(np, "gpios");
-> +}
-> +
-> +/**
->   * of_get_gpio_flags() - Get a GPIO number and flags to use with GPIO API
->   * @np:		device node to get GPIO from
->   * @index:	index of the GPIO
-> -- 
-> 1.7.7
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
