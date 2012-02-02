@@ -1,15 +1,15 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] drivercore: Output common devicetree information in uevent
-Date: Wed, 1 Feb 2012 16:20:57 -0700
-Message-ID: <CACxGe6vU=jL7tqXQKdzqksEmDNgvN5U+HdypgC3bUcQaqxSuRQ@mail.gmail.com>
-References: <1328121082-21802-1-git-send-email-grant.likely@secretlab.ca>
- <1328130989.28487.83.camel@pasglop>
- <CACxGe6uafURnPOGRNpKKXXMM06JHFoqDVqHojQdv_aeCAd_Sfg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: samsung: adapt to changes in gpio specifier
+ translator function declaration
+Date: Wed, 1 Feb 2012 17:05:16 -0700
+Message-ID: <20120202000516.GA15343@ponder.secretlab.ca>
+References: <1328101352-22274-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6uafURnPOGRNpKKXXMM06JHFoqDVqHojQdv_aeCAd_Sfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1328101352-22274-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,33 +19,18 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Greg Kroah-Hartman <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Frederic Lambert <frdrc66-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 1, 2012 at 2:29 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wr=
-ote:
-> On Wed, Feb 1, 2012 at 2:16 PM, Benjamin Herrenschmidt
-> <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
->> On Wed, 2012-02-01 at 11:31 -0700, Grant Likely wrote:
->>> The original function also creates a MODALIAS property for the
->>> compatible
->>> list, but that code has not been generalized into the common case
->>> because
->>> it has the potential to break module loading on a lot of bus types.
->>> Bus
->>> types are still responsible for their own MODALIAS properties.
->>>
->>> Boot tested on ARM and compile tested on PowerPC and SPARC.
->>>
->>>
->> We also want to generalize adding the devspec property that we have on
->> PCI to all devices no ?
->
-> The pci_show_devspec() function? =A0Yeah, that can be generalized, but
-> haven't researched where the best place to hook it in should be.
+On Wed, Feb 01, 2012 at 06:32:32PM +0530, Thomas Abraham wrote:
+> Commit 15c9a0acc3f7 (of: create of_phandle_args to simplify return of phandle
+> parsing data) modifies the parameter list of of_xlate function pointer declaration
+> in gpio_chip. Adapt the gpio specifier translate function for this change.
+> 
+> Reported-by: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Is there any point in generalizing that attribute though when the data
-is in uevent?
+Applied, thanks.
 
 g.
