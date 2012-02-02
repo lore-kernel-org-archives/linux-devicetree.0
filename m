@@ -1,39 +1,85 @@
-From: Richard Zhao <richard.zhao@linaro.org>
-Subject: Re: [PATCH v2 4/9] ARM: dts: imx6q-sabrelite: add sgtl5000 audio
- codec
-Date: Thu, 2 Feb 2012 22:41:18 +0800
-Message-ID: <20120202144116.GA3278@richard-laptop>
-References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
- <1328148728-32258-5-git-send-email-richard.zhao@linaro.org>
- <CAOMZO5CxZgcO1JUZiFFJzWwLao1g7Y1_VNbsuiJOW+PH2B+FNQ@mail.gmail.com>
- <20120202134907.GA3015@richard-laptop>
- <CAOMZO5CuPDhU6zUyhE1jA0SDTjv1XDMCkNoQ_0nH82poGYOaqA@mail.gmail.com>
+From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Subject: RE: [PATCH-V2] arm/dts: omap3-evm: Add i2c and twl4030 support
+Date: Thu, 2 Feb 2012 15:23:57 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A8317BD828@DBDE01.ent.ti.com>
+References: <1328077568-22043-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5CuPDhU6zUyhE1jA0SDTjv1XDMCkNoQ_0nH82poGYOaqA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, shawn.guo@linaro.org, Dirk Behme <dirk.behme@de.bosch.com>, Eric Nelson <eric.nelson@boundarydevices.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1328077568-22043-1-git-send-email-hvaibhav@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Cousson, Benoit" <b-cousson@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2012 at 12:15:52PM -0200, Fabio Estevam wrote:
-> On 2/2/12, Richard Zhao <richard.zhao@linaro.org> wrote:
+On Wed, Feb 01, 2012 at 11:56:08, Hiremath, Vaibhav wrote:
+> Add support for TWL4030, which is interfaced on i2c1 bus.
+> Also add clock frequencies for other i2c instances(2 & 3)
+> required for client-device exist on OMAP3EVM board.
 > 
-> >> Without imx-sgtl5000.c in place, this patch only introduces dead code
-> >> at the moment.
-> > Each patch make sense too without sgtl5000.
+> Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Tony Lindgren <tony@atomide.com>
+> ---
+> Changes from V1:
+> 	- As per comment from Benoit, changed hex representation
+> 	  from uppercase to lowercase.
 > 
-> Well, as this patch goal is to provide audio support to mx6sabrelite,
-> we need imx-sgtl5000 in place to test it, right?
-My goal seem less important here. You see I'm adding more and more things
-into the patch series, which is out of my goal. The maintainers only
-consider right patch go to right git.
->  How can we know that
-> don't get a kernel oops or something?
-patch pass building is possible go to upstream too.
+>  arch/arm/boot/dts/omap3-evm.dts |   28 ++++++++++++++++++++++++++++
+>  1 files changed, 28 insertions(+), 0 deletions(-)
 > 
-> Regards,
+> diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
+> index 2eee16e..f349ee9 100644
+> --- a/arch/arm/boot/dts/omap3-evm.dts
+> +++ b/arch/arm/boot/dts/omap3-evm.dts
+> @@ -18,3 +18,31 @@
+>  		reg = <0x80000000 0x10000000>; /* 256 MB */
+>  	};
+>  };
+> +
+> +&i2c1 {
+> +	clock-frequency = <2600000>;
+> +
+> +	twl: twl@48 {
+> +		reg = <0x48>;
+> +		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+> +		interrupt-parent = <&intc>;
+> +	};
+> +};
+> +
+> +/include/ "twl4030.dtsi"
+> +
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <400000>;
+> +
+> +	/*
+> +	 * TVP5146 Video decoder-in for analog input support.
+> +	 */
+> +	tvp5146@5c {
+> +		compatible = "ti,tvp5146m2";
+> +		reg = <0x5c>;
+> +	};
+> +};
+
+Grant,
+
+Can you ack this patch and below patch as well, so that
+Benoit can queue it in his tree?
+
+arm/dts: Add support for TI AM3517/05 EVM board
+
+Thanks,
+Vaibhav
+
+> --
+> 1.7.0.4
 > 
-> Fabio Estevam
+> 
+
