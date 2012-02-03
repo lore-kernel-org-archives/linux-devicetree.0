@@ -1,7 +1,7 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [PATCH 04/10] Remove unused variable from test scripts
-Date: Fri,  3 Feb 2012 16:12:03 +1100
-Message-ID: <1328245929-15443-5-git-send-email-david@gibson.dropbear.id.au>
+Subject: [PATCH 06/10] Remove bashism from run_tests.sh
+Date: Fri,  3 Feb 2012 16:12:05 +1100
+Message-ID: <1328245929-15443-7-git-send-email-david@gibson.dropbear.id.au>
 References: <1328245929-15443-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,54 +21,27 @@ To: jdl-CYoMK+44s/E@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Several of the test scripts remove $TMPFILE, without ever having set
-the TMPFILE variable. This patch fixes it.
+The patches introducing fdtget and fdtput inserted a peculiar bashism to
+run_tests.sh using non-portable assignment within an (( )) expression.
+This patch fixes it.
 
 Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
- tests/dtc-checkfails.sh |    2 +-
- tests/fdtget-runtest.sh |    2 +-
- tests/fdtput-runtest.sh |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ tests/run_tests.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/tests/dtc-checkfails.sh b/tests/dtc-checkfails.sh
-index c58694f..e7aa25e 100755
---- a/tests/dtc-checkfails.sh
-+++ b/tests/dtc-checkfails.sh
-@@ -12,7 +12,7 @@ done
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index 2650559..37c173c 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -478,7 +478,7 @@ fdtput_tests () {
+     tac $base | tr a-z A-Z | sort -r >$bigfile2
  
- LOG="tmp.log.$$"
+     # Allow just enough space for both file1 and file2
+-    (( space = $(stat -c %s $file1) + $(stat -c %s $file2) ))
++    space=$(( $(stat -c %s $file1) + $(stat -c %s $file2) ))
+     $DTC -O dtb -p $space -o $file ${file%.dtb}.dts 2>/dev/null
  
--rm -f $TMPFILE $LOG
-+rm -f $LOG
- 
- verbose_run_log "$LOG" $VALGRIND "$DTC" -o /dev/null "$@"
- ret="$?"
-diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
-index f38184f..c17c8f9 100755
---- a/tests/fdtget-runtest.sh
-+++ b/tests/fdtget-runtest.sh
-@@ -5,7 +5,7 @@
- LOG="tmp.log.$$"
- EXPECT="tmp.expect.$$"
- 
--rm -f $TMPFILE $LOG
-+rm -f $LOG
- 
- expect="$1"
- echo "$expect" >$EXPECT
-diff --git a/tests/fdtput-runtest.sh b/tests/fdtput-runtest.sh
-index ea51569..8e4cd95 100644
---- a/tests/fdtput-runtest.sh
-+++ b/tests/fdtput-runtest.sh
-@@ -11,7 +11,7 @@
- LOG="tmp.log.$$"
- EXPECT="tmp.expect.$$"
- 
--rm -f $TMPFILE $LOG
-+rm -f $LOG
- 
- expect="$1"
- echo "$expect" >$EXPECT
+     # run_fdtput_test <test-name> <expected-result> <file> <key> <flags>
 -- 
 1.7.8.3
