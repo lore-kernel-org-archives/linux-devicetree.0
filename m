@@ -1,52 +1,63 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v5 18/18] tegra: fdt: Enable FDT support for
-	Seaboard
-Date: Fri, 3 Feb 2012 09:05:23 -0800
-Message-ID: <CAPnjgZ2Y5rA9siGiRVRQwVmm8gnbN_z0QL7rMn-3GvmTU2GfmQ@mail.gmail.com>
-References: <1327447272-30182-1-git-send-email-sjg@chromium.org>
-	<1327447272-30182-19-git-send-email-sjg@chromium.org>
-	<4F2B0B5F.10400@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <4F2B0B5F.10400@nvidia.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <TWarren@nvidia.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v6 10/18] tegra: usb: fdt: Add additional device tree definitions for USB ports
+Date: Fri,  3 Feb 2012 09:08:19 -0800
+Message-ID: <1328288907-16725-11-git-send-email-sjg@chromium.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Remy Bohmer <linux-SYUVB/VFmdasTnJN9+BGXg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+This adds clock references to the USB part of the device tree for U-Boot,
+and marks USB1 as supporting legacy mode (which we disable in the driver).
 
-On Thu, Feb 2, 2012 at 2:17 PM, Stephen Warren <swarren@nvidia.com> wrote:
-> On 01/24/2012 04:21 PM, Simon Glass wrote:
->> This switches Seaboard over to use FDT for run-time config instead of
->> CONFIG options. USB is the only user at present.
->>
->> Signed-off-by: Simon Glass <sjg@chromium.org>
->
-> Aside from the issues I've just mentioned in my recent emails, and from
-> needing to update to the clock binding we discussed on the Linux mailing
-> lists, the whole series is:
->
-> Acked-by: Stephen Warren <swarren@nvidia.com>
+The USB timing information may vary between boards sometimes, but for
+now we hard-code it in C. This is because all current T2x boards use
+the same values, we will deal with T3x later and we first need to agree
+on the format for this timing information in the fdt and may in fact
+decide that it has no place there.
 
-Thanks - it would be nice to get this in since it is the first actual
-use of fdt in U-Boot.
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes in v5:
+- Add dr_mode property to control host/device/otg mode
+- Add nvidia,has-legacy-mode property per review comments
+- Change device tree comment style from // to /* */
 
-I will resend the two patches that need changing as v6.
+Changes in v6:
+- Remove dr_mode properties from SOC .dtsi file and move to boards
 
->
-> --
-> nvpublic
+ arch/arm/dts/tegra20.dtsi |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-Regards,
-Simon
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+index ec75747..df1eda4 100644
+--- a/arch/arm/dts/tegra20.dtsi
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -176,6 +176,8 @@
+ 		reg = <0xc5000000 0x4000>;
+ 		interrupts = < 52 >;
+ 		phy_type = "utmi";
++		clocks = <&periph_clk 22>;	/* PERIPH_ID_USBD */
++		nvidia,has-legacy-mode;
+ 	};
+ 
+ 	usb@c5004000 {
+@@ -183,6 +185,7 @@
+ 		reg = <0xc5004000 0x4000>;
+ 		interrupts = < 53 >;
+ 		phy_type = "ulpi";
++		clocks = <&periph_clk 58>;	/* PERIPH_ID_USB2 */
+ 	};
+ 
+ 	usb@c5008000 {
+@@ -190,6 +193,7 @@
+ 		reg = <0xc5008000 0x4000>;
+ 		interrupts = < 129 >;
+ 		phy_type = "utmi";
++		clocks = <&periph_clk 59>;	/* PERIPH_ID_USB3 */
+ 	};
+ 
+ };
+-- 
+1.7.7.3
