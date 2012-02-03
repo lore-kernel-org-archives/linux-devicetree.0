@@ -1,16 +1,16 @@
 From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 Subject: Re: [PATCH v2] irq_domain/microblaze: Convert microblaze to use
  irq_domains
-Date: Fri, 03 Feb 2012 11:30:43 +0100
-Message-ID: <4F2BB753.6020307@monstr.eu>
+Date: Fri, 03 Feb 2012 11:33:28 +0100
+Message-ID: <4F2BB7F8.7000608@monstr.eu>
 References: <1328183974-3767-1-git-send-email-monstr@monstr.eu>
- <20120202200113.GX15343@ponder.secretlab.ca>
+ <20120202185948.GS15343@ponder.secretlab.ca>
 Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120202200113.GX15343-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <20120202185948.GS15343-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -34,7 +34,15 @@ Grant Likely wrote:
 >> pretty big value because intc support up to 32 interrupts.
 >> The main problem was with get_irq function because there must
 >> check status of IVR.
->>
+> 
+> It doesn't really need to do that.  I can drop that change, but you
+> will need to either enable sparse irq or make that number larger if
+> you ever set up cascaded interrupt controllers.
+
+I have never seen cascaded interrupt controllers on Microblaze system
+that's why it is better to have simpler/faster code.
+
+> 
 >> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 >> Signed-off-by: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 >> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
@@ -42,50 +50,20 @@ Grant Likely wrote:
 >> Cc: John Linn <john.linn-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 >>
 >> ---
->> diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
->> index 3f613df..ace700a 100644
->> --- a/arch/microblaze/kernel/irq.c
->> +++ b/arch/microblaze/kernel/irq.c
->> @@ -31,14 +31,13 @@ void __irq_entry do_IRQ(struct pt_regs *regs)
->>  	trace_hardirqs_off();
->>  
->>  	irq_enter();
->> -	irq = get_irq(regs);
->> +	irq = get_irq();
->>  next_irq:
->>  	BUG_ON(!irq);
->> -	/* Substract 1 because of get_irq */
->> -	generic_handle_irq(irq + IRQ_OFFSET - NO_IRQ_OFFSET);
->> +	generic_handle_irq(irq);
->>  
->> -	irq = get_irq(regs);
->> -	if (irq) {
->> +	irq = get_irq();
->> +	if (irq != -1U) {
+>> This builds on top of my irq_domain tree:
+>> git://git.secretlab.ca/git/linux-2.6 irqdomain/next
+>>
+>> v2: Turn off SPARSE_IRQ because we don't need it.
 > 
-> irq should never be -1 now with my current tree.  I've just pushed it out,
-> can you take a look and try it with the original "if (!irq)" test?
+> Is this all that you changed?  Do I need to drop the version in my
+> tree to pick up this version of the patch, or am I okay to simply drop
+> the SPARSE_IRQ hunk?
+> 
 
-That was the origin problem with your patch.
-If you look at do_IRQ there is get_irq called twice. First time when IRQ happen and
-then as checking if any other IRQ has happened from in time where irq was handled.
-Probably much cleaner case is to just call get_irq once and then handle other IRQ.
-But it takes some time to get to do_IRQ function because of reg saving and restoring, etc.
-that's why if any other IRQ happened it is handled. (It is because Microblaze is slow).
-
-Then look at get_irq function there is hwirq = in_be32(INTC_BASE + IVR). When IRQ happened
-there is sensible value. If doesn't then there is -1.
-In that case irq_find_mapping is not called and jump back.
-
-If there is that concurrent IRQ handling you can't use if(!irq).
-
-Does it make sense to you?
+Not only that. In second email you see that changes about concurrent irq.
 
 Thanks,
 Michal
-
-
-
 
 
 -- 
