@@ -1,56 +1,88 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [PATCH] Fix uninitialized access bug in utilfdt_decode_type
-Date: Fri,  3 Feb 2012 17:06:12 +1100
-Message-ID: <1328249172-6282-1-git-send-email-david@gibson.dropbear.id.au>
+From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Subject: RE: [PATCH 2/2] arm/dts: Add support for TI AM335x EVM board
+Date: Fri, 3 Feb 2012 06:42:15 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A8317BE7E1@DBDE01.ent.ti.com>
+References: <1326870839-19951-1-git-send-email-hvaibhav@ti.com>
+ <1326870839-19951-2-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1326870839-19951-2-git-send-email-hvaibhav@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Cousson, Benoit" <b-cousson@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-I just found this little bug with valgrind.  strchr() will return true
-if the given character is '\0'.  This meant that utilfdt_decode_type()
-could take a path which accesses uninitialized data when given the
-(invalid) format string "L".
+On Wed, Jan 18, 2012 at 12:43:59, Hiremath, Vaibhav wrote:
+> Add AM335x EVM DTS file to use the omap3.dtsi SoC file,
+> along with memory node and i2c information.
+> 
+> Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Tony Lindgren <tony@atomide.com>
+> ---
+>  arch/arm/boot/dts/am335x-evm.dts |   39 ++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 39 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/am335x-evm.dts
+> 
+> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+> new file mode 100644
+> index 0000000..8cc877f
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -0,0 +1,39 @@
+> +/*
+> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/dts-v1/;
+> +
+> +/include/ "omap3.dtsi"
+> +
+> +/ {
+> +	model = "TI AM335x EVM";
+> +	compatible = "ti,am335x-evm", "ti,am33xx", "ti,omap3";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x10000000>; /* 256 MB */
+> +	};
+> +};
+> +
+> +&intc {
+> +	/*
+> +	 * AM33XX family of devices have 128 interrupts
+> +	 */
+> +	ti,intc-size = <128>;
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <400000>;
+> +};
+> +
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <400000>;
+> +};
 
-Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
----
- util.c |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
+Grant,
 
-diff --git a/util.c b/util.c
-index d82d41f..2422c34 100644
---- a/util.c
-+++ b/util.c
-@@ -296,6 +296,9 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size)
- {
- 	int qualifier = 0;
- 
-+	if (!*fmt)
-+		return -1;
-+
- 	/* get the conversion qualifier */
- 	*size = -1;
- 	if (strchr("hlLb", *fmt)) {
-@@ -311,7 +314,7 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size)
- 	}
- 
- 	/* we should now have a type */
--	if (!strchr("iuxs", *fmt))
-+	if ((*fmt == '\0') || !strchr("iuxs", *fmt))
- 		return -1;
- 
- 	/* convert qualifier (bhL) to byte size */
--- 
-1.7.8.3
+If there are not review comments, can you also ack this patch as well?
+
+Thanks,
+Vaibhav
+
+> --
+> 1.7.0.4
+> 
+> 
+
