@@ -1,65 +1,93 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v6 11/18] tegra: usb: fdt: Add USB definitions for Tegra2 Seaboard
-Date: Fri,  3 Feb 2012 09:08:20 -0800
-Message-ID: <1328288907-16725-12-git-send-email-sjg@chromium.org>
-References: <1328288907-16725-11-git-send-email-sjg@chromium.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1328288907-16725-11-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Albert ARIBAUD <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Remy Bohmer <linux-SYUVB/VFmdasTnJN9+BGXg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Pinmux bindings proposal V2
+Date: Sat, 4 Feb 2012 01:21:39 +0800
+Message-ID: <CAA+hA=TYt7iFbLkSLfOMe8z1-dJGufqFDuZGarRx-ioHkf3sRw@mail.gmail.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
+ <20120201143530.GA2203@S2101-09.ap.freescale.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF178E124AC5@HQMAIL01.nvidia.com>
+ <CAA+hA=RpkP-FFAr8wqVPjSKEMvO_sRHmOK_9nUYfuW=ps0O_=Q@mail.gmail.com>
+ <20120203140238.GC12915@S2101-09.ap.freescale.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120203140238.GC12915-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We set up two USB ports, one of which can be host or device.
-For some reason the kernel version does enable both ports.
+On Fri, Feb 3, 2012 at 10:02 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Feb 03, 2012 at 04:07:23AM +0800, Dong Aisheng wrote:
+> ...
+>> However If IMX uses the data model i described above, the binding is
+>> then a little different from tegra. that means we may need to change
+>> to =A0let each soc's pinctrl driver do real pinmux map parsing (maybe
+>> add a callback in pinctrl.ops) based on their soc specific pinctrl
+>> configuration node like pmx_usdhc4 above instread of let pinctrl core
+>> do a standard pinmux map parsing which is our target we discussed so
+>> long for.
+>>
+> Yeah, this seems a reasonable alternative to me. =A0Pushing the pinmux_map
+> construction down to individual pinctrl driver, who can interpret 'mux'
+> property best, will relieve the pinctrl core from understanding the
+> property for different cases, so that we can even save the property
+> 'mux-unit' I asked for. =A0And doing so somehow aligns with non-dt case,
+> where the pinmux_map is constructed by individual pinctrl driver too
+> (with help from PINMUX_MAP_* macros in board file).
+>
+Yes, that's i think may be right way we should go now.
+The reasons are as we met so many issues and discussed so long, we
+feel like that it's hard to make a standard dt binding in pintrl core
+based on one mux property format to cover all the differences for
+different SOCs likeTegra(using HW group) and IMX(using virtual group).
+We need to fix these issues on a higher level that each SOC pinctrl
+driver implements their pinmux map parsing function, pinctrl core
+calls these functions to get the pinmux maps the driver parsed instead
+of pinctrl core parsing itself.
+It could be something like:
+in pinmux_get() {
+    struct pinmux_map *maps;
+    u32 num;
+    ...
+    maps =3D pinctrl.ops.get_pinmux_map(pinmux_node, &num);
+    ret =3D pinmux_map_register(maps, num);
+    ...
+    ret =3D pinmux_enable_maps(maps, num);
+}
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v2:
-- Remove 0x from fdt aliases
-- Use "okay" instead of "ok" for fdt node status
+The basic binding idea for this way is:
+1) pinctrl core is only responsible for the pinmux map parsing.
+Each pinctrl driver is responsible for the function and group creation
+no matter whether they're defined in drivers or parsed from device
+tree.
+2) The pinctrl driver is responsible for their pinmux node definitions
+to cover their hw difference. However we prefer to reference the
+format as Stephen proposed to align each SOC best. And each pinctrl
+driver is responsible for the real pinmux map parsing by implementing
+the pinmux_map_parse callback function.
+3) when calling pinmux_get, we dynamically parse and create the pinmux
+map table for each device.
+4) the hog_on_boot map nodes are defined under SoC's pinctrl device node.
+The pinctrl driver is responsible for parsing and register them.
 
-Changes in v3:
-- Disable USB2 which is not used on Seaboard
-- Fix device tree indenting with tabs instead of spaces
-- Remove "okay" from nodes since this is the default anyway
+Generally speaking, this way is very flexible and can cover most
+differences between each SoCs.
+It should work for both IMX and Tegra well. Tegra can still do on the
+same binding as before as Stephen proposed. The only difference is
+that the real pinmux map parsing is moved from pinctrl core to Tegra
+pinctrl driver. And IMX can still use virtual group as we wished(i
+think this is correct since pinctrl subsystem does not have a
+restriction that user can only use pure hw group).
+For other SOCs, i guess it should also work.
 
-Changes in v5:
-- Remove support-host-mode property
-
-Changes in v6:
-- Remove dr_mode properties from SOC .dtsi file and move to boards
-
- board/nvidia/dts/tegra2-seaboard.dts |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
-
-diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts/tegra2-seaboard.dts
-index dde5d03..f00341f 100644
---- a/board/nvidia/dts/tegra2-seaboard.dts
-+++ b/board/nvidia/dts/tegra2-seaboard.dts
-@@ -11,6 +11,12 @@
- 		bootargs = "vmalloc=192M video=tegrafb console=ttyS0,115200n8 root=/dev/mmcblk1p3 rw rootwait";
- 	};
- 
-+	aliases {
-+		/* This defines the order of our USB ports */
-+		usb0 = "/usb@c5008000";
-+		usb1 = "/usb@c5000000";
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = < 0x00000000 0x40000000 >;
-@@ -32,5 +38,10 @@
- 
- 	usb@c5000000 {
- 		nvidia,vbus-gpio = <&gpio 24 0>; /* PD0 */
-+		dr_mode = "otg";
-+	};
-+
-+	usb@c5004000 {
-+		status = "disabled";
- 	};
- };
--- 
-1.7.7.3
+Regards
+Dong Aisheng
