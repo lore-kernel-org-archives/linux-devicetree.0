@@ -1,7 +1,7 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [PATCH 02/10] Add quilt files to .gitignore
-Date: Fri,  3 Feb 2012 16:12:01 +1100
-Message-ID: <1328245929-15443-3-git-send-email-david@gibson.dropbear.id.au>
+Subject: [PATCH 03/10] Trivial style fixup
+Date: Fri,  3 Feb 2012 16:12:02 +1100
+Message-ID: <1328245929-15443-4-git-send-email-david@gibson.dropbear.id.au>
 References: <1328245929-15443-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,23 +21,29 @@ To: jdl-CYoMK+44s/E@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For the benefit of quilt users (such as myself, sometimes) have git
-ignore the quilt control and patches files.
+Having braces on an if branch but not the else branch, or vice
+versa is ugly and can trick you when reading the code.
 
 Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
- .gitignore |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ fdtget.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/.gitignore b/.gitignore
-index 5074980..7cabc49 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -12,3 +12,5 @@ lex.yy.c
- /version_gen.h
- /fdtget
- /fdtput
-+/patches
-+/.pc
+diff --git a/fdtget.c b/fdtget.c
+index 48ab615..2c384b6 100644
+--- a/fdtget.c
++++ b/fdtget.c
+@@ -77,9 +77,9 @@ static int show_data(struct display_info *disp, const char *data, int len)
+ 		return 0;
+ 	}
+ 	size = disp->size;
+-	if (size == -1)
++	if (size == -1) {
+ 		size = (len % 4) == 0 ? 4 : 1;
+-	else if (len % size) {
++	} else if (len % size) {
+ 		fprintf(stderr, "Property length must be a multiple of "
+ 				"selected data size\n");
+ 		return -1;
 -- 
 1.7.8.3
