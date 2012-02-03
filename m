@@ -1,43 +1,114 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: Re: [PATCH v6 10/18] tegra: usb: fdt: Add additional
- device tree definitions for USB ports
-Date: Fri, 3 Feb 2012 12:03:40 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178E5D2FF9@HQMAIL01.nvidia.com>
-References: <1328288907-16725-11-git-send-email-sjg@chromium.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: Pinmux bindings proposal V2
+Date: Fri, 3 Feb 2012 13:05:45 -0800
+Message-ID: <20120203210545.GE1426@atomide.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
+ <20120201143530.GA2203@S2101-09.ap.freescale.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF178E124AC5@HQMAIL01.nvidia.com>
+ <CAA+hA=RpkP-FFAr8wqVPjSKEMvO_sRHmOK_9nUYfuW=ps0O_=Q@mail.gmail.com>
+ <20120203173205.GB1426@atomide.com>
+ <CAA+hA=QFB7x0yv65LMuLx1exmiUAuB98D+9Fyyk9oeVu+7F2QQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1328288907-16725-11-git-send-email-sjg@chromium.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>, U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry@theia.denx.de, Baren <vanbaren@cideas.com>, Tom Warren <TWarren@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAA+hA=QFB7x0yv65LMuLx1exmiUAuB98D+9Fyyk9oeVu+7F2QQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <dongas86@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>, "Sascha Hauer (s.hauer@pengutronix.de)" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, "Grant Likely (grant.likely@secretlab.ca)" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Simon Glass wrote at Friday, February 03, 2012 10:08 AM:
-> This adds clock references to the USB part of the device tree for U-Boot,
-> and marks USB1 as supporting legacy mode (which we disable in the driver).
-> 
-> The USB timing information may vary between boards sometimes, but for
-> now we hard-code it in C. This is because all current T2x boards use
-> the same values, we will deal with T3x later and we first need to agree
-> on the format for this timing information in the fdt and may in fact
-> decide that it has no place there.
-> 
-> Signed-off-by: Simon Glass <sjg@chromium.org>
+* Dong Aisheng <dongas86@gmail.com> [120203 09:42]:
+> On Sat, Feb 4, 2012 at 1:32 AM, Tony Lindgren <tony@atomide.com> wrot=
+e:
+> > * Dong Aisheng <dongas86@gmail.com> [120202 11:36]:
+> >>
+> >> Actually i think i'd rather do not use config property, then i cou=
+ld
+> >> be more compact:
+> >> (anyway it's another issue and is flexible to be controlled by #pi=
+nmux-cells)
+> >> pinctrl_usdhc4: pinconfig-usdhc4 {
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* 0: pin 1: group */
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 mux-entity =3D <0>;
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 func-name =3D "usdhc4func";
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 grp-name =3D "usdhc4grp";
+> >
+> > The func-name and grp-name should be optional here.
+> > This mux entry is already the group, and can be used as
+> > the group name.
+> For the case i discussed here, the mux entry is PIN.
+> (the mux-entity value is 0).
+> we introduce this value here for treating all pins is one group.
+> When do map parsing, only one pinmux map will be created.
+> So we need a grp-name.
+> And we also need a func-name here for construct pinmux map.
 
-The has-legacy-mode property looks good to me.
+Sounds like a similar setup I have, I do not need any func-name
+or grp-name though.. The group name is already unique with
+pinconfig-usdhc4 in your example?
+=20
+> > And the function name can be generated
+> > dynamically in most cases. I'm currently using np->full_name
+> > of the driver claiming these pins as the function name.
+>
+> Why i did not use np->name as function name is because the np->name
+> can be different
+> while actually these nodes may represent the same function but just
+> different pins, so the function name should be same.
 
-The clock bindings need updating.
+I used a function name based on the group name initially
+(pinconfig-usdhc4 in your example), then renamed it to the
+np->full_name of the device requesting the mux when the
+mux was found ;)
 
--- 
-nvpublic
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 mux =3D
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+CMD =C2=A00 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+CLK =C2=A00 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+DAT0 1 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+DAT1 1 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+DAT2 1 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+DAT3 1 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+DAT4 1 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+DAT5 1 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+DAT6 1 MX6Q_USDHC_PAD_CTRL>
+> >> =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 <MX6Q_SD4_=
+DAT7 1 MX6Q_USDHC_PAD_CTRL>;
+> >> };
+> >
+> > For listing basic pins this format works fine for me. It seems
+> > to have low overhead for parsing. And the width of the array
+> > can be driver specific.
+> >
+> > Looks like it's the binding for altenative states that's still a
+> > bit open..
+> >
+> Yes, it does not have states support.
+>=20
+> > So how about let's first standardize on the mux format above?
+> >
+> I'm afraid it may be hard for us to standardize the mux format for a
+> standard binding in pinctrl core due to  hw difference.
+
+Yes the width would have to be hardare specific for the array.
+
+> I'm think the new way which i sent in this thread after the mail you =
+replied.
+> You can refer to them to see if it's reasonable for you too.
+
+Hmm, sorry now I'm confused. Got a link for that mail as so
+many have been posted?
+
+Regards,
+
+Tony
