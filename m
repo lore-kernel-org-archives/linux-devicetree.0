@@ -1,7 +1,7 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [PATCH 08/10] Clean up invocation of fdt{get,put} tests
-Date: Fri,  3 Feb 2012 16:12:07 +1100
-Message-ID: <1328245929-15443-9-git-send-email-david@gibson.dropbear.id.au>
+Subject: [PATCH 09/10] Don't use diff to check fdt{get,put} results
+Date: Fri,  3 Feb 2012 16:12:08 +1100
+Message-ID: <1328245929-15443-10-git-send-email-david@gibson.dropbear.id.au>
 References: <1328245929-15443-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,326 +21,69 @@ To: jdl-CYoMK+44s/E@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch cleans up how the fdtget and fdtput tests are invoked.
-Specifically we no longer hide the full command lines with a wrapper
-function - this makes it possible to distinguish fdtget from similar
-fdtput tests and makes it easier to work out how to manually invoke an
-individual failing test.
+Currently the fdt{get,put}-runtest.sh scripts invoke diff to check if
+fdt{get,put} did the right thing.  This isn't great though: it's not
+obvious from the diff output which is the expected and which is the
+actual result; diff's line by line behaviour is useless here, since all
+the results are a single line and finally, when there is a difference
+it always prints information even when the tests are supposed to be
+running in quiet mode.
 
-In addition, we remove the testing for errors from the
-fdt{get,put}-runtest.sh script, instead using an internal wrapper
-analagous to run_wrap_test which can test for any program invocation
-that's expected to return an error.
-
-For a couple of the fdtput tests this would result in printing out
-ludicrously large command lines.  Therefore we introduce a new
-mechanism to cut those down to something reasonable.
+This patch uses cmp instead, and explicitly prints the expected results,
+when running in verbose mode (the invocation of fdtget itself will have
+already displayed the actual results in this mode.
 
 Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
- tests/fdtget-runtest.sh |   11 +---
- tests/fdtput-runtest.sh |   16 +----
- tests/run_tests.sh      |  144 ++++++++++++++++++++++++++---------------------
- tests/tests.sh          |   19 ++++++
- 4 files changed, 104 insertions(+), 86 deletions(-)
+ tests/fdtget-runtest.sh |   13 +++++++------
+ tests/fdtput-runtest.sh |   13 +++++++------
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
 diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
-index 42dc00c..75e7503 100755
+index 75e7503..dac7f9a 100755
 --- a/tests/fdtget-runtest.sh
 +++ b/tests/fdtget-runtest.sh
-@@ -8,17 +8,10 @@ rm -f $LOG $EXPECT
- trap "rm -f $LOG $EXPECT" 0
+@@ -13,11 +13,12 @@ shift
  
- expect="$1"
--echo "$expect" >$EXPECT
-+echo $expect >$EXPECT
- shift
+ verbose_run_log_check "$LOG" $VALGRIND $DTGET "$@"
  
--verbose_run_log "$LOG" $VALGRIND "$DTGET" "$@"
+-diff $EXPECT $LOG
 -ret="$?"
 -
--if [ "$ret" -ne 0 -a "$expect" = "ERR" ]; then
+-if [ "$ret" -eq 0 ]; then
 -	PASS
--fi
--
--FAIL_IF_SIGNAL $ret
-+verbose_run_log_check "$LOG" $VALGRIND $DTGET "$@"
- 
- diff $EXPECT $LOG
- ret="$?"
++if cmp $EXPECT $LOG>/dev/null; then
++    PASS
+ else
+-	FAIL
++    if [ -z "$QUIET_TEST" ]; then
++	echo "EXPECTED :-:"
++	cat $EXPECT
++    fi
++    FAIL "Results differ from expected"
+ fi
 diff --git a/tests/fdtput-runtest.sh b/tests/fdtput-runtest.sh
-index 9178d2f..dbd9c0d 100644
+index dbd9c0d..527a968 100644
 --- a/tests/fdtput-runtest.sh
 +++ b/tests/fdtput-runtest.sh
-@@ -14,7 +14,7 @@ rm -f $LOG $EXPECT
- trap "rm -f $LOG $EXPECT" 0
- 
- expect="$1"
--echo "$expect" >$EXPECT
-+echo $expect >$EXPECT
- dtb="$2"
- node="$3"
- property="$4"
-@@ -23,20 +23,10 @@ shift 5
- value="$@"
- 
- # First run fdtput
--verbose_run $VALGRIND "$DTPUT" "$dtb" "$node" "$property" $value $flags
--ret="$?"
--
--if [ "$ret" -ne 0 -a "$expect" = "ERR" ]; then
--	PASS
--fi
--
--FAIL_IF_SIGNAL $ret
-+verbose_run_check $VALGRIND "$DTPUT" "$dtb" "$node" "$property" $value $flags
- 
+@@ -28,11 +28,12 @@ verbose_run_check $VALGRIND "$DTPUT" "$dtb" "$node" "$property" $value $flags
  # Now fdtget to read the value
--verbose_run_log "$LOG" $VALGRIND "$DTGET" "$dtb" "$node" "$property" $flags
+ verbose_run_log_check "$LOG" $VALGRIND "$DTGET" "$dtb" "$node" "$property" $flags
+ 
+-diff $EXPECT $LOG
 -ret="$?"
 -
--FAIL_IF_SIGNAL $ret
-+verbose_run_log_check "$LOG" $VALGRIND "$DTGET" "$dtb" "$node" "$property" $flags
- 
- diff $EXPECT $LOG
- ret="$?"
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 37c173c..999c882 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -36,6 +36,20 @@ base_run_test() {
-     fi
- }
- 
-+shorten_echo () {
-+    limit=32
-+    echo -n "$1"
-+    shift
-+    for x; do
-+	if [ ${#x} -le $limit ]; then
-+	    echo -n " $x"
-+	else
-+	    short=$(echo "$x" | head -c$limit)
-+	    echo -n " \"$short\"...<${#x} bytes>"
-+	fi
-+    done
-+}
-+
- run_test () {
-     echo -n "$@:	"
-     if [ -n "$VALGRIND" -a -f $1.supp ]; then
-@@ -70,6 +84,28 @@ run_wrap_test () {
-     base_run_test wrap_test "$@"
- }
- 
-+wrap_error () {
-+    (
-+	if verbose_run "$@"; then
-+	    FAIL "Expected non-zero return code"
-+	else
-+	    ret="$?"
-+	    if [ "$ret" -gt 127 ]; then
-+		signame=$(kill -l $((ret - 128)))
-+		FAIL "Killed by SIG$signame"
-+	    else
-+		PASS
-+	    fi
-+	fi
-+    )
-+}
-+
-+run_wrap_error_test () {
-+    shorten_echo "$@"
-+    echo -n " {!= 0}:	"
-+    base_run_test wrap_error "$@"
-+}
-+
- run_dtc_test () {
-     echo -n "dtc $@:	"
-     base_run_test wrap_test $VALGRIND $DTC "$@"
-@@ -84,25 +120,18 @@ asm_to_so_test () {
- }
- 
- run_fdtget_test () {
--    # run_fdtget_test name expected_output dtb_file args...
--    echo -n "$1:	"
-+    expect="$1"
-     shift
--    base_run_test sh fdtget-runtest.sh "$@"
-+    echo -n "fdtget-runtest.sh "$expect" $@:	"
-+    base_run_test sh fdtget-runtest.sh "$expect" "$@"
- }
- 
- run_fdtput_test () {
--    # run_fdtput_test name expected_output dtb_file node property flags value...
--    echo -n "$1:	"
-+    expect="$1"
-     shift
--    output="$1"
--    dtb="$2"
--    node="$3"
--    property="$4"
--    flags="$5"
--    shift 5
--    base_run_test sh fdtput-runtest.sh "$output" "$dtb" "$node" "$property" \
--		"$flags" $@
--#     base_run_test sh fdtput-runtest.sh "$@"
-+    shorten_echo fdtput-runtest.sh "$expect" "$@"
-+    echo -n ":	"
-+    base_run_test sh fdtput-runtest.sh "$expect" "$@"
- }
- 
- tree1_tests () {
-@@ -425,39 +454,32 @@ dtbs_equal_tests () {
- }
- 
- fdtget_tests () {
--    file=label01.dtb
--    $DTC -O dtb -o $file ${file%.dtb}.dts 2>/dev/null
-+    dts=label01.dts
-+    dtb=$dts.fdtget.test.dtb
-+    run_dtc_test -O dtb -o $dtb $dts
- 
--    # run_fdtget_test <test-name> <expected-result> <args>...
--    run_fdtget_test "Simple string" "MyBoardName" $file / model
--    run_fdtget_test "Multiple string i" "77 121 66 111 \
-+    # run_fdtget_test <expected-result> [<flags>] <file> <node> <property>
-+    run_fdtget_test "MyBoardName" $dtb / model
-+    run_fdtget_test "77 121 66 111 \
- 97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
--108 121 78 97 109 101 0" $file / compatible
--    run_fdtget_test "Multiple string s" "MyBoardName MyBoardFamilyName" \
--	-t s $file / compatible
--    run_fdtget_test "Integer" "32768" $file /cpus/PowerPC,970@1 d-cache-size
--    run_fdtget_test "Integer hex" "8000" -tx $file \
--	/cpus/PowerPC,970@1 d-cache-size
--    run_fdtget_test "Integer list" "61 62 63 0" -tbx $file \
--	/randomnode tricky1
--    run_fdtget_test "Byte list short" "a b c d de ea ad be ef" -tbx \
--	$file /randomnode blob
-+108 121 78 97 109 101 0" $dtb / compatible
-+    run_fdtget_test "MyBoardName MyBoardFamilyName" -t s $dtb / compatible
-+    run_fdtget_test 32768 $dtb /cpus/PowerPC,970@1 d-cache-size
-+    run_fdtget_test 8000 -tx $dtb /cpus/PowerPC,970@1 d-cache-size
-+    run_fdtget_test "61 62 63 0" -tbx $dtb /randomnode tricky1
-+    run_fdtget_test "a b c d de ea ad be ef" -tbx $dtb /randomnode blob
- 
-     # Here the property size is not a multiple of 4 bytes, so it should fail
--    run_fdtget_test "Integer list invalid" ERR -tlx \
--	$file /randomnode mixed
--    run_fdtget_test "Integer list halfword" "6162 6300 1234 0 a 0 b 0 c" -thx \
--	$file /randomnode mixed
--    run_fdtget_test "Integer list byte" \
--	"61 62 63 0 12 34 0 0 0 a 0 0 0 b 0 0 0 c" -thhx \
--	$file /randomnode mixed
--    run_fdtget_test "Missing property" ERR -ts \
--	$file /randomnode doctor-who
-+    run_wrap_error_test $DTGET -tlx $dtb /randomnode mixed
-+    run_fdtget_test "6162 6300 1234 0 a 0 b 0 c" -thx $dtb /randomnode mixed
-+    run_fdtget_test "61 62 63 0 12 34 0 0 0 a 0 0 0 b 0 0 0 c" \
-+	-thhx $dtb /randomnode mixed
-+    run_wrap_error_test $DTGET -ts $dtb /randomnode doctor-who
- }
- 
- fdtput_tests () {
--    file=label01.dtb
--    src=label01.dts
-+    dts=label01.dts
-+    dtb=$dts.fdtput.test.dtb
- 
-     # Create some test files containing useful strings
-     base=tmp.test0
-@@ -467,7 +489,7 @@ fdtput_tests () {
-     bigfile2=tmp.test4
- 
-     # Filter out anything the shell might not like
--    cat $src | tr -d "'\"\n\;/\.\*{}\-" | tr -s "[:blank:]" " " >$base
-+    cat $dts | tr -d "'\"\n\;/\.\*{}\-" | tr -s "[:blank:]" " " >$base
- 
-     # Make two small files
-     head -5 $base >$file1
-@@ -479,31 +501,25 @@ fdtput_tests () {
- 
-     # Allow just enough space for both file1 and file2
-     space=$(( $(stat -c %s $file1) + $(stat -c %s $file2) ))
--    $DTC -O dtb -p $space -o $file ${file%.dtb}.dts 2>/dev/null
--
--    # run_fdtput_test <test-name> <expected-result> <file> <key> <flags>
--    #		<args>...
--    run_fdtput_test "Simple string" "a_model" $file / model -ts "a_model"
--    run_fdtput_test "Multiple string s" "board1 board2" \
--	$file / compatible -ts board1 board2
--    run_fdtput_test "Single string with spaces" "board1 board2" \
--	$file / compatible -ts "board1 board2"
--    run_fdtput_test "Integer" "32768" \
--	$file /cpus/PowerPC,970@1 d-cache-size "" "32768"
--    run_fdtput_test "Integer hex" "8001" \
--	$file /cpus/PowerPC,970@1 d-cache-size -tx 0x8001
--    run_fdtput_test "Integer list" "2 3 12" \
--	$file /randomnode tricky1 -tbi "02 003 12"
--    run_fdtput_test "Byte list short" "a b c ea ad be ef" \
--	$file /randomnode blob -tbx "a b c ea ad be ef"
--    run_fdtput_test "Integer list short" "a0b0c0d deeaae ef000000" \
--	$file /randomnode blob -tx "a0b0c0d deeaae ef000000"
--    run_fdtput_test "Large string list" "`cat $file1 $file2`" \
--	$file /randomnode blob -ts "`cat $file1`" "`cat $file2`"
-+    run_dtc_test -O dtb -p $space -o $dtb $dts
-+
-+    # run_fdtput_test <expected-result> <file> <node> <property> <flags> <value>
-+    run_fdtput_test "a_model" $dtb / model -ts "a_model"
-+    run_fdtput_test "board1 board2" $dtb / compatible -ts board1 board2
-+    run_fdtput_test "board1 board2" $dtb / compatible -ts "board1 board2"
-+    run_fdtput_test "32768" $dtb /cpus/PowerPC,970@1 d-cache-size "" "32768"
-+    run_fdtput_test "8001" $dtb /cpus/PowerPC,970@1 d-cache-size -tx 0x8001
-+    run_fdtput_test "2 3 12" $dtb /randomnode tricky1 -tbi "02 003 12"
-+    run_fdtput_test "a b c ea ad be ef" $dtb /randomnode blob \
-+	-tbx "a b c ea ad be ef"
-+    run_fdtput_test "a0b0c0d deeaae ef000000" $dtb /randomnode blob \
-+	-tx "a0b0c0d deeaae ef000000"
-+    run_fdtput_test "`cat $file1 $file2`" $dtb /randomnode blob \
-+	-ts "`cat $file1`" "`cat $file2`"
- 
-     # This should be larger than available space in the fdt ($space)
--    run_fdtput_test "Enormous string list" ERR \
--	$file /randomnode blob -ts "`cat $bigfile1`" "`cat $bigfile2`"
-+    run_wrap_error_test $DTPUT $dtb /randomnode blob \
-+	-ts "`cat $bigfile1`" "`cat $bigfile2`"
- 
-     # TODO: Add tests for verbose mode?
- }
-diff --git a/tests/tests.sh b/tests/tests.sh
-index 3b7c6c8..31530d5 100644
---- a/tests/tests.sh
-+++ b/tests/tests.sh
-@@ -30,6 +30,15 @@ verbose_run () {
-     fi
- }
- 
-+verbose_run_check () {
-+    verbose_run "$@"
-+    ret="$?"
-+    FAIL_IF_SIGNAL $ret
-+    if [ $ret != 0 ]; then
-+	FAIL "Returned error code $ret"
+-if [ "$ret" -eq 0 ]; then
+-	PASS
++if cmp $EXPECT $LOG >/dev/null; then
++    PASS
+ else
+-	FAIL
++    if [ -z "$QUIET_TEST" ]; then
++	echo "EXPECTED :-:"
++	cat $EXPECT
 +    fi
-+}
-+
- verbose_run_log () {
-     LOG="$1"
-     shift
-@@ -40,3 +49,13 @@ verbose_run_log () {
-     fi
-     return $ret
- }
-+
-+verbose_run_log_check () {
-+    verbose_run_log "$@"
-+    ret="$?"
-+    FAIL_IF_SIGNAL $ret
-+    if [ $ret != 0 ]; then
-+	FAIL "Returned error code $ret"
-+    fi
-+}
-+
++    FAIL "Results differ from expected"
+ fi
 -- 
 1.7.8.3
