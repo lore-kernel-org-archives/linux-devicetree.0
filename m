@@ -1,21 +1,14 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Pinmux bindings proposal V2
-Date: Sat, 4 Feb 2012 09:15:15 -0800
-Message-ID: <20120204171515.GJ20333@atomide.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF1780DAB4CE@HQMAIL01.nvidia.com>
- <20120201143530.GA2203@S2101-09.ap.freescale.net>
- <74CDBE0F657A3D45AFBB94109FB122FF178E124AC5@HQMAIL01.nvidia.com>
- <CAA+hA=RpkP-FFAr8wqVPjSKEMvO_sRHmOK_9nUYfuW=ps0O_=Q@mail.gmail.com>
- <20120203173205.GB1426@atomide.com>
- <CAA+hA=QFB7x0yv65LMuLx1exmiUAuB98D+9Fyyk9oeVu+7F2QQ@mail.gmail.com>
- <20120203210545.GE1426@atomide.com>
- <CAA+hA=ThTuGnedNk_KnYLpquZ7EG+b6yU+GSoiS8qiWUB=_0fw@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v3 00/25] irq_domain generalization and refinement
+Date: Sat, 4 Feb 2012 22:17:48 +0000
+Message-ID: <20120204221748.GN14129@n2100.arm.linux.org.uk>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAA+hA=ThTuGnedNk_KnYLpquZ7EG+b6yU+GSoiS8qiWUB=_0fw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1327700179-17454-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -25,35 +18,59 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [120204 08:24]:
-> On Sat, Feb 4, 2012 at 5:05 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> ....
-> >> I'm think the new way which i sent in this thread after the mail you replied.
-> >> You can refer to them to see if it's reasonable for you too.
-> >
-> > Hmm, sorry now I'm confused. Got a link for that mail as so
-> > many have been posted?
-> >
-> Pls see:
-> https://lkml.org/lkml/2012/2/3/276
+On Fri, Jan 27, 2012 at 02:35:54PM -0700, Grant Likely wrote:
+> Hey everyone,
 > 
-> For a simple example, you can refer to.
-> https://lkml.org/lkml/2012/2/2/405
+> This patch series is ready for much wider consumption now.  I'd like
+> to get it into linux-next ASAP because there will be ARM board support
+> depending on it.  I'll wait a few days before I ask Stephen to pull
+> this in.
 
-Thanks for clarifying. Yes I'm using something that's a subset
-of that already, except I'm creating the functions and groups
-automatically.
+Grant,
 
-> Shawn and me will attend Linaro connect meeting on Feb 6th.
-> If you also attend, we may discuss it together with Linus and Stephen.
+Can you answer me this: does this irqdomain support require DT?
 
-Yes let's talk more there, I won't be there until on Tuesday
-the 7th though.
+The question comes up because OMAP has converted some of their support
+to require irq domain support for their PMICs, and it seems irq domain
+support requires DT.  This seems to have made the whole of OMAP
+essentially become a DT-only platform.
 
-Regards,
+Removing the dependency on IRQ_DOMAIN brings up these build errors
+in the twl-core code (that being the PMIC for OMAP CPUs):
 
-Tony
+drivers/mfd/twl-core.c: In function 'twl_probe':
+drivers/mfd/twl-core.c:1229: error: invalid use of undefined type 'struct irq_domain'
+drivers/mfd/twl-core.c:1230: error: invalid use of undefined type 'struct irq_domain'
+drivers/mfd/twl-core.c:1235: error: implicit declaration of function 'irq_domain_add'
+
+That's a bit of a problem, because afaik there aren't the DT descriptions
+for the boards I have yet, so it's causing me to see regressions when
+building and booting kernels with CONFIG_OF=n.
+
+The more core-code we end up with which requires DT, the worse this
+problem is going to become - and obviously saying "everyone must now
+convert to DT" is, even today, a mammoth task.
+
+Now, here's the thing: I believe that IRQ domains - at least as far as
+the hwirq stuff - should be available irrespective of whether we have
+the rest of the IRQ domain support code in place, so that IRQ support
+code doesn't have to keep playing games to decode from the global
+space to the per-controller number space.
+
+I believe that would certainly help the current OMAP problems, where
+the current lack of CONFIG_IRQ_DOMAIN basically makes the kernel oops
+on boot.
+
+How we fix this regression for 3.4 I've no idea at present, I'm trying
+to work out what the real dependencies are for OMAP on this stuff.
+
+Finally, do we need asm/irq.h in our asm/prom.h ?  That's causing
+fragility between DT and non-DT builds, because people are finding
+that their DT builds work without their mach/irqs.h includes but
+fail when built with non-DT.  The only thing which DT might need -
+at the most - is NR_IRQS, but I'd hope with things like irq domains
+it doesn't actually require it.
