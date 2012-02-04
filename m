@@ -1,72 +1,68 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH V2 1/4] i2c: tegra: Add __devinit/exit to probe/remove
-Date: Fri, 3 Feb 2012 16:05:49 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF178E5D30DD@HQMAIL01.nvidia.com>
-References: <1324189772-26914-1-git-send-email-swarren@nvidia.com>
-	<20111220015634.GA27789@quad.lixom.net>
-	<CAM=Q2cs8K4vraWPNqervcmxEqUGiAbng+44+L9OhD3ijPw9tAA@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF176BE92E21@HQMAIL01.nvidia.com>
-	<20120106162615.GA8441@trinity.fluff.org>
-	<74CDBE0F657A3D45AFBB94109FB122FF177EE39E15@HQMAIL01.nvidia.com>
- <CAOesGMjx0nA5Y_Cv8ECBcZP45EyR5BPUNXEapCN3JjdWTjpo8A@mail.gmail.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 4/9] tegra: fdt: i2c: Add extra I2C bindings for U-Boot
+Date: Fri,  3 Feb 2012 17:13:55 -0800
+Message-ID: <1328318041-10943-5-git-send-email-sjg@chromium.org>
+References: <1328318041-10943-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjx0nA5Y_Cv8ECBcZP45EyR5BPUNXEapCN3JjdWTjpo8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1328318041-10943-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote at Friday, January 06, 2012 10:45 AM:
-> On Fri, Jan 6, 2012 at 8:47 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
-rote:
-> > Ben Dooks wrote at Friday, January 06, 2012 9:26 AM:
-> >> On Tue, Dec 20, 2011 at 01:47:29PM -0800, Stephen Warren wrote:
-> >> > Shubhrajyoti Datta wrote at Monday, December 19, 2011 11:15 PM:
-> >> > ...
-> >> > > Hi Stephen ,
-> >> > > could you check this one also
-> >> > > thanks.
-> >> > >
-> >> > > From: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
-> >> > > Date: Tue, 20 Dec 2011 11:40:51 +0530
-> >> > > Subject: [PATCH] I2C : tegra : devexit in remove
-> >> > >
-> >> > > Adding I2C __devexxit in remove
-> >> > >
-> >> > > Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> > > Signed-off-by: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
-> >> >
-> >> > Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> >
-> >> > Ben or Olof,
-> >> >
-> >> > > - =A0 =A0 =A0 .remove =A0=3D tegra_i2c_remove,
-> >> > > + =A0 =A0 =A0 .remove =A0=3D__devexit_p(tegra_i2c_remove),
-> >> >
-> >> > When you apply this, can you fix it up to add a space after the =
-=3D in
-> >> > the modified line? If you want, I can post an updated version to=
- do that.
-> >>
-> >> Let me know if you want anything applying or a pull-request proces=
-sed.
-> >>
-> >> I think once fixed the patches would be fine and I ack them:
-> >>
-> >> Acked-by: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-> >
-> > Olof, since you took the original through the Tegra tree, I think i=
-t
-> > makes sense for us to take this fix through there too, and for 3.3?
-> > The patch above is http://patchwork.ozlabs.org/patch/132349/
->=20
-> Yep, will do.
+Add U-Boot's peripheral clock information to the Tegra20 device tree file.
 
-I haven't seen this show up anywhere yet.
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes in v2:
+- Adjust definitions to fit new peripheral clock bindings
+- Change 'speed' to 'clock-frequency'
+- Remove u-boot,pinmux binding (sadly)
 
---=20
-nvpublic
+Changes in v3:
+- Move speed setting from tegra20.dtsi to board .dts file
+
+ arch/arm/dts/tegra20.dtsi |    6 +++++-
+ 1 files changed, 5 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+index df1eda4..e7536f7 100644
+--- a/arch/arm/dts/tegra20.dtsi
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -45,6 +45,7 @@
+ 		compatible = "nvidia,tegra20-i2c";
+ 		reg = <0x7000C000 0x100>;
+ 		interrupts = < 70 >;
++		clocks = <&periph_clk 12>;	/* PERIPH_ID_I2C1 */
+ 	};
+ 
+ 	i2c@7000c400 {
+@@ -53,6 +54,7 @@
+ 		compatible = "nvidia,tegra20-i2c";
+ 		reg = <0x7000C400 0x100>;
+ 		interrupts = < 116 >;
++		clocks = <&periph_clk 54>;	/* PERIPH_ID_I2C2 */
+ 	};
+ 
+ 	i2c@7000c500 {
+@@ -61,14 +63,16 @@
+ 		compatible = "nvidia,tegra20-i2c";
+ 		reg = <0x7000C500 0x100>;
+ 		interrupts = < 124 >;
++		clocks = <&periph_clk 67>;	/* PERIPH_ID_I2C3 */
+ 	};
+ 
+ 	i2c@7000d000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-		compatible = "nvidia,tegra20-i2c";
++		compatible = "nvidia,tegra20-i2c-dvc";
+ 		reg = <0x7000D000 0x200>;
+ 		interrupts = < 85 >;
++		clocks = <&periph_clk 47>;	/* PERIPH_ID_DVC_I2C */
+ 	};
+ 
+ 	i2s@70002800 {
+-- 
+1.7.7.3
