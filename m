@@ -1,125 +1,45 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 2/9] fdt: Add function to allow aliases to refer to multiple nodes
-Date: Fri,  3 Feb 2012 17:13:53 -0800
-Message-ID: <1328318041-10943-3-git-send-email-sjg@chromium.org>
-References: <1328318041-10943-1-git-send-email-sjg@chromium.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1328318041-10943-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Aneesh V <aneesh@ti.com>
+Subject: [RFC v4 PATCH 0/4] dt: device tree support for TI EMIF driver
+Date: Sat,  4 Feb 2012 18:12:05 +0530
+Message-ID: <1328359329-685-1-git-send-email-aneesh@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Aneesh V <aneesh@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Some devices can deal with multiple compatible properties. The devices
-need to know which nodes to bind to which features. For example an
-I2C driver which supports two different controller types will want to
-know which type it is dealing with in each case.
+This series adds device tree support for TI EMIF SDRAM controller
+driver. For this, a binding has been added for representing AC timing
+parameters and other details of LPDDR2 memories.
 
-The new fdtdec_add_aliases_for_id() function deals with this by allowing
-the driver to search for additional compatible nodes for a different ID.
-It can then detect the new ones and perform appropriate processing.
+This series depends on the series for adding EMIF driver [1]
 
-Another option considered was to return a tuple (node offset, compat id)
-and have the function be passed a list of compatible IDs. This is more
-overhead for the common case though. We may add such a function later if
-more drivers in U-Boot require it.
+Changes in RFC v3:
+* Removed support for DDR3
+* Incorporated review comments from Olof
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v3:
-- Add comments and warning for mixed alias use in fdtdec
+Changes from RFC v3 to RFC v4:
+* Added a new patch to add DT support in the EMIF driver
 
- include/fdtdec.h |   23 +++++++++++++++++++++++
- lib/fdtdec.c     |   22 ++++++++++++++++++----
- 2 files changed, 41 insertions(+), 4 deletions(-)
+[1] http://marc.info/?l=linux-omap&m=132835811606125&w=2
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index bd2222c..b028bfb 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -200,6 +200,29 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- 			enum fdt_compat_id id, int *node_list, int maxcount);
- 
- /*
-+ * This function is similar to fdtdec_find_aliases_for_id() except that it
-+ * adds to the node_list that is passed in. Any 0 elements are considered
-+ * available for allocation - others are considered already used and are
-+ * skipped.
-+ *
-+ * You can use this by calling fdtdec_find_aliases_for_id() with an
-+ * uninitialised array, then setting the elements that are returned to -1,
-+ * say, then calling this function, perhaps with a different compat id.
-+ * Any elements you get back that are >0 are new nodes added by the call
-+ * to this function.
-+ *
-+ * Note that if you have some nodes with aliases and some without, you are
-+ * sailing close to the wind. The call to fdtdec_find_aliases_for_id() with
-+ * one compat_id may fill in positions for which you have aliases defined
-+ * for another compat_id. When you later call *this* function with the second
-+ * compat_id, the alias positions may already be used. A debug warning may
-+ * be generated in this case, but it is safest to define aliases for all
-+ * nodes when you care about the ordering.
-+ */
-+int fdtdec_add_aliases_for_id(const void *blob, const char *name,
-+			enum fdt_compat_id id, int *node_list, int maxcount);
-+
-+/*
-  * Get the name for a compatible ID
-  *
-  * @param id		Compatible ID to look for
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 7260c73..35361d1 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -151,10 +151,18 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 	return node;
- }
- 
--/* TODO: Can we tighten this code up a little? */
- int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- 			enum fdt_compat_id id, int *node_list, int maxcount)
- {
-+	memset(node_list, '\0', sizeof(*node_list) * maxcount);
-+
-+	return fdtdec_add_aliases_for_id(blob, name, id, node_list, maxcount);
-+}
-+
-+/* TODO: Can we tighten this code up a little? */
-+int fdtdec_add_aliases_for_id(const void *blob, const char *name,
-+			enum fdt_compat_id id, int *node_list, int maxcount)
-+{
- 	int name_len = strlen(name);
- 	int nodes[maxcount];
- 	int num_found = 0;
-@@ -184,8 +192,6 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- 		       __func__, name);
- 
- 	/* Now find all the aliases */
--	memset(node_list, '\0', sizeof(*node_list) * maxcount);
--
- 	for (offset = fdt_first_property_offset(blob, alias_node);
- 			offset > 0;
- 			offset = fdt_next_property_offset(blob, offset)) {
-@@ -232,11 +238,19 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- 		 * it as done.
- 		 */
- 		if (fdtdec_get_is_enabled(blob, node)) {
-+			if (node_list[number]) {
-+				debug("%s: warning: alias '%s' requires that "
-+				      "a node be placed in the list in a "
-+				      "position which is already filled by "
-+				      "node '%s'\n", __func__, path,
-+				      fdt_get_name(blob, node, NULL));
-+				continue;
-+			}
- 			node_list[number] = node;
- 			if (number >= num_found)
- 				num_found = number + 1;
- 		}
--		nodes[j] = 0;
-+		nodes[found] = 0;
- 	}
- 
- 	/* Add any nodes not mentioned by an alias */
--- 
-1.7.7.3
+Aneesh V (4):
+  dt: device tree bindings for LPDDR2 memories
+  dt: emif: device tree bindings for TI's EMIF sdram controller
+  arm: dts: EMIF and LPDDR2 device tree data for OMAP4 boards
+  misc: emif: add device tree support to emif driver
+
+ .../devicetree/bindings/lpddr2/lpddr2-timings.txt  |   54 ++++
+ .../devicetree/bindings/lpddr2/lpddr2.txt          |  102 +++++++
+ .../bindings/memory-controllers/ti/emif.txt        |   55 ++++
+ arch/arm/boot/dts/elpida_ecb240abacn.dtsi          |   71 +++++
+ arch/arm/boot/dts/omap4-panda.dts                  |   13 +
+ arch/arm/boot/dts/omap4-sdp.dts                    |   13 +
+ arch/arm/boot/dts/omap4.dtsi                       |   18 ++
+ drivers/misc/emif.c                                |  281 +++++++++++++++++++-
+ 8 files changed, 606 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt
+ create mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+ create mode 100644 arch/arm/boot/dts/elpida_ecb240abacn.dtsi
+
