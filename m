@@ -1,7 +1,7 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 3/4] ARM: at91: usb_a9g20 add DT i2c support
-Date: Sun,  5 Feb 2012 11:38:55 +0100
-Message-ID: <1328438337-21185-3-git-send-email-plagnioj@jcrosoft.com>
+Subject: [PATCH 2/4] ARM: at91s: sam9g20 add i2c DT support
+Date: Sun,  5 Feb 2012 11:38:54 +0100
+Message-ID: <1328438337-21185-2-git-send-email-plagnioj@jcrosoft.com>
 References: <1328438337-21185-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,57 +21,37 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-use gpio-i2c and enable rv3029 RTC
-
-enable the in the sam9g20 defconfig
+for now on use gpio-i2c driver on the same pin as the hardware IP
 
 Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 Cc: devicetree-discuss@lists.ozlabs.org
 ---
- arch/arm/boot/dts/usb_a9g20.dts        |    9 +++++++++
- arch/arm/configs/at91sam9g20_defconfig |    3 +++
- 2 files changed, 12 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/at91sam9g20.dtsi |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/usb_a9g20.dts b/arch/arm/boot/dts/usb_a9g20.dts
-index 11be3e9..9d84374 100644
---- a/arch/arm/boot/dts/usb_a9g20.dts
-+++ b/arch/arm/boot/dts/usb_a9g20.dts
-@@ -121,6 +121,15 @@
- 
+diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
+index f8f4627..d52e827 100644
+--- a/arch/arm/boot/dts/at91sam9g20.dtsi
++++ b/arch/arm/boot/dts/at91sam9g20.dtsi
+@@ -220,6 +220,19 @@
+ 				status = "disabled";
  			};
  
 +			i2c-gpio@0 {
-+				status = "okay";
-+
-+				rv3029c2@56 {
-+					compatible = "rv3029c2";
-+					reg = <0x56>;
-+				};
++				compatible = "gpio-i2c";
++				gpios = <&pioA 23 0 /* sda */
++					 &pioA 24 0 /* scl */
++					>;
++				gpio-i2c,sda_is_open_drain;
++				gpio-i2c,scl_is_open_drain;
++				udelay = <2>;		/* ~100 kHz */
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
 +			};
 +
  		};
  	};
  };
-diff --git a/arch/arm/configs/at91sam9g20_defconfig b/arch/arm/configs/at91sam9g20_defconfig
-index 9123568..994d331 100644
---- a/arch/arm/configs/at91sam9g20_defconfig
-+++ b/arch/arm/configs/at91sam9g20_defconfig
-@@ -74,6 +74,8 @@ CONFIG_LEGACY_PTY_COUNT=16
- CONFIG_SERIAL_ATMEL=y
- CONFIG_SERIAL_ATMEL_CONSOLE=y
- CONFIG_HW_RANDOM=y
-+CONFIG_I2C=y
-+CONFIG_I2C_GPIO=y
- CONFIG_SPI=y
- CONFIG_SPI_ATMEL=y
- CONFIG_SPI_SPIDEV=y
-@@ -105,6 +107,7 @@ CONFIG_LEDS_TRIGGERS=y
- CONFIG_LEDS_TRIGGER_TIMER=y
- CONFIG_LEDS_TRIGGER_HEARTBEAT=y
- CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_RV3029C2=y
- CONFIG_RTC_DRV_AT91SAM9=y
- CONFIG_EXT2_FS=y
- CONFIG_MSDOS_FS=y
 -- 
 1.7.7
