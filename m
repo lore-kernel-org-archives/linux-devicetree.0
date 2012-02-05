@@ -1,184 +1,71 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 1/4] i2c/gpio-i2c add: add DT support
-Date: Sun,  5 Feb 2012 11:38:53 +0100
-Message-ID: <1328438337-21185-1-git-send-email-plagnioj@jcrosoft.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v3 00/25] irq_domain generalization and refinement
+Date: Sun, 5 Feb 2012 16:13:48 +0000
+Message-ID: <20120205161348.GZ889@n2100.arm.linux.org.uk>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
+ <20120204221748.GN14129@n2100.arm.linux.org.uk>
+ <20120204223125.GO14129@n2100.arm.linux.org.uk>
+ <20120205013853.GQ20333@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-i2c@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120205013853.GQ20333-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: linux-i2c@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org
----
- .../devicetree/bindings/gpio/gpio_i2c.txt          |   33 ++++++++++++
- drivers/i2c/busses/i2c-gpio.c                      |   55 +++++++++++++++++++-
- 2 files changed, 86 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+On Sat, Feb 04, 2012 at 05:38:53PM -0800, Tony Lindgren wrote:
+> * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [120204 14:00]:
+> > 
+> > Actually, it turns out to be not that hard, because twl doesn't actually
+> > make use of the IRQ domain stuff:
+> > 
+> > commit aeb5032b3f8b9ab69daa545777433fa94b3494c4
+> > Author:     Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> > AuthorDate: Mon Aug 29 16:20:23 2011 +0200
+> > Commit:     Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > CommitDate: Mon Jan 9 00:37:40 2012 +0100
+> > 
+> >     mfd: twl-core: Add initial DT support for twl4030/twl6030
+> > 
+> >     [grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org: Fix IRQ_DOMAIN dependency in kconfig]
+> > 
+> > Adding any dependency - especially one which wouldn't be enabled - for
+> > a new feature which wasn't required before is going to break existing
+> > users, so this shouldn't have been done in the first place.
+> > 
+> > A better fix to preserve existing users would've been as below - yes
+> > it means more ifdefs, but if irq domain is to remain a DT only thing
+> > then we're going to end up with _lots_ of this stuff.
+> > 
+> > I'd much prefer to see irq domain become more widely available so it
+> > doesn't require these ifdefs everywhere.
+> 
+> Your patch below looks like a correct fix to me to the problem
+> you and Grazvydas are seeing:
+> 
+> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_i2c.txt b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
-new file mode 100644
-index 0000000..15f288da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
-@@ -0,0 +1,33 @@
-+Device-Tree bindings for i2c gpio driver
-+
-+Required properties:
-+	- compatible = "gpio-i2c";
-+	- gpios: sda and scl gpio
-+
-+
-+Optional properties:
-+	- gpio-i2c,sda_is_open_drain: sda as open drain
-+	- gpio-i2c,scl_is_open_drain: scl as open drain
-+	- gpio-i2c,scl_is_output_only: scl as output only
-+	- udelay: half clock cycle time in us (may depend on each platform)
-+	- timeout: timeout to get data
-+
-+
-+Example nodes:
-+
-+i2c-gpio@0 {
-+	compatible = "gpio-i2c";
-+	gpios = <&pioA 23 0 /* sda */
-+		 &pioA 24 0 /* scl */
-+		>;
-+	gpio-i2c,sda_is_open_drain;
-+	gpio-i2c,scl_is_open_drain;
-+	udelay = <2>;		/* ~100 kHz */
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	rv3029c2@56 {
-+		compatible = "rv3029c2";
-+		reg = <0x56>;
-+	};
-+};
-diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-index a651779..6b5d794 100644
---- a/drivers/i2c/busses/i2c-gpio.c
-+++ b/drivers/i2c/busses/i2c-gpio.c
-@@ -14,6 +14,8 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_i2c.h>
- 
- #include <asm/gpio.h>
- 
-@@ -78,16 +80,51 @@ static int i2c_gpio_getscl(void *data)
- 	return gpio_get_value(pdata->scl_pin);
- }
- 
-+static int of_i2c_gpio_probe(struct device_node *np,
-+			     struct i2c_gpio_platform_data *pdata)
-+{
-+	u32 reg;
-+
-+	pdata->sda_pin = of_get_gpio(np, 0);
-+	pdata->scl_pin = of_get_gpio(np, 1);
-+
-+	if (of_property_read_u32(np, "udelay", &reg))
-+		pdata->udelay = reg;
-+
-+	if (of_property_read_u32(np, "timeout", &reg))
-+		pdata->timeout = reg;
-+
-+	pdata->sda_is_open_drain =
-+		!!of_get_property(np, "gpio-i2c,sda_is_open_drain", NULL);
-+	pdata->scl_is_open_drain =
-+		!!of_get_property(np, "gpio-i2c,scl_is_open_drain", NULL);
-+	pdata->scl_is_output_only =
-+		!!of_get_property(np, "gpio-i2c,scl_is_output_only", NULL);
-+
-+	return 0;
-+}
-+
- static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- {
- 	struct i2c_gpio_platform_data *pdata;
- 	struct i2c_algo_bit_data *bit_data;
- 	struct i2c_adapter *adap;
- 	int ret;
-+	int len = sizeof(struct i2c_gpio_platform_data);
- 
--	pdata = pdev->dev.platform_data;
-+	pdata = kzalloc(len, GFP_KERNEL);
- 	if (!pdata)
--		return -ENXIO;
-+		return -ENOMEM;
-+
-+	if (pdev->dev.of_node) {
-+		of_i2c_gpio_probe(pdev->dev.of_node, pdata);
-+	} else {
-+		if (!pdev->dev.platform_data) {
-+			ret = -ENXIO;
-+			goto err_alloc_adap;
-+		}
-+		memcpy(pdata, pdev->dev.platform_data, len);
-+	}
- 
- 	ret = -ENOMEM;
- 	adap = kzalloc(sizeof(struct i2c_adapter), GFP_KERNEL);
-@@ -143,6 +180,7 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- 	adap->algo_data = bit_data;
- 	adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
- 	adap->dev.parent = &pdev->dev;
-+	adap->dev.of_node = pdev->dev.of_node;
- 
- 	/*
- 	 * If "dev->id" is negative we consider it as zero.
-@@ -154,6 +192,8 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_add_bus;
- 
-+	of_i2c_register_devices(adap);
-+
- 	platform_set_drvdata(pdev, adap);
- 
- 	dev_info(&pdev->dev, "using pins %u (SDA) and %u (SCL%s)\n",
-@@ -172,6 +212,7 @@ err_request_sda:
- err_alloc_bit_data:
- 	kfree(adap);
- err_alloc_adap:
-+	kfree(pdata);
- 	return ret;
- }
- 
-@@ -192,10 +233,20 @@ static int __devexit i2c_gpio_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id gpio_i2c_dt_ids[] = {
-+	{ .compatible = "gpio-i2c", },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, gpio_i2c_dt_ids);
-+#endif
-+
- static struct platform_driver i2c_gpio_driver = {
- 	.driver		= {
- 		.name	= "i2c-gpio",
- 		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(gpio_i2c_dt_ids),
- 	},
- 	.probe		= i2c_gpio_probe,
- 	.remove		= __devexit_p(i2c_gpio_remove),
--- 
-1.7.7
+It's not quite correct, because OMAP4 has issues in this area as well
+(which does select IRQ_DOMAIN but can be without OF.)  The result is
+an oops from irq_domain_add() because domain->ops is NULL.
+
+The right solution is three fold:
+
+1. Wrap the bits of code in CONFIG_IRQ_DOMAIN
+2. Get rid of the #ifdef CONFIG_OF there, so the 'ops' member can be
+   initialized.
+3. Fix the OMAP vp code not to oops when voltdm->pmic is NULL
+
+which I have in my combined patch for fixing OMAP so far.
