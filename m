@@ -1,37 +1,49 @@
-From: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/4] i2c/gpio-i2c add: add DT support
-Date: Mon, 6 Feb 2012 20:15:52 +0100
-Message-ID: <20120206201552.153eba5d@endymion.delvare>
-References: <1328438337-21185-1-git-send-email-plagnioj@jcrosoft.com>
-	<4F301E25.5060507@samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: An extremely simplified pinctrl bindings proposal
+Date: Mon, 6 Feb 2012 20:26:52 +0100
+Message-ID: <CACRpkdYt-L+an5DTdYkS5Hi+18-rszAt7hXwZNUNVK-d0UaCWA@mail.gmail.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF178E5D3160@HQMAIL01.nvidia.com>
+	<4F302474.1020701@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4F301E25.5060507-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F302474.1020701@firmworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Dong Aisheng <dongas86@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "Sascha Hauer (s.hauer@pengutronix.de)" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, "Grant Likely (grant.likely@secretlab.ca)" <grant.likely@secretlab.ca>, "ext Tony Lindgren (tony@atomide.com)" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 06 Feb 2012 19:38:29 +0100, Karol Lewandowski wrote:
-> On 05.02.2012 11:38, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> 
-> Hi!
-> 
-> > +Device-Tree bindings for i2c gpio driver
-> > +
-> > +Required properties:
-> > +	- compatible = "gpio-i2c";
-> 
-> Driver name is "i2c-gpio" in file i2c-gpio.c. Previous version of patch 
-> adding DT-support (prepared by Thomas Chou[1]) used i2c-gpio - could we 
-> stick to that name?
-> 
-> [1] https://lkml.org/lkml/2011/2/23/584
+On Mon, Feb 6, 2012 at 8:05 PM, Mitch Bradley <wmb@firmworks.com> wrote=
+:
 
-Yes, please. The gpio subsystem normalized its driver names to gpio-*,
-so we shouldn't use that anywhere else to avoid confusion.
+> I like the general approach of simplifying the pinctrl thing, as the
+> previous approach did not appear to be converging.
 
--- 
-Jean Delvare
+pinctrl as such is upstream, widely ACKed and quite converged I'd say.
+
+But the Device Tree bindings and general path to get data out of the dr=
+ivers
+and board files are not (yet) converging...
+
+> Both Open Firmware and ACPI have addressed this general problem. =A0I=
+n
+> addition to a numeric identifier for the register, you need to specif=
+y the
+> access semantics. =A0It's difficult to finitely enumerate all possibl=
+e cases,
+> but you can get to 99.9% with a modest number of access models, and t=
+hen add
+> new models as needed.
+
+This is interesting. So are you referring to a piece of Open Firmware
+that is not in the Device Tree? Since this is all about device tree tha=
+t
+comes from OF, we might be reinventing the wheel.
+Can you give some pointers?
+
+Indeed it seems related to ACPI or some BIOS stuff on
+non-embedded systems.
+
+Yours,
+Linus Walleij
