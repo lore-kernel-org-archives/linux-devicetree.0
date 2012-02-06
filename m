@@ -1,50 +1,49 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+From: Mitch Bradley <wmb@firmworks.com>
 Subject: Re: An extremely simplified pinctrl bindings proposal
-Date: Mon, 6 Feb 2012 11:03:15 -0800
-Message-ID: <20120206190315.GU1426@atomide.com>
+Date: Mon, 06 Feb 2012 09:05:24 -1000
+Message-ID: <4F302474.1020701@firmworks.com>
 References: <74CDBE0F657A3D45AFBB94109FB122FF178E5D3160@HQMAIL01.nvidia.com>
- <CACRpkdahin4srDh7dphgvq306gjz7CGP=h4dVkUY+w0z0wpXRQ@mail.gmail.com>
- <4F2F6AE2.1040504@nvidia.com>
- <CACRpkdbtTPSoX1x4aBtNVGZ2Qex9t77D09V9JgON_jfShQdx6w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbtTPSoX1x4aBtNVGZ2Qex9t77D09V9JgON_jfShQdx6w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF178E5D3160@HQMAIL01.nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "cjb@laptop.org" <cjb@laptop.org>, Dong Aisheng <dongas86@gmail.com>, "ext Tony Lindgren (tony@atomide.com)" <tony@atomide.com>, "Linus Walleij (linus.walleij@linaro.org)" <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Grant Likely (grant.likely@secretlab.ca)" <grant.likely@secretlab.ca>, Thomas Abraham <thomas.abraham@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "Sascha Hauer (s.hauer@pengutronix.de)" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120206 08:58]:
-> On Mon, Feb 6, 2012 at 6:53 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> 
-> I will certainly finalize the pinctrl subsystem as-is, adding the
-> pin configurations states as the last major piece. If for nothing
-> else it provides some understanding of the problem space.
-> 
-> I think we should keep both for the time being and consider the
-> alternative approach when patches appear. So if/when someone
-> creates a new subsystem like this, drivers can move over to it on a
-> per-driver basis. If there are zero drivers left in pinctrl it can be
-> deleted.
+I like the general approach of simplifying the pinctrl thing, as the 
+previous approach did not appear to be converging.
 
-Yes it seems that we can easily do both. So far the only
-change needed for pinctrl drivers containing no data is that
-we should make the string names optional and structure debugfs
-around the physical register addresses instead. I'm basically
-just setting the mux register physcal address as the pin name
-for now to work around this.
+One possible name would be "gpconfig" - for general purpose configuration.
 
-Regards,
+The register access model in the strawman proposal is probably too 
+simple.  32-bit memory mapped registers are certainly the most common 
+subcase on ARM, but there are many other cases that occur in practice:
 
-Tony
+* Registers that must be accessed with 8, 16, or 64-bit cycles.
+* Registers that have side effects on read, so read-mask-write must be 
+avoided
+* Registers accessed via an index/data cycle pair, thus having locking 
+requirements
+* Registers that must be read after being written, or otherwise 
+requiring some sort of memory-ordering enforcement.
+* Time delays between pairs of writes
+* PCI configuration registers, which often have some combination of the 
+above
+* Registers behind serial buses like I2C
+
+Both Open Firmware and ACPI have addressed this general problem.  In 
+addition to a numeric identifier for the register, you need to specify 
+the access semantics.  It's difficult to finitely enumerate all possible 
+cases, but you can get to 99.9% with a modest number of access models, 
+and then add new models as needed.
