@@ -1,49 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Subject: Re: An extremely simplified pinctrl bindings proposal
-Date: Mon, 6 Feb 2012 20:26:52 +0100
-Message-ID: <CACRpkdYt-L+an5DTdYkS5Hi+18-rszAt7hXwZNUNVK-d0UaCWA@mail.gmail.com>
+Date: Mon, 6 Feb 2012 19:41:25 +0000
+Message-ID: <20120206194125.GA23030@sirena.org.uk>
 References: <74CDBE0F657A3D45AFBB94109FB122FF178E5D3160@HQMAIL01.nvidia.com>
-	<4F302474.1020701@firmworks.com>
+ <CACRpkdahin4srDh7dphgvq306gjz7CGP=h4dVkUY+w0z0wpXRQ@mail.gmail.com>
+ <4F2F6AE2.1040504@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F302474.1020701@firmworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Dong Aisheng <dongas86@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "Sascha Hauer (s.hauer@pengutronix.de)" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, "Grant Likely (grant.likely@secretlab.ca)" <grant.likely@secretlab.ca>, "ext Tony Lindgren (tony@atomide.com)" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F2F6AE2.1040504-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 6, 2012 at 8:05 PM, Mitch Bradley <wmb@firmworks.com> wrote=
-:
+On Sun, Feb 05, 2012 at 09:53:38PM -0800, Stephen Warren wrote:
+> On 02/05/2012 08:20 PM, Linus Walleij wrote:
 
-> I like the general approach of simplifying the pinctrl thing, as the
-> previous approach did not appear to be converging.
+> > A controlled set of register read/writes and maybe also conditionals
+> > (if that bit is 1, do this, else do that, plus a loop command to wait
+> > for a flag or similar) are known as a "jam tables" and usually used
+> > in BIOSes to do a compact machine initialization. I learned this term
+> > in Bunnie Huang's "Hacking the Xbox, where he describes finding a
+> > jam table interpreter in the Xbox ROM.
 
-pinctrl as such is upstream, widely ACKed and quite converged I'd say.
-
-But the Device Tree bindings and general path to get data out of the dr=
-ivers
-and board files are not (yet) converging...
-
-> Both Open Firmware and ACPI have addressed this general problem. =A0I=
-n
-> addition to a numeric identifier for the register, you need to specif=
-y the
-> access semantics. =A0It's difficult to finitely enumerate all possibl=
-e cases,
-> but you can get to 99.9% with a modest number of access models, and t=
-hen add
-> new models as needed.
-
-This is interesting. So are you referring to a piece of Open Firmware
-that is not in the Device Tree? Since this is all about device tree tha=
-t
-comes from OF, we might be reinventing the wheel.
-Can you give some pointers?
-
-Indeed it seems related to ACPI or some BIOS stuff on
-non-embedded systems.
-
-Yours,
-Linus Walleij
+FWIW I just added a subset of this functionality (called "patches" for
+want of a better name) to regmap, just a simple list of register writes
+that get blasted in htere.  The intent is somewhat different, though -
+it's there for dumping undocumented or partially documented register
+write sequences from vendors into devices since there's a common pattern
+of doing that when bringing things out of reset, more like what Grant
+seems to have been talking about in that thread.
