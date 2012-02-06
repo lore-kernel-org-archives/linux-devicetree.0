@@ -1,64 +1,84 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH V2 1/4] i2c: tegra: Add __devinit/exit to probe/removeG
-Date: Mon, 6 Feb 2012 08:52:22 -0800
-Message-ID: <20120206165222.GA25597@quad.lixom.net>
-References: <1324189772-26914-1-git-send-email-swarren@nvidia.com>
- <20111220015634.GA27789@quad.lixom.net>
- <CAM=Q2cs8K4vraWPNqervcmxEqUGiAbng+44+L9OhD3ijPw9tAA@mail.gmail.com>
- <74CDBE0F657A3D45AFBB94109FB122FF176BE92E21@HQMAIL01.nvidia.com>
- <20120106162615.GA8441@trinity.fluff.org>
- <74CDBE0F657A3D45AFBB94109FB122FF177EE39E15@HQMAIL01.nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: An extremely simplified pinctrl bindings proposal
+Date: Mon, 6 Feb 2012 18:29:35 +0100
+Message-ID: <CACRpkdbtTPSoX1x4aBtNVGZ2Qex9t77D09V9JgON_jfShQdx6w@mail.gmail.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF178E5D3160@HQMAIL01.nvidia.com>
+	<CACRpkdahin4srDh7dphgvq306gjz7CGP=h4dVkUY+w0z0wpXRQ@mail.gmail.com>
+	<4F2F6AE2.1040504@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF177EE39E15-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F2F6AE2.1040504@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Dong Aisheng <dongas86@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "Sascha Hauer (s.hauer@pengutronix.de)" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "Simon Glass (sjg@chromium.org)" <sjg@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, "Grant Likely (grant.likely@secretlab.ca)" <grant.likely@secretlab.ca>, "ext Tony Lindgren (tony@atomide.com)" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2012 at 08:47:11AM -0800, Stephen Warren wrote:
-> Ben Dooks wrote at Friday, January 06, 2012 9:26 AM:
-> > On Tue, Dec 20, 2011 at 01:47:29PM -0800, Stephen Warren wrote:
-> > > Shubhrajyoti Datta wrote at Monday, December 19, 2011 11:15 PM:
-> > > ...
-> > > > Hi Stephen ,
-> > > > could you check this one also
-> > > > thanks.
-> > > >
-> > > > From: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
-> > > > Date: Tue, 20 Dec 2011 11:40:51 +0530
-> > > > Subject: [PATCH] I2C : tegra : devexit in remove
-> > > >
-> > > > Adding I2C __devexxit in remove
-> > > >
-> > > > Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > > > Signed-off-by: Shubhrajyoti D <shubhrajyoti-l0cyMroinI0@public.gmane.org>
-> > >
-> > > Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > >
-> > > Ben or Olof,
-> > >
-> > > > -       .remove  = tegra_i2c_remove,
-> > > > +       .remove  =__devexit_p(tegra_i2c_remove),
-> > >
-> > > When you apply this, can you fix it up to add a space after the = in
-> > > the modified line? If you want, I can post an updated version to do that.
-> > 
-> > Let me know if you want anything applying or a pull-request processed.
-> > 
-> > I think once fixed the patches would be fine and I ack them:
-> > 
-> > Acked-by: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-> 
-> Olof, since you took the original through the Tegra tree, I think it
-> makes sense for us to take this fix through there too, and for 3.3?
-> The patch above is http://patchwork.ozlabs.org/patch/132349/
+On Mon, Feb 6, 2012 at 6:53 AM, Stephen Warren <swarren@nvidia.com> wrote:
 
-Done, applied, sorry for the delay.
+> I think the main argument to call it pinctrl/pinmux still is to provide
+> some named API and reason for drivers to invoke when they wanted to make
+> use of the feature.
+>
+> In other words, it's pretty easy to see why and when a driver would
+> invoke a pin control API to configure the HW surrounding the HW module
+> that driver controls. If we don't call that pinctrl, what else might we
+> call it? That said, I'm sure we can come up with some reasonable more
+> general-purpose name.
 
-The patch has whitespace damage but I fixed it up manually.
+I feel pinctrl would be misleading and overly specific. Maybe something
+like "hwstates" or "initvectors" or similar is more to the point. Or
+just "soc-bios" :-)
 
+An elegant way of doing it would be to hide the current pinctrl calls
+behind the new API, say
 
--Olof
+hws = hardware_state_get(dev);
+hardware_state_enable(hws);
+hardware_state_disable(hws);
+hardware_state_put(hws);
+
+Then these can boil down to simple register read/writes or divert to
+pinctrl or pinconfig.
+
+>> A controlled set of register read/writes and maybe also conditionals
+>> (...)
+>
+> I think anything beyond a simple linear list of register writes would
+> get a /lot/ of pushback. See for example Grant's comments in one of the
+> links I referenced:
+
+OK. Keeping it simple is best then I guess.
+
+> I can imagine the data including flags like 8/16/32/64-bit register
+> accesses, or read-modify-write vs. just write (i.e. do we need to
+> include a mask or not) being reasonable, but any state, looping, delay,
+> conditionals etc. being nak'd.
+
+Sure.
+
+I have this mux on the AB8500 on the Ux500 that is on I2C.
+So this off-chip device can mux its pins between GPIO and some
+other functions. So I'd need something that can provide a
+read/write function handle or so rather than plain register writes.
+Or is this concept only for memory-mapped stuff?
+
+>> While I would probably mourn the death of sematics I also see
+>> that if the goal is to get huge static data sets out of the kernel,
+>> something like this may be the best way to get there.
+>
+> Yes, the loss of semantics also doesn't entirely appeal to me. However,
+> I wonder if the other advantages don't outweigh that.
+
+I will certainly finalize the pinctrl subsystem as-is, adding the
+pin configurations states as the last major piece. If for nothing
+else it provides some understanding of the problem space.
+
+I think we should keep both for the time being and consider the
+alternative approach when patches appear. So if/when someone
+creates a new subsystem like this, drivers can move over to it on a
+per-driver basis. If there are zero drivers left in pinctrl it can be
+deleted.
+
+Yours,
+Linus Walleij
