@@ -1,91 +1,203 @@
-From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: Re: [PATCH 2/3] dt: rfkill-gpio: add bindings documentation
-Date: Mon, 06 Feb 2012 11:16:17 +0100
-Message-ID: <3698018.3auA4qnmIx@fb07-iapwap2>
-References: <215249735783e9fe35db1c594d901f591725de50.1328461986.git.marvin24@gmx.de> <a2291f385edf9692f4a946fd78a7ee7cca29e3b4.1328461986.git.marvin24@gmx.de> <CAOesGMhXZLRHw+TSVqHZFQcYLeu995EKaG_hNFRkgOnPFdmq6g@mail.gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 4/6 V2] of/mtd/nand: add generic bindings and helpers
+Date: Mon,  6 Feb 2012 11:35:11 +0100
+Message-ID: <1328524512-18159-1-git-send-email-plagnioj@jcrosoft.com>
+References: <1327727444-23908-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMhXZLRHw+TSVqHZFQcYLeu995EKaG_hNFRkgOnPFdmq6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1327727444-23908-1-git-send-email-plagnioj@jcrosoft.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+- nand-ecc-mode : String, operation mode of the NAND ecc mode.
+  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+  "soft_bch".
+- nand-bus-width : 8 or 16 bus width if not present 8
+- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
 
-Am Sonntag, 5. Februar 2012, 14:00:25 schrieb Olof Johansson:
-> Hi,
-> 
-> On Sun, Feb 5, 2012 at 9:18 AM, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org> wrote:
-> > Add device tree bindings information for rfkill gpio switches.
-> > 
-> > Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
-> > Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
-> > Cc: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > Signed-off-by: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-> 
-> Please cc devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org on device tree bindings;
-> not everyone monitors the linux mailing lists.
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-mtd@lists.infradead.org
+---
+ Documentation/devicetree/bindings/mtd/nand.txt |    7 ++
+ drivers/of/Kconfig                             |    4 +
+ drivers/of/Makefile                            |    1 +
+ drivers/of/of_mtd.c                            |   90 ++++++++++++++++++++++++
+ include/linux/of_mtd.h                         |   19 +++++
+ 5 files changed, 121 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/nand.txt
+ create mode 100644 drivers/of/of_mtd.c
+ create mode 100644 include/linux/of_mtd.h
 
-done.
-
-> > diff --git a/Documentation/devicetree/bindings/gpio/rfkill.txt
-> > b/Documentation/devicetree/bindings/gpio/rfkill.txt new file mode 100644
-> > index 0000000..22bf22a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/rfkill.txt
-> > @@ -0,0 +1,38 @@
-> > +RFKILL switches connected to GPIO lines
-> > +
-> > +Required properties:
-> > +- compatible : should be "rfkill-gpio".
-> > +
-> > +Each rfkill switch is represented as a sub-node of the rfkill-gpio device.
-> > +Each node has a label property which represents the name of the corresponding
-> > +rfkill device.
-> > +
-> > +RFKILL sub-node properties:
-> > +- label :  (optional) The label for this rfkill switch.  If omitted, the label
-> > is +  taken from the node name (excluding the unit address).
-> > +- reset-gpio, shutdown-gpio :  Should specify the rfkill gpios for reset and
-> > +  shutdown (see "Specifying GPIO information for devices" in
-> > +  Documentation/devicetree/booting-without-of.txt).
-> > +- type : enumerated type of the gpio (see include/linux/rfkill.h).
-> > +- clock : (optional) name of the clock name associated with the rfkill switch
-> > +  (see include/linux/rfkill-gpio.h)
-> 
-> Sorry, but this is going about things the wrong way.
-> 
-> A device tree binding is meant to describe hardware. For example, the
-> type and clock properties are clearly linux specifics that shouldn't
-> be expressed that way in the device tree.
-> 
-> instead, think about what you actually need to provide for a driver to
-> do its work. Does the wifi device have a gpio to control power (and
-> one for providing reset outside of the standard interface)? Well, then
-> that should probably be defined in the node that describes the device
-> -- i.e. under the sdhci node in question here.
-
-well, that doesn't work in case of paz00 because nearly all devices (including wifi) 
-are connected via usb. Only the rfkill switch is controlled via the gpios.
-
-> That doesn't fit the rfkill device/driver model perfectly, since it
-> doesn't have something to bind against, so the rfkill platform device
-> needs to be instantiated from somewhere else. It's possible that best
-> match is to have the wifi driver handle it, which should be OK, I
-> think?
-
-You are right, but in case of usb devices which are not instantiated via device tree 
-there is no parent. It doesn't make much sense for me to put it under the usb 
-controller because it is independent to it. One may argue that the rfkill switch is a 
-separate device, which is controlled via gpio lines. The wifi driver itself has no 
-way to modify the gpios itself, it can only read out its status. I'm a bit lost here, 
-maybe you have a better solution.
-
-Thanks
-
-Marc
+diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+new file mode 100644
+index 0000000..03855c8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/nand.txt
+@@ -0,0 +1,7 @@
++* MTD generic binding
++
++- nand-ecc-mode : String, operation mode of the NAND ecc mode.
++  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
++  "soft_bch".
++- nand-bus-width : 8 or 16 bus width if not present 8
++- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 268163d..fa666a9 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -90,4 +90,8 @@ config OF_PCI_IRQ
+ 	help
+ 	  OpenFirmware PCI IRQ routing helpers
+ 
++config OF_MTD
++	depends on MTD
++	def_bool y
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index a73f5a5..8c4980a 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_OF_SELFTEST) += selftest.o
+ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
++obj-$(CONFIG_OF_NET)	+= of_mtd.o
+diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
+new file mode 100644
+index 0000000..d7183de
+--- /dev/null
++++ b/drivers/of/of_mtd.c
+@@ -0,0 +1,90 @@
++/*
++ * Copyright 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
++ *
++ * OF helpers for mtd.
++ *
++ * This file is released under the GPLv2
++ *
++ */
++#include <linux/kernel.h>
++#include <linux/of_mtd.h>
++#include <linux/mtd/nand.h>
++#include <linux/export.h>
++
++/**
++ * It maps 'enum nand_ecc_modes_t' found in include/linux/mtd/nand.h
++ * into the device tree binding of 'nand-ecc', so that MTD
++ * device driver can get nand ecc from device tree.
++ */
++static const char *nand_ecc_modes[] = {
++	[NAND_ECC_NONE]		= "none",
++	[NAND_ECC_SOFT]		= "soft",
++	[NAND_ECC_HW]		= "hw",
++	[NAND_ECC_HW_SYNDROME]	= "hw_syndrome",
++	[NAND_ECC_HW_OOB_FIRST]	= "hw_oob_first",
++	[NAND_ECC_SOFT_BCH]	= "soft_bch",
++};
++
++/**
++ * of_get_nand_ecc_mode - Get nand ecc mode for given device_node
++ * @np:	Pointer to the given device_node
++ *
++ * The function gets ecc mode string from property 'nand-ecc-mode',
++ * and return its index in nand_ecc_modes table, or errno in error case.
++ */
++const int of_get_nand_ecc_mode(struct device_node *np)
++{
++	const char *pm;
++	int err, i;
++
++	err = of_property_read_string(np, "nand-ecc-mode", &pm);
++	if (err < 0)
++		return err;
++
++	for (i = 0; i < ARRAY_SIZE(nand_ecc_modes); i++)
++		if (!strcasecmp(pm, nand_ecc_modes[i]))
++			return i;
++
++	return -ENODEV;
++}
++EXPORT_SYMBOL_GPL(of_get_nand_ecc_mode);
++
++/**
++ * of_get_nand_bus_width - Get nand bus witdh for given device_node
++ * @np:	Pointer to the given device_node
++ *
++ * return bus width option, or errno in error case.
++ */
++int of_get_nand_bus_width(struct device_node *np)
++{
++	u32 val;
++
++	if (of_property_read_u32(np, "nand-bus-width", &val))
++		return 8;
++
++	switch(val) {
++	case 8:
++	case 16:
++		return val;
++	default:
++		return -EIO;
++	}
++}
++EXPORT_SYMBOL_GPL(of_get_nand_bus_width);
++
++/**
++ * of_get_nand_on_flash_bbt - Get nand on flash bbt for given device_node
++ * @np:	Pointer to the given device_node
++ *
++ * return true if 1 false other wise
++ */
++bool of_get_nand_on_flash_bbt(struct device_node *np)
++{
++	u32 val;
++
++	if (of_property_read_u32(np, "nand-on-flash-bbt", &val))
++		return false;
++
++	return val ? true : false;
++}
++EXPORT_SYMBOL_GPL(of_get_nand_on_flash_bbt);
+diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
+new file mode 100644
+index 0000000..bae1b60
+--- /dev/null
++++ b/include/linux/of_mtd.h
+@@ -0,0 +1,19 @@
++/*
++ * Copyright 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
++ *
++ * OF helpers for mtd.
++ *
++ * This file is released under the GPLv2
++ */
++
++#ifndef __LINUX_OF_MTD_H
++#define __LINUX_OF_NET_H
++
++#ifdef CONFIG_OF_MTD
++#include <linux/of.h>
++extern const int of_get_nand_ecc_mode(struct device_node *np);
++int of_get_nand_bus_width(struct device_node *np);
++bool of_get_nand_on_flash_bbt(struct device_node *np);
++#endif
++
++#endif /* __LINUX_OF_MTD_H */
+-- 
+1.7.7
