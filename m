@@ -1,327 +1,530 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 5/6 V2] atmel/nand: add DT support
-Date: Mon,  6 Feb 2012 11:35:12 +0100
-Message-ID: <1328524512-18159-2-git-send-email-plagnioj@jcrosoft.com>
-References: <1327727444-23908-1-git-send-email-plagnioj@jcrosoft.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1327727444-23908-1-git-send-email-plagnioj@jcrosoft.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-mtd@lists.infradead.org
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH v2 02/10] pwm: Allow chips to support multiple PWMs.
+Date: Mon,  6 Feb 2012 16:19:37 +0100
+Message-ID: <1328541585-24642-3-git-send-email-thierry.reding@avionic-design.de>
+References: <1328541585-24642-1-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1328541585-24642-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-use a local copy of board informatin and fill with DT data
+This commit modifies the PWM core to support multiple PWMs per struct
+pwm_chip. It achieves this in a similar way to how gpiolib works, by
+allowing PWM ranges to be requested dynamically (pwm_chip.base == -1) or
+starting at a given offset (pwm_chip.base >= 0). A chip specifies how
+many PWMs it controls using the npwm member. Each of the functions in
+the pwm_ops structure gets an additional argument that specified the PWM
+number (it can be converted to a per-chip index by subtracting the
+chip's base).
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-mtd@lists.infradead.org
+The total maximum number of PWM devices is currently fixed to 64, but
+can easily be made configurable via Kconfig.
+
+The patch is incomplete in that it doesn't convert any existing drivers
+that are now broken.
+
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 ---
-V2:
-	comment from Grant
-	rebase over rc3
+Changes in v2:
+  - add 'struct device *dev' field to pwm_chip, drop label field
+  - use radix tree for PWM descriptors
+  - add pwm_set_chip_data() and pwm_get_chip_data() functions to allow
+    storing and retrieving chip-specific per-PWM data
 
-Best Regards,
-J.
- .../devicetree/bindings/mtd/atmel-nand.txt         |   41 ++++++++
- drivers/mtd/nand/atmel_nand.c                      |  105 ++++++++++++++++----
- 2 files changed, 126 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/atmel-nand.txt
+TODO:
+  - pass chip-indexed PWM number (PWM descriptor?) to drivers
+  - merge with Sascha's patch
 
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-new file mode 100644
-index 0000000..a910ab9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-@@ -0,0 +1,41 @@
-+Atmel NAND flash
+ drivers/pwm/core.c  |  287 ++++++++++++++++++++++++++++++++++++++-------------
+ include/linux/pwm.h |   37 +++++--
+ 2 files changed, 242 insertions(+), 82 deletions(-)
+
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 71de479..a223bd6 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -17,154 +17,292 @@
+  *  along with this program; see the file COPYING.  If not, write to
+  *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
 +
-+Required properties:
-+- compatible : "atmel,at91rm9200-nand".
-+- reg : should specify localbus address and size used for the chip,
-+	and if availlable the ECC.
-+- atmel,nand-addr-offset : offset for the address latch.
-+- atmel,nand-cmd-offset : offset for the command latch.
-+- #address-cells, #size-cells : Must be present if the device has sub-nodes
-+  representing partitions.
-+
-+- gpios : specifies the gpio pins to control the NAND device. detect is an
-+  optional gpio and may be set to 0 if not present.
-+
-+Optional properties:
-+- nand-ecc-mode : String, operation mode of the NAND ecc mode, soft by default.
-+  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
-+  "soft_bch".
-+- nand-bus-width : 8 or 16 bus width if not present 8
-+- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
-+
-+Examples:
-+nand0: nand@40000000,0 {
-+	compatible = "atmel,at91rm9200-nand";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	reg = <0x40000000 0x10000000
-+	       0xffffe800 0x200
-+	      >;
-+	atmel,nand-addr-offset = <21>;
-+	atmel,nand-cmd-offset = <22>;
-+	nand-on-flash-bbt = <1>;
-+	nand-ecc-mode = "soft";
-+	gpios = <&pioC 13 0
-+		 &pioC 14 0
-+		 0
-+		>;
-+	partition@0 {
-+		...
-+	};
-+};
-diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
-index 045d174..7f91ed2 100644
---- a/drivers/mtd/nand/atmel_nand.c
-+++ b/drivers/mtd/nand/atmel_nand.c
-@@ -27,6 +27,10 @@
  #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_mtd.h>
- #include <linux/mtd/mtd.h>
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
-@@ -83,7 +87,7 @@ struct atmel_nand_host {
- 	struct mtd_info		mtd;
- 	void __iomem		*io_base;
- 	dma_addr_t		io_phys;
--	struct atmel_nand_data	*board;
-+	struct atmel_nand_data	board;
- 	struct device		*dev;
- 	void __iomem		*ecc;
++#include <linux/of_pwm.h>
+ #include <linux/pwm.h>
++#include <linux/radix-tree.h>
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/err.h>
+ #include <linux/slab.h>
+ #include <linux/device.h>
  
-@@ -101,8 +105,8 @@ static int cpu_has_dma(void)
-  */
- static void atmel_nand_enable(struct atmel_nand_host *host)
- {
--	if (gpio_is_valid(host->board->enable_pin))
--		gpio_set_value(host->board->enable_pin, 0);
-+	if (gpio_is_valid(host->board.enable_pin))
-+		gpio_set_value(host->board.enable_pin, 0);
- }
++#define MAX_PWMS 1024
++
+ struct pwm_device {
+-	struct			pwm_chip *chip;
+-	const char		*label;
++	const char *label;
++	unsigned int pwm;
++};
++
++struct pwm_desc {
++	struct pwm_chip		*chip;
++	void			*chip_data;
+ 	unsigned long		flags;
+ #define FLAG_REQUESTED	0
+ #define FLAG_ENABLED	1
+-	struct list_head	node;
++	struct pwm_device	pwm;
+ };
  
- /*
-@@ -110,8 +114,8 @@ static void atmel_nand_enable(struct atmel_nand_host *host)
-  */
- static void atmel_nand_disable(struct atmel_nand_host *host)
- {
--	if (gpio_is_valid(host->board->enable_pin))
--		gpio_set_value(host->board->enable_pin, 1);
-+	if (gpio_is_valid(host->board.enable_pin))
-+		gpio_set_value(host->board.enable_pin, 1);
- }
- 
- /*
-@@ -132,9 +136,9 @@ static void atmel_nand_cmd_ctrl(struct mtd_info *mtd, int cmd, unsigned int ctrl
- 		return;
- 
- 	if (ctrl & NAND_CLE)
--		writeb(cmd, host->io_base + (1 << host->board->cle));
-+		writeb(cmd, host->io_base + (1 << host->board.cle));
- 	else
--		writeb(cmd, host->io_base + (1 << host->board->ale));
-+		writeb(cmd, host->io_base + (1 << host->board.ale));
- }
- 
- /*
-@@ -145,8 +149,8 @@ static int atmel_nand_device_ready(struct mtd_info *mtd)
- 	struct nand_chip *nand_chip = mtd->priv;
- 	struct atmel_nand_host *host = nand_chip->priv;
- 
--	return gpio_get_value(host->board->rdy_pin) ^
--                !!host->board->rdy_pin_active_low;
-+	return gpio_get_value(host->board.rdy_pin) ^
-+                !!host->board.rdy_pin_active_low;
- }
- 
- /*
-@@ -261,7 +265,7 @@ static void atmel_read_buf(struct mtd_info *mtd, u8 *buf, int len)
- 		if (atmel_nand_dma_op(mtd, buf, len, 1) == 0)
- 			return;
- 
--	if (host->board->bus_width_16)
-+	if (host->board.bus_width_16)
- 		atmel_read_buf16(mtd, buf, len);
- 	else
- 		atmel_read_buf8(mtd, buf, len);
-@@ -277,7 +281,7 @@ static void atmel_write_buf(struct mtd_info *mtd, const u8 *buf, int len)
- 		if (atmel_nand_dma_op(mtd, (void *)buf, len, 0) == 0)
- 			return;
- 
--	if (host->board->bus_width_16)
-+	if (host->board.bus_width_16)
- 		atmel_write_buf16(mtd, buf, len);
- 	else
- 		atmel_write_buf8(mtd, buf, len);
-@@ -469,6 +473,48 @@ static void atmel_nand_hwctl(struct mtd_info *mtd, int mode)
- 	}
- }
- 
-+static int __devinit atmel_of_init_port(struct atmel_nand_host *host,
-+					 struct device_node *np)
+-static LIST_HEAD(pwm_list);
+-
+ static DEFINE_MUTEX(pwm_lock);
++static DECLARE_BITMAP(allocated_pwms, MAX_PWMS);
++static RADIX_TREE(pwm_desc_tree, GFP_KERNEL);
++
++static struct pwm_desc *pwm_to_desc(unsigned int pwm)
 +{
-+	u32 val;
-+	int ecc_mode;
-+	struct atmel_nand_data *board = &host->board;
-+	enum of_gpio_flags flags;
++	return radix_tree_lookup(&pwm_desc_tree, pwm);
++}
 +
-+	if (of_property_read_u32(np, "atmel,nand-addr-offset", &val) == 0) {
-+		if (val >= 32) {
-+			dev_err(host->dev, "invalid addr-offset %u\n", val);
++static struct pwm_desc *alloc_desc(unsigned int pwm)
++{
++	struct pwm_desc *desc;
++
++	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
++	if (!desc)
++		return NULL;
+ 
+-static struct pwm_device *_find_pwm(int pwm_id)
++	return desc;
++}
++
++static void free_desc(unsigned int pwm)
++{
++	struct pwm_desc *desc = pwm_to_desc(pwm);
++
++	radix_tree_delete(&pwm_desc_tree, pwm);
++	kfree(desc);
++}
++
++static int alloc_descs(int pwm, unsigned int from, unsigned int count)
+ {
+-	struct pwm_device *pwm;
++	unsigned int start;
++	unsigned int i;
++	int ret = 0;
++
++	if (pwm >= 0) {
++		if (from > pwm)
 +			return -EINVAL;
-+		}
-+		board->ale = val;
++
++		from = pwm;
 +	}
 +
-+	if (of_property_read_u32(np, "atmel,nand-cmd-offset", &val) == 0) {
-+		if (val >= 32) {
-+			dev_err(host->dev, "invalid cmd-offset %u\n", val);
-+			return -EINVAL;
++	start = bitmap_find_next_zero_area(allocated_pwms, MAX_PWMS, from,
++			count, 0);
+ 
+-	list_for_each_entry(pwm, &pwm_list, node) {
+-		if (pwm->chip->pwm_id == pwm_id)
+-			return pwm;
++	if ((pwm >= 0) && (start != pwm))
++		return -EEXIST;
++
++	if (start + count > MAX_PWMS)
++		return -ENOSPC;
++
++	for (i = start; i < start + count; i++) {
++		struct pwm_desc *desc = alloc_desc(i);
++		if (!desc) {
++			ret = -ENOMEM;
++			goto err;
 +		}
-+		board->cle = val;
-+	}
 +
-+	ecc_mode = of_get_nand_ecc_mode(np);
++		radix_tree_insert(&pwm_desc_tree, i, desc);
+ 	}
+ 
+-	return NULL;
++	bitmap_set(allocated_pwms, start, count);
 +
-+	board->ecc_mode = ecc_mode < 0 ? NAND_ECC_SOFT : ecc_mode;
++	return start;
 +
-+	board->on_flash_bbt = of_get_nand_on_flash_bbt(np);
++err:
++	for (i--; i >= 0; i--)
++		free_desc(i);
 +
-+	if (of_get_nand_bus_width(np) == 16)
-+		board->bus_width_16 = 1;
++	return ret;
++}
 +
-+	board->rdy_pin = of_get_gpio_flags(np, 0, &flags);
-+	board->rdy_pin_active_low = (flags == OF_GPIO_ACTIVE_LOW);
++static void free_descs(unsigned int from, unsigned int count)
++{
++	unsigned int i;
 +
-+	board->enable_pin = of_get_gpio(np, 1);
-+	board->det_pin = of_get_gpio(np, 2);
++	for (i = from; i < from + count; i++)
++		free_desc(i);
 +
++	bitmap_clear(allocated_pwms, from, count);
+ }
+ 
+ /**
+- * pwmchip_add() - register a new pwm
+- * @chip: the pwm
+- *
+- * register a new pwm. pwm->pwm_id must be initialized. if pwm_id < 0 then
+- * a dynamically assigned id will be used, otherwise the id specified,
++ * pwm_set_chip_data - set private chip data for a PWM
++ * @pwm: PWM number
++ * @data: pointer to chip-specific data
+  */
+-int pwmchip_add(struct pwm_chip *chip)
++int pwm_set_chip_data(unsigned int pwm, void *data)
+ {
+-	struct pwm_device *pwm;
+-	int ret = 0;
++	struct pwm_desc *desc = pwm_to_desc(pwm);
+ 
+-	pwm = kzalloc(sizeof(*pwm), GFP_KERNEL);
+-	if (!pwm)
+-		return -ENOMEM;
++	if (!desc)
++		return -EINVAL;
+ 
+-	pwm->chip = chip;
++	desc->chip_data = data;
 +	return 0;
 +}
 +
- /*
-  * Probe for the NAND device.
++/**
++ * pwm_get_chip_data - get private chip data for a PWM
++ * @pwm: PWM number
++ */
++void *pwm_get_chip_data(unsigned int pwm)
++{
++	struct pwm_desc *desc = pwm_to_desc(pwm);
++
++	return desc ? desc->chip_data : NULL;
++}
++
++/**
++ * pwmchip_add() - register a new PWM chip
++ * @chip: the PWM chip to add
++ *
++ * Register a new PWM chip. If pwm->base < 0 then a dynamically assigned base
++ * will be used.
++ */
++int pwmchip_add(struct pwm_chip *chip)
++{
++	unsigned int i;
++	int ret;
+ 
+ 	mutex_lock(&pwm_lock);
+ 
+-	if (chip->pwm_id >= 0 && _find_pwm(chip->pwm_id)) {
+-		ret = -EBUSY;
++	ret = alloc_descs(chip->base, 0, chip->npwm);
++	if (ret < 0)
+ 		goto out;
++
++	chip->base = ret;
++	ret = 0;
++
++	/* initialize descriptors */
++	for (i = chip->base; i < chip->base + chip->npwm; i++) {
++		struct pwm_desc *desc = pwm_to_desc(i);
++
++		if (!desc) {
++			pr_debug("pwm: descriptor %u not initialized\n", i);
++			continue;
++		}
++
++		desc->chip = chip;
+ 	}
+ 
+-	list_add_tail(&pwm->node, &pwm_list);
++	of_pwmchip_add(chip);
++
+ out:
+ 	mutex_unlock(&pwm_lock);
+-
+-	if (ret)
+-		kfree(pwm);
+-
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(pwmchip_add);
+ 
+ /**
+- * pwmchip_remove() - remove a pwm
+- * @chip: the pwm
++ * pwmchip_remove() - remove a PWM chip
++ * @chip: the PWM chip to remove
+  *
+- * remove a pwm. This function may return busy if the pwm is still requested.
++ * Removes a PWM chip. This function may return busy if the PWM chip provides
++ * a PWM device that is still requested.
   */
-@@ -479,6 +525,7 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 	struct nand_chip *nand_chip;
- 	struct resource *regs;
- 	struct resource *mem;
-+	struct mtd_part_parser_data ppdata = {};
- 	int res;
+ int pwmchip_remove(struct pwm_chip *chip)
+ {
+-	struct pwm_device *pwm;
++	unsigned int i;
+ 	int ret = 0;
  
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -505,8 +552,15 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
+ 	mutex_lock(&pwm_lock);
  
- 	mtd = &host->mtd;
- 	nand_chip = &host->nand_chip;
--	host->board = pdev->dev.platform_data;
- 	host->dev = &pdev->dev;
-+	if (pdev->dev.of_node) {
-+		res = atmel_of_init_port(host, pdev->dev.of_node);
-+		if (res)
-+			goto err_nand_ioremap;
-+	} else {
-+		memcpy(&host->board, pdev->dev.platform_data,
-+		       sizeof(struct atmel_nand_data));
+-	pwm = _find_pwm(chip->pwm_id);
+-	if (!pwm) {
+-		ret = -ENOENT;
+-		goto out;
+-	}
++	for (i = chip->base; i < chip->base + chip->npwm; i++) {
++		struct pwm_desc *desc = pwm_to_desc(i);
+ 
+-	if (test_bit(FLAG_REQUESTED, &pwm->flags)) {
+-		ret = -EBUSY;
+-		goto out;
++		if (test_bit(FLAG_REQUESTED, &desc->flags)) {
++			ret = -EBUSY;
++			goto out;
++		}
+ 	}
+ 
+-	list_del(&pwm->node);
++	free_descs(chip->base, chip->npwm);
++	of_pwmchip_remove(chip);
+ 
+-	kfree(pwm);
+ out:
+ 	mutex_unlock(&pwm_lock);
+-
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(pwmchip_remove);
+ 
++/**
++ * pwmchip_find() - iterator for locating a specific pwm_chip
++ * @data: data to pass to match function
++ * @match: callback function to check pwm_chip
++ */
++struct pwm_chip *pwmchip_find(void *data, int (*match)(struct pwm_chip *chip,
++						       void *data))
++{
++	struct pwm_chip *chip = NULL;
++	unsigned long i;
++
++	mutex_lock(&pwm_lock);
++
++	for_each_set_bit(i, allocated_pwms, MAX_PWMS) {
++		struct pwm_desc *desc = pwm_to_desc(i);
++
++		if (!desc || !desc->chip)
++			continue;
++
++		if (match(desc->chip, data)) {
++			chip = desc->chip;
++			break;
++		}
 +	}
++
++	mutex_unlock(&pwm_lock);
++
++	return chip;
++}
++EXPORT_SYMBOL_GPL(pwmchip_find);
++
+ /*
+  * pwm_request - request a PWM device
+  */
+-struct pwm_device *pwm_request(int pwm_id, const char *label)
++struct pwm_device *pwm_request(int pwm, const char *label)
+ {
+-	struct pwm_device *pwm;
++	struct pwm_device *dev;
++	struct pwm_desc *desc;
+ 	int ret;
  
- 	nand_chip->priv = host;		/* link the private data structures */
- 	mtd->priv = nand_chip;
-@@ -517,10 +571,10 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 	nand_chip->IO_ADDR_W = host->io_base;
- 	nand_chip->cmd_ctrl = atmel_nand_cmd_ctrl;
++	if ((pwm < 0) || (pwm >= MAX_PWMS))
++		return ERR_PTR(-ENOENT);
++
+ 	mutex_lock(&pwm_lock);
  
--	if (gpio_is_valid(host->board->rdy_pin))
-+	if (gpio_is_valid(host->board.rdy_pin))
- 		nand_chip->dev_ready = atmel_nand_device_ready;
+-	pwm = _find_pwm(pwm_id);
+-	if (!pwm) {
+-		pwm = ERR_PTR(-ENOENT);
+-		goto out;
+-	}
++	desc = pwm_to_desc(pwm);
++	dev = &desc->pwm;
  
--	nand_chip->ecc.mode = host->board->ecc_mode;
-+	nand_chip->ecc.mode = host->board.ecc_mode;
+-	if (test_bit(FLAG_REQUESTED, &pwm->flags)) {
+-		pwm = ERR_PTR(-EBUSY);
++	if (test_bit(FLAG_REQUESTED, &desc->flags)) {
++		dev = ERR_PTR(-EBUSY);
+ 		goto out;
+ 	}
  
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
- 	if (!regs && nand_chip->ecc.mode == NAND_ECC_HW) {
-@@ -545,7 +599,7 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
+-	if (!try_module_get(pwm->chip->ops->owner)) {
+-		pwm = ERR_PTR(-ENODEV);
++	if (!try_module_get(desc->chip->ops->owner)) {
++		dev = ERR_PTR(-ENODEV);
+ 		goto out;
+ 	}
  
- 	nand_chip->chip_delay = 20;		/* 20us command delay time */
- 
--	if (host->board->bus_width_16)	/* 16-bit bus width */
-+	if (host->board.bus_width_16)	/* 16-bit bus width */
- 		nand_chip->options |= NAND_BUSWIDTH_16;
- 
- 	nand_chip->read_buf = atmel_read_buf;
-@@ -554,15 +608,15 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, host);
- 	atmel_nand_enable(host);
- 
--	if (gpio_is_valid(host->board->det_pin)) {
--		if (gpio_get_value(host->board->det_pin)) {
-+	if (gpio_is_valid(host->board.det_pin)) {
-+		if (gpio_get_value(host->board.det_pin)) {
- 			printk(KERN_INFO "No SmartMedia card inserted.\n");
- 			res = -ENXIO;
- 			goto err_no_card;
+-	if (pwm->chip->ops->request) {
+-		ret = pwm->chip->ops->request(pwm->chip);
++	if (desc->chip->ops->request) {
++		ret = desc->chip->ops->request(desc->chip, pwm);
+ 		if (ret) {
+-			pwm = ERR_PTR(ret);
++			dev = ERR_PTR(ret);
+ 			goto out_put;
  		}
  	}
  
--	if (host->board->on_flash_bbt || on_flash_bbt) {
-+	if (host->board.on_flash_bbt || on_flash_bbt) {
- 		printk(KERN_INFO "atmel_nand: Use On Flash BBT\n");
- 		nand_chip->bbt_options |= NAND_BBT_USE_FLASH;
- 	}
-@@ -637,8 +691,9 @@ static int __init atmel_nand_probe(struct platform_device *pdev)
+-	pwm->label = label;
+-	set_bit(FLAG_REQUESTED, &pwm->flags);
++	dev->label = label;
++	dev->pwm = pwm;
++	set_bit(FLAG_REQUESTED, &desc->flags);
+ 
+ 	goto out;
+ 
+ out_put:
+-	module_put(pwm->chip->ops->owner);
++	module_put(desc->chip->ops->owner);
+ out:
+ 	mutex_unlock(&pwm_lock);
+ 
+-	return pwm;
++	return dev;
+ }
+ EXPORT_SYMBOL_GPL(pwm_request);
+ 
+@@ -173,16 +311,19 @@ EXPORT_SYMBOL_GPL(pwm_request);
+  */
+ void pwm_free(struct pwm_device *pwm)
+ {
++	struct pwm_desc *desc = container_of(pwm, struct pwm_desc, pwm);
++
+ 	mutex_lock(&pwm_lock);
+ 
+-	if (!test_and_clear_bit(FLAG_REQUESTED, &pwm->flags)) {
++	if (!test_and_clear_bit(FLAG_REQUESTED, &desc->flags)) {
+ 		pr_warning("PWM device already freed\n");
+ 		goto out;
  	}
  
- 	mtd->name = "atmel_nand";
--	res = mtd_device_parse_register(mtd, NULL, 0,
--			host->board->parts, host->board->num_parts);
-+	ppdata.of_node = pdev->dev.of_node;
-+	res = mtd_device_parse_register(mtd, NULL, &ppdata,
-+			host->board.parts, host->board.num_parts);
- 	if (!res)
- 		return res;
+ 	pwm->label = NULL;
++	pwm->pwm = 0;
  
-@@ -682,11 +737,21 @@ static int __exit atmel_nand_remove(struct platform_device *pdev)
+-	module_put(pwm->chip->ops->owner);
++	module_put(desc->chip->ops->owner);
+ out:
+ 	mutex_unlock(&pwm_lock);
+ }
+@@ -193,7 +334,9 @@ EXPORT_SYMBOL_GPL(pwm_free);
+  */
+ int pwm_config(struct pwm_device *pwm, int duty_ns, int period_ns)
+ {
+-	return pwm->chip->ops->config(pwm->chip, duty_ns, period_ns);
++	struct pwm_desc *desc = container_of(pwm, struct pwm_desc, pwm);
++	return desc->chip->ops->config(desc->chip, pwm->pwm, duty_ns,
++			period_ns);
+ }
+ EXPORT_SYMBOL_GPL(pwm_config);
+ 
+@@ -202,8 +345,10 @@ EXPORT_SYMBOL_GPL(pwm_config);
+  */
+ int pwm_enable(struct pwm_device *pwm)
+ {
+-	if (!test_and_set_bit(FLAG_ENABLED, &pwm->flags))
+-		return pwm->chip->ops->enable(pwm->chip);
++	struct pwm_desc *desc = container_of(pwm, struct pwm_desc, pwm);
++
++	if (!test_and_set_bit(FLAG_ENABLED, &desc->flags))
++		return desc->chip->ops->enable(desc->chip, pwm->pwm);
+ 
  	return 0;
  }
+@@ -214,7 +359,9 @@ EXPORT_SYMBOL_GPL(pwm_enable);
+  */
+ void pwm_disable(struct pwm_device *pwm)
+ {
+-	if (test_and_clear_bit(FLAG_ENABLED, &pwm->flags))
+-		pwm->chip->ops->disable(pwm->chip);
++	struct pwm_desc *desc = container_of(pwm, struct pwm_desc, pwm);
++
++	if (test_and_clear_bit(FLAG_ENABLED, &desc->flags))
++		desc->chip->ops->disable(desc->chip, pwm->pwm);
+ }
+ EXPORT_SYMBOL_GPL(pwm_disable);
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index df9681b..0f8d105 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -32,37 +32,50 @@ void pwm_disable(struct pwm_device *pwm);
+ struct pwm_chip;
  
-+#if defined(CONFIG_OF)
-+static const struct of_device_id atmel_nand_dt_ids[] = {
-+	{ .compatible = "atmel,at91rm9200-nand" },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, atmel_nand_dt_ids);
-+#endif
-+
- static struct platform_driver atmel_nand_driver = {
- 	.remove		= __exit_p(atmel_nand_remove),
- 	.driver		= {
- 		.name	= "atmel_nand",
- 		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(atmel_nand_dt_ids),
- 	},
+ /**
+- * struct pwm_ops - PWM operations
++ * struct pwm_ops - PWM controller operations
+  * @request: optional hook for requesting a PWM
+  * @free: optional hook for freeing a PWM
+  * @config: configure duty cycles and period length for this PWM
+  * @enable: enable PWM output toggling
+  * @disable: disable PWM output toggling
++ * @owner: helps prevent removal of modules exporting active PWMs
+  */
+ struct pwm_ops {
+-	int			(*request)(struct pwm_chip *chip);
+-	void			(*free)(struct pwm_chip *chip);
+-	int			(*config)(struct pwm_chip *chip, int duty_ns,
++	int			(*request)(struct pwm_chip *chip,
++						unsigned int pwm);
++	void			(*free)(struct pwm_chip *chip,
++						unsigned int pwm);
++	int			(*config)(struct pwm_chip *chip,
++						unsigned int pwm, int duty_ns,
+ 						int period_ns);
+-	int			(*enable)(struct pwm_chip *chip);
+-	void			(*disable)(struct pwm_chip *chip);
++	int			(*enable)(struct pwm_chip *chip,
++						unsigned int pwm);
++	void			(*disable)(struct pwm_chip *chip,
++						unsigned int pwm);
+ 	struct module		*owner;
  };
  
+ /**
+- * struct pwm_chip - abstract a PWM
+- * @label: for diagnostics
+- * @owner: helps prevent removal of modules exporting active PWMs
+- * @ops: The callbacks for this PWM
++ * struct pwm_chip - abstract a PWM controller
++ * @dev: device providing the PWMs
++ * @ops: callbacks for this PWM controller
++ * @base: number of first PWM controlled by this chip
++ * @npwm: number of PWMs controlled by this chip
+  */
+ struct pwm_chip {
+-	int			pwm_id;
+-	const char		*label;
++	struct device		*dev;
+ 	struct pwm_ops		*ops;
++	int			base;
++	unsigned int		npwm;
+ };
+ 
++int pwm_set_chip_data(unsigned int pwm, void *data);
++void *pwm_get_chip_data(unsigned int pwm);
++
+ int pwmchip_add(struct pwm_chip *chip);
+ int pwmchip_remove(struct pwm_chip *chip);
++struct pwm_chip *pwmchip_find(void *data, int (*match)(struct pwm_chip *chip,
++						       void *data));
+ #endif
+ 
+ #endif /* __LINUX_PWM_H */
 -- 
-1.7.7
+1.7.9
