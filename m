@@ -1,383 +1,650 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH] ARM: at91/aic: add irq domain and device tree support
-Date: Tue,  7 Feb 2012 19:40:43 +0100
-Message-ID: <1328640043-23859-1-git-send-email-nicolas.ferre@atmel.com>
+From: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] pwm: Allow chips to support multiple PWMs.
+Date: Wed, 08 Feb 2012 09:53:23 +1100
+Message-ID: <4F31AB63.3020301@gmail.com>
+References: <1328541585-24642-1-git-send-email-thierry.reding@avionic-design.de> <1328541585-24642-3-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, avictor.za-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1328541585-24642-3-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a try of generic irq chip and irqdomain new helper functions.
+On 07/02/12 02:19, Thierry Reding wrote:
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
-This is only a RFC and the the documentation will be taken
-from previous patch for AIC already sent.
+Hi Thierry,
 
-The multi handler mode allows to simplify the reverse mapping operation
-before calling the handle_IRQ function.
+A few comments below,
 
-This patch goes on top of 3.3-rc2 and a bunch of at91 patches + irqdomain/next
-form Grant Likely and pl061-domain-v5 from Rob Herring.
+~Ryan
 
-This attempt does not work well for the moment. if you have any hint...
-On the other hand, I am not sure to having taken the latest irqdomain work form
-Grant...
+> This commit modifies the PWM core to support multiple PWMs per struct
+> pwm_chip. It achieves this in a similar way to how gpiolib works, by
+> allowing PWM ranges to be requested dynamically (pwm_chip.base == -1) or
+> starting at a given offset (pwm_chip.base >= 0). A chip specifies how
+> many PWMs it controls using the npwm member. Each of the functions in
+> the pwm_ops structure gets an additional argument that specified the PWM
+> number (it can be converted to a per-chip index by subtracting the
+> chip's base).
+> 
+> The total maximum number of PWM devices is currently fixed to 64, but
+> can easily be made configurable via Kconfig.
 
-With several debug macros turned on, I have the following log:
+It would be better to make the code handle arbitrary numbers of PWMs. A
+Kconfig knob becomes annoying when you have more than one platform
+configured into the kernel.
 
-[..]
+> The patch is incomplete in that it doesn't convert any existing drivers
+> that are now broken.
 
-NR_IRQS:192
-of_irq_init: init atmel,at91rm9200-aic @ c055a9ec, parent   (null)
-irq: Allocated domain of type 2 @0xc78027e0
 
-[..]
+Does this patch actually break the drivers in terms of not building or
+running? If so, can this patch series be reworked a bit to allow the old
+PWM framework to be used until all of the drivers are converted?
 
-of_irq_map_one: dev=/ahb/apb/timer@fffffd30, index=0
- intspec=1 intlen=2
- intsize=2 intlen=2
-of_irq_map_raw: par=/ahb/apb/interrupt-controller@fffff000,intspec=[0x00000001
-0x00000004...],ointsize=2
-of_irq_map_raw: ipar=/ahb/apb/interrupt-controller@fffff000, size=2
- -> addrsize=1
- -> got it !
-irq: irq_create_mapping(0xc78027e0, 0x1)
-irq: -> using domain @c78027e0
-irq: irq 1 on domain /ahb/apb/interrupt-controller@fffff000 mapped to virtual irq 1
-Got PIT irq = 1
-Now, enable PIT IRQ!
-Console: colour dummy device 80x30
-Calibrating delay loop... irq 0, desc: c0429104, depth: 1, count: 0, unhandled: 0
-->handle_irq():  c0041adc, handle_bad_irq+0x0/0x204
-->irq_data.chip(): c042e548, no_irq_chip+0x0/0x5c
-->action():   (null)
-   IRQ_NOPROBE set
- IRQ_NOREQUEST set
-irq 0, desc: c0429104, depth: 1, count: 0, unhandled: 0
-->handle_irq():  c0041adc, handle_bad_irq+0x0/0x204
-->irq_data.chip(): c042e548, no_irq_chip+0x0/0x5c
-->action():   (null)
-   IRQ_NOPROBE set
- IRQ_NOREQUEST set
+> 
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> ---
+> Changes in v2:
+>   - add 'struct device *dev' field to pwm_chip, drop label field
+>   - use radix tree for PWM descriptors
+>   - add pwm_set_chip_data() and pwm_get_chip_data() functions to allow
+>     storing and retrieving chip-specific per-PWM data
+> 
+> TODO:
+>   - pass chip-indexed PWM number (PWM descriptor?) to drivers
+>   - merge with Sascha's patch
+> 
+>  drivers/pwm/core.c  |  287 ++++++++++++++++++++++++++++++++++++++-------------
+>  include/linux/pwm.h |   37 +++++--
+>  2 files changed, 242 insertions(+), 82 deletions(-)
+> 
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 71de479..a223bd6 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -17,154 +17,292 @@
+>   *  along with this program; see the file COPYING.  If not, write to
+>   *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+>   */
+> +
+>  #include <linux/module.h>
+> +#include <linux/of_pwm.h>
+>  #include <linux/pwm.h>
+> +#include <linux/radix-tree.h>
+>  #include <linux/list.h>
+>  #include <linux/mutex.h>
+>  #include <linux/err.h>
+>  #include <linux/slab.h>
+>  #include <linux/device.h>
+>  
+> +#define MAX_PWMS 1024
+> +
+>  struct pwm_device {
+> -	struct			pwm_chip *chip;
+> -	const char		*label;
+> +	const char *label;
+> +	unsigned int pwm;
+> +};
+> +
+> +struct pwm_desc {
+> +	struct pwm_chip		*chip;
+> +	void			*chip_data;
+>  	unsigned long		flags;
+>  #define FLAG_REQUESTED	0
+>  #define FLAG_ENABLED	1
+> -	struct list_head	node;
+> +	struct pwm_device	pwm;
+>  };
 
-[.. and again ..]
 
- arch/arm/Kconfig                              |    3 +
- arch/arm/mach-at91/board-dt.c                 |    1 +
- arch/arm/mach-at91/include/mach/at91_aic.h    |    2 +
- arch/arm/mach-at91/include/mach/entry-macro.S |    9 --
- arch/arm/mach-at91/irq.c                      |  151 +++++++++++++++++--------
- 5 files changed, 108 insertions(+), 58 deletions(-)
+Do pwm_desc and pwm_device really need to be separate structs?
+pwm_device only has two fields, which could easily be added to pwm_desc
+(and rename it to pmw_device if you like). They are both opaque
+structures, so it makes no difference to the users of the framework.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index c146065..af3431c 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -323,6 +323,9 @@ config ARCH_AT91
- 	select ARCH_REQUIRE_GPIOLIB
- 	select HAVE_CLK
- 	select CLKDEV_LOOKUP
-+	select IRQ_DOMAIN
-+	select GENERIC_IRQ_CHIP
-+	select MULTI_IRQ_HANDLER
- 	help
- 	  This enables support for systems based on the Atmel AT91RM9200,
- 	  AT91SAM9 processors.
-diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
-index 0579315..735b273 100644
---- a/arch/arm/mach-at91/board-dt.c
-+++ b/arch/arm/mach-at91/board-dt.c
-@@ -122,4 +122,5 @@ DT_MACHINE_START(at91sam_dt, "Atmel AT91SAM (Device Tree)")
- 	.init_irq	= at91_dt_init_irq,
- 	.init_machine	= at91_dt_device_init,
- 	.dt_compat	= at91_dt_board_compat,
-+	.handle_irq	= at91_handle_irq,
- MACHINE_END
-diff --git a/arch/arm/mach-at91/include/mach/at91_aic.h b/arch/arm/mach-at91/include/mach/at91_aic.h
-index 3045781..0cd3d8d 100644
---- a/arch/arm/mach-at91/include/mach/at91_aic.h
-+++ b/arch/arm/mach-at91/include/mach/at91_aic.h
-@@ -24,6 +24,8 @@ extern void __iomem *at91_aic_base;
  
- #define at91_aic_write(field, value) \
- 	__raw_writel(value, at91_aic_base + field);
-+
-+void at91_handle_irq(struct pt_regs *regs);
- #else
- .extern at91_aic_base
- #endif
-diff --git a/arch/arm/mach-at91/include/mach/entry-macro.S b/arch/arm/mach-at91/include/mach/entry-macro.S
-index 423eea0..05f8e26 100644
---- a/arch/arm/mach-at91/include/mach/entry-macro.S
-+++ b/arch/arm/mach-at91/include/mach/entry-macro.S
-@@ -17,17 +17,8 @@
- 	.endm
- 
- 	.macro  get_irqnr_preamble, base, tmp
--	ldr	\base, =at91_aic_base		@ base virtual address of AIC peripheral
--	ldr	\base, [\base]
--	.endm
--
--	.macro  arch_ret_to_user, tmp1, tmp2
- 	.endm
- 
- 	.macro	get_irqnr_and_base, irqnr, irqstat, base, tmp
--	ldr	\irqnr, [\base, #AT91_AIC_IVR]		@ read IRQ vector register: de-asserts nIRQ to processor (and clears interrupt)
--	ldr	\irqstat, [\base, #AT91_AIC_ISR]	@ read interrupt source number
--	teq	\irqstat, #0				@ ISR is 0 when no current interrupt, or spurious interrupt
--	streq	\tmp, [\base, #AT91_AIC_EOICR]		@ not going to be handled further, then ACK it now.
- 	.endm
- 
-diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
-index be6b639..5a50e86 100644
---- a/arch/arm/mach-at91/irq.c
-+++ b/arch/arm/mach-at91/irq.c
-@@ -24,32 +24,29 @@
- #include <linux/module.h>
- #include <linux/mm.h>
- #include <linux/types.h>
-+#include <linux/irq.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/err.h>
- 
- #include <mach/hardware.h>
- #include <asm/irq.h>
- #include <asm/setup.h>
-+#include <asm/exception.h>
- 
- #include <asm/mach/arch.h>
- #include <asm/mach/irq.h>
- #include <asm/mach/map.h>
- 
--void __iomem *at91_aic_base;
--
--static void at91_aic_mask_irq(struct irq_data *d)
--{
--	/* Disable interrupt on AIC */
--	at91_aic_write(AT91_AIC_IDCR, 1 << d->irq);
--}
--
--static void at91_aic_unmask_irq(struct irq_data *d)
--{
--	/* Enable interrupt on AIC */
--	at91_aic_write(AT91_AIC_IECR, 1 << d->irq);
--}
-+void __iomem	*at91_aic_base;
-+static struct irq_chip_generic *at91_aic_gc;
-+struct device_node *at91_aic_np;
- 
- unsigned int at91_extern_irq;
- 
--#define is_extern_irq(irq) ((1 << (irq)) & at91_extern_irq)
-+#define is_extern_irq(hwirq) ((1 << (hwirq)) & at91_extern_irq)
- 
- static int at91_aic_set_type(struct irq_data *d, unsigned type)
- {
-@@ -63,13 +60,13 @@ static int at91_aic_set_type(struct irq_data *d, unsigned type)
- 		srctype = AT91_AIC_SRCTYPE_RISING;
- 		break;
- 	case IRQ_TYPE_LEVEL_LOW:
--		if ((d->irq == AT91_ID_FIQ) || is_extern_irq(d->irq))		/* only supported on external interrupts */
-+		if ((d->hwirq == AT91_ID_FIQ) || is_extern_irq(d->hwirq))		/* only supported on external interrupts */
- 			srctype = AT91_AIC_SRCTYPE_LOW;
- 		else
- 			return -EINVAL;
- 		break;
- 	case IRQ_TYPE_EDGE_FALLING:
--		if ((d->irq == AT91_ID_FIQ) || is_extern_irq(d->irq))		/* only supported on external interrupts */
-+		if ((d->hwirq == AT91_ID_FIQ) || is_extern_irq(d->hwirq))		/* only supported on external interrupts */
- 			srctype = AT91_AIC_SRCTYPE_FALLING;
- 		else
- 			return -EINVAL;
-@@ -78,39 +75,34 @@ static int at91_aic_set_type(struct irq_data *d, unsigned type)
- 		return -EINVAL;
- 	}
- 
--	smr = at91_aic_read(AT91_AIC_SMR(d->irq)) & ~AT91_AIC_SRCTYPE;
--	at91_aic_write(AT91_AIC_SMR(d->irq), smr | srctype);
-+	smr = at91_aic_read(AT91_AIC_SMR(d->hwirq)) & ~AT91_AIC_SRCTYPE;
-+	at91_aic_write(AT91_AIC_SMR(d->hwirq), smr | srctype);
- 	return 0;
- }
- 
- #ifdef CONFIG_PM
- 
--static u32 wakeups;
- static u32 backups;
- 
--static int at91_aic_set_wake(struct irq_data *d, unsigned value)
-+void at91_irq_suspend(struct irq_data *d)
- {
--	if (unlikely(d->irq >= 32))
--		return -EINVAL;
--
--	if (value)
--		wakeups |= (1 << d->irq);
--	else
--		wakeups &= ~(1 << d->irq);
--
--	return 0;
--}
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
- 
--void at91_irq_suspend(void)
--{
- 	backups = at91_aic_read(AT91_AIC_IMR);
- 	at91_aic_write(AT91_AIC_IDCR, backups);
--	at91_aic_write(AT91_AIC_IECR, wakeups);
-+
-+	irq_gc_lock(gc);
-+	at91_aic_write(AT91_AIC_IECR, gc->wake_active);
-+	irq_gc_unlock(gc);
- }
- 
--void at91_irq_resume(void)
-+void at91_irq_resume(struct irq_data *d)
- {
--	at91_aic_write(AT91_AIC_IDCR, wakeups);
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+
-+	irq_gc_lock(gc);
-+	at91_aic_write(AT91_AIC_IDCR, gc->wake_active);
-+	irq_gc_unlock(gc);
- 	at91_aic_write(AT91_AIC_IECR, backups);
- }
- 
-@@ -118,40 +110,86 @@ void at91_irq_resume(void)
- #define at91_aic_set_wake	NULL
- #endif
- 
--static struct irq_chip at91_aic_chip = {
--	.name		= "AIC",
--	.irq_ack	= at91_aic_mask_irq,
--	.irq_mask	= at91_aic_mask_irq,
--	.irq_unmask	= at91_aic_unmask_irq,
--	.irq_set_type	= at91_aic_set_type,
--	.irq_set_wake	= at91_aic_set_wake,
-+static void __init at91_aic_init_gc(struct irq_chip_generic *gc)
-+
-+{
-+	struct irq_chip_type *ct = gc->chip_types;
-+
-+	at91_aic_gc = gc;
-+	gc->wake_enabled = IRQ_MSK(NR_AIC_IRQS);
-+	ct->chip.irq_ack = irq_gc_mask_set_bit;
-+	ct->chip.irq_mask = irq_gc_mask_set_bit;
-+	ct->chip.irq_unmask = irq_gc_unmask_enable_reg;
-+	ct->chip.irq_set_type = at91_aic_set_type;
-+	ct->chip.irq_set_wake = irq_gc_set_wake;
-+	ct->regs.mask = AT91_AIC_IDCR;
-+	ct->regs.enable = AT91_AIC_IECR;
-+}
-+
-+#if defined(CONFIG_OF)
-+static int __init __at91_aic_of_init(struct device_node *node,
-+				     struct device_node *parent)
-+{
-+	at91_aic_np = node;
-+	at91_aic_base = of_iomap(at91_aic_np, 0);
-+	return 0;
-+}
-+
-+static const struct of_device_id aic_ids[] __initconst = {
-+	{ .compatible = "atmel,at91rm9200-aic", .data = __at91_aic_of_init },
-+	{ /*sentinel*/ }
- };
- 
-+static void __init at91_aic_of_init(void)
-+{
-+	of_irq_init(aic_ids);
-+}
-+#else
-+static void __init at91_aic_of_init(void) {}
-+#endif
-+
- /*
-  * Initialize the AIC interrupt controller.
-  */
- void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
- {
--	unsigned int i;
--
--	at91_aic_base = ioremap(AT91_AIC, 512);
-+	unsigned int	i;
-+	int		irq_base;
-+	int		ret;
-+
-+	if(of_have_populated_dt()) {
-+		at91_aic_of_init();
-+		irq_base = -1;
-+	} else {
-+		at91_aic_base = ioremap(AT91_AIC, 512);
-+		irq_base = AIC_BASE_IRQ;
-+	}
- 
- 	if (!at91_aic_base)
--		panic("Impossible to ioremap AT91_AIC\n");
-+		panic("AIC: Unable to ioremap AIC registers\n");
-+
-+	ret = irq_setup_generic_chip_domain("AIC", of_node_get(at91_aic_np),
-+				      1, irq_base, at91_aic_base,
-+				      handle_level_irq,
-+				      NR_AIC_IRQS,
-+				      IRQ_GC_INIT_MASK_CACHE,
-+				      IRQ_NOREQUEST | IRQ_NOPROBE, 0,
-+				      at91_aic_init_gc, NULL);
-+
-+	if (ret)
-+		printk(KERN_CRIT "Unable to get generic chip domain\n");
- 
- 	/*
- 	 * The IVR is used by macro get_irqnr_and_base to read and verify.
- 	 * The irq number is NR_AIC_IRQS when a spurious interrupt has occurred.
- 	 */
- 	for (i = 0; i < NR_AIC_IRQS; i++) {
-+
- 		/* Put irq number in Source Vector Register: */
- 		at91_aic_write(AT91_AIC_SVR(i), i);
- 		/* Active Low interrupt, with the specified priority */
- 		at91_aic_write(AT91_AIC_SMR(i), AT91_AIC_SRCTYPE_LOW | priority[i]);
- 
--		irq_set_chip_and_handler(i, &at91_aic_chip, handle_level_irq);
--		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
--
- 		/* Perform 8 End Of Interrupt Command to make sure AIC will not Lock out nIRQ */
- 		if (i < 8)
- 			at91_aic_write(AT91_AIC_EOICR, 0);
-@@ -170,3 +208,18 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
- 	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
- 	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
- }
-+
-+asmlinkage void __exception_irq_entry at91_handle_irq(struct pt_regs *regs)
-+{
-+        u32 stat, irq;
-+
-+	irq = at91_aic_read(AT91_AIC_IVR);
-+	stat = at91_aic_read(AT91_AIC_ISR);
-+
-+	if (stat == 0) {
-+		/* No interrupt or spurious interrupt: ACK it now */
-+		at91_aic_write(AT91_AIC_EOICR, 0);
-+	}
-+
-+	handle_IRQ(irq_find_mapping(at91_aic_gc->domain, irq), regs);
-+}
--- 
-1.7.5.4
+> -static LIST_HEAD(pwm_list);
+> -
+>  static DEFINE_MUTEX(pwm_lock);
+> +static DECLARE_BITMAP(allocated_pwms, MAX_PWMS);
+> +static RADIX_TREE(pwm_desc_tree, GFP_KERNEL);
+
+I missed any discussion of this from v1, but why was this approach
+chosen? The bitmap arbitrarily limits the maximum number of PWMs and is
+also a little bit (nitpicky) wasteful when a platform doesn't need
+anywhere near 1024 PWMs.
+
+In most cases I would expect that platforms only have a handful of PWMs
+(say less than 32), in which case a list lookup isn't too bad.
+
+As someone else mentioned, it might be best to drop the global numbering
+scheme and have each pwm_chip have its own numbering for its PWMs. So
+requesting a PWM would first require getting a handle to the PWM chip it
+is on. If a chip has a fixed number of PWMs (e.g. set a registration
+time) then the PWMs within a chip can just be an array with O(1) lookup.
+
+> +static struct pwm_desc *pwm_to_desc(unsigned int pwm)
+> +{
+> +	return radix_tree_lookup(&pwm_desc_tree, pwm);
+> +}
+> +
+> +static struct pwm_desc *alloc_desc(unsigned int pwm)
+> +{
+> +	struct pwm_desc *desc;
+> +
+> +	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+> +	if (!desc)
+> +		return NULL;
+>  
+> -static struct pwm_device *_find_pwm(int pwm_id)
+> +	return desc;
+> +}
+> +
+> +static void free_desc(unsigned int pwm)
+> +{
+> +	struct pwm_desc *desc = pwm_to_desc(pwm);
+> +
+> +	radix_tree_delete(&pwm_desc_tree, pwm);
+> +	kfree(desc);
+> +}
+> +
+> +static int alloc_descs(int pwm, unsigned int from, unsigned int count)
+
+>  {
+
+You don't really need the from argument. There is only one caller for
+alloc_descs and it passes 0 for from. So you could re-write this as:
+
+	static int alloc_descs(int pwm, unsigned int count)
+	{
+		unsigned int from = 0;
+		...
+
+		if (pwm > MAX_PWMS)
+			return -EINVAL;
+		if (pwm >= 0)
+			from = pwm;
+
+> -	struct pwm_device *pwm;
+> +	unsigned int start;
+> +	unsigned int i;
+> +	int ret = 0;
+> +
+> +	if (pwm >= 0) {
+> +		if (from > pwm)
+> +			return -EINVAL;
+> +
+> +		from = pwm;
+> +	}
+
+
+This doesn't catch some caller errors:
+
+	if (pwm > MAX_PWMS || from > MAX_PWMS)
+		return -EINVAL;
+
+> +
+> +	start = bitmap_find_next_zero_area(allocated_pwms, MAX_PWMS, from,
+> +			count, 0);
+
+Do the PWM indexes need to be contiguous for a given PWM chip? You could
+probably grab each bit individually. That said, I think a better
+solution is to have per-chip numbering.
+
+> -	list_for_each_entry(pwm, &pwm_list, node) {
+> -		if (pwm->chip->pwm_id == pwm_id)
+> -			return pwm;
+> +	if ((pwm >= 0) && (start != pwm))
+
+
+Don't need the inner parens.
+
+> +		return -EEXIST;
+> +
+> +	if (start + count > MAX_PWMS)
+> +		return -ENOSPC;
+
+
+Is this possible? Can bitmap_find_next_zero_area return a start position
+where the count would exceed the maximum?
+
+> +
+> +	for (i = start; i < start + count; i++) {
+> +		struct pwm_desc *desc = alloc_desc(i);
+> +		if (!desc) {
+> +			ret = -ENOMEM;
+> +			goto err;
+> +		}
+> +
+> +		radix_tree_insert(&pwm_desc_tree, i, desc);
+>  	}
+>  
+> -	return NULL;
+> +	bitmap_set(allocated_pwms, start, count);
+> +
+> +	return start;
+> +
+> +err:
+> +	for (i--; i >= 0; i--)
+
+
+Nitpick:
+
+	while (--i >= 0)
+
+is a bit simpler.
+
+> +		free_desc(i);
+> +
+> +	return ret;
+> +}
+> +
+> +static void free_descs(unsigned int from, unsigned int count)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = from; i < from + count; i++)
+> +		free_desc(i);
+> +
+> +	bitmap_clear(allocated_pwms, from, count);
+>  }
+>  
+>  /**
+> - * pwmchip_add() - register a new pwm
+> - * @chip: the pwm
+> - *
+> - * register a new pwm. pwm->pwm_id must be initialized. if pwm_id < 0 then
+> - * a dynamically assigned id will be used, otherwise the id specified,
+> + * pwm_set_chip_data - set private chip data for a PWM
+> + * @pwm: PWM number
+> + * @data: pointer to chip-specific data
+>   */
+> -int pwmchip_add(struct pwm_chip *chip)
+> +int pwm_set_chip_data(unsigned int pwm, void *data)
+
+
+This interface is a bit ugly. Shouldn't the user need to have a handle
+to the pwm_device in order to access the chip_data? Why should callers
+be able to set/grab chip data from random PWMs?
+
+>  {
+> -	struct pwm_device *pwm;
+> -	int ret = 0;
+> +	struct pwm_desc *desc = pwm_to_desc(pwm);
+>  
+> -	pwm = kzalloc(sizeof(*pwm), GFP_KERNEL);
+> -	if (!pwm)
+> -		return -ENOMEM;
+> +	if (!desc)
+> +		return -EINVAL;
+>  
+> -	pwm->chip = chip;
+> +	desc->chip_data = data;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pwm_get_chip_data - get private chip data for a PWM
+> + * @pwm: PWM number
+> + */
+> +void *pwm_get_chip_data(unsigned int pwm)
+> +{
+
+> +	struct pwm_desc *desc = pwm_to_desc(pwm);
+> +
+> +	return desc ? desc->chip_data : NULL;
+> +}
+> +
+> +/**
+> + * pwmchip_add() - register a new PWM chip
+> + * @chip: the PWM chip to add
+> + *
+> + * Register a new PWM chip. If pwm->base < 0 then a dynamically assigned base
+> + * will be used.
+> + */
+> +int pwmchip_add(struct pwm_chip *chip)
+> +{
+> +	unsigned int i;
+> +	int ret;
+>  
+>  	mutex_lock(&pwm_lock);
+>  
+> -	if (chip->pwm_id >= 0 && _find_pwm(chip->pwm_id)) {
+> -		ret = -EBUSY;
+> +	ret = alloc_descs(chip->base, 0, chip->npwm);
+> +	if (ret < 0)
+>  		goto out;
+> +
+> +	chip->base = ret;
+> +	ret = 0;
+> +
+> +	/* initialize descriptors */
+> +	for (i = chip->base; i < chip->base + chip->npwm; i++) {
+> +		struct pwm_desc *desc = pwm_to_desc(i);
+> +
+> +		if (!desc) {
+> +			pr_debug("pwm: descriptor %u not initialized\n", i);
+
+
+Should this be a WARN_ON?
+
+> +			continue;
+> +		}
+> +
+> +		desc->chip = chip;
+>  	}
+>  
+> -	list_add_tail(&pwm->node, &pwm_list);
+> +	of_pwmchip_add(chip);
+> +
+>  out:
+>  	mutex_unlock(&pwm_lock);
+> -
+> -	if (ret)
+> -		kfree(pwm);
+> -
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(pwmchip_add);
+>  
+>  /**
+> - * pwmchip_remove() - remove a pwm
+> - * @chip: the pwm
+> + * pwmchip_remove() - remove a PWM chip
+> + * @chip: the PWM chip to remove
+>   *
+> - * remove a pwm. This function may return busy if the pwm is still requested.
+> + * Removes a PWM chip. This function may return busy if the PWM chip provides
+> + * a PWM device that is still requested.
+>   */
+>  int pwmchip_remove(struct pwm_chip *chip)
+>  {
+> -	struct pwm_device *pwm;
+> +	unsigned int i;
+>  	int ret = 0;
+>  
+>  	mutex_lock(&pwm_lock);
+>  
+> -	pwm = _find_pwm(chip->pwm_id);
+> -	if (!pwm) {
+> -		ret = -ENOENT;
+> -		goto out;
+> -	}
+> +	for (i = chip->base; i < chip->base + chip->npwm; i++) {
+> +		struct pwm_desc *desc = pwm_to_desc(i);
+>  
+> -	if (test_bit(FLAG_REQUESTED, &pwm->flags)) {
+> -		ret = -EBUSY;
+> -		goto out;
+> +		if (test_bit(FLAG_REQUESTED, &desc->flags)) {
+> +			ret = -EBUSY;
+> +			goto out;
+> +		}
+>  	}
+>  
+> -	list_del(&pwm->node);
+> +	free_descs(chip->base, chip->npwm);
+> +	of_pwmchip_remove(chip);
+>  
+> -	kfree(pwm);
+>  out:
+>  	mutex_unlock(&pwm_lock);
+> -
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(pwmchip_remove);
+>  
+> +/**
+> + * pwmchip_find() - iterator for locating a specific pwm_chip
+> + * @data: data to pass to match function
+> + * @match: callback function to check pwm_chip
+> + */
+> +struct pwm_chip *pwmchip_find(void *data, int (*match)(struct pwm_chip *chip,
+> +						       void *data))
+> +{
+> +	struct pwm_chip *chip = NULL;
+> +	unsigned long i;
+> +
+> +	mutex_lock(&pwm_lock);
+> +
+> +	for_each_set_bit(i, allocated_pwms, MAX_PWMS) {
+> +		struct pwm_desc *desc = pwm_to_desc(i);
+> +
+> +		if (!desc || !desc->chip)
+> +			continue;
+> +
+> +		if (match(desc->chip, data)) {
+> +			chip = desc->chip;
+> +			break;
+> +		}
+> +	}
+> +
+> +	mutex_unlock(&pwm_lock);
+> +
+> +	return chip;
+> +}
+> +EXPORT_SYMBOL_GPL(pwmchip_find);
+
+
+So, propreitary modules are not allowed to use PWMs?
+
+> +
+>  /*
+>   * pwm_request - request a PWM device
+>   */
+> -struct pwm_device *pwm_request(int pwm_id, const char *label)
+> +struct pwm_device *pwm_request(int pwm, const char *label)
+>  {
+> -	struct pwm_device *pwm;
+> +	struct pwm_device *dev;
+> +	struct pwm_desc *desc;
+>  	int ret;
+>  
+> +	if ((pwm < 0) || (pwm >= MAX_PWMS))
+
+
+Don't need the inner parens.
+
+> +		return ERR_PTR(-ENOENT);
+
+
+-EINVAL maybe?
+
+> +
+>  	mutex_lock(&pwm_lock);
+>  
+> -	pwm = _find_pwm(pwm_id);
+> -	if (!pwm) {
+> -		pwm = ERR_PTR(-ENOENT);
+> -		goto out;
+> -	}
+> +	desc = pwm_to_desc(pwm);
+> +	dev = &desc->pwm;
+
+
+This looks wrong. If the pwm_desc being requested doesn't exist, won't
+this oops?
+
+>  
+> -	if (test_bit(FLAG_REQUESTED, &pwm->flags)) {
+> -		pwm = ERR_PTR(-EBUSY);
+> +	if (test_bit(FLAG_REQUESTED, &desc->flags)) {
+> +		dev = ERR_PTR(-EBUSY);
+>  		goto out;
+>  	}
+>  
+> -	if (!try_module_get(pwm->chip->ops->owner)) {
+> -		pwm = ERR_PTR(-ENODEV);
+> +	if (!try_module_get(desc->chip->ops->owner)) {
+> +		dev = ERR_PTR(-ENODEV);
+>  		goto out;
+>  	}
+>  
+> -	if (pwm->chip->ops->request) {
+> -		ret = pwm->chip->ops->request(pwm->chip);
+> +	if (desc->chip->ops->request) {
+> +		ret = desc->chip->ops->request(desc->chip, pwm);
+>  		if (ret) {
+> -			pwm = ERR_PTR(ret);
+> +			dev = ERR_PTR(ret);
+>  			goto out_put;
+>  		}
+>  	}
+>  
+> -	pwm->label = label;
+> -	set_bit(FLAG_REQUESTED, &pwm->flags);
+> +	dev->label = label;
+> +	dev->pwm = pwm;
+> +	set_bit(FLAG_REQUESTED, &desc->flags);
+>  
+>  	goto out;
+>  
+>  out_put:
+> -	module_put(pwm->chip->ops->owner);
+> +	module_put(desc->chip->ops->owner);
+>  out:
+>  	mutex_unlock(&pwm_lock);
+>  
+> -	return pwm;
+> +	return dev;
+>  }
+>  EXPORT_SYMBOL_GPL(pwm_request);
+>  
+> @@ -173,16 +311,19 @@ EXPORT_SYMBOL_GPL(pwm_request);
+>   */
+>  void pwm_free(struct pwm_device *pwm)
+>  {
+> +	struct pwm_desc *desc = container_of(pwm, struct pwm_desc, pwm);
+> +
+>  	mutex_lock(&pwm_lock);
+
+pwm_lock is used to protect global addition and removal from the
+radix/tree bitmap. Here you are also using it to protect the fields of a
+specific pwm device? Maybe it would be better to have a per pwm device
+lock for this?
+
+> -	if (!test_and_clear_bit(FLAG_REQUESTED, &pwm->flags)) {
+> +	if (!test_and_clear_bit(FLAG_REQUESTED, &desc->flags)) {
+>  		pr_warning("PWM device already freed\n");
+>  		goto out;
+>  	}
+>  
+>  	pwm->label = NULL;
+> +	pwm->pwm = 0;
+
+
+Why do this? Isn't index 0 a valid PWM index?a
+
+>  
+> -	module_put(pwm->chip->ops->owner);
+> +	module_put(desc->chip->ops->owner);
+>  out:
+>  	mutex_unlock(&pwm_lock);
+>  }
+> @@ -193,7 +334,9 @@ EXPORT_SYMBOL_GPL(pwm_free);
+>   */
+>  int pwm_config(struct pwm_device *pwm, int duty_ns, int period_ns)
+>  {
+> -	return pwm->chip->ops->config(pwm->chip, duty_ns, period_ns);
+> +	struct pwm_desc *desc = container_of(pwm, struct pwm_desc, pwm);
+> +	return desc->chip->ops->config(desc->chip, pwm->pwm, duty_ns,
+> +			period_ns);
+>  }
+>  EXPORT_SYMBOL_GPL(pwm_config);
+>  
+> @@ -202,8 +345,10 @@ EXPORT_SYMBOL_GPL(pwm_config);
+>   */
+>  int pwm_enable(struct pwm_device *pwm)
+>  {
+> -	if (!test_and_set_bit(FLAG_ENABLED, &pwm->flags))
+> -		return pwm->chip->ops->enable(pwm->chip);
+> +	struct pwm_desc *desc = container_of(pwm, struct pwm_desc, pwm);
+> +
+> +	if (!test_and_set_bit(FLAG_ENABLED, &desc->flags))
+> +		return desc->chip->ops->enable(desc->chip, pwm->pwm);
+>  
+>  	return 0;
+>  }
+> @@ -214,7 +359,9 @@ EXPORT_SYMBOL_GPL(pwm_enable);
+>   */
+>  void pwm_disable(struct pwm_device *pwm)
+>  {
+> -	if (test_and_clear_bit(FLAG_ENABLED, &pwm->flags))
+> -		pwm->chip->ops->disable(pwm->chip);
+> +	struct pwm_desc *desc = container_of(pwm, struct pwm_desc, pwm);
+> +
+> +	if (test_and_clear_bit(FLAG_ENABLED, &desc->flags))
+> +		desc->chip->ops->disable(desc->chip, pwm->pwm);
+>  }
+>  EXPORT_SYMBOL_GPL(pwm_disable);
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index df9681b..0f8d105 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -32,37 +32,50 @@ void pwm_disable(struct pwm_device *pwm);
+>  struct pwm_chip;
+>  
+>  /**
+> - * struct pwm_ops - PWM operations
+> + * struct pwm_ops - PWM controller operations
+>   * @request: optional hook for requesting a PWM
+>   * @free: optional hook for freeing a PWM
+>   * @config: configure duty cycles and period length for this PWM
+>   * @enable: enable PWM output toggling
+>   * @disable: disable PWM output toggling
+> + * @owner: helps prevent removal of modules exporting active PWMs
+>   */
+>  struct pwm_ops {
+> -	int			(*request)(struct pwm_chip *chip);
+> -	void			(*free)(struct pwm_chip *chip);
+> -	int			(*config)(struct pwm_chip *chip, int duty_ns,
+> +	int			(*request)(struct pwm_chip *chip,
+> +						unsigned int pwm);
+> +	void			(*free)(struct pwm_chip *chip,
+> +						unsigned int pwm);
+> +	int			(*config)(struct pwm_chip *chip,
+> +						unsigned int pwm, int duty_ns,
+>  						int period_ns);
+> -	int			(*enable)(struct pwm_chip *chip);
+> -	void			(*disable)(struct pwm_chip *chip);
+> +	int			(*enable)(struct pwm_chip *chip,
+> +						unsigned int pwm);
+> +	void			(*disable)(struct pwm_chip *chip,
+> +						unsigned int pwm);
+>  	struct module		*owner;
+>  };
+>  
+>  /**
+> - * struct pwm_chip - abstract a PWM
+> - * @label: for diagnostics
+> - * @owner: helps prevent removal of modules exporting active PWMs
+> - * @ops: The callbacks for this PWM
+> + * struct pwm_chip - abstract a PWM controller
+> + * @dev: device providing the PWMs
+> + * @ops: callbacks for this PWM controller
+> + * @base: number of first PWM controlled by this chip
+> + * @npwm: number of PWMs controlled by this chip
+>   */
+>  struct pwm_chip {
+> -	int			pwm_id;
+> -	const char		*label;
+> +	struct device		*dev;
+>  	struct pwm_ops		*ops;
+> +	int			base;
+> +	unsigned int		npwm;
+>  };
+>  
+> +int pwm_set_chip_data(unsigned int pwm, void *data);
+> +void *pwm_get_chip_data(unsigned int pwm);
+> +
+>  int pwmchip_add(struct pwm_chip *chip);
+>  int pwmchip_remove(struct pwm_chip *chip);
+> +struct pwm_chip *pwmchip_find(void *data, int (*match)(struct pwm_chip *chip,
+> +						       void *data));
+>  #endif
+>  
+>  #endif /* __LINUX_PWM_H */
