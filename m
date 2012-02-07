@@ -1,87 +1,54 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: An extremely simplified pinctrl bindings proposal
-Date: Mon, 06 Feb 2012 21:07:14 -1000
-Message-ID: <4F30CDA2.7010008@firmworks.com>
-References: <74CDBE0F657A3D45AFBB94109FB122FF178E5D3160@HQMAIL01.nvidia.com>
- <4F302474.1020701@firmworks.com> <4F30B79C.4030404@nvidia.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 4/6 V2] of/mtd/nand: add generic bindings and helpers
+Date: Tue, 7 Feb 2012 05:16:06 +0100
+Message-ID: <20120207041606.GD15647@game.jcrosoft.org>
+References: <1327727444-23908-1-git-send-email-plagnioj@jcrosoft.com>
+ <1328524512-18159-1-git-send-email-plagnioj@jcrosoft.com>
+ <201202061720.24996.sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F30B79C.4030404-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <201202061720.24996.sr@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Stefan Roese <sr@denx.de>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/6/2012 7:33 PM, Stephen Warren wrote:
-> On 02/06/2012 11:05 AM, Mitch Bradley wrote:
->> I like the general approach of simplifying the pinctrl thing, as the
->> previous approach did not appear to be converging.
->>
->> One possible name would be "gpconfig" - for general purpose configuration.
->
-> Sounds reasonable
->
->> The register access model in the strawman proposal is probably too
->> simple.  32-bit memory mapped registers are certainly the most common
->> subcase on ARM, but there are many other cases that occur in practice:
->>
->> * Registers that must be accessed with 8, 16, or 64-bit cycles.
->> * Registers that have side effects on read, so read-mask-write must be
->> avoided
->> * Registers accessed via an index/data cycle pair, thus having locking
->> requirements
->> * Registers that must be read after being written, or otherwise
->> requiring some sort of memory-ordering enforcement.
->> * Time delays between pairs of writes
->> * PCI configuration registers, which often have some combination of the
->> above
->> * Registers behind serial buses like I2C
->>
->> Both Open Firmware and ACPI have addressed this general problem.  In
->> addition to a numeric identifier for the register, you need to specify
->> the access semantics.  It's difficult to finitely enumerate all possible
->> cases, but you can get to 99.9% with a modest number of access models,
->> and then add new models as needed.
->
-> My thinking was that each driver that permitted execution of these
-> register write sequences on its registers would provide an extremely
-> simple driver to support this. Perhaps just one "op" function that
-> implemented each write, and took care of details such as timing delays
-> for the IO, indexed addressing, using I2C instead of memory-mapped,
-> perhaps register access width, etc.
->
-> Some of the items in the list above could be solved by explicit flags in
-> the data instead (register access width comes to mind for memory-mapped
-> devices at least).
->
-> Do you have any direct pointers to how OF and ACPI solved this kind of
-> thing; it'd be good background.
+On 17:20 Mon 06 Feb     , Stefan Roese wrote:
+> Hi Jean-Christophe,
+> 
+> On Monday 06 February 2012 11:35:11 Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+> >   Supported values are: "none", "soft", "hw", "hw_syndrome",
+> > "hw_oob_first", "soft_bch".
+> > - nand-bus-width : 8 or 16 bus width if not present 8
+> > - nand-on-flash-bbt: boolean to enable on flash bbt option if not present
+> > false
+> 
+> Why not use an "empty" type (without argument) for nand-on-flash-bbt then?
+I want to be able to disable it
 
-In ACPI, you declare an "OperationRegion" with a given "region space" 
-(an enumeration from SystemMemory, SystemIO, PCIConfig, SMBus, 
-EmbeddedControl, CMOS, PCIBARTarget) - ACPI spec section 17.5.89. 
-Inside that operation region, you declare various fields, further 
-specifying the subordinate access type from a region-dependent list. 
-Those access types include ByteAcc, WordAcc, DWordAcc, QWordAcc, and 
-BufferAcc.  The field declaration further specifies whether or not a 
-mutex must be acquired, and a rule for what to do about unmodified bits 
-within the larger object containing the field.  ACPI Spec 17.5.44
+I send a patch to add a helper to manage boolean
 
-In OFW, each parent bus has a set of methods for performing 
-memory-mapped I/O operations on its addressable regions.  The child 
-devices invoke a "map-in" method in the parent to acquire an address 
-token, then pass that token to access methods in the parent node.  For 
-the common case, there are a set of fetch and store methods for the 
-usual sizes (8, 16, 32), and for more complex cases, the parent can define
-whatever methods make sense for its needs.  The methods are implemented 
-by byte code associated with the parent driver.
+this will allow to disable a boolean
+
+    is-ok;          => true
+    is-ok = <1>;    => true
+    is-ok = <0>;    => false
+
+Best Regards,
+J.
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
