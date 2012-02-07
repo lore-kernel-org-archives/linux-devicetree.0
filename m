@@ -1,81 +1,54 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 2/5] gpio/omap: Use devm_ API and add request_mem_region
-Date: Thu, 16 Feb 2012 09:56:13 +0100
-Message-ID: <4F3CC4AD.3000103@ti.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>	<1329321854-24490-3-git-send-email-b-cousson@ti.com> <CAC83ZvKuOkLKdAVNeoVjRZriouDCGPXPhkZZ+MgcktH+9pYN3w@mail.gmail.com> <4F3CA41A.4020800@ti.com>
+From: Horst Kronstorfer <hkronsto-USXAA5bZaHGDvotElmWtJA@public.gmane.org>
+Subject: [PATCH] dtc: Fix zero-length input segfault
+Date: Tue,  7 Feb 2012 10:02:53 +0100
+Message-ID: <1328605373-14063-1-git-send-email-hkronsto@frequentis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F3CA41A.4020800@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Shubhrajyoti <shubhrajyoti@ti.com>
-Cc: "DebBarma, Tarun Kanti" <tarun.kanti@ti.com>, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khilman@ti.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Horst Kronstorfer <hkronsto-USXAA5bZaHGDvotElmWtJA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/16/2012 7:37 AM, Shubhrajyoti wrote:
-> On Thursday 16 February 2012 11:11 AM, DebBarma, Tarun Kanti wrote:
->> Hi Benoit,
->>
->> On Wed, Feb 15, 2012 at 9:34 PM, Benoit Cousson<b-cousson@ti.com>  wrote:
->>> Replace the regular kzalloc and ioremap with the devm_ equivalent
->>> to simplify error handling.
->>>
->>> Add the missing devm_request_mem_region to reserve the region used
->>> by the driver.
->>>
->>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
->>> Cc: Tarun Kanti DebBarma<tarun.kanti@ti.com>
->>> ---
->>>   drivers/gpio/gpio-omap.c |   35 +++++++++++++++--------------------
->>>   1 files changed, 15 insertions(+), 20 deletions(-)
->>>
->>> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
->>> index a0c3e03..c3a9dc8 100644
->>> --- a/drivers/gpio/gpio-omap.c
->>> +++ b/drivers/gpio/gpio-omap.c
->>> @@ -19,7 +19,7 @@
->>>   #include<linux/err.h>
->>>   #include<linux/clk.h>
->>>   #include<linux/io.h>
->>> -#include<linux/slab.h>
->>> +#include<linux/device.h>
->>>   #include<linux/pm_runtime.h>
->>>   #include<linux/pm.h>
->>>
->>> @@ -1052,23 +1052,19 @@ static int __devinit omap_gpio_probe(struct platform_device *pdev)
->>>         struct gpio_bank *bank;
->>>         int ret = 0;
->>>
->>> -       if (!dev->platform_data) {
->>> -               ret = -EINVAL;
->>> -               goto err_exit;
->>> -       }
->>> +       if (!dev->platform_data)
->>> +               return -EINVAL;
->>>
->>> -       bank = kzalloc(sizeof(struct gpio_bank), GFP_KERNEL);
->>> +       bank = devm_kzalloc(&pdev->dev, sizeof(struct gpio_bank), GFP_KERNEL);
->>>         if (!bank) {
->>>                 dev_err(dev, "Memory alloc failed\n");
->>> -               ret = -ENOMEM;
->>> -               goto err_exit;
->>> +               return -ENOMEM;
->>>         }
->>>
->>>         res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->>>         if (unlikely(!res)) {
->>>                 dev_err(dev, "Invalid IRQ resource\n");
->>> -               ret = -ENODEV;
->>> -               goto err_free;
->>> +               return -ENODEV;
->> How is the memory allocated to 'bank' getting freed before return -ENODEV?
->
-> I think that may not be needed
+This patch fixes a segmentation fault caused by dereferencing a NULL
+pointer (pos->file aka yylloc.file) in srcpos_string when the input
+length is 0 (fe 'dtc </dev/null'.) Reason: yylloc.file is initialized
+with 0 and the tokenizer, which updates yylloc.file via srcpos_update
+doesn't get a chance to run on zero-length input.
 
-It is indeed not needed, and this is the whole point of that API 
-compared to the regular kzalloc... and that's why it is highly 
-recommended to switch to this kind of API.
+Signed-off-by: Horst Kronstorfer <hkronsto-USXAA5bZaHGDvotElmWtJA@public.gmane.org>
+---
+ treesource.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-Regards,
-Benoit
+diff --git a/treesource.c b/treesource.c
+index c09aafa..33eeba5 100644
+--- a/treesource.c
++++ b/treesource.c
+@@ -23,6 +23,7 @@
+ 
+ extern FILE *yyin;
+ extern int yyparse(void);
++extern YYLTYPE yylloc;
+ 
+ struct boot_info *the_boot_info;
+ int treesource_error;
+@@ -34,6 +35,7 @@ struct boot_info *dt_from_source(const char *fname)
+ 
+ 	srcfile_push(fname);
+ 	yyin = current_srcfile->f;
++	yylloc.file = current_srcfile;
+ 
+ 	if (yyparse() != 0)
+ 		die("Unable to parse input tree\n");
+-- 
+1.7.7.6
