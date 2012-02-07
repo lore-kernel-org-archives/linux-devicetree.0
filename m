@@ -1,124 +1,38 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
-Date: Tue, 07 Feb 2012 09:13:31 -0600
-Message-ID: <4F313F9B.4020500@gmail.com>
-References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 00/25] irq_domain generalization and refinement
+Date: Tue, 7 Feb 2012 15:26:27 +0000
+Message-ID: <20120207152627.GA17825@sirena.org.uk>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
+ <20120204221748.GN14129@n2100.arm.linux.org.uk>
+ <20120204223125.GO14129@n2100.arm.linux.org.uk>
+ <20120205013853.GQ20333@atomide.com>
+ <20120205161348.GZ889@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1328588028-24766-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120205161348.GZ889@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Tony Lindgren <tony@atomide.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2012 10:13 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> of_property_read_bool
-> 
-> Search for a property in a device node and read a 32-bit value from
-> it. Returns 0 if <0> or if the property does not exist, 1 if <1> or none.
-> 
-> this will allow to disable a boolean
-> 
-> is-ok;          => true
-> is-ok = <1>;    => true
-> is-ok = <0>;    => false
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+On Sun, Feb 05, 2012 at 04:13:48PM +0000, Russell King - ARM Linux wrote:
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> It's not quite correct, because OMAP4 has issues in this area as well
+> (which does select IRQ_DOMAIN but can be without OF.)  The result is
+> an oops from irq_domain_add() because domain->ops is NULL.
 
-> ---
-> Hi,
-> 
-> 	if this is ok I'll rebase my mtd and i2c patch to use it
-> 
+> The right solution is three fold:
 
-I'm assuming you'll want to merge this patch with your mtd and i2c
-patches. If you want me to apply, let me know.
+> 1. Wrap the bits of code in CONFIG_IRQ_DOMAIN
+> 2. Get rid of the #ifdef CONFIG_OF there, so the 'ops' member can be
+>    initialized.
+> 3. Fix the OMAP vp code not to oops when voltdm->pmic is NULL
 
-Rob
+> which I have in my combined patch for fixing OMAP so far.
 
-> Best Regards,
-> J.
->  drivers/of/base.c  |   30 ++++++++++++++++++++++++++++++
->  include/linux/of.h |    8 ++++++++
->  2 files changed, 38 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 133908a..a0eaf08 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -686,6 +686,36 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
->  EXPORT_SYMBOL_GPL(of_property_read_u64);
->  
->  /**
-> + * of_property_read_bool - Find and read a boolean from a property
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + *
-> + * Search for a property in a device node and read a 32-bit value from
-> + * it. Returns 0 if <0> or if the property does not exist, 1 if <1> or none.
-> + *
-> + * is-ok;	=> true
-> + * is-ok = <1>;	=> true
-> + * is-ok = <0>;	=> false
-> + */
-> +int of_property_read_bool(const struct device_node *np, const char *propname)
-> +{
-> +	u32 reg;
-> +	int ret = of_property_read_u32(np, propname, &reg);
-> +
-> +	switch (ret) {
-> +	case -EINVAL:
-> +		return false;
-> +	case -ENODATA:
-> +		return true;
-> +	case 0:
-> +		return reg == 1;
-> +	default:
-> +		return ret;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(of_property_read_bool);
-> +
-> +/**
->   * of_property_read_string - Find and read a string from a property
->   * @np:		device node from which the property value is to be read.
->   * @propname:	name of the property to be searched.
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a75a831..2e5f77b 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -210,6 +210,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
->  				      size_t sz);
->  extern int of_property_read_u64(const struct device_node *np,
->  				const char *propname, u64 *out_value);
-> +extern int of_property_read_bool(const struct device_node *np,
-> +				const char *propname);
->  
->  extern int of_property_read_string(struct device_node *np,
->  				   const char *propname,
-> @@ -288,6 +290,12 @@ static inline int of_property_read_u32_array(const struct device_node *np,
->  	return -ENOSYS;
->  }
->  
-> +static inline int of_property_read_bool(const struct device_node *np,
-> +				const char *propname)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
->  static inline int of_property_read_string(struct device_node *np,
->  					  const char *propname,
->  					  const char **out_string)
+It'd also help if we supported null ops, I sent patches for that a few
+times over the 3.3 cycle since I was running into it on my systems but
+apparently to /dev/null and further changes in this area have made the
+patches not apply any more.
