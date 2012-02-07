@@ -1,47 +1,124 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 5/6 V2] atmel/nand: add DT support
-Date: Tue, 7 Feb 2012 12:53:06 +0100
-Message-ID: <20120207115306.GF15647@game.jcrosoft.org>
-References: <1327727444-23908-1-git-send-email-plagnioj@jcrosoft.com>
- <1328524512-18159-2-git-send-email-plagnioj@jcrosoft.com>
- <4F30FD4B.4050501@atmel.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
+Date: Tue, 07 Feb 2012 09:13:31 -0600
+Message-ID: <4F313F9B.4020500@gmail.com>
+References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4F30FD4B.4050501@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1328588028-24766-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11:30 Tue 07 Feb     , Nicolas Ferre wrote:
-> On 02/06/2012 11:35 AM, Jean-Christophe PLAGNIOL-VILLARD :
-> > use a local copy of board informatin and fill with DT data
-> > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> > Acked-by: Grant Likely <grant.likely@secretlab.ca>
-> > Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > Cc: devicetree-discuss@lists.ozlabs.org
-> > Cc: linux-mtd@lists.infradead.org
+On 02/06/2012 10:13 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> of_property_read_bool
 > 
-> [..]
+> Search for a property in a device node and read a 32-bit value from
+> it. Returns 0 if <0> or if the property does not exist, 1 if <1> or none.
 > 
-> > +static int __devinit atmel_of_init_port(struct atmel_nand_host *host,
-> > +					 struct device_node *np)
+> this will allow to disable a boolean
 > 
-> Maybe you will need to protect this function in case of !DT builds: I
-> suspect that some of the of_xxxxx() calls are not provided if !CONFIG_OF.
-no-need on the of_ function are static inline it !CONFIG_OF
+> is-ok;          => true
+> is-ok = <1>;    => true
+> is-ok = <0>;    => false
+> 
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 
-Best Regards,
-J.
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+> ---
+> Hi,
+> 
+> 	if this is ok I'll rebase my mtd and i2c patch to use it
+> 
+
+I'm assuming you'll want to merge this patch with your mtd and i2c
+patches. If you want me to apply, let me know.
+
+Rob
+
+> Best Regards,
+> J.
+>  drivers/of/base.c  |   30 ++++++++++++++++++++++++++++++
+>  include/linux/of.h |    8 ++++++++
+>  2 files changed, 38 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 133908a..a0eaf08 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -686,6 +686,36 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
+>  EXPORT_SYMBOL_GPL(of_property_read_u64);
+>  
+>  /**
+> + * of_property_read_bool - Find and read a boolean from a property
+> + * @np:		device node from which the property value is to be read.
+> + * @propname:	name of the property to be searched.
+> + *
+> + * Search for a property in a device node and read a 32-bit value from
+> + * it. Returns 0 if <0> or if the property does not exist, 1 if <1> or none.
+> + *
+> + * is-ok;	=> true
+> + * is-ok = <1>;	=> true
+> + * is-ok = <0>;	=> false
+> + */
+> +int of_property_read_bool(const struct device_node *np, const char *propname)
+> +{
+> +	u32 reg;
+> +	int ret = of_property_read_u32(np, propname, &reg);
+> +
+> +	switch (ret) {
+> +	case -EINVAL:
+> +		return false;
+> +	case -ENODATA:
+> +		return true;
+> +	case 0:
+> +		return reg == 1;
+> +	default:
+> +		return ret;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(of_property_read_bool);
+> +
+> +/**
+>   * of_property_read_string - Find and read a string from a property
+>   * @np:		device node from which the property value is to be read.
+>   * @propname:	name of the property to be searched.
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index a75a831..2e5f77b 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -210,6 +210,8 @@ extern int of_property_read_u32_array(const struct device_node *np,
+>  				      size_t sz);
+>  extern int of_property_read_u64(const struct device_node *np,
+>  				const char *propname, u64 *out_value);
+> +extern int of_property_read_bool(const struct device_node *np,
+> +				const char *propname);
+>  
+>  extern int of_property_read_string(struct device_node *np,
+>  				   const char *propname,
+> @@ -288,6 +290,12 @@ static inline int of_property_read_u32_array(const struct device_node *np,
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline int of_property_read_bool(const struct device_node *np,
+> +				const char *propname)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+>  static inline int of_property_read_string(struct device_node *np,
+>  					  const char *propname,
+>  					  const char **out_string)
