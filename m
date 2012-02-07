@@ -1,13 +1,15 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 4/6 v3] of/mtd/nand: add generic bindings and helpers
-Date: Tue,  7 Feb 2012 17:18:30 +0100
-Message-ID: <1328631510-11688-1-git-send-email-plagnioj@jcrosoft.com>
-References: <1328524512-18159-1-git-send-email-plagnioj@jcrosoft.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 24/25] irq_domain: remove "hint" when allocating irq
+ numbers
+Date: Tue, 07 Feb 2012 19:07:04 +0100
+Message-ID: <4F316848.4060100@atmel.com>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
+ <1327700179-17454-25-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1328524512-18159-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1327700179-17454-25-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,186 +19,23 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Milton Miller <miltonm-ogEGBHC/i9Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-- nand-ecc-mode : String, operation mode of the NAND ecc mode.
-  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
-  "soft_bch".
-- nand-bus-width : 8 or 16 bus width if not present 8
-- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
+On 01/27/2012 10:36 PM, Grant Likely :
+> The 'hint' used to try and line up irq numbers with hw irq numbers is
+> rather a hack and not very useful.  Now that /proc/interrupts also outputs
+> the hwirq number, it is even less useful to keep around the 'hint' heuristic.
+> 
+> This patch removes it.
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
----
-v3:
-	rebase over "of: introduce helper to manage boolean"
+Grant,
 
-Best Regards,
-J.
- Documentation/devicetree/bindings/mtd/nand.txt |    7 ++
- drivers/of/Kconfig                             |    4 +
- drivers/of/Makefile                            |    1 +
- drivers/of/of_mtd.c                            |   85 ++++++++++++++++++++++++
- include/linux/of_mtd.h                         |   19 +++++
- 5 files changed, 116 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/nand.txt
- create mode 100644 drivers/of/of_mtd.c
- create mode 100644 include/linux/of_mtd.h
+While trying your patch series in conjunction with Rob one, I do not
+find this patch in your irqdomain/next branch (and a couple of others).
+Can you tell me if this v3 series is available as a git tree?
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-new file mode 100644
-index 0000000..03855c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -0,0 +1,7 @@
-+* MTD generic binding
-+
-+- nand-ecc-mode : String, operation mode of the NAND ecc mode.
-+  Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
-+  "soft_bch".
-+- nand-bus-width : 8 or 16 bus width if not present 8
-+- nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 268163d..fa666a9 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -90,4 +90,8 @@ config OF_PCI_IRQ
- 	help
- 	  OpenFirmware PCI IRQ routing helpers
- 
-+config OF_MTD
-+	depends on MTD
-+	def_bool y
-+
- endmenu # OF
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index a73f5a5..8c4980a 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -12,3 +12,4 @@ obj-$(CONFIG_OF_SELFTEST) += selftest.o
- obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
- obj-$(CONFIG_OF_PCI)	+= of_pci.o
- obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
-+obj-$(CONFIG_OF_NET)	+= of_mtd.o
-diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
-new file mode 100644
-index 0000000..e6a1074
---- /dev/null
-+++ b/drivers/of/of_mtd.c
-@@ -0,0 +1,85 @@
-+/*
-+ * Copyright 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-+ *
-+ * OF helpers for mtd.
-+ *
-+ * This file is released under the GPLv2
-+ *
-+ */
-+#include <linux/kernel.h>
-+#include <linux/of_mtd.h>
-+#include <linux/mtd/nand.h>
-+#include <linux/export.h>
-+
-+/**
-+ * It maps 'enum nand_ecc_modes_t' found in include/linux/mtd/nand.h
-+ * into the device tree binding of 'nand-ecc', so that MTD
-+ * device driver can get nand ecc from device tree.
-+ */
-+static const char *nand_ecc_modes[] = {
-+	[NAND_ECC_NONE]		= "none",
-+	[NAND_ECC_SOFT]		= "soft",
-+	[NAND_ECC_HW]		= "hw",
-+	[NAND_ECC_HW_SYNDROME]	= "hw_syndrome",
-+	[NAND_ECC_HW_OOB_FIRST]	= "hw_oob_first",
-+	[NAND_ECC_SOFT_BCH]	= "soft_bch",
-+};
-+
-+/**
-+ * of_get_nand_ecc_mode - Get nand ecc mode for given device_node
-+ * @np:	Pointer to the given device_node
-+ *
-+ * The function gets ecc mode string from property 'nand-ecc-mode',
-+ * and return its index in nand_ecc_modes table, or errno in error case.
-+ */
-+const int of_get_nand_ecc_mode(struct device_node *np)
-+{
-+	const char *pm;
-+	int err, i;
-+
-+	err = of_property_read_string(np, "nand-ecc-mode", &pm);
-+	if (err < 0)
-+		return err;
-+
-+	for (i = 0; i < ARRAY_SIZE(nand_ecc_modes); i++)
-+		if (!strcasecmp(pm, nand_ecc_modes[i]))
-+			return i;
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL_GPL(of_get_nand_ecc_mode);
-+
-+/**
-+ * of_get_nand_bus_width - Get nand bus witdh for given device_node
-+ * @np:	Pointer to the given device_node
-+ *
-+ * return bus width option, or errno in error case.
-+ */
-+int of_get_nand_bus_width(struct device_node *np)
-+{
-+	u32 val;
-+
-+	if (of_property_read_u32(np, "nand-bus-width", &val))
-+		return 8;
-+
-+	switch(val) {
-+	case 8:
-+	case 16:
-+		return val;
-+	default:
-+		return -EIO;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(of_get_nand_bus_width);
-+
-+/**
-+ * of_get_nand_on_flash_bbt - Get nand on flash bbt for given device_node
-+ * @np:	Pointer to the given device_node
-+ *
-+ * return true if 1 false other wise
-+ */
-+bool of_get_nand_on_flash_bbt(struct device_node *np)
-+{
-+	return !!of_property_read_bool(np, "nand-on-flash-bbt");
-+}
-+EXPORT_SYMBOL_GPL(of_get_nand_on_flash_bbt);
-diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
-new file mode 100644
-index 0000000..bae1b60
---- /dev/null
-+++ b/include/linux/of_mtd.h
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-+ *
-+ * OF helpers for mtd.
-+ *
-+ * This file is released under the GPLv2
-+ */
-+
-+#ifndef __LINUX_OF_MTD_H
-+#define __LINUX_OF_NET_H
-+
-+#ifdef CONFIG_OF_MTD
-+#include <linux/of.h>
-+extern const int of_get_nand_ecc_mode(struct device_node *np);
-+int of_get_nand_bus_width(struct device_node *np);
-+bool of_get_nand_on_flash_bbt(struct device_node *np);
-+#endif
-+
-+#endif /* __LINUX_OF_MTD_H */
+Thanks, best regards,
 -- 
-1.7.7
+Nicolas Ferre
