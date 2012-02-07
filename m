@@ -1,95 +1,87 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] pwm: Allow chips to support multiple PWMs.
-Date: Tue, 7 Feb 2012 08:04:00 +0100
-Message-ID: <20120207070400.GA29238@avionic-0098.mockup.avionic-design.de>
-References: <1328541585-24642-1-git-send-email-thierry.reding@avionic-design.de>
- <1328541585-24642-3-git-send-email-thierry.reding@avionic-design.de>
- <4F3044A9.8000202@metafoo.de>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: An extremely simplified pinctrl bindings proposal
+Date: Mon, 06 Feb 2012 21:07:14 -1000
+Message-ID: <4F30CDA2.7010008@firmworks.com>
+References: <74CDBE0F657A3D45AFBB94109FB122FF178E5D3160@HQMAIL01.nvidia.com>
+ <4F302474.1020701@firmworks.com> <4F30B79C.4030404@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F3044A9.8000202-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F30B79C.4030404-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Sascha Hauer (s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org)" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2/6/2012 7:33 PM, Stephen Warren wrote:
+> On 02/06/2012 11:05 AM, Mitch Bradley wrote:
+>> I like the general approach of simplifying the pinctrl thing, as the
+>> previous approach did not appear to be converging.
+>>
+>> One possible name would be "gpconfig" - for general purpose configuration.
+>
+> Sounds reasonable
+>
+>> The register access model in the strawman proposal is probably too
+>> simple.  32-bit memory mapped registers are certainly the most common
+>> subcase on ARM, but there are many other cases that occur in practice:
+>>
+>> * Registers that must be accessed with 8, 16, or 64-bit cycles.
+>> * Registers that have side effects on read, so read-mask-write must be
+>> avoided
+>> * Registers accessed via an index/data cycle pair, thus having locking
+>> requirements
+>> * Registers that must be read after being written, or otherwise
+>> requiring some sort of memory-ordering enforcement.
+>> * Time delays between pairs of writes
+>> * PCI configuration registers, which often have some combination of the
+>> above
+>> * Registers behind serial buses like I2C
+>>
+>> Both Open Firmware and ACPI have addressed this general problem.  In
+>> addition to a numeric identifier for the register, you need to specify
+>> the access semantics.  It's difficult to finitely enumerate all possible
+>> cases, but you can get to 99.9% with a modest number of access models,
+>> and then add new models as needed.
+>
+> My thinking was that each driver that permitted execution of these
+> register write sequences on its registers would provide an extremely
+> simple driver to support this. Perhaps just one "op" function that
+> implemented each write, and took care of details such as timing delays
+> for the IO, indexed addressing, using I2C instead of memory-mapped,
+> perhaps register access width, etc.
+>
+> Some of the items in the list above could be solved by explicit flags in
+> the data instead (register access width comes to mind for memory-mapped
+> devices at least).
+>
+> Do you have any direct pointers to how OF and ACPI solved this kind of
+> thing; it'd be good background.
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In ACPI, you declare an "OperationRegion" with a given "region space" 
+(an enumeration from SystemMemory, SystemIO, PCIConfig, SMBus, 
+EmbeddedControl, CMOS, PCIBARTarget) - ACPI spec section 17.5.89. 
+Inside that operation region, you declare various fields, further 
+specifying the subordinate access type from a region-dependent list. 
+Those access types include ByteAcc, WordAcc, DWordAcc, QWordAcc, and 
+BufferAcc.  The field declaration further specifies whether or not a 
+mutex must be acquired, and a rule for what to do about unmodified bits 
+within the larger object containing the field.  ACPI Spec 17.5.44
 
-* Lars-Peter Clausen wrote:
-> On 02/06/2012 04:19 PM, Thierry Reding wrote:
-> > This commit modifies the PWM core to support multiple PWMs per struct
-> > pwm_chip.
->=20
-> I think you should mention what motivates this change.
-
-Okay, I can add that.
-
-> > It achieves this in a similar way to how gpiolib works, by
-> > allowing PWM ranges to be requested dynamically (pwm_chip.base =3D=3D -=
-1) or
-> > starting at a given offset (pwm_chip.base >=3D 0).
->=20
-> If we've learned one thing from gpiolib, I think it is that using a global
-> index to identify a resource was a bad idea.
-
-Yes, that concern has been raised several times already. The reason for it
-being this way is that the current API requires it. So either we keep it as
-is for now and change it over to indexing on a per-chip basis later (which
-has the advantage of not breaking anything currently in-tree) or we make th=
-at
-change now, in which case this patch series will probably double in size. I=
-'m
-also not sure if I can reasonably keep the series bisectible that way.
-
-One of the major problems when converting to a non-global namespace is how =
-to
-represent the relationship in code. For device tree this should be easy to =
-do
-because it has all the infrastructure in place. For non-device-tree devices=
- I
-have no idea yet how this could be done. Perhaps by using something like the
-clock API and using names for lookup?
-
-> > A chip specifies how
-> > many PWMs it controls using the npwm member. Each of the functions in
-> > the pwm_ops structure gets an additional argument that specified the PWM
-> > number (it can be converted to a per-chip index by subtracting the
-> > chip's base).
-> >=20
-> > The total maximum number of PWM devices is currently fixed to 64, but
-> > can easily be made configurable via Kconfig.
->=20
-> The code says 1024.
-
-Right, I missed that. Thanks.
-
-> > The patch is incomplete in that it doesn't convert any existing drivers
-> > that are now broken.
-
-I just noticed that this isn't completely valid anymore either since I've
-ported two of the drivers. However, The remaining drivers won't work proper=
-ly
-when built against a kernel with PWM framework support because of the
-duplicate symbols.
-
-Thierry
-
---TB36FDmn/VVEgNH/
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk8wzOAACgkQZ+BJyKLjJp+DNQCeOO04eyKJlSax6hW+vw97dEm9
-/IkAn207EQKXryYMtPAX1QmIjdq03kz5
-=Eqrr
------END PGP SIGNATURE-----
-
---TB36FDmn/VVEgNH/--
+In OFW, each parent bus has a set of methods for performing 
+memory-mapped I/O operations on its addressable regions.  The child 
+devices invoke a "map-in" method in the parent to acquire an address 
+token, then pass that token to access methods in the parent node.  For 
+the common case, there are a set of fetch and store methods for the 
+usual sizes (8, 16, 32), and for more complex cases, the parent can define
+whatever methods make sense for its needs.  The methods are implemented 
+by byte code associated with the parent driver.
