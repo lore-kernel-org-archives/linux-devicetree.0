@@ -1,7 +1,7 @@
 From: Horst Kronstorfer <hkronsto-USXAA5bZaHGDvotElmWtJA@public.gmane.org>
 Subject: [PATCH] dtc: Fix zero-length input segfault
-Date: Tue,  7 Feb 2012 10:02:53 +0100
-Message-ID: <1328605373-14063-1-git-send-email-hkronsto@frequentis.com>
+Date: Wed,  8 Feb 2012 08:22:29 +0100
+Message-ID: <1328685749-30152-1-git-send-email-hkronsto@frequentis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
