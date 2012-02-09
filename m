@@ -1,104 +1,237 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device
- tree support
-Date: Thu, 09 Feb 2012 22:42:56 +0900
-Message-ID: <003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>
-References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/3] of_spi: add generic binding support to specify ncs gpio
+Date: Thu,  9 Feb 2012 17:14:36 +0100
+Message-ID: <1328804077-6121-2-git-send-email-plagnioj@jcrosoft.com>
+References: <1328804077-6121-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1328804077-6121-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thomas Abraham wrote:
-> 
-> This patchset removes all uses of 'clk_type' member from the platform data
-> of sdhci-s3c driver and adds device tree support for sdhci-s3c driver.
-> 
-> In this patchset, all uses of 'clk_type' member from the platform data are
-> removed from the sdhci-s3c driver and platform code. The clk_type is a SoC
-> specific information and not a board/machine specific information. Hence,
-> this
-> information can be more aptly represented using SoC specific driver data
-> in the
-> sdhci-s3c driver.
-> 
-> Hence all uses of 'clk_type' member in sdhci-s3c driver's platform data is
-> removed. In place of that, the sdhci host qurik
-> 'SDHCI_QUIRK_NONSTANDARD_CLOCK'
-> is used to handle controllers that do not have a standard sdclk division
-> (like those in the exynos4 SoC's).
-> 
-> This is a pre-requisite for adding device tree support for sdhci-s3c
-> driver.
-> While migrating towards device tree support, retreving 'clk_type'
-> information
-> from device tree information does not seem correct and hence it has been
-> added
-> as SoC specific driver data. All this is handled in patches 1 to 3.
-> 
-> Patch 4 to 6 add device tree support for sdhci-s3c driver. The fourth
-> patch
-> derives the maximum transfer width host capability from the max_width
-> member
-> in platform data. The fifth patch modifies the sdhci-s3c driver to
-> mainatain
-> a local copy of the platform data, which makes it easier to add device
-> tree
-> support for the driver. The last patch adds device tree based discovery
-> for
-> the sdhci-s3c driver.
-> 
-> This patchset is based on the following tree.
->   http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
-> [for-next]
-> 
-> Thomas Abraham (6):
->   mmc: sdhci-s3c: Remove usage of clk_type member in platform data
->   arm: exynos4: use 'exynos4-sdhci' as device name for sdhci controllers
->   arm: samsung: remove all uses of clk_type member in sdhci platform data
->   mmc: sdhci-s3c: derive transfer width host capability from max_width in
-> platform data
->   mmc: sdhci-s3c: Keep a copy of platform data and use it
->   mmc: sdhci-s3c: Add device tree support
-> 
->  .../devicetree/bindings/mmc/samsung-sdhci.txt      |   70 ++++++
->  arch/arm/mach-exynos/clock.c                       |   24 +-
->  arch/arm/mach-exynos/common.c                      |    5 +
->  arch/arm/mach-exynos/mach-armlex4210.c             |    3 -
->  arch/arm/mach-exynos/mach-nuri.c                   |    3 -
->  arch/arm/mach-exynos/mach-origen.c                 |    2 -
->  arch/arm/mach-exynos/mach-smdk4x12.c               |    2 -
->  arch/arm/mach-exynos/mach-smdkv310.c               |    4 -
->  arch/arm/mach-exynos/mach-universal_c210.c         |    2 -
->  arch/arm/plat-samsung/devs.c                       |    4 -
->  arch/arm/plat-samsung/include/plat/sdhci.h         |   35 +++-
->  arch/arm/plat-samsung/platformdata.c               |    2 -
->  drivers/mmc/host/sdhci-s3c.c                       |  235
-+++++++++++++++++++-
->  13 files changed, 341 insertions(+), 50 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/samsung-
-> sdhci.txt
+This will allow to use gpio for chip select with no modification in the
+driver binding
 
-Hi,
+When use the ncs-gpios, the gpio number will be passed via the controller_data
+and the number of chip select will automatically increased.
 
-Looks ok to me and I'd like to pick this series in samsung tree with Chris'
-ack.
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+---
+ Documentation/devicetree/bindings/spi/spi-bus.txt |    6 +++
+ drivers/of/of_spi.c                               |   27 ++++++++---
+ drivers/spi/spi.c                                 |   51 +++++++++++++++++++-
+ include/linux/spi/spi.h                           |    5 ++
+ 4 files changed, 78 insertions(+), 11 deletions(-)
 
-Chris, is it ok? If you need to merge this in your tree, please let me know.
-I will provide topic branch for it.
-
-If any problems, please let me know.
-
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index e782add..5a24729 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -12,6 +12,7 @@ The SPI master node requires the following properties:
+ - #size-cells     - should be zero.
+ - compatible      - name of SPI bus controller following generic names
+     		recommended practice.
++- ncs-gpios       - (optional) gpios chip select.
+ No other properties are required in the SPI bus node.  It is assumed
+ that a driver for an SPI bus device will understand that it is an SPI bus.
+ However, the binding does not attempt to define the specific method for
+@@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
+ chip selects.  Individual drivers can define additional properties to
+ support describing the chip select layout.
+ 
++If ncs-gpios is used the number of chip select will automatically increased.
++
+ SPI slave nodes must be children of the SPI master node and can
+ contain the following properties.
+ - reg             - (required) chip select address of device.
+@@ -34,6 +37,9 @@ contain the following properties.
+ - spi-cs-high     - (optional) Empty property indicating device requires
+     		chip select active high
+ 
++If a gpio chipselect is used for the SPI slave the gpio number will be passed
++via the controller_data
++
+ SPI example for an MPC5200 SPI bus:
+ 	spi@f00 {
+ 		#address-cells = <1>;
+diff --git a/drivers/of/of_spi.c b/drivers/of/of_spi.c
+index 6dbc074..0d41407 100644
+--- a/drivers/of/of_spi.c
++++ b/drivers/of/of_spi.c
+@@ -12,6 +12,7 @@
+ #include <linux/spi/spi.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_spi.h>
++#include <linux/of_gpio.h>
+ 
+ /**
+  * of_register_spi_devices - Register child devices onto the SPI bus
+@@ -27,6 +28,7 @@ void of_register_spi_devices(struct spi_master *master)
+ 	const __be32 *prop;
+ 	int rc;
+ 	int len;
++	int ncs_pin;
+ 
+ 	if (!master->dev.of_node)
+ 		return;
+@@ -50,15 +52,24 @@ void of_register_spi_devices(struct spi_master *master)
+ 			continue;
+ 		}
+ 
+-		/* Device address */
+-		prop = of_get_property(nc, "reg", &len);
+-		if (!prop || len < sizeof(*prop)) {
+-			dev_err(&master->dev, "%s has no 'reg' property\n",
+-				nc->full_name);
+-			spi_dev_put(spi);
+-			continue;
++		/* ncs gpio */
++		ncs_pin = of_get_named_gpio(nc, "ncs-gpio", 0);
++
++		if (gpio_is_valid(ncs_pin)) {
++			spi->controller_data = (void *)ncs_pin;
++			spi->chip_select = master->num_chipselect;
++			master->num_chipselect++;
++		} else {
++			/* Device address */
++			prop = of_get_property(nc, "reg", &len);
++			if (!prop || len < sizeof(*prop)) {
++				dev_err(&master->dev, "%s has no 'reg' property\n",
++					nc->full_name);
++				spi_dev_put(spi);
++				continue;
++			}
++			spi->chip_select = be32_to_cpup(prop);
+ 		}
+-		spi->chip_select = be32_to_cpup(prop);
+ 
+ 		/* Mode (clock phase/polarity/etc.) */
+ 		if (of_find_property(nc, "spi-cpha", NULL))
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index e2f4ca0..1f5ffa6 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -28,6 +28,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/spi/spi.h>
+ #include <linux/of_spi.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/export.h>
+ 
+@@ -339,15 +340,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
+ int spi_add_device(struct spi_device *spi)
+ {
+ 	static DEFINE_MUTEX(spi_add_lock);
+-	struct device *dev = spi->master->dev.parent;
++	struct spi_master *master = spi->master;
++	struct device *dev = master->dev.parent;
+ 	struct device *d;
+ 	int status;
+ 
+ 	/* Chipselects are numbered 0..max; validate. */
+-	if (spi->chip_select >= spi->master->num_chipselect) {
++	if (spi->chip_select >= master->num_chipselect) {
+ 		dev_err(dev, "cs%d >= max %d\n",
+ 			spi->chip_select,
+-			spi->master->num_chipselect);
++			master->num_chipselect);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -371,6 +373,13 @@ int spi_add_device(struct spi_device *spi)
+ 		goto done;
+ 	}
+ 
++	if (master->num_gpio_chipselect &&
++	    spi->chip_select >= master->first_gpio_chipselect) {
++		int num = spi->chip_select = master->first_gpio_chipselect;
++
++		spi->controller_data = (void*)master->chipselect_gpios[num];
++	}
++
+ 	/* Drivers may modify this initial i/o setup, but will
+ 	 * normally rely on the device being setup.  Devices
+ 	 * using SPI_CS_HIGH can't coexist well otherwise...
+@@ -562,6 +571,38 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+ }
+ EXPORT_SYMBOL_GPL(spi_alloc_master);
+ 
++static int of_spi_register_master(struct spi_master *master)
++{
++	int nb, i;
++	int *cs;
++	struct device_node *np = master->dev.of_node;
++
++	if (!np)
++		return 0;
++
++	nb = of_gpio_named_count(np, "ncs-gpios");
++
++	if (nb < 1)
++		return 0;
++
++	master->chipselect_gpios = kzalloc(sizeof(int) * nb, GFP_KERNEL);
++
++	if (!master->chipselect_gpios)
++		return -ENOMEM;
++
++	master->first_gpio_chipselect = master->num_chipselect;
++	master->num_chipselect += nb;
++	master->num_gpio_chipselect = nb;
++
++	for (i = 0; i < nb; i++) {
++		cs = &master->chipselect_gpios[i];
++
++		*cs = of_get_named_gpio(np, "ncs-gpios", i);
++	}
++
++	return 0;
++}
++
+ /**
+  * spi_register_master - register SPI master controller
+  * @master: initialized master, originally from spi_alloc_master()
+@@ -593,6 +634,10 @@ int spi_register_master(struct spi_master *master)
+ 	if (!dev)
+ 		return -ENODEV;
+ 
++	status = of_spi_register_master(master);
++	if (status)
++		return status;
++
+ 	/* even if it's just one always-selected device, there must
+ 	 * be at least one chipselect
+ 	 */
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 176fce9..d21c267 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -318,6 +318,11 @@ struct spi_master {
+ 
+ 	/* called on release() to free memory provided by spi_master */
+ 	void			(*cleanup)(struct spi_device *spi);
++
++	/* gpio chip select */
++	int			*chipselect_gpios;
++	int			first_gpio_chipselect;
++	int			num_gpio_chipselect;
+ };
+ 
+ static inline void *spi_master_get_devdata(struct spi_master *master)
+-- 
+1.7.7
