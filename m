@@ -1,7 +1,7 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/4] ARM: at91: usb_a9g20 add DT i2c support
-Date: Thu,  9 Feb 2012 03:25:07 +0100
-Message-ID: <1328754308-7365-3-git-send-email-plagnioj@jcrosoft.com>
+Subject: [PATCH 4/4 v2] ARM: at91: sam9g45 add i2c DT support
+Date: Thu,  9 Feb 2012 03:25:08 +0100
+Message-ID: <1328754308-7365-4-git-send-email-plagnioj@jcrosoft.com>
 References: <1328754308-7365-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,58 +21,44 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-use i2c-gpio and enable rv3029 RTC
-
-enable the in the sam9g20 defconfig
+for now on use i2c-gpio driver on the same pin as the hardware IP
 
 Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 ---
- arch/arm/boot/dts/usb_a9g20.dts        |    9 +++++++++
- arch/arm/configs/at91sam9g20_defconfig |    3 +++
- 2 files changed, 12 insertions(+), 0 deletions(-)
+v2:
 
-diff --git a/arch/arm/boot/dts/usb_a9g20.dts b/arch/arm/boot/dts/usb_a9g20.dts
-index 11be3e9..9d84374 100644
---- a/arch/arm/boot/dts/usb_a9g20.dts
-+++ b/arch/arm/boot/dts/usb_a9g20.dts
-@@ -121,6 +121,15 @@
- 
+	update DT bindings
+
+Best Regards,
+J.
+ arch/arm/boot/dts/at91sam9g45.dtsi |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index a12ebc4..9f266ee 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -211,6 +211,19 @@
+ 				status = "disabled";
  			};
  
 +			i2c-gpio@0 {
-+				status = "okay";
-+
-+				rv3029c2@56 {
-+					compatible = "rv3029c2";
-+					reg = <0x56>;
-+				};
++				compatible = "i2c-gpio";
++				gpios = <&pioA 20 0 /* sda */
++					 &pioA 21 0 /* scl */
++					>;
++				i2c-gpio,sda-open-drain;
++				i2c-gpio,scl-open-drain;
++				udelay = <5>;		/* ~100 kHz */
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
 +			};
 +
  		};
  	};
  };
-diff --git a/arch/arm/configs/at91sam9g20_defconfig b/arch/arm/configs/at91sam9g20_defconfig
-index 9123568..994d331 100644
---- a/arch/arm/configs/at91sam9g20_defconfig
-+++ b/arch/arm/configs/at91sam9g20_defconfig
-@@ -74,6 +74,8 @@ CONFIG_LEGACY_PTY_COUNT=16
- CONFIG_SERIAL_ATMEL=y
- CONFIG_SERIAL_ATMEL_CONSOLE=y
- CONFIG_HW_RANDOM=y
-+CONFIG_I2C=y
-+CONFIG_I2C_GPIO=y
- CONFIG_SPI=y
- CONFIG_SPI_ATMEL=y
- CONFIG_SPI_SPIDEV=y
-@@ -105,6 +107,7 @@ CONFIG_LEDS_TRIGGERS=y
- CONFIG_LEDS_TRIGGER_TIMER=y
- CONFIG_LEDS_TRIGGER_HEARTBEAT=y
- CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_RV3029C2=y
- CONFIG_RTC_DRV_AT91SAM9=y
- CONFIG_EXT2_FS=y
- CONFIG_MSDOS_FS=y
 -- 
 1.7.7
