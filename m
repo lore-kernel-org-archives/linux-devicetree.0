@@ -1,102 +1,64 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] ARM: Exynos: Add irq domain and device tree support for
- interrupt combiner
-Date: Wed, 08 Feb 2012 13:47:21 -0600
-Message-ID: <4F32D149.7030908@gmail.com>
-References: <1328724604-11192-1-git-send-email-thomas.abraham@linaro.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/4 v2] ARM: at91: sam9g20 add i2c DT support
+Date: Thu,  9 Feb 2012 03:25:06 +0100
+Message-ID: <1328754308-7365-2-git-send-email-plagnioj@jcrosoft.com>
+References: <1328754308-7365-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1328724604-11192-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, kgene.kim@samsung.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1328754308-7365-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2012 12:10 PM, Thomas Abraham wrote:
-> A common irq domain for the interrupts managed by the interrupt combiners is
-> setup. All the instances of irq combiner reference the common irq domain for
-> translating hardware interrupts to linux irq number.
-> 
-> In case of device tree based boot, a interrupt specifier translator is setup
-> that can translate interrupt specifiers for device nodes which use combiner
-> as their interrupt parent.
-> 
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
-> Changes since v2:
-> - Rebased to Grant's irqdomain/next branch.
-> 
-> Changes since v1:
-> - Includes all changes suggested by Rob Herring.
-> - Tested with SPARSE_IRQ enabled.
-> 
->  arch/arm/mach-exynos/common.c |  100 ++++++++++++++++++++++++++++++++--------
->  1 files changed, 80 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
-> index 6de298c..24693f0 100644
-> --- a/arch/arm/mach-exynos/common.c
-> +++ b/arch/arm/mach-exynos/common.c
+for now on use i2c-gpio driver on the same pin as the hardware IP
 
-snip
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+v2:
 
-> -	for (i = irq_start; i < combiner_data[combiner_nr].irq_offset
-> -				+ MAX_IRQ_IN_COMBINER; i++) {
-> -		irq_set_chip_and_handler(i, &combiner_chip, handle_level_irq);
-> -		irq_set_chip_data(i, &combiner_data[combiner_nr]);
-> -		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
-> +	if (combiner_init_irq_domain(COMBINER_IRQ(0, 0), MAX_COMBINER_NR *
-> +					MAX_IRQ_IN_COMBINER, np))
-> +		BUG();
+	update DT bindings
 
-You've already done a WARN. Do you need a BUG too?
+Best Regards,
+J.
+ arch/arm/boot/dts/at91sam9g20.dtsi |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
 
-> +	for (irq = 0; irq < MAX_COMBINER_NR; irq++) {
-> +		combiner_init(irq, (void __iomem *)S5P_VA_COMBINER(irq));
-> +		combiner_cascade_irq(irq, IRQ_SPI(irq));
-
-This is relying on fixed Linux irq numbers and will break once GIC is
-using linear domains. Somehow you need to lookup the linux irq# using
-the GIC hw irq#.
-
-Rob
-
->  	}
->  }
->  
-> +
->  #ifdef CONFIG_OF
->  static const struct of_device_id exynos4_dt_irq_match[] = {
->  	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
-> +	{ .compatible = "samsung,exynos4120-combiner",
-> +			.data = combiner_of_init, },
->  	{},
->  };
->  #endif
->  
->  void __init exynos4_init_irq(void)
->  {
-> -	int irq;
->  	unsigned int gic_bank_offset;
->  
->  	gic_bank_offset = soc_is_exynos4412() ? 0x4000 : 0x8000;
-> @@ -408,12 +472,8 @@ void __init exynos4_init_irq(void)
->  		of_irq_init(exynos4_dt_irq_match);
->  #endif
->  
-> -	for (irq = 0; irq < MAX_COMBINER_NR; irq++) {
-> -
-> -		combiner_init(irq, (void __iomem *)S5P_VA_COMBINER(irq),
-> -				COMBINER_IRQ(irq, 0));
-> -		combiner_cascade_irq(irq, IRQ_SPI(irq));
-> -	}
-> +	if (!of_have_populated_dt())
-> +		combiner_of_init(NULL, NULL);
->  
->  	/*
->  	 * The parameters of s5p_init_irq() are for VIC init.
+diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
+index f8f4627..81f8615 100644
+--- a/arch/arm/boot/dts/at91sam9g20.dtsi
++++ b/arch/arm/boot/dts/at91sam9g20.dtsi
+@@ -220,6 +220,19 @@
+ 				status = "disabled";
+ 			};
+ 
++			i2c-gpio@0 {
++				compatible = "i2c-gpio";
++				gpios = <&pioA 23 0 /* sda */
++					 &pioA 24 0 /* scl */
++					>;
++				i2c-gpio,sda-open-drain;
++				i2c-gpio,scl-open-drain;
++				udelay = <2>;		/* ~100 kHz */
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
+ 		};
+ 	};
+ };
+-- 
+1.7.7
