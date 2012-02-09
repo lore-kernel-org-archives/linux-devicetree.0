@@ -1,41 +1,99 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2] ARM: Exynos4: Add cpu-offset property in gic device
- tree node
-Date: Thu, 09 Feb 2012 19:23:25 +0900
-Message-ID: <067c01cce714$db77de90$92679bb0$%kim@samsung.com>
-References: <1328023789-4672-1-git-send-email-thomas.abraham@linaro.org>
- <4F2819D0.7090002@samsung.com>
+Subject: RE: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device
+ tree support
+Date: Thu, 09 Feb 2012 22:42:56 +0900
+Message-ID: <003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <4F2819D0.7090002@samsung.com>
+In-reply-to: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
 Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Karol Lewandowski' <k.lewandowsk@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, patches@linaro.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Karol Lewandowski wrote:
+Thomas Abraham wrote:
 > 
-> On 31.01.2012 16:29, Thomas Abraham wrote:
-> > Commit db0d4db22a78 ('ARM: gic: allow GIC to support non-banked setups)
-> > requires a cpu-offset property to be specified for non-banked gic
-> > controllers, which is the case for Exynos4.
-> >
-> > Reported-by: Karol Lewandowski<k.lewandowski@samsung.com>
+> This patchset removes all uses of 'clk_type' member from the platform data
+> of sdhci-s3c driver and adds device tree support for sdhci-s3c driver.
 > 
-> ( Minor note - my email address lacks 'i' at the end, i.e. it's
->    k.lewandowsk@ :)
+> In this patchset, all uses of 'clk_type' member from the platform data are
+> removed from the sdhci-s3c driver and platform code. The clk_type is a SoC
+> specific information and not a board/machine specific information. Hence,
+> this
+> information can be more aptly represented using SoC specific driver data
+> in the
+> sdhci-s3c driver.
 > 
-> > Signed-off-by: Thomas Abraham<thomas.abraham@linaro.org>
-> > ---
-> > This patch solves the issue of boot failure with SMP enabled kernel for
-> > Exynos4 device tree enabled machine.
+> Hence all uses of 'clk_type' member in sdhci-s3c driver's platform data is
+> removed. In place of that, the sdhci host qurik
+> 'SDHCI_QUIRK_NONSTANDARD_CLOCK'
+> is used to handle controllers that do not have a standard sdclk division
+> (like those in the exynos4 SoC's).
 > 
-> Tested-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+> This is a pre-requisite for adding device tree support for sdhci-s3c
+> driver.
+> While migrating towards device tree support, retreving 'clk_type'
+> information
+> from device tree information does not seem correct and hence it has been
+> added
+> as SoC specific driver data. All this is handled in patches 1 to 3.
 > 
-Applied with fixing Karol's e-mail address.
+> Patch 4 to 6 add device tree support for sdhci-s3c driver. The fourth
+> patch
+> derives the maximum transfer width host capability from the max_width
+> member
+> in platform data. The fifth patch modifies the sdhci-s3c driver to
+> mainatain
+> a local copy of the platform data, which makes it easier to add device
+> tree
+> support for the driver. The last patch adds device tree based discovery
+> for
+> the sdhci-s3c driver.
+> 
+> This patchset is based on the following tree.
+>   http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+> [for-next]
+> 
+> Thomas Abraham (6):
+>   mmc: sdhci-s3c: Remove usage of clk_type member in platform data
+>   arm: exynos4: use 'exynos4-sdhci' as device name for sdhci controllers
+>   arm: samsung: remove all uses of clk_type member in sdhci platform data
+>   mmc: sdhci-s3c: derive transfer width host capability from max_width in
+> platform data
+>   mmc: sdhci-s3c: Keep a copy of platform data and use it
+>   mmc: sdhci-s3c: Add device tree support
+> 
+>  .../devicetree/bindings/mmc/samsung-sdhci.txt      |   70 ++++++
+>  arch/arm/mach-exynos/clock.c                       |   24 +-
+>  arch/arm/mach-exynos/common.c                      |    5 +
+>  arch/arm/mach-exynos/mach-armlex4210.c             |    3 -
+>  arch/arm/mach-exynos/mach-nuri.c                   |    3 -
+>  arch/arm/mach-exynos/mach-origen.c                 |    2 -
+>  arch/arm/mach-exynos/mach-smdk4x12.c               |    2 -
+>  arch/arm/mach-exynos/mach-smdkv310.c               |    4 -
+>  arch/arm/mach-exynos/mach-universal_c210.c         |    2 -
+>  arch/arm/plat-samsung/devs.c                       |    4 -
+>  arch/arm/plat-samsung/include/plat/sdhci.h         |   35 +++-
+>  arch/arm/plat-samsung/platformdata.c               |    2 -
+>  drivers/mmc/host/sdhci-s3c.c                       |  235
++++++++++++++++++++-
+>  13 files changed, 341 insertions(+), 50 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/samsung-
+> sdhci.txt
+
+Hi,
+
+Looks ok to me and I'd like to pick this series in samsung tree with Chris'
+ack.
+
+Chris, is it ok? If you need to merge this in your tree, please let me know.
+I will provide topic branch for it.
+
+If any problems, please let me know.
 
 Thanks.
 
