@@ -1,57 +1,43 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: hex number case in dts files.
-Date: Fri, 10 Feb 2012 12:25:38 +1100
-Message-ID: <20120210012538.GC10536@truffala.fritz.box>
-References: <20120209180411.GA5654@codeaurora.org> <4F340E71.7070004@gmail.com>
- <20120210001921.GA10536@truffala.fritz.box>
- <20120210002950.GA18408@codeaurora.org>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH v3 4/9] tegra: fdt: i2c: Add extra I2C bindings
+ for	U-Boot
+Date: Fri, 10 Feb 2012 07:29:14 +0100
+Message-ID: <4F34B93A.2050503@denx.de>
+References: <1328318041-10943-1-git-send-email-sjg@chromium.org>
+ <1328318041-10943-5-git-send-email-sjg@chromium.org>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120210002950.GA18408-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1328318041-10943-5-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 09, 2012 at 04:29:50PM -0800, David Brown wrote:
-> On Fri, Feb 10, 2012 at 11:19:21AM +1100, David Gibson wrote:
-> > On Thu, Feb 09, 2012 at 12:20:33PM -0600, Rob Herring wrote:
-> > > On 02/09/2012 12:04 PM, David Brown wrote:
-> > > > I've noticed an inconsistency in the case of letters in hex constants
-> > > > in various dts files.  The ones that are actually numbers probably
-> > > > don't really matter, the but the node names are case sensitive
-> > > > strings, and in some sense do matter.
-> > > > 
-> > > > I ask because some people I've spoken with internally seem to have
-> > > > strong opinions about what case hex constants should be, and it'd be
-> > > > nice to be able to have some guideline about this.  Historically, I've
-> > > > always seen DT hex values in lowercase.
-> > > > 
-> > > 
-> > > Lower case should be used for dts files.
-> > 
-> > Yes, the node names should always have the hex done in lower case.  I
-> > have plans to put more checks in for how reg is encoded into node
-> > names, but just need to get time.
+Hello Simon,
+
+Simon Glass wrote:
+> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
 > 
-> What about number of digits?  Should a register at 0x42 be
-> node@00000042 or node@42?  Again, I'm seeing both.
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> Changes in v2:
+> - Adjust definitions to fit new peripheral clock bindings
+> - Change 'speed' to 'clock-frequency'
+> - Remove u-boot,pinmux binding (sadly)
+> 
+> Changes in v3:
+> - Move speed setting from tegra20.dtsi to board .dts file
+> 
+>  arch/arm/dts/tegra20.dtsi |    6 +++++-
+>  1 files changed, 5 insertions(+), 1 deletions(-)
 
-node@42
+Acked-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 
+bye,
+Heiko
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
