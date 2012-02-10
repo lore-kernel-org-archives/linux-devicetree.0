@@ -1,43 +1,33 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [U-Boot] [PATCH v3 4/9] tegra: fdt: i2c: Add extra I2C bindings
- for	U-Boot
-Date: Fri, 10 Feb 2012 07:29:14 +0100
-Message-ID: <4F34B93A.2050503@denx.de>
-References: <1328318041-10943-1-git-send-email-sjg@chromium.org>
- <1328318041-10943-5-git-send-email-sjg@chromium.org>
-Reply-To: hs-ynQEQJNshbs@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1328318041-10943-5-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: hex number case in dts files.
+Date: Fri, 10 Feb 2012 18:25:09 +0100
+Message-ID: <7100D251-EE4E-4575-A1BD-96652638755B@kernel.crashing.org>
+References: <20120209180411.GA5654@codeaurora.org>
+ <4F340E71.7070004@gmail.com> <20120210001921.GA10536@truffala.fritz.box>
+ <20120210002950.GA18408@codeaurora.org>
+Mime-Version: 1.0 (Apple Message framework v753.1)
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120210002950.GA18408-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+> What about number of digits?  Should a register at 0x42 be
+> node@00000042 or node@42?  Again, I'm seeing both.
 
-Simon Glass wrote:
-> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
-> 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> Changes in v2:
-> - Adjust definitions to fit new peripheral clock bindings
-> - Change 'speed' to 'clock-frequency'
-> - Remove u-boot,pinmux binding (sadly)
-> 
-> Changes in v3:
-> - Move speed setting from tegra20.dtsi to board .dts file
-> 
->  arch/arm/dts/tegra20.dtsi |    6 +++++-
->  1 files changed, 5 insertions(+), 1 deletions(-)
+It depends on the binding of the parent node.  Most use no
+leading zeroes except when representing 0 itself.
 
-Acked-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Segher
