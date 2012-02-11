@@ -1,68 +1,35 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH V3 1/1] dt: add of_get_child_count helper function
-Date: Sun, 12 Feb 2012 00:37:46 +0400
-Message-ID: <4F36D19A.8050409@mvista.com>
-References: <1328980929-5423-1-git-send-email-dong.aisheng@linaro.org>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device tree support
+Date: Sat, 11 Feb 2012 16:37:31 -0500
+Message-ID: <m2aa4pkq5g.fsf@bob.laptop.org>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
+	<003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1328980929-5423-1-git-send-email-dong.aisheng@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <dong.aisheng@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <003401cce730$baf979a0$30ec6ce0$%kim@samsung.com> (Kukjin Kim's
+	message of "Thu, 09 Feb 2012 22:42:56 +0900")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi,
 
-On 11-02-2012 21:22, Dong Aisheng wrote:
-
-> Currently most code to get child count in kernel are almost same,
-> add a helper to implement this function for dt to use.
-
-> Signed-off-by: Dong Aisheng<dong.aisheng@linaro.org>
-> Cc: Grant Likely<grant.likely@secretlab.ca>
-> Cc: Rob Herring<rob.herring@calxeda.com>
-
-> ---
-> Hi Rob,
-
-> Since my imx pinctrl driver series still depends on the pinctrl core dt
-> binding patch which is still not in mainline, i'd like this pure dt patch
-> go separately first in case others want to use.
-
-> changes v2->v3:
->   Addressed some people's comments:
->   * do not use assignment as expression
->   * return 0 for non-dt case
-
-> Changes v1->v2:
->   * change the name from of_get_child_number to of_get_child_count
-> ---
->   include/linux/of.h |   16 ++++++++++++++++
->   1 files changed, 16 insertions(+), 0 deletions(-)
-
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a75a831..ae242ef 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -195,6 +195,17 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
->   	for (child = of_get_next_child(parent, NULL); child != NULL; \
->   	     child = of_get_next_child(parent, child))
+On Thu, Feb 09 2012, Kukjin Kim wrote:
+> Looks ok to me and I'd like to pick this series in samsung tree with Chris'
+> ack.
 >
-> +static inline int of_get_child_count(const struct device_node *np)
-> +{
-> +	struct device_node *child = NULL;
-> +	int num = 0;
-> +
-> +	while ((child = of_get_next_child(np, child)) != NULL)
+> Chris, is it ok? If you need to merge this in your tree, please let me know.
+> I will provide topic branch for it.
+>
+> If any problems, please let me know.
 
-    Doesn't scripts/checkpatch.pl complain here?
+I don't have a very strong opinion, but I think it's probably better to
+go via the mmc tree since the patch is so large and hence the chance of
+conflict before merging is high.  Thanks,
 
-> +		num++;
-> +
-> +	return num;
-> +}
-> +
-
-WBR, Sergei
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
