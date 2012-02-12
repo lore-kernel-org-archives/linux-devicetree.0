@@ -1,35 +1,42 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device tree support
-Date: Sat, 11 Feb 2012 16:37:31 -0500
-Message-ID: <m2aa4pkq5g.fsf@bob.laptop.org>
-References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
-	<003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH V3 1/1] dt: add of_get_child_count helper function
+Date: Sat, 11 Feb 2012 22:50:40 -0800
+Message-ID: <20120212065040.GA2031@b29396-Latitude-E6410>
+References: <1328980929-5423-1-git-send-email-dong.aisheng@linaro.org>
+ <4F36D19A.8050409@mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <003401cce730$baf979a0$30ec6ce0$%kim@samsung.com> (Kukjin Kim's
-	message of "Thu, 09 Feb 2012 22:42:56 +0900")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F36D19A.8050409@mvista.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: Dong Aisheng <dong.aisheng@linaro.org>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sun, Feb 12, 2012 at 12:37:46AM +0400, Sergei Shtylyov wrote:
+> >diff --git a/include/linux/of.h b/include/linux/of.h
+> >index a75a831..ae242ef 100644
+> >--- a/include/linux/of.h
+> >+++ b/include/linux/of.h
+> >@@ -195,6 +195,17 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+> >  	for (child = of_get_next_child(parent, NULL); child != NULL; \
+> >  	     child = of_get_next_child(parent, child))
+> >
+> >+static inline int of_get_child_count(const struct device_node *np)
+> >+{
+> >+	struct device_node *child = NULL;
+> >+	int num = 0;
+> >+
+> >+	while ((child = of_get_next_child(np, child)) != NULL)
+> 
+>    Doesn't scripts/checkpatch.pl complain here?
+> 
+That complain actually is not caused by this patch.
+I have already sent a patch to fix that issue.
+But seemed to get a NACK.
+Please refer to:
+https://lkml.org/lkml/2011/12/20/236
 
-On Thu, Feb 09 2012, Kukjin Kim wrote:
-> Looks ok to me and I'd like to pick this series in samsung tree with Chris'
-> ack.
->
-> Chris, is it ok? If you need to merge this in your tree, please let me know.
-> I will provide topic branch for it.
->
-> If any problems, please let me know.
-
-I don't have a very strong opinion, but I think it's probably better to
-go via the mmc tree since the patch is so large and hence the chance of
-conflict before merging is high.  Thanks,
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+Regards
+Dong Aisheng
