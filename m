@@ -1,114 +1,264 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [PATCH 4/9] ARM: at91/gpio: change comments and one variable name
-Date: Mon, 13 Feb 2012 15:43:04 +0100
-Message-ID: <032e5eba814724ec4f14c6b26bb2fa8556595efe.1329139662.git.nicolas.ferre@atmel.com>
-References: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com>
+From: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/4 v2] i2c/gpio: add DT support
+Date: Mon, 13 Feb 2012 18:17:37 +0100
+Message-ID: <4F3945B1.9070900@samsung.com>
+References: <1328754308-7365-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com>
-In-Reply-To: <2fd1ebedc5ad5ac7aeb15c590c4400212a3b06cf.1329139662.git.nicolas.ferre@atmel.com>
-References: <2fd1ebedc5ad5ac7aeb15c590c4400212a3b06cf.1329139662.git.nicolas.ferre@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, avictor.za@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1328754308-7365-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-What was true only on at91sam9263 about the sharing of a single AIC
-IRQ line for several GPIO banks is now used by several Atmel SoCs.
+On 09.02.2012 03:25, Jean-Christophe PLAGNIOL-VILLARD wrote:
 
-Change a variable name to allow better understanding while
-introducing IRQ domains in following patches.
+Hi!
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
----
- arch/arm/mach-at91/gpio.c |   25 ++++++++++++++-----------
- 1 files changed, 14 insertions(+), 11 deletions(-)
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>
+> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org
+> ---
+> v2:
+> 
+> 	use devm
+> 	update DT bindings to i2c-gpio and sda-open-drain...
+> 	update against "of: introduce helper to manage boolean"
+> 
+> Best Regards,
+> J.
+>  .../devicetree/bindings/gpio/gpio_i2c.txt          |   32 +++++++
+>  drivers/i2c/busses/i2c-gpio.c                      |   95 +++++++++++++++----
+>  2 files changed, 107 insertions(+), 20 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio_i2c.txt b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> new file mode 100644
+> index 0000000..9710ed2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> @@ -0,0 +1,32 @@
+> +Device-Tree bindings for i2c gpio driver
+> +
+> +Required properties:
+> +	- compatible = "i2c-gpio";
+> +	- gpios: sda and scl gpio
+> +
+> +
+> +Optional properties:
+> +	- i2c-gpio,sda-open-drain: sda as open drain
+> +	- i2c-gpio,scl-open-drain: scl as open drain
+> +	- i2c-gpio,scl-output-only: scl as output only
 
-diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
-index 74d6783..b762afc 100644
---- a/arch/arm/mach-at91/gpio.c
-+++ b/arch/arm/mach-at91/gpio.c
-@@ -29,8 +29,8 @@
- struct at91_gpio_chip {
- 	struct gpio_chip	chip;
- 	struct at91_gpio_chip	*next;		/* Bank sharing same clock */
--	int			id;		/* ID of register bank */
--	void __iomem		*regbase;	/* Base of register bank */
-+	int			pioc_hwirq;	/* PIO bank interrupt identifier on AIC */
-+	void __iomem		*regbase;	/* PIO bank virtual address */
- 	struct clk		*clock;		/* associated clock */
- };
- 
-@@ -285,7 +285,7 @@ static int gpio_irq_set_wake(struct irq_data *d, unsigned state)
- 	else
- 		wakeups[bank] &= ~mask;
- 
--	irq_set_irq_wake(gpio_chip[bank].id, state);
-+	irq_set_irq_wake(gpio_chip[bank].pioc_hwirq, state);
- 
- 	return 0;
- }
-@@ -499,7 +499,7 @@ void __init at91_gpio_irq_setup(void)
- 	for (pioc = 0, this = gpio_chip, prev = NULL;
- 			pioc++ < gpio_banks;
- 			prev = this, this++) {
--		unsigned	id = this->id;
-+		unsigned	pioc_hwirq = this->pioc_hwirq;
- 		unsigned	i;
- 
- 		__raw_writel(~0, this->regbase + PIO_IDR);
-@@ -518,14 +518,14 @@ void __init at91_gpio_irq_setup(void)
- 		}
- 
- 		/* The toplevel handler handles one bank of GPIOs, except
--		 * AT91SAM9263_ID_PIOCDE handles three... PIOC is first in
--		 * the list, so we only set up that handler.
-+		 * on some SoC it can handles up to three...
-+		 * We only set up the handler for the first of the list.
- 		 */
- 		if (prev && prev->next == this)
- 			continue;
- 
--		irq_set_chip_data(id, this);
--		irq_set_chained_handler(id, gpio_irq_handler);
-+		irq_set_chip_data(pioc_hwirq, this);
-+		irq_set_chained_handler(pioc_hwirq, gpio_irq_handler);
- 	}
- 	pr_info("AT91: %d gpio irqs in %d banks\n", irq - gpio_to_irq(0), gpio_banks);
- }
-@@ -615,7 +615,7 @@ void __init at91_gpio_init(struct at91_gpio_bank *data, int nr_banks)
- 	for (i = 0; i < nr_banks; i++) {
- 		at91_gpio = &gpio_chip[i];
- 
--		at91_gpio->id = data[i].id;
-+		at91_gpio->pioc_hwirq = data[i].pioc_hwirq;
- 		at91_gpio->chip.base = i * 32;
- 
- 		at91_gpio->regbase = ioremap(data[i].regbase, 512);
-@@ -633,8 +633,11 @@ void __init at91_gpio_init(struct at91_gpio_bank *data, int nr_banks)
- 		/* enable PIO controller's clock */
- 		clk_enable(at91_gpio->clock);
- 
--		/* AT91SAM9263_ID_PIOCDE groups PIOC, PIOD, PIOE */
--		if (last && last->id == at91_gpio->id)
-+		/*
-+		 * GPIO controller are grouped on some SoC:
-+		 * PIOC, PIOD and PIOE can share the same IRQ line
-+		 */
-+		if (last && last->pioc_hwirq == at91_gpio->pioc_hwirq)
- 			last->next = at91_gpio;
- 		last = at91_gpio;
- 
--- 
-1.7.9
+
+> +	- udelay: delay between GPIO operations (may depend on each platform)
+> +	- timeout: timeout to get data (ms)
+
+
+If these are really needed then I would prefer to have these fully
+qualified (with unit type "-ms/-millisecs" appended).
+
+Regulator framework, with its "-microvolt/-microamp", serve here as
+prime example of being quite descriptive (one doesn't neet to look up
+the docs). Please see:
+
+  http://permalink.gmane.org/gmane.linux.ports.arm.omap/67637
+
+> +
+> +Example nodes:
+> +
+> +i2c-gpio@0 {
+> +	compatible = "i2c-gpio";
+> +	gpios = <&pioA 23 0 /* sda */
+> +		 &pioA 24 0 /* scl */
+> +		>;
+> +	i2c-gpio,sda-open-drain;
+> +	i2c-gpio,scl-open-drain;
+> +	udelay = <2>;		/* ~100 kHz */
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	rv3029c2@56 {
+> +		compatible = "rv3029c2";
+> +		reg = <0x56>;
+> +	};
+> +};
+> diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+> index a651779..d7032c1 100644
+> --- a/drivers/i2c/busses/i2c-gpio.c
+> +++ b/drivers/i2c/busses/i2c-gpio.c
+> @@ -14,8 +14,15 @@
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/gpio.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_i2c.h>
+>  
+> -#include <asm/gpio.h>
+> +struct i2c_gpio_private_data {
+> +	struct i2c_adapter adap;
+> +	struct i2c_algo_bit_data bit_data;
+> +	struct i2c_gpio_platform_data pdata;
+> +};
+>  
+>  /* Toggle SDA by changing the direction of the pin */
+>  static void i2c_gpio_setsda_dir(void *data, int state)
+> @@ -78,24 +85,63 @@ static int i2c_gpio_getscl(void *data)
+>  	return gpio_get_value(pdata->scl_pin);
+>  }
+>  
+> +static int __devinit of_i2c_gpio_probe(struct device_node *np,
+> +			     struct i2c_gpio_platform_data *pdata)
+> +{
+> +	u32 reg;
+> +
+> +	if (of_gpio_count(np) < 2)
+> +		return -ENODEV;
+> +
+> +	pdata->sda_pin = of_get_gpio(np, 0);
+> +	pdata->scl_pin = of_get_gpio(np, 1);
+> +
+> +	if (pdata->sda_pin < 0 || pdata->scl_pin < 0) {
+> +		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
+> +		       np->full_name, pdata->sda_pin, pdata->scl_pin);
+> +		return -ENODEV;
+> +	}
+> +
+
+
+
+> +	if (of_property_read_u32(np, "udelay", &reg))
+> +		pdata->udelay = reg;
+> +
+> +	if (of_property_read_u32(np, "timeout", &reg))
+> +		pdata->timeout = msecs_to_jiffies(reg);
+
+
+I don't know if you have received my previous mail[1] but as I said
+there - of_property_read_* returns non-zero (< 0) value on _error_.
+Thus, logic of above two statements has to be reversed.
+
+[1] http://permalink.gmane.org/gmane.linux.drivers.i2c/10009
+
+Thanks
+
+> +
+> +	pdata->sda_is_open_drain =
+> +		!!of_property_read_bool(np, "i2c-gpio,sda-open-drain");
+> +	pdata->scl_is_open_drain =
+> +		!!of_property_read_bool(np, "i2c-gpio,scl-open-drain");
+> +	pdata->scl_is_output_only =
+> +		!!of_property_read_bool(np, "i2c-gpio,scl-output-only");
+> +
+> +	return 0;
+> +}
+> +
+>  static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+>  {
+> +	struct i2c_gpio_private_data *priv;
+>  	struct i2c_gpio_platform_data *pdata;
+>  	struct i2c_algo_bit_data *bit_data;
+>  	struct i2c_adapter *adap;
+>  	int ret;
+>  
+> -	pdata = pdev->dev.platform_data;
+> -	if (!pdata)
+> -		return -ENXIO;
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +	adap = &priv->adap;
+> +	bit_data = &priv->bit_data;
+> +	pdata = &priv->pdata;
+>  
+> -	ret = -ENOMEM;
+> -	adap = kzalloc(sizeof(struct i2c_adapter), GFP_KERNEL);
+> -	if (!adap)
+> -		goto err_alloc_adap;
+> -	bit_data = kzalloc(sizeof(struct i2c_algo_bit_data), GFP_KERNEL);
+> -	if (!bit_data)
+> -		goto err_alloc_bit_data;
+> +	if (pdev->dev.of_node) {
+> +		ret = of_i2c_gpio_probe(pdev->dev.of_node, pdata);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		if (!pdev->dev.platform_data)
+> +			return -ENXIO;
+> +		memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
+> +	}
+>  
+>  	ret = gpio_request(pdata->sda_pin, "sda");
+>  	if (ret)
+> @@ -143,6 +189,7 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+>  	adap->algo_data = bit_data;
+>  	adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
+>  	adap->dev.parent = &pdev->dev;
+> +	adap->dev.of_node = pdev->dev.of_node;
+>  
+>  	/*
+>  	 * If "dev->id" is negative we consider it as zero.
+> @@ -154,7 +201,9 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_add_bus;
+>  
+> -	platform_set_drvdata(pdev, adap);
+> +	of_i2c_register_devices(adap);
+> +
+> +	platform_set_drvdata(pdev, priv);
+>  
+>  	dev_info(&pdev->dev, "using pins %u (SDA) and %u (SCL%s)\n",
+>  		 pdata->sda_pin, pdata->scl_pin,
+> @@ -168,34 +217,40 @@ err_add_bus:
+>  err_request_scl:
+>  	gpio_free(pdata->sda_pin);
+>  err_request_sda:
+> -	kfree(bit_data);
+> -err_alloc_bit_data:
+> -	kfree(adap);
+> -err_alloc_adap:
+>  	return ret;
+>  }
+>  
+>  static int __devexit i2c_gpio_remove(struct platform_device *pdev)
+>  {
+> +	struct i2c_gpio_private_data *priv;
+>  	struct i2c_gpio_platform_data *pdata;
+>  	struct i2c_adapter *adap;
+>  
+> -	adap = platform_get_drvdata(pdev);
+> -	pdata = pdev->dev.platform_data;
+> +	priv = platform_get_drvdata(pdev);
+> +	adap = &priv->adap;
+> +	pdata = &priv->pdata;
+>  
+>  	i2c_del_adapter(adap);
+>  	gpio_free(pdata->scl_pin);
+>  	gpio_free(pdata->sda_pin);
+> -	kfree(adap->algo_data);
+> -	kfree(adap);
+>  
+>  	return 0;
+>  }
+>  
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id i2c_gpio_dt_ids[] = {
+> +	{ .compatible = "i2c-gpio", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, i2c_gpio_dt_ids);
+> +#endif
+> +
+>  static struct platform_driver i2c_gpio_driver = {
+>  	.driver		= {
+>  		.name	= "i2c-gpio",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table	= of_match_ptr(i2c_gpio_dt_ids),
+>  	},
+>  	.probe		= i2c_gpio_probe,
+>  	.remove		= __devexit_p(i2c_gpio_remove),
