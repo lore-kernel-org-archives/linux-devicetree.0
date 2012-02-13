@@ -1,66 +1,69 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V3 1/1] dt: add of_get_child_count helper function
-Date: Sun, 12 Feb 2012 17:04:20 -0700
-Message-ID: <CACxGe6tUVR+dWphnswTYcY+kut6V_WTN17ZMR8dFGd0XviyU9Q@mail.gmail.com>
-References: <1328980929-5423-1-git-send-email-dong.aisheng@linaro.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] gpio: drop CONFIG_OF_GPIO in the definition of the
+ struct gpio_chip
+Date: Mon, 13 Feb 2012 11:18:10 +0100
+Message-ID: <4F38E362.6010307@atmel.com>
+References: <1329125002-21134-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1328980929-5423-1-git-send-email-dong.aisheng@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <dong.aisheng@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rob.herring@calxeda.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1329125002-21134-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 11, 2012 at 10:22 AM, Dong Aisheng <dong.aisheng@linaro.org=
-> wrote:
-> Currently most code to get child count in kernel are almost same,
-> add a helper to implement this function for dt to use.
->
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
->
-> ---
-> Hi Rob,
->
-> Since my imx pinctrl driver series still depends on the pinctrl core =
-dt
-> binding patch which is still not in mainline, i'd like this pure dt p=
-atch
-> go separately first in case others want to use.
->
-> changes v2->v3:
-> =A0Addressed some people's comments:
-> =A0* do not use assignment as expression
-> =A0* return 0 for non-dt case
->
-> Changes v1->v2:
-> =A0* change the name from of_get_child_number to of_get_child_count
-> ---
-> =A0include/linux/of.h | =A0 16 ++++++++++++++++
-> =A01 files changed, 16 insertions(+), 0 deletions(-)
->
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a75a831..ae242ef 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -195,6 +195,17 @@ extern struct device_node *of_get_next_child(con=
-st struct device_node *node,
-> =A0 =A0 =A0 =A0for (child =3D of_get_next_child(parent, NULL); child =
-!=3D NULL; \
-> =A0 =A0 =A0 =A0 =A0 =A0 child =3D of_get_next_child(parent, child))
->
-> +static inline int of_get_child_count(const struct device_node *np)
-> +{
-> + =A0 =A0 =A0 struct device_node *child =3D NULL;
-> + =A0 =A0 =A0 int num =3D 0;
-> +
-> + =A0 =A0 =A0 while ((child =3D of_get_next_child(np, child)) !=3D NU=
-LL)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 num++;
+On 02/13/2012 10:23 AM, Jean-Christophe PLAGNIOL-VILLARD :
+> this will allow to avoid the ifdef CONFIG_OF_GPIO in gpio drivers
+> 
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Use for_each_child_of_node()
+Added devicetree-discuss ml.
 
-g.
+> ---
+>  include/asm-generic/gpio.h |    2 --
+>  1 files changed, 0 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+> index 1ff4e22..c08b758 100644
+> --- a/include/asm-generic/gpio.h
+> +++ b/include/asm-generic/gpio.h
+> @@ -122,7 +122,6 @@ struct gpio_chip {
+>  	unsigned		can_sleep:1;
+>  	unsigned		exported:1;
+>  
+> -#if defined(CONFIG_OF_GPIO)
+>  	/*
+>  	 * If CONFIG_OF is enabled, then all GPIO controllers described in the
+
+Maybe you will need to rework this comment.
+
+>  	 * device tree automatically may have an OF translation
+> @@ -131,7 +130,6 @@ struct gpio_chip {
+>  	int of_gpio_n_cells;
+>  	int (*of_xlate)(struct gpio_chip *gc,
+>  		        const struct of_phandle_args *gpiospec, u32 *flags);
+> -#endif
+
+I do not know if we can remove the ifdef completely of just move of_node
+out of it.
+
+
+>  };
+>  
+>  extern const char *gpiochip_is_requested(struct gpio_chip *chip,
+
+
+-- 
+Nicolas Ferre
