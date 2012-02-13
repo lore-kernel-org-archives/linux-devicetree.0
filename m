@@ -1,52 +1,53 @@
 From: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH 1/4] i2c/gpio-i2c add: add DT support
-Date: Mon, 13 Feb 2012 23:14:01 +0000
-Message-ID: <20120213231401.GE2999@freya.fluff.org>
-References: <1328438337-21185-1-git-send-email-plagnioj@jcrosoft.com>
- <4F301E25.5060507@samsung.com>
+Subject: Re: [PATCH 3.3 v2] I2C: OMAP: fix build breakage when CONFIG_OF is
+ not set
+Date: Mon, 13 Feb 2012 23:27:07 +0000
+Message-ID: <20120213232707.GH2999@freya.fluff.org>
+References: <1328699901-19488-1-git-send-email-coelho@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F301E25.5060507-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1328699901-19488-1-git-send-email-coelho-l0cyMroinI0@public.gmane.org>
 Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Luciano Coelho <coelho-l0cyMroinI0@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 06, 2012 at 07:38:29PM +0100, Karol Lewandowski wrote:
-> On 05.02.2012 11:38, Jean-Christophe PLAGNIOL-VILLARD wrote:
+On Wed, Feb 08, 2012 at 01:18:21PM +0200, Luciano Coelho wrote:
+> Since commit 6145197 (i2c: OMAP: Add DT support for i2c controller),
+> building i2c_omap.c breaks if CONFIG_OF is not set:
 > 
-> Hi!
+> drivers/i2c/busses/i2c-omap.c: In function 'omap_i2c_probe':
+> drivers/i2c/busses/i2c-omap.c:1021: error: 'omap_i2c_of_match' undeclared (first use in this function)
+> drivers/i2c/busses/i2c-omap.c:1021: error: (Each undeclared identifier is reported only once
+> drivers/i2c/busses/i2c-omap.c:1021: error: for each function it appears in.)
 > 
-> >+Device-Tree bindings for i2c gpio driver
-> >+
-> >+Required properties:
-> >+	- compatible = "gpio-i2c";
+> This is because the definition of omap_i2c_of_match is #ifdef'd on
+> CONFIG_OF, but the usage of it is not.
 > 
-> Driver name is "i2c-gpio" in file i2c-gpio.c. Previous version of
-> patch adding DT-support (prepared by Thomas Chou[1]) used i2c-gpio -
-> could we stick to that name?
+> Since the places where omap_ic2_of_match are prepared to get NULL
+> pointers if CONFIG_OF is not defined, we can simply define it to NULL.
 > 
-> [1] https://lkml.org/lkml/2011/2/23/584
+> Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Luciano Coelho <coelho-l0cyMroinI0@public.gmane.org>
+> Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> ---
+> v2: changed the commit log to use abbrev sha and include the commit subject
 > 
-> >+	- gpios: sda and scl gpio
-> >+
-> >+
-> >+Optional properties:
-> >+	- gpio-i2c,sda_is_open_drain: sda as open drain
-> >+	- gpio-i2c,scl_is_open_drain: scl as open drain
-> >+	- gpio-i2c,scl_is_output_only: scl as output only
+>  drivers/i2c/busses/i2c-omap.c |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 > 
-> Most of DT-properties I've seen used hyphen, not underscore.  Could
-> we stick to that convention?
-> 
-> (Nitpick: I think that "is" in property names is redundant too.)
-> 
-> >+	- udelay: half clock cycle time in us (may depend on each platform)
-> 
-> Could we use "clock-frequency" as Grant have suggested during review
-> of previous patch to i2c-gpio?
+> diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+> index f713eac..fd200eb 100644
+> --- a/drivers/i2c/busses/i2c-omap.c
+> +++ b/drivers/i2c/busses/i2c-omap.c
+> @@ -979,6 +979,8 @@ static const struct of_device_id omap_i2c_of_match[] = {
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, omap_i2c_of_match);
+> +#else
+> +static const struct of_device_id *omap_i2c_of_match = NULL;
+>  #endif
 
-I'm with Grant on that, it would be nice to have a reasonably sane set of
-default i2c dt bindings that everyone uses.
+of_match_ptr(_ptr) will go to NULL if CONFIG_OF is not set, use that please.
