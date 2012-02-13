@@ -1,7 +1,7 @@
 From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [PATCH 7/9] ARM: at91/gpio: add .to_irq gpio_chip handler
-Date: Mon, 13 Feb 2012 15:43:07 +0100
-Message-ID: <3b6c5c3e124b46ad6f57c33a57631e95a25dc5c1.1329139662.git.nicolas.ferre@atmel.com>
+Subject: [PATCH 6/9] ARM: at91/gpio: non-DT builds do not have gpio_chip.of_node field
+Date: Mon, 13 Feb 2012 15:43:06 +0100
+Message-ID: <bb41f7d8c40982714b9404314569c342307d9a17.1329139662.git.nicolas.ferre@atmel.com>
 References: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com>
@@ -12,85 +12,41 @@ To: plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, grant.likely@se
 Cc: tglx@linutronix.de, devicetree-discuss@lists.ozlabs.org, avictor.za@gmail.com, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Replace the gpio_to_irq() macro by a plain gpiolib .to_irq() handler.
-This call is using the irqdomain to translate hardware to Linux
-IRQ numbers.
-The irq_to_gpio() macro is completely removed.
+Protect build failure in case of non-DT configuration: the
+gpio_chip structure does not have a of_node field in case of
+!CONFIG_OF_GPIO.
+
+Keep this in a separate patch as it can be reverted if the
+field is added for both DT/non-DT cases.
 
 Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 ---
- arch/arm/mach-at91/gpio.c              |   13 +++++++++++++
- arch/arm/mach-at91/include/mach/gpio.h |   12 ------------
- 2 files changed, 13 insertions(+), 12 deletions(-)
+ arch/arm/mach-at91/gpio.c |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
 
 diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
-index 0dc3f5e..e8f5831 100644
+index 89e683a..0dc3f5e 100644
 --- a/arch/arm/mach-at91/gpio.c
 +++ b/arch/arm/mach-at91/gpio.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/clk.h>
- #include <linux/errno.h>
-+#include <linux/device.h>
- #include <linux/gpio.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -48,6 +49,7 @@ static int at91_gpiolib_direction_output(struct gpio_chip *chip,
- 					 unsigned offset, int val);
- static int at91_gpiolib_direction_input(struct gpio_chip *chip,
- 					unsigned offset);
-+static int at91_gpiolib_to_irq(struct gpio_chip *chip, unsigned offset);
- 
- #define AT91_GPIO_CHIP(name, base_gpio, nr_gpio)			\
- 	{								\
-@@ -59,6 +61,7 @@ static int at91_gpiolib_direction_input(struct gpio_chip *chip,
- 			.set		  = at91_gpiolib_set,		\
- 			.dbg_show	  = at91_gpiolib_dbg_show,	\
- 			.base		  = base_gpio,			\
-+			.to_irq		  = at91_gpiolib_to_irq,	\
- 			.ngpio		  = nr_gpio,			\
- 		},							\
- 	}
-@@ -640,6 +643,16 @@ static void at91_gpiolib_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- 	}
- }
- 
-+static int at91_gpiolib_to_irq(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct at91_gpio_chip *at91_gpio = to_at91_gpio_chip(chip);
-+	int virq = irq_find_mapping(at91_gpio->domain, offset);
-+
-+	dev_dbg(chip->dev, "%s: request IRQ for GPIO %d, return %d\n",
-+				chip->label, offset + chip->base, virq);
-+	return virq;
-+}
-+
- static int __init at91_gpio_setup_clk(int idx)
+@@ -496,12 +496,17 @@ postcore_initcall(at91_gpio_debugfs_init);
+ static void __init at91_gpio_irqdomain(struct at91_gpio_chip *at91_gpio)
  {
- 	struct at91_gpio_chip *at91_gpio = &gpio_chip[idx];
-diff --git a/arch/arm/mach-at91/include/mach/gpio.h b/arch/arm/mach-at91/include/mach/gpio.h
-index e3fd225..7cf009b 100644
---- a/arch/arm/mach-at91/include/mach/gpio.h
-+++ b/arch/arm/mach-at91/include/mach/gpio.h
-@@ -204,18 +204,6 @@ extern int at91_get_gpio_value(unsigned pin);
- extern void at91_gpio_suspend(void);
- extern void at91_gpio_resume(void);
+ 	int irq_base;
++#if defined(CONFIG_OF)
++	struct device_node *of_node = at91_gpio->chip.of_node;
++#else
++	struct device_node *of_node = NULL;
++#endif
  
--/*-------------------------------------------------------------------------*/
--
--/* wrappers for "new style" GPIO calls. the old AT91-specific ones should
-- * eventually be removed (along with this errno.h inclusion), and the
-- * gpio request/free calls should probably be implemented.
-- */
--
--#include <asm/errno.h>
--
--#define gpio_to_irq(gpio) (gpio + NR_AIC_IRQS)
--#define irq_to_gpio(irq)  (irq - NR_AIC_IRQS)
--
- #endif	/* __ASSEMBLY__ */
- 
- #endif
+ 	irq_base = irq_alloc_descs(-1, 0, at91_gpio->chip.ngpio, 0);
+ 	if (irq_base < 0)
+ 		panic("at91_gpio.%d: error %d: couldn't allocate IRQ numbers.\n",
+ 			at91_gpio->pioc_idx, irq_base);
+-	at91_gpio->domain = irq_domain_add_legacy(at91_gpio->chip.of_node,
++	at91_gpio->domain = irq_domain_add_legacy(of_node,
+ 						  at91_gpio->chip.ngpio,
+ 						  irq_base, 0,
+ 						  &irq_domain_simple_ops, NULL);
 -- 
 1.7.9
