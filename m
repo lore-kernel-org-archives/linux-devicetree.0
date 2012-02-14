@@ -1,68 +1,85 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 6/9] ARM: mx31ads: add audmux device
-Date: Mon, 13 Feb 2012 22:06:28 -0800
-Message-ID: <20120214060627.GB13456@opensource.wolfsonmicro.com>
-References: <1328148728-32258-7-git-send-email-richard.zhao@linaro.org>
- <20120202085521.GB9773@S2101-09.ap.freescale.net>
- <20120202091132.GD9773@S2101-09.ap.freescale.net>
- <20120202092427.GB32403@b20223-02.ap.freescale.net>
- <20120202130901.GE9773@S2101-09.ap.freescale.net>
- <20120202135805.GB3015@richard-laptop>
- <20120203021554.GE32403@b20223-02.ap.freescale.net>
- <20120203133240.GB12915@S2101-09.ap.freescale.net>
- <a9d9bad3-edd0-4a5f-9bb3-15787430d858@email.android.com>
- <20120214013506.GA3276@b20223-02.ap.freescale.net>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [RFC PATCH 1/7] ARM: davinci,
+ intc: Add OF support for TI interrupt controller
+Date: Tue, 14 Feb 2012 08:15:25 +0100
+Message-ID: <4F3A0A0D.3060005@denx.de>
+References: <1327308967-8092-1-git-send-email-hs@denx.de>
+ <1327308967-8092-2-git-send-email-hs@denx.de>
+ <20120202045459.GI15343@ponder.secretlab.ca> <4F2F74DB.7010604@denx.de>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LyciRD1jyfeSSjG0"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120214013506.GA3276@b20223-02.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@freescale.com>
-Cc: Richard Zhao <richard.zhao@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, alsa-devel@alsa-project.org, kernel@pengutronix.de, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, eric.miao@linaro.org, eric@eukrea.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <4F2F74DB.7010604-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Grant,
 
---LyciRD1jyfeSSjG0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Heiko Schocher wrote:
+> Hello Grant,
+> 
+> Grant Likely wrote:
+>> On Mon, Jan 23, 2012 at 09:56:01AM +0100, Heiko Schocher wrote:
+>>> Add a function to initialize the davinci interrupt controller (INTC)
+>>> using a device tree node.
+>>>
+>>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>>> Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/arm/davinci/intc.txt       |   26 ++++++++++
+>>>  arch/arm/mach-davinci/cp_intc.c                    |   51 ++++++++++++++++++++
+>>>  arch/arm/mach-davinci/include/mach/cp_intc.h       |    1 +
+>>>  3 files changed, 78 insertions(+), 0 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/intc.txt
+> [...]
+>>> diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
+>>> index f83152d..2c6e2e4 100644
+>>> --- a/arch/arm/mach-davinci/cp_intc.c
+>>> +++ b/arch/arm/mach-davinci/cp_intc.c
+> [...]
+>>> +	cp_intc_init();
+>>> +	irq_domain_add_simple(node, 0);
+>> Take a look at the irq_domain patches that will be (probably) merged
+>> in v3.4.  Instead of calling irq_domain_add_simple(), you should
+>> migrate the whole interrupt controller to natively use an irq_domain
+>> for hwirq <--> irq mapping.
+> 
+> I rebased my hole patchset to:
+> 
+> git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
+> and reworked the arch/arm/mach-davinci/cp_intc.c irq driver to use
+> irq_domain, works good on the enbw_cmc board :-)
+> 
+> Waiting for your comment to my question to the
+> [RFC PATCH 7/7] ARM: davinci: add support for the am1808 based enbw_cmc board
+> patch, see:
+> http://www.mail-archive.com/linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg07132.html
+> 
+> and resend the hole reworked patchserie. Is it OK, if I use the above
+> branch as base for sending this patchserie, or should I use another
+> tree/branch for it?
 
-On Tue, Feb 14, 2012 at 09:35:07AM +0800, Richard Zhao wrote:
-> On Sun, Feb 05, 2012 at 12:50:15PM +0800, Richard Zhao wrote:
+Ping?
 
-> > no, it is asoc machine driver to have machine specific code.=20
-> > the machine driver do not correspond to any hw device, which cause hard
-> > to bind dt or create platform device.
-
-> I'll have to keep audmux driver in arch/, till ASOC machine driver
-> has a way to get platfrom parameters.
-
-Machine drivers can easily get platform data, they're just regular
-drivers of whatever type so can get platform data in the same way that
-any other driver for their bus can.
-
---LyciRD1jyfeSSjG0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPOfmkAAoJEBus8iNuMP3dnRQQAJyGTi2uSzQ/Y7Pa8drwExCx
-ZdMxeS6zi+Sis0UYl5nuoqP+cBV4JaQiVa4x0xuGUyN2L6pz30q4MIPlpq5V8iUs
-wsIWtP9z3LCvUJTmVKcA1eLCSmayh1uAer1l4KzMP21EzlbjlI6O6jHIekGD7/kv
-8a9FEmptwyQn83Gc430FaFvIbPTtP/Et1ZEQ0/235M6EJTzNjyk+A9J+9w9vLDoe
-7YbPxPGerNdTnAjfr6xoq/e9s5Nlozmrv0CzvSHAST8EWr2G1tino8HiNWIKS5N1
-4chgYbquQaq6jWw4ni+PblCKTx7ly0B+GB5kScUeBzKWv8/deCk4mrHAqBAPnVKy
-fZnyu7HxANPZx6qQ5JBjsF2i8kN1owLLslNTFSOsaLIEBcGrwMBjg3KODdpnXJ+m
-DTHhdcnv0nUGKK9Hbzro5/W9VtIAcm4C/RE5kDHjzDRA7mTgVdtotaX6gA7rdu0O
-o/X4tiKVrdJWpz0P6nS8drMOXEy3oqG7Vvl98F+kmZaTJrBK6vl/5vIH3P4DJ5/W
-C4nJ/h0EW+VbD1Q34cBbsz+++mPtrpUO84/xkBwbkwtbviaZeNZtvTdhfWe5FRJu
-mNAz2bNVKjt7YAnSx//akmTwo5xkv9rZZ1vbd8hVvbSYjYHOAsTaw3AvuWp8wx7x
-XERBCK7GYYP9daHbre8e
-=Od6n
------END PGP SIGNATURE-----
-
---LyciRD1jyfeSSjG0--
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
