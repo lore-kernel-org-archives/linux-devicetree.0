@@ -1,156 +1,264 @@
-From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt: rfkill-gpio: add bindings documentation
-Date: Tue, 14 Feb 2012 11:12:41 +0100
-Message-ID: <4F3A3399.2010203@gmx.de>
-References: <1ec0e63a7453072689618430ebc2bdd7b62542a2.1329073559.git.marvin24@gmx.de> <86044d44009316a48b402050f9dd742391d46eac.1329073559.git.marvin24@gmx.de> <CAPnjgZ2b4QjKMKjKyHqGGU1TbMamq6pBPUAAO99gMa98Rd+Erw@mail.gmail.com> <4F391470.3090102@gmail.com> <CAOesGMjofzC9pp1H9SXS693QR7JU9XjvVLVi6gBSGuqVNJ-rKA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v5 1/9] ARM: at91/aic: add irq domain and device tree
+ support
+Date: Tue, 14 Feb 2012 11:24:56 +0100
+Message-ID: <4F3A3678.8090706@atmel.com>
+References: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com> <2fd1ebedc5ad5ac7aeb15c590c4400212a3b06cf.1329139662.git.nicolas.ferre@atmel.com> <4F398A6E.8040905@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjofzC9pp1H9SXS693QR7JU9XjvVLVi6gBSGuqVNJ-rKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F398A6E.8040905@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, plagnioj@jcrosoft.com
+Cc: linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, devicetree-discuss@lists.ozlabs.org, avictor.za@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Am 13.02.2012 20:43, schrieb Olof Johansson:
-> On Mon, Feb 13, 2012 at 5:47 AM, Rob Herring<robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>  wrote:
->> On 02/12/2012 02:21 PM, Simon Glass wrote:
+On 02/13/2012 11:10 PM, Rob Herring :
+> On 02/13/2012 08:43 AM, Nicolas Ferre wrote:
+>> Add an irqdomain for the AIC interrupt controller.
+>> The device tree support is mapping the registers and
+>> is using the irq_domain_add_legacy() to manage hwirq
+>> translation.
+>> The documentation is describing the meaning of the
+>> two cells required for using this "interrupt-controller"
+>> in a device tree node.
+>>
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+>> ---
+>> v5: - rebased on top of Grant's "irq_domain generalization and refinement"
+>>       patch series
+>>     - use of irq_domain_add_legacy() API
+>>
+>> v4: - use irq_alloc_descs() to find irq_base
+>>     - add a new constant AIC_BASE_IRQ that will allow to skip
+>>       first interrupt numbers (in the future)
+>>
+>> v3: - change number of cells to define an AIC interrupt (irq trigger type)
+>>     - change current .dtsi files to match specification
+>>     - use irq_domain_simple_ops (for DT mapping)
+>>
+>> v2: - use of_irq_init() function for device tree probing
+>>     - add documentation
+>>     - use own simple struct irq_domain_ops
 >>
 >>
->> On Sun, Feb 12, 2012 at 11:13 AM, Marc Dietrich<marvin24-Mmb7MZpHnFY@public.gmane.org>  wrote:
->>>> Add device tree bindings information for rfkill gpio switches.
->>>>
->>>> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> Cc: "John W. Linville"<linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
->>>> Cc: Johannes Berg<johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
->>>> Cc: Rhyland Klein<rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>>> Signed-off-by: Marc Dietrich<marvin24-Mmb7MZpHnFY@public.gmane.org>
->>>> ---
->>>>   Documentation/devicetree/bindings/gpio/rfkill.txt |   38 +++++++++++++++++++++
->>>>   1 files changed, 38 insertions(+), 0 deletions(-)
->>>>   create mode 100644 Documentation/devicetree/bindings/gpio/rfkill.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/gpio/rfkill.txt b/Documentation/devicetree/bindings/gpio/rfkill.txt
->>>> new file mode 100644
->>>> index 0000000..22bf22a
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/gpio/rfkill.txt
->>>> @@ -0,0 +1,38 @@
->>>> +RFKILL switches connected to GPIO lines
->>>> +
->>>> +Required properties:
->>>> +- compatible : should be "rfkill-gpio".
->>>> +
->>>> +Each rfkill switch is represented as a sub-node of the rfkill-gpio device.
->>>> +Each node has a label property which represents the name of the corresponding
->>>> +rfkill device.
->>>> +
->>>> +RFKILL sub-node properties:
->>>> +- label :  (optional) The label for this rfkill switch.  If omitted, the label is
->>>> +  taken from the node name (excluding the unit address).
->>>> +- reset-gpio, shutdown-gpio :  Should specify the rfkill gpios for reset and
->>>> +  shutdown (see "Specifying GPIO information for devices" in
->>> Should that be reset-gpios, shutdown-gpios? Even though you have only
->>> one it seems that people put an 's' on the end.
-> Agreed.
->
->>>> +  Documentation/devicetree/booting-without-of.txt).
->>>> +- type : enumerated type of the gpio (see include/linux/rfkill.h).
->>> It would be better I think if this were explicit here. If you have a
->>> number, then what values does it take and what do they mean?
-> This should most likely be moved to a set of properties instad of an
-> enumerated type, I agree. And/or use a string to encode the type
-> simiar to how powerpc does some of the USB interfaces.
->
->>>> +- clock : (optional) name of the clock name associated with the rfkill switch
->>> Can this be a phandle instead of a string?
->> This seems to be in the wrong place altogether. The gpio controller
->> would have a clock, not particular gpio line.
-> And either way, this should conform to the standard clock binding, not
-> use something locally hacked up.
->
->>>> +  (see include/linux/rfkill-gpio.h)
->>> IMO device tree bindings should be fully documented in this file,
->>> rather than needing to look at a separate header. This is particularly
->>> true if the binding is used in another project.
->>>
->> Correct. A binding should not be Linux specific. It should describe the h/w.
->>
->>>> +
->>>> +Examples:
->>>> +
->>>> +rfkill-switches {
->>>> +       compatible = "rfkill-gpio";
->>>> +
->>>> +       wifi {
->>>> +               label = "wifi";
->>>> +               reset-gpio =<&gpio 25 0>; /* Active high */
->>>> +               shutdown-gpio =<&gpio 85 0>; /* Active high */
->>>> +               type =<1>;
->>>> +       };
->>>> +
->>>> +       bt {
->>>> +               label = "bluetooth";
->>>> +               reset-gpio =<&gpio 17 0>; /* Active high */
->>>> +               shutdown-gpio =<&gpio 35 0>; /* Active high */
->>>> +               type =<1>;
->>>> +       };
->> Why wouldn't the gpio lines just be part of the bt and wifi device nodes
->> themselves? The DT is supposed to describe h/w connections.
-> The thing is, that "rfkill" isn't a _device_, and Marc is trying to
-> describe it as one. It's really just a software abstraction of a
-> collection of power supplies and/or GPIO lines that are used to power
-> up/down specific peripherals.
+>>  .../devicetree/bindings/arm/atmel-aic.txt          |   38 ++++++++++
+>>  arch/arm/Kconfig                                   |    1 +
+>>  arch/arm/boot/dts/at91sam9g20.dtsi                 |   18 +++---
+>>  arch/arm/boot/dts/at91sam9g45.dtsi                 |   16 ++--
+>>  arch/arm/mach-at91/include/mach/irqs.h             |    3 +-
+>>  arch/arm/mach-at91/irq.c                           |   74 ++++++++++++++++----
+>>  6 files changed, 119 insertions(+), 31 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
 
-Oh, this gets more complicated than I wanted. First I only translated 
-the *existing* platform_data to devicetree format. I understand that 
-devicetree needs some more careful thoughts. Let me shortly describe my 
-hw setup and lets see how it can me mapped.
+[..]
 
-> I know that the USB modem, for example, is probed through autoprobing
-> the USB bus. So there's no device to associate it with, per se. But
-> the USB slot that the modem is connected to, which is also the
-> connector that the GPIO controls the power supplies and reset line to,
-> are connected directly to one of the USB host controllers, right? So
-> maybe describing it there is a better option.
+>> --- a/arch/arm/mach-at91/include/mach/irqs.h
+>> +++ b/arch/arm/mach-at91/include/mach/irqs.h
+>> @@ -25,6 +25,7 @@
+>>  #include <mach/at91_aic.h>
+>>  
+>>  #define NR_AIC_IRQS 32
+>> +#define AIC_BASE_IRQ 0
+>>  
+>>  
+>>  /*
+>> @@ -40,7 +41,7 @@
+>>   * symbols in gpio.h for ones handled indirectly as GPIOs.
+>>   * We make provision for 5 banks of GPIO.
+>>   */
+>> -#define	NR_IRQS		(NR_AIC_IRQS + (5 * 32))
+>> +#define	NR_IRQS		(AIC_BASE_IRQ + NR_AIC_IRQS + (5 * 32))
+> 
+> Why? You're not changing anything.
+> 
+> You should turn on SPARSE_IRQ at some point and then this value goes away.
 
-The wifi module (some models also include an additional bluetooth part) 
-is plugged into a mini-pci-e like slot. This has pins for usb (the 
-module uses usb), dap, sdio, uart, and some other pins which also 
-include the gpio lines for rfkill. The other gpio end is directly 
-connected to the tegra soc.
+Yes, my intention is to move to this step by step. I have tried hard to
+rework completely the AIC driver without success so far. I plan:
+- move the AIC_BASE_IRQ away from irq0
+  => this is why I introduce a constant here
+- use SPARSE_IRQ
+- move to generic irq & irq domain helpers (move DT case to "linear")
 
-So there is no usb slot and a standard usb slot also does not contain 
-any gpio lines (just 2 power and 2 data lines). The usb controller also 
-sits in the tegra soc (well, more or less because it is the ulpi port 
-connected to SMC3315 and later a SMC2512 4-port usb hub). So gpio and 
-usb take a totally different path. IMHO, it makes no sense to add a gpio 
-to the usb controller, but see below.
+*once* the code for handling all this is stabilized and integrated in
+mainline.
 
-> That still leaves the issue of actually having something to bind it
-> against. As I already said, rfkill isn't a device, so crafting one
-> just because linux wants one is the wrong way to go about. Maybe using
-> /chosen to refer to the device nodes for the GPIO lines under USB
-> instead, and have rfkill look for those and create a device if they're
-> found is a better way to go about it.
-To me it looks more like how the LEDs are implemented but with a 
-"linux,rfkill_type" property. To me this looks saner than adding a gpio 
-to an usb controller, even if there if no physical rfkill device. This 
-still leaves the problem of what to do with the clock (it is not used by 
-any machine AFAIK).
+This rework is designed for 3.4 and a lot of code depend on this for all
+our at91 DT move.
 
-The main problem here is that usb devices have no device tree entries 
-(only the host controllers). Perhaps it is possible to a fake usb device 
-as a workaround? This has the advantage that it exists physically, but 
-the resources are not taken from the device tree. Instead all other non 
-standard properties (gpios, clocks) are.
 
-Marc
+>>  /* FIQ is AIC source 0. */
+>>  #define FIQ_START AT91_ID_FIQ
+>> diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
+>> index be6b639..880da98 100644
+>> --- a/arch/arm/mach-at91/irq.c
+>> +++ b/arch/arm/mach-at91/irq.c
+>> @@ -24,6 +24,12 @@
+>>  #include <linux/module.h>
+>>  #include <linux/mm.h>
+>>  #include <linux/types.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/irqdomain.h>
+>> +#include <linux/err.h>
+>>  
+>>  #include <mach/hardware.h>
+>>  #include <asm/irq.h>
+>> @@ -34,22 +40,24 @@
+>>  #include <asm/mach/map.h>
+>>  
+>>  void __iomem *at91_aic_base;
+>> +static struct irq_domain *at91_aic_domain;
+>> +static struct device_node *at91_aic_np;
+>>  
+>>  static void at91_aic_mask_irq(struct irq_data *d)
+>>  {
+>>  	/* Disable interrupt on AIC */
+>> -	at91_aic_write(AT91_AIC_IDCR, 1 << d->irq);
+>> +	at91_aic_write(AT91_AIC_IDCR, 1 << d->hwirq);
+>>  }
+>>  
+>>  static void at91_aic_unmask_irq(struct irq_data *d)
+>>  {
+>>  	/* Enable interrupt on AIC */
+>> -	at91_aic_write(AT91_AIC_IECR, 1 << d->irq);
+>> +	at91_aic_write(AT91_AIC_IECR, 1 << d->hwirq);
+>>  }
+>>  
+>>  unsigned int at91_extern_irq;
+>>  
+>> -#define is_extern_irq(irq) ((1 << (irq)) & at91_extern_irq)
+>> +#define is_extern_irq(hwirq) ((1 << (hwirq)) & at91_extern_irq)
+>>  
+>>  static int at91_aic_set_type(struct irq_data *d, unsigned type)
+>>  {
+>> @@ -63,13 +71,13 @@ static int at91_aic_set_type(struct irq_data *d, unsigned type)
+>>  		srctype = AT91_AIC_SRCTYPE_RISING;
+>>  		break;
+>>  	case IRQ_TYPE_LEVEL_LOW:
+>> -		if ((d->irq == AT91_ID_FIQ) || is_extern_irq(d->irq))		/* only supported on external interrupts */
+>> +		if ((d->hwirq == AT91_ID_FIQ) || is_extern_irq(d->hwirq))		/* only supported on external interrupts */
+>>  			srctype = AT91_AIC_SRCTYPE_LOW;
+>>  		else
+>>  			return -EINVAL;
+>>  		break;
+>>  	case IRQ_TYPE_EDGE_FALLING:
+>> -		if ((d->irq == AT91_ID_FIQ) || is_extern_irq(d->irq))		/* only supported on external interrupts */
+>> +		if ((d->hwirq == AT91_ID_FIQ) || is_extern_irq(d->hwirq))		/* only supported on external interrupts */
+>>  			srctype = AT91_AIC_SRCTYPE_FALLING;
+>>  		else
+>>  			return -EINVAL;
+>> @@ -78,8 +86,8 @@ static int at91_aic_set_type(struct irq_data *d, unsigned type)
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> -	smr = at91_aic_read(AT91_AIC_SMR(d->irq)) & ~AT91_AIC_SRCTYPE;
+>> -	at91_aic_write(AT91_AIC_SMR(d->irq), smr | srctype);
+>> +	smr = at91_aic_read(AT91_AIC_SMR(d->hwirq)) & ~AT91_AIC_SRCTYPE;
+>> +	at91_aic_write(AT91_AIC_SMR(d->hwirq), smr | srctype);
+>>  	return 0;
+>>  }
+>>  
+>> @@ -90,13 +98,13 @@ static u32 backups;
+>>  
+>>  static int at91_aic_set_wake(struct irq_data *d, unsigned value)
+>>  {
+>> -	if (unlikely(d->irq >= 32))
+>> +	if (unlikely(d->hwirq >= NR_AIC_IRQS))
+>>  		return -EINVAL;
+>>  
+>>  	if (value)
+>> -		wakeups |= (1 << d->irq);
+>> +		wakeups |= (1 << d->hwirq);
+>>  	else
+>> -		wakeups &= ~(1 << d->irq);
+>> +		wakeups &= ~(1 << d->hwirq);
+>>  
+>>  	return 0;
+>>  }
+>> @@ -127,24 +135,64 @@ static struct irq_chip at91_aic_chip = {
+>>  	.irq_set_wake	= at91_aic_set_wake,
+>>  };
+>>  
+>> +#if defined(CONFIG_OF)
+>> +static int __init __at91_aic_of_init(struct device_node *node,
+>> +				     struct device_node *parent)
+>> +{
+>> +	at91_aic_base = of_iomap(node, 0);
+>> +	at91_aic_np = node;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id aic_ids[] __initconst = {
+>> +	{ .compatible = "atmel,at91rm9200-aic", .data = __at91_aic_of_init },
+>> +	{ /*sentinel*/ }
+>> +};
+>> +
+>> +static void __init at91_aic_of_init(void)
+>> +{
+>> +	of_irq_init(aic_ids);
+> 
+> This call and match str belongs in your board file (init_irq function)
+> and you should be doing all setup in __at91_aic_of_init.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It has already been discussed here:
+http://article.gmane.org/gmane.linux.drivers.devicetree/9834
+
+I feel that this self-contained driver is the best solution for the
+moment. Once the priorities will be encoded in the device tree (and
+moreover once they will be useful for threaded interrupts), we may
+re-consider this.
+
+>> +}
+>> +#else
+>> +static void __init at91_aic_of_init(void) {}
+>> +#endif
+>> +
+>>  /*
+>>   * Initialize the AIC interrupt controller.
+>>   */
+>>  void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
+> 
+> Perhaps the priority should be a cell in your interrupts property?
+
+Yes, it is a good idea. But that will prevent me from using a standard
+irq_domain simple xlate operation... Maybe we can think about this a bit
+more and implement it in the future.
+
+>>  {
+>>  	unsigned int i;
+>> +	int irq_base;
+>>  
+>> -	at91_aic_base = ioremap(AT91_AIC, 512);
+>> +	if (of_have_populated_dt())
+>> +		at91_aic_of_init();
+> 
+> You should get to this point because of_irq_init called you and you
+> should already have a node ptr at point.
+> 
+>> +	else
+>> +		at91_aic_base = ioremap(AT91_AIC, 512);
+>>  
+>>  	if (!at91_aic_base)
+>> -		panic("Impossible to ioremap AT91_AIC\n");
+>> +		panic("Unable to ioremap AIC registers\n");
+>> +
+>> +	/* Add irq domain for AIC */
+>> +	irq_base = irq_alloc_descs(-1, AIC_BASE_IRQ, NR_AIC_IRQS, 0);
+> 
+> Really, you don't want to use irq0, but that would break your irq entry
+> code.
+
+Exactly. I have the code for switching to MULTI_IRQ_HANDLER ready. But
+that will require a little modification of each board file. This
+scattered modification is maybe a bit late for 3.4 inclusion...
+
+Best regards,
+-- 
+Nicolas Ferre
