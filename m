@@ -1,71 +1,126 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 6/9] ARM: mx31ads: add audmux device
-Date: Tue, 14 Feb 2012 09:23:43 -0800
-Message-ID: <20120214172342.GA3916@opensource.wolfsonmicro.com>
-References: <20120202091132.GD9773@S2101-09.ap.freescale.net>
- <20120202092427.GB32403@b20223-02.ap.freescale.net>
- <20120202130901.GE9773@S2101-09.ap.freescale.net>
- <20120202135805.GB3015@richard-laptop>
- <20120203021554.GE32403@b20223-02.ap.freescale.net>
- <20120203133240.GB12915@S2101-09.ap.freescale.net>
- <a9d9bad3-edd0-4a5f-9bb3-15787430d858@email.android.com>
- <20120214013506.GA3276@b20223-02.ap.freescale.net>
- <20120214060627.GB13456@opensource.wolfsonmicro.com>
- <20120214073414.GB3276@b20223-02.ap.freescale.net>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH] of: Only compile OF_DYNAMIC on PowerPC pseries and iseries
+Date: Tue, 14 Feb 2012 10:25:30 -0700
+Message-ID: <1329240330-3539-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120214073414.GB3276@b20223-02.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@freescale.com>
-Cc: Richard Zhao <richard.zhao@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, alsa-devel@alsa-project.org, kernel@pengutronix.de, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, eric.miao@linaro.org, eric@eukrea.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, "David S. Miller" <davem@davemloft.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
+Only two architectures use the OF node reference counting and reclaim bits.
+There is no need to compile it for the rest of the PowerPC platforms or for
+any of the other architectures.  This patch makes iseries and pseries
+select CONFIG_OF_DYNAMIC, and makes it default to off for everything else.
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It is still safe to turn on CONFIG_OF_DYNAMIC on all architectures, it just
+isn't necessary.
 
-On Tue, Feb 14, 2012 at 03:34:15PM +0800, Richard Zhao wrote:
-> On Mon, Feb 13, 2012 at 10:06:28PM -0800, Mark Brown wrote:
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+---
+ arch/powerpc/platforms/iseries/Kconfig |    1 +
+ arch/powerpc/platforms/pseries/Kconfig |    1 +
+ drivers/of/Kconfig                     |    5 +++--
+ drivers/of/base.c                      |    4 ++--
+ include/linux/of.h                     |   14 ++++++--------
+ 5 files changed, 13 insertions(+), 12 deletions(-)
 
-> > Machine drivers can easily get platform data, they're just regular
-> > drivers of whatever type so can get platform data in the same way that
-> > any other driver for their bus can.
-
-> Machine drivers don't correspond to any hw devices. If we create a
-> virtual platform device, it'll be hard for DT binding.
-
-As has been discussed repeatedly and at some considerable length the
-board design for audio is considered sufficiently interesting to be
-worth representing in the device tree directly, there are plenty of
-choices made during board design.  There is absolutely no technical
-problem from doing this on the device tree side.
-
-People working on device tree really need to talk to each other more...
-
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPOpiYAAoJEBus8iNuMP3d/g0P/2rhrRBrhWm+0ZbuhCdim9+B
-Sb7KT2Jz0GHdgOigKL0V+uaJcMFXxRnETNJQ4fgAJaOJxD+Ra8AP2enuSYuuUd8Z
-aDtR1o+/iPMOaSdZ7izhyAlWPeGka3kWai5GwAtqmAkBfIUU2lbQyj/iyVe7P1/P
-nD4hdHGAuQMaZBb268N91crMEyX1P243TbvIDqBRJWLZyLqHwYHCPAwTNzL2tgQg
-5wEDG/Nzg3+CuxRlzRYcDyId9zX2zEc5xXLs2Jee5Iw+VTJDDvTZMX7Zxw10xpnQ
-vl7fCvoZAByqs3hnhloar478XdpJPxfNQtoIAK8ByiF8qwehQSfRRF809nkK/AOx
-T79XNRif3QlqbIM2rhzx+GKY2m9GsiUdAfdujxByaL1y1Rnxhsg9VCgY3DHWKV2b
-Fzdv5DLc7sc0/qzOO2S4WQSQYFQzLeSLHDi1tUQuJCsQFvX059KbaD3n5YdY6flm
-1c3Z7wPtkKLeKCFvQQ/sOVzlaaNwASIAzfLTSK4iE2FMX2YM66EMwfdZjbUJuwVu
-OPcGuLqVUjF4wzm/aijOv5y/gmtJ4PXwhLWwr7NY6xT/TdILj3qgaOdd59bwY2my
-p/sQwLYCy9GjlPyNlAVxd//npi95X4rW+g0BdIegwUNf8RHVDltSh6kRRXy/m96v
-ZZu9VGYGTfajpN7i1kN+
-=dmrw
------END PGP SIGNATURE-----
-
---dDRMvlgZJXvWKvBx--
+diff --git a/arch/powerpc/platforms/iseries/Kconfig b/arch/powerpc/platforms/iseries/Kconfig
+index b57cda3..63835e0 100644
+--- a/arch/powerpc/platforms/iseries/Kconfig
++++ b/arch/powerpc/platforms/iseries/Kconfig
+@@ -1,6 +1,7 @@
+ config PPC_ISERIES
+ 	bool "IBM Legacy iSeries"
+ 	depends on PPC64 && PPC_BOOK3S
++	select OF_DYNAMIC
+ 	select PPC_SMP_MUXED_IPI
+ 	select PPC_INDIRECT_PIO
+ 	select PPC_INDIRECT_MMIO
+diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
+index 31f22c1..f255625 100644
+--- a/arch/powerpc/platforms/pseries/Kconfig
++++ b/arch/powerpc/platforms/pseries/Kconfig
+@@ -3,6 +3,7 @@ config PPC_PSERIES
+ 	bool "IBM pSeries & new (POWER5-based) iSeries"
+ 	select HAVE_PCSPKR_PLATFORM
+ 	select MPIC
++	select OF_DYNAMIC
+ 	select PCI_MSI
+ 	select PPC_XICS
+ 	select PPC_ICP_NATIVE
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 268163d..6ea51dc 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -35,9 +35,10 @@ config OF_EARLY_FLATTREE
+ config OF_PROMTREE
+ 	bool
+ 
++# Hardly any platforms need this.  It is safe to select, but only do so if you
++# need it.
+ config OF_DYNAMIC
+-	def_bool y
+-	depends on PPC_OF
++	bool
+ 
+ config OF_ADDRESS
+ 	def_bool y
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 133908a..df6da08 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -88,7 +88,7 @@ int of_n_size_cells(struct device_node *np)
+ }
+ EXPORT_SYMBOL(of_n_size_cells);
+ 
+-#if !defined(CONFIG_SPARC)   /* SPARC doesn't do ref counting (yet) */
++#if defined(CONFIG_OF_DYNAMIC)
+ /**
+  *	of_node_get - Increment refcount of a node
+  *	@node:	Node to inc refcount, NULL is supported to
+@@ -161,7 +161,7 @@ void of_node_put(struct device_node *node)
+ 		kref_put(&node->kref, of_node_release);
+ }
+ EXPORT_SYMBOL(of_node_put);
+-#endif /* !CONFIG_SPARC */
++#endif /* CONFIG_OF_DYNAMIC */
+ 
+ struct property *of_find_property(const struct device_node *np,
+ 				  const char *name,
+diff --git a/include/linux/of.h b/include/linux/of.h
+index a75a831..b6ff1f7 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -72,19 +72,17 @@ struct of_phandle_args {
+ 	uint32_t args[MAX_PHANDLE_ARGS];
+ };
+ 
+-#if defined(CONFIG_SPARC) || !defined(CONFIG_OF)
++#ifdef CONFIG_OF_DYNAMIC
++extern struct device_node *of_node_get(struct device_node *node);
++extern void of_node_put(struct device_node *node);
++#else /* CONFIG_OF_DYNAMIC */
+ /* Dummy ref counting routines - to be implemented later */
+ static inline struct device_node *of_node_get(struct device_node *node)
+ {
+ 	return node;
+ }
+-static inline void of_node_put(struct device_node *node)
+-{
+-}
+-#else
+-extern struct device_node *of_node_get(struct device_node *node);
+-extern void of_node_put(struct device_node *node);
+-#endif
++static inline void of_node_put(struct device_node *node) { }
++#endif /* !CONFIG_OF_DYNAMIC */
+ 
+ #ifdef CONFIG_OF
+ 
+-- 
+1.7.9
