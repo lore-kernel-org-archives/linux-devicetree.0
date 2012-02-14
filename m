@@ -1,100 +1,165 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: Re: [PATCH v2 6/9] ARM: mx31ads: add audmux device
-Date: Tue, 14 Feb 2012 09:35:07 +0800
-Message-ID: <20120214013506.GA3276@b20223-02.ap.freescale.net>
-References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
- <1328148728-32258-7-git-send-email-richard.zhao@linaro.org>
- <20120202085521.GB9773@S2101-09.ap.freescale.net>
- <20120202091132.GD9773@S2101-09.ap.freescale.net>
- <20120202092427.GB32403@b20223-02.ap.freescale.net>
- <20120202130901.GE9773@S2101-09.ap.freescale.net>
- <20120202135805.GB3015@richard-laptop>
- <20120203021554.GE32403@b20223-02.ap.freescale.net>
- <20120203133240.GB12915@S2101-09.ap.freescale.net>
- <a9d9bad3-edd0-4a5f-9bb3-15787430d858@email.android.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/4 v2] i2c/gpio: add DT support
+Date: Tue, 14 Feb 2012 05:06:54 +0100
+Message-ID: <20120214040654.GF3378@game.jcrosoft.org>
+References: <1328754308-7365-1-git-send-email-plagnioj@jcrosoft.com>
+ <20120213230948.GC2999@freya.fluff.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <a9d9bad3-edd0-4a5f-9bb3-15787430d858@email.android.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Richard Zhao <richard.zhao@linaro.org>
-Cc: Shawn Guo <shawn.guo@linaro.org>, alsa-devel@alsa-project.org, kernel@pengutronix.de, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, eric.miao@linaro.org, eric@eukrea.com, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20120213230948.GC2999@freya.fluff.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ben Dooks <ben-i2c@fluff.org>
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 05, 2012 at 12:50:15PM +0800, Richard Zhao wrote:
->=20
->=20
-> Shawn Guo <shawn.guo@linaro.org> wrote:
->=20
-> >On Fri, Feb 03, 2012 at 10:15:54AM +0800, Richard Zhao wrote:
-> >> adding Eric B=E9nard.
-> >>=20
-> >> On Thu, Feb 02, 2012 at 09:58:07PM +0800, Richard Zhao wrote:
-> >> > On Thu, Feb 02, 2012 at 09:09:03PM +0800, Shawn Guo wrote:
-> >> > > On Thu, Feb 02, 2012 at 05:24:28PM +0800, Richard Zhao wrote:
-> >> > > > On Thu, Feb 02, 2012 at 05:11:34PM +0800, Shawn Guo wrote:
-> >> > > > > On Thu, Feb 02, 2012 at 04:55:23PM +0800, Shawn Guo wrote:
-> >> > > > > > On Thu, Feb 02, 2012 at 10:12:05AM +0800, Richard Zhao
-> >wrote:
-> >> > > > > > > Signed-off-by: Richard Zhao <richard.zhao@linaro.org>
-> >> > > > > > > ---
-> >> > > > > > >  arch/arm/mach-imx/mach-mx31ads.c      |   10 ++++++++=
-++
-> >> > > > > > >  arch/arm/plat-mxc/include/mach/mx31.h |    1 +
-> >> > > > > > >  2 files changed, 11 insertions(+), 0 deletions(-)
-> >> > > > > > >=20
-> >> > > > > > Hmm, let's see who are actually using
-> >mxc_audmux_v2_configure_port().
-> >> > > > > >=20
-> >> > > > > > $ git grep -n mxc_audmux_v2_configure_port arch/arm/
-> >> > > > > > arch/arm/mach-imx/eukrea_mbimxsd25-baseboard.c:246:   =20
-> >mxc_audmux_v2_configure_port(0,
-> >> > > > > > arch/arm/mach-imx/eukrea_mbimxsd25-baseboard.c:254:   =20
-> >mxc_audmux_v2_configure_port(4,
-> >> > > > > > arch/arm/mach-imx/eukrea_mbimxsd35-baseboard.c:257:   =20
-> >mxc_audmux_v2_configure_port(0,
-> >> > > > > > arch/arm/mach-imx/eukrea_mbimxsd35-baseboard.c:265:   =20
-> >mxc_audmux_v2_configure_port(3,
-> >> > > > > > arch/arm/mach-imx/mach-pcm043.c:365:  =20
-> >mxc_audmux_v2_configure_port(3,
-> >> > > > > > arch/arm/mach-imx/mach-pcm043.c:371:  =20
-> >mxc_audmux_v2_configure_port(0,
-> >> It's machine specific code, though audmux driver is common. Might =
-be
-> >ok?
-> >
-> >With audmux driver moved out, it's not ok to me to have board file
-> >call this function.
-> >
-> >> The asoc machine file for the above 3 boards is not platform drive=
-r,
-> >and
-> >> don't get any plat info.
-> >
-> >It can be nicely solved if we do these initial setup in audmux drive=
-r
-> >probe function with the configuration data retrieved from audmux
-> >platform data or device tree.
-> no, it is asoc machine driver to have machine specific code.=20
-> the machine driver do not correspond to any hw device, which cause ha=
-rd
-> to bind dt or create platform device.
-I'll have to keep audmux driver in arch/, till ASOC machine driver
-has a way to get platfrom parameters.
+On 23:09 Mon 13 Feb     , Ben Dooks wrote:
+> On Thu, Feb 09, 2012 at 03:25:05AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> > Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+> > Cc: linux-i2c@vger.kernel.org
+> > Cc: devicetree-discuss@lists.ozlabs.org
+> > ---
+> > v2:
+> > 
+> > 	use devm
+> > 	update DT bindings to i2c-gpio and sda-open-drain...
+> > 	update against "of: introduce helper to manage boolean"
+> > 
+> > Best Regards,
+> > J.
+> >  .../devicetree/bindings/gpio/gpio_i2c.txt          |   32 +++++++
+> >  drivers/i2c/busses/i2c-gpio.c                      |   95 +++++++++++++++----
+> >  2 files changed, 107 insertions(+), 20 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio_i2c.txt b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> > new file mode 100644
+> > index 0000000..9710ed2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> > @@ -0,0 +1,32 @@
+> > +Device-Tree bindings for i2c gpio driver
+> > +
+> > +Required properties:
+> > +	- compatible = "i2c-gpio";
+> > +	- gpios: sda and scl gpio
+> > +
+> > +
+> > +Optional properties:
+> > +	- i2c-gpio,sda-open-drain: sda as open drain
+> > +	- i2c-gpio,scl-open-drain: scl as open drain
+> > +	- i2c-gpio,scl-output-only: scl as output only
+> > +	- udelay: delay between GPIO operations (may depend on each platform)
+> > +	- timeout: timeout to get data (ms)
+> > +
+> > +Example nodes:
+> > +
+> > +i2c-gpio@0 {
+> > +	compatible = "i2c-gpio";
+> > +	gpios = <&pioA 23 0 /* sda */
+> > +		 &pioA 24 0 /* scl */
+> > +		>;
+> > +	i2c-gpio,sda-open-drain;
+> > +	i2c-gpio,scl-open-drain;
+> > +	udelay = <2>;		/* ~100 kHz */
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +
+> > +	rv3029c2@56 {
+> > +		compatible = "rv3029c2";
+> > +		reg = <0x56>;
+> > +	};
+> > +};
+> > diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+> > index a651779..d7032c1 100644
+> > --- a/drivers/i2c/busses/i2c-gpio.c
+> > +++ b/drivers/i2c/busses/i2c-gpio.c
+> > @@ -14,8 +14,15 @@
+> >  #include <linux/module.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/gpio.h>
+> > +#include <linux/of_gpio.h>
+> > +#include <linux/of_i2c.h>
+> > -#include <asm/gpio.h>
+> > +struct i2c_gpio_private_data {
+> > +	struct i2c_adapter adap;
+> > +	struct i2c_algo_bit_data bit_data;
+> > +	struct i2c_gpio_platform_data pdata;
+> > +};
+> >  
+> >  /* Toggle SDA by changing the direction of the pin */
+> >  static void i2c_gpio_setsda_dir(void *data, int state)
+> > @@ -78,24 +85,63 @@ static int i2c_gpio_getscl(void *data)
+> >  	return gpio_get_value(pdata->scl_pin);
+> >  }
+> >  
+> > +static int __devinit of_i2c_gpio_probe(struct device_node *np,
+> > +			     struct i2c_gpio_platform_data *pdata)
+> > +{
+> > +	u32 reg;
+> > +
+> > +	if (of_gpio_count(np) < 2)
+> > +		return -ENODEV;
+> 
+> Hmm, there's no error print and unless updated recently I think the
+> driver core will not produce any warnings if ->probe returns an
+> -ENODEV. I would prefer to see this printing a warning as for the
+> case below if an GPIO fails to be found.
+> 
+> Maybe return -EINVAL as it is not a valid configuration.
+> 
+> > +
+> > +	pdata->sda_pin = of_get_gpio(np, 0);
+> > +	pdata->scl_pin = of_get_gpio(np, 1);
+> > +
+> > +	if (pdata->sda_pin < 0 || pdata->scl_pin < 0) {
+> > +		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
+> > +		       np->full_name, pdata->sda_pin, pdata->scl_pin);
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	if (of_property_read_u32(np, "udelay", &reg))
+> > +		pdata->udelay = reg;
+> 
+> This sounds like a "linux" specific property. I would think about
+> giving it a name like frequency, or ask Grant if we have a base set
+> of properties that a i2c controller should think about implementing.
+as example in the doc it's the delay between each gpio operations and it's
+platform specific. put frequency will assume you specify the frequency of the
+bus you want but we can not calculate here (platform specific).
+> 
+> > +	if (of_property_read_u32(np, "timeout", &reg))
+> > +		pdata->timeout = msecs_to_jiffies(reg);
+> > +
+> > +	pdata->sda_is_open_drain =
+> > +		!!of_property_read_bool(np, "i2c-gpio,sda-open-drain");
+> > +	pdata->scl_is_open_drain =
+> > +		!!of_property_read_bool(np, "i2c-gpio,scl-open-drain");
+> > +	pdata->scl_is_output_only =
+> > +		!!of_property_read_bool(np, "i2c-gpio,scl-output-only");
+> 
+> I hate !!, why does of_property_read_bool() not return a bool? Also,
+> why can't I find of_property_read_bool() in include/linux/* ?
+because it's an other patch
+> 
+> Also, does of_property_read_bool() consitently return a useful value if
+> the property does not exist, or is not readable? I am most concerned
+> with the behaviour if one of these properties has un-parsable contents.
+it's use read_u32
 
-Thanks
-Richard
-> >
-> >--=20
-> >Regards,
-> >Shawn
-> >
-> >_______________________________________________
-> >linux-arm-kernel mailing list
-> >linux-arm-kernel@lists.infradead.org
-> >http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
->=20
+and return false if read_u32 return -EINVAL
 
+Best Regards,
+J.
