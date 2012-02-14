@@ -1,93 +1,115 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 2/4] ARM: OMAP2/3: intc: Add DT support for TI
- interrupt controller
-Date: Tue, 14 Feb 2012 13:52:08 -0700
-Message-ID: <20120214205208.GA2656@ponder.secretlab.ca>
-References: <1329242172-4214-1-git-send-email-b-cousson@ti.com>
- <1329242172-4214-3-git-send-email-b-cousson@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: at91: usb ohci add dt support
+Date: Tue, 14 Feb 2012 14:02:59 -0700
+Message-ID: <20120214210259.GC2656@ponder.secretlab.ca>
+References: <1329235109-6688-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1329242172-4214-3-git-send-email-b-cousson@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1329235109-6688-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 14, 2012 at 06:56:10PM +0100, Benoit Cousson wrote:
-> Add a function to initialize the OMAP2/3 interrupt controller (INTC)
-> using a device tree node.
-> 
-> This version take advantage of the new irq_domain_add_legacy API.
-> 
-> Replace some printk() with the proper pr_ macro.
-> 
-> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
+On Tue, Feb 14, 2012 at 04:58:26PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  .../devicetree/bindings/arm/omap/intc.txt          |   27 +++++++++
->  arch/arm/mach-omap2/common.h                       |   10 +++
->  arch/arm/mach-omap2/irq.c                          |   59 ++++++++++++++++---
->  3 files changed, 86 insertions(+), 10 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/omap/intc.txt
+> Hi Greg,
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/intc.txt b/Documentation/devicetree/bindings/arm/omap/intc.txt
+> 	I you don't mind I'll apply this via at91 tree as it's part a DT USB
+> 	patch series
+> 
+> Best Regards,
+> J.
+>  .../devicetree/bindings/usb/atmel-usb.txt          |   19 ++++
+>  drivers/usb/host/ohci-at91.c                       |  101 +++++++++++++++++++-
+>  2 files changed, 119 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/atmel-usb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
 > new file mode 100644
-> index 0000000..f2583e6
+> index 0000000..6c7f728
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/omap/intc.txt
-> @@ -0,0 +1,27 @@
-> +* OMAP Interrupt Controller
+> +++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+> @@ -0,0 +1,19 @@
+> +Atmel SOC USB controllers
 > +
-> +OMAP2/3 are using a TI interrupt controller that can support several
-> +configurable number of interrupts.
+> +OHCI
 > +
-> +Main node required properties:
+> +Required properties:
+> + - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
+> +   used in host mode.
+> + - num-ports: Number of ports.
+> + - atmel,vbus-gpio: If present, specifies a gpio that needs to be
+> +   activated for the bus to be powered.
+> + - atmel,oc-gpio: If present, specifies a gpio that needs to be
+> +   activated for the overcurrent detection.
 > +
-> +- compatible : should be:
-> +	"ti,omap2-intc"
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source. The type shall be a <u32> and the value shall be 1.
-> +
-> +  The cell contains the interrupt number in the range [0-128].
-> +- ti,intc-size: Number of interrupts handled by the interrupt controller.
-> +- reg: physical base address and size of the intc registers map.
-> +
-> +Example:
-> +
-> +	intc: interrupt-controller@1 {
-> +		compatible = "ti,omap2-intc";
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		ti,intc-size = <96>;
-> +		reg = <0x48200000 0x1000>;
-> +	};
-> +
-> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-> index febffde..a87ce52 100644
-> --- a/arch/arm/mach-omap2/common.h
-> +++ b/arch/arm/mach-omap2/common.h
-> @@ -174,6 +174,16 @@ void omap3_intc_handle_irq(struct pt_regs *regs);
->  extern void __iomem *omap4_get_l2cache_base(void);
->  #endif
+> +usb0: ohci@00500000 {
+> +	compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+> +	reg = <0x00500000 0x100000>;
+> +	interrupts = <20 4>;
+> +	num-ports = <2>;
+> +};
+> diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
+> index 8e855eb..718f138 100644
+> --- a/drivers/usb/host/ohci-at91.c
+> +++ b/drivers/usb/host/ohci-at91.c
+> @@ -14,6 +14,8 @@
 >  
-> +struct device_node;
+>  #include <linux/clk.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_gpio.h>
+>  
+>  #include <mach/hardware.h>
+>  #include <asm/gpio.h>
+> @@ -477,13 +479,109 @@ static irqreturn_t ohci_hcd_at91_overcurrent_irq(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
 > +#ifdef CONFIG_OF
-> +int __init intc_of_init(struct device_node *node, struct device_node *parent);
+> +static const struct of_device_id at91_ohci_dt_ids[] = {
+> +	{ .compatible = "atmel,at91rm9200-ohci" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, at91_ohci_dt_ids);
+> +
+> +static u64 at91_ohci_dma_mask = DMA_BIT_MASK(32);
+> +
+> +static int __devinit ohci_at91_of_init(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int i, ret, gpio;
+> +	enum of_gpio_flags flags;
+> +	struct at91_usbh_data	*pdata;
+> +	u32 ports;
+> +
+> +	if (!np)
+> +		return 0;
+> +
+> +	/* Right now device-tree probed devices don't get dma_mask set.
+> +	 * Since shared usb code relies on it, set it here for now.
+> +	 * Once we have dma capability bindings this can go away.
+> +	 */
+> +	if (!pdev->dev.dma_mask)
+> +		pdev->dev.dma_mask = &at91_ohci_dma_mask;
+> +
+> +	pdata = kzalloc(sizeof(struct at91_usbh_data), GFP_KERNEL);
 
-This name is pretty generic for a global symbol.  How about omap2_intc_of_init?
+devm_kzalloc()
 
-Otherwise this series looks good.
-
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-
-This series need to be committed on top of the irqdomain tree.  I can either
-pick it up myself (with Tony's ack) or I can stabilize the irqdomain/next tree
-so that you can use it as a stable base to commit against (which I should
-probably do anyway since there are others who will depend on it).
+Otherwise looks good to me.
 
 g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
