@@ -1,29 +1,44 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 2/9] ARM: at91/snapper9260: move gpio_to_irq out of
-	structure initialization
-Date: Tue, 14 Feb 2012 09:48:35 +0000
-Message-ID: <20120214094835.GB13673@n2100.arm.linux.org.uk>
-References: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com> <e0557a2864e52e017a0e931c6c64fd341ae21559.1329139662.git.nicolas.ferre@atmel.com> <4F396C4C.9060108@gmail.com>
+From: Luciano Coelho <coelho-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3.3 v2] I2C: OMAP: fix build breakage when CONFIG_OF is
+ not set
+Date: Tue, 14 Feb 2012 11:55:31 +0200
+Message-ID: <1329213331.3032.62.camel@cumari>
+References: <1328699901-19488-1-git-send-email-coelho@ti.com>
+	 <20120213232707.GH2999@freya.fluff.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F396C4C.9060108@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryan Mallon <rmallon@gmail.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, avictor.za@gmail.com, tglx@linutronix.de, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120213232707.GH2999-RazCHl0VsYgkUSuvROHNpA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben-i2c-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 14, 2012 at 07:02:20AM +1100, Ryan Mallon wrote:
-> On 14/02/12 01:43, Nicolas Ferre wrote:
-> 
-> > gpio_to_irq() implementation will be moved from a macro to a
-> > plain function: we cannot use it in a structure initialization
-> > anymore.
-> 
-> What was the reason for the change? It was originally a macro for 
-> exactly this reason.
+Hi Ben,
 
-gpio_to_irq() is supposed to work not only for built-in GPIOs, but also
-GPIOs provided by other devices.  Having it as a definition which only
-works for the SoC GPIOs is broken.
+On Mon, 2012-02-13 at 23:27 +0000, Ben Dooks wrote: 
+> On Wed, Feb 08, 2012 at 01:18:21PM +0200, Luciano Coelho wrote:
+> > diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+> > index f713eac..fd200eb 100644
+> > --- a/drivers/i2c/busses/i2c-omap.c
+> > +++ b/drivers/i2c/busses/i2c-omap.c
+> > @@ -979,6 +979,8 @@ static const struct of_device_id omap_i2c_of_match[] = {
+> >  	{ },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, omap_i2c_of_match);
+> > +#else
+> > +static const struct of_device_id *omap_i2c_of_match = NULL;
+> >  #endif
+> 
+> of_match_ptr(_ptr) will go to NULL if CONFIG_OF is not set, use that please.
+
+Yes, you're right.  But this patch can be ignored, since there was
+already an equivalent one queued up (which I missed).  And it uses
+of_match_ptr() ;)
+
+Thanks for your comment anyway!
+
+-- 
+Cheers,
+Luca.
