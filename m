@@ -1,199 +1,57 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/4 v2] ARM: at91: usb ohci add dt support
-Date: Wed, 15 Feb 2012 05:35:35 +0100
-Message-ID: <1329280535-21284-1-git-send-email-plagnioj@jcrosoft.com>
-References: <1329235109-6688-1-git-send-email-plagnioj@jcrosoft.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: remoteproc: Load coprocessor code to the specific main memory
+ location
+Date: Wed, 15 Feb 2012 13:47:30 +0100
+Message-ID: <4F3BA962.9040109@monstr.eu>
+References: <4F1EE861.4030405@monstr.eu> <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com> <4F1FF870.3000105@monstr.eu> <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com> <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com> <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com> <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1329235109-6688-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
----
-v2:
+Ohad Ben-Cohen wrote:
+> On Mon, Feb 13, 2012 at 3:20 PM, Michal Simek <monstr@monstr.eu> wrote:
+>> Here is how it is achieve
+>>        ret = dma_declare_coherent_memory(&zynq_freertos.dev, 0,
+>>                                0, 0x10000000, DMA_MEMORY_MAP);
+>>
+>> which is fully compatible with remoteproc.
+> 
+> Great, this is what we've been doing with davinci too.
 
-	use devm_kzalloc
+Cool.
 
-Best Regards,
-J.
- .../devicetree/bindings/usb/atmel-usb.txt          |   19 ++++
- drivers/usb/host/ohci-at91.c                       |  101 +++++++++++++++++++-
- 2 files changed, 119 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/atmel-usb.txt
+> 
+>> Do you have any example of using it?
+> 
+> What exactly are you looking for ? RTOS or Linux side ?
 
-diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-new file mode 100644
-index 0000000..6c7f728
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-@@ -0,0 +1,19 @@
-+Atmel SOC USB controllers
-+
-+OHCI
-+
-+Required properties:
-+ - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
-+   used in host mode.
-+ - num-ports: Number of ports.
-+ - atmel,vbus-gpio: If present, specifies a gpio that needs to be
-+   activated for the bus to be powered.
-+ - atmel,oc-gpio: If present, specifies a gpio that needs to be
-+   activated for the overcurrent detection.
-+
-+usb0: ohci@00500000 {
-+	compatible = "atmel,at91rm9200-ohci", "usb-ohci";
-+	reg = <0x00500000 0x100000>;
-+	interrupts = <20 4>;
-+	num-ports = <2>;
-+};
-diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
-index 8e855eb..db8963f 100644
---- a/drivers/usb/host/ohci-at91.c
-+++ b/drivers/usb/host/ohci-at91.c
-@@ -14,6 +14,8 @@
- 
- #include <linux/clk.h>
- #include <linux/platform_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_gpio.h>
- 
- #include <mach/hardware.h>
- #include <asm/gpio.h>
-@@ -477,13 +479,109 @@ static irqreturn_t ohci_hcd_at91_overcurrent_irq(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id at91_ohci_dt_ids[] = {
-+	{ .compatible = "atmel,at91rm9200-ohci" },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, at91_ohci_dt_ids);
-+
-+static u64 at91_ohci_dma_mask = DMA_BIT_MASK(32);
-+
-+static int __devinit ohci_at91_of_init(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	int i, ret, gpio;
-+	enum of_gpio_flags flags;
-+	struct at91_usbh_data	*pdata;
-+	u32 ports;
-+
-+	if (!np)
-+		return 0;
-+
-+	/* Right now device-tree probed devices don't get dma_mask set.
-+	 * Since shared usb code relies on it, set it here for now.
-+	 * Once we have dma capability bindings this can go away.
-+	 */
-+	if (!pdev->dev.dma_mask)
-+		pdev->dev.dma_mask = &at91_ohci_dma_mask;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	if (!of_property_read_u32(np, "num-ports", &ports))
-+		pdata->ports = ports;
-+
-+	for (i = 0; i < 2; i++) {
-+		gpio = of_get_named_gpio_flags(np, "atmel,vbus-gpio", i, &flags);
-+		pdata->vbus_pin[i] = gpio;
-+		if (!gpio_is_valid(gpio))
-+			continue;
-+		pdata->vbus_pin_active_low[i] = flags & OF_GPIO_ACTIVE_LOW;
-+		ret = gpio_request(gpio, "ohci_vbus");
-+		if (ret) {
-+			dev_warn(&pdev->dev, "can't request vbus gpio %d", gpio);
-+			continue;
-+		}
-+		ret = gpio_direction_output(gpio, !(flags & OF_GPIO_ACTIVE_LOW) ^ 1);
-+		if (ret)
-+			dev_warn(&pdev->dev, "can't put vbus gpio %d as output %d",
-+				 !(flags & OF_GPIO_ACTIVE_LOW) ^ 1, gpio);
-+	}
-+
-+	for (i = 0; i < 2; i++) {
-+		gpio = of_get_named_gpio_flags(np, "atmel,oc-gpio", i, &flags);
-+		pdata->overcurrent_pin[i] = gpio;
-+		if (!gpio_is_valid(gpio))
-+			continue;
-+		ret = gpio_request(gpio, "ohci_overcurrent");
-+		if (ret) {
-+			dev_err(&pdev->dev, "can't request overcurrent gpio %d", gpio);
-+			continue;
-+		}
-+
-+		ret = gpio_direction_input(gpio);
-+		if (ret) {
-+			dev_err(&pdev->dev, "can't configure overcurrent gpio %d as input", gpio);
-+			continue;
-+		}
-+
-+		ret = request_irq(gpio_to_irq(gpio),
-+				  ohci_hcd_at91_overcurrent_irq,
-+				  IRQF_SHARED, "ohci_overcurrent", pdev);
-+		if (ret) {
-+			gpio_free(gpio);
-+			dev_warn(& pdev->dev, "cannot get GPIO IRQ for overcurrent\n");
-+		}
-+	}
-+
-+	pdev->dev.platform_data = pdata;
-+
-+	return 0;
-+}
-+#else
-+static int __devinit ohci_at91_of_init(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+#endif
-+
- /*-------------------------------------------------------------------------*/
- 
- static int ohci_hcd_at91_drv_probe(struct platform_device *pdev)
- {
--	struct at91_usbh_data	*pdata = pdev->dev.platform_data;
-+	struct at91_usbh_data	*pdata;
- 	int			i;
- 
-+	i = ohci_at91_of_init(pdev);
-+
-+	if (i)
-+		return i;
-+
-+	pdata = pdev->dev.platform_data;
-+
- 	if (pdata) {
- 		for (i = 0; i < ARRAY_SIZE(pdata->vbus_pin); i++) {
- 			if (!gpio_is_valid(pdata->vbus_pin[i]))
-@@ -596,5 +694,6 @@ static struct platform_driver ohci_hcd_at91_driver = {
- 	.driver		= {
- 		.name	= "at91_ohci",
- 		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(at91_ohci_dt_ids),
- 	},
- };
+Both side will be great. Rtos is freertos.
+
+> 
+> On the Linux side, you can just make the rpmsg sample work (it's part
+> of the rpmsg patch set). For the RTOS side, feel free to just take our
+> code (it's BSD licensed and hosted on github) and adapt it to your
+> environment.
+
+You mean that server_sample and rpmsg_omx right?
+I have also found rpmsg-omx demo application.
+What I am missing is how to probe rpmsg bus.
+Do you have any working example?
+
+Communication between cpus is done through swirqs. I have test sending it from linux to rtos.
+
+Thanks,
+Michal
+
 -- 
-1.7.7
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
