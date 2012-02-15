@@ -1,54 +1,77 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 00/25] irq_domain generalization and refinement
-Date: Wed, 15 Feb 2012 13:33:00 -0700
-Message-ID: <20120215203300.GJ25779@ponder.secretlab.ca>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <20120204221748.GN14129@n2100.arm.linux.org.uk>
- <20120204223125.GO14129@n2100.arm.linux.org.uk>
- <20120205013853.GQ20333@atomide.com>
- <20120205161348.GZ889@n2100.arm.linux.org.uk>
- <20120207152627.GA17825@sirena.org.uk>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/4] arm/dts: OMAP4: Add SPI controller nodes
+Date: Wed, 15 Feb 2012 22:00:42 +0100
+Message-ID: <4F3C1CFA.3050705@ti.com>
+References: <1329327457-2121-1-git-send-email-b-cousson@ti.com>
+ <1329327457-2121-3-git-send-email-b-cousson@ti.com>
+ <20120215200240.GA25779@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120207152627.GA17825@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120215200240.GA25779-e0URQFbLeQY2iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 07, 2012 at 03:26:27PM +0000, Mark Brown wrote:
-> On Sun, Feb 05, 2012 at 04:13:48PM +0000, Russell King - ARM Linux wrote:
-> 
-> > It's not quite correct, because OMAP4 has issues in this area as well
-> > (which does select IRQ_DOMAIN but can be without OF.)  The result is
-> > an oops from irq_domain_add() because domain->ops is NULL.
-> 
-> > The right solution is three fold:
-> 
-> > 1. Wrap the bits of code in CONFIG_IRQ_DOMAIN
-> > 2. Get rid of the #ifdef CONFIG_OF there, so the 'ops' member can be
-> >    initialized.
-> > 3. Fix the OMAP vp code not to oops when voltdm->pmic is NULL
-> 
-> > which I have in my combined patch for fixing OMAP so far.
-> 
-> It'd also help if we supported null ops, I sent patches for that a few
-> times over the 3.3 cycle since I was running into it on my systems but
-> apparently to /dev/null and further changes in this area have made the
-> patches not apply any more.
+On 2/15/2012 9:02 PM, Grant Likely wrote:
+> On Wed, Feb 15, 2012 at 06:37:35PM +0100, Benoit Cousson wrote:
+>> Add the 4 McSPI controller nodes present in an OMAP4 device.
+>>
+>> Remove SPI static device initialisation if DT is populated.
+>>
+>> Signed-off-by: Benoit Cousson<b-cousson-l0cyMroinI0@public.gmane.org>
+>> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/omap4.dtsi  |   32 ++++++++++++++++++++++++++++++++
+>>   arch/arm/mach-omap2/devices.c |    4 +++-
+>>   2 files changed, 35 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+>> index 4b81f03..7fc0cbe 100644
+>> --- a/arch/arm/boot/dts/omap4.dtsi
+>> +++ b/arch/arm/boot/dts/omap4.dtsi
+>> @@ -209,5 +209,37 @@
+>>   			#size-cells =<0>;
+>>   			ti,hwmods = "i2c4";
+>>   		};
+>> +
+>> +		mcspi1: mcspi@1 {
+>> +			compatible = "ti,omap4-mcspi";
+>> +			#address-cells =<1>;
+>> +			#size-cells =<0>;
+>> +			ti,hwmods = "mcspi1";
+>> +			ti,spi-num-cs =<4>;
+>
+> No reg or interrupts properties?  And the @<num>  in the name must match the
+> first entry in a reg property.  This looks wrong.
 
-I've avoided allowing null ops so that the drivers are forced to be explicit
-about what they want, and it makes for (IMHO) simpler to follow code in the
-core.
+Well, it is done on purpose :-)
 
-Sorry I missed your patches though.
+The idea being that since reg, irq and dma are still provided by hwmod 
+data, I'd rather not populate this information here at all and thus not 
+confuse people that will then think that these entries are valid and useful.
 
-g.
+At some point, when I'll be able to migrate some of the hwmod data to 
+DT, I will use the hwmod Python generator to generate the OMAP DTS and 
+then populate the proper reg, interrupts and dma-requests.
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+It does not match with the DT convention yet, but this is to emphasis 
+the temporary situation due to hwmod data still in use to build a device.
+
+@<num> might be populated, but again the point was to be *consistent* in 
+the overall inconsistency with regards to DT convention.
+
+Does that make sense or not at all?
+
+Regards,
+Benoit
