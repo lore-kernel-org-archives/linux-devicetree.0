@@ -1,81 +1,37 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: remoteproc: Load coprocessor code to the specific main memory
- location
-Date: Wed, 15 Feb 2012 15:36:58 +0100
-Message-ID: <4F3BC30A.4030301@monstr.eu>
-References: <4F1EE861.4030405@monstr.eu>
- <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com>
- <4F1FF870.3000105@monstr.eu>
- <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com>
- <4F200F64.9060203@monstr.eu>
- <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
- <4F212E9E.9060807@monstr.eu>
- <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com>
- <4F391C1D.9020402@monstr.eu>
- <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com>
- <4F3BA962.9040109@monstr.eu>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v3 24/25] irq_domain: remove "hint" when allocating irq
+ numbers
+Date: Wed, 15 Feb 2012 16:04:28 +0100
+Message-ID: <4F3BC97C.6030203@atmel.com>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca> <1327700179-17454-25-git-send-email-grant.likely@secretlab.ca> <4F316848.4060100@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F3BA962.9040109-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Williams <john.williams-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, "Grosen, Mark" <mgrosen-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F316848.4060100@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Michal Simek wrote:
-> Ohad Ben-Cohen wrote:
->> On Mon, Feb 13, 2012 at 3:20 PM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
->>> Here is how it is achieve
->>>        ret = dma_declare_coherent_memory(&zynq_freertos.dev, 0,
->>>                                0, 0x10000000, DMA_MEMORY_MAP);
->>>
->>> which is fully compatible with remoteproc.
+On 02/07/2012 07:07 PM, Nicolas Ferre :
+> On 01/27/2012 10:36 PM, Grant Likely :
+>> The 'hint' used to try and line up irq numbers with hw irq numbers is
+>> rather a hack and not very useful.  Now that /proc/interrupts also outputs
+>> the hwirq number, it is even less useful to keep around the 'hint' heuristic.
 >>
->> Great, this is what we've been doing with davinci too.
+>> This patch removes it.
 > 
-> Cool.
+> Grant,
 > 
->>
->>> Do you have any example of using it?
->>
->> What exactly are you looking for ? RTOS or Linux side ?
-> 
-> Both side will be great. Rtos is freertos.
-> 
->>
->> On the Linux side, you can just make the rpmsg sample work (it's part
->> of the rpmsg patch set). For the RTOS side, feel free to just take our
->> code (it's BSD licensed and hosted on github) and adapt it to your
->> environment.
-> 
-> You mean that server_sample and rpmsg_omx right?
-> I have also found rpmsg-omx demo application.
-> What I am missing is how to probe rpmsg bus.
-> Do you have any working example?
-> 
-> Communication between cpus is done through swirqs. I have test sending 
-> it from linux to rtos.
+> While trying your patch series in conjunction with Rob one, I do not
+> find this patch in your irqdomain/next branch (and a couple of others).
+> Can you tell me if this v3 series is available as a git tree?
 
-ok. How that rpmsg channels are created? Is it based on data sent from remoteproc?
-Or based on resource table?
+I am still interested by patch 24-25 of this series but still cannot
+find them in your irqdomain/next branch:
+Are they also expected to join the 3.4 merge window material?
 
-Thanks,
-Michal
-
-
+Bye,
 -- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+Nicolas Ferre
