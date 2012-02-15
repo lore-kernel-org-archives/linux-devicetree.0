@@ -1,37 +1,53 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v3 24/25] irq_domain: remove "hint" when allocating irq
- numbers
-Date: Wed, 15 Feb 2012 16:04:28 +0100
-Message-ID: <4F3BC97C.6030203@atmel.com>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca> <1327700179-17454-25-git-send-email-grant.likely@secretlab.ca> <4F316848.4060100@atmel.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: [PATCH 0/5] gpio/omap: Cleanup and adaptation to Device Tree
+Date: Wed, 15 Feb 2012 17:04:09 +0100
+Message-ID: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F316848.4060100@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: grant.likely@secretlab.ca
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khilman@ti.com, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2012 07:07 PM, Nicolas Ferre :
-> On 01/27/2012 10:36 PM, Grant Likely :
->> The 'hint' used to try and line up irq numbers with hw irq numbers is
->> rather a hack and not very useful.  Now that /proc/interrupts also outputs
->> the hwirq number, it is even less useful to keep around the 'hint' heuristic.
->>
->> This patch removes it.
-> 
-> Grant,
-> 
-> While trying your patch series in conjunction with Rob one, I do not
-> find this patch in your irqdomain/next branch (and a couple of others).
-> Can you tell me if this v3 series is available as a git tree?
+Hi Grant,
 
-I am still interested by patch 24-25 of this series but still cannot
-find them in your irqdomain/next branch:
-Are they also expected to join the 3.4 merge window material?
+Here are a couple of GPIO cleanup + the DT adaptation patches.
 
-Bye,
--- 
-Nicolas Ferre
+This series is based on lo/master (a37cdd9) + for_3.4/dt_base branch to get
+the needed cleanup and fixes for OMAP.
+
+The interrupt controller support is using irq_domain_add_legacy for
+the moment and will be updated next to use irqchip irq_domain.
+
+It requires the irq_domain generalization and refinement series
+available at:
+  git://git.secretlab.ca/git/linux-2.6 irqdomain/next
+  
+But I guess you already know where to find it :-)
+
+It requires as well Tarun's GPIO cleanup series available at:
+  git://gitorious.org/~tarunkanti/omap-sw-develoment/tarunkantis-linux-omap-dev for_3.4/gpio_cleanup_fixes_v9
+
+This series is available here for reference:
+  git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.4/dt_gpio
+
+Regards,
+Benoit
+
+
+Benoit Cousson (5):
+  gpio/omap: Remove bank->id information and misc cleanup
+  gpio/omap: Use devm_ API and add request_mem_region
+  gpio/omap: Add DT support to GPIO driver
+  arm/dts: OMAP4: Add gpio nodes
+  arm/dts: OMAP3: Add gpio nodes
+
+ .../devicetree/bindings/gpio/gpio-omap.txt         |   30 ++++
+ arch/arm/boot/dts/omap3.dtsi                       |   54 ++++++
+ arch/arm/boot/dts/omap4.dtsi                       |   54 ++++++
+ arch/arm/mach-omap2/gpio.c                         |    8 +-
+ drivers/gpio/gpio-omap.c                           |  175 +++++++++++++++-----
+ 5 files changed, 278 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-omap.txt
+
