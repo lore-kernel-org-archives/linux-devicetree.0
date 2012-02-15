@@ -1,112 +1,127 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH V3] ARM: tegra: Define Tegra20 CAR binding
-Date: Wed, 15 Feb 2012 12:25:15 -0800
-Message-ID: <CAPnjgZ0VGt4+aY4ck9kjRycY+k_UyzRBxAbDD1V_O=MTyOpiCQ@mail.gmail.com>
-References: <1329329667-26725-1-git-send-email-swarren@nvidia.com>
-	<CAPnjgZ32TD_P4Pa650Y1MpxryxSOMtJHdJB28ZNFxv4hxqGMRA@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF178FACB8D6@HQMAIL01.nvidia.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 25/25] irq_domain: mostly eliminate slow-path revmap
+ lookups
+Date: Wed, 15 Feb 2012 13:29:46 -0700
+Message-ID: <20120215202946.GI25779@ponder.secretlab.ca>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
+ <1327700179-17454-26-git-send-email-grant.likely@secretlab.ca>
+ <4F3BDF1E.4040506@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF178FACB8D6-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F3BDF1E.4040506@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Wed, Feb 15, 2012 at 05:36:46PM +0100, Nicolas Ferre wrote:
+> Grant,
+> 
+> I do not know if it is the latest revision but I have identified some
+> issues on error/slow paths...
+> 
+> 
+> On 01/27/2012 10:36 PM, Grant Likely :
+> > With the current state of irq_domain, the reverse map is always used when
+> > new IRQs get mapped.  This means that the irq_find_mapping() function
+> > can be simplified to always call out to the revmap-specific lookup function.
+> > 
+> > This patch adds lookup functions for the revmaps that don't yet have one
+> > and removes the slow path lookup from most of the code paths.  The only
+> > place where the slow path legitimately remains is when the linear map
+> > is used with a hwirq number larger than the revmap size.
+> > 
+> > Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Milton Miller <miltonm@bga.com>
+> > ---
+> >  arch/powerpc/sysdev/xics/xics-common.c |    3 -
+> >  include/linux/irqdomain.h              |    3 +-
+> >  kernel/irq/irqdomain.c                 |   94 +++++++++++++++++---------------
+> >  3 files changed, 51 insertions(+), 49 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/sysdev/xics/xics-common.c b/arch/powerpc/sysdev/xics/xics-common.c
+> > index ea5e204..1d7067d 100644
+> > --- a/arch/powerpc/sysdev/xics/xics-common.c
+> > +++ b/arch/powerpc/sysdev/xics/xics-common.c
+> > @@ -330,9 +330,6 @@ static int xics_host_map(struct irq_domain *h, unsigned int virq,
+> >  
+> >  	pr_devel("xics: map virq %d, hwirq 0x%lx\n", virq, hw);
+> >  
+> > -	/* Insert the interrupt mapping into the radix tree for fast lookup */
+> > -	irq_radix_revmap_insert(xics_host, virq, hw);
+> > -
+> >  	/* They aren't all level sensitive but we just don't really know */
+> >  	irq_set_status_flags(virq, IRQ_LEVEL);
+> >  
+> > diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> > index 0b00f83..38314f2 100644
+> > --- a/include/linux/irqdomain.h
+> > +++ b/include/linux/irqdomain.h
+> > @@ -93,6 +93,7 @@ struct irq_domain {
+> >  	struct list_head link;
+> >  
+> >  	/* type of reverse mapping_technique */
+> > +	unsigned int (*revmap)(struct irq_domain *host, irq_hw_number_t hwirq);
+> >  	unsigned int revmap_type;
+> >  	union {
+> >  		struct {
+> > @@ -155,8 +156,6 @@ extern void irq_dispose_mapping(unsigned int virq);
+> >  extern unsigned int irq_find_mapping(struct irq_domain *host,
+> >  				     irq_hw_number_t hwirq);
+> >  extern unsigned int irq_create_direct_mapping(struct irq_domain *host);
+> > -extern void irq_radix_revmap_insert(struct irq_domain *host, unsigned int virq,
+> > -				    irq_hw_number_t hwirq);
+> >  extern unsigned int irq_radix_revmap_lookup(struct irq_domain *host,
+> >  					    irq_hw_number_t hwirq);
+> >  extern unsigned int irq_linear_revmap(struct irq_domain *host,
+> > diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> > index 5b4fc4d..91c1cb7 100644
+> > --- a/kernel/irq/irqdomain.c
+> > +++ b/kernel/irq/irqdomain.c
+> > @@ -104,6 +104,7 @@ struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
+> >  	domain->revmap_data.legacy.first_irq = first_irq;
+> >  	domain->revmap_data.legacy.first_hwirq = first_hwirq;
+> >  	domain->revmap_data.legacy.size = size;
+> > +	domain->revmap = irq_domain_legacy_revmap;
+> >  
+> >  	mutex_lock(&irq_domain_mutex);
+> >  	/* Verify that all the irqs are available */
+> > @@ -174,18 +175,35 @@ struct irq_domain *irq_domain_add_linear(struct device_node *of_node,
+> >  	}
+> >  	domain->revmap_data.linear.size = size;
+> >  	domain->revmap_data.linear.revmap = revmap;
+> > +	domain->revmap = irq_linear_revmap;
+> >  	irq_domain_add(domain);
+> >  	return domain;
+> >  }
+> >  
+> > +static unsigned int irq_domain_nomap_revmap(struct irq_domain *domain,
+> > +					    irq_hw_number_t hwirq)
+> > +{
+> > +	struct irq_data *data = irq_get_irq_data(hwirq);
+> > +
+> > +	if (WARN_ON_ONCE(domain->revmap_type != IRQ_DOMAIN_MAP_NOMAP))
+> > +		return irq_find_mapping(domain, hwirq);
+> 
+> Should be:
+> 		return irq_find_mapping_slow(domain, hwirq);
+> 
+> Recursion otherwise...
 
-On Wed, Feb 15, 2012 at 11:14 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
-rote:
-> Simon Glass wrote at Wednesday, February 15, 2012 11:45 AM:
->> On Wed, Feb 15, 2012 at 10:14 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org=
-> wrote:
->> > The Tegra20 CAR (Clock And Reset) Controller controls most aspects=
- of
->> > most clocks within Tegra20. The device tree binding models this as=
- a
->> > single monolithic clock provider, which exports ~130 clocks. This =
-reduces
->> > the number of nodes needed in device tree to represent these clock=
-s.
->> >
->> > This binding is only useful for Tegra20; the set of clocks that ex=
-ists on
->> > Tegra30 is sufficiently different to merit its own binding.
->>
->> It seems there is a large common element - they are almost backwards
->> compatible. Should we not at least look at this now?
->
-> I don't believe there's any need for the clock IDs for the two chips =
-to
-> align in any way. These are two different chips, with different sets =
-of
-> clocks, different tegra*.dtsi files, different clock "drivers" that d=
-efine
-> the available clocks, etc.
->
-> And while as you say, there are a lot of similarities, there are also=
- a
-> number of differences within these first 96 clocks which make having
-> things completely aligned impractical. I imagine you'd rather that
-> Tegra30's binding follow Tegra30's CLK_OUT_ENB register layouts exact=
-ly,
-> rather than attempting to align with Tegra20 even in the face of
-> differences in HW.
+Good catch; but it's not the whole story.  Part of the problem when looking
+at the other revmap functions is that the revmaps can be called by external
+code and there is the possibility that the wrong revmap got called.  In that
+case, calling the normal path is the right thing to do.  However, it is also
+possible (but unlikely) to have a ->revmap() and ->revmap_type mismatch where
+calling the normal path would indeed cause a recursion.
 
-OK my question was really more about how you deal with multi-arch in
-Linux / U-Boot. Does it make sense to ignore the commonality. Perhaps
-instead the range from 96 to 160 should be reserved?
+So, the whole ->revmap thing is a weak design and needs to be rethought.
 
->
->> > + =A073 =A0 csite
->>
->> Would 'coresight' be better given that you have csi also?
->
-> The clock is named "csite" in the TRM; renaming it would make it hard=
-er
-> to correlate the binding with the TRM.
+However, for the time being, I'll change all the revmaps to use the slow
+path because it is safer.
 
-OK
-
->
->> > + =A076 =A0 la
->>
->> What is this one?
->
-> It's in the kernel's tegra2_clocks.c. It's undocumented, but I've
-> confirmed that it does exist.
-
-OK
-
->
->> + =A096 =A0 uart2
->> + =A097 =A0 vfir
->> + =A098 =A0 spdif_in
->> + =A099 =A0 spdif_out
->> + =A0100 =A0vi
->> + =A0101 =A0vi_sensor
->> + =A0102 =A0tvo
->> + =A0103 =A0cve
->>
->> These clocks follow on directly from the above numbers. What is your
->> plan for T30? I think this has another 64 clocks. Should we reserve
->> those spaces now so that the binding are compatible between the two?
->
-> For Tegra30, I imagine the first 160 clock IDs would be assigned in a
-> way that matches the CLK)OUT_ENB registers (since there are 160 bits =
-in
-> them), and any other clocks would be assigned IDs starting with 160.
->
-> P.S. Your HTML mail was a little hard to quote.
-
-Sorry, I turned it on to send something odd, and forgot to turn it off.
-
-Regards,
-Simon
-
->
-> --
-> nvpublic
->
+g.
