@@ -1,85 +1,135 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 24/25] irq_domain: remove "hint" when allocating irq
- numbers
-Date: Wed, 15 Feb 2012 22:32:43 -0700
-Message-ID: <20120216053243.GM25779@ponder.secretlab.ca>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-25-git-send-email-grant.likely@secretlab.ca>
- <4F316848.4060100@atmel.com>
- <4F3BC97C.6030203@atmel.com>
- <20120215202145.GH25779@ponder.secretlab.ca>
- <20120215215001.GA30946@r65073-Latitude-D630>
+From: "DebBarma, Tarun Kanti" <tarun.kanti@ti.com>
+Subject: Re: [PATCH 2/5] gpio/omap: Use devm_ API and add request_mem_region
+Date: Thu, 16 Feb 2012 11:11:52 +0530
+Message-ID: <CAC83ZvKuOkLKdAVNeoVjRZriouDCGPXPhkZZ+MgcktH+9pYN3w@mail.gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+ <1329321854-24490-3-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120215215001.GA30946@r65073-Latitude-D630>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1329321854-24490-3-git-send-email-b-cousson@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: grant.likely@secretlab.ca, khilman@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2012 at 01:50:02PM -0800, Shawn Guo wrote:
-> On Wed, Feb 15, 2012 at 01:21:45PM -0700, Grant Likely wrote:
-> > On Wed, Feb 15, 2012 at 04:04:28PM +0100, Nicolas Ferre wrote:
-> > > On 02/07/2012 07:07 PM, Nicolas Ferre :
-> > > > On 01/27/2012 10:36 PM, Grant Likely :
-> > > >> The 'hint' used to try and line up irq numbers with hw irq numbers is
-> > > >> rather a hack and not very useful.  Now that /proc/interrupts also outputs
-> > > >> the hwirq number, it is even less useful to keep around the 'hint' heuristic.
-> > > >>
-> > > >> This patch removes it.
-> > > > 
-> > > > Grant,
-> > > > 
-> > > > While trying your patch series in conjunction with Rob one, I do not
-> > > > find this patch in your irqdomain/next branch (and a couple of others).
-> > > > Can you tell me if this v3 series is available as a git tree?
-> > > 
-> > > I am still interested by patch 24-25 of this series but still cannot
-> > > find them in your irqdomain/next branch:
-> > > Are they also expected to join the 3.4 merge window material?
-> > 
-> > I've held off on putting them in irqdomain/next because they are a bit more
-> > risky than the other patches, and I want an explicit ack from Ben for patches
-> > 24 & 25.  However, that shouldn't really cause any issues since the changes
-> > in 24 & 25 don't impact the irq_domain functionality or API.  They are just
-> > optimizations.
-> > 
-> I'm seeing that patch 24 does impact on irq_domain functionality
-> a little bit.  On next tree which has no this patch yet,
-> irq_create_mapping can reasonably create virq in range 1..15, while
-> irq_find_mapping will only try to find the virq from 16
-> (NUM_ISA_INTERRUPTS).  This will result in that any hwirq that is < 16
-> gets multiple entries in the mapping table with different virq numbers
-> mapped to the same one hwirq.
+Hi Benoit,
 
-That's a bug then.  The implementation should work without patch 24.  Does
-this patch fix it?
+On Wed, Feb 15, 2012 at 9:34 PM, Benoit Cousson <b-cousson@ti.com> wrote:
+> Replace the regular kzalloc and ioremap with the devm_ equivalent
+> to simplify error handling.
+>
+> Add the missing devm_request_mem_region to reserve the region used
+> by the driver.
+>
+> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Tarun Kanti DebBarma <tarun.kanti@ti.com>
+> ---
+> =A0drivers/gpio/gpio-omap.c | =A0 35 +++++++++++++++--------------------
+> =A01 files changed, 15 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index a0c3e03..c3a9dc8 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -19,7 +19,7 @@
+> =A0#include <linux/err.h>
+> =A0#include <linux/clk.h>
+> =A0#include <linux/io.h>
+> -#include <linux/slab.h>
+> +#include <linux/device.h>
+> =A0#include <linux/pm_runtime.h>
+> =A0#include <linux/pm.h>
+>
+> @@ -1052,23 +1052,19 @@ static int __devinit omap_gpio_probe(struct platf=
+orm_device *pdev)
+> =A0 =A0 =A0 =A0struct gpio_bank *bank;
+> =A0 =A0 =A0 =A0int ret =3D 0;
+>
+> - =A0 =A0 =A0 if (!dev->platform_data) {
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -EINVAL;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_exit;
+> - =A0 =A0 =A0 }
+> + =A0 =A0 =A0 if (!dev->platform_data)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+>
+> - =A0 =A0 =A0 bank =3D kzalloc(sizeof(struct gpio_bank), GFP_KERNEL);
+> + =A0 =A0 =A0 bank =3D devm_kzalloc(&pdev->dev, sizeof(struct gpio_bank),=
+ GFP_KERNEL);
+> =A0 =A0 =A0 =A0if (!bank) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "Memory alloc failed\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENOMEM;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_exit;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+> =A0 =A0 =A0 =A0}
+>
+> =A0 =A0 =A0 =A0res =3D platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> =A0 =A0 =A0 =A0if (unlikely(!res)) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "Invalid IRQ resource\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENODEV;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_free;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+How is the memory allocated to 'bank' getting freed before return -ENODEV?
 
----
+> =A0 =A0 =A0 =A0}
+>
+> =A0 =A0 =A0 =A0bank->irq =3D res->start;
+> @@ -1096,15 +1092,19 @@ static int __devinit omap_gpio_probe(struct platf=
+orm_device *pdev)
+> =A0 =A0 =A0 =A0res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> =A0 =A0 =A0 =A0if (unlikely(!res)) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "Invalid mem resource\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENODEV;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_free;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+And here?
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 2c1d6f8..2d3dfff 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -516,8 +516,8 @@ unsigned int irq_find_mapping(struct irq_domain *domain,
- 		return irq_domain_legacy_revmap(domain, hwirq);
- 
- 	/* Slow path does a linear search of the map */
--	if (hint < NUM_ISA_INTERRUPTS)
--		hint = NUM_ISA_INTERRUPTS;
-+	if (hint == 0)
-+		hint = 1;
- 	i = hint;
- 	do {
- 		struct irq_data *data = irq_get_irq_data(i);
-@@ -525,7 +525,7 @@ unsigned int irq_find_mapping(struct irq_domain *domain,
- 			return i;
- 		i++;
- 		if (i >= irq_virq_count)
--			i = NUM_ISA_INTERRUPTS;
-+			i = 1
- 	} while(i != hint);
- 	return 0;
- }
+> + =A0 =A0 =A0 }
+> +
+> + =A0 =A0 =A0 if (!devm_request_mem_region(dev, res->start, resource_size=
+(res),
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+pdev->name)) {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 dev_err(dev, "Region already claimed\n");
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EBUSY;
+> =A0 =A0 =A0 =A0}
+>
+> - =A0 =A0 =A0 bank->base =3D ioremap(res->start, resource_size(res));
+> + =A0 =A0 =A0 bank->base =3D devm_ioremap(dev, res->start, resource_size(=
+res));
+> =A0 =A0 =A0 =A0if (!bank->base) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "Could not ioremap\n");
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENOMEM;
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_free;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+And here?
+--
+Tarun
+> =A0 =A0 =A0 =A0}
+>
+> =A0 =A0 =A0 =A0platform_set_drvdata(pdev, bank);
+> @@ -1125,11 +1125,6 @@ static int __devinit omap_gpio_probe(struct platfo=
+rm_device *pdev)
+> =A0 =A0 =A0 =A0list_add_tail(&bank->node, &omap_gpio_list);
+>
+> =A0 =A0 =A0 =A0return ret;
+> -
+> -err_free:
+> - =A0 =A0 =A0 kfree(bank);
+> -err_exit:
+> - =A0 =A0 =A0 return ret;
+> =A0}
+>
+> =A0#ifdef CONFIG_ARCH_OMAP2PLUS
+> --
+> 1.7.0.4
+>
