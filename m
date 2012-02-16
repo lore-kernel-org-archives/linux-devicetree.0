@@ -1,71 +1,117 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v5 08/27] irq_domain: Move irq_domain code from powerpc
- to kernel/irq
-Date: Thu, 16 Feb 2012 18:52:12 +0100
-Message-ID: <4F3D424C.2020306@ti.com>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-9-git-send-email-grant.likely@secretlab.ca> <4F3D3F21.3060905@ti.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v4 1/8] sandbox: fdt: Add support for
+	CONFIG_OF_CONTROL
+Date: Thu, 16 Feb 2012 11:16:32 -0800
+Message-ID: <CAPnjgZ11gEk8+40MuTxN=4-Vnqn5N9147B9xhLtqCwWdqc1ttA@mail.gmail.com>
+References: <1329349878-16664-1-git-send-email-sjg@chromium.org>
+	<201202161150.04317.marek.vasut@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F3D3F21.3060905@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: multipart/mixed; boundary="===============0499744708=="
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <201202161150.04317.marek.vasut@gmail.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: u-boot@lists.denx.de, Jerry Van Baren <vanbaren@cideas.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-OK, forget about it, I've just seen your email on that and pulled your 
-latest update.
+--===============0499744708==
+Content-Type: multipart/alternative; boundary=e89a8f64314884451e04b919aa64
+
+--e89a8f64314884451e04b919aa64
+Content-Type: text/plain; charset=ISO-8859-1
+
+Hi Marek,
+
+On Feb 16, 2012 2:50 AM, "Marek Vasut" <marek.vasut@gmail.com> wrote:
+>
+> > This adds support for a controlling fdt, mirroring the ARM
+implementation.
+>
+> This is offtopic, but CONFIG OF CONTROL sounds interesting ;-)
+
+Yes I hope it will be before end of year.
+
+>
+> btw. aren't you missing this part from ARM implementation?
+>
+> /* Allow the early environment to override the fdt address */
+> gd->fdt_blob = (void *)getenv_ulong("fdtcontroladdr", 16, (uintptr_t)gd-
+> >fdt_blob);
+
+In principle yes. In practice we don't have a simple memory interface for
+sandbox yet, so we can't implement this.
+
+Well we did have one but it broke a few boards so was reverted. We should
+come up with a way to do this...
 
 Regards,
-Benoit
+Simon
 
-On 2/16/2012 6:38 PM, Cousson, Benoit wrote:
-> Hi Grant,
 >
-> It looks like there is a small regression in that update, it cannot
-> build due to a missing semi-colon.
->
-> On 2/16/2012 10:09 AM, Grant Likely wrote:
->> +/**
->> + * irq_find_mapping() - Find a linux irq from an hw irq number.
->> + * @host: domain owning this hardware interrupt
->> + * @hwirq: hardware irq number in that host space
->> + *
->> + * This is a slow path, for use by generic code. It's expected that an
->> + * irq controller implementation directly calls the appropriate low
->> level
->> + * mapping function.
->> + */
->> +unsigned int irq_find_mapping(struct irq_domain *host,
->> + irq_hw_number_t hwirq)
->> +{
->> + unsigned int i;
->> + unsigned int hint = hwirq % irq_virq_count;
->> +
->> + /* Look for default host if nececssary */
->> + if (host == NULL)
->> + host = irq_default_host;
->> + if (host == NULL)
->> + return NO_IRQ;
->> +
->> + /* legacy -> bail early */
->> + if (host->revmap_type == IRQ_DOMAIN_MAP_LEGACY)
->> + return hwirq;
->> +
->> + /* Slow path does a linear search of the map */
->> + if (hint == 0)
->> + hint = 1;
->> + i = hint;
->> + do {
->> + struct irq_data *data = irq_get_irq_data(i);
->> + if (data&& (data->domain == host)&& (data->hwirq == hwirq))
->> + return i;
->> + i++;
->> + if (i>= irq_virq_count)
->> + i = 1
->
-> The ";" is missing.
->
-> Regards,
-> Benoit
+> >
+> > Signed-off-by: Simon Glass <sjg@chromium.org>
+> > ---
+> > Changes in v3:
+> > - Use #if defined()..#elif defined, instead of #ifdef..#elif defined
+> >
+> >  arch/sandbox/include/asm/global_data.h |    1 +
+> >  arch/sandbox/lib/board.c               |    8 ++++++++
+> >  2 files changed, 9 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/arch/sandbox/include/asm/global_data.h
+> > b/arch/sandbox/include/asm/global_data.h index 8d47191..01a7063 100644
+> > --- a/arch/sandbox/include/asm/global_data.h
+> > +++ b/arch/sandbox/include/asm/global_data.h
+> > @@ -45,6 +45,7 @@ typedef     struct global_data {
+> >       unsigned long   fb_base;        /* base address of frame buffer */
+> >       u8              *ram_buf;       /* emulated RAM buffer */
+> >       phys_size_t     ram_size;       /* RAM size */
+> > +     const void      *fdt_blob;      /* Our device tree, NULL if none
+*/
+> >       void            **jt;           /* jump table */
+> >       char            env_buf[32];    /* buffer for getenv() before
+reloc. */
+> >  } gd_t;
+> > diff --git a/arch/sandbox/lib/board.c b/arch/sandbox/lib/board.c
+> > index b7997e9..6d464d6 100644
+> > --- a/arch/sandbox/lib/board.c
+> > +++ b/arch/sandbox/lib/board.c
+> > @@ -156,6 +156,14 @@ void board_init_f(ulong bootflag)
+> >
+> >       memset((void *)gd, 0, sizeof(gd_t));
+> >
+> > +#if defined(CONFIG_OF_EMBED)
+> > +     /* Get a pointer to the FDT */
+> > +     gd->fdt_blob = _binary_dt_dtb_start;
+> > +#elif defined(CONFIG_OF_SEPARATE)
+> > +     /* FDT is at end of image */
+> > +     gd->fdt_blob = (void *)(_end_ofs + _TEXT_BASE);
+> > +#endif
+> > +
+> >       for (init_fnc_ptr = init_sequence; *init_fnc_ptr; ++init_fnc_ptr)
+{
+> >               if ((*init_fnc_ptr)() != 0)
+> >                       hang();
+
+--e89a8f64314884451e04b919aa64--
+
+--===============0499744708==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+U-Boot mailing list
+U-Boot@lists.denx.de
+http://lists.denx.de/mailman/listinfo/u-boot
+
+--===============0499744708==--
