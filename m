@@ -1,38 +1,47 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: remoteproc: Load coprocessor code to the specific main memory location
-Date: Thu, 16 Feb 2012 12:28:38 +0100
-Message-ID: <CAK=WgbaRF-L7M3VMZQdqFLUFOJuwFVkBH1hUNuJ51kSrzkaVjA@mail.gmail.com>
-References: <4F1EE861.4030405@monstr.eu> <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com>
- <4F1FF870.3000105@monstr.eu> <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com>
- <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
- <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com>
- <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com>
- <4F3BA962.9040109@monstr.eu> <4F3BC30A.4030301@monstr.eu> <4F3CC899.4070302@monstr.eu>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device
+ tree support
+Date: Thu, 16 Feb 2012 22:04:45 +0900
+Message-ID: <4F3CFEED.6060206@samsung.com>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>	<003401cce730$baf979a0$30ec6ce0$%kim@samsung.com> <m2aa4pkq5g.fsf@bob.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F3CC899.4070302@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <m2aa4pkq5g.fsf@bob.laptop.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2012 at 10:12 AM, Michal Simek <monstr@monstr.eu> wrote:
-> I should be more specific. Can you point me to remoteproc code which publish
-> remote service based on them Linux rpmsg driver will be probed? It is rtos
-> part of code.
-> In your ELCE presentation is called rpmsg-client-sample service.
+On 02/12/12 06:37, Chris Ball wrote:
+> Hi,
+>
+> On Thu, Feb 09 2012, Kukjin Kim wrote:
+>> Looks ok to me and I'd like to pick this series in samsung tree with Chris'
+>> ack.
+>>
+>> Chris, is it ok? If you need to merge this in your tree, please let me know.
+>> I will provide topic branch for it.
+>>
+>> If any problems, please let me know.
+>
+> I don't have a very strong opinion, but I think it's probably better to
+> go via the mmc tree since the patch is so large and hence the chance of
+> conflict before merging is high.  Thanks,
+>
+Hi Chris,
 
-Sorry for the late response (I'm in ELC).
+I mean if I or you create topic branch for this whole series, can be 
+merged into both tree for avoiding conflicts with further working. Of 
+course, the topic branch don't have to rebase after merging into each tree.
 
-Yes, use the client sample (which is part of the submitted patch set)
-and not the omx/server samples (which are public, but were never
-submitted nor cleaned up).
+If you're ok on this and my opinion, let me create the topic branch.
 
-The channels are created dynamically: the rpmsg bus designates address
-53 for a name service, which listens to channel creation/removal
-announcements coming from the remote processor. Take a look in
-virtio_rpmsg_bus.c and you'll immediately see it.
+Thanks.
 
-Hope this helps,
-Ohad.
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
