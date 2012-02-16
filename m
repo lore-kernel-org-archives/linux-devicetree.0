@@ -1,37 +1,63 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: remoteproc: Load coprocessor code to the specific main memory location
-Date: Thu, 16 Feb 2012 18:34:26 +0100
-Message-ID: <CAK=WgbZ3oXc+NQscdShqmu2wkzv=M-qBDCH2-k=5qSRX9W=z3Q@mail.gmail.com>
-References: <4F1EE861.4030405@monstr.eu> <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com>
- <4F1FF870.3000105@monstr.eu> <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com>
- <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
- <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com>
- <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com>
- <4F3BA962.9040109@monstr.eu> <4F3BC30A.4030301@monstr.eu> <4F3CC899.4070302@monstr.eu>
- <CAK=WgbaRF-L7M3VMZQdqFLUFOJuwFVkBH1hUNuJ51kSrzkaVjA@mail.gmail.com>
- <4F3CFFAD.9030402@monstr.eu> <4F3D032B.6090700@monstr.eu>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH v5 08/27] irq_domain: Move irq_domain code from powerpc
+ to kernel/irq
+Date: Thu, 16 Feb 2012 18:38:41 +0100
+Message-ID: <4F3D3F21.3060905@ti.com>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <1329383368-12122-9-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F3D032B.6090700@monstr.eu>
+In-Reply-To: <1329383368-12122-9-git-send-email-grant.likely@secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2012 at 2:22 PM, Michal Simek <monstr@monstr.eu> wrote:
-> ok on that addresses above is mapped vring_desc structure. I expect that
-> addr is address to any memory location when data are places. Next is filled
-> by init because of ring buffer. What flags should be used? And what is data
-> structure?
+Hi Grant,
 
-I'm sorry, but can you please rephrase this question too ? I'm just not
-sure I understand you correctly.
+It looks like there is a small regression in that update, it cannot 
+build due to a missing semi-colon.
 
-In general, you don't need to fiddle with the vring_desc structure -
-that's internal to virtio, and things should just work.
+On 2/16/2012 10:09 AM, Grant Likely wrote:
+> +/**
+> + * irq_find_mapping() - Find a linux irq from an hw irq number.
+> + * @host: domain owning this hardware interrupt
+> + * @hwirq: hardware irq number in that host space
+> + *
+> + * This is a slow path, for use by generic code. It's expected that an
+> + * irq controller implementation directly calls the appropriate low level
+> + * mapping function.
+> + */
+> +unsigned int irq_find_mapping(struct irq_domain *host,
+> +			      irq_hw_number_t hwirq)
+> +{
+> +	unsigned int i;
+> +	unsigned int hint = hwirq % irq_virq_count;
+> +
+> +	/* Look for default host if nececssary */
+> +	if (host == NULL)
+> +		host = irq_default_host;
+> +	if (host == NULL)
+> +		return NO_IRQ;
+> +
+> +	/* legacy ->  bail early */
+> +	if (host->revmap_type == IRQ_DOMAIN_MAP_LEGACY)
+> +		return hwirq;
+> +
+> +	/* Slow path does a linear search of the map */
+> +	if (hint == 0)
+> +		hint = 1;
+> +	i = hint;
+> +	do {
+> +		struct irq_data *data = irq_get_irq_data(i);
+> +		if (data&&  (data->domain == host)&&  (data->hwirq == hwirq))
+> +			return i;
+> +		i++;
+> +		if (i>= irq_virq_count)
+> +			i = 1
 
-Or are you asking about the rtos side ?
+The ";" is missing.
 
-Thanks,
-Ohad.
+Regards,
+Benoit
