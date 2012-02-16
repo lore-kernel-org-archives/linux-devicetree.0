@@ -1,101 +1,81 @@
-From: "DebBarma, Tarun Kanti" <tarun.kanti@ti.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
 Subject: Re: [PATCH 2/5] gpio/omap: Use devm_ API and add request_mem_region
-Date: Thu, 16 Feb 2012 12:41:16 +0530
-Message-ID: <CAC83ZvJU1J0oC5DZZt2kQ4WyaX33EMj9MRvuutRFxKTTTexSvw@mail.gmail.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
-	<1329321854-24490-3-git-send-email-b-cousson@ti.com>
-	<CAC83ZvKuOkLKdAVNeoVjRZriouDCGPXPhkZZ+MgcktH+9pYN3w@mail.gmail.com>
-	<20120216063533.GA29232@ponder.secretlab.ca>
+Date: Thu, 16 Feb 2012 09:56:13 +0100
+Message-ID: <4F3CC4AD.3000103@ti.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>	<1329321854-24490-3-git-send-email-b-cousson@ti.com> <CAC83ZvKuOkLKdAVNeoVjRZriouDCGPXPhkZZ+MgcktH+9pYN3w@mail.gmail.com> <4F3CA41A.4020800@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120216063533.GA29232@ponder.secretlab.ca>
+In-Reply-To: <4F3CA41A.4020800@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benoit Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khilman@ti.com, devicetree-discuss@lists.ozlabs.org
+To: Shubhrajyoti <shubhrajyoti@ti.com>
+Cc: "DebBarma, Tarun Kanti" <tarun.kanti@ti.com>, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khilman@ti.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2012 at 12:05 PM, Grant Likely
-<grant.likely@secretlab.ca> wrote:
-> On Thu, Feb 16, 2012 at 11:11:52AM +0530, DebBarma, Tarun Kanti wrote=
-:
+On 2/16/2012 7:37 AM, Shubhrajyoti wrote:
+> On Thursday 16 February 2012 11:11 AM, DebBarma, Tarun Kanti wrote:
 >> Hi Benoit,
 >>
->> On Wed, Feb 15, 2012 at 9:34 PM, Benoit Cousson <b-cousson@ti.com> w=
-rote:
->> > Replace the regular kzalloc and ioremap with the devm_ equivalent
->> > to simplify error handling.
->> >
->> > Add the missing devm_request_mem_region to reserve the region used
->> > by the driver.
->> >
->> > Signed-off-by: Benoit Cousson <b-cousson@ti.com>
->> > Cc: Tarun Kanti DebBarma <tarun.kanti@ti.com>
->> > ---
->> > =A0drivers/gpio/gpio-omap.c | =A0 35 +++++++++++++++--------------=
-------
->> > =A01 files changed, 15 insertions(+), 20 deletions(-)
->> >
->> > diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
->> > index a0c3e03..c3a9dc8 100644
->> > --- a/drivers/gpio/gpio-omap.c
->> > +++ b/drivers/gpio/gpio-omap.c
->> > @@ -19,7 +19,7 @@
->> > =A0#include <linux/err.h>
->> > =A0#include <linux/clk.h>
->> > =A0#include <linux/io.h>
->> > -#include <linux/slab.h>
->> > +#include <linux/device.h>
->> > =A0#include <linux/pm_runtime.h>
->> > =A0#include <linux/pm.h>
->> >
->> > @@ -1052,23 +1052,19 @@ static int __devinit omap_gpio_probe(struc=
-t platform_device *pdev)
->> > =A0 =A0 =A0 =A0struct gpio_bank *bank;
->> > =A0 =A0 =A0 =A0int ret =3D 0;
->> >
->> > - =A0 =A0 =A0 if (!dev->platform_data) {
->> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -EINVAL;
->> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_exit;
->> > - =A0 =A0 =A0 }
->> > + =A0 =A0 =A0 if (!dev->platform_data)
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
->> >
->> > - =A0 =A0 =A0 bank =3D kzalloc(sizeof(struct gpio_bank), GFP_KERNE=
-L);
->> > + =A0 =A0 =A0 bank =3D devm_kzalloc(&pdev->dev, sizeof(struct gpio=
-_bank), GFP_KERNEL);
->> > =A0 =A0 =A0 =A0if (!bank) {
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "Memory alloc failed\n=
-");
->> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENOMEM;
->> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_exit;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
->> > =A0 =A0 =A0 =A0}
->> >
->> > =A0 =A0 =A0 =A0res =3D platform_get_resource(pdev, IORESOURCE_IRQ,=
- 0);
->> > =A0 =A0 =A0 =A0if (unlikely(!res)) {
->> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "Invalid IRQ resource\=
-n");
->> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENODEV;
->> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_free;
->> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
->> How is the memory allocated to 'bank' getting freed before return -E=
-NODEV?
+>> On Wed, Feb 15, 2012 at 9:34 PM, Benoit Cousson<b-cousson@ti.com>  wrote:
+>>> Replace the regular kzalloc and ioremap with the devm_ equivalent
+>>> to simplify error handling.
+>>>
+>>> Add the missing devm_request_mem_region to reserve the region used
+>>> by the driver.
+>>>
+>>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>>> Cc: Tarun Kanti DebBarma<tarun.kanti@ti.com>
+>>> ---
+>>>   drivers/gpio/gpio-omap.c |   35 +++++++++++++++--------------------
+>>>   1 files changed, 15 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+>>> index a0c3e03..c3a9dc8 100644
+>>> --- a/drivers/gpio/gpio-omap.c
+>>> +++ b/drivers/gpio/gpio-omap.c
+>>> @@ -19,7 +19,7 @@
+>>>   #include<linux/err.h>
+>>>   #include<linux/clk.h>
+>>>   #include<linux/io.h>
+>>> -#include<linux/slab.h>
+>>> +#include<linux/device.h>
+>>>   #include<linux/pm_runtime.h>
+>>>   #include<linux/pm.h>
+>>>
+>>> @@ -1052,23 +1052,19 @@ static int __devinit omap_gpio_probe(struct platform_device *pdev)
+>>>         struct gpio_bank *bank;
+>>>         int ret = 0;
+>>>
+>>> -       if (!dev->platform_data) {
+>>> -               ret = -EINVAL;
+>>> -               goto err_exit;
+>>> -       }
+>>> +       if (!dev->platform_data)
+>>> +               return -EINVAL;
+>>>
+>>> -       bank = kzalloc(sizeof(struct gpio_bank), GFP_KERNEL);
+>>> +       bank = devm_kzalloc(&pdev->dev, sizeof(struct gpio_bank), GFP_KERNEL);
+>>>         if (!bank) {
+>>>                 dev_err(dev, "Memory alloc failed\n");
+>>> -               ret = -ENOMEM;
+>>> -               goto err_exit;
+>>> +               return -ENOMEM;
+>>>         }
+>>>
+>>>         res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+>>>         if (unlikely(!res)) {
+>>>                 dev_err(dev, "Invalid IRQ resource\n");
+>>> -               ret = -ENODEV;
+>>> -               goto err_free;
+>>> +               return -ENODEV;
+>> How is the memory allocated to 'bank' getting freed before return -ENODEV?
 >
-> The magic of devm_*() functions. =A0Anything allocated by those funct=
-ions is
-> automatically freed on either probe failure or driver removal.
-OK, thanks.
---
-Tarun
->
-> g.
->
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I think that may not be needed
+
+It is indeed not needed, and this is the whole point of that API 
+compared to the regular kzalloc... and that's why it is highly 
+recommended to switch to this kind of API.
+
+Regards,
+Benoit
