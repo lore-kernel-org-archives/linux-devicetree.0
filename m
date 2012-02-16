@@ -1,59 +1,95 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 24/25] irq_domain: remove "hint" when allocating irq
- numbers
-Date: Wed, 15 Feb 2012 22:03:35 -0800
-Message-ID: <20120216060334.GA11758@r65073-Latitude-D630>
-References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
- <1327700179-17454-25-git-send-email-grant.likely@secretlab.ca>
- <4F316848.4060100@atmel.com>
- <4F3BC97C.6030203@atmel.com>
- <20120215202145.GH25779@ponder.secretlab.ca>
- <20120215215001.GA30946@r65073-Latitude-D630>
- <20120216053243.GM25779@ponder.secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/5] gpio/omap: Use devm_ API and add request_mem_region
+Date: Wed, 15 Feb 2012 23:35:33 -0700
+Message-ID: <20120216063533.GA29232@ponder.secretlab.ca>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+ <1329321854-24490-3-git-send-email-b-cousson@ti.com>
+ <CAC83ZvKuOkLKdAVNeoVjRZriouDCGPXPhkZZ+MgcktH+9pYN3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120216053243.GM25779@ponder.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAC83ZvKuOkLKdAVNeoVjRZriouDCGPXPhkZZ+MgcktH+9pYN3w@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "DebBarma, Tarun Kanti" <tarun.kanti@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khilman@ti.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2012 at 10:32:43PM -0700, Grant Likely wrote:
-...
-> That's a bug then.  The implementation should work without patch 24.  Does
-> this patch fix it?
-> 
-Yes, it fixes the problem for me.
+On Thu, Feb 16, 2012 at 11:11:52AM +0530, DebBarma, Tarun Kanti wrote:
+> Hi Benoit,
+>=20
+> On Wed, Feb 15, 2012 at 9:34 PM, Benoit Cousson <b-cousson@ti.com> wr=
+ote:
+> > Replace the regular kzalloc and ioremap with the devm_ equivalent
+> > to simplify error handling.
+> >
+> > Add the missing devm_request_mem_region to reserve the region used
+> > by the driver.
+> >
+> > Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+> > Cc: Tarun Kanti DebBarma <tarun.kanti@ti.com>
+> > ---
+> > =A0drivers/gpio/gpio-omap.c | =A0 35 +++++++++++++++---------------=
+-----
+> > =A01 files changed, 15 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> > index a0c3e03..c3a9dc8 100644
+> > --- a/drivers/gpio/gpio-omap.c
+> > +++ b/drivers/gpio/gpio-omap.c
+> > @@ -19,7 +19,7 @@
+> > =A0#include <linux/err.h>
+> > =A0#include <linux/clk.h>
+> > =A0#include <linux/io.h>
+> > -#include <linux/slab.h>
+> > +#include <linux/device.h>
+> > =A0#include <linux/pm_runtime.h>
+> > =A0#include <linux/pm.h>
+> >
+> > @@ -1052,23 +1052,19 @@ static int __devinit omap_gpio_probe(struct=
+ platform_device *pdev)
+> > =A0 =A0 =A0 =A0struct gpio_bank *bank;
+> > =A0 =A0 =A0 =A0int ret =3D 0;
+> >
+> > - =A0 =A0 =A0 if (!dev->platform_data) {
+> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -EINVAL;
+> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_exit;
+> > - =A0 =A0 =A0 }
+> > + =A0 =A0 =A0 if (!dev->platform_data)
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -EINVAL;
+> >
+> > - =A0 =A0 =A0 bank =3D kzalloc(sizeof(struct gpio_bank), GFP_KERNEL=
+);
+> > + =A0 =A0 =A0 bank =3D devm_kzalloc(&pdev->dev, sizeof(struct gpio_=
+bank), GFP_KERNEL);
+> > =A0 =A0 =A0 =A0if (!bank) {
+> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "Memory alloc failed\n"=
+);
+> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENOMEM;
+> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_exit;
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENOMEM;
+> > =A0 =A0 =A0 =A0}
+> >
+> > =A0 =A0 =A0 =A0res =3D platform_get_resource(pdev, IORESOURCE_IRQ, =
+0);
+> > =A0 =A0 =A0 =A0if (unlikely(!res)) {
+> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dev_err(dev, "Invalid IRQ resource\n=
+");
+> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ret =3D -ENODEV;
+> > - =A0 =A0 =A0 =A0 =A0 =A0 =A0 goto err_free;
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+> How is the memory allocated to 'bank' getting freed before return -EN=
+ODEV?
 
-Regards,
-Shawn
+The magic of devm_*() functions.  Anything allocated by those functions=
+ is
+automatically freed on either probe failure or driver removal.
 
-> ---
-> 
-> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-> index 2c1d6f8..2d3dfff 100644
-> --- a/kernel/irq/irqdomain.c
-> +++ b/kernel/irq/irqdomain.c
-> @@ -516,8 +516,8 @@ unsigned int irq_find_mapping(struct irq_domain *domain,
->  		return irq_domain_legacy_revmap(domain, hwirq);
->  
->  	/* Slow path does a linear search of the map */
-> -	if (hint < NUM_ISA_INTERRUPTS)
-> -		hint = NUM_ISA_INTERRUPTS;
-> +	if (hint == 0)
-> +		hint = 1;
->  	i = hint;
->  	do {
->  		struct irq_data *data = irq_get_irq_data(i);
-> @@ -525,7 +525,7 @@ unsigned int irq_find_mapping(struct irq_domain *domain,
->  			return i;
->  		i++;
->  		if (i >= irq_virq_count)
-> -			i = NUM_ISA_INTERRUPTS;
-> +			i = 1
->  	} while(i != hint);
->  	return 0;
->  }
-> 
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
