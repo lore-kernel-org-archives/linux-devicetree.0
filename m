@@ -1,333 +1,189 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v5 22/27] irq_domain/powerpc: constify irq_domain_ops
-Date: Thu, 16 Feb 2012 02:09:23 -0700
-Message-ID: <1329383368-12122-23-git-send-email-grant.likely@secretlab.ca>
+Subject: [PATCH v5 16/27] irq_domain: Remove irq_domain_add_simple()
+Date: Thu, 16 Feb 2012 02:09:17 -0700
+Message-ID: <1329383368-12122-17-git-send-email-grant.likely@secretlab.ca>
 References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Make all the irq_domain_ops structures in powerpc 'static const'
+irq_domain_add_simple() was a stop-gap measure until complete irq_domain
+support was complete.  This patch removes the irq_domain_add_simple()
+interface.
+
+This patch also drops the explicit irq_domain initialization performed
+by the mach-versatile code because the versatile interrupt controller
+already has irq_domain support built into it.  This was a bug that was
+hanging around quietly for a while, but with the full irq_domain which
+actually verifies that irq_domain ranges are available it would cause
+the registration to fail and the system wouldn't boot.
+
+v4: Fixed number of irqs in mx5 gpio code
+v2: Updated to pass in host_data pointer on irq_domain allocation.
 
 Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Milton Miller <miltonm@bga.com>
+Cc: Russell King <linux@arm.linux.org.uk>
 Tested-by: Olof Johansson <olof@lixom.net>
 ---
- arch/powerpc/platforms/512x/mpc5121_ads_cpld.c   |    2 +-
- arch/powerpc/platforms/52xx/media5200.c          |    2 +-
- arch/powerpc/platforms/52xx/mpc52xx_gpt.c        |    2 +-
- arch/powerpc/platforms/52xx/mpc52xx_pic.c        |    2 +-
- arch/powerpc/platforms/82xx/pq2ads-pci-pic.c     |    2 +-
- arch/powerpc/platforms/85xx/socrates_fpga_pic.c  |    2 +-
- arch/powerpc/platforms/86xx/gef_pic.c            |    2 +-
- arch/powerpc/platforms/cell/axon_msi.c           |    2 +-
- arch/powerpc/platforms/cell/beat_interrupt.c     |    2 +-
- arch/powerpc/platforms/cell/interrupt.c          |    2 +-
- arch/powerpc/platforms/cell/spider-pic.c         |    2 +-
- arch/powerpc/platforms/embedded6xx/flipper-pic.c |    2 +-
- arch/powerpc/platforms/embedded6xx/hlwd-pic.c    |    2 +-
- arch/powerpc/platforms/iseries/irq.c             |    2 +-
- arch/powerpc/platforms/powermac/pic.c            |    2 +-
- arch/powerpc/platforms/powermac/smp.c            |    2 +-
- arch/powerpc/platforms/ps3/interrupt.c           |    2 +-
- arch/powerpc/platforms/wsp/opb_pic.c             |    2 +-
- arch/powerpc/sysdev/cpm1.c                       |    2 +-
- arch/powerpc/sysdev/cpm2_pic.c                   |    2 +-
- arch/powerpc/sysdev/ehv_pic.c                    |    2 +-
- arch/powerpc/sysdev/fsl_msi.c                    |    2 +-
- 22 files changed, 22 insertions(+), 22 deletions(-)
+ arch/arm/mach-imx/imx51-dt.c        |    4 ++--
+ arch/arm/mach-imx/imx53-dt.c        |    4 ++--
+ arch/arm/mach-imx/mach-imx6q.c      |    3 ++-
+ arch/arm/mach-msm/board-msm8x60.c   |    8 ++------
+ arch/arm/mach-omap2/board-generic.c |    2 +-
+ arch/arm/mach-prima2/irq.c          |    2 +-
+ include/linux/irqdomain.h           |    1 -
+ kernel/irq/irqdomain.c              |   10 ++--------
+ 8 files changed, 12 insertions(+), 22 deletions(-)
 
-diff --git a/arch/powerpc/platforms/512x/mpc5121_ads_cpld.c b/arch/powerpc/platforms/512x/mpc5121_ads_cpld.c
-index 291d61c..ca3a062 100644
---- a/arch/powerpc/platforms/512x/mpc5121_ads_cpld.c
-+++ b/arch/powerpc/platforms/512x/mpc5121_ads_cpld.c
-@@ -137,7 +137,7 @@ cpld_pic_host_map(struct irq_domain *h, unsigned int virq,
+diff --git a/arch/arm/mach-imx/imx51-dt.c b/arch/arm/mach-imx/imx51-dt.c
+index e6bad17..1e03ef4 100644
+--- a/arch/arm/mach-imx/imx51-dt.c
++++ b/arch/arm/mach-imx/imx51-dt.c
+@@ -47,7 +47,7 @@ static const struct of_dev_auxdata imx51_auxdata_lookup[] __initconst = {
+ static int __init imx51_tzic_add_irq_domain(struct device_node *np,
+ 				struct device_node *interrupt_parent)
+ {
+-	irq_domain_add_simple(np, 0);
++	irq_domain_add_legacy(np, 128, 0, 0, &irq_domain_simple_ops, NULL);
  	return 0;
  }
  
--static struct irq_domain_ops cpld_pic_host_ops = {
-+static const struct irq_domain_ops cpld_pic_host_ops = {
- 	.match = cpld_pic_host_match,
- 	.map = cpld_pic_host_map,
- };
-diff --git a/arch/powerpc/platforms/52xx/media5200.c b/arch/powerpc/platforms/52xx/media5200.c
-index 5db5cfb..17d91b7 100644
---- a/arch/powerpc/platforms/52xx/media5200.c
-+++ b/arch/powerpc/platforms/52xx/media5200.c
-@@ -136,7 +136,7 @@ static int media5200_irq_xlate(struct irq_domain *h, struct device_node *ct,
+@@ -57,7 +57,7 @@ static int __init imx51_gpio_add_irq_domain(struct device_node *np,
+ 	static int gpio_irq_base = MXC_GPIO_IRQ_START + ARCH_NR_GPIOS;
+ 
+ 	gpio_irq_base -= 32;
+-	irq_domain_add_simple(np, gpio_irq_base);
++	irq_domain_add_legacy(np, 32, gpio_irq_base, 0, &irq_domain_simple_ops, NULL);
+ 
+ 	return 0;
+ }
+diff --git a/arch/arm/mach-imx/imx53-dt.c b/arch/arm/mach-imx/imx53-dt.c
+index 05ebb3e..fd5be0f 100644
+--- a/arch/arm/mach-imx/imx53-dt.c
++++ b/arch/arm/mach-imx/imx53-dt.c
+@@ -51,7 +51,7 @@ static const struct of_dev_auxdata imx53_auxdata_lookup[] __initconst = {
+ static int __init imx53_tzic_add_irq_domain(struct device_node *np,
+ 				struct device_node *interrupt_parent)
+ {
+-	irq_domain_add_simple(np, 0);
++	irq_domain_add_legacy(np, 128, 0, 0, &irq_domain_simple_ops, NULL);
  	return 0;
  }
  
--static struct irq_domain_ops media5200_irq_ops = {
-+static const struct irq_domain_ops media5200_irq_ops = {
- 	.map = media5200_irq_map,
- 	.xlate = media5200_irq_xlate,
- };
-diff --git a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
-index b53275d..028470b 100644
---- a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
-+++ b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
-@@ -236,7 +236,7 @@ static int mpc52xx_gpt_irq_xlate(struct irq_domain *h, struct device_node *ct,
+@@ -61,7 +61,7 @@ static int __init imx53_gpio_add_irq_domain(struct device_node *np,
+ 	static int gpio_irq_base = MXC_GPIO_IRQ_START + ARCH_NR_GPIOS;
+ 
+ 	gpio_irq_base -= 32;
+-	irq_domain_add_simple(np, gpio_irq_base);
++	irq_domain_add_legacy(np, 32, gpio_irq_base, 0, &irq_domain_simple_ops, NULL);
+ 
  	return 0;
  }
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index c257281..6075d4d 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -97,7 +97,8 @@ static int __init imx6q_gpio_add_irq_domain(struct device_node *np,
+ 	static int gpio_irq_base = MXC_GPIO_IRQ_START + ARCH_NR_GPIOS;
  
--static struct irq_domain_ops mpc52xx_gpt_irq_ops = {
-+static const struct irq_domain_ops mpc52xx_gpt_irq_ops = {
- 	.map = mpc52xx_gpt_irq_map,
- 	.xlate = mpc52xx_gpt_irq_xlate,
- };
-diff --git a/arch/powerpc/platforms/52xx/mpc52xx_pic.c b/arch/powerpc/platforms/52xx/mpc52xx_pic.c
-index 41fa671..8520b58 100644
---- a/arch/powerpc/platforms/52xx/mpc52xx_pic.c
-+++ b/arch/powerpc/platforms/52xx/mpc52xx_pic.c
-@@ -384,7 +384,7 @@ static int mpc52xx_irqhost_map(struct irq_domain *h, unsigned int virq,
+ 	gpio_irq_base -= 32;
+-	irq_domain_add_simple(np, gpio_irq_base);
++	irq_domain_add_legacy(np, 32, gpio_irq_base, 0, &irq_domain_simple_ops,
++			      NULL);
+ 
  	return 0;
  }
+diff --git a/arch/arm/mach-msm/board-msm8x60.c b/arch/arm/mach-msm/board-msm8x60.c
+index 0a11342..962e711 100644
+--- a/arch/arm/mach-msm/board-msm8x60.c
++++ b/arch/arm/mach-msm/board-msm8x60.c
+@@ -80,12 +80,8 @@ static struct of_device_id msm_dt_gic_match[] __initdata = {
  
--static struct irq_domain_ops mpc52xx_irqhost_ops = {
-+static const struct irq_domain_ops mpc52xx_irqhost_ops = {
- 	.xlate = mpc52xx_irqhost_xlate,
- 	.map = mpc52xx_irqhost_map,
- };
-diff --git a/arch/powerpc/platforms/82xx/pq2ads-pci-pic.c b/arch/powerpc/platforms/82xx/pq2ads-pci-pic.c
-index 4ef9d69..328d221 100644
---- a/arch/powerpc/platforms/82xx/pq2ads-pci-pic.c
-+++ b/arch/powerpc/platforms/82xx/pq2ads-pci-pic.c
-@@ -112,7 +112,7 @@ static int pci_pic_host_map(struct irq_domain *h, unsigned int virq,
- 	return 0;
+ static void __init msm8x60_dt_init(void)
+ {
+-	struct device_node *node;
+-
+-	node = of_find_matching_node_by_address(NULL, msm_dt_gic_match,
+-			MSM8X60_QGIC_DIST_PHYS);
+-	if (node)
+-		irq_domain_add_simple(node, GIC_SPI_START);
++	irq_domain_generate_simple(msm_dt_gic_match, MSM8X60_QGIC_DIST_PHYS,
++				GIC_SPI_START);
+ 
+ 	if (of_machine_is_compatible("qcom,msm8660-surf")) {
+ 		printk(KERN_INFO "Init surf UART registers\n");
+diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+index d587560..00b1d02 100644
+--- a/arch/arm/mach-omap2/board-generic.c
++++ b/arch/arm/mach-omap2/board-generic.c
+@@ -67,7 +67,7 @@ static void __init omap_generic_init(void)
+ {
+ 	struct device_node *node = of_find_matching_node(NULL, intc_match);
+ 	if (node)
+-		irq_domain_add_simple(node, 0);
++		irq_domain_add_legacy(node, 32, 0, 0, &irq_domain_simple_ops, NULL);
+ 
+ 	omap_sdrc_init(NULL, NULL);
+ 
+diff --git a/arch/arm/mach-prima2/irq.c b/arch/arm/mach-prima2/irq.c
+index d93ceef..37c2de9 100644
+--- a/arch/arm/mach-prima2/irq.c
++++ b/arch/arm/mach-prima2/irq.c
+@@ -68,7 +68,7 @@ void __init sirfsoc_of_irq_init(void)
+ 	if (!sirfsoc_intc_base)
+ 		panic("unable to map intc cpu registers\n");
+ 
+-	irq_domain_add_simple(np, 0);
++	irq_domain_add_legacy(np, 32, 0, 0, &irq_domain_simple_ops, NULL);
+ 
+ 	of_node_put(np);
+ 
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 624e9ac..e7379a3 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -164,7 +164,6 @@ extern unsigned int irq_linear_revmap(struct irq_domain *host,
+ 
+ extern struct irq_domain_ops irq_domain_simple_ops;
+ #if defined(CONFIG_OF_IRQ)
+-extern void irq_domain_add_simple(struct device_node *controller, int irq_base);
+ extern void irq_domain_generate_simple(const struct of_device_id *match,
+ 					u64 phys_base, unsigned int irq_start);
+ #else /* CONFIG_OF_IRQ */
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index dad793f..03f571a 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -722,13 +722,6 @@ struct irq_domain_ops irq_domain_simple_ops = {
+ EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
+ 
+ #ifdef CONFIG_OF_IRQ
+-void irq_domain_add_simple(struct device_node *controller, int irq_base)
+-{
+-	irq_domain_add_legacy(controller, 32, irq_base, 0,
+-			      &irq_domain_simple_ops, NULL);
+-}
+-EXPORT_SYMBOL_GPL(irq_domain_add_simple);
+-
+ void irq_domain_generate_simple(const struct of_device_id *match,
+ 				u64 phys_base, unsigned int irq_start)
+ {
+@@ -737,7 +730,8 @@ void irq_domain_generate_simple(const struct of_device_id *match,
+ 		(unsigned long long) phys_base, (int) irq_start);
+ 	node = of_find_matching_node_by_address(NULL, match, phys_base);
+ 	if (node)
+-		irq_domain_add_simple(node, irq_start);
++		irq_domain_add_legacy(node, 32, irq_start, 0,
++				      &irq_domain_simple_ops, NULL);
  }
- 
--static struct irq_domain_ops pci_pic_host_ops = {
-+static const struct irq_domain_ops pci_pic_host_ops = {
- 	.map = pci_pic_host_map,
- };
- 
-diff --git a/arch/powerpc/platforms/85xx/socrates_fpga_pic.c b/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
-index 1092c12..3bbbf74 100644
---- a/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
-+++ b/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
-@@ -269,7 +269,7 @@ static int socrates_fpga_pic_host_xlate(struct irq_domain *h,
- 	return 0;
- }
- 
--static struct irq_domain_ops socrates_fpga_pic_host_ops = {
-+static const struct irq_domain_ops socrates_fpga_pic_host_ops = {
- 	.map    = socrates_fpga_pic_host_map,
- 	.xlate  = socrates_fpga_pic_host_xlate,
- };
-diff --git a/arch/powerpc/platforms/86xx/gef_pic.c b/arch/powerpc/platforms/86xx/gef_pic.c
-index 126a94b..af3fd69 100644
---- a/arch/powerpc/platforms/86xx/gef_pic.c
-+++ b/arch/powerpc/platforms/86xx/gef_pic.c
-@@ -177,7 +177,7 @@ static int gef_pic_host_xlate(struct irq_domain *h, struct device_node *ct,
- 	return 0;
- }
- 
--static struct irq_domain_ops gef_pic_host_ops = {
-+static const struct irq_domain_ops gef_pic_host_ops = {
- 	.map	= gef_pic_host_map,
- 	.xlate	= gef_pic_host_xlate,
- };
-diff --git a/arch/powerpc/platforms/cell/axon_msi.c b/arch/powerpc/platforms/cell/axon_msi.c
-index cf9fd3c..db360fc 100644
---- a/arch/powerpc/platforms/cell/axon_msi.c
-+++ b/arch/powerpc/platforms/cell/axon_msi.c
-@@ -327,7 +327,7 @@ static int msic_host_map(struct irq_domain *h, unsigned int virq,
- 	return 0;
- }
- 
--static struct irq_domain_ops msic_host_ops = {
-+static const struct irq_domain_ops msic_host_ops = {
- 	.map	= msic_host_map,
- };
- 
-diff --git a/arch/powerpc/platforms/cell/beat_interrupt.c b/arch/powerpc/platforms/cell/beat_interrupt.c
-index bbdf574..e5c3a2c 100644
---- a/arch/powerpc/platforms/cell/beat_interrupt.c
-+++ b/arch/powerpc/platforms/cell/beat_interrupt.c
-@@ -172,7 +172,7 @@ static int beatic_pic_host_match(struct irq_domain *h, struct device_node *np)
- 	return 1;
- }
- 
--static struct irq_domain_ops beatic_pic_host_ops = {
-+static const struct irq_domain_ops beatic_pic_host_ops = {
- 	.map = beatic_pic_host_map,
- 	.unmap = beatic_pic_host_unmap,
- 	.xlate = beatic_pic_host_xlate,
-diff --git a/arch/powerpc/platforms/cell/interrupt.c b/arch/powerpc/platforms/cell/interrupt.c
-index c844797..2d42f3b 100644
---- a/arch/powerpc/platforms/cell/interrupt.c
-+++ b/arch/powerpc/platforms/cell/interrupt.c
-@@ -285,7 +285,7 @@ static int iic_host_xlate(struct irq_domain *h, struct device_node *ct,
- 	return 0;
- }
- 
--static struct irq_domain_ops iic_host_ops = {
-+static const struct irq_domain_ops iic_host_ops = {
- 	.match = iic_host_match,
- 	.map = iic_host_map,
- 	.xlate = iic_host_xlate,
-diff --git a/arch/powerpc/platforms/cell/spider-pic.c b/arch/powerpc/platforms/cell/spider-pic.c
-index 6521d20..d8b7cc8 100644
---- a/arch/powerpc/platforms/cell/spider-pic.c
-+++ b/arch/powerpc/platforms/cell/spider-pic.c
-@@ -194,7 +194,7 @@ static int spider_host_xlate(struct irq_domain *h, struct device_node *ct,
- 	return 0;
- }
- 
--static struct irq_domain_ops spider_host_ops = {
-+static const struct irq_domain_ops spider_host_ops = {
- 	.map = spider_host_map,
- 	.xlate = spider_host_xlate,
- };
-diff --git a/arch/powerpc/platforms/embedded6xx/flipper-pic.c b/arch/powerpc/platforms/embedded6xx/flipper-pic.c
-index 4345971..675335a 100644
---- a/arch/powerpc/platforms/embedded6xx/flipper-pic.c
-+++ b/arch/powerpc/platforms/embedded6xx/flipper-pic.c
-@@ -113,7 +113,7 @@ static int flipper_pic_match(struct irq_domain *h, struct device_node *np)
- }
- 
- 
--static struct irq_domain_ops flipper_irq_domain_ops = {
-+static const struct irq_domain_ops flipper_irq_domain_ops = {
- 	.map = flipper_pic_map,
- 	.match = flipper_pic_match,
- };
-diff --git a/arch/powerpc/platforms/embedded6xx/hlwd-pic.c b/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
-index 499d410..da6ca02 100644
---- a/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
-+++ b/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
-@@ -100,7 +100,7 @@ static int hlwd_pic_map(struct irq_domain *h, unsigned int virq,
- 	return 0;
- }
- 
--static struct irq_domain_ops hlwd_irq_domain_ops = {
-+static const struct irq_domain_ops hlwd_irq_domain_ops = {
- 	.map = hlwd_pic_map,
- };
- 
-diff --git a/arch/powerpc/platforms/iseries/irq.c b/arch/powerpc/platforms/iseries/irq.c
-index 5538b59..05ce516 100644
---- a/arch/powerpc/platforms/iseries/irq.c
-+++ b/arch/powerpc/platforms/iseries/irq.c
-@@ -356,7 +356,7 @@ static int iseries_irq_host_match(struct irq_domain *h, struct device_node *np)
- 	return 1;
- }
- 
--static struct irq_domain_ops iseries_irq_domain_ops = {
-+static const struct irq_domain_ops iseries_irq_domain_ops = {
- 	.map = iseries_irq_host_map,
- 	.match = iseries_irq_host_match,
- };
-diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
-index 646fdf3..46a5f32 100644
---- a/arch/powerpc/platforms/powermac/pic.c
-+++ b/arch/powerpc/platforms/powermac/pic.c
-@@ -299,7 +299,7 @@ static int pmac_pic_host_xlate(struct irq_domain *h, struct device_node *ct,
- 	return 0;
- }
- 
--static struct irq_domain_ops pmac_pic_host_ops = {
-+static const struct irq_domain_ops pmac_pic_host_ops = {
- 	.match = pmac_pic_host_match,
- 	.map = pmac_pic_host_map,
- 	.xlate = pmac_pic_host_xlate,
-diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
-index 09afd70..a81e5a8 100644
---- a/arch/powerpc/platforms/powermac/smp.c
-+++ b/arch/powerpc/platforms/powermac/smp.c
-@@ -184,7 +184,7 @@ static int psurge_host_map(struct irq_domain *h, unsigned int virq,
- 	return 0;
- }
- 
--struct irq_domain_ops psurge_host_ops = {
-+static const struct irq_domain_ops psurge_host_ops = {
- 	.map	= psurge_host_map,
- };
- 
-diff --git a/arch/powerpc/platforms/ps3/interrupt.c b/arch/powerpc/platforms/ps3/interrupt.c
-index c05808f..2a4ff86 100644
---- a/arch/powerpc/platforms/ps3/interrupt.c
-+++ b/arch/powerpc/platforms/ps3/interrupt.c
-@@ -684,7 +684,7 @@ static int ps3_host_match(struct irq_domain *h, struct device_node *np)
- 	return 1;
- }
- 
--static struct irq_domain_ops ps3_host_ops = {
-+static const struct irq_domain_ops ps3_host_ops = {
- 	.map = ps3_host_map,
- 	.match = ps3_host_match,
- };
-diff --git a/arch/powerpc/platforms/wsp/opb_pic.c b/arch/powerpc/platforms/wsp/opb_pic.c
-index 4837515..0c6fe0b 100644
---- a/arch/powerpc/platforms/wsp/opb_pic.c
-+++ b/arch/powerpc/platforms/wsp/opb_pic.c
-@@ -207,7 +207,7 @@ static int opb_host_xlate(struct irq_domain *host, struct device_node *dn,
- 	return 0;
- }
- 
--static struct irq_domain_ops opb_host_ops = {
-+static const struct irq_domain_ops opb_host_ops = {
- 	.map = opb_host_map,
- 	.xlate = opb_host_xlate,
- };
-diff --git a/arch/powerpc/sysdev/cpm1.c b/arch/powerpc/sysdev/cpm1.c
-index 53f39db..d4fa03f 100644
---- a/arch/powerpc/sysdev/cpm1.c
-+++ b/arch/powerpc/sysdev/cpm1.c
-@@ -123,7 +123,7 @@ static struct irqaction cpm_error_irqaction = {
- 	.name = "error",
- };
- 
--static struct irq_domain_ops cpm_pic_host_ops = {
-+static const struct irq_domain_ops cpm_pic_host_ops = {
- 	.map = cpm_pic_host_map,
- };
- 
-diff --git a/arch/powerpc/sysdev/cpm2_pic.c b/arch/powerpc/sysdev/cpm2_pic.c
-index b364332..8c9fc9c 100644
---- a/arch/powerpc/sysdev/cpm2_pic.c
-+++ b/arch/powerpc/sysdev/cpm2_pic.c
-@@ -236,7 +236,7 @@ static int cpm2_pic_host_xlate(struct irq_domain *h, struct device_node *ct,
- 	return 0;
- }
- 
--static struct irq_domain_ops cpm2_pic_host_ops = {
-+static const struct irq_domain_ops cpm2_pic_host_ops = {
- 	.map = cpm2_pic_host_map,
- 	.xlate = cpm2_pic_host_xlate,
- };
-diff --git a/arch/powerpc/sysdev/ehv_pic.c b/arch/powerpc/sysdev/ehv_pic.c
-index adea322..6e0e100 100644
---- a/arch/powerpc/sysdev/ehv_pic.c
-+++ b/arch/powerpc/sysdev/ehv_pic.c
-@@ -248,7 +248,7 @@ static int ehv_pic_host_xlate(struct irq_domain *h, struct device_node *ct,
- 	return 0;
- }
- 
--static struct irq_domain_ops ehv_pic_host_ops = {
-+static const struct irq_domain_ops ehv_pic_host_ops = {
- 	.match = ehv_pic_host_match,
- 	.map = ehv_pic_host_map,
- 	.xlate = ehv_pic_host_xlate,
-diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
-index f4fd95b..0c01deb 100644
---- a/arch/powerpc/sysdev/fsl_msi.c
-+++ b/arch/powerpc/sysdev/fsl_msi.c
-@@ -74,7 +74,7 @@ static int fsl_msi_host_map(struct irq_domain *h, unsigned int virq,
- 	return 0;
- }
- 
--static struct irq_domain_ops fsl_msi_host_ops = {
-+static const struct irq_domain_ops fsl_msi_host_ops = {
- 	.map = fsl_msi_host_map,
- };
- 
+ EXPORT_SYMBOL_GPL(irq_domain_generate_simple);
+ #endif
 -- 
 1.7.9
