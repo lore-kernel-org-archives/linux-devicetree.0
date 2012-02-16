@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v5 17/27] irq_domain: Create common xlate functions that device drivers can use
-Date: Thu, 16 Feb 2012 02:09:18 -0700
-Message-ID: <1329383368-12122-18-git-send-email-grant.likely@secretlab.ca>
+Subject: [PATCH v5 20/27] irq_domain/c6x: constify irq_domain structures
+Date: Thu, 16 Feb 2012 02:09:21 -0700
+Message-ID: <1329383368-12122-21-git-send-email-grant.likely@secretlab.ca>
 References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,131 +11,53 @@ To: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-disc
 Cc: Grant Likely <grant.likely@secretlab.ca>, Mark Salter <msalter@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Rather than having each interrupt controller driver creating its own barely
-unique .xlate function for irq_domain, create a library of translators which
-any driver can use directly.
-
-v5: - Remove irq_domain_xlate_pci().  It was incorrect.
-
 Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Mark Salter <msalter@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Milton Miller <miltonm@bga.com>
-Tested-by: Olof Johansson <olof@lixom.net>
 ---
- include/linux/irqdomain.h |   12 ++++++++
- kernel/irq/irqdomain.c    |   65 ++++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 67 insertions(+), 10 deletions(-)
+ arch/arm/common/gic.c            |    2 +-
+ arch/c6x/kernel/irq.c            |    2 +-
+ arch/c6x/platforms/megamod-pic.c |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index e7379a3..ea58f36 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -163,6 +163,18 @@ extern unsigned int irq_linear_revmap(struct irq_domain *host,
- 				      irq_hw_number_t hwirq);
- 
- extern struct irq_domain_ops irq_domain_simple_ops;
-+
-+/* stock xlate functions */
-+int irq_domain_xlate_onecell(struct irq_domain *d, struct device_node *ctrlr,
-+			const u32 *intspec, unsigned int intsize,
-+			irq_hw_number_t *out_hwirq, unsigned int *out_type);
-+int irq_domain_xlate_twocell(struct irq_domain *d, struct device_node *ctrlr,
-+			const u32 *intspec, unsigned int intsize,
-+			irq_hw_number_t *out_hwirq, unsigned int *out_type);
-+int irq_domain_xlate_onetwocell(struct irq_domain *d, struct device_node *ctrlr,
-+			const u32 *intspec, unsigned int intsize,
-+			irq_hw_number_t *out_hwirq, unsigned int *out_type);
-+
- #if defined(CONFIG_OF_IRQ)
- extern void irq_domain_generate_simple(const struct of_device_id *match,
- 					u64 phys_base, unsigned int irq_start);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 03f571a..9a8f95e 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -699,25 +699,70 @@ int irq_domain_simple_map(struct irq_domain *d, unsigned int irq,
+diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
+index 7275d80..f0783be 100644
+--- a/arch/arm/common/gic.c
++++ b/arch/arm/common/gic.c
+@@ -635,7 +635,7 @@ static int gic_irq_domain_xlate(struct irq_domain *d,
  	return 0;
  }
  
--int irq_domain_simple_xlate(struct irq_domain *d,
--			    struct device_node *controller,
--			    const u32 *intspec, unsigned int intsize,
--			    unsigned long *out_hwirq, unsigned int *out_type)
-+/**
-+ * irq_domain_xlate_onecell() - Generic xlate for direct one cell bindings
-+ *
-+ * Device Tree IRQ specifier translation function which works with one cell
-+ * bindings where the cell value maps directly to the hwirq number.
-+ */
-+int irq_domain_xlate_onecell(struct irq_domain *d, struct device_node *ctrlr,
-+			     const u32 *intspec, unsigned int intsize,
-+			     unsigned long *out_hwirq, unsigned int *out_type)
- {
--	if (d->of_node != controller)
--		return -EINVAL;
--	if (intsize < 1)
-+	if (WARN_ON(intsize < 1))
- 		return -EINVAL;
- 	*out_hwirq = intspec[0];
- 	*out_type = IRQ_TYPE_NONE;
--	if (intsize > 1)
--		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(irq_domain_xlate_onecell);
-+
-+/**
-+ * irq_domain_xlate_twocell() - Generic xlate for direct two cell bindings
-+ *
-+ * Device Tree IRQ specifier translation function which works with two cell
-+ * bindings where the cell values map directly to the hwirq number
-+ * and linux irq flags.
-+ */
-+int irq_domain_xlate_twocell(struct irq_domain *d, struct device_node *ctrlr,
-+			const u32 *intspec, unsigned int intsize,
-+			irq_hw_number_t *out_hwirq, unsigned int *out_type)
-+{
-+	if (WARN_ON(intsize < 2))
-+		return -EINVAL;
-+	*out_hwirq = intspec[0];
-+	*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_xlate_twocell);
-+
-+/**
-+ * irq_domain_xlate_onetwocell() - Generic xlate for one or two cell bindings
-+ *
-+ * Device Tree IRQ specifier translation function which works with either one
-+ * or two cell bindings where the cell values map directly to the hwirq number
-+ * and linux irq flags.
-+ *
-+ * Note: don't use this function unless your interrupt controller explicitly
-+ * supports both one and two cell bindings.  For the majority of controllers
-+ * the _onecell() or _twocell() variants above should be used.
-+ */
-+int irq_domain_xlate_onetwocell(struct irq_domain *d,
-+				struct device_node *ctrlr,
-+				const u32 *intspec, unsigned int intsize,
-+				unsigned long *out_hwirq, unsigned int *out_type)
-+{
-+	if (WARN_ON(intsize < 1))
-+		return -EINVAL;
-+	*out_hwirq = intspec[0];
-+	*out_type = (intsize > 1) ? intspec[1] : IRQ_TYPE_NONE;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_xlate_onetwocell);
- 
- struct irq_domain_ops irq_domain_simple_ops = {
- 	.map = irq_domain_simple_map,
--	.xlate = irq_domain_simple_xlate,
-+	.xlate = irq_domain_xlate_onetwocell,
+-struct irq_domain_ops gic_irq_domain_ops = {
++const struct irq_domain_ops gic_irq_domain_ops = {
+ 	.map = gic_irq_domain_map,
+ 	.xlate = gic_irq_domain_xlate,
  };
- EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
+diff --git a/arch/c6x/kernel/irq.c b/arch/c6x/kernel/irq.c
+index 3d5ac60..c6b36e8 100644
+--- a/arch/c6x/kernel/irq.c
++++ b/arch/c6x/kernel/irq.c
+@@ -86,7 +86,7 @@ static int core_domain_map(struct irq_domain *h, unsigned int virq,
+ 	return 0;
+ }
  
+-static struct irq_domain_ops core_domain_ops = {
++static const struct irq_domain_ops core_domain_ops = {
+ 	.map = core_domain_map,
+ };
+ 
+diff --git a/arch/c6x/platforms/megamod-pic.c b/arch/c6x/platforms/megamod-pic.c
+index 61f5863..9f35fbf 100644
+--- a/arch/c6x/platforms/megamod-pic.c
++++ b/arch/c6x/platforms/megamod-pic.c
+@@ -148,7 +148,7 @@ static int megamod_xlate(struct irq_domain *h, struct device_node *ct,
+ 	return 0;
+ }
+ 
+-static struct irq_domain_ops megamod_domain_ops = {
++static const struct irq_domain_ops megamod_domain_ops = {
+ 	.map	= megamod_map,
+ 	.xlate	= megamod_xlate,
+ };
 -- 
 1.7.9
