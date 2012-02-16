@@ -1,77 +1,59 @@
-From: Mike Frysinger <vapier@gentoo.org>
-Subject: Re: [PATCH v4 1/8] sandbox: fdt: Add support for
-	CONFIG_OF_CONTROL
-Date: Thu, 16 Feb 2012 01:03:17 -0500
-Message-ID: <201202160103.18589.vapier@gentoo.org>
-References: <1329349878-16664-1-git-send-email-sjg@chromium.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v3 24/25] irq_domain: remove "hint" when allocating irq
+ numbers
+Date: Wed, 15 Feb 2012 22:03:35 -0800
+Message-ID: <20120216060334.GA11758@r65073-Latitude-D630>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca>
+ <1327700179-17454-25-git-send-email-grant.likely@secretlab.ca>
+ <4F316848.4060100@atmel.com>
+ <4F3BC97C.6030203@atmel.com>
+ <20120215202145.GH25779@ponder.secretlab.ca>
+ <20120215215001.GA30946@r65073-Latitude-D630>
+ <20120216053243.GM25779@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0154099603=="
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1329349878-16664-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120216053243.GM25779@ponder.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============0154099603==
-Content-Type: multipart/signed;
-  boundary="nextPart5245076.BqCuk94rHz";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+On Wed, Feb 15, 2012 at 10:32:43PM -0700, Grant Likely wrote:
+...
+> That's a bug then.  The implementation should work without patch 24.  Does
+> this patch fix it?
+> 
+Yes, it fixes the problem for me.
 
---nextPart5245076.BqCuk94rHz
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Regards,
+Shawn
 
-On Wednesday 15 February 2012 18:51:11 Simon Glass wrote:
-> This adds support for a controlling fdt, mirroring the ARM implementation.
-
-merged into my sandbox branch
--mike
-
---nextPart5245076.BqCuk94rHz
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (GNU/Linux)
-
-iQIcBAABAgAGBQJPPJwmAAoJEEFjO5/oN/WBqEgQANAHNOmfohbABxrMsuIuH/3Q
-pZonOsbMJKS10y0pFaHK4rhkCTs6gCfsOwweEGtgz6GnbXAY48Q2w9cdWHYdHVsP
-hN2b/zttqqLG3gIixAobDY2PLX+6fq88Zm1KNTiRYlBTEWOFx5ZSR7ckxnwqR/4f
-aZaRgKak7J2byt6xbDmPLzYW8AqiIdundsGCn8I2twhji565UemDQiSnf50mTzOB
-Iyf7qJyaENUDfbJYlUeLxPQAc2CW6V8abzwelWfVKYRz0V6HrOAzgCqJmsD8s0oQ
-wpeQ++53ZlypfccbyMWGfJ/7/k0q+iZhINTdyYSn7uK0j7GKzR6oSNfsvRnNZ2pr
-dCf0zWb18zCvMHdQ3WUZ6uxb9Of1oLwsl0I8/M0u2I12ovHXSdRoe1gWWELEcDwP
-gZoj6j9b1Q7t4bonRINnvRFna7adGEJDpnfDB9vhu/Qgmjv2rRFKw4onFPRzer+a
-ypq/BYOZ7O7ch/5zJapJXlgDcZLasnjq47yw0ryJG35o+7hGD1/ex2BW7MC4Hhvv
-z00Vml/jcO4Eklwxonhx7T4zMAQBt2lADpQIb8MjkduOn80wzUGdAWFhHm7QNY9R
-Sxk+2xe2Xqxwh+TUw559Gtbva+D6Ntv8khnHVBJaSgUgDOxVNnYm+eUdMYfdNOG4
-LDlUsgyx19prVvjyMwSv
-=zjdS
------END PGP SIGNATURE-----
-
---nextPart5245076.BqCuk94rHz--
-
---===============0154099603==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-U-Boot mailing list
-U-Boot@lists.denx.de
-http://lists.denx.de/mailman/listinfo/u-boot
-
---===============0154099603==--
+> ---
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 2c1d6f8..2d3dfff 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -516,8 +516,8 @@ unsigned int irq_find_mapping(struct irq_domain *domain,
+>  		return irq_domain_legacy_revmap(domain, hwirq);
+>  
+>  	/* Slow path does a linear search of the map */
+> -	if (hint < NUM_ISA_INTERRUPTS)
+> -		hint = NUM_ISA_INTERRUPTS;
+> +	if (hint == 0)
+> +		hint = 1;
+>  	i = hint;
+>  	do {
+>  		struct irq_data *data = irq_get_irq_data(i);
+> @@ -525,7 +525,7 @@ unsigned int irq_find_mapping(struct irq_domain *domain,
+>  			return i;
+>  		i++;
+>  		if (i >= irq_virq_count)
+> -			i = NUM_ISA_INTERRUPTS;
+> +			i = 1
+>  	} while(i != hint);
+>  	return 0;
+>  }
+> 
