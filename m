@@ -1,37 +1,41 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v5 00/27] irq_domain generalization and rework
-Date: Fri, 17 Feb 2012 19:05:38 +0100
-Message-ID: <20120217180538.GA11520@merkur.ravnborg.org>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <20120216145219.0f1c1b98.akpm@linux-foundation.org> <20120216232648.GM27825@n2100.arm.linux.org.uk>
+From: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] powerpc/85xx:Add PSC9131 RDB Support
+Date: Fri, 17 Feb 2012 19:20:59 +0000
+Message-ID: <CAOZdJXVvL98vNG5UvT2t1dgJw1D204-5BCgDsxqD04szhHueBQ@mail.gmail.com>
+References: <1329208640-32209-1-git-send-email-prabhakar@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120216232648.GM27825@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1329208640-32209-1-git-send-email-prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Content-ID: <1FAAB96E06B64B4ABE694E6D2633A878-KZfg59tc24wqcZcGjlUOXw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Kushwaha Prabhakar-B32579 <B32579-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Goyal Akhil-B35197 <B35197-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Aggrwal Poonam-B10812 <B10812-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Srivastava Rajan-B34330 <B34330-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mehresh Ramneek-B31383 <B31383-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jain Priyanka-B32167 <B32167-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > 
-> > /*
-> >  * Please do not include this file in generic code.  There is currently
-> >  * no requirement for any architecture to implement anything held
-> >  * within this file.
-> >  *
-> >  * Thanks. --rmk
-> >  */
-> > 
-> > A quick grep indicates that we've lost this battle ;) Is the comments
-> > still true?  Should we stop discouraging inclusion of linux/irq.h? 
-> > Does anyone even know that it's discouraged ;)
-> 
-> It's still true for any platform which hasn't been converted to genirq,
-> as such a platform would not have asm/hw_irq.h.
+On Tue, Feb 14, 2012 at 2:37 AM, Prabhakar Kushwaha
+<prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>
+> =A0Applied on git://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc=
+.git branch next
 
-In-tree only s390 is not using genirq.
-All the rest are converted and provide hw_irq.h -
-most of the new archs provide hw_irq via asm-generic so it does
-not show up unless you look in the Kbuild file,.
+This is actually a false statement.  "Applied" is past tense, so you
+are saying that this patch has *already* been applied to Kumar's
+powerpc.git repository.  But this is not true -- Kumar's repository
+has not been updated in the last three weeks, and this patch is
+nowhere to be found.
 
-	Sam
+-- =
+
+Timur Tabi
+Linux kernel developer at Freescale
