@@ -1,63 +1,64 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v5 00/27] irq_domain generalization and rework
-Date: Thu, 16 Feb 2012 23:26:48 +0000
-Message-ID: <20120216232648.GM27825@n2100.arm.linux.org.uk>
-References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca> <20120216145219.0f1c1b98.akpm@linux-foundation.org>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: remoteproc: Load coprocessor code to the specific main memory location
+Date: Fri, 17 Feb 2012 02:55:33 +0100
+Message-ID: <CAK=WgbZBJJbFcoeZ+hY=BgyW_4yvOJPVNMZ18_9o+zY7tEc_pQ@mail.gmail.com>
+References: <4F1EE861.4030405@monstr.eu> <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com>
+ <4F1FF870.3000105@monstr.eu> <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com>
+ <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
+ <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com>
+ <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com>
+ <4F3BA962.9040109@monstr.eu> <4F3BC30A.4030301@monstr.eu> <4F3CC899.4070302@monstr.eu>
+ <CAK=WgbaRF-L7M3VMZQdqFLUFOJuwFVkBH1hUNuJ51kSrzkaVjA@mail.gmail.com>
+ <4F3CFFAD.9030402@monstr.eu> <4F3D032B.6090700@monstr.eu> <CAK=WgbZ3oXc+NQscdShqmu2wkzv=M-qBDCH2-k=5qSRX9W=z3Q@mail.gmail.com>
+ <CAHTX3dJ4PruKO-wJLJU8W0boHFL0f6eoF+QNaoNjm5hu26YEow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120216145219.0f1c1b98.akpm@linux-foundation.org>
+In-Reply-To: <CAHTX3dJ4PruKO-wJLJU8W0boHFL0f6eoF+QNaoNjm5hu26YEow@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
+To: Michal Simek <monstr@monstr.eu>
+Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2012 at 02:52:19PM -0800, Andrew Morton wrote:
-> On Thu, 16 Feb 2012 02:09:01 -0700
-> Grant Likely <grant.likely@secretlab.ca> wrote:
-> > This series generalizes the "irq_host" infrastructure from powerpc
-> > so that it can be used by all architectures and renames it to "irq_domain".
-> 
-> drivers/mfd/twl-core.c is fairly horked on i386 allmodconfig:
-> 
-> drivers/mfd/twl-core.c: In function 'twl_probe':
-> drivers/mfd/twl-core.c:1218: error: implicit declaration of function 'irq_alloc_descs'
-> drivers/mfd/twl-core.c:1226: error: implicit declaration of function 'irq_domain_add_legacy'
-> drivers/mfd/twl-core.c:1227: error: 'irq_domain_simple_ops' undeclared (first use in this function)
-> drivers/mfd/twl-core.c:1227: error: (Each undeclared identifier is reported only once
-> drivers/mfd/twl-core.c:1227: error: for each function it appears in.)
-> 
-> This is today's linux-next so it has rmk's "ARM: omap: fix broken
-> twl-core dependencies and ifdefs" in there, which looks like it
-> attempts to repair this stuff.
+On Thu, Feb 16, 2012 at 9:21 PM, Michal Simek <monstr@monstr.eu> wrote:
+> IRC in init part Linux kick rtos which send which services are available.in
+> any format which is unknown to me.
 
-Yes, you're the third to report this breakage.
+Check out struct rpmsg_ns_msg - that's the exact format of the name
+service notification messages (it's also mentioned by
+Documentation/rpmsg.txt).
 
-Grant's response on Tuesday over this was:
-| This is irq_domain related.  It's related to an API change.  I'm
-| tracking to get it solved, either by moving the twl commit into the
-| irqdomain branch or by deferring the api change to v3.5.
-|
-| I've also got a patch that converts x86 over to the new api, but I
-| don't have sufficient review to put it into the irqdomain tree yet.
+Of course, these messages, like any other message that is sent across,
+need to begin with the usual rpmsg header. Its format is defined by
+struct rpmsg_hdr.
 
-> btw, Russell, regarding this comment in include/linux/irq.h:
-> 
-> /*
->  * Please do not include this file in generic code.  There is currently
->  * no requirement for any architecture to implement anything held
->  * within this file.
->  *
->  * Thanks. --rmk
->  */
-> 
-> A quick grep indicates that we've lost this battle ;) Is the comments
-> still true?  Should we stop discouraging inclusion of linux/irq.h? 
-> Does anyone even know that it's discouraged ;)
+To send the message from the rtos to Linux, you then need to grab a
+buffer from the available ring (of the vring which is used by Linux to
+receive messages), fill it with the message, put it in the used ring,
+and kick the Linux side.
 
-It's still true for any platform which hasn't been converted to genirq,
-as such a platform would not have asm/hw_irq.h.  That said, since
-genirq, it's now necessary for any driver which contains interrupt
-controller code like GPIO drivers.  So I suspect the comment should now
-be lost, even though it's not really a replacement for asm/irq.h.
+> Please also correct me if I read the code wrongly. that mailbox in omap
+> driver is used just to say which buffer contains that message. Is it
+> correct?
+
+We're using the mailbox payload in order to indicate which vring has
+pending buffers.
+
+> I can create 15 sw signals to tell rtos which buffer contains message.
+
+You can also just use a single interrupt and then, when it is
+triggered, check both vrings for pending buffers. It's just another if
+statement and shouldn't be too much of an overhead.
+
+> Will be help if I clear my code and send it to you for review? Maybe you
+> will see where the problem is.
+
+I'm not sure I'll have the time to review it, but let's try to
+progress this way and see how it goes.
+
+Sorry I couldn't answer faster this week - I'm in ELC and was a bit
+away from emails. I'll soon be flying back and that will keep me away
+from emails again, but b/o next week I'll be online again.
+
+Thanks,
+Ohad.
