@@ -1,37 +1,103 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/9] ARM/USB: at91/ohci-at91: remove the use of
- irq_to_gpio
-Date: Fri, 17 Feb 2012 08:59:38 -0800
-Message-ID: <20120217165938.GB25671@kroah.com>
-References: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com>
- <fab15f7eaf6622e68e62bc3afa533b12f48ca27e.1329139662.git.nicolas.ferre@atmel.com>
- <4F3E20CC.5090205@atmel.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH v5 00/27] irq_domain generalization and rework
+Date: Fri, 17 Feb 2012 18:42:31 +0100
+Message-ID: <4F3E9187.9080308@ti.com>
+References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
+ <20120216145219.0f1c1b98.akpm@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F3E20CC.5090205@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-usb@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, tglx@linutronix.de, devicetree-discuss@lists.ozlabs.org, avictor.za@gmail.com, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120216145219.0f1c1b98.akpm@linux-foundation.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, Russell King <rmk@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 17, 2012 at 10:41:32AM +0100, Nicolas Ferre wrote:
-> On 02/13/2012 03:43 PM, Nicolas Ferre :
-> > irq_to_gpio() macro will be removed from AT91 GPIO interrupt
-> > controller. So we replace it with the use of gpio_to_irq()
-> > and a reworked test.
-> > 
-> > Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> > Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> > Cc: linux-usb@vger.kernel.org
-> 
-> Hi Greg,
-> 
-> I would like to queue this patch through arm-soc git tree (with all AT91
-> material of this patch series).
-> 
-> So, can I have your "Acked-by" on this one?
+Hi Grant,
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On 2/16/2012 11:52 PM, Andrew Morton wrote:
+> On Thu, 16 Feb 2012 02:09:01 -0700
+> Grant Likely<grant.likely@secretlab.ca>  wrote:
+> 
+>>
+>> This series generalizes the "irq_host" infrastructure from powerpc
+>> so that it can be used by all architectures and renames it to "irq_domain".
+> 
+> drivers/mfd/twl-core.c is fairly horked on i386 allmodconfig:
+> 
+> drivers/mfd/twl-core.c: In function 'twl_probe':
+> drivers/mfd/twl-core.c:1218: error: implicit declaration of function 'irq_alloc_descs'
+> drivers/mfd/twl-core.c:1226: error: implicit declaration of function 'irq_domain_add_legacy'
+> drivers/mfd/twl-core.c:1227: error: 'irq_domain_simple_ops' undeclared (first use in this function)
+> drivers/mfd/twl-core.c:1227: error: (Each undeclared identifier is reported only once
+> drivers/mfd/twl-core.c:1227: error: for each function it appears in.)
+> 
+> 
+> This is today's linux-next so it has rmk's "ARM: omap: fix broken
+> twl-core dependencies and ifdefs" in there, which looks like it
+> attempts to repair this stuff.
+
+If we cannot assume this driver will be used only on architecture that does support IRQ_DOMAIN, we have to keep the #ifdef and then add the missing linux/irq.h.
+
+Since this driver is using IRQ_DOMAIN only for Device Tree support, we can still avoid using irq_domain_add_legacy for the legacy non-DT case.
+That's too bad because I was expecting to use irq_domain to clean the cascading IRQ scheme used in that driver, but that can wait.
+
+The fix is trivial, but here it is just in case.
+
+Regards,
+Benoit
+
+
+---
+>From 0faf51f8475025260d5db808b1651a38b409803d Mon Sep 17 00:00:00 2001
+From: Benoit Cousson <b-cousson@ti.com>
+Date: Fri, 17 Feb 2012 18:13:31 +0100
+Subject: [PATCH] mfd: twl-core: Fix IRQ_DOMAIN dependency
+
+TWL chips might be potentially used on architecture that does not support
+ird_domain yet.
+
+Do not call ird_domain API in that case.
+
+Include <linux/irq.h> directly since it will not be included anymore by
+<linux/irqdomain.h> if !IRQ_DOMAIN.
+ 
+Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+---
+ drivers/mfd/twl-core.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
+index 59888f5..61441e2 100644
+--- a/drivers/mfd/twl-core.c
++++ b/drivers/mfd/twl-core.c
+@@ -38,6 +38,7 @@
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
++#include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ 
+ #include <linux/regulator/machine.h>
+@@ -1237,8 +1238,10 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ 	pdata->irq_base = status;
+ 	pdata->irq_end = pdata->irq_base + nr_irqs;
++#ifdef IRQ_DOMAIN
+ 	irq_domain_add_legacy(node, nr_irqs, pdata->irq_base, 0,
+ 			      &irq_domain_simple_ops, NULL);
++#endif
+ 
+ 	if (i2c_check_functionality(client->adapter, I2C_FUNC_I2C) == 0) {
+ 		dev_dbg(&client->dev, "can't talk I2C?\n");
+-- 
+1.7.5.4
