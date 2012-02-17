@@ -1,53 +1,37 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PULL] of nand generic binding
-Date: Fri, 17 Feb 2012 16:57:07 +0100
-Message-ID: <20120217155707.GR1214@game.jcrosoft.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 3/9] ARM/USB: at91/ohci-at91: remove the use of
+ irq_to_gpio
+Date: Fri, 17 Feb 2012 08:59:38 -0800
+Message-ID: <20120217165938.GB25671@kroah.com>
+References: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com>
+ <fab15f7eaf6622e68e62bc3afa533b12f48ca27e.1329139662.git.nicolas.ferre@atmel.com>
+ <4F3E20CC.5090205@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <4F3E20CC.5090205@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: linux-usb@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, tglx@linutronix.de, devicetree-discuss@lists.ozlabs.org, avictor.za@gmail.com, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-HI,
+On Fri, Feb 17, 2012 at 10:41:32AM +0100, Nicolas Ferre wrote:
+> On 02/13/2012 03:43 PM, Nicolas Ferre :
+> > irq_to_gpio() macro will be removed from AT91 GPIO interrupt
+> > controller. So we replace it with the use of gpio_to_irq()
+> > and a reworked test.
+> > 
+> > Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> > Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> > Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > Cc: linux-usb@vger.kernel.org
+> 
+> Hi Greg,
+> 
+> I would like to queue this patch through arm-soc git tree (with all AT91
+> material of this patch series).
+> 
+> So, can I have your "Acked-by" on this one?
 
-	please find attached the generic binding for the MTD nand
-
-	This will add boolean and nand helpers
-
-The following changes since commit d65b4e98d7ea3038b767b70fe8be959b2913f16d:
-
-  Linux 3.3-rc3 (2012-02-08 19:21:53 -0800)
-
-are available in the git repository at:
-  git://github.com/at91linux/linux-at91.git for-grant-dt
-
-Jean-Christophe PLAGNIOL-VILLARD (2):
-      of: introduce helper to manage boolean
-      of/mtd/nand: add generic bindings and helpers
-
- Documentation/devicetree/bindings/mtd/nand.txt |    7 ++
- drivers/of/Kconfig                             |    4 +
- drivers/of/Makefile                            |    1 +
- drivers/of/base.c                              |   30 ++++++++
- drivers/of/of_mtd.c                            |   85 ++++++++++++++++++++++++
- include/linux/of.h                             |    8 ++
- include/linux/of_mtd.h                         |   19 +++++
- 7 files changed, 154 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/nand.txt
- create mode 100644 drivers/of/of_mtd.c
- create mode 100644 include/linux/of_mtd.h
-
-Best Regards,
-J.
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
