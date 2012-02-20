@@ -1,121 +1,83 @@
-From: Albert ARIBAUD <albert.u.boot@aribaud.net>
-Subject: Re: [PATCH v4 04/20] arm: fdt: Ensure that an embedded fdt
-	is word-aligned
-Date: Sun, 19 Feb 2012 19:33:27 +0100
-Message-ID: <4F414077.7040100@aribaud.net>
-References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
-	<1326342789-5781-5-git-send-email-sjg@chromium.org>
-	<4F3F90A6.3070002@aribaud.net>
-	<CAPnjgZ0hqaKEavwwO+5v7w08XPh7nObu0b_MQuE=wLjrOjyKzw@mail.gmail.com>
-	<4F40B25D.1090704@aribaud.net>
-	<CAPnjgZ2sq7Gx8XQ3OG0a6sAVS_S_F7V3XkyCXMz2GvA=e+y_Vg@mail.gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/4 v2] i2c/gpio: add DT support
+Date: Mon, 20 Feb 2012 10:58:13 +0100
+Message-ID: <20120220095813.GB11307@game.jcrosoft.org>
+References: <1328754308-7365-1-git-send-email-plagnioj@jcrosoft.com>
+ <4F3945B1.9070900@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CAPnjgZ2sq7Gx8XQ3OG0a6sAVS_S_F7V3XkyCXMz2GvA=e+y_Vg@mail.gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <4F3945B1.9070900@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On 18:17 Mon 13 Feb     , Karol Lewandowski wrote:
+> On 09.02.2012 03:25, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> 
+> Hi!
+> 
+> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > ---
+> > v2:
+> > 
+> > 	use devm
+> > 	update DT bindings to i2c-gpio and sda-open-drain...
+> > 	update against "of: introduce helper to manage boolean"
+> > 
+> > Best Regards,
+> > J.
+> >  .../devicetree/bindings/gpio/gpio_i2c.txt          |   32 +++++++
+> >  drivers/i2c/busses/i2c-gpio.c                      |   95 +++++++++++++++----
+> >  2 files changed, 107 insertions(+), 20 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio_i2c.txt b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> > new file mode 100644
+> > index 0000000..9710ed2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+> > @@ -0,0 +1,32 @@
+> > +Device-Tree bindings for i2c gpio driver
+> > +
+> > +Required properties:
+> > +	- compatible = "i2c-gpio";
+> > +	- gpios: sda and scl gpio
+> > +
+> > +
+> > +Optional properties:
+> > +	- i2c-gpio,sda-open-drain: sda as open drain
+> > +	- i2c-gpio,scl-open-drain: scl as open drain
+> > +	- i2c-gpio,scl-output-only: scl as output only
+> 
+> 
+> > +	- udelay: delay between GPIO operations (may depend on each platform)
+> > +	- timeout: timeout to get data (ms)
+> 
+> 
+> If these are really needed then I would prefer to have these fully
+> qualified (with unit type "-ms/-millisecs" appended).
+> 
+> Regulator framework, with its "-microvolt/-microamp", serve here as
+> prime example of being quite descriptive (one doesn't neet to look up
+> the docs). Please see:
+> 
+>   http://permalink.gmane.org/gmane.linux.ports.arm.omap/67637
+timeout are usualy in ms I don't really see the need of -ms or so
 
-Le 19/02/2012 17:23, Simon Glass a =E9crit :
-
-> Sorry I had that wrong - it's not the link step I am bothered by, it is t=
-he
-> objcopy step.
->
-> What I would like to do is mark the input section, created by objcopy, wi=
-th
-> a particular alignment so that the linker does the right thing. This
-> feature appears to be present in objcopy but does not appear to work.
-> Perhaps I should debug that first to see what is going on.
-
-(Formally there are two "objcopy steps" in u-boot building. One happens =
-
-after the link step, where from the u-boot ELF binary objcopy derives =
-
-the u-boot.bin pure binary and u-boot.srec S-Record file. I suspect =
-
-you're referring to the other one, which happens before the link stage =
-
-and which turns the binary FDT data into an ELF-linkable object. Correct?)
-
-Maybe one is allowed to specify alignment requirements when making an =
-
-ELF object file from a pure binary with objcopy; but obviously it does =
-
-not work as you want it to, whereas section alignment in linker scripts =
-
-is a tried and proven method.
-
->>>> So I must be missing something. Can you clarify the scenario that gets
->>>
->>> fixed here?
->>>
->>> The fdt blob is in one of the object files. If during linking the file
->>> before it has a data segment whose size is not a multiple of 4, then the
->>> fdt object can be misaligned in the output.
->>
->>
->> Understood. This example of an alignment failure scenario shows that the
-> failure cause is indeed that the FDT is embedded in the .data output
-> section at link time.
->>
->>
->>>> Not that I am against the patch, mind you, quite the opposite. I am ju=
-st
->>>
->>> wondering about the pros and cons of having a separated (and aligned) D=
-TS
->>> data *output* section and placing that section after .code and .data
-> rather
->>> than between them.
->>>
->>> Bear in mind that embedding the fdt in the image is really only for
->>> development.
->>
->>
->> Understood, and I think that's one more reason to make sure that the act
-> of FDT embedding does not alter .data input section ordering.
->
-> Well it is just a data section really.
-
-So are the relocation tables in .rel.dyn and .dynsyms, but that does not =
-
-mean they have to go to the "dot data" output section.
-
->>> We could have a separate output section if you like. Up to you.
->>
->>
->> I much prefer embedded FDT data to be explicitly mapped to a a dedicated
-> .fdt output section in u-boot.lds, because it ensures that aligment
-> constaints for .fdt and .data can be controlled independently.
->
-> I will take a look at this.
-
-Thanks. This should be fairly easy to do in the linker script by =
-
-inserting an output section (e.g. ".fdt") after .data, aligning the =
-
-start of that section to a word boundary, and explicitly mapping the =
-
-.data section of the FDT object file into it.
-
-> Regards,
-> Simon
-
-Amicalement,
--- =
-
-Albert.
+Best Regards,
+J.
