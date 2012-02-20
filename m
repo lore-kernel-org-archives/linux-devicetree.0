@@ -1,89 +1,80 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 1/4 v2] i2c/gpio: add DT support
-Date: Mon, 20 Feb 2012 13:58:07 +0000
-Message-ID: <20120220135807.GB26840@n2100.arm.linux.org.uk>
-References: <1328754308-7365-1-git-send-email-plagnioj@jcrosoft.com>
- <4F3945B1.9070900@samsung.com> <20120220095813.GB11307@game.jcrosoft.org>
- <20120220100843.GE22562@n2100.arm.linux.org.uk>
- <20120220102231.GC11307@game.jcrosoft.org>
- <20120220125054.GF22562@n2100.arm.linux.org.uk>
- <20120220133725.GD11307@game.jcrosoft.org>
- <20120220134634.GE11307@game.jcrosoft.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: remoteproc: Load coprocessor code to the specific main memory
+ location
+Date: Mon, 20 Feb 2012 15:22:09 +0100
+Message-ID: <4F425711.80102@monstr.eu>
+References: <4F1EE861.4030405@monstr.eu> <CAK=Wgba5kT8AwLtuHyosucYnWf-EA+xpE1kzmssfhSC7ZXQA=g@mail.gmail.com> <4F1FF870.3000105@monstr.eu> <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com> <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com> <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com> <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com> <4F3BA962.9040109@monstr.eu> <4F3BC30A.4030301@monstr.eu> <4F3CC899.4070302@monstr.eu> <CAK=WgbaRF-L7M3VMZQdqFLUFOJuwFVkBH1hUNuJ51kSrzkaVjA@mail.gmail.com> <4F3CFFAD.9030402@monstr.eu> <4F3D032B.6090700@monstr.eu> <CAK=WgbZ3oXc+NQscdShqmu2wkzv=M-qBDCH2-k=5qSRX9W=z3Q@mail.gmail.com> <CAHTX3dJ4PruKO
+ -wJLJU8W0boHFL0f6eoF+QNaoNjm5hu26YEow@mail.gmail.com> <CAK=WgbZBJJbFcoeZ+hY=BgyW_4yvOJPVNMZ18_9o+zY7tEc_pQ@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120220134634.GE11307-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK=WgbZBJJbFcoeZ+hY=BgyW_4yvOJPVNMZ18_9o+zY7tEc_pQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 20, 2012 at 02:46:34PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 14:37 Mon 20 Feb     , Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 12:50 Mon 20 Feb     , Russell King - ARM Linux wrote:
-> > > On Mon, Feb 20, 2012 at 11:22:31AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > > > On 10:08 Mon 20 Feb     , Russell King - ARM Linux wrote:
-> > > > > On Mon, Feb 20, 2012 at 10:58:13AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > > > > > On 18:17 Mon 13 Feb     , Karol Lewandowski wrote:
-> > > > > > > > +	- udelay: delay between GPIO operations (may depend on each platform)
-> > > > > > > > +	- timeout: timeout to get data (ms)
-> > > > > > > 
-> > > > > > > 
-> > > > > > > If these are really needed then I would prefer to have these fully
-> > > > > > > qualified (with unit type "-ms/-millisecs" appended).
-> > > > > > > 
-> > > > > > > Regulator framework, with its "-microvolt/-microamp", serve here as
-> > > > > > > prime example of being quite descriptive (one doesn't neet to look up
-> > > > > > > the docs). Please see:
-> > > > > > > 
-> > > > > > >   http://permalink.gmane.org/gmane.linux.ports.arm.omap/67637
-> > > > > > timeout are usualy in ms I don't really see the need of -ms or so
-> > > > > 
-> > > > > Which is obviously total crap for udelay, which would be in _micro_seconds.
-> > > > agreed but here on i2c gpio I never see timetout as udelay so I don't see
-> > > > the mandatory to force the name in the binding
-> > > > 
-> > > > futhermore it's maybe linux specific
-> > > 
-> > > Stop grabbing at straws.  There's nothing linux specific about the units
-> > > of specification.
-> > > 
-> > > What is linux specific is specifying the _delay_ rather than specifying
-> > > the bus frequency.  So as soon as you're trying to justify not adding
-> > > the units because they may be linux specific, you've already lost that
-> > > argument by using a delay rather than a bus frequency.  You can't have
-> > > it both ways.
-> > > 
-> > > Moreover, mixing microseconds and milliseconds in the properties for a
-> > > device is absolutely insane.
-> > > 
-> > > So, which ever way, your patch as it currently stands is wrong and broken.
-> >  no what I said is the binding timeout is maybe linux specific for i2c gpio
+Ohad Ben-Cohen wrote:
+> On Thu, Feb 16, 2012 at 9:21 PM, Michal Simek <monstr@monstr.eu> wrote:
+>> IRC in init part Linux kick rtos which send which services are available.in
+>> any format which is unknown to me.
 > 
-> I do not argue about that here we do not even disucss about the bus frequency
-> but the specific bining to the i2c algo bit for it's internal timeout
+> Check out struct rpmsg_ns_msg - that's the exact format of the name
+> service notification messages (it's also mentioned by
+> Documentation/rpmsg.txt).
 > 
-> the timeout is used to do not end in an infinite loop while ready the scl on
-> slow device
+> Of course, these messages, like any other message that is sent across,
+> need to begin with the usual rpmsg header. Its format is defined by
+> struct rpmsg_hdr.
+> 
+> To send the message from the rtos to Linux, you then need to grab a
+> buffer from the available ring (of the vring which is used by Linux to
+> receive messages), fill it with the message, put it in the used ring,
+> and kick the Linux side.
 
-The patch is still wrong and broken.
+ok. Will try.
 
-As you're not listening to me at all, I've lost patience, so I'm just going
-to say this:
+> 
+>> Please also correct me if I read the code wrongly. that mailbox in omap
+>> driver is used just to say which buffer contains that message. Is it
+>> correct?
+> 
+> We're using the mailbox payload in order to indicate which vring has
+> pending buffers.
 
-Explicit NAK on this patch.
+ok.
 
-When you feel like you can _constructively_ _consider_ the point that both
-Karol and myself have raised with respect to the _U_N_I_T_S_ then feel free
-to continue this discussion.  If not, don't waste your time writing another
-email.  I hope that's plain.
+> 
+>> I can create 15 sw signals to tell rtos which buffer contains message.
+> 
+> You can also just use a single interrupt and then, when it is
+> triggered, check both vrings for pending buffers. It's just another if
+> statement and shouldn't be too much of an overhead.
+> 
+>> Will be help if I clear my code and send it to you for review? Maybe you
+>> will see where the problem is.
+> 
+> I'm not sure I'll have the time to review it, but let's try to
+> progress this way and see how it goes.
+> 
+> Sorry I couldn't answer faster this week - I'm in ELC and was a bit
+> away from emails. I'll soon be flying back and that will keep me away
+> from emails again, but b/o next week I'll be online again.
+
+that's ok. I will be out of office next week and then I will have panda board
+to check how it works on working sample. Unfortunately I don't have enough time
+to play with rpmsg this week too.
+IRC you mentioned somewhere that you maybe will have firmware which is possible to
+compiled by gcc and which doesn't required that TI tools. Am I correct or that was
+something totally different?
+
+Thanks,
+Michal
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
