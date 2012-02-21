@@ -1,73 +1,84 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 5/6 V3] atmel/nand: add DT support
-Date: Tue, 21 Feb 2012 12:00:04 +0100
-Message-ID: <20120221110004.GC9371@game.jcrosoft.org>
-References: <1328524512-18159-2-git-send-email-plagnioj@jcrosoft.com>
- <1329817573-6473-1-git-send-email-plagnioj@jcrosoft.com>
- <4F436AF5.5030104@atmel.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device
+ tree support
+Date: Tue, 21 Feb 2012 20:37:26 +0900
+Message-ID: <00b901ccf08d$2fc18b50$8f44a1f0$%kim@samsung.com>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
+ <003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>
+ <m2aa4pkq5g.fsf@bob.laptop.org> <4F3CFEED.6060206@samsung.com>
+ <m239abgc32.fsf@bob.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F436AF5.5030104-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <m239abgc32.fsf@bob.laptop.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Chris Ball' <cjb@laptop.org>
+Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 10:59 Tue 21 Feb     , Nicolas Ferre wrote:
-> On 02/21/2012 10:46 AM, Jean-Christophe PLAGNIOL-VILLARD :
-> > Use a local copy of board informatin and fill with DT data.
-> > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > ---
-> > v3:
-> > 
-> > 	protect against !CONFIG_OF
-> > 
-> > Best Regards,
-> > J.
-> >  .../devicetree/bindings/mtd/atmel-nand.txt         |   41 +++++++
-> >  arch/arm/boot/dts/at91sam9g20.dtsi                 |   17 +++
-> >  arch/arm/boot/dts/at91sam9g45.dtsi                 |   17 +++
-> >  arch/arm/boot/dts/at91sam9m10g45ek.dts             |   26 +++++-
-> >  arch/arm/boot/dts/usb_a9g20.dts                    |   46 ++++++++-
-> >  arch/arm/mach-at91/at91sam9x5.c                    |    5 -
+Chris Ball wrote:
 > 
-> As we will put this series on top of 9x5, we may also add the entries in
-> at91sam9x5.dtsi / at91sam9x5cm.dtsi ...
-will add the sam9x5 support on an other patch
+> Hi,
+> 
+Hi,
 
-Best Regards,
-J.
+> On Thu, Feb 16 2012, Kukjin Kim wrote:
+> > I mean if I or you create topic branch for this whole series, can be
+> > merged into both tree for avoiding conflicts with further working. Of
+> > course, the topic branch don't have to rebase after merging into each
+> > tree.
+> >
+> > If you're ok on this and my opinion, let me create the topic branch.
 > 
-> >  arch/arm/mach-at91/board-dt.c                      |   52 ---------
-> >  drivers/mtd/nand/atmel_nand.c                      |  113 ++++++++++++++++----
-> >  8 files changed, 238 insertions(+), 79 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> Okay, sure.  Thanks,
 > 
-> Otherwise,
-> 
-> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> 
-> Bye,
-> -- 
-> Nicolas Ferre
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+I created topic branch for this we talked. You can pull that following:
+  git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+v3.4-for-cjb
+
+If any problems, please kindly let me know.
+
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
+
+The following changes since commit d65b4e98d7ea3038b767b70fe8be959b2913f16d:
+
+  Linux 3.3-rc3 (2012-02-08 19:21:53 -0800)
+
+are available in the git repository at:
+  git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+v3.4-for-cjb
+
+Thomas Abraham (6):
+      mmc: sdhci-s3c: Remove usage of clk_type member in platform data
+      ARM: EXYNOS: use 'exynos4-sdhci' as device name for sdhci controllers
+      ARM: SAMSUNG: remove all uses of clk_type member in sdhci platform
+data
+      mmc: sdhci-s3c: derive transfer width host capability from max_width
+in platform data
+      mmc: sdhci-s3c: Keep a copy of platform data and use it
+      mmc: sdhci-s3c: Add device tree support
+
+ .../devicetree/bindings/mmc/samsung-sdhci.txt      |   70 ++++++
+ arch/arm/mach-exynos/clock.c                       |   24 +-
+ arch/arm/mach-exynos/common.c                      |    5 +
+ arch/arm/mach-exynos/mach-armlex4210.c             |    3 -
+ arch/arm/mach-exynos/mach-nuri.c                   |    3 -
+ arch/arm/mach-exynos/mach-origen.c                 |    2 -
+ arch/arm/mach-exynos/mach-smdk4x12.c               |    2 -
+ arch/arm/mach-exynos/mach-smdkv310.c               |    4 -
+ arch/arm/mach-exynos/mach-universal_c210.c         |    2 -
+ arch/arm/plat-samsung/devs.c                       |    4 -
+ arch/arm/plat-samsung/include/plat/sdhci.h         |   35 +++-
+ arch/arm/plat-samsung/platformdata.c               |    2 -
+ drivers/mmc/host/sdhci-s3c.c                       |  235
++++++++++++++++++++-
+ 13 files changed, 341 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/samsung-sdhci.txt
