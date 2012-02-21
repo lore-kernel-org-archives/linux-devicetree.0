@@ -1,100 +1,29 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v5 00/27] irq_domain generalization and rework
-Date: Tue, 21 Feb 2012 15:51:29 +0100
-Message-ID: <4F43AF71.4060207@ti.com>
+From: Mark Salter <msalter@redhat.com>
+Subject: Re: [PATCH v5 20/27] irq_domain/c6x: constify irq_domain structures
+Date: Tue, 21 Feb 2012 10:47:55 -0500
+Message-ID: <1329839277.17322.4.camel@deneb.redhat.com>
 References: <1329383368-12122-1-git-send-email-grant.likely@secretlab.ca>
- <20120216145219.0f1c1b98.akpm@linux-foundation.org> <4F3E9187.9080308@ti.com>
- <20120217175550.GQ27825@n2100.arm.linux.org.uk>
+	 <1329383368-12122-21-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120217175550.GQ27825@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1329383368-12122-21-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/17/2012 6:55 PM, Russell King - ARM Linux wrote:
-> On Fri, Feb 17, 2012 at 06:42:31PM +0100, Cousson, Benoit wrote:
+On Thu, 2012-02-16 at 02:09 -0700, Grant Likely wrote:
+> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Mark Salter <msalter@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/arm/common/gic.c            |    2 +-
+>  arch/c6x/kernel/irq.c            |    2 +-
+>  arch/c6x/platforms/megamod-pic.c |    2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 
-[...]
+For c6x part:
 
->> @@ -1237,8 +1238,10 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
->>
->>   	pdata->irq_base = status;
->>   	pdata->irq_end = pdata->irq_base + nr_irqs;
->> +#ifdef IRQ_DOMAIN
->>   	irq_domain_add_legacy(node, nr_irqs, pdata->irq_base, 0,
->>   			&irq_domain_simple_ops, NULL);
->> +#endif
-> 
-> Do you really need this?  If you've tested this, then apparantly the answer
-> is no, because it won't ever be built like that.  (You're missing a
-> CONFIG_ prefix.)
-
-Ooops, sorry about that.
-It was indeed working fine in every cases except for the DT boot :-(
-
-As explain before, for the moment the interrupt domain is used only for the DT boot. It is mandatory do get the interrupt binding to work properly for all the TWL sub modules (RTC...).
-
-> Maybe the only solution to the x86 problem is to ensure that the driver
-> includes linux/irq.h ?
-
-Both will be needed to allow a DT boot with OMAP. Here is the updated version.
-
-Regards,
-Benoit
-
----
->From d844a8fc84d4514884356c935967f59d88a00124 Mon Sep 17 00:00:00 2001
-From: Benoit Cousson <b-cousson@ti.com>
-Date: Mon, 20 Feb 2012 10:58:34 +0100
-Subject: [PATCH] mfd: twl-core: Fix IRQ_DOMAIN dependency
-
-TWL chips might be potentially used on architecture that does not support
-ird_domain yet.
-
-Do not call ird_domain API in that case.
-
-Include <linux/irq.h> directly since it will not be included anymore by
-<linux/irqdomain.h> if !IRQ_DOMAIN.
-
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
----
- drivers/mfd/twl-core.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
-index 66f9bff..18c4f93 100644
---- a/drivers/mfd/twl-core.c
-+++ b/drivers/mfd/twl-core.c
-@@ -38,6 +38,7 @@
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-+#include <linux/irq.h>
- #include <linux/irqdomain.h>
- 
- #include <linux/regulator/machine.h>
-@@ -1223,8 +1224,10 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	pdata->irq_base = status;
- 	pdata->irq_end = pdata->irq_base + nr_irqs;
-+#ifdef CONFIG_IRQ_DOMAIN
- 	irq_domain_add_legacy(node, nr_irqs, pdata->irq_base, 0,
- 			      &irq_domain_simple_ops, NULL);
-+#endif
- 
- 	if (i2c_check_functionality(client->adapter, I2C_FUNC_I2C) == 0) {
- 		dev_dbg(&client->dev, "can't talk I2C?\n");
--- 
-1.7.0.4
+Acked-by: Mark Salter <msalter@redhat.com>
