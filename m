@@ -1,239 +1,223 @@
 From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH v2 4/7] ARM: davinci: net: davinci_emac: add OF support
-Date: Wed, 22 Feb 2012 07:50:07 +0100
-Message-ID: <1329893410-24413-5-git-send-email-hs@denx.de>
+Subject: [PATCH v2 3/7] ARM: davinci: mux: add OF support
+Date: Wed, 22 Feb 2012 07:50:06 +0100
+Message-ID: <1329893410-24413-4-git-send-email-hs@denx.de>
 References: <1329893410-24413-1-git-send-email-hs@denx.de>
-Return-path: <netdev-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1329893410-24413-1-git-send-email-hs@denx.de>
-Sender: netdev-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: davinci-linux-open-source@linux.davincidsp.com
-Cc: Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Sekhar Nori <nsekhar@ti.com>, Wolfgang Denk <wd@denx.de>, Anatoly Sivov <mm05@mail.ru>
+Cc: Wolfgang Denk <wd@denx.de>, devicetree-discuss@lists.ozlabs.org, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-add of support for the davinci_emac driver.
+add support for configuring the pinmux on davinci SoC
+through OF.
 
 Signed-off-by: Heiko Schocher <hs@denx.de>
 Cc: davinci-linux-open-source@linux.davincidsp.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree-discuss@lists.ozlabs.org
-Cc: netdev@vger.kernel.org
 Cc: Grant Likely <grant.likely@secretlab.ca>
 Cc: Sekhar Nori <nsekhar@ti.com>
 Cc: Wolfgang Denk <wd@denx.de>
-Cc: Anatoly Sivov <mm05@mail.ru>
 
 ---
-- changes for v2:
-  - add comment from Anatoly Sivov
-    - fix typo in davinci_emac.txt
-  - add comment from Grant Likely:
-    - add prefix "ti,davinci-" to davinci specific property names
-    - remove version property
-    - use compatible name "ti,davinci-dm6460-emac"
-    - use devm_kzalloc()
-    - use of_match_ptr()
-    - document all new properties
-    - remove of_address_to_resource() and do not overwrite
-      resource table
-    - whitespace fixes
-    - remove hw_ram_addr as it is not used in current
-      board code
+This patch is just a RFC, as I want to get rid of the pin
+setup code in board code ... This patch introduces a
+davinci_cfg_reg_of() function, which davinci drivers can call,
+if they found a pinmux-handle, so used in the following
+drivers in this patchserie:
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
+drivers/net/ethernet/ti/davinci_emac
+drivers/i2c/busses/i2c-davinci.c
+drivers/mtd/nand/davinci_nand.c
 
- .../bindings/arm/davinci/davinci_emac.txt          |   43 +++++++++
- drivers/net/ethernet/ti/davinci_emac.c             |   94 +++++++++++++++++++-
- 2 files changed, 136 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
+Comments are welcome.
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt b/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
+ .../devicetree/bindings/arm/davinci/mux.txt        |   40 +++++++++++
+ arch/arm/mach-davinci/include/mach/mux.h           |    2 +
+ arch/arm/mach-davinci/mux.c                        |   73 +++++++++++++++++++-
+ 3 files changed, 114 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci/mux.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/davinci/mux.txt b/Documentation/devicetree/bindings/arm/davinci/mux.txt
 new file mode 100644
-index 0000000..a7b0911
+index 0000000..ecb026a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/davinci/davinci_emac.txt
-@@ -0,0 +1,43 @@
-+* Texas Instruments Davinci EMAC
++++ b/Documentation/devicetree/bindings/arm/davinci/mux.txt
+@@ -0,0 +1,40 @@
++* Texas Instruments Davinci pinmux
 +
-+This file provides information, what the device node
-+for the davinci_emac interface contain.
++This file provides information, what the device node for the
++davinci pinmux interface contain.
 +
 +Required properties:
-+- compatible: "ti,davinci-dm6460-emac";
-+- reg: Offset and length of the register set for the device
-+- ti,davinci-ctrl-reg-offset: offset to control register
-+- ti,davinci-ctrl-mod-reg-offset: offset to control module register
-+- ti,davinci-ctrl-ram-offset: offset to control module ram
-+- ti,davinci-ctrl-ram-size: size of control module ram
-+- ti,davinci-rmii-en: use RMII
-+- ti,davinci-no-bd-ram: has the emac controller BD RAM
-+- phy-handle: Contains a phandle to an Ethernet PHY.
-+              if not, davinci_emac driver defaults to 100/FULL
-+- interrupts: interrupt mapping for the davinci emac interrupts sources:
-+              4 sources: <Receive Threshold Interrupt
-+			  Receive Interrupt
-+			  Transmit Interrupt
-+			  Miscellaneous Interrupt>
-+- pinmux-handle: Contains a handle to configure the pinmux settings.
++- compatible: "ti,davinci-pinmux";
++- pins : contains a table with the following colums:
++   mux register: pinmux register
++   register offset: offset in register, which to change
++   mode mask: mode mask
++   mode value: mode value
 +
 +Optional properties:
-+- local-mac-address : 6 bytes, mac address
++- none
 +
 +Example (enbw_cmc board):
-+	eth0: emac@1e20000 {
-+		compatible = "ti,davinci-dm6460-emac";
-+		reg = <0x220000 0x4000>;
-+		ti,davinci-ctrl-reg-offset = <0x3000>;
-+		ti,davinci-ctrl-mod-reg-offset = <0x2000>;
-+		ti,davinci-ctrl-ram-offset = <0>;
-+		ti,davinci-ctrl-ram-size = <0x2000>;
-+		local-mac-address = [ 00 00 00 00 00 00 ];
-+		interrupts = <33
-+				34
-+				35
-+				36
-+				>;
-+		interrupt-parent = <&intc>;
-+		pinmux-handle = <&emac_pins>;
++	emac_pins: pinmux@1c14120 {
++		compatible = "ti,davinci-pinmux";
++		reg = <0x14120 0x1000>;
++		pins = < /*	muxreg	maskoff	modemsk muxmode */
++				2	4	15	8 /* MII TXEN */
++				2	8	15	8 /* MII TXCLK */
++				2	12	15	8 /* MII COL */
++				2	16	15	8 /* MII TXD_3 */
++				2	20	15	8 /* MII TXD_2 */
++				2	24	15	8 /* MII TXD_1 */
++				2	28	15	8 /* MII TXD_0 */
++				3	8	15	8 /* MII RXER */
++				3	12	15	8 /* MII CRS */
++				3	0	15	8 /* MII RXCLK */
++				3	4	15	8 /* MII RXDV */
++				3	16	15	8 /* MII RXD_3 */
++				3	20	15	8 /* MII RXD_2 */
++				3	24	15	8 /* MII RXD_1 */
++				3	28	15	8 /* MII RXD_0 */
++				4	0	15	8 /* MDIO CLK */
++				4	4	15	8 /* MDIO D */
++			>;
 +	};
-diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-index 4fa0bcb..56e1c35 100644
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -58,6 +58,12 @@
+diff --git a/arch/arm/mach-davinci/include/mach/mux.h b/arch/arm/mach-davinci/include/mach/mux.h
+index a7e92fc..3a62857 100644
+--- a/arch/arm/mach-davinci/include/mach/mux.h
++++ b/arch/arm/mach-davinci/include/mach/mux.h
+@@ -1205,6 +1205,7 @@ enum davinci_tnetv107x_index {
+ /* setup pin muxing */
+ extern int davinci_cfg_reg(unsigned long reg_cfg);
+ extern int davinci_cfg_reg_list(const short pins[]);
++extern int davinci_cfg_reg_of(struct device_node *);
+ #else
+ /* boot loader does it all (no warnings from CONFIG_DAVINCI_MUX_WARNINGS) */
+ static inline int davinci_cfg_reg(unsigned long reg_cfg) { return 0; }
+@@ -1212,6 +1213,7 @@ static inline int davinci_cfg_reg_list(const short pins[])
+ {
+ 	return 0;
+ }
++static int davinci_cfg_reg_of(struct device_node *) { return 0; };
+ #endif
+ 
+ #endif /* __INC_MACH_MUX_H */
+diff --git a/arch/arm/mach-davinci/mux.c b/arch/arm/mach-davinci/mux.c
+index f34a8dc..6b38072 100644
+--- a/arch/arm/mach-davinci/mux.c
++++ b/arch/arm/mach-davinci/mux.c
+@@ -18,18 +18,21 @@
  #include <linux/io.h>
- #include <linux/uaccess.h>
- #include <linux/davinci_emac.h>
+ #include <linux/module.h>
+ #include <linux/spinlock.h>
 +#include <linux/of.h>
 +#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_net.h>
-+
-+#include <mach/mux.h>
++#include <linux/slab.h>
  
- #include <asm/irq.h>
- #include <asm/page.h>
-@@ -339,6 +345,9 @@ struct emac_priv {
- 	u32 rx_addr_type;
- 	atomic_t cur_tx;
- 	const char *phy_id;
-+#ifdef CONFIG_OF
-+	struct device_node *phy_node;
-+#endif
- 	struct phy_device *phydev;
- 	spinlock_t lock;
- 	/*platform specific members*/
-@@ -1760,6 +1769,82 @@ static const struct net_device_ops emac_netdev_ops = {
- #endif
- };
+ #include <mach/mux.h>
+ #include <mach/common.h>
+ 
+ static void __iomem *pinmux_base;
++static DEFINE_SPINLOCK(mux_spin_lock);
+ 
+ /*
+  * Sets the DAVINCI MUX register based on the table
+  */
+ int __init_or_module davinci_cfg_reg(const unsigned long index)
+ {
+-	static DEFINE_SPINLOCK(mux_spin_lock);
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 	unsigned long flags;
+ 	const struct mux_config *cfg;
+@@ -98,6 +101,74 @@ int __init_or_module davinci_cfg_reg(const unsigned long index)
+ }
+ EXPORT_SYMBOL(davinci_cfg_reg);
  
 +#ifdef CONFIG_OF
-+static struct emac_platform_data
-+	*davinci_emac_of_get_pdata(struct platform_device *pdev,
-+	struct emac_priv *priv)
++int davinci_cfg_reg_of(struct device_node *np)
 +{
-+	struct device_node *np;
-+	struct device_node *pinmux_np;
-+	struct emac_platform_data *pdata = NULL;
-+	const u8 *mac_addr;
-+	u32 data;
-+	int ret;
-+	int version;
++	unsigned long flags;
++	int pinmux_map_len;
++	const unsigned int *pinmux_map;
++	u32 muxreg, maskoff, modemsk, muxmode;
++	unsigned int reg_orig = 0, reg = 0;
++	unsigned int mask, warn = 0;
 +
-+	np = pdev->dev.of_node;
-+	if (!np)
-+		goto nodata;
-+	else
-+		version = EMAC_VERSION_2;
-+
-+	pdata = pdev->dev.platform_data;
-+	if (!pdata) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata)
-+			goto nodata;
++	pinmux_map = of_get_property(np, "pins", &pinmux_map_len);
++	if (pinmux_map == NULL) {
++		printk(KERN_ERR "pins is not set!\n");
++		return -EINVAL;
 +	}
-+	pdata->version = version;
 +
-+	mac_addr = of_get_mac_address(np);
-+	if (mac_addr)
-+		memcpy(pdata->mac_addr, mac_addr, ETH_ALEN);
++	pinmux_map_len /= sizeof(unsigned int);
++	if ((pinmux_map_len % 4) != 0) {
++		printk(KERN_ERR "pins format wrong!\n");
++		return -EINVAL;
++	}
 +
-+	ret = of_property_read_u32(np, "ti,davinci-ctrl-reg-offset", &data);
-+	if (!ret)
-+		pdata->ctrl_reg_offset = data;
++	if (!pinmux_base) {
++		pinmux_base = of_iomap(np, 0);
++		if (WARN_ON(!pinmux_base))
++			return -ENOMEM;
++	}
 +
-+	ret = of_property_read_u32(np, "ti,davinci-ctrl-mod-reg-offset",
-+		&data);
-+	if (!ret)
-+		pdata->ctrl_mod_reg_offset = data;
++	while (pinmux_map_len > 0) {
++		muxreg = be32_to_cpu(pinmux_map[0]);
++		maskoff = be32_to_cpu(pinmux_map[1]);
++		modemsk = be32_to_cpu(pinmux_map[2]);
++		muxmode = be32_to_cpu(pinmux_map[3]);
 +
-+	ret = of_property_read_u32(np, "ti,davinci-ctrl-ram-offset", &data);
-+	if (!ret)
-+		pdata->ctrl_ram_offset = data;
++		/* Update the mux register in question */
++		if (modemsk) {
++			unsigned	tmp1, tmp2;
 +
-+	ret = of_property_read_u32(np, "ti,davinci-ctrl-ram-size", &data);
-+	if (!ret)
-+		pdata->ctrl_ram_size = data;
++			spin_lock_irqsave(&mux_spin_lock, flags);
++			reg_orig = __raw_readl(pinmux_base + muxreg);
 +
-+	ret = of_property_read_u32(np, "ti,davinci-rmii-en", &data);
-+	if (!ret)
-+		pdata->rmii_en = data;
++			mask = (modemsk << maskoff);
++			tmp1 = reg_orig & mask;
++			reg = reg_orig & ~mask;
 +
-+	ret = of_property_read_u32(np, "ti,davinci-no-bd-ram", &data);
-+	if (!ret)
-+		pdata->no_bd_ram = data;
++			tmp2 = (muxmode << maskoff);
++			reg |= tmp2;
 +
-+	priv->phy_node = of_parse_phandle(np, "phy-handle", 0);
-+	if (!priv->phy_node)
-+		pdata->phy_id = "";
++			if (tmp1 != tmp2)
++				warn = 1;
 +
-+	pinmux_np = of_parse_phandle(np, "pinmux-handle", 0);
-+	if (pinmux_np)
-+		davinci_cfg_reg_of(pinmux_np);
++			__raw_writel(reg, pinmux_base + muxreg);
++			spin_unlock_irqrestore(&mux_spin_lock, flags);
++		}
++		pinmux_map += 4;
++		pinmux_map_len -= 4;
++	}
 +
-+	pdev->dev.platform_data = pdata;
-+nodata:
-+	return  pdata;
++	return 0;
 +}
 +#else
-+static struct emac_platform_data
-+	*davinci_emac_of_get_pdata(struct platform_device *pdev,
-+	struct emac_priv *priv)
++int davinci_cfg_reg_of(struct device_node *np)
 +{
-+	return  pdev->dev.platform_data;
++	return 0;
 +}
 +#endif
- /**
-  * davinci_emac_probe: EMAC device probe
-  * @pdev: The DaVinci EMAC device that we are removing
-@@ -1803,7 +1888,7 @@ static int __devinit davinci_emac_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&priv->lock);
- 
--	pdata = pdev->dev.platform_data;
-+	pdata = davinci_emac_of_get_pdata(pdev, priv);
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "no platform data\n");
- 		rc = -ENODEV;
-@@ -2013,6 +2098,12 @@ static const struct dev_pm_ops davinci_emac_pm_ops = {
- 	.resume		= davinci_emac_resume,
- };
- 
-+static const struct of_device_id davinci_emac_of_match[] = {
-+	{.compatible = "ti,davinci-dm6460-emac", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, davinci_emac_of_match);
++EXPORT_SYMBOL(davinci_cfg_reg_of);
 +
- /**
-  * davinci_emac_driver: EMAC platform driver structure
-  */
-@@ -2021,6 +2112,7 @@ static struct platform_driver davinci_emac_driver = {
- 		.name	 = "davinci_emac",
- 		.owner	 = THIS_MODULE,
- 		.pm	 = &davinci_emac_pm_ops,
-+		.of_match_table = of_match_ptr(davinci_emac_of_match),
- 	},
- 	.probe = davinci_emac_probe,
- 	.remove = __devexit_p(davinci_emac_remove),
+ int __init_or_module davinci_cfg_reg_list(const short pins[])
+ {
+ 	int i, error = -EINVAL;
 -- 
 1.7.7.6
