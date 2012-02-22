@@ -1,48 +1,67 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: remoteproc: Load coprocessor code to the specific main memory
- location
-Date: Wed, 22 Feb 2012 13:10:11 +0100
-Message-ID: <4F44DB23.4010303@monstr.eu>
-References: <4F1EE861.4030405@monstr.eu> <4F1FF870.3000105@monstr.eu> <CAK=WgbZwaxMPsMiNcq5yFvBLrcODqGgDT6b=mmQ91JBVtTEyXA@mail.gmail.com> <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com> <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com> <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com> <4F3BA962.9040109@monstr.eu> <4F3BC30A.4030301@monstr.eu> <4F3CC899.4070302@monstr.eu> <CAK=WgbaRF-L7M3VMZQdqFLUFOJuwFVkBH1hUNuJ51kSrzkaVjA@mail.gmail.com> <4F3CFFAD.9030402@monstr.eu> <4F3D032B.6090700@monstr.eu> <CAK=WgbZ3oXc+NQscdShqmu2wkzv=M-qBDCH2-k=5qSRX9W=z3Q@mail.gmail.com> <CAHTX3dJ4PruKO-wJLJU8W0boHFL0f6eoF+QNaoNjm5hu26YEow@mail.gmail.com> <CAK=WgbZBJJbFc
- oeZ+hY=BgyW_4yvOJPVNMZ18_9o+zY7tEc_pQ@mail.gmail.com> <4F425711.80102@monstr.eu> <CAK=WgbbNJMpndKqgW4SJjE=H-BqT7yVsB+F-kEfJWmW+ikJM+A@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] ARM: davinci, intc: Add OF support for TI interrupt
+ controller
+Date: Wed, 22 Feb 2012 16:23:00 +0400
+Message-ID: <4F44DE24.30606@mvista.com>
+References: <1329893410-24413-1-git-send-email-hs@denx.de>
+ <1329893410-24413-2-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK=WgbbNJMpndKqgW4SJjE=H-BqT7yVsB+F-kEfJWmW+ikJM+A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1329893410-24413-2-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ohad Ben-Cohen wrote:
-> Hi Michal,
-> 
-> On Mon, Feb 20, 2012 at 4:22 PM, Michal Simek <monstr@monstr.eu> wrote:
->> IRC you mentioned somewhere that you maybe will have firmware which is
->> possible to
->> compiled by gcc and which doesn't required that TI tools. Am I correct or
->> that was
->> something totally different?
-> 
-> You're correct - this is in the works, but I'm afraid I don't have any
-> scheduling information about this, sorry.
-> 
-> But we have folks from another vendor now who got rpmsg working, and
-> are working out the legal issues so they can release the RTOS sources.
-> Hopefully that'll be released soon.
+Hello.
 
-That will be great to get it. Please let me know when you have them.
-After EW I will look at it anyway.
+On 22-02-2012 10:50, Heiko Schocher wrote:
 
+> Add a function to initialize the davinci interrupt controller (INTC)
+> using a device tree node.
 
-Thanks,
-Michal
+    cp_intc is not DaVinci interrupt controller, it's only used in OMAP-L1x 
+SoCs. cp_intc stands for Common Platform Interrupt Controller. I don't see 
+where you are initializiing the DaVinci interrupt controller itself. You 
+should understand that there are two disctinct types of interrupt controllers 
+used in the SoCs supported by arch/arm/mach-davinci/.
 
+> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
+> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
+> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
 
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+[...]
+
+> diff --git a/Documentation/devicetree/bindings/arm/davinci/intc.txt b/Documentation/devicetree/bindings/arm/davinci/intc.txt
+> new file mode 100644
+> index 0000000..dac2f69
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/davinci/intc.txt
+> @@ -0,0 +1,26 @@
+> +* TI Davinci Interrupt Controller
+> +
+> +davinci are using a TI interrupt controller that can support several
+> +configurable number of interrupts.
+> +
+> +Main node required properties:
+> +
+> +- compatible : should be:
+> +	"ti,davinci-intc"
+
+    The right "compatible" prop would be "ti,cp_intc" in this case.
+
+WBR, Sergei
