@@ -1,89 +1,76 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 02/10] pwm: Allow chips to support multiple PWMs.
-Date: Wed, 22 Feb 2012 16:34:44 +0000
-Message-ID: <201202221634.45159.arnd@arndb.de>
-References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de> <1329923841-32017-3-git-send-email-thierry.reding@avionic-design.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Wed, 22 Feb 2012 11:23:16 -0600
+Message-ID: <4F452484.5080503@gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1329923841-32017-3-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F44FC37.2000701@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: grant.likely@secretlab.ca, khilman@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Tarun Kanti DebBarma <tarun.kanti@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 22 February 2012, Thierry Reding wrote:
+On 02/22/2012 08:31 AM, Cousson, Benoit wrote:
+> On 2/22/2012 3:23 PM, Rob Herring wrote:
+>> On 02/15/2012 10:04 AM, Benoit Cousson wrote:
+>>> Adapt the GPIO driver to retrieve information from a DT file.
+>>>
+>>> Allocate the irq_base dynamically and rename bank->virtual_irq_start
+>>> to bank->irq_base.
+>>> Change irq_base type to int instead of u16 to match irq_alloc_descs
+>>> output.
+>>>
+>>> Add documentation for GPIO properties specific to OMAP.
+>>>
+>>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>>> Cc: Tarun Kanti DebBarma<tarun.kanti@ti.com>
+>>
+>> One comment below, but otherwise:
+>>
+>> Acked-by: Rob Herring<rob.herring@calxeda.com>
+>>
+>>> ---
+>>>   .../devicetree/bindings/gpio/gpio-omap.txt         |   30 +++++
+>>>   drivers/gpio/gpio-omap.c                           |  121
+>>> ++++++++++++++++++--
+>>>   2 files changed, 142 insertions(+), 9 deletions(-)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>>> b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>>> new file mode 100644
+>>> index 0000000..c1b3100
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>>> @@ -0,0 +1,30 @@
+>>> +OMAP GPIO controller bindings
+>>> +
+>>> +Required properties:
+>>> +- compatible:
+>>> +  - "ti,omap2-gpio" for OMAP2 controllers
+>>> +  - "ti,omap3-gpio" for OMAP3 controllers
+>>> +  - "ti,omap4-gpio" for OMAP4 controllers
+>>> +- #gpio-cells : Should be two.
+>>> +  - first cell is the pin number
+>>> +  - second cell is used to specify optional parameters (unused)
+>>> +- gpio-controller : Marks the device node as a GPIO controller.
+>>> +- #interrupt-cells : Should be one
+>>
+>> There's no level/edge settings for gpios?
+> 
+> That's a good question, because I was wondering as well :-)
+> 
+> I did no see how it was done in other GPIO implementation.
 
->  #include <linux/module.h>
-> +#include <linux/of_pwm.h>
->  #include <linux/pwm.h>
+There's not really a good example that I've found. Many gpio nodes don't
+even have "interrupt-controller" set.
 
-You should probably reorder the patches for bisectability, or move the
-of_* related changes out of this patch into patch 3. At the point
-where patch 2 is applied, linux/of_pwm.h does not exist yet.
+So if you have an irq_set_type function for gpio's, then you should have
+2 cells.
 
->  
-> +/**
-> + * pwmchip_find() - iterator for locating a specific pwm_chip
-> + * @data: data to pass to match function
-> + * @match: callback function to check pwm_chip
-> + */
-> +struct pwm_chip *pwmchip_find(void *data, int (*match)(struct pwm_chip *chip,
-> +						       void *data))
-> +{
-> +	struct pwm_chip *ret = NULL;
-> +	struct pwm_chip *chip;
-> +
-> +	mutex_lock(&pwm_lock);
-> +
-> +	list_for_each_entry(chip, &pwm_chips, list) {
-> +		if (match(chip, data)) {
-> +			ret = chip;
-> +			break;
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&pwm_lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(pwmchip_find);
+Rob
 
-Is this only used for the device tree functions? If so, I would recommend
-making it less generic and always search for a device node.
-
-> +static int pwm_show(struct seq_file *s, void *unused)
-> +{
-> +	const char *prefix = "";
-> +	struct pwm_chip *chip;
-> +
-> +	list_for_each_entry(chip, &pwm_chips, list) {
-> +		struct device *dev = chip->dev;
-> +
-> +		seq_printf(s, "%s%s/%s, %d PWM devices\n", prefix,
-> +			   dev->bus ? dev->bus->name : "no-bus",
-> +			   dev_name(dev), chip->npwm);
-> +
-> +		if (chip->ops->dbg_show)
-> +			chip->ops->dbg_show(chip, s);
-> +		else
-> +			pwm_dbg_show(chip, s);
-> +
-> +		prefix = "\n";
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pwm_open(struct inode *inode, struct file *file)
-> +{
-> +	return single_open(file, pwm_show, NULL);
-> +}
-
-When you have a seq_file with a (possibly long) list of entries, better
-use seq_open instead of single_open and print each item in the
-->next() callback function.
-
-	Arnd
