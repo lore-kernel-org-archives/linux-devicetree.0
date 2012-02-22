@@ -1,57 +1,44 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: [PATCH 0/3 v4] arm: kirkwood: add dreamplug/devicetree support
-Date: Wed, 22 Feb 2012 19:18:43 +0000
-Message-ID: <cover.1329936660.git.jason@lakedaemon.net>
-References: <cover.1312906908.git.jason@lakedaemon.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: ignore devicetree blobs.
+Date: Wed, 22 Feb 2012 20:38:58 +0000
+Message-ID: <201202222038.59477.arnd@arndb.de>
+References: <cover.1329936660.git.jason@lakedaemon.net>
+ <3629df9b5b96d3a3a63a34ebf6ddfca2fd72ccfc.1329936660.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1312906908.git.jason@lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de, grant.likely@secretlab.ca
-Cc: devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <3629df9b5b96d3a3a63a34ebf6ddfca2fd72ccfc.1329936660.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series provides initial support for devicetree on kirkwood for the
-dreamplug platform.  After discussing the approach with Arnd Bergman last week
-at ELC, we decided to take an incremental approach to the conversion.  First, I
-would detect that we were on the dreamplug via the devicetree blob.  Then,
-configure uart0 via devicetree.  We chose the uart since it is already well
-supported under devicetree.
+On Wednesday 22 February 2012, Jason Cooper wrote:
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-This patch series has been boot-tested on the dreamplug.
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-In a future patch series, I plan to migrate spi/flash/partitions over to
-devicetree.
+> diff --git a/arch/arm/boot/.gitignore b/arch/arm/boot/.gitignore
+> index ce1c5ff..3c79f85 100644
+> --- a/arch/arm/boot/.gitignore
+> +++ b/arch/arm/boot/.gitignore
+> @@ -3,3 +3,4 @@ zImage
+>  xipImage
+>  bootpImage
+>  uImage
+> +*.dtb
 
-When the migration is complete, board-dt.c will not be specific to the
-dreamplug, and dts files can be written for all of the other kirkwood boards.
+This patch should probably go through Russell's tree. It looks obviously
+correct so unless someone complains in the next few days, just put it into
+the patch tracker system.
 
-Jason Cooper (3):
-  arm: ignore devicetree blobs.
-  arm: kirkwood: add dreamplug (fdt) support.
-  arm: kirkwood: convert uart0 to devicetree.
-
- arch/arm/boot/.gitignore                 |    1 +
- arch/arm/boot/dts/kirkwood-dreamplug.dts |   19 +++
- arch/arm/boot/dts/kirkwood.dtsi          |   14 +++
- arch/arm/mach-kirkwood/Kconfig           |   14 +++
- arch/arm/mach-kirkwood/Makefile          |    1 +
- arch/arm/mach-kirkwood/Makefile.boot     |    2 +
- arch/arm/mach-kirkwood/board-dt.c        |  180 ++++++++++++++++++++++++++++++
- 7 files changed, 231 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
- create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
- create mode 100644 arch/arm/mach-kirkwood/board-dt.c
-
--- 
-1.7.3.4
+	Arnd
