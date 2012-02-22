@@ -1,44 +1,54 @@
 From: Karol Lewandowski <k.lewandowsk@samsung.com>
-Subject: [PATCH 0/3] power: max17042_battery: Add DT bindings
-Date: Wed, 22 Feb 2012 19:06:19 +0100
-Message-ID: <1329933982-2529-1-git-send-email-k.lewandowsk@samsung.com>
+Subject: [PATCH 1/3] max17042_battery: Use devm_kzalloc() where applicable
+Date: Wed, 22 Feb 2012 19:06:20 +0100
+Message-ID: <1329933982-2529-2-git-send-email-k.lewandowsk@samsung.com>
+References: <1329933982-2529-1-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN
 Content-Transfer-Encoding: 7BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1329933982-2529-1-git-send-email-k.lewandowsk@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: myungjoo.ham@samsung.com
 Cc: kyungmin.park@samsung.com, m.szyprowski@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, cbou@mail.ru, Karol Lewandowski <k.lewandowsk@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This allows us to simplify probe and exit function.
 
-This series of patches adds bindings to max17042_battery driver making
-it possible to instantiate it from device tree description.
+Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ drivers/power/max17042_battery.c |    4 +---
+ 1 files changed, 1 insertions(+), 3 deletions(-)
 
-First, convience patch, simply replaces kzalloc with devm_kzalloc
-where possible.
-
-Second, most intrusive patch adds variables orginally found only in
-platform data to max17042_chip structure.  I decided it to do it that
-way rather than allocating new platform data and then populating it
-from device tree description.
-
-Last patch adds DT bindings itself.
-
-I would be grateful for any comments and I will be more than happy to
-rework this patchset if needed.
-
-
-Karol Lewandowski (3):
-  max17042_battery: Use devm_kzalloc() where applicable
-  max17042_battery: Preserve properties outside of platform data
-  max17042_battery: Make it possible to instantiate driver from DT
-
- .../bindings/power_supply/max17042_battery.txt     |   18 +++++
- drivers/power/max17042_battery.c                   |   77 ++++++++++++++++----
- 2 files changed, 79 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power_supply/max17042_battery.txt
-
+diff --git a/drivers/power/max17042_battery.c b/drivers/power/max17042_battery.c
+index 86acee2..21a3650 100644
+--- a/drivers/power/max17042_battery.c
++++ b/drivers/power/max17042_battery.c
+@@ -220,7 +220,7 @@ static int __devinit max17042_probe(struct i2c_client *client,
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA))
+ 		return -EIO;
+ 
+-	chip = kzalloc(sizeof(*chip), GFP_KERNEL);
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+ 
+@@ -246,7 +246,6 @@ static int __devinit max17042_probe(struct i2c_client *client,
+ 	ret = power_supply_register(&client->dev, &chip->battery);
+ 	if (ret) {
+ 		dev_err(&client->dev, "failed: power supply register\n");
+-		kfree(chip);
+ 		return ret;
+ 	}
+ 
+@@ -269,7 +268,6 @@ static int __devexit max17042_remove(struct i2c_client *client)
+ 	struct max17042_chip *chip = i2c_get_clientdata(client);
+ 
+ 	power_supply_unregister(&chip->battery);
+-	kfree(chip);
+ 	return 0;
+ }
+ 
 -- 
 1.7.8.3
