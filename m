@@ -1,76 +1,187 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Wed, 22 Feb 2012 11:23:16 -0600
-Message-ID: <4F452484.5080503@gmail.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com>
+Subject: Re: [PATCH v3 4/4] ARM: Exynos4: Add device tree support for gpio
+ wakeup interrupt controller
+Date: Wed, 22 Feb 2012 11:38:16 -0600
+Message-ID: <4F452808.1080709@gmail.com>
+References: <1329912858-32750-1-git-send-email-thomas.abraham@linaro.org> <1329912858-32750-5-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F44FC37.2000701@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: grant.likely@secretlab.ca, khilman@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Tarun Kanti DebBarma <tarun.kanti@ti.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1329912858-32750-5-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/22/2012 08:31 AM, Cousson, Benoit wrote:
-> On 2/22/2012 3:23 PM, Rob Herring wrote:
->> On 02/15/2012 10:04 AM, Benoit Cousson wrote:
->>> Adapt the GPIO driver to retrieve information from a DT file.
->>>
->>> Allocate the irq_base dynamically and rename bank->virtual_irq_start
->>> to bank->irq_base.
->>> Change irq_base type to int instead of u16 to match irq_alloc_descs
->>> output.
->>>
->>> Add documentation for GPIO properties specific to OMAP.
->>>
->>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
->>> Cc: Tarun Kanti DebBarma<tarun.kanti@ti.com>
->>
->> One comment below, but otherwise:
->>
->> Acked-by: Rob Herring<rob.herring@calxeda.com>
->>
->>> ---
->>>   .../devicetree/bindings/gpio/gpio-omap.txt         |   30 +++++
->>>   drivers/gpio/gpio-omap.c                           |  121
->>> ++++++++++++++++++--
->>>   2 files changed, 142 insertions(+), 9 deletions(-)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>> b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>> new file mode 100644
->>> index 0000000..c1b3100
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>> @@ -0,0 +1,30 @@
->>> +OMAP GPIO controller bindings
->>> +
->>> +Required properties:
->>> +- compatible:
->>> +  - "ti,omap2-gpio" for OMAP2 controllers
->>> +  - "ti,omap3-gpio" for OMAP3 controllers
->>> +  - "ti,omap4-gpio" for OMAP4 controllers
->>> +- #gpio-cells : Should be two.
->>> +  - first cell is the pin number
->>> +  - second cell is used to specify optional parameters (unused)
->>> +- gpio-controller : Marks the device node as a GPIO controller.
->>> +- #interrupt-cells : Should be one
->>
->> There's no level/edge settings for gpios?
+On 02/22/2012 06:14 AM, Thomas Abraham wrote:
+> Add device tree support for gpio wakeup source interrupt controller
+> on Exynos4.
 > 
-> That's a good question, because I was wondering as well :-)
-> 
-> I did no see how it was done in other GPIO implementation.
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 
-There's not really a good example that I've found. Many gpio nodes don't
-even have "interrupt-controller" set.
+For the series:
 
-So if you have an irq_set_type function for gpio's, then you should have
-2 cells.
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
 Rob
 
+> ---
+>  .../bindings/arm/samsung/wakeup-eint.txt           |   37 +++++++++++++++++
+>  arch/arm/mach-exynos/common.c                      |   43 +++++++++++++------
+>  2 files changed, 66 insertions(+), 14 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/samsung/wakeup-eint.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/wakeup-eint.txt b/Documentation/devicetree/bindings/arm/samsung/wakeup-eint.txt
+> new file mode 100644
+> index 0000000..ac9db41
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/samsung/wakeup-eint.txt
+> @@ -0,0 +1,37 @@
+> +* Samsung Exynos4 GPIO Wakeup Interrupt Source Controller
+> +
+> +Samsung Exynos4 processor supports 32 external wakeup interrupt sources. First
+> +16 of these interrupts are directly connected to GIC and the rest 16 of the
+> +interrupts are grouped together to deliver a single interrupt to GIC.
+> +
+> +Required properties:
+> +
+> +- compatible: should be "samsung,exynos4210-wakeup-eint".
+> +- interrupt-controller: Identifies the node as an interrupt controller.
+> +- interrupt-cells: Specifies the number of cells required to specify the
+> +  interrupt source number. The value of should be <2>. The first cell
+> +  represents the wakeup interrupt source number and the second cell
+> +  should be zero (currently unused).
+> +- interrupts: List of interrupts generated by the gpio wakeup interrupt
+> +    controller which are connected to a parent interrupt controller. The
+> +    format of the interrupt specifier depends on the interrupt parent
+> +    controller.
+> +
+> +Optional properties:
+> +- interrupt-parent: phandle of the parent interrupt controller, required if
+> +  not inheriting the interrupt parent from the parent node.
+> +
+> +Example:
+> +
+> +	The following example is from the Exynos4210 dtsi file.
+> +
+> +	wakeup_eint: interrupt-controller-wakeup-eint {
+> +		compatible = "samsung,exynos4210-wakeup-eint";
+> +		#interrupt-cells = <2>;
+> +		interrupt-controller;
+> +		interrupts = <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>,
+> +				<0 20 0>, <0 21 0>, <0 22 0>, <0 23 0>,
+> +				<0 24 0>, <0 25 0>, <0 26 0>, <0 27 0>,
+> +				<0 28 0>, <0 29 0>, <0 30 0>, <0 31 0>,
+> +				<0 32 0>;
+> +	};
+> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+> index 888e703..615168e 100644
+> --- a/arch/arm/mach-exynos/common.c
+> +++ b/arch/arm/mach-exynos/common.c
+> @@ -49,6 +49,9 @@
+>  
+>  #include "common.h"
+>  
+> +static int exynos4_init_irq_eint(struct device_node *np,
+> +					struct device_node *parent);
+> +
+>  static const char name_exynos4210[] = "EXYNOS4210";
+>  static const char name_exynos4212[] = "EXYNOS4212";
+>  static const char name_exynos4412[] = "EXYNOS4412";
+> @@ -81,8 +84,6 @@ static struct cpu_table cpu_ids[] __initdata = {
+>  	},
+>  };
+>  
+> -static int exynos4_init_irq_eint(void);
+> -
+>  /* Initial IO mappings */
+>  
+>  static struct map_desc exynos_iodesc[] __initdata = {
+> @@ -461,6 +462,8 @@ static const struct of_device_id exynos4_dt_irq_match[] = {
+>  	{ .compatible = "arm,cortex-a9-gic", .data = gic_of_init, },
+>  	{ .compatible = "samsung,exynos4210-combiner",
+>  			.data = combiner_of_init, },
+> +	{ .compatible = "samsung,exynos4210-wakeup-eint",
+> +		.data = exynos4_init_irq_eint, },
+>  	{},
+>  };
+>  #endif
+> @@ -478,8 +481,10 @@ void __init exynos4_init_irq(void)
+>  		of_irq_init(exynos4_dt_irq_match);
+>  #endif
+>  
+> -	if (!of_have_populated_dt())
+> +	if (!of_have_populated_dt()) {
+>  		combiner_init(S5P_VA_COMBINER_BASE, NULL);
+> +		exynos4_init_irq_eint(NULL, NULL);
+> +	}
+>  
+>  	/*
+>  	 * The parameters of s5p_init_irq() are for VIC init.
+> @@ -487,7 +492,6 @@ void __init exynos4_init_irq(void)
+>  	 * uses GIC instead of VIC.
+>  	 */
+>  	s5p_init_irq(NULL, 0);
+> -	exynos4_init_irq_eint();
+>  }
+>  
+>  struct bus_type exynos4_subsys = {
+> @@ -745,9 +749,20 @@ static struct irq_domain_ops exynos4_eint_irq_domain_ops = {
+>  	.map = exynos4_eint_irq_domain_map,
+>  };
+>  
+> -static int __init exynos4_init_irq_eint(void)
+> +static int __init exynos4_eint_to_irq(struct device_node *np, int hwirq)
+> +{
+> +#ifdef CONFIG_OF
+> +	return np ? irq_of_parse_and_map(np, hwirq) :
+> +			exynos4_irq_eint_to_gic_irq(hwirq);
+> +#else
+> +	return exynos4_irq_eint_to_gic_irq(hwirq);
+> +#endif
+> +}
+> +
+> +static int __init exynos4_init_irq_eint(struct device_node *np,
+> +						struct device_node *parent)
+>  {
+> -	int eint, irq_base;
+> +	int eint, irq_base, irq;
+>  	struct irq_domain *irq_domain;
+>  
+>  	irq_base = irq_alloc_descs(IRQ_EINT(0), 1, EXYNOS4_EINT_NR, 0);
+> @@ -757,7 +772,7 @@ static int __init exynos4_init_irq_eint(void)
+>  			"Continuing with %d as linux irq base\n", irq_base);
+>  	}
+>  
+> -	irq_domain = irq_domain_add_legacy(NULL, EXYNOS4_EINT_NR, irq_base, 0,
+> +	irq_domain = irq_domain_add_legacy(np, EXYNOS4_EINT_NR, irq_base, 0,
+>  					&exynos4_eint_irq_domain_ops, NULL);
+>  	if (WARN_ON(!irq_domain)) {
+>  		pr_warning("exynos4_init_irq_eint: irq domain init failed\n");
+> @@ -765,16 +780,16 @@ static int __init exynos4_init_irq_eint(void)
+>  	}
+>  
+>  	eint_data.irq_domain = irq_domain;
+> -	eint_data.gic_irq_base = exynos4_irq_eint_to_gic_irq(0);
+> +	eint_data.gic_irq_base = exynos4_eint_to_irq(np, 0);
+>  
+>  	for (eint = 0 ; eint <= 15 ; eint++) {
+> -		irq_set_handler_data(exynos4_irq_eint_to_gic_irq(eint),
+> -					&eint_data);
+> -		irq_set_chained_handler(exynos4_irq_eint_to_gic_irq(eint),
+> -					exynos4_irq_eint0_15);
+> +		irq = exynos4_eint_to_irq(np, eint);
+> +		irq_set_handler_data(irq, &eint_data);
+> +		irq_set_chained_handler(irq, exynos4_irq_eint0_15);
+>  	}
+>  
+> -	irq_set_chained_handler(IRQ_EINT16_31, exynos4_irq_demux_eint16_31);
+> -	irq_set_handler_data(IRQ_EINT16_31, &eint_data);
+> +	irq = exynos4_eint_to_irq(np, eint);
+> +	irq_set_chained_handler(irq, exynos4_irq_demux_eint16_31);
+> +	irq_set_handler_data(irq, &eint_data);
+>  	return 0;
+>  }
