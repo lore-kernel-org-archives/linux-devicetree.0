@@ -1,55 +1,58 @@
-From: Jason <jason@lakedaemon.net>
-Subject: Re: [PATCH 3/3] arm: kirkwood: convert uart0 to devicetree.
-Date: Wed, 22 Feb 2012 16:09:19 -0500
-Message-ID: <20120222210919.GK23524@titan.lakedaemon.net>
+From: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH 2/3 v4] arm: kirkwood: add dreamplug (fdt) support.
+Date: Wed, 22 Feb 2012 16:17:21 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1202221614560.24536@xanadu.home>
 References: <cover.1329936660.git.jason@lakedaemon.net>
- <0ad28cac6d608253b01e1d57bb479a29754ae823.1329936660.git.jason@lakedaemon.net>
- <201202222055.27698.arnd@arndb.de>
+ <8532afcdc4adbb3771e6f742bcc33ef9c0347858.1329936660.git.jason@lakedaemon.net>
+ <201202222046.28707.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201202222055.27698.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <201202222046.28707.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2012 at 08:55:27PM +0000, Arnd Bergmann wrote:
+On Wed, 22 Feb 2012, Arnd Bergmann wrote:
+
 > On Wednesday 22 February 2012, Jason Cooper wrote:
-> > This uart is common to all kirkwood SoC's, so I placed it in the
-> > kirkwood.dtsi.
+> > Initially, copied guruplug-setup.c and did s/guruplug/dreamplug/g.
+> > Then, switched to SPI based NOR flash.
 > > 
-> > Signed-off-by: Jason Cooper <jason@lakedaemon.net>
+> > After talking to Arnd Bergman, chose an incremental approach to adding
+> > devicetree support.  First, we use the dtb to tell us we are on the
+> > dreamplug, then we gradually port over drivers.
+> > 
+> > Driver porting will start with the uart (see next patch), and progress
+> > from there.  Possibly, spi/flash/partitions will be next.
+> > 
+> > When done, board-dt.c will no longer be dreamplug specific, and dt's can
+> > be made for the other kirkwood boards.
+> > 
+> > Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 > 
-> I'm not sure how we are handling this for other platforms, but
-> my feeling is that the serial port information should be in
-> the board specific dts file, because there are multiple serial
-> ports on the chips and individual boards may only provide one
-> of them.
+> Looks good to me. 
+> 
+> I'm adding Nicolas and Lennert to Cc to make sure they see the mail.
+> 
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-On closer inspection, it looks like the openrd board and the qnap boards
-are including uart1, nothing else does.  I'll redo it and resubmit.
+I'm fine with the approach.
 
-> Alternatively, you could list all serial ports in the dts file
-> and use the linux,stdout-path "chosen" property to tell the
-> kernel which one to use.
+Acked-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-All of the boards use uart0 as the default tty, so I'm thinking uart0 is
-declared in all boards (.dts), and the two that need it, declare uart1
-in the same dts.
+Arnd, Jason: please feel free to work something out between yourselves 
+to move those patches into the arm-soc tree.
 
-Does that sound right?
 
-thx,
-
-Jason.
+Nicolas
