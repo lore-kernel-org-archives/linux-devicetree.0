@@ -1,501 +1,320 @@
 From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] ARM: at91: AIC and GPIO IRQ device tree initilization
-Date: Wed, 22 Feb 2012 10:07:56 +0100
-Message-ID: <4F44B06C.4050709@atmel.com>
-References: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com> <1329470878-14635-1-git-send-email-nicolas.ferre@atmel.com> <4F43A51B.9030107@gmail.com>
+Subject: Re: [RFC PATCH 1/2] of: Add generic device tree DMA helpers
+Date: Wed, 22 Feb 2012 11:59:14 +0100
+Message-ID: <4F44CA82.9060906@atmel.com>
+References: <4F22DEF2.5000807@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F43A51B.9030107@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, tglx@linutronix.de, avictor.za@gmail.com, linux-kernel@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F22DEF2.5000807@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, Thomas Abraham <thomas.abraham@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/21/2012 03:07 PM, Rob Herring :
-> On 02/17/2012 03:27 AM, Nicolas Ferre wrote:
->> Both AIC and GPIO controllers are now using the standard of_irq_init()
->> function to initialize IRQs in case of DT use.
->> The DT specific initialization functions are now separated from the
->> non-DT case and are now using "linear" irq domains.
->> The .map() irqdomain operation is responsible for positioning the IRQ
->> handlers. In AIC case, the Linux IRQ number is directly programmed in
->> the hardware to avoid an additional reverse mapping operation.
->> The AIC position its irq domain as the "default" irq domain.
->>
->> For DT case, the priority is not yet filled in the SMR. It will be the
->> subject of another patch.
->>
->> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->> ---
->> Hi,
->>
->> This patch goes on top of previous series:
->> "[PATCH 0/9] ARM: at91: irqdomain and device tree for AIC and GPIO"
->> (which goes on top of Grant's "irq_domain generalization and rework").
->>
->> It should address all advices by Rob Herring and I hope it is the best
->> way to deal with irq domains in all DT/non-DT cases.
->>
->> A simple concern is that the IRQ latency may be bigger because of the
->> irq_create_mapping() call in .to_irq(). This is called in the hot path
->> of GPIO IRQ handler...
+On 01/27/2012 06:29 PM, Cousson, Benoit :
+> Add some basic helpers to retrieve a DMA controller device_node
+> and the DMA request line number.
 > 
-> 
-> Why are you not using irq_find_mapping?
+> For legacy reason another API will export the DMA request number
+> into a Linux resource of type IORESOURCE_DMA.
+> This API is usable only on system with an unique DMA controller.
 
-Hehe, good question ;-)
-It should have been experimented at some point and forgotten... But you
-are absolutely right, it is the way to go.
+Hi,
 
->> Best regards,
->>
->>
->>  arch/arm/mach-at91/board-dt.c |   11 +++-
->>  arch/arm/mach-at91/generic.h  |    6 ++
->>  arch/arm/mach-at91/gpio.c     |  124 +++++++++++++++++++++++++++++++----------
->>  arch/arm/mach-at91/irq.c      |   92 ++++++++++++++++++++-----------
->>  4 files changed, 171 insertions(+), 62 deletions(-)
->>
->> diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
->> index 6120978..e0df4e5 100644
->> --- a/arch/arm/mach-at91/board-dt.c
->> +++ b/arch/arm/mach-at91/board-dt.c
->> @@ -15,6 +15,8 @@
->>  #include <linux/init.h>
->>  #include <linux/module.h>
->>  #include <linux/gpio.h>
->> +#include <linux/of.h>
->> +#include <linux/of_irq.h>
->>  #include <linux/of_platform.h>
->>  
->>  #include <mach/hardware.h>
->> @@ -86,9 +88,16 @@ static void __init ek_add_device_nand(void)
->>  	at91_add_device_nand(&ek_nand_data);
->>  }
->>  
->> +static const struct of_device_id irq_of_match[] __initconst = {
->> +
->> +	{ .compatible = "atmel,at91rm9200-aic", .data = at91_aic_of_init },
->> +	{ .compatible = "atmel,at91rm9200-gpio", .data = at91_gpio_of_irq_setup },
->> +	{ /*sentinel*/ }
->> +};
->> +
->>  static void __init at91_dt_init_irq(void)
->>  {
->> -	at91_init_irq_default();
->> +	of_irq_init(irq_of_match);
->>  }
->>  
->>  static void __init at91_dt_device_init(void)
->> diff --git a/arch/arm/mach-at91/generic.h b/arch/arm/mach-at91/generic.h
->> index 78cd605..c5d16e5 100644
->> --- a/arch/arm/mach-at91/generic.h
->> +++ b/arch/arm/mach-at91/generic.h
->> @@ -9,6 +9,7 @@
->>   */
->>  
->>  #include <linux/clkdev.h>
->> +#include <linux/of.h>
->>  
->>   /* Map io */
->>  extern void __init at91_map_io(void);
->> @@ -25,6 +26,9 @@ extern void __init at91_init_irq_default(void);
->>  extern void __init at91_init_interrupts(unsigned int priority[]);
->>  extern void __init at91x40_init_interrupts(unsigned int priority[]);
->>  extern void __init at91_aic_init(unsigned int priority[]);
->> +extern int  __init at91_aic_of_init(struct device_node *node,
->> +				    struct device_node *parent);
->> +
->>  
->>   /* Timer */
->>  struct sys_timer;
->> @@ -75,5 +79,7 @@ struct at91_gpio_bank {
->>  };
->>  extern void __init at91_gpio_init(struct at91_gpio_bank *, int nr_banks);
->>  extern void __init at91_gpio_irq_setup(void);
->> +extern int  __init at91_gpio_of_irq_setup(struct device_node *node,
->> +					  struct device_node *parent);
->>  
->>  extern int at91_extern_irq;
->> diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
->> index fbcb47e..64395a5 100644
->> --- a/arch/arm/mach-at91/gpio.c
->> +++ b/arch/arm/mach-at91/gpio.c
->> @@ -27,6 +27,7 @@
->>  #include <linux/irqdomain.h>
->>  #include <linux/of_address.h>
->>  #include <linux/of_irq.h>
->> +#include <linux/of_gpio.h>
->>  
->>  #include <mach/hardware.h>
->>  #include <mach/at91_pio.h>
->> @@ -37,6 +38,7 @@ struct at91_gpio_chip {
->>  	struct gpio_chip	chip;
->>  	struct at91_gpio_chip	*next;		/* Bank sharing same clock */
->>  	int			pioc_hwirq;	/* PIO bank interrupt identifier on AIC */
->> +	int			pioc_virq;	/* PIO bank Linux virtual interrupt */
->>  	int			pioc_idx;	/* PIO bank index */
->>  	void __iomem		*regbase;	/* PIO bank virtual address */
->>  	struct clk		*clock;		/* associated clock */
->> @@ -295,7 +297,7 @@ static int gpio_irq_set_wake(struct irq_data *d, unsigned state)
->>  	else
->>  		wakeups[bank] &= ~mask;
->>  
->> -	irq_set_irq_wake(gpio_chip[bank].pioc_hwirq, state);
->> +	irq_set_irq_wake(at91_gpio->pioc_virq, state);
->>  
->>  	return 0;
->>  }
->> @@ -397,12 +399,12 @@ static struct irq_chip gpio_irqchip = {
->>  
->>  static void gpio_irq_handler(unsigned irq, struct irq_desc *desc)
->>  {
->> -	unsigned	virq;
->>  	struct irq_data *idata = irq_desc_get_irq_data(desc);
->>  	struct irq_chip *chip = irq_data_get_irq_chip(idata);
->>  	struct at91_gpio_chip *at91_gpio = irq_data_get_irq_chip_data(idata);
->>  	void __iomem	*pio = at91_gpio->regbase;
->> -	u32		isr;
->> +	unsigned long	isr;
->> +	int		n;
->>  
->>  	/* temporarily mask (level sensitive) parent IRQ */
->>  	chip->irq_ack(idata);
->> @@ -420,13 +422,10 @@ static void gpio_irq_handler(unsigned irq, struct irq_desc *desc)
->>  			continue;
->>  		}
->>  
->> -		virq = gpio_to_irq(at91_gpio->chip.base);
->> -
->> -		while (isr) {
->> -			if (isr & 1)
->> -				generic_handle_irq(virq);
->> -			virq++;
->> -			isr >>= 1;
->> +		n = find_first_bit(&isr, BITS_PER_LONG);
->> +		while (n < BITS_PER_LONG) {
->> +			generic_handle_irq(at91_gpiolib_to_irq(&at91_gpio->chip, n));
->> +			n = find_next_bit(&isr, BITS_PER_LONG, n + 1);
->>  		}
->>  	}
->>  	chip->irq_unmask(idata);
->> @@ -496,23 +495,91 @@ postcore_initcall(at91_gpio_debugfs_init);
->>  /*--------------------------------------------------------------------------*/
->>  
->>  /*
->> + * This lock class tells lockdep that GPIO irqs are in a different
->> + * category than their parents, so it won't report false recursion.
->> + */
->> +static struct lock_class_key gpio_lock_class;
->> +
->> +#if defined(CONFIG_OF)
->> +static int at91_gpio_irq_map(struct irq_domain *h, unsigned int virq,
->> +							irq_hw_number_t hw)
->> +{
->> +	struct at91_gpio_chip	*at91_gpio = h->host_data;
->> +
->> +	irq_set_lockdep_class(virq, &gpio_lock_class);
->> +
->> +	/*
->> +	 * Can use the "simple" and not "edge" handler since it's
->> +	 * shorter, and the AIC handles interrupts sanely.
->> +	 */
->> +	irq_set_chip_and_handler(virq, &gpio_irqchip,
->> +				 handle_simple_irq);
->> +	set_irq_flags(virq, IRQF_VALID);
->> +	irq_set_chip_data(virq, at91_gpio);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct irq_domain_ops at91_gpio_ops = {
->> +	.map	= at91_gpio_irq_map,
->> +	.xlate	= irq_domain_xlate_twocell,
->> +};
->> +
->> +int __init at91_gpio_of_irq_setup(struct device_node *node,
->> +				     struct device_node *parent)
->> +{
->> +	struct at91_gpio_chip	*prev = NULL;
->> +	int			alias_idx = of_alias_get_id(node, "gpio");
->> +	struct at91_gpio_chip	*at91_gpio = &gpio_chip[alias_idx];
->> +
->> +	/* Disable irqs of this PIO controller */
->> +	__raw_writel(~0, at91_gpio->regbase + PIO_IDR);
->> +
->> +	/* Setup irq domain */
->> +	at91_gpio->domain = irq_domain_add_linear(node, at91_gpio->chip.ngpio,
->> +						&at91_gpio_ops, at91_gpio);
->> +	if (!at91_gpio->domain)
->> +		panic("at91_gpio.%d: couldn't allocate irq domain (DT).\n",
->> +			at91_gpio->pioc_idx);
->> +
->> +	/* Setup chained handler */
->> +	if (at91_gpio->pioc_idx)
->> +		prev = &gpio_chip[at91_gpio->pioc_idx - 1];
->> +
->> +	/* The toplevel handler handles one bank of GPIOs, except
->> +	 * on some SoC it can handles up to three...
->> +	 * We only set up the handler for the first of the list.
->> +	 */
->> +	if (prev && prev->next == at91_gpio)
->> +		return 0;
->> +
->> +	at91_gpio->pioc_virq = irq_create_mapping(irq_find_host(parent),
->> +							at91_gpio->pioc_hwirq);
->> +	irq_set_chip_data(at91_gpio->pioc_virq, at91_gpio);
->> +	irq_set_chained_handler(at91_gpio->pioc_virq, gpio_irq_handler);
->> +
->> +	return 0;
->> +}
->> +#else
->> +int __init at91_gpio_of_irq_setup(struct device_node *node,
->> +				     struct device_node *parent)
->> +{
->> +	return -EINVAL;
->> +}
->> +#endif
->> +
->> +/*
->>   * irqdomain initialization: pile up irqdomains on top of AIC range
->>   */
->>  static void __init at91_gpio_irqdomain(struct at91_gpio_chip *at91_gpio)
->>  {
->>  	int irq_base;
->> -#if defined(CONFIG_OF)
->> -	struct device_node *of_node = at91_gpio->chip.of_node;
->> -#else
->> -	struct device_node *of_node = NULL;
->> -#endif
->>  
->>  	irq_base = irq_alloc_descs(-1, 0, at91_gpio->chip.ngpio, 0);
->>  	if (irq_base < 0)
->>  		panic("at91_gpio.%d: error %d: couldn't allocate IRQ numbers.\n",
->>  			at91_gpio->pioc_idx, irq_base);
->> -	at91_gpio->domain = irq_domain_add_legacy(of_node,
->> -						  at91_gpio->chip.ngpio,
->> +	at91_gpio->domain = irq_domain_add_legacy(NULL, at91_gpio->chip.ngpio,
->>  						  irq_base, 0,
->>  						  &irq_domain_simple_ops, NULL);
->>  	if (!at91_gpio->domain)
->> @@ -521,12 +588,6 @@ static void __init at91_gpio_irqdomain(struct at91_gpio_chip *at91_gpio)
->>  }
->>  
->>  /*
->> - * This lock class tells lockdep that GPIO irqs are in a different
->> - * category than their parents, so it won't report false recursion.
->> - */
->> -static struct lock_class_key gpio_lock_class;
->> -
->> -/*
->>   * Called from the processor-specific init to enable GPIO interrupt support.
->>   */
->>  void __init at91_gpio_irq_setup(void)
->> @@ -538,8 +599,7 @@ void __init at91_gpio_irq_setup(void)
->>  	for (pioc = 0, this = gpio_chip, prev = NULL;
->>  			pioc++ < gpio_banks;
->>  			prev = this, this++) {
->> -		unsigned	pioc_hwirq = this->pioc_hwirq;
->> -		int		offset;
->> +		int offset;
->>  
->>  		__raw_writel(~0, this->regbase + PIO_IDR);
->>  
->> @@ -547,7 +607,7 @@ void __init at91_gpio_irq_setup(void)
->>  		at91_gpio_irqdomain(this);
->>  
->>  		for (offset = 0; offset < this->chip.ngpio; offset++) {
->> -			unsigned int virq = irq_find_mapping(this->domain, offset);
->> +			unsigned int virq = irq_create_mapping(this->domain, offset);
-> 
-> This should get done by irq_domain_add_legacy.
+I followed that discussion and I like very much the biding that Benoit
+is proposing. It will help me a lot with my current work on Atmel DMA
+controller.
 
-Yes, I revert this to irq_find_mapping().
-
-
->>  			irq_set_lockdep_class(virq, &gpio_lock_class);
->>  
->>  			/*
->> @@ -569,8 +629,9 @@ void __init at91_gpio_irq_setup(void)
->>  		if (prev && prev->next == this)
->>  			continue;
->>  
->> -		irq_set_chip_data(pioc_hwirq, this);
->> -		irq_set_chained_handler(pioc_hwirq, gpio_irq_handler);
->> +		this->pioc_virq = irq_create_mapping(NULL, this->pioc_hwirq);
->> +		irq_set_chip_data(this->pioc_virq, this);
->> +		irq_set_chained_handler(this->pioc_virq, gpio_irq_handler);
->>  	}
->>  	pr_info("AT91: %d gpio irqs in %d banks\n", gpio_irqnbr, gpio_banks);
->>  }
->> @@ -648,7 +709,12 @@ static void at91_gpiolib_dbg_show(struct seq_file *s, struct gpio_chip *chip)
->>  static int at91_gpiolib_to_irq(struct gpio_chip *chip, unsigned offset)
->>  {
->>  	struct at91_gpio_chip *at91_gpio = to_at91_gpio_chip(chip);
->> -	int virq = irq_find_mapping(at91_gpio->domain, offset);
->> +	int virq;
->> +
->> +	if (offset < chip->ngpio)
->> +		virq = irq_create_mapping(at91_gpio->domain, offset);
->> +	else
->> +		virq = -ENXIO;
->>  
->>  	dev_dbg(chip->dev, "%s: request IRQ for GPIO %d, return %d\n",
->>  				chip->label, offset + chip->base, virq);
->> diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
->> index 46682fa..2e4ee09 100644
->> --- a/arch/arm/mach-at91/irq.c
->> +++ b/arch/arm/mach-at91/irq.c
->> @@ -135,27 +135,72 @@ static struct irq_chip at91_aic_chip = {
->>  	.irq_set_wake	= at91_aic_set_wake,
->>  };
->>  
->> +static void __init at91_aic_hw_init(unsigned int spu_vector)
->> +{
->> +	int i;
->> +
->> +	/*
->> +	 * Perform 8 End Of Interrupt Command to make sure AIC
->> +	 * will not Lock out nIRQ
->> +	 */
->> +	for (i = 0; i < 8; i++)
->> +		at91_aic_write(AT91_AIC_EOICR, 0);
->> +
->> +	/*
->> +	 * Spurious Interrupt ID in Spurious Vector Register.
->> +	 * When there is no current interrupt, the IRQ Vector Register
->> +	 * reads the value stored in AIC_SPU
->> +	 */
->> +	at91_aic_write(AT91_AIC_SPU, spu_vector);
->> +
->> +	/* No debugging in AIC: Debug (Protect) Control Register */
->> +	at91_aic_write(AT91_AIC_DCR, 0);
->> +
->> +	/* Disable and clear all interrupts initially */
->> +	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
->> +	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
->> +}
->> +
->> +
->> +
-> 
-> Remove extra blank lines.
-
-Sure, done.
-
->>  #if defined(CONFIG_OF)
->> -static int __init __at91_aic_of_init(struct device_node *node,
->> -				     struct device_node *parent)
->> +static int at91_aic_irq_map(struct irq_domain *h, unsigned int virq,
->> +							irq_hw_number_t hw)
->>  {
->> -	at91_aic_base = of_iomap(node, 0);
->> -	at91_aic_np = node;
->> +	/* Put virq number in Source Vector Register */
->> +	at91_aic_write(AT91_AIC_SVR(hw), virq);
->> +
->> +	/* Active Low interrupt, without priority */
->> +	at91_aic_write(AT91_AIC_SMR(hw), AT91_AIC_SRCTYPE_LOW);
->> +
->> +	irq_set_chip_and_handler(virq, &at91_aic_chip, handle_level_irq);
->> +	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
->>  
->>  	return 0;
->>  }
->>  
->> -static const struct of_device_id aic_ids[] __initconst = {
->> -	{ .compatible = "atmel,at91rm9200-aic", .data = __at91_aic_of_init },
->> -	{ /*sentinel*/ }
->> +static struct irq_domain_ops at91_aic_irq_ops = {
->> +	.map	= at91_aic_irq_map,
->> +	.xlate	= irq_domain_xlate_twocell,
->>  };
->>  
->> -static void __init at91_aic_of_init(void)
->> +int __init at91_aic_of_init(struct device_node *node,
->> +				     struct device_node *parent)
->>  {
->> -	of_irq_init(aic_ids);
->> +	at91_aic_base = of_iomap(node, 0);
->> +	at91_aic_np = node;
->> +
->> +	at91_aic_domain = irq_domain_add_linear(at91_aic_np, NR_AIC_IRQS,
->> +						&at91_aic_irq_ops, NULL);
->> +	if (!at91_aic_domain)
->> +		panic("Unable to add AIC irq domain (DT)\n");
->> +
->> +	irq_set_default_host(at91_aic_domain);
-> 
-> Is this really necessary? I don't think it should be.
-
-Well, it allows me to retreive the IRQ controller domain from the gpio
-driver.
-Cf. at91_gpio_irq_setup() with the call to
-irq_create_mapping(NULL, xxx) just above.
-
-Is there a better way to do this?
-(it seems that irq_find_host() is dedicated to the device tree enabled
-configuration).
-
->> +	at91_aic_hw_init(NR_AIC_IRQS);
->> +
->> +	return 0;
->>  }
->> -#else
->> -static void __init at91_aic_of_init(void) {}
->>  #endif
->>  
->>  /*
->> @@ -166,11 +211,7 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
->>  	unsigned int i;
->>  	int irq_base;
->>  
->> -	if (of_have_populated_dt())
->> -		at91_aic_of_init();
->> -	else
->> -		at91_aic_base = ioremap(AT91_AIC, 512);
->> -
->> +	at91_aic_base = ioremap(AT91_AIC, 512);
->>  	if (!at91_aic_base)
->>  		panic("Unable to ioremap AIC registers\n");
->>  
->> @@ -187,6 +228,8 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
->>  	if (!at91_aic_domain)
->>  		panic("Unable to add AIC irq domain\n");
->>  
->> +	irq_set_default_host(at91_aic_domain);
->> +
->>  	/*
->>  	 * The IVR is used by macro get_irqnr_and_base to read and verify.
->>  	 * The irq number is NR_AIC_IRQS when a spurious interrupt has occurred.
->> @@ -199,22 +242,7 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
->>  
->>  		irq_set_chip_and_handler(i, &at91_aic_chip, handle_level_irq);
->>  		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
->> -
->> -		/* Perform 8 End Of Interrupt Command to make sure AIC will not Lock out nIRQ */
->> -		if (i < 8)
->> -			at91_aic_write(AT91_AIC_EOICR, 0);
->>  	}
->>  
->> -	/*
->> -	 * Spurious Interrupt ID in Spurious Vector Register is NR_AIC_IRQS
->> -	 * When there is no current interrupt, the IRQ Vector Register reads the value stored in AIC_SPU
->> -	 */
->> -	at91_aic_write(AT91_AIC_SPU, NR_AIC_IRQS);
->> -
->> -	/* No debugging in AIC: Debug (Protect) Control Register */
->> -	at91_aic_write(AT91_AIC_DCR, 0);
->> -
->> -	/* Disable and clear all interrupts initially */
->> -	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
->> -	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
->> +	at91_aic_hw_init(NR_AIC_IRQS);
->>  }
-
+If I understand correctly, some rework is needed before it can be
+integrated in a stable git tree (I mean before we can base our work on
+top of it). So, in the meantime, what should I do to help and make
+things go forward? to be quite frank, I would be interested to have a
+working DMA enabled device soon ;-)
+Do you think that 3.4 is out of reach?
 
 Best regards,
+
+> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> ---
+>  Documentation/devicetree/bindings/dma/dma.txt |   44 +++++++++
+>  drivers/of/Kconfig                            |    5 +
+>  drivers/of/Makefile                           |    1 +
+>  drivers/of/dma.c                              |  130 +++++++++++++++++++++++++
+>  include/linux/of_dma.h                        |   49 +++++++++
+>  5 files changed, 229 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/dma.txt
+>  create mode 100644 drivers/of/dma.c
+>  create mode 100644 include/linux/of_dma.h
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+> new file mode 100644
+> index 0000000..7f2a301
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/dma.txt
+> @@ -0,0 +1,44 @@
+> +* Generic DMA Controller and DMA request bindings
+> +
+> +Generic binding to provide a way for a driver to retrieve the
+> +DMA request line that goes from an IP to a DMA controller.
+> +
+> +
+> +* DMA controller
+> +
+> +Required properties:
+> +    - dma-controller: Mark the device as a DMA controller
+> +    - #dma-cells: Number of cell for each DMA line, must be one.
+> +
+> +
+> +Example:
+> +
+> +	sdma: dma-controller@48000000 {
+> +		compatible = "ti,sdma-omap4"
+> +		reg = <0x48000000 0x1000>;
+> +		interrupts = <12>;
+> +        dma-controller;
+> +		#dma-cells = <1>;
+> +	};
+> +
+> +
+> +
+> +* DMA client
+> +
+> +Client drivers should specify the DMA request numbers using a phandle to
+> +the controller + the DMA request number on that controller.
+> +
+> +Required properties:
+> +    - dma-request: List of pair phandle + dma-request per line
+> +    - dma-request-names: list of strings in the same order as the dma-request
+> +      in the dma-request property.
+> +
+> +
+> +Example:
+> +
+> +    i2c1: i2c@1 {
+> +        ...
+> +        dma-request = <&sdma 2 &sdma 3>;
+> +        dma-request-names = "tx", "rx";
+> +        ...
+> +    };
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 268163d..7d1f06b 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -90,4 +90,9 @@ config OF_PCI_IRQ
+>  	help
+>  	  OpenFirmware PCI IRQ routing helpers
+>  
+> +config OF_DMA
+> +	def_bool y
+> +	help
+> +	  Device Tree DMA routing helpers
+> +
+>  endmenu # OF
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index a73f5a5..d08443b 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -12,3 +12,4 @@ obj-$(CONFIG_OF_SELFTEST) += selftest.o
+>  obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>  obj-$(CONFIG_OF_PCI)	+= of_pci.o
+>  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+> +obj-$(CONFIG_OF_DMA)  += dma.o
+> diff --git a/drivers/of/dma.c b/drivers/of/dma.c
+> new file mode 100644
+> index 0000000..d4927e2
+> --- /dev/null
+> +++ b/drivers/of/dma.c
+> @@ -0,0 +1,130 @@
+> +/*
+> + * Device tree helpers for DMA request / controller
+> + *
+> + * Based on of_gpio.c
+> + *
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_dma.h>
+> +
+> +/**
+> + * of_get_dma_request() - Get a DMA request number and dma-controller node
+> + * @np:		device node to get DMA request from
+> + * @propname:	property name containing DMA specifier(s)
+> + * @index:	index of the DMA request
+> + * @ctrl_np:	a device_node pointer to fill in
+> + *
+> + * Returns DMA number along to the dma controller node, or one of the errno
+> + * value on the error condition. If @ctrl_np is not NULL the function also
+> + * fills in the DMA controller device_node pointer.
+> + */
+> +int of_get_dma_request(struct device_node *np, int index,
+> +		       struct device_node **ctrl_np)
+> +{
+> +	int ret = -EINVAL;
+> +	struct of_phandle_args dma_spec;
+> +
+> +	ret = of_parse_phandle_with_args(np, "dma-request", "#dma-cells",
+> +					 index, &dma_spec);
+> +	if (ret) {
+> +		pr_debug("%s: can't parse dma property\n", __func__);
+> +		goto err0;
+> +	}
+> +
+> +	if (dma_spec.args_count > 0)
+> +		ret = dma_spec.args[0];
+> +
+> +	if (ctrl_np)
+> +		*ctrl_np = dma_spec.np;
+> +	else
+> +		of_node_put(dma_spec.np);
+> +
+> +err0:
+> +	pr_debug("%s exited with status %d\n", __func__, ret);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(of_get_dma_request);
+> +
+> +/**
+> + * of_dma_count - Count DMA requests for a device
+> + * @np:		device node to count DMAs for
+> + *
+> + * The function returns the count of DMA requests specified for a node.
+> + *
+> + * Note that the empty DMA specifiers counts too. For example,
+> + *
+> + * dma-request = <0
+> + *                &sdma 1
+> + *                0
+> + *                &sdma 3>;
+> + *
+> + * defines four DMAs (so this function will return 4), two of which
+> + * are not specified.
+> + */
+> +unsigned int of_dma_count(struct device_node *np)
+> +{
+> +	unsigned int cnt = 0;
+> +
+> +	do {
+> +		int ret;
+> +
+> +		ret = of_parse_phandle_with_args(np, "dma-request",
+> +						 "#dma-cells", cnt, NULL);
+> +		/* A hole in the dma-request = <> counts anyway. */
+> +		if (ret < 0 && ret != -EEXIST)
+> +			break;
+> +	} while (++cnt);
+> +
+> +	return cnt;
+> +}
+> +EXPORT_SYMBOL(of_dma_count);
+> +
+> +/**
+> + * of_dma_to_resource - Decode a node's DMA and return it as a resource
+> + * @dev: pointer to device tree node
+> + * @index: zero-based index of the DMA request
+> + * @r: pointer to resource structure to return result into.
+> + *
+> + * Using a resource to export a DMA request number to a driver should
+> + * be used only for legacy purpose and on system when only one DMA controller
+> + * is present.
+> + * The proper and only scalable way is to use the native of_get_dma_request API
+> + * in order retrieve both the DMA controller device node and the DMA request
+> + * line for that controller.
+> + */
+> +int of_dma_to_resource(struct device_node *dev, int index, struct resource *r)
+> +{
+> +	const char *name = NULL;
+> +	int dma;
+> +
+> +	if (!r)
+> +		return -EINVAL;
+> +
+> +	dma = of_get_dma_request(dev, index, NULL);
+> +	if (dma < 0)
+> +		return dma;
+> +
+> +	/*
+> +	 * Get optional "dma-request-names" property to add a name
+> +	 * to the resource.
+> +	 */
+> +	of_property_read_string_index(dev, "dma-request-names", index,
+> +				      &name);
+> +
+> +	r->start = dma;
+> +	r->end = dma;
+> +	r->flags = IORESOURCE_DMA;
+> +	r->name = name ? name : dev->full_name;
+> +
+> +	return dma;
+> +}
+> +EXPORT_SYMBOL_GPL(of_dma_to_resource);
+> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+> new file mode 100644
+> index 0000000..575163d
+> --- /dev/null
+> +++ b/include/linux/of_dma.h
+> @@ -0,0 +1,49 @@
+> +/*
+> + * OF helpers for DMA request / controller
+> + *
+> + * Based on of_gpio.h
+> + *
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef __LINUX_OF_DMA_H
+> +#define __LINUX_OF_DMA_H
+> +
+> +#include <linux/of.h>
+> +
+> +struct device_node;
+> +
+> +#ifdef CONFIG_OF_GPIO
+> +
+> +extern int of_get_dma_request(struct device_node *np, int index,
+> +		       struct device_node **ctrl_np);
+> +extern unsigned int of_dma_count(struct device_node *np);
+> +extern int of_dma_to_resource(struct device_node *dev, int index,
+> +			      struct resource *r);
+> +
+> +#else /* CONFIG_OF_DMA */
+> +
+> +static int of_get_dma_request(struct device_node *np, int index,
+> +			      struct device_node **ctrl_np);
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +static inline unsigned int of_dma_count(struct device_node *np)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int of_dma_to_resource(struct device_node *dev, int index,
+> +			      struct resource *r);
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +#endif /* CONFIG_OF_DMA */
+> +
+> +#endif /* __LINUX_OF_DMA_H */
+
+
 -- 
 Nicolas Ferre
