@@ -1,67 +1,29 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] ARM: davinci, intc: Add OF support for TI interrupt
- controller
-Date: Wed, 22 Feb 2012 16:23:00 +0400
-Message-ID: <4F44DE24.30606@mvista.com>
-References: <1329893410-24413-1-git-send-email-hs@denx.de>
- <1329893410-24413-2-git-send-email-hs@denx.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add
+ device tree support
+Date: Wed, 22 Feb 2012 12:58:23 +0000
+Message-ID: <20120222125823.GA14463@sirena.org.uk>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>
+ <003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>
+ <m2aa4pkq5g.fsf@bob.laptop.org>
+ <4F3CFEED.6060206@samsung.com>
+ <m239abgc32.fsf@bob.laptop.org>
+ <00b901ccf08d$2fc18b50$8f44a1f0$%kim@samsung.com>
+ <m2vcn0496y.fsf@bob.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1329893410-24413-2-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <m2vcn0496y.fsf@bob.laptop.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tue, Feb 21, 2012 at 08:17:41AM -0500, Chris Ball wrote:
 
-On 22-02-2012 10:50, Heiko Schocher wrote:
+> Pushed to mmc-next, thanks.  (I'm expecting that you'll do the merge
+> to Linus.)
 
-> Add a function to initialize the davinci interrupt controller (INTC)
-> using a device tree node.
-
-    cp_intc is not DaVinci interrupt controller, it's only used in OMAP-L1x 
-SoCs. cp_intc stands for Common Platform Interrupt Controller. I don't see 
-where you are initializiing the DaVinci interrupt controller itself. You 
-should understand that there are two disctinct types of interrupt controllers 
-used in the SoCs supported by arch/arm/mach-davinci/.
-
-> Signed-off-by: Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Grant Likely<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Sekhar Nori<nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Wolfgang Denk<wd-ynQEQJNshbs@public.gmane.org>
-
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/intc.txt b/Documentation/devicetree/bindings/arm/davinci/intc.txt
-> new file mode 100644
-> index 0000000..dac2f69
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/davinci/intc.txt
-> @@ -0,0 +1,26 @@
-> +* TI Davinci Interrupt Controller
-> +
-> +davinci are using a TI interrupt controller that can support several
-> +configurable number of interrupts.
-> +
-> +Main node required properties:
-> +
-> +- compatible : should be:
-> +	"ti,davinci-intc"
-
-    The right "compatible" prop would be "ti,cp_intc" in this case.
-
-WBR, Sergei
+I've been sending patches adding runtime PM support to this driver for a
+while with no response - are there any issues with those?
