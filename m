@@ -1,139 +1,96 @@
-From: Karol Lewandowski <k.lewandowsk@samsung.com>
-Subject: [PATCH 3/3] max17042_battery: Make it possible to instantiate driver
- from DT
-Date: Wed, 22 Feb 2012 19:06:22 +0100
-Message-ID: <1329933982-2529-4-git-send-email-k.lewandowsk@samsung.com>
-References: <1329933982-2529-1-git-send-email-k.lewandowsk@samsung.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Wed, 22 Feb 2012 10:29:43 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+ <1329321854-24490-4-git-send-email-b-cousson@ti.com>
+ <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com>
+ <4F452484.5080503@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1329933982-2529-1-git-send-email-k.lewandowsk@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com
-Cc: kyungmin.park@samsung.com, m.szyprowski@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, cbou@mail.ru, Karol Lewandowski <k.lewandowsk@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F452484.5080503@gmail.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "khilman@ti.com" <khilman@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow both device tree (preferred) and platform data-based driver
-instantiation.
+Rob Herring wrote at Wednesday, February 22, 2012 10:23 AM:
+> On 02/22/2012 08:31 AM, Cousson, Benoit wrote:
+> > On 2/22/2012 3:23 PM, Rob Herring wrote:
+> >> On 02/15/2012 10:04 AM, Benoit Cousson wrote:
+> >>> Adapt the GPIO driver to retrieve information from a DT file.
+> >>>
+> >>> Allocate the irq_base dynamically and rename bank->virtual_irq_start
+> >>> to bank->irq_base.
+> >>> Change irq_base type to int instead of u16 to match irq_alloc_descs
+> >>> output.
+> >>>
+> >>> Add documentation for GPIO properties specific to OMAP.
+> >>>
+> >>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+> >>> Cc: Tarun Kanti DebBarma<tarun.kanti@ti.com>
+> >>
+> >> One comment below, but otherwise:
+> >>
+> >> Acked-by: Rob Herring<rob.herring@calxeda.com>
+> >>
+> >>> ---
+> >>>   .../devicetree/bindings/gpio/gpio-omap.txt         |   30 +++++
+> >>>   drivers/gpio/gpio-omap.c                           |  121
+> >>> ++++++++++++++++++--
+> >>>   2 files changed, 142 insertions(+), 9 deletions(-)
+> >>>   create mode 100644
+> >>> Documentation/devicetree/bindings/gpio/gpio-omap.txt
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+> >>> b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+> >>> new file mode 100644
+> >>> index 0000000..c1b3100
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+> >>> @@ -0,0 +1,30 @@
+> >>> +OMAP GPIO controller bindings
+> >>> +
+> >>> +Required properties:
+> >>> +- compatible:
+> >>> +  - "ti,omap2-gpio" for OMAP2 controllers
+> >>> +  - "ti,omap3-gpio" for OMAP3 controllers
+> >>> +  - "ti,omap4-gpio" for OMAP4 controllers
+> >>> +- #gpio-cells : Should be two.
+> >>> +  - first cell is the pin number
+> >>> +  - second cell is used to specify optional parameters (unused)
+> >>> +- gpio-controller : Marks the device node as a GPIO controller.
+> >>> +- #interrupt-cells : Should be one
+> >>
+> >> There's no level/edge settings for gpios?
+> >
+> > That's a good question, because I was wondering as well :-)
+> >
+> > I did no see how it was done in other GPIO implementation.
+> 
+> There's not really a good example that I've found. Many gpio nodes don't
+> even have "interrupt-controller" set.
+> 
+> So if you have an irq_set_type function for gpio's, then you should have
+> 2 cells.
 
-Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- .../bindings/power_supply/max17042_battery.txt     |   18 ++++++++
- drivers/power/max17042_battery.c                   |   45 ++++++++++++++++++--
- 2 files changed, 59 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power_supply/max17042_battery.txt
+Tegra's GPIO IRQ binding (gpio_nvidia.txt in linux-next at least) says:
 
-diff --git a/Documentation/devicetree/bindings/power_supply/max17042_battery.txt b/Documentation/devicetree/bindings/power_supply/max17042_battery.txt
-new file mode 100644
-index 0000000..5bc9b68
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/max17042_battery.txt
-@@ -0,0 +1,18 @@
-+max17042_battery
-+~~~~~~~~~~~~~~~~
-+
-+Required properties :
-+ - compatible : "maxim,max17042"
-+
-+Optional properties :
-+ - maxim,rsns-microohm : Resistance of rsns resistor in micro Ohms
-+                         (datasheet-recommended value is 10000).
-+   Defining this property enables current-sense functionality.
-+
-+Example:
-+
-+	battery-charger@36 {
-+		compatible = "maxim,max17042";
-+		reg = <0x36>;
-+		maxim,rsns-microohm = <10000>;
-+	};
-diff --git a/drivers/power/max17042_battery.c b/drivers/power/max17042_battery.c
-index 49c1377..aec883b 100644
---- a/drivers/power/max17042_battery.c
-+++ b/drivers/power/max17042_battery.c
-@@ -29,6 +29,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/power_supply.h>
- #include <linux/power/max17042_battery.h>
-+#include <linux/of.h>
- 
- struct max17042_chip {
- 	struct i2c_client *client;
-@@ -211,6 +212,31 @@ static int max17042_get_property(struct power_supply *psy,
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static int max17042_dt_parse(struct max17042_chip *chip, struct device_node *np)
-+{
-+	u32 prop;
-+
-+	if (!np)
-+		return -EINVAL;
-+
-+	/* require current sense resistor value to be specified for
-+	   current-sense functionality to be enabled at all */
-+	if (of_property_read_u32(np, "maxim,rsns-microohm", &prop) == 0) {
-+		chip->r_sns = prop;
-+		chip->enable_current_sense = true;
-+	} else
-+		chip->enable_current_sense = false;
-+
-+	return 0;
-+}
-+#else
-+static int max17042_dt_parse(struct max17042_chip *chip, struct device_node *np)
-+{
-+	return -EINVAL;
-+}
-+#endif
-+
- static int __devinit max17042_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -237,12 +263,14 @@ static int __devinit max17042_probe(struct i2c_client *client,
- 	chip->battery.properties	= max17042_battery_props;
- 	chip->battery.num_properties	= ARRAY_SIZE(max17042_battery_props);
- 
--	if (pdata) {
-+	ret = max17042_dt_parse(chip, client->dev.of_node);
-+	if (ret < 0) {
-+		if (!pdata) {
-+			dev_warn(&client->dev, "no driver data provided\n");
-+			return -ENODEV;
-+		}
- 		chip->r_sns = pdata->r_sns;
- 		chip->enable_current_sense = pdata->enable_current_sense;
--	} else {
--		dev_warn(&client->dev, "no driver data provided\n");
--		return -ENODEV;
- 	}
- 
- 	/* When current is not measured,
-@@ -281,6 +309,14 @@ static int __devexit max17042_remove(struct i2c_client *client)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id max17042_dt_match[] = {
-+	{ .compatible = "maxim,max17042" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, max17042_dt_match);
-+#endif
-+
- static const struct i2c_device_id max17042_id[] = {
- 	{ "max17042", 0 },
- 	{ }
-@@ -290,6 +326,7 @@ MODULE_DEVICE_TABLE(i2c, max17042_id);
- static struct i2c_driver max17042_i2c_driver = {
- 	.driver	= {
- 		.name	= "max17042",
-+		.of_match_table = of_match_ptr(max17042_dt_match),
- 	},
- 	.probe		= max17042_probe,
- 	.remove		= __devexit_p(max17042_remove),
+- #interrupt-cells : Should be 2.
+  The first cell is the GPIO number.
+  The second cell is used to specify flags:
+    bits[3:0] trigger type and level flags:
+      1 = low-to-high edge triggered.
+      2 = high-to-low edge triggered.
+      4 = active high level-sensitive.
+      8 = active low level-sensitive.
+      Valid combinations are 1, 2, 3, 4, 8.
+
+Presumably, that's what you meant.
+
 -- 
-1.7.8.3
+nvpublic
+
