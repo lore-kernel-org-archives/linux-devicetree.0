@@ -1,257 +1,501 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v2 6/7] ARM: mtd: nand: davinci: add OF support for davinci
- nand controller
-Date: Wed, 22 Feb 2012 07:50:09 +0100
-Message-ID: <1329893410-24413-7-git-send-email-hs@denx.de>
-References: <1329893410-24413-1-git-send-email-hs@denx.de>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] ARM: at91: AIC and GPIO IRQ device tree initilization
+Date: Wed, 22 Feb 2012 10:07:56 +0100
+Message-ID: <4F44B06C.4050709@atmel.com>
+References: <1329144189-4535-1-git-send-email-nicolas.ferre@atmel.com> <1329470878-14635-1-git-send-email-nicolas.ferre@atmel.com> <4F43A51B.9030107@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1329893410-24413-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F43A51B.9030107@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, tglx@linutronix.de, avictor.za@gmail.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add OF support for the davinci nand controller.
+On 02/21/2012 03:07 PM, Rob Herring :
+> On 02/17/2012 03:27 AM, Nicolas Ferre wrote:
+>> Both AIC and GPIO controllers are now using the standard of_irq_init()
+>> function to initialize IRQs in case of DT use.
+>> The DT specific initialization functions are now separated from the
+>> non-DT case and are now using "linear" irq domains.
+>> The .map() irqdomain operation is responsible for positioning the IRQ
+>> handlers. In AIC case, the Linux IRQ number is directly programmed in
+>> the hardware to avoid an additional reverse mapping operation.
+>> The AIC position its irq domain as the "default" irq domain.
+>>
+>> For DT case, the priority is not yet filled in the SMR. It will be the
+>> subject of another patch.
+>>
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>> ---
+>> Hi,
+>>
+>> This patch goes on top of previous series:
+>> "[PATCH 0/9] ARM: at91: irqdomain and device tree for AIC and GPIO"
+>> (which goes on top of Grant's "irq_domain generalization and rework").
+>>
+>> It should address all advices by Rob Herring and I hope it is the best
+>> way to deal with irq domains in all DT/non-DT cases.
+>>
+>> A simple concern is that the IRQ latency may be bigger because of the
+>> irq_create_mapping() call in .to_irq(). This is called in the hot path
+>> of GPIO IRQ handler...
+> 
+> 
+> Why are you not using irq_find_mapping?
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Hehe, good question ;-)
+It should have been experimented at some point and forgotten... But you
+are absolutely right, it is the way to go.
 
----
-- changes for v2:
-  - add comments from Scott Wood:
-    - add "ti,davinci-" prefix
-    - Dashes are preferred to underscores
-    - rename "nandflash" to "nand"
-    - introduce new "ti,davinci" specific properties for setting
-      up ecc_mode, ecc_bits, options and bbt options, instead
-      using linux defines
-    - readme fixes
+>> Best regards,
+>>
+>>
+>>  arch/arm/mach-at91/board-dt.c |   11 +++-
+>>  arch/arm/mach-at91/generic.h  |    6 ++
+>>  arch/arm/mach-at91/gpio.c     |  124 +++++++++++++++++++++++++++++++----------
+>>  arch/arm/mach-at91/irq.c      |   92 ++++++++++++++++++++-----------
+>>  4 files changed, 171 insertions(+), 62 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-at91/board-dt.c b/arch/arm/mach-at91/board-dt.c
+>> index 6120978..e0df4e5 100644
+>> --- a/arch/arm/mach-at91/board-dt.c
+>> +++ b/arch/arm/mach-at91/board-dt.c
+>> @@ -15,6 +15,8 @@
+>>  #include <linux/init.h>
+>>  #include <linux/module.h>
+>>  #include <linux/gpio.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_irq.h>
+>>  #include <linux/of_platform.h>
+>>  
+>>  #include <mach/hardware.h>
+>> @@ -86,9 +88,16 @@ static void __init ek_add_device_nand(void)
+>>  	at91_add_device_nand(&ek_nand_data);
+>>  }
+>>  
+>> +static const struct of_device_id irq_of_match[] __initconst = {
+>> +
+>> +	{ .compatible = "atmel,at91rm9200-aic", .data = at91_aic_of_init },
+>> +	{ .compatible = "atmel,at91rm9200-gpio", .data = at91_gpio_of_irq_setup },
+>> +	{ /*sentinel*/ }
+>> +};
+>> +
+>>  static void __init at91_dt_init_irq(void)
+>>  {
+>> -	at91_init_irq_default();
+>> +	of_irq_init(irq_of_match);
+>>  }
+>>  
+>>  static void __init at91_dt_device_init(void)
+>> diff --git a/arch/arm/mach-at91/generic.h b/arch/arm/mach-at91/generic.h
+>> index 78cd605..c5d16e5 100644
+>> --- a/arch/arm/mach-at91/generic.h
+>> +++ b/arch/arm/mach-at91/generic.h
+>> @@ -9,6 +9,7 @@
+>>   */
+>>  
+>>  #include <linux/clkdev.h>
+>> +#include <linux/of.h>
+>>  
+>>   /* Map io */
+>>  extern void __init at91_map_io(void);
+>> @@ -25,6 +26,9 @@ extern void __init at91_init_irq_default(void);
+>>  extern void __init at91_init_interrupts(unsigned int priority[]);
+>>  extern void __init at91x40_init_interrupts(unsigned int priority[]);
+>>  extern void __init at91_aic_init(unsigned int priority[]);
+>> +extern int  __init at91_aic_of_init(struct device_node *node,
+>> +				    struct device_node *parent);
+>> +
+>>  
+>>   /* Timer */
+>>  struct sys_timer;
+>> @@ -75,5 +79,7 @@ struct at91_gpio_bank {
+>>  };
+>>  extern void __init at91_gpio_init(struct at91_gpio_bank *, int nr_banks);
+>>  extern void __init at91_gpio_irq_setup(void);
+>> +extern int  __init at91_gpio_of_irq_setup(struct device_node *node,
+>> +					  struct device_node *parent);
+>>  
+>>  extern int at91_extern_irq;
+>> diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
+>> index fbcb47e..64395a5 100644
+>> --- a/arch/arm/mach-at91/gpio.c
+>> +++ b/arch/arm/mach-at91/gpio.c
+>> @@ -27,6 +27,7 @@
+>>  #include <linux/irqdomain.h>
+>>  #include <linux/of_address.h>
+>>  #include <linux/of_irq.h>
+>> +#include <linux/of_gpio.h>
+>>  
+>>  #include <mach/hardware.h>
+>>  #include <mach/at91_pio.h>
+>> @@ -37,6 +38,7 @@ struct at91_gpio_chip {
+>>  	struct gpio_chip	chip;
+>>  	struct at91_gpio_chip	*next;		/* Bank sharing same clock */
+>>  	int			pioc_hwirq;	/* PIO bank interrupt identifier on AIC */
+>> +	int			pioc_virq;	/* PIO bank Linux virtual interrupt */
+>>  	int			pioc_idx;	/* PIO bank index */
+>>  	void __iomem		*regbase;	/* PIO bank virtual address */
+>>  	struct clk		*clock;		/* associated clock */
+>> @@ -295,7 +297,7 @@ static int gpio_irq_set_wake(struct irq_data *d, unsigned state)
+>>  	else
+>>  		wakeups[bank] &= ~mask;
+>>  
+>> -	irq_set_irq_wake(gpio_chip[bank].pioc_hwirq, state);
+>> +	irq_set_irq_wake(at91_gpio->pioc_virq, state);
+>>  
+>>  	return 0;
+>>  }
+>> @@ -397,12 +399,12 @@ static struct irq_chip gpio_irqchip = {
+>>  
+>>  static void gpio_irq_handler(unsigned irq, struct irq_desc *desc)
+>>  {
+>> -	unsigned	virq;
+>>  	struct irq_data *idata = irq_desc_get_irq_data(desc);
+>>  	struct irq_chip *chip = irq_data_get_irq_chip(idata);
+>>  	struct at91_gpio_chip *at91_gpio = irq_data_get_irq_chip_data(idata);
+>>  	void __iomem	*pio = at91_gpio->regbase;
+>> -	u32		isr;
+>> +	unsigned long	isr;
+>> +	int		n;
+>>  
+>>  	/* temporarily mask (level sensitive) parent IRQ */
+>>  	chip->irq_ack(idata);
+>> @@ -420,13 +422,10 @@ static void gpio_irq_handler(unsigned irq, struct irq_desc *desc)
+>>  			continue;
+>>  		}
+>>  
+>> -		virq = gpio_to_irq(at91_gpio->chip.base);
+>> -
+>> -		while (isr) {
+>> -			if (isr & 1)
+>> -				generic_handle_irq(virq);
+>> -			virq++;
+>> -			isr >>= 1;
+>> +		n = find_first_bit(&isr, BITS_PER_LONG);
+>> +		while (n < BITS_PER_LONG) {
+>> +			generic_handle_irq(at91_gpiolib_to_irq(&at91_gpio->chip, n));
+>> +			n = find_next_bit(&isr, BITS_PER_LONG, n + 1);
+>>  		}
+>>  	}
+>>  	chip->irq_unmask(idata);
+>> @@ -496,23 +495,91 @@ postcore_initcall(at91_gpio_debugfs_init);
+>>  /*--------------------------------------------------------------------------*/
+>>  
+>>  /*
+>> + * This lock class tells lockdep that GPIO irqs are in a different
+>> + * category than their parents, so it won't report false recursion.
+>> + */
+>> +static struct lock_class_key gpio_lock_class;
+>> +
+>> +#if defined(CONFIG_OF)
+>> +static int at91_gpio_irq_map(struct irq_domain *h, unsigned int virq,
+>> +							irq_hw_number_t hw)
+>> +{
+>> +	struct at91_gpio_chip	*at91_gpio = h->host_data;
+>> +
+>> +	irq_set_lockdep_class(virq, &gpio_lock_class);
+>> +
+>> +	/*
+>> +	 * Can use the "simple" and not "edge" handler since it's
+>> +	 * shorter, and the AIC handles interrupts sanely.
+>> +	 */
+>> +	irq_set_chip_and_handler(virq, &gpio_irqchip,
+>> +				 handle_simple_irq);
+>> +	set_irq_flags(virq, IRQF_VALID);
+>> +	irq_set_chip_data(virq, at91_gpio);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct irq_domain_ops at91_gpio_ops = {
+>> +	.map	= at91_gpio_irq_map,
+>> +	.xlate	= irq_domain_xlate_twocell,
+>> +};
+>> +
+>> +int __init at91_gpio_of_irq_setup(struct device_node *node,
+>> +				     struct device_node *parent)
+>> +{
+>> +	struct at91_gpio_chip	*prev = NULL;
+>> +	int			alias_idx = of_alias_get_id(node, "gpio");
+>> +	struct at91_gpio_chip	*at91_gpio = &gpio_chip[alias_idx];
+>> +
+>> +	/* Disable irqs of this PIO controller */
+>> +	__raw_writel(~0, at91_gpio->regbase + PIO_IDR);
+>> +
+>> +	/* Setup irq domain */
+>> +	at91_gpio->domain = irq_domain_add_linear(node, at91_gpio->chip.ngpio,
+>> +						&at91_gpio_ops, at91_gpio);
+>> +	if (!at91_gpio->domain)
+>> +		panic("at91_gpio.%d: couldn't allocate irq domain (DT).\n",
+>> +			at91_gpio->pioc_idx);
+>> +
+>> +	/* Setup chained handler */
+>> +	if (at91_gpio->pioc_idx)
+>> +		prev = &gpio_chip[at91_gpio->pioc_idx - 1];
+>> +
+>> +	/* The toplevel handler handles one bank of GPIOs, except
+>> +	 * on some SoC it can handles up to three...
+>> +	 * We only set up the handler for the first of the list.
+>> +	 */
+>> +	if (prev && prev->next == at91_gpio)
+>> +		return 0;
+>> +
+>> +	at91_gpio->pioc_virq = irq_create_mapping(irq_find_host(parent),
+>> +							at91_gpio->pioc_hwirq);
+>> +	irq_set_chip_data(at91_gpio->pioc_virq, at91_gpio);
+>> +	irq_set_chained_handler(at91_gpio->pioc_virq, gpio_irq_handler);
+>> +
+>> +	return 0;
+>> +}
+>> +#else
+>> +int __init at91_gpio_of_irq_setup(struct device_node *node,
+>> +				     struct device_node *parent)
+>> +{
+>> +	return -EINVAL;
+>> +}
+>> +#endif
+>> +
+>> +/*
+>>   * irqdomain initialization: pile up irqdomains on top of AIC range
+>>   */
+>>  static void __init at91_gpio_irqdomain(struct at91_gpio_chip *at91_gpio)
+>>  {
+>>  	int irq_base;
+>> -#if defined(CONFIG_OF)
+>> -	struct device_node *of_node = at91_gpio->chip.of_node;
+>> -#else
+>> -	struct device_node *of_node = NULL;
+>> -#endif
+>>  
+>>  	irq_base = irq_alloc_descs(-1, 0, at91_gpio->chip.ngpio, 0);
+>>  	if (irq_base < 0)
+>>  		panic("at91_gpio.%d: error %d: couldn't allocate IRQ numbers.\n",
+>>  			at91_gpio->pioc_idx, irq_base);
+>> -	at91_gpio->domain = irq_domain_add_legacy(of_node,
+>> -						  at91_gpio->chip.ngpio,
+>> +	at91_gpio->domain = irq_domain_add_legacy(NULL, at91_gpio->chip.ngpio,
+>>  						  irq_base, 0,
+>>  						  &irq_domain_simple_ops, NULL);
+>>  	if (!at91_gpio->domain)
+>> @@ -521,12 +588,6 @@ static void __init at91_gpio_irqdomain(struct at91_gpio_chip *at91_gpio)
+>>  }
+>>  
+>>  /*
+>> - * This lock class tells lockdep that GPIO irqs are in a different
+>> - * category than their parents, so it won't report false recursion.
+>> - */
+>> -static struct lock_class_key gpio_lock_class;
+>> -
+>> -/*
+>>   * Called from the processor-specific init to enable GPIO interrupt support.
+>>   */
+>>  void __init at91_gpio_irq_setup(void)
+>> @@ -538,8 +599,7 @@ void __init at91_gpio_irq_setup(void)
+>>  	for (pioc = 0, this = gpio_chip, prev = NULL;
+>>  			pioc++ < gpio_banks;
+>>  			prev = this, this++) {
+>> -		unsigned	pioc_hwirq = this->pioc_hwirq;
+>> -		int		offset;
+>> +		int offset;
+>>  
+>>  		__raw_writel(~0, this->regbase + PIO_IDR);
+>>  
+>> @@ -547,7 +607,7 @@ void __init at91_gpio_irq_setup(void)
+>>  		at91_gpio_irqdomain(this);
+>>  
+>>  		for (offset = 0; offset < this->chip.ngpio; offset++) {
+>> -			unsigned int virq = irq_find_mapping(this->domain, offset);
+>> +			unsigned int virq = irq_create_mapping(this->domain, offset);
+> 
+> This should get done by irq_domain_add_legacy.
 
- .../devicetree/bindings/arm/davinci/nand.txt       |   74 +++++++++++++++++
- drivers/mtd/nand/davinci_nand.c                    |   85 +++++++++++++++++++-
- 2 files changed, 158 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
+Yes, I revert this to irq_find_mapping().
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-new file mode 100644
-index 0000000..e02874a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-@@ -0,0 +1,74 @@
-+* Texas Instruments Davinci NAND
-+
-+This file provides information, what the device node for the
-+davinci nand interface contain.
-+
-+Required properties:
-+- compatible: "ti,davinci-nand";
-+- reg : contain 2 offset/length values:
-+        - offset and length for the access window
-+        - offset and length for accessing the aemif control registers
-+- ti,davinci-chipselect: Indicates on the davinci_nand driver which
-+                         chipselect is used for accessing the nand.
-+
-+Recommended properties :
-+- ti,davinci-mask-ale: mask for ale
-+- ti,davinci-mask-cle: mask for cle
-+- ti,davinci-mask-chipsel: mask for chipselect
-+- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
-+		- "none"
-+		- "soft"
-+		- "hw"
-+- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
-+- ti,davinci-nand-buswidth: buswidth 8 or 16
-+- ti,davinci-nand-use-bbt: use flash based bad block table support.
-+
-+Optional properties:
-+- pinmux-handle: contains a handle to configure the pinmux settings.
-+- timing-handle: contains a handle to setup aemif timing.
-+
-+Example (enbw_cmc board):
-+aemif@60000000 {
-+	compatible = "ti,davinci-aemif";
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	reg = <0x68000000 0x80000>;
-+	ranges = <2 0 0x60000000 0x02000000
-+		  3 0 0x62000000 0x02000000
-+		  4 0 0x64000000 0x02000000
-+		  5 0 0x66000000 0x02000000
-+		  6 0 0x68000000 0x02000000>;
-+	nand_cs: cs3@68000000 {
-+		compatible = "ti,davinci-cs";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		/* all timings in nanoseconds */
-+		cs = <3>;
-+		asize = <0>;
-+		ta = <0>;
-+		rhold = <7>;
-+		rstrobe = <42>;
-+		rsetup = <7>;
-+		whold = <7>;
-+		wstrobe = <14>;
-+		wsetup = <7>;
-+		ew = <0>;
-+		ss = <0>;
-+	};
-+	nand@3,0 {
-+		compatible = "ti,davinci-nand";
-+		reg = <3 0x0 0x807ff
-+			6 0x0 0x8000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ti,davinci-chipselect = <1>;
-+		ti,davinci-mask-ale = <0>;
-+		ti,davinci-mask-cle = <0>;
-+		ti,davinci-mask-chipsel = <0>;
-+		ti,davinci-ecc-mode = "hw";
-+		ti,davinci-ecc-bits = <4>;
-+		ti,davinci-nand-use-bbt;
-+		pinmux-handle = <&nand_pins>;
-+		timing-handle = <&nand_cs>;
-+	};
-+};
-diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
-index 6e56615..bdd6edc 100644
---- a/drivers/mtd/nand/davinci_nand.c
-+++ b/drivers/mtd/nand/davinci_nand.c
-@@ -33,9 +33,12 @@
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
- #include <linux/slab.h>
-+#include <linux/of_i2c.h>
-+#include <linux/of_device.h>
- 
- #include <mach/nand.h>
- #include <mach/aemif.h>
-+#include <mach/mux.h>
- 
- /*
-  * This is a device driver for the NAND flash controller found on the
-@@ -518,9 +521,86 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
- 	},
- };
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id davinci_nand_of_match[] = {
-+	{.compatible = "ti,davinci-nand", },
-+	{},
-+}
-+MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
-+
-+static struct davinci_nand_pdata
-+	*nand_davinci_get_pdata(struct platform_device *pdev)
-+{
-+	if ((pdev->dev.platform_data == NULL) &&
-+		(pdev->dev.of_node)) {
-+		struct device_node *tmp_np;
-+		struct davinci_nand_pdata *pdata;
-+		const char *mode;
-+		u32 prop;
-+		int len;
-+
-+		pdata =  kzalloc(sizeof(struct davinci_nand_pdata),
-+				GFP_KERNEL);
-+		pdev->dev.platform_data = pdata;
-+		if (!pdata)
-+			return NULL;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-chipselect", &prop))
-+			pdev->id = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-ale", &prop))
-+			pdata->mask_ale = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-cle", &prop))
-+			pdata->mask_cle = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-mask-chipsel", &prop))
-+			pdata->mask_chipsel = prop;
-+		if (!of_property_read_string(pdev->dev.of_node,
-+			"ti,davinci-ecc-mode", &mode)) {
-+			if (!strncmp("none", mode, 4))
-+				pdata->ecc_mode = NAND_ECC_NONE;
-+			if (!strncmp("soft", mode, 4))
-+				pdata->ecc_mode = NAND_ECC_SOFT;
-+			if (!strncmp("hw", mode, 2))
-+				pdata->ecc_mode = NAND_ECC_HW;
-+		}
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-ecc-bits", &prop))
-+			pdata->ecc_bits = prop;
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+			"ti,davinci-nand-buswidth", &prop))
-+			if (prop == 16)
-+				pdata->options |= NAND_BUSWIDTH_16;
-+		if (of_find_property(pdev->dev.of_node,
-+			"ti,davinci-nand-use-bbt", &len))
-+			pdata->bbt_options = NAND_BBT_USE_FLASH;
-+
-+		tmp_np = of_parse_phandle(pdev->dev.of_node,
-+				"pinmux-handle", 0);
-+		if (tmp_np)
-+			davinci_cfg_reg_of(tmp_np);
-+
-+		tmp_np = of_parse_phandle(pdev->dev.of_node,
-+				"timing-handle", 0);
-+		if (tmp_np)
-+			davinci_aemif_setup_timing_of(tmp_np);
-+	}
-+
-+	return pdev->dev.platform_data;
-+}
-+#else
-+#define davinci_nand_of_match NULL
-+static struct davinci_nand_pdata
-+	*nand_davinci_get_pdata(struct platform_device *pdev)
-+{
-+	return pdev->dev.platform_data;
-+}
-+#endif
-+
- static int __init nand_davinci_probe(struct platform_device *pdev)
- {
--	struct davinci_nand_pdata	*pdata = pdev->dev.platform_data;
-+	struct davinci_nand_pdata	*pdata;
- 	struct davinci_nand_info	*info;
- 	struct resource			*res1;
- 	struct resource			*res2;
-@@ -530,6 +610,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
- 	uint32_t			val;
- 	nand_ecc_modes_t		ecc_mode;
- 
-+	pdata = nand_davinci_get_pdata(pdev);
- 	/* insist on board-specific configuration */
- 	if (!pdata)
- 		return -ENODEV;
-@@ -815,6 +896,8 @@ static struct platform_driver nand_davinci_driver = {
- 	.remove		= __exit_p(nand_davinci_remove),
- 	.driver		= {
- 		.name	= "davinci_nand",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = davinci_nand_of_match,
- 	},
- };
- MODULE_ALIAS("platform:davinci_nand");
+
+>>  			irq_set_lockdep_class(virq, &gpio_lock_class);
+>>  
+>>  			/*
+>> @@ -569,8 +629,9 @@ void __init at91_gpio_irq_setup(void)
+>>  		if (prev && prev->next == this)
+>>  			continue;
+>>  
+>> -		irq_set_chip_data(pioc_hwirq, this);
+>> -		irq_set_chained_handler(pioc_hwirq, gpio_irq_handler);
+>> +		this->pioc_virq = irq_create_mapping(NULL, this->pioc_hwirq);
+>> +		irq_set_chip_data(this->pioc_virq, this);
+>> +		irq_set_chained_handler(this->pioc_virq, gpio_irq_handler);
+>>  	}
+>>  	pr_info("AT91: %d gpio irqs in %d banks\n", gpio_irqnbr, gpio_banks);
+>>  }
+>> @@ -648,7 +709,12 @@ static void at91_gpiolib_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+>>  static int at91_gpiolib_to_irq(struct gpio_chip *chip, unsigned offset)
+>>  {
+>>  	struct at91_gpio_chip *at91_gpio = to_at91_gpio_chip(chip);
+>> -	int virq = irq_find_mapping(at91_gpio->domain, offset);
+>> +	int virq;
+>> +
+>> +	if (offset < chip->ngpio)
+>> +		virq = irq_create_mapping(at91_gpio->domain, offset);
+>> +	else
+>> +		virq = -ENXIO;
+>>  
+>>  	dev_dbg(chip->dev, "%s: request IRQ for GPIO %d, return %d\n",
+>>  				chip->label, offset + chip->base, virq);
+>> diff --git a/arch/arm/mach-at91/irq.c b/arch/arm/mach-at91/irq.c
+>> index 46682fa..2e4ee09 100644
+>> --- a/arch/arm/mach-at91/irq.c
+>> +++ b/arch/arm/mach-at91/irq.c
+>> @@ -135,27 +135,72 @@ static struct irq_chip at91_aic_chip = {
+>>  	.irq_set_wake	= at91_aic_set_wake,
+>>  };
+>>  
+>> +static void __init at91_aic_hw_init(unsigned int spu_vector)
+>> +{
+>> +	int i;
+>> +
+>> +	/*
+>> +	 * Perform 8 End Of Interrupt Command to make sure AIC
+>> +	 * will not Lock out nIRQ
+>> +	 */
+>> +	for (i = 0; i < 8; i++)
+>> +		at91_aic_write(AT91_AIC_EOICR, 0);
+>> +
+>> +	/*
+>> +	 * Spurious Interrupt ID in Spurious Vector Register.
+>> +	 * When there is no current interrupt, the IRQ Vector Register
+>> +	 * reads the value stored in AIC_SPU
+>> +	 */
+>> +	at91_aic_write(AT91_AIC_SPU, spu_vector);
+>> +
+>> +	/* No debugging in AIC: Debug (Protect) Control Register */
+>> +	at91_aic_write(AT91_AIC_DCR, 0);
+>> +
+>> +	/* Disable and clear all interrupts initially */
+>> +	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
+>> +	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
+>> +}
+>> +
+>> +
+>> +
+> 
+> Remove extra blank lines.
+
+Sure, done.
+
+>>  #if defined(CONFIG_OF)
+>> -static int __init __at91_aic_of_init(struct device_node *node,
+>> -				     struct device_node *parent)
+>> +static int at91_aic_irq_map(struct irq_domain *h, unsigned int virq,
+>> +							irq_hw_number_t hw)
+>>  {
+>> -	at91_aic_base = of_iomap(node, 0);
+>> -	at91_aic_np = node;
+>> +	/* Put virq number in Source Vector Register */
+>> +	at91_aic_write(AT91_AIC_SVR(hw), virq);
+>> +
+>> +	/* Active Low interrupt, without priority */
+>> +	at91_aic_write(AT91_AIC_SMR(hw), AT91_AIC_SRCTYPE_LOW);
+>> +
+>> +	irq_set_chip_and_handler(virq, &at91_aic_chip, handle_level_irq);
+>> +	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
+>>  
+>>  	return 0;
+>>  }
+>>  
+>> -static const struct of_device_id aic_ids[] __initconst = {
+>> -	{ .compatible = "atmel,at91rm9200-aic", .data = __at91_aic_of_init },
+>> -	{ /*sentinel*/ }
+>> +static struct irq_domain_ops at91_aic_irq_ops = {
+>> +	.map	= at91_aic_irq_map,
+>> +	.xlate	= irq_domain_xlate_twocell,
+>>  };
+>>  
+>> -static void __init at91_aic_of_init(void)
+>> +int __init at91_aic_of_init(struct device_node *node,
+>> +				     struct device_node *parent)
+>>  {
+>> -	of_irq_init(aic_ids);
+>> +	at91_aic_base = of_iomap(node, 0);
+>> +	at91_aic_np = node;
+>> +
+>> +	at91_aic_domain = irq_domain_add_linear(at91_aic_np, NR_AIC_IRQS,
+>> +						&at91_aic_irq_ops, NULL);
+>> +	if (!at91_aic_domain)
+>> +		panic("Unable to add AIC irq domain (DT)\n");
+>> +
+>> +	irq_set_default_host(at91_aic_domain);
+> 
+> Is this really necessary? I don't think it should be.
+
+Well, it allows me to retreive the IRQ controller domain from the gpio
+driver.
+Cf. at91_gpio_irq_setup() with the call to
+irq_create_mapping(NULL, xxx) just above.
+
+Is there a better way to do this?
+(it seems that irq_find_host() is dedicated to the device tree enabled
+configuration).
+
+>> +	at91_aic_hw_init(NR_AIC_IRQS);
+>> +
+>> +	return 0;
+>>  }
+>> -#else
+>> -static void __init at91_aic_of_init(void) {}
+>>  #endif
+>>  
+>>  /*
+>> @@ -166,11 +211,7 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
+>>  	unsigned int i;
+>>  	int irq_base;
+>>  
+>> -	if (of_have_populated_dt())
+>> -		at91_aic_of_init();
+>> -	else
+>> -		at91_aic_base = ioremap(AT91_AIC, 512);
+>> -
+>> +	at91_aic_base = ioremap(AT91_AIC, 512);
+>>  	if (!at91_aic_base)
+>>  		panic("Unable to ioremap AIC registers\n");
+>>  
+>> @@ -187,6 +228,8 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
+>>  	if (!at91_aic_domain)
+>>  		panic("Unable to add AIC irq domain\n");
+>>  
+>> +	irq_set_default_host(at91_aic_domain);
+>> +
+>>  	/*
+>>  	 * The IVR is used by macro get_irqnr_and_base to read and verify.
+>>  	 * The irq number is NR_AIC_IRQS when a spurious interrupt has occurred.
+>> @@ -199,22 +242,7 @@ void __init at91_aic_init(unsigned int priority[NR_AIC_IRQS])
+>>  
+>>  		irq_set_chip_and_handler(i, &at91_aic_chip, handle_level_irq);
+>>  		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
+>> -
+>> -		/* Perform 8 End Of Interrupt Command to make sure AIC will not Lock out nIRQ */
+>> -		if (i < 8)
+>> -			at91_aic_write(AT91_AIC_EOICR, 0);
+>>  	}
+>>  
+>> -	/*
+>> -	 * Spurious Interrupt ID in Spurious Vector Register is NR_AIC_IRQS
+>> -	 * When there is no current interrupt, the IRQ Vector Register reads the value stored in AIC_SPU
+>> -	 */
+>> -	at91_aic_write(AT91_AIC_SPU, NR_AIC_IRQS);
+>> -
+>> -	/* No debugging in AIC: Debug (Protect) Control Register */
+>> -	at91_aic_write(AT91_AIC_DCR, 0);
+>> -
+>> -	/* Disable and clear all interrupts initially */
+>> -	at91_aic_write(AT91_AIC_IDCR, 0xFFFFFFFF);
+>> -	at91_aic_write(AT91_AIC_ICCR, 0xFFFFFFFF);
+>> +	at91_aic_hw_init(NR_AIC_IRQS);
+>>  }
+
+
+Best regards,
 -- 
-1.7.7.6
+Nicolas Ferre
