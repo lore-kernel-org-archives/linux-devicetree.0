@@ -1,18 +1,13 @@
-From: Jason <jason@lakedaemon.net>
-Subject: Re: [PATCH 2/3 v4] arm: kirkwood: add dreamplug (fdt) support.
-Date: Thu, 23 Feb 2012 14:00:59 -0500
-Message-ID: <20120223190059.GO23524@titan.lakedaemon.net>
-References: <cover.1329936660.git.jason@lakedaemon.net>
- <8532afcdc4adbb3771e6f742bcc33ef9c0347858.1329936660.git.jason@lakedaemon.net>
- <4F45B043.1080302@gmail.com> <201202230734.33583.arnd@arndb.de>
- <20120223161210.GN23524@titan.lakedaemon.net>
- <CACxGe6veKy3eA=GCp9eZWG1h8UgEYwAP9aicJhwm90=m4Z33xg@mail.gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: [PATCH 0/2 v5] arm: kirkwood: add dreamplug/devicetree support
+Date: Thu, 23 Feb 2012 19:52:16 +0000
+Message-ID: <cover.1330025976.git.jason@lakedaemon.net>
+References: <cover.1312906908.git.jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6veKy3eA=GCp9eZWG1h8UgEYwAP9aicJhwm90=m4Z33xg@mail.gmail.com>
+In-Reply-To: <cover.1312906908.git.jason@lakedaemon.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,49 +17,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+To: arnd@arndb.de, grant.likely@secretlab.ca
+Cc: devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 23, 2012 at 11:56:46AM -0700, Grant Likely wrote:
-> On Thu, Feb 23, 2012 at 9:12 AM, Jason <jason@lakedaemon.net> wrote:
-> > On Thu, Feb 23, 2012 at 07:34:33AM +0000, Arnd Bergmann wrote:
-> >> On Thursday 23 February 2012, Rob Herring wrote:
-> >> > On 02/22/2012 01:18 PM, Jason Cooper wrote:
-...
-> >> > > +
-> >> > > +static const char *kirkwood_dt_board_compat[] =3D {
-> >> > > + "marvell,dreamplug",
-> >> > > + NULL
-> >> > > +};
-> >>
-> >> Since you mention the name, it should probably be "globalscale,dreampl=
-ug"
-> >> because the device is made by GlobalScale instead of Marvell.
-> >
-> > hmm, Globalscale Tech is, as I understand it, a turn-key manufacturer.
-> > They are simply building Marvell's development platforms for them,
-> > handling sales, etc. =A0My impression was that Marvell designed the boa=
-rd
-> > and contracted Globalscale to build and distribute it.
-> >
-> > I don't care which we use, but is the convention to use the SoC designer
-> > (marvell,dreamplug), the SoC (kirkwood,dreamplug), or the brand
-> > (globalscale,dreamplug)?
-> >
-> > If there is no set standard, I think the SoC is most accurate, as
-> > nothing prevents a manufacturer from swapping out ICs/SoCs between
-> > manufacturing runs of the same make/model. =A0Look at certain wifi USB
-> > devices for examples.
-> =
+This patch series provides initial support for devicetree on kirkwood for the
+dreamplug platform.  After discussing the approach with Arnd Bergman last week
+at ELC, we decided to take an incremental approach to the conversion.  First, I
+would detect that we were on the dreamplug via the devicetree blob.  Then,
+configure uart0 via devicetree.  We chose the uart since it is already well
+supported under devicetree.
 
-> convention is to use the vendor of the device.  If it is marketed as a
-> Marvell product, then use "marvell,...".  If it is Globalscale, then
-> "globalscale,...".  The actual SoC on the device is irrelevant for the
-> top level compatible property name.
+This patch series has been boot-tested on the dreamplug.
 
-globalscale it is, then.  Thanks for the clarification.
+In a future patch series, I plan to migrate spi/flash/partitions over to
+devicetree.
 
-thx,
+When the migration is complete, board-dt.c will not be specific to the
+dreamplug, and dts files can be written for all of the other kirkwood boards.
 
-Jason.
+Jason Cooper (2):
+  arm: kirkwood: add dreamplug (fdt) support.
+  arm: kirkwood: convert uart0 to devicetree.
+
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |   25 ++++
+ arch/arm/boot/dts/kirkwood.dtsi          |    6 +
+ arch/arm/mach-kirkwood/Kconfig           |   14 +++
+ arch/arm/mach-kirkwood/Makefile          |    1 +
+ arch/arm/mach-kirkwood/Makefile.boot     |    2 +
+ arch/arm/mach-kirkwood/board-dt.c        |  180 ++++++++++++++++++++++++++++++
+ 6 files changed, 228 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
+ create mode 100644 arch/arm/mach-kirkwood/board-dt.c
+
+-- 
+1.7.3.4
