@@ -1,67 +1,53 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [RFC PATCH 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 23 Feb 2012 16:57:18 +0100
-Message-ID: <4F4661DE.90704@ti.com>
-References: <4F22DEF2.5000807@ti.com> <4F44CA82.9060906@atmel.com> <4F460EF2.9010000@ti.com> <4F46609C.8080907@atmel.com>
+From: Jason <jason@lakedaemon.net>
+Subject: Re: [PATCH 1/3] arm: ignore devicetree blobs.
+Date: Thu, 23 Feb 2012 10:56:57 -0500
+Message-ID: <20120223155657.GM23524@titan.lakedaemon.net>
+References: <cover.1312906908.git.jason@lakedaemon.net>
+ <cover.1329936660.git.jason@lakedaemon.net>
+ <3629df9b5b96d3a3a63a34ebf6ddfca2fd72ccfc.1329936660.git.jason@lakedaemon.net>
+ <20120222222619.GY14173@pengutronix.de>
+ <20120223091630.GA2036@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F46609C.8080907@atmel.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, Thomas Abraham <thomas.abraham@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20120223091630.GA2036@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 2/23/2012 4:51 PM, Nicolas Ferre wrote:
-> On 02/23/2012 11:03 AM, Cousson, Benoit :
->> Salut Nico,
->
-> Coucou Benoit ;-)
->
->> On 2/22/2012 11:59 AM, Nicolas Ferre wrote:
->>> On 01/27/2012 06:29 PM, Cousson, Benoit :
->>>> Add some basic helpers to retrieve a DMA controller device_node
->>>> and the DMA request line number.
->>>>
->>>> For legacy reason another API will export the DMA request number
->>>> into a Linux resource of type IORESOURCE_DMA.
->>>> This API is usable only on system with an unique DMA controller.
->>>
->>> Hi,
->>>
->>> I followed that discussion and I like very much the biding that Benoit
->>> is proposing. It will help me a lot with my current work on Atmel DMA
->>> controller.
->>>
->>> If I understand correctly, some rework is needed before it can be
->>> integrated in a stable git tree (I mean before we can base our work on
->>> top of it). So, in the meantime, what should I do to help and make
->>> things go forward? to be quite frank, I would be interested to have a
->>> working DMA enabled device soon ;-)
->>
->> Me too, but unfortunately, I was busy trying to add irq_domain and
->> fixing issues with SPARSE_IRQ on OMAP :-(
->
-> Been there, loved that ;-)
->
->>> Do you think that 3.4 is out of reach?
->>
->> Maybe not, from the comments, it looks like we should add a .xlate
->> callback to allow any custom parsing of the DMA nodes attributes.
->>
->> I'll be more than happy, if you can finalize that patch :-)
->
-> I will try to figure out what I can understand from the irq mechanism of
-> .xlate and try to see if I can implement it on top of your patch.
+Dave,
 
-In fact that dma code is a big copy/paste of the of/gpio one and gpio 
-was already managing .xlate function.
-I removed it because I thought it was useless for the DMA :-)
+On Thu, Feb 23, 2012 at 09:16:30AM +0000, Dave Martin wrote:
+> On Wed, Feb 22, 2012 at 11:26:19PM +0100, Uwe Kleine-K?nig wrote:
+> > On Wed, Feb 22, 2012 at 07:18:44PM +0000, Jason Cooper wrote:
+> > > 
+> > > Signed-off-by: Jason Cooper <jason@lakedaemon.net>
+> > /me claims prior art:
+> > 
+> > 	http://mid.gmane.org/1323808612-14976-1-git-send-email-u.kleine-koenig@pengutronix.de
+> 
+> Multiple people proposed this...
+> 
+> Grant accepted my patch, and it is already in -next:
+> 
+> See next-20110222
+> 
+> 810ae3d26507e61d1f7a69e9716443df1ce41449
+> ARM: devicetree: Add .dtb files to arch/arm/boot/.gitignore
 
-You might just have to copy the original code...
+awesome, I'll drop this from the next version of the series, then.
 
-> I will keep you informed...
+thx,
 
-Thanks for the help,
-Benoit
+Jason.
