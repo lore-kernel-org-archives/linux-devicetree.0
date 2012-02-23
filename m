@@ -1,39 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 02/10] pwm: Allow chips to support multiple PWMs.
-Date: Thu, 23 Feb 2012 14:07:12 +0000
-Message-ID: <201202231407.12981.arnd@arndb.de>
-References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de> <201202221634.45159.arnd@arndb.de> <20120223081235.GC8621@avionic-0098.mockup.avionic-design.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 1/2] regulator: twl: adapt twl-regulator driver to dt
+Date: Thu, 23 Feb 2012 15:31:27 +0000
+Message-ID: <20120223153127.GD4553@opensource.wolfsonmicro.com>
+References: <1329996954-27083-1-git-send-email-rnayak@ti.com>
+ <1329996954-27083-2-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120223081235.GC8621-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PHCdUe6m4AxPMzOu"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1329996954-27083-2-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 23 February 2012, Thierry Reding wrote:
-> > Is this only used for the device tree functions? If so, I would recommend
-> > making it less generic and always search for a device node.
-> 
-> It is currently only used to look up a struct pwm_chip for a given struct
-> device_node, yes. But I can see other uses for this. For instance this could
-> be useful if we ever want to provide an alternative way of requesting a PWM
-> on a per-chip basis.
 
-Nah, just keep it simple for now. If we need it later, we can still
-add something like this back, but for now it's just a source of
-confusion and possible bugs.
+--PHCdUe6m4AxPMzOu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I was again basically looking at gpiolib for inspiration (maybe I should stop
-> doing that :-). Maybe gpiolib should be reworked to use seq_file's iterator
-> interface as well? Just in case anybody else turns to gpiolib for
-> inspiration.
+On Thu, Feb 23, 2012 at 05:05:53PM +0530, Rajendra Nayak wrote:
+> Modify the twl regulator driver to extract the regulator_init_data from
+> device tree when passed, instead of getting it through platform_data
+> structures (on non-DT builds)
 
-Good idea. Would you be able to send a patch for that, too? I would guess
-converting both at the same time would be easier for you than splitting
-the work between two people.
+This doesn't apply to current -next, I expect because of the SMPS
+regulator changes which went in.  Please always submit patches against
+-next.  There's also a patch from Tero adding support for some
+additional regulators which is floating around and would conflict with
+this.  Could you guys please coordinate with each other on this?
 
-	ARnd
+--PHCdUe6m4AxPMzOu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPRlvGAAoJEBus8iNuMP3df04P/A/A6CVCcbWoD2dpmcefDJGD
+uzfA5wZsC7AUnEmbQK6TKxhyuKRqcIBWGaAEJWGDISyxhpC4KM3/F4LPezzCe/3Q
+CHb2PtEp3Is6MbJ2I+qNo4Qxe7EmV7sjl4oLNW2tKH73SY6Py+/RXTMsOt+ba2vx
+Z3IfAnzZmPhgY09rStxVkLPvYAHTd30Uoyz5LjIkafBZti/zIYOFcFAas6xvpSK5
+UuZw5zR29rJKA5Od/uTXnvquwHriGAfzT4mswkrEXAdIj9Ysmhy/+zkYUiusp0kh
+kf1ycCqz+U+4w0P6bm1Bgq/YMRnz5jgBMpfHNZio4Z2xZsnv3ME0rWkNoK907Hej
+lLonMbZDdbFrmT+RJvdzTgYtRwsTJjZCyIE8huDfYSDmTTaEy4MZ2s8v8gaWAFlw
+OQzuJw7BsLZGBAqRAhK3ggaWiZI2XEF/kI1QYLN43yRJAs57WPsAHIikpoKBb89U
+QO3BQTJysIRCDtBRdJzmxYNunJoYTa7jDtQb4eo/mXOh9W3UPh9mpt98Gcw/orZp
+AMv3UF/HHSnNCdgDmyKKkHBJa/PTyb8Wg6C4azTNZhim8N+2ZhMuPT5Nxxg7czhy
+wZSmPbKEFWqiCbs/F6g+ixkSblDTggwCYlApUgA5uV2boEJDuUVMMe4wDo9vhIEk
+6I+qRcZD4ZyQB3TV1OgK
+=EafO
+-----END PGP SIGNATURE-----
+
+--PHCdUe6m4AxPMzOu--
