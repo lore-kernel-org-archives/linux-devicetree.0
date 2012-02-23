@@ -1,57 +1,57 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH v2 0/4] omap hsmmc device tree support
-Date: Thu, 23 Feb 2012 17:43:18 +0530
-Message-ID: <4F462D5E.5010600@ti.com>
-References: <1329998490-27555-1-git-send-email-rnayak@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1329998490-27555-1-git-send-email-rnayak@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, svenkatr@ti.com, linaro-dev@lists.linaro.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v3 0/2] regulator: add irq domain and device tree support for
+ MAX8997
+Date: Thu, 23 Feb 2012 18:08:06 +0530
+Message-ID: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, dg77.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 23 February 2012 05:31 PM, Rajendra Nayak wrote:
-> This series adds device tree support for OMAP hsmmc
-> driver. The series is dependent on a couple other series,
-> to add TWL regulator DT support[1] and another to clean
-> the pdev->id usage within the hsmmc driver[2]
->
-> all patches including the dependent series can be
-> found here
-> git://gitorious.org/omap-pm/linux.git for-dt/regulator
+Changes since v2:
+- Atleast one voltage level has to be specfied for Buck 1/2/5 even if GPIO
+  DVS option is not used (suggested by MyungJoo Ham).
+- Reworked the irq_domain support based the v5 of irq_domain generalization
+  patches.
 
-sorry, the right branch is for-dt/mmc
+MAX8997 is a multi-function device which includes support for regulators, rtc,
+battery charger and other sub-blocks. This patchset adds device tree support
+for the pmic (regulators) sub-block.
 
->
-> The series is tested on omap4sdp (both external and emmc),
-> omap4panda amd omap3beagle boards.
->
-> Things to do:
-> -1- Card detect isn't functional and needs twl4030 gpio
-> to be DT converted.
-> -2- pbias cell programming is missing and needs an OMAP
-> control module driver.
->
-> [1] http://marc.info/?l=linux-omap&m=132999699905180&w=2
-> [2] http://marc.info/?l=linux-omap&m=132999646604985&w=2
->
-> Rajendra Nayak (4):
->    mmc: omap_hsmmc: Convert hsmmc driver to use device tree
->    mmc: omap_hsmmc: Avoid a regulator voltage change with dt
->    arm/dts: OMAP4: Add mmc controller nodes and board data
->    arm/dts: OMAP3: Add mmc controller nodes and board data
->
->   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   31 +++++++
->   arch/arm/boot/dts/omap3-beagle.dts                 |    6 ++
->   arch/arm/boot/dts/omap3.dtsi                       |   26 ++++++
->   arch/arm/boot/dts/omap4-panda.dts                  |   10 +++
->   arch/arm/boot/dts/omap4-sdp.dts                    |   16 ++++
->   arch/arm/boot/dts/omap4.dtsi                       |   31 +++++++
->   drivers/mmc/host/omap_hsmmc.c                      |   83 +++++++++++++++++++-
->   7 files changed, 202 insertions(+), 1 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
->
+The first patch adds irq domain support for the interrupts supported by max8997
+mainly for removing the need to pass a irq_base from the platform code. The
+irq_base could not anyway be passed in case of device tree based instantiation.
+The reverse mapping method used is linear since the sub-drivers of max8997 has
+access to the max8997 irq_domain from which the linux irq number can be
+obtained.
 
+The second patch adds device tree support for max8997. This patch modifies both
+mfd and regulator portions of the max8997 code.
+
+This patchset is based on the following tree.
+http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git [for-next]
+
+with all patches merged from
+http://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git [for-next]
+http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
+
+and depends on the following patchset.
+[PATCH v3 0/4] ARM: Exynos4: Add irq domain and device tree support for wakeup interrupts.
+
+This patchset has been tested on Origen board.
+
+Thomas Abraham (2):
+  mfd: add irq domain support for max8997 interrupts
+  regulator: add device tree support for max8997
+
+ .../devicetree/bindings/regulator/max8997-pmic.txt |  134 +++++++++++++++++++
+ arch/arm/mach-exynos/mach-nuri.c                   |    4 -
+ arch/arm/mach-exynos/mach-origen.c                 |    1 -
+ drivers/mfd/max8997-irq.c                          |   60 +++++----
+ drivers/mfd/max8997.c                              |   73 ++++++++++-
+ drivers/regulator/max8997.c                        |  139 +++++++++++++++++++-
+ include/linux/mfd/max8997-private.h                |    4 +-
+ include/linux/mfd/max8997.h                        |    2 +-
+ 8 files changed, 382 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/max8997-pmic.txt
