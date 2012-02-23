@@ -1,177 +1,77 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2 v5] arm: kirkwood: add dreamplug (fdt) support.
-Date: Thu, 23 Feb 2012 14:21:15 -0700
-Message-ID: <CACxGe6uMcOWC6ukTGF1soyfeTkT2fkmewhKUKA-AiK8hQDzCGQ@mail.gmail.com>
-References: <cover.1312906908.git.jason@lakedaemon.net>
- <cover.1330025976.git.jason@lakedaemon.net>
- <1192198e66f9a30eb13fa427240e91fb7f0a49e4.1330025976.git.jason@lakedaemon.net>
- <CACxGe6vjzXUwvGu73p+5L2-cW5EOJtFcR8JW8-gOUrRt-choJg@mail.gmail.com>
- <20120223211138.GP23524@titan.lakedaemon.net>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH v3 22/25] irq_domain/x86: Convert x86 (embedded) to use
+ common irq_domain
+Date: Thu, 23 Feb 2012 22:22:15 +0100
+Message-ID: <4F46AE07.2000105@linutronix.de>
+References: <1327700179-17454-1-git-send-email-grant.likely@secretlab.ca> <1327700179-17454-23-git-send-email-grant.likely@secretlab.ca> <20120128164405.GA20763@linutronix.de> <20120130195842.GT28397@ponder.secretlab.ca> <20120201141705.GF9587@linutronix.de> <CACxGe6vZxWXUG-WJFWDaoH3+PYBGWOXb291_jn9TdjrSF=p_JQ@mail.gmail.com> <CACxGe6tQvBZBMynXbknWx1o1s5TPEN7rXrNOOAjC5F_dz9B51w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120223211138.GP23524-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6tQvBZBMynXbknWx1o1s5TPEN7rXrNOOAjC5F_dz9B51w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, Milton Miller <miltonm@bga.com>, Rob Herring <rob.herring@calxeda.com>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 23, 2012 at 2:11 PM, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> On Thu, Feb 23, 2012 at 01:18:55PM -0700, Grant Likely wrote:
->> On Thu, Feb 23, 2012 at 12:52 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wr=
-ote:
->> > Initially, copied guruplug-setup.c and did s/guruplug/dreamplug/g.
->> > Then, switched to SPI based NOR flash.
->> >
->> > After talking to Arnd Bergman, chose an incremental approach to adding
->> > devicetree support. =A0First, we use the dtb to tell us we are on the
->> > dreamplug, then we gradually port over drivers.
->> >
->> > Driver porting will start with the uart (see next patch), and progress
->> > from there. =A0Possibly, spi/flash/partitions will be next.
->> >
->> > When done, board-dt.c will no longer be dreamplug specific, and dt's c=
-an
->> > be made for the other kirkwood boards.
->> >
->> > Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
->> > ---
->> > Changes from v1
->> >
->> > =A0 - attempting dts, looking for pointers.
->> >
->> > Changes from v2
->> >
->> > =A0 - resubmit as MACH_TYPE_DREAMPLUG (3550) is in arm/for-next, rebas=
-ed
->> > =A0 =A0 against same.
->> > =A0 - removed lame fdt attempt, others are working on kirkwood fdt. =
-=A0Will
->> > =A0 =A0 convert once kirkwood fdt is mainline.
->> > =A0 - s/boot_params/atag_offset/
->> > =A0 - added kirkwood_reset
->> > =A0 - 1 checkpatch.pl warning (help in Kconfig), looks the same as all
->> > =A0 =A0 other kirkwood boards...
->> >
->> > Changes from v3
->> >
->> > =A0 - rebased against v3.3-rc3 (recommended by Arnd)
->> > =A0 - use devicetree to determine which board we are on
->> > =A0 - added patch to configure uart0 from devicetree
->> >
->> > Changes from v4
->> >
->> > =A0 - fixed Kconfig logic so user can always see 'Dreamplug' in menuco=
-nfig.
->> > =A0 - changed 'marvell,dreamplug' to 'globalscale,dreamplug' as sugges=
-ted by
->> > =A0 =A0 Grant Likely.
->> > =A0 - fixed of_machine_is_compatible() logic for calling dreamplug spe=
-cific
->> > =A0 =A0 init functions.
->> >
->> > =A0arch/arm/boot/dts/kirkwood-dreamplug.dts | =A0 18 +++
->> > =A0arch/arm/boot/dts/kirkwood.dtsi =A0 =A0 =A0 =A0 =A0| =A0 =A06 +
->> > =A0arch/arm/mach-kirkwood/Kconfig =A0 =A0 =A0 =A0 =A0 | =A0 14 +++
->> > =A0arch/arm/mach-kirkwood/Makefile =A0 =A0 =A0 =A0 =A0| =A0 =A01 +
->> > =A0arch/arm/mach-kirkwood/Makefile.boot =A0 =A0 | =A0 =A02 +
->> > =A0arch/arm/mach-kirkwood/board-dt.c =A0 =A0 =A0 =A0| =A0182 +++++++++=
-+++++++++++++++++++++
->> > =A06 files changed, 223 insertions(+), 0 deletions(-)
->> > =A0create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
->> > =A0create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
->> > =A0create mode 100644 arch/arm/mach-kirkwood/board-dt.c
->> >
->> > diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/=
-dts/kirkwood-dreamplug.dts
->> > new file mode 100644
->> > index 0000000..765813f
->> > --- /dev/null
->> > +++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
->> > @@ -0,0 +1,18 @@
->> > +/dts-v1/;
->> > +
->> > +/include/ "kirkwood.dtsi"
->> > +
->> > +/ {
->> > + =A0 =A0 =A0 model =3D "Globalscale Technologies Dreamplug";
->> > + =A0 =A0 =A0 compatible =3D "globalscale,dreamplug", "globalscale,kir=
-kwood";
+On 02/23/2012 08:56 PM, Grant Likely wrote:
+> On Wed, Feb 1, 2012 at 11:06 AM, Grant Likely<grant.likely@secretlab.ca>  wrote:
+>> On Wed, Feb 1, 2012 at 7:17 AM, Sebastian Andrzej Siewior
+>> <bigeasy@linutronix.de>  wrote:
+>>> * Grant Likely | 2012-01-30 12:58:42 [-0700]:
+>>>
+>>>> Ugh.  This isn't easy.  The legacy mapping really needs all the
+>>>
+>>> Feel free to merge this patch. I don't have the time to look at this now
+>>> so I take a look at the ioapic later.
 >>
->> Hahaha... okay, more clarification is needed here.
->>
->> The compatible property is a list, and the first entry must always be
->> the exact device model. =A0That is why the vendor of the hardware is in
->> the prefix. =A0However, the following entries are a list of devices that
->> it is 'compatible' with. =A0In the case of the top-level compatible
->> property, we've been using the convention of including a string for
->> the SoC, and in that case the manufacturer is indeed Marvell.
->>
->> Also, *be specific*. =A0Kirkwood is a family of processors, not a single
->> SoC. =A0The compatible string should reflect that. =A0So, in your case,
->> compatible should look something like:
->>
->> compatible =3D "globalscale,dreamplug", "marvell,kirkwood-88f6281";
+>> There's no rush here.  I can leave it as-is with IRQ_DOMAIN turned off
+>> for x86 for now.
 >
-> ahhh... ok. =A0So, my board-dt.c should have:
+> Turns out I have to enable IRQ_DOMAIN for x86 because the TI TWL4030
+> driver needs it.  I do need to apply this patch.  Until something
+> better can be implemented, can I change ioapic_add_ofnode() so that it
+> allocates all irq_descs immediately.  It's not ideal, but every other
+> approach I've looked at results in nasty hacks.
 >
-> static const char *kirkwood_dt_board_compat[] =3D {
-> =A0 =A0 =A0 =A0"marvell,kirkwood",
-> =A0 =A0 =A0 =A0NULL
-> };
->
-> And then the test to run the dreamplug specific init should be:
->
-> =A0 =A0 =A0 =A0if (of_machine_is_compatible("globalscale,dreamplug"))
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dreamplug_init();
->
-> And then, kirkwood.dtsi:
->
-> compatible =3D "marvell,kirkwood";
->
-> and kirkwood-dreamplug.dts:
->
-> compatible =3D "globalscale,dreamplug", "marvell,kirkwood-88f6281-a1";
->
->
-> My only question is, should the kirkwood.dtsi have just
-> "marvell,kirkwood", or "marvell,kirkwood","marvell,kirkwood-88f6281-a1"?
+> Looking at the ioapic code, it appears to handle preallocated
+> irq_descs gracefully.
 
-Fix the order.  The list is ordered from most specific to least.
-Also, if the silicon revision can be read out of the SoC at runtime,
-then including the -a1 revision is probably overkill.
+Please merge your initial patch as-it.
 
-So, something like the following is fine:
+> Does adding this loop help (apologies if it is whitespace damaged, I
+> cut&paste it):
+>
+> diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+> index 3ae2ced..89c1310 100644
+> --- a/arch/x86/kernel/devicetree.c
+> +++ b/arch/x86/kernel/devicetree.c
+> @@ -345,7 +345,7 @@ const struct irq_domain_ops ioapic_irq_domain_ops = {
+>   static void __init ioapic_add_ofnode(struct device_node *np)
+>   {
+>   	struct resource r;
+> -	int i, ret;
+> +	int i, j, ret;
+>
+>   	ret = of_address_to_resource(np, 0,&r);
+>   	if (ret) {
+> @@ -361,6 +361,14 @@ static void __init ioapic_add_ofnode(struct
+> device_node *np)
+>
+>   			gsi_cfg = mp_ioapic_gsi_routing(i);
+>
+> +			/*
+> +			 * Preallocate irq_descs so that the legacy mapping
+> +			 * works, but don't set them up.
+> +			 * io_apic_setup_irq_pin_once() will finish the set up.
+> +			 */
+> +			for (j = 0; j<  32; j++)
 
-compatible =3D "globalscale,dreamplug", "marvell,kirkwood-88f6281",
-"marvell,kirkwood";
-
-BTW, does the dreamplug have a part number?
-
->
-> I'm guessing kirkwood.dtsi is a generic devicetree, and should just be
-> "marvell,kirkwood". =A0If that's true, then *kirkwood_dt_board_compat
-> should just be "marvell,kirkwood" since board-dt.c should be able to
-> handle any kirkwood SoC.
->
-> Sorry for being so dense.
->
-> thx,
->
-> Jason.
+It is not 32. If I remember correctly the first ioapic had 24 pins so
+did the second. This is ioapic specifc.
 
 
+>
+> g.
 
--- =
-
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Sebastian
