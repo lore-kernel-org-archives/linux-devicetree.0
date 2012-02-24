@@ -1,83 +1,39 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH v2 3/4] arm/dts: OMAP4: Add mmc controller nodes and board
- data
-Date: Fri, 24 Feb 2012 15:56:52 +0530
-Message-ID: <4F4765EC.1000102@ti.com>
-References: <1329998490-27555-1-git-send-email-rnayak@ti.com>	<1329998490-27555-4-git-send-email-rnayak@ti.com> <CANrkHUaP7cV_vSKQYZkeF-aS5CEi2CAp3_9aDJKCVOX-67oNPg@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] arm/dts: OMAP4: Add mmc controller nodes and
+	board data
+Date: Fri, 24 Feb 2012 10:37:45 +0000
+Message-ID: <20120224103745.GI22675@n2100.arm.linux.org.uk>
+References: <1329998490-27555-1-git-send-email-rnayak@ti.com>
+	<1329998490-27555-4-git-send-email-rnayak@ti.com>
+	<CANrkHUaP7cV_vSKQYZkeF-aS5CEi2CAp3_9aDJKCVOX-67oNPg@mail.gmail.com>
+	<4F4765EC.1000102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CANrkHUaP7cV_vSKQYZkeF-aS5CEi2CAp3_9aDJKCVOX-67oNPg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: "T Krishnamoorthy, Balaji" <balajitk@ti.com>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, svenkatr@ti.com, linaro-dev@lists.linaro.org
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F4765EC.1000102-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, "T Krishnamoorthy,
+	Balaji" <balajitk-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 24 February 2012 03:46 PM, T Krishnamoorthy, Balaji wrote:
->> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
->> index 29f4589..9204f60 100644
->> --- a/arch/arm/boot/dts/omap4.dtsi
->> +++ b/arch/arm/boot/dts/omap4.dtsi
->> @@ -25,6 +25,11 @@
->>                 serial1 =&uart2;
->>                 serial2 =&uart3;
->>                 serial3 =&uart4;
->> +               mmc1 =&mmc1;
->> +               mmc2 =&mmc2;
->> +               mmc3 =&mmc3;
->> +               mmc4 =&mmc4;
->> +               mmc5 =&mmc5;
->>         };
->>
->>         cpus {
->> @@ -155,5 +160,31 @@
->>                         #size-cells =<0>;
->>                         ti,hwmods = "i2c4";
->>                 };
->> +
->> +               mmc1: mmc@1 {
->> +                       compatible = "ti,omap4-hsmmc";
->> +                       ti,hwmods = "mmc1";
->> +                       ti,dual-volt;
->> +               };
->> +
->> +               mmc2: mmc@2 {
->> +                       compatible = "ti,omap4-hsmmc";
->> +                       ti,hwmods = "mmc2";
->> +               };
->
-> Hi Rajendra,
-> Is there a way to control the device registration order,
-> eMMC connected to mmc2 needs to be registered as /dev/mmcblk0p ...
-> irrespective of whether SD card is mount or not on mmc1 card slot.
-> So that bootargs would not have to be modified when filesystem is on eMMC.
+On Fri, Feb 24, 2012 at 03:56:52PM +0530, Rajendra Nayak wrote:
+> I don't know if we can, but even if we could, we take care of the same
+> bootargs working on two boards (say sdp and panda) *if* on sdp I have my
+> filesystem on eMMC and on panda I have it on external card.
+> What happens if I want to use my filesystem on both boards on external
+> card?
 
-I don't know if we can, but even if we could, we take care of the same
-bootargs working on two boards (say sdp and panda) *if* on sdp I have my
-filesystem on eMMC and on panda I have it on external card.
-What happens if I want to use my filesystem on both boards on external
-card?
-
->
->> +
->> +               mmc3: mmc@3 {
->> +                       compatible = "ti,omap4-hsmmc";
->> +                       ti,hwmods = "mmc3";
->> +               };
->> +
->> +               mmc4: mmc@4 {
->> +                       compatible = "ti,omap4-hsmmc";
->> +                       ti,hwmods = "mmc4";
->> +               };
->> +
->> +               mmc5: mmc@5 {
->> +                       compatible = "ti,omap4-hsmmc";
->> +                       ti,hwmods = "mmc5";
->> +               };
->>         };
->>   };
->> --
->> 1.7.1
->>
-
+This is why the bootargs should be part of the information the boot
+loader passes to the kernel, and not part of the kernel configuration
+or DT.
