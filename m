@@ -1,49 +1,86 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/3 v4] arm: kirkwood: add dreamplug (fdt) support.
-Date: Fri, 24 Feb 2012 08:57:53 +0100
-Message-ID: <20120224075753.GA24858@lunn.ch>
+From: "T Krishnamoorthy, Balaji" <balajitk@ti.com>
+Subject: Re: [PATCH v2 3/4] arm/dts: OMAP4: Add mmc controller nodes and board data
+Date: Fri, 24 Feb 2012 15:46:44 +0530
+Message-ID: <CANrkHUaP7cV_vSKQYZkeF-aS5CEi2CAp3_9aDJKCVOX-67oNPg@mail.gmail.com>
+References: <1329998490-27555-1-git-send-email-rnayak@ti.com>
+	<1329998490-27555-4-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1329998490-27555-4-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, svenkatr@ti.com, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.d=
+tsi
+> index 29f4589..9204f60 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -25,6 +25,11 @@
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0serial1 =3D &uart2;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0serial2 =3D &uart3;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0serial3 =3D &uart4;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc1 =3D &mmc1;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc2 =3D &mmc2;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc3 =3D &mmc3;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc4 =3D &mmc4;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc5 =3D &mmc5;
+> =A0 =A0 =A0 =A0};
+>
+> =A0 =A0 =A0 =A0cpus {
+> @@ -155,5 +160,31 @@
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0#size-cells =3D <0>;
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0ti,hwmods =3D "i2c4";
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0};
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc1: mmc@1 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,omap=
+4-hsmmc";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,hwmods =3D "mmc1";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,dual-volt;
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc2: mmc@2 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,omap=
+4-hsmmc";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,hwmods =3D "mmc2";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
 
-Great to see this work going forward. I hope we can cooperating in the
-future. I have an out of tree kirkwood board i would like to supported
-via DT, and i also have a QNAP T119+ i can use for testing.
+Hi Rajendra,
+Is there a way to control the device registration order,
+eMMC connected to mmc2 needs to be registered as /dev/mmcblk0p ...
+irrespective of whether SD card is mount or not on mmc1 card slot.
+So that bootargs would not have to be modified when filesystem is on eM=
+MC.
 
-I have some patches under development which will help. I've been
-porting the different Orion machines to use Mike Turquette generic CLK
-and clkdev so that the device drivers can determine for themselves
-what the clock is. tclk is then removed from the platform data
-structures, making DT a little bit simpler. This work should also
-solve the kirkwood clock gating which is going to be an issue for
-DT. For example, your board file is probably currently calling
-kirkwood_spi_init(), in order to use SPI. This does:
-
-kirkwood_clk_ctrl |= CGC_RUNIT;
-
-and so ensures that the RUNIT clock does not get turned off in a
-lateinit call. Once you have DT, this flag is not going to be set, and
-so you have the danger of the clock to the SPI core gets turned
-off. The clk framework should solve this, since the SPI device driver
-will claim the clock and ensure it keeps running.
-
-I'm hoping the next version of Mike Turquette patches get included in
-the tree soon, so i can finish my patches for integration.
-
-    Andrew
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc3: mmc@3 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,omap=
+4-hsmmc";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,hwmods =3D "mmc3";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc4: mmc@4 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,omap=
+4-hsmmc";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,hwmods =3D "mmc4";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> +
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 mmc5: mmc@5 {
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "ti,omap=
+4-hsmmc";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ti,hwmods =3D "mmc5";
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };
+> =A0 =A0 =A0 =A0};
+> =A0};
+> --
+> 1.7.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
