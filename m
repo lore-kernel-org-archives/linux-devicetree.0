@@ -1,96 +1,49 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH] devicetree: Add empty of_platform_populate() for !CONFIG_OF_ADDRESS (sparc)
-Date: Fri, 24 Feb 2012 15:06:58 -0700
-Message-ID: <1330121218-10442-1-git-send-email-grant.likely@secretlab.ca>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: status = "okay" vs. "disabled" in soc.dtsi or board.dts
+Date: Fri, 24 Feb 2012 15:08:16 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17BD8BCE07@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Benoit Cousson <b-cousson@ti.com>, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sparc has its own helpers for translating address ranges when the device
-tree is parsed at boot time, and it isn't able to use of_platform_populate().
-However, there are some device drivers that want to use that function on
-other DT enabled platforms (ie. TWL4030).  This patch adds an empty
-of_platform_populate() implementation that returns an error when
-CONFIG_OF_ADDRESS is not selected.
+Grant, Rob, et al.,
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benoit Cousson <b-cousson@ti.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>
----
- drivers/mfd/twl-core.c      |    5 ++---
- drivers/of/platform.c       |    4 ++--
- include/linux/of_platform.h |   12 ++++++++++--
- 3 files changed, 14 insertions(+), 7 deletions(-)
+As background, consider an SoC with 4 SD/MMC controllers, and that most
+boards will only use 1 or 2 of these controllers. Attempting to initialize
+the other would be pointless since nothing is connected, cause meaningless
+kernel error spew, etc.
 
-diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
-index 66f9bff..4970d43 100644
---- a/drivers/mfd/twl-core.c
-+++ b/drivers/mfd/twl-core.c
-@@ -1305,11 +1305,10 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		twl_i2c_write_u8(TWL4030_MODULE_INTBR, temp, REG_GPPUPDCTR1);
- 	}
- 
--#ifdef CONFIG_OF_DEVICE
-+	status = -ENODEV;
- 	if (node)
- 		status = of_platform_populate(node, NULL, NULL, &client->dev);
--	else
--#endif
-+	if (status)
- 		status = add_children(pdata, id->driver_data);
- 
- fail:
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 63b3ec4..20fbebd 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -55,7 +55,7 @@ EXPORT_SYMBOL(of_find_device_by_node);
- #include <asm/dcr.h>
- #endif
- 
--#if !defined(CONFIG_SPARC)
-+#ifdef CONFIG_OF_ADDRESS
- /*
-  * The following routines scan a subtree and registers a device for
-  * each applicable node.
-@@ -462,4 +462,4 @@ int of_platform_populate(struct device_node *root,
- 	of_node_put(root);
- 	return rc;
- }
--#endif /* !CONFIG_SPARC */
-+#endif /* CONFIG_OF_ADDRESS */
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 040ce2f..242fa35 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -81,7 +81,7 @@ extern struct platform_device *of_device_alloc(struct device_node *np,
- 					 struct device *parent);
- extern struct platform_device *of_find_device_by_node(struct device_node *np);
- 
--#if !defined(CONFIG_SPARC) /* SPARC has its own device registration method */
-+#ifdef CONFIG_OF_ADDRESS /* device reg helpers depend on OF_ADDRESS */
- /* Platform devices and busses creation */
- extern struct platform_device *of_platform_device_create(struct device_node *np,
- 						   const char *bus_id,
-@@ -94,7 +94,15 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
--#endif /* !CONFIG_SPARC */
-+#else
-+static inline int of_platform_populate(struct device_node *root,
-+					const struct of_device_id *matches,
-+					const struct of_dev_auxdata *lookup,
-+					struct device *parent)
-+{
-+	return -ENODEV;
-+}
-+#endif /* !CONFIG_OF_ADDRESS */
- 
- #endif /* CONFIG_OF_DEVICE */
- 
+This could be handled in two ways:
+
+1)
+
+For all such devices, place status="disabled" in $soc.dtsi, and override
+this in $board.dts for the devices that are actually used on the board.
+
+2)
+
+Do nothing in particular in $soc.dtsi, thus leaving everything enabled,
+and disable anything unused in $board.dts.
+
+
+We've had this discussion before, and if I understood you (Grant)
+correctly, you stated during review of some Tegra .dts files that (2)
+was the de-facto practice, and hence that's what the current Tegra
+.dts files in the kernel do.
+
+However, I've just noticed that we aren't consistent about this across
+SoCs; IMX and Atmel appear to do (1) whereas Tegra and Exynos do (2).
+(1) seems a little more direct; the $board.dts files only contain
+configuration for devices they use, rather than also having to disable
+devices they don't. Can Tegra (and Exynos) switch?
+
+Thanks.
+
 -- 
-1.7.9
+nvpublic
