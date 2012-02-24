@@ -1,72 +1,69 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 4/4] arm/dts: OMAP3: Add mmc controller nodes and
- board data
-Date: Fri, 24 Feb 2012 10:49:00 -0800
-Message-ID: <20120224184859.GN18185@atomide.com>
-References: <1329998490-27555-1-git-send-email-rnayak@ti.com>
- <1329998490-27555-5-git-send-email-rnayak@ti.com>
- <20120223185718.GZ18185@atomide.com>
- <4F470B71.1020308@ti.com>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/3 v4] arm: kirkwood: add dreamplug (fdt) support.
+Date: Fri, 24 Feb 2012 14:36:07 -0500
+Message-ID: <20120224193607.GS23524@titan.lakedaemon.net>
+References: <20120224075753.GA24858@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F470B71.1020308@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, svenkatr@ti.com, linaro-dev@lists.linaro.org
+In-Reply-To: <20120224075753.GA24858-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Rajendra Nayak <rnayak@ti.com> [120223 19:29]:
-> On Friday 24 February 2012 12:27 AM, Tony Lindgren wrote:
-> >>--- a/arch/arm/boot/dts/omap3.dtsi
-> >>+++ b/arch/arm/boot/dts/omap3.dtsi
-> >>@@ -113,5 +113,31 @@
-> >>  			#size-cells =<0>;
-> >>  			ti,hwmods = "i2c3";
-> >>  		};
-> >>+
-> >>+		mmc1: mmc@1 {
-> >>+			compatible = "ti,omap2-hsmmc";
-> >>+			ti,hwmods = "mmc1";
-> >>+			ti,dual-volt;
-> >>+		};
-> >>+
-> >>+		mmc2: mmc@2 {
-> >>+			compatible = "ti,omap2-hsmmc";
-> >>+			ti,hwmods = "mmc2";
-> >>+		};
-> >>+
-> >>+		mmc3: mmc@3 {
-> >>+			compatible = "ti,omap2-hsmmc";
-> >>+			ti,hwmods = "mmc3";
-> >>+		};
-> >>+
-> >>+		mmc4: mmc@4 {
-> >>+			compatible = "ti,omap2-hsmmc";
-> >>+			ti,hwmods = "mmc4";
-> >>+		};
-> >>+
-> >>+		mmc5: mmc@5 {
-> >>+			compatible = "ti,omap2-hsmmc";
-> >>+			ti,hwmods = "mmc5";
-> >>+		};
-> >>  	};
-> >>  };
-> >
-> >These all should all be "ti,omap3-hsmmc" I guess?
+On Fri, Feb 24, 2012 at 08:57:53AM +0100, Andrew Lunn wrote:
+> Hi Jason
 > 
-> Well, I defined the binding such that both omap2 and omap3
-> can use the same compatible "ti,omap2-hsmmc" since there is
-> no difference in the way they are defined or handled. If thats
-> confusing, I can have separate compatibles.
-> Btw, I guess we do the same with a few other re-used IPs as well,
-> I just checked and mcpsi does the same.
+> Great to see this work going forward. I hope we can cooperating in the
+> future. I have an out of tree kirkwood board i would like to supported
+> via DT, and i also have a QNAP T119+ i can use for testing.
 
-Yeah let's use separate compatibles to avoid confusion.
-For omap2 we also have the ti,omap2-mmc in addition to
-ti,omap2-hsmmc..
+Awesome, I don't have one of those.
 
-Regards,
+> I have some patches under development which will help. I've been
+> porting the different Orion machines to use Mike Turquette generic CLK
+> and clkdev...
 
-Tony
+It appears that changing core platform code across an entire
+architecture is quite difficult.  ;-)  I hope it gets merged, but I'm
+not going to hold my breath.
+
+> ...so that the device drivers can determine for themselves
+> what the clock is. tclk is then removed from the platform data
+> structures, making DT a little bit simpler. This work should also
+> solve the kirkwood clock gating which is going to be an issue for
+> DT. For example, your board file is probably currently calling
+> kirkwood_spi_init(), in order to use SPI. This does:
+> 
+> kirkwood_clk_ctrl |= CGC_RUNIT;
+> 
+> and so ensures that the RUNIT clock does not get turned off in a
+> lateinit call. Once you have DT, this flag is not going to be set, and
+> so you have the danger of the clock to the SPI core gets turned
+> off. The clk framework should solve this, since the SPI device driver
+> will claim the clock and ensure it keeps running.
+
+Why not convert kirkwood_clock_gate() (mach-kirkwood/common.c:480) to
+make use of of_device_is_available() ?  That would eliminate one global
+variable.  That wouldn't even require a change to the devicetrees, since
+it returns 1 if 'status' doesn't exist (or is set to "okay" or "ok").
+
+I don't even see where CGC_RUNIT is used in kirkwood_clock_gate(),
+except at line 528.  Maybe I'm missing something, a lot of this is new
+to me.
+
+
+thx,
+
+Jason.
