@@ -1,57 +1,49 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v3 06/10] pwm: Add NVIDIA Tegra SoC support
-Date: Fri, 24 Feb 2012 07:48:51 +0100
-Message-ID: <20120224064851.GC18786@avionic-0098.mockup.avionic-design.de>
-References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de>
- <1329923841-32017-7-git-send-email-thierry.reding@avionic-design.de>
- <4F459A94.4030104@gmail.com>
- <20120223081459.GD8621@avionic-0098.mockup.avionic-design.de>
- <4F460616.3080400@gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/3 v4] arm: kirkwood: add dreamplug (fdt) support.
+Date: Fri, 24 Feb 2012 08:57:53 +0100
+Message-ID: <20120224075753.GA24858@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F460616.3080400-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jason
 
---YD3LsXFS42OYHhNZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Great to see this work going forward. I hope we can cooperating in the
+future. I have an out of tree kirkwood board i would like to supported
+via DT, and i also have a QNAP T119+ i can use for testing.
 
-* Ryan Mallon wrote:
-> On 23/02/12 19:14, Thierry Reding wrote:
-> > * Ryan Mallon wrote:
-[...]
-> >> pwmchip_add should probably verify that the initialisation of the
-> >> pwm_chip structure is sane to avoid problems like this.
-> >=20
-> > Absolutely. What would be the best response to an invalid struct pwm_ch=
-ip? I
-> > suppose at least returning -EINVAL, perhaps complemented with WARN_ON?
->=20
-> Just returning -EINVAL should be okay. I don't think you need a WARN_ON,
-> since failing to register the hardware should be enough of a reason for
-> a user to report a problem.
+I have some patches under development which will help. I've been
+porting the different Orion machines to use Mike Turquette generic CLK
+and clkdev so that the device drivers can determine for themselves
+what the clock is. tclk is then removed from the platform data
+structures, making DT a little bit simpler. This work should also
+solve the kirkwood clock gating which is going to be an issue for
+DT. For example, your board file is probably currently calling
+kirkwood_spi_init(), in order to use SPI. This does:
 
-Okay, will do.
+kirkwood_clk_ctrl |= CGC_RUNIT;
 
-Thierry
+and so ensures that the RUNIT clock does not get turned off in a
+lateinit call. Once you have DT, this flag is not going to be set, and
+so you have the danger of the clock to the SPI core gets turned
+off. The clk framework should solve this, since the SPI device driver
+will claim the clock and ensure it keeps running.
 
---YD3LsXFS42OYHhNZ
-Content-Type: application/pgp-signature
+I'm hoping the next version of Mike Turquette patches get included in
+the tree soon, so i can finish my patches for integration.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk9HMtMACgkQZ+BJyKLjJp8fOQCfTURskVcYobNBg5kQVdSzbjAx
-pWkAoIVoxAB2gku2evFjtz3EnneWDQTq
-=1lDS
------END PGP SIGNATURE-----
-
---YD3LsXFS42OYHhNZ--
+    Andrew
