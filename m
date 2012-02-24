@@ -1,96 +1,69 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Fri, 24 Feb 2012 16:30:16 +0100
-Message-ID: <4F47AD08.4030504@ti.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/3 v4] arm: kirkwood: add dreamplug (fdt) support.
+Date: Fri, 24 Feb 2012 10:55:57 -0500
+Message-ID: <20120224155557.GR23524@titan.lakedaemon.net>
+References: <20120224075753.GA24858@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>, Rob Herring <robherring2@gmail.com>
-Cc: "khilman@ti.com" <khilman@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120224075753.GA24858-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/22/2012 7:29 PM, Stephen Warren wrote:
-> Rob Herring wrote at Wednesday, February 22, 2012 10:23 AM:
->> On 02/22/2012 08:31 AM, Cousson, Benoit wrote:
->>> On 2/22/2012 3:23 PM, Rob Herring wrote:
->>>> On 02/15/2012 10:04 AM, Benoit Cousson wrote:
->>>>> Adapt the GPIO driver to retrieve information from a DT file.
->>>>>
->>>>> Allocate the irq_base dynamically and rename bank->virtual_irq_start
->>>>> to bank->irq_base.
->>>>> Change irq_base type to int instead of u16 to match irq_alloc_descs
->>>>> output.
->>>>>
->>>>> Add documentation for GPIO properties specific to OMAP.
->>>>>
->>>>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
->>>>> Cc: Tarun Kanti DebBarma<tarun.kanti@ti.com>
->>>>
->>>> One comment below, but otherwise:
->>>>
->>>> Acked-by: Rob Herring<rob.herring@calxeda.com>
->>>>
->>>>> ---
->>>>>    .../devicetree/bindings/gpio/gpio-omap.txt         |   30 +++++
->>>>>    drivers/gpio/gpio-omap.c                           |  121
->>>>> ++++++++++++++++++--
->>>>>    2 files changed, 142 insertions(+), 9 deletions(-)
->>>>>    create mode 100644
->>>>> Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>>> b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>>> new file mode 100644
->>>>> index 0000000..c1b3100
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>>> @@ -0,0 +1,30 @@
->>>>> +OMAP GPIO controller bindings
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible:
->>>>> +  - "ti,omap2-gpio" for OMAP2 controllers
->>>>> +  - "ti,omap3-gpio" for OMAP3 controllers
->>>>> +  - "ti,omap4-gpio" for OMAP4 controllers
->>>>> +- #gpio-cells : Should be two.
->>>>> +  - first cell is the pin number
->>>>> +  - second cell is used to specify optional parameters (unused)
->>>>> +- gpio-controller : Marks the device node as a GPIO controller.
->>>>> +- #interrupt-cells : Should be one
->>>>
->>>> There's no level/edge settings for gpios?
->>>
->>> That's a good question, because I was wondering as well :-)
->>>
->>> I did no see how it was done in other GPIO implementation.
->>
->> There's not really a good example that I've found. Many gpio nodes don't
->> even have "interrupt-controller" set.
->>
->> So if you have an irq_set_type function for gpio's, then you should have
->> 2 cells.
+On Fri, Feb 24, 2012 at 08:57:53AM +0100, Andrew Lunn wrote:
+> Hi Jason
+> 
+> Great to see this work going forward. I hope we can cooperating in the
+> future. I have an out of tree kirkwood board i would like to supported
+> via DT, and i also have a QNAP T119+ i can use for testing.
 
-After checking the OMAP gpio code, I do have a gpio_irq_type and the 
-GPIO do support the 4 types. I'm not sure yet about the combinations.
+Awesome, I don't have one of those.
 
-> Tegra's GPIO IRQ binding (gpio_nvidia.txt in linux-next at least) says:
->
-> - #interrupt-cells : Should be 2.
->    The first cell is the GPIO number.
->    The second cell is used to specify flags:
->      bits[3:0] trigger type and level flags:
->        1 = low-to-high edge triggered.
->        2 = high-to-low edge triggered.
->        4 = active high level-sensitive.
->        8 = active low level-sensitive.
->        Valid combinations are 1, 2, 3, 4, 8.
+> I have some patches under development which will help. I've been
+> porting the different Orion machines to use Mike Turquette generic CLK
+> and clkdev...
 
-Indeed, so I'll just copy / paste Tegra's binding...
+It appears that changing core platform code across an entire
+architecture is quite difficult.  ;-)  I hope it gets merged, but I'm
+not going to hold my breath.
 
-Thanks,
-Benoit
+> ...so that the device drivers can determine for themselves
+> what the clock is. tclk is then removed from the platform data
+> structures, making DT a little bit simpler. This work should also
+> solve the kirkwood clock gating which is going to be an issue for
+> DT. For example, your board file is probably currently calling
+> kirkwood_spi_init(), in order to use SPI. This does:
+> 
+> kirkwood_clk_ctrl |= CGC_RUNIT;
+> 
+> and so ensures that the RUNIT clock does not get turned off in a
+> lateinit call. Once you have DT, this flag is not going to be set, and
+> so you have the danger of the clock to the SPI core gets turned
+> off. The clk framework should solve this, since the SPI device driver
+> will claim the clock and ensure it keeps running.
 
+Why not convert kirkwood_clock_gate() (mach-kirkwood/common.c:480) to
+make use of of_device_is_available() ?  That would eliminate one global
+variable.  That wouldn't even require a change to the devicetrees, since
+it returns 1 if 'status' doesn't exist (or is set to "okay" or "ok").
+
+I don't even see where CGC_RUNIT is used in kirkwood_clock_gate(),
+except at line 528.  Maybe I'm missing something, a lot of this is new
+to me.
+
+
+thx,
+
+Jason.
