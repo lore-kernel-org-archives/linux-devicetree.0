@@ -1,52 +1,32 @@
-From: Ian Campbell <ijc@hellion.org.uk>
-Subject: Re: [PATCH 0/2 v5] arm: kirkwood: add dreamplug/devicetree support
-Date: Sun, 26 Feb 2012 11:00:38 +0000
-Message-ID: <1330254038.10008.24.camel@dagon.hellion.org.uk>
-References: <cover.1312906908.git.jason@lakedaemon.net>
- <cover.1330025976.git.jason@lakedaemon.net>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH v6 10/18] tegra: usb: fdt: Add additional device tree definitions for USB ports
+Date: Mon, 27 Feb 2012 00:14:08 +0100
+Message-ID: <201202270014.09174.marex@denx.de>
+References: <1328288907-16725-11-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1330025976.git.jason@lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, arnd@arndb.de
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1328288907-16725-11-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org
+Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2012-02-23 at 19:52 +0000, Jason Cooper wrote:
-> This patch series provides initial support for devicetree on kirkwood for the
-> dreamplug platform.  After discussing the approach with Arnd Bergman last week
-> at ELC, we decided to take an incremental approach to the conversion.  First, I
-> would detect that we were on the dreamplug via the devicetree blob.  Then,
-> configure uart0 via devicetree.  We chose the uart since it is already well
-> supported under devicetree.
+> This adds clock references to the USB part of the device tree for U-Boot,
+> and marks USB1 as supporting legacy mode (which we disable in the driver).
 > 
-> This patch series has been boot-tested on the dreamplug.
+> The USB timing information may vary between boards sometimes, but for
+> now we hard-code it in C. This is because all current T2x boards use
+> the same values, we will deal with T3x later and we first need to agree
+> on the format for this timing information in the fdt and may in fact
+> decide that it has no place there.
+> 
 
-Tested-by: Ian Campbell <ijc@hellion.org.uk>
+Hi,
 
-I needed the following (obvious) patch against u-boot:
+what's the status of this patch/patchset?
 
-diff --git a/include/configs/dreamplug.h b/include/configs/dreamplug.h
-index 0f2f9a2..76f9eea 100644
---- a/include/configs/dreamplug.h
-+++ b/include/configs/dreamplug.h
-@@ -148,4 +148,6 @@
-  */
- #define CONFIG_DISPLAY_CPUINFO
- 
-+#define CONFIG_OF_LIBFDT
-+
- #endif /* _CONFIG_DREAMPLUG_H */
-
-
-Ian.
+Thanks
+M
