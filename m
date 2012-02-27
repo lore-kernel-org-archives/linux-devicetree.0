@@ -1,43 +1,144 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PULL] DT fixes for 3.3
-Date: Mon, 27 Feb 2012 14:02:24 -0600
-Message-ID: <4F4BE150.3000903@gmail.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v4 04/20] arm: fdt: Ensure that an embedded fdt
+	is word-aligned
+Date: Mon, 27 Feb 2012 12:27:08 -0800
+Message-ID: <CAPnjgZ1kWN3FtgzxOq_iUUiMhbUymy=H2RS2+U932sxAuK3v4g@mail.gmail.com>
+References: <1326342789-5781-1-git-send-email-sjg@chromium.org>
+	<1326342789-5781-5-git-send-email-sjg@chromium.org>
+	<4F3F90A6.3070002@aribaud.net>
+	<CAPnjgZ0hqaKEavwwO+5v7w08XPh7nObu0b_MQuE=wLjrOjyKzw@mail.gmail.com>
+	<4F40B25D.1090704@aribaud.net>
+	<CAPnjgZ2sq7Gx8XQ3OG0a6sAVS_S_F7V3XkyCXMz2GvA=e+y_Vg@mail.gmail.com>
+	<4F414077.7040100@aribaud.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <4F414077.7040100@aribaud.net>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Albert ARIBAUD <albert.u.boot@aribaud.net>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
 List-Id: devicetree@vger.kernel.org
 
-Grant,
+Hi Albert,
 
-Please pull these few fixes and doc updates for 3.3.
+On Sun, Feb 19, 2012 at 10:33 AM, Albert ARIBAUD
+<albert.u.boot@aribaud.net> wrote:
+> Hi Simon,
+>
+> Le 19/02/2012 17:23, Simon Glass a =E9crit :
+>
+>
+>> Sorry I had that wrong - it's not the link step I am bothered by, it is
+>> the
+>> objcopy step.
+>>
+>> What I would like to do is mark the input section, created by objcopy,
+>> with
+>> a particular alignment so that the linker does the right thing. This
+>> feature appears to be present in objcopy but does not appear to work.
+>> Perhaps I should debug that first to see what is going on.
+>
+>
+> (Formally there are two "objcopy steps" in u-boot building. One happens
+> after the link step, where from the u-boot ELF binary objcopy derives the
+> u-boot.bin pure binary and u-boot.srec S-Record file. I suspect you're
+> referring to the other one, which happens before the link stage and which
+> turns the binary FDT data into an ELF-linkable object. Correct?)
+>
+> Maybe one is allowed to specify alignment requirements when making an ELF
+> object file from a pure binary with objcopy; but obviously it does not wo=
+rk
+> as you want it to, whereas section alignment in linker scripts is a tried
+> and proven method.
+>
+>
+>>>>> So I must be missing something. Can you clarify the scenario that gets
+>>>>
+>>>>
+>>>> fixed here?
+>>>>
+>>>> The fdt blob is in one of the object files. If during linking the file
+>>>> before it has a data segment whose size is not a multiple of 4, then t=
+he
+>>>> fdt object can be misaligned in the output.
+>>>
+>>>
+>>>
+>>> Understood. This example of an alignment failure scenario shows that the
+>>
+>> failure cause is indeed that the FDT is embedded in the .data output
+>> section at link time.
+>>>
+>>>
+>>>
+>>>>> Not that I am against the patch, mind you, quite the opposite. I am
+>>>>> just
+>>>>
+>>>>
+>>>> wondering about the pros and cons of having a separated (and aligned)
+>>>> DTS
+>>>> data *output* section and placing that section after .code and .data
+>>
+>> rather
+>>>>
+>>>> than between them.
+>>>>
+>>>> Bear in mind that embedding the fdt in the image is really only for
+>>>> development.
+>>>
+>>>
+>>>
+>>> Understood, and I think that's one more reason to make sure that the act
+>>
+>> of FDT embedding does not alter .data input section ordering.
+>>
+>> Well it is just a data section really.
+>
+>
+> So are the relocation tables in .rel.dyn and .dynsyms, but that does not
+> mean they have to go to the "dot data" output section.
+>
+>
+>>>> We could have a separate output section if you like. Up to you.
+>>>
+>>>
+>>>
+>>> I much prefer embedded FDT data to be explicitly mapped to a a dedicated
+>>
+>> .fdt output section in u-boot.lds, because it ensures that aligment
+>> constaints for .fdt and .data can be controlled independently.
+>>
+>> I will take a look at this.
+>
+>
+> Thanks. This should be fairly easy to do in the linker script by inserting
+> an output section (e.g. ".fdt") after .data, aligning the start of that
+> section to a word boundary, and explicitly mapping the .data section of t=
+he
+> FDT object file into it.
 
-Rob
+Just an update on this: I am going to drop this patch from the series
+now and deal with it later once the lds cleanup series lands. I don't
+want to patch a file that is being removed.
 
-The following changes since commit 6b21d18ed50c7d145220b0724ea7f2613abf0f95:
+Regards,
+Simon
 
-  Linux 3.3-rc5 (2012-02-25 12:18:16 -0800)
-
-are available in the git repository at:
-  git://sources.calxeda.com/kernel/linux.git fixes-for-grant
-
-Baruch Siach (1):
-      of/mdio: fix fixed link bus name
-
-Danny Kukawka (1):
-      of/fdt.c: asm/setup.h included twice
-
-Jamie Iles (1):
-      of: add picochip vendor prefix
-
-Tobias Klauser (1):
-      doc: dt: Fix broken reference in gpio-leds documentation
-
- Documentation/devicetree/bindings/gpio/led.txt     |    6 +++---
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/of/fdt.c                                   |    1 -
- drivers/of/of_mdio.c                               |    2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+>
+>
+>> Regards,
+>> Simon
+>
+>
+> Amicalement,
+> --
+> Albert.
