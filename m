@@ -1,56 +1,64 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v6 20/20] tegra: fdt: Enable FDT support for
-	Seaboard
-Date: Mon, 27 Feb 2012 12:52:53 -0800
-Message-ID: <1330375973-10681-21-git-send-email-sjg@chromium.org>
-References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PULL] DT fixes for 3.3
+Date: Mon, 27 Feb 2012 14:06:46 -0700
+Message-ID: <CACxGe6uzY4z22tS-Z7oNT7NTiwgXLxkzAi=zEydf2+8OhwZX7A@mail.gmail.com>
+References: <4F4BE150.3000903@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1330375973-10681-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F4BE150.3000903@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This switches Seaboard over to use FDT for run-time config instead of
-CONFIG options. USB is the only user at present.
+On Mon, Feb 27, 2012 at 1:02 PM, Rob Herring <robherring2@gmail.com> wr=
+ote:
+> Grant,
+>
+> Please pull these few fixes and doc updates for 3.3.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
----
-Changes in v3:
-- Drop Tegra USB alignment patch as we will deal with this another way
+Merged, thanks.
 
-Changes in v6:
-- Drop fdt alignment patch as we will handle this after generic reloc
+g.
 
- include/configs/seaboard.h |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
 
-diff --git a/include/configs/seaboard.h b/include/configs/seaboard.h
-index b6d9f7a..1dc775a 100644
---- a/include/configs/seaboard.h
-+++ b/include/configs/seaboard.h
-@@ -27,6 +27,11 @@
- #include <asm/sizes.h>
- #include "tegra2-common.h"
- 
-+/* Enable fdt support for Seaboard. Flash the image in u-boot-dtb.bin */
-+#define CONFIG_DEFAULT_DEVICE_TREE	tegra2-seaboard
-+#define CONFIG_OF_CONTROL
-+#define CONFIG_OF_SEPARATE
-+
- /* High-level configuration options */
- #define TEGRA2_SYSMEM		"mem=384M@0M nvmem=128M@384M mem=512M@512M"
- #define V_PROMPT		"Tegra2 (SeaBoard) # "
--- 
-1.7.7.3
+>
+> Rob
+>
+> The following changes since commit 6b21d18ed50c7d145220b0724ea7f2613a=
+bf0f95:
+>
+> =A0Linux 3.3-rc5 (2012-02-25 12:18:16 -0800)
+>
+> are available in the git repository at:
+> =A0git://sources.calxeda.com/kernel/linux.git fixes-for-grant
+>
+> Baruch Siach (1):
+> =A0 =A0 =A0of/mdio: fix fixed link bus name
+>
+> Danny Kukawka (1):
+> =A0 =A0 =A0of/fdt.c: asm/setup.h included twice
+>
+> Jamie Iles (1):
+> =A0 =A0 =A0of: add picochip vendor prefix
+>
+> Tobias Klauser (1):
+> =A0 =A0 =A0doc: dt: Fix broken reference in gpio-leds documentation
+>
+> =A0Documentation/devicetree/bindings/gpio/led.txt =A0 =A0 | =A0 =A06 =
++++---
+> =A0.../devicetree/bindings/vendor-prefixes.txt =A0 =A0 =A0 =A0| =A0 =A0=
+1 +
+> =A0drivers/of/fdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 | =A0 =A01 -
+> =A0drivers/of/of_mdio.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 | =A0 =A02 +-
+> =A04 files changed, 5 insertions(+), 5 deletions(-)
+
+
+
+--=20
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
