@@ -1,91 +1,54 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] of: Add generic device tree DMA helpers
-Date: Mon, 27 Feb 2012 14:09:41 +0100
-Message-ID: <4F4B8095.9010005@atmel.com>
-References: <4F22DEF2.5000807@ti.com> <4F44CA82.9060906@atmel.com>
- <4F460EF2.9010000@ti.com> <4F46609C.8080907@atmel.com>
- <4F4661DE.90704@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 0/2] Device tree support for TWL regulators
+Date: Mon, 27 Feb 2012 13:41:12 +0000
+Message-ID: <20120227134112.GB3191@opensource.wolfsonmicro.com>
+References: <1330338961-31765-1-git-send-email-rnayak@ti.com>
+ <4F4B73C8.8070807@ti.com>
+ <4F4B7798.6000300@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F4661DE.90704-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F4B7798.6000300@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2012 04:57 PM, Cousson, Benoit :
-> On 2/23/2012 4:51 PM, Nicolas Ferre wrote:
->> On 02/23/2012 11:03 AM, Cousson, Benoit :
->>> Salut Nico,
->>
->> Coucou Benoit ;-)
->>
->>> On 2/22/2012 11:59 AM, Nicolas Ferre wrote:
->>>> On 01/27/2012 06:29 PM, Cousson, Benoit :
->>>>> Add some basic helpers to retrieve a DMA controller device_node
->>>>> and the DMA request line number.
->>>>>
->>>>> For legacy reason another API will export the DMA request number
->>>>> into a Linux resource of type IORESOURCE_DMA.
->>>>> This API is usable only on system with an unique DMA controller.
->>>>
->>>> Hi,
->>>>
->>>> I followed that discussion and I like very much the biding that Benoit
->>>> is proposing. It will help me a lot with my current work on Atmel DMA
->>>> controller.
->>>>
->>>> If I understand correctly, some rework is needed before it can be
->>>> integrated in a stable git tree (I mean before we can base our work on
->>>> top of it). So, in the meantime, what should I do to help and make
->>>> things go forward? to be quite frank, I would be interested to have a
->>>> working DMA enabled device soon ;-)
->>>
->>> Me too, but unfortunately, I was busy trying to add irq_domain and
->>> fixing issues with SPARSE_IRQ on OMAP :-(
->>
->> Been there, loved that ;-)
->>
->>>> Do you think that 3.4 is out of reach?
->>>
->>> Maybe not, from the comments, it looks like we should add a .xlate
->>> callback to allow any custom parsing of the DMA nodes attributes.
->>>
->>> I'll be more than happy, if you can finalize that patch :-)
->>
->> I will try to figure out what I can understand from the irq mechanism of
->> .xlate and try to see if I can implement it on top of your patch.
-> 
-> In fact that dma code is a big copy/paste of the of/gpio one and gpio
-> was already managing .xlate function.
-> I removed it because I thought it was useless for the DMA :-)
-> 
-> You might just have to copy the original code...
 
-The thing is that with gpio, we can rely on the gpio_chip structure for
-having a common storage location of such .xlate callbacks.
-In our DMA case, I guess that we should not cling to dmaengine
-infrastructure because not all of us are using it right now.
+--s/l3CgOIzMHHjg/5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So, maybe we should provide some simple "xlate" helpers like the
-irqdomain ones. But I fear that a "callback" directly called from the
-of_get_dma_request() function is not possible (the gpio code model).
+On Mon, Feb 27, 2012 at 06:01:20PM +0530, Rajendra Nayak wrote:
 
-On the other hand, the "cookie" based infrastructure seems a little
-overkill to me. It seems that, in this case, we must establish a
-relation between the DMA controller code and the device tree DMA
-helpers. Please correct me if I am wrong.
+> Depending on what order Mark happens to pull them in, I am fine
+> re-sending adding support for the 2 twl6030 fixed regulators.
 
-Best regards,
--- 
-Nicolas Ferre
+Please can you guys come up with a single unified series for this stuff
+- I'll hold off on applying anything to allow you to do this.
+
+--s/l3CgOIzMHHjg/5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPS4fxAAoJEBus8iNuMP3d2tgP+wVgCxY/F/cmzWm2yRiGGFHd
+k6c986ufY+tOIkpMs/+EPwuMLD93Nf2C4pKE4mGtzgjrLhk26JKOiZX7UZ+XRps0
+dmTbdzQ8WYaftXeGQuLypnyj8kaYkQlgbyrOfuW/2NfwoXA4/tqJ2LIY2ymd0Jyk
+ifc7m0dNfHmVxNpSsi44ssZMt96K1dz9brZhAgRmLWrE8OV6IznUxOOgrHX7vCBR
+GotR+NgqvkhehZBdh/bZabotv3hFKzc8TTJULr+rCJO2WlKqjUeyZjJJoGRUd+4z
+Uxt+sE8/11/bAIK57DAGxWChdJHoQ8ddg1rSq9lnn/Ty71DXw9r4w32slooy/TI0
+4BuO29kLVdZKSC0QMjh7aIrB/LVWRfezvaCVnHIbPmjJvf4J7qmGfqMhTbd7DAss
+s2DB9JlgTyceuLpGVQyzd2/bkgL+nmykSR4avkOqPAZO2YGeHJzeUpUUTO5BdGJb
+ARenKLUbuXPGnySVWd/BBmfc2AtzOdO6ptn/ooIKVeQu/MJjXvdv3DIXgZMb6dsW
+DqTtyalEb/d74KYOjP0fTXJdK/3l/F1sWcKnMbn4IA4R458l77LeGt+UmEmIjC3D
+0fFd8lOBlF+k0Y031o1OYOwfUIAd6nxDzraGZZNl9ej3UDTsn58+bAgZpZEatHkg
+Vzc/GEI45ChX0HvE0eoP
+=C0DM
+-----END PGP SIGNATURE-----
+
+--s/l3CgOIzMHHjg/5--
