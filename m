@@ -1,13 +1,16 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH 0/2 v6] arm: kirkwood: add dreamplug/devicetree support
-Date: Mon, 27 Feb 2012 16:07:12 +0000
-Message-ID: <cover.1330358323.git.jason@lakedaemon.net>
-References: <cover.1312906908.git.jason@lakedaemon.net>
+Subject: [PATCH 2/2 v2] arm: kirkwood: convert uart0 to devicetree.
+Date: Mon, 27 Feb 2012 16:07:14 +0000
+Message-ID: <dbc3c26c0a6f45a56cb96be29f9503c0b7714ef0.1330358323.git.jason@lakedaemon.net>
+References: <cover.1330358323.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1312906908.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <cover.1330358323.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <cover.1330358323.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+References: <cover.1312906908.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+ <cover.1330358323.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,35 +24,48 @@ To: arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@publi
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series provides initial support for devicetree on kirkwood for the
-dreamplug platform.  After discussing the approach with Arnd Bergman last week
-at ELC, we decided to take an incremental approach to the conversion.  First, I
-would detect that we were on the dreamplug via the devicetree blob.  Then,
-configure uart0 via devicetree.  We chose the uart since it is already well
-supported under devicetree.
+This uart is the primary console for the dreamplug.  Removed
+kirkwood_uart0_init() call from board-dt.c.
 
-This patch series has been boot-tested on the dreamplug.
+Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+---
+Changes from v1
 
-In a future patch series, I plan to migrate spi/flash/partitions over to
-devicetree.
+    - moved serial config from kirkwood.dtsi to kirkwood-dreamplug.dts as
+      suggested by Arnd Bergman.
 
-When the migration is complete, board-dt.c will not be specific to the
-dreamplug, and dts files can be written for all of the other kirkwood boards.
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |    7 +++++++
+ arch/arm/mach-kirkwood/board-dt.c        |    2 --
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-Jason Cooper (2):
-  arm: kirkwood: add dreamplug (fdt) support.
-  arm: kirkwood: convert uart0 to devicetree.
-
- arch/arm/boot/dts/kirkwood-dreamplug.dts |   25 ++++
- arch/arm/boot/dts/kirkwood.dtsi          |    6 +
- arch/arm/mach-kirkwood/Kconfig           |   14 +++
- arch/arm/mach-kirkwood/Makefile          |    1 +
- arch/arm/mach-kirkwood/Makefile.boot     |    2 +
- arch/arm/mach-kirkwood/board-dt.c        |  180 ++++++++++++++++++++++++++++++
- 6 files changed, 228 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
- create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
- create mode 100644 arch/arm/mach-kirkwood/board-dt.c
-
+diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
+index 0424d99..8a5dff8 100644
+--- a/arch/arm/boot/dts/kirkwood-dreamplug.dts
++++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
+@@ -15,4 +15,11 @@
+ 		bootargs = "console=ttyS0,115200n8 earlyprintk";
+ 	};
+ 
++	serial@f1012000 {
++		compatible = "ns16550a";
++		reg = <0xf1012000 0xff>;
++		reg-shift = <2>;
++		interrupts = <33>;
++		clock-frequency = <200000000>;
++	};
+ };
+diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+index 76392af..fbe6405 100644
+--- a/arch/arm/mach-kirkwood/board-dt.c
++++ b/arch/arm/mach-kirkwood/board-dt.c
+@@ -140,8 +140,6 @@ static void __init dreamplug_init(void)
+ 	 */
+ 	kirkwood_mpp_conf(dreamplug_mpp_config);
+ 
+-	kirkwood_uart0_init();
+-
+ 	spi_register_board_info(dreamplug_spi_slave_info,
+ 				ARRAY_SIZE(dreamplug_spi_slave_info));
+ 	kirkwood_spi_init();
 -- 
 1.7.3.4
