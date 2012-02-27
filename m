@@ -1,108 +1,83 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add empty of_platform_populate() for
- !CONFIG_OF_ADDRESS (sparc)
-Date: Mon, 27 Feb 2012 06:56:16 -0700
-Message-ID: <CACxGe6tsq7Tyvj45rnES5nLTdWiPomg_QJyPoYPZ+GFdkXT=9Q@mail.gmail.com>
-References: <1330121218-10442-1-git-send-email-grant.likely@secretlab.ca>
- <20120227103958.GJ27687@sortiz-mobl>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 0/2] Device tree support for TWL regulators
+Date: Mon, 27 Feb 2012 14:03:56 +0000
+Message-ID: <20120227140356.GF3191@opensource.wolfsonmicro.com>
+References: <1330338961-31765-1-git-send-email-rnayak@ti.com>
+ <4F4B73C8.8070807@ti.com>
+ <4F4B7798.6000300@ti.com>
+ <20120227134112.GB3191@opensource.wolfsonmicro.com>
+ <4F4B8A85.7060603@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1693185540963021158=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120227103958.GJ27687@sortiz-mobl>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SNIs70sCzqvszXB4"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F4B8A85.7060603@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: tony@atomide.com, Rajendra Nayak <rnayak@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lrg@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
---===============1693185540963021158==
-Content-Type: multipart/alternative; boundary=e89a8fb1f6006490e704b9f27971
 
---e89a8fb1f6006490e704b9f27971
-Content-Type: text/plain; charset=ISO-8859-1
-
-On Feb 27, 2012 3:32 AM, "Samuel Ortiz" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->
-> Hi Grant,
->
-> On Fri, Feb 24, 2012 at 03:06:58PM -0700, Grant Likely wrote:
-> > Sparc has its own helpers for translating address ranges when the device
-> > tree is parsed at boot time, and it isn't able to use
-of_platform_populate().
-> > However, there are some device drivers that want to use that function on
-> > other DT enabled platforms (ie. TWL4030).  This patch adds an empty
-> > of_platform_populate() implementation that returns an error when
-> > CONFIG_OF_ADDRESS is not selected.
-> Applied as well. Please let me know if you'd prefer to see this one going
-> through your irqdomain/next branch.
-
-Yes, it must go via my tree. I've already applied it and pushed it out.
-
-g.
-
->
-> Cheers,
-> Samuel.
->
-> --
-> Intel Open Source Technology Centre
-> http://oss.intel.com/
-
---e89a8fb1f6006490e704b9f27971
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<p><br>
-On Feb 27, 2012 3:32 AM, &quot;Samuel Ortiz&quot; &lt;<a href=3D"mailto:sam=
-eo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org">sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; Hi Grant,<br>
-&gt;<br>
-&gt; On Fri, Feb 24, 2012 at 03:06:58PM -0700, Grant Likely wrote:<br>
-&gt; &gt; Sparc has its own helpers for translating address ranges when the=
- device<br>
-&gt; &gt; tree is parsed at boot time, and it isn&#39;t able to use of_plat=
-form_populate().<br>
-&gt; &gt; However, there are some device drivers that want to use that func=
-tion on<br>
-&gt; &gt; other DT enabled platforms (ie. TWL4030). =A0This patch adds an e=
-mpty<br>
-&gt; &gt; of_platform_populate() implementation that returns an error when<=
-br>
-&gt; &gt; CONFIG_OF_ADDRESS is not selected.<br>
-&gt; Applied as well. Please let me know if you&#39;d prefer to see this on=
-e going<br>
-&gt; through your irqdomain/next branch.</p>
-<p>Yes, it must go via my tree. I&#39;ve already applied it and pushed it o=
-ut.</p>
-<p>g.</p>
-<p>&gt;<br>
-&gt; Cheers,<br>
-&gt; Samuel.<br>
-&gt;<br>
-&gt; --<br>
-&gt; Intel Open Source Technology Centre<br>
-&gt; <a href=3D"http://oss.intel.com/">http://oss.intel.com/</a><br>
-</p>
-
---e89a8fb1f6006490e704b9f27971--
-
---===============1693185540963021158==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+--SNIs70sCzqvszXB4
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+On Mon, Feb 27, 2012 at 02:52:05PM +0100, Cousson, Benoit wrote:
+> On 2/27/2012 2:41 PM, Mark Brown wrote:
+> >On Mon, Feb 27, 2012 at 06:01:20PM +0530, Rajendra Nayak wrote:
 
---===============1693185540963021158==--
+> >Please can you guys come up with a single unified series for this stuff
+> >- I'll hold off on applying anything to allow you to do this.
+
+> The issue is that the initial TWL regulator series from Rajendra
+> will depend on the twl core DT support I have that depends on the
+> irq_domain series from Grant...
+
+Really?  That's the first I've heard of any such dependency here.  Is it
+a build time dependency or is it just something that's required to make
+the code actually spring into life?  It looks like it's the latter but
+you're saying there's an actual dependency.
+
+There's also more than that, there's also at least Tero submitting some
+other stuff separately (and his stuff won't play with DT...) and I think
+Peter also.  It really fees like there's a bunch of people working on
+different things without talking to each other here.
+
+> So I guess, it will be easy for us to split the regulator patches
+> from the DTS ones to have at least the driver changes merged by you.
+> Then Tony might be able to pull all the DTS in one series and thus
+> avoid the various merge conflict that will happen since most OMAP
+> drivers are hacking the same DTS files.
+
+> Does that make sense? Or do you think it will be even worst
+> separating the patches?
+
+Unless there's a compile time dependency I don't think we need to
+refactor anything here, what I'm seeing at the minute looks OK from a
+merge point of view except that there appears to be a lack of
+coordination between the various serieses.
+
+--SNIs70sCzqvszXB4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPS41FAAoJEBus8iNuMP3dtBMP/15v/MN44FUlC5tFiQaNt0q+
+tsH6whmnsG3HtHgrP3lck7CrFb8uQXWLQ6A8PlyLYp2EWgp4BgStfql2ThItpSkh
+CnUOQaqBKEyYFVp3ceuyR4ceC1vk4LrDWans3ost73GJW/k4KDLErQEs6FHU1qqu
+F1Ja8jtV4r7YCv2YTT1eSnjhno/QcMC1JRe45ewqjm5ZTP2ZwfDBALxeaFnzQTxP
+QOU/9IulFz8mSJoOqwNuv2gukte386wVOGHup6QYBwCuk7NnS8Lbmi3N+JDLliHz
+tQYCgCTOXraWn8Ly2bWfFNIZJNWG9cWI/5c7NXk5Qn3QDbCwd3Zmac96BxvnHOG5
+5fVsXtoGGbtUTeyfNgUNi7chbik2oSiZ+Il7N5TmaYyV4BklHgv/aXgvjInEKik6
+xSJiGRlupd5CgypYsOB0o9suuBjRSL7VuFkaGgqpKBuZo7A6Fv21BUK8D46M9I1C
+j3Ew/nzvv9lsGyzKUBISxPeUiVAVEyIkprRGYq9rY23+N1L55rViq6AuXyfrMA6T
+R4TX/dlg7OO9libLwHW6JYJeGO3xtWtpX1vK9RUubYS7mupE/+GTYon7/rOuldim
+f0jLwvDIM4o1LhG0Twm2pMJoS6mFMB3wYzi2fkbpsB7qU/+X1UO19qXo2y+z2t9F
+bchqwvrRJ1S4J0rQ5rg6
+=9kco
+-----END PGP SIGNATURE-----
+
+--SNIs70sCzqvszXB4--
