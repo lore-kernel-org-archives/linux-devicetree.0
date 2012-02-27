@@ -1,8 +1,8 @@
 From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v6 02/20] fdt: Add functions to access phandles,
-	arrays and bools
-Date: Mon, 27 Feb 2012 12:52:35 -0800
-Message-ID: <1330375973-10681-3-git-send-email-sjg@chromium.org>
+Subject: [PATCH v6 03/20] fdt: Add basic support for decoding GPIO
+	definitions
+Date: Mon, 27 Feb 2012 12:52:36 -0800
+Message-ID: <1330375973-10681-4-git-send-email-sjg@chromium.org>
 References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,141 +22,220 @@ To: U-Boot Mailing List <u-boot@lists.denx.de>
 Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a function to look up a property which is a phandle in a node, and
-another to read a fixed-length integer array from an fdt property.
-Also add a function to read boolean properties, although there is no
-actual boolean type in U-Boot.
+This adds some support into fdtdec for reading GPIO definitions from
+the fdt. We permit up to FDT_GPIO_MAX GPIOs in the system. Each GPIO
+is of the form:
+
+gpio-function-name = <phandle gpio_num flags>;
+
+where:
+
+phandle is a pointer to the GPIO node
+gpio_num is the number of the GPIO (0 to 223)
+flags is a flag, as follows:
+
+   bit    meaning
+   0      0=polarity normal, 1=active low (inverted)
+
+An example is:
+
+enable-propounder-gpios = <&gpio 43 0>;
+
+which means that GPIO 43 is used to enable the propounder (setting the
+GPIO high), or that you can detect that the propounder is enabled by
+checking if the GPIO is high (the fdt does not indicate input/output).
+
+Two main functions are provided:
+
+fdtdec_decode_gpio() reads a GPIO property from an fdt node and decodes it
+into a structure.
+
+fdtdec_setup_gpio() sets up the GPIO by calling gpio_request for you.
+
+Both functions can cope with the property being missing, which is taken to
+mean that that GPIO function is not available or is not needed.
+
+[For reference, from Stephen Warren <swarren@nvidia.com>. It may be that
+we add this extra complexity later if needed:
+
+The correct way to parse such a GPIO property in general is:
+
+* Read the first cell.
+* Find the node referenced by the phandle (the controller).
+* Ensure property gpio-controller is present in the controller node.
+* Read property #gpio-cells from the controller node.
+* Extract #gpio-cells from the original property.
+* Keep processing more cells from the original property; there may be
+multiple GPIOs listed.
+
+According to the binding documentation in the Linux kernel, Samsung
+Exynos4 doesn't use this format, and while all other chips do have a
+flags cell, about 50% of the controllers indicate the cell is unused.
+]
 
 Signed-off-by: Simon Glass <sjg@chromium.org>
-Acked-by: Gerald Van Baren <vanbaren@cideas.com>
-Acked-by: Stephen Warren <swarren@nvidia.com>
 ---
+Changes in v5:
+- Fixed endian bug in fdtdec_decode_gpios()
+- Make sure GPIO name is NULL if incorrectly decoded
 
- include/fdtdec.h |   39 +++++++++++++++++++++++++++++++
- lib/fdtdec.c     |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 106 insertions(+), 0 deletions(-)
+ include/fdtdec.h |   45 ++++++++++++++++++++++++++++++
+ lib/fdtdec.c     |   79 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 124 insertions(+), 0 deletions(-)
 
 diff --git a/include/fdtdec.h b/include/fdtdec.h
-index 01badd4..047f603 100644
+index 047f603..6c0a2d1 100644
 --- a/include/fdtdec.h
 +++ b/include/fdtdec.h
-@@ -188,3 +188,42 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
-  * @return compatible string for that id
+@@ -61,6 +61,23 @@ enum fdt_compat_id {
+ 	COMPAT_COUNT,
+ };
+ 
++/* GPIOs are numbered from 0 */
++enum {
++	FDT_GPIO_NONE = -1U,	/* an invalid GPIO used to end our list */
++
++	FDT_GPIO_ACTIVE_LOW = 1 << 0,	/* input is active low (else high) */
++};
++
++/* This is the state of a GPIO pin as defined by the fdt */
++struct fdt_gpio_state {
++	const char *name;	/* name of the fdt property defining this */
++	uint gpio;		/* GPIO number, or FDT_GPIO_NONE if none */
++	u8 flags;		/* FDT_GPIO_... flags */
++};
++
++/* This tells us whether a fdt_gpio_state record is valid or not */
++#define fdt_gpio_isvalid(x) ((x)->gpio != FDT_GPIO_NONE)
++
+ /**
+  * Find the next numbered alias for a peripheral. This is used to enumerate
+  * all the peripherals of a certain type.
+@@ -227,3 +244,31 @@ int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
+  * @return 1 if the properly is present; 0 if it isn't present
   */
- const char *fdtdec_get_compatible(enum fdt_compat_id id);
-+
-+/* Look up a phandle and follow it to its node. Then return the offset
-+ * of that node.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @return node offset if found, -ve error code on error
-+ */
-+int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name);
+ int fdtdec_get_bool(const void *blob, int node, const char *prop_name);
 +
 +/**
-+ * Look up a property in a node and return its contents in an integer
-+ * array of given length. The property must have at least enough data for
-+ * the array (4*count bytes). It may have more, but this will be ignored.
++ * Decode a single GPIOs from an FDT.
 + *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @param array		array to fill with data
-+ * @param count		number of array elements
-+ * @return 0 if ok, or -FDT_ERR_NOTFOUND if the property is not found,
-+ *		or -FDT_ERR_BADLAYOUT if not enough data
++ * If the property is not found, then the GPIO structure will still be
++ * initialised, with gpio set to FDT_GPIO_NONE. This makes it easy to
++ * provide optional GPIOs.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Node to look at
++ * @param prop_name	Node property name
++ * @param gpio		gpio elements to fill from FDT
++ * @return 0 if ok, -FDT_ERR_NOTFOUND if the property is missing.
 + */
-+int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
-+		u32 *array, int count);
++int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
++		struct fdt_gpio_state *gpio);
 +
 +/**
-+ * Look up a boolean property in a node and return it.
++ * Set up a GPIO pin according to the provided gpio information. At present this
++ * just requests the GPIO.
 + *
-+ * A boolean properly is true if present in the device tree and false if not
-+ * present, regardless of its value.
++ * If the gpio is FDT_GPIO_NONE, no action is taken. This makes it easy to
++ * deal with optional GPIOs.
 + *
-+ * @param blob	FDT blob
-+ * @param node	node to examine
-+ * @param prop_name	name of property to find
-+ * @return 1 if the properly is present; 0 if it isn't present
++ * @param gpio		GPIO info to use for set up
++ * @return 0 if all ok or gpio was FDT_GPIO_NONE; -1 on error
 + */
-+int fdtdec_get_bool(const void *blob, int node, const char *prop_name);
++int fdtdec_setup_gpio(struct fdt_gpio_state *gpio);
 diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 846ec3f..977528b 100644
+index 977528b..c748cac 100644
 --- a/lib/fdtdec.c
 +++ b/lib/fdtdec.c
-@@ -269,3 +269,70 @@ int fdtdec_check_fdt(void)
- 			"binary or define CONFIG_OF_EMBED\n");
- 	return 0;
+@@ -24,6 +24,9 @@
+ #include <libfdt.h>
+ #include <fdtdec.h>
+ 
++/* we need the generic GPIO interface here */
++#include <asm-generic/gpio.h>
++
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+ /*
+@@ -336,3 +339,79 @@ int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
+ 	cell = fdt_getprop(blob, node, prop_name, &len);
+ 	return cell != NULL;
  }
 +
-+int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name)
-+{
-+	const u32 *phandle;
-+	int lookup;
-+
-+	phandle = fdt_getprop(blob, node, prop_name, NULL);
-+	if (!phandle)
-+		return -FDT_ERR_NOTFOUND;
-+
-+	lookup = fdt_node_offset_by_phandle(blob, fdt32_to_cpu(*phandle));
-+	return lookup;
-+}
-+
 +/**
-+ * Look up a property in a node and check that it has a minimum length.
++ * Decode a list of GPIOs from an FDT. This creates a list of GPIOs with no
++ * terminating item.
 + *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @param min_len	minimum property length in bytes
-+ * @param err		0 if ok, or -FDT_ERR_NOTFOUND if the property is not
-+			found, or -FDT_ERR_BADLAYOUT if not enough data
-+ * @return pointer to cell, which is only valid if err == 0
++ * @param blob		FDT blob to use
++ * @param node		Node to look at
++ * @param prop_name	Node property name
++ * @param gpio		Array of gpio elements to fill from FDT. This will be
++ *			untouched if either 0 or an error is returned
++ * @param max_count	Maximum number of elements allowed
++ * @return number of GPIOs read if ok, -FDT_ERR_BADLAYOUT if max_count would
++ * be exceeded, or -FDT_ERR_NOTFOUND if the property is missing.
 + */
-+static const void *get_prop_check_min_len(const void *blob, int node,
-+		const char *prop_name, int min_len, int *err)
++static int fdtdec_decode_gpios(const void *blob, int node,
++		const char *prop_name, struct fdt_gpio_state *gpio,
++		int max_count)
 +{
-+	const void *cell;
-+	int len;
-+
-+	debug("%s: %s\n", __func__, prop_name);
-+	cell = fdt_getprop(blob, node, prop_name, &len);
-+	if (!cell)
-+		*err = -FDT_ERR_NOTFOUND;
-+	else if (len < min_len)
-+		*err = -FDT_ERR_BADLAYOUT;
-+	else
-+		*err = 0;
-+	return cell;
-+}
-+
-+int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
-+		u32 *array, int count)
-+{
++	const struct fdt_property *prop;
 +	const u32 *cell;
-+	int i, err = 0;
++	const char *name;
++	int len, i;
 +
 +	debug("%s: %s\n", __func__, prop_name);
-+	cell = get_prop_check_min_len(blob, node, prop_name,
-+				      sizeof(u32) * count, &err);
-+	if (!err) {
-+		for (i = 0; i < count; i++)
-+			array[i] = fdt32_to_cpu(cell[i]);
++	assert(max_count > 0);
++	prop = fdt_get_property(blob, node, prop_name, &len);
++	if (!prop) {
++		debug("FDT: %s: property '%s' missing\n", __func__, prop_name);
++		return -FDT_ERR_NOTFOUND;
 +	}
-+	return err;
++
++	/* We will use the name to tag the GPIO */
++	name = fdt_string(blob, fdt32_to_cpu(prop->nameoff));
++	cell = (u32 *)prop->data;
++	len /= sizeof(u32) * 3;		/* 3 cells per GPIO record */
++	if (len > max_count) {
++		debug("FDT: %s: too many GPIOs / cells for "
++			"property '%s'\n", __func__, prop_name);
++		return -FDT_ERR_BADLAYOUT;
++	}
++
++	/* Read out the GPIO data from the cells */
++	for (i = 0; i < len; i++, cell += 3) {
++		gpio[i].gpio = fdt32_to_cpu(cell[1]);
++		gpio[i].flags = fdt32_to_cpu(cell[2]);
++		gpio[i].name = name;
++	}
++
++	return len;
 +}
 +
-+int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
++int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
++		struct fdt_gpio_state *gpio)
 +{
-+	const s32 *cell;
-+	int len;
++	int err;
 +
 +	debug("%s: %s\n", __func__, prop_name);
-+	cell = fdt_getprop(blob, node, prop_name, &len);
-+	return cell != NULL;
++	gpio->gpio = FDT_GPIO_NONE;
++	gpio->name = NULL;
++	err = fdtdec_decode_gpios(blob, node, prop_name, gpio, 1);
++	return err == 1 ? 0 : err;
++}
++
++int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
++{
++	/*
++	 * Return success if there is no GPIO defined. This is used for
++	 * optional GPIOs)
++	 */
++	if (!fdt_gpio_isvalid(gpio))
++		return 0;
++
++	if (gpio_request(gpio->gpio, gpio->name))
++		return -1;
++	return 0;
 +}
 -- 
 1.7.7.3
