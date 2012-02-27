@@ -1,44 +1,55 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of/mdio: fix fixed link bus name
-Date: Mon, 27 Feb 2012 09:59:38 -0600
-Message-ID: <4F4BA86A.1040309@gmail.com>
-References: <8ebe6a3f11343c392a7353581d5f648980206e8e.1330346765.git.baruch@tkos.co.il>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: [PATCH 0/2 v6] arm: kirkwood: add dreamplug/devicetree support
+Date: Mon, 27 Feb 2012 16:07:12 +0000
+Message-ID: <cover.1330358323.git.jason@lakedaemon.net>
+References: <cover.1312906908.git.jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <8ebe6a3f11343c392a7353581d5f648980206e8e.1330346765.git.baruch@tkos.co.il>
-Sender: netdev-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Grant Likely <grant.likely@secretlab.ca>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1312906908.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/27/2012 06:48 AM, Baruch Siach wrote:
-> Since 9e6c643b (phy/fixed: use an unique MDIO bus name) the name of the fixed
-> PHY bus is "fixed-0". Teach of_phy_connect_fixed_link() the new name.
-> 
+This patch series provides initial support for devicetree on kirkwood for the
+dreamplug platform.  After discussing the approach with Arnd Bergman last week
+at ELC, we decided to take an incremental approach to the conversion.  First, I
+would detect that we were on the dreamplug via the devicetree blob.  Then,
+configure uart0 via devicetree.  We chose the uart since it is already well
+supported under devicetree.
 
-Applied for 3.3.
+This patch series has been boot-tested on the dreamplug.
 
-Rob
+In a future patch series, I plan to migrate spi/flash/partitions over to
+devicetree.
 
-> Tested on a P1020RDB PowerPC system.
-> 
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
->  drivers/of/of_mdio.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 980c079..483c0ad 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -182,7 +182,7 @@ struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->  	if (!phy_id || sz < sizeof(*phy_id))
->  		return NULL;
->  
-> -	sprintf(bus_id, PHY_ID_FMT, "0", be32_to_cpu(phy_id[0]));
-> +	sprintf(bus_id, PHY_ID_FMT, "fixed-0", be32_to_cpu(phy_id[0]));
->  
->  	phy = phy_connect(dev, bus_id, hndlr, 0, iface);
->  	return IS_ERR(phy) ? NULL : phy;
+When the migration is complete, board-dt.c will not be specific to the
+dreamplug, and dts files can be written for all of the other kirkwood boards.
+
+Jason Cooper (2):
+  arm: kirkwood: add dreamplug (fdt) support.
+  arm: kirkwood: convert uart0 to devicetree.
+
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |   25 ++++
+ arch/arm/boot/dts/kirkwood.dtsi          |    6 +
+ arch/arm/mach-kirkwood/Kconfig           |   14 +++
+ arch/arm/mach-kirkwood/Makefile          |    1 +
+ arch/arm/mach-kirkwood/Makefile.boot     |    2 +
+ arch/arm/mach-kirkwood/board-dt.c        |  180 ++++++++++++++++++++++++++++++
+ 6 files changed, 228 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
+ create mode 100644 arch/arm/mach-kirkwood/board-dt.c
+
+-- 
+1.7.3.4
