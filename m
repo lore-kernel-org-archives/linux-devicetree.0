@@ -1,8 +1,8 @@
 From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v6 07/20] fdt: Add staging area for device tree
-	binding documentation
-Date: Mon, 27 Feb 2012 12:52:40 -0800
-Message-ID: <1330375973-10681-8-git-send-email-sjg@chromium.org>
+Subject: [PATCH v6 15/20] tegra: fdt: Add function to return
+	peripheral/clock ID
+Date: Mon, 27 Feb 2012 12:52:48 -0800
+Message-ID: <1330375973-10681-16-git-send-email-sjg@chromium.org>
 References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,46 +19,91 @@ List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
 Sender: u-boot-bounces@lists.denx.de
 Errors-To: u-boot-bounces@lists.denx.de
 To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a directory to hold device tree binding files, to permit easy review
-of this material in U-Boot patches.
+A common requirement is to find the clock ID for a peripheral. This is the
+second cell of the 'clocks' property (the first being the phandle itself).
 
 Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
 Changes in v4:
-- Add staging area for device tree bindings used in U-Boot
+- Add fdtdec function to return peripheral ID
 
-Changes in v5:
-- Update README to indicate that we will commit fdt documentation to U-Boot
+Changes in v6:
+- Move peripheral decode function into Tegra's clock.c
 
- doc/device-tree-bindings/README |   17 +++++++++++++++++
- 1 files changed, 17 insertions(+), 0 deletions(-)
- create mode 100644 doc/device-tree-bindings/README
+ arch/arm/cpu/armv7/tegra2/clock.c        |   19 +++++++++++++++++++
+ arch/arm/include/asm/arch-tegra2/clock.h |   13 +++++++++++++
+ 2 files changed, 32 insertions(+), 0 deletions(-)
 
-diff --git a/doc/device-tree-bindings/README b/doc/device-tree-bindings/README
-new file mode 100644
-index 0000000..2ea3439
---- /dev/null
-+++ b/doc/device-tree-bindings/README
-@@ -0,0 +1,17 @@
-+Device Tree Bindings Staging Area
-+=================================
+diff --git a/arch/arm/cpu/armv7/tegra2/clock.c b/arch/arm/cpu/armv7/tegra2/clock.c
+index 11d2346..ffbfc28 100644
+--- a/arch/arm/cpu/armv7/tegra2/clock.c
++++ b/arch/arm/cpu/armv7/tegra2/clock.c
+@@ -28,6 +28,7 @@
+ #include <asm/arch/tegra2.h>
+ #include <common.h>
+ #include <div64.h>
++#include <fdtdec.h>
+ 
+ /*
+  * This is our record of the current clock rate of each clock. We don't
+@@ -918,6 +919,24 @@ void clock_ll_start_uart(enum periph_id periph_id)
+ 	reset_set_enable(periph_id, 0);
+ }
+ 
 +
-+This directory contains device tree bindings for U-Boot.
++int clock_decode_periph_id(const void *blob, int node)
++{
++	enum periph_id id;
++	int err, valid;
++	u32 cell[2];
 +
-+These follow along with Linux kernel bindings, with a few additions. By
-+adding the files here, U-Boot patches can clearly show thees additions.
-+This makes it easier for device tree people to review these additions in
-+patches sent to the U-Boot mailing list.
++	err = fdtdec_get_int_array(blob, node, "clocks", cell,
++				   ARRAY_SIZE(cell));
++	if (err)
++		return -1;
++	id = cell[1];
 +
-+The intent IS to commit these files to U-Boot. Hopefully at some point
-+the files will be stored in another repo (shared with Linux) which is
-+brought in as needed. Changes here are intended to mirror changes in the
-+Linux Documentation/devicetree/bindings/ directory.
++	valid = clock_periph_id_isvalid(id);
++	assert(valid);
++	return valid ? id : PERIPH_ID_NONE;
++}
 +
-+sjg@chromium.org
-+17-Jan-12
+ int clock_verify(void)
+ {
+ 	struct clk_pll *pll = get_pll(CLOCK_ID_PERIPH);
+diff --git a/arch/arm/include/asm/arch-tegra2/clock.h b/arch/arm/include/asm/arch-tegra2/clock.h
+index 080ef18..6b12c76 100644
+--- a/arch/arm/include/asm/arch-tegra2/clock.h
++++ b/arch/arm/include/asm/arch-tegra2/clock.h
+@@ -177,6 +177,7 @@ enum periph_id {
+ 	PERIPH_ID_CRAM2,
+ 
+ 	PERIPH_ID_COUNT,
++	PERIPH_ID_NONE = -1,
+ };
+ 
+ /* Converts a clock number to a clock register: 0=L, 1=H, 2=U */
+@@ -355,6 +356,18 @@ unsigned clock_get_rate(enum clock_id clkid);
+  */
+ void clock_ll_start_uart(enum periph_id periph_id);
+ 
++/**
++ * Decode a peripheral ID from a device tree node.
++ *
++ * This works by looking up the peripheral's 'clocks' node and reading out
++ * the second cell, which is the clock number / peripheral ID.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Node to look at
++ * @return peripheral ID, or PERIPH_ID_NONE if none
++ */
++enum periph_id clock_decode_periph_id(const void *blob, int node);
++
+ /*
+  * Checks that clocks are valid and prints a warning if not
+  *
 -- 
 1.7.7.3
