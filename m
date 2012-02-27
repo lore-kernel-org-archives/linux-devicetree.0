@@ -1,7 +1,8 @@
 From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v6 01/20] fdt: Tidy up a few fdtdec problems
-Date: Mon, 27 Feb 2012 12:52:34 -0800
-Message-ID: <1330375973-10681-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH v6 02/20] fdt: Add functions to access phandles,
+	arrays and bools
+Date: Mon, 27 Feb 2012 12:52:35 -0800
+Message-ID: <1330375973-10681-3-git-send-email-sjg@chromium.org>
 References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,133 +22,141 @@ To: U-Boot Mailing List <u-boot@lists.denx.de>
 Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
 List-Id: devicetree@vger.kernel.org
 
-This fixes five trivial issues in fdtdec.c:
-1. fdtdec_get_is_enabled() doesn't really need a default value
-2. The fdt must be word-aligned, since otherwise it will fail on ARM
-3. The compat_names[] array is missing its first element. This is needed
-only because the first fdt_compat_id is defined to be invalid.
-4. Added a header prototype for fdtdec_next_compatible()
-5. Change fdtdec_next_alias() to only increment its 'upto' parameter
-on success, to make the display error messages in the caller easier.
+Add a function to look up a property which is a phandle in a node, and
+another to read a fixed-length integer array from an fdt property.
+Also add a function to read boolean properties, although there is no
+actual boolean type in U-Boot.
 
 Signed-off-by: Simon Glass <sjg@chromium.org>
 Acked-by: Gerald Van Baren <vanbaren@cideas.com>
 Acked-by: Stephen Warren <swarren@nvidia.com>
 ---
 
- include/fdtdec.h |   23 +++++++++++++++++++----
- lib/fdtdec.c     |   22 ++++++++++++++++------
- 2 files changed, 35 insertions(+), 10 deletions(-)
+ include/fdtdec.h |   39 +++++++++++++++++++++++++++++++
+ lib/fdtdec.c     |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 0 deletions(-)
 
 diff --git a/include/fdtdec.h b/include/fdtdec.h
-index 3a15f55..01badd4 100644
+index 01badd4..047f603 100644
 --- a/include/fdtdec.h
 +++ b/include/fdtdec.h
-@@ -82,6 +82,21 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 		enum fdt_compat_id id, int *upto);
- 
- /**
-+ * Find the next compatible node for a peripheral.
+@@ -188,3 +188,42 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
+  * @return compatible string for that id
+  */
+ const char *fdtdec_get_compatible(enum fdt_compat_id id);
++
++/* Look up a phandle and follow it to its node. Then return the offset
++ * of that node.
 + *
-+ * Do the first call with node = 0. This function will return a pointer to
-+ * the next compatible node. Next time you call this function, pass the
-+ * value returned, and the next node will be provided.
-+ *
-+ * @param blob		FDT blob to use
-+ * @param node		Start node for search
-+ * @param id		Compatible ID to look for (enum fdt_compat_id)
-+ * @return offset of next compatible node, or -FDT_ERR_NOTFOUND if no more
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @return node offset if found, -ve error code on error
 + */
-+int fdtdec_next_compatible(const void *blob, int node,
-+		enum fdt_compat_id id);
++int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name);
 +
 +/**
-  * Look up an address property in a node and return it as an address.
-  * The property must hold either one address with no trailing data or
-  * one address with a length. This is only tested on 32-bit machines.
-@@ -112,14 +127,14 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
-  * Checks whether a node is enabled.
-  * This looks for a 'status' property. If this exists, then returns 1 if
-  * the status is 'ok' and 0 otherwise. If there is no status property,
-- * it returns the default value.
-+ * it returns 1 on the assumption that anything mentioned should be enabled
-+ * by default.
-  *
-  * @param blob	FDT blob
-  * @param node	node to examine
-- * @param default_val	default value to return if no 'status' property exists
-- * @return integer value 0/1, if found, or default_val if not
-+ * @return integer value 0 (not enabled) or 1 (enabled)
-  */
--int fdtdec_get_is_enabled(const void *blob, int node, int default_val);
-+int fdtdec_get_is_enabled(const void *blob, int node);
- 
- /**
-  * Checks whether we have a valid fdt available to control U-Boot, and panic
++ * Look up a property in a node and return its contents in an integer
++ * array of given length. The property must have at least enough data for
++ * the array (4*count bytes). It may have more, but this will be ignored.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param array		array to fill with data
++ * @param count		number of array elements
++ * @return 0 if ok, or -FDT_ERR_NOTFOUND if the property is not found,
++ *		or -FDT_ERR_BADLAYOUT if not enough data
++ */
++int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
++		u32 *array, int count);
++
++/**
++ * Look up a boolean property in a node and return it.
++ *
++ * A boolean properly is true if present in the device tree and false if not
++ * present, regardless of its value.
++ *
++ * @param blob	FDT blob
++ * @param node	node to examine
++ * @param prop_name	name of property to find
++ * @return 1 if the properly is present; 0 if it isn't present
++ */
++int fdtdec_get_bool(const void *blob, int node, const char *prop_name);
 diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 3852038..846ec3f 100644
+index 846ec3f..977528b 100644
 --- a/lib/fdtdec.c
 +++ b/lib/fdtdec.c
-@@ -33,6 +33,7 @@ DECLARE_GLOBAL_DATA_PTR;
-  */
- #define COMPAT(id, name) name
- static const char * const compat_names[COMPAT_COUNT] = {
-+	COMPAT(UNKNOWN, "<none>"),
- };
- 
- const char *fdtdec_get_compatible(enum fdt_compat_id id)
-@@ -89,14 +90,21 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
- 	return default_val;
- }
- 
--int fdtdec_get_is_enabled(const void *blob, int node, int default_val)
-+int fdtdec_get_is_enabled(const void *blob, int node)
- {
- 	const char *cell;
- 
-+	/*
-+	 * It should say "okay", so only allow that. Some fdts use "ok" but
-+	 * this is a bug. Please fix your device tree source file. See here
-+	 * for discussion:
-+	 *
-+	 * http://www.mail-archive.com/u-boot@lists.denx.de/msg71598.html
-+	 */
- 	cell = fdt_getprop(blob, node, "status", NULL);
- 	if (cell)
--		return 0 == strcmp(cell, "ok");
--	return default_val;
-+		return 0 == strcmp(cell, "okay");
-+	return 1;
- }
- 
- enum fdt_compat_id fd_dec_lookup(const void *blob, int node)
-@@ -127,14 +135,16 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 	/* snprintf() is not available */
- 	assert(strlen(name) < MAX_STR_LEN);
- 	sprintf(str, "%.*s%d", MAX_STR_LEN, name, *upto);
--	(*upto)++;
- 	node = find_alias_node(blob, str);
- 	if (node < 0)
- 		return node;
- 	err = fdt_node_check_compatible(blob, node, compat_names[id]);
- 	if (err < 0)
- 		return err;
--	return err ? -FDT_ERR_NOTFOUND : node;
-+	if (err)
-+		return -FDT_ERR_NOTFOUND;
-+	(*upto)++;
-+	return node;
- }
- 
- /* TODO: Can we tighten this code up a little? */
-@@ -254,7 +264,7 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
- int fdtdec_check_fdt(void)
- {
- 	/* We must have an fdt */
--	if (fdt_check_header(gd->fdt_blob))
-+	if (((uintptr_t)gd->fdt_blob & 3) || fdt_check_header(gd->fdt_blob))
- 		panic("No valid fdt found - please append one to U-Boot\n"
+@@ -269,3 +269,70 @@ int fdtdec_check_fdt(void)
  			"binary or define CONFIG_OF_EMBED\n");
  	return 0;
+ }
++
++int fdtdec_lookup_phandle(const void *blob, int node, const char *prop_name)
++{
++	const u32 *phandle;
++	int lookup;
++
++	phandle = fdt_getprop(blob, node, prop_name, NULL);
++	if (!phandle)
++		return -FDT_ERR_NOTFOUND;
++
++	lookup = fdt_node_offset_by_phandle(blob, fdt32_to_cpu(*phandle));
++	return lookup;
++}
++
++/**
++ * Look up a property in a node and check that it has a minimum length.
++ *
++ * @param blob		FDT blob
++ * @param node		node to examine
++ * @param prop_name	name of property to find
++ * @param min_len	minimum property length in bytes
++ * @param err		0 if ok, or -FDT_ERR_NOTFOUND if the property is not
++			found, or -FDT_ERR_BADLAYOUT if not enough data
++ * @return pointer to cell, which is only valid if err == 0
++ */
++static const void *get_prop_check_min_len(const void *blob, int node,
++		const char *prop_name, int min_len, int *err)
++{
++	const void *cell;
++	int len;
++
++	debug("%s: %s\n", __func__, prop_name);
++	cell = fdt_getprop(blob, node, prop_name, &len);
++	if (!cell)
++		*err = -FDT_ERR_NOTFOUND;
++	else if (len < min_len)
++		*err = -FDT_ERR_BADLAYOUT;
++	else
++		*err = 0;
++	return cell;
++}
++
++int fdtdec_get_int_array(const void *blob, int node, const char *prop_name,
++		u32 *array, int count)
++{
++	const u32 *cell;
++	int i, err = 0;
++
++	debug("%s: %s\n", __func__, prop_name);
++	cell = get_prop_check_min_len(blob, node, prop_name,
++				      sizeof(u32) * count, &err);
++	if (!err) {
++		for (i = 0; i < count; i++)
++			array[i] = fdt32_to_cpu(cell[i]);
++	}
++	return err;
++}
++
++int fdtdec_get_bool(const void *blob, int node, const char *prop_name)
++{
++	const s32 *cell;
++	int len;
++
++	debug("%s: %s\n", __func__, prop_name);
++	cell = fdt_getprop(blob, node, prop_name, &len);
++	return cell != NULL;
++}
 -- 
 1.7.7.3
