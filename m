@@ -1,32 +1,38 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [U-Boot] [PATCH v6 10/18] tegra: usb: fdt: Add additional device tree definitions for USB ports
-Date: Mon, 27 Feb 2012 00:14:08 +0100
-Message-ID: <201202270014.09174.marex@denx.de>
-References: <1328288907-16725-11-git-send-email-sjg@chromium.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 0/9] imx patches when I enable imx6q sabrelite audio
+Date: Mon, 27 Feb 2012 15:59:02 +0800
+Message-ID: <20120227075858.GA31207@S2101-09.ap.freescale.net>
+References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1328288907-16725-11-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org
-Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Richard Zhao <richard.zhao@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, eric.miao@linaro.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> This adds clock references to the USB part of the device tree for U-Boot,
-> and marks USB1 as supporting legacy mode (which we disable in the driver).
+On Thu, Feb 02, 2012 at 10:11:59AM +0800, Richard Zhao wrote:
+> Changes in v2:
 > 
-> The USB timing information may vary between boards sometimes, but for
-> now we hard-code it in C. This is because all current T2x boards use
-> the same values, we will deal with T3x later and we first need to agree
-> on the format for this timing information in the fdt and may in fact
-> decide that it has no place there.
+>  - change dt peroperty/label to lower case as much as possible
+>    keep XXX-supply property upper case.
+>  - convert audmux-v2 to platform device driver
+>  - move audmux-v2 driver to sound/soc/imx
 > 
+> [PATCH v2 1/9] ARM: mxc: make imx_dma_is_general_purpose more
+> [PATCH v2 2/9] ARM: imx6q: add cko1 clock
+> [PATCH v2 3/9] ARM: dts: imx6q-sabrelite: add 2p5v and 3p3v
+> [PATCH v2 4/9] ARM: dts: imx6q-sabrelite: add sgtl5000 audio codec
 
-Hi,
+I applied patch 1 ~ 4.  Thanks.
 
-what's the status of this patch/patchset?
+Regards,
+Shawn
 
-Thanks
-M
+> [PATCH v2 5/9] ARM: mxc: convert audmux-v2 to a platform driver
+> [PATCH v2 6/9] ARM: mx31ads: add audmux device
+> [PATCH v2 7/9] ARM: mxc: move audmux-v2 to sound/soc/imx
+> [PATCH v2 8/9] ASoC: imx: add dt support for audmux-v2
+> [PATCH v2 9/9] ARM: imx6q-sabrelite: add audmux support
