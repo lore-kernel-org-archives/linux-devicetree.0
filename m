@@ -1,70 +1,44 @@
-From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 0/2 v5] arm: kirkwood: add dreamplug/devicetree support
-Date: Mon, 27 Feb 2012 09:57:24 -0500
-Message-ID: <20120227145724.GU23524@titan.lakedaemon.net>
-References: <cover.1312906908.git.jason@lakedaemon.net>
- <cover.1330025976.git.jason@lakedaemon.net>
- <1330254038.10008.24.camel@dagon.hellion.org.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of/mdio: fix fixed link bus name
+Date: Mon, 27 Feb 2012 09:59:38 -0600
+Message-ID: <4F4BA86A.1040309@gmail.com>
+References: <8ebe6a3f11343c392a7353581d5f648980206e8e.1330346765.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1330254038.10008.24.camel-ztPmHsLffjjnO4AKDKe2m+kiAK3p4hvP@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <8ebe6a3f11343c392a7353581d5f648980206e8e.1330346765.git.baruch@tkos.co.il>
+Sender: netdev-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Grant Likely <grant.likely@secretlab.ca>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 26, 2012 at 11:00:38AM +0000, Ian Campbell wrote:
-> On Thu, 2012-02-23 at 19:52 +0000, Jason Cooper wrote:
-> > This patch series provides initial support for devicetree on kirkwood for the
-> > dreamplug platform.  After discussing the approach with Arnd Bergman last week
-> > at ELC, we decided to take an incremental approach to the conversion.  First, I
-> > would detect that we were on the dreamplug via the devicetree blob.  Then,
-> > configure uart0 via devicetree.  We chose the uart since it is already well
-> > supported under devicetree.
-> > 
-> > This patch series has been boot-tested on the dreamplug.
+On 02/27/2012 06:48 AM, Baruch Siach wrote:
+> Since 9e6c643b (phy/fixed: use an unique MDIO bus name) the name of the fixed
+> PHY bus is "fixed-0". Teach of_phy_connect_fixed_link() the new name.
 > 
-> Tested-by: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 
-thanks!
+Applied for 3.3.
 
-> I needed the following (obvious) patch against u-boot:
+Rob
 
-yes, I forgot to mention that.  By any chance, have you tested booting
-non-fdt kernels from u-boot with this option enabled?  I'm fairly sure
-it will work, but I haven't tested it myself.
-
-If you can boot both fdt and non-fdt kernels with this enabled, submit
-it to u-boot, CC: Prafulla, and I'll ack it.
-
-thx,
-
-Jason.
-
-> diff --git a/include/configs/dreamplug.h b/include/configs/dreamplug.h
-> index 0f2f9a2..76f9eea 100644
-> --- a/include/configs/dreamplug.h
-> +++ b/include/configs/dreamplug.h
-> @@ -148,4 +148,6 @@
->   */
->  #define CONFIG_DISPLAY_CPUINFO
+> Tested on a P1020RDB PowerPC system.
+> 
+> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+> ---
+>  drivers/of/of_mdio.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 980c079..483c0ad 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -182,7 +182,7 @@ struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
+>  	if (!phy_id || sz < sizeof(*phy_id))
+>  		return NULL;
 >  
-> +#define CONFIG_OF_LIBFDT
-> +
->  #endif /* _CONFIG_DREAMPLUG_H */
-> 
-> 
-> Ian.
-> 
-> 
+> -	sprintf(bus_id, PHY_ID_FMT, "0", be32_to_cpu(phy_id[0]));
+> +	sprintf(bus_id, PHY_ID_FMT, "fixed-0", be32_to_cpu(phy_id[0]));
+>  
+>  	phy = phy_connect(dev, bus_id, hndlr, 0, iface);
+>  	return IS_ERR(phy) ? NULL : phy;
