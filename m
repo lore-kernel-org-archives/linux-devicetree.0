@@ -1,280 +1,153 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v6 10/20] tegra: fdt: Add clock bindings
-Date: Mon, 27 Feb 2012 12:52:43 -0800
-Message-ID: <1330375973-10681-11-git-send-email-sjg@chromium.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v6 01/20] fdt: Tidy up a few fdtdec problems
+Date: Mon, 27 Feb 2012 12:52:34 -0800
+Message-ID: <1330375973-10681-2-git-send-email-sjg@chromium.org>
 References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1330375973-10681-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1330375973-10681-1-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Tom Warren <twarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a basic binding for the oscillator and peripheral clocks. The
-second cell is the clock number, defined as the bit number within the clock
-enable register if the peripheral clock.
+This fixes five trivial issues in fdtdec.c:
+1. fdtdec_get_is_enabled() doesn't really need a default value
+2. The fdt must be word-aligned, since otherwise it will fail on ARM
+3. The compat_names[] array is missing its first element. This is needed
+only because the first fdt_compat_id is defined to be invalid.
+4. Added a header prototype for fdtdec_next_compatible()
+5. Change fdtdec_next_alias() to only increment its 'upto' parameter
+on success, to make the display error messages in the caller easier.
 
-This uses the RFC clock bindings from Grant Likely so may change later:
-
-https://lkml.org/lkml/2011/12/12/498
-
-It is taken from Stephen Warren's patch here:
-
-http://patchwork.ozlabs.org/patch/141359/
-
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Simon Glass <sjg@chromium.org>
+Acked-by: Gerald Van Baren <vanbaren@cideas.com>
+Acked-by: Stephen Warren <swarren@nvidia.com>
 ---
-Changes in v4:
-- Add clock bindings for Tegra2x
 
-Changes in v6:
-- Add clock bindings from Stephen Warren's latest patch
+ include/fdtdec.h |   23 +++++++++++++++++++----
+ lib/fdtdec.c     |   22 ++++++++++++++++------
+ 2 files changed, 35 insertions(+), 10 deletions(-)
 
- arch/arm/dts/tegra20.dtsi                          |   16 ++
- .../clock/nvidia,tegra20-car.txt                   |  207 ++++++++++++++++++++
- 2 files changed, 223 insertions(+), 0 deletions(-)
- create mode 100644 doc/device-tree-bindings/clock/nvidia,tegra20-car.txt
-
-diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-index a9a98ea..2c46e11 100644
---- a/arch/arm/dts/tegra20.dtsi
-+++ b/arch/arm/dts/tegra20.dtsi
-@@ -4,6 +4,22 @@
- 	compatible = "nvidia,tegra20";
- 	interrupt-parent = <&intc>;
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 3a15f55..01badd4 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -82,6 +82,21 @@ int fdtdec_next_alias(const void *blob, const char *name,
+ 		enum fdt_compat_id id, int *upto);
  
-+	tegra_car: clock@60006000 {
-+		compatible = "nvidia,tegra20-car";
-+		reg = <0x60006000 0x1000>;
-+		#clock-cells = <1>;
-+	};
+ /**
++ * Find the next compatible node for a peripheral.
++ *
++ * Do the first call with node = 0. This function will return a pointer to
++ * the next compatible node. Next time you call this function, pass the
++ * value returned, and the next node will be provided.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Start node for search
++ * @param id		Compatible ID to look for (enum fdt_compat_id)
++ * @return offset of next compatible node, or -FDT_ERR_NOTFOUND if no more
++ */
++int fdtdec_next_compatible(const void *blob, int node,
++		enum fdt_compat_id id);
 +
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		osc: clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+		};
-+	};
-+
- 	intc: interrupt-controller@50041000 {
- 		compatible = "nvidia,tegra20-gic";
- 		interrupt-controller;
-diff --git a/doc/device-tree-bindings/clock/nvidia,tegra20-car.txt b/doc/device-tree-bindings/clock/nvidia,tegra20-car.txt
-new file mode 100644
-index 0000000..5c07fca
---- /dev/null
-+++ b/doc/device-tree-bindings/clock/nvidia,tegra20-car.txt
-@@ -0,0 +1,207 @@
-+NVIDIA Tegra20 Clock And Reset Controller
-+
-+This binding uses the common clock binding:
-+Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+The CAR (Clock And Reset) Controller on Tegra is the HW module responsible
-+for muxing and gating Tegra's clocks, and setting their rates.
-+
-+Required properties :
-+- compatible : Should be "nvidia,tegra20-car"
-+- reg : Should contain CAR registers location and length
-+- clocks : Should contain phandle and clock specifiers for two clocks:
-+  the 32 KHz "32k_in", and the board-specific oscillator "osc".
-+- #clock-cells : Should be 1.
-+  In clock consumers, this cell represents the clock ID exposed by the CAR.
-+
-+  The first 96 clocks are numbered to match the bits in the CAR's CLK_OUT_ENB
-+  registers. These IDs often match those in the CAR's RST_DEVICES registers,
-+  but not in all cases. Some bits in CLK_OUT_ENB affect multiple clocks. In
-+  this case, those clocks are assigned IDs above 95 in order to highlight
-+  this issue. Implementations that interpret these clock IDs as bit values
-+  within the CLK_OUT_ENB or RST_DEVICES registers should be careful to
-+  explicitly handle these special cases.
-+
-+  The balance of the clocks controlled by the CAR are assigned IDs of 96 and
-+  above.
-+
-+  0	cpu
-+  1	unassigned
-+  2	unassigned
-+  3	ac97
-+  4	rtc
-+  5	tmr
-+  6	uart1
-+  7	unassigned	(register bit affects uart2 and vfir)
-+  8	gpio
-+  9	sdmmc2
-+  10	unassigned	(register bit affects spdif_in and spdif_out)
-+  11	i2s1
-+  12	i2c1
-+  13	ndflash
-+  14	sdmmc1
-+  15	sdmmc4
-+  16	twc
-+  17	pwm
-+  18	i2s2
-+  19	epp
-+  20	unassigned	(register bit affects vi and vi_sensor)
-+  21	2d
-+  22	usbd
-+  23	isp
-+  24	3d
-+  25	ide
-+  26	disp2
-+  27	disp1
-+  28	host1x
-+  29	vcp
-+  30	unassigned
-+  31	cache2
-+
-+  32	mem
-+  33	ahbdma
-+  34	apbdma
-+  35	unassigned
-+  36	kbc
-+  37	stat_mon
-+  38	pmc
-+  39	fuse
-+  40	kfuse
-+  41	sbc1
-+  42	snor
-+  43	spi1
-+  44	sbc2
-+  45	xio
-+  46	sbc3
-+  47	dvc
-+  48	dsi
-+  49	unassigned	(register bit affects tvo and cve)
-+  50	mipi
-+  51	hdmi
-+  52	csi
-+  53	tvdac
-+  54	i2c2
-+  55	uart3
-+  56	unassigned
-+  57	emc
-+  58	usb2
-+  59	usb3
-+  60	mpe
-+  61	vde
-+  62	bsea
-+  63	bsev
-+
-+  64	speedo
-+  65	uart4
-+  66	uart5
-+  67	i2c3
-+  68	sbc4
-+  69	sdmmc3
-+  70	pcie
-+  71	owr
-+  72	afi
-+  73	csite
-+  74	unassigned
-+  75	avpucq
-+  76	la
-+  77	unassigned
-+  78	unassigned
-+  79	unassigned
-+  80	unassigned
-+  81	unassigned
-+  82	unassigned
-+  83	unassigned
-+  84	irama
-+  85	iramb
-+  86	iramc
-+  87	iramd
-+  88	cram2
-+  89	audio_2x	a/k/a audio_2x_sync_clk
-+  90	clk_d
-+  91	unassigned
-+  92	sus
-+  93	cdev1
-+  94	cdev2
-+  95	unassigned
-+
-+  96	uart2
-+  97	vfir
-+  98	spdif_in
-+  99	spdif_out
-+  100	vi
-+  101	vi_sensor
-+  102	tvo
-+  103	cve
-+  104	osc
-+  105	clk_32k		a/k/a clk_s
-+  106	clk_m
-+  107	sclk
-+  108	cclk
-+  109	hclk
-+  110	pclk
-+  111	blink
-+  112	pll_a
-+  113	pll_a_out0
-+  114	pll_c
-+  115	pll_c_out1
-+  116	pll_d
-+  117	pll_d_out0
-+  118	pll_e
-+  119	pll_m
-+  120	pll_m_out1
-+  121	pll_p
-+  122	pll_p_out1
-+  123	pll_p_out2
-+  124	pll_p_out3
-+  125	pll_p_out4
-+  126	pll_s
-+  127	pll_u
-+  128	pll_x
-+  129	cop		a/k/a avp
-+  130	audio		a/k/a audio_sync_clk
-+
-+Example SoC include file:
-+
-+/ {
-+	tegra_car: clock@60006000 {
-+		compatible = "nvidia,tegra20-car";
-+		reg = <0x60006000 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
-+	usb@c5004000 {
-+		clocks = <&tegra_car 58>; /* usb2 */
-+	};
-+};
-+
-+Example board file:
-+
-+/ {
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		osc: clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <12000000>;
-+		};
-+	};
-+
-+	i2c@7000d000 {
-+		pmic@34 {
-+			compatible = "ti,tps6586x";
-+			reg = <0x34>;
-+
-+			clk_32k: clock {
-+				compatible = "fixed-clock";
-+				#clock-cells = <0>;
-+				clock-frequency = <32768>;
-+			};
-+		};
-+	};
-+
-+	&tegra_car {
-+		clocks = <&clk_32k> <&osc>;
-+	};
-+};
++/**
+  * Look up an address property in a node and return it as an address.
+  * The property must hold either one address with no trailing data or
+  * one address with a length. This is only tested on 32-bit machines.
+@@ -112,14 +127,14 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+  * Checks whether a node is enabled.
+  * This looks for a 'status' property. If this exists, then returns 1 if
+  * the status is 'ok' and 0 otherwise. If there is no status property,
+- * it returns the default value.
++ * it returns 1 on the assumption that anything mentioned should be enabled
++ * by default.
+  *
+  * @param blob	FDT blob
+  * @param node	node to examine
+- * @param default_val	default value to return if no 'status' property exists
+- * @return integer value 0/1, if found, or default_val if not
++ * @return integer value 0 (not enabled) or 1 (enabled)
+  */
+-int fdtdec_get_is_enabled(const void *blob, int node, int default_val);
++int fdtdec_get_is_enabled(const void *blob, int node);
+ 
+ /**
+  * Checks whether we have a valid fdt available to control U-Boot, and panic
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 3852038..846ec3f 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -33,6 +33,7 @@ DECLARE_GLOBAL_DATA_PTR;
+  */
+ #define COMPAT(id, name) name
+ static const char * const compat_names[COMPAT_COUNT] = {
++	COMPAT(UNKNOWN, "<none>"),
+ };
+ 
+ const char *fdtdec_get_compatible(enum fdt_compat_id id)
+@@ -89,14 +90,21 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+ 	return default_val;
+ }
+ 
+-int fdtdec_get_is_enabled(const void *blob, int node, int default_val)
++int fdtdec_get_is_enabled(const void *blob, int node)
+ {
+ 	const char *cell;
+ 
++	/*
++	 * It should say "okay", so only allow that. Some fdts use "ok" but
++	 * this is a bug. Please fix your device tree source file. See here
++	 * for discussion:
++	 *
++	 * http://www.mail-archive.com/u-boot@lists.denx.de/msg71598.html
++	 */
+ 	cell = fdt_getprop(blob, node, "status", NULL);
+ 	if (cell)
+-		return 0 == strcmp(cell, "ok");
+-	return default_val;
++		return 0 == strcmp(cell, "okay");
++	return 1;
+ }
+ 
+ enum fdt_compat_id fd_dec_lookup(const void *blob, int node)
+@@ -127,14 +135,16 @@ int fdtdec_next_alias(const void *blob, const char *name,
+ 	/* snprintf() is not available */
+ 	assert(strlen(name) < MAX_STR_LEN);
+ 	sprintf(str, "%.*s%d", MAX_STR_LEN, name, *upto);
+-	(*upto)++;
+ 	node = find_alias_node(blob, str);
+ 	if (node < 0)
+ 		return node;
+ 	err = fdt_node_check_compatible(blob, node, compat_names[id]);
+ 	if (err < 0)
+ 		return err;
+-	return err ? -FDT_ERR_NOTFOUND : node;
++	if (err)
++		return -FDT_ERR_NOTFOUND;
++	(*upto)++;
++	return node;
+ }
+ 
+ /* TODO: Can we tighten this code up a little? */
+@@ -254,7 +264,7 @@ int fdtdec_find_aliases_for_id(const void *blob, const char *name,
+ int fdtdec_check_fdt(void)
+ {
+ 	/* We must have an fdt */
+-	if (fdt_check_header(gd->fdt_blob))
++	if (((uintptr_t)gd->fdt_blob & 3) || fdt_check_header(gd->fdt_blob))
+ 		panic("No valid fdt found - please append one to U-Boot\n"
+ 			"binary or define CONFIG_OF_EMBED\n");
+ 	return 0;
 -- 
 1.7.7.3
