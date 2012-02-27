@@ -1,64 +1,43 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PULL] DT fixes for 3.3
-Date: Mon, 27 Feb 2012 14:06:46 -0700
-Message-ID: <CACxGe6uzY4z22tS-Z7oNT7NTiwgXLxkzAi=zEydf2+8OhwZX7A@mail.gmail.com>
-References: <4F4BE150.3000903@gmail.com>
+Subject: Re: [PATCH v3 0/2] Device tree support for TWL regulators
+Date: Mon, 27 Feb 2012 15:17:21 -0700
+Message-ID: <CACxGe6vU2dSpRrqd2y=ssgVsWuwpuvFtja9YcUAQA_ETWcwCYg@mail.gmail.com>
+References: <1330338961-31765-1-git-send-email-rnayak@ti.com>
+ <4F4B73C8.8070807@ti.com> <4F4B7798.6000300@ti.com> <20120227134112.GB3191@opensource.wolfsonmicro.com>
+ <4F4B8A85.7060603@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F4BE150.3000903@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F4B8A85.7060603@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, tony@atomide.com, linaro-dev@lists.linaro.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, Rajendra Nayak <rnayak@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-omap@vger.kernel.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 27, 2012 at 1:02 PM, Rob Herring <robherring2@gmail.com> wr=
-ote:
-> Grant,
+On Mon, Feb 27, 2012 at 6:52 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
+> Hi Mark,
 >
-> Please pull these few fixes and doc updates for 3.3.
+>
+> On 2/27/2012 2:41 PM, Mark Brown wrote:
+>>
+>> On Mon, Feb 27, 2012 at 06:01:20PM +0530, Rajendra Nayak wrote:
+>>
+>>> Depending on what order Mark happens to pull them in, I am fine
+>>> re-sending adding support for the 2 twl6030 fixed regulators.
+>>
+>>
+>> Please can you guys come up with a single unified series for this stuff
+>> - I'll hold off on applying anything to allow you to do this.
+>
+>
+> The issue is that the initial TWL regulator series from Rajendra will depend
+> on the twl core DT support I have that depends on the irq_domain series from
+> Grant...
 
-Merged, thanks.
+If it depends on the irqdomain tree, then just merge that tree into
+yours.  That tree is stable now for exactly that reason.  You can rely
+on it.
+
+git://git.secretlab.ca/git/linux-2.6 irqdomain/next
 
 g.
-
-
->
-> Rob
->
-> The following changes since commit 6b21d18ed50c7d145220b0724ea7f2613a=
-bf0f95:
->
-> =A0Linux 3.3-rc5 (2012-02-25 12:18:16 -0800)
->
-> are available in the git repository at:
-> =A0git://sources.calxeda.com/kernel/linux.git fixes-for-grant
->
-> Baruch Siach (1):
-> =A0 =A0 =A0of/mdio: fix fixed link bus name
->
-> Danny Kukawka (1):
-> =A0 =A0 =A0of/fdt.c: asm/setup.h included twice
->
-> Jamie Iles (1):
-> =A0 =A0 =A0of: add picochip vendor prefix
->
-> Tobias Klauser (1):
-> =A0 =A0 =A0doc: dt: Fix broken reference in gpio-leds documentation
->
-> =A0Documentation/devicetree/bindings/gpio/led.txt =A0 =A0 | =A0 =A06 =
-+++---
-> =A0.../devicetree/bindings/vendor-prefixes.txt =A0 =A0 =A0 =A0| =A0 =A0=
-1 +
-> =A0drivers/of/fdt.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 =A0 | =A0 =A01 -
-> =A0drivers/of/of_mdio.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 | =A0 =A02 +-
-> =A04 files changed, 5 insertions(+), 5 deletions(-)
-
-
-
---=20
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
