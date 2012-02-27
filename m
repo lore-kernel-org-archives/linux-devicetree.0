@@ -1,98 +1,74 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [RFC PATCH 1/2] of: Add generic device tree DMA helpers
-Date: Mon, 27 Feb 2012 18:28:02 +0100
-Message-ID: <4F4BBD22.6090104@atmel.com>
-References: <4F22DEF2.5000807@ti.com> <4F44CA82.9060906@atmel.com> <4F460EF2.9010000@ti.com> <4F46609C.8080907@atmel.com> <4F4661DE.90704@ti.com> <4F4B8095.9010005@atmel.com> <4F4B91B8.8000805@ti.com>
+From: Jason <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/2 v6] arm: kirkwood: add dreamplug/devicetree support
+Date: Mon, 27 Feb 2012 12:31:28 -0500
+Message-ID: <20120227173128.GW23524@titan.lakedaemon.net>
+References: <cover.1312906908.git.jason@lakedaemon.net>
+ <cover.1330358323.git.jason@lakedaemon.net>
+ <201202271629.37478.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F4B91B8.8000805@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Thomas Abraham <thomas.abraham@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <201202271629.37478.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/27/2012 03:22 PM, Cousson, Benoit :
-> On 2/27/2012 2:09 PM, Nicolas Ferre wrote:
->> On 02/23/2012 04:57 PM, Cousson, Benoit :
->>> On 2/23/2012 4:51 PM, Nicolas Ferre wrote:
->>>> On 02/23/2012 11:03 AM, Cousson, Benoit :
->>>>> Salut Nico,
->>>>
->>>> Coucou Benoit ;-)
->>>>
->>>>> On 2/22/2012 11:59 AM, Nicolas Ferre wrote:
->>>>>> On 01/27/2012 06:29 PM, Cousson, Benoit :
->>>>>>> Add some basic helpers to retrieve a DMA controller device_node
->>>>>>> and the DMA request line number.
->>>>>>>
->>>>>>> For legacy reason another API will export the DMA request number
->>>>>>> into a Linux resource of type IORESOURCE_DMA.
->>>>>>> This API is usable only on system with an unique DMA controller.
->>>>>>
->>>>>> Hi,
->>>>>>
->>>>>> I followed that discussion and I like very much the biding that
->>>>>> Benoit
->>>>>> is proposing. It will help me a lot with my current work on Atmel DMA
->>>>>> controller.
->>>>>>
->>>>>> If I understand correctly, some rework is needed before it can be
->>>>>> integrated in a stable git tree (I mean before we can base our
->>>>>> work on
->>>>>> top of it). So, in the meantime, what should I do to help and make
->>>>>> things go forward? to be quite frank, I would be interested to have a
->>>>>> working DMA enabled device soon ;-)
->>>>>
->>>>> Me too, but unfortunately, I was busy trying to add irq_domain and
->>>>> fixing issues with SPARSE_IRQ on OMAP :-(
->>>>
->>>> Been there, loved that ;-)
->>>>
->>>>>> Do you think that 3.4 is out of reach?
->>>>>
->>>>> Maybe not, from the comments, it looks like we should add a .xlate
->>>>> callback to allow any custom parsing of the DMA nodes attributes.
->>>>>
->>>>> I'll be more than happy, if you can finalize that patch :-)
->>>>
->>>> I will try to figure out what I can understand from the irq
->>>> mechanism of
->>>> .xlate and try to see if I can implement it on top of your patch.
->>>
->>> In fact that dma code is a big copy/paste of the of/gpio one and gpio
->>> was already managing .xlate function.
->>> I removed it because I thought it was useless for the DMA :-)
->>>
->>> You might just have to copy the original code...
->>
->> The thing is that with gpio, we can rely on the gpio_chip structure for
->> having a common storage location of such .xlate callbacks.
->> In our DMA case, I guess that we should not cling to dmaengine
->> infrastructure because not all of us are using it right now.
+On Mon, Feb 27, 2012 at 04:29:37PM +0000, Arnd Bergmann wrote:
+> On Monday 27 February 2012, Jason Cooper wrote:
+> > This patch series provides initial support for devicetree on kirkwood for the
+> > dreamplug platform.  After discussing the approach with Arnd Bergman last week
+> > at ELC, we decided to take an incremental approach to the conversion.  First, I
+> > would detect that we were on the dreamplug via the devicetree blob.  Then,
+> > configure uart0 via devicetree.  We chose the uart since it is already well
+> > supported under devicetree.
+> > 
+> > This patch series has been boot-tested on the dreamplug.
+> > 
+> > In a future patch series, I plan to migrate spi/flash/partitions over to
+> > devicetree.
+> > 
+> > When the migration is complete, board-dt.c will not be specific to the
+> > dreamplug, and dts files can be written for all of the other kirkwood boards.
+> > 
+> > Jason Cooper (2):
+> >   arm: kirkwood: add dreamplug (fdt) support.
+> >   arm: kirkwood: convert uart0 to devicetree.
 > 
-> Yep, that's the main issue compared to GPIO or IRQ.
+> Applied to the kirkwood/board branch and pulled into next/boards.
 > 
->> So, maybe we should provide some simple "xlate" helpers like the
->> irqdomain ones. But I fear that a "callback" directly called from the
->> of_get_dma_request() function is not possible (the gpio code model).
-> 
-> I think a well that we cannot much but a simple very abstract callback
-> since we do not have any formal DMA representation?
-> 
-> I'm not sure to understand you concern?
+> Great work!
 
-Well, in fact I cannot find a place where to store a "xlate" callback:
-- it have to be provided by the DMA controller (the one pointed out by
-the phandle) and not the caller of the of_get_dma_request() funtion
-- it has to be generic enough to match the dmaengine/non-dmaengine cases
-(so it cannot be stored in the dmaengine "struct dma_device").
+Well, that was easier than I thought.  Thanks.
 
-So I guess that the very basic idea of returning the full DMA specifier
-(struct of_phandle_args) is the best... My only concern is that the
-"helper" becomes very short and empty in this case...
+> I've made two trivial manual changes, please do these yourself next time:
+> 
+> 1. Subject should start with "ARM: kirkwood:", not "arm: kirkwood:" by
+>    convention.
 
-Bye,
--- 
-Nicolas Ferre
+Sorry, will do.
+
+> 2. Nico and I had both replied with "Acked-by:". When you get one of
+>    these replies, add that line under your "Signed-off-by:" line.
+
+Ahh, I always wondered how those made the transition.  Will add that to
+my process.
+
+> If you have more changes for dreamplug, please submit those on top of
+> these patches now.
+
+Okay, SPI coming up next.
+
+thx,
+
+Jason.
