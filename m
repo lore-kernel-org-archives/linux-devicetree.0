@@ -1,62 +1,31 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 15/20] tegra: fdt: Add function to return peripheral/clock
- ID
-Date: Mon, 27 Feb 2012 16:41:18 -0700
-Message-ID: <4F4C149E.3070505@nvidia.com>
-References: <1330375973-10681-1-git-send-email-sjg@chromium.org> <1330375973-10681-16-git-send-email-sjg@chromium.org>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH v3 0/2] Device tree support for TWL regulators
+Date: Tue, 28 Feb 2012 11:11:48 +0530
+Message-ID: <4F4C691C.2000600@ti.com>
+References: <1330338961-31765-1-git-send-email-rnayak@ti.com> <4F4B73C8.8070807@ti.com> <4F4B7798.6000300@ti.com> <20120227134112.GB3191@opensource.wolfsonmicro.com> <4F4B8A85.7060603@ti.com> <20120227140356.GF3191@opensource.wolfsonmicro.com> <4F4B9166.7020909@ti.com> <20120227145345.GJ3191@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1330375973-10681-16-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120227145345.GJ3191@opensource.wolfsonmicro.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, tony@atomide.com, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lrg@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/27/2012 01:52 PM, Simon Glass wrote:
-> A common requirement is to find the clock ID for a peripheral. This is the
-> second cell of the 'clocks' property (the first being the phandle itself).
+On Monday 27 February 2012 08:23 PM, Mark Brown wrote:
+> If adding device tree support breaks existing platforms something is
+> going wrong, while you're pulling things together device tree might not
+> work until all the support makes it in but the old non-DT code should
+> continue to function.
 
-> +int clock_decode_periph_id(const void *blob, int node)
+Adding device tree support will not break existing platforms. The
+non-DT code will function as expected. The dependencies I mentioned
+were only with the dtsi/dts files that patch 2 was updating. The driver
+changes have no dependencies with any other DT series. I will repost
+all of Tero/Peter and my changes (to add DT support to the driver) as
+one single series and drop the dts file updates, which I guess can go
+via Tony/OMAP tree.
 
-> +	valid = clock_periph_id_isvalid(id);
+>
 
-clock_periph_id_isvalid() is not the correct function to use here; the
-code should be checking for invalid IDs in the CAR binding, not invalid
-IDs in the HW periph ID definition. They're different.
-
-Just to be explicit, the function you need here would be:
-
-int clkid_to_periphid(int clkid)
-{
-    if (clk_id > 95)
-        return -1;
-    switch (clk_id) {
-    case 1:
-    case 2:
-    case 7:
-    case 10:
-    case 20:
-    case 30:
-    case 35:
-    case 49:
-    case 56:
-    case 74:
-    case 77:
-    case 78:
-    case 79:
-    case 80:
-    case 81:
-    case 82:
-    case 83:
-    case 91:
-    case 95:
-        return -1;
-    default:
-        return clkid;
-    }
-}
-
--- 
-nvpublic
