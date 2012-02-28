@@ -1,277 +1,103 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH v2] ARM: kirkwood: covert orion-spi to fdt.
-Date: Tue, 28 Feb 2012 18:43:26 +0000
-Message-ID: <10078cadd3ab4e8f2a0a642f810be6adbec4d477.1330454040.git.jason@lakedaemon.net>
-References: <4a9b37f69d6cec5049627b8afa777bb010af05f6.1330381705.git.jason@lakedaemon.net>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 15/20] tegra: fdt: Add function to return
+ peripheral/clock ID
+Date: Tue, 28 Feb 2012 10:44:05 -0800
+Message-ID: <CAPnjgZ2+6k0Ww30vrc_Qb0AnKWVfq0BaCK85HXpzTD0q67smjQ@mail.gmail.com>
+References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
+	<1330375973-10681-16-git-send-email-sjg@chromium.org>
+	<4F4C149E.3070505@nvidia.com>
+	<CAPnjgZ24vhy7NKj_Dt_dzn0qJ8=rj4nF04WSsY8u9MorAanzVA@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DB4@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4a9b37f69d6cec5049627b8afa777bb010af05f6.1330381705.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DB4-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On the Globalscale Dreamplug (Marvell Kirkwood Development Platform),
-2MB of NOR flash are used to hold the bootloader, bootloader
-environment, and devicetree blob.  It is connected via spi.
+Hi Stephen,
 
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
-Changes from v1:
+On Tue, Feb 28, 2012 at 10:37 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> w=
+rote:
+> Simon Glass wrote at Tuesday, February 28, 2012 10:46 AM:
+>> On Mon, Feb 27, 2012 at 3:41 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>=
+ wrote:
+>> > On 02/27/2012 01:52 PM, Simon Glass wrote:
+>> >> A common requirement is to find the clock ID for a peripheral. Th=
+is is the
+>> >> second cell of the 'clocks' property (the first being the phandle=
+ itself).
+>> >
+>> >> +int clock_decode_periph_id(const void *blob, int node)
+>> >
+>> >> + =A0 =A0 valid =3D clock_periph_id_isvalid(id);
+>> >
+>> > clock_periph_id_isvalid() is not the correct function to use here;=
+ the
+>> > code should be checking for invalid IDs in the CAR binding, not in=
+valid
+>> > IDs in the HW periph ID definition. They're different.
+>> >
+>> > Just to be explicit, the function you need here would be:
+>> >
+>> > int clkid_to_periphid(int clkid)
+>> > {
+>> > =A0 =A0if (clk_id > 95)
+>> > =A0 =A0 =A0 =A0return -1;
+>> > =A0 =A0switch (clk_id) {
+>> > =A0 =A0case 1:
+>> > =A0 =A0case 2:
+>> > =A0 =A0case 7:
+>> > =A0 =A0case 10:
+>> > =A0 =A0case 20:
+>> > =A0 =A0case 30:
+>> > =A0 =A0case 35:
+>> > =A0 =A0case 49:
+>> > =A0 =A0case 56:
+>> > =A0 =A0case 74:
+>> > =A0 =A0case 77:
+>> > =A0 =A0case 78:
+>> > =A0 =A0case 79:
+>> > =A0 =A0case 80:
+>> > =A0 =A0case 81:
+>> > =A0 =A0case 82:
+>> > =A0 =A0case 83:
+>> > =A0 =A0case 91:
+>> > =A0 =A0case 95:
+>> > =A0 =A0 =A0 =A0return -1;
+>> > =A0 =A0default:
+>> > =A0 =A0 =A0 =A0return clkid;
+>> > =A0 =A0}
+>> > }
+>>
+>> Ick.
+>>
+>> Why is 7 in there,
+>
+> 7 affects both the UART2 and VFIR clocks/blocks.
+>
+>> and did you miss 76?
+>
+> No, that's the undocumented "la" clock.
+>
+>> Also U-Boot only goes up to 88
+>> at present so should I change the first test to match?
+>
+> No, clocks 89, 90, 92, 93, and 94 are defined in the binding, which
+> matches the CLK_OUT_ENB registers in the Tegra CAR HW (albeit not the
+> CLK_RST registers, since there are some differences between the two).
 
-    - checkpatch clean.
-    - compiles, boots, registers partitions correctly.
-    - removed WIP tag.
-    - removed most '#ifdef CONFIG_OF's as suggested by Arnd
-    - added tclk and clock_fix elements to struct orion_spi
-    - remove/undo partial conversion to module_platform_driver()
+=46or both of your comments, since they aren't used in U-Boot, wouldn't
+it be more correct to flag these as errors also? We would have to
+update at least the clock.h header to support them.
 
- arch/arm/boot/dts/kirkwood-dreamplug.dts |   34 ++++++++++++++++++++++++
- arch/arm/mach-kirkwood/board-dt.c        |   40 -----------------------------
- arch/arm/mach-kirkwood/common.c          |    7 +++++
- drivers/spi/spi-orion.c                  |   41 +++++++++++++++++++++++++++---
- 4 files changed, 78 insertions(+), 44 deletions(-)
+Regards,
+Simon
 
-diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-index 8a5dff8..bdf2ddc 100644
---- a/arch/arm/boot/dts/kirkwood-dreamplug.dts
-+++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-@@ -22,4 +22,38 @@
- 		interrupts = <33>;
- 		clock-frequency = <200000000>;
- 	};
-+
-+	spi@f1010600 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		compatible = "marvell,orion-spi";
-+		reg = <0xf1010600 0x1ff>;
-+		clock-frequency = <200000000>;
-+
-+		flash@0 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			compatible = "macronix,mx25l1606e", "jedec-flash";
-+
-+			spi-max-frequency = <50000000>;
-+			reg = <0>;
-+
-+			partition@0 {
-+				label = "U-Boot";
-+				reg = <0x0 0x100000>;
-+			};
-+
-+			partition@100000 {
-+				label = "U-Boot Environment";
-+				reg = <0x100000 0x080000>;
-+			};
-+
-+			partition@180000 {
-+				label = "Flattened Device Tree";
-+				reg = <0x180000 0x080000>;
-+			};
-+		};
-+	};
- };
-diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index fbe6405..4960e63 100644
---- a/arch/arm/mach-kirkwood/board-dt.c
-+++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -39,42 +39,6 @@ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
- 	{ }
- };
- 
--struct mtd_partition dreamplug_partitions[] = {
--	{
--		.name	= "u-boot",
--		.size	= SZ_512K,
--		.offset = 0,
--	},
--	{
--		.name	= "u-boot env",
--		.size	= SZ_64K,
--		.offset = SZ_512K + SZ_512K,
--	},
--	{
--		.name	= "dtb",
--		.size	= SZ_64K,
--		.offset = SZ_512K + SZ_512K + SZ_512K,
--	},
--};
--
--static const struct flash_platform_data dreamplug_spi_slave_data = {
--	.type		= "mx25l1606e",
--	.name		= "spi_flash",
--	.parts		= dreamplug_partitions,
--	.nr_parts	= ARRAY_SIZE(dreamplug_partitions),
--};
--
--static struct spi_board_info __initdata dreamplug_spi_slave_info[] = {
--	{
--		.modalias	= "m25p80",
--		.platform_data	= &dreamplug_spi_slave_data,
--		.irq		= -1,
--		.max_speed_hz	= 50000000,
--		.bus_num	= 0,
--		.chip_select	= 0,
--	},
--};
--
- static struct mv643xx_eth_platform_data dreamplug_ge00_data = {
- 	.phy_addr	= MV643XX_ETH_PHY_ADDR(0),
- };
-@@ -140,10 +104,6 @@ static void __init dreamplug_init(void)
- 	 */
- 	kirkwood_mpp_conf(dreamplug_mpp_config);
- 
--	spi_register_board_info(dreamplug_spi_slave_info,
--				ARRAY_SIZE(dreamplug_spi_slave_info));
--	kirkwood_spi_init();
--
- 	kirkwood_ehci_init();
- 	kirkwood_ge00_init(&dreamplug_ge00_data);
- 	kirkwood_ge01_init(&dreamplug_ge01_data);
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index cc15426..4868dbd 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -15,6 +15,7 @@
- #include <linux/ata_platform.h>
- #include <linux/mtd/nand.h>
- #include <linux/dma-mapping.h>
-+#include <linux/of.h>
- #include <net/dsa.h>
- #include <asm/page.h>
- #include <asm/timex.h>
-@@ -481,6 +482,7 @@ static int __init kirkwood_clock_gate(void)
- {
- 	unsigned int curr = readl(CLOCK_GATING_CTRL);
- 	u32 dev, rev;
-+	struct device_node *dp;
- 
- 	kirkwood_pcie_id(&dev, &rev);
- 	printk(KERN_DEBUG "Gating clock of unused units\n");
-@@ -524,6 +526,11 @@ static int __init kirkwood_clock_gate(void)
- 	} else  /* keep this bit set for devices that don't have PCIe1 */
- 		kirkwood_clk_ctrl |= CGC_PEX1;
- 
-+	dp = of_find_node_by_path("/");
-+	if (dp && of_device_is_available(of_find_compatible_node(dp, NULL,
-+							  "marvell,orion-spi")))
-+		kirkwood_clk_ctrl |= CGC_RUNIT;
-+
- 	/* Now gate clock the required units */
- 	writel(kirkwood_clk_ctrl, CLOCK_GATING_CTRL);
- 	printk(KERN_DEBUG " after: 0x%08x\n", readl(CLOCK_GATING_CTRL));
-diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-index 13448c8..becd489 100644
---- a/drivers/spi/spi-orion.c
-+++ b/drivers/spi/spi-orion.c
-@@ -18,6 +18,7 @@
- #include <linux/spi/spi.h>
- #include <linux/spi/orion_spi.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <asm/unaligned.h>
- 
- #define DRIVER_NAME			"orion_spi"
-@@ -45,6 +46,8 @@ struct orion_spi {
- 	void __iomem		*base;
- 	unsigned int		max_speed;
- 	unsigned int		min_speed;
-+	unsigned int		tclk;
-+	unsigned int		clock_fix;
- 	struct orion_spi_info	*spi_info;
- };
- 
-@@ -104,7 +107,7 @@ static int orion_spi_baudrate_set(struct spi_device *spi, unsigned int speed)
- 
- 	orion_spi = spi_master_get_devdata(spi->master);
- 
--	tclk_hz = orion_spi->spi_info->tclk;
-+	tclk_hz = orion_spi->tclk;
- 
- 	/*
- 	 * the supported rates are: 4,6,8...30
-@@ -360,7 +363,7 @@ static int orion_spi_setup(struct spi_device *spi)
- 	orion_spi = spi_master_get_devdata(spi->master);
- 
- 	/* Fix ac timing if required.   */
--	if (orion_spi->spi_info->enable_clock_fix)
-+	if (orion_spi->clock_fix)
- 		orion_spi_setbits(orion_spi, ORION_SPI_IF_CONFIG_REG,
- 				  (1 << 14));
- 
-@@ -474,6 +477,7 @@ static int __init orion_spi_probe(struct platform_device *pdev)
- 	master->setup = orion_spi_setup;
- 	master->transfer = orion_spi_transfer;
- 	master->num_chipselect = ORION_NUM_CHIPSELECTS;
-+	master->dev.of_node = pdev->dev.of_node;
- 
- 	dev_set_drvdata(&pdev->dev, master);
- 
-@@ -481,8 +485,26 @@ static int __init orion_spi_probe(struct platform_device *pdev)
- 	spi->master = master;
- 	spi->spi_info = spi_info;
- 
--	spi->max_speed = DIV_ROUND_UP(spi_info->tclk, 4);
--	spi->min_speed = DIV_ROUND_UP(spi_info->tclk, 30);
-+	if (spi_info)
-+		spi->tclk = spi_info->tclk;
-+
-+	of_property_read_u32(master->dev.of_node,
-+				"clock-frequency", &spi->tclk);
-+
-+	if (!spi->tclk) {
-+		dev_err(&pdev->dev, "cannot set clock rate\n");
-+		status = -EINVAL;
-+		goto out;
-+	}
-+
-+	spi->max_speed = DIV_ROUND_UP(spi->tclk, 4);
-+	spi->min_speed = DIV_ROUND_UP(spi->tclk, 30);
-+
-+	if (spi_info)
-+		spi->clock_fix = spi_info->enable_clock_fix;
-+
-+	if (of_find_property(master->dev.of_node, "spi-clock-fix", NULL))
-+		spi->clock_fix = 1;
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (r == NULL) {
-@@ -541,10 +563,21 @@ static int __exit orion_spi_remove(struct platform_device *pdev)
- 
- MODULE_ALIAS("platform:" DRIVER_NAME);
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id spi_orion_of_match_table[] __devinitdata = {
-+	{ .compatible = "marvell,orion-spi", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, spi_orion_of_match_table);
-+#else /* CONFIG_OF */
-+#define spi_orion_of_match_table NULL
-+#endif /* CONFIG_OF */
-+
- static struct platform_driver orion_spi_driver = {
- 	.driver = {
- 		.name	= DRIVER_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = spi_orion_of_match_table,
- 	},
- 	.remove		= __exit_p(orion_spi_remove),
- };
--- 
-1.7.3.4
+>
+> --
+> nvpublic
+>
