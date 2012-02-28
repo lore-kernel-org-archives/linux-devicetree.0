@@ -1,64 +1,51 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v3 0/2] Device tree support for TWL regulators
-Date: Tue, 28 Feb 2012 10:18:50 +0000
-Message-ID: <20120228101850.GA3121@opensource.wolfsonmicro.com>
-References: <1330338961-31765-1-git-send-email-rnayak@ti.com>
- <4F4B73C8.8070807@ti.com>
- <4F4B7798.6000300@ti.com>
- <20120227134112.GB3191@opensource.wolfsonmicro.com>
- <4F4B8A85.7060603@ti.com>
- <20120227140356.GF3191@opensource.wolfsonmicro.com>
- <4F4B9166.7020909@ti.com>
- <20120227145345.GJ3191@opensource.wolfsonmicro.com>
- <4F4C691C.2000600@ti.com>
+From: Richard Zhao <richard.zhao@freescale.com>
+Subject: Re: [PATCH v2 0/9] imx patches when I enable imx6q sabrelite audio
+Date: Tue, 28 Feb 2012 20:07:28 +0800
+Message-ID: <20120228120728.GA3261@b20223-02.ap.freescale.net>
+References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
+ <20120227075858.GA31207@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4F4C691C.2000600@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, tony@atomide.com, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lrg@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org
+In-Reply-To: <20120227075858.GA31207@S2101-09.ap.freescale.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Richard Zhao <richard.zhao@linaro.org>, alsa-devel@alsa-project.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 27, 2012 at 03:59:02PM +0800, Shawn Guo wrote:
+> On Thu, Feb 02, 2012 at 10:11:59AM +0800, Richard Zhao wrote:
+> > Changes in v2:
+> > 
+> >  - change dt peroperty/label to lower case as much as possible
+> >    keep XXX-supply property upper case.
+> >  - convert audmux-v2 to platform device driver
+> >  - move audmux-v2 driver to sound/soc/imx
+> > 
+> > [PATCH v2 1/9] ARM: mxc: make imx_dma_is_general_purpose more
+> > [PATCH v2 2/9] ARM: imx6q: add cko1 clock
+> > [PATCH v2 3/9] ARM: dts: imx6q-sabrelite: add 2p5v and 3p3v
+> > [PATCH v2 4/9] ARM: dts: imx6q-sabrelite: add sgtl5000 audio codec
+> 
+> I applied patch 1 ~ 4.  Thanks.
+Thanks. I'll continue to work on other patches in this series after
+your audio work get it. and feel free to take any patch you need.
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Richard
+> 
+> Regards,
+> Shawn
+> 
+> > [PATCH v2 5/9] ARM: mxc: convert audmux-v2 to a platform driver
+> > [PATCH v2 6/9] ARM: mx31ads: add audmux device
+> > [PATCH v2 7/9] ARM: mxc: move audmux-v2 to sound/soc/imx
+> > [PATCH v2 8/9] ASoC: imx: add dt support for audmux-v2
+> > [PATCH v2 9/9] ARM: imx6q-sabrelite: add audmux support
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-On Tue, Feb 28, 2012 at 11:11:48AM +0530, Rajendra Nayak wrote:
-
-> changes have no dependencies with any other DT series. I will repost
-> all of Tero/Peter and my changes (to add DT support to the driver) as
-> one single series and drop the dts file updates, which I guess can go
-> via Tony/OMAP tree.
-
-Yes, that sounds like a good plan - the DTS changes are largely
-orthogonal to the code changes and don't need to go via the same path
-(this is true in general, the DTSs are pretty horrible for merge
-issues).
-
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPTKoCAAoJEBus8iNuMP3dXUwQAJksUfrnuTiJCJGtLXkOQ5Qz
-hEXHt14rxffPtoI/IIWLx6VNTu/p7jRrBiQY+/jVYrmk7PfuWtS26GIoxHj7z7XS
-yJGWzaoex2AXqg3YLtJbdkuwF7VfL7l+U5eTZ4Nasr93DlAqMb63zd7IVkploac4
-g/++o/Re0JEGAPRI0Q+zL+oc07XdBThAO4tttBpcUwU9prFnOn5sbBRq856hafFi
-KEH8hXaC0IXRCyYsZuRZaNZVnx4ar1U2NANotg8Wta/wbRW8gxRI8T2h4/wzSznF
-mls/4d7uKyDKxwN3p6N7LLjr9qjhGZyEWgm/niFOeSIpRr0tc9MON5cSMgqp7uj/
-GpfnAZsEtz/Gd4GHKJDib8yXrWkwDx6bgqkbOmxOP4LqZABu9neK1q2CAdXYTbnp
-4iZqGdJ7sA6s4amC/NBDWaradJJFK46VuxXT2PakssmXI8lcPTHZ0wUYnqqtlSXz
-DecTPTbOltd/rF40l17Dkz17G08HV0BDwHTTGOfI5XKcAe0LDTPRPvHegnxw0p+d
-9CigLOKNaR3FN8Ph8bFybBPq5HN8HlZmOOzdE6ShPJebQHU+kpr6bMMImcytREJQ
-qKBIjR9CLOyehUc0gPq+PZsDDOQVSJRLSdHcn0Z+SHPE81x7W40bdD0pCy1cDhjK
-5+Vw4iSZXNMdsFIPtODw
-=tnn1
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
