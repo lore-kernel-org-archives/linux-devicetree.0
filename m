@@ -1,51 +1,50 @@
-From: Richard Zhao <richard.zhao@freescale.com>
-Subject: Re: [PATCH v2 0/9] imx patches when I enable imx6q sabrelite audio
-Date: Tue, 28 Feb 2012 20:07:28 +0800
-Message-ID: <20120228120728.GA3261@b20223-02.ap.freescale.net>
-References: <1328148728-32258-1-git-send-email-richard.zhao@linaro.org>
- <20120227075858.GA31207@S2101-09.ap.freescale.net>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH WIP] ARM: kirkwood: covert orion-spi to fdt.
+Date: Tue, 28 Feb 2012 10:06:03 -0500
+Message-ID: <20120228150603.GY23524@titan.lakedaemon.net>
+References: <20120228094059.GA27255@lunn.ch> <201202281004.14366.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120227075858.GA31207@S2101-09.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Richard Zhao <richard.zhao@linaro.org>, alsa-devel@alsa-project.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, eric.miao@linaro.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <201202281004.14366.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 27, 2012 at 03:59:02PM +0800, Shawn Guo wrote:
-> On Thu, Feb 02, 2012 at 10:11:59AM +0800, Richard Zhao wrote:
-> > Changes in v2:
-> > 
-> >  - change dt peroperty/label to lower case as much as possible
-> >    keep XXX-supply property upper case.
-> >  - convert audmux-v2 to platform device driver
-> >  - move audmux-v2 driver to sound/soc/imx
-> > 
-> > [PATCH v2 1/9] ARM: mxc: make imx_dma_is_general_purpose more
-> > [PATCH v2 2/9] ARM: imx6q: add cko1 clock
-> > [PATCH v2 3/9] ARM: dts: imx6q-sabrelite: add 2p5v and 3p3v
-> > [PATCH v2 4/9] ARM: dts: imx6q-sabrelite: add sgtl5000 audio codec
+On Tue, Feb 28, 2012 at 10:04:14AM +0000, Arnd Bergmann wrote:
+> On Tuesday 28 February 2012, Andrew Lunn wrote:
+> > I think this code belongs on the board-dts.c file. kirkwood_clk_ctrl
+> > is a global so can be set from anywhere. It is also set in other files
+> > than common.c, eg pcie.c.
 > 
-> I applied patch 1 ~ 4.  Thanks.
-Thanks. I'll continue to work on other patches in this series after
-your audio work get it. and feel free to take any patch you need.
+> Ok, that makes sense.
 
-Richard
-> 
-> Regards,
-> Shawn
-> 
-> > [PATCH v2 5/9] ARM: mxc: convert audmux-v2 to a platform driver
-> > [PATCH v2 6/9] ARM: mx31ads: add audmux device
-> > [PATCH v2 7/9] ARM: mxc: move audmux-v2 to sound/soc/imx
-> > [PATCH v2 8/9] ASoC: imx: add dt support for audmux-v2
-> > [PATCH v2 9/9] ARM: imx6q-sabrelite: add audmux support
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Yes, my goal is to eventually eliminate common.c, pcie.c, etc.  If we do
+it right, kirkwood_clock_gate() won't be necessary.
 
+> > In the end, i hope this all goes away. I have patches based on Mike's
+> > generic clk infrastructure, which adds clk/clkdev to all orion based
+> > machines. So the SPI driver, in its probe function will get its clock,
+> > enable it, and also find out the speed of it. The release function
+> > also disables the clock, turning it off if nobody else is using it. 
+> > 
+> > I just hope the generic clk does not take too long to land.
+> 
+> Excellent, that will of course be the best solution in the long run.
+
+Agreed.
+
+thx,
+
+Jason.
