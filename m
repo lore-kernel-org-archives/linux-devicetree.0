@@ -1,31 +1,59 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH v3 0/2] Device tree support for TWL regulators
-Date: Tue, 28 Feb 2012 11:11:48 +0530
-Message-ID: <4F4C691C.2000600@ti.com>
-References: <1330338961-31765-1-git-send-email-rnayak@ti.com> <4F4B73C8.8070807@ti.com> <4F4B7798.6000300@ti.com> <20120227134112.GB3191@opensource.wolfsonmicro.com> <4F4B8A85.7060603@ti.com> <20120227140356.GF3191@opensource.wolfsonmicro.com> <4F4B9166.7020909@ti.com> <20120227145345.GJ3191@opensource.wolfsonmicro.com>
+From: Ian Campbell <ijc@hellion.org.uk>
+Subject: Re: [PATCH 0/2 v5] arm: kirkwood: add dreamplug/devicetree support
+Date: Tue, 28 Feb 2012 07:20:49 +0000
+Message-ID: <1330413649.10008.50.camel@dagon.hellion.org.uk>
+References: <cover.1312906908.git.jason@lakedaemon.net>
+ <cover.1330025976.git.jason@lakedaemon.net>
+ <1330254038.10008.24.camel@dagon.hellion.org.uk>
+ <20120227145724.GU23524@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120227145345.GJ3191@opensource.wolfsonmicro.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, tony@atomide.com, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lrg@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120227145724.GU23524@titan.lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason <jason@lakedaemon.net>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Monday 27 February 2012 08:23 PM, Mark Brown wrote:
-> If adding device tree support breaks existing platforms something is
-> going wrong, while you're pulling things together device tree might not
-> work until all the support makes it in but the old non-DT code should
-> continue to function.
+On Mon, 2012-02-27 at 09:57 -0500, Jason wrote:
+> On Sun, Feb 26, 2012 at 11:00:38AM +0000, Ian Campbell wrote:
+> > On Thu, 2012-02-23 at 19:52 +0000, Jason Cooper wrote:
+> > > This patch series provides initial support for devicetree on kirkwood for the
+> > > dreamplug platform.  After discussing the approach with Arnd Bergman last week
+> > > at ELC, we decided to take an incremental approach to the conversion.  First, I
+> > > would detect that we were on the dreamplug via the devicetree blob.  Then,
+> > > configure uart0 via devicetree.  We chose the uart since it is already well
+> > > supported under devicetree.
+> > > 
+> > > This patch series has been boot-tested on the dreamplug.
+> > 
+> > Tested-by: Ian Campbell <ijc@hellion.org.uk>
+> 
+> thanks!
+> 
+> > I needed the following (obvious) patch against u-boot:
+> 
+> yes, I forgot to mention that.  By any chance, have you tested booting
+> non-fdt kernels from u-boot with this option enabled?  I'm fairly sure
+> it will work, but I haven't tested it myself.
 
-Adding device tree support will not break existing platforms. The
-non-DT code will function as expected. The dependencies I mentioned
-were only with the dtsi/dts files that patch 2 was updating. The driver
-changes have no dependencies with any other DT series. I will repost
-all of Tero/Peter and my changes (to add DT support to the driver) as
-one single series and drop the dts file updates, which I guess can go
-via Tony/OMAP tree.
+I hadn't but I have now, it worked fine booting my existing kernel
+(which uses v3 of your previous non-FDT dreamplug patches) with the
+updated u-boot.
 
->
+> If you can boot both fdt and non-fdt kernels with this enabled, submit
+> it to u-boot, CC: Prafulla, and I'll ack it.
 
+Done.
+
+Thanks,
+Ian.
