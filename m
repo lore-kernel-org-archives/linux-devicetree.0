@@ -1,112 +1,54 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: Re: [PATCH v6 15/20] tegra: fdt: Add function to return
- peripheral/clock ID
-Date: Tue, 28 Feb 2012 10:51:25 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DC8@HQMAIL01.nvidia.com>
-References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
-	<1330375973-10681-16-git-send-email-sjg@chromium.org>
-	<4F4C149E.3070505@nvidia.com>
-	<CAPnjgZ24vhy7NKj_Dt_dzn0qJ8=rj4nF04WSsY8u9MorAanzVA@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DB4@HQMAIL01.nvidia.com>
-	<CAPnjgZ2+6k0Ww30vrc_Qb0AnKWVfq0BaCK85HXpzTD0q67smjQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] ARM: kirkwood: covert orion-spi to fdt.
+Date: Tue, 28 Feb 2012 19:22:11 +0000
+Message-ID: <201202281922.12084.arnd@arndb.de>
+References: <4a9b37f69d6cec5049627b8afa777bb010af05f6.1330381705.git.jason@lakedaemon.net>
+ <10078cadd3ab4e8f2a0a642f810be6adbec4d477.1330454040.git.jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CAPnjgZ2+6k0Ww30vrc_Qb0AnKWVfq0BaCK85HXpzTD0q67smjQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <TWarren@nvidia.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <10078cadd3ab4e8f2a0a642f810be6adbec4d477.1330454040.git.jason@lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: grant.likely@secretlab.ca, Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Simon Glass wrote at Tuesday, February 28, 2012 11:44 AM:
-> On Tue, Feb 28, 2012 at 10:37 AM, Stephen Warren <swarren@nvidia.com> wro=
-te:
-> > Simon Glass wrote at Tuesday, February 28, 2012 10:46 AM:
-> >> On Mon, Feb 27, 2012 at 3:41 PM, Stephen Warren <swarren@nvidia.com> w=
-rote:
-> >> > On 02/27/2012 01:52 PM, Simon Glass wrote:
-> >> >> A common requirement is to find the clock ID for a peripheral. This=
- is the
-> >> >> second cell of the 'clocks' property (the first being the phandle i=
-tself).
-> >> >
-> >> >> +int clock_decode_periph_id(const void *blob, int node)
-> >> >
-> >> >> + =A0 =A0 valid =3D clock_periph_id_isvalid(id);
-> >> >
-> >> > clock_periph_id_isvalid() is not the correct function to use here; t=
-he
-> >> > code should be checking for invalid IDs in the CAR binding, not inva=
-lid
-> >> > IDs in the HW periph ID definition. They're different.
-> >> >
-> >> > Just to be explicit, the function you need here would be:
-> >> >
-> >> > int clkid_to_periphid(int clkid)
-> >> > {
-> >> > =A0 =A0if (clk_id > 95)
-> >> > =A0 =A0 =A0 =A0return -1;
-> >> > =A0 =A0switch (clk_id) {
-> >> > =A0 =A0case 1:
-> >> > =A0 =A0case 2:
-> >> > =A0 =A0case 7:
-> >> > =A0 =A0case 10:
-> >> > =A0 =A0case 20:
-> >> > =A0 =A0case 30:
-> >> > =A0 =A0case 35:
-> >> > =A0 =A0case 49:
-> >> > =A0 =A0case 56:
-> >> > =A0 =A0case 74:
-> >> > =A0 =A0case 77:
-> >> > =A0 =A0case 78:
-> >> > =A0 =A0case 79:
-> >> > =A0 =A0case 80:
-> >> > =A0 =A0case 81:
-> >> > =A0 =A0case 82:
-> >> > =A0 =A0case 83:
-> >> > =A0 =A0case 91:
-> >> > =A0 =A0case 95:
-> >> > =A0 =A0 =A0 =A0return -1;
-> >> > =A0 =A0default:
-> >> > =A0 =A0 =A0 =A0return clkid;
-> >> > =A0 =A0}
-> >> > }
-> >>
-> >> Ick.
-> >>
-> >> Why is 7 in there,
-> >
-> > 7 affects both the UART2 and VFIR clocks/blocks.
-> >
-> >> and did you miss 76?
-> >
-> > No, that's the undocumented "la" clock.
-> >
-> >> Also U-Boot only goes up to 88
-> >> at present so should I change the first test to match?
-> >
-> > No, clocks 89, 90, 92, 93, and 94 are defined in the binding, which
-> > matches the CLK_OUT_ENB registers in the Tegra CAR HW (albeit not the
-> > CLK_RST registers, since there are some differences between the two).
-> =
+On Tuesday 28 February 2012, Jason Cooper wrote:
+> On the Globalscale Dreamplug (Marvell Kirkwood Development Platform),
+> 2MB of NOR flash are used to hold the bootloader, bootloader
+> environment, and devicetree blob.  It is connected via spi.
+> 
+> diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
+> index cc15426..4868dbd 100644
+> --- a/arch/arm/mach-kirkwood/common.c
+> +++ b/arch/arm/mach-kirkwood/common.c
+> @@ -524,6 +526,11 @@ static int __init kirkwood_clock_gate(void)
+>  	} else  /* keep this bit set for devices that don't have PCIe1 */
+>  		kirkwood_clk_ctrl |= CGC_PEX1;
+>  
+> +	dp = of_find_node_by_path("/");
+> +	if (dp && of_device_is_available(of_find_compatible_node(dp, NULL,
+> +							  "marvell,orion-spi")))
+> +		kirkwood_clk_ctrl |= CGC_RUNIT;
+> +
+>  	/* Now gate clock the required units */
+>  	writel(kirkwood_clk_ctrl, CLOCK_GATING_CTRL);
+>  	printk(KERN_DEBUG " after: 0x%08x\n", readl(CLOCK_GATING_CTRL));
 
-> For both of your comments, since they aren't used in U-Boot, wouldn't
-> it be more correct to flag these as errors also? We would have to
-> update at least the clock.h header to support them.
+I think this needs to move to the board-dt.c file as Andrew suggested,
+or you have to put the #ifdef back, otherwise you get a link error
+because of_find_node_by_path does not have a fallback with CONFIG_OF
+not set.
 
-It's probably more correct to update the periph_id enum to define all
-the valid values, but either way is fine.
+Everything else looks good to me now.
 
--- =
-
-nvpublic
+	Arnd
