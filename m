@@ -1,79 +1,58 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH WIP] ARM: kirkwood: covert orion-spi to fdt.
-Date: Tue, 28 Feb 2012 16:07:26 +0000
-Message-ID: <201202281607.27027.arnd@arndb.de>
-References: <4a9b37f69d6cec5049627b8afa777bb010af05f6.1330381705.git.jason@lakedaemon.net>
- <201202280739.24399.arnd@arndb.de>
- <20120228152553.GZ23524@titan.lakedaemon.net>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 11/20] tegra: fdt: Add clock bindings for Tegra2 Seaboard
+Date: Tue, 28 Feb 2012 09:20:35 -0800
+Message-ID: <CAPnjgZ0_xzn0tvETt3C=pjyRX-MXNA-JXy4fuAs9L8OdHuvLhg@mail.gmail.com>
+References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
+	<1330375973-10681-12-git-send-email-sjg@chromium.org>
+	<4F4C11E9.1050907@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120228152553.GZ23524-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4F4C11E9.1050907-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 28 February 2012, Jason wrote:
-> On Tue, Feb 28, 2012 at 07:39:24AM +0000, Arnd Bergmann wrote:
-> > Same thing here:
-> > 
-> > 	if (of_find_property(spi->master->dev.of_node, "spi-clock-fix", NULL) ||
-> > 		(orion_spi->spi_info && orion_spi->spi_info->enable_clock_fix))
-> 
-> Also, should this be "mv,spi-clock-fix" like I've seen for some ti
-> custom dt bindings?
+Hi Stephen,
 
-I'm never sure about this either. Maybe Grant can comment on this.
+On Mon, Feb 27, 2012 at 3:29 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wr=
+ote:
+> On 02/27/2012 01:52 PM, Simon Glass wrote:
+>> Add the definition of the oscillator clock frequency.
+>
+>> diff --git a/board/nvidia/dts/tegra2-seaboard.dts b/board/nvidia/dts=
+/tegra2-seaboard.dts
+>
+>> + =A0 =A0 clock@60006000 {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 clocks =3D <&osc>;
+>> + =A0 =A0 };
+>
+> The CAR takes two clock inputs; one 32KHz clock (typically from the
+> PMU/PMIC) and one from the oscillator. The 32KHz one is missing here.=
+ I
+> guess this won't make any difference to U-Boot since it isn't using t=
+he
+> clock inputs in the CAR driver, but it'd be best if the .dts file
+> contained the correct content so it didn't act as an incorrect exampl=
+e.
+> See the example in the binding documentation for what should be there=
+=2E
 
-> > > +#ifdef CONFIG_OF
-> > > +	orion_spi_wq = create_singlethread_workqueue(
-> > > +				orion_spi_driver.driver.name);
-> > > +	if (orion_spi_wq == NULL)
-> > > +		return -ENOMEM;
-> > > +#endif
-> > 
-> > This seems wrong: why do you have to create the workqueue again here?
-> 
-> Gah!  Originally, I was trying to mirror spi-tegra.c, which uses
-> module_platform_driver().  So, I was moving code out of orion_spi_init()
-> into orion_spi_probe() and setting .probe = orion_spi_probe().  I forgot
-> to undo this when I backed away from that approach (to get it working
-> first).
-> 
-> Should I go ahead and convert it to module_platform_driver()?
+Yes I saw that - but it adds an i2c binding which I don't yet have. I
+add i2c in the next series.
 
-You can do that if you like, but it's not required here. If you do,
-best send that conversion as a separate patch in a series before this
-one.
+I will add that one i2c node here.
 
-> > > +
-> > > +	spi->max_speed = DIV_ROUND_UP(tclk, 4);
-> > > +	spi->min_speed = DIV_ROUND_UP(tclk, 30);
-> > > +#else
-> > >  	spi->spi_info = spi_info;
-> > >  
-> > >  	spi->max_speed = DIV_ROUND_UP(spi_info->tclk, 4);
-> > >  	spi->min_speed = DIV_ROUND_UP(spi_info->tclk, 30);
-> > > +#endif
-> > 
-> > Same code as above? Just find the clock frequency once and store it in  
-> > spi->tclk.
-> 
-> Do you mean spi_info->tclk?  If so, spi_info is NULL when using device
-> tree because orion_spi_init() in plat-orion/common.c never gets called,
-> so the platform data isn't set.
+Regards,
+Simon
 
-I meant you should add a new "tclk" member to struct orion_spi and set
-that to spi_info->tclk or the value from the device tree.
-
-	Arnd
+>
+> --
+> nvpublic
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra=
+" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
