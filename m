@@ -1,381 +1,65 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [RFC PATCH] of: DMA helpers: manage generic requests specification
-Date: Wed, 29 Feb 2012 15:54:08 +0100
-Message-ID: <1330527248-4350-1-git-send-email-nicolas.ferre@atmel.com>
-References: <4F22DEF2.5000807@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F22DEF2.5000807@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: b-cousson@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, swarren@nvidia.com, plagnioj@jcrosoft.com, Nicolas Ferre <nicolas.ferre@atmel.com>, Russell King <linux@arm.linux.org.uk>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PULL] of nand generic binding
+Date: Wed, 29 Feb 2012 16:25:34 +0100
+Message-ID: <20120229152534.GH3318@game.jcrosoft.org>
+References: <20120217155707.GR1214@game.jcrosoft.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120217155707.GR1214-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-By making DMA controllers register a generic translation
-function, we allow the management of any type of DMA requests
-specification.
-The void * output of an of_dma_xlate() function that will be implemented
-by the DMA controller can carry any type of "dma-request" argument.
+On 16:57 Fri 17 Feb     , Jean-Christophe PLAGNIOL-VILLARD wrote:
+> HI,
+> 
+> 	please find attached the generic binding for the MTD nand
+> 
+> 	This will add boolean and nand helpers
+is it ok?
 
-The DMA client will search its associated DMA controller in the list
-and call the registered of_dam_xlate() function to retrieve the
-request values.
-
-One simple xlate function is provided for the "single number" type
-of request biding.
-
-This implementation is independent from dmaengine so it can also be
-used by legacy drivers.
-
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Benoit Cousson <b-cousson@ti.com>
-Cc: Stephen Warren <swarren@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Rob Herring <rob.herring@calxeda.com>
----
-Hi all,
-
-Here are my thoughts about the DMA helpers for device tree.
-This patch goes on top of Benoit's ones. My goal was to keep this separated
-from any DMA infrastructure (dmaengine not needed, nor any other DMA
-implementation).
-
-It is to keep the ball rolling, so do not hesitate to comment.
-
-Best regards,
-
-
- Documentation/devicetree/bindings/dma/dma.txt |   29 +++--
- drivers/of/dma.c                              |  161 ++++++++++++++++++++++---
- include/linux/of_dma.h                        |   33 +++++-
- 3 files changed, 186 insertions(+), 37 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-index 7f2a301..c49e98d 100644
---- a/Documentation/devicetree/bindings/dma/dma.txt
-+++ b/Documentation/devicetree/bindings/dma/dma.txt
-@@ -6,9 +6,8 @@ DMA request line that goes from an IP to a DMA controller.
- 
- * DMA controller
- 
--Required properties:
--    - dma-controller: Mark the device as a DMA controller
--    - #dma-cells: Number of cell for each DMA line, must be one.
-+Required property:
-+    - #dma-cells: Number of cells for each DMA line.
- 
- 
- Example:
-@@ -17,7 +16,6 @@ Example:
- 		compatible = "ti,sdma-omap4"
- 		reg = <0x48000000 0x1000>;
- 		interrupts = <12>;
--        dma-controller;
- 		#dma-cells = <1>;
- 	};
- 
-@@ -25,20 +23,23 @@ Example:
- 
- * DMA client
- 
--Client drivers should specify the DMA request numbers using a phandle to
--the controller + the DMA request number on that controller.
-+Client drivers should specify the DMA request property using a phandle to
-+the controller. If needed, the DMA request identity on that controller is then
-+added followed by optional request specifications.
- 
--Required properties:
--    - dma-request: List of pair phandle + dma-request per line
-+Required property:
-+    - dma-request: List of phandle + dma-request + request specifications,
-+      one group per request "line".
-+Optional property:
-     - dma-request-names: list of strings in the same order as the dma-request
-       in the dma-request property.
- 
- 
- Example:
- 
--    i2c1: i2c@1 {
--        ...
--        dma-request = <&sdma 2 &sdma 3>;
--        dma-request-names = "tx", "rx";
--        ...
--    };
-+	i2c1: i2c@1 {
-+		...
-+		dma-request = <&sdma 2 &sdma 3>;
-+		dma-request-names = "tx", "rx";
-+		...
-+	};
-diff --git a/drivers/of/dma.c b/drivers/of/dma.c
-index d4927e2..e0c6fd9 100644
---- a/drivers/of/dma.c
-+++ b/drivers/of/dma.c
-@@ -13,41 +13,145 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/module.h>
-+#include <linux/rculist.h>
-+#include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/of_dma.h>
- 
-+static LIST_HEAD(of_dma_list);
-+
-+/**
-+ * of_dma_find_controller() - Find a DMA controller in DT DMA helpers list
-+ * @np:		device node of DMA controller
-+ */
-+static struct of_dma *of_dma_find_controller(struct device_node *np)
-+{
-+	struct of_dma	*ofdma;
-+
-+	list_for_each_entry_rcu(ofdma, &of_dma_list, of_dma_controllers) {
-+		if (ofdma->of_node == np)
-+			return ofdma;
-+	}
-+
-+	return NULL;
-+}
-+
- /**
-- * of_get_dma_request() - Get a DMA request number and dma-controller node
-+ * of_dma_controller_register() - Register a DMA controller to DT DMA helpers
-+ * @np:			device node of DMA controller
-+ * @of_dma_xlate:	generic translation function which converts a phandle
-+ *			arguments list into a generic output value
-+ *
-+ * Returns 0 on success or appropriate errno value on error.
-+ *
-+ * If #dma-cells is not specified in DMA controller device tree node, we assume
-+ * that the DMA controller phandle will come without argument.
-+ *
-+ * Allocated memory sould be freed with apropriate of_dma_controller_free()
-+ * call.
-+ */
-+int of_dma_controller_register(struct device_node *np,
-+			int (*of_dma_xlate)(struct of_phandle_args *, void *))
-+{
-+	struct of_dma	*ofdma;
-+	int		*nbcells;
-+
-+	if (!np || !of_dma_xlate) {
-+		pr_err("%s: not enouth information provided\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	ofdma = kzalloc(sizeof(*ofdma), GFP_KERNEL);
-+	if (!ofdma)
-+		return -ENOMEM;
-+
-+	nbcells = (int *)of_get_property(np, "#dma-cells", NULL);
-+	if (!nbcells)
-+		/*
-+		 * no #dma-cells properties: assume no argument to
-+		 * dma-request property on slave side
-+		 */
-+		ofdma->of_dma_n_cells = 0;
-+	else
-+		ofdma->of_dma_n_cells = be32_to_cpup(nbcells);
-+
-+	ofdma->of_node = np;
-+	ofdma->of_dma_xlate = of_dma_xlate;
-+
-+	/* Now queue of_dma controller structure in list */
-+	list_add_tail_rcu(&ofdma->of_dma_controllers, &of_dma_list);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_dma_controller_register);
-+
-+/**
-+ * of_dma_controller_free() - Remove a DMA controller from DT DMA helpers list
-+ * @np:		device node of DMA controller
-+ *
-+ * Memory allocated by of_dma_controller_register() is freed here.
-+ */
-+void of_dma_controller_free(struct device_node *np)
-+{
-+	struct of_dma	*ofdma;
-+
-+	ofdma = of_dma_find_controller(np);
-+	if (ofdma) {
-+		list_del_rcu(&ofdma->of_dma_controllers);
-+		kfree(ofdma);
-+	}
-+}
-+EXPORT_SYMBOL(of_dma_controller_free);
-+
-+/**
-+ * of_get_dma_request() - Get the associated DMA request data
-  * @np:		device node to get DMA request from
-- * @propname:	property name containing DMA specifier(s)
-  * @index:	index of the DMA request
-- * @ctrl_np:	a device_node pointer to fill in
-+ * @out_data:	a output that can be filled in by the of_dma_xlate() function
-  *
-- * Returns DMA number along to the dma controller node, or one of the errno
-- * value on the error condition. If @ctrl_np is not NULL the function also
-- * fills in the DMA controller device_node pointer.
-+ * Returns return value of of_dma_xlate() and fills out_data (if provided).
-+ * On error returns the appropriate errno value.
-  */
- int of_get_dma_request(struct device_node *np, int index,
--		       struct device_node **ctrl_np)
-+		       void *out_data)
- {
--	int ret = -EINVAL;
--	struct of_phandle_args dma_spec;
-+	struct of_phandle_args	dma_spec;
-+	struct of_dma		*ofdma;
-+	int			ret;
- 
- 	ret = of_parse_phandle_with_args(np, "dma-request", "#dma-cells",
- 					 index, &dma_spec);
- 	if (ret) {
--		pr_debug("%s: can't parse dma property\n", __func__);
-+		pr_err("%s: can't parse dma property\n", np->full_name);
- 		goto err0;
- 	}
- 
--	if (dma_spec.args_count > 0)
--		ret = dma_spec.args[0];
-+	if (list_empty(&of_dma_list)) {
-+		pr_debug("%s: empty DMA controller list\n",
-+			 np->full_name);
-+		ret = -ENOENT;
-+		goto err1;
-+	}
- 
--	if (ctrl_np)
--		*ctrl_np = dma_spec.np;
--	else
--		of_node_put(dma_spec.np);
-+	ofdma = of_dma_find_controller(dma_spec.np);
-+	if (!ofdma) {
-+		pr_debug("%s: DMA controller %s isn't registered\n",
-+			 np->full_name, dma_spec.np->full_name);
-+		ret = -ENODEV;
-+		goto err1;
-+	}
- 
-+	if (dma_spec.args_count != ofdma->of_dma_n_cells) {
-+		pr_debug("%s: wrong #dma-cells for %s\n",
-+			 np->full_name, dma_spec.np->full_name);
-+		ret = -EINVAL;
-+		goto err1;
-+	}
-+
-+	ret = ofdma->of_dma_xlate(&dma_spec, out_data);
-+
-+err1:
-+	of_node_put(dma_spec.np);
- err0:
- 	pr_debug("%s exited with status %d\n", __func__, ret);
- 	return ret;
-@@ -55,6 +159,24 @@ err0:
- EXPORT_SYMBOL(of_get_dma_request);
- 
- /**
-+ * of_dma_xlate_onenumbercell() - Generic DMA xlate for direct one cell bindings
-+ *
-+ * Device Tree DMA translation function which works with one cell bindings
-+ * where the cell values map directly to the hardware request number understood
-+ * by the DMA controller.
-+ */
-+int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec, void *req_nbr)
-+{
-+	if (!dma_spec)
-+		return -EINVAL;
-+	if (WARN_ON(dma_spec->args_count != 1))
-+		return -EINVAL;
-+	*(int *)req_nbr = dma_spec->args[0];
-+	return 0;
-+}
-+EXPORT_SYMBOL(of_dma_xlate_onenumbercell);
-+
-+/**
-  * of_dma_count - Count DMA requests for a device
-  * @np:		device node to count DMAs for
-  *
-@@ -105,13 +227,14 @@ int of_dma_to_resource(struct device_node *dev, int index, struct resource *r)
- {
- 	const char *name = NULL;
- 	int dma;
-+	int ret;
- 
- 	if (!r)
- 		return -EINVAL;
- 
--	dma = of_get_dma_request(dev, index, NULL);
--	if (dma < 0)
--		return dma;
-+	ret = of_get_dma_request(dev, index, &dma);
-+	if (ret < 0)
-+		return ret;
- 
- 	/*
- 	 * Get optional "dma-request-names" property to add a name
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-index 575163d..fbf98de 100644
---- a/include/linux/of_dma.h
-+++ b/include/linux/of_dma.h
-@@ -17,18 +17,38 @@
- 
- struct device_node;
- 
--#ifdef CONFIG_OF_GPIO
-+#ifdef CONFIG_OF_DMA
- 
-+struct of_dma {
-+	struct list_head of_dma_controllers;
-+	struct device_node *of_node;
-+	int of_dma_n_cells;
-+	int (*of_dma_xlate)(struct of_phandle_args *dma_spec, void *data);
-+};
-+
-+extern int of_dma_controller_register(struct device_node *np,
-+			int (*of_dma_xlate)(struct of_phandle_args *, void *));
-+extern void of_dma_controller_free(struct device_node *np);
- extern int of_get_dma_request(struct device_node *np, int index,
--		       struct device_node **ctrl_np);
-+			      void *out_data);
- extern unsigned int of_dma_count(struct device_node *np);
- extern int of_dma_to_resource(struct device_node *dev, int index,
- 			      struct resource *r);
- 
-+extern int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec,
-+				      void *req_nbr);
- #else /* CONFIG_OF_DMA */
- 
--static int of_get_dma_request(struct device_node *np, int index,
--			      struct device_node **ctrl_np);
-+static int of_dma_controller_register(struct device_node *np,
-+			int (*of_dma_xlate)(struct of_phandle_args *, void *))
-+{
-+	return -ENOSYS;
-+}
-+
-+static void of_dma_controller_free(struct device_node *np) {}
-+
-+extern int of_get_dma_request(struct device_node *np, int index,
-+			      void *out_data)
- {
- 	return -ENOSYS;
- }
-@@ -44,6 +64,11 @@ static int of_dma_to_resource(struct device_node *dev, int index,
- 	return -ENOSYS;
- }
- 
-+static int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec,
-+				      void *req_nbr)
-+{
-+	return -ENOSYS;
-+}
- #endif /* CONFIG_OF_DMA */
- 
- #endif /* __LINUX_OF_DMA_H */
--- 
-1.7.9
-
+Best Regards,
+J.
+> 
+> The following changes since commit d65b4e98d7ea3038b767b70fe8be959b2913f16d:
+> 
+>   Linux 3.3-rc3 (2012-02-08 19:21:53 -0800)
+> 
+> are available in the git repository at:
+>   git://github.com/at91linux/linux-at91.git for-grant-dt
+> 
+> Jean-Christophe PLAGNIOL-VILLARD (2):
+>       of: introduce helper to manage boolean
+>       of/mtd/nand: add generic bindings and helpers
+> 
+>  Documentation/devicetree/bindings/mtd/nand.txt |    7 ++
+>  drivers/of/Kconfig                             |    4 +
+>  drivers/of/Makefile                            |    1 +
+>  drivers/of/base.c                              |   30 ++++++++
+>  drivers/of/of_mtd.c                            |   85 ++++++++++++++++++++++++
+>  include/linux/of.h                             |    8 ++
+>  include/linux/of_mtd.h                         |   19 +++++
+>  7 files changed, 154 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/nand.txt
+>  create mode 100644 drivers/of/of_mtd.c
+>  create mode 100644 include/linux/of_mtd.h
+> 
+> Best Regards,
+> J.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
