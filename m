@@ -1,111 +1,78 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH v2 1/7] ARM: davinci,
- intc: Add OF support for TI interrupt controller
-Date: Wed, 29 Feb 2012 07:42:51 +0100
-Message-ID: <4F4DC8EB.7010201@denx.de>
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] ARM: davinci, intc: Add OF support for TI interrupt
+	controller
+Date: Wed, 29 Feb 2012 14:22:27 +0400
+Message-ID: <4F4DFC63.9060509@mvista.com>
 References: <1329893410-24413-1-git-send-email-hs@denx.de>
- <1329893410-24413-2-git-send-email-hs@denx.de> <4F44DE24.30606@mvista.com>
-Reply-To: hs@denx.de
+	<1329893410-24413-2-git-send-email-hs@denx.de>
+	<4F44DE24.30606@mvista.com> <4F4DC8EB.7010201@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <4F44DE24.30606@mvista.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sshtylyov@mvista.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, davinci-linux-open-source@linux.davincidsp.com, Wolfgang Denk <wd@denx.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <4F4DC8EB.7010201-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: hs-ynQEQJNshbs@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Sergei,
+Hello.
 
-Sergei Shtylyov wrote:
-> On 22-02-2012 10:50, Heiko Schocher wrote:
-> 
->> Add a function to initialize the davinci interrupt controller (INTC)
->> using a device tree node.
-> 
->    cp_intc is not DaVinci interrupt controller, it's only used in
-> OMAP-L1x SoCs. cp_intc stands for Common Platform Interrupt Controller.
+On 29-02-2012 10:42, Heiko Schocher wrote:
 
-Ah, Ok! Thanks for the explanation.
+>>> Add a function to initialize the davinci interrupt controller (INTC)
+>>> using a device tree node.
 
-> I don't see where you are initializiing the DaVinci interrupt controller
-> itself. You should understand that there are two disctinct types of
-> interrupt controllers used in the SoCs supported by arch/arm/mach-davinci/.
+>>     cp_intc is not DaVinci interrupt controller, it's only used in
+>> OMAP-L1x SoCs. cp_intc stands for Common Platform Interrupt Controller.
 
-board code:
+> Ah, Ok! Thanks for the explanation.
 
-MACHINE_START(ENBW_CMC, "EnBW CMC")
-[...]
-        .init_irq       = davinci_init_irq,
+>> I don't see where you are initializiing the DaVinci interrupt controller
+>> itself. You should understand that there are two disctinct types of
+>> interrupt controllers used in the SoCs supported by arch/arm/mach-davinci/.
 
-and in arch/arm/mach-davinci/cp_intc.c
+> board code:
 
-for the of case:
-
-void __init davinci_init_irq(void)
-{
-        of_irq_init(irq_match);
-}
-
-in drivers/of/irq.c:
-
-/**
- * of_irq_init - Scan and init matching interrupt controllers in DT
- * @matches: 0 terminated array of nodes to match and init function to call
- *
- * This function scans the device tree for matching interrupt controller nodes,
- * and calls their initialization functions in order with parents first.
- */
-void __init of_irq_init(const struct of_device_id *matches)
-
-Ok, the name of davinci_init_irq() is missleading ...
-
-Should I name it "cp_intc_of_init" ?
-
->> Signed-off-by: Heiko Schocher<hs@denx.de>
->> Cc: davinci-linux-open-source@linux.davincidsp.com
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: Grant Likely<grant.likely@secretlab.ca>
->> Cc: Sekhar Nori<nsekhar@ti.com>
->> Cc: Wolfgang Denk<wd@denx.de>
-> 
+> MACHINE_START(ENBW_CMC, "EnBW CMC")
 > [...]
-> 
->> diff --git a/Documentation/devicetree/bindings/arm/davinci/intc.txt
->> b/Documentation/devicetree/bindings/arm/davinci/intc.txt
->> new file mode 100644
->> index 0000000..dac2f69
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/davinci/intc.txt
->> @@ -0,0 +1,26 @@
->> +* TI Davinci Interrupt Controller
->> +
->> +davinci are using a TI interrupt controller that can support several
->> +configurable number of interrupts.
->> +
->> +Main node required properties:
->> +
->> +- compatible : should be:
->> +    "ti,davinci-intc"
-> 
->    The right "compatible" prop would be "ti,cp_intc" in this case.
+>          .init_irq       = davinci_init_irq,
 
-Ok, change this.
+> and in arch/arm/mach-davinci/cp_intc.c
 
-Thanks for the review!
+> for the of case:
 
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> void __init davinci_init_irq(void)
+> {
+>          of_irq_init(irq_match);
+> }
+
+> in drivers/of/irq.c:
+
+> /**
+>   * of_irq_init - Scan and init matching interrupt controllers in DT
+>   * @matches: 0 terminated array of nodes to match and init function to call
+>   *
+>   * This function scans the device tree for matching interrupt controller nodes,
+>   * and calls their initialization functions in order with parents first.
+>   */
+> void __init of_irq_init(const struct of_device_id *matches)
+
+> Ok, the name of davinci_init_irq() is missleading ...
+
+> Should I name it "cp_intc_of_init" ?
+
+    Probably. At least something with "cp_intc" in the name...
+
+> bye,
+> Heiko
+
+WBR, Sergei
