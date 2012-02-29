@@ -1,49 +1,35 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 4/9] tegra: fdt: i2c: Add extra I2C bindings for U-Boot
-Date: Wed, 29 Feb 2012 13:36:24 -0700
-Message-ID: <4F4E8C48.1020408@nvidia.com>
-References: <1330536689-9121-5-git-send-email-sjg@chromium.org>	<4F4E88BC.4070106@nvidia.com> <CAPnjgZ3fVwwvt6Cxr5RU0Bw=UkZ7Rq7fswfRYxpHBvhwrXCn3g@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v6 2/2] of: Make of_find_node_by_path() traverse
+ /aliases for relative paths.
+Date: Wed, 29 Feb 2012 15:36:33 -0500 (EST)
+Message-ID: <20120229.153633.249570825230282737.davem@davemloft.net>
+References: <1330543264-18103-1-git-send-email-ddaney.cavm@gmail.com>
+        <1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPnjgZ3fVwwvt6Cxr5RU0Bw=UkZ7Rq7fswfRYxpHBvhwrXCn3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+To: ddaney.cavm@gmail.com
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, david.daney@cavium.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/29/2012 01:32 PM, Simon Glass wrote:
-> Hi Stephen,
+From: David Daney <ddaney.cavm@gmail.com>
+Date: Wed, 29 Feb 2012 11:21:04 -0800
+
+> Currently all paths passed to of_find_node_by_path() must begin with a
+> '/', indicating a full path to the desired node.
 > 
-> On Wed, Feb 29, 2012 at 12:21 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 02/29/2012 10:31 AM, Simon Glass wrote:
->>> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
->>
->>> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
->>
->>>               compatible = "nvidia,tegra20-i2c";
->>>               reg = <0x7000C000 0x100>;
->>>               interrupts = < 70 >;
->>> +             clocks = <&tegra_car 12>;       /* PERIPH_ID_I2C1 */
->>>       };
->>
->> The I2C modules all require 2 clocks; the one you've added in this patch
->> and a second reference to pll_p_out3. Can you please list both of these
->> here, and update the I2C binding to describe the set of clocks that it
->> requires. Thanks.
+> Augment the look-up code so that if a path does *not* begin with '/',
+> the path is used as the name of an /aliases property.  The value of
+> this alias is then used as the full node path to be found.
 > 
-> OK - do you have a pointer to the kernel commit please? I always seem
-> to have trouble tracking this stuff down.
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-The clock stuff isn't in the kernel yet, so there's no commit to point
-to. The commit I asked you to create would update the bindings to define
-which clocks the I2C node needs, and would then go into U-Boot and the
-kernel.
+But as the caller you sure as hell know whether you have a "/"
+prefixed name or not.
 
-As a reference though, look at the kernel I2C driver and see that it
-performs two clk_get() calls, and then look into tegra2_clocks.c to see
-the two clocks it matches.
-
--- 
-nvpublic
+Why complicate an incredibly well designed and simple function for
+something you can create another interface for?
