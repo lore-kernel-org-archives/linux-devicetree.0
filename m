@@ -1,164 +1,33 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH v6 1/2] of/lib: Allow scripts/dtc/libfdt to be used from kernel code
-Date: Wed, 29 Feb 2012 11:21:03 -0800
-Message-ID: <1330543264-18103-2-git-send-email-ddaney.cavm@gmail.com>
-References: <1330543264-18103-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1330543264-18103-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 4/9] tegra: fdt: i2c: Add extra I2C bindings for U-Boot
+Date: Wed, 29 Feb 2012 13:21:16 -0700
+Message-ID: <4F4E88BC.4070106@nvidia.com>
+References: <1330536689-9121-5-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1330536689-9121-5-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+On 02/29/2012 10:31 AM, Simon Glass wrote:
+> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
 
-libfdt is part of the device tree support in scripts/dtc/libfdt.  For
-some platforms that use the Device Tree, we want to be able to edit
-the flattened device tree form.
+> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
 
-We don't want to burden kernel builds that do not require it, so we
-gate compilation of libfdt files with CONFIG_LIBFDT.  So if it is
-needed, you need to do this in your Kconfig:
+>  		compatible = "nvidia,tegra20-i2c";
+>  		reg = <0x7000C000 0x100>;
+>  		interrupts = < 70 >;
+> +		clocks = <&tegra_car 12>;	/* PERIPH_ID_I2C1 */
+>  	};
 
-	select LIBFDT
+The I2C modules all require 2 clocks; the one you've added in this patch
+and a second reference to pll_p_out3. Can you please list both of these
+here, and update the I2C binding to describe the set of clocks that it
+requires. Thanks.
 
-And in the Makefile of the code using libfdt something like:
-
-ccflags-y := -I$(src)/../../../scripts/dtc/libfdt
-
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- include/linux/libfdt.h     |    8 ++++++++
- include/linux/libfdt_env.h |   13 +++++++++++++
- lib/Kconfig                |    6 ++++++
- lib/Makefile               |    5 +++++
- lib/fdt.c                  |    2 ++
- lib/fdt_ro.c               |    2 ++
- lib/fdt_rw.c               |    2 ++
- lib/fdt_strerror.c         |    2 ++
- lib/fdt_sw.c               |    2 ++
- lib/fdt_wip.c              |    2 ++
- 10 files changed, 44 insertions(+), 0 deletions(-)
- create mode 100644 include/linux/libfdt.h
- create mode 100644 include/linux/libfdt_env.h
- create mode 100644 lib/fdt.c
- create mode 100644 lib/fdt_ro.c
- create mode 100644 lib/fdt_rw.c
- create mode 100644 lib/fdt_strerror.c
- create mode 100644 lib/fdt_sw.c
- create mode 100644 lib/fdt_wip.c
-
-diff --git a/include/linux/libfdt.h b/include/linux/libfdt.h
-new file mode 100644
-index 0000000..4c0306c
---- /dev/null
-+++ b/include/linux/libfdt.h
-@@ -0,0 +1,8 @@
-+#ifndef _INCLUDE_LIBFDT_H_
-+#define _INCLUDE_LIBFDT_H_
-+
-+#include <linux/libfdt_env.h>
-+#include "../../scripts/dtc/libfdt/fdt.h"
-+#include "../../scripts/dtc/libfdt/libfdt.h"
-+
-+#endif /* _INCLUDE_LIBFDT_H_ */
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-new file mode 100644
-index 0000000..01508c7
---- /dev/null
-+++ b/include/linux/libfdt_env.h
-@@ -0,0 +1,13 @@
-+#ifndef _LIBFDT_ENV_H
-+#define _LIBFDT_ENV_H
-+
-+#include <linux/string.h>
-+
-+#include <asm/byteorder.h>
-+
-+#define fdt32_to_cpu(x) be32_to_cpu(x)
-+#define cpu_to_fdt32(x) cpu_to_be32(x)
-+#define fdt64_to_cpu(x) be64_to_cpu(x)
-+#define cpu_to_fdt64(x) cpu_to_be64(x)
-+
-+#endif /* _LIBFDT_ENV_H */
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 43359bb..5b4444e 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -369,4 +369,10 @@ config SIGNATURE
- 	  Digital signature verification. Currently only RSA is supported.
- 	  Implementation is done using GnuPG MPI library
- 
-+#
-+# libfdt files, only selected if needed.
-+#
-+config LIBFDT
-+	bool
-+
- endmenu
-diff --git a/lib/Makefile b/lib/Makefile
-index 18515f0..1c6c198 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -123,6 +123,11 @@ obj-$(CONFIG_SIGNATURE) += digsig.o
- 
- obj-$(CONFIG_CLZ_TAB) += clz_tab.o
- 
-+libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o
-+$(foreach file, $(libfdt_files), \
-+	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
-+lib-$(CONFIG_LIBFDT) += $(libfdt_files)
-+
- hostprogs-y	:= gen_crc32table
- clean-files	:= crc32table.h
- 
-diff --git a/lib/fdt.c b/lib/fdt.c
-new file mode 100644
-index 0000000..97f2006
---- /dev/null
-+++ b/lib/fdt.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt.c"
-diff --git a/lib/fdt_ro.c b/lib/fdt_ro.c
-new file mode 100644
-index 0000000..f73c04e
---- /dev/null
-+++ b/lib/fdt_ro.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_ro.c"
-diff --git a/lib/fdt_rw.c b/lib/fdt_rw.c
-new file mode 100644
-index 0000000..0c1f0f4
---- /dev/null
-+++ b/lib/fdt_rw.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_rw.c"
-diff --git a/lib/fdt_strerror.c b/lib/fdt_strerror.c
-new file mode 100644
-index 0000000..8713e3f
---- /dev/null
-+++ b/lib/fdt_strerror.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_strerror.c"
-diff --git a/lib/fdt_sw.c b/lib/fdt_sw.c
-new file mode 100644
-index 0000000..9ac7e50
---- /dev/null
-+++ b/lib/fdt_sw.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_sw.c"
-diff --git a/lib/fdt_wip.c b/lib/fdt_wip.c
-new file mode 100644
-index 0000000..45b3fc3
---- /dev/null
-+++ b/lib/fdt_wip.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_wip.c"
 -- 
-1.7.2.3
+nvpublic
