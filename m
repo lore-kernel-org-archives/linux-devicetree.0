@@ -1,78 +1,57 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] ARM: davinci, intc: Add OF support for TI interrupt
-	controller
-Date: Wed, 29 Feb 2012 14:22:27 +0400
-Message-ID: <4F4DFC63.9060509@mvista.com>
-References: <1329893410-24413-1-git-send-email-hs@denx.de>
-	<1329893410-24413-2-git-send-email-hs@denx.de>
-	<4F44DE24.30606@mvista.com> <4F4DC8EB.7010201@denx.de>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: [PATCH] [media] s5p-g2d: Make it possible to instantiate driver from DT
+Date: Wed, 29 Feb 2012 14:54:32 +0100
+Message-ID: <1330523672-16453-1-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <4F4DC8EB.7010201-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: hs-ynQEQJNshbs@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: k.debski@samsung.com
+Cc: m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Karol Lewandowski <k.lewandowsk@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This driver requires standard properties only (address and irq)
+which are automatically marshalled into plain old resources by OF core.
 
-On 29-02-2012 10:42, Heiko Schocher wrote:
+Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ drivers/media/video/s5p-g2d/g2d.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
->>> Add a function to initialize the davinci interrupt controller (INTC)
->>> using a device tree node.
-
->>     cp_intc is not DaVinci interrupt controller, it's only used in
->> OMAP-L1x SoCs. cp_intc stands for Common Platform Interrupt Controller.
-
-> Ah, Ok! Thanks for the explanation.
-
->> I don't see where you are initializiing the DaVinci interrupt controller
->> itself. You should understand that there are two disctinct types of
->> interrupt controllers used in the SoCs supported by arch/arm/mach-davinci/.
-
-> board code:
-
-> MACHINE_START(ENBW_CMC, "EnBW CMC")
-> [...]
->          .init_irq       = davinci_init_irq,
-
-> and in arch/arm/mach-davinci/cp_intc.c
-
-> for the of case:
-
-> void __init davinci_init_irq(void)
-> {
->          of_irq_init(irq_match);
-> }
-
-> in drivers/of/irq.c:
-
-> /**
->   * of_irq_init - Scan and init matching interrupt controllers in DT
->   * @matches: 0 terminated array of nodes to match and init function to call
->   *
->   * This function scans the device tree for matching interrupt controller nodes,
->   * and calls their initialization functions in order with parents first.
->   */
-> void __init of_irq_init(const struct of_device_id *matches)
-
-> Ok, the name of davinci_init_irq() is missleading ...
-
-> Should I name it "cp_intc_of_init" ?
-
-    Probably. At least something with "cp_intc" in the name...
-
-> bye,
-> Heiko
-
-WBR, Sergei
+diff --git a/drivers/media/video/s5p-g2d/g2d.c b/drivers/media/video/s5p-g2d/g2d.c
+index febaa67..e7c0020 100644
+--- a/drivers/media/video/s5p-g2d/g2d.c
++++ b/drivers/media/video/s5p-g2d/g2d.c
+@@ -20,6 +20,7 @@
+ #include <linux/interrupt.h>
+ 
+ #include <linux/platform_device.h>
++#include <linux/of.h>
+ #include <media/v4l2-mem2mem.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ioctl.h>
+@@ -795,12 +796,20 @@ static int g2d_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id g2d_dt_match[] = {
++	{ .compatible = "samsung,exynos4210-g2d" },
++	{},
++};
++#endif
++
+ static struct platform_driver g2d_pdrv = {
+ 	.probe		= g2d_probe,
+ 	.remove		= g2d_remove,
+ 	.driver		= {
+ 		.name = G2D_NAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(g2d_dt_match),
+ 	},
+ };
+ 
+-- 
+1.7.8.3
