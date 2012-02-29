@@ -1,79 +1,70 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: Re: [PATCH v6 2/2] of: Make of_find_node_by_path() traverse /aliases
- for relative paths.
-Date: Wed, 29 Feb 2012 14:18:31 -0800
-Message-ID: <4F4EA437.1040501@gmail.com>
-References: <1330543264-18103-1-git-send-email-ddaney.cavm@gmail.com>	<1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com> <20120229.153633.249570825230282737.davem@davemloft.net> <4F4E99E2.2000607@cavium.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
+Date: Wed, 29 Feb 2012 14:31:14 -0800
+Message-ID: <20120229223114.GS18901@atomide.com>
+References: <1324019153-13316-1-git-send-email-hvaibhav@ti.com>
+ <79CD15C6BA57404B839C016229A409A80719AC@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F4E99E2.2000607@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: David Miller <davem@davemloft.net>, grant.likely@secretlab.ca, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <79CD15C6BA57404B839C016229A409A80719AC@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "Cousson, Benoit" <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Grant and others,
+* Hiremath, Vaibhav <hvaibhav@ti.com> [120105 02:46]:
+> > -----Original Message-----
+> > From: Hiremath, Vaibhav
+> > Sent: Friday, December 16, 2011 12:36 PM
+> > To: linux-omap@vger.kernel.org
+> > Cc: tony@atomide.com; linux-arm-kernel@lists.infradead.org; devicetree-
+> > discuss@lists.ozlabs.org; grant.likely@secretlab.ca; Cousson, Benoit;
+> > Hiremath, Vaibhav
+> > Subject: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
+> > 
+> > Add OMAP3 EVM (OMAP3530, AM/DM37x) DTS file to use the omap3.dtsi SoC file,
+> > along with memory node information.
+> > 
+> > Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
+> > ---
+> > Boot tested it on AM/DM37x EVM, kernel parses the info correctly.
+> > 
+> >  arch/arm/boot/dts/omap3-evm.dts |   20 ++++++++++++++++++++
+> >  1 files changed, 20 insertions(+), 0 deletions(-)
+> >  create mode 100644 arch/arm/boot/dts/omap3-evm.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-
+> > evm.dts
+> > new file mode 100644
+> > index 0000000..2eee16e
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/omap3-evm.dts
+> > @@ -0,0 +1,20 @@
+> > +/*
+> > + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +/dts-v1/;
+> > +
+> > +/include/ "omap3.dtsi"
+> > +
+> > +/ {
+> > +	model = "TI OMAP3 EVM (OMAP3530, AM/DM37x)";
+> > +	compatible = "ti,omap3-evm", "ti,omap3";
+> > +
+> > +	memory {
+> > +		device_type = "memory";
+> > +		reg = <0x80000000 0x10000000>; /* 256 MB */
+> > +	};
+> > +};
+> Can this merged? OR anybody has any comments here?
 
-Really this patch 2/2 is not so critical for me.  I am using it, but can 
-(and perhaps should) avoid using of_find_node_by_path() altogether, thus 
-making the patch unneeded.
+For reference, looks like this one is queued up as
+commit f0e15e2b0c6b3e89daade25a1e9a2d80136c14c3.
 
-If you would like, we can drop this one, but I would still very much 
-like '[PATCH v6 1/2] of/lib: Allow scripts/dtc/libfdt to be used from 
-kernel code' to be merged.
-
-Do you want me to send the first patch separately, or could you just 
-'cherry-pick' it from this set?
-
-Thanks,
-David Daney
-
-
-On 02/29/2012 01:34 PM, David Daney wrote:
-> On 02/29/2012 12:36 PM, David Miller wrote:
->> From: David Daney<ddaney.cavm@gmail.com>
->> Date: Wed, 29 Feb 2012 11:21:04 -0800
->>
->>> Currently all paths passed to of_find_node_by_path() must begin with a
->>> '/', indicating a full path to the desired node.
->>>
->>> Augment the look-up code so that if a path does *not* begin with '/',
->>> the path is used as the name of an /aliases property. The value of
->>> this alias is then used as the full node path to be found.
->>>
->>> Signed-off-by: David Daney<david.daney@cavium.com>
->>
->> But as the caller you sure as hell know whether you have a "/"
->> prefixed name or not.
->
-> Yes, worst case we could just examine the first character of the string.
->
->>
->> Why complicate an incredibly well designed and simple function for
->> something you can create another interface for?
->>
->
-> Because in this message:
->
-> http://www.linux-mips.org/archives/linux-mips/2011-02/msg00147.html
->
-> Grant explicitly asked me to do it this way when he said:
->
-> of_find_node_by_path() needs to be fixed to also accept alias
-> values so that a string that starts with a '/' is a full path, but
-> no leading '/' means start with an alias. This code will lose a
-> level of indentation if you can make that change to the common
-> code.
->
-> And then in follow ups to that conversation, we eventually came up
-> with this patch.
->
-> If you find it particularly objectionable, convince Grant to NACK the
-> patch (but please keep me CCed on the conversation), and I will open
-> code the equivalent in my drivers.
->
-> Thanks,
-> David Daney
->
+Tony
