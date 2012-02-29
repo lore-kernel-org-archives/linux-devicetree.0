@@ -1,72 +1,60 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: RE: [RFC PATCH] of: DMA helpers: manage generic requests
- specification
-Date: Wed, 29 Feb 2012 12:54:15 -0800
-Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17BDDF217B@HQMAIL01.nvidia.com>
-References: <4F22DEF2.5000807@ti.com>
- <1330527248-4350-1-git-send-email-nicolas.ferre@atmel.com>
+From: David Daney <david.daney@cavium.com>
+Subject: Re: [PATCH v6 2/2] of: Make of_find_node_by_path() traverse /aliases
+ for relative paths.
+Date: Wed, 29 Feb 2012 13:34:26 -0800
+Message-ID: <4F4E99E2.2000607@cavium.com>
+References: <1330543264-18103-1-git-send-email-ddaney.cavm@gmail.com>	<1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com> <20120229.153633.249570825230282737.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1330527248-4350-1-git-send-email-nicolas.ferre@atmel.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, "b-cousson@ti.com" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120229.153633.249570825230282737.davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>, grant.likely@secretlab.ca
+Cc: ddaney.cavm@gmail.com, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Nicolas Ferre wrote at Wednesday, February 29, 2012 7:54 AM:
-> By making DMA controllers register a generic translation
-> function, we allow the management of any type of DMA requests
-> specification.
-> The void * output of an of_dma_xlate() function that will be implemented
-> by the DMA controller can carry any type of "dma-request" argument.
-> 
-> The DMA client will search its associated DMA controller in the list
-> and call the registered of_dam_xlate() function to retrieve the
-> request values.
-> 
-> One simple xlate function is provided for the "single number" type
-> of request biding.
-> 
-> This implementation is independent from dmaengine so it can also be
-> used by legacy drivers.
+On 02/29/2012 12:36 PM, David Miller wrote:
+> From: David Daney<ddaney.cavm@gmail.com>
+> Date: Wed, 29 Feb 2012 11:21:04 -0800
+>
+>> Currently all paths passed to of_find_node_by_path() must begin with a
+>> '/', indicating a full path to the desired node.
+>>
+>> Augment the look-up code so that if a path does *not* begin with '/',
+>> the path is used as the name of an /aliases property.  The value of
+>> this alias is then used as the full node path to be found.
+>>
+>> Signed-off-by: David Daney<david.daney@cavium.com>
+>
+> But as the caller you sure as hell know whether you have a "/"
+> prefixed name or not.
 
-At a high level this seems along the right lines.
+Yes, worst case we could just examine the first character of the string.
 
-The big issue I see is the lack of type-safety in of_get_dma_request()'s
-out_data pointer: The DMA xlate function will assume it points at some
-particular type, and the client is responsible for allocating that
-correct type. However, it's "user"-supplied device tree data that hooks
-the two together, and there could easily be mismatches, thus causing
-the xlate function to trash memory.
+>
+> Why complicate an incredibly well designed and simple function for
+> something you can create another interface for?
+>
 
-Could each DMA controller (or type of out_data) have some enum in the
-kernel that the client passes in, and the DMA engine validates matches
-its expectations, to prevent this kind of thing?
+Because in this message:
 
-enum DMA_PARAMS_TYPE {
-    FOO_DMA_PARAMS,
-    BAR_DMA_PARAMS,
-    ...
-};
+http://www.linux-mips.org/archives/linux-mips/2011-02/msg00147.html
 
-struct foo_dma_params { ... };
+Grant explicitly asked me to do it this way when he said:
 
-struct foo_dma_params params;
+    of_find_node_by_path() needs to be fixed to also accept alias
+    values so that a string that starts with a '/' is a full path, but
+    no leading '/' means start with an alias.  This code will lose a
+    level of indentation if you can make that change to the common
+    code.
 
-of_get_dma_request(np, 0, &params, FOO_DMA_PARAMS);
+And then in follow ups to that conversation, we eventually came up
+with this patch.
 
-and inside xlate():
+If you find it particularly objectionable, convince Grant to NACK the 
+patch (but please keep me CCed on the conversation), and I will open 
+code the equivalent in my drivers.
 
-if (params_type != FOO_DMA_PARAMS)
-    return -EINVAL;
-
-For the dmaengine case, I assume there'd be a single DMA_PARAMS_TYPE
-value for the dmaengine specifier type, and the dmaengine core would
-take care of making sure everything matched somehow.
-
--- 
-nvpublic
-
+Thanks,
+David Daney
