@@ -1,65 +1,39 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PULL] of nand generic binding
-Date: Wed, 29 Feb 2012 16:25:34 +0100
-Message-ID: <20120229152534.GH3318@game.jcrosoft.org>
-References: <20120217155707.GR1214@game.jcrosoft.org>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v6 15/20] tegra: fdt: Add function to return
+ peripheral/clock ID
+Date: Wed, 29 Feb 2012 09:08:56 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17BDDF2072@HQMAIL01.nvidia.com>
+References: <1330375973-10681-1-git-send-email-sjg@chromium.org>
+	<1330375973-10681-16-git-send-email-sjg@chromium.org>
+	<4F4C149E.3070505@nvidia.com>
+	<CAPnjgZ24vhy7NKj_Dt_dzn0qJ8=rj4nF04WSsY8u9MorAanzVA@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DB4@HQMAIL01.nvidia.com>
+	<CAPnjgZ2+6k0Ww30vrc_Qb0AnKWVfq0BaCK85HXpzTD0q67smjQ@mail.gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DC8@HQMAIL01.nvidia.com>
+ <CAPnjgZ2vwck_u1HVbpz=B4QjiCVoLeX6TcvwMi-o71Fqt_m3NQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120217155707.GR1214-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPnjgZ2vwck_u1HVbpz=B4QjiCVoLeX6TcvwMi-o71Fqt_m3NQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16:57 Fri 17 Feb     , Jean-Christophe PLAGNIOL-VILLARD wrote:
-> HI,
-> 
-> 	please find attached the generic binding for the MTD nand
-> 
-> 	This will add boolean and nand helpers
-is it ok?
+Simon Glass wrote at Tuesday, February 28, 2012 4:50 PM:
+> On Tue, Feb 28, 2012 at 10:51 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> > Simon Glass wrote at Tuesday, February 28, 2012 11:44 AM:
+> >> On Tue, Feb 28, 2012 at 10:37 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+...
+> >> >> and did you miss 76?
+> >> >
+> >> > No, that's the undocumented "la" clock.
+....
+> OK - BTW what does 'LA' stand for?
 
-Best Regards,
-J.
-> 
-> The following changes since commit d65b4e98d7ea3038b767b70fe8be959b2913f16d:
-> 
->   Linux 3.3-rc3 (2012-02-08 19:21:53 -0800)
-> 
-> are available in the git repository at:
->   git://github.com/at91linux/linux-at91.git for-grant-dt
-> 
-> Jean-Christophe PLAGNIOL-VILLARD (2):
->       of: introduce helper to manage boolean
->       of/mtd/nand: add generic bindings and helpers
-> 
->  Documentation/devicetree/bindings/mtd/nand.txt |    7 ++
->  drivers/of/Kconfig                             |    4 +
->  drivers/of/Makefile                            |    1 +
->  drivers/of/base.c                              |   30 ++++++++
->  drivers/of/of_mtd.c                            |   85 ++++++++++++++++++++++++
->  include/linux/of.h                             |    8 ++
->  include/linux/of_mtd.h                         |   19 +++++
->  7 files changed, 154 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/nand.txt
->  create mode 100644 drivers/of/of_mtd.c
->  create mode 100644 include/linux/of_mtd.h
-> 
-> Best Regards,
-> J.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Sorry, I don't know; it's not documented. I just confirmed it exists.
+
+-- 
+nvpublic
