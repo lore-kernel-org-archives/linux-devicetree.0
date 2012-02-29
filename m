@@ -1,35 +1,72 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v6 2/2] of: Make of_find_node_by_path() traverse
- /aliases for relative paths.
-Date: Wed, 29 Feb 2012 15:36:33 -0500 (EST)
-Message-ID: <20120229.153633.249570825230282737.davem@davemloft.net>
-References: <1330543264-18103-1-git-send-email-ddaney.cavm@gmail.com>
-        <1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com>
+From: Stephen Warren <swarren@nvidia.com>
+Subject: RE: [RFC PATCH] of: DMA helpers: manage generic requests
+ specification
+Date: Wed, 29 Feb 2012 12:54:15 -0800
+Message-ID: <74CDBE0F657A3D45AFBB94109FB122FF17BDDF217B@HQMAIL01.nvidia.com>
+References: <4F22DEF2.5000807@ti.com>
+ <1330527248-4350-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-To: ddaney.cavm@gmail.com
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, david.daney@cavium.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1330527248-4350-1-git-send-email-nicolas.ferre@atmel.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, "b-cousson@ti.com" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <ddaney.cavm@gmail.com>
-Date: Wed, 29 Feb 2012 11:21:04 -0800
-
-> Currently all paths passed to of_find_node_by_path() must begin with a
-> '/', indicating a full path to the desired node.
+Nicolas Ferre wrote at Wednesday, February 29, 2012 7:54 AM:
+> By making DMA controllers register a generic translation
+> function, we allow the management of any type of DMA requests
+> specification.
+> The void * output of an of_dma_xlate() function that will be implemented
+> by the DMA controller can carry any type of "dma-request" argument.
 > 
-> Augment the look-up code so that if a path does *not* begin with '/',
-> the path is used as the name of an /aliases property.  The value of
-> this alias is then used as the full node path to be found.
+> The DMA client will search its associated DMA controller in the list
+> and call the registered of_dam_xlate() function to retrieve the
+> request values.
 > 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+> One simple xlate function is provided for the "single number" type
+> of request biding.
+> 
+> This implementation is independent from dmaengine so it can also be
+> used by legacy drivers.
 
-But as the caller you sure as hell know whether you have a "/"
-prefixed name or not.
+At a high level this seems along the right lines.
 
-Why complicate an incredibly well designed and simple function for
-something you can create another interface for?
+The big issue I see is the lack of type-safety in of_get_dma_request()'s
+out_data pointer: The DMA xlate function will assume it points at some
+particular type, and the client is responsible for allocating that
+correct type. However, it's "user"-supplied device tree data that hooks
+the two together, and there could easily be mismatches, thus causing
+the xlate function to trash memory.
+
+Could each DMA controller (or type of out_data) have some enum in the
+kernel that the client passes in, and the DMA engine validates matches
+its expectations, to prevent this kind of thing?
+
+enum DMA_PARAMS_TYPE {
+    FOO_DMA_PARAMS,
+    BAR_DMA_PARAMS,
+    ...
+};
+
+struct foo_dma_params { ... };
+
+struct foo_dma_params params;
+
+of_get_dma_request(np, 0, &params, FOO_DMA_PARAMS);
+
+and inside xlate():
+
+if (params_type != FOO_DMA_PARAMS)
+    return -EINVAL;
+
+For the dmaengine case, I assume there'd be a single DMA_PARAMS_TYPE
+value for the dmaengine specifier type, and the dmaengine core would
+take care of making sure everything matched somehow.
+
+-- 
+nvpublic
+
