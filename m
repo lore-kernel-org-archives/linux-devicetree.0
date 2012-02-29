@@ -1,41 +1,57 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
-Date: Wed, 29 Feb 2012 23:39:27 +0100
-Message-ID: <4F4EA91F.1030305@ti.com>
-References: <1324019153-13316-1-git-send-email-hvaibhav@ti.com> <79CD15C6BA57404B839C016229A409A80719AC@DBDE01.ent.ti.com> <20120229223114.GS18901@atomide.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 0/4] twl-regulator DT adaptation and updates to add new
+ regulators
+Date: Wed, 29 Feb 2012 23:18:19 +0000
+Message-ID: <20120229231818.GA8295@opensource.wolfsonmicro.com>
+References: <1330421953-29517-1-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120229223114.GS18901@atomide.com>
+Content-Disposition: inline
+In-Reply-To: <1330421953-29517-1-git-send-email-rnayak@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "Hiremath, Vaibhav" <hvaibhav@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 2/29/2012 11:31 PM, Tony Lindgren wrote:
-> * Hiremath, Vaibhav<hvaibhav@ti.com>  [120105 02:46]:
-...
->> Can this merged? OR anybody has any comments here?
->
-> For reference, looks like this one is queued up as
-> commit f0e15e2b0c6b3e89daade25a1e9a2d80136c14c3.
 
-Yes, it is, I included it in my DTS pull-request because it was the only 
-one with Grant's ack.
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have the whole series ready to be pulled but was waiting for DT 
-maintainers acked-by.
+On Tue, Feb 28, 2012 at 03:09:09PM +0530, Rajendra Nayak wrote:
+> Hi Mark,
+>=20
+> Here is a consolidated series which adds DT support for twl regulator
+> driver and adds support for VDD1/2/3 regulator and support for
+> fixed LDO V1V8 and V2V1. The patches are based on -next and tested
+> on omap3 beagle and omap4 panda boards.
 
-I still have these four ones in my branch.
+Applied all, thanks.  Please do try to use subject lines consistent with
+the subsystem.
 
-d5c9442 arm/dts: Add support for TI AM3517/05 EVM board
-3b5fa9a arm/dts: omap3-evm: Add i2c and twl4030 support
-7f4ca5f arm/dts: Add support for TI AM335x EVM board
-d0c3aca ARM: OMAP2+: board-generic: Add DT support for AM33xx devices
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-In fact the board one already has the proper ack, only the DTS are 
-missing it.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-Regards,
-Benoit
+iQIcBAEBAgAGBQJPTrI0AAoJEBus8iNuMP3d3N4P/2rsttR7MF1b2Ghp9NRTwCYp
+0b0DxfRVuuoPBb9F6+ybACmToiqadYF4VMXKCdH0kxdkpiTBuYIePgt0g1amlnG5
+7XsLl+NKuvxXWPjqyiz8HZHuR4apK+0xotRl/qBTuvndPahbqdaUgV8KiEIhRPLZ
+NfMIIxFzUS4Hbwn2rweE1x5T2TOzfADRKzof7hE4mennNlJihjjzRyiudaPVvftj
+t1p4ndYpLQ1FPWA3ktMVIIWQxKkA9fZea601zrhT6covuT2yd05nbiQ4cI9QkO94
+Dgb0+KxFOlirkRe8QD20a2XduKNlybZ86WxFy5TaDBuXIQju+gEWaHTMHU+GkTTL
+KD1SqFDlHT3oOpVwu92Ie8Jbcc6tP4XvDJweVafG2cwJEYYL2Ke01zad7dMgLpmA
+1KhXxAisfwrJNXlzav/LA35fdZ4ACOuFE3fr5T3OEiMcde1n/Y/uTBkoBUnHInrt
+5C4t8//I0+Ez5jYDwfOcxHzSvWbiY/uFyC7WL1dHrPZ1F3q1ygCF3gxaYu12jw9o
+ytlDgu4aD/EBdsH6obZF213cAzUH74P4SP9QAFhixUk+ibXxOBHjvY+jT452+SQH
+GfEp651RLJvWgoCZazAEUkq3BB9kAzzOep0LLOe4mFVApaOU67IeKC4D6XjkFDrx
+q58Q+9thtpCIbsHJWy88
+=vvCH
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
