@@ -1,56 +1,166 @@
-From: Karol Lewandowski <k.lewandowsk@samsung.com>
-Subject: Re: [PATCH 3/3] [media] s5p-tv: Add initial DT-support for TV mixer
-Date: Thu, 01 Mar 2012 18:27:05 +0100
-Message-ID: <4F4FB169.6030606@samsung.com>
-References: <1330527107-21222-1-git-send-email-k.lewandowsk@samsung.com>
- <1330527107-21222-4-git-send-email-k.lewandowsk@samsung.com>
- <CAJuYYwSYtSzbxjtCBbXxHp33Zo+-4=YrA+LVZvOe=X8-c+vxJQ@mail.gmail.com>
+From: Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v7 15/20] tegra: fdt: Add function to return
+ peripheral/clock ID
+Date: Thu, 1 Mar 2012 10:21:07 -0800
+Message-ID: <5FBF8E85CA34454794F0F7ECBA79798F37971BB3B4@HQMAIL04.nvidia.com>
+References: <1330452478-5039-10-git-send-email-sjg@chromium.org>
+ <1330452478-5039-16-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwSYtSzbxjtCBbXxHp33Zo+-4=YrA+LVZvOe=X8-c+vxJQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: t.stanislaws@samsung.com, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1330452478-5039-16-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01.03.2012 04:18, Thomas Abraham wrote:
+Simon,
 
-> On 29 February 2012 20:21, Karol Lewandowski <k.lewandowsk@samsung.com> wrote:
->> ---
->>  drivers/media/video/s5p-tv/mixer_drv.c |    9 +++++++++
->>  1 files changed, 9 insertions(+), 0 deletions(-)
->>
->> diff --git a/drivers/media/video/s5p-tv/mixer_drv.c b/drivers/media/video/s5p-tv/mixer_drv.c
->> index a2c0c25..6bf4a9e 100644
->> --- a/drivers/media/video/s5p-tv/mixer_drv.c
->> +++ b/drivers/media/video/s5p-tv/mixer_drv.c
->> @@ -448,6 +448,14 @@ static int __devexit mxr_remove(struct platform_device *pdev)
->>        return 0;
->>  }
->>
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id mxr_dt_match[] = {
->> +       { .compatible = "samsung,exynos4210-tvmixer" },
+> -----Original Message-----
+> From: Simon Glass [mailto:sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org]
+> Sent: Tuesday, February 28, 2012 11:08 AM
+> To: U-Boot Mailing List
+> Cc: Tom Warren; Stephen Warren; Simon Glass; linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> Jerry Van Baren; Devicetree Discuss
+> Subject: [PATCH v7 15/20] tegra: fdt: Add function to return
+> peripheral/clock ID
 > 
-> If the tvmixer module is also available in SoC's prior to Exynos4210,
-> and if tvmixer in Exynos4210 is similar to tvmixer found on prior
-> SoC's, the base version should indicate that. For instance, if the
-> tvmixer started to appear from s5pv210 onwards, then the compatible
-> value should be "samsung,s5pv210-tvmixer". The compatible string
-> should indicate the base version.
+> A common requirement is to find the clock ID for a peripheral. This is the
+> second cell of the 'clocks' property (the first being the phandle itself).
+> 
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> Changes in v4:
+> - Add fdtdec function to return peripheral ID
+> 
+> Changes in v6:
+> - Move peripheral decode function into Tegra's clock.c
+> 
+> Changes in v7:
+> - Add belts and braces checking of device tree clock ID
+> 
+>  arch/arm/cpu/armv7/tegra2/clock.c        |   56
+> ++++++++++++++++++++++++++++++
+>  arch/arm/include/asm/arch-tegra2/clock.h |   13 +++++++
+>  2 files changed, 69 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/cpu/armv7/tegra2/clock.c
+> b/arch/arm/cpu/armv7/tegra2/clock.c
+> index 11d2346..959322b 100644
+> --- a/arch/arm/cpu/armv7/tegra2/clock.c
+> +++ b/arch/arm/cpu/armv7/tegra2/clock.c
+> @@ -28,6 +28,7 @@
+>  #include <asm/arch/tegra2.h>
+>  #include <common.h>
+>  #include <div64.h>
+> +#include <fdtdec.h>
+> 
+>  /*
+>   * This is our record of the current clock rate of each clock. We don't @@
+> -918,6 +919,61 @@ void clock_ll_start_uart(enum periph_id periph_id)
+>  	reset_set_enable(periph_id, 0);
+>  }
+> 
+> +/*
+> + * Convert a device tree clock ID to our peripheral ID. They are mostly
+> + * the same but we are very cautious so we check that a valid clock ID
+> +is
+> + * provided.
+> + *
+> + * @param clk_id	Clock ID according to tegra2 device tree binding
+> + * @return peripheral ID, or PERIPH_ID_NONE if the clock ID is invalid
+> +*/ static enum periph_id clk_id_to_periph_id(int clk_id) {
+> +	if (clk_id > 95)
+> +		return PERIPH_ID_NONE;
+> +
+> +	switch (clk_id) {
+> +	case 1:
+> +	case 2:
+> +	case 7:
+> +	case 10:
+> +	case 20:
+> +	case 30:
+> +	case 35:
+> +	case 49:
+> +	case 56:
+> +	case 74:
+> +	case 76:
+> +	case 77:
+> +	case 78:
+> +	case 79:
+> +	case 80:
+> +	case 81:
+> +	case 82:
+> +	case 83:
+> +	case 91:
+> +	case 95:
+> +		return PERIPH_ID_NONE;
+> +	default:
+> +		return clk_id;
+> +	}
+> +}
+> +
+> +int clock_decode_periph_id(const void *blob, int node) {
+> +	enum periph_id id;
+> +	u32 cell[2];
+> +	int err;
+> +
+> +	err = fdtdec_get_int_array(blob, node, "clocks", cell,
+> +				   ARRAY_SIZE(cell));
 
+This call to fdtdec_get_int_array() breaks Harmony and Ventana builds, since they're not yet DT-enabled (CONFIG_OF_CONTROL isn't #defined).
 
-Fair point, although I'm afraid that chosing "base" version might be
-tricky sometimes (e.g. while g2d seems to be available on s5pv210 driver
-itself have been tested only on s5pv310/exynos4210 - chosing s5pv210 as
-base doesn't look like best idea.)
+I'd fix this myself, but I'm not sure what the correct fix is to keep Harmony/Ventana building & booting.
 
-I'll resend fixed patches later.
+Please fix, test on all Tegra2 builds (MAKEALL -s tegra2) and resend. Thanks.
 
-Thank you very much for review!
+Tom
 
-Regards,
+> +	if (err)
+> +		return -1;
+> +	id = clk_id_to_periph_id(cell[1]);
+> +	assert(clock_periph_id_isvalid(id));
+> +	return id;
+> +}
+> +
+>  int clock_verify(void)
+>  {
+>  	struct clk_pll *pll = get_pll(CLOCK_ID_PERIPH); diff --git
+> a/arch/arm/include/asm/arch-tegra2/clock.h b/arch/arm/include/asm/arch-
+> tegra2/clock.h
+> index 080ef18..6b12c76 100644
+> --- a/arch/arm/include/asm/arch-tegra2/clock.h
+> +++ b/arch/arm/include/asm/arch-tegra2/clock.h
+> @@ -177,6 +177,7 @@ enum periph_id {
+>  	PERIPH_ID_CRAM2,
+> 
+>  	PERIPH_ID_COUNT,
+> +	PERIPH_ID_NONE = -1,
+>  };
+> 
+>  /* Converts a clock number to a clock register: 0=L, 1=H, 2=U */ @@ -355,6
+> +356,18 @@ unsigned clock_get_rate(enum clock_id clkid);
+>   */
+>  void clock_ll_start_uart(enum periph_id periph_id);
+> 
+> +/**
+> + * Decode a peripheral ID from a device tree node.
+> + *
+> + * This works by looking up the peripheral's 'clocks' node and reading
+> +out
+> + * the second cell, which is the clock number / peripheral ID.
+> + *
+> + * @param blob		FDT blob to use
+> + * @param node		Node to look at
+> + * @return peripheral ID, or PERIPH_ID_NONE if none  */ enum periph_id
+> +clock_decode_periph_id(const void *blob, int node);
+> +
+>  /*
+>   * Checks that clocks are valid and prints a warning if not
+>   *
+> --
+> 1.7.7.3
 -- 
-Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
+nvpublic
