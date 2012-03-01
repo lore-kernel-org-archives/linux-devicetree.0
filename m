@@ -1,166 +1,51 @@
-From: Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v7 15/20] tegra: fdt: Add function to return
- peripheral/clock ID
-Date: Thu, 1 Mar 2012 10:21:07 -0800
-Message-ID: <5FBF8E85CA34454794F0F7ECBA79798F37971BB3B4@HQMAIL04.nvidia.com>
-References: <1330452478-5039-10-git-send-email-sjg@chromium.org>
- <1330452478-5039-16-git-send-email-sjg@chromium.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: [PATCH 0/4] ARM: kirkwood: fdt: convert kirkwood init funcs to fdt
+Date: Thu,  1 Mar 2012 18:20:51 +0000
+Message-ID: <cover.1330625877.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1330452478-5039-16-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Simon,
+This series begins the process of converting all of the drivers initialized
+from kirkwood_init() to devicetree.
 
-> -----Original Message-----
-> From: Simon Glass [mailto:sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org]
-> Sent: Tuesday, February 28, 2012 11:08 AM
-> To: U-Boot Mailing List
-> Cc: Tom Warren; Stephen Warren; Simon Glass; linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> Jerry Van Baren; Devicetree Discuss
-> Subject: [PATCH v7 15/20] tegra: fdt: Add function to return
-> peripheral/clock ID
-> 
-> A common requirement is to find the clock ID for a peripheral. This is the
-> second cell of the 'clocks' property (the first being the phandle itself).
-> 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> Changes in v4:
-> - Add fdtdec function to return peripheral ID
-> 
-> Changes in v6:
-> - Move peripheral decode function into Tegra's clock.c
-> 
-> Changes in v7:
-> - Add belts and braces checking of device tree clock ID
-> 
->  arch/arm/cpu/armv7/tegra2/clock.c        |   56
-> ++++++++++++++++++++++++++++++
->  arch/arm/include/asm/arch-tegra2/clock.h |   13 +++++++
->  2 files changed, 69 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/cpu/armv7/tegra2/clock.c
-> b/arch/arm/cpu/armv7/tegra2/clock.c
-> index 11d2346..959322b 100644
-> --- a/arch/arm/cpu/armv7/tegra2/clock.c
-> +++ b/arch/arm/cpu/armv7/tegra2/clock.c
-> @@ -28,6 +28,7 @@
->  #include <asm/arch/tegra2.h>
->  #include <common.h>
->  #include <div64.h>
-> +#include <fdtdec.h>
-> 
->  /*
->   * This is our record of the current clock rate of each clock. We don't @@
-> -918,6 +919,61 @@ void clock_ll_start_uart(enum periph_id periph_id)
->  	reset_set_enable(periph_id, 0);
->  }
-> 
-> +/*
-> + * Convert a device tree clock ID to our peripheral ID. They are mostly
-> + * the same but we are very cautious so we check that a valid clock ID
-> +is
-> + * provided.
-> + *
-> + * @param clk_id	Clock ID according to tegra2 device tree binding
-> + * @return peripheral ID, or PERIPH_ID_NONE if the clock ID is invalid
-> +*/ static enum periph_id clk_id_to_periph_id(int clk_id) {
-> +	if (clk_id > 95)
-> +		return PERIPH_ID_NONE;
-> +
-> +	switch (clk_id) {
-> +	case 1:
-> +	case 2:
-> +	case 7:
-> +	case 10:
-> +	case 20:
-> +	case 30:
-> +	case 35:
-> +	case 49:
-> +	case 56:
-> +	case 74:
-> +	case 76:
-> +	case 77:
-> +	case 78:
-> +	case 79:
-> +	case 80:
-> +	case 81:
-> +	case 82:
-> +	case 83:
-> +	case 91:
-> +	case 95:
-> +		return PERIPH_ID_NONE;
-> +	default:
-> +		return clk_id;
-> +	}
-> +}
-> +
-> +int clock_decode_periph_id(const void *blob, int node) {
-> +	enum periph_id id;
-> +	u32 cell[2];
-> +	int err;
-> +
-> +	err = fdtdec_get_int_array(blob, node, "clocks", cell,
-> +				   ARRAY_SIZE(cell));
+The first patch cleans up kirkwood_init() by moving a flag setting to it's
+appropriate location.  This will help later when converting the audio driver.
 
-This call to fdtdec_get_int_array() breaks Harmony and Ventana builds, since they're not yet DT-enabled (CONFIG_OF_CONTROL isn't #defined).
+Next, I pull the functionality of kirkwood_init() into kirkwood_dt_init() in
+board-dt.c  This way, as drivers are converted, their init calls can be removed
+from kirkwood_dt_init() and non-fdt users won't be affected (they call
+kirkwood_init()).
 
-I'd fix this myself, but I'm not sure what the correct fix is to keep Harmony/Ventana building & booting.
+Last, I converted the two easiest drivers, rtc and wdt.  The xor and crypto
+drivers remain for a later patch series.
 
-Please fix, test on all Tegra2 builds (MAKEALL -s tegra2) and resend. Thanks.
+Jason Cooper (4):
+  ARM: kirkwood: move var setting to correct location.
+  ARM: kirkwood: fdt: absorb kirkwood_init()
+  ARM: kirkwood: convert rtc-mv to fdt.
+  ARM: kirkwood: convert orion-wdt to fdt.
 
-Tom
+ arch/arm/boot/dts/kirkwood.dtsi   |   12 ++++++++++
+ arch/arm/mach-kirkwood/board-dt.c |   28 ++++++++++++++++++++++-
+ arch/arm/mach-kirkwood/common.c   |   10 ++++----
+ arch/arm/mach-kirkwood/common.h   |    6 +++++
+ drivers/rtc/rtc-mv.c              |   19 ++++++++++++++++
+ drivers/watchdog/orion_wdt.c      |   44 ++++++++++++++++++++++++++----------
+ 6 files changed, 101 insertions(+), 18 deletions(-)
 
-> +	if (err)
-> +		return -1;
-> +	id = clk_id_to_periph_id(cell[1]);
-> +	assert(clock_periph_id_isvalid(id));
-> +	return id;
-> +}
-> +
->  int clock_verify(void)
->  {
->  	struct clk_pll *pll = get_pll(CLOCK_ID_PERIPH); diff --git
-> a/arch/arm/include/asm/arch-tegra2/clock.h b/arch/arm/include/asm/arch-
-> tegra2/clock.h
-> index 080ef18..6b12c76 100644
-> --- a/arch/arm/include/asm/arch-tegra2/clock.h
-> +++ b/arch/arm/include/asm/arch-tegra2/clock.h
-> @@ -177,6 +177,7 @@ enum periph_id {
->  	PERIPH_ID_CRAM2,
-> 
->  	PERIPH_ID_COUNT,
-> +	PERIPH_ID_NONE = -1,
->  };
-> 
->  /* Converts a clock number to a clock register: 0=L, 1=H, 2=U */ @@ -355,6
-> +356,18 @@ unsigned clock_get_rate(enum clock_id clkid);
->   */
->  void clock_ll_start_uart(enum periph_id periph_id);
-> 
-> +/**
-> + * Decode a peripheral ID from a device tree node.
-> + *
-> + * This works by looking up the peripheral's 'clocks' node and reading
-> +out
-> + * the second cell, which is the clock number / peripheral ID.
-> + *
-> + * @param blob		FDT blob to use
-> + * @param node		Node to look at
-> + * @return peripheral ID, or PERIPH_ID_NONE if none  */ enum periph_id
-> +clock_decode_periph_id(const void *blob, int node);
-> +
->  /*
->   * Checks that clocks are valid and prints a warning if not
->   *
-> --
-> 1.7.7.3
 -- 
-nvpublic
+1.7.3.4
