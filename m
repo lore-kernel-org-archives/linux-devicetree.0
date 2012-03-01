@@ -1,7 +1,7 @@
 From: Haojian Zhuang <haojian.zhuang@marvell.com>
-Subject: [PATCH 2/8] serial: pxa: add OF support
-Date: Thu,  1 Mar 2012 14:10:22 +0800
-Message-ID: <1330582228-12424-3-git-send-email-haojian.zhuang@marvell.com>
+Subject: [PATCH 1/8] gpio: pxa: add OF support
+Date: Thu,  1 Mar 2012 14:10:21 +0800
+Message-ID: <1330582228-12424-2-git-send-email-haojian.zhuang@marvell.com>
 References: <1330582228-12424-1-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,119 +21,87 @@ To: arnd@arndb.de, linux-arm-kernel@lists.infradead.org, devicetree-discuss@list
 Cc: Haojian Zhuang <haojian.zhuang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Parse uart device id from alias in DTS file.
+gpio-pxa drivers needs to parse two properties: mrvl,gpio-irq0 and
+mrvl,gpio-irq1.
+
+There may be 3 irqs in gpio devices in arch-pxa. The first one may
+be only for gpio0, the second on may be only for gpio1, and the last
+one may be the irq mux for other gpios. In arch-mmp, there's only
+one irq mux for all gpios.
+
+Since irq mux is common, we only specify it in interrupts propery.
+And we creates two properties mrvl,gpio-irq0 and mrvl,gpio-irq1 for
+arch-pxa.
 
 Signed-off-by: Haojian Zhuang <haojian.zhuang@marvell.com>
 ---
- drivers/tty/serial/pxa.c |   57 ++++++++++++++++++++++++++++++++++++---------
- 1 files changed, 45 insertions(+), 12 deletions(-)
+ drivers/gpio/gpio-pxa.c |   40 +++++++++++++++++++++++++++++++++++++---
+ 1 files changed, 37 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
-index 5c8e3bb..380f15f 100644
---- a/drivers/tty/serial/pxa.c
-+++ b/drivers/tty/serial/pxa.c
-@@ -36,6 +36,7 @@
- #include <linux/circ_buf.h>
- #include <linux/delay.h>
- #include <linux/interrupt.h>
+diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
+index b2d3ee1..7d8e1d0 100644
+--- a/drivers/gpio/gpio-pxa.c
++++ b/drivers/gpio/gpio-pxa.c
+@@ -18,6 +18,7 @@
+ #include <linux/init.h>
+ #include <linux/irq.h>
+ #include <linux/io.h>
 +#include <linux/of.h>
  #include <linux/platform_device.h>
- #include <linux/tty.h>
- #include <linux/tty_flip.h>
-@@ -781,6 +782,39 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
- };
- #endif
+ #include <linux/syscore_ops.h>
+ #include <linux/slab.h>
+@@ -464,6 +465,39 @@ static int pxa_gpio_nums(void)
+ 	return count;
+ }
  
-+static struct of_device_id serial_pxa_dt_ids[] = {
-+	{ .compatible = "mrvl,pxa-uart", },
-+	{ .compatible = "mrvl,mmp-uart", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
-+
 +#ifdef CONFIG_OF
-+static int serial_pxa_probe_dt(struct platform_device *pdev,
-+			       struct uart_pxa_port *sport)
++static int __devinit pxa_gpio_probe_dt(struct platform_device *pdev,
++				       int *irq0, int *irq1, int *irq_mux)
 +{
 +	struct device_node *np = pdev->dev.of_node;
-+	int ret;
++	const __be32 *irq;
 +
-+	if (!np)
-+		return 1;
-+
-+	ret = of_alias_get_id(np, "serial");
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
-+		return ret;
-+	}
-+	sport->port.line = ret;
++	irq = of_get_property(np, "mrvl,gpio-irq0", NULL);
++	if (irq)
++		*irq0 = be32_to_cpup(irq);
++	irq = of_get_property(np, "mrvl,gpio-irq1", NULL);
++	if (irq)
++		*irq1 = be32_to_cpup(irq);
++	*irq_mux = platform_get_irq(pdev, 0);
 +	return 0;
 +}
 +#else
-+static int serial_pxa_probe_dt(struct platform_device *pdev,
-+			       struct uart_pxa_port *sport)
++static int __devinit pxa_gpio_probe_dt(struct platform_device *pdev,
++				       int *irq0, int *irq1, int *irq_mux)
 +{
 +	return 1;
 +}
 +#endif
 +
- static int serial_pxa_probe(struct platform_device *dev)
++static int __devinit pxa_gpio_probe_irq(struct platform_device *pdev,
++					int *irq0, int *irq1, int *irq_mux)
++{
++	*irq0 = platform_get_irq_byname(pdev, "gpio0");
++	*irq1 = platform_get_irq_byname(pdev, "gpio1");
++	*irq_mux = platform_get_irq_byname(pdev, "gpio_mux");
++	return 0;
++}
++
+ static int __devinit pxa_gpio_probe(struct platform_device *pdev)
  {
- 	struct uart_pxa_port *sport;
-@@ -792,7 +826,7 @@ static int serial_pxa_probe(struct platform_device *dev)
- 	if (!mmres || !irqres)
- 		return -ENODEV;
+ 	struct pxa_gpio_chip *c;
+@@ -476,9 +510,9 @@ static int __devinit pxa_gpio_probe(struct platform_device *pdev)
+ 	if (!pxa_last_gpio)
+ 		return -EINVAL;
  
--	sport = kzalloc(sizeof(struct uart_pxa_port), GFP_KERNEL);
-+	sport = kzalloc(sizeof(struct uart_pxa_port) + 8, GFP_KERNEL);
- 	if (!sport)
- 		return -ENOMEM;
- 
-@@ -808,20 +842,18 @@ static int serial_pxa_probe(struct platform_device *dev)
- 	sport->port.irq = irqres->start;
- 	sport->port.fifosize = 64;
- 	sport->port.ops = &serial_pxa_pops;
--	sport->port.line = dev->id;
- 	sport->port.dev = &dev->dev;
- 	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
- 	sport->port.uartclk = clk_get_rate(sport->clk);
- 
--	switch (dev->id) {
--	case 0: sport->name = "FFUART"; break;
--	case 1: sport->name = "BTUART"; break;
--	case 2: sport->name = "STUART"; break;
--	case 3: sport->name = "HWUART"; break;
--	default:
--		sport->name = "???";
--		break;
--	}
-+	ret = serial_pxa_probe_dt(dev, sport);
+-	irq0 = platform_get_irq_byname(pdev, "gpio0");
+-	irq1 = platform_get_irq_byname(pdev, "gpio1");
+-	irq_mux = platform_get_irq_byname(pdev, "gpio_mux");
++	ret = pxa_gpio_probe_dt(pdev, &irq0, &irq1, &irq_mux);
 +	if (ret > 0)
-+		sport->port.line = dev->id;
-+	else if (ret < 0)
-+		goto err_clk;
-+	sport->name = (char *)((unsigned int)sport + 8);
-+	/* name can't exceed 8 bytes */
-+	sprintf(sport->name, "UART%d", sport->port.line + 1);
- 
- 	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
- 	if (!sport->port.membase) {
-@@ -829,7 +861,7 @@ static int serial_pxa_probe(struct platform_device *dev)
- 		goto err_clk;
- 	}
- 
--	serial_pxa_ports[dev->id] = sport;
-+	serial_pxa_ports[sport->port.line] = sport;
- 
- 	uart_add_one_port(&serial_pxa_reg, &sport->port);
- 	platform_set_drvdata(dev, sport);
-@@ -866,6 +898,7 @@ static struct platform_driver serial_pxa_driver = {
- #ifdef CONFIG_PM
- 		.pm	= &serial_pxa_pm_ops,
- #endif
-+		.of_match_table = serial_pxa_dt_ids,
- 	},
- };
- 
++		ret = pxa_gpio_probe_irq(pdev, &irq0, &irq1, &irq_mux);
+ 	if ((irq0 > 0 && irq1 <= 0) || (irq0 <= 0 && irq1 > 0)
+ 		|| (irq_mux <= 0))
+ 		return -EINVAL;
 -- 
 1.7.0.4
