@@ -1,146 +1,55 @@
 From: Karol Lewandowski <k.lewandowsk@samsung.com>
-Subject: Re: [PATCH 1/3] [media] s5p-tv: Add initial DT-support for sii9234
-Date: Thu, 01 Mar 2012 16:11:16 +0100
-Message-ID: <4F4F9194.5010705@samsung.com>
+Subject: Re: [PATCH 3/3] [media] s5p-tv: Add initial DT-support for TV mixer
+Date: Thu, 01 Mar 2012 18:27:05 +0100
+Message-ID: <4F4FB169.6030606@samsung.com>
 References: <1330527107-21222-1-git-send-email-k.lewandowsk@samsung.com>
- <1330527107-21222-2-git-send-email-k.lewandowsk@samsung.com>
- <CAJuYYwRSgHLyWSaAyxAWwdSzUHXRmGTirgi_Wvcsfd89kWDx0g@mail.gmail.com>
+ <1330527107-21222-4-git-send-email-k.lewandowsk@samsung.com>
+ <CAJuYYwSYtSzbxjtCBbXxHp33Zo+-4=YrA+LVZvOe=X8-c+vxJQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwRSgHLyWSaAyxAWwdSzUHXRmGTirgi_Wvcsfd89kWDx0g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwSYtSzbxjtCBbXxHp33Zo+-4=YrA+LVZvOe=X8-c+vxJQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: t.stanislaws@samsung.com, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+Cc: t.stanislaws@samsung.com, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01.03.2012 04:09, Thomas Abraham wrote:
-
-> Hi Karol,
-
-
-Hi!
-
+On 01.03.2012 04:18, Thomas Abraham wrote:
 
 > On 29 February 2012 20:21, Karol Lewandowski <k.lewandowsk@samsung.com> wrote:
->> Make it possible to instantiate sii9234, HDMI's MHL, from regular
->> device tree description.
->>
->> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
->> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 >> ---
->>  Documentation/devicetree/bindings/i2c/sii9234.txt |   14 ++++++++++++++
->>  drivers/media/video/s5p-tv/sii9234_drv.c          |   20 +++++++++++++++++++-
->>  2 files changed, 33 insertions(+), 1 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/i2c/sii9234.txt
+>>  drivers/media/video/s5p-tv/mixer_drv.c |    9 +++++++++
+>>  1 files changed, 9 insertions(+), 0 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/i2c/sii9234.txt b/Documentation/devicetree/bindings/i2c/sii9234.txt
->> new file mode 100644
->> index 0000000..7bb7636
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/sii9234.txt
->> @@ -0,0 +1,14 @@
->> +* SII 9234
->> +
-> 
-> A minimal description about this device would be helpful here.
-> 
->> +Required properties :
->> + - compatible : "sii,9234"
-> 
-> To be more informative, can this be changed to "sil,mhl-9234".
-
-
-Thanks for pointing this out - I'll fix compat string and add description.
-
-> 
->> + - reg        : i2c device address
->> + - gpio-reset : gpio line used to reset IC
->> +
->> +Example:
->> +
->> +       mhl@39 {
->> +               compatible = "sii,9234";
->> +               reg = <0x39>;
->> +               gpio-reset = <&gpf3 4 0 0 0>;
->> +       };
->> diff --git a/drivers/media/video/s5p-tv/sii9234_drv.c b/drivers/media/video/s5p-tv/sii9234_drv.c
->> index 0f31ecc..0a1511a 100644
->> --- a/drivers/media/video/s5p-tv/sii9234_drv.c
->> +++ b/drivers/media/video/s5p-tv/sii9234_drv.c
->> @@ -22,6 +22,8 @@
->>  #include <linux/pm_runtime.h>
->>  #include <linux/regulator/machine.h>
->>  #include <linux/slab.h>
->> +#include <linux/of.h>
->> +#include <linux/of_gpio.h>
->>
->>  #include <mach/gpio.h>
->>  #include <plat/gpio-cfg.h>
->> @@ -338,7 +340,15 @@ static int __devinit sii9234_probe(struct i2c_client *client,
->>                goto fail_ctx;
->>        }
->>
->> -       ctx->gpio_n_reset = pdata->gpio_n_reset;
->> +       if (dev->of_node) {
->> +               ctx->gpio_n_reset = of_get_named_gpio(dev->of_node, "gpio-reset", 0);
->> +               if (ctx->gpio_n_reset < 0) {
-> 
-> if (gpio_is_valid(ctx->gpio_n_reset)) can be used here.
-
-
-Will fix, I wasn't aware of this either.
-
-> 
->> +                       ret = -ENODEV;
->> +                       goto fail_power;
->> +               }
->> +       } else
->> +               ctx->gpio_n_reset = pdata->gpio_n_reset;
-> 
-> linux coding style suggests to have braces for 'else' branch when
-> braces are used for the 'if' branch.
-
-
-Ok.
-
-> 
->> +
->>        ret = gpio_request(ctx->gpio_n_reset, "MHL_RST");
->>        if (ret) {
->>                dev_err(dev, "failed to acquire MHL_RST gpio\n");
->> @@ -401,6 +411,13 @@ static int __devexit sii9234_remove(struct i2c_client *client)
+>> diff --git a/drivers/media/video/s5p-tv/mixer_drv.c b/drivers/media/video/s5p-tv/mixer_drv.c
+>> index a2c0c25..6bf4a9e 100644
+>> --- a/drivers/media/video/s5p-tv/mixer_drv.c
+>> +++ b/drivers/media/video/s5p-tv/mixer_drv.c
+>> @@ -448,6 +448,14 @@ static int __devexit mxr_remove(struct platform_device *pdev)
 >>        return 0;
 >>  }
 >>
 >> +#ifdef CONFIG_OF
->> +static const struct of_device_id sii9234_dt_match[] = {
->> +       { .compatible = "sii,9234" },
->> +       { },
->> +};
->> +MODULE_DEVICE_TABLE(of, sii9234_dt_match);
->> +#endif
->>
->>  static const struct i2c_device_id sii9234_id[] = {
->>        { "SII9234", 0 },
->> @@ -413,6 +430,7 @@ static struct i2c_driver sii9234_driver = {
->>                .name   = "sii9234",
->>                .owner  = THIS_MODULE,
->>                .pm = &sii9234_pm_ops,
->> +               .of_match_table = of_match_ptr(sii9234_dt_match),
->>        },
->>        .probe          = sii9234_probe,
->>        .remove         = __devexit_p(sii9234_remove),
->> --
->> 1.7.8.3
->>
+>> +static const struct of_device_id mxr_dt_match[] = {
+>> +       { .compatible = "samsung,exynos4210-tvmixer" },
 > 
-> Thanks,
-> Thomas.
+> If the tvmixer module is also available in SoC's prior to Exynos4210,
+> and if tvmixer in Exynos4210 is similar to tvmixer found on prior
+> SoC's, the base version should indicate that. For instance, if the
+> tvmixer started to appear from s5pv210 onwards, then the compatible
+> value should be "samsung,s5pv210-tvmixer". The compatible string
+> should indicate the base version.
 
 
-Thanks for reviewing this!
+Fair point, although I'm afraid that chosing "base" version might be
+tricky sometimes (e.g. while g2d seems to be available on s5pv210 driver
+itself have been tested only on s5pv310/exynos4210 - chosing s5pv210 as
+base doesn't look like best idea.)
+
+I'll resend fixed patches later.
+
+Thank you very much for review!
 
 Regards,
 -- 
