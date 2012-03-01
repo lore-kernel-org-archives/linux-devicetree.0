@@ -1,108 +1,147 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: [GIT PULL v2] at91: irqdomain and device tree for 3.4
-Date: Thu, 01 Mar 2012 15:53:26 +0100
-Message-ID: <4F4F8D66.7040205@atmel.com>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: Re: [PATCH 1/3] [media] s5p-tv: Add initial DT-support for sii9234
+Date: Thu, 01 Mar 2012 16:11:16 +0100
+Message-ID: <4F4F9194.5010705@samsung.com>
+References: <1330527107-21222-1-git-send-email-k.lewandowsk@samsung.com>
+ <1330527107-21222-2-git-send-email-k.lewandowsk@samsung.com>
+ <CAJuYYwRSgHLyWSaAyxAWwdSzUHXRmGTirgi_Wvcsfd89kWDx0g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwRSgHLyWSaAyxAWwdSzUHXRmGTirgi_Wvcsfd89kWDx0g@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: t.stanislaws@samsung.com, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd and Olof,
+On 01.03.2012 04:09, Thomas Abraham wrote:
 
-This pull request supersedes the previous:
-"[GIT PULL] at91: irqdomain and device tree for AIC and GPIO"
-
-This series adds irqdomain and device tree support for both the
-interrupt and GPIO controllers of AT91 SoC. It has been discussed a lot
-and I think that I have addressed all comments and advices.
-
-To the AIC, GPIO device tree work, it also adds the the conversion of the 
-PIT and TC timers, the PIO3 support and some basic LED and gpio-keys entries.
-
-The irqdomain work takes advantage of Grant's patch series that is present
-in:
-git://git.secretlab.ca/git/linux-2.6 irqdomain/next
-This branch is merged into this tree, on top of at91/base2+cleanup (aka cleanup2)
-and before the application of new AT91 material.
+> Hi Karol,
 
 
-The following changes since commit 89d4a1753b6632327f18d6c8e0842b366b736621:
-
-  Merge branch 'irqdomain/next' of git://git.secretlab.ca/git/linux-2.6 (2012-03-01 13:26:51 +0100)
-
-are available in the git repository at:
+Hi!
 
 
-  git://github.com/at91linux/linux-at91.git at91-3.4-cleanup2+DT
+> On 29 February 2012 20:21, Karol Lewandowski <k.lewandowsk@samsung.com> wrote:
+>> Make it possible to instantiate sii9234, HDMI's MHL, from regular
+>> device tree description.
+>>
+>> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>  Documentation/devicetree/bindings/i2c/sii9234.txt |   14 ++++++++++++++
+>>  drivers/media/video/s5p-tv/sii9234_drv.c          |   20 +++++++++++++++++++-
+>>  2 files changed, 33 insertions(+), 1 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/i2c/sii9234.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/sii9234.txt b/Documentation/devicetree/bindings/i2c/sii9234.txt
+>> new file mode 100644
+>> index 0000000..7bb7636
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/sii9234.txt
+>> @@ -0,0 +1,14 @@
+>> +* SII 9234
+>> +
+> 
+> A minimal description about this device would be helpful here.
+> 
+>> +Required properties :
+>> + - compatible : "sii,9234"
+> 
+> To be more informative, can this be changed to "sil,mhl-9234".
 
 
-for you to fetch changes up to f75622f4679479d352d2fa83e0d84c6c13cfcb5f:
+Thanks for pointing this out - I'll fix compat string and add description.
 
-  ARM: at91: at91sam9x5cm/dt: add leds support (2012-03-01 22:34:22 +0800)
+> 
+>> + - reg        : i2c device address
+>> + - gpio-reset : gpio line used to reset IC
+>> +
+>> +Example:
+>> +
+>> +       mhl@39 {
+>> +               compatible = "sii,9234";
+>> +               reg = <0x39>;
+>> +               gpio-reset = <&gpf3 4 0 0 0>;
+>> +       };
+>> diff --git a/drivers/media/video/s5p-tv/sii9234_drv.c b/drivers/media/video/s5p-tv/sii9234_drv.c
+>> index 0f31ecc..0a1511a 100644
+>> --- a/drivers/media/video/s5p-tv/sii9234_drv.c
+>> +++ b/drivers/media/video/s5p-tv/sii9234_drv.c
+>> @@ -22,6 +22,8 @@
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/regulator/machine.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_gpio.h>
+>>
+>>  #include <mach/gpio.h>
+>>  #include <plat/gpio-cfg.h>
+>> @@ -338,7 +340,15 @@ static int __devinit sii9234_probe(struct i2c_client *client,
+>>                goto fail_ctx;
+>>        }
+>>
+>> -       ctx->gpio_n_reset = pdata->gpio_n_reset;
+>> +       if (dev->of_node) {
+>> +               ctx->gpio_n_reset = of_get_named_gpio(dev->of_node, "gpio-reset", 0);
+>> +               if (ctx->gpio_n_reset < 0) {
+> 
+> if (gpio_is_valid(ctx->gpio_n_reset)) can be used here.
 
-----------------------------------------------------------------
-Jean-Christophe PLAGNIOL-VILLARD (6):
-      ARM: at91: pit add DT support
-      ARM: at91: usb_a9g20/dt: add leds support
-      ARM: at91: at91sam9m10g45ek/dt: add gpio-keys support
-      ARM: at91: usb_a9g20/dt: add gpio-keys support
-      ARM: at91: at91sam9x5cm/dt: add leds support
 
-Nicolas Ferre (16):
-      ARM: at91/aic: add irq domain and device tree support
-      ARM: at91/snapper9260: move gpio_to_irq out of structure initialization
-      ARM/USB: at91/ohci-at91: remove the use of irq_to_gpio
-      ARM: at91/gpio: change comments and one variable name
-      ARM: at91/gpio: add irqdomain and DT support
-      ARM: at91/gpio: non-DT builds do not have gpio_chip.of_node field
-      ARM: at91/gpio: add .to_irq gpio_chip handler
-      ARM: at91/gpio: remove the static specification of gpio_chip.base
-      ARM: at91/board-dt: remove AIC irq domain from board file
-      ARM: at91: AIC and GPIO IRQ device tree initialization
-      ARM: at91/pit: add traces in case of error  
-      ARM: at91/tclib: take iomem size from resource
-      ARM: at91/tc: add device tree support to atmel_tclib
-      ARM: at91/tc/clocksource: Add 32 bit variant to Timer Counter
-      ARM: at91: add sam9_smc.o to at91sam9x5 build
-      ARM: at91/pio: add new PIO3 features
+Will fix, I wasn't aware of this either.
 
- .../devicetree/bindings/arm/atmel-aic.txt          |   38 ++
- .../devicetree/bindings/arm/atmel-at91.txt         |   32 +
- .../devicetree/bindings/gpio/gpio_atmel.txt        |   20 +
- arch/arm/Kconfig                                   |    1 +
- arch/arm/boot/dts/at91sam9g20.dtsi                 |   68 ++-
- arch/arm/boot/dts/at91sam9g45.dtsi                 |   87 +++-
- arch/arm/boot/dts/at91sam9m10g45ek.dts             |   72 +++
- arch/arm/boot/dts/at91sam9x5.dtsi                  |   12 +-
- arch/arm/boot/dts/at91sam9x5cm.dtsi                |   15 +
- arch/arm/boot/dts/usb_a9g20.dts                    |   23 +
- arch/arm/mach-at91/Makefile                        |    2 +-
- arch/arm/mach-at91/at91sam9260.c                   |    7 +
- arch/arm/mach-at91/at91sam9260_devices.c           |   21 +-
- arch/arm/mach-at91/at91sam926x_time.c              |   68 ++-
- arch/arm/mach-at91/at91sam9g45.c                   |    3 +
- arch/arm/mach-at91/at91sam9g45_devices.c           |   21 +-
- arch/arm/mach-at91/at91sam9x5.c                    |    2 -
- arch/arm/mach-at91/board-dt.c                      |   14 +-
- arch/arm/mach-at91/board-snapper9260.c             |   10 +-
- arch/arm/mach-at91/generic.h                       |    6 +
- arch/arm/mach-at91/gpio.c                          |  625 +++++++++++++++++---
- arch/arm/mach-at91/include/mach/at91_pio.h         |   25 +
- arch/arm/mach-at91/include/mach/gpio.h             |   17 +-
- arch/arm/mach-at91/irq.c                           |  132 ++++-
- drivers/clocksource/tcb_clksrc.c                   |   90 ++-
- drivers/misc/atmel_tclib.c                         |   64 ++-
- drivers/usb/host/ohci-at91.c                       |    5 +-
- include/linux/atmel_tc.h                           |   10 +
- 28 files changed, 1286 insertions(+), 204 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/atmel-aic.txt
- create mode 100644 Documentation/devicetree/bindings/arm/atmel-at91.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_atmel.txt
+> 
+>> +                       ret = -ENODEV;
+>> +                       goto fail_power;
+>> +               }
+>> +       } else
+>> +               ctx->gpio_n_reset = pdata->gpio_n_reset;
+> 
+> linux coding style suggests to have braces for 'else' branch when
+> braces are used for the 'if' branch.
 
-Thanks, best regards,
+
+Ok.
+
+> 
+>> +
+>>        ret = gpio_request(ctx->gpio_n_reset, "MHL_RST");
+>>        if (ret) {
+>>                dev_err(dev, "failed to acquire MHL_RST gpio\n");
+>> @@ -401,6 +411,13 @@ static int __devexit sii9234_remove(struct i2c_client *client)
+>>        return 0;
+>>  }
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id sii9234_dt_match[] = {
+>> +       { .compatible = "sii,9234" },
+>> +       { },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sii9234_dt_match);
+>> +#endif
+>>
+>>  static const struct i2c_device_id sii9234_id[] = {
+>>        { "SII9234", 0 },
+>> @@ -413,6 +430,7 @@ static struct i2c_driver sii9234_driver = {
+>>                .name   = "sii9234",
+>>                .owner  = THIS_MODULE,
+>>                .pm = &sii9234_pm_ops,
+>> +               .of_match_table = of_match_ptr(sii9234_dt_match),
+>>        },
+>>        .probe          = sii9234_probe,
+>>        .remove         = __devexit_p(sii9234_remove),
+>> --
+>> 1.7.8.3
+>>
+> 
+> Thanks,
+> Thomas.
+
+
+Thanks for reviewing this!
+
+Regards,
 -- 
-Nicolas Ferre
+Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
