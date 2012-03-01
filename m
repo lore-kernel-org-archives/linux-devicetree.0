@@ -1,30 +1,139 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 0/4] twl-regulator DT adaptation and updates to add new
- regulators
-Date: Thu, 01 Mar 2012 11:10:40 +0530
-Message-ID: <4F4F0BD8.7090506@ti.com>
-References: <1330421953-29517-1-git-send-email-rnayak@ti.com> <20120229231818.GA8295@opensource.wolfsonmicro.com>
+From: Haojian Zhuang <haojian.zhuang@marvell.com>
+Subject: [PATCH 2/8] serial: pxa: add OF support
+Date: Thu,  1 Mar 2012 14:10:22 +0800
+Message-ID: <1330582228-12424-3-git-send-email-haojian.zhuang@marvell.com>
+References: <1330582228-12424-1-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120229231818.GA8295@opensource.wolfsonmicro.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1330582228-12424-1-git-send-email-haojian.zhuang@marvell.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arnd@arndb.de, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, linux@arm.linux.org.uk, eric.y.miao@gmail.com
+Cc: Haojian Zhuang <haojian.zhuang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 March 2012 04:48 AM, Mark Brown wrote:
-> On Tue, Feb 28, 2012 at 03:09:09PM +0530, Rajendra Nayak wrote:
->> Hi Mark,
->>
->> Here is a consolidated series which adds DT support for twl regulator
->> driver and adds support for VDD1/2/3 regulator and support for
->> fixed LDO V1V8 and V2V1. The patches are based on -next and tested
->> on omap3 beagle and omap4 panda boards.
->
-> Applied all, thanks.  Please do try to use subject lines consistent with
-> the subsystem.
+Parse uart device id from alias in DTS file.
 
-Thanks Mark, will remember to keep the subject lines consistent
-hence forth.
+Signed-off-by: Haojian Zhuang <haojian.zhuang@marvell.com>
+---
+ drivers/tty/serial/pxa.c |   57 ++++++++++++++++++++++++++++++++++++---------
+ 1 files changed, 45 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+index 5c8e3bb..380f15f 100644
+--- a/drivers/tty/serial/pxa.c
++++ b/drivers/tty/serial/pxa.c
+@@ -36,6 +36,7 @@
+ #include <linux/circ_buf.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/tty.h>
+ #include <linux/tty_flip.h>
+@@ -781,6 +782,39 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
+ };
+ #endif
+ 
++static struct of_device_id serial_pxa_dt_ids[] = {
++	{ .compatible = "mrvl,pxa-uart", },
++	{ .compatible = "mrvl,mmp-uart", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
++
++#ifdef CONFIG_OF
++static int serial_pxa_probe_dt(struct platform_device *pdev,
++			       struct uart_pxa_port *sport)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int ret;
++
++	if (!np)
++		return 1;
++
++	ret = of_alias_get_id(np, "serial");
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
++		return ret;
++	}
++	sport->port.line = ret;
++	return 0;
++}
++#else
++static int serial_pxa_probe_dt(struct platform_device *pdev,
++			       struct uart_pxa_port *sport)
++{
++	return 1;
++}
++#endif
++
+ static int serial_pxa_probe(struct platform_device *dev)
+ {
+ 	struct uart_pxa_port *sport;
+@@ -792,7 +826,7 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 	if (!mmres || !irqres)
+ 		return -ENODEV;
+ 
+-	sport = kzalloc(sizeof(struct uart_pxa_port), GFP_KERNEL);
++	sport = kzalloc(sizeof(struct uart_pxa_port) + 8, GFP_KERNEL);
+ 	if (!sport)
+ 		return -ENOMEM;
+ 
+@@ -808,20 +842,18 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 	sport->port.irq = irqres->start;
+ 	sport->port.fifosize = 64;
+ 	sport->port.ops = &serial_pxa_pops;
+-	sport->port.line = dev->id;
+ 	sport->port.dev = &dev->dev;
+ 	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
+ 	sport->port.uartclk = clk_get_rate(sport->clk);
+ 
+-	switch (dev->id) {
+-	case 0: sport->name = "FFUART"; break;
+-	case 1: sport->name = "BTUART"; break;
+-	case 2: sport->name = "STUART"; break;
+-	case 3: sport->name = "HWUART"; break;
+-	default:
+-		sport->name = "???";
+-		break;
+-	}
++	ret = serial_pxa_probe_dt(dev, sport);
++	if (ret > 0)
++		sport->port.line = dev->id;
++	else if (ret < 0)
++		goto err_clk;
++	sport->name = (char *)((unsigned int)sport + 8);
++	/* name can't exceed 8 bytes */
++	sprintf(sport->name, "UART%d", sport->port.line + 1);
+ 
+ 	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
+ 	if (!sport->port.membase) {
+@@ -829,7 +861,7 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 		goto err_clk;
+ 	}
+ 
+-	serial_pxa_ports[dev->id] = sport;
++	serial_pxa_ports[sport->port.line] = sport;
+ 
+ 	uart_add_one_port(&serial_pxa_reg, &sport->port);
+ 	platform_set_drvdata(dev, sport);
+@@ -866,6 +898,7 @@ static struct platform_driver serial_pxa_driver = {
+ #ifdef CONFIG_PM
+ 		.pm	= &serial_pxa_pm_ops,
+ #endif
++		.of_match_table = serial_pxa_dt_ids,
+ 	},
+ };
+ 
+-- 
+1.7.0.4
