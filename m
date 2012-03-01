@@ -1,16 +1,15 @@
-From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 2/3 v4] arm: kirkwood: add dreamplug (fdt) support.
-Date: Thu, 1 Mar 2012 07:20:00 -0500
-Message-ID: <20120301122000.GA6276@titan.lakedaemon.net>
-References: <20120224075753.GA24858@lunn.ch>
- <20120229144450.GB23524@titan.lakedaemon.net>
- <20120229235326.GA3207@lunn.ch>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/8] rtc: sa1100: add OF support
+Date: Thu, 1 Mar 2012 20:52:56 +0800
+Message-ID: <CAN1soZwe+NRaf--SKupqtTnJ=YExT9LYBx+R9jUV3aA0ecbkbg@mail.gmail.com>
+References: <1330582228-12424-1-git-send-email-haojian.zhuang@marvell.com>
+ <1330582228-12424-4-git-send-email-haojian.zhuang@marvell.com>
+ <201203010951.12405.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120229235326.GA3207-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <201203010951.12405.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,36 +19,49 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 01, 2012 at 12:53:26AM +0100, Andrew Lunn wrote:
-> On Wed, Feb 29, 2012 at 09:44:50AM -0500, Jason wrote:
-> > On Fri, Feb 24, 2012 at 08:57:53AM +0100, Andrew Lunn wrote:
-> > > I have some patches under development which will help.
-> > 
-> > Any chance you could shoot those to me?  (on-list preferable)  I'm
-> > thinking we could convert it to an interim solution eg
-> > kirkwood_{get,put}_clock() that would be easy to migrate to generic
-> > CLK/clkdev once it lands.
-> 
-> It is not that easy. It is not kirkwood, but all platform orion, so
-> includes dove, orion5x, mv78xx0 and kirkwood. All these share the same
-> device drivers, since they all share the same SoC peripheral
-> cores. However, only kirkwood has per peripheral gated clocks and all
-> the others share tclk.
-> 
-> I've also broke orion5x twice so far with my patches, since i don't
-> have any hardware with that SoC. So this time i was hoping to ask for
-> testing on orion5x before submitting to mainline.
-> 
-> Mike did say he hoped the generic clk would be ready last week. Maybe
-> we should ping him and ask for a new ETA?
+On Thu, Mar 1, 2012 at 5:51 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 01 March 2012, Haojian Zhuang wrote:
+>> +#ifdef CONFIG_OF
+>> +static int sa1100_rtc_probe_dt(struct platform_device *pdev,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct sa11=
+00_rtc *info)
+>> +{
+>> + =A0 =A0 =A0 info->irq_alarm =3D platform_get_irq(pdev, 0);
+>> + =A0 =A0 =A0 info->irq_1hz =3D platform_get_irq(pdev, 1);
+>> + =A0 =A0 =A0 if (info->irq_1hz < 0 || info->irq_alarm < 0)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+>> + =A0 =A0 =A0 return 0;
+>> +}
+>> +#else
+>> +static int sa1100_rtc_probe_dt(struct platform_device *pdev,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0struct sa11=
+00_rtc *info)
+>> +{
+>> + =A0 =A0 =A0 return 1;
+>> +}
+>> +#endif
+>> +
+>> +static int sa1100_rtc_probe_irq(struct platform_device *pdev,
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct sa1=
+100_rtc *info)
+>> +{
+>> + =A0 =A0 =A0 info->irq_1hz =3D platform_get_irq_byname(pdev, "rtc 1Hz");
+>> + =A0 =A0 =A0 info->irq_alarm =3D platform_get_irq_byname(pdev, "rtc ala=
+rm");
+>> + =A0 =A0 =A0 if (info->irq_1hz < 0 || info->irq_alarm < 0)
+>> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -ENODEV;
+>> + =A0 =A0 =A0 return 0;
+>> +}
+>
+> This should not be necessary. I thought we had already added support
+> for named irq resources coming from the device tree. If not, why not
+> just make the other ones anonymous as well and just use platform_get_irq(=
+)?
+>
 
-Nah, it'll be ready when it's ready.  I'll keep things the way they are
-and gut through the conversion once his stuff is in mainline.
-
-thx,
-
-Jason.
+Yes, platform_get_irq() is better. I'll append the two irqs into
+interrupts property.
