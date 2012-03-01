@@ -1,14 +1,14 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/8] gpio: pxa: add OF support
-Date: Thu, 1 Mar 2012 09:40:36 +0000
-Message-ID: <201203010940.37123.arnd@arndb.de>
+Subject: Re: [PATCH 2/8] serial: pxa: add OF support
+Date: Thu, 1 Mar 2012 09:47:39 +0000
+Message-ID: <201203010947.39601.arnd@arndb.de>
 References: <1330582228-12424-1-git-send-email-haojian.zhuang@marvell.com>
- <1330582228-12424-2-git-send-email-haojian.zhuang@marvell.com>
+ <1330582228-12424-3-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1330582228-12424-2-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1330582228-12424-3-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,37 +23,28 @@ Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR0
 List-Id: devicetree@vger.kernel.org
 
 On Thursday 01 March 2012, Haojian Zhuang wrote:
-> +#ifdef CONFIG_OF
-> +static int __devinit pxa_gpio_probe_dt(struct platform_device *pdev,
-> +                                      int *irq0, int *irq1, int *irq_mux)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       const __be32 *irq;
-> +
-> +       irq = of_get_property(np, "mrvl,gpio-irq0", NULL);
-> +       if (irq)
-> +               *irq0 = be32_to_cpup(irq);
-> +       irq = of_get_property(np, "mrvl,gpio-irq1", NULL);
-> +       if (irq)
-> +               *irq1 = be32_to_cpup(irq);
-> +       *irq_mux = platform_get_irq(pdev, 0);
-> +       return 0;
-> +}
-> +#else
-> +static int __devinit pxa_gpio_probe_dt(struct platform_device *pdev,
-> +                                      int *irq0, int *irq1, int *irq_mux)
-> +{
-> +       return 1;
-> +}
-> +#endif
-> +
+> @@ -792,7 +826,7 @@ static int serial_pxa_probe(struct platform_device *dev)
+>         if (!mmres || !irqres)
+>                 return -ENODEV;
+>  
+> -       sport = kzalloc(sizeof(struct uart_pxa_port), GFP_KERNEL);
+> +       sport = kzalloc(sizeof(struct uart_pxa_port) + 8, GFP_KERNEL);
+>         if (!sport)
+>                 return -ENOMEM;
+>  
+> @@ -808,20 +842,18 @@ static int serial_pxa_probe(struct platform_device *dev)
+> +       ret = serial_pxa_probe_dt(dev, sport);
+> +       if (ret > 0)
+> +               sport->port.line = dev->id;
+> +       else if (ret < 0)
+> +               goto err_clk;
+> +       sport->name = (char *)((unsigned int)sport + 8);
+> +       /* name can't exceed 8 bytes */
+> +       sprintf(sport->name, "UART%d", sport->port.line + 1);
 
-It seems that you are not following the regular IRQ binding. This should
-probably use irq_of_parse_and_map().
+The pointer arithmetic looks wrong to me, both technically and morally ;-)
 
-For other code like the one above, I suggest you use
-of_property_read_u32_array(), which will already compile to nothing
-if CONFIG_OF is not set, so you don't have to provide two versions of
-the fucntion.
+Since struct uart_pxa_port is a local data structure, why don't you just
+turn the name field into a fixed-length array?
 
 	Arnd
