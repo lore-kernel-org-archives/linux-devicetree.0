@@ -1,14 +1,14 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: kirkwood: convert rtc-mv to fdt.
-Date: Thu, 1 Mar 2012 19:35:58 +0000
-Message-ID: <201203011935.58503.arnd@arndb.de>
+Subject: Re: [PATCH 4/4] ARM: kirkwood: convert orion-wdt to fdt.
+Date: Thu, 1 Mar 2012 19:48:51 +0000
+Message-ID: <201203011948.51642.arnd@arndb.de>
 References: <cover.1330625877.git.jason@lakedaemon.net>
- <2c985a303f3b9b0cfcead25634b7e1db68d34ee3.1330625878.git.jason@lakedaemon.net>
+ <2f29e88b98b2bcff0c241996e6d7216a60995d2d.1330625878.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <2c985a303f3b9b0cfcead25634b7e1db68d34ee3.1330625878.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <2f29e88b98b2bcff0c241996e6d7216a60995d2d.1330625878.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,43 +23,33 @@ Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
 On Thursday 01 March 2012, Jason Cooper wrote:
-> The comment at mach-kirkwood/common.c:469, says this device is in every
-> kirkwood board.  So, it is placed in kirkwood.dtsi.
->
-> @@ -218,10 +220,15 @@ static int __devinit mv_rtc_probe(struct platform_device *pdev)
->  {
->  	struct resource *res;
->  	struct rtc_plat_data *pdata;
-> +	struct device_node *np = pdev->dev.of_node;
->  	resource_size_t size;
->  	u32 rtc_time;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	if (np)
-> +		of_address_to_resource(np, 0, res);
-> +
->  	if (!res)
->  		return -ENODEV;
->  
-> @@ -257,6 +264,8 @@ static int __devinit mv_rtc_probe(struct platform_device *pdev)
->  
->  	pdata->irq = platform_get_irq(pdev, 0);
->  
-> +	of_property_read_u32(np, "interrupts", &pdata->irq);
-> +
->  	platform_set_drvdata(pdev, pdata);
->  
->  	if (pdata->irq >= 0) {
+>  static int heartbeat = -1;             /* module parameter (seconds) */
+>  static unsigned int wdt_max_duration;  /* (seconds) */
+>  static unsigned int wdt_tclk;
+> +static unsigned int wdt_reg;
+>  static unsigned long wdt_status;
+> static DEFINE_SPINLOCK(wdt_lock);
 
-The two additions here don't seem necessary, the second one not even
-correct: Any interrupts and register properties automatically get
-turned into platform resources when the device is instatiated.
+This variable needs to be a 'void __iomem *', not an int.
 
-The interrupt number should not be taken verbatim from the device tree
-because it is always local to the "interrupt-parent" node, so you would
-have to use irq_of_parse_and map rather than reading the property
-directly, but as I said you don't even need to do that for platform
-devices.
+> +       wdt_reg = TIMER_VIRT_BASE;
+> +
+> +       of_property_read_u32(np, "reg", &wdt_reg);
+> +
+>         if (orion_wdt_miscdev.parent)
+>                 return -EBUSY;
+>         orion_wdt_miscdev.parent = &pdev->dev;
+
+Don't just read a reg property, but use the resource instead and ioremap it.
+
+This driver still uses hardcoded virtual addresses for its registers, which
+we're trying to get rid of. The best solution would be to always put the
+register address into the platform device resources, either hardcoded for
+classic boards or automatic through the device tree.
+
+A reg property is special in that it's not just a number but is relative
+to the "ranges" property of the parent device and can be multiple 32 bit
+values for the address, which get turned into a CPU physical address using
+of_translate_address().
 
 	Arnd
