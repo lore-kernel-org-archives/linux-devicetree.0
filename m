@@ -1,43 +1,109 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH 1/4] regulator: twl6030: add support for vdd1, vdd2 and
- vdd3 regulators
-Date: Fri, 2 Mar 2012 14:53:35 +0100
-Message-ID: <20120302135335.GS9008@sortiz-mobl>
-References: <1330421953-29517-1-git-send-email-rnayak@ti.com>
- <1330421953-29517-2-git-send-email-rnayak@ti.com>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: kirkwood: convert orion-wdt to fdt.
+Date: Fri, 2 Mar 2012 09:15:41 -0500
+Message-ID: <20120302141541.GE11986@titan.lakedaemon.net>
+References: <cover.1330625877.git.jason@lakedaemon.net>
+ <2f29e88b98b2bcff0c241996e6d7216a60995d2d.1330625878.git.jason@lakedaemon.net>
+ <20120302091510.GC29461@kw.sim.vm.gnt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1330421953-29517-2-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: broonie@opensource.wolfsonmicro.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org, Tero Kristo <t-kristo@ti.com>, Kevin Hilman <khilman@ti.com>
+In-Reply-To: <20120302091510.GC29461-tZfvYpCFA3RN6yImKYG91Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Feb 28, 2012 at 03:09:10PM +0530, Rajendra Nayak wrote:
-> From: Tero Kristo <t-kristo@ti.com>
+On Fri, Mar 02, 2012 at 10:15:11AM +0100, Simon Guinot wrote:
+> Hi Jason,
 > 
-> vdd1 and vdd2 are now common regulators for twl4030 and twl6030. Also
-> added vdd3 as a new regulator for twl6030. twl6030 vdd1...vdd3 smps
-> regulator voltages can only be controlled through the smartreflex
-> voltage channel, thus the support for the voltage_get and set is
-> minimal and requires external controller.
+> On Thu, Mar 01, 2012 at 06:20:55PM +0000, Jason Cooper wrote:
+> > Converted register address to a variable so that it could be set from
+> > fdt.  Also, pull clock frequency from fdt and clean up failure logic a
+> > bit.
+> > 
+> > Same as rtc-mv, this device is used in all kirkwood boards.  So, it is
+> > placed in kirkwood.dtsi.
+> > 
+> > Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/kirkwood.dtsi   |    6 +++++
+> >  arch/arm/mach-kirkwood/board-dt.c |    1 -
+> >  arch/arm/mach-kirkwood/common.c   |    2 +-
+> >  arch/arm/mach-kirkwood/common.h   |    1 -
+> >  drivers/watchdog/orion_wdt.c      |   44 ++++++++++++++++++++++++++----------
+> >  5 files changed, 39 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> > index 5fb185c..bf28424 100644
+> > --- a/arch/arm/boot/dts/kirkwood.dtsi
+> > +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> > @@ -8,5 +8,11 @@
+> >  		reg = <0xf1010300 0x1f>;
+> >  		interrupts = <53>;
+> >  	};
+> > +
+> > +	wdt@fed20300 {
+> > +		compatible = "marvell,orion-wdt";
+> > +		reg = <0xfed20300 0x28>;
+> > +		clock-frequency = <200000000>;
+> > +	};
 > 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
-> Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> Cc: Liam Girdwood <lrg@ti.com>
-> Cc: Samuel Ortiz <sameo@linux.intel.com>
-Acked-by: Samuel Ortiz <sameo@linux.intel.com>
+> How this will work for boards using a different clock frequency (TCLK) ?
+> Here, we could have 166MHz for example.
+> 
+> Can this node be updated during the board initialization with a detected
+> TCLK value ?
+> 
+> Or maybe this clock-frequency can reference a TCLK frequency defined in
+> a board specific dts (I don't know if the DT format allow such things) ?
 
-Mark, Liam, are you guys taking this one ?
+Grr... good catch.  I originally had this in kirkwood-dreamplug.dts,
+which is always 200000000.  That's not the case in kirkwood.dtsi.  What
+I would like to do, and I haven't had time to look into it (I thought I
+would tackle it later as a refinement :-( ), is a reference of some
+sort, eg:
 
-Cheers,
-Samuel.
+in kirkwood.dtsi:
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+/ {
+	compatible = "marvell,kirkwood";
+	tclk:clock-frequency = <200000000>;
+
+	wdt@fed20300 {
+		compatible = "marvell,orion-wdt";
+		reg = <0xfed20300 0x28>;
+		clock-frequency = &tclk;
+	};
+};
+
+then, in kirkwood-foobar.dts
+
+/include/ "kirkwood.dtsi"
+
+/ {
+	model = "foobar";
+	compatible = "...";
+	tclk:clock-frequency = <166000000>;
+};
+
+but I'm not sure if that would work.
+
+In any case, the simplest answer is to set clock-frequency in
+kirkwood-dreamplug.dts as a root node property, and then each driver
+that needs tclk, requests the clock-frequency from the root node.
+Hopefully, Grant can chime in on this one.
+
+Thanks for the review,
+
+Jason.
