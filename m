@@ -1,73 +1,53 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: kirkwood: convert orion-wdt to fdt.
-Date: Fri, 2 Mar 2012 14:56:47 +0000
-Message-ID: <201203021456.47896.arnd@arndb.de>
-References: <cover.1330625877.git.jason@lakedaemon.net>
- <20120302091510.GC29461@kw.sim.vm.gnt>
- <20120302141541.GE11986@titan.lakedaemon.net>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/4] regulator: twl6030: add support for vdd1, vdd2 and
+ vdd3 regulators
+Date: Fri, 2 Mar 2012 15:15:58 +0000
+Message-ID: <20120302151558.GH3230@opensource.wolfsonmicro.com>
+References: <1330421953-29517-1-git-send-email-rnayak@ti.com>
+ <1330421953-29517-2-git-send-email-rnayak@ti.com>
+ <20120302135335.GS9008@sortiz-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120302141541.GE11986-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gKijDXBCEH69PxaN"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120302135335.GS9008@sortiz-mobl>
+Sender: linux-omap-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Rajendra Nayak <rnayak@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, b-cousson@ti.com, patches@linaro.org, linaro-dev@lists.linaro.org, Tero Kristo <t-kristo@ti.com>, Kevin Hilman <khilman@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 March 2012, Jason wrote:
-> Grr... good catch.  I originally had this in kirkwood-dreamplug.dts,
-> which is always 200000000.  That's not the case in kirkwood.dtsi.  What
-> I would like to do, and I haven't had time to look into it (I thought I
-> would tackle it later as a refinement :-( ), is a reference of some
-> sort, eg:
-> 
-> in kirkwood.dtsi:
-> 
-> / {
->         compatible = "marvell,kirkwood";
->         tclk:clock-frequency = <200000000>;
-> 
->         wdt@fed20300 {
->                 compatible = "marvell,orion-wdt";
->                 reg = <0xfed20300 0x28>;
->                 clock-frequency = &tclk;
->         };
-> };
-> 
-> then, in kirkwood-foobar.dts
-> 
-> include "kirkwood.dtsi"
-> 
-> / {
->         model = "foobar";
->         compatible = "...";
->         tclk:clock-frequency = <166000000>;
-> };
-> 
-> but I'm not sure if that would work.
 
-That would make wdt@fed20300/clock-frequency a phandle pointing to the
-root property, which is not what we want here.
+--gKijDXBCEH69PxaN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> In any case, the simplest answer is to set clock-frequency in
-> kirkwood-dreamplug.dts as a root node property, and then each driver
-> that needs tclk, requests the clock-frequency from the root node.
-> Hopefully, Grant can chime in on this one.
+On Fri, Mar 02, 2012 at 02:53:35PM +0100, Samuel Ortiz wrote:
 
-I think you can just pick a reasonable default value for
-wdt@fed20300/clock-frequency, and let the board override that
-by setting it to something else if necessary. I suppose this
-will also change a bit when kirkwood gets moved over to generic
-clk support in the future and starts using the clk binding instead
-of what you do now.
+> Mark, Liam, are you guys taking this one ?
 
-	Arnd
+Yes.
+
+--gKijDXBCEH69PxaN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJPUOQEAAoJEBus8iNuMP3drysP/1ZhAsOXaxnY2Rt6XzSu7QNt
+LZY/ZsZUW+XUesYr06DXRp5wGV/7AdZM9qN736UPG8W/mhXgxTHIQ+daIHfY8yt6
+/FyA4tWW2mrc/GiFEywzWaSeAwavBdG4cpqQGA7Njitv2qHQq5MeCzBuE11bD5c8
+h0vGCd4wOOLaKV8WizvOygtz8SUToMpOSyrDasVuB90uBljO3oQgcJkReK2v+Vdw
+g6QUwv7EtBk9Pa5N5AyWvIoUn35uPMWjCTXv5PfyTfncw0uVoyMsXoTXy1B3tN+y
+mRVqwus7KY204CULEKKtK60o26dMQnxr5gcvWAog695esY9nRaqCRB4x7ydGCUNE
+jTI37qH07fcG7SzFQtRvTEc39N/BTI9dXMQ8TgaMvyL8KCf7uECpLxmwlGyf3RUp
+zHJFyuHLG3rTW69MhuBk7+8e2tERD12ecbEBHtn1QuMn9yexzrdfww70/MrtLAxQ
++UJyVCOOrxbVoEdCi/ufw5JDOuRMuPTSSuJQalftNAjZ9zShaOZ9wOIeD3obj8oS
+NWETE8RmiNJ2K2ZSAlisk9QqifHKm004VhY2VbCZgSfRMdVx+ld58ETako+Xa09U
+urrObsKFicT7D4hIEpq8ZSEXB5rhrDbFyjEgNiOFPEP+kBSNcA3rUVHwiToEVG/C
+ipbEMlBmZlYjzdo5+3Sh
+=97br
+-----END PGP SIGNATURE-----
+
+--gKijDXBCEH69PxaN--
