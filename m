@@ -1,172 +1,49 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: [PATCH 3/5 v2] ARM: kirkwood: fdt: absorb kirkwood_init()
-Date: Fri,  2 Mar 2012 17:50:20 +0000
-Message-ID: <ebd67d97d13fed0608bcf482e739479693c465b5.1330709314.git.jason@lakedaemon.net>
-References: <cover.1330709314.git.jason@lakedaemon.net>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PULL REQUEST] ARM: kirkwood: fdt: convert kirkwood init funcs
+ to fdt
+Date: Fri, 2 Mar 2012 12:52:33 -0500
+Message-ID: <20120302175233.GM11986@titan.lakedaemon.net>
+References: <cover.1330625877.git.jason@lakedaemon.net>
+ <cover.1330709314.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1330709314.git.jason@lakedaemon.net>
-In-Reply-To: <cover.1330709314.git.jason@lakedaemon.net>
-References: <cover.1330709314.git.jason@lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de, grant.likely@secretlab.ca
-Cc: devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1330709314.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We need to absorb kirkwood_init() into kirkwood_dt_init() so that as we
-convert drivers, we can remove the platform call, eg
-kirkwood_rtc_init().  This maintains compatibility with non-fdt
-configurations because they still call kirkwood_init() in common.c.
+The following changes since commit 759a45185ac0e4dfaf8bbfcb390ec73aca4b7a34:
 
-As drivers are converted, we will reinstate the 'static' qualifier in
-common.c.
+  ARM: kirkwood: convert uart0 to devicetree. (2012-02-27 16:21:44 +0000)
 
-Signed-off-by: Jason Cooper <jason@lakedaemon.net>
----
+are available in the git repository at:
+  git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_test
 
-Changes since v1:
+Jason Cooper (5):
+      ARM: kirkwood: covert orion-spi to fdt.
+      ARM: kirkwood: move var setting to correct location.
+      ARM: kirkwood: fdt: absorb kirkwood_init()
+      ARM: kirkwood: convert rtc-mv to fdt.
+      ARM: kirkwood: convert orion-wdt to fdt.
 
-    - changed printk() to pr_info() as suggested by Grant Likely.
-
- arch/arm/mach-kirkwood/board-dt.c |   29 ++++++++++++++++++++++++++++-
- arch/arm/mach-kirkwood/common.c   |   12 ++++++------
- arch/arm/mach-kirkwood/common.h   |    8 ++++++++
- 3 files changed, 42 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index 4960e63..2a45656 100644
---- a/arch/arm/mach-kirkwood/board-dt.c
-+++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -29,7 +29,9 @@
- #include <linux/spi/orion_spi.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-+#include <asm/mach/map.h>
- #include <mach/kirkwood.h>
-+#include <mach/bridge-regs.h>
- #include <plat/mvsdio.h>
- #include "common.h"
- #include "mpp.h"
-@@ -115,7 +117,32 @@ static void __init dreamplug_init(void)
- 
- static void __init kirkwood_dt_init(void)
- {
--	kirkwood_init();
-+	pr_info("Kirkwood: %s, TCLK=%d.\n", kirkwood_id(), kirkwood_tclk);
-+
-+	/*
-+	 * Disable propagation of mbus errors to the CPU local bus,
-+	 * as this causes mbus errors (which can occur for example
-+	 * for PCI aborts) to throw CPU aborts, which we're not set
-+	 * up to deal with.
-+	 */
-+	writel(readl(CPU_CONFIG) & ~CPU_CONFIG_ERROR_PROP, CPU_CONFIG);
-+
-+	kirkwood_setup_cpu_mbus();
-+
-+#ifdef CONFIG_CACHE_FEROCEON_L2
-+	kirkwood_l2_init();
-+#endif
-+
-+	/* internal devices that every board has */
-+	kirkwood_rtc_init();
-+	kirkwood_wdt_init();
-+	kirkwood_xor0_init();
-+	kirkwood_xor1_init();
-+	kirkwood_crypto_init();
-+
-+#ifdef CONFIG_KEXEC
-+	kexec_reinit = kirkwood_enable_pcie;
-+#endif
- 
- 	if (of_machine_is_compatible("globalscale,dreamplug"))
- 		dreamplug_init();
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index d9e4d99..167b6c8 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -163,7 +163,7 @@ void __init kirkwood_nand_init_rnb(struct mtd_partition *parts, int nr_parts,
- /*****************************************************************************
-  * SoC RTC
-  ****************************************************************************/
--static void __init kirkwood_rtc_init(void)
-+void __init kirkwood_rtc_init(void)
- {
- 	orion_rtc_init(RTC_PHYS_BASE, IRQ_KIRKWOOD_RTC);
- }
-@@ -279,7 +279,7 @@ void __init kirkwood_crypto_init(void)
- /*****************************************************************************
-  * XOR0
-  ****************************************************************************/
--static void __init kirkwood_xor0_init(void)
-+void __init kirkwood_xor0_init(void)
- {
- 	kirkwood_clk_ctrl |= CGC_XOR0;
- 
-@@ -291,7 +291,7 @@ static void __init kirkwood_xor0_init(void)
- /*****************************************************************************
-  * XOR1
-  ****************************************************************************/
--static void __init kirkwood_xor1_init(void)
-+void __init kirkwood_xor1_init(void)
- {
- 	kirkwood_clk_ctrl |= CGC_XOR1;
- 
-@@ -303,7 +303,7 @@ static void __init kirkwood_xor1_init(void)
- /*****************************************************************************
-  * Watchdog
-  ****************************************************************************/
--static void __init kirkwood_wdt_init(void)
-+void __init kirkwood_wdt_init(void)
- {
- 	orion_wdt_init(kirkwood_tclk);
- }
-@@ -393,7 +393,7 @@ void __init kirkwood_audio_init(void)
- /*
-  * Identify device ID and revision.
-  */
--static char * __init kirkwood_id(void)
-+char * __init kirkwood_id(void)
- {
- 	u32 dev, rev;
- 
-@@ -436,7 +436,7 @@ static char * __init kirkwood_id(void)
- 	}
- }
- 
--static void __init kirkwood_l2_init(void)
-+void __init kirkwood_l2_init(void)
- {
- #ifdef CONFIG_CACHE_FEROCEON_L2_WRITETHROUGH
- 	writel(readl(L2_CONFIG_REG) | L2_WRITETHROUGH, L2_CONFIG_REG);
-diff --git a/arch/arm/mach-kirkwood/common.h b/arch/arm/mach-kirkwood/common.h
-index 9071a39..c382447 100644
---- a/arch/arm/mach-kirkwood/common.h
-+++ b/arch/arm/mach-kirkwood/common.h
-@@ -51,6 +51,14 @@ void kirkwood_nand_init_rnb(struct mtd_partition *parts, int nr_parts, int (*dev
- void kirkwood_audio_init(void);
- void kirkwood_restart(char, const char *);
- 
-+char *kirkwood_id(void);
-+void kirkwood_l2_init(void);
-+void kirkwood_rtc_init(void);
-+void kirkwood_wdt_init(void);
-+void kirkwood_xor0_init(void);
-+void kirkwood_xor1_init(void);
-+void kirkwood_crypto_init(void);
-+
- extern int kirkwood_tclk;
- extern struct sys_timer kirkwood_timer;
- 
--- 
-1.7.3.4
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |   34 +++++++++++++++
+ arch/arm/boot/dts/kirkwood.dtsi          |   12 +++++
+ arch/arm/mach-kirkwood/board-dt.c        |   67 +++++++++++------------------
+ arch/arm/mach-kirkwood/common.c          |   21 +++++++--
+ arch/arm/mach-kirkwood/common.h          |    6 +++
+ drivers/rtc/rtc-mv.c                     |    7 +++
+ drivers/spi/spi-orion.c                  |   37 +++++++++++++++--
+ drivers/watchdog/orion_wdt.c             |   48 ++++++++++++++++-----
+ 8 files changed, 170 insertions(+), 62 deletions(-)
