@@ -1,145 +1,78 @@
-From: David Daney <david.daney@cavium.com>
-Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
-Date: Fri, 02 Mar 2012 10:03:58 -0800
-Message-ID: <4F510B8E.3070201@cavium.com>
-References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com> <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com> <4F50D7C2.7080204@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 5/5 v2] ARM: kirkwood: convert orion-wdt to fdt.
+Date: Fri, 2 Mar 2012 18:32:33 +0000
+Message-ID: <201203021832.34901.arnd@arndb.de>
+References: <cover.1330709314.git.jason@lakedaemon.net>
+ <e2fe5e97a83fc753559bbb18d5d111ed01b89034.1330709314.git.jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F50D7C2.7080204@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <e2fe5e97a83fc753559bbb18d5d111ed01b89034.1330709314.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2012 06:22 AM, Rob Herring wrote:
-[...]
->> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->> index ce30e2f..01344ae 100644
->> --- a/arch/mips/Kconfig
->> +++ b/arch/mips/Kconfig
->> @@ -1432,6 +1432,7 @@ config CPU_CAVIUM_OCTEON
->>   	select WEAK_ORDERING
->>   	select CPU_SUPPORTS_HIGHMEM
->>   	select CPU_SUPPORTS_HUGEPAGES
->> +	select IRQ_DOMAIN
->
-> IIRC, Grant has a patch cued up that enables IRQ_DOMAIN for all of MIPS.
->
+On Friday 02 March 2012, Jason Cooper wrote:
+> +       wdt_reg = (void __iomem *)TIMER_VIRT_BASE;
+> +
+> +       ret = of_address_to_resource(np, 0, &res);
+> +       if (ret) {
+> +               printk(KERN_ERR "invalid address\n");
+> +               return ret;
+> +       }
+> +
+> +       wdt_reg = ioremap(res.start, res.end - res.start);
+> +
 
-Indeed, I now see it in linux-next.  I will remove this one.
+This will break non-dt uses because you overwrite the wdt_reg value.
 
->>   	help
->>   	  The Cavium Octeon processor is a highly integrated chip containing
->>   	  many ethernet hardware widgets for networking tasks. The processor
->> diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
->> index bdcedd3..e9f2f6c 100644
->> --- a/arch/mips/cavium-octeon/octeon-irq.c
->> +++ b/arch/mips/cavium-octeon/octeon-irq.c
-[...]
->> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
->> +					      unsigned int line,
->> +					      unsigned int bit,
->> +					      struct irq_domain *domain,
->>   					      struct irq_chip *chip,
->>   					      irq_flow_handler_t handler)
->>   {
->> +	struct irq_data *irqd;
->>   	union octeon_ciu_chip_data cd;
->>
->>   	irq_set_chip_and_handler(irq, chip, handler);
->> -
->>   	cd.l = 0;
->>   	cd.s.line = line;
->>   	cd.s.bit = bit;
->>
->>   	irq_set_chip_data(irq, cd.p);
->>   	octeon_irq_ciu_to_irq[line][bit] = irq;
->> +
->> +	irqd = irq_get_irq_data(irq);
->> +	irqd->hwirq = line<<  6 | bit;
->> +	irqd->domain = domain;
->
-> I think the domain code will set these.
+As I commented before, I think the best approach would be to
+provide a hardcoded resource for the device in the legacy case
+and just use platform_get_resource() to get the resource
+and ioremap it in either case.
 
-It is my understanding that the domain code only does this for:
+of_address_to_resource() works only for the DT case, while
+platform_get_resource() works in either case.
 
-o irq_domain_add_legacy()
+You need to add something like
 
-o irq_create_direct_mapping()
+8<---
+diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
+index 089899a..d16f43f 100644
+--- a/arch/arm/plat-orion/common.c
++++ b/arch/arm/plat-orion/common.c
+@@ -568,13 +568,17 @@ void __init orion_spi_1_init(unsigned long mapbase,
+  ****************************************************************************/
+ static struct orion_wdt_platform_data orion_wdt_data;
+ 
++static struct resource orion_wdt_resource =
++               DEFINE_RES_MEM(TIMER_PHYS_BASE, 0x28);
++
+ static struct platform_device orion_wdt_device = {
+        .name           = "orion_wdt",
+        .id             = -1,
+        .dev            = {
+                .platform_data  = &orion_wdt_data,
+        },
+-       .num_resources  = 0,
++       .resources      = &orion_wdt_resource,
++       .num_resources  = 1,
+ };
+ 
+ void __init orion_wdt_init(unsigned long tclk)
+---->8
 
-o irq_create_mapping()
-
-We use none of those.  So I do it here.
-
-If there is a better way, I am open to suggestions.
-
-[...]
->> @@ -982,6 +1092,10 @@ static void __init octeon_irq_init_ciu(void)
->>   	struct irq_chip *chip_mbox;
->>   	struct irq_chip *chip_wd;
->>   	struct irq_chip *chip_gpio;
->> +	struct device_node *gpio_node;
->> +	struct device_node *ciu_node;
->> +	struct irq_domain *gpio_domain;
->> +	struct irq_domain *ciu_domain;
->>
->>   	octeon_irq_init_ciu_percpu();
->>   	octeon_irq_setup_secondary = octeon_irq_setup_secondary_ciu;
->> @@ -1011,83 +1125,144 @@ static void __init octeon_irq_init_ciu(void)
->>   	/* Mips internal */
->>   	octeon_irq_init_core();
->>
->> +	gpio_node = of_find_compatible_node(NULL, NULL, "cavium,octeon-3860-gpio");
->> +	ciu_node = of_find_compatible_node(NULL, NULL, "cavium,octeon-3860-ciu");
->> +	/* gpio domain host_data is the base hwirq number. */
->> +	gpio_domain = irq_domain_add_linear(gpio_node, 16,&octeon_irq_domain_gpio_ops, (void *)16);
->
-> It would be better to define a struct here rather than casting a data
-> value to a ptr.
-
-You mean allocate storage for the data somewhere and then pass a pointer 
-to it?
-
-If so, I could, but it would just be adding code and data size just to 
-satisfy some coding style thing...
-
-Or do you want a union of the pointer and my int?  That would use the 
-same amount of storage, but add more source code to gain what?
-
-[...]
->> +	octeon_irq_set_ciu_mapping(OCTEON_IRQ_PEM0, 1, 48,
->> +				   ciu_domain, chip, handle_level_irq);
->> +	octeon_irq_set_ciu_mapping(OCTEON_IRQ_PEM1, 1, 49,
->> +				   ciu_domain, chip, handle_level_irq);
->> +	octeon_irq_set_ciu_mapping(OCTEON_IRQ_SRIO0, 1, 50,
->> +				   ciu_domain, chip, handle_level_irq);
->> +	octeon_irq_set_ciu_mapping(OCTEON_IRQ_SRIO1, 1, 51,
->> +				   ciu_domain, chip, handle_level_irq);
->> +	octeon_irq_set_ciu_mapping(OCTEON_IRQ_LMC0, 1, 52,
->> +				   ciu_domain, chip, handle_level_irq);
->> +	octeon_irq_set_ciu_mapping(OCTEON_IRQ_DFM, 1, 56,
->> +				   ciu_domain, chip, handle_level_irq);
->> +	octeon_irq_set_ciu_mapping(OCTEON_IRQ_RST, 1, 63,
->> +				   ciu_domain, chip, handle_level_irq);
->>
->
-> Can all these calls be moved into the .map function somehow?
->
-
-No, the non-OF code using the OCTEON_IRQ_* symbols doesn't use 
-irq_domain, so the .map function would never be used.
+and an appropriate definition for TIMER_PHYS_BASE.
 
 
-> edge vs. level should be driven by dts.
->
-
-We may have to disagree on this point.  Because:
-
-1) edge vs. level can be accurately probed, as we do here.
-
-2) The dts doesnt contain the information.
-
-
-David Daney
+	Arnd
