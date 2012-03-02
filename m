@@ -1,17 +1,15 @@
-From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PULL REQUEST v2] ARM: kirkwood: fdt: convert kirkwood init funcs
- to fdt
-Date: Fri, 2 Mar 2012 15:00:34 -0500
-Message-ID: <20120302200034.GQ11986@titan.lakedaemon.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 5/5 v2] ARM: kirkwood: convert orion-wdt to fdt.
+Date: Fri, 2 Mar 2012 20:02:59 +0000
+Message-ID: <201203022003.08756.arnd@arndb.de>
 References: <cover.1330709314.git.jason@lakedaemon.net>
- <e2fe5e97a83fc753559bbb18d5d111ed01b89034.1330709314.git.jason@lakedaemon.net>
  <201203021832.34901.arnd@arndb.de>
+ <20120302195710.GP11986@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201203021832.34901.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20120302195710.GP11986-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,31 +19,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The following changes since commit 759a45185ac0e4dfaf8bbfcb390ec73aca4b7a34:
+On Friday 02 March 2012, Jason wrote:
+> On Fri, Mar 02, 2012 at 06:32:33PM +0000, Arnd Bergmann wrote:
+>
+> > As I commented before, I think the best approach would be to
+> > provide a hardcoded resource for the device in the legacy case
+> > and just use platform_get_resource() to get the resource
+> > and ioremap it in either case.
+> 
+> Sorry, my denseness got in the way.  When you said hardcoded, I thought
+> you meant #define TIMER_VIRT_BASE .
 
-  ARM: kirkwood: convert uart0 to devicetree. (2012-02-27 16:21:44 +0000)
+Using TIMER_VIRT_BASE wouldn't be all that wrong either, but I think it's
+better to use the same code path in both ways. Using a resource also has
+the nice side-effect of allowing us to build a multiplatform kernel for
+anything that uses orion-wdt but has different constants for TIMER_VIRT_BASE.
 
-are available in the git repository at:
-  git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_test
-
-Jason Cooper (5):
-      ARM: kirkwood: covert orion-spi to fdt.
-      ARM: kirkwood: move var setting to correct location.
-      ARM: kirkwood: fdt: absorb kirkwood_init()
-      ARM: kirkwood: convert rtc-mv to fdt.
-      ARM: kirkwood: convert orion-wdt to fdt.
-
- arch/arm/boot/dts/kirkwood-dreamplug.dts |   34 +++++++++++++++
- arch/arm/boot/dts/kirkwood.dtsi          |   12 +++++
- arch/arm/mach-kirkwood/board-dt.c        |   67 +++++++++++------------------
- arch/arm/mach-kirkwood/common.c          |   21 +++++++--
- arch/arm/mach-kirkwood/common.h          |    6 +++
- arch/arm/plat-orion/common.c             |    7 +++-
- drivers/rtc/rtc-mv.c                     |    7 +++
- drivers/spi/spi-orion.c                  |   37 +++++++++++++++--
- drivers/watchdog/orion_wdt.c             |   46 +++++++++++++++-----
- 9 files changed, 174 insertions(+), 63 deletions(-)
+	Arnd
