@@ -1,16 +1,14 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PULL REQUEST v2] ARM: kirkwood: fdt: convert kirkwood init funcs
- to fdt
-Date: Fri, 2 Mar 2012 21:18:05 +0000
-Message-ID: <201203022118.05796.arnd@arndb.de>
-References: <cover.1330709314.git.jason@lakedaemon.net>
- <20120302200034.GQ11986@titan.lakedaemon.net>
- <201203022035.44672.arnd@arndb.de>
+From: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add empty of_platform_populate() for
+ !CONFIG_OF_ADDRESS (sparc)
+Date: Fri, 2 Mar 2012 22:20:16 +0100
+Message-ID: <4F513990.1030401@ti.com>
+References: <1330121218-10442-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203022035.44672.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1330121218-10442-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,25 +18,48 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 March 2012, Arnd Bergmann wrote:
-> On Friday 02 March 2012, Jason wrote:
-> > The following changes since commit 759a45185ac0e4dfaf8bbfcb390ec73aca4b7a34:
-> > 
-> >   ARM: kirkwood: convert uart0 to devicetree. (2012-02-27 16:21:44 +0000)
-> > 
-> > are available in the git repository at:
-> >   git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_test
-> > 
-> 
-> Applied to next/dt branch.
+Hi Grant,
 
-On second thought, I should probably wait for the maintainer to comment
-as well ;-)
+In fact this patch is not working for build without CONFIG_OF like x86.
 
-Nico, does this look ok to you?
+On 2/24/2012 11:06 PM, Grant Likely wrote:
+> --- a/include/linux/of_platform.h
+> +++ b/include/linux/of_platform.h
+> @@ -81,7 +81,7 @@ extern struct platform_device *of_device_alloc(struct device_node *np,
+>   					 struct device *parent);
+>   extern struct platform_device *of_find_device_by_node(struct device_node *np);
+>
+> -#if !defined(CONFIG_SPARC) /* SPARC has its own device registration method */
+> +#ifdef CONFIG_OF_ADDRESS /* device reg helpers depend on OF_ADDRESS */
+>   /* Platform devices and busses creation */
+>   extern struct platform_device *of_platform_device_create(struct device_node *np,
+>   						   const char *bus_id,
+> @@ -94,7 +94,15 @@ extern int of_platform_populate(struct device_node *root,
+>   				const struct of_device_id *matches,
+>   				const struct of_dev_auxdata *lookup,
+>   				struct device *parent);
+> -#endif /* !CONFIG_SPARC */
+> +#else
+> +static inline int of_platform_populate(struct device_node *root,
+> +					const struct of_device_id *matches,
+> +					const struct of_dev_auxdata *lookup,
+> +					struct device *parent)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif /* !CONFIG_OF_ADDRESS */
+>
+>   #endif /* CONFIG_OF_DEVICE */
 
-	Arnd
+Because if CONFIG_OF_DEVICE is not defined, then the stub for 
+of_platform_populate will not be defined either. It should exist for any 
+config without CONFIG_OF.
+
+Building twl4030 for x86 is actually broken.
+
+Regards,
+Benoit
