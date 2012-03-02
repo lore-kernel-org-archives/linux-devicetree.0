@@ -1,56 +1,37 @@
-From: Jason <jason@lakedaemon.net>
-Subject: Re: [PATCH 0/4] ARM: kirkwood: fdt: convert kirkwood init funcs to fdt
-Date: Fri, 2 Mar 2012 12:04:41 -0500
-Message-ID: <20120302170441.GK11986@titan.lakedaemon.net>
-References: <cover.1330625877.git.jason@lakedaemon.net>
- <201203012214.07019.arnd@arndb.de>
- <20120302163121.GI11986@titan.lakedaemon.net>
- <201203021658.12047.arnd@arndb.de>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] Initial Device Tree system for Snowball
+Date: Fri, 2 Mar 2012 18:05:54 +0100
+Message-ID: <20120302170554.GA21255@game.jcrosoft.org>
+References: <1330703567-17925-1-git-send-email-niklas.hernaeus@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201203021658.12047.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1330703567-17925-1-git-send-email-niklas.hernaeus-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Niklas Hernaeus <niklas.hernaeus-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thomas Espersson <thomas.espersson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2012 at 04:58:11PM +0000, Arnd Bergmann wrote:
-> On Friday 02 March 2012, Jason wrote:
-> > > 
-> > > I have other commit IDs for the two patches that I took from your
-> > > emails, so you should rebase the other patches on top of the
-> > > version that I have in the arm-soc/kirkwood/board branch, otherwise
-> > > we end up with duplicate commits my tree when I pull them again.
-> > 
-> > Got it, I cherry-picked the series over and incorporated Grant's
-> > suggestions.
-> > 
+On 16:52 Fri 02 Mar     , Niklas Hernaeus wrote:
+> From: Niklas Hernaeus <niklas.hernaeus-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> Just making sure you know about this one:
-> 
-> git rebase -i --onto arm-soc/kirkwood/board torvalds/master
-> 
-> The '-i' lets you pick which ones you want to move over, then it
-> applies all patches from the current branch that are not on
-> torvalds/master on top of the last commit from arm-soc/kirkwood/board.
-> 
-> If you don't know it yet, I suggest you play with this for an hour
-> or so that will be very well invested time. If you knew this, then nevermind.
+> This is the base system for using Device Tree for Snowball.
+> The new boardfile is a slightly modified copy of the original board file,
+> so new Device Tree stuff can simply be added and code removed, while
+> functionality stays the same.
+duplicating the code is not a good idea
 
-I use the daylights out of git rebase -i, but hadn't made use of --onto
-yet.  Thanks for the tip.
+do the invert put the minimum in c and then add the rest slowly via DT
 
-thx,
-
-Jason.
+Best Regards,
+J.
