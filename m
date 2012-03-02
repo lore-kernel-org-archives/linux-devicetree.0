@@ -1,288 +1,159 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/6] ARM: at91: add pmc DT support
-Date: Fri,  2 Mar 2012 20:54:04 +0100
-Message-ID: <1330718048-9314-2-git-send-email-plagnioj@jcrosoft.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 4/6] ARM: at91: add RSTC (Reset Controller) dt support
+Date: Fri,  2 Mar 2012 20:54:06 +0100
+Message-ID: <1330718048-9314-4-git-send-email-plagnioj@jcrosoft.com>
 References: <20120302192844.GB21255@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120302192844.GB21255-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120302192844.GB21255@game.jcrosoft.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Specified the main Oscillator via clock binding.
-This will allow to do not hardcode it anymore in the DT board at 12MHz.
-
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 ---
- .../devicetree/bindings/arm/atmel-pmc.txt          |   11 ++++
- arch/arm/boot/dts/at91sam9g20.dtsi                 |    5 ++
- arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 ++
- arch/arm/boot/dts/at91sam9m10g45ek.dts             |   11 ++++
- arch/arm/boot/dts/at91sam9x5.dtsi                  |    5 ++
- arch/arm/boot/dts/at91sam9x5cm.dtsi                |   11 ++++
- arch/arm/boot/dts/usb_a9g20.dts                    |   11 ++++
- arch/arm/mach-at91/clock.c                         |   56 ++++++++++++++++++--
- arch/arm/mach-at91/generic.h                       |    1 +
- arch/arm/mach-at91/setup.c                         |    3 +-
- 10 files changed, 112 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/atmel-pmc.txt
+ .../devicetree/bindings/arm/atmel-at91.txt         |   12 ++++++++
+ arch/arm/boot/dts/at91sam9g20.dtsi                 |    5 +++
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 +++
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    5 +++
+ arch/arm/mach-at91/at91sam9x5.c                    |    1 -
+ arch/arm/mach-at91/setup.c                         |   30 ++++++++++++++++++++
+ 6 files changed, 57 insertions(+), 1 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/atmel-pmc.txt b/Documentation/devicetree/bindings/arm/atmel-pmc.txt
-new file mode 100644
-index 0000000..389bed5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/atmel-pmc.txt
-@@ -0,0 +1,11 @@
-+* Power Management Controller (PMC)
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+index 1aeaf6f..a64f867 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+@@ -30,3 +30,15 @@ One interrupt per TC channel in a TC block:
+ 		reg = <0xfffdc000 0x100>;
+ 		interrupts = <26 4 27 4 28 4>;
+ 	};
 +
-+Required properties:
-+- compatible: Should be "atmel,at91rm9200-pmc"
-+- reg: Should contain PMC registers location and length
++RSTC Reset Controller required properties:
++- compatible: Should be "atmel,<chip>-rstc".
++  <chip> can be "at91sam9260" or "at91sam9g45"
++- reg: Should contain registers location and length
 +
-+Examples:
-+	pmc: pmc@fffffc00 {
-+		compatible = "atmel,at91rm9200-pmc";
-+		reg = <0xfffffc00 0x100>;
++Example:
++
++	rstc@fffffd00 {
++		compatible = "atmel,at91sam9260-rstc";
++		reg = <0xfffffd00 0x10>;
 +	};
 diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-index c030703..ee94828 100644
+index ee94828..5414347 100644
 --- a/arch/arm/boot/dts/at91sam9g20.dtsi
 +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-@@ -59,6 +59,11 @@
- 				reg = <0xfffff000 0x200>;
+@@ -64,6 +64,11 @@
+ 				reg = <0xfffffc00 0x100>;
  			};
  
-+			pmc: pmc@fffffc00 {
-+				compatible = "atmel,at91rm9200-pmc";
-+				reg = <0xfffffc00 0x100>;
++			rstc@fffffd00 {
++				compatible = "atmel,at91sam9260-rstc";
++				reg = <0xfffffd00 0x10>;
 +			};
 +
  			pit: timer@fffffd30 {
  				compatible = "atmel,at91sam9260-pit";
  				reg = <0xfffffd30 0xf>;
 diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 4b54424..dfb71d5 100644
+index dfb71d5..e2ccba5 100644
 --- a/arch/arm/boot/dts/at91sam9g45.dtsi
 +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -60,6 +60,11 @@
- 				reg = <0xfffff000 0x200>;
+@@ -65,6 +65,11 @@
+ 				reg = <0xfffffc00 0x100>;
  			};
  
-+			pmc: pmc@fffffc00 {
-+				compatible = "atmel,at91rm9200-pmc";
-+				reg = <0xfffffc00 0x100>;
++			rstc@fffffd00 {
++				compatible = "atmel,at91sam9g45-rstc";
++				reg = <0xfffffd00 0x10>;
 +			};
 +
  			pit: timer@fffffd30 {
  				compatible = "atmel,at91sam9260-pit";
  				reg = <0xfffffd30 0xf>;
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 4b1eb36..7147588 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -21,6 +21,17 @@
- 		reg = <0x70000000 0x4000000>;
- 	};
- 
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		main_clock: clock@0 {
-+			compatible = "atmel,osc", "fixed-clock";
-+			clock-frequency = <12000000>;
-+		};
-+	};
-+
- 	ahb {
- 		apb {
- 			dbgu: serial@ffffee00 {
 diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index ac3c96c..a7d7107 100644
+index a7d7107..54e3030 100644
 --- a/arch/arm/boot/dts/at91sam9x5.dtsi
 +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -58,6 +58,11 @@
- 				reg = <0xfffff000 0x200>;
+@@ -63,6 +63,11 @@
+ 				reg = <0xfffffc00 0x100>;
  			};
  
-+			pmc: pmc@fffffc00 {
-+				compatible = "atmel,at91rm9200-pmc";
-+				reg = <0xfffffc00 0x100>;
++			rstc@fffffe00 {
++				compatible = "atmel,at91sam9g45-rstc";
++				reg = <0xfffffe00 0x10>;
 +			};
 +
  			pit: timer@fffffe30 {
  				compatible = "atmel,at91sam9260-pit";
  				reg = <0xfffffe30 0xf>;
-diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-index 3f84585..03116b2 100644
---- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-@@ -12,6 +12,17 @@
- 		reg = <0x20000000 0x8000000>;
- 	};
+diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
+index 7333276..0b82c34 100644
+--- a/arch/arm/mach-at91/at91sam9x5.c
++++ b/arch/arm/mach-at91/at91sam9x5.c
+@@ -309,7 +309,6 @@ static void __init at91sam9x5_ioremap_registers(void)
  
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		main_clock: clock@0 {
-+			compatible = "atmel,osc", "fixed-clock";
-+			clock-frequency = <12000000>;
-+		};
-+	};
-+
- 	ahb {
- 		nand0: nand@40000000 {
- 			nand-bus-width = <8>;
-diff --git a/arch/arm/boot/dts/usb_a9g20.dts b/arch/arm/boot/dts/usb_a9g20.dts
-index e4a732f..390c481 100644
---- a/arch/arm/boot/dts/usb_a9g20.dts
-+++ b/arch/arm/boot/dts/usb_a9g20.dts
-@@ -20,6 +20,17 @@
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		main_clock: clock@0 {
-+			compatible = "atmel,osc", "fixed-clock";
-+			clock-frequency = <12000000>;
-+		};
-+	};
-+
- 	ahb {
- 		apb {
- 			dbgu: serial@fffff200 {
-diff --git a/arch/arm/mach-at91/clock.c b/arch/arm/mach-at91/clock.c
-index be51ca7..a0f4d74 100644
---- a/arch/arm/mach-at91/clock.c
-+++ b/arch/arm/mach-at91/clock.c
-@@ -23,6 +23,7 @@
- #include <linux/delay.h>
- #include <linux/clk.h>
- #include <linux/io.h>
-+#include <linux/of_address.h>
- 
- #include <mach/hardware.h>
- #include <mach/at91_pmc.h>
-@@ -671,16 +672,12 @@ static void __init at91_upll_usbfs_clock_init(unsigned long main_clock)
- 	uhpck.rate_hz /= 1 + ((at91_pmc_read(AT91_PMC_USB) & AT91_PMC_OHCIUSBDIV) >> 8);
- }
- 
--int __init at91_clock_init(unsigned long main_clock)
-+static int __init at91_pmc_init(unsigned long main_clock)
+ void __init at91sam9x5_initialize(void)
  {
- 	unsigned tmp, freq, mckr;
- 	int i;
- 	int pll_overclock = false;
+-	arm_pm_restart = at91sam9g45_restart;
+ 	at91_extern_irq = (1 << AT91SAM9X5_ID_IRQ0);
  
--	at91_pmc_base = ioremap(AT91_PMC, 256);
--	if (!at91_pmc_base)
--		panic("Impossible to ioremap AT91_PMC 0x%x\n", AT91_PMC);
--
- 	/*
- 	 * When the bootloader initialized the main oscillator correctly,
- 	 * there's no problem using the cycle counter.  But if it didn't,
-@@ -802,6 +799,55 @@ int __init at91_clock_init(unsigned long main_clock)
- 	return 0;
- }
- 
-+#if defined(CONFIG_OF)
-+static struct of_device_id pmc_ids[] = {
-+	{ .compatible = "atmel,at91rm9200-pmc" },
-+	{ /*sentinel*/ }
-+};
-+
-+static struct of_device_id osc_ids[] = {
-+	{ .compatible = "atmel,osc" },
-+	{ /*sentinel*/ }
-+};
-+
-+int __init at91_dt_clock_init(void)
-+{
-+	struct device_node *np;
-+	u32 main_clock = 0;
-+
-+	np = of_find_matching_node(NULL, pmc_ids);
-+	if (!np)
-+		panic("unable to find compatible pmc node in dtb\n");
-+
-+	at91_pmc_base = of_iomap(np, 0);
-+	if (!at91_pmc_base)
-+		panic("unable to map pmc cpu registers\n");
-+
-+	of_node_put(np);
-+
-+	/* retrieve the freqency of fixed clocks from device tree */
-+	np = of_find_matching_node(NULL, osc_ids);
-+	if (np) {
-+		u32 rate;
-+		if (!of_property_read_u32(np, "clock-frequency", &rate))
-+			main_clock = rate;
-+	}
-+
-+	of_node_put(np);
-+
-+	return at91_pmc_init(main_clock);
-+}
-+#endif
-+
-+int __init at91_clock_init(unsigned long main_clock)
-+{
-+	at91_pmc_base = ioremap(AT91_PMC, 256);
-+	if (!at91_pmc_base)
-+		panic("Impossible to ioremap AT91_PMC 0x%x\n", AT91_PMC);
-+
-+	return at91_pmc_init(main_clock);
-+}
-+
- /*
-  * Several unused clocks may be active.  Turn them off.
-  */
-diff --git a/arch/arm/mach-at91/generic.h b/arch/arm/mach-at91/generic.h
-index d5f5083..dd9b346 100644
---- a/arch/arm/mach-at91/generic.h
-+++ b/arch/arm/mach-at91/generic.h
-@@ -53,6 +53,7 @@ extern void __init at91sam9rl_set_console_clock(int id);
- extern void __init at91sam9g45_set_console_clock(int id);
- #ifdef CONFIG_AT91_PMC_UNIT
- extern int __init at91_clock_init(unsigned long main_clock);
-+extern int __init at91_dt_clock_init(void);
- #else
- static int inline at91_clock_init(unsigned long main_clock) { return 0; }
- #endif
+ 	/* Register GPIO subsystem (using DT) */
 diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-index c0bd5a6..d7abc25 100644
+index d7abc25..3e48b59 100644
 --- a/arch/arm/mach-at91/setup.c
 +++ b/arch/arm/mach-at91/setup.c
-@@ -292,9 +292,8 @@ void __init at91_dt_initialize(void)
+@@ -287,8 +287,38 @@ void __init at91_ioremap_matrix(u32 base_addr)
+ }
+ 
+ #if defined(CONFIG_OF)
++static struct of_device_id rstc_ids[] = {
++	{ .compatible = "atmel,at91sam9260-rstc", .data = at91sam9_alt_restart },
++	{ .compatible = "atmel,at91sam9g45-rstc", .data = at91sam9g45_restart },
++	{ /*sentinel*/ }
++};
++
++static void at91_dt_rstc(void)
++{
++	struct device_node *np;
++	const struct of_device_id *of_id;
++
++	np = of_find_matching_node(NULL, rstc_ids);
++	if (!np)
++		panic("unable to find compatible rstc node in dtb\n");
++
++	at91_rstc_base = of_iomap(np, 0);
++	if (!at91_rstc_base)
++		panic("unable to map rstc cpu registers\n");
++
++	of_id = of_match_node(rstc_ids, np);
++	if (!of_id)
++		panic("AT91: rtsc no restart function availlable\n");
++
++	arm_pm_restart = of_id->data;
++
++	of_node_put(np);
++}
++
+ void __init at91_dt_initialize(void)
+ {
++	at91_dt_rstc();
++
  	/* temporary until have the ramc binding*/
  	at91_boot_soc.ioremap_registers();
  
--	/* temporary until have the pmc binding */
- 	/* Init clock subsystem */
--	at91_clock_init(12000000);
-+	at91_dt_clock_init();
- 
- 	/* Register the processor-specific clocks */
- 	at91_boot_soc.register_clocks();
 -- 
 1.7.7
