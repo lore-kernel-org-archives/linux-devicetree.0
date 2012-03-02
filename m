@@ -1,15 +1,11 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/4] ARM: kirkwood: convert rtc-mv to fdt.
-Date: Fri, 2 Mar 2012 09:48:11 +0000
-Message-ID: <201203020948.12235.arnd@arndb.de>
-References: <cover.1330625877.git.jason@lakedaemon.net>
- <2c985a303f3b9b0cfcead25634b7e1db68d34ee3.1330625878.git.jason@lakedaemon.net>
- <20120302071939.A1BE83E2D8A@localhost>
+From: "Linus Walleij" <linus.walleij@linaro.org>
+Subject: [PATCH 1/2] ARM: dts: versatile-pb/ab fix MMC IRQs
+Date: Fri,  2 Mar 2012 11:07:23 +0100
+Message-ID: <1330682843-21163-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120302071939.A1BE83E2D8A@localhost>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,25 +15,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
+Cc: Niklas Hernaeus <niklas.hernaeus@linaro.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 March 2012, Grant Likely wrote:
-> > --- a/arch/arm/mach-kirkwood/common.c
-> > +++ b/arch/arm/mach-kirkwood/common.c
-> > @@ -163,7 +163,7 @@ void __init kirkwood_nand_init_rnb(struct mtd_partition *parts, int nr_parts,
-> >  /*****************************************************************************
-> >   * SoC RTC
-> >   ****************************************************************************/
-> > -void __init kirkwood_rtc_init(void)
-> > +static void __init kirkwood_rtc_init(void)
-> 
-> This undoes the code changed in the previous patch.  If you reorder the patches then
-> this change goes away in both.
-> 
+The MMCI driver will not work without two IRQs since this is not
+flagged as a single-irq variant. Looking through the complex IRQ
+definition for the MMCI on the versatile (including an #if 1
+statement forcing MMCI IRQ0 to the VIC) this appears to the the
+correct IRQ number for both models.
 
-That would break bisection because you end up with two rtc devices after this
-patch without first moving out the kirkwood_rtc_init into board-dt.c
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Niklas Hernaeus <niklas.hernaeus@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ arch/arm/boot/dts/versatile-ab.dts |    2 +-
+ arch/arm/boot/dts/versatile-pb.dts |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-	Arnd
+diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+index 0b32925..e2fe319 100644
+--- a/arch/arm/boot/dts/versatile-ab.dts
++++ b/arch/arm/boot/dts/versatile-ab.dts
+@@ -173,7 +173,7 @@
+ 			mmc@5000 {
+ 				compatible = "arm,primecell";
+ 				reg = < 0x5000 0x1000>;
+-				interrupts = <22>;
++				interrupts = <22 34>;
+ 			};
+ 			kmi@6000 {
+ 				compatible = "arm,pl050", "arm,primecell";
+diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
+index 1664610..7e81752 100644
+--- a/arch/arm/boot/dts/versatile-pb.dts
++++ b/arch/arm/boot/dts/versatile-pb.dts
+@@ -41,7 +41,7 @@
+ 			mmc@b000 {
+ 				compatible = "arm,primecell";
+ 				reg = <0xb000 0x1000>;
+-				interrupts = <23>;
++				interrupts = <23 34>;
+ 			};
+ 		};
+ 	};
+-- 
+1.7.7.6
