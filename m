@@ -1,239 +1,275 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: [PATCH 5/5 v2] ARM: kirkwood: convert orion-wdt to fdt.
-Date: Fri,  2 Mar 2012 17:50:22 +0000
-Message-ID: <e2fe5e97a83fc753559bbb18d5d111ed01b89034.1330709314.git.jason@lakedaemon.net>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: [PATCH 1/5 v2] ARM: kirkwood: covert orion-spi to fdt.
+Date: Fri,  2 Mar 2012 17:50:18 +0000
+Message-ID: <a3c65ac8146eab1796dec771c1ddfe403d1471a9.1330709314.git.jason@lakedaemon.net>
 References: <cover.1330709314.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1330709314.git.jason@lakedaemon.net>
-In-Reply-To: <cover.1330709314.git.jason@lakedaemon.net>
-References: <cover.1330709314.git.jason@lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de, grant.likely@secretlab.ca
-Cc: devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1330709314.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <cover.1330709314.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+References: <cover.1330709314.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Converted register address to a variable so that it could be set from
-fdt.  Also, pull clock frequency from fdt and clean up failure logic a
-bit.
+On the Globalscale Dreamplug (Marvell Kirkwood Development Platform),
+2MB of NOR flash are used to hold the bootloader, bootloader
+environment, and devicetree blob.  It is connected via spi.
 
-Same as rtc-mv, this device is used in all kirkwood boards.  So, it is
-placed in kirkwood.dtsi.
-
-Signed-off-by: Jason Cooper <jason@lakedaemon.net>
+Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 ---
 
-Changes since v1:
+Changes from v1:
 
-    - use of_match_ptr()
+    - used of_match_ptr() as suggested by Grant Likely
 
- arch/arm/boot/dts/kirkwood.dtsi   |    6 ++++
- arch/arm/mach-kirkwood/board-dt.c |    1 -
- arch/arm/mach-kirkwood/common.c   |    2 +-
- arch/arm/mach-kirkwood/common.h   |    1 -
- drivers/watchdog/orion_wdt.c      |   48 +++++++++++++++++++++++++++---------
- 5 files changed, 43 insertions(+), 15 deletions(-)
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |   34 +++++++++++++++++++++++++
+ arch/arm/mach-kirkwood/board-dt.c        |   40 ------------------------------
+ arch/arm/mach-kirkwood/common.c          |   11 ++++++++
+ drivers/spi/spi-orion.c                  |   37 ++++++++++++++++++++++++---
+ 4 files changed, 78 insertions(+), 44 deletions(-)
 
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index 5fb185c..bf28424 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -8,5 +8,11 @@
- 		reg = <0xf1010300 0x1f>;
- 		interrupts = <53>;
+diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
+index 8a5dff8..bdf2ddc 100644
+--- a/arch/arm/boot/dts/kirkwood-dreamplug.dts
++++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
+@@ -22,4 +22,38 @@
+ 		interrupts = <33>;
+ 		clock-frequency = <200000000>;
  	};
 +
-+	wdt@fed20300 {
-+		compatible = "marvell,orion-wdt";
-+		reg = <0xfed20300 0x28>;
++	spi@f1010600 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		compatible = "marvell,orion-spi";
++		reg = <0xf1010600 0x1ff>;
 +		clock-frequency = <200000000>;
++
++		flash@0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			compatible = "macronix,mx25l1606e", "jedec-flash";
++
++			spi-max-frequency = <50000000>;
++			reg = <0>;
++
++			partition@0 {
++				label = "U-Boot";
++				reg = <0x0 0x100000>;
++			};
++
++			partition@100000 {
++				label = "U-Boot Environment";
++				reg = <0x100000 0x080000>;
++			};
++
++			partition@180000 {
++				label = "Flattened Device Tree";
++				reg = <0x180000 0x080000>;
++			};
++		};
 +	};
  };
- 
 diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index 6e18338..fb03318 100644
+index fbe6405..4960e63 100644
 --- a/arch/arm/mach-kirkwood/board-dt.c
 +++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -134,7 +134,6 @@ static void __init kirkwood_dt_init(void)
- #endif
- 
- 	/* internal devices that every board has */
--	kirkwood_wdt_init();
- 	kirkwood_xor0_init();
- 	kirkwood_xor1_init();
- 	kirkwood_crypto_init();
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index 0c0375f..35dc40b 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -303,7 +303,7 @@ void __init kirkwood_xor1_init(void)
- /*****************************************************************************
-  * Watchdog
-  ****************************************************************************/
--void __init kirkwood_wdt_init(void)
-+static void __init kirkwood_wdt_init(void)
- {
- 	orion_wdt_init(kirkwood_tclk);
- }
-diff --git a/arch/arm/mach-kirkwood/common.h b/arch/arm/mach-kirkwood/common.h
-index ca08826..ac4b2fb 100644
---- a/arch/arm/mach-kirkwood/common.h
-+++ b/arch/arm/mach-kirkwood/common.h
-@@ -53,7 +53,6 @@ void kirkwood_restart(char, const char *);
- 
- char *kirkwood_id(void);
- void kirkwood_l2_init(void);
--void kirkwood_wdt_init(void);
- void kirkwood_xor0_init(void);
- void kirkwood_xor1_init(void);
- void kirkwood_crypto_init(void);
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 4ad78f8..8704b98 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -17,6 +17,8 @@
- #include <linux/fs.h>
- #include <linux/miscdevice.h>
- #include <linux/platform_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
- #include <linux/watchdog.h>
- #include <linux/init.h>
- #include <linux/uaccess.h>
-@@ -28,9 +30,9 @@
- /*
-  * Watchdog timer block registers.
-  */
--#define TIMER_CTRL		(TIMER_VIRT_BASE + 0x0000)
-+#define TIMER_CTRL		0x0000
- #define  WDT_EN			0x0010
--#define WDT_VAL			(TIMER_VIRT_BASE + 0x0024)
-+#define WDT_VAL			0x0024
- 
- #define WDT_MAX_CYCLE_COUNT	0xffffffff
- #define WDT_IN_USE		0
-@@ -40,6 +42,7 @@ static int nowayout = WATCHDOG_NOWAYOUT;
- static int heartbeat = -1;		/* module parameter (seconds) */
- static unsigned int wdt_max_duration;	/* (seconds) */
- static unsigned int wdt_tclk;
-+static void __iomem *wdt_reg;
- static unsigned long wdt_status;
- static DEFINE_SPINLOCK(wdt_lock);
- 
-@@ -48,7 +51,7 @@ static void orion_wdt_ping(void)
- 	spin_lock(&wdt_lock);
- 
- 	/* Reload watchdog duration */
--	writel(wdt_tclk * heartbeat, WDT_VAL);
-+	writel(wdt_tclk * heartbeat, wdt_reg + WDT_VAL);
- 
- 	spin_unlock(&wdt_lock);
- }
-@@ -60,7 +63,7 @@ static void orion_wdt_enable(void)
- 	spin_lock(&wdt_lock);
- 
- 	/* Set watchdog duration */
--	writel(wdt_tclk * heartbeat, WDT_VAL);
-+	writel(wdt_tclk * heartbeat, wdt_reg + WDT_VAL);
- 
- 	/* Clear watchdog timer interrupt */
- 	reg = readl(BRIDGE_CAUSE);
-@@ -68,9 +71,9 @@ static void orion_wdt_enable(void)
- 	writel(reg, BRIDGE_CAUSE);
- 
- 	/* Enable watchdog timer */
--	reg = readl(TIMER_CTRL);
-+	reg = readl(wdt_reg + TIMER_CTRL);
- 	reg |= WDT_EN;
--	writel(reg, TIMER_CTRL);
-+	writel(reg, wdt_reg + TIMER_CTRL);
- 
- 	/* Enable reset on watchdog */
- 	reg = readl(RSTOUTn_MASK);
-@@ -92,9 +95,9 @@ static void orion_wdt_disable(void)
- 	writel(reg, RSTOUTn_MASK);
- 
- 	/* Disable watchdog timer */
--	reg = readl(TIMER_CTRL);
-+	reg = readl(wdt_reg + TIMER_CTRL);
- 	reg &= ~WDT_EN;
--	writel(reg, TIMER_CTRL);
-+	writel(reg, wdt_reg + TIMER_CTRL);
- 
- 	spin_unlock(&wdt_lock);
- }
-@@ -102,7 +105,7 @@ static void orion_wdt_disable(void)
- static int orion_wdt_get_timeleft(int *time_left)
- {
- 	spin_lock(&wdt_lock);
--	*time_left = readl(WDT_VAL) / wdt_tclk;
-+	*time_left = readl(wdt_reg + WDT_VAL) / wdt_tclk;
- 	spin_unlock(&wdt_lock);
- 	return 0;
- }
-@@ -236,15 +239,30 @@ static struct miscdevice orion_wdt_miscdev = {
- static int __devinit orion_wdt_probe(struct platform_device *pdev)
- {
- 	struct orion_wdt_platform_data *pdata = pdev->dev.platform_data;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct resource res;
- 	int ret;
- 
--	if (pdata) {
-+	if (pdata)
- 		wdt_tclk = pdata->tclk;
--	} else {
--		printk(KERN_ERR "Orion Watchdog misses platform data\n");
-+
-+	of_property_read_u32(np, "clock-frequency", &wdt_tclk);
-+
-+	if (!wdt_tclk) {
-+		printk(KERN_ERR "Orion Watchdog can't get clock freq\n");
- 		return -ENODEV;
- 	}
- 
-+	wdt_reg = (void __iomem *)TIMER_VIRT_BASE;
-+
-+	ret = of_address_to_resource(np, 0, &res);
-+	if (ret) {
-+		printk(KERN_ERR "invalid address\n");
-+		return ret;
-+	}
-+
-+	wdt_reg = ioremap(res.start, res.end - res.start);
-+
- 	if (orion_wdt_miscdev.parent)
- 		return -EBUSY;
- 	orion_wdt_miscdev.parent = &pdev->dev;
-@@ -284,6 +302,11 @@ static void orion_wdt_shutdown(struct platform_device *pdev)
- 		orion_wdt_disable();
- }
- 
-+static struct of_device_id orion_wdt_of_match_table[] = {
-+	{ .compatible = "marvell,orion-wdt", },
-+	{},
-+};
-+
- static struct platform_driver orion_wdt_driver = {
- 	.probe		= orion_wdt_probe,
- 	.remove		= __devexit_p(orion_wdt_remove),
-@@ -291,6 +314,7 @@ static struct platform_driver orion_wdt_driver = {
- 	.driver		= {
- 		.owner	= THIS_MODULE,
- 		.name	= "orion_wdt",
-+		.of_match_table = of_match_ptr(orion_wdt_of_match_table),
- 	},
+@@ -39,42 +39,6 @@ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
+ 	{ }
  };
  
+-struct mtd_partition dreamplug_partitions[] = {
+-	{
+-		.name	= "u-boot",
+-		.size	= SZ_512K,
+-		.offset = 0,
+-	},
+-	{
+-		.name	= "u-boot env",
+-		.size	= SZ_64K,
+-		.offset = SZ_512K + SZ_512K,
+-	},
+-	{
+-		.name	= "dtb",
+-		.size	= SZ_64K,
+-		.offset = SZ_512K + SZ_512K + SZ_512K,
+-	},
+-};
+-
+-static const struct flash_platform_data dreamplug_spi_slave_data = {
+-	.type		= "mx25l1606e",
+-	.name		= "spi_flash",
+-	.parts		= dreamplug_partitions,
+-	.nr_parts	= ARRAY_SIZE(dreamplug_partitions),
+-};
+-
+-static struct spi_board_info __initdata dreamplug_spi_slave_info[] = {
+-	{
+-		.modalias	= "m25p80",
+-		.platform_data	= &dreamplug_spi_slave_data,
+-		.irq		= -1,
+-		.max_speed_hz	= 50000000,
+-		.bus_num	= 0,
+-		.chip_select	= 0,
+-	},
+-};
+-
+ static struct mv643xx_eth_platform_data dreamplug_ge00_data = {
+ 	.phy_addr	= MV643XX_ETH_PHY_ADDR(0),
+ };
+@@ -140,10 +104,6 @@ static void __init dreamplug_init(void)
+ 	 */
+ 	kirkwood_mpp_conf(dreamplug_mpp_config);
+ 
+-	spi_register_board_info(dreamplug_spi_slave_info,
+-				ARRAY_SIZE(dreamplug_spi_slave_info));
+-	kirkwood_spi_init();
+-
+ 	kirkwood_ehci_init();
+ 	kirkwood_ge00_init(&dreamplug_ge00_data);
+ 	kirkwood_ge01_init(&dreamplug_ge01_data);
+diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
+index cc15426..357fcde 100644
+--- a/arch/arm/mach-kirkwood/common.c
++++ b/arch/arm/mach-kirkwood/common.c
+@@ -15,6 +15,7 @@
+ #include <linux/ata_platform.h>
+ #include <linux/mtd/nand.h>
+ #include <linux/dma-mapping.h>
++#include <linux/of.h>
+ #include <net/dsa.h>
+ #include <asm/page.h>
+ #include <asm/timex.h>
+@@ -481,6 +482,9 @@ static int __init kirkwood_clock_gate(void)
+ {
+ 	unsigned int curr = readl(CLOCK_GATING_CTRL);
+ 	u32 dev, rev;
++#ifdef CONFIG_OF
++	struct device_node *dp;
++#endif
+ 
+ 	kirkwood_pcie_id(&dev, &rev);
+ 	printk(KERN_DEBUG "Gating clock of unused units\n");
+@@ -524,6 +528,13 @@ static int __init kirkwood_clock_gate(void)
+ 	} else  /* keep this bit set for devices that don't have PCIe1 */
+ 		kirkwood_clk_ctrl |= CGC_PEX1;
+ 
++#ifdef CONFIG_OF
++	dp = of_find_node_by_path("/");
++	if (dp && of_device_is_available(of_find_compatible_node(dp, NULL,
++							  "marvell,orion-spi")))
++		kirkwood_clk_ctrl |= CGC_RUNIT;
++#endif
++
+ 	/* Now gate clock the required units */
+ 	writel(kirkwood_clk_ctrl, CLOCK_GATING_CTRL);
+ 	printk(KERN_DEBUG " after: 0x%08x\n", readl(CLOCK_GATING_CTRL));
+diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
+index 13448c8..acfb240 100644
+--- a/drivers/spi/spi-orion.c
++++ b/drivers/spi/spi-orion.c
+@@ -18,6 +18,7 @@
+ #include <linux/spi/spi.h>
+ #include <linux/spi/orion_spi.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <asm/unaligned.h>
+ 
+ #define DRIVER_NAME			"orion_spi"
+@@ -45,6 +46,8 @@ struct orion_spi {
+ 	void __iomem		*base;
+ 	unsigned int		max_speed;
+ 	unsigned int		min_speed;
++	unsigned int		tclk;
++	unsigned int		clock_fix;
+ 	struct orion_spi_info	*spi_info;
+ };
+ 
+@@ -104,7 +107,7 @@ static int orion_spi_baudrate_set(struct spi_device *spi, unsigned int speed)
+ 
+ 	orion_spi = spi_master_get_devdata(spi->master);
+ 
+-	tclk_hz = orion_spi->spi_info->tclk;
++	tclk_hz = orion_spi->tclk;
+ 
+ 	/*
+ 	 * the supported rates are: 4,6,8...30
+@@ -360,7 +363,7 @@ static int orion_spi_setup(struct spi_device *spi)
+ 	orion_spi = spi_master_get_devdata(spi->master);
+ 
+ 	/* Fix ac timing if required.   */
+-	if (orion_spi->spi_info->enable_clock_fix)
++	if (orion_spi->clock_fix)
+ 		orion_spi_setbits(orion_spi, ORION_SPI_IF_CONFIG_REG,
+ 				  (1 << 14));
+ 
+@@ -474,6 +477,7 @@ static int __init orion_spi_probe(struct platform_device *pdev)
+ 	master->setup = orion_spi_setup;
+ 	master->transfer = orion_spi_transfer;
+ 	master->num_chipselect = ORION_NUM_CHIPSELECTS;
++	master->dev.of_node = pdev->dev.of_node;
+ 
+ 	dev_set_drvdata(&pdev->dev, master);
+ 
+@@ -481,8 +485,26 @@ static int __init orion_spi_probe(struct platform_device *pdev)
+ 	spi->master = master;
+ 	spi->spi_info = spi_info;
+ 
+-	spi->max_speed = DIV_ROUND_UP(spi_info->tclk, 4);
+-	spi->min_speed = DIV_ROUND_UP(spi_info->tclk, 30);
++	if (spi_info)
++		spi->tclk = spi_info->tclk;
++
++	of_property_read_u32(master->dev.of_node,
++				"clock-frequency", &spi->tclk);
++
++	if (!spi->tclk) {
++		dev_err(&pdev->dev, "cannot set clock rate\n");
++		status = -EINVAL;
++		goto out;
++	}
++
++	spi->max_speed = DIV_ROUND_UP(spi->tclk, 4);
++	spi->min_speed = DIV_ROUND_UP(spi->tclk, 30);
++
++	if (spi_info)
++		spi->clock_fix = spi_info->enable_clock_fix;
++
++	if (of_find_property(master->dev.of_node, "spi-clock-fix", NULL))
++		spi->clock_fix = 1;
+ 
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (r == NULL) {
+@@ -541,10 +563,17 @@ static int __exit orion_spi_remove(struct platform_device *pdev)
+ 
+ MODULE_ALIAS("platform:" DRIVER_NAME);
+ 
++static struct of_device_id spi_orion_of_match_table[] __devinitdata = {
++	{ .compatible = "marvell,orion-spi", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, spi_orion_of_match_table);
++
+ static struct platform_driver orion_spi_driver = {
+ 	.driver = {
+ 		.name	= DRIVER_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(spi_orion_of_match_table),
+ 	},
+ 	.remove		= __exit_p(orion_spi_remove),
+ };
 -- 
 1.7.3.4
