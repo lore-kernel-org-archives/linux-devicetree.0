@@ -1,7 +1,8 @@
 From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 5/5 v2] ARM: kirkwood: convert orion-wdt to fdt.
-Date: Fri, 2 Mar 2012 14:57:10 -0500
-Message-ID: <20120302195710.GP11986@titan.lakedaemon.net>
+Subject: [PULL REQUEST v2] ARM: kirkwood: fdt: convert kirkwood init funcs
+ to fdt
+Date: Fri, 2 Mar 2012 15:00:34 -0500
+Message-ID: <20120302200034.GQ11986@titan.lakedaemon.net>
 References: <cover.1330709314.git.jason@lakedaemon.net>
  <e2fe5e97a83fc753559bbb18d5d111ed01b89034.1330709314.git.jason@lakedaemon.net>
  <201203021832.34901.arnd@arndb.de>
@@ -24,67 +25,27 @@ To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2012 at 06:32:33PM +0000, Arnd Bergmann wrote:
-> On Friday 02 March 2012, Jason Cooper wrote:
-> > +       wdt_reg = (void __iomem *)TIMER_VIRT_BASE;
-> > +
-> > +       ret = of_address_to_resource(np, 0, &res);
-> > +       if (ret) {
-> > +               printk(KERN_ERR "invalid address\n");
-> > +               return ret;
-> > +       }
-> > +
-> > +       wdt_reg = ioremap(res.start, res.end - res.start);
-> > +
-> 
-> This will break non-dt uses because you overwrite the wdt_reg value.
+The following changes since commit 759a45185ac0e4dfaf8bbfcb390ec73aca4b7a34:
 
-I thought for non-dt configurations of_.*() zeroed out.  No problem, I
-must've misunderstood something from earlier.
+  ARM: kirkwood: convert uart0 to devicetree. (2012-02-27 16:21:44 +0000)
 
-> As I commented before, I think the best approach would be to
-> provide a hardcoded resource for the device in the legacy case
-> and just use platform_get_resource() to get the resource
-> and ioremap it in either case.
+are available in the git repository at:
+  git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_test
 
-Sorry, my denseness got in the way.  When you said hardcoded, I thought
-you meant #define TIMER_VIRT_BASE .
+Jason Cooper (5):
+      ARM: kirkwood: covert orion-spi to fdt.
+      ARM: kirkwood: move var setting to correct location.
+      ARM: kirkwood: fdt: absorb kirkwood_init()
+      ARM: kirkwood: convert rtc-mv to fdt.
+      ARM: kirkwood: convert orion-wdt to fdt.
 
-> of_address_to_resource() works only for the DT case, while
-> platform_get_resource() works in either case.
-> 
-> You need to add something like
-
-Ahh... now *that* makes sense.
-
-> 8<---
-> diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
-> index 089899a..d16f43f 100644
-> --- a/arch/arm/plat-orion/common.c
-> +++ b/arch/arm/plat-orion/common.c
-> @@ -568,13 +568,17 @@ void __init orion_spi_1_init(unsigned long mapbase,
->   ****************************************************************************/
->  static struct orion_wdt_platform_data orion_wdt_data;
->  
-> +static struct resource orion_wdt_resource =
-> +               DEFINE_RES_MEM(TIMER_PHYS_BASE, 0x28);
-> +
->  static struct platform_device orion_wdt_device = {
->         .name           = "orion_wdt",
->         .id             = -1,
->         .dev            = {
->                 .platform_data  = &orion_wdt_data,
->         },
-> -       .num_resources  = 0,
-> +       .resources      = &orion_wdt_resource,
-> +       .num_resources  = 1,
->  };
->  
->  void __init orion_wdt_init(unsigned long tclk)
-> ---->8
-> 
-> and an appropriate definition for TIMER_PHYS_BASE.
-
-thx,
-
-Jason.
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |   34 +++++++++++++++
+ arch/arm/boot/dts/kirkwood.dtsi          |   12 +++++
+ arch/arm/mach-kirkwood/board-dt.c        |   67 +++++++++++------------------
+ arch/arm/mach-kirkwood/common.c          |   21 +++++++--
+ arch/arm/mach-kirkwood/common.h          |    6 +++
+ arch/arm/plat-orion/common.c             |    7 +++-
+ drivers/rtc/rtc-mv.c                     |    7 +++
+ drivers/spi/spi-orion.c                  |   37 +++++++++++++++--
+ drivers/watchdog/orion_wdt.c             |   46 +++++++++++++++-----
+ 9 files changed, 174 insertions(+), 63 deletions(-)
