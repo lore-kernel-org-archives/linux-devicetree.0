@@ -1,17 +1,17 @@
 From: Jason <jason@lakedaemon.net>
-Subject: Re: [PATCH 4/4] ARM: kirkwood: convert orion-wdt to fdt.
-Date: Fri, 2 Mar 2012 12:02:52 -0500
-Message-ID: <20120302170252.GJ11986@titan.lakedaemon.net>
+Subject: Re: [PATCH 0/4] ARM: kirkwood: fdt: convert kirkwood init funcs to fdt
+Date: Fri, 2 Mar 2012 12:04:41 -0500
+Message-ID: <20120302170441.GK11986@titan.lakedaemon.net>
 References: <cover.1330625877.git.jason@lakedaemon.net>
- <201203021456.47896.arnd@arndb.de>
- <20120302153614.GG11986@titan.lakedaemon.net>
- <201203021648.52523.arnd@arndb.de>
+ <201203012214.07019.arnd@arndb.de>
+ <20120302163121.GI11986@titan.lakedaemon.net>
+ <201203021658.12047.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <201203021648.52523.arnd@arndb.de>
+In-Reply-To: <201203021658.12047.arnd@arndb.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,83 +22,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, mturquette@linaro.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, Simon Guinot <simon@sequanux.org>, linux-arm-kernel@lists.infradead.org
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2012 at 04:48:51PM +0000, Arnd Bergmann wrote:
+On Fri, Mar 02, 2012 at 04:58:11PM +0000, Arnd Bergmann wrote:
 > On Friday 02 March 2012, Jason wrote:
 > > > 
-> > > That would make wdt@fed20300/clock-frequency a phandle pointing to the
-> > > root property, which is not what we want here.
+> > > I have other commit IDs for the two patches that I took from your
+> > > emails, so you should rebase the other patches on top of the
+> > > version that I have in the arm-soc/kirkwood/board branch, otherwise
+> > > we end up with duplicate commits my tree when I pull them again.
 > > 
-> > The 200000000 value is not the actual value used in most drivers [1],
-> > but rather the speed of the system clock [2] (hence, my inclination to
-> > make it a root property), the drivers have been pulling this number from
-> > a global variable [3] and dividing/rounding it as needed for their own needs
-> > [1].
-> 
-> Ah, I see. If you put a "clock-frequency" property into a device node,
-> it should definitely be the frequency used by that device, not the system
-> clock that it is derived from.
-
-Whew, glad to know I'm not crazy.
-
-> > Since it's derived from the SoC core [2], it would seem to make sense to
-> > have a root "clock-frequency" in the board dts.  Am I missing something?
-> > Is there a better way to do this?
-> 
-> The correct solution would be to use the clock binding, but I'm not sure
-> how far we are in making that final or usable.
-> 
-> > > > In any case, the simplest answer is to set clock-frequency in
-> > > > kirkwood-dreamplug.dts as a root node property, and then each driver
-> > > > that needs tclk, requests the clock-frequency from the root node.
-> > > > Hopefully, Grant can chime in on this one.
-> > > 
-> > > I think you can just pick a reasonable default value for
-> > > wdt@fed20300/clock-frequency, and let the board override that
-> > > by setting it to something else if necessary.
+> > Got it, I cherry-picked the series over and incorporated Grant's
+> > suggestions.
 > > 
-> > True, for now, I can just set clock-frequency for each device to the
-> > exact same value and we'll polish later once we have a better idea of
-> > the pattern it's following.
-> > 
-> > > I suppose this will also change a bit when kirkwood gets moved over to
-> > > generic clk support in the future and starts using the clk binding
-> > > instead of what you do now.
-> > 
-> > Yes, I don't want to over-think it, but I would like to make sure it's
-> > in the correct place, since it is a global property of the board.
 > 
-> Andrew Lunn said that he has a patch for plat-orion to use the generic
-> clock framework. I think we should look at that before introducing
-> a hack that will have to be removed again very soon.
+> Just making sure you know about this one:
+> 
+> git rebase -i --onto arm-soc/kirkwood/board torvalds/master
+> 
+> The '-i' lets you pick which ones you want to move over, then it
+> applies all patches from the current branch that are not on
+> torvalds/master on top of the last commit from arm-soc/kirkwood/board.
+> 
+> If you don't know it yet, I suggest you play with this for an hour
+> or so that will be very well invested time. If you knew this, then nevermind.
 
-I asked him for it earlier [1], apparently it's a very invasive patch
-series which breaks things.  I would like to look at it as a reference,
-even if applying it isn't a good idea.
-
-How about it, Andrew?
-
-> Kirkwood/orion is probably not a bad platform to add to the initial
-> set of platforms for which we use the common clk infrastructure,
-> so maybe the best way forward for you is to take Andrews patches
-> and build on top of that.
-
-Agreed.
-
-> It might mean that your follow-on patches get delayed until v3.5
-> instead of going into v3.4, but the initial code you have in arm-soc
-> is working already and you can work on getting it the clock code right
-> in the initial code.
-
-In [1] I was trying to setup a stand-in, eg kirkwood_get_clock() and
-kirkwood_put_clock() that could be replaced once the clock code lands.
-That way, we're on the right path, but not blocked waiting for the clock
-code.
+I use the daylights out of git rebase -i, but hadn't made use of --onto
+yet.  Thanks for the tip.
 
 thx,
 
 Jason.
-
-[1] http://www.spinics.net/lists/arm-kernel/msg162284.html
