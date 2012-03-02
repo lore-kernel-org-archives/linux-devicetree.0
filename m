@@ -1,82 +1,132 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
-Date: Fri, 02 Mar 2012 12:07:44 -0700
-Message-ID: <20120302190744.571E03E1C63@localhost>
-References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com> <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com> <4F50D7C2.7080204@gmail.com> <4F510B8E.3070201@cavium.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] Initial Device Tree system for Snowball
+Date: Fri, 02 Mar 2012 12:14:53 -0700
+Message-ID: <20120302191453.C972F3E1C63@localhost>
+References: <1330703567-17925-1-git-send-email-niklas.hernaeus@stericsson.com>
 Mime-Version: 1.0
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F510B8E.3070201@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>, Rob Herring <robherring2@gmail.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1330703567-17925-1-git-send-email-niklas.hernaeus-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Niklas Hernaeus <niklas.hernaeus-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 02 Mar 2012 10:03:58 -0800, David Daney <david.daney@cavium.com> wrote:
-> On 03/02/2012 06:22 AM, Rob Herring wrote:
-> [...]
-> >> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> >> index ce30e2f..01344ae 100644
-> >> --- a/arch/mips/Kconfig
-> >> +++ b/arch/mips/Kconfig
-> >> @@ -1432,6 +1432,7 @@ config CPU_CAVIUM_OCTEON
-> >>   	select WEAK_ORDERING
-> >>   	select CPU_SUPPORTS_HIGHMEM
-> >>   	select CPU_SUPPORTS_HUGEPAGES
-> >> +	select IRQ_DOMAIN
-> >
-> > IIRC, Grant has a patch cued up that enables IRQ_DOMAIN for all of MIPS.
-> >
+On Fri, 2 Mar 2012 16:52:47 +0100, Niklas Hernaeus <niklas.hernaeus-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org> wrote:
+> From: Niklas Hernaeus <niklas.hernaeus-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> Indeed, I now see it in linux-next.  I will remove this one.
+> This is the base system for using Device Tree for Snowball.
+> The new boardfile is a slightly modified copy of the original board file,
+> so new Device Tree stuff can simply be added and code removed, while
+> functionality stays the same.
 > 
-> >>   	help
-> >>   	  The Cavium Octeon processor is a highly integrated chip containing
-> >>   	  many ethernet hardware widgets for networking tasks. The processor
-> >> diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
-> >> index bdcedd3..e9f2f6c 100644
-> >> --- a/arch/mips/cavium-octeon/octeon-irq.c
-> >> +++ b/arch/mips/cavium-octeon/octeon-irq.c
-> [...]
-> >> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
-> >> +					      unsigned int line,
-> >> +					      unsigned int bit,
-> >> +					      struct irq_domain *domain,
-> >>   					      struct irq_chip *chip,
-> >>   					      irq_flow_handler_t handler)
-> >>   {
-> >> +	struct irq_data *irqd;
-> >>   	union octeon_ciu_chip_data cd;
-> >>
-> >>   	irq_set_chip_and_handler(irq, chip, handler);
-> >> -
-> >>   	cd.l = 0;
-> >>   	cd.s.line = line;
-> >>   	cd.s.bit = bit;
-> >>
-> >>   	irq_set_chip_data(irq, cd.p);
-> >>   	octeon_irq_ciu_to_irq[line][bit] = irq;
-> >> +
-> >> +	irqd = irq_get_irq_data(irq);
-> >> +	irqd->hwirq = line<<  6 | bit;
-> >> +	irqd->domain = domain;
-> >
-> > I think the domain code will set these.
+> Signed-off-by: Niklas Hernaeus <niklas.hernaeus-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/snowball.dts          |   32 ++
+>  arch/arm/mach-ux500/Kconfig             |   17 +-
+>  arch/arm/mach-ux500/Makefile            |    5 +-
+>  arch/arm/mach-ux500/board-mop500-dt.c   |  729 +++++++++++++++++++++++++++++++
+>  arch/arm/mach-ux500/include/mach/irqs.h |    2 +-
+>  5 files changed, 779 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/snowball.dts
+>  create mode 100644 arch/arm/mach-ux500/board-mop500-dt.c
 > 
-> It is my understanding that the domain code only does this for:
-> 
-> o irq_domain_add_legacy()
-> 
-> o irq_create_direct_mapping()
-> 
-> o irq_create_mapping()
-> 
-> We use none of those.  So I do it here.
-> 
-> If there is a better way, I am open to suggestions.
+> diff --git a/arch/arm/boot/dts/snowball.dts b/arch/arm/boot/dts/snowball.dts
+> new file mode 100644
+> index 0000000..02305fb
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/snowball.dts
+> @@ -0,0 +1,32 @@
+> +/*
+> + * Copyright 2011 ST-Ericsson AB
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +
+> +/ {
+> +	model = "Calao Systems Snowball platform with device tree";
+> +	compatible = "calaosystems,snowball-a9500";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x20000000>;
+> +	};
+> +
+> +	soc-u9500 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +	};
+> +};
+> diff --git a/arch/arm/mach-ux500/Kconfig b/arch/arm/mach-ux500/Kconfig
+> index 52af004..be7e4fe 100644
+> --- a/arch/arm/mach-ux500/Kconfig
+> +++ b/arch/arm/mach-ux500/Kconfig
+> @@ -27,19 +27,22 @@ menu "Ux500 target platform (boards)"
+>  config MACH_U8500
+>  	bool "U8500 Development platform"
+>  	depends on UX500_SOC_DB8500
+> +	depends on !USE_OF
 
-irq_create_mapping is called by irq_create_of_mapping() which is
-in turn called by irq_of_parse_and-map().  irq_domain always
-manages the hwirq and domain values.  Driver code cannot manipulate
-them manually.
+Hi Niklas,
 
-g.
+Don't make any configurations depend on !USE_OF.  Turning on device
+tree support must not disable non-DT booting.  This is a policy
+decision made a while ago.  You'll need to ensure the code is
+structured so that the DT and non-DT code paths can co-exist.
+
+>  	select TPS6105X
+>  	help
+>  	  Include support for the mop500 development platform.
+>  
+>  config MACH_HREFV60
+> -       bool "U85000 Development platform, HREFv60 version"
+> -       depends on UX500_SOC_DB8500
+> -       help
+> -         Include support for the HREFv60 new development platform.
+> +	bool "U85000 Development platform, HREFv60 version"
+> +	depends on UX500_SOC_DB8500
+> +	depends on !USE_OF
+
+Ditto here.
+
+> +	help
+> +	  Include support for the HREFv60 new development platform.
+>  
+>  config MACH_SNOWBALL
+>  	bool "U8500 Snowball platform"
+>  	depends on UX500_SOC_DB8500
+> +	depends on !USE_OF
+>  	select MACH_U8500
+>  	help
+>  	  Include support for the snowball development platform.
+> @@ -49,6 +52,12 @@ config MACH_U5500
+>  	depends on UX500_SOC_DB5500
+>  	help
+>  	  Include support for the U5500 development platform.
+> +config MACH_UX500_DT
+> +	def_bool y if USE_OF
+> +	depends on UX500_SOC_DB8500 || UX500_SOC_DB5500
+> +
+> +config MACH_MOP500
+> +	def_bool y if MACH_U8500 || MACH_UX500_DT
+>  endmenu
