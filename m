@@ -1,99 +1,66 @@
-From: David Daney <david.daney@cavium.com>
-Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
-Date: Fri, 02 Mar 2012 11:29:52 -0800
-Message-ID: <4F511FB0.5070901@cavium.com>
-References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com> <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com> <4F50D7C2.7080204@gmail.com> <4F510B8E.3070201@cavium.com> <20120302190744.571E03E1C63@localhost>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 0/6] AT91 more DT bindings
+Date: Fri, 2 Mar 2012 20:28:44 +0100
+Message-ID: <20120302192844.GB21255@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120302190744.571E03E1C63@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2012 11:07 AM, Grant Likely wrote:
-> On Fri, 02 Mar 2012 10:03:58 -0800, David Daney<david.daney@cavium.com>  wrote:
->> On 03/02/2012 06:22 AM, Rob Herring wrote:
->> [...]
->>>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->>>> index ce30e2f..01344ae 100644
->>>> --- a/arch/mips/Kconfig
->>>> +++ b/arch/mips/Kconfig
->>>> @@ -1432,6 +1432,7 @@ config CPU_CAVIUM_OCTEON
->>>>    	select WEAK_ORDERING
->>>>    	select CPU_SUPPORTS_HIGHMEM
->>>>    	select CPU_SUPPORTS_HUGEPAGES
->>>> +	select IRQ_DOMAIN
->>>
->>> IIRC, Grant has a patch cued up that enables IRQ_DOMAIN for all of MIPS.
->>>
->>
->> Indeed, I now see it in linux-next.  I will remove this one.
->>
->>>>    	help
->>>>    	  The Cavium Octeon processor is a highly integrated chip containing
->>>>    	  many ethernet hardware widgets for networking tasks. The processor
->>>> diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
->>>> index bdcedd3..e9f2f6c 100644
->>>> --- a/arch/mips/cavium-octeon/octeon-irq.c
->>>> +++ b/arch/mips/cavium-octeon/octeon-irq.c
->> [...]
->>>> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
->>>> +					      unsigned int line,
->>>> +					      unsigned int bit,
->>>> +					      struct irq_domain *domain,
->>>>    					      struct irq_chip *chip,
->>>>    					      irq_flow_handler_t handler)
->>>>    {
->>>> +	struct irq_data *irqd;
->>>>    	union octeon_ciu_chip_data cd;
->>>>
->>>>    	irq_set_chip_and_handler(irq, chip, handler);
->>>> -
->>>>    	cd.l = 0;
->>>>    	cd.s.line = line;
->>>>    	cd.s.bit = bit;
->>>>
->>>>    	irq_set_chip_data(irq, cd.p);
->>>>    	octeon_irq_ciu_to_irq[line][bit] = irq;
->>>> +
->>>> +	irqd = irq_get_irq_data(irq);
->>>> +	irqd->hwirq = line<<   6 | bit;
->>>> +	irqd->domain = domain;
->>>
->>> I think the domain code will set these.
->>
->> It is my understanding that the domain code only does this for:
->>
->> o irq_domain_add_legacy()
->>
->> o irq_create_direct_mapping()
->>
->> o irq_create_mapping()
->>
->> We use none of those.  So I do it here.
->>
->> If there is a better way, I am open to suggestions.
->
-> irq_create_mapping is called by irq_create_of_mapping() which is
-> in turn called by irq_of_parse_and-map().  irq_domain always
-> manages the hwirq and domain values.  Driver code cannot manipulate
-> them manually.
->
+HI,
 
-I really must be missing something.
+	The following patch series add the bindings for:
+	 - PMC
+	 - SDRAM/DDR Controller
+	 - Reset Controller
+	 - Shutdown Controller
 
-Given:
+The following changes since commit c5ec01650adb1976f928177cd7e71afcb82026c5:
 
-1) I must have a mapping between hwirq and irq that I control so that 
-non-OF code using the OCTEON_IRQ_* constants continues to work.
+  ARM: at91: dt: enable usb ehci for sam9g45 and sam9x5 (2012-03-02 00:46:37 +0800)
 
-2) irq_create_mapping() will allocate a random irq value if none is 
-already assigned to the hwirq.
+are available in the git repository at:
+  git://github.com/at91linux/linux-at91.git ..BRANCH.NOT.VERIFIED..
 
-Therefore: To avoid having random irq values assigned, I must manually 
-assign them.
+Jean-Christophe PLAGNIOL-VILLARD (6):
+      ARM: at91/dt: add specific DT soc init
+      ARM: at91: add pmc DT support
+      ARM: at91: always enable sam9 restart
+      ARM: at91: add RSTC (Reset Controller) dt support
+      ARM: at91: add ram controller DT support
+      ARM: at91: add Shutdown Controller (SHDWC) DT support
 
-David Daney
+ .../devicetree/bindings/arm/atmel-at91.txt         |   60 ++++++++
+ .../devicetree/bindings/arm/atmel-pmc.txt          |   11 ++
+ arch/arm/boot/dts/at91sam9g20.dtsi                 |   20 +++
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |   21 +++
+ arch/arm/boot/dts/at91sam9m10g45ek.dts             |   11 ++
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |   20 +++
+ arch/arm/boot/dts/at91sam9x5cm.dtsi                |   11 ++
+ arch/arm/boot/dts/usb_a9g20.dts                    |   11 ++
+ arch/arm/mach-at91/Kconfig                         |   10 +-
+ arch/arm/mach-at91/at91sam9x5.c                    |    7 -
+ arch/arm/mach-at91/board-dt.c                      |    8 +-
+ arch/arm/mach-at91/clock.c                         |   54 ++++++-
+ arch/arm/mach-at91/generic.h                       |    2 +
+ arch/arm/mach-at91/include/mach/at91_shdwc.h       |    4 +-
+ arch/arm/mach-at91/include/mach/at91sam9x5.h       |    5 -
+ arch/arm/mach-at91/setup.c                         |  158 ++++++++++++++++++++
+ 16 files changed, 380 insertions(+), 33 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/atmel-pmc.txt
+
+Best Regards,
+J.
