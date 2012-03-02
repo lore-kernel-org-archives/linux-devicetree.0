@@ -1,42 +1,99 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3 v3] spi: move master of_node init to spi_alloc_master
-Date: Fri, 02 Mar 2012 12:20:32 -0700
-Message-ID: <20120302192032.3ACF33E1C63@localhost>
-References: <1330682587-20636-1-git-send-email-plagnioj@jcrosoft.com>
+From: David Daney <david.daney@cavium.com>
+Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
+Date: Fri, 02 Mar 2012 11:29:52 -0800
+Message-ID: <4F511FB0.5070901@cavium.com>
+References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com> <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com> <4F50D7C2.7080204@gmail.com> <4F510B8E.3070201@cavium.com> <20120302190744.571E03E1C63@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1330682587-20636-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120302190744.571E03E1C63@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  2 Mar 2012 11:03:05 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+On 03/02/2012 11:07 AM, Grant Likely wrote:
+> On Fri, 02 Mar 2012 10:03:58 -0800, David Daney<david.daney@cavium.com>  wrote:
+>> On 03/02/2012 06:22 AM, Rob Herring wrote:
+>> [...]
+>>>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>>>> index ce30e2f..01344ae 100644
+>>>> --- a/arch/mips/Kconfig
+>>>> +++ b/arch/mips/Kconfig
+>>>> @@ -1432,6 +1432,7 @@ config CPU_CAVIUM_OCTEON
+>>>>    	select WEAK_ORDERING
+>>>>    	select CPU_SUPPORTS_HIGHMEM
+>>>>    	select CPU_SUPPORTS_HUGEPAGES
+>>>> +	select IRQ_DOMAIN
+>>>
+>>> IIRC, Grant has a patch cued up that enables IRQ_DOMAIN for all of MIPS.
+>>>
+>>
+>> Indeed, I now see it in linux-next.  I will remove this one.
+>>
+>>>>    	help
+>>>>    	  The Cavium Octeon processor is a highly integrated chip containing
+>>>>    	  many ethernet hardware widgets for networking tasks. The processor
+>>>> diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
+>>>> index bdcedd3..e9f2f6c 100644
+>>>> --- a/arch/mips/cavium-octeon/octeon-irq.c
+>>>> +++ b/arch/mips/cavium-octeon/octeon-irq.c
+>> [...]
+>>>> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
+>>>> +					      unsigned int line,
+>>>> +					      unsigned int bit,
+>>>> +					      struct irq_domain *domain,
+>>>>    					      struct irq_chip *chip,
+>>>>    					      irq_flow_handler_t handler)
+>>>>    {
+>>>> +	struct irq_data *irqd;
+>>>>    	union octeon_ciu_chip_data cd;
+>>>>
+>>>>    	irq_set_chip_and_handler(irq, chip, handler);
+>>>> -
+>>>>    	cd.l = 0;
+>>>>    	cd.s.line = line;
+>>>>    	cd.s.bit = bit;
+>>>>
+>>>>    	irq_set_chip_data(irq, cd.p);
+>>>>    	octeon_irq_ciu_to_irq[line][bit] = irq;
+>>>> +
+>>>> +	irqd = irq_get_irq_data(irq);
+>>>> +	irqd->hwirq = line<<   6 | bit;
+>>>> +	irqd->domain = domain;
+>>>
+>>> I think the domain code will set these.
+>>
+>> It is my understanding that the domain code only does this for:
+>>
+>> o irq_domain_add_legacy()
+>>
+>> o irq_create_direct_mapping()
+>>
+>> o irq_create_mapping()
+>>
+>> We use none of those.  So I do it here.
+>>
+>> If there is a better way, I am open to suggestions.
+>
+> irq_create_mapping is called by irq_create_of_mapping() which is
+> in turn called by irq_of_parse_and-map().  irq_domain always
+> manages the hwirq and domain values.  Driver code cannot manipulate
+> them manually.
+>
 
-Actually, the of_node pointer setting was purposefully left out
-of spi_alloc_master() because it is not necesarily true that the
-dt node associated with the struct device will be the node where
-all the spi children are parented.  I want to leave this
-initialization in the drivers.
+I really must be missing something.
 
-g.
+Given:
 
+1) I must have a mapping between hwirq and irq that I control so that 
+non-OF code using the OCTEON_IRQ_* constants continues to work.
 
-------------------------------------------------------------------------------
-Virtualization & Cloud Management Using Capacity Planning
-Cloud computing makes use of virtualization - but cloud computing 
-also focuses on allowing computing to be delivered as a service.
-http://www.accelacomm.com/jaw/sfnl/114/51521223/
+2) irq_create_mapping() will allocate a random irq value if none is 
+already assigned to the hwirq.
+
+Therefore: To avoid having random irq values assigned, I must manually 
+assign them.
+
+David Daney
