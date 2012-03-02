@@ -1,7 +1,7 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 4/6] ARM: at91: add RSTC (Reset Controller) dt support
-Date: Fri,  2 Mar 2012 20:54:06 +0100
-Message-ID: <1330718048-9314-4-git-send-email-plagnioj@jcrosoft.com>
+Subject: [PATCH 5/6] ARM: at91: add ram controller DT support
+Date: Fri,  2 Mar 2012 20:54:07 +0100
+Message-ID: <1330718048-9314-5-git-send-email-plagnioj@jcrosoft.com>
 References: <20120302192844.GB21255@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,139 +21,179 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
+We can now drop the call to ioremap_registers() as we have the binding for the
+SDRAM/DDR Controller.
+
+Drop ioremap_registers() for sam9x5 too.
+
 Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 ---
- .../devicetree/bindings/arm/atmel-at91.txt         |   12 ++++++++
+ .../devicetree/bindings/arm/atmel-at91.txt         |   19 ++++++++++++++
  arch/arm/boot/dts/at91sam9g20.dtsi                 |    5 +++
- arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 +++
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |    6 ++++
  arch/arm/boot/dts/at91sam9x5.dtsi                  |    5 +++
- arch/arm/mach-at91/at91sam9x5.c                    |    1 -
- arch/arm/mach-at91/setup.c                         |   30 ++++++++++++++++++++
- 6 files changed, 57 insertions(+), 1 deletions(-)
+ arch/arm/mach-at91/at91sam9x5.c                    |    6 ----
+ arch/arm/mach-at91/include/mach/at91sam9x5.h       |    5 ---
+ arch/arm/mach-at91/setup.c                         |   27 +++++++++++++++++--
+ 7 files changed, 59 insertions(+), 14 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-index 1aeaf6f..a64f867 100644
+index a64f867..1f87820 100644
 --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
 +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-@@ -30,3 +30,15 @@ One interrupt per TC channel in a TC block:
- 		reg = <0xfffdc000 0x100>;
- 		interrupts = <26 4 27 4 28 4>;
+@@ -42,3 +42,22 @@ Example:
+ 		compatible = "atmel,at91sam9260-rstc";
+ 		reg = <0xfffffd00 0x10>;
  	};
 +
-+RSTC Reset Controller required properties:
-+- compatible: Should be "atmel,<chip>-rstc".
-+  <chip> can be "at91sam9260" or "at91sam9g45"
++RAMC SDRAM/DDR Controller required properties:
++- compatible: Should be "atmel,at91sam9260-sdramc",
++			"atmel,at91sam9g45-ddramc",
 +- reg: Should contain registers location and length
++  For at91sam9263 and at91sam9g45 you must specify 2 entries.
 +
-+Example:
++Examples:
 +
-+	rstc@fffffd00 {
-+		compatible = "atmel,at91sam9260-rstc";
-+		reg = <0xfffffd00 0x10>;
++	ramc0: ramc@ffffe800 {
++		compatible = "atmel,at91sam9g45-ddramc";
++		reg = <0xffffe800 0x200>;
++	};
++
++	ramc0: ramc@ffffe400 {
++		compatible = "atmel,at91sam9g45-ddramc";
++		reg = <0xffffe400 0x200
++		       0xffffe600 0x200>;
 +	};
 diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-index ee94828..5414347 100644
+index 5414347..573ac5a 100644
 --- a/arch/arm/boot/dts/at91sam9g20.dtsi
 +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-@@ -64,6 +64,11 @@
- 				reg = <0xfffffc00 0x100>;
+@@ -59,6 +59,11 @@
+ 				reg = <0xfffff000 0x200>;
  			};
  
-+			rstc@fffffd00 {
-+				compatible = "atmel,at91sam9260-rstc";
-+				reg = <0xfffffd00 0x10>;
++			ramc0: ramc@ffffea00 {
++				compatible = "atmel,at91sam9260-sdramc";
++				reg = <0xffffea00 0x200>;
 +			};
 +
- 			pit: timer@fffffd30 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffd30 0xf>;
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91rm9200-pmc";
+ 				reg = <0xfffffc00 0x100>;
 diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index dfb71d5..e2ccba5 100644
+index e2ccba5..6da07a9 100644
 --- a/arch/arm/boot/dts/at91sam9g45.dtsi
 +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -65,6 +65,11 @@
- 				reg = <0xfffffc00 0x100>;
+@@ -60,6 +60,12 @@
+ 				reg = <0xfffff000 0x200>;
  			};
  
-+			rstc@fffffd00 {
-+				compatible = "atmel,at91sam9g45-rstc";
-+				reg = <0xfffffd00 0x10>;
++			ramc0: ramc@ffffe400 {
++				compatible = "atmel,at91sam9g45-ddramc";
++				reg = <0xffffe400 0x200
++				       0xffffe600 0x200>;
 +			};
 +
- 			pit: timer@fffffd30 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffd30 0xf>;
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91rm9200-pmc";
+ 				reg = <0xfffffc00 0x100>;
 diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index a7d7107..54e3030 100644
+index 54e3030..09bc806 100644
 --- a/arch/arm/boot/dts/at91sam9x5.dtsi
 +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -63,6 +63,11 @@
- 				reg = <0xfffffc00 0x100>;
+@@ -58,6 +58,11 @@
+ 				reg = <0xfffff000 0x200>;
  			};
  
-+			rstc@fffffe00 {
-+				compatible = "atmel,at91sam9g45-rstc";
-+				reg = <0xfffffe00 0x10>;
++			ramc0: ramc@ffffe800 {
++				compatible = "atmel,at91sam9g45-ddramc";
++				reg = <0xffffe800 0x200>;
 +			};
 +
- 			pit: timer@fffffe30 {
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffe30 0xf>;
+ 			pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91rm9200-pmc";
+ 				reg = <0xfffffc00 0x100>;
 diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
-index 7333276..0b82c34 100644
+index 0b82c34..b6831ee 100644
 --- a/arch/arm/mach-at91/at91sam9x5.c
 +++ b/arch/arm/mach-at91/at91sam9x5.c
-@@ -309,7 +309,6 @@ static void __init at91sam9x5_ioremap_registers(void)
- 
- void __init at91sam9x5_initialize(void)
- {
--	arm_pm_restart = at91sam9g45_restart;
- 	at91_extern_irq = (1 << AT91SAM9X5_ID_IRQ0);
- 
- 	/* Register GPIO subsystem (using DT) */
-diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-index d7abc25..3e48b59 100644
---- a/arch/arm/mach-at91/setup.c
-+++ b/arch/arm/mach-at91/setup.c
-@@ -287,8 +287,38 @@ void __init at91_ioremap_matrix(u32 base_addr)
+@@ -302,11 +302,6 @@ static void __init at91sam9x5_map_io(void)
+ 	at91_init_sram(0, AT91SAM9X5_SRAM_BASE, AT91SAM9X5_SRAM_SIZE);
  }
  
- #if defined(CONFIG_OF)
-+static struct of_device_id rstc_ids[] = {
-+	{ .compatible = "atmel,at91sam9260-rstc", .data = at91sam9_alt_restart },
-+	{ .compatible = "atmel,at91sam9g45-rstc", .data = at91sam9g45_restart },
+-static void __init at91sam9x5_ioremap_registers(void)
+-{
+-	at91_ioremap_ramc(0, AT91SAM9X5_BASE_DDRSDRC0, 512);
+-}
+-
+ void __init at91sam9x5_initialize(void)
+ {
+ 	at91_extern_irq = (1 << AT91SAM9X5_ID_IRQ0);
+@@ -359,7 +354,6 @@ static unsigned int at91sam9x5_default_irq_priority[NR_AIC_IRQS] __initdata = {
+ struct at91_init_soc __initdata at91sam9x5_soc = {
+ 	.map_io = at91sam9x5_map_io,
+ 	.default_irq_priority = at91sam9x5_default_irq_priority,
+-	.ioremap_registers = at91sam9x5_ioremap_registers,
+ 	.register_clocks = at91sam9x5_register_clocks,
+ 	.init = at91sam9x5_initialize,
+ };
+diff --git a/arch/arm/mach-at91/include/mach/at91sam9x5.h b/arch/arm/mach-at91/include/mach/at91sam9x5.h
+index a297a77..88e43d5 100644
+--- a/arch/arm/mach-at91/include/mach/at91sam9x5.h
++++ b/arch/arm/mach-at91/include/mach/at91sam9x5.h
+@@ -55,11 +55,6 @@
+ #define AT91SAM9X5_BASE_USART2	0xf8024000
+ 
+ /*
+- * System Peripherals
+- */
+-#define AT91SAM9X5_BASE_DDRSDRC0	0xffffe800
+-
+-/*
+  * Base addresses for early serial code (uncompress.h)
+  */
+ #define AT91_DBGU	AT91_BASE_DBGU0
+diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
+index 3e48b59..f86450d 100644
+--- a/arch/arm/mach-at91/setup.c
++++ b/arch/arm/mach-at91/setup.c
+@@ -315,12 +315,33 @@ static void at91_dt_rstc(void)
+ 	of_node_put(np);
+ }
+ 
++static struct of_device_id ramc_ids[] = {
++	{ .compatible = "atmel,at91sam9260-sdramc" },
++	{ .compatible = "atmel,at91sam9g45-ddramc" },
 +	{ /*sentinel*/ }
 +};
 +
-+static void at91_dt_rstc(void)
++static void at91_dt_ramc(void)
 +{
 +	struct device_node *np;
-+	const struct of_device_id *of_id;
 +
-+	np = of_find_matching_node(NULL, rstc_ids);
++	np = of_find_matching_node(NULL, ramc_ids);
 +	if (!np)
-+		panic("unable to find compatible rstc node in dtb\n");
++		panic("unable to find compatible ram conroller node in dtb\n");
 +
-+	at91_rstc_base = of_iomap(np, 0);
-+	if (!at91_rstc_base)
-+		panic("unable to map rstc cpu registers\n");
-+
-+	of_id = of_match_node(rstc_ids, np);
-+	if (!of_id)
-+		panic("AT91: rtsc no restart function availlable\n");
-+
-+	arm_pm_restart = of_id->data;
++	at91_ramc_base[0] = of_iomap(np, 0);
++	if (!at91_ramc_base[0])
++		panic("unable to map ramc[0] cpu registers\n");
++	/* the controller may have 2 banks */
++	at91_ramc_base[1] = of_iomap(np, 1);
 +
 +	of_node_put(np);
 +}
 +
  void __init at91_dt_initialize(void)
  {
-+	at91_dt_rstc();
-+
- 	/* temporary until have the ramc binding*/
- 	at91_boot_soc.ioremap_registers();
+ 	at91_dt_rstc();
+-
+-	/* temporary until have the ramc binding*/
+-	at91_boot_soc.ioremap_registers();
++	at91_dt_ramc();
  
+ 	/* Init clock subsystem */
+ 	at91_dt_clock_init();
 -- 
 1.7.7
