@@ -1,170 +1,73 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
-Date: Sat, 03 Mar 2012 13:38:39 -0600
-Message-ID: <4F52733F.4030807@gmail.com>
-References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com> <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com> <4F50D7C2.7080204@gmail.com> <4F510B8E.3070201@cavium.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3 06/10] pwm: Add NVIDIA Tegra SoC support
+Date: Sat, 3 Mar 2012 23:42:12 +0100
+Message-ID: <20120303224212.GA6661@avionic-0098.mockup.avionic-design.de>
+References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de>
+ <1329923841-32017-7-git-send-email-thierry.reding@avionic-design.de>
+ <74CDBE0F657A3D45AFBB94109FB122FF17BDDF1E63@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F510B8E.3070201@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17BDDF1E63-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/2012 12:03 PM, David Daney wrote:
-> On 03/02/2012 06:22 AM, Rob Herring wrote:
-> [...]
->>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->>> index ce30e2f..01344ae 100644
->>> --- a/arch/mips/Kconfig
->>> +++ b/arch/mips/Kconfig
->>> @@ -1432,6 +1432,7 @@ config CPU_CAVIUM_OCTEON
->>>       select WEAK_ORDERING
->>>       select CPU_SUPPORTS_HIGHMEM
->>>       select CPU_SUPPORTS_HUGEPAGES
->>> +    select IRQ_DOMAIN
->>
->> IIRC, Grant has a patch cued up that enables IRQ_DOMAIN for all of MIPS.
->>
-> 
-> Indeed, I now see it in linux-next.  I will remove this one.
-> 
->>>       help
->>>         The Cavium Octeon processor is a highly integrated chip
->>> containing
->>>         many ethernet hardware widgets for networking tasks. The
->>> processor
->>> diff --git a/arch/mips/cavium-octeon/octeon-irq.c
->>> b/arch/mips/cavium-octeon/octeon-irq.c
->>> index bdcedd3..e9f2f6c 100644
->>> --- a/arch/mips/cavium-octeon/octeon-irq.c
->>> +++ b/arch/mips/cavium-octeon/octeon-irq.c
-> [...]
->>> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
->>> +                          unsigned int line,
->>> +                          unsigned int bit,
->>> +                          struct irq_domain *domain,
->>>                             struct irq_chip *chip,
->>>                             irq_flow_handler_t handler)
->>>   {
->>> +    struct irq_data *irqd;
->>>       union octeon_ciu_chip_data cd;
->>>
->>>       irq_set_chip_and_handler(irq, chip, handler);
->>> -
->>>       cd.l = 0;
->>>       cd.s.line = line;
->>>       cd.s.bit = bit;
->>>
->>>       irq_set_chip_data(irq, cd.p);
->>>       octeon_irq_ciu_to_irq[line][bit] = irq;
->>> +
->>> +    irqd = irq_get_irq_data(irq);
->>> +    irqd->hwirq = line<<  6 | bit;
->>> +    irqd->domain = domain;
->>
->> I think the domain code will set these.
-> 
-> It is my understanding that the domain code only does this for:
-> 
-> o irq_domain_add_legacy()
-> 
-> o irq_create_direct_mapping()
-> 
-> o irq_create_mapping()
-> 
-> We use none of those.  So I do it here.
-> 
-> If there is a better way, I am open to suggestions.
 
-How do you convert local h/w irq controller numbers in the dts to linux
-irq #'s?
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> [...]
->>> @@ -982,6 +1092,10 @@ static void __init octeon_irq_init_ciu(void)
->>>       struct irq_chip *chip_mbox;
->>>       struct irq_chip *chip_wd;
->>>       struct irq_chip *chip_gpio;
->>> +    struct device_node *gpio_node;
->>> +    struct device_node *ciu_node;
->>> +    struct irq_domain *gpio_domain;
->>> +    struct irq_domain *ciu_domain;
->>>
->>>       octeon_irq_init_ciu_percpu();
->>>       octeon_irq_setup_secondary = octeon_irq_setup_secondary_ciu;
->>> @@ -1011,83 +1125,144 @@ static void __init octeon_irq_init_ciu(void)
->>>       /* Mips internal */
->>>       octeon_irq_init_core();
->>>
->>> +    gpio_node = of_find_compatible_node(NULL, NULL,
->>> "cavium,octeon-3860-gpio");
->>> +    ciu_node = of_find_compatible_node(NULL, NULL,
->>> "cavium,octeon-3860-ciu");
->>> +    /* gpio domain host_data is the base hwirq number. */
->>> +    gpio_domain = irq_domain_add_linear(gpio_node,
->>> 16,&octeon_irq_domain_gpio_ops, (void *)16);
->>
->> It would be better to define a struct here rather than casting a data
->> value to a ptr.
-> 
-> You mean allocate storage for the data somewhere and then pass a pointer
-> to it?
-> 
-> If so, I could, but it would just be adding code and data size just to
-> satisfy some coding style thing...
-> 
-> Or do you want a union of the pointer and my int?  That would use the
-> same amount of storage, but add more source code to gain what?
+* Stephen Warren wrote:
+> Thierry Reding wrote at Wednesday, February 22, 2012 8:17 AM:
+> > This commit adds a generic PWM framework driver for the PWFM controller
+> > found on NVIDIA Tegra SoCs. The driver is based on code from the
+> > Chromium kernel tree and was originally written by Gary King (NVIDIA)
+> > and later modified by Simon Que (Chromium).
+>=20
+> > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+>=20
+> > +static int tegra_pwm_config(struct pwm_chip *chip, struct pwm_device *=
+pwm,
+>=20
+> > +	/*
+> > +	 * Convert from duty_ns / period_ns to a fixed number of duty
+> > +	 * ticks per (1 << PWM_DUTY_WIDTH) cycles.
+> > +	 */
+> > +	c =3D duty_ns * ((1 << PWM_DUTY_WIDTH) - 1);
+>=20
+> The driver in ChromeOS has the following extra line here:
+>=20
+>     c +=3D (period_ns / 2);
+>=20
+> and the following extra line in the comment above:
+>=20
+>     Also, make sure to round to the nearest integer during division.
+>=20
+> I don't know the HW well enough to know if that line should be present?
+>=20
+> Otherwise, this looks similar enough to the ChromeOS driver, so:
+>=20
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-The former. It's better style, less error prone and easily expanded if
-more data is needed in the future.
+Those probably weren't there yet when I prepared the first series. I'll have
+another look will sync up with it after testing that it still works.
 
-> 
-> [...]
->>> +    octeon_irq_set_ciu_mapping(OCTEON_IRQ_PEM0, 1, 48,
->>> +                   ciu_domain, chip, handle_level_irq);
->>> +    octeon_irq_set_ciu_mapping(OCTEON_IRQ_PEM1, 1, 49,
->>> +                   ciu_domain, chip, handle_level_irq);
->>> +    octeon_irq_set_ciu_mapping(OCTEON_IRQ_SRIO0, 1, 50,
->>> +                   ciu_domain, chip, handle_level_irq);
->>> +    octeon_irq_set_ciu_mapping(OCTEON_IRQ_SRIO1, 1, 51,
->>> +                   ciu_domain, chip, handle_level_irq);
->>> +    octeon_irq_set_ciu_mapping(OCTEON_IRQ_LMC0, 1, 52,
->>> +                   ciu_domain, chip, handle_level_irq);
->>> +    octeon_irq_set_ciu_mapping(OCTEON_IRQ_DFM, 1, 56,
->>> +                   ciu_domain, chip, handle_level_irq);
->>> +    octeon_irq_set_ciu_mapping(OCTEON_IRQ_RST, 1, 63,
->>> +                   ciu_domain, chip, handle_level_irq);
->>>
->>
->> Can all these calls be moved into the .map function somehow?
->>
-> 
-> No, the non-OF code using the OCTEON_IRQ_* symbols doesn't use
-> irq_domain, so the .map function would never be used.
-> 
+Thierry
 
-.map is called for legacy domains during domain add.
+--cWoXeonUoKmBZSoM
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> 
->> edge vs. level should be driven by dts.
->>
-> 
-> We may have to disagree on this point.  Because:
-> 
-> 1) edge vs. level can be accurately probed, as we do here.
+iEYEARECAAYFAk9SnkQACgkQZ+BJyKLjJp8JVACgnY8PFSESqnnEghbXU90UjWqx
+/g4Anj8hNw8o+FqmuSbGHqEBzwyHzzkD
+=eYf+
+-----END PGP SIGNATURE-----
 
-Looks like you are just hard coding it here. Where do you read something
-that tells you the interrupt is level or edge?
-
-Rob
-
-> 
-> 2) The dts doesnt contain the information.
-> 
-> 
-> David Daney
+--cWoXeonUoKmBZSoM--
