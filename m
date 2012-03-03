@@ -1,68 +1,128 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v3 02/10] pwm: Allow chips to support multiple PWMs.
-Date: Sat, 3 Mar 2012 20:32:49 +0100
-Message-ID: <20120303193249.GA22021@avionic-0098.mockup.avionic-design.de>
-References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de>
- <201202221634.45159.arnd@arndb.de>
- <20120223081235.GC8621@avionic-0098.mockup.avionic-design.de>
- <201202231407.12981.arnd@arndb.de>
- <20120223160420.GA9899@avionic-0098.mockup.avionic-design.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
+Date: Sat, 03 Mar 2012 13:35:33 -0600
+Message-ID: <4F527285.1020500@gmail.com>
+References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com>
+ <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com>
+ <4F50D7C2.7080204@gmail.com> <4F510B8E.3070201@cavium.com>
+ <20120302190744.571E03E1C63@localhost> <4F511FB0.5070901@cavium.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120223160420.GA9899-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F511FB0.5070901-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 03/02/2012 01:29 PM, David Daney wrote:
+> On 03/02/2012 11:07 AM, Grant Likely wrote:
+>> On Fri, 02 Mar 2012 10:03:58 -0800, David
+>> Daney<david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>  wrote:
+>>> On 03/02/2012 06:22 AM, Rob Herring wrote:
+>>> [...]
+>>>>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>>>>> index ce30e2f..01344ae 100644
+>>>>> --- a/arch/mips/Kconfig
+>>>>> +++ b/arch/mips/Kconfig
+>>>>> @@ -1432,6 +1432,7 @@ config CPU_CAVIUM_OCTEON
+>>>>>        select WEAK_ORDERING
+>>>>>        select CPU_SUPPORTS_HIGHMEM
+>>>>>        select CPU_SUPPORTS_HUGEPAGES
+>>>>> +    select IRQ_DOMAIN
+>>>>
+>>>> IIRC, Grant has a patch cued up that enables IRQ_DOMAIN for all of
+>>>> MIPS.
+>>>>
+>>>
+>>> Indeed, I now see it in linux-next.  I will remove this one.
+>>>
+>>>>>        help
+>>>>>          The Cavium Octeon processor is a highly integrated chip
+>>>>> containing
+>>>>>          many ethernet hardware widgets for networking tasks. The
+>>>>> processor
+>>>>> diff --git a/arch/mips/cavium-octeon/octeon-irq.c
+>>>>> b/arch/mips/cavium-octeon/octeon-irq.c
+>>>>> index bdcedd3..e9f2f6c 100644
+>>>>> --- a/arch/mips/cavium-octeon/octeon-irq.c
+>>>>> +++ b/arch/mips/cavium-octeon/octeon-irq.c
+>>> [...]
+>>>>> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
+>>>>> +                          unsigned int line,
+>>>>> +                          unsigned int bit,
+>>>>> +                          struct irq_domain *domain,
+>>>>>                              struct irq_chip *chip,
+>>>>>                              irq_flow_handler_t handler)
+>>>>>    {
+>>>>> +    struct irq_data *irqd;
+>>>>>        union octeon_ciu_chip_data cd;
+>>>>>
+>>>>>        irq_set_chip_and_handler(irq, chip, handler);
+>>>>> -
+>>>>>        cd.l = 0;
+>>>>>        cd.s.line = line;
+>>>>>        cd.s.bit = bit;
+>>>>>
+>>>>>        irq_set_chip_data(irq, cd.p);
+>>>>>        octeon_irq_ciu_to_irq[line][bit] = irq;
+>>>>> +
+>>>>> +    irqd = irq_get_irq_data(irq);
+>>>>> +    irqd->hwirq = line<<   6 | bit;
+>>>>> +    irqd->domain = domain;
+>>>>
+>>>> I think the domain code will set these.
+>>>
+>>> It is my understanding that the domain code only does this for:
+>>>
+>>> o irq_domain_add_legacy()
+>>>
+>>> o irq_create_direct_mapping()
+>>>
+>>> o irq_create_mapping()
+>>>
+>>> We use none of those.  So I do it here.
+>>>
+>>> If there is a better way, I am open to suggestions.
+>>
+>> irq_create_mapping is called by irq_create_of_mapping() which is
+>> in turn called by irq_of_parse_and-map().  irq_domain always
+>> manages the hwirq and domain values.  Driver code cannot manipulate
+>> them manually.
+>>
+> 
+> I really must be missing something.
+> 
+> Given:
+> 
+> 1) I must have a mapping between hwirq and irq that I control so that
+> non-OF code using the OCTEON_IRQ_* constants continues to work.
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Those defines are what you need to work to get rid of.
 
-* Thierry Reding wrote:
-> * Arnd Bergmann wrote:
-> > On Thursday 23 February 2012, Thierry Reding wrote:
-> > > > Is this only used for the device tree functions? If so, I would rec=
-ommend
-> > > > making it less generic and always search for a device node.
-> > >=20
-> > > It is currently only used to look up a struct pwm_chip for a given st=
-ruct
-> > > device_node, yes. But I can see other uses for this. For instance thi=
-s could
-> > > be useful if we ever want to provide an alternative way of requesting=
- a PWM
-> > > on a per-chip basis.
-> >=20
-> > Nah, just keep it simple for now. If we need it later, we can still
-> > add something like this back, but for now it's just a source of
-> > confusion and possible bugs.
->=20
-> Will do.
+> 2) irq_create_mapping() will allocate a random irq value if none is
+> already assigned to the hwirq.
+> 
+> Therefore: To avoid having random irq values assigned, I must manually
+> assign them.
+> 
 
-I turns out that this is not as easy to do as I thought. The problem is that
-if I remove the pwmchip_find() from the core and move the lookup
-functionality into the OF support code I no longer have access to the list =
-of
-PWM chips. So I guess it will have to stay in to keep things encapsulated
-properly.
+So you should be using legacy domain if you need to maintain fixed hwirq
+to linux irq numbers. "linear" is a bit confusing as it doesn't mean
+linear 1:1 irq number assignment, but linear search.
 
-Thierry
+Ultimately, for DT boot you should use of_irq_init to scan the dts, and
+then create a linear domain for each interrupt controller node. You may
+need to decide on linear vs. legacy at runtime based on having a DT node
+pointer or not.
 
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk9SceEACgkQZ+BJyKLjJp8s7gCfdDyNiTLuh74KROE93wQDMqJ3
-alwAn2xEUB3JeTjHO6Zz0wJnhQU+FWZf
-=rPxI
------END PGP SIGNATURE-----
-
---vkogqOf2sHV7VnPd--
+Rob
