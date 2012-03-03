@@ -1,47 +1,64 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device
- tree support
-Date: Sat, 03 Mar 2012 09:44:44 +0900
-Message-ID: <4F51697C.40408@samsung.com>
-References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>	<003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>	<m2aa4pkq5g.fsf@bob.laptop.org> <4F3CFEED.6060206@samsung.com>	<m239abgc32.fsf@bob.laptop.org>	<00b901ccf08d$2fc18b50$8f44a1f0$%kim@samsung.com>	<m2vcn0496y.fsf@bob.laptop.org> <20120222125823.GA14463@sirena.org.uk> <m2ty26n3dm.fsf@bob.laptop.org>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] devicetree: Add empty of_platform_populate() for
+ !CONFIG_OF_ADDRESS (sparc)
+Date: Fri, 2 Mar 2012 17:07:15 -0800
+Message-ID: <20120302170715.9f0a67ef.akpm@linux-foundation.org>
+References: <1330121218-10442-1-git-send-email-grant.likely@secretlab.ca>
+	<4F513990.1030401@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <m2ty26n3dm.fsf@bob.laptop.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Kukjin Kim <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F513990.1030401@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/12 05:40, Chris Ball wrote:
-> Hi,
->
-> On Wed, Feb 22 2012, Mark Brown wrote:
->> On Tue, Feb 21, 2012 at 08:17:41AM -0500, Chris Ball wrote:
->>
->>> Pushed to mmc-next, thanks.  (I'm expecting that you'll do the merge
->>> to Linus.)
->>
->> I've been sending patches adding runtime PM support to this driver for a
->> while with no response - are there any issues with those?
->
-> I don't have s3c hardware, so I've been waiting for a Tested-by or ACK
-> from someone who does -- Kukjin, any objection if I take this into
-> mmc-next with a plan to merge it, to provoke some testing?  Is it
-> possible for you to test/review the patch?
->
-Hi Chris,
+On Fri, 2 Mar 2012 22:20:16 +0100
+"Cousson, Benoit" <b-cousson@ti.com> wrote:
 
-Maybe I lost Mark's runtime PM supporting patches. I couldn't find it in 
-my mail box. Sorry for that :(
+> Hi Grant,
+> 
+> In fact this patch is not working for build without CONFIG_OF like x86.
+> 
+> On 2/24/2012 11:06 PM, Grant Likely wrote:
+> > --- a/include/linux/of_platform.h
+> > +++ b/include/linux/of_platform.h
+> > @@ -81,7 +81,7 @@ extern struct platform_device *of_device_alloc(struct device_node *np,
+> >   					 struct device *parent);
+> >   extern struct platform_device *of_find_device_by_node(struct device_node *np);
+> >
+> > -#if !defined(CONFIG_SPARC) /* SPARC has its own device registration method */
+> > +#ifdef CONFIG_OF_ADDRESS /* device reg helpers depend on OF_ADDRESS */
+> >   /* Platform devices and busses creation */
+> >   extern struct platform_device *of_platform_device_create(struct device_node *np,
+> >   						   const char *bus_id,
+> > @@ -94,7 +94,15 @@ extern int of_platform_populate(struct device_node *root,
+> >   				const struct of_device_id *matches,
+> >   				const struct of_dev_auxdata *lookup,
+> >   				struct device *parent);
+> > -#endif /* !CONFIG_SPARC */
+> > +#else
+> > +static inline int of_platform_populate(struct device_node *root,
+> > +					const struct of_device_id *matches,
+> > +					const struct of_dev_auxdata *lookup,
+> > +					struct device *parent)
+> > +{
+> > +	return -ENODEV;
+> > +}
+> > +#endif /* !CONFIG_OF_ADDRESS */
+> >
+> >   #endif /* CONFIG_OF_DEVICE */
+> 
+> Because if CONFIG_OF_DEVICE is not defined, then the stub for 
+> of_platform_populate will not be defined either. It should exist for any 
+> config without CONFIG_OF.
+> 
+> Building twl4030 for x86 is actually broken.
+> 
 
-Mark, could you please send it to me again?
+All twl is broken.  i386 allmodconfig with this monring's linux-next:
 
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+drivers/mfd/twl-core.c: In function 'twl_probe':
+drivers/mfd/twl-core.c:1357: error: implicit declaration of function 'of_platform_populate'
