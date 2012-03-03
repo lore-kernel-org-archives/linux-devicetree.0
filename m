@@ -1,11 +1,16 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/1] mtd: ofpart Kconfig fix typo
-Date: Sat,  3 Mar 2012 07:47:25 +0100
-Message-ID: <1330757245-8691-1-git-send-email-plagnioj@jcrosoft.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 5/5 v2] ARM: kirkwood: convert orion-wdt to fdt.
+Date: Sat, 3 Mar 2012 10:08:53 +0000
+Message-ID: <20120303100853.GK7363@n2100.arm.linux.org.uk>
+References: <cover.1330709314.git.jason@lakedaemon.net>
+ <e2fe5e97a83fc753559bbb18d5d111ed01b89034.1330709314.git.jason@lakedaemon.net>
+ <201203021832.34901.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201203021832.34901.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,36 +20,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-it's "default y" not "default Y"
+On Fri, Mar 02, 2012 at 06:32:33PM +0000, Arnd Bergmann wrote:
+> On Friday 02 March 2012, Jason Cooper wrote:
+> > +       wdt_reg = (void __iomem *)TIMER_VIRT_BASE;
+> > +
+> > +       ret = of_address_to_resource(np, 0, &res);
+> > +       if (ret) {
+> > +               printk(KERN_ERR "invalid address\n");
+> > +               return ret;
+> > +       }
+> > +
+> > +       wdt_reg = ioremap(res.start, res.end - res.start);
+> > +
+> 
+> This will break non-dt uses because you overwrite the wdt_reg value.
 
-The typo was introduced in 3.1 by
-Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-since commit
-d6137badeff1ef64b4e0092ec249ebdeaeb3ff37
-
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- drivers/mtd/Kconfig |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index 1be6218..5e78236 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -128,7 +128,7 @@ config MTD_AFS_PARTS
- 
- config MTD_OF_PARTS
- 	tristate "OpenFirmware partitioning information support"
--	default Y
-+	default y
- 	depends on OF
- 	help
- 	  This provides a partition parsing function which derives
--- 
-1.7.7
+Don't also forget that "res.end - res.start" is also not correct, and
+resource_size() should be used to prevent that kind of error.
