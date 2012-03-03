@@ -1,42 +1,224 @@
-From: Arnd Bergmann <arnd.bergmann@linaro.org>
-Subject: Re: [PATCH] Initial Device Tree system for Snowball
-Date: Sat, 3 Mar 2012 02:09:51 +0000
-Message-ID: <201203030209.51767.arnd.bergmann@linaro.org>
-References: <1330703567-17925-1-git-send-email-niklas.hernaeus@stericsson.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/3 v3] of_spi: add generic binding support to specify ncs
+	gpio
+Date: Fri, 02 Mar 2012 19:32:07 -0700
+Message-ID: <20120303023207.7241E3E2D8A@localhost>
+References: <1330682587-20636-1-git-send-email-plagnioj@jcrosoft.com>
+	<1330682587-20636-2-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1330703567-17925-1-git-send-email-niklas.hernaeus@stericsson.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Niklas Hernaeus <niklas.hernaeus@linaro.org>, linaro-kernel@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, Thomas Espersson <thomas.espersson@stericsson.com>, Lee Jones <lee.jones@linaro.org>, Niklas Hernaeus <niklas.hernaeus@stericsson.com>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1330682587-20636-2-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 March 2012, Niklas Hernaeus wrote:
+On Fri,  2 Mar 2012 11:03:06 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> This will allow to use gpio for chip select with no modification in the
+> driver binding
 > 
-> From: Niklas Hernaeus <niklas.hernaeus@linaro.org>
+> When use the ncs-gpios, the gpio number will be passed via the controller_data
+> and the number of chip select will automatically increased.
 > 
-> This is the base system for using Device Tree for Snowball.
-> The new boardfile is a slightly modified copy of the original board file,
-> so new Device Tree stuff can simply be added and code removed, while
-> functionality stays the same.
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> ---
+> v3:
+> 	use devm_kzalloc
+> 
+> v2:
+> 	specify the gpio array at controller level
+> 
+> Best Regards,
+> J.
+>  Documentation/devicetree/bindings/spi/spi-bus.txt |    6 +++
+>  drivers/spi/spi.c                                 |   49 +++++++++++++++++++-
+>  include/linux/spi/spi.h                           |    5 ++
+>  3 files changed, 57 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index e782add..5a24729 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -12,6 +12,7 @@ The SPI master node requires the following properties:
+>  - #size-cells     - should be zero.
+>  - compatible      - name of SPI bus controller following generic names
+>      		recommended practice.
+> +- ncs-gpios       - (optional) gpios chip select.
 
-I realized that this series is based on a version before Lee's patches
-to add the soc information, and things have changed quite a bit with that.
+ncs?  What does the 'n' stand for?
 
-I've played a bit more with this and tried to merge the two, the result
-is a series in the testing/ux500/dt branch of arm-soc.git. I'm sure it's not
-actually all correct, but I've tried my best there and also added quite
-a bit of device tree source for illustration. Maybe the two of you can
-have a look there and see what you can make of it.
+>  No other properties are required in the SPI bus node.  It is assumed
+>  that a driver for an SPI bus device will understand that it is an SPI bus.
+>  However, the binding does not attempt to define the specific method for
+> @@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
+>  chip selects.  Individual drivers can define additional properties to
+>  support describing the chip select layout.
+>  
+> +If ncs-gpios is used the number of chip select will automatically increased.
+> +
+>  SPI slave nodes must be children of the SPI master node and can
+>  contain the following properties.
+>  - reg             - (required) chip select address of device.
+> @@ -34,6 +37,9 @@ contain the following properties.
+>  - spi-cs-high     - (optional) Empty property indicating device requires
+>      		chip select active high
+>  
+> +If a gpio chipselect is used for the SPI slave the gpio number will be passed
+> +via the controller_data
+> +
+>  SPI example for an MPC5200 SPI bus:
+>  	spi@f00 {
+>  		#address-cells = <1>;
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index e2f4ca0..f3df51f 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/of_spi.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/export.h>
+>  
+> @@ -339,15 +340,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
+>  int spi_add_device(struct spi_device *spi)
+>  {
+>  	static DEFINE_MUTEX(spi_add_lock);
+> -	struct device *dev = spi->master->dev.parent;
+> +	struct spi_master *master = spi->master;
+> +	struct device *dev = master->dev.parent;
+>  	struct device *d;
+>  	int status;
+>  
+>  	/* Chipselects are numbered 0..max; validate. */
+> -	if (spi->chip_select >= spi->master->num_chipselect) {
+> +	if (spi->chip_select >= master->num_chipselect) {
+>  		dev_err(dev, "cs%d >= max %d\n",
+>  			spi->chip_select,
+> -			spi->master->num_chipselect);
+> +			master->num_chipselect);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -371,6 +373,13 @@ int spi_add_device(struct spi_device *spi)
+>  		goto done;
+>  	}
+>  
+> +	if (master->num_gpio_chipselect &&
+> +	    spi->chip_select >= master->first_gpio_chipselect) {
+> +		int num = spi->chip_select - master->first_gpio_chipselect;
 
-	Arnd
+I'd rather see an unconditional array of gpios; which only get used if a
+valid gpio number is assigned.
+
+> +
+> +		spi->controller_data = (void*)master->chipselect_gpios[num];
+
+Controller_data cannot be used here since it is provided for use
+by the controller driver.
+
+> +	}
+> +
+>  	/* Drivers may modify this initial i/o setup, but will
+>  	 * normally rely on the device being setup.  Devices
+>  	 * using SPI_CS_HIGH can't coexist well otherwise...
+> @@ -562,6 +571,36 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+>  }
+>  EXPORT_SYMBOL_GPL(spi_alloc_master);
+>  
+> +static int of_spi_register_master(struct spi_master *master)
+> +{
+> +	int nb, i;
+> +	int *cs;
+> +	struct device_node *np = master->dev.of_node;
+> +
+> +	if (!np)
+> +		return 0;
+> +
+> +	nb = of_gpio_named_count(np, "ncs-gpios");
+> +
+> +	if (nb < 1)
+> +		return 0;
+> +
+> +	cs = devm_kzalloc(&master->dev, sizeof(int) * nb, GFP_KERNEL);
+> +	master->chipselect_gpios = cs;
+
+the chipselect gpios functionality should be available regardless
+of whether or not DT is used.  This should be moved out of the of-specific
+register function.
+
+> +
+> +	if (!master->chipselect_gpios)
+> +		return -ENOMEM;
+> +
+> +	master->first_gpio_chipselect = master->num_chipselect;
+> +	master->num_chipselect += nb;
+> +	master->num_gpio_chipselect = nb;
+> +
+> +	for (i = 0; i < nb; i++)
+> +		cs[i] = of_get_named_gpio(np, "ncs-gpios", i);
+> +
+> +	return 0;
+> +}
+
+This function should be #ifdefed out when !OF
+
+> +
+>  /**
+>   * spi_register_master - register SPI master controller
+>   * @master: initialized master, originally from spi_alloc_master()
+> @@ -593,6 +632,10 @@ int spi_register_master(struct spi_master *master)
+>  	if (!dev)
+>  		return -ENODEV;
+>  
+> +	status = of_spi_register_master(master);
+> +	if (status)
+> +		return status;
+> +
+>  	/* even if it's just one always-selected device, there must
+>  	 * be at least one chipselect
+>  	 */
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 176fce9..d21c267 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -318,6 +318,11 @@ struct spi_master {
+>  
+>  	/* called on release() to free memory provided by spi_master */
+>  	void			(*cleanup)(struct spi_device *spi);
+> +
+> +	/* gpio chip select */
+> +	int			*chipselect_gpios;
+> +	int			first_gpio_chipselect;
+> +	int			num_gpio_chipselect;
+
+s/chipselect/cs/ would be quite a bit less verbose
+
+>  };
+>  
+>  static inline void *spi_master_get_devdata(struct spi_master *master)
+> -- 
+> 1.7.7
+> 
+
+-- 
+email sent from notmuch.vim plugin
+
+------------------------------------------------------------------------------
+Virtualization & Cloud Management Using Capacity Planning
+Cloud computing makes use of virtualization - but cloud computing 
+also focuses on allowing computing to be delivered as a service.
+http://www.accelacomm.com/jaw/sfnl/114/51521223/
