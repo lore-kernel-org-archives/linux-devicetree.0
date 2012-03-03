@@ -1,19 +1,17 @@
 From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: kirkwood: convert orion-wdt to fdt.
-Date: Sat, 3 Mar 2012 17:54:40 -0500
-Message-ID: <20120303225440.GR11986@titan.lakedaemon.net>
-References: <cover.1330625877.git.jason@lakedaemon.net>
- <201203021456.47896.arnd@arndb.de>
- <20120302153614.GG11986@titan.lakedaemon.net>
- <201203021648.52523.arnd@arndb.de>
- <20120302170252.GJ11986@titan.lakedaemon.net>
- <20120302223629.GA21080@lunn.ch>
+Subject: Re: [PATCH 5/5 v2] ARM: kirkwood: convert orion-wdt to fdt.
+Date: Sat, 3 Mar 2012 18:05:11 -0500
+Message-ID: <20120303230511.GS11986@titan.lakedaemon.net>
+References: <cover.1330709314.git.jason@lakedaemon.net>
+ <e2fe5e97a83fc753559bbb18d5d111ed01b89034.1330709314.git.jason@lakedaemon.net>
+ <201203021832.34901.arnd@arndb.de>
+ <20120303100853.GK7363@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120302223629.GA21080-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20120303100853.GK7363-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,27 +21,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2012 at 11:36:29PM +0100, Andrew Lunn wrote:
-> > > Andrew Lunn said that he has a patch for plat-orion to use the generic
-> > > clock framework. I think we should look at that before introducing
-> > > a hack that will have to be removed again very soon.
+On Sat, Mar 03, 2012 at 10:08:53AM +0000, Russell King - ARM Linux wrote:
+> On Fri, Mar 02, 2012 at 06:32:33PM +0000, Arnd Bergmann wrote:
+> > On Friday 02 March 2012, Jason Cooper wrote:
+> > > +       wdt_reg = (void __iomem *)TIMER_VIRT_BASE;
+> > > +
+> > > +       ret = of_address_to_resource(np, 0, &res);
+> > > +       if (ret) {
+> > > +               printk(KERN_ERR "invalid address\n");
+> > > +               return ret;
+> > > +       }
+> > > +
+> > > +       wdt_reg = ioremap(res.start, res.end - res.start);
+> > > +
 > > 
-> > I asked him for it earlier [1], apparently it's a very invasive patch
-> > series which breaks things.  I would like to look at it as a reference,
-> > even if applying it isn't a good idea.
+> > This will break non-dt uses because you overwrite the wdt_reg value.
 > 
-> I did not say it breaks things. I said i have a habit of breaking
-> orion5x, because i cannot test it.
+> Don't also forget that "res.end - res.start" is also not correct, and
+> resource_size() should be used to prevent that kind of error.
 
-Wow, you're right, I was way off.  I must not have read that over before
-sending.  My mistake.
+Russell, thanks for the review.  I'll redo this one and resubmit my
+pull-request to Arnd.  I assume that we don't won't this to be a
+separate patch as a future bisect could land inbetween this patch and
+the fix.
 
-> I will send the patches as RFC on Sunday. I'm traveling at the moment.
+Sorry for the extra work Arnd.
 
-Awesome, thanks.
+thx,
 
 Jason.
