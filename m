@@ -1,46 +1,133 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] spi/atmel: add DT support
-Date: Sat, 3 Mar 2012 04:46:34 +0100
-Message-ID: <20120303034634.GD21255@game.jcrosoft.org>
-References: <1328804077-6121-1-git-send-email-plagnioj@jcrosoft.com>
-	<1328804077-6121-3-git-send-email-plagnioj@jcrosoft.com>
-	<20120303023929.BE8F93E2D8D@localhost>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add empty of_platform_populate() for
+ !CONFIG_OF_ADDRESS (sparc)
+Date: Fri, 02 Mar 2012 21:09:30 -0700
+Message-ID: <20120303040930.1E9283E190C@localhost>
+References: <1330121218-10442-1-git-send-email-grant.likely@secretlab.ca>
+ <4F513990.1030401@ti.com> <20120302170715.9f0a67ef.akpm@linux-foundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120303023929.BE8F93E2D8D@localhost>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120302170715.9f0a67ef.akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "Cousson,
+ Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19:39 Fri 02 Mar     , Grant Likely wrote:
-> On Thu,  9 Feb 2012 17:14:37 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > the atmel_spi use only gpio for chip select
-> > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+On Fri, 2 Mar 2012 17:07:15 -0800, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
+> On Fri, 2 Mar 2012 22:20:16 +0100
+> "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org> wrote:
 > 
-> Looks good to me; applied.
-please wait it's need to patch that manage the cs-gpio
+> > Hi Grant,
+> > 
+> > In fact this patch is not working for build without CONFIG_OF like x86.
+> > 
+> > On 2/24/2012 11:06 PM, Grant Likely wrote:
+> > > --- a/include/linux/of_platform.h
+> > > +++ b/include/linux/of_platform.h
+> > > @@ -81,7 +81,7 @@ extern struct platform_device *of_device_alloc(struct device_node *np,
+> > >   					 struct device *parent);
+> > >   extern struct platform_device *of_find_device_by_node(struct device_node *np);
+> > >
+> > > -#if !defined(CONFIG_SPARC) /* SPARC has its own device registration method */
+> > > +#ifdef CONFIG_OF_ADDRESS /* device reg helpers depend on OF_ADDRESS */
+> > >   /* Platform devices and busses creation */
+> > >   extern struct platform_device *of_platform_device_create(struct device_node *np,
+> > >   						   const char *bus_id,
+> > > @@ -94,7 +94,15 @@ extern int of_platform_populate(struct device_node *root,
+> > >   				const struct of_device_id *matches,
+> > >   				const struct of_dev_auxdata *lookup,
+> > >   				struct device *parent);
+> > > -#endif /* !CONFIG_SPARC */
+> > > +#else
+> > > +static inline int of_platform_populate(struct device_node *root,
+> > > +					const struct of_device_id *matches,
+> > > +					const struct of_dev_auxdata *lookup,
+> > > +					struct device *parent)
+> > > +{
+> > > +	return -ENODEV;
+> > > +}
+> > > +#endif /* !CONFIG_OF_ADDRESS */
+> > >
+> > >   #endif /* CONFIG_OF_DEVICE */
+> > 
+> > Because if CONFIG_OF_DEVICE is not defined, then the stub for 
+> > of_platform_populate will not be defined either. It should exist for any 
+> > config without CONFIG_OF.
+> > 
+> > Building twl4030 for x86 is actually broken.
+> > 
+> 
+> All twl is broken.  i386 allmodconfig with this monring's linux-next:
+> 
+> drivers/mfd/twl-core.c: In function 'twl_probe':
+> drivers/mfd/twl-core.c:1357: error: implicit declaration of function 'of_platform_populate'
+> 
 
-will resend a new version soon
+This patch seems to solve it finally against irqdomain/next.  Benoit, with
+your ack I'll push it out.
 
-Best Regards,
-J.
+g.
 
-------------------------------------------------------------------------------
-Virtualization & Cloud Management Using Capacity Planning
-Cloud computing makes use of virtualization - but cloud computing 
-also focuses on allowing computing to be delivered as a service.
-http://www.accelacomm.com/jaw/sfnl/114/51521223/
+---
+
+commit 679946dfdbf990d3e75418fdaf92f3981ff1f4db
+Author: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Date:   Fri Mar 2 21:05:31 2012 -0700
+
+    dt: fix twl4030 for non-dt compile on x86
+    
+    twl4030 still doesn't build correctly for x86 allmodconfig.  This
+    fix solves the missing symbol errors.
+    
+    Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
+index 4970d43..54727ef 100644
+--- a/drivers/mfd/twl-core.c
++++ b/drivers/mfd/twl-core.c
+@@ -38,6 +38,7 @@
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
++#include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ 
+ #include <linux/regulator/machine.h>
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 242fa35..b47d204 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -94,7 +94,12 @@ extern int of_platform_populate(struct device_node *root,
+ 				const struct of_device_id *matches,
+ 				const struct of_dev_auxdata *lookup,
+ 				struct device *parent);
+-#else
++#endif /* CONFIG_OF_ADDRESS */
++
++#endif /* CONFIG_OF_DEVICE */
++
++#if !defined(CONFIG_OF_ADDRESS)
++struct of_dev_auxdata;
+ static inline int of_platform_populate(struct device_node *root,
+ 					const struct of_device_id *matches,
+ 					const struct of_dev_auxdata *lookup,
+@@ -104,6 +109,4 @@ static inline int of_platform_populate(struct device_node *root,
+ }
+ #endif /* !CONFIG_OF_ADDRESS */
+ 
+-#endif /* CONFIG_OF_DEVICE */
+-
+ #endif	/* _LINUX_OF_PLATFORM_H */
+-- 
+email sent from notmuch.vim plugin
