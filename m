@@ -1,42 +1,47 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: kirkwood: convert orion-wdt to fdt.
-Date: Fri, 2 Mar 2012 23:36:29 +0100
-Message-ID: <20120302223629.GA21080@lunn.ch>
-References: <cover.1330625877.git.jason@lakedaemon.net>
- <201203021456.47896.arnd@arndb.de>
- <20120302153614.GG11986@titan.lakedaemon.net>
- <201203021648.52523.arnd@arndb.de>
- <20120302170252.GJ11986@titan.lakedaemon.net>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH v3 0/6] mmc: sdhci-s3c: Rework platform data and add device
+ tree support
+Date: Sat, 03 Mar 2012 09:44:44 +0900
+Message-ID: <4F51697C.40408@samsung.com>
+References: <1328032576-9269-1-git-send-email-thomas.abraham@linaro.org>	<003401cce730$baf979a0$30ec6ce0$%kim@samsung.com>	<m2aa4pkq5g.fsf@bob.laptop.org> <4F3CFEED.6060206@samsung.com>	<m239abgc32.fsf@bob.laptop.org>	<00b901ccf08d$2fc18b50$8f44a1f0$%kim@samsung.com>	<m2vcn0496y.fsf@bob.laptop.org> <20120222125823.GA14463@sirena.org.uk> <m2ty26n3dm.fsf@bob.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120302170252.GJ11986-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <m2ty26n3dm.fsf@bob.laptop.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Kukjin Kim <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-> > Andrew Lunn said that he has a patch for plat-orion to use the generic
-> > clock framework. I think we should look at that before introducing
-> > a hack that will have to be removed again very soon.
-> 
-> I asked him for it earlier [1], apparently it's a very invasive patch
-> series which breaks things.  I would like to look at it as a reference,
-> even if applying it isn't a good idea.
+On 03/03/12 05:40, Chris Ball wrote:
+> Hi,
+>
+> On Wed, Feb 22 2012, Mark Brown wrote:
+>> On Tue, Feb 21, 2012 at 08:17:41AM -0500, Chris Ball wrote:
+>>
+>>> Pushed to mmc-next, thanks.  (I'm expecting that you'll do the merge
+>>> to Linus.)
+>>
+>> I've been sending patches adding runtime PM support to this driver for a
+>> while with no response - are there any issues with those?
+>
+> I don't have s3c hardware, so I've been waiting for a Tested-by or ACK
+> from someone who does -- Kukjin, any objection if I take this into
+> mmc-next with a plan to merge it, to provoke some testing?  Is it
+> possible for you to test/review the patch?
+>
+Hi Chris,
 
-I did not say it breaks things. I said i have a habit of breaking
-orion5x, because i cannot test it.
+Maybe I lost Mark's runtime PM supporting patches. I couldn't find it in 
+my mail box. Sorry for that :(
 
-I will send the patches as RFC on Sunday. I'm traveling at the moment.
+Mark, could you please send it to me again?
 
-  Andrew
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
