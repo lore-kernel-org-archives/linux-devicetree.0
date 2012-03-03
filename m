@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 2/4] fdtget: Add -p to list the properties of a node
-Date: Fri,  2 Mar 2012 17:12:08 -0800
-Message-ID: <1330737130-29600-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH 4/4] fdtget: Add -d to provide a default value
+Date: Fri,  2 Mar 2012 17:12:10 -0800
+Message-ID: <1330737130-29600-4-git-send-email-sjg@chromium.org>
 References: <1330737130-29600-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,180 +20,98 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This option lists the properties of each node given as a parameter, one
-property per line.
+Sometimes the requested node or property is not present in the device
+tree. This option provides a way of reporting a default value in this
+case, rather than halting with an error.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- fdtget.c |   66 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 files changed, 60 insertions(+), 6 deletions(-)
+ fdtget.c           |   20 +++++++++++++++++---
+ tests/run_tests.sh |    6 ++++++
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
 diff --git a/fdtget.c b/fdtget.c
-index 9783e04..874bcbf 100644
+index 9ed5edd..5e87545 100644
 --- a/fdtget.c
 +++ b/fdtget.c
-@@ -1,6 +1,12 @@
- /*
-  * Copyright (c) 2011 The Chromium OS Authors. All rights reserved.
-  *
-+ * Portions from U-Boot cmd_fdt.c (C) Copyright 2007
-+ * Gerald Van Baren, Custom IDEAS, vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org
-+ * Based on code written by:
-+ *   Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> and
-+ *   Matthew McClintock <msm-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-  * This program is free software; you can redistribute it and/or
-  * modify it under the terms of the GNU General Public License as
-  * published by the Free Software Foundation; either version 2 of
-@@ -17,6 +23,7 @@
-  * MA 02111-1307 USA
-  */
- 
-+#include <assert.h>
- #include <ctype.h>
- #include <getopt.h>
- #include <stdio.h>
-@@ -27,10 +34,16 @@
- 
- #include "util.h"
- 
-+enum display_mode {
-+	MODE_SHOW_VALUE,	/* show values for node properties */
-+	MODE_LIST_PROPS,	/* list the properties for a node */
-+};
-+
- /* Holds information which controls our output and options */
- struct display_info {
+@@ -45,6 +45,7 @@ struct display_info {
  	int type;		/* data type (s/i/u/x or 0 for default) */
  	int size;		/* data size (1/2/4) */
-+	enum display_mode mode;	/* display mode that we are using */
+ 	enum display_mode mode;	/* display mode that we are using */
++	const char *default_val; /* default value if node/property not found */
  };
  
  static void report_error(const char *where, int err)
-@@ -98,6 +111,32 @@ static int show_data(struct display_info *disp, const char *data, int len)
- }
- 
- /**
-+ * List all properties in a node, one per line.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		Node to display
-+ * @return 0 if ok, or FDT_ERR... if not.
-+ */
-+static int list_properties(const void *blob, int node)
-+{
-+	const struct fdt_property *data;
-+	const char *name;
-+	int prop;
-+
-+	prop = fdt_first_property_offset(blob, node);
-+	do {
-+		/* Stop silently when there are no more properties */
-+		if (prop < 0)
-+			return prop == -FDT_ERR_NOTFOUND ? 0 : prop;
-+		data = fdt_get_property_by_offset(blob, prop, NULL);
-+		name = fdt_string(blob, fdt32_to_cpu(data->nameoff));
-+		if (name)
-+			puts(name);
-+		prop = fdt_next_property_offset(blob, prop);
-+	} while (1);
-+}
-+
-+/**
-  * Show the data for a given node (and perhaps property) according to the
-  * display option provided.
-  *
-@@ -113,6 +152,10 @@ static int show_data_for_item(const void *blob, struct display_info *disp,
- 	const void *value = NULL;
- 	int len, err = 0;
- 
-+	if (disp->mode == MODE_LIST_PROPS)
-+		return list_properties(blob, node);
-+
-+	assert(property);
- 	value = fdt_getprop(blob, node, property, &len);
- 	if (value) {
- 		if (show_data(disp, value, len))
-@@ -136,23 +179,25 @@ static int show_data_for_item(const void *blob, struct display_info *disp,
-  * @param return 0 if ok, -ve on error
-  */
- static int do_fdtget(struct display_info *disp, const char *filename,
--		     char **arg, int arg_count)
-+		     char **arg, int arg_count, int args_per_step)
- {
- 	char *blob;
-+	const char *prop;
- 	int i, node;
- 
- 	blob = utilfdt_read(filename);
- 	if (!blob)
- 		return -1;
- 
--	for (i = 0; i + 2 <= arg_count; i += 2) {
-+	for (i = 0; i + args_per_step <= arg_count; i += args_per_step) {
+@@ -225,6 +226,8 @@ static int show_data_for_item(const void *blob, struct display_info *disp,
+ 				err = -1;
+ 			else
+ 				printf("\n");
++		} else if (disp->default_val) {
++			puts(disp->default_val);
+ 		} else {
+ 			report_error(property, len);
+ 			err = -1;
+@@ -258,8 +261,13 @@ static int do_fdtget(struct display_info *disp, const char *filename,
+ 	for (i = 0; i + args_per_step <= arg_count; i += args_per_step) {
  		node = fdt_path_offset(blob, arg[i]);
  		if (node < 0) {
- 			report_error(arg[i], node);
- 			return -1;
+-			report_error(arg[i], node);
+-			return -1;
++			if (disp->default_val) {
++				puts(disp->default_val);
++				continue;
++			} else {
++				report_error(arg[i], node);
++				return -1;
++			}
  		}
-+		prop = args_per_step == 1 ? NULL : arg[i + 1];
+ 		prop = args_per_step == 1 ? NULL : arg[i + 1];
  
--		if (show_data_for_item(blob, disp, node, arg[i + 1]))
-+		if (show_data_for_item(blob, disp, node, prop))
- 			return -1;
- 	}
- 	return 0;
-@@ -164,8 +209,10 @@ static const char *usage_msg =
- 	"Each value is printed on a new line.\n\n"
- 	"Usage:\n"
- 	"	fdtget <options> <dt file> [<node> <property>]...\n"
-+	"	fdtget -p <options> <dt file> [<node> ]...\n"
- 	"Options:\n"
+@@ -280,6 +288,8 @@ static const char *usage_msg =
  	"\t-t <type>\tType of data\n"
-+	"\t-p\t\tList properties for each node\n"
+ 	"\t-p\t\tList properties for each node\n"
+ 	"\t-l\t\tList children for each node\n"
++	"\t-d\t\tDefault value to display when the property is "
++			"missing\n"
  	"\t-h\t\tPrint this help\n\n"
  	USAGE_TYPE_MSG;
  
-@@ -182,12 +229,14 @@ int main(int argc, char *argv[])
- {
- 	char *filename = NULL;
- 	struct display_info disp;
-+	int args_per_step = 2;
- 
- 	/* set defaults */
- 	memset(&disp, '\0', sizeof(disp));
+@@ -303,7 +313,7 @@ int main(int argc, char *argv[])
  	disp.size = -1;
-+	disp.mode = MODE_SHOW_VALUE;
+ 	disp.mode = MODE_SHOW_VALUE;
  	for (;;) {
--		int c = getopt(argc, argv, "ht:");
-+		int c = getopt(argc, argv, "hpt:");
+-		int c = getopt(argc, argv, "hlpt:");
++		int c = getopt(argc, argv, "d:hlpt:");
  		if (c == -1)
  			break;
  
-@@ -201,6 +250,11 @@ int main(int argc, char *argv[])
- 					&disp.size))
- 				usage("Invalid type string");
+@@ -327,6 +337,10 @@ int main(int argc, char *argv[])
+ 			disp.mode = MODE_LIST_CHILDREN;
+ 			args_per_step = 1;
  			break;
 +
-+		case 'p':
-+			disp.mode = MODE_LIST_PROPS;
-+			args_per_step = 1;
++		case 'd':
++			disp.default_val = optarg;
 +			break;
  		}
  	}
  
-@@ -217,10 +271,10 @@ int main(int argc, char *argv[])
- 		return 0;
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index ac6fa17..deffae3 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -478,6 +478,12 @@ fdtget_tests () {
  
- 	/* Check for node, property arguments */
--	if (argc % 2)
-+	if (args_per_step == 2 && (argc % 2))
- 		usage("Must have an even number of arguments");
- 
--	if (do_fdtget(&disp, filename, argv, argc))
-+	if (do_fdtget(&disp, filename, argv, argc, args_per_step))
- 		return 1;
- 	return 0;
+     # Test multiple arguments
+     run_fdtget_test "MyBoardName\nmemory" -ts $dtb / model /memory device_type
++
++    # Test defaults
++    run_wrap_error_test $DTGET -tx $dtb /randomnode doctor-who
++    run_fdtget_test "<the dead silence>" -tx \
++	-d "<the dead silence>" $dtb /randomnode doctor-who
++    run_fdtget_test "<blink>" -tx -d "<blink>" $dtb /memory doctor-who
  }
+ 
+ fdtput_tests () {
 -- 
 1.7.7.3
