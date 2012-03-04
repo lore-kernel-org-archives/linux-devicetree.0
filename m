@@ -1,15 +1,16 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/5 v2] ARM: kirkwood: covert orion-spi to fdt.
-Date: Sun, 4 Mar 2012 20:29:59 +0000
-Message-ID: <201203042030.00064.arnd@arndb.de>
-References: <cover.1330709314.git.jason@lakedaemon.net>
- <a3c65ac8146eab1796dec771c1ddfe403d1471a9.1330709314.git.jason@lakedaemon.net>
- <201203041912.21137.michael@walle.cc>
+Subject: Re: [PATCH v3 07/10] arm/tegra: Add PWFM controller device tree
+ probing
+Date: Sun, 4 Mar 2012 20:39:14 +0000
+Message-ID: <201203042039.14848.arnd@arndb.de>
+References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de>
+ <74CDBE0F657A3D45AFBB94109FB122FF17BDDF1E67@HQMAIL01.nvidia.com>
+ <20120303225404.GC6661@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203041912.21137.michael-QKn5cuLxLXY@public.gmane.org>
+In-Reply-To: <20120303225404.GC6661-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,33 +20,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 04 March 2012, Michael Walle wrote:
-> > @@ -481,8 +485,26 @@ static int __init orion_spi_probe(struct
-> > platform_device *pdev) spi->master = master;
-> >       spi->spi_info = spi_info;
+On Saturday 03 March 2012, Thierry Reding wrote:
+> Not enough information to check signature validity.  Show Details
+>   * Stephen Warren wrote:
+> > Thierry Reding wrote at Wednesday, February 22, 2012 8:17 AM:
+> > > Add auxdata to instantiate a device tree for the PWFM controller and
+> > > include a corresponding node in the device tree.
 > > 
-> > -     spi->max_speed = DIV_ROUND_UP(spi_info->tclk, 4);
-> > -     spi->min_speed = DIV_ROUND_UP(spi_info->tclk, 30);
-> > +     if (spi_info)
-> > +             spi->tclk = spi_info->tclk;
-> > +
-> > +     of_property_read_u32(master->dev.of_node,
-> > +                             "clock-frequency", &spi->tclk);
-> > +
-> > +     if (!spi->tclk) {
-> > +             dev_err(&pdev->dev, "cannot set clock rate\n");
-> shouldn't you check the return value of of_property_read_u32 instead? and 
-> report a more meaningful error message, eg no valid clock-frequency property 
-> in the OF case?
+> > > diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+> > 
+> > > +   pwm: pwm@7000a000 {
+> > > +           compatible = "nvidia,tegra20-pwm";
+> > > +           reg = <0x7000a000 0x100>;
+> > > +           #pwm-cells = <2>;
+> > > +   };
+> > 
+> > The compatible value probably should list both Tegra30 and Tegra20, so
+> > we can know exactly which HW is present, just in case we need to turn
+> > on some bug-fix only for one of the variants:
+> > 
+> >     compatible = "nvidia,tegra30-pwm", "nvidia,tegra20-pwm";
+> 
+> I'm confused. If I know exactly that the hardware is Tegra30 (which it
+> definitely should be if I include tegra30.dtsi), then why list "tegra20-pwm"
+> as compatible?
+> 
+> Or did you mean to list tegra30-pwm as compatible value in the PWM driver?
 
-I suggested this version, because it keeps the code very simple. Checking
-the return value would of course be correct, but I don't think we
-need any extra information here: there are only a few ways how this can
-go wrong and it will be pretty obvious from the device tree when you
-see the message.
+We generally list the oldest version of the device that a specific version
+is compatible to, in order to use the same driver unmodified.
+
+E.g. an ns16550a serial port would list both ns16550a and i8250 in its
+compatible fields so it works with operating systems that only know about
+i8250.
+
+It's not actually all that useful when you add device tree support for
+two versions of the same device at the same time, but I think that
+it's good style anyway, in particular when you consider other users of
+the device tree data besides the Linux kernel.
 
 	Arnd
