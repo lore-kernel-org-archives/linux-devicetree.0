@@ -1,69 +1,33 @@
-From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 4/5 v2] ARM: kirkwood: convert rtc-mv to fdt.
-Date: Sun, 4 Mar 2012 19:17:13 -0500
-Message-ID: <20120305001713.GU11986@titan.lakedaemon.net>
-References: <cover.1330709314.git.jason@lakedaemon.net>
- <4de611961e8210a0a2c3b56fe72b40dba638752a.1330709314.git.jason@lakedaemon.net>
- <201203041612.44966.michael@walle.cc>
- <201203041650.52217.arnd@arndb.de>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v3 06/10] pwm: Add NVIDIA Tegra SoC support
+Date: Sun, 4 Mar 2012 19:39:35 -0800
+Message-ID: <20120305033935.GA32675@quad.lixom.net>
+References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de>
+ <1329923841-32017-7-git-send-email-thierry.reding@avionic-design.de>
+ <74CDBE0F657A3D45AFBB94109FB122FF17BDDF1E63@HQMAIL01.nvidia.com>
+ <20120303224212.GA6661@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201203041650.52217.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20120303224212.GA6661-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 04, 2012 at 04:50:52PM +0000, Arnd Bergmann wrote:
-> On Sunday 04 March 2012, Michael Walle wrote:
-> > > @@ -294,11 +295,17 @@ static int __exit mv_rtc_remove(struct
-> > > platform_device *pdev) return 0;
-> > >  }
-> > > 
-> > > +static struct of_device_id rtc_mv_of_match_table[] = {
-> > > +     { .compatible = "marvell,rtc", },
-> > > +     {}
-> > > +};
-> > > +
-> > Isn't here an ifdef CONFIG_OF missing to prevent compiler warnings?
-> > 
-> 
-> Yes, I guess so. I keep thinking that an __unused attribute would
-> actually be more helpful here because it lets the compiler automatically
-> discard the symbol when it's not used, but we still get potential
-> compiler errors and warnings if something inside of the unused data
-> is broken.
+On Sat, Mar 03, 2012 at 11:42:12PM +0100, Thierry Reding wrote:
 
-Hmmm, in the process of responding, I looked up Grant's original email
-[1] to show justification.  However, rereading it shows I was
-overzealous in my desire to remove #ifdef's.  :-P  Grant only said
-adding of_match_ptr() would remove the #else portion of my original
-code:
+> Those probably weren't there yet when I prepared the first series. I'll have
+> another look will sync up with it after testing that it still works.
 
-#ifdef CONFIG_OF
-...
-#else
-#define rtc_mv_of_match_table = NULL;
-#endif
 
-I'll restore the #ifdef/#endif across the kirkwood code I've changed so
-far, without the #else.  __unused shouldn't be necessary, then.
+Yep, the patch in question is from Simon, and it's at:
 
-Thanks for the review, Michael.
+http://git.chromium.org/gitweb/?p=chromiumos/third_party/kernel.git;a=commitdiff;h=7778c724bf3211c534f9bcef7b26afc6cb067a82
 
-thx,
+Essentially, the driver accidentally rounded down a backlight setting of
+'1' which is how it was found.
 
-Jason.
 
-[1] http://www.spinics.net/lists/arm-kernel/msg162595.html
+-Olof
