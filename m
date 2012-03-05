@@ -1,60 +1,45 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH V2] mt_ventoux: support for TeeJet Mt.Ventoux board
-Date: Mon, 5 Mar 2012 13:46:41 -0800
-Message-ID: <20120305214641.GV12083@atomide.com>
-References: <1324940912-18164-3-git-send-email-yanok@emcraft.com>
- <1325027377-13484-1-git-send-email-yanok@emcraft.com>
- <4F291924.50702@denx.de>
+From: Jason <jason@lakedaemon.net>
+Subject: Re: [PULL REQUEST v2] ARM: kirkwood: fdt: convert kirkwood init
+ funcs to fdt
+Date: Mon, 5 Mar 2012 17:25:36 -0500
+Message-ID: <20120305222536.GP5050@titan.lakedaemon.net>
+References: <20120305214126.GA18513@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <4F291924.50702@denx.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stefano Babic <sbabic@denx.de>
-Cc: Ilya Yanok <yanok@emcraft.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grinberg@compulab.co.il, sasha_d@emcraft.com, Detlev Zundel <dzu@denx.de>
+In-Reply-To: <20120305214126.GA18513@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.pitre@linaro.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Stefano Babic <sbabic@denx.de> [120201 02:20]:
-> On 28/12/2011 00:09, Ilya Yanok wrote:
-> > This patch adds support for TeeJet Mt.Ventoux board based on TAM3517
-> > SOM. Supported devices:
-> >  - Serial
-> >  - Ethernet
-> >  - NAND
-> >  - USB host
-> >  - LCD
-> >  - Touchscreen
-> >  - CAN controller
-> >  - ADC128S converter
+On Mon, Mar 05, 2012 at 10:41:26PM +0100, Andrew Lunn wrote:
+> > > If the drivers want to use it, I think it has to be orion_find_tclk for
+> > > drivers that are shared between multiple plat-orion platforms.
 > > 
-> > Signed-off-by: Ilya Yanok <yanok@emcraft.com>
-> > ---
+> > That's pretty much all of them  :-)
 > > 
-> > Changes from V1:
-> > 
-> >  - Fixed indentation (use tabs not spaces)
-> >  - Fixed over 80 characters lines
-> >  - Added #if defined(CONFIG_SENSORS_ADCXX_MODULE) to allow adcxx to be a
-> >    module.
-> >  - Fixes for compilation with CONFIG_TOUCHSCREEN_ADS7846!=y
-> >   - Added defined(CONFIG_TOUCHSCREEN_ADS7846_MODULE)
-> >   - Moved call to omap_ads7846_init to separate small function
-> >   - Register fixed regulator used for touchscreen only if the driver is
-> >     enabled
-> >  - Changed board name (MT_VENTOUX -> Mt.Ventoux)
-> 
-> Hi Tony,
-> 
-> can I ask you about the status of these patches ? I have not seen open
-> comments, do you think they can be merged in your tree ?
+> > I'll rename it and move it to plat-orion/common.c.  This'll be fun.
 
-Yes I can carry some board-*.c files until device tree is
-usable for basic features. There's still some hsmmc changes
-pending that I'd like to get out of the way before adding
-new ones as then it means I have to keep updating those
-board files separately.
+This is old, see Nico's reply and my response.
 
-Regards,
+> We have overlapping work going on. My adoption of Mike's generic clk
+> framework overlaps a lot with your DT tclk problems. If you introduce
+> orion_find_tclk() into all the drivers, we are probably going to rip
+> it all out again once my patches go in. Plus we are going to have
+> horrible merging conflicts between your code and my code
 
-Tony
+I'd love to deconflict but I haven't seen your RFC patches, yet.
+
+thx,
+
+Jason.
