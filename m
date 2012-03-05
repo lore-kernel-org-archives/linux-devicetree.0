@@ -1,226 +1,159 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v3 3/7] ARM: davinci: mux: add OF support
-Date: Mon, 5 Mar 2012 12:10:00 +0100
-Message-ID: <1330945804-3379-4-git-send-email-hs@denx.de>
-References: <1330945804-3379-1-git-send-email-hs@denx.de>
+From: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 1/7] serial: pxa: add OF support
+Date: Mon,  5 Mar 2012 20:21:45 +0800
+Message-ID: <1330950111-30797-2-git-send-email-haojian.zhuang@marvell.com>
+References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1330945804-3379-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1330950111-30797-1-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add support for configuring the pinmux on davinci SoC
-through OF.
+Parse uart device id from alias in DTS file.
 
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-
+Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
-This patch is just a RFC, as I want to get rid of the pin
-setup code in board code ... This patch introduces a
-davinci_cfg_reg_of() function, which davinci drivers can call,
-if they found a pinmux-handle, so used in the following
-drivers in this patchserie:
+ drivers/tty/serial/pxa.c |   65 +++++++++++++++++++++++++++++++++++++--------
+ 1 files changed, 53 insertions(+), 12 deletions(-)
 
-drivers/net/ethernet/ti/davinci_emac
-drivers/i2c/busses/i2c-davinci.c
-drivers/mtd/nand/davinci_nand.c
-
-Comments are welcome.
-
-- no changes for v2
-- no changes for v3
-
- .../devicetree/bindings/arm/davinci/mux.txt        |   40 +++++++++++
- arch/arm/mach-davinci/include/mach/mux.h           |    2 +
- arch/arm/mach-davinci/mux.c                        |   73 +++++++++++++++++++-
- 3 files changed, 114 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci/mux.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/davinci/mux.txt b/Documentation/devicetree/bindings/arm/davinci/mux.txt
-new file mode 100644
-index 0000000..ecb026a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/davinci/mux.txt
-@@ -0,0 +1,40 @@
-+* Texas Instruments Davinci pinmux
+diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+index 5c8e3bb..a71855b 100644
+--- a/drivers/tty/serial/pxa.c
++++ b/drivers/tty/serial/pxa.c
+@@ -36,6 +36,7 @@
+ #include <linux/circ_buf.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/tty.h>
+ #include <linux/tty_flip.h>
+@@ -44,6 +45,8 @@
+ #include <linux/io.h>
+ #include <linux/slab.h>
+ 
++#define PXA_NAME_LEN		8
 +
-+This file provides information, what the device node for the
-+davinci pinmux interface contain.
-+
-+Required properties:
-+- compatible: "ti,davinci-pinmux";
-+- pins : contains a table with the following colums:
-+   mux register: pinmux register
-+   register offset: offset in register, which to change
-+   mode mask: mode mask
-+   mode value: mode value
-+
-+Optional properties:
-+- none
-+
-+Example (enbw_cmc board):
-+	emac_pins: pinmux@1c14120 {
-+		compatible = "ti,davinci-pinmux";
-+		reg = <0x14120 0x1000>;
-+		pins = < /*	muxreg	maskoff	modemsk muxmode */
-+				2	4	15	8 /* MII TXEN */
-+				2	8	15	8 /* MII TXCLK */
-+				2	12	15	8 /* MII COL */
-+				2	16	15	8 /* MII TXD_3 */
-+				2	20	15	8 /* MII TXD_2 */
-+				2	24	15	8 /* MII TXD_1 */
-+				2	28	15	8 /* MII TXD_0 */
-+				3	8	15	8 /* MII RXER */
-+				3	12	15	8 /* MII CRS */
-+				3	0	15	8 /* MII RXCLK */
-+				3	4	15	8 /* MII RXDV */
-+				3	16	15	8 /* MII RXD_3 */
-+				3	20	15	8 /* MII RXD_2 */
-+				3	24	15	8 /* MII RXD_1 */
-+				3	28	15	8 /* MII RXD_0 */
-+				4	0	15	8 /* MDIO CLK */
-+				4	4	15	8 /* MDIO D */
-+			>;
-+	};
-diff --git a/arch/arm/mach-davinci/include/mach/mux.h b/arch/arm/mach-davinci/include/mach/mux.h
-index a7e92fc..3a62857 100644
---- a/arch/arm/mach-davinci/include/mach/mux.h
-+++ b/arch/arm/mach-davinci/include/mach/mux.h
-@@ -1205,6 +1205,7 @@ enum davinci_tnetv107x_index {
- /* setup pin muxing */
- extern int davinci_cfg_reg(unsigned long reg_cfg);
- extern int davinci_cfg_reg_list(const short pins[]);
-+extern int davinci_cfg_reg_of(struct device_node *);
- #else
- /* boot loader does it all (no warnings from CONFIG_DAVINCI_MUX_WARNINGS) */
- static inline int davinci_cfg_reg(unsigned long reg_cfg) { return 0; }
-@@ -1212,6 +1213,7 @@ static inline int davinci_cfg_reg_list(const short pins[])
- {
- 	return 0;
- }
-+static int davinci_cfg_reg_of(struct device_node *) { return 0; };
+ struct uart_pxa_port {
+ 	struct uart_port        port;
+ 	unsigned char           ier;
+@@ -781,6 +784,39 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
+ };
  #endif
  
- #endif /* __INC_MACH_MUX_H */
-diff --git a/arch/arm/mach-davinci/mux.c b/arch/arm/mach-davinci/mux.c
-index f34a8dc..6b38072 100644
---- a/arch/arm/mach-davinci/mux.c
-+++ b/arch/arm/mach-davinci/mux.c
-@@ -18,18 +18,21 @@
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/spinlock.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
- 
- #include <mach/mux.h>
- #include <mach/common.h>
- 
- static void __iomem *pinmux_base;
-+static DEFINE_SPINLOCK(mux_spin_lock);
- 
- /*
-  * Sets the DAVINCI MUX register based on the table
-  */
- int __init_or_module davinci_cfg_reg(const unsigned long index)
- {
--	static DEFINE_SPINLOCK(mux_spin_lock);
- 	struct davinci_soc_info *soc_info = &davinci_soc_info;
- 	unsigned long flags;
- 	const struct mux_config *cfg;
-@@ -98,6 +101,74 @@ int __init_or_module davinci_cfg_reg(const unsigned long index)
- }
- EXPORT_SYMBOL(davinci_cfg_reg);
- 
++static struct of_device_id serial_pxa_dt_ids[] = {
++	{ .compatible = "mrvl,pxa-uart", },
++	{ .compatible = "mrvl,mmp-uart", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
++
 +#ifdef CONFIG_OF
-+int davinci_cfg_reg_of(struct device_node *np)
++static int serial_pxa_probe_dt(struct platform_device *pdev,
++			       struct uart_pxa_port *sport)
 +{
-+	unsigned long flags;
-+	int pinmux_map_len;
-+	const unsigned int *pinmux_map;
-+	u32 muxreg, maskoff, modemsk, muxmode;
-+	unsigned int reg_orig = 0, reg = 0;
-+	unsigned int mask, warn = 0;
++	struct device_node *np = pdev->dev.of_node;
++	int ret;
 +
-+	pinmux_map = of_get_property(np, "pins", &pinmux_map_len);
-+	if (pinmux_map == NULL) {
-+		printk(KERN_ERR "pins is not set!\n");
-+		return -EINVAL;
++	if (!np)
++		return 1;
++
++	ret = of_alias_get_id(np, "serial");
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
++		return ret;
 +	}
-+
-+	pinmux_map_len /= sizeof(unsigned int);
-+	if ((pinmux_map_len % 4) != 0) {
-+		printk(KERN_ERR "pins format wrong!\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!pinmux_base) {
-+		pinmux_base = of_iomap(np, 0);
-+		if (WARN_ON(!pinmux_base))
-+			return -ENOMEM;
-+	}
-+
-+	while (pinmux_map_len > 0) {
-+		muxreg = be32_to_cpu(pinmux_map[0]);
-+		maskoff = be32_to_cpu(pinmux_map[1]);
-+		modemsk = be32_to_cpu(pinmux_map[2]);
-+		muxmode = be32_to_cpu(pinmux_map[3]);
-+
-+		/* Update the mux register in question */
-+		if (modemsk) {
-+			unsigned	tmp1, tmp2;
-+
-+			spin_lock_irqsave(&mux_spin_lock, flags);
-+			reg_orig = __raw_readl(pinmux_base + muxreg);
-+
-+			mask = (modemsk << maskoff);
-+			tmp1 = reg_orig & mask;
-+			reg = reg_orig & ~mask;
-+
-+			tmp2 = (muxmode << maskoff);
-+			reg |= tmp2;
-+
-+			if (tmp1 != tmp2)
-+				warn = 1;
-+
-+			__raw_writel(reg, pinmux_base + muxreg);
-+			spin_unlock_irqrestore(&mux_spin_lock, flags);
-+		}
-+		pinmux_map += 4;
-+		pinmux_map_len -= 4;
-+	}
-+
++	sport->port.line = ret;
 +	return 0;
 +}
 +#else
-+int davinci_cfg_reg_of(struct device_node *np)
++static int serial_pxa_probe_dt(struct platform_device *pdev,
++			       struct uart_pxa_port *sport)
 +{
-+	return 0;
++	return 1;
 +}
 +#endif
-+EXPORT_SYMBOL(davinci_cfg_reg_of);
 +
- int __init_or_module davinci_cfg_reg_list(const short pins[])
+ static int serial_pxa_probe(struct platform_device *dev)
  {
- 	int i, error = -EINVAL;
+ 	struct uart_pxa_port *sport;
+@@ -808,34 +844,37 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 	sport->port.irq = irqres->start;
+ 	sport->port.fifosize = 64;
+ 	sport->port.ops = &serial_pxa_pops;
+-	sport->port.line = dev->id;
+ 	sport->port.dev = &dev->dev;
+ 	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
+ 	sport->port.uartclk = clk_get_rate(sport->clk);
+-
+-	switch (dev->id) {
+-	case 0: sport->name = "FFUART"; break;
+-	case 1: sport->name = "BTUART"; break;
+-	case 2: sport->name = "STUART"; break;
+-	case 3: sport->name = "HWUART"; break;
+-	default:
+-		sport->name = "???";
+-		break;
++	sport->name = kzalloc(PXA_NAME_LEN, GFP_KERNEL);
++	if (!sport->name) {
++		ret = -ENOMEM;
++		goto err_clk;
+ 	}
+ 
++	ret = serial_pxa_probe_dt(dev, sport);
++	if (ret > 0)
++		sport->port.line = dev->id;
++	else if (ret < 0)
++		goto err_clk;
++	snprintf(sport->name, PXA_NAME_LEN - 1, "UART%d", sport->port.line + 1);
++
+ 	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
+ 	if (!sport->port.membase) {
+ 		ret = -ENOMEM;
+-		goto err_clk;
++		goto err_name;
+ 	}
+ 
+-	serial_pxa_ports[dev->id] = sport;
++	serial_pxa_ports[sport->port.line] = sport;
+ 
+ 	uart_add_one_port(&serial_pxa_reg, &sport->port);
+ 	platform_set_drvdata(dev, sport);
+ 
+ 	return 0;
+ 
++ err_name:
++	kfree(sport->name);
+  err_clk:
+ 	clk_put(sport->clk);
+  err_free:
+@@ -850,6 +889,7 @@ static int serial_pxa_remove(struct platform_device *dev)
+ 	platform_set_drvdata(dev, NULL);
+ 
+ 	uart_remove_one_port(&serial_pxa_reg, &sport->port);
++	kfree(sport->name);
+ 	clk_put(sport->clk);
+ 	kfree(sport);
+ 
+@@ -866,6 +906,7 @@ static struct platform_driver serial_pxa_driver = {
+ #ifdef CONFIG_PM
+ 		.pm	= &serial_pxa_pm_ops,
+ #endif
++		.of_match_table = serial_pxa_dt_ids,
+ 	},
+ };
+ 
 -- 
-1.7.7.6
+1.7.0.4
