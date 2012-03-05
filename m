@@ -1,72 +1,73 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] serial: pxa: add OF support
-Date: Mon, 5 Mar 2012 12:55:37 +0000
-Message-ID: <201203051255.37311.arnd@arndb.de>
-References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
- <1330950111-30797-2-git-send-email-haojian.zhuang@marvell.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [RFC PATCH] of: DMA helpers: manage generic requests specification
+Date: Mon, 5 Mar 2012 14:14:22 +0100
+Message-ID: <4F54BC2E.3040702@ti.com>
+References: <4F22DEF2.5000807@ti.com> <1330527248-4350-1-git-send-email-nicolas.ferre@atmel.com> <74CDBE0F657A3D45AFBB94109FB122FF17BDDF217B@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1330950111-30797-2-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17BDDF217B@HQMAIL01.nvidia.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 05 March 2012, Haojian Zhuang wrote:
+On 2/29/2012 9:54 PM, Stephen Warren wrote:
+> Nicolas Ferre wrote at Wednesday, February 29, 2012 7:54 AM:
+>> By making DMA controllers register a generic translation
+>> function, we allow the management of any type of DMA requests
+>> specification.
+>> The void * output of an of_dma_xlate() function that will be implemented
+>> by the DMA controller can carry any type of "dma-request" argument.
+>>
+>> The DMA client will search its associated DMA controller in the list
+>> and call the registered of_dam_xlate() function to retrieve the
+>> request values.
+>>
+>> One simple xlate function is provided for the "single number" type
+>> of request biding.
+>>
+>> This implementation is independent from dmaengine so it can also be
+>> used by legacy drivers.
+>
+> At a high level this seems along the right lines.
+>
+> The big issue I see is the lack of type-safety in of_get_dma_request()'s
+> out_data pointer: The DMA xlate function will assume it points at some
+> particular type, and the client is responsible for allocating that
+> correct type. However, it's "user"-supplied device tree data that hooks
+> the two together, and there could easily be mismatches, thus causing
+> the xlate function to trash memory.
+>
+> Could each DMA controller (or type of out_data) have some enum in the
+> kernel that the client passes in, and the DMA engine validates matches
+> its expectations, to prevent this kind of thing?
 
->  
-> +#define PXA_NAME_LEN		8
-> +
->  struct uart_pxa_port {
->  	struct uart_port        port;
->  	unsigned char           ier;
+Beside u32 and string, do we know what kind of parameters we can expect 
+to retrieve?
+Because we can potentially reduce the scope to these two types only.
 
-Why didn't you just add a field here with that length?
+> enum DMA_PARAMS_TYPE {
+>      FOO_DMA_PARAMS,
+>      BAR_DMA_PARAMS,
+>      ...
+> };
+>
+> struct foo_dma_params { ... };
+>
+> struct foo_dma_params params;
+>
+> of_get_dma_request(np, 0,&params, FOO_DMA_PARAMS);
+>
+> and inside xlate():
+>
+> if (params_type != FOO_DMA_PARAMS)
+>      return -EINVAL;
+>
+> For the dmaengine case, I assume there'd be a single DMA_PARAMS_TYPE
+> value for the dmaengine specifier type, and the dmaengine core would
+> take care of making sure everything matched somehow.
 
-> @@ -781,6 +784,39 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
->  };
->  #endif
->  
-> +static struct of_device_id serial_pxa_dt_ids[] = {
-> +	{ .compatible = "mrvl,pxa-uart", },
-> +	{ .compatible = "mrvl,mmp-uart", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
-
-This one should have an #ifdef CONFIG_OF
-
-> +#ifdef CONFIG_OF
-> +static int serial_pxa_probe_dt(struct platform_device *pdev,
-> +			       struct uart_pxa_port *sport)
-> +{
-
-While this one does not need it: it will already compile to nothing
-if you check the error value correctly.
-
-> +	sport->name = kzalloc(PXA_NAME_LEN, GFP_KERNEL);
-> +	if (!sport->name) {
-> +		ret = -ENOMEM;
-> +		goto err_clk;
->  	}
-
-No need for this allocation if you put the name into uart_pxa_port
-as a member instead of a pointer.
-
-> +		.of_match_table = serial_pxa_dt_ids,
->  	},
->  };
-
-		.of_match_table = of_match_ptr(serial_pxa_dt_ids),
-
-	Arnd
+Regards,
+Benoit
