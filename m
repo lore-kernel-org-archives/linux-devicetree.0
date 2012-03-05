@@ -1,64 +1,95 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PULL REQUEST v2] ARM: kirkwood: fdt: convert kirkwood init
- funcs to fdt
-Date: Mon, 5 Mar 2012 16:27:27 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1203051626370.31242@xanadu.home>
-References: <cover.1330709314.git.jason@lakedaemon.net>
- <alpine.LFD.2.02.1203051344130.31242@xanadu.home>
- <20120305191546.GK5050@titan.lakedaemon.net>
- <201203052016.26949.arnd@arndb.de>
- <20120305202941.GN5050@titan.lakedaemon.net>
- <alpine.LFD.2.02.1203051542190.31242@xanadu.home>
- <20120305211737.GO5050@titan.lakedaemon.net>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V3 1/2] mcx: very basic support for HTKW mcx board
+Date: Mon, 5 Mar 2012 13:38:44 -0800
+Message-ID: <20120305213844.GU12083@atomide.com>
+References: <1324482822-24221-1-git-send-email-yanok@emcraft.com>
+ <1324482822-24221-2-git-send-email-yanok@emcraft.com>
+ <20120305195329.GP12083@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120305211737.GO5050-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120305195329.GP12083@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Ilya Yanok <yanok@emcraft.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 5 Mar 2012, Jason wrote:
-
-> On Mon, Mar 05, 2012 at 03:43:42PM -0500, Nicolas Pitre wrote:
-> > On Mon, 5 Mar 2012, Jason wrote:
+* Tony Lindgren <tony@atomide.com> [120305 11:21]:
+> * Ilya Yanok <yanok@emcraft.com> [111221 07:22]:
+> > Very basic support for HTKW mcx board. Able to boot via board-generic
+> > and ramdisk/initramfs, however most of peripherals is unsupported.
+> > Produces tons of twl4030 related errors as this board doesn't have
+> > twl4030 installed.
 > > 
-> > > On Mon, Mar 05, 2012 at 08:16:26PM +0000, Arnd Bergmann wrote:
-> > > > On Monday 05 March 2012, Jason wrote:
-> > > > > > 
-> > > > > > The clock frequency part being hardcoded to 200000 in the common .dtsi 
-> > > > > > file looks wrong.  The clock may differ, and it used to (and should) be 
-> > > > > > probed at run time, please see kirkwood_find_tclk().
-> > > > > 
-> > > > > So, should I EXPORT_SYMBOL_GPL(kirkwood_find_tclk); and have each driver
-> > > > > call it?
-> > > > 
-> > > > If the drivers want to use it, I think it has to be orion_find_tclk for
-> > > > drivers that are shared between multiple plat-orion platforms.
-> > > 
-> > > That's pretty much all of them  :-)
-> > > 
-> > > I'll rename it and move it to plat-orion/common.c.  This'll be fun.
-> > 
-> > No no...  This is not a function which is generic at all.  The _result_ 
-> > i.e. core clock frequency value is a generic thing, not the method to 
-> > determine it.
+> > Signed-off-by: Ilya Yanok <yanok@emcraft.com>
 > 
-> How about this?  Export a global variable, orion_tclk, and a function to
-> read it.  Then, make sure each sub arch sets the global.  Does this
-> sound viable until common clk lands?
+> Grant, care to ack this one?
 
-Yep, looks fine.
+Actually a version of this you already acked as
+"[PATCH 1/2] mt_ventoux: very basic support for TeeJet Mt.Ventoux board"
+so using that instead
 
+Regards,
 
-Nicolas
+Tony
+
+> > ---
+> > Changes from V2:
+> > 
+> >  - None
+> > 
+> > Changes from V1:
+> > 
+> >  - device tree move to the separate patch
+> >  - iva node is disabled instead of using custom includes
+> >  - removed bootargs entry
+> > 
+> >  arch/arm/boot/dts/mcx.dts |   27 +++++++++++++++++++++++++++
+> >  1 files changed, 27 insertions(+), 0 deletions(-)
+> >  create mode 100644 arch/arm/boot/dts/mcx.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/mcx.dts b/arch/arm/boot/dts/mcx.dts
+> > new file mode 100644
+> > index 0000000..66b81bd
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/mcx.dts
+> > @@ -0,0 +1,27 @@
+> > +/*
+> > + * Copyright (C) 2011 Ilya Yanok, EmCraft Systems
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +/dts-v1/;
+> > +
+> > +/include/ "omap3.dtsi"
+> > +
+> > +/ {
+> > +	model = "HTKW mcx";
+> > +	compatible = "htkw,mcx", "ti,omap3";
+> > +
+> > +	memory {
+> > +		device_type = "memory";
+> > +		reg = <0x80000000 0x10000000>; /* 256 MB */
+> > +	};
+> > +
+> > +	/* AM35xx doesn't have IVA */
+> > +	soc {
+> > +		iva {
+> > +			status = "disabled";
+> > +		};
+> > +	};
+> > +};
+> > -- 
+> > 1.7.6.4
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
