@@ -1,39 +1,80 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] devicetree: Add empty of_platform_populate() for
- !CONFIG_OF_ADDRESS (sparc)
-Date: Mon, 5 Mar 2012 08:10:42 -0700
-Message-ID: <20120305151042.GD27229@ponder.secretlab.ca>
-References: <1330121218-10442-1-git-send-email-grant.likely@secretlab.ca>
- <4F513990.1030401@ti.com>
- <20120302170715.9f0a67ef.akpm@linux-foundation.org>
- <20120303040930.1E9283E190C@localhost>
- <4F54BFD9.8000802@ti.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: obtaining a regulator from a phandle
+Date: Mon, 5 Mar 2012 16:21:57 +0100
+Message-ID: <20120305152157.GA12927@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F54BFD9.8000802@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2012 at 02:30:01PM +0100, Cousson, Benoit wrote:
-> On 3/3/2012 5:09 AM, Grant Likely wrote:
-> >On Fri, 2 Mar 2012 17:07:15 -0800, Andrew Morton<akpm@linux-foundation.org>  wrote:
-> >>All twl is broken.  i386 allmodconfig with this monring's linux-next:
-> >>
-> >>drivers/mfd/twl-core.c: In function 'twl_probe':
-> >>drivers/mfd/twl-core.c:1357: error: implicit declaration of function 'of_platform_populate'
-> >>
-> >
-> >This patch seems to solve it finally against irqdomain/next.  Benoit, with
-> >your ack I'll push it out.
-> 
-> I've just built it on x86 and tested it on OMAP4 board successfully.
-> 
-> Acked-by: Benoit Cousson <b-cousson@ti.com>
 
-Okay, I've pushed it out.
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-g.
+Hi,
+
+I'm working on getting DT support for PCIe on Tegra working. The Tegra PCIe
+controller needs a specific voltage supplied by a regulator on the board th=
+at
+I use (Harmony-compatible), so what I did was add DT support for the PMU
+(tps6586x) to provide the corresponding regulator:
+
+	pmu: tps6586x@34 {
+		[...]
+		regulators {
+			...
+			ldo0_reg: ldo0 {
+				regulator-min-microvolt =3D <3300000>;
+				regulator-max-microvolt =3D <3300000>;
+			};
+		};
+		[...]
+	};
+
+Within the device node of the PCIe controller, I reference the ldo0 regulat=
+or
+like so:
+
+	pcie@80000000 {
+		pex-clk-supply =3D <&ldo0_reg>;
+	};
+
+This all works well, except there seems to be no API to obtain a regulator
+=66rom the DT phandle. I'm wondering whether this is because nobody has had=
+ any
+use for it or whether I'm using it wrongly.
+
+I could possibly work around this by giving the ldo0 an explicit name via t=
+he
+regulator-name property and then look up that property from the phandle and
+then obtain a reference to the regulator by calling the normal regulator_ge=
+t()
+and passing the name. That seems wasteful, though, because I already have a
+direct link to the regulator (via its struct device_node) and all I really
+need is to look up the corresponding struct regulator.
+
+So my question really is if it would be acceptable to add such a helper, or
+whether I have completely misunderstood how this works. In the latter case,
+could anyone point me in the right direction?
+
+Thierry
+
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk9U2hUACgkQZ+BJyKLjJp/oLQCfbiXZusw+m1c87uC0A9oMI75a
+PQgAnA8hyhaU8bSnrya4ABKSmbqWXYYV
+=n+I0
+-----END PGP SIGNATURE-----
+
+--mYCpIKhGyMATD0i+--
