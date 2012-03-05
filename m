@@ -1,300 +1,126 @@
 From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v3 7/7] ARM: davinci: add support for the am1808 based enbw_cmc board
-Date: Mon,  5 Mar 2012 12:10:04 +0100
-Message-ID: <1330945804-3379-8-git-send-email-hs@denx.de>
+Subject: [PATCH v3 2/7] ARM: davinci: configure davinci aemif chipselects
+ through OF
+Date: Mon,  5 Mar 2012 12:09:59 +0100
+Message-ID: <1330945804-3379-3-git-send-email-hs@denx.de>
 References: <1330945804-3379-1-git-send-email-hs@denx.de>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <1330945804-3379-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-- AM1808 based board
-- 64 MiB DDR ram
-- 2 MiB Nor flash
-- 128 MiB NAND flash
-- use internal RTC
-- I2C support
-- hwmon lm75 support
-- UBI/UBIFS support
-- MMC support
-- USB OTG support
+Add support for configuring the aemif timing registers
+through device tree. Introduce new compatible property
+"ti,davinci-cs", see full description in
+Documentation/devicetree/bindings/arm/davinci/aemif.txt
 
 Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
-Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
 Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
 
 ---
-- post this board support with USB support, even though
-  USB is only working with the 10 ms "workaround", posted here:
-  http://comments.gmane.org/gmane.linux.usb.general/54505
-  I see this issue also on the AM1808 TMDXEXP1808L evalboard.
-- MMC and USB are not using OF support yet, ideas how to port
-  this are welcome. I need for USB and MMC boards board
-  specific callbacks, how to solve this with OF support?
+- changes for v2
+  - add comment from Sergei Shtylyov:
+    - use of_property_read_u32()
+    - Conding Style changes
+  - add comment from Sekhar Nori:
+    - add patch description
+    - use davinci_aemif_setup_timing
+    - change compatible node to "ti,davinci-aemif"
 
-- changes for v2:
-  - changes in the nand node due to comments from Scott Wood:
-    - add "ti,davinci-" prefix
-    - Dashes are preferred to underscores
-    - rename "nandflash" to "nand"
-    - introduce new "ti,davinci" specific properties for setting
-      up ecc_mode, ecc_bits, options and bbt options, instead
-      using linux defines
-  - changes for i2c due to comments from Sylwester Nawrocki:
-    - use "cell-index" instead "id"
-    - OF_DEV_AUXDATA in the machine code, instead pre-define
-      platform device name
-  - add comment from Grant Likely for i2c:
-    - removed "id" resp. "cell-index" completely
-    - fixed documentation
-    - use of_match_ptr()
-    - use devm_kzalloc() for allocating plattform data mem
-    - fixed a whitespace issue
-  - add net comments from Grant Likely:
-    - add prefix "ti,davinci-" to davinci specific property names
-    - remove version property
-    - use compatible name "ti,davinci-dm6460-emac"
-  - add comment from Grant Likely:
-    - rename compatible node
-    - do not use cell-index
-    - CONFIG_OF required for this board
-    TODO:
-    - create a generic board support file, as I got no
-      answer to my ping to grant, maybe this could be done
-      in a second step?
-- changes for v3:
-  - add comments from Sergei Shtylyov:
-    - rename compatible" prop to "ti,cp_intc"
-    - cp_intc_init now used for Interrupt controller init
+  - not moved to mfd, as mentioned in this discussion:
+    http://davinci-linux-open-source.1494791.n2.nabble.com/PATCH-arm-davinci-configure-davinci-aemif-chipselects-through-OF-td7059739.html
+    instead use a phandle in the DTS, so drivers which
+    uses the davinci aemif, can call davinci_aemif_setup_timing_of()
 
- arch/arm/boot/dts/enbw_cmc.dts                  |  268 ++++++++++++++++
- arch/arm/configs/enbw_cmc_defconfig             |  123 ++++++++
- arch/arm/mach-davinci/Kconfig                   |    9 +
- arch/arm/mach-davinci/Makefile                  |    1 +
- arch/arm/mach-davinci/board-enbw-cmc.c          |  380 +++++++++++++++++++++++
- arch/arm/mach-davinci/include/mach/uncompress.h |    1 +
- 6 files changed, 782 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/enbw_cmc.dts
- create mode 100644 arch/arm/configs/enbw_cmc_defconfig
- create mode 100644 arch/arm/mach-davinci/board-enbw-cmc.c
+    This is just thought as an RFC ... The enbw_cmc board
+    support not really need to setup this bus timings, as
+    they are setup in U-Boot ... but I want to post this,
+    as I think, it is a nice to have ... as an example used
+    in the davinci nand controller OF support patch, in this
+    patchserie.
+- no changes for v3
 
-diff --git a/arch/arm/boot/dts/enbw_cmc.dts b/arch/arm/boot/dts/enbw_cmc.dts
+ .../devicetree/bindings/arm/davinci/aemif.txt      |  119 ++++++++++++++++++++
+ arch/arm/mach-davinci/aemif.c                      |   86 ++++++++++++++-
+ arch/arm/mach-davinci/include/mach/aemif.h         |    1 +
+ 3 files changed, 205 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci/aemif.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/davinci/aemif.txt b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
 new file mode 100644
-index 0000000..143b2e2
+index 0000000..0dbb842
 --- /dev/null
-+++ b/arch/arm/boot/dts/enbw_cmc.dts
-@@ -0,0 +1,268 @@
-+/*
-+ * Device Tree for the EnBW CMC plattform
-+ *
-+ * Copyright 2011 DENX Software Engineering GmbH
-+ * Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+/dts-v1/;
-+/include/ "skeleton.dtsi"
++++ b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
+@@ -0,0 +1,119 @@
++* Texas Instruments Davinci AEMIF
 +
-+/ {
-+	model = "EnBW CMC";
-+	compatible = "enbw,cmc";
++This file provides information, what the device node for the
++davinci aemif interface contain.
 +
-+	aliases {
-+		ethernet0 = &eth0;
-+	};
++Required properties:
++- compatible: "ti,davinci-aemif";
++- #address-cells : Should be either two or three.  The first cell is the
++                   chipselect number, and the remaining cells are the
++                   offset into the chipselect.
++- #size-cells : Either one or two, depending on how large each chipselect
++                can be.
++- ranges : Each range corresponds to a single chipselect, and cover
++           the entire access window as configured.
 +
-+	arm {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xfffee000 0x00020000>;
-+		intc: interrupt-controller@1 {
-+			compatible = "ti,cp_intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			ti,intc-size = <101>;
-+			reg = <0x0 0x2000>;
-+		};
-+	};
-+	soc@1c00000 {
-+		compatible = "ti,da850";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x01c00000 0x400000>;
++Optional properties:
++- none
 +
-+		serial0: serial@1c42000 {
-+			compatible = "ti,da850", "ns16550a";
-+			reg = <0x42000 0x100>;
-+			clock-frequency = <150000000>;
-+			reg-shift = <2>;
-+			interrupts = <25>;
-+			interrupt-parent = <&intc>;
-+		};
-+		serial1: serial@1d0c000 {
-+			compatible = "ti,da850", "ns16550a";
-+			reg = <0x10c000 0x100>;
-+			clock-frequency = <150000000>;
-+			reg-shift = <2>;
-+			interrupts = <53>;
-+			interrupt-parent = <&intc>;
-+		};
-+		serial2: serial@1d0d000 {
-+			compatible = "ti,da850", "ns16550a";
-+			reg = <0x10d000 0x100>;
-+			clock-frequency = <150000000>;
-+			reg-shift = <2>;
-+			interrupts = <61>;
-+			interrupt-parent = <&intc>;
-+		};
++Optional subnodes:
++- Chipselect setup:
++	- compatible: "ti,davinci-cs";
++	- #address-cells = <1>;
++	- #size-cells = <1>;
 +
-+		nor_pins: nor_pinmux@1c14120 {
-+			compatible = "ti,davinci-pinmux";
-+			reg = <0x14120 0x1000>;
-+			pins = < /*	muxreg	maskoff	modemsk muxmode */
-+					5	24	15	1 /* EMA_BA_1 */
-+					6	0	15	1 /* EMA CLK */
-+					6	24	15	1 /* EMA_WAIT_1 */
-+					7	0	15	1 /* NEMA_CS_2 */
-+					7	16	15	1 /* NEMA_WE */
-+					7	20	15	1 /* NEMA_OE */
-+					9	28	15	1 /* EMA_D_0 */
-+					9	24	15	1 /* EMA_D_1 */
-+					9	20	15	1 /* EMA_D_2 */
-+					9	16	15	1 /* EMA_D_3 */
-+					9	12	15	1 /* EMA_D_4 */
-+					9	8	15	1 /* EMA_D_5 */
-+					9	4	15	1 /* EMA_D_6 */
-+					9	0	15	1 /* EMA_D_7 */
-+					8	28	15	1 /* EMA_D_8 */
-+					8	24	15	1 /* EMA_D_9 */
-+					8	20	15	1 /* EMA_D_10 */
-+					8	16	15	1 /* EMA_D_11 */
-+					8	12	15	1 /* EMA_D_12 */
-+					8	8	15	1 /* EMA_D_13 */
-+					8	4	15	1 /* EMA_D_14 */
-+					8	0	15	1 /* EMA_D_15 */
-+					12	28	15	1 /* EMA_A_0 */
-+					12	24	15	1 /* EMA_A_1 */
-+					12	20	15	1 /* EMA_A_2 */
-+					12	16	15	1 /* EMA_A_3 */
-+					12	12	15	1 /* EMA_A_4 */
-+					12	8	15	1 /* EMA_A_5 */
-+					12	4	15	1 /* EMA_A_6 */
-+					12	0	15	1 /* EMA_A_7 */
-+					11	28	15	1 /* EMA_A_8 */
-+					11	24	15	1 /* EMA_A_9 */
-+					11	20	15	1 /* EMA_A_10 */
-+					11	16	15	1 /* EMA_A_11 */
-+					11	12	15	1 /* EMA_A_12 */
-+					11	8	15	1 /* EMA_A_13 */
-+					11	4	15	1 /* EMA_A_14 */
-+					11	0	15	1 /* EMA_A_15 */
-+					10	28	15	1 /* EMA_A_16 */
-+					10	24	15	1 /* EMA_A_17 */
-+					10	20	15	1 /* EMA_A_18 */
-+					10	16	15	1 /* EMA_A_19 */
-+					10	12	15	1 /* EMA_A_20 */
-+					10	8	15	1 /* EMA_A_21 */
-+					10	4	15	1 /* EMA_A_22 */
-+					10	0	15	1 /* EMA_A_23 */
-+				>;
-+		};
-+		nand_pins: nand_pinmux@1c14120 {
-+			compatible = "ti,davinci-pinmux";
-+			reg = <0x14120 0x1000>;
-+			pins = < /*	muxreg	maskoff	modemsk muxmode */
-+					7	4	15	1 /* NEMA_CS_3 */
-+				>;
-+		};
++    Timing setup, all timings in nanoseconds
++	- cs:		chipselect (value 2,3,4 or 5)
++	- asize:	Asynchronous Data Bus Width.
++			value:
++			0: 8 bit
++			1: 16 bit
++	- ta:		Minimum Turn-Around time.
++	- rhold:	Read hold width
++	- rstrobe:	Read strobe width
++	- rsetup:	Read setup width
++	- whold:	Write hold width
++	- wstrobe:	Write strobe width
++	- wsetup:	Write setup width
++	- ew:		Extend Wait bit
++			value:
++			0: Extended wait cycles disabled.
++			1: Extended wait cycles enabled.
++	- ss:		Select Strobe bit.
++			value:
++			0: Normal Mode enabled.
++			1: Select Strobe Mode enabled.
++- CFI driver:
++  see: Documentation/devicetree/bindings/mtd/mtd-physmap.txt
 +
-+		emac_pins: pinmux@1c14120 {
-+			compatible = "ti,davinci-pinmux";
-+			reg = <0x14120 0x1000>;
-+			pins = < /*	muxreg	maskoff	modemsk muxmode */
-+					2	4	15	8 /* MII TXEN */
-+					2	8	15	8 /* MII TXCLK */
-+					2	12	15	8 /* MII COL */
-+					2	16	15	8 /* MII TXD_3 */
-+					2	20	15	8 /* MII TXD_2 */
-+					2	24	15	8 /* MII TXD_1 */
-+					2	28	15	8 /* MII TXD_0 */
-+					3	8	15	8 /* MII RXER */
-+					3	12	15	8 /* MII CRS */
-+					3	0	15	8 /* MII RXCLK */
-+					3	4	15	8 /* MII RXDV */
-+					3	16	15	8 /* MII RXD_3 */
-+					3	20	15	8 /* MII RXD_2 */
-+					3	24	15	8 /* MII RXD_1 */
-+					3	28	15	8 /* MII RXD_0 */
-+					4	0	15	8 /* MDIO CLK */
-+					4	4	15	8 /* MDIO D */
-+				>;
-+		};
-+
-+		i2c1_pins: i2c_pinmux@1c14120 {
-+			compatible = "ti,davinci-pinmux";
-+			reg = <0x14120 0x1000>;
-+			pins = < /*	muxreg	maskoff	modemsk muxmode */
-+					4	12	15	2 /* I2C0 SDA */
-+					4	8	15	2 /* I2C0 SCL */
-+				>;
-+		};
-+
-+		eth0: emac@1e20000 {
-+			compatible = "ti,davinci-dm6460-emac";
-+			reg = <0x220000 0x4000>;
-+			ti,davinci-ctrl-reg-offset = <0x3000>;
-+			ti,davinci-ctrl-mod-reg-offset = <0x2000>;
-+			ti,davinci-ctrl-ram-offset = <0>;
-+			ti,davinci-ctrl-ram-size = <0x2000>;
-+			local-mac-address = [ 00 00 00 00 00 00 ];
-+			interrupts = <33
-+					34
-+					35
-+					36
-+					>;
-+			interrupt-parent = <&intc>;
-+			pinmux-handle = <&emac_pins>;
-+		};
-+
-+		i2c@1c22000 {
-+			compatible = "ti,davinci-i2c";
-+			reg = <0x22000 0x1000>;
-+			clock-frequency = <100000>;
-+			interrupts = <15>;
-+			interrupt-parent = <&intc>;
-+			pinmux-handle = <&i2c1_pins>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dtt@48 {
-+				compatible = "national,lm75";
-+				reg = <0x48>;
-+			};
-+		};
-+	};
-+	onchipram@8000000 {
-+		compatible = "ti,davinci-onchipram";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x80000000 0x20000>;
-+	};
++Example (enbw_cmc board):
 +	aemif@60000000 {
 +		compatible = "ti,davinci-aemif";
 +		#address-cells = <2>;
@@ -347,583 +173,154 @@ index 0000000..143b2e2
 +			ew = <0>;
 +			ss = <0>;
 +		};
-+		nand@3,0 {
++		nandflash@3,0 {
 +			compatible = "ti,davinci-nand";
 +			reg = <3 0x0 0x807ff
 +				6 0x0 0x8000>;
 +			#address-cells = <1>;
 +			#size-cells = <1>;
-+			ti,davinci-chipselect = <1>;
-+			ti,davinci-mask-ale = <0>;
-+			ti,davinci-mask-cle = <0>;
-+			ti,davinci-mask-chipsel = <0>;
-+			ti,davinci-ecc-mode = "hw";
-+			ti,davinci-ecc-bits = <4>;
-+			ti,davinci-nand-use-bbt;
++			mask_ale = <0>;
++			mask_cle = <0>;
++			mask_chipsel = <0>;
++			ecc_mode = <2>;
++			ecc_bits = <4>;
++			options = <0>;
++			bbt_options = <0x20000>;
 +			pinmux-handle = <&nand_pins>;
 +			timing-handle = <&nand_cs>;
 +		};
 +
 +	};
-+};
-diff --git a/arch/arm/configs/enbw_cmc_defconfig b/arch/arm/configs/enbw_cmc_defconfig
-new file mode 100644
-index 0000000..9d98e7f
---- /dev/null
-+++ b/arch/arm/configs/enbw_cmc_defconfig
-@@ -0,0 +1,123 @@
-+CONFIG_EXPERIMENTAL=y
-+# CONFIG_SWAP is not set
-+CONFIG_SYSVIPC=y
-+CONFIG_POSIX_MQUEUE=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_LOG_BUF_SHIFT=14
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_EXPERT=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
-+CONFIG_MODULE_FORCE_UNLOAD=y
-+CONFIG_MODVERSIONS=y
-+# CONFIG_BLK_DEV_BSG is not set
-+CONFIG_PARTITION_ADVANCED=y
-+# CONFIG_IOSCHED_DEADLINE is not set
-+# CONFIG_IOSCHED_CFQ is not set
-+CONFIG_ARCH_DAVINCI=y
-+CONFIG_ARCH_DAVINCI_DA850=y
-+# CONFIG_MACH_DAVINCI_DA850_EVM is not set
-+CONFIG_GPIO_PCA953X=y
-+CONFIG_NO_HZ=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_PREEMPT=y
-+CONFIG_AEABI=y
-+# CONFIG_OABI_COMPAT is not set
-+CONFIG_USE_OF=y
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+CONFIG_IP_PNP=y
-+CONFIG_IP_PNP_DHCP=y
-+# CONFIG_INET_LRO is not set
-+CONFIG_IPV6=y
-+CONFIG_NETFILTER=y
-+# CONFIG_WIRELESS is not set
-+CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
-+# CONFIG_FW_LOADER is not set
-+CONFIG_MTD=y
-+CONFIG_MTD_CMDLINE_PARTS=y
-+CONFIG_MTD_CHAR=y
-+CONFIG_MTD_BLKDEVS=y
-+CONFIG_MTD_CFI=y
-+CONFIG_MTD_CFI_INTELEXT=y
-+CONFIG_MTD_CFI_AMDSTD=y
-+CONFIG_MTD_PHYSMAP=y
-+CONFIG_MTD_PHYSMAP_OF=y
-+CONFIG_MTD_NAND=y
-+CONFIG_MTD_NAND_DAVINCI=y
-+CONFIG_MTD_UBI=y
-+CONFIG_BLK_DEV_LOOP=y
-+CONFIG_BLK_DEV_RAM=y
-+CONFIG_BLK_DEV_RAM_COUNT=1
-+CONFIG_BLK_DEV_RAM_SIZE=32768
-+CONFIG_EEPROM_AT24=y
-+CONFIG_SCSI=y
-+CONFIG_BLK_DEV_SD=y
-+CONFIG_NETDEVICES=y
-+CONFIG_MII=y
-+CONFIG_TI_DAVINCI_EMAC=y
-+# CONFIG_WLAN is not set
-+CONFIG_INPUT_POLLDEV=y
-+# CONFIG_INPUT_MOUSEDEV is not set
-+CONFIG_INPUT_EVDEV=y
-+CONFIG_INPUT_EVBUG=y
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_VT is not set
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_NR_UARTS=3
-+CONFIG_SERIAL_8250_RUNTIME_UARTS=3
-+CONFIG_SERIAL_OF_PLATFORM=y
-+CONFIG_HW_RANDOM=y
-+CONFIG_I2C=y
-+CONFIG_I2C_CHARDEV=y
-+CONFIG_I2C_DAVINCI=y
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_GPIO_PCF857X=y
-+CONFIG_SENSORS_LM75=y
-+CONFIG_WATCHDOG=y
-+CONFIG_WATCHDOG_CORE=y
-+CONFIG_DAVINCI_WATCHDOG=y
-+# CONFIG_HID_SUPPORT is not set
-+CONFIG_USB=y
-+CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
-+CONFIG_USB_MUSB_HDRC=y
-+CONFIG_USB_MUSB_DA8XX=y
-+CONFIG_USB_STORAGE=y
-+CONFIG_USB_UAS=y
-+CONFIG_USB_LIBUSUAL=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_FUSB300=y
-+CONFIG_USB_ETH=y
-+CONFIG_MMC=y
-+CONFIG_MMC_DAVINCI=y
-+CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_OMAP=y
-+CONFIG_EXT2_FS=y
-+CONFIG_EXT3_FS=y
-+CONFIG_AUTOFS4_FS=y
-+CONFIG_MSDOS_FS=y
-+CONFIG_VFAT_FS=y
-+CONFIG_TMPFS=y
-+CONFIG_UBIFS_FS=y
-+CONFIG_CRAMFS=y
-+CONFIG_NFS_FS=y
-+CONFIG_NFS_V3=y
-+CONFIG_ROOT_NFS=y
-+CONFIG_NLS_CODEPAGE_437=y
-+CONFIG_NLS_ASCII=y
-+CONFIG_NLS_ISO8859_1=y
-+CONFIG_NLS_UTF8=y
-+CONFIG_DEBUG_FS=y
-+CONFIG_TIMER_STATS=y
-+CONFIG_DEBUG_RT_MUTEXES=y
-+CONFIG_DEBUG_MUTEXES=y
-+# CONFIG_CRYPTO_ANSI_CPRNG is not set
-+# CONFIG_CRYPTO_HW is not set
-+CONFIG_CRC_CCITT=m
-+CONFIG_CRC_T10DIF=m
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index 32d837d..4cb0469 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -202,6 +202,15 @@ config DA850_WL12XX
- 	  Say Y if you want to use a wl1271 expansion card connected to the
- 	  AM18x EVM.
- 
-+config MACH_ENBW_CMC
-+	bool "EnBW Communication Module Compact"
-+	default ARCH_DAVINCI_DA850
-+	depends on ARCH_DAVINCI_DA850
-+	select OF
-+	help
-+	  Say Y here to select the EnBW Communication Module Compact
-+	  board.
-+
- config GPIO_PCA953X
- 	default MACH_DAVINCI_DA850_EVM
- 
-diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
-index 2db78bd..12f3166 100644
---- a/arch/arm/mach-davinci/Makefile
-+++ b/arch/arm/mach-davinci/Makefile
-@@ -34,6 +34,7 @@ obj-$(CONFIG_MACH_DAVINCI_DA850_EVM)	+= board-da850-evm.o
- obj-$(CONFIG_MACH_TNETV107X)		+= board-tnetv107x-evm.o
- obj-$(CONFIG_MACH_MITYOMAPL138)		+= board-mityomapl138.o
- obj-$(CONFIG_MACH_OMAPL138_HAWKBOARD)	+= board-omapl138-hawk.o
-+obj-$(CONFIG_MACH_ENBW_CMC)		+= board-enbw-cmc.o
- 
- # Power Management
- obj-$(CONFIG_CPU_FREQ)			+= cpufreq.o
-diff --git a/arch/arm/mach-davinci/board-enbw-cmc.c b/arch/arm/mach-davinci/board-enbw-cmc.c
-new file mode 100644
-index 0000000..8cb60fb
---- /dev/null
-+++ b/arch/arm/mach-davinci/board-enbw-cmc.c
-@@ -0,0 +1,380 @@
-+/*
-+ * EnBW Communication Module Compact board
-+ * Copyright 2011 DENX Software Engineering GmbH
-+ * Author: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-+ *
-+ * based on:
-+ * TI DA850/OMAP-L138 EVM board
-+ *
-+ * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * Derived from: arch/arm/mach-davinci/board-da850-evm.c
-+ * Original Copyrights follow:
-+ *
-+ * 2007, 2009 (c) MontaVista Software, Inc. This file is licensed under
-+ * the terms of the GNU General Public License version 2. This program
-+ * is licensed "as is" without any warranty of any kind, whether express
-+ * or implied.
-+ */
-+#include <linux/console.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio_keys.h>
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/nand.h>
-+#include <linux/mtd/partitions.h>
-+#include <linux/mtd/physmap.h>
+diff --git a/arch/arm/mach-davinci/aemif.c b/arch/arm/mach-davinci/aemif.c
+index 1ce70a9..e3d94a5 100644
+--- a/arch/arm/mach-davinci/aemif.c
++++ b/arch/arm/mach-davinci/aemif.c
+@@ -13,12 +13,14 @@
+ #include <linux/err.h>
+ #include <linux/clk.h>
+ #include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/of_net.h>
 +#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy.h>
-+#include <linux/phy_fixed.h>
-+#include <linux/platform_device.h>
-+#include <linux/spi/spi.h>
-+#include <linux/spi/flash.h>
-+#include <asm/mach-types.h>
-+#include <asm/mach/arch.h>
-+#include <mach/aemif.h>
-+#include <mach/cp_intc.h>
-+#include <mach/da8xx.h>
-+#include <mach/mux.h>
-+#include <mach/nand.h>
-+#include <mach/spi.h>
+ #include <linux/time.h>
+ 
+ #include <mach/aemif.h>
+ 
+ /* Timing value configuration */
+-
++#define ASIZE(x)	(x)
+ #define TA(x)		((x) << 2)
+ #define RHOLD(x)	((x) << 4)
+ #define RSTROBE(x)	((x) << 7)
+@@ -26,7 +28,10 @@
+ #define WHOLD(x)	((x) << 17)
+ #define WSTROBE(x)	((x) << 20)
+ #define WSETUP(x)	((x) << 26)
++#define EW(x)		((x) << 30)
++#define SS(x)		((x) << 31)
+ 
++#define ASIZE_MAX	0x1
+ #define TA_MAX		0x3
+ #define RHOLD_MAX	0x7
+ #define RSTROBE_MAX	0x3f
+@@ -34,6 +39,8 @@
+ #define WHOLD_MAX	0x7
+ #define WSTROBE_MAX	0x3f
+ #define WSETUP_MAX	0xf
++#define EW_MAX		0x1
++#define SS_MAX		0x1
+ 
+ #define TIMING_MASK	(TA(TA_MAX) | \
+ 				RHOLD(RHOLD_MAX) | \
+@@ -131,3 +138,80 @@ int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+ 	return 0;
+ }
+ EXPORT_SYMBOL(davinci_aemif_setup_timing);
 +
-+#define ENBW_CMC_MMCSD_CD_PIN          GPIO_TO_PIN(3, 13)
-+
-+/*
-+ * USB1 VBUS is controlled by GPIO7[12], over-current is reported on GPIO7[8].
-+ */
-+#define DA850_USB_VBUS_PIN	GPIO_TO_PIN(7, 12)
-+#define ON_BD_USB_OVC		GPIO_TO_PIN(7, 8)
-+
-+#if defined(CONFIG_USB_OHCI_HCD)
-+static irqreturn_t enbw_cmc_usb_ocic_irq(int irq, void *dev_id);
-+static da8xx_ocic_handler_t enbw_cmc_usb_ocic_handler;
-+
-+static int enbw_cmc_usb_set_power(unsigned port, int on)
++#if defined(CONFIG_OF)
++static int dv_get_value(struct device_node *np, const char *name)
 +{
-+	gpio_set_value(DA850_USB_VBUS_PIN, on);
-+	return 0;
-+}
-+
-+static int enbw_cmc_usb_get_power(unsigned port)
-+{
-+	return gpio_get_value(DA850_USB_VBUS_PIN);
-+}
-+
-+static int enbw_cmc_usb_get_oci(unsigned port)
-+{
-+	return !gpio_get_value(ON_BD_USB_OVC);
-+}
-+
-+static irqreturn_t enbw_cmc_usb_ocic_irq(int, void *);
-+
-+static int enbw_cmc_usb_ocic_notify(da8xx_ocic_handler_t handler)
-+{
-+	int irq         = gpio_to_irq(ON_BD_USB_OVC);
-+	int error       = 0;
-+
-+	if (handler != NULL) {
-+		enbw_cmc_usb_ocic_handler = handler;
-+
-+		error = request_irq(irq, enbw_cmc_usb_ocic_irq,
-+					IRQF_DISABLED | IRQF_TRIGGER_RISING |
-+					IRQF_TRIGGER_FALLING,
-+					"OHCI over-current indicator", NULL);
-+		if (error)
-+			pr_err("%s: could not request IRQ to watch "
-+				"over-current indicator changes\n", __func__);
-+	} else {
-+		free_irq(irq, NULL);
-+	}
-+	return error;
-+}
-+
-+static struct da8xx_ohci_root_hub enbw_cmc_usb11_pdata = {
-+	.set_power      = enbw_cmc_usb_set_power,
-+	.get_power      = enbw_cmc_usb_get_power,
-+	.get_oci        = enbw_cmc_usb_get_oci,
-+	.ocic_notify    = enbw_cmc_usb_ocic_notify,
-+	.potpgt         = (10 + 1) / 2,  /* 10 ms max */
-+};
-+
-+static irqreturn_t enbw_cmc_usb_ocic_irq(int irq, void *dev_id)
-+{
-+	enbw_cmc_usb_ocic_handler(&enbw_cmc_usb11_pdata, 1);
-+	return IRQ_HANDLED;
-+}
-+#endif
-+
-+static __init void enbw_cmc_usb_init(void)
-+{
++	u32 data;
 +	int ret;
-+	u32 cfgchip2;
 +
-+	/* Set up USB clock/mode in the CFGCHIP2 register. */
-+	cfgchip2 = __raw_readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
++	ret = of_property_read_u32(np, name, &data);
++	if (ret != 0)
++		return ret;
 +
-+	/* USB2.0 PHY reference clock is AUXCLK with 24MHz */
-+	cfgchip2 &= ~CFGCHIP2_REFFREQ;
-+	cfgchip2 |=  CFGCHIP2_REFFREQ_24MHZ;
-+
-+	/*
-+	 * Select internal reference clock for USB 2.0 PHY
-+	 * and use it as a clock source for USB 1.1 PHY
-+	 * (this is the default setting anyway).
-+	 */
-+	cfgchip2 &= ~CFGCHIP2_USB1PHYCLKMUX;
-+	cfgchip2 |=  CFGCHIP2_USB2PHYCLKMUX;
-+
-+	cfgchip2 &= ~CFGCHIP2_OTGMODE;
-+	cfgchip2 |=  CFGCHIP2_SESENDEN | CFGCHIP2_VBDTCTEN;
-+
-+	__raw_writel(cfgchip2, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
-+
-+	ret = davinci_cfg_reg(DA830_USB0_DRVVBUS);
-+	if (ret)
-+		pr_warning("%s: USB 2.0 PinMux setup failed: %d\n",
-+			   __func__, ret);
-+	else {
-+		/*
-+		 * SP2525A @ 5V supplies 500mA,
-+		 * with the power on to power good time of 10 ms.
-+		 */
-+		ret = da8xx_register_usb20(500, 10);
-+		if (ret)
-+			pr_warning("%s: USB 2.0 registration failed: %d\n",
-+				   __func__, ret);
-+	}
-+
-+#if defined(CONFIG_USB_OHCI_HCD)
-+	ret = gpio_request_one(DA850_USB_VBUS_PIN,
-+			GPIOF_DIR_OUT, "USB 1.1 VBUS");
-+	if (ret < 0) {
-+		pr_err("%s: failed to request GPIO for USB 1.1 port "
-+			"power control: %d\n", __func__, ret);
-+		return;
-+	}
-+	gpio_direction_input(DA850_USB_VBUS_PIN);
-+
-+	ret = gpio_request(ON_BD_USB_OVC, "ON_BD_USB_OVC");
-+	if (ret) {
-+		printk(KERN_ERR "%s: failed to request GPIO for USB 1.1 port "
-+		       "over-current indicator: %d\n", __func__, ret);
-+		gpio_free(DA850_USB_VBUS_PIN);
-+		return;
-+	}
-+	gpio_direction_input(ON_BD_USB_OVC);
-+
-+	ret = da8xx_register_usb11(&enbw_cmc_usb11_pdata);
-+	if (ret) {
-+		pr_warning("%s: USB 1.1 registration failed: %d\n",
-+			   __func__, ret);
-+		gpio_free(ON_BD_USB_OVC);
-+		gpio_free(DA850_USB_VBUS_PIN);
-+	}
-+#endif
-+
-+	return;
++	return data;
 +}
 +
-+static int enbw_cmc_mmc_get_ro(int index)
++int davinci_aemif_setup_timing_of(struct device_node *np)
 +{
++	struct device_node *parent;
++	struct davinci_aemif_timing t;
++	void __iomem *base;
++	unsigned val;
++	int asize, ew, ss;
++	int cs;
++	unsigned offset;
++	int ret;
++
++	if (!np)
++		return -ENODEV;
++
++	parent = np->parent;
++	if (!np)
++		return -ENODEV;
++
++	base = of_iomap(parent, 0);
++	if (!base)
++		return -EINVAL;
++
++	cs = dv_get_value(np, "cs");
++	if (cs < 2)
++		return -EINVAL;
++
++	t.ta		= dv_get_value(np, "ta");
++	t.rhold		= dv_get_value(np, "rhold");
++	t.rstrobe	= dv_get_value(np, "rstrobe");
++	t.rsetup	= dv_get_value(np, "rsetup");
++	t.whold		= dv_get_value(np, "whold");
++	t.wstrobe	= dv_get_value(np, "wstrobe");
++	t.wsetup	= dv_get_value(np, "wsetup");
++
++	ret = davinci_aemif_setup_timing(&t, base, cs);
++	if (ret != 0)
++		return ret;
++
++	/* setup none timing paramters */
++	offset = A1CR_OFFSET + cs * 4;
++	asize = dv_get_value(np, "asize");
++	ew = dv_get_value(np, "ew");
++	ss = dv_get_value(np, "ss");
++	val = __raw_readl(base + offset);
++	val &= TIMING_MASK;
++	val |= (asize & ACR_ASIZE_MASK);
++	if (ew)
++		val |= ACR_EW_MASK;
++	if (ss)
++		val |= ACR_SS_MASK;
++
++	__raw_writel(val, base + offset);
++
++	iounmap(base);
 +	return 0;
-+}
-+
-+static int enbw_cmc_mmc_get_cd(int index)
-+{
-+	return gpio_get_value(ENBW_CMC_MMCSD_CD_PIN) ? 1 : 0;
-+}
-+
-+static struct davinci_mmc_config enbw_cmc_mmc_config = {
-+	.get_ro		= enbw_cmc_mmc_get_ro,
-+	.get_cd		= enbw_cmc_mmc_get_cd,
-+	.wires		= 4,
-+	.max_freq	= 50000000,
-+	.caps		= MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED,
-+	.version	= MMC_CTLR_VERSION_2,
-+};
-+
-+static int __init enbw_cmc_config_emac(void)
-+{
-+	void __iomem *cfg_chip3_base;
-+	u32 val;
-+	struct davinci_soc_info *soc_info = &davinci_soc_info;
-+
-+	if (!machine_is_enbw_cmc())
-+		return 0;
-+
-+	cfg_chip3_base = DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG);
-+	val = __raw_readl(cfg_chip3_base);
-+	val &= ~BIT(8);
-+	pr_info("EMAC: MII PHY configured, RMII PHY will not be"
-+						" functional\n");
-+
-+	/* configure the CFGCHIP3 register for MII */
-+	__raw_writel(val, cfg_chip3_base);
-+
-+	/* use complete info from OF */
-+	soc_info->emac_pdata = NULL;
-+
-+	return 0;
-+}
-+device_initcall(enbw_cmc_config_emac);
-+
-+static const s16 da850_dma0_rsv_chans[][2] = {
-+	/* (offset, number) */
-+	{-1, -1}
-+};
-+
-+static const s16 da850_dma0_rsv_slots[][2] = {
-+	/* (offset, number) */
-+	{-1, -1}
-+};
-+
-+static const s16 da850_dma1_rsv_chans[][2] = {
-+	/* (offset, number) */
-+	{-1, -1}
-+};
-+
-+static const s16 da850_dma1_rsv_slots[][2] = {
-+	/* (offset, number) */
-+	{-1, -1}
-+};
-+
-+static struct edma_rsv_info da850_edma_cc0_rsv = {
-+	.rsv_chans	= da850_dma0_rsv_chans,
-+	.rsv_slots	= da850_dma0_rsv_slots,
-+};
-+
-+static struct edma_rsv_info da850_edma_cc1_rsv = {
-+	.rsv_chans	= da850_dma1_rsv_chans,
-+	.rsv_slots	= da850_dma1_rsv_slots,
-+};
-+
-+static struct edma_rsv_info *da850_edma_rsv[2] = {
-+	&da850_edma_cc0_rsv,
-+	&da850_edma_cc1_rsv,
-+};
-+
-+#ifdef CONFIG_CPU_FREQ
-+static __init int da850_evm_init_cpufreq(void)
-+{
-+	switch (system_rev & 0xF) {
-+	case 3:
-+		da850_max_speed = 456000;
-+		break;
-+	case 2:
-+		da850_max_speed = 408000;
-+		break;
-+	case 1:
-+		da850_max_speed = 372000;
-+		break;
-+	}
-+
-+	return da850_register_cpufreq("pll0_sysclk3");
 +}
 +#else
-+static __init int da850_evm_init_cpufreq(void) { return 0; }
++int davinci_aemif_setup_timing_of(struct device_node *np)
++{
++	return 0;
++}
 +#endif
-+
-+struct of_dev_auxdata enbw_cmc_auxdata_lookup[] __initdata = {
-+	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "ti,davinci-wdt", NULL),
-+	OF_DEV_AUXDATA("ti,davinci-i2c", 0x01c22000, "i2c_davinci.1", NULL),
-+	OF_DEV_AUXDATA("ti,davinci-i2c", 0x01e28000, "i2c_davinci.2", NULL),
-+	OF_DEV_AUXDATA("ti,davinci-dm6460-emac", 0x01e20000, "davinci_emac.1",
-+			NULL),
-+	{}
-+};
-+
-+const struct of_device_id enbw_cmc_bus_match_table[] = {
-+	{ .compatible = "simple-bus", },
-+	{ .compatible = "ti,da850", },
-+	{ .compatible = "ti,davinci-onchipram", },
-+	{ .compatible = "ti,davinci-aemif", },
-+	{} /* Empty terminated list */
-+};
-+
-+static __init void enbw_cmc_init(void)
-+{
-+	int ret;
-+
-+	of_platform_populate(NULL, enbw_cmc_bus_match_table,
-+		enbw_cmc_auxdata_lookup, NULL);
-+
-+	ret = da8xx_register_watchdog();
-+	if (ret)
-+		pr_warning("enbw_cmc_init: watchdog registration failed: %d\n",
-+				ret);
-+
-+	ret = da850_register_edma(da850_edma_rsv);
-+	if (ret)
-+		pr_warning("enbw_cmc_init: edma registration failed: %d\n",
-+				ret);
-+
-+	/*
-+	 * shut down uart 0 this port is not used on the board
-+	 */
-+	__raw_writel(0, IO_ADDRESS(DA8XX_UART0_BASE) + 0x30);
-+
-+	ret = da8xx_register_rtc();
-+	if (ret)
-+		pr_warning("enbw_cmc_init: rtc setup failed: %d\n", ret);
-+
-+	ret = da850_evm_init_cpufreq();
-+	if (ret)
-+		pr_warning("enbw_cmc_init: cpufreq registration failed: %d\n",
-+				ret);
-+
-+	ret = da8xx_register_cpuidle();
-+	if (ret)
-+		pr_warning("enbw_cmc_init: cpuidle registration failed: %d\n",
-+				ret);
-+
-+	ret = gpio_request(ENBW_CMC_MMCSD_CD_PIN, "MMC CD\n");
-+	if (ret)
-+		pr_warning("enbw_cmc_init: can not open GPIO %d\n",
-+				ENBW_CMC_MMCSD_CD_PIN);
-+	gpio_direction_input(ENBW_CMC_MMCSD_CD_PIN);
-+
-+	ret = da850_register_mmcsd1(&enbw_cmc_mmc_config);
-+	if (ret)
-+		pr_warning("enbw_cmc_init: mmcsd1 registration failed:"
-+				" %d\n", ret);
-+
-+	enbw_cmc_usb_init();
-+}
-+
-+#ifdef CONFIG_SERIAL_8250_CONSOLE
-+static int __init enbw_cmc_console_init(void)
-+{
-+	if (!machine_is_enbw_cmc())
-+		return 0;
-+
-+	return add_preferred_console("ttyS", 2, "115200");
-+}
-+console_initcall(enbw_cmc_console_init);
-+#endif
-+
-+static void __init enbw_cmc_map_io(void)
-+{
-+	da850_init();
-+}
-+
-+static const char *enbw_cmc_board_compat[] __initconst = {
-+	"enbw,cmc",
-+	NULL
-+};
-+
-+MACHINE_START(ENBW_CMC, "EnBW CMC")
-+	.map_io		= enbw_cmc_map_io,
-+	.init_irq	= cp_intc_init,
-+	.timer		= &davinci_timer,
-+	.init_machine	= enbw_cmc_init,
-+	.dt_compat	= enbw_cmc_board_compat,
-+	.dma_zone_size	= SZ_128M,
-+	.restart	= da8xx_restart,
-+MACHINE_END
-diff --git a/arch/arm/mach-davinci/include/mach/uncompress.h b/arch/arm/mach-davinci/include/mach/uncompress.h
-index 9dc7cf9..2f21384 100644
---- a/arch/arm/mach-davinci/include/mach/uncompress.h
-+++ b/arch/arm/mach-davinci/include/mach/uncompress.h
-@@ -96,6 +96,7 @@ static inline void __arch_decomp_setup(unsigned long arch_id)
- 		DEBUG_LL_DA8XX(davinci_da850_evm,	2);
- 		DEBUG_LL_DA8XX(mityomapl138,		1);
- 		DEBUG_LL_DA8XX(omapl138_hawkboard,	2);
-+		DEBUG_LL_DA8XX(enbw_cmc,		2);
++EXPORT_SYMBOL(davinci_aemif_setup_timing_of);
+diff --git a/arch/arm/mach-davinci/include/mach/aemif.h b/arch/arm/mach-davinci/include/mach/aemif.h
+index 05b2934..f3bbec6 100644
+--- a/arch/arm/mach-davinci/include/mach/aemif.h
++++ b/arch/arm/mach-davinci/include/mach/aemif.h
+@@ -33,4 +33,5 @@ struct davinci_aemif_timing {
  
- 		/* TNETV107x boards */
- 		DEBUG_LL_TNETV107X(tnetv107x,		1);
+ int davinci_aemif_setup_timing(struct davinci_aemif_timing *t,
+ 					void __iomem *base, unsigned cs);
++int davinci_aemif_setup_timing_of(struct device_node *np);
+ #endif
 -- 
 1.7.7.6
