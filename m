@@ -1,232 +1,258 @@
 From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v3 1/7] ARM: davinci,
-	intc: Add OF support for TI interrupt controller
-Date: Mon, 5 Mar 2012 12:09:58 +0100
-Message-ID: <1330945804-3379-2-git-send-email-hs@denx.de>
+Subject: [PATCH v3 6/7] ARM: mtd: nand: davinci: add OF support for davinci
+ nand controller
+Date: Mon,  5 Mar 2012 12:10:03 +0100
+Message-ID: <1330945804-3379-7-git-send-email-hs@denx.de>
 References: <1330945804-3379-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <1330945804-3379-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a function to initialize the Common Platform Interrupt Controller
-(cp_intc) from TI used on OMAP-L1x SoCs using a device tree node.
+add OF support for the davinci nand controller.
 
 Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
 ---
 - changes for v2:
-- add comment from Grant Likely:
-  - migrate the whole interrupt controller to natively use an
-    irq_domain. Rebased complete patchserie to:
-    git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
+  - add comments from Scott Wood:
+    - add "ti,davinci-" prefix
+    - Dashes are preferred to underscores
+    - rename "nandflash" to "nand"
+    - introduce new "ti,davinci" specific properties for setting
+      up ecc_mode, ecc_bits, options and bbt options, instead
+      using linux defines
+    - readme fixes
+- no changes for v3
 
-    commit 3a806bfcde2cc3e4853f2807b2e3c94e7ccaf450
-    Author: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-    Date:   Fri Jan 27 06:44:34 2012 -0700
+ .../devicetree/bindings/arm/davinci/nand.txt       |   74 +++++++++++++++++
+ drivers/mtd/nand/davinci_nand.c                    |   85 +++++++++++++++++++-
+ 2 files changed, 158 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.txt
 
-    irq_domain: mostly eliminate slow-path revmap lookups
-- changes for v3:
-  - add comments from Sergei Shtylyov:
-    - rename compatible" prop to "ti,cp_intc"
-    - cp_intc_init() is now also for the of case
-      the name of the init function (it calls the
-      "new" __cp_intc_init() function, which was
-      the "old" cp_intc_init()). Through this
-      rework the changes for OF is better visible.
-      As the OF case uses the irq_domain rework from
-      Grant Likely, maybe the none OF case can use
-      this also, but this should be tested on a hw ...
-  - rebased to:
-    git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
-
-    commit 280ad7fda5f95211857fda38960f2b6fdf6edd3e
-    Author: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-    Date:   Fri Feb 24 14:58:54 2012 -0700
-
-    mfd: twl-core: Add IRQ_DOMAIN dependency
-
- .../devicetree/bindings/arm/davinci/intc.txt       |   27 ++++++
- arch/arm/mach-davinci/cp_intc.c                    |   87 +++++++++++++++++--
- 2 files changed, 104 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci/intc.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/davinci/intc.txt b/Documentation/devicetree/bindings/arm/davinci/intc.txt
+diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
 new file mode 100644
-index 0000000..dfd6a560
+index 0000000..e02874a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/davinci/intc.txt
-@@ -0,0 +1,27 @@
-+* TI Common Platform Interrupt Controller
++++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
+@@ -0,0 +1,74 @@
++* Texas Instruments Davinci NAND
 +
-+Common Platform Interrupt Controller (cp_intc) is used on
-+OMAP-L1x SoCs and can support several configurable number
-+of interrupts.
++This file provides information, what the device node for the
++davinci nand interface contain.
 +
-+Main node required properties:
++Required properties:
++- compatible: "ti,davinci-nand";
++- reg : contain 2 offset/length values:
++        - offset and length for the access window
++        - offset and length for accessing the aemif control registers
++- ti,davinci-chipselect: Indicates on the davinci_nand driver which
++                         chipselect is used for accessing the nand.
 +
-+- compatible : should be:
-+	"ti,cp_intc"
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The type shall be a <u32> and the value shall be 1.
++Recommended properties :
++- ti,davinci-mask-ale: mask for ale
++- ti,davinci-mask-cle: mask for cle
++- ti,davinci-mask-chipsel: mask for chipselect
++- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
++		- "none"
++		- "soft"
++		- "hw"
++- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
++- ti,davinci-nand-buswidth: buswidth 8 or 16
++- ti,davinci-nand-use-bbt: use flash based bad block table support.
 +
-+  The cell contains the interrupt number in the range [0-128].
-+- ti,intc-size: Number of interrupts handled by the interrupt controller.
-+- reg: physical base address and size of the intc registers map.
++Optional properties:
++- pinmux-handle: contains a handle to configure the pinmux settings.
++- timing-handle: contains a handle to setup aemif timing.
 +
-+Example:
-+
-+	intc: interrupt-controller@1 {
-+		compatible = "ti,cp_intc";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		ti,intc-size = <101>;
-+		reg = <0xfffee000 0x2000>;
++Example (enbw_cmc board):
++aemif@60000000 {
++	compatible = "ti,davinci-aemif";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	reg = <0x68000000 0x80000>;
++	ranges = <2 0 0x60000000 0x02000000
++		  3 0 0x62000000 0x02000000
++		  4 0 0x64000000 0x02000000
++		  5 0 0x66000000 0x02000000
++		  6 0 0x68000000 0x02000000>;
++	nand_cs: cs3@68000000 {
++		compatible = "ti,davinci-cs";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		/* all timings in nanoseconds */
++		cs = <3>;
++		asize = <0>;
++		ta = <0>;
++		rhold = <7>;
++		rstrobe = <42>;
++		rsetup = <7>;
++		whold = <7>;
++		wstrobe = <14>;
++		wsetup = <7>;
++		ew = <0>;
++		ss = <0>;
 +	};
-diff --git a/arch/arm/mach-davinci/cp_intc.c b/arch/arm/mach-davinci/cp_intc.c
-index f83152d..585114a 100644
---- a/arch/arm/mach-davinci/cp_intc.c
-+++ b/arch/arm/mach-davinci/cp_intc.c
-@@ -9,9 +9,14 @@
-  * kind, whether express or implied.
-  */
++	nand@3,0 {
++		compatible = "ti,davinci-nand";
++		reg = <3 0x0 0x807ff
++			6 0x0 0x8000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ti,davinci-chipselect = <1>;
++		ti,davinci-mask-ale = <0>;
++		ti,davinci-mask-cle = <0>;
++		ti,davinci-mask-chipsel = <0>;
++		ti,davinci-ecc-mode = "hw";
++		ti,davinci-ecc-bits = <4>;
++		ti,davinci-nand-use-bbt;
++		pinmux-handle = <&nand_pins>;
++		timing-handle = <&nand_cs>;
++	};
++};
+diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+index 6e56615..bdd6edc 100644
+--- a/drivers/mtd/nand/davinci_nand.c
++++ b/drivers/mtd/nand/davinci_nand.c
+@@ -33,9 +33,12 @@
+ #include <linux/mtd/nand.h>
+ #include <linux/mtd/partitions.h>
+ #include <linux/slab.h>
++#include <linux/of_i2c.h>
++#include <linux/of_device.h>
  
-+#include <linux/export.h>
- #include <linux/init.h>
- #include <linux/irq.h>
-+#include <linux/irqdomain.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
+ #include <mach/nand.h>
+ #include <mach/aemif.h>
++#include <mach/mux.h>
  
- #include <mach/common.h>
- #include <mach/cp_intc.h>
-@@ -99,18 +104,45 @@ static struct irq_chip cp_intc_irq_chip = {
- 	.irq_set_wake	= cp_intc_set_wake,
+ /*
+  * This is a device driver for the NAND flash controller found on the
+@@ -518,9 +521,86 @@ static struct nand_ecclayout hwecc4_2048 __initconst = {
+ 	},
  };
  
--void __init cp_intc_init(void)
-+static struct irq_domain *cp_intc_domain;
-+
-+static int cp_intc_host_map(struct irq_domain *h, unsigned int virq,
-+			  irq_hw_number_t hw)
- {
--	unsigned long num_irq	= davinci_soc_info.intc_irq_num;
-+	pr_debug("cp_intc_host_map(%d, 0x%lx)\n", virq, hw);
-+
-+	irq_set_chip(virq, &cp_intc_irq_chip);
-+	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
-+	irq_set_handler(virq, handle_edge_irq);
-+	return 0;
++#if defined(CONFIG_OF)
++static const struct of_device_id davinci_nand_of_match[] = {
++	{.compatible = "ti,davinci-nand", },
++	{},
 +}
++MODULE_DEVICE_TABLE(of, davinci_nand_of_match);
 +
-+static const struct irq_domain_ops cp_intc_host_ops = {
-+	.map = cp_intc_host_map,
-+	.xlate = irq_domain_xlate_onetwocell,
-+};
-+
-+int __init __cp_intc_init(struct device_node *node,
-+		struct device_node *parent)
++static struct davinci_nand_pdata
++	*nand_davinci_get_pdata(struct platform_device *pdev)
 +{
-+	u32 num_irq		= davinci_soc_info.intc_irq_num;
- 	u8 *irq_prio		= davinci_soc_info.intc_irq_prios;
- 	u32 *host_map		= davinci_soc_info.intc_host_map;
- 	unsigned num_reg	= BITS_TO_LONGS(num_irq);
--	int i;
-+	int i, irq_base;
- 
- 	davinci_intc_type = DAVINCI_INTC_TYPE_CP_INTC;
--	davinci_intc_base = ioremap(davinci_soc_info.intc_base, SZ_8K);
-+	if (node) {
-+		davinci_intc_base = of_iomap(node, 0);
-+		if (of_property_read_u32(node, "ti,intc-size", &num_irq))
-+			pr_warn("unable to get intc-size, default to %d\n",
-+				num_irq);
-+	} else {
-+		davinci_intc_base = ioremap(davinci_soc_info.intc_base,
-+					SZ_8K);
++	if ((pdev->dev.platform_data == NULL) &&
++		(pdev->dev.of_node)) {
++		struct device_node *tmp_np;
++		struct davinci_nand_pdata *pdata;
++		const char *mode;
++		u32 prop;
++		int len;
++
++		pdata =  kzalloc(sizeof(struct davinci_nand_pdata),
++				GFP_KERNEL);
++		pdev->dev.platform_data = pdata;
++		if (!pdata)
++			return NULL;
++		if (!of_property_read_u32(pdev->dev.of_node,
++			"ti,davinci-chipselect", &prop))
++			pdev->id = prop;
++		if (!of_property_read_u32(pdev->dev.of_node,
++			"ti,davinci-mask-ale", &prop))
++			pdata->mask_ale = prop;
++		if (!of_property_read_u32(pdev->dev.of_node,
++			"ti,davinci-mask-cle", &prop))
++			pdata->mask_cle = prop;
++		if (!of_property_read_u32(pdev->dev.of_node,
++			"ti,davinci-mask-chipsel", &prop))
++			pdata->mask_chipsel = prop;
++		if (!of_property_read_string(pdev->dev.of_node,
++			"ti,davinci-ecc-mode", &mode)) {
++			if (!strncmp("none", mode, 4))
++				pdata->ecc_mode = NAND_ECC_NONE;
++			if (!strncmp("soft", mode, 4))
++				pdata->ecc_mode = NAND_ECC_SOFT;
++			if (!strncmp("hw", mode, 2))
++				pdata->ecc_mode = NAND_ECC_HW;
++		}
++		if (!of_property_read_u32(pdev->dev.of_node,
++			"ti,davinci-ecc-bits", &prop))
++			pdata->ecc_bits = prop;
++		if (!of_property_read_u32(pdev->dev.of_node,
++			"ti,davinci-nand-buswidth", &prop))
++			if (prop == 16)
++				pdata->options |= NAND_BUSWIDTH_16;
++		if (of_find_property(pdev->dev.of_node,
++			"ti,davinci-nand-use-bbt", &len))
++			pdata->bbt_options = NAND_BBT_USE_FLASH;
++
++		tmp_np = of_parse_phandle(pdev->dev.of_node,
++				"pinmux-handle", 0);
++		if (tmp_np)
++			davinci_cfg_reg_of(tmp_np);
++
++		tmp_np = of_parse_phandle(pdev->dev.of_node,
++				"timing-handle", 0);
++		if (tmp_np)
++			davinci_aemif_setup_timing_of(tmp_np);
 +	}
- 	if (WARN_ON(!davinci_intc_base))
--		return;
-+		return -EINVAL;
- 
- 	cp_intc_write(0, CP_INTC_GLOBAL_ENABLE);
- 
-@@ -165,13 +197,48 @@ void __init cp_intc_init(void)
- 		for (i = 0; host_map[i] != -1; i++)
- 			cp_intc_write(host_map[i], CP_INTC_HOST_MAP(i));
- 
--	/* Set up genirq dispatching for cp_intc */
--	for (i = 0; i < num_irq; i++) {
--		irq_set_chip(i, &cp_intc_irq_chip);
--		set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
--		irq_set_handler(i, handle_edge_irq);
-+	if (node) {
-+		irq_base = irq_alloc_descs(-1, 0, num_irq, 0);
-+		if (irq_base < 0) {
-+			pr_warn("Couldn't allocate IRQ numbers\n");
-+			irq_base = 0;
-+		}
 +
-+		/* create a legacy host */
-+		cp_intc_domain = irq_domain_add_legacy(node, num_irq,
-+					irq_base, 0, &cp_intc_host_ops, NULL);
-+		if (cp_intc_domain == NULL) {
-+			pr_err("CP INTC: failed to allocate irq host!\n");
-+			return -EINVAL;
-+		}
-+	} else {
-+		/* Set up genirq dispatching for cp_intc */
-+		for (i = 0; i < num_irq; i++) {
-+			irq_set_chip(i, &cp_intc_irq_chip);
-+			set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
-+			irq_set_handler(i, handle_edge_irq);
-+		}
- 	}
- 
- 	/* Enable global interrupt */
- 	cp_intc_write(1, CP_INTC_GLOBAL_ENABLE);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static struct of_device_id irq_match[] __initdata = {
-+	{ .compatible = "ti,cp_intc", .data = __cp_intc_init, },
-+	{ }
-+};
-+
-+void __init cp_intc_init(void)
-+{
-+	of_irq_init(irq_match);
++	return pdev->dev.platform_data;
 +}
 +#else
-+void __init cp_intc_init(void)
++#define davinci_nand_of_match NULL
++static struct davinci_nand_pdata
++	*nand_davinci_get_pdata(struct platform_device *pdev)
 +{
-+	__cp_intc_init(NULL, NULL);
- }
++	return pdev->dev.platform_data;
++}
 +#endif
++
+ static int __init nand_davinci_probe(struct platform_device *pdev)
+ {
+-	struct davinci_nand_pdata	*pdata = pdev->dev.platform_data;
++	struct davinci_nand_pdata	*pdata;
+ 	struct davinci_nand_info	*info;
+ 	struct resource			*res1;
+ 	struct resource			*res2;
+@@ -530,6 +610,7 @@ static int __init nand_davinci_probe(struct platform_device *pdev)
+ 	uint32_t			val;
+ 	nand_ecc_modes_t		ecc_mode;
+ 
++	pdata = nand_davinci_get_pdata(pdev);
+ 	/* insist on board-specific configuration */
+ 	if (!pdata)
+ 		return -ENODEV;
+@@ -815,6 +896,8 @@ static struct platform_driver nand_davinci_driver = {
+ 	.remove		= __exit_p(nand_davinci_remove),
+ 	.driver		= {
+ 		.name	= "davinci_nand",
++		.owner	= THIS_MODULE,
++		.of_match_table = davinci_nand_of_match,
+ 	},
+ };
+ MODULE_ALIAS("platform:davinci_nand");
 -- 
 1.7.7.6
