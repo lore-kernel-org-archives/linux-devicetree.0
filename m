@@ -1,65 +1,69 @@
-From: Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH 3/4] ARM: kirkwood: convert rtc-mv to fdt.
-Date: Mon, 5 Mar 2012 00:22:11 +0100
-Message-ID: <201203050022.12085.michael@walle.cc>
-References: <cover.1330625877.git.jason@lakedaemon.net>
- <201203041648.17428.arnd@arndb.de>
- <20120304222710.GT11986@titan.lakedaemon.net>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 4/5 v2] ARM: kirkwood: convert rtc-mv to fdt.
+Date: Sun, 4 Mar 2012 19:17:13 -0500
+Message-ID: <20120305001713.GU11986@titan.lakedaemon.net>
+References: <cover.1330709314.git.jason@lakedaemon.net>
+ <4de611961e8210a0a2c3b56fe72b40dba638752a.1330709314.git.jason@lakedaemon.net>
+ <201203041612.44966.michael@walle.cc>
+ <201203041650.52217.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120304222710.GT11986@titan.lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason <jason@lakedaemon.net>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201203041650.52217.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag 04 M=E4rz 2012, 23:27:10 schrieb Jason:
-> On Sun, Mar 04, 2012 at 04:48:17PM +0000, Arnd Bergmann wrote:
-> > On Sunday 04 March 2012, Michael Walle wrote:
-> > > in my older patch series i flagged all converted devices with two
-> > > =
+On Sun, Mar 04, 2012 at 04:50:52PM +0000, Arnd Bergmann wrote:
+> On Sunday 04 March 2012, Michael Walle wrote:
+> > > @@ -294,11 +295,17 @@ static int __exit mv_rtc_remove(struct
+> > > platform_device *pdev) return 0;
+> > >  }
+> > > 
+> > > +static struct of_device_id rtc_mv_of_match_table[] = {
+> > > +     { .compatible = "marvell,rtc", },
+> > > +     {}
+> > > +};
+> > > +
+> > Isn't here an ifdef CONFIG_OF missing to prevent compiler warnings?
+> > 
+> 
+> Yes, I guess so. I keep thinking that an __unused attribute would
+> actually be more helpful here because it lets the compiler automatically
+> discard the symbol when it's not used, but we still get potential
+> compiler errors and warnings if something inside of the unused data
+> is broken.
 
-> > > compatibility names. Eg:
-> > >        { .compatible =3D "marvell,orion5x-rtc", },
-> > >        { .compatible =3D "marvell,kirkwood-rtc", },
-> > > =
+Hmmm, in the process of responding, I looked up Grant's original email
+[1] to show justification.  However, rereading it shows I was
+overzealous in my desire to remove #ifdef's.  :-P  Grant only said
+adding of_match_ptr() would remove the #else portion of my original
+code:
 
-> > > IMHO marvell,rtc is i little too general, i guess marvell won't have
-> > > only one rtc ;)
-> > > =
+#ifdef CONFIG_OF
+...
+#else
+#define rtc_mv_of_match_table = NULL;
+#endif
 
-> > > Other opinions?
-> > =
+I'll restore the #ifdef/#endif across the kirkwood code I've changed so
+far, without the #else.  __unused shouldn't be necessary, then.
 
-> > Being specific is certainly good, and it may also be a good idea to
-> > list the first one it's compatible with in the device tree source.
-> > =
+Thanks for the review, Michael.
 
-> > So the device tree for a 88F6281 soc could list
-> > =
+thx,
 
-> > 	compatible =3D "marvell,88f6281-rtc", "marvell,kirkwood-rtc",
-> > 	"marvell,orion-rtc";
-> =
+Jason.
 
-> I'll go ahead and make this style of change throughout.  I assume
-> "marvell,88f6281-rtc" would only be for SoC internal devices?  eg, the spi
-> driver wouldn't follow that convention.  I'll see if I can dig up a part
-> number on it.
-
-following the filename spi-orion.c i guess it should use 'marvell,orion-spi=
-'.
-
--- =
-
-Michael
+[1] http://www.spinics.net/lists/arm-kernel/msg162595.html
