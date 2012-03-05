@@ -1,14 +1,17 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 7/7] Document: devicetree: add OF documents for arch-mmp
-Date: Mon, 5 Mar 2012 14:46:14 +0000
-Message-ID: <201203051446.14600.arnd@arndb.de>
-References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
- <1330950111-30797-8-git-send-email-haojian.zhuang@marvell.com>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [GIT PULL v3] ARM: kirkwood: fdt: convert kirkwood init funcs
+ to fdt
+Date: Mon, 5 Mar 2012 09:51:50 -0500
+Message-ID: <20120305145150.GF5050@titan.lakedaemon.net>
+References: <20120305034113.GB5050@titan.lakedaemon.net>
+ <20120305133242.GD5050@titan.lakedaemon.net>
+ <201203051434.35132.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1330950111-30797-8-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201203051434.35132.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,38 +21,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 05 March 2012, Haojian Zhuang wrote:
-> Add OF support in Document/devicetree directory.
+On Mon, Mar 05, 2012 at 02:34:34PM +0000, Arnd Bergmann wrote:
+> On Monday 05 March 2012, Jason wrote:
+> > This is still bugging me.  If, say, orion_wdt.c is common to all of
+> > plat-orion/ shouldn't it be in an 'orion.dtsi'?  With compatible =
+> > "marvell,orion-wdt"?  Then, if hypothetically, kirkwood used the same
+> > driver but had a small tweak, then kirkwood.dtsi would have
+> > "marvell,kirkwood-wdt"?  Which would let the driver know that it needed
+> > to apply the tweak because it was kirkwood.
 > 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Some drivers are common to all orion, but others are only used in some
+> out of {orion5k,kirkwood,mv78xx0,dove}. You could of course have
+> an orion.dtsi that is included in kirkwood.dtsi.
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+As Andrew just brought up, the drivers are common across all of them,
+but the registers and irqs are different.  Which would seem to shoot
+down the need for an orion.dtsi.
 
-One question for Benoit, Grant or Rob:
+The registers/irqs are common across kirkwood, so the best place
+probably is kirkwood.dtsi.
 
-> +Required properties:
-> +- compatible: should be "mrvl,sa1100-rtc"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: Should be two. The first interrupt number is the rtc alarm
-> +  interrupt and the second interrupt number is the rtc hz interrupt.
-> +- interrupt-names: Assign name of irq resource.
-> +
-> +Example:
-> +	rtc: rtc@d4010000 {
-> +		compatible = "mrvl,mmp-rtc";
-> +		reg = <0xd4010000 0x1000>;
-> +		interrupts = <5>, <6>;
-> +		interrupt-name = "rtc 1Hz", "rtc alarm";
-> +	};
+However, if they are placed in kirkwood.dtsi, having compatible =
+"mrvl,88f6821-rtc" probably is not a good idea.  Not all kirkwoods have
+the same dev_id.
 
-When the binding for a device lists the interrupt-names property, should it
-also list the specific values for it? This one says that which ones they are,
-but I think we should actually mandate the exact string in the binding if
-we want to allow drivers to get the resource by its name.
+> BTW, I just realized that the patches that Haojian Zhuang sent for
+> pxa/mmp are using mrvl instead of marvell, and you should definitely
+> be using the same identifier both both. By convention we use the
+> stock ticker symbol as a unique identifier, which would be mrvl here.
 
-	Arnd
+Hehehe that was in the Manual, right?  ;-)
+
+> > In this scenario, since kirkwood and dreamplug currently need no
+> > modifications to the default wdt driver, they would just inherit
+> > orion.dtsi's "marvell,orion-wdt", right?
+> 
+> I would still list both, so we are future-proof in case we need
+> to modify the driver in the future but don't want to modify
+> the device tree.
+
+So, in kirkwood.dtsi, compatible = "mrvl,kirkwood-rtc", "mrvl,orion-rtc";
+
+and, drivers without tweaks would match "mrvl,orion-rtc".
+
+> > On the driver side, since it currently has no subarch or board specific
+> > tweaks, then it is only good for the generic case,
+> > "marvell,orion-wdt", and thus should only match it for now.
+> 
+> Yes.
+
+Okay.
+
+thx,
+
+Jason.
