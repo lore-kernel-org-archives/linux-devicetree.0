@@ -1,46 +1,60 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PULL REQUEST v2] ARM: kirkwood: fdt: convert kirkwood init
- funcs to fdt
-Date: Mon, 5 Mar 2012 22:41:26 +0100
-Message-ID: <20120305214126.GA18513@lunn.ch>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V2] mt_ventoux: support for TeeJet Mt.Ventoux board
+Date: Mon, 5 Mar 2012 13:46:41 -0800
+Message-ID: <20120305214641.GV12083@atomide.com>
+References: <1324940912-18164-3-git-send-email-yanok@emcraft.com>
+ <1325027377-13484-1-git-send-email-yanok@emcraft.com>
+ <4F291924.50702@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <4F291924.50702@denx.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stefano Babic <sbabic@denx.de>
+Cc: Ilya Yanok <yanok@emcraft.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grinberg@compulab.co.il, sasha_d@emcraft.com, Detlev Zundel <dzu@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-> > If the drivers want to use it, I think it has to be orion_find_tclk for
-> > drivers that are shared between multiple plat-orion platforms.
+* Stefano Babic <sbabic@denx.de> [120201 02:20]:
+> On 28/12/2011 00:09, Ilya Yanok wrote:
+> > This patch adds support for TeeJet Mt.Ventoux board based on TAM3517
+> > SOM. Supported devices:
+> >  - Serial
+> >  - Ethernet
+> >  - NAND
+> >  - USB host
+> >  - LCD
+> >  - Touchscreen
+> >  - CAN controller
+> >  - ADC128S converter
+> > 
+> > Signed-off-by: Ilya Yanok <yanok@emcraft.com>
+> > ---
+> > 
+> > Changes from V1:
+> > 
+> >  - Fixed indentation (use tabs not spaces)
+> >  - Fixed over 80 characters lines
+> >  - Added #if defined(CONFIG_SENSORS_ADCXX_MODULE) to allow adcxx to be a
+> >    module.
+> >  - Fixes for compilation with CONFIG_TOUCHSCREEN_ADS7846!=y
+> >   - Added defined(CONFIG_TOUCHSCREEN_ADS7846_MODULE)
+> >   - Moved call to omap_ads7846_init to separate small function
+> >   - Register fixed regulator used for touchscreen only if the driver is
+> >     enabled
+> >  - Changed board name (MT_VENTOUX -> Mt.Ventoux)
 > 
-> That's pretty much all of them  :-)
+> Hi Tony,
 > 
-> I'll rename it and move it to plat-orion/common.c.  This'll be fun.
+> can I ask you about the status of these patches ? I have not seen open
+> comments, do you think they can be merged in your tree ?
 
-Hi Jason
+Yes I can carry some board-*.c files until device tree is
+usable for basic features. There's still some hsmmc changes
+pending that I'd like to get out of the way before adding
+new ones as then it means I have to keep updating those
+board files separately.
 
-Maybe it is time to stop and consider a moment....
+Regards,
 
-We have overlapping work going on. My adoption of Mike's generic clk
-framework overlaps a lot with your DT tclk problems. If you introduce
-orion_find_tclk() into all the drivers, we are probably going to rip
-it all out again once my patches go in. Plus we are going to have
-horrible merging conflicts between your code and my code
-
-It seems more logical to get the clk code in first, then work on DT.
-
-Could you task swap for a while? Maybe look at converting MPP to
-pinmux and then add DT bindings for that. No tclk needed :-)
-
-       Andrew
+Tony
