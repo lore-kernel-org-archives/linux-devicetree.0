@@ -1,59 +1,45 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: remoteproc: Load coprocessor code to the specific main memory
- location
-Date: Tue, 06 Mar 2012 16:22:06 +0100
-Message-ID: <4F562B9E.7060302@monstr.eu>
-References: <4F1EE861.4030405@monstr.eu> <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com> <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com> <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com> <4F3BA962.9040109@monstr.eu> <4F3BC30A.4030301@monstr.eu> <4F3CC899.4070302@monstr.eu> <CAK=WgbaRF-L7M3VMZQdqFLUFOJuwFVkBH1hUNuJ51kSrzkaVjA@mail.gmail.com> <4F3CFFAD.9030402@monstr.eu> <4F3D032B.6090700@monstr.eu> <CAK=WgbZ3oXc+NQscdShqmu2wkzv=M-qBDCH2-k=5qSRX9W=z3Q@mail.gmail.com> <CAHTX3dJ4PruKO-wJLJU8W0boHFL0f6eoF+QNaoNjm5hu26YEow@mail.gmail.com> <CAK=WgbZBJJbFcoeZ+hY=BgyW_4yvOJPVNMZ18_9o+zY7tEc_pQ@mail.gmail.com> <4F425711.80102@monstr.eu> <CAK=WgbbNJMpndKq
- gW4SJjE=H-BqT7yVsB+F-kEfJWmW+ikJM+A@mail.gmail.com> <4F44DB23.4010303@monstr.eu> <CAK=Wgbaa9rv1pg19sWYFVX_Dvt0J0AzbRtKhPVnhP6WGdMeT9A@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 02/10] pwm: Allow chips to support multiple PWMs.
+Date: Tue, 6 Mar 2012 15:38:11 +0000
+Message-ID: <201203061538.11709.arnd@arndb.de>
+References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de> <20120223160420.GA9899@avionic-0098.mockup.avionic-design.de> <20120303193249.GA22021@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK=Wgbaa9rv1pg19sWYFVX_Dvt0J0AzbRtKhPVnhP6WGdMeT9A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120303193249.GA22021-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
-
-Ohad Ben-Cohen wrote:
-> On Wed, Feb 22, 2012 at 2:10 PM, Michal Simek <monstr@monstr.eu> wrote:
->> That will be great to get it. Please let me know when you have them.
+On Saturday 03 March 2012, Thierry Reding wrote:
+>   * Thierry Reding wrote:
+> > * Arnd Bergmann wrote:
+> > > On Thursday 23 February 2012, Thierry Reding wrote:
+> > > > > Is this only used for the device tree functions? If so, I would recommend
+> > > > > making it less generic and always search for a device node.
+> > > > 
+> > > > It is currently only used to look up a struct pwm_chip for a given struct
+> > > > device_node, yes. But I can see other uses for this. For instance this could
+> > > > be useful if we ever want to provide an alternative way of requesting a PWM
+> > > > on a per-chip basis.
+> > > 
+> > > Nah, just keep it simple for now. If we need it later, we can still
+> > > add something like this back, but for now it's just a source of
+> > > confusion and possible bugs.
+> > 
+> > Will do.
 > 
-> Will do.
+> I turns out that this is not as easy to do as I thought. The problem is that
+> if I remove the pwmchip_find() from the core and move the lookup
+> functionality into the OF support code I no longer have access to the list of
+> PWM chips. So I guess it will have to stay in to keep things encapsulated
+> properly.
 
-I have got the pandaboard (revision A3). u-boot and linux is running on it.
-I just need to compile ducati-m3-core0.xem3
+Well, or you move everything into the one file. If you have the device tree
+support function in the same file as everything else, you no longer need
+the additional complexity.
 
-I have found the manual at https://github.com/GAnthony/syslink3
-
-In sysbios-rpmsg readme I have found some TI tools which are required
-and there is any compilation failure. I think it is because of missing CGT tools
-
-        3) CGT TMS470: 4.9.0
-           Public Links:-
-             TMS470 Compiler is not available for free publicly. Please contact your TI representative.
-
-Is it possible to compile firmware with this compiler?
-
-
-I have also tried your bios version at
-git://github.com/ohadbc/sysbios-rpmsg.git
-branch: rpmsg_3.3_rc1_TLV
-
-compilation passed but it doesn't generate bin file. :-(
-I will investigate it tmr.
-
-I would like to compile that bin file myself to be able to add some debug messages.
-
-Thanks for your help,
-Michal
-
-
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+	Arnd
