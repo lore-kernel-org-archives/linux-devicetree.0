@@ -1,43 +1,43 @@
-From: Ohad Ben-Cohen <ohad@wizery.com>
-Subject: Re: remoteproc: Load coprocessor code to the specific main memory location
-Date: Tue, 6 Mar 2012 18:26:16 +0200
-Message-ID: <CAK=WgbbZwuqmjvY13M83CPsUFv0+DXxCHvnL5S3WpmDW_Qco3A@mail.gmail.com>
-References: <4F1EE861.4030405@monstr.eu> <4F200F64.9060203@monstr.eu>
- <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com>
- <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com>
- <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com>
- <4F3BA962.9040109@monstr.eu> <4F3BC30A.4030301@monstr.eu> <4F3CC899.4070302@monstr.eu>
- <CAK=WgbaRF-L7M3VMZQdqFLUFOJuwFVkBH1hUNuJ51kSrzkaVjA@mail.gmail.com>
- <4F3CFFAD.9030402@monstr.eu> <4F3D032B.6090700@monstr.eu> <CAK=WgbZ3oXc+NQscdShqmu2wkzv=M-qBDCH2-k=5qSRX9W=z3Q@mail.gmail.com>
- <CAHTX3dJ4PruKO-wJLJU8W0boHFL0f6eoF+QNaoNjm5hu26YEow@mail.gmail.com>
- <CAK=WgbZBJJbFcoeZ+hY=BgyW_4yvOJPVNMZ18_9o+zY7tEc_pQ@mail.gmail.com>
- <4F425711.80102@monstr.eu> <CAK=WgbbNJMpndKqgW4SJjE=H-BqT7yVsB+F-kEfJWmW+ikJM+A@mail.gmail.com>
- <4F44DB23.4010303@monstr.eu> <CAK=Wgbaa9rv1pg19sWYFVX_Dvt0J0AzbRtKhPVnhP6WGdMeT9A@mail.gmail.com>
- <4F562B9E.7060302@monstr.eu>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: obtaining a regulator from a phandle
+Date: Tue, 06 Mar 2012 10:21:40 -0700
+Message-ID: <4F5647A4.2060205@wwwdotorg.org>
+References: <20120305152157.GA12927@avionic-0098.adnet.avionic-design.de> <74CDBE0F657A3D45AFBB94109FB122FF17BE861C09@HQMAIL01.nvidia.com> <20120305165514.GA21298@avionic-0098.adnet.avionic-design.de> <20120306113947.GA22769@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F562B9E.7060302@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>, "Grosen, Mark" <mgrosen@ti.com>, "Anna, Suman" <s-anna@ti.com>, "Guzman Lugo, Fernando" <fernando.lugo@ti.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120306113947.GA22769-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, ARM kernel mailing list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+On 03/06/2012 04:39 AM, Thierry Reding wrote:
+...
+> And this is precisely where things get ugly. Now there is a dependency
+> problem between the fixed regulator and the PMU which provides the GPIO. Both
+> the PMU and the fixed regulator are setup via subsys_initcall(), and the
+> regulator beats the PMU, resulting in the fixed regulator being unable to get
+> the GPIO because it hasn't been setup yet. So I remembered Grant's deferred
+> probing patch from yesterday and thought I'd try it out. This worked great,
+> and the fixed regulator was properly set up after all other devices had been
+> probed.
 
-On Tue, Mar 6, 2012 at 5:22 PM, Michal Simek <monstr@monstr.eu> wrote:
-> =A0 =A0 =A0 3) CGT TMS470: 4.9.0
-> =A0 =A0 =A0 =A0 =A0Public Links:-
-> =A0 =A0 =A0 =A0 =A0 =A0TMS470 Compiler is not available for free publ=
-icly. Please
-> contact your TI representative.
+It's great that worked out.
 
-I think you need those tools and can't build the image without them
-(Mark/Suman/Fernando, PCMIIW).
+> The PCIe driver now also needs deferred probing until the fixed regulator is
+> present, which also works as expected. But then the problems start. Since now
+> we're so far into the boot process that all __init{,data} is gone, therefore
+> pci_common_init() is no longer present, resulting in an ugly crash.
+> 
+> So the only way I see out of this is patch up everything so that PCI
+> initialization can actually be done after init memory is freed. This would
+> have the added benefit that the driver could actually be built as a module.
+> 
+> Does anyone see another (easier) way out of this?
 
-Btw I was also told that it will soon be possible to build the
-firmware with gcc. Mark will know more details about this.
-
-Thanks,
-Ohad.
+To me, that sounds like exactly how to solve it. You can probably mark
+the code __devinit rather than just removing all the decorations
+completely. You probably want to run this by the core ARM maintainers
+though; I CC'd Russell and the ARM mailing list for comment.
