@@ -1,43 +1,60 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: obtaining a regulator from a phandle
-Date: Tue, 06 Mar 2012 10:21:40 -0700
-Message-ID: <4F5647A4.2060205@wwwdotorg.org>
-References: <20120305152157.GA12927@avionic-0098.adnet.avionic-design.de> <74CDBE0F657A3D45AFBB94109FB122FF17BE861C09@HQMAIL01.nvidia.com> <20120305165514.GA21298@avionic-0098.adnet.avionic-design.de> <20120306113947.GA22769@avionic-0098.mockup.avionic-design.de>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3 02/10] pwm: Allow chips to support multiple PWMs.
+Date: Tue, 6 Mar 2012 20:17:12 +0100
+Message-ID: <20120306191712.GB13882@avionic-0098.mockup.avionic-design.de>
+References: <1329923841-32017-1-git-send-email-thierry.reding@avionic-design.de>
+ <20120223160420.GA9899@avionic-0098.mockup.avionic-design.de>
+ <20120303193249.GA22021@avionic-0098.mockup.avionic-design.de>
+ <201203061538.11709.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SkvwRMAIpAhPCcCJ"
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120306113947.GA22769-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201203061538.11709.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, ARM kernel mailing list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2012 04:39 AM, Thierry Reding wrote:
-...
-> And this is precisely where things get ugly. Now there is a dependency
-> problem between the fixed regulator and the PMU which provides the GPIO. Both
-> the PMU and the fixed regulator are setup via subsys_initcall(), and the
-> regulator beats the PMU, resulting in the fixed regulator being unable to get
-> the GPIO because it hasn't been setup yet. So I remembered Grant's deferred
-> probing patch from yesterday and thought I'd try it out. This worked great,
-> and the fixed regulator was properly set up after all other devices had been
-> probed.
 
-It's great that worked out.
+--SkvwRMAIpAhPCcCJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The PCIe driver now also needs deferred probing until the fixed regulator is
-> present, which also works as expected. But then the problems start. Since now
-> we're so far into the boot process that all __init{,data} is gone, therefore
-> pci_common_init() is no longer present, resulting in an ugly crash.
-> 
-> So the only way I see out of this is patch up everything so that PCI
-> initialization can actually be done after init memory is freed. This would
-> have the added benefit that the driver could actually be built as a module.
-> 
-> Does anyone see another (easier) way out of this?
+* Arnd Bergmann wrote:
+> On Saturday 03 March 2012, Thierry Reding wrote:
+> > I turns out that this is not as easy to do as I thought. The problem is=
+ that
+> > if I remove the pwmchip_find() from the core and move the lookup
+> > functionality into the OF support code I no longer have access to the l=
+ist of
+> > PWM chips. So I guess it will have to stay in to keep things encapsulat=
+ed
+> > properly.
+>=20
+> Well, or you move everything into the one file. If you have the device tr=
+ee
+> support function in the same file as everything else, you no longer need
+> the additional complexity.
 
-To me, that sounds like exactly how to solve it. You can probably mark
-the code __devinit rather than just removing all the decorations
-completely. You probably want to run this by the core ARM maintainers
-though; I CC'd Russell and the ARM mailing list for comment.
+Okay, I think it makes the most sense to move all of the OF support code in=
+to
+drivers/pwm/core.c. That way we can also check off the discussion about the
+OF support code's location.
+
+Thierry
+
+--SkvwRMAIpAhPCcCJ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk9WYrgACgkQZ+BJyKLjJp/enwCeLBhld+aU9hGGV5PCT7+AarvV
+EMsAn38ZQmUaDA57+NH8sG3ooSQObsGA
+=1JTl
+-----END PGP SIGNATURE-----
+
+--SkvwRMAIpAhPCcCJ--
