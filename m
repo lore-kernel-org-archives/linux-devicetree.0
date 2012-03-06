@@ -1,77 +1,59 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] serial: pxa: add OF support
-Date: Tue, 6 Mar 2012 23:04:40 +0800
-Message-ID: <CAN1soZwatL=O6iTVaOn+seHPrLH1r1yhvDKM=YCjzuprcbAvOw@mail.gmail.com>
-References: <201203051255.37311.arnd@arndb.de>
- <1331001730-13429-1-git-send-email-haojian.zhuang@marvell.com>
- <201203061502.08097.arnd@arndb.de>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: remoteproc: Load coprocessor code to the specific main memory
+ location
+Date: Tue, 06 Mar 2012 16:22:06 +0100
+Message-ID: <4F562B9E.7060302@monstr.eu>
+References: <4F1EE861.4030405@monstr.eu> <4F200F64.9060203@monstr.eu> <CAK=WgbZDADRf1OF=uWbbsF+t2dx36tqj=kRftn5nd4RA7DtEnA@mail.gmail.com> <4F212E9E.9060807@monstr.eu> <CAK=WgbYMBDp3Qm8TErNrnDwn2ZTFt62+OuyyQvVE-jrnNsL6kg@mail.gmail.com> <4F391C1D.9020402@monstr.eu> <CAK=WgbYn6hrS4YLEdfp=0jSEfEwy-HkJmt5S06_j6gZFf0UTmQ@mail.gmail.com> <4F3BA962.9040109@monstr.eu> <4F3BC30A.4030301@monstr.eu> <4F3CC899.4070302@monstr.eu> <CAK=WgbaRF-L7M3VMZQdqFLUFOJuwFVkBH1hUNuJ51kSrzkaVjA@mail.gmail.com> <4F3CFFAD.9030402@monstr.eu> <4F3D032B.6090700@monstr.eu> <CAK=WgbZ3oXc+NQscdShqmu2wkzv=M-qBDCH2-k=5qSRX9W=z3Q@mail.gmail.com> <CAHTX3dJ4PruKO-wJLJU8W0boHFL0f6eoF+QNaoNjm5hu26YEow@mail.gmail.com> <CAK=WgbZBJJbFcoeZ+hY=BgyW_4yvOJPVNMZ18_9o+zY7tEc_pQ@mail.gmail.com> <4F425711.80102@monstr.eu> <CAK=WgbbNJMpndKq
+ gW4SJjE=H-BqT7yVsB+F-kEfJWmW+ikJM+A@mail.gmail.com> <4F44DB23.4010303@monstr.eu> <CAK=Wgbaa9rv1pg19sWYFVX_Dvt0J0AzbRtKhPVnhP6WGdMeT9A@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203061502.08097.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK=Wgbaa9rv1pg19sWYFVX_Dvt0J0AzbRtKhPVnhP6WGdMeT9A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, John Williams <john.williams@petalogix.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, "Grosen, Mark" <mgrosen@ti.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 6, 2012 at 11:02 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 06 March 2012, Haojian Zhuang wrote:
->
->> @@ -51,7 +54,7 @@ struct uart_pxa_port {
->> =A0 =A0 =A0 unsigned char =A0 =A0 =A0 =A0 =A0 mcr;
->> =A0 =A0 =A0 unsigned int =A0 =A0 =A0 =A0 =A0 =A0lsr_break_flag;
->> =A0 =A0 =A0 struct clk =A0 =A0 =A0 =A0 =A0 =A0 =A0*clk;
->> - =A0 =A0 char =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0*name;
->> + =A0 =A0 char =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0name[PXA_NAME_LEN];
->> =A0};
->
-> This looks better now
->
->> =A0static inline unsigned int serial_in(struct uart_pxa_port *up, int of=
-fset)
->> @@ -781,6 +784,33 @@ static const struct dev_pm_ops serial_pxa_pm_ops =
-=3D {
->> =A0};
->> =A0#endif
->>
->> +#ifdef CONFIG_OF
->> +static struct of_device_id serial_pxa_dt_ids[] =3D {
->> + =A0 =A0 { .compatible =3D "mrvl,pxa-uart", },
->> + =A0 =A0 { .compatible =3D "mrvl,mmp-uart", },
->> + =A0 =A0 {}
->> +};
->> +MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
->> +#endif
->
-> If you do this, you have to use of_match_ptr for referencing
-> serial_pxa_dt_ids or you will get a link error when CONFIG_OF is
-> disabled.
->
->> @@ -850,6 +876,7 @@ static int serial_pxa_remove(struct platform_device =
-*dev)
->> =A0 =A0 =A0 platform_set_drvdata(dev, NULL);
->>
->> =A0 =A0 =A0 uart_remove_one_port(&serial_pxa_reg, &sport->port);
->> + =A0 =A0 kfree(sport->name);
->> =A0 =A0 =A0 clk_put(sport->clk);
->> =A0 =A0 =A0 kfree(sport);
->>
->
-> And this must be removed now that sport->name is allocated as part of spo=
-rt.
->
-> =A0 =A0 =A0 =A0Arnd
->
-Ah. It's a bug. I'll fix it tomorrow.
+Hi Ohad,
 
-Thanks
-Haojian
+Ohad Ben-Cohen wrote:
+> On Wed, Feb 22, 2012 at 2:10 PM, Michal Simek <monstr@monstr.eu> wrote:
+>> That will be great to get it. Please let me know when you have them.
+> 
+> Will do.
+
+I have got the pandaboard (revision A3). u-boot and linux is running on it.
+I just need to compile ducati-m3-core0.xem3
+
+I have found the manual at https://github.com/GAnthony/syslink3
+
+In sysbios-rpmsg readme I have found some TI tools which are required
+and there is any compilation failure. I think it is because of missing CGT tools
+
+        3) CGT TMS470: 4.9.0
+           Public Links:-
+             TMS470 Compiler is not available for free publicly. Please contact your TI representative.
+
+Is it possible to compile firmware with this compiler?
+
+
+I have also tried your bios version at
+git://github.com/ohadbc/sysbios-rpmsg.git
+branch: rpmsg_3.3_rc1_TLV
+
+compilation passed but it doesn't generate bin file. :-(
+I will investigate it tmr.
+
+I would like to compile that bin file myself to be able to add some debug messages.
+
+Thanks for your help,
+Michal
+
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
