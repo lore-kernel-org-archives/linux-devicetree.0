@@ -1,7 +1,7 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH 12/14] ARM: kirkwood: use devicetree for orion-ehci
-Date: Wed,  7 Mar 2012 03:44:53 +0000
-Message-ID: <45ba995e67914c0e04a8735fcc06b64b8dd687ec.1331090356.git.jason@lakedaemon.net>
+Subject: [PATCH 13/14] ARM: kirkwood: sata_mv: add device tree binding
+Date: Wed,  7 Mar 2012 03:44:54 +0000
+Message-ID: <9858608e73993c22b64e9f10cff6e597d20f73b1.1331090356.git.jason@lakedaemon.net>
 References: <cover.1331090356.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,61 +24,66 @@ To: arnd-r2nGTMty4D4@public.gmane.org
 Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Original devicetree node from Michael Walle, changed to use
-'mrvl,orion-ehci' for compatible property.
+From: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
+
+Based on devicetree work by Michael Walle.  Changed compatible property
+to "mrvl,orion-sata", simplified retrieving nr_ports from fdt.
 
 Signed-off-by: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
 Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 ---
- arch/arm/boot/dts/kirkwood-dreamplug.dts |    7 +++++++
- arch/arm/mach-kirkwood/board-dt.c        |    1 -
- arch/arm/mach-kirkwood/common.c          |    6 ++++++
- 3 files changed, 13 insertions(+), 1 deletions(-)
+ drivers/ata/sata_mv.c |   18 ++++++++++++++++--
+ 1 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-index ebb2c87..f332380 100644
---- a/arch/arm/boot/dts/kirkwood-dreamplug.dts
-+++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
-@@ -22,4 +22,11 @@
- 		interrupts = <33>;
- 		clock-frequency = <200000000>;
- 	};
-+
-+	ehci@f1050000 {
-+		compatible = "mrvl,orion-ehci";
-+		reg = <0xf1050000 0x1000>;
-+		interrupts = <19>;
-+		phy-version = "orion";
-+	};
- };
-diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index 638f261..1034ac7 100644
---- a/arch/arm/mach-kirkwood/board-dt.c
-+++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -147,7 +147,6 @@ static void __init dreamplug_init(void)
- 				ARRAY_SIZE(dreamplug_spi_slave_info));
- 	kirkwood_spi_init();
+diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
+index 38950ea..ebd0d24 100644
+--- a/drivers/ata/sata_mv.c
++++ b/drivers/ata/sata_mv.c
+@@ -65,6 +65,7 @@
+ #include <linux/mbus.h>
+ #include <linux/bitops.h>
+ #include <linux/gfp.h>
++#include <linux/of.h>
+ #include <scsi/scsi_host.h>
+ #include <scsi/scsi_cmnd.h>
+ #include <scsi/scsi_device.h>
+@@ -4045,8 +4046,12 @@ static int mv_platform_probe(struct platform_device *pdev)
+ 		return -EINVAL;
  
--	kirkwood_ehci_init();
- 	kirkwood_ge00_init(&dreamplug_ge00_data);
- 	kirkwood_ge01_init(&dreamplug_ge01_data);
- 	kirkwood_sata_init(&dreamplug_sata_data);
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index 154f1cf..d0e8575 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -498,6 +498,12 @@ static int __init kirkwood_clock_gate(void)
- 		kirkwood_clk_ctrl |= CGC_CRYPTO;
- 		of_node_put(np);
- 	}
-+
-+	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-ehci");
-+	if (np && of_device_is_available(np)) {
-+		kirkwood_clk_ctrl |= CGC_USB0;
-+		of_node_put(np);
+ 	/* allocate host */
+-	mv_platform_data = pdev->dev.platform_data;
+-	n_ports = mv_platform_data->n_ports;
++	if (pdev->dev.of_node)
++		of_property_read_u32(pdev->dev.of_node, "nr-ports", &n_ports);
++	else {
++		mv_platform_data = pdev->dev.platform_data;
++		n_ports = mv_platform_data->n_ports;
 +	}
+ 
+ 	host = ata_host_alloc_pinfo(&pdev->dev, ppi, n_ports);
+ 	hpriv = devm_kzalloc(&pdev->dev, sizeof(*hpriv), GFP_KERNEL);
+@@ -4172,6 +4177,14 @@ static int mv_platform_resume(struct platform_device *pdev)
+ #define mv_platform_resume NULL
  #endif
  
- 	/* For SATA: first shutdown the phy */
++#ifdef CONFIG_OF
++static struct of_device_id mv_sata_dt_ids[] __devinitdata = {
++	{ .compatible = "mrvl,orion-sata", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, mvsdio_dt_ids);
++#endif
++
+ static struct platform_driver mv_platform_driver = {
+ 	.probe			= mv_platform_probe,
+ 	.remove			= __devexit_p(mv_platform_remove),
+@@ -4180,6 +4193,7 @@ static struct platform_driver mv_platform_driver = {
+ 	.driver			= {
+ 				   .name = DRV_NAME,
+ 				   .owner = THIS_MODULE,
++				   .of_match_table = of_match_ptr(mv_sata_dt_ids),
+ 				  },
+ };
+ 
 -- 
 1.7.3.4
