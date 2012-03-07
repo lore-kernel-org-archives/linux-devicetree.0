@@ -1,57 +1,79 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/9 v2] ARM: at91: usb ohci add dt support
-Date: Wed, 7 Mar 2012 11:33:52 +0100
-Message-ID: <20120307103352.GA17745@game.jcrosoft.org>
-References: <20120307084924.GK21255@game.jcrosoft.org>
- <1331111746-21393-1-git-send-email-plagnioj@jcrosoft.com>
- <20120307093446.GN17370@n2100.arm.linux.org.uk>
+Subject: [PATCH 1/1] of: add dma-mask binding
+Date: Wed,  7 Mar 2012 12:26:15 +0100
+Message-ID: <1331119575-6638-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120307093446.GN17370-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09:34 Wed 07 Mar     , Russell King - ARM Linux wrote:
-> On Wed, Mar 07, 2012 at 10:15:38AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > +static u64 at91_ohci_dma_mask = DMA_BIT_MASK(32);
-> > +
-> > +static int __devinit ohci_at91_of_init(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	int i, ret, gpio;
-> > +	enum of_gpio_flags flags;
-> > +	struct at91_usbh_data	*pdata;
-> > +	u32 ports;
-> > +
-> > +	if (!np)
-> > +		return 0;
-> > +
-> > +	/* Right now device-tree probed devices don't get dma_mask set.
-> > +	 * Since shared usb code relies on it, set it here for now.
-> > +	 * Once we have dma capability bindings this can go away.
-> > +	 */
-> > +	if (!pdev->dev.dma_mask)
-> > +		pdev->dev.dma_mask = &at91_ohci_dma_mask;
-> 
-> That sounds like a rather big omission from DT - what's happening to
-> address this (before we end up with lots of drivers with this).  Pretty
-> much any device which does DMA needs both this and the coherent DMA mask
-> set properly.
-> 
-> We really don't want this kind of workaround scattered in every driver
-> which has been converted to DT.
-Tegra do it also
-I do yet found a good generic way in DT
+This will allow each device to specify its dma-mask
+The microblaze architecture hook is keep temporary if no dma-mask is specified
+int the DT
 
-Today only usb need I do plan to drop it for 3.5 can we have for 3.4
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+---
+ drivers/of/platform.c |   26 +++++++++++++++++++++++++-
+ 1 files changed, 25 insertions(+), 1 deletions(-)
 
-Best Regards,
-J.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index cae9477..bb22194 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -121,6 +121,26 @@ void of_device_make_bus_id(struct device *dev)
+ 	dev_set_name(dev, "%s.%d", node->name, magic - 1);
+ }
+ 
++static u64* of_get_dma_mask(struct device_node *np)
++{
++	const __be32 *prop;
++	int len;
++	u64 *dma_mask;
++
++	prop = of_get_property(np, "dma-mask", &len);
++
++	if (!prop)
++		return NULL;
++
++	dma_mask = kzalloc(sizeof(u64), GFP_KERNEL);
++	if (!dma_mask)
++		return NULL;
++
++	*dma_mask = of_read_number(prop, len / 4);
++
++	return dma_mask;
++}
++
+ /**
+  * of_device_alloc - Allocate and initialize an of_device
+  * @np: device node to assign to device
+@@ -161,10 +181,14 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+ 	}
+ 
++	dev->dev.dma_mask = of_get_dma_mask(np);
+ 	dev->dev.of_node = of_node_get(np);
++
+ #if defined(CONFIG_MICROBLAZE)
+-	dev->dev.dma_mask = &dev->archdata.dma_mask;
++	if (!dev->dev.dma_mask)
++		dev->dev.dma_mask = &dev->archdata.dma_mask;
+ #endif
++
+ 	dev->dev.parent = parent;
+ 
+ 	if (bus_id)
+-- 
+1.7.7
