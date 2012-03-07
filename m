@@ -1,15 +1,12 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PULL] of nand generic binding
-Date: Wed, 7 Mar 2012 09:29:45 +0100
-Message-ID: <20120307082945.GJ21255@game.jcrosoft.org>
-References: <20120217155707.GR1214@game.jcrosoft.org>
- <20120229152534.GH3318@game.jcrosoft.org>
+Subject: [PATCH 0/9 v2] at91 USB DT support
+Date: Wed, 7 Mar 2012 09:49:24 +0100
+Message-ID: <20120307084924.GK21255@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120229152534.GH3318-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,21 +16,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 16:25 Wed 29 Feb     , Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 16:57 Fri 17 Feb     , Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > HI,
-> > 
-> > 	please find attached the generic binding for the MTD nand
-> > 
-> > 	This will add boolean and nand helpers
-> is it ok?
-I need this for 3.4
+HI,
 
-will you apply it or can I apply it via AT91
+	this is a second version of the patch series to add DT suport for
+	usb host and device on at91
+
+
+The following changes since commit 3370718be26d86e7f8587390eee563c289542ee7:
+
+  ARM: at91/dt: add Calao DAB-MMX daugther board support for USB-A9G20 (2012-03-02 00:46:21 +0800)
+
+are available in the git repository at:
+  git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:at91linux/linux-at91.git ..BRANCH.NOT.VERIFIED..
+
+Jean-Christophe PLAGNIOL-VILLARD (9):
+      ARM: at91: usb ohci add dt support
+      ARM: at91: dt: enable usb ohci for sam9g20, sam9g45 amd sam9x5
+      ARM: at91: usb ehci add dt support
+      ARM: at91: dt: enable usb ehci for sam9g45 and sam9x5
+      USB: at91: Device udc add dt support
+      ARM: at91: sam9g20 udc add dt support
+      usb: add Atmel USBA UDC DT support
+      ARM: at91: sam9g45 add udc DT support
+      ARM: at91: sam9x5 add udc DT support
+
+ .../devicetree/bindings/usb/atmel-usb.txt          |  135 +++++++++++++
+ arch/arm/boot/dts/at91sam9g20.dtsi                 |   14 ++
+ arch/arm/boot/dts/at91sam9g25ek.dts                |   17 ++
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |   80 ++++++++
+ arch/arm/boot/dts/at91sam9m10g45ek.dts             |   15 ++
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |   81 ++++++++
+ arch/arm/boot/dts/usb_a9g20.dts                    |   10 +
+ arch/arm/mach-at91/at91sam9260.c                   |    1 +
+ arch/arm/mach-at91/at91sam9g45.c                   |    4 +
+ arch/arm/mach-at91/at91sam9x5.c                    |    7 +-
+ drivers/usb/Kconfig                                |    2 +-
+ drivers/usb/gadget/Kconfig                         |    4 +-
+ drivers/usb/gadget/at91_udc.c                      |   40 ++++-
+ drivers/usb/gadget/atmel_usba_udc.c                |  209 +++++++++++++++-----
+ drivers/usb/gadget/atmel_usba_udc.h                |    1 +
+ drivers/usb/host/ehci-atmel.c                      |   24 +++-
+ drivers/usb/host/ohci-at91.c                       |  101 ++++++++++-
+ 17 files changed, 688 insertions(+), 57 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/atmel-usb.txt
 
 Best Regards,
 J.
