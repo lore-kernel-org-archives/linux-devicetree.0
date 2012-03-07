@@ -1,13 +1,14 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] fdtget: Add -l to list the subnodes of a node
-Date: Wed, 07 Mar 2012 16:42:01 -0600
-Message-ID: <E1S5PYX-0000nv-4q@jdl.com>
+Subject: Re: [PATCH v2 4/4] fdtget: Add -d to provide a default value
+Date: Wed, 07 Mar 2012 16:42:23 -0600
+Message-ID: <E1S5PYt-0000oM-WE@jdl.com>
 References: <1331080907-7230-3-git-send-email-sjg@chromium.org>
+ <1331080907-7230-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1331080907-7230-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-reply-to: <1331080907-7230-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,10 +22,15 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> This option lists the subnodes of each node given as a parameter, one
-> subnode per line.
+> Sometimes the requested node or property is not present in the device
+> tree. This option provides a way of reporting a default value in this
+> case, rather than halting with an error.
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> ---
+> Changes in v2:
+> - Rebased on top of changes to the -l patch
 
 Applied.
 
