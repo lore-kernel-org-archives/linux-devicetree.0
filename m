@@ -1,139 +1,161 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 4/9] ARM: at91: dt: enable usb ehci for sam9g45 and sam9x5
-Date: Wed,  7 Mar 2012 10:15:41 +0100
-Message-ID: <1331111746-21393-4-git-send-email-plagnioj@jcrosoft.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 5/9] USB: at91: Device udc add dt support
+Date: Wed,  7 Mar 2012 10:15:42 +0100
+Message-ID: <1331111746-21393-5-git-send-email-plagnioj@jcrosoft.com>
 References: <20120307084924.GK21255@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120307084924.GK21255@game.jcrosoft.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120307084924.GK21255-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- arch/arm/boot/dts/at91sam9g25ek.dts    |    4 ++++
- arch/arm/boot/dts/at91sam9g45.dtsi     |    7 +++++++
- arch/arm/boot/dts/at91sam9m10g45ek.dts |    4 ++++
- arch/arm/boot/dts/at91sam9x5.dtsi      |    7 +++++++
- arch/arm/mach-at91/at91sam9g45.c       |    1 +
- arch/arm/mach-at91/at91sam9x5.c        |    1 +
- drivers/usb/Kconfig                    |    2 +-
- 7 files changed, 25 insertions(+), 1 deletions(-)
+Allow to compile it if AT91 is enable.
 
-diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-index 93d5e36..ac0dc00 100644
---- a/arch/arm/boot/dts/at91sam9g25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-@@ -41,5 +41,9 @@
- 					   &pioD 20 0
- 					  >;
- 		};
-+
-+		usb1: ehci@00700000 {
-+			status = "okay";
-+		};
- 	};
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+Hi Greg
+
+	if it's ok with you I apply with the rest of the USB patch series via
+	at91
+
+Best Regards,
+J.
+ .../devicetree/bindings/usb/atmel-usb.txt          |   18 +++++++++
+ drivers/usb/gadget/Kconfig                         |    2 +-
+ drivers/usb/gadget/at91_udc.c                      |   40 +++++++++++++++++++-
+ 3 files changed, 57 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+index 0143d7c..60bd215 100644
+--- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
++++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
+@@ -29,3 +29,21 @@ usb1: ehci@00800000 {
+ 	reg = <0x00800000 0x100000>;
+ 	interrupts = <22 4>;
  };
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index db9a51a..4b54424 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -203,6 +203,13 @@
- 			interrupts = <22 4>;
- 			status = "disabled";
- 		};
 +
-+		usb1: ehci@00800000 {
-+			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
-+			reg = <0x00800000 0x100000>;
-+			interrupts = <22 4>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	i2c-gpio@0 {
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index ce4640e..4b1eb36 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -65,6 +65,10 @@
- 			atmel,vbus-gpio = <&pioD 1 0
- 					   &pioD 3 0>;
- 		};
++AT91 USB device controller
 +
-+		usb1: ehci@00800000 {
-+			status = "okay";
-+		};
- 	};
- 
- 	leds {
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 7b43014..ac3c96c 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -194,6 +194,13 @@
- 			interrupts = <22 4>;
- 			status = "disabled";
- 		};
++Required properties:
++ - compatible: Should be "atmel,at91rm9200-udc"
++ - reg: Address and length of the register set for the device
++ - interrupts: Should contain macb interrupt
 +
-+		usb1: ehci@00700000 {
-+			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
-+			reg = <0x00700000 0x100000>;
-+			interrupts = <22 4>;
-+			status = "disabled";
-+		};
- 	};
++Optional properties:
++ - atmel,vbus-gpio: If present, specifies a gpio that needs to be
++   activated for the bus to be powered.
++
++usb1: gadget@fffa4000 {
++	compatible = "atmel,at91rm9200-udc";
++	reg = <0xfffa4000 0x4000>;
++	interrupts = <10 4>;
++	atmel,vbus-gpio = <&pioC 5 0>;
++};
+diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
+index 85ae4b4..edf1144 100644
+--- a/drivers/usb/gadget/Kconfig
++++ b/drivers/usb/gadget/Kconfig
+@@ -137,7 +137,7 @@ choice
  
- 	i2c-gpio@0 {
-diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-index f58775e..df3bcea 100644
---- a/arch/arm/mach-at91/at91sam9g45.c
-+++ b/arch/arm/mach-at91/at91sam9g45.c
-@@ -233,6 +233,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "fff7c000.timer", &tcb0_clk),
- 	CLKDEV_CON_DEV_ID("t0_clk", "fffd4000.timer", &tcb0_clk),
- 	CLKDEV_CON_DEV_ID("hclk", "700000.ohci", &uhphs_clk),
-+	CLKDEV_CON_DEV_ID("ehci_clk", "800000.ehci", &uhphs_clk),
- 	/* fake hclk clock */
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &uhphs_clk),
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
-diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
-index 40888ab..7333276 100644
---- a/arch/arm/mach-at91/at91sam9x5.c
-+++ b/arch/arm/mach-at91/at91sam9x5.c
-@@ -232,6 +232,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("hclk", "f8030000.ethernet", &macb1_clk),
- 	CLKDEV_CON_DEV_ID("hclk", "600000.ohci", &uhphs_clk),
- 	CLKDEV_CON_DEV_ID("ohci_clk", "600000.ohci", &uhphs_clk),
-+	CLKDEV_CON_DEV_ID("ehci_clk", "700000.ehci", &uhphs_clk),
+ config USB_AT91
+ 	tristate "Atmel AT91 USB Device Port"
+-	depends on ARCH_AT91 && !ARCH_AT91SAM9RL && !ARCH_AT91SAM9G45
++	depends on ARCH_AT91
+ 	help
+ 	   Many Atmel AT91 processors (such as the AT91RM2000) have a
+ 	   full speed USB Device Port with support for five configurable
+diff --git a/drivers/usb/gadget/at91_udc.c b/drivers/usb/gadget/at91_udc.c
+index f99b3dc..4063209 100644
+--- a/drivers/usb/gadget/at91_udc.c
++++ b/drivers/usb/gadget/at91_udc.c
+@@ -30,6 +30,8 @@
+ #include <linux/usb/ch9.h>
+ #include <linux/usb/gadget.h>
+ #include <linux/prefetch.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ 
+ #include <asm/byteorder.h>
+ #include <mach/hardware.h>
+@@ -1707,7 +1709,27 @@ static void at91udc_shutdown(struct platform_device *dev)
+ 	spin_unlock_irqrestore(&udc->lock, flags);
+ }
+ 
+-static int __init at91udc_probe(struct platform_device *pdev)
++static void __devinit at91udc_of_init(struct at91_udc *udc,
++				     struct device_node *np)
++{
++	struct at91_udc_data *board = &udc->board;
++	u32 val;
++	enum of_gpio_flags flags;
++
++	if (of_property_read_u32(np, "atmel,vbus-polled", &val) == 0)
++		board->vbus_polled = 1;
++
++	board->vbus_pin = of_get_named_gpio_flags(np, "atmel,vbus-gpio", 0,
++						  &flags);
++	board->vbus_active_low = (flags & OF_GPIO_ACTIVE_LOW) ? 1 : 0;
++
++	board->pullup_pin = of_get_named_gpio_flags(np, "atmel,pullup-gpio", 0,
++						  &flags);
++
++	board->pullup_active_low = (flags & OF_GPIO_ACTIVE_LOW) ? 1 : 0;
++}
++
++static int __devinit at91udc_probe(struct platform_device *pdev)
+ {
+ 	struct device	*dev = &pdev->dev;
+ 	struct at91_udc	*udc;
+@@ -1742,7 +1764,11 @@ static int __init at91udc_probe(struct platform_device *pdev)
+ 	/* init software state */
+ 	udc = &controller;
+ 	udc->gadget.dev.parent = dev;
+-	udc->board = *(struct at91_udc_data *) dev->platform_data;
++	if (pdev->dev.of_node)
++		at91udc_of_init(udc, pdev->dev.of_node);
++	else
++		memcpy(&udc->board, dev->platform_data,
++		       sizeof(struct at91_udc_data));
+ 	udc->pdev = pdev;
+ 	udc->enabled = 0;
+ 	spin_lock_init(&udc->lock);
+@@ -1971,6 +1997,15 @@ static int at91udc_resume(struct platform_device *pdev)
+ #define	at91udc_resume	NULL
+ #endif
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id at91_udc_dt_ids[] = {
++	{ .compatible = "atmel,at91rm9200-udc" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, at91_udc_dt_ids);
++#endif
++
+ static struct platform_driver at91_udc_driver = {
+ 	.remove		= __exit_p(at91udc_remove),
+ 	.shutdown	= at91udc_shutdown,
+@@ -1979,6 +2014,7 @@ static struct platform_driver at91_udc_driver = {
+ 	.driver		= {
+ 		.name	= (char *) driver_name,
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(at91_udc_dt_ids),
+ 	},
  };
  
- /*
-diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
-index 75823a1..afee052 100644
---- a/drivers/usb/Kconfig
-+++ b/drivers/usb/Kconfig
-@@ -65,7 +65,7 @@ config USB_ARCH_HAS_EHCI
- 	default y if PPC_MPC512x
- 	default y if ARCH_IXP4XX
- 	default y if ARCH_W90X900
--	default y if ARCH_AT91SAM9G45
-+	default y if ARCH_AT91SAM9G45 || ARCH_AT91SAM9X5
- 	default y if ARCH_MXC
- 	default y if ARCH_OMAP3
- 	default y if ARCH_CNS3XXX
 -- 
 1.7.7
