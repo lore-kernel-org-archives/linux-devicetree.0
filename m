@@ -1,112 +1,192 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/9 v2] ARM: at91: usb ehci add dt support
-Date: Wed,  7 Mar 2012 10:15:40 +0100
-Message-ID: <1331111746-21393-3-git-send-email-plagnioj@jcrosoft.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 1/9 v2] ARM: at91: usb ohci add dt support
+Date: Wed,  7 Mar 2012 10:15:38 +0100
+Message-ID: <1331111746-21393-1-git-send-email-plagnioj@jcrosoft.com>
 References: <20120307084924.GK21255@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120307084924.GK21255-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120307084924.GK21255@game.jcrosoft.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: linux-usb@vger.kernel.org
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../devicetree/bindings/usb/atmel-usb.txt          |   12 ++++++++++
- drivers/usb/host/ehci-atmel.c                      |   24 +++++++++++++++++++-
- 2 files changed, 35 insertions(+), 1 deletions(-)
+ .../devicetree/bindings/usb/atmel-usb.txt          |   19 ++++
+ drivers/usb/host/ohci-at91.c                       |  101 +++++++++++++++++++-
+ 2 files changed, 119 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/atmel-usb.txt
 
 diff --git a/Documentation/devicetree/bindings/usb/atmel-usb.txt b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-index 6c7f728..0143d7c 100644
---- a/Documentation/devicetree/bindings/usb/atmel-usb.txt
+new file mode 100644
+index 0000000..6c7f728
+--- /dev/null
 +++ b/Documentation/devicetree/bindings/usb/atmel-usb.txt
-@@ -17,3 +17,15 @@ usb0: ohci@00500000 {
- 	interrupts = <20 4>;
- 	num-ports = <2>;
- };
+@@ -0,0 +1,19 @@
++Atmel SOC USB controllers
 +
-+EHCI
++OHCI
 +
 +Required properties:
-+ - compatible: Should be "atmel,at91sam9g45-ehci" for USB controllers
++ - compatible: Should be "atmel,at91rm9200-ohci" for USB controllers
 +   used in host mode.
++ - num-ports: Number of ports.
++ - atmel,vbus-gpio: If present, specifies a gpio that needs to be
++   activated for the bus to be powered.
++ - atmel,oc-gpio: If present, specifies a gpio that needs to be
++   activated for the overcurrent detection.
 +
-+usb1: ehci@00800000 {
-+	compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
-+	reg = <0x00800000 0x100000>;
-+	interrupts = <22 4>;
++usb0: ohci@00500000 {
++	compatible = "atmel,at91rm9200-ohci", "usb-ohci";
++	reg = <0x00500000 0x100000>;
++	interrupts = <20 4>;
++	num-ports = <2>;
 +};
-diff --git a/drivers/usb/host/ehci-atmel.c b/drivers/usb/host/ehci-atmel.c
-index a5a3ef1..19f318a 100644
---- a/drivers/usb/host/ehci-atmel.c
-+++ b/drivers/usb/host/ehci-atmel.c
-@@ -13,6 +13,7 @@
+diff --git a/drivers/usb/host/ohci-at91.c b/drivers/usb/host/ohci-at91.c
+index 8e855eb..db8963f 100644
+--- a/drivers/usb/host/ohci-at91.c
++++ b/drivers/usb/host/ohci-at91.c
+@@ -14,6 +14,8 @@
  
  #include <linux/clk.h>
  #include <linux/platform_device.h>
 +#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
  
- /* interface and function clocks */
- static struct clk *iclk, *fclk;
-@@ -115,6 +116,8 @@ static const struct hc_driver ehci_atmel_hc_driver = {
- 	.clear_tt_buffer_complete	= ehci_clear_tt_buffer_complete,
- };
+ #include <mach/hardware.h>
+ #include <asm/gpio.h>
+@@ -477,13 +479,109 @@ static irqreturn_t ohci_hcd_at91_overcurrent_irq(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
  
-+static u64 at91_ehci_dma_mask = DMA_BIT_MASK(32);
++#ifdef CONFIG_OF
++static const struct of_device_id at91_ohci_dt_ids[] = {
++	{ .compatible = "atmel,at91rm9200-ohci" },
++	{ /* sentinel */ }
++};
 +
- static int __devinit ehci_atmel_drv_probe(struct platform_device *pdev)
- {
- 	struct usb_hcd *hcd;
-@@ -137,6 +140,13 @@ static int __devinit ehci_atmel_drv_probe(struct platform_device *pdev)
- 		goto fail_create_hcd;
- 	}
- 
++MODULE_DEVICE_TABLE(of, at91_ohci_dt_ids);
++
++static u64 at91_ohci_dma_mask = DMA_BIT_MASK(32);
++
++static int __devinit ohci_at91_of_init(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int i, ret, gpio;
++	enum of_gpio_flags flags;
++	struct at91_usbh_data	*pdata;
++	u32 ports;
++
++	if (!np)
++		return 0;
++
 +	/* Right now device-tree probed devices don't get dma_mask set.
 +	 * Since shared usb code relies on it, set it here for now.
 +	 * Once we have dma capability bindings this can go away.
 +	 */
 +	if (!pdev->dev.dma_mask)
-+		pdev->dev.dma_mask = &at91_ehci_dma_mask;
++		pdev->dev.dma_mask = &at91_ohci_dma_mask;
 +
- 	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
- 	if (!hcd) {
- 		retval = -ENOMEM;
-@@ -225,9 +235,21 @@ static int __devexit ehci_atmel_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id atmel_ehci_dt_ids[] = {
-+	{ .compatible = "atmel,at91sam9g45-ehci" },
-+	{ /* sentinel */ }
-+};
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
 +
-+MODULE_DEVICE_TABLE(of, atmel_ehci_dt_ids);
++	if (!of_property_read_u32(np, "num-ports", &ports))
++		pdata->ports = ports;
++
++	for (i = 0; i < 2; i++) {
++		gpio = of_get_named_gpio_flags(np, "atmel,vbus-gpio", i, &flags);
++		pdata->vbus_pin[i] = gpio;
++		if (!gpio_is_valid(gpio))
++			continue;
++		pdata->vbus_pin_active_low[i] = flags & OF_GPIO_ACTIVE_LOW;
++		ret = gpio_request(gpio, "ohci_vbus");
++		if (ret) {
++			dev_warn(&pdev->dev, "can't request vbus gpio %d", gpio);
++			continue;
++		}
++		ret = gpio_direction_output(gpio, !(flags & OF_GPIO_ACTIVE_LOW) ^ 1);
++		if (ret)
++			dev_warn(&pdev->dev, "can't put vbus gpio %d as output %d",
++				 !(flags & OF_GPIO_ACTIVE_LOW) ^ 1, gpio);
++	}
++
++	for (i = 0; i < 2; i++) {
++		gpio = of_get_named_gpio_flags(np, "atmel,oc-gpio", i, &flags);
++		pdata->overcurrent_pin[i] = gpio;
++		if (!gpio_is_valid(gpio))
++			continue;
++		ret = gpio_request(gpio, "ohci_overcurrent");
++		if (ret) {
++			dev_err(&pdev->dev, "can't request overcurrent gpio %d", gpio);
++			continue;
++		}
++
++		ret = gpio_direction_input(gpio);
++		if (ret) {
++			dev_err(&pdev->dev, "can't configure overcurrent gpio %d as input", gpio);
++			continue;
++		}
++
++		ret = request_irq(gpio_to_irq(gpio),
++				  ohci_hcd_at91_overcurrent_irq,
++				  IRQF_SHARED, "ohci_overcurrent", pdev);
++		if (ret) {
++			gpio_free(gpio);
++			dev_warn(& pdev->dev, "cannot get GPIO IRQ for overcurrent\n");
++		}
++	}
++
++	pdev->dev.platform_data = pdata;
++
++	return 0;
++}
++#else
++static int __devinit ohci_at91_of_init(struct platform_device *pdev)
++{
++	return 0;
++}
 +#endif
 +
- static struct platform_driver ehci_atmel_driver = {
- 	.probe		= ehci_atmel_drv_probe,
- 	.remove		= __devexit_p(ehci_atmel_drv_remove),
- 	.shutdown	= usb_hcd_platform_shutdown,
--	.driver.name	= "atmel-ehci",
-+	.driver		= {
-+		.name	= "atmel-ehci",
-+		.of_match_table	= of_match_ptr(atmel_ehci_dt_ids),
-+	},
+ /*-------------------------------------------------------------------------*/
+ 
+ static int ohci_hcd_at91_drv_probe(struct platform_device *pdev)
+ {
+-	struct at91_usbh_data	*pdata = pdev->dev.platform_data;
++	struct at91_usbh_data	*pdata;
+ 	int			i;
+ 
++	i = ohci_at91_of_init(pdev);
++
++	if (i)
++		return i;
++
++	pdata = pdev->dev.platform_data;
++
+ 	if (pdata) {
+ 		for (i = 0; i < ARRAY_SIZE(pdata->vbus_pin); i++) {
+ 			if (!gpio_is_valid(pdata->vbus_pin[i]))
+@@ -596,5 +694,6 @@ static struct platform_driver ohci_hcd_at91_driver = {
+ 	.driver		= {
+ 		.name	= "at91_ohci",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(at91_ohci_dt_ids),
+ 	},
  };
 -- 
 1.7.7
