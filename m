@@ -1,79 +1,126 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/1] of: add dma-mask binding
-Date: Wed,  7 Mar 2012 12:26:15 +0100
-Message-ID: <1331119575-6638-1-git-send-email-plagnioj@jcrosoft.com>
+Subject: [PATCH 2/4 v4] spi/atmel: add DT support
+Date: Wed,  7 Mar 2012 13:23:07 +0100
+Message-ID: <1331122989-14451-2-git-send-email-plagnioj@jcrosoft.com>
+References: <1331122989-14451-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1331122989-14451-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This will allow each device to specify its dma-mask
-The microblaze architecture hook is keep temporary if no dma-mask is specified
-int the DT
+The atmel_spi use only gpio for chip select.
 
 Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 ---
- drivers/of/platform.c |   26 +++++++++++++++++++++++++-
- 1 files changed, 25 insertions(+), 1 deletions(-)
+ .../devicetree/bindings/spi/spi_atmel.txt          |    6 +++++
+ drivers/spi/spi-atmel.c                            |   21 ++++++++++++++++---
+ 2 files changed, 23 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel.txt
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index cae9477..bb22194 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -121,6 +121,26 @@ void of_device_make_bus_id(struct device *dev)
- 	dev_set_name(dev, "%s.%d", node->name, magic - 1);
- }
+diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
+new file mode 100644
+index 0000000..7ec3d8d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
+@@ -0,0 +1,6 @@
++Atmel SPI device
++
++Required properties:
++- compatible : should be "atmel,at91rm9200-spi".
++- reg: Address and length of the register set for the device
++- interrupts: Should contain macb interrupt
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index 16d6a83..efbc5f8 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -19,6 +19,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/spi/spi.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
  
-+static u64* of_get_dma_mask(struct device_node *np)
-+{
-+	const __be32 *prop;
-+	int len;
-+	u64 *dma_mask;
-+
-+	prop = of_get_property(np, "dma-mask", &len);
-+
-+	if (!prop)
-+		return NULL;
-+
-+	dma_mask = kzalloc(sizeof(u64), GFP_KERNEL);
-+	if (!dma_mask)
-+		return NULL;
-+
-+	*dma_mask = of_read_number(prop, len / 4);
-+
-+	return dma_mask;
-+}
-+
- /**
-  * of_device_alloc - Allocate and initialize an of_device
-  * @np: device node to assign to device
-@@ -161,10 +181,14 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
- 	}
+ #include <asm/io.h>
+ #include <mach/board.h>
+@@ -695,7 +696,7 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 	u32			scbr, csr;
+ 	unsigned int		bits = spi->bits_per_word;
+ 	unsigned long		bus_hz;
+-	unsigned int		npcs_pin;
++	int			npcs_pin;
+ 	int			ret;
  
-+	dev->dev.dma_mask = of_get_dma_mask(np);
- 	dev->dev.of_node = of_node_get(np);
-+
- #if defined(CONFIG_MICROBLAZE)
--	dev->dev.dma_mask = &dev->archdata.dma_mask;
-+	if (!dev->dev.dma_mask)
-+		dev->dev.dma_mask = &dev->archdata.dma_mask;
+ 	as = spi_master_get_devdata(spi->master);
+@@ -767,7 +768,9 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 	csr |= SPI_BF(DLYBCT, 0);
+ 
+ 	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
+-	npcs_pin = (unsigned int)spi->controller_data;
++	if (!gpio_is_valid(spi->cs_gpio))
++		spi->cs_gpio = (int)spi->controller_data;
++	npcs_pin = spi->cs_gpio;
+ 	asd = spi->controller_state;
+ 	if (!asd) {
+ 		asd = kzalloc(sizeof(struct atmel_spi_device), GFP_KERNEL);
+@@ -887,7 +890,7 @@ static void atmel_spi_cleanup(struct spi_device *spi)
+ {
+ 	struct atmel_spi	*as = spi_master_get_devdata(spi->master);
+ 	struct atmel_spi_device	*asd = spi->controller_state;
+-	unsigned		gpio = (unsigned) spi->controller_data;
++	unsigned		gpio = spi->cs_gpio;
+ 	unsigned long		flags;
+ 
+ 	if (!asd)
+@@ -938,7 +941,8 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+ 
+ 	master->bus_num = pdev->id;
+-	master->num_chipselect = 4;
++	master->dev.of_node = pdev->dev.of_node;
++	master->num_chipselect = master->dev.of_node ? 0 : 4;
+ 	master->setup = atmel_spi_setup;
+ 	master->transfer = atmel_spi_transfer;
+ 	master->cleanup = atmel_spi_cleanup;
+@@ -1064,11 +1068,20 @@ static int atmel_spi_resume(struct platform_device *pdev)
+ #define	atmel_spi_resume	NULL
  #endif
-+
- 	dev->dev.parent = parent;
  
- 	if (bus_id)
++#if defined(CONFIG_OF)
++static const struct of_device_id atmel_spi_dt_ids[] = {
++	{ .compatible = "atmel,at91rm9200-spi" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, atmel_spi_dt_ids);
++#endif
+ 
+ static struct platform_driver atmel_spi_driver = {
+ 	.driver		= {
+ 		.name	= "atmel_spi",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(atmel_spi_dt_ids),
+ 	},
+ 	.suspend	= atmel_spi_suspend,
+ 	.resume		= atmel_spi_resume,
 -- 
 1.7.7
+
+
+------------------------------------------------------------------------------
+Virtualization & Cloud Management Using Capacity Planning
+Cloud computing makes use of virtualization - but cloud computing 
+also focuses on allowing computing to be delivered as a service.
+http://www.accelacomm.com/jaw/sfnl/114/51521223/
