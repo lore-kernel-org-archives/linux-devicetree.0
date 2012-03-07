@@ -1,11 +1,13 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] dtc: Add -i option to support search paths
-Date: Tue,  6 Mar 2012 17:10:12 -0800
-Message-ID: <1331082612-10612-1-git-send-email-sjg@chromium.org>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/6] serial: pxa: add OF support
+Date: Wed,  7 Mar 2012 09:42:05 +0800
+Message-ID: <1331084525-4638-1-git-send-email-haojian.zhuang@gmail.com>
+References: <201203061502.08097.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201203061502.08097.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -15,344 +17,124 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: arnd-r2nGTMty4D4@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It is often inconvenient to place device tree files in the same directory
-as their includes, or to specify the full path to include files.
+From: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-An example of this is in U-Boot where we have a .dtsi file for each SOC
-type, and this is included by the board .dts file. We need to either use
-a mechanism like:
+Parse uart device id from alias in DTS file.
 
-/include/ ARCH_CPU_DTS
-
-with sed or cpp to perform the replacement with the correct path, or
-we must specify the full path in the file:
-
-/include/ "../../arch/arm/dts/tegra20.dtsi"
-
-The first option is not desirable since it requires anyone compiling the
-file to first pre-process it. The second is not desirable since it
-introduces a path which is project-specific into a file which is supposed
-to be a hardware description. For example Linux and U-Boot are unlikely to
-put these include files in the same place.
-
-It is much more convenient to specify the search patch on the command line
-as is done with C pre-processors, for example.
-
-Introduce a -i option to add to the list of search paths used to find
-source and include files.
-
-We cannot use -I as it is already in use. Other suggestions welcome.
-
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- dtc.c                                  |    8 +++-
- srcpos.c                               |   86 +++++++++++++++++++++++++++++---
- srcpos.h                               |   35 +++++++++++++
- tests/run_tests.sh                     |    9 +++
- tests/search_dir/search_test.dtsi      |    4 ++
- tests/search_dir/search_test2.dtsi     |    3 +
- tests/search_dir_b/search_test_b.dtsi  |    4 ++
- tests/search_dir_b/search_test_b2.dtsi |    5 ++
- tests/search_paths.dts                 |    6 ++
- tests/search_paths_b.dts               |    6 ++
- 10 files changed, 158 insertions(+), 8 deletions(-)
- create mode 100644 tests/search_dir/search_test.dtsi
- create mode 100644 tests/search_dir/search_test2.dtsi
- create mode 100644 tests/search_dir_b/search_test_b.dtsi
- create mode 100644 tests/search_dir_b/search_test_b2.dtsi
- create mode 100644 tests/search_paths.dts
- create mode 100644 tests/search_paths_b.dts
+ drivers/tty/serial/pxa.c |   49 ++++++++++++++++++++++++++++++++++-----------
+ 1 files changed, 37 insertions(+), 12 deletions(-)
 
-diff --git a/dtc.c b/dtc.c
-index 7a0c605..83aef32 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -82,6 +82,8 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t\tSet the physical boot cpu\n");
- 	fprintf(stderr, "\t-f\n");
- 	fprintf(stderr, "\t\tForce - try to produce output even if the input tree has errors\n");
-+	fprintf(stderr, "\t-i\n");
-+	fprintf(stderr, "\t\tAdd a path to search for include files\n");
- 	fprintf(stderr, "\t-s\n");
- 	fprintf(stderr, "\t\tSort nodes and properties before outputting (only useful for\n\t\tcomparing trees)\n");
- 	fprintf(stderr, "\t-v\n");
-@@ -113,7 +115,8 @@ int main(int argc, char *argv[])
- 	minsize    = 0;
- 	padsize    = 0;
+diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+index 5c8e3bb..cdf4b2b 100644
+--- a/drivers/tty/serial/pxa.c
++++ b/drivers/tty/serial/pxa.c
+@@ -36,6 +36,7 @@
+ #include <linux/circ_buf.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/tty.h>
+ #include <linux/tty_flip.h>
+@@ -44,6 +45,8 @@
+ #include <linux/io.h>
+ #include <linux/slab.h>
  
--	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:vH:s")) != EOF) {
-+	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:s"))
-+			!= EOF) {
- 		switch (opt) {
- 		case 'I':
- 			inform = optarg;
-@@ -148,6 +151,9 @@ int main(int argc, char *argv[])
- 		case 'b':
- 			cmdline_boot_cpuid = strtoll(optarg, NULL, 0);
- 			break;
-+		case 'i':
-+			srcfile_add_search_path(optarg);
-+			break;
- 		case 'v':
- 			printf("Version: %s\n", DTC_VERSION);
- 			exit(0);
-diff --git a/srcpos.c b/srcpos.c
-index 36a38e9..dacec92 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -24,6 +24,9 @@
- #include "dtc.h"
- #include "srcpos.h"
- 
-+/* This is the list of directories that we search for source files */
-+static struct search_path *search_path_head, **search_path_tail;
++#define PXA_NAME_LEN		8
 +
- 
- static char *dirname(const char *path)
- {
-@@ -47,6 +50,64 @@ struct srcfile_state *current_srcfile; /* = NULL */
- #define MAX_SRCFILE_DEPTH     (100)
- static int srcfile_depth; /* = 0 */
- 
-+
-+/**
-+ * Try to open a file in a given directory.
-+ *
-+ * If the filename is an absolute path, then dirname is ignored. If it is a
-+ * relative path, then we look in that directory for the file.
-+ *
-+ * @param dirname	Directory to look in, or NULL for none
-+ * @param fname		Filename to look for
-+ * @param fp		Set to NULL if file did not open
-+ * @return allocated filename on success (called must free), NULL on failure
-+ */
-+static char *try_open(const char *dirname, const char *fname, FILE **fp)
-+{
-+	char *fullname;
-+
-+	if (!dirname || fname[0] == '/')
-+		fullname = xstrdup(fname);
-+	else
-+		fullname = join_path(dirname, fname);
-+
-+	*fp = fopen(fullname, "r");
-+	if (!*fp) {
-+		free(fullname);
-+		fullname = NULL;
-+	}
-+
-+	return fullname;
-+}
-+
-+/**
-+ * Open a file for read access
-+ *
-+ * If it is a relative filename, we search the full search path for it.
-+ *
-+ * @param fname	Filename to open
-+ * @param fp	Returns pointer to opened FILE, or NULL on failure
-+ * @return pointer to allocated filename, which caller must free
-+ */
-+static char *fopen_any_on_path(const char *fname, FILE **fp)
-+{
-+	const char *cur_dir = NULL;
-+	struct search_path *node;
-+	char *fullname;
-+
-+	/* Try current directory first */
-+	assert(fp);
-+	if (current_srcfile)
-+		cur_dir = current_srcfile->dir;
-+	fullname = try_open(cur_dir, fname, fp);
-+
-+	/* Failing that, try each search path in turn */
-+	for (node = search_path_head; !*fp && node; node = node->next)
-+		fullname = try_open(node->dirname, fname, fp);
-+
-+	return fullname;
-+}
-+
- FILE *srcfile_relative_open(const char *fname, char **fullnamep)
- {
- 	FILE *f;
-@@ -56,13 +117,7 @@ FILE *srcfile_relative_open(const char *fname, char **fullnamep)
- 		f = stdin;
- 		fullname = xstrdup("<stdin>");
- 	} else {
--		if (!current_srcfile || !current_srcfile->dir
--		    || (fname[0] == '/'))
--			fullname = xstrdup(fname);
--		else
--			fullname = join_path(current_srcfile->dir, fname);
--
--		f = fopen(fullname, "r");
-+		fullname = fopen_any_on_path(fname, &f);
- 		if (!f)
- 			die("Couldn't open \"%s\": %s\n", fname,
- 			    strerror(errno));
-@@ -119,6 +174,23 @@ int srcfile_pop(void)
- 	return current_srcfile ? 1 : 0;
- }
- 
-+void srcfile_add_search_path(const char *dirname)
-+{
-+	struct search_path *node;
-+
-+	/* Create the node */
-+	node = xmalloc(sizeof(*node));
-+	node->next = NULL;
-+	node->dirname = xstrdup(dirname);
-+
-+	/* Add to the end of our list */
-+	if (search_path_tail)
-+		*search_path_tail = node;
-+	else
-+		search_path_head = node;
-+	search_path_tail = &node->next;
-+}
-+
- /*
-  * The empty source position.
-  */
-diff --git a/srcpos.h b/srcpos.h
-index ce980ca..4a0bcb5 100644
---- a/srcpos.h
-+++ b/srcpos.h
-@@ -30,13 +30,48 @@ struct srcfile_state {
- 	struct srcfile_state *prev;
+ struct uart_pxa_port {
+ 	struct uart_port        port;
+ 	unsigned char           ier;
+@@ -51,7 +54,7 @@ struct uart_pxa_port {
+ 	unsigned char           mcr;
+ 	unsigned int            lsr_break_flag;
+ 	struct clk		*clk;
+-	char			*name;
++	char			name[PXA_NAME_LEN];
  };
  
-+/* A list of directories to search for source/include files */
-+struct search_path {
-+	struct search_path *next;	/* next node in list, NULL for end */
-+	const char *dirname;		/* name of directory to search */
-+};
-+
- extern FILE *depfile; /* = NULL */
- extern struct srcfile_state *current_srcfile; /* = NULL */
+ static inline unsigned int serial_in(struct uart_pxa_port *up, int offset)
+@@ -781,6 +784,31 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
+ };
+ #endif
  
-+/**
-+ * Open a source file.
-+ *
-+ * If the source file is a relative pathname, then it is searched for in the
-+ * current directory (the directory of the last source file read) and after
-+ * that in the search path.
-+ *
-+ * We work through the search path in order from the first path specified to
-+ * the last.
-+ *
-+ * If the file is not found, then this function does not return, but calls
-+ * die().
-+ *
-+ * @param fname		Filename to search
-+ * @param fullnamep	If non-NULL, it is set to the allocated filename of the
-+ *			file that was opened. The caller is then responsible
-+ *			for freeing the pointer.
-+ * @return pointer to opened FILE
-+ */
- FILE *srcfile_relative_open(const char *fname, char **fullnamep);
++static struct of_device_id serial_pxa_dt_ids[] = {
++	{ .compatible = "mrvl,pxa-uart", },
++	{ .compatible = "mrvl,mmp-uart", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
 +
- void srcfile_push(const char *fname);
- int srcfile_pop(void);
++static int serial_pxa_probe_dt(struct platform_device *pdev,
++			       struct uart_pxa_port *sport)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int ret;
++
++	if (!np)
++		return 1;
++
++	ret = of_alias_get_id(np, "serial");
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
++		return ret;
++	}
++	sport->port.line = ret;
++	return 0;
++}
++
+ static int serial_pxa_probe(struct platform_device *dev)
+ {
+ 	struct uart_pxa_port *sport;
+@@ -808,20 +836,16 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 	sport->port.irq = irqres->start;
+ 	sport->port.fifosize = 64;
+ 	sport->port.ops = &serial_pxa_pops;
+-	sport->port.line = dev->id;
+ 	sport->port.dev = &dev->dev;
+ 	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
+ 	sport->port.uartclk = clk_get_rate(sport->clk);
  
-+/**
-+ * Add a new directory to the search path for input files
-+ *
-+ * The new path is added at the end of the list.
-+ *
-+ * @param dirname	Directory to add
-+ */
-+void srcfile_add_search_path(const char *dirname);
-+
- struct srcpos {
-     int first_line;
-     int first_column;
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index a561433..c7e9b83 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -412,6 +412,15 @@ dtc_tests () {
-     # Dependencies
-     run_dtc_test -I dts -O dtb -o dependencies.test.dtb -d dependencies.test.d dependencies.dts
-     run_wrap_test cmp dependencies.test.d dependencies.cmp
-+
-+    # Search paths
-+    run_wrap_error_test $DTC -I dts -O dtb -o search_paths.dtb search_paths.dts
-+    run_dtc_test -i search_dir -I dts -O dtb -o search_paths.dtb \
-+	search_paths.dts
-+    run_wrap_error_test $DTC -i search_dir_b -I dts -O dtb \
-+	-o search_paths_b.dtb search_paths_b.dts
-+    run_dtc_test -i search_dir_b -i search_dir -I dts -O dtb \
-+	-o search_paths_b.dtb search_paths_b.dts
- }
+-	switch (dev->id) {
+-	case 0: sport->name = "FFUART"; break;
+-	case 1: sport->name = "BTUART"; break;
+-	case 2: sport->name = "STUART"; break;
+-	case 3: sport->name = "HWUART"; break;
+-	default:
+-		sport->name = "???";
+-		break;
+-	}
++	ret = serial_pxa_probe_dt(dev, sport);
++	if (ret > 0)
++		sport->port.line = dev->id;
++	else if (ret < 0)
++		goto err_clk;
++	snprintf(sport->name, PXA_NAME_LEN - 1, "UART%d", sport->port.line + 1);
  
- cmp_tests () {
-diff --git a/tests/search_dir/search_test.dtsi b/tests/search_dir/search_test.dtsi
-new file mode 100644
-index 0000000..217fb80
---- /dev/null
-+++ b/tests/search_dir/search_test.dtsi
-@@ -0,0 +1,4 @@
-+/include/ "search_test2.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_dir/search_test2.dtsi b/tests/search_dir/search_test2.dtsi
-new file mode 100644
-index 0000000..7b9099e
---- /dev/null
-+++ b/tests/search_dir/search_test2.dtsi
-@@ -0,0 +1,3 @@
-+
-+/ {
-+};
-diff --git a/tests/search_dir_b/search_test_b.dtsi b/tests/search_dir_b/search_test_b.dtsi
-new file mode 100644
-index 0000000..b06a7d6
---- /dev/null
-+++ b/tests/search_dir_b/search_test_b.dtsi
-@@ -0,0 +1,4 @@
-+/include/ "search_test_b2.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_dir_b/search_test_b2.dtsi b/tests/search_dir_b/search_test_b2.dtsi
-new file mode 100644
-index 0000000..2526b43
---- /dev/null
-+++ b/tests/search_dir_b/search_test_b2.dtsi
-@@ -0,0 +1,5 @@
-+
-+/include/ "search_test.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_paths.dts b/tests/search_paths.dts
-new file mode 100644
-index 0000000..a2bf179
---- /dev/null
-+++ b/tests/search_paths.dts
-@@ -0,0 +1,6 @@
-+/dts-v1/;
-+
-+/include/ "search_test.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_paths_b.dts b/tests/search_paths_b.dts
-new file mode 100644
-index 0000000..6ace6e2
---- /dev/null
-+++ b/tests/search_paths_b.dts
-@@ -0,0 +1,6 @@
-+/dts-v1/;
-+
-+/include/ "search_test_b.dtsi"
-+
-+/ {
-+};
+ 	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
+ 	if (!sport->port.membase) {
+@@ -829,7 +853,7 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 		goto err_clk;
+ 	}
+ 
+-	serial_pxa_ports[dev->id] = sport;
++	serial_pxa_ports[sport->port.line] = sport;
+ 
+ 	uart_add_one_port(&serial_pxa_reg, &sport->port);
+ 	platform_set_drvdata(dev, sport);
+@@ -866,6 +890,7 @@ static struct platform_driver serial_pxa_driver = {
+ #ifdef CONFIG_PM
+ 		.pm	= &serial_pxa_pm_ops,
+ #endif
++		.of_match_table = serial_pxa_dt_ids,
+ 	},
+ };
+ 
 -- 
-1.7.7.3
+1.7.5.4
