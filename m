@@ -1,76 +1,57 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 06/14] ARM: kirkwood: convert uart0 to devicetree.
-Date: Wed, 7 Mar 2012 21:05:15 +0100
-Message-ID: <20120307200515.GC18513@lunn.ch>
-References: <cover.1331090356.git.jason@lakedaemon.net>
- <80fb8cef577eee14364e95009f7a590fd9056ee3.1331090356.git.jason@lakedaemon.net>
- <201203071831.31738.arnd@arndb.de>
- <20120307192723.GE5050@titan.lakedaemon.net>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4 4/9] tegra: fdt: i2c: Add extra I2C bindings for U-Boot
+Date: Wed, 07 Mar 2012 13:35:09 -0700
+Message-ID: <4F57C67D.9030903@wwwdotorg.org>
+References: <1330536689-9121-5-git-send-email-sjg@chromium.org>	<4F4E88BC.4070106@nvidia.com>	<CAPnjgZ3fVwwvt6Cxr5RU0Bw=UkZ7Rq7fswfRYxpHBvhwrXCn3g@mail.gmail.com>	<4F4E8C48.1020408@nvidia.com> <CAPnjgZ0Xu-8cXWW=Z7mQd6UqNXT_RnRKAP-y3dvA4WtZtL1jKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120307192723.GE5050-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPnjgZ0Xu-8cXWW=Z7mQd6UqNXT_RnRKAP-y3dvA4WtZtL1jKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 07, 2012 at 02:27:23PM -0500, Jason wrote:
-> On Wed, Mar 07, 2012 at 06:31:31PM +0000, Arnd Bergmann wrote:
-> > On Wednesday 07 March 2012, Jason Cooper wrote:
-> > > +       serial@f1012000 {
-> > > +               compatible = "ns16550a";
-> > > +               reg = <0xf1012000 0xff>;
-> > > +               reg-shift = <2>;
-> > > +               interrupts = <33>;
-> > > +               clock-frequency = <200000000>;
-> > > +       };
-> > 
-> > I just noticed that the length here should be inclusive, i.e. 0x100 not 0xff.
-> > This is different from the way we define resources in Linux.
+On 03/06/2012 09:22 PM, Simon Glass wrote:
+> Hi Stephen,
 > 
-> Grrr.  Now I'm getting frustrated.  I'm trying to boot without
-> earlyprintk.  Evidently, something is wrong with the above, because the
-> device boots all the way up (blinky lights come on), but I get no
-> messages after the usual "Uncompressing Linux... done, booting the
-> kernel."
+> On Wed, Feb 29, 2012 at 12:36 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 02/29/2012 01:32 PM, Simon Glass wrote:
+>>> Hi Stephen,
+>>>
+>>> On Wed, Feb 29, 2012 at 12:21 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> On 02/29/2012 10:31 AM, Simon Glass wrote:
+>>>>> Add U-Boot's peripheral clock information to the Tegra20 device tree file.
+>>>>
+>>>>> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+>>>>
+>>>>>               compatible = "nvidia,tegra20-i2c";
+>>>>>               reg = <0x7000C000 0x100>;
+>>>>>               interrupts = < 70 >;
+>>>>> +             clocks = <&tegra_car 12>;       /* PERIPH_ID_I2C1 */
+>>>>>       };
+>>>>
+>>>> The I2C modules all require 2 clocks; the one you've added in this patch
+>>>> and a second reference to pll_p_out3. Can you please list both of these
+>>>> here, and update the I2C binding to describe the set of clocks that it
+>>>> requires. Thanks.
+>>>
+>>> OK - do you have a pointer to the kernel commit please? I always seem
+>>> to have trouble tracking this stuff down.
+>>
+>> The clock stuff isn't in the kernel yet, so there's no commit to point
+>> to. The commit I asked you to create would update the bindings to define
+>> which clocks the I2C node needs, and would then go into U-Boot and the
+>> kernel.
+> 
+> Which binding should I update? I have had a look through Olof's trees at:
 
-Hi Jason
+Oh, it looks like we don't have any binding documentation for the Tegra
+I2C controller at all yet.
 
-What do you see in /proc/iomem?
-
-You should expect:
-
-f1012000-f10120ff : serial8250.0
-  f1012000-f101201f : serial
-f1012100-f10121ff : serial8250.1
-  f1012100-f101211f : serial
-
-or probably just the first, if your device only has one serial port.
-
-How about /proc/interrupts?
-
- 33:        195  orion_irq  serial
-
-
-Anything like this in dmesg?
-
-[   17.189397] Serial: 8250/16550 driver, 2 ports, IRQ sharing disabled
-[   17.210023] serial8250.0: ttyS0 at MMIO 0xf1012000 (irq = 33) is a 16550A
-[   17.624748] console [ttyS0] enabled
-[   17.648555] serial8250.1: ttyS1 at MMIO 0xf1012100 (irq = 34) is a 16550A
-
-Comparing your system to the above might help you track down which
-property is wrong.
-
-	 Andrew
+So, there's nothing in the kernel to update. Sorry about that. If you
+want, you could submit a kernel patch to add such a binding, but since
+there isn't one already I won't hold you to it. I see you added a rough
+placeholder binding doc in the U-Boot tree in your updated U-Boot patch
+which is probably fine for now if you want.
