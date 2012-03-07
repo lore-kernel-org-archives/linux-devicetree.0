@@ -1,11 +1,13 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 3/4] fdtget: Add -l to list the subnodes of a node
-Date: Tue,  6 Mar 2012 16:41:46 -0800
-Message-ID: <1331080907-7230-3-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 4/4] fdtget: Add -d to provide a default value
+Date: Tue,  6 Mar 2012 16:41:47 -0800
+Message-ID: <1331080907-7230-4-git-send-email-sjg@chromium.org>
+References: <1331080907-7230-3-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1331080907-7230-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,161 +20,102 @@ Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDA
 To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This option lists the subnodes of each node given as a parameter, one
-subnode per line.
+Sometimes the requested node or property is not present in the device
+tree. This option provides a way of reporting a default value in this
+case, rather than halting with an error.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 ---
 Changes in v2:
-- Change the term 'child' to 'subnode'
+- Rebased on top of changes to the -l patch
 
- fdtget.c |   96 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--------
- 1 files changed, 84 insertions(+), 12 deletions(-)
+ fdtget.c           |   20 +++++++++++++++++---
+ tests/run_tests.sh |    6 ++++++
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
 diff --git a/fdtget.c b/fdtget.c
-index 874bcbf..2c7d238 100644
+index 2c7d238..c2fbab2 100644
 --- a/fdtget.c
 +++ b/fdtget.c
-@@ -37,6 +37,7 @@
- enum display_mode {
- 	MODE_SHOW_VALUE,	/* show values for node properties */
- 	MODE_LIST_PROPS,	/* list the properties for a node */
-+	MODE_LIST_SUBNODES,	/* list the subnodes of a node */
+@@ -45,6 +45,7 @@ struct display_info {
+ 	int type;		/* data type (s/i/u/x or 0 for default) */
+ 	int size;		/* data size (1/2/4) */
+ 	enum display_mode mode;	/* display mode that we are using */
++	const char *default_val; /* default value if node/property not found */
  };
  
- /* Holds information which controls our output and options */
-@@ -136,6 +137,61 @@ static int list_properties(const void *blob, int node)
- 	} while (1);
- }
- 
-+#define MAX_LEVEL	32		/* how deeply nested we will go */
-+
-+/**
-+ * List all subnodes in a node, one per line
-+ *
-+ * @param blob		FDT blob
-+ * @param node		Node to display
-+ * @return 0 if ok, or FDT_ERR... if not.
-+ */
-+static int list_subnodes(const void *blob, int node)
-+{
-+	int nextoffset;		/* next node offset from libfdt */
-+	uint32_t tag;		/* current tag */
-+	int level = 0;		/* keep track of nesting level */
-+	const char *pathp;
-+	int depth = 1;		/* the assumed depth of this node */
-+
-+	while (level >= 0) {
-+		tag = fdt_next_tag(blob, node, &nextoffset);
-+		switch (tag) {
-+		case FDT_BEGIN_NODE:
-+			pathp = fdt_get_name(blob, node, NULL);
-+			if (level <= depth) {
-+				if (pathp == NULL)
-+					pathp = "/* NULL pointer error */";
-+				if (*pathp == '\0')
-+					pathp = "/";	/* root is nameless */
-+				if (level == 1)
-+					puts(pathp);
-+			}
-+			level++;
-+			if (level >= MAX_LEVEL) {
-+				printf("Nested too deep, aborting.\n");
-+				return 1;
-+			}
-+			break;
-+		case FDT_END_NODE:
-+			level--;
-+			if (level == 0)
-+				level = -1;		/* exit the loop */
-+			break;
-+		case FDT_END:
-+			return 1;
-+		case FDT_PROP:
-+			break;
-+		default:
-+			if (level <= depth)
-+				printf("Unknown tag 0x%08X\n", tag);
-+			return 1;
-+		}
-+		node = nextoffset;
-+	}
-+	return 0;
-+}
-+
- /**
-  * Show the data for a given node (and perhaps property) according to the
-  * display option provided.
-@@ -152,20 +208,30 @@ static int show_data_for_item(const void *blob, struct display_info *disp,
- 	const void *value = NULL;
- 	int len, err = 0;
- 
--	if (disp->mode == MODE_LIST_PROPS)
--		return list_properties(blob, node);
-+	switch (disp->mode) {
-+	case MODE_LIST_PROPS:
-+		err = list_properties(blob, node);
-+		break;
-+
-+	case MODE_LIST_SUBNODES:
-+		err = list_subnodes(blob, node);
-+		break;
- 
--	assert(property);
--	value = fdt_getprop(blob, node, property, &len);
--	if (value) {
--		if (show_data(disp, value, len))
-+	default:
-+		assert(property);
-+		value = fdt_getprop(blob, node, property, &len);
-+		if (value) {
-+			if (show_data(disp, value, len))
-+				err = -1;
-+			else
-+				printf("\n");
-+		} else {
-+			report_error(property, len);
+ static void report_error(const char *where, int err)
+@@ -225,6 +226,8 @@ static int show_data_for_item(const void *blob, struct display_info *disp,
+ 				err = -1;
+ 			else
+ 				printf("\n");
++		} else if (disp->default_val) {
++			puts(disp->default_val);
+ 		} else {
+ 			report_error(property, len);
  			err = -1;
--		else
--			printf("\n");
--	} else {
--		report_error(property, len);
--		err = -1;
-+		}
-+		break;
- 	}
-+
- 	return err;
- }
+@@ -258,8 +261,13 @@ static int do_fdtget(struct display_info *disp, const char *filename,
+ 	for (i = 0; i + args_per_step <= arg_count; i += args_per_step) {
+ 		node = fdt_path_offset(blob, arg[i]);
+ 		if (node < 0) {
+-			report_error(arg[i], node);
+-			return -1;
++			if (disp->default_val) {
++				puts(disp->default_val);
++				continue;
++			} else {
++				report_error(arg[i], node);
++				return -1;
++			}
+ 		}
+ 		prop = args_per_step == 1 ? NULL : arg[i + 1];
  
-@@ -213,6 +279,7 @@ static const char *usage_msg =
- 	"Options:\n"
+@@ -280,6 +288,8 @@ static const char *usage_msg =
  	"\t-t <type>\tType of data\n"
  	"\t-p\t\tList properties for each node\n"
-+	"\t-l\t\tList subnodes for each node\n"
+ 	"\t-l\t\tList subnodes for each node\n"
++	"\t-d\t\tDefault value to display when the property is "
++			"missing\n"
  	"\t-h\t\tPrint this help\n\n"
  	USAGE_TYPE_MSG;
  
-@@ -236,7 +303,7 @@ int main(int argc, char *argv[])
+@@ -303,7 +313,7 @@ int main(int argc, char *argv[])
  	disp.size = -1;
  	disp.mode = MODE_SHOW_VALUE;
  	for (;;) {
--		int c = getopt(argc, argv, "hpt:");
-+		int c = getopt(argc, argv, "hlpt:");
+-		int c = getopt(argc, argv, "hlpt:");
++		int c = getopt(argc, argv, "d:hlpt:");
  		if (c == -1)
  			break;
  
-@@ -255,6 +322,11 @@ int main(int argc, char *argv[])
- 			disp.mode = MODE_LIST_PROPS;
+@@ -327,6 +337,10 @@ int main(int argc, char *argv[])
+ 			disp.mode = MODE_LIST_SUBNODES;
  			args_per_step = 1;
  			break;
 +
-+		case 'l':
-+			disp.mode = MODE_LIST_SUBNODES;
-+			args_per_step = 1;
++		case 'd':
++			disp.default_val = optarg;
 +			break;
  		}
  	}
  
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index ac6fa17..deffae3 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -478,6 +478,12 @@ fdtget_tests () {
+ 
+     # Test multiple arguments
+     run_fdtget_test "MyBoardName\nmemory" -ts $dtb / model /memory device_type
++
++    # Test defaults
++    run_wrap_error_test $DTGET -tx $dtb /randomnode doctor-who
++    run_fdtget_test "<the dead silence>" -tx \
++	-d "<the dead silence>" $dtb /randomnode doctor-who
++    run_fdtget_test "<blink>" -tx -d "<blink>" $dtb /memory doctor-who
+ }
+ 
+ fdtput_tests () {
 -- 
 1.7.7.3
