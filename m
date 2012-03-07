@@ -1,66 +1,330 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH 01/14] ARM: orion: spi: remove enable_clock_fix which is not
- used
-Date: Wed,  7 Mar 2012 03:44:42 +0000
-Message-ID: <b0fe0cfb7e76a869a8ba7f7344de75eb122e206c.1331090356.git.jason@lakedaemon.net>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: [PATCH 03/14] ARM: kirkwood: add dreamplug (fdt) support.
+Date: Wed,  7 Mar 2012 03:44:44 +0000
+Message-ID: <dc7b6bf6c75cfd73fa501480a3169e311d101e54.1331090356.git.jason@lakedaemon.net>
 References: <cover.1331090356.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1331090356.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-In-Reply-To: <cover.1331090356.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-References: <cover.1330625877.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
- <cover.1331090356.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1331090356.git.jason@lakedaemon.net>
+In-Reply-To: <cover.1331090356.git.jason@lakedaemon.net>
+References: <cover.1330625877.git.jason@lakedaemon.net>
+ <cover.1331090356.git.jason@lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arnd@arndb.de
+Cc: nicolas.pitre@linaro.org, andrew@lunn.ch, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, michael@walle.cc, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Initially, copied guruplug-setup.c and did s/guruplug/dreamplug/g.
+Then, switched to SPI based NOR flash.
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+After talking to Arnd Bergman, chose an incremental approach to adding
+devicetree support.  First, we use the dtb to tell us we are on the
+dreamplug, then we gradually port over drivers.
+
+Driver porting will start with the uart (see next patch), and progress
+from there.  Possibly, spi/flash/partitions will be next.
+
+When done, board-dt.c will no longer be dreamplug specific, and dt's can
+be made for the other kirkwood boards.
+
+Signed-off-by: Jason Cooper <jason@lakedaemon.net>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Nicolas Pitre <nico@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/spi/spi-orion.c       |    5 -----
- include/linux/spi/orion_spi.h |    1 -
- 2 files changed, 0 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-index 13448c8..e496f79 100644
---- a/drivers/spi/spi-orion.c
-+++ b/drivers/spi/spi-orion.c
-@@ -359,11 +359,6 @@ static int orion_spi_setup(struct spi_device *spi)
+Changes from previous version:
+
+* s/marvell,/mrvl,/g for compatible properties
+
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |   18 +++
+ arch/arm/boot/dts/kirkwood.dtsi          |    6 +
+ arch/arm/mach-kirkwood/Kconfig           |   14 +++
+ arch/arm/mach-kirkwood/Makefile          |    1 +
+ arch/arm/mach-kirkwood/Makefile.boot     |    2 +
+ arch/arm/mach-kirkwood/board-dt.c        |  182 ++++++++++++++++++++++++++++++
+ 6 files changed, 223 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
+ create mode 100644 arch/arm/mach-kirkwood/board-dt.c
+
+diff --git a/arch/arm/boot/dts/kirkwood-dreamplug.dts b/arch/arm/boot/dts/kirkwood-dreamplug.dts
+new file mode 100644
+index 0000000..578806d
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-dreamplug.dts
+@@ -0,0 +1,18 @@
++/dts-v1/;
++
++/include/ "kirkwood.dtsi"
++
++/ {
++	model = "Globalscale Technologies Dreamplug";
++	compatible = "globalscale,dreamplug-003-ds2001", "globalscale,dreamplug", "mrvl,kirkwood-88f6281", "mrvl,kirkwood";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x20000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyS0,115200n8 earlyprintk";
++	};
++
++};
+diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+new file mode 100644
+index 0000000..702b955
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood.dtsi
+@@ -0,0 +1,6 @@
++/include/ "skeleton.dtsi"
++
++/ {
++	compatible = "mrvl,kirkwood";
++};
++
+diff --git a/arch/arm/mach-kirkwood/Kconfig b/arch/arm/mach-kirkwood/Kconfig
+index 7fc603b..90ceab7 100644
+--- a/arch/arm/mach-kirkwood/Kconfig
++++ b/arch/arm/mach-kirkwood/Kconfig
+@@ -44,6 +44,20 @@ config MACH_GURUPLUG
+ 	  Say 'Y' here if you want your kernel to support the
+ 	  Marvell GuruPlug Reference Board.
  
- 	orion_spi = spi_master_get_devdata(spi->master);
++config ARCH_KIRKWOOD_DT
++	bool "Marvell Kirkwood Flattened Device Tree"
++	select USE_OF
++	help
++	  Say 'Y' here if you want your kernel to support the
++	  Marvell Kirkwood using flattened device tree.
++
++config MACH_DREAMPLUG_DT
++	bool "Marvell DreamPlug (Flattened Device Tree)"
++	select ARCH_KIRKWOOD_DT
++	help
++	  Say 'Y' here if you want your kernel to support the
++	  Marvell DreamPlug (Flattened Device Tree).
++
+ config MACH_TS219
+ 	bool "QNAP TS-110, TS-119, TS-119P+, TS-210, TS-219, TS-219P and TS-219P+ Turbo NAS"
+ 	help
+diff --git a/arch/arm/mach-kirkwood/Makefile b/arch/arm/mach-kirkwood/Makefile
+index 5dcaa81..acbc5e1 100644
+--- a/arch/arm/mach-kirkwood/Makefile
++++ b/arch/arm/mach-kirkwood/Makefile
+@@ -20,3 +20,4 @@ obj-$(CONFIG_MACH_NET5BIG_V2)		+= netxbig_v2-setup.o lacie_v2-common.o
+ obj-$(CONFIG_MACH_T5325)		+= t5325-setup.o
  
--	/* Fix ac timing if required.   */
--	if (orion_spi->spi_info->enable_clock_fix)
--		orion_spi_setbits(orion_spi, ORION_SPI_IF_CONFIG_REG,
--				  (1 << 14));
--
- 	if ((spi->max_speed_hz == 0)
- 			|| (spi->max_speed_hz > orion_spi->max_speed))
- 		spi->max_speed_hz = orion_spi->max_speed;
-diff --git a/include/linux/spi/orion_spi.h b/include/linux/spi/orion_spi.h
-index decf6d8..b4d9fa6 100644
---- a/include/linux/spi/orion_spi.h
-+++ b/include/linux/spi/orion_spi.h
-@@ -11,7 +11,6 @@
- 
- struct orion_spi_info {
- 	u32	tclk;		/* no <linux/clk.h> support yet */
--	u32	enable_clock_fix;
- };
- 
- 
+ obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
++obj-$(CONFIG_ARCH_KIRKWOOD_DT)		+= board-dt.o
+diff --git a/arch/arm/mach-kirkwood/Makefile.boot b/arch/arm/mach-kirkwood/Makefile.boot
+index 760a0ef..16f9385 100644
+--- a/arch/arm/mach-kirkwood/Makefile.boot
++++ b/arch/arm/mach-kirkwood/Makefile.boot
+@@ -1,3 +1,5 @@
+    zreladdr-y	+= 0x00008000
+ params_phys-y	:= 0x00000100
+ initrd_phys-y	:= 0x00800000
++
++dtb-$(CONFIG_MACH_DREAMPLUG_DT) += kirkwood-dreamplug.dtb
+diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+new file mode 100644
+index 0000000..76392af
+--- /dev/null
++++ b/arch/arm/mach-kirkwood/board-dt.c
+@@ -0,0 +1,182 @@
++/*
++ * Copyright 2012 (C), Jason Cooper <jason@lakedaemon.net>
++ *
++ * arch/arm/mach-kirkwood/board-dt.c
++ *
++ * Marvell DreamPlug Reference Board Setup
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++#include <linux/mtd/partitions.h>
++#include <linux/ata_platform.h>
++#include <linux/mv643xx_eth.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_fdt.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/gpio.h>
++#include <linux/leds.h>
++#include <linux/mtd/physmap.h>
++#include <linux/spi/flash.h>
++#include <linux/spi/spi.h>
++#include <linux/spi/orion_spi.h>
++#include <asm/mach-types.h>
++#include <asm/mach/arch.h>
++#include <mach/kirkwood.h>
++#include <plat/mvsdio.h>
++#include "common.h"
++#include "mpp.h"
++
++static struct of_device_id kirkwood_dt_match_table[] __initdata = {
++	{ .compatible = "simple-bus", },
++	{ }
++};
++
++struct mtd_partition dreamplug_partitions[] = {
++	{
++		.name	= "u-boot",
++		.size	= SZ_512K,
++		.offset = 0,
++	},
++	{
++		.name	= "u-boot env",
++		.size	= SZ_64K,
++		.offset = SZ_512K + SZ_512K,
++	},
++	{
++		.name	= "dtb",
++		.size	= SZ_64K,
++		.offset = SZ_512K + SZ_512K + SZ_512K,
++	},
++};
++
++static const struct flash_platform_data dreamplug_spi_slave_data = {
++	.type		= "mx25l1606e",
++	.name		= "spi_flash",
++	.parts		= dreamplug_partitions,
++	.nr_parts	= ARRAY_SIZE(dreamplug_partitions),
++};
++
++static struct spi_board_info __initdata dreamplug_spi_slave_info[] = {
++	{
++		.modalias	= "m25p80",
++		.platform_data	= &dreamplug_spi_slave_data,
++		.irq		= -1,
++		.max_speed_hz	= 50000000,
++		.bus_num	= 0,
++		.chip_select	= 0,
++	},
++};
++
++static struct mv643xx_eth_platform_data dreamplug_ge00_data = {
++	.phy_addr	= MV643XX_ETH_PHY_ADDR(0),
++};
++
++static struct mv643xx_eth_platform_data dreamplug_ge01_data = {
++	.phy_addr	= MV643XX_ETH_PHY_ADDR(1),
++};
++
++static struct mv_sata_platform_data dreamplug_sata_data = {
++	.n_ports	= 1,
++};
++
++static struct mvsdio_platform_data dreamplug_mvsdio_data = {
++	/* unfortunately the CD signal has not been connected */
++};
++
++static struct gpio_led dreamplug_led_pins[] = {
++	{
++		.name			= "dreamplug:blue:bluetooth",
++		.gpio			= 47,
++		.active_low		= 1,
++	},
++	{
++		.name			= "dreamplug:green:wifi",
++		.gpio			= 48,
++		.active_low		= 1,
++	},
++	{
++		.name			= "dreamplug:green:wifi_ap",
++		.gpio			= 49,
++		.active_low		= 1,
++	},
++};
++
++static struct gpio_led_platform_data dreamplug_led_data = {
++	.leds		= dreamplug_led_pins,
++	.num_leds	= ARRAY_SIZE(dreamplug_led_pins),
++};
++
++static struct platform_device dreamplug_leds = {
++	.name	= "leds-gpio",
++	.id	= -1,
++	.dev	= {
++		.platform_data	= &dreamplug_led_data,
++	}
++};
++
++static unsigned int dreamplug_mpp_config[] __initdata = {
++	MPP0_SPI_SCn,
++	MPP1_SPI_MOSI,
++	MPP2_SPI_SCK,
++	MPP3_SPI_MISO,
++	MPP47_GPIO,	/* Bluetooth LED */
++	MPP48_GPIO,	/* Wifi LED */
++	MPP49_GPIO,	/* Wifi AP LED */
++	0
++};
++
++static void __init dreamplug_init(void)
++{
++	/*
++	 * Basic setup. Needs to be called early.
++	 */
++	kirkwood_mpp_conf(dreamplug_mpp_config);
++
++	kirkwood_uart0_init();
++
++	spi_register_board_info(dreamplug_spi_slave_info,
++				ARRAY_SIZE(dreamplug_spi_slave_info));
++	kirkwood_spi_init();
++
++	kirkwood_ehci_init();
++	kirkwood_ge00_init(&dreamplug_ge00_data);
++	kirkwood_ge01_init(&dreamplug_ge01_data);
++	kirkwood_sata_init(&dreamplug_sata_data);
++	kirkwood_sdio_init(&dreamplug_mvsdio_data);
++
++	platform_device_register(&dreamplug_leds);
++}
++
++static void __init kirkwood_dt_init(void)
++{
++	kirkwood_init();
++
++	if (of_machine_is_compatible("globalscale,dreamplug"))
++		dreamplug_init();
++
++	of_platform_populate(NULL, kirkwood_dt_match_table, NULL, NULL);
++}
++
++static const char *kirkwood_dt_board_compat[] = {
++	"globalscale,dreamplug",
++	NULL
++};
++
++DT_MACHINE_START(KIRKWOOD_DT, "Marvell Kirkwood (Flattened Device Tree)")
++	/* Maintainer: Jason Cooper <jason@lakedaemon.net> */
++	.map_io		= kirkwood_map_io,
++	.init_early	= kirkwood_init_early,
++	.init_irq	= kirkwood_init_irq,
++	.timer		= &kirkwood_timer,
++	.init_machine	= kirkwood_dt_init,
++	.restart	= kirkwood_restart,
++	.dt_compat	= kirkwood_dt_board_compat,
++MACHINE_END
 -- 
 1.7.3.4
