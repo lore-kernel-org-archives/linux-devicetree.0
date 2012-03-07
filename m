@@ -1,7 +1,7 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH 10/14] ARM: kirkwood: mv_cesa devicetree support.
-Date: Wed,  7 Mar 2012 03:44:51 +0000
-Message-ID: <4a6df8e03abfa36901103583376b3c33f703559b.1331090356.git.jason@lakedaemon.net>
+Subject: [PATCH 11/14] ARM: kirkwood: ehci-orion: add device tree binding
+Date: Wed,  7 Mar 2012 03:44:52 +0000
+Message-ID: <8d2def2acb877d133bfbfb29a5afeb7aa6a7f954.1331090356.git.jason@lakedaemon.net>
 References: <cover.1331090356.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,111 +24,117 @@ To: arnd-r2nGTMty4D4@public.gmane.org
 Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Based on work by Michael Walle (commit a952154).
-
-Used the crypto portion of the patch, integrated with board-dt.c
+From: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
 
 Signed-off-by: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
 Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 ---
+ .../devicetree/bindings/usb/ehci-orion.txt         |    5 ++
+ drivers/usb/host/ehci-orion.c                      |   50 +++++++++++++++++++-
+ 2 files changed, 53 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ehci-orion.txt
 
-Changes from previous version:
-
-* s/marvell,/mrvl,/g for compatible properties
-* split into binding patch and a use patch.
-* make sure clock doesn't get disabled when booting fdt
-
- arch/arm/boot/dts/kirkwood.dtsi   |    7 +++++++
- arch/arm/mach-kirkwood/board-dt.c |    1 -
- arch/arm/mach-kirkwood/common.c   |   14 +++++++++++++-
- arch/arm/mach-kirkwood/common.h   |    1 -
- 4 files changed, 20 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index 5960a8e..a1634ae 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -16,4 +16,11 @@
- 		reg = <0xf1010300 0x1f>;
- 		interrupts = <53>;
- 	};
+diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+new file mode 100644
+index 0000000..b46d825
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+@@ -0,0 +1,5 @@
++Marvell Orion SoC USB controller
 +
-+	crypto@f1030000 {
-+		compatible = "mrvl,kirkwood-crypto", "mrvl,orion-crypto";
-+		reg = <0xf1030000 0x10000>,
-+		      <0xf5000000 0x800>;
-+		interrupts = <22>;
-+	};
- };
-diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index deea565..638f261 100644
---- a/arch/arm/mach-kirkwood/board-dt.c
-+++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -184,7 +184,6 @@ static void __init kirkwood_dt_init(void)
- 	kirkwood_wdt_init();
- 	kirkwood_xor0_init();
- 	kirkwood_xor1_init();
--	kirkwood_crypto_init();
- 
- #ifdef CONFIG_KEXEC
- 	kexec_reinit = kirkwood_enable_pcie;
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index ef45244..154f1cf 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -15,6 +15,7 @@
- #include <linux/ata_platform.h>
- #include <linux/mtd/nand.h>
- #include <linux/dma-mapping.h>
++Required properties :
++ - compatible : should be "mrvl,orion-ehci".
++ - phy_version : should be "orion".
+diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+index 6c6a5a3..f1dec1d 100644
+--- a/drivers/usb/host/ehci-orion.c
++++ b/drivers/usb/host/ehci-orion.c
+@@ -12,6 +12,8 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/mbus.h>
 +#include <linux/of.h>
- #include <net/dsa.h>
- #include <asm/page.h>
- #include <asm/timex.h>
-@@ -267,7 +268,7 @@ void __init kirkwood_uart1_init(void)
- /*****************************************************************************
-  * Cryptographic Engines and Security Accelerator (CESA)
-  ****************************************************************************/
--void __init kirkwood_crypto_init(void)
-+static void __init kirkwood_crypto_init(void)
- {
- 	kirkwood_clk_ctrl |= CGC_CRYPTO;
- 	orion_crypto_init(CRYPTO_PHYS_BASE, KIRKWOOD_SRAM_PHYS_BASE,
-@@ -480,6 +481,9 @@ static int __init kirkwood_clock_gate(void)
- {
- 	unsigned int curr = readl(CLOCK_GATING_CTRL);
- 	u32 dev, rev;
-+#ifdef CONFIG_OF
-+	struct device_node *np;
-+#endif
++#include <linux/of_device.h>
+ #include <plat/ehci-orion.h>
  
- 	kirkwood_pcie_id(&dev, &rev);
- 	printk(KERN_DEBUG "Gating clock of unused units\n");
-@@ -488,6 +492,14 @@ static int __init kirkwood_clock_gate(void)
- 	/* Make sure those units are accessible */
- 	writel(curr | CGC_SATA0 | CGC_SATA1 | CGC_PEX0 | CGC_PEX1, CLOCK_GATING_CTRL);
+ #define rdl(off)	__raw_readl(hcd->regs + (off))
+@@ -191,6 +193,29 @@ ehci_orion_conf_mbus_windows(struct usb_hcd *hcd,
+ 	}
+ }
  
-+#ifdef CONFIG_OF
-+	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-crypto");
-+	if (np && of_device_is_available(np)) {
-+		kirkwood_clk_ctrl |= CGC_CRYPTO;
-+		of_node_put(np);
++static const char *phy_versions[] = {
++	[EHCI_PHY_NA]		= "",
++	[EHCI_PHY_ORION]	= "orion",
++	[EHCI_PHY_DD]		= "dd", /* XXX dd? */
++	[EHCI_PHY_KW]		= "kirkwood",
++};
++
++static const int get_phy_version(struct device_node *np)
++{
++	const char *pm;
++	int err, i;
++
++	err = of_property_read_string(np, "phy-version", &pm);
++	if (err < 0)
++		return err;
++
++	for (i = 0; i < ARRAY_SIZE(phy_versions); i++)
++		if (!strcasecmp(pm, phy_versions[i]))
++			return i;
++
++	return -ENODEV;
++}
++
+ static int __devinit ehci_orion_drv_probe(struct platform_device *pdev)
+ {
+ 	struct orion_ehci_data *pd = pdev->dev.platform_data;
+@@ -200,6 +225,7 @@ static int __devinit ehci_orion_drv_probe(struct platform_device *pdev)
+ 	struct ehci_hcd *ehci;
+ 	void __iomem *regs;
+ 	int irq, err;
++	enum orion_ehci_phy_ver phy_version;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+@@ -267,7 +293,15 @@ static int __devinit ehci_orion_drv_probe(struct platform_device *pdev)
+ 	/*
+ 	 * setup Orion USB controller.
+ 	 */
+-	switch (pd->phy_version) {
++	if (pdev->dev.of_node) {
++		phy_version = get_phy_version(pdev->dev.of_node);
++		if (phy_version < 0)
++			goto err3;
++	} else {
++		phy_version = pd->phy_version;
 +	}
++
++	switch (phy_version) {
+ 	case EHCI_PHY_NA:	/* dont change USB phy settings */
+ 		break;
+ 	case EHCI_PHY_ORION:
+@@ -312,9 +346,21 @@ static int __exit ehci_orion_drv_remove(struct platform_device *pdev)
+ 
+ MODULE_ALIAS("platform:orion-ehci");
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id ehci_orion_dt_ids[] __devinitdata = {
++	{ .compatible = "mrvl,orion-ehci", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, ehci_orion_dt_ids);
 +#endif
 +
- 	/* For SATA: first shutdown the phy */
- 	if (!(kirkwood_clk_ctrl & CGC_SATA0)) {
- 		/* Disable PLL and IVREF */
-diff --git a/arch/arm/mach-kirkwood/common.h b/arch/arm/mach-kirkwood/common.h
-index ca08826..76644e7 100644
---- a/arch/arm/mach-kirkwood/common.h
-+++ b/arch/arm/mach-kirkwood/common.h
-@@ -56,7 +56,6 @@ void kirkwood_l2_init(void);
- void kirkwood_wdt_init(void);
- void kirkwood_xor0_init(void);
- void kirkwood_xor1_init(void);
--void kirkwood_crypto_init(void);
- 
- extern int kirkwood_tclk;
- extern struct sys_timer kirkwood_timer;
+ static struct platform_driver ehci_orion_driver = {
+ 	.probe		= ehci_orion_drv_probe,
+ 	.remove		= __exit_p(ehci_orion_drv_remove),
+ 	.shutdown	= usb_hcd_platform_shutdown,
+-	.driver.name	= "orion-ehci",
++	.driver = {
++		.name	= "orion-ehci",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(ehci_orion_dt_ids),
++	},
+ };
 -- 
 1.7.3.4
