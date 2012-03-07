@@ -1,80 +1,65 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/6] AT91 more DT bindings
-Date: Wed, 7 Mar 2012 18:39:07 +0100
-Message-ID: <20120307173907.GE17087@game.jcrosoft.org>
-References: <20120302192844.GB21255@game.jcrosoft.org>
+From: Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v8 21/21] tegra: fdt: Enable FDT support for Ventana
+Date: Wed, 7 Mar 2012 10:18:32 -0800
+Message-ID: <5FBF8E85CA34454794F0F7ECBA79798F37971BBC9D@HQMAIL04.nvidia.com>
+References: <1331089833-25262-16-git-send-email-sjg@chromium.org>
+	<1331089833-25262-22-git-send-email-sjg@chromium.org>
+	<4F579697.4050108@wwwdotorg.org>
+ <CAPnjgZ0CF2Ytoj35MvdpEJa-g7JozG2U7xtQjPEGM4+p_ehtwA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120302192844.GB21255-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPnjgZ0CF2Ytoj35MvdpEJa-g7JozG2U7xtQjPEGM4+p_ehtwA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Simon/Stephen,
 
-	Rob is ok for you?
+> -----Original Message-----
+> From: sjg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org [mailto:sjg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org] On Behalf Of Simon Glass
+> Sent: Wednesday, March 07, 2012 10:15 AM
+> To: Stephen Warren
+> Cc: U-Boot Mailing List; Tom Warren; linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jerry Van
+> Baren; Devicetree Discuss
+> Subject: Re: [PATCH v8 21/21] tegra: fdt: Enable FDT support for Ventana
+> 
+> Hi Stephen,
+> 
+> On Wed, Mar 7, 2012 at 9:10 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> wrote:
+> > On 03/06/2012 08:10 PM, Simon Glass wrote:
+> >> From: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>
+> >> This switches Ventana over to use FDT for run-time config instead of
+> >> CONFIG options.
+> >>
+> >> At present Ventana does not have its own device tree file - it just
+> >> uses the Seaboard one.
+> >
+> > But there's a Ventana-specific tegra-ventana.dts in the kernel...
+> 
+> Yes, that's right. Perhaps we should drop this patch for now? Ventana will
+> still build, just not have USB support.
+> 
+> >
+> >> Signed-off-by: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >
+> > Have you tested this on Ventana in mainline U-Boot?
+> 
+> I have not, but I think Tom has - maybe Tom you can reply Tested-by here if
+> so?
+I haven't tested on Ventana yet (just got my board last week), but I will when I apply these patches and report back. If you want to drop the patch for now until you can get a tegra-ventana.dts prepped, that's fine by me, too.
 
-Best Regards,
-J.
-On 20:28 Fri 02 Mar     , Jean-Christophe PLAGNIOL-VILLARD wrote:
-> HI,
+Tom
+
+-- 
+nvpublic
 > 
-> 	The following patch series add the bindings for:
-> 	 - PMC
-> 	 - SDRAM/DDR Controller
-> 	 - Reset Controller
-> 	 - Shutdown Controller
-> 
-> The following changes since commit c5ec01650adb1976f928177cd7e71afcb82026c5:
-> 
->   ARM: at91: dt: enable usb ehci for sam9g45 and sam9x5 (2012-03-02 00:46:37 +0800)
-> 
-> are available in the git repository at:
->   git://github.com/at91linux/linux-at91.git ..BRANCH.NOT.VERIFIED..
-> 
-> Jean-Christophe PLAGNIOL-VILLARD (6):
->       ARM: at91/dt: add specific DT soc init
->       ARM: at91: add pmc DT support
->       ARM: at91: always enable sam9 restart
->       ARM: at91: add RSTC (Reset Controller) dt support
->       ARM: at91: add ram controller DT support
->       ARM: at91: add Shutdown Controller (SHDWC) DT support
-> 
->  .../devicetree/bindings/arm/atmel-at91.txt         |   60 ++++++++
->  .../devicetree/bindings/arm/atmel-pmc.txt          |   11 ++
->  arch/arm/boot/dts/at91sam9g20.dtsi                 |   20 +++
->  arch/arm/boot/dts/at91sam9g45.dtsi                 |   21 +++
->  arch/arm/boot/dts/at91sam9m10g45ek.dts             |   11 ++
->  arch/arm/boot/dts/at91sam9x5.dtsi                  |   20 +++
->  arch/arm/boot/dts/at91sam9x5cm.dtsi                |   11 ++
->  arch/arm/boot/dts/usb_a9g20.dts                    |   11 ++
->  arch/arm/mach-at91/Kconfig                         |   10 +-
->  arch/arm/mach-at91/at91sam9x5.c                    |    7 -
->  arch/arm/mach-at91/board-dt.c                      |    8 +-
->  arch/arm/mach-at91/clock.c                         |   54 ++++++-
->  arch/arm/mach-at91/generic.h                       |    2 +
->  arch/arm/mach-at91/include/mach/at91_shdwc.h       |    4 +-
->  arch/arm/mach-at91/include/mach/at91sam9x5.h       |    5 -
->  arch/arm/mach-at91/setup.c                         |  158 ++++++++++++++++++++
->  16 files changed, 380 insertions(+), 33 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/atmel-pmc.txt
-> 
-> Best Regards,
-> J.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Regards,
+> Simon
