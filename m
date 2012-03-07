@@ -1,50 +1,90 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v7 09/20] tegra: fdt: Add additional USB binding
-Date: Tue, 6 Mar 2012 19:19:21 -0800
-Message-ID: <CAPnjgZ1__o0tq3rKomf627xC+zAmVO6-F5K4+wtL-uXUJLH5PQ@mail.gmail.com>
-References: <1330452478-5039-10-git-send-email-sjg@chromium.org>
-	<74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DBB@HQMAIL01.nvidia.com>
-	<CAPnjgZ2e6wNPt9SW_oNXWF+X5K7oPtaAVWOe6oQ7QJNzFWSucQ@mail.gmail.com>
-	<74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DC6@HQMAIL01.nvidia.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: [PATCH 05/14] ARM: kirkwood: add interrupt controller to devicetree.
+Date: Wed,  7 Mar 2012 03:44:46 +0000
+Message-ID: <c27a2b2c176940d153f2659e1a64f9349fbdb9c1.1331090356.git.jason@lakedaemon.net>
+References: <cover.1331090356.git.jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17BDDF1DC6-C7FfzLzN0UxDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1331090356.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+In-Reply-To: <cover.1331090356.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+References: <cover.1330625877.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+ <cover.1331090356.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Based on work by Michael Walle (commit a952154).
 
-On Tue, Feb 28, 2012 at 10:49 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> Simon Glass wrote at Tuesday, February 28, 2012 11:49 AM:
->> On Tue, Feb 28, 2012 at 10:42 AM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> > Simon Glass wrote at Tuesday, February 28, 2012 11:08 AM:
->> >> This adds a property to indicate a port which can switch between host and device
->> >> mode.
->> >>
->> >> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> >
->> > Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> >
->> > (I can't recall; did this patch make it into the kernel too?)
->>
->> Not that I know of.
->
-> OK, it must have been another change that you pushed there.
->
-> Please push this one to the kernel too, thanks.
+Used just the intc portion of the patch, fixed the register address, and
+used of_find_compatible_node() instead.
 
-OK, I sent a ping on that thread so let's see if we get a response.
+Signed-off-by: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
+Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+---
+ arch/arm/boot/dts/kirkwood.dtsi   |    9 ++++++++-
+ arch/arm/mach-kirkwood/board-dt.c |    7 +++++++
+ 2 files changed, 15 insertions(+), 1 deletions(-)
 
-It could be that it has been committed somewhere but no one responded
-on the mailing list.
-
-Regards,
-Simon
-
->
-> --
-> nvpublic
->
+diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+index 702b955..7896a1d 100644
+--- a/arch/arm/boot/dts/kirkwood.dtsi
++++ b/arch/arm/boot/dts/kirkwood.dtsi
+@@ -2,5 +2,12 @@
+ 
+ / {
+ 	compatible = "mrvl,kirkwood";
+-};
++	interrupt-parent = <&intc>;
+ 
++	intc: interrupt-controller@fed20200 {
++		compatible = "mrvl,orion-intc";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		reg = <0xfed20200 0x20>;
++	};
++};
+diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+index f514b42..f9f446b 100644
+--- a/arch/arm/mach-kirkwood/board-dt.c
++++ b/arch/arm/mach-kirkwood/board-dt.c
+@@ -13,6 +13,7 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
++#include <linux/irqdomain.h>
+ #include <linux/mtd/partitions.h>
+ #include <linux/ata_platform.h>
+ #include <linux/mv643xx_eth.h>
+@@ -159,6 +160,8 @@ static void __init dreamplug_init(void)
+ 
+ static void __init kirkwood_dt_init(void)
+ {
++	struct device_node *node;
++
+ 	pr_info("Kirkwood: %s, TCLK=%d.\n", kirkwood_id(), kirkwood_tclk);
+ 
+ 	/*
+@@ -175,6 +178,10 @@ static void __init kirkwood_dt_init(void)
+ 	kirkwood_l2_init();
+ #endif
+ 
++	node = of_find_compatible_node(NULL, NULL, "mrvl,orion-intc");
++	if (node)
++		irq_domain_add_simple(node, 0);
++
+ 	/* internal devices that every board has */
+ 	kirkwood_rtc_init();
+ 	kirkwood_wdt_init();
+-- 
+1.7.3.4
