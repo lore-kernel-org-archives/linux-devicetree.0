@@ -1,17 +1,13 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: at91: add Shutdown Controller (SHDWC) DT support
-Date: Wed, 7 Mar 2012 19:59:05 +0100
-Message-ID: <20120307185905.GC27213@game.jcrosoft.org>
-References: <20120302192844.GB21255@game.jcrosoft.org>
- <201203022024.19488.arnd@arndb.de>
- <20120307173828.GD17087@game.jcrosoft.org>
- <201203071849.36867.arnd@arndb.de>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH 1/4] fdtget: Fix multiple arg bug and add test for it
+Date: Wed, 07 Mar 2012 13:27:11 -0600
+Message-ID: <E1S5MVz-00087L-Ld@jdl.com>
+References: <1330737130-29600-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201203071849.36867.arnd-r2nGTMty4D4@public.gmane.org>
+In-reply-to: <1330737130-29600-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -21,56 +17,19 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18:49 Wed 07 Mar     , Arnd Bergmann wrote:
-> On Wednesday 07 March 2012, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 20:24 Fri 02 Mar     , Arnd Bergmann wrote:
-> > > On Friday 02 March 2012, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > > > +       }
-> > > > +
-> > > > +       if (of_device_is_compatible(np, "atmel,at91sam9x5-shdwc")) {
-> > > > +               have_rtt = false;
-> > > > +               have_rtc = true;
-> > > > +       } else if (of_device_is_compatible(np, "atmel,at91sam9rl-shdwc")) {
-> > > > +               have_rtt = true;
-> > > > +               have_rtc = true;
-> > > > +       } else {
-> > > > +               have_rtt = true;
-> > > > +               have_rtc = false;
-> > > > +       }
-> > > > +
-> > > > +       if (have_rtc && of_property_read_bool(np, "atmel,wakeup-rtc-timer"))
-> > > > +                       mode |= AT91_SHDW_RTCWKEN;
-> > > > +
-> > > > +       if (have_rtt && of_property_read_bool(np, "atmel,wakeup-rtt-timer"))
-> > > > +                       mode |= AT91_SHDW_RTTWKEN;
-> > > > +
-> > > > +       at91_shdwc_write(AT91_SHDW_MR, wakeup_mode | mode);
-> > > > +
-> > > 
-> > > Hi Jean-Christophe,
-> > > 
-> > > I don't understand why you check the specific part here. Isn't it enough to
-> > > check the property when you already mandate that they can only be present
-> > > on devices that support the specific wakeup?
-> > > 
-> > > If there is a good explanation for that, maybe add a code comment why it's
-> > > required.
-> > some wake update source exist on few soc and we are not supposed to set the
-> > bit otherwise
-> > 
+> There is a rather unfortunate bug in fdtget in that if multiple argument
+> sets are provided, it just repeats displaying the first set ones for
+> each set.
 > 
-> I still don't understand: Doesn't the property already give the information?
-Yes
-> In general, you should try to encode these things in specific properties instead of
-> checking the compatible property.
-But I check that no mistake is done in the DT as the source of wakeup is
-availlable on different version of the IP
+> Fix this bug and add a test for it.
+> 
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Just more cautious
+Applied.
 
-Best Regards,
-J.
+Thanks,
+jdl
