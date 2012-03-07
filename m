@@ -1,137 +1,120 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/5 v2] i2c/gpio: add DT support
-Date: Wed, 7 Mar 2012 18:22:23 +0100
-Message-ID: <20120307172223.GB17087@game.jcrosoft.org>
-References: <1330525221-25651-1-git-send-email-plagnioj@jcrosoft.com>
- <4F5797F4.2040104@gmail.com>
+Subject: Re: [PATCH 1/1] of: add dma-mask binding
+Date: Wed, 7 Mar 2012 18:34:37 +0100
+Message-ID: <20120307173437.GC17087@game.jcrosoft.org>
+References: <1331119575-6638-1-git-send-email-plagnioj@jcrosoft.com>
+ <4F5793E9.9010100@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F5797F4.2040104-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <4F5793E9.9010100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11:16 Wed 07 Mar     , Rob Herring wrote:
-> On 02/29/2012 08:20 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+On 10:59 Wed 07 Mar     , Rob Herring wrote:
+> On 03/07/2012 05:26 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > This will allow each device to specify its dma-mask
+> > The microblaze architecture hook is keep temporary if no dma-mask is specified
+> > int the DT
+> > 
 > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 > > ---
-> > v2:
+> >  drivers/of/platform.c |   26 +++++++++++++++++++++++++-
+> >  1 files changed, 25 insertions(+), 1 deletions(-)
 > > 
-> > 	use devm_kzalloc
-> > 	use i2c-gpio
-> > 	use time name in the properties
-> > 
-> > Best Regars,
-> > J.
-> >  .../devicetree/bindings/gpio/gpio_i2c.txt          |   32 +++++++
-> >  drivers/i2c/busses/i2c-gpio.c                      |   95 +++++++++++++++----
-> >  2 files changed, 107 insertions(+), 20 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_i2c.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio_i2c.txt b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
-> > new file mode 100644
-> > index 0000000..27e1b1a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
-> > @@ -0,0 +1,32 @@
-> > +Device-Tree bindings for i2c gpio driver
-> > +
-> > +Required properties:
-> > +	- compatible = "i2c-gpio";
-> > +	- gpios: sda and scl gpio
-> > +
-> > +
-> > +Optional properties:
-> > +	- i2c-gpio,sda-open-drain: sda as open drain
-> > +	- i2c-gpio,scl-open-drain: scl as open drain
-> > +	- i2c-gpio,scl-output-only: scl as output only
-> > +	- udelay: delay between GPIO operations (may depend on each platform)
-> 
-> i2c-gpio,delay-us
-> 
-> > +	- i2c-algo-bit,timeout-milliseconds: timeout to get data
-> 
-> i2c-gpio,timeout-ms
-it's algo-bit speficic no i2c-gpio that's why I use i2c-algo-bit
-> 
-> > +
-> > +Example nodes:
-> > +
-> > +i2c-gpio@0 {
-> 
-> Should be "i2c@0"
-ok
-> 
-> > +	compatible = "i2c-gpio";
-> > +	gpios = <&pioA 23 0 /* sda */
-> > +		 &pioA 24 0 /* scl */
-> > +		>;
-> > +	i2c-gpio,sda-open-drain;
-> > +	i2c-gpio,scl-open-drain;
-> > +	udelay = <2>;		/* ~100 kHz */
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +
-> > +	rv3029c2@56 {
-> > +		compatible = "rv3029c2";
-> > +		reg = <0x56>;
-> > +	};
-> > +};
-> > diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-> > index a651779..71adba5 100644
-> > --- a/drivers/i2c/busses/i2c-gpio.c
-> > +++ b/drivers/i2c/busses/i2c-gpio.c
-> > @@ -14,8 +14,15 @@
-> >  #include <linux/module.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/platform_device.h>
-> > +#include <linux/gpio.h>
-> > +#include <linux/of_gpio.h>
-> > +#include <linux/of_i2c.h>
-> >  
-> > -#include <asm/gpio.h>
-> > +struct i2c_gpio_private_data {
-> > +	struct i2c_adapter adap;
-> > +	struct i2c_algo_bit_data bit_data;
-> > +	struct i2c_gpio_platform_data pdata;
-> > +};
-> >  
-> >  /* Toggle SDA by changing the direction of the pin */
-> >  static void i2c_gpio_setsda_dir(void *data, int state)
-> > @@ -78,24 +85,63 @@ static int i2c_gpio_getscl(void *data)
-> >  	return gpio_get_value(pdata->scl_pin);
+> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > index cae9477..bb22194 100644
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -121,6 +121,26 @@ void of_device_make_bus_id(struct device *dev)
+> >  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
 > >  }
 > >  
-> > +static int __devinit of_i2c_gpio_probe(struct device_node *np,
-> > +			     struct i2c_gpio_platform_data *pdata)
+> > +static u64* of_get_dma_mask(struct device_node *np)
 > > +{
-> > +	u32 reg;
+> > +	const __be32 *prop;
+> > +	int len;
+> > +	u64 *dma_mask;
 > > +
-> > +	if (of_gpio_count(np) < 2)
-> > +		return -ENODEV;
-> > +
-> > +	pdata->sda_pin = of_get_gpio(np, 0);
-> > +	pdata->scl_pin = of_get_gpio(np, 1);
-> > +
-> > +	if (pdata->sda_pin < 0 || pdata->scl_pin < 0) {
-> > +		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
-> > +		       np->full_name, pdata->sda_pin, pdata->scl_pin);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	if (of_property_read_u32(np, "udelay", &reg))
-> > +		pdata->udelay = reg;
+> > +	prop = of_get_property(np, "dma-mask", &len);
 > 
-> Why not of_property_read_u32(np, "udelay", &pdata->udelay)?
+> This would need some documentation. There is already "dma-ranges"
+> defined for OF which nay do what's needed.
+what is dma-ranges I see no doc about it
+but I don't think it could be used for the dma mask
 > 
-> Also, reg may not be initialized here.
-if udelay have any error we keep udelay as 0
+> > +
+> > +	if (!prop)
+> > +		return NULL;
+> > +
+> > +	dma_mask = kzalloc(sizeof(u64), GFP_KERNEL);
+> 
+> This seems kind of wasteful for 1 u64.
+no choice dma_mask must be a pointer
+> 
+> > +	if (!dma_mask)
+> > +		return NULL;
+> > +
+> > +	*dma_mask = of_read_number(prop, len / 4);
+> > +
+> > +	return dma_mask;
+> > +}
+> > +
+> >  /**
+> >   * of_device_alloc - Allocate and initialize an of_device
+> >   * @np: device node to assign to device
+> > @@ -161,10 +181,14 @@ struct platform_device *of_device_alloc(struct device_node *np,
+> >  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+> >  	}
+> >  
+> > +	dev->dev.dma_mask = of_get_dma_mask(np);
+> >  	dev->dev.of_node = of_node_get(np);
+> > +
+> >  #if defined(CONFIG_MICROBLAZE)
+> > -	dev->dev.dma_mask = &dev->archdata.dma_mask;
+> 
+> And doing it this way for didn't get a warm reception either:
+> 
+> http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-April/005285.html
+> 
+> Do you really need this to be something other than ~0UL and if so does
+> it need to be per device or system wide?
+> 
+> You can solve this with bus notifiers in your at91 code. Here's an
+> example which I did (but no longer need):
+> 
+> static u64 highbank_dma_mask = DMA_BIT_MASK(32);
+IIRC on at91 all of them that need it have a DMA_BIT_MASK(32)
+
+
+> 
+> static int highbank_platform_notifier(struct notifier_block *nb,
+> 				  unsigned long event, void *__dev)
+> {
+> 	struct device *dev = __dev;
+> 
+> 	if (event != BUS_NOTIFY_ADD_DEVICE)
+> 		return NOTIFY_DONE;
+> 
+> 	if (of_device_is_compatible(dev->of_node, "calxeda,hb-nfc"))
+> 		dev->dma_mask = &highbank_dma_mask;
+execpt as example today I need it on 2 node (OHCI & EHCI)
+
+and if more device need I don't want to end up with more fixup
+
+I really prefer to set it via DT
 
 Best Regards,
 J.
