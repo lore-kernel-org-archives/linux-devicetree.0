@@ -1,140 +1,47 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 9/9] ARM: at91: sam9x5 add udc DT support
-Date: Wed,  7 Mar 2012 10:15:46 +0100
-Message-ID: <1331111746-21393-9-git-send-email-plagnioj@jcrosoft.com>
-References: <20120307084924.GK21255@game.jcrosoft.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/9 v2] ARM: at91: usb ohci add dt support
+Date: Wed, 7 Mar 2012 09:34:46 +0000
+Message-ID: <20120307093446.GN17370@n2100.arm.linux.org.uk>
+References: <20120307084924.GK21255@game.jcrosoft.org> <1331111746-21393-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120307084924.GK21255@game.jcrosoft.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1331111746-21393-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- arch/arm/boot/dts/at91sam9g25ek.dts |    5 +++
- arch/arm/boot/dts/at91sam9x5.dtsi   |   67 +++++++++++++++++++++++++++++++++++
- arch/arm/mach-at91/at91sam9x5.c     |    2 +
- 3 files changed, 74 insertions(+), 0 deletions(-)
+On Wed, Mar 07, 2012 at 10:15:38AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> +static u64 at91_ohci_dma_mask = DMA_BIT_MASK(32);
+> +
+> +static int __devinit ohci_at91_of_init(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int i, ret, gpio;
+> +	enum of_gpio_flags flags;
+> +	struct at91_usbh_data	*pdata;
+> +	u32 ports;
+> +
+> +	if (!np)
+> +		return 0;
+> +
+> +	/* Right now device-tree probed devices don't get dma_mask set.
+> +	 * Since shared usb code relies on it, set it here for now.
+> +	 * Once we have dma capability bindings this can go away.
+> +	 */
+> +	if (!pdev->dev.dma_mask)
+> +		pdev->dev.dma_mask = &at91_ohci_dma_mask;
 
-diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-index ac0dc00..8e949d3 100644
---- a/arch/arm/boot/dts/at91sam9g25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-@@ -32,6 +32,11 @@
- 				phy-mode = "rmii";
- 				status = "okay";
- 			};
-+
-+			usb2: gadget@f803c000 {
-+				atmel,vbus-gpio = <&pioB 16 0>;
-+				status = "okay";
-+			};
- 		};
- 
- 		usb0: ohci@00600000 {
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index ac3c96c..0579698 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -171,6 +171,73 @@
- 				interrupts = <27 4>;
- 				status = "disabled";
- 			};
-+
-+			usb2: gadget@f803c000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "atmel,at91sam9rl-udc";
-+				reg = <0x00500000 0x80000
-+				       0xf803c000 0x400>;
-+				interrupts = <23 4>;
-+				status = "disabled";
-+
-+				ep0 {
-+					reg = <0>;
-+					atmel,fifo-size = <64>;
-+					atmel,nb-banks = <1>;
-+					atmel,can-dma = <0>;
-+					atmel,can-isoc = <0>;
-+				};
-+
-+				ep1 {
-+					reg = <1>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <2>;
-+					atmel,can-dma = <1>;
-+					atmel,can-isoc = <1>;
-+				};
-+
-+				ep2 {
-+					reg = <2>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <2>;
-+					atmel,can-dma = <1>;
-+					atmel,can-isoc = <1>;
-+				};
-+
-+				ep3 {
-+					reg = <3>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <3>;
-+					atmel,can-dma = <1>;
-+					atmel,can-isoc = <0>;
-+				};
-+
-+				ep4 {
-+					reg = <4>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <3>;
-+					atmel,can-dma = <1>;
-+					atmel,can-isoc = <0>;
-+				};
-+
-+				ep5 {
-+					reg = <5>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <3>;
-+					atmel,can-dma = <1>;
-+					atmel,can-isoc = <1>;
-+				};
-+
-+				ep6 {
-+					reg = <6>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <3>;
-+					atmel,can-dma = <1>;
-+					atmel,can-isoc = <1>;
-+				};
-+			};
-+
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
-index 7333276..66f2cb5 100644
---- a/arch/arm/mach-at91/at91sam9x5.c
-+++ b/arch/arm/mach-at91/at91sam9x5.c
-@@ -233,6 +233,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("hclk", "600000.ohci", &uhphs_clk),
- 	CLKDEV_CON_DEV_ID("ohci_clk", "600000.ohci", &uhphs_clk),
- 	CLKDEV_CON_DEV_ID("ehci_clk", "700000.ehci", &uhphs_clk),
-+	CLKDEV_CON_DEV_ID("hclk", "500000.gadget", &utmi_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "500000.gadget", &udphs_clk),
- };
- 
- /*
--- 
-1.7.7
+That sounds like a rather big omission from DT - what's happening to
+address this (before we end up with lots of drivers with this).  Pretty
+much any device which does DMA needs both this and the coherent DMA mask
+set properly.
+
+We really don't want this kind of workaround scattered in every driver
+which has been converted to DT.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
