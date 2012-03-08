@@ -1,103 +1,35 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5 v3] ARM: at91: sam9x5 add i2c DT support
-Date: Thu, 08 Mar 2012 14:36:05 -0600
-Message-ID: <4F591835.5040702@gmail.com>
-References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
- <1331196635-27203-5-git-send-email-plagnioj@jcrosoft.com>
- <4F58E87D.9040701@gmail.com> <20120308175204.GJ27213@game.jcrosoft.org>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 5/9] USB: at91: Device udc add dt support
+Date: Thu, 8 Mar 2012 12:53:38 -0800
+Message-ID: <20120308205338.GA16644@kroah.com>
+References: <20120307084924.GK21255@game.jcrosoft.org>
+ <1331111746-21393-5-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120308175204.GJ27213-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1331111746-21393-5-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/2012 11:52 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 11:12 Thu 08 Mar     , Rob Herring wrote:
->> On 03/08/2012 02:50 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>> For now on use i2c-gpio driver on the same pin as the hardware IP.
->>>
->>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->>> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>> ---
->>> v3:
->>>
->>> 	update i2c binding (Rob comments)
->>>
->>> Best Regards,
->>> J.
->>>  arch/arm/boot/dts/at91sam9x5.dtsi |   39 +++++++++++++++++++++++++++++++++++++
->>>  1 files changed, 39 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
->>> index c294657..fdd1ac6 100644
->>> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
->>> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
->>> @@ -188,4 +188,43 @@
->>>  			status = "disabled";
->>>  		};
->>>  	};
->>> +
->>> +	i2c-gpio@0 {
->>> +		compatible = "i2c-gpio";
->>> +		gpios = <&pioA 30 0 /* sda */
->>> +			 &pioA 31 0 /* scl */
->>> +			>;
->>> +		i2c-gpio,sda-open-drain;
->>> +		i2c-gpio,scl-open-drain;
->>> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +		status = "disabled";
->>> +	};
->>> +
->>> +	i2c-gpio@1 {
->>> +		compatible = "i2c-gpio";
->>> +		gpios = <&pioC 0 0 /* sda */
->>> +			 &pioC 1 0 /* scl */
->>> +			>;
->>> +		i2c-gpio,sda-open-drain;
->>> +		i2c-gpio,scl-open-drain;
->>> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +		status = "disabled";
->>> +	};
->>> +
->>> +	i2c-gpio@2 {
->>> +		compatible = "i2c-gpio";
->>> +		gpios = <&pioB 4 0 /* sda */
->>> +			 &pioB 5 0 /* scl */
->>> +			>;
->>> +		i2c-gpio,sda-open-drain;
->>> +		i2c-gpio,scl-open-drain;
->>> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +		status = "disabled";
->>> +	};
->>
->> If these are just any random gpio lines, it seems strange to define
->> these in a SOC dtsi and then disable them.
-> they are not, they are the same pin as the i2c hardware IP.
+On Wed, Mar 07, 2012 at 10:15:42AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> Allow to compile it if AT91 is enable.
 > 
-> Today the hw driver is not ready or will not work correctly (IP issue)
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> Hi Greg
 > 
-> On hardware design we use the I2C pin but can not use the hw driver
-> 
+> 	if it's ok with you I apply with the rest of the USB patch series via
+> 	at91
 
-Okay. Then other than the i2c-gpio node name, ack for all of these.
+Ok with me.
 
-Rob
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
