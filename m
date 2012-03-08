@@ -1,50 +1,59 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 04/11] regulator: tps6586x: fix typo in debug message
-Date: Thu, 8 Mar 2012 19:08:27 +0000
-Message-ID: <20120308190827.GB3638@opensource.wolfsonmicro.com>
-References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
- <1331218291-16119-5-git-send-email-thierry.reding@avionic-design.de>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH 06/14] ARM: kirkwood: convert uart0 to devicetree.
+Date: Thu, 8 Mar 2012 20:27:11 +0100 (CET)
+Message-ID: <alpine.LFD.2.02.1203082026470.2742@ionos>
+References: <cover.1331090356.git.jason@lakedaemon.net>
+ <201203072113.04369.arnd@arndb.de>
+ <20120308162530.GI5050@titan.lakedaemon.net>
+ <201203081701.01663.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Hmb9n29fjuiORm2l"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1331218291-16119-5-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201203081701.01663.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 8 Mar 2012, Arnd Bergmann wrote:
 
---Hmb9n29fjuiORm2l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Thursday 08 March 2012, Jason wrote:
+> > 
+> > On Wed, Mar 07, 2012 at 09:13:04PM +0000, Arnd Bergmann wrote:
+> > > Finally, something could be wrong with the interrupt controller.
+> > > AFAICT, you register it through the device tree now, but it's also
+> > > getting initialized through kirkwood_init_irq, so the numbers
+> > > would all be wrong.
+> > 
+> > Yes, I'm working through this now.  mv_cesa silently fails to come up
+> > if it can't find the interrupt controller via fdt.  So, it needs to get
+> > done.
+> > 
+> > Right now, I'm looking at how mach-versatile does it (vic_init()) since
+> > it's also an ARM926ej-s...
+> > 
+> 
+> Ok, sounds good. It's not important whether it's an ARM9 or not btw.
+> You should look at both anything that defines an "interrupt-controller"
+> property as an example including Documentation/devicetree/bindings/arm/vic.txt
+> and Documentation/devicetree/bindings/arm/gic.txt.
+> 
+> (taking Thomas Gleixner on Cc)
+> 
+> Since the orion irq chip is based on irqchip_generic, it would be
+> perfect to have a generic irqchip binding to go along with
+> kernel/irq/generic-chip.c. Not sure if anyone has thought about this
+> before, but it looks like we can completely avoid using
+> arch/arm/plat-orion/irq.c and arch/arm/mach-kirkwood/irq.c if we
+> do that.
 
-On Thu, Mar 08, 2012 at 03:51:24PM +0100, Thierry Reding wrote:
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-
-Applied, thanks.
-
---Hmb9n29fjuiORm2l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJPWQOEAAoJEBus8iNuMP3dfu4QAJhJpCq99CRu3OoF3uPsZweM
-+Rc3/bWQya+dZoAPYcytvVTJj0Ijv4rp12TMMBCgrGj0s2nIxWDeIdAtp1XFqOXB
-ubv0dI/mzGLEvPnPNHSD4in2TnKuuabopQkLI1044F5tW4/pQS+OyswyCE7QtaXQ
-mXHMYusZgTQb5IlzL/I4knGEi5DQgB2aJrRI7FeWTTvtUl7+YMF0X8ynMWtU9g80
-h0PtlXc9MSmFICnLGcOr2faYvpUi9IJKGbHno/jgxc0WyJR5QChTwUlNWvzi7qfi
-mXbIOy4todXMpD+a+Egfc8RARf3sWk/IYGJGAwAFSznqo5JmMBrWX6b19kweFvis
-YEiw2jO6wlApJ82E4x0pEsx1mCQRDfML1CWm5VqJGeTLwvcuzHERZrOBwGj8VAr+
-6StLMtMMuDor30ZjkYN/6/3MP69rW0gtG42lNfK3mPN8X++/FL/yD/9Bwn5uZPEt
-d5vUGCgDk3/CSIkUefZeuyMTOwxxf/fO1Tzi0yK1X15ygCqHi7AQA/UcpxBLQslE
-n/7wzU+jCMVaseDWrM0aY94TyNQv/iBVeeio+gHcco8MMsjoiJbbjkNO65pz2PfI
-lKVBD8ORE4Vtd7ziGF4bye29l7ZoTKyLtUbEcekedqyIEi6kKp4iuW4y1QQ0X82A
-T9z9haiuKd8QN1vk7XXg
-=WNKZ
------END PGP SIGNATURE-----
-
---Hmb9n29fjuiORm2l--
+Right. That should be trivial to implement.
