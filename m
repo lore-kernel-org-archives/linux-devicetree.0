@@ -1,86 +1,41 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: at91: add ram controller DT support
-Date: Thu, 8 Mar 2012 15:10:00 +0100
-Message-ID: <20120308141000.GF27213@game.jcrosoft.org>
-References: <20120302192844.GB21255@game.jcrosoft.org>
- <1330718048-9314-5-git-send-email-plagnioj@jcrosoft.com>
- <4F57BDCE.1050708@gmail.com>
- <20120308061324.GE27213@game.jcrosoft.org>
- <4F58BE4F.5080009@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F58BE4F.5080009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH 07/11] ARM: pci: Keep pci_common_init() around after init
+Date: Thu,  8 Mar 2012 15:51:27 +0100
+Message-ID: <1331218291-16119-8-git-send-email-thierry.reding@avionic-design.de>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1331218291-16119-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08:12 Thu 08 Mar     , Rob Herring wrote:
-> On 03/08/2012 12:13 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >>> diff --git a/arch/arm/mach-at91/include/mach/at91sam9x5.h b/arch/arm/mach-at91/include/mach/at91sam9x5.h
-> >>> index a297a77..88e43d5 100644
-> >>> --- a/arch/arm/mach-at91/include/mach/at91sam9x5.h
-> >>> +++ b/arch/arm/mach-at91/include/mach/at91sam9x5.h
-> >>> @@ -55,11 +55,6 @@
-> >>>  #define AT91SAM9X5_BASE_USART2	0xf8024000
-> >>>  
-> >>>  /*
-> >>> - * System Peripherals
-> >>> - */
-> >>> -#define AT91SAM9X5_BASE_DDRSDRC0	0xffffe800
-> >>> -
-> >>> -/*
-> >>>   * Base addresses for early serial code (uncompress.h)
-> >>>   */
-> >>>  #define AT91_DBGU	AT91_BASE_DBGU0
-> >>> diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-> >>> index 3e48b59..f86450d 100644
-> >>> --- a/arch/arm/mach-at91/setup.c
-> >>> +++ b/arch/arm/mach-at91/setup.c
-> >>> @@ -315,12 +315,33 @@ static void at91_dt_rstc(void)
-> >>>  	of_node_put(np);
-> >>>  }
-> >>>  
-> >>> +static struct of_device_id ramc_ids[] = {
-> >>> +	{ .compatible = "atmel,at91sam9260-sdramc" },
-> >>> +	{ .compatible = "atmel,at91sam9g45-ddramc" },
-> >>> +	{ /*sentinel*/ }
-> >>> +};
-> >>> +
-> >>> +static void at91_dt_ramc(void)
-> >>> +{
-> >>> +	struct device_node *np;
-> >>> +
-> >>> +	np = of_find_matching_node(NULL, ramc_ids);
-> >>> +	if (!np)
-> >>> +		panic("unable to find compatible ram conroller node in dtb\n");
-> >>
-> >> You really can't boot if this fails? A WARN is better if it allows you
-> >> to boot until at least your console is actually up.
-> > if the restart is called you will have a oops so no it's a basic mandatory
-> > device on at91
-> > 
-> 
-> But you may never see the panic message because your console is not up.
-> If you WARN and can continue to boot, then the user can see the problem
-> and fix it. Otherwise you get nothing and have to go rebuild and turn on
-> earlyprintk.
-yeah agreed but if the restart id use before the console is enable you will
-have the same issue. the ramc controller are basic device so people usally
-don't touch it except you add a SoC support.
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+---
+ arch/arm/kernel/bios32.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-so I prefer to panic
-
-Best Regards,
-J.
+diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+index be5d3b2..c88dcf5 100644
+--- a/arch/arm/kernel/bios32.c
++++ b/arch/arm/kernel/bios32.c
+@@ -411,7 +411,7 @@ static int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+ 	return irq;
+ }
+ 
+-static void __init pcibios_init_hw(struct hw_pci *hw)
++static void pcibios_init_hw(struct hw_pci *hw)
+ {
+ 	struct pci_sys_data *sys = NULL;
+ 	int ret;
+@@ -457,7 +457,7 @@ static void __init pcibios_init_hw(struct hw_pci *hw)
+ 	}
+ }
+ 
+-void __init pci_common_init(struct hw_pci *hw)
++void pci_common_init(struct hw_pci *hw)
+ {
+ 	struct pci_sys_data *sys;
+ 
+-- 
+1.7.9.3
