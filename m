@@ -1,56 +1,103 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 09/11] ARM: tegra: Rewrite PCIe support as a driver
-Date: Thu, 08 Mar 2012 13:09:04 -0700
-Message-ID: <4F5911E0.6060802@wwwdotorg.org>
-References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de> <1331218291-16119-10-git-send-email-thierry.reding@avionic-design.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/5 v3] ARM: at91: sam9x5 add i2c DT support
+Date: Thu, 08 Mar 2012 14:36:05 -0600
+Message-ID: <4F591835.5040702@gmail.com>
+References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
+ <1331196635-27203-5-git-send-email-plagnioj@jcrosoft.com>
+ <4F58E87D.9040701@gmail.com> <20120308175204.GJ27213@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1331218291-16119-10-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120308175204.GJ27213-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/2012 07:51 AM, Thierry Reding wrote:
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+On 03/08/2012 11:52 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 11:12 Thu 08 Mar     , Rob Herring wrote:
+>> On 03/08/2012 02:50 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>> For now on use i2c-gpio driver on the same pin as the hardware IP.
+>>>
+>>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>>> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>> ---
+>>> v3:
+>>>
+>>> 	update i2c binding (Rob comments)
+>>>
+>>> Best Regards,
+>>> J.
+>>>  arch/arm/boot/dts/at91sam9x5.dtsi |   39 +++++++++++++++++++++++++++++++++++++
+>>>  1 files changed, 39 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+>>> index c294657..fdd1ac6 100644
+>>> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+>>> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+>>> @@ -188,4 +188,43 @@
+>>>  			status = "disabled";
+>>>  		};
+>>>  	};
+>>> +
+>>> +	i2c-gpio@0 {
+>>> +		compatible = "i2c-gpio";
+>>> +		gpios = <&pioA 30 0 /* sda */
+>>> +			 &pioA 31 0 /* scl */
+>>> +			>;
+>>> +		i2c-gpio,sda-open-drain;
+>>> +		i2c-gpio,scl-open-drain;
+>>> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +		status = "disabled";
+>>> +	};
+>>> +
+>>> +	i2c-gpio@1 {
+>>> +		compatible = "i2c-gpio";
+>>> +		gpios = <&pioC 0 0 /* sda */
+>>> +			 &pioC 1 0 /* scl */
+>>> +			>;
+>>> +		i2c-gpio,sda-open-drain;
+>>> +		i2c-gpio,scl-open-drain;
+>>> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +		status = "disabled";
+>>> +	};
+>>> +
+>>> +	i2c-gpio@2 {
+>>> +		compatible = "i2c-gpio";
+>>> +		gpios = <&pioB 4 0 /* sda */
+>>> +			 &pioB 5 0 /* scl */
+>>> +			>;
+>>> +		i2c-gpio,sda-open-drain;
+>>> +		i2c-gpio,scl-open-drain;
+>>> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +		status = "disabled";
+>>> +	};
+>>
+>> If these are just any random gpio lines, it seems strange to define
+>> these in a SOC dtsi and then disable them.
+> they are not, they are the same pin as the i2c hardware IP.
+> 
+> Today the hw driver is not ready or will not work correctly (IP issue)
+> 
+> On hardware design we use the I2C pin but can not use the hw driver
+> 
 
-Patch description?
+Okay. Then other than the i2c-gpio node name, ack for all of these.
 
-> diff --git a/arch/arm/mach-tegra/board-harmony-pcie.c b/arch/arm/mach-tegra/board-harmony-pcie.c
-...
-> -static int __init harmony_pcie_init(void)
-> +static int tegra_pcie_init(struct platform_device *pdev)
-
-That name should probably still be called harmony_something() since it's
-still board-specific.
-
-I wonder how having a per-board callback will integrate with device
-tree. I guess I'll find out when I review patch 11:-)
-
-> diff --git a/arch/arm/mach-tegra/board-trimslice.c b/arch/arm/mach-tegra/board-trimslice.c
-
-> +static int __init trimslice_pci_init(void)
->  {
->  	if (!machine_is_trimslice())
->  		return 0;
-
-You can remove that test now.
-
-> diff --git a/arch/arm/mach-tegra/board.h b/arch/arm/mach-tegra/board.h
-
-> +#define TEGRA_PCIE_MAX_PORTS 2
-> +
-> +struct tegra_pcie_pdata {
-> +	int (*init)(struct platform_device *pdev);
-> +	int (*exit)(struct platform_device *pdev);
-> +	bool enable_ports[TEGRA_PCIE_MAX_PORTS];
-> +};
-
-That's a somewhat odd place to put the header; a dedicated
-mach-tegra/include/mach/tegra_pcie_pdata.h or
-include/linux/platform_data/tegra_pcie.h might make more sense.
-
-Aside from those pretty minor issues, this all looks great. Thanks for
-fixing our driver!
+Rob
