@@ -1,71 +1,73 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: at91: add ram controller DT support
-Date: Thu, 8 Mar 2012 07:13:24 +0100
-Message-ID: <20120308061324.GE27213@game.jcrosoft.org>
-References: <20120302192844.GB21255@game.jcrosoft.org>
- <1330718048-9314-5-git-send-email-plagnioj@jcrosoft.com>
- <4F57BDCE.1050708@gmail.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 4/9] tegra: fdt: i2c: Add extra I2C bindings for U-Boot
+Date: Wed, 7 Mar 2012 22:31:01 -0800
+Message-ID: <CAPnjgZ3AxtS8guUnbFnuFoD-Dqfvy0XKvPH+f84RyKmxin1Hhw@mail.gmail.com>
+References: <1331096428-6317-5-git-send-email-sjg@chromium.org>
+	<4F57C76D.6040004@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F57BDCE.1050708-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4F57C76D.6040004-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > diff --git a/arch/arm/mach-at91/include/mach/at91sam9x5.h b/arch/arm/mach-at91/include/mach/at91sam9x5.h
-> > index a297a77..88e43d5 100644
-> > --- a/arch/arm/mach-at91/include/mach/at91sam9x5.h
-> > +++ b/arch/arm/mach-at91/include/mach/at91sam9x5.h
-> > @@ -55,11 +55,6 @@
-> >  #define AT91SAM9X5_BASE_USART2	0xf8024000
-> >  
-> >  /*
-> > - * System Peripherals
-> > - */
-> > -#define AT91SAM9X5_BASE_DDRSDRC0	0xffffe800
-> > -
-> > -/*
-> >   * Base addresses for early serial code (uncompress.h)
-> >   */
-> >  #define AT91_DBGU	AT91_BASE_DBGU0
-> > diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-> > index 3e48b59..f86450d 100644
-> > --- a/arch/arm/mach-at91/setup.c
-> > +++ b/arch/arm/mach-at91/setup.c
-> > @@ -315,12 +315,33 @@ static void at91_dt_rstc(void)
-> >  	of_node_put(np);
-> >  }
-> >  
-> > +static struct of_device_id ramc_ids[] = {
-> > +	{ .compatible = "atmel,at91sam9260-sdramc" },
-> > +	{ .compatible = "atmel,at91sam9g45-ddramc" },
-> > +	{ /*sentinel*/ }
-> > +};
-> > +
-> > +static void at91_dt_ramc(void)
-> > +{
-> > +	struct device_node *np;
-> > +
-> > +	np = of_find_matching_node(NULL, ramc_ids);
-> > +	if (!np)
-> > +		panic("unable to find compatible ram conroller node in dtb\n");
-> 
-> You really can't boot if this fails? A WARN is better if it allows you
-> to boot until at least your console is actually up.
-if the restart is called you will have a oops so no it's a basic mandatory
-device on at91
+Hi Stephen,
 
-Best Regards,
-J.
+On Wed, Mar 7, 2012 at 12:39 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>=
+ wrote:
+> On 03/06/2012 10:00 PM, Simon Glass wrote:
+>> Add U-Boot's peripheral clock information to the Tegra20 device tree=
+ file.
+>>
+>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ...
+>> diff --git a/doc/device-tree-bindings/i2c/tegra20-i2c.txt b/doc/devi=
+ce-tree-bindings/i2c/tegra20-i2c.txt
+> ...
+>> +Required properties:
+>> + - clocks : Two clocks must be given, each as a phandle to the Tegr=
+a's
+>> + =A0 =A0 =A0 =A0 =A0 =A0CAR node and the clock number as a paramete=
+r:
+>
+> I'd rather rely on the common clock binding documentation for the for=
+mat
+> of the clock specifiers than duplicate the information here. True, th=
+at
+> document isn't in U-Boot (nor is it final). I.e.:
+>
+> =A0 =A0Two clocks must be specified:
+>
+> But I think this is fine for now (I might care more if submitting a d=
+oc
+> file for the kernel tree), so
+>
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+
+Thanks. Good to get this in.
+
+Regards,
+Simon
+>
+>> + =A0 =A0 - the I2C clock to use for the peripheral
+>> + =A0 =A0 - the pll_p_out3 clock, which can be used for fast operati=
+on. This
+>> + =A0 =A0 =A0 =A0 =A0does not change and is the same for all I2C nod=
+es.
+>> +
+>> +Example:
+>> +(TODO: merge with existing example):
+>> +
+>> + =A0 =A0 i2c@7000c400 {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 #address-cells =3D <1>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 #size-cells =3D <0>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D "nvidia,tegra20-i2c";
+>> + =A0 =A0 =A0 =A0 =A0 =A0 reg =3D <0x7000C400 0x100>;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D < 116 >;
+>> + =A0 =A0 =A0 =A0 =A0 =A0 /* PERIPH_ID_I2C2, PLL_P_OUT3 */
+>> + =A0 =A0 =A0 =A0 =A0 =A0 clocks =3D <&tegra_car 54>, <&tegra_car 12=
+4>;
+>> + =A0 =A0 };
