@@ -1,51 +1,38 @@
-From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [GIT PULL v4] ARM: kirkwood: fdt conversion progress
-Date: Thu, 8 Mar 2012 11:27:29 -0500
-Message-ID: <20120308162729.GJ5050@titan.lakedaemon.net>
-References: <20120307221012.GH5050@titan.lakedaemon.net>
- <201203081610.21493.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201203081610.21493.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Aneesh V <aneesh@ti.com>
+Subject: [PATCH 0/4] dt: device tree support for TI EMIF driver
+Date: Thu,  8 Mar 2012 22:03:53 +0530
+Message-ID: <1331224437-4808-1-git-send-email-aneesh@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Aneesh V <aneesh@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2012 at 04:10:21PM +0000, Arnd Bergmann wrote:
-> On Wednesday 07 March 2012, Jason Cooper wrote:
-> > The following changes since commit d65b4e98d7ea3038b767b70fe8be959b2913f16d:
-> > 
-> >   Linux 3.3-rc3 (2012-02-08 19:21:53 -0800)
-> > 
-> > are available in the git repository at:
-> >   git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt
-> > 
-> > ---
-> > Arnd,
-> > 
-> > My first two should match up with what you have already, the only
-> > outlier is that Jean-Christophe's patch is needed, but I don't think
-> > everyone agrees on it yet.
-> > 
-> 
-> Right now, Olof is handling the pull requests. I would suggest that he
-> can use your branch to replace the current staging branch but still keep
-> it in staging until everyone agrees or you replace it with a better version.
+This series adds device tree support for TI EMIF SDRAM controller
+driver. For this, a binding has been added for representing AC timing
+parameters and other details of LPDDR2 memories.
 
-Ok, I'll make sure he's added to future emails.
+This series depends my series for adding EMIF driver [1]
 
-thx,
+[1] http://marc.info/?l=linux-omap&m=133122243430942&w=2
 
-Jason.
+Aneesh V (4):
+  dt: device tree bindings for LPDDR2 memories
+  dt: emif: device tree bindings for TI's EMIF sdram controller
+  arm: dts: EMIF and LPDDR2 device tree data for OMAP4 boards
+  misc: emif: add device tree support to emif driver
+
+ .../devicetree/bindings/lpddr2/lpddr2-timings.txt  |   52 ++++
+ .../devicetree/bindings/lpddr2/lpddr2.txt          |  102 +++++++
+ .../bindings/memory-controllers/ti/emif.txt        |   55 ++++
+ arch/arm/boot/dts/elpida_ecb240abacn.dtsi          |   67 +++++
+ arch/arm/boot/dts/omap4-panda.dts                  |   13 +
+ arch/arm/boot/dts/omap4-sdp.dts                    |   13 +
+ arch/arm/boot/dts/omap4.dtsi                       |   18 ++
+ drivers/misc/emif.c                                |  289 +++++++++++++++++++-
+ 8 files changed, 608 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt
+ create mode 100644 Documentation/devicetree/bindings/lpddr2/lpddr2.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+ create mode 100644 arch/arm/boot/dts/elpida_ecb240abacn.dtsi
+
