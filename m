@@ -1,68 +1,23 @@
-From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 06/14] ARM: kirkwood: convert uart0 to devicetree.
-Date: Thu, 8 Mar 2012 14:47:25 -0500
-Message-ID: <20120308194725.GM5050@titan.lakedaemon.net>
-References: <cover.1331090356.git.jason@lakedaemon.net>
- <201203072113.04369.arnd@arndb.de>
- <20120308162530.GI5050@titan.lakedaemon.net>
- <201203081701.01663.arnd@arndb.de>
- <alpine.LFD.2.02.1203082026470.2742@ionos>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 08/11] ARM: tegra: Move tegra_pcie_xclk_clamp() to PMC
+Date: Thu, 08 Mar 2012 12:50:21 -0700
+Message-ID: <4F590D7D.70308@wwwdotorg.org>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de> <1331218291-16119-9-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.02.1203082026470.2742@ionos>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1331218291-16119-9-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2012 at 08:27:11PM +0100, Thomas Gleixner wrote:
-> On Thu, 8 Mar 2012, Arnd Bergmann wrote:
+On 03/08/2012 07:51 AM, Thierry Reding wrote:
+> The PMC code already accesses the PMC registers so it makes sense to
+> move this function there as well. While at it, rename the function to
+> tegra_pmc_pcie_xclk_clamp() for consistency.
 > 
-> > On Thursday 08 March 2012, Jason wrote:
-> > > 
-> > > On Wed, Mar 07, 2012 at 09:13:04PM +0000, Arnd Bergmann wrote:
-> > > > Finally, something could be wrong with the interrupt controller.
-> > > > AFAICT, you register it through the device tree now, but it's also
-> > > > getting initialized through kirkwood_init_irq, so the numbers
-> > > > would all be wrong.
-> > > 
-> > > Yes, I'm working through this now.  mv_cesa silently fails to come up
-> > > if it can't find the interrupt controller via fdt.  So, it needs to get
-> > > done.
-> > > 
-> > > Right now, I'm looking at how mach-versatile does it (vic_init()) since
-> > > it's also an ARM926ej-s...
-> > > 
-> > 
-> > Ok, sounds good. It's not important whether it's an ARM9 or not btw.
-> > You should look at both anything that defines an "interrupt-controller"
-> > property as an example including Documentation/devicetree/bindings/arm/vic.txt
-> > and Documentation/devicetree/bindings/arm/gic.txt.
-> > 
-> > (taking Thomas Gleixner on Cc)
-> > 
-> > Since the orion irq chip is based on irqchip_generic, it would be
-> > perfect to have a generic irqchip binding to go along with
-> > kernel/irq/generic-chip.c. Not sure if anyone has thought about this
-> > before, but it looks like we can completely avoid using
-> > arch/arm/plat-orion/irq.c and arch/arm/mach-kirkwood/irq.c if we
-> > do that.
-> 
-> Right. That should be trivial to implement.
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 
-ok, I'm on it.  kernel/irq/of_generic_irq.c sound good?
-
-thx,
-
-Jason.
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
