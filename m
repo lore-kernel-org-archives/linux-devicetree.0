@@ -1,16 +1,18 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Subject: Re: [PATCH 06/14] ARM: kirkwood: convert uart0 to devicetree.
-Date: Thu, 8 Mar 2012 20:27:11 +0100 (CET)
-Message-ID: <alpine.LFD.2.02.1203082026470.2742@ionos>
+Date: Thu, 8 Mar 2012 14:47:25 -0500
+Message-ID: <20120308194725.GM5050@titan.lakedaemon.net>
 References: <cover.1331090356.git.jason@lakedaemon.net>
  <201203072113.04369.arnd@arndb.de>
  <20120308162530.GI5050@titan.lakedaemon.net>
  <201203081701.01663.arnd@arndb.de>
+ <alpine.LFD.2.02.1203082026470.2742@ionos>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203081701.01663.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.02.1203082026470.2742@ionos>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,40 +22,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 8 Mar 2012, Arnd Bergmann wrote:
+On Thu, Mar 08, 2012 at 08:27:11PM +0100, Thomas Gleixner wrote:
+> On Thu, 8 Mar 2012, Arnd Bergmann wrote:
+> 
+> > On Thursday 08 March 2012, Jason wrote:
+> > > 
+> > > On Wed, Mar 07, 2012 at 09:13:04PM +0000, Arnd Bergmann wrote:
+> > > > Finally, something could be wrong with the interrupt controller.
+> > > > AFAICT, you register it through the device tree now, but it's also
+> > > > getting initialized through kirkwood_init_irq, so the numbers
+> > > > would all be wrong.
+> > > 
+> > > Yes, I'm working through this now.  mv_cesa silently fails to come up
+> > > if it can't find the interrupt controller via fdt.  So, it needs to get
+> > > done.
+> > > 
+> > > Right now, I'm looking at how mach-versatile does it (vic_init()) since
+> > > it's also an ARM926ej-s...
+> > > 
+> > 
+> > Ok, sounds good. It's not important whether it's an ARM9 or not btw.
+> > You should look at both anything that defines an "interrupt-controller"
+> > property as an example including Documentation/devicetree/bindings/arm/vic.txt
+> > and Documentation/devicetree/bindings/arm/gic.txt.
+> > 
+> > (taking Thomas Gleixner on Cc)
+> > 
+> > Since the orion irq chip is based on irqchip_generic, it would be
+> > perfect to have a generic irqchip binding to go along with
+> > kernel/irq/generic-chip.c. Not sure if anyone has thought about this
+> > before, but it looks like we can completely avoid using
+> > arch/arm/plat-orion/irq.c and arch/arm/mach-kirkwood/irq.c if we
+> > do that.
+> 
+> Right. That should be trivial to implement.
 
-> On Thursday 08 March 2012, Jason wrote:
-> > 
-> > On Wed, Mar 07, 2012 at 09:13:04PM +0000, Arnd Bergmann wrote:
-> > > Finally, something could be wrong with the interrupt controller.
-> > > AFAICT, you register it through the device tree now, but it's also
-> > > getting initialized through kirkwood_init_irq, so the numbers
-> > > would all be wrong.
-> > 
-> > Yes, I'm working through this now.  mv_cesa silently fails to come up
-> > if it can't find the interrupt controller via fdt.  So, it needs to get
-> > done.
-> > 
-> > Right now, I'm looking at how mach-versatile does it (vic_init()) since
-> > it's also an ARM926ej-s...
-> > 
-> 
-> Ok, sounds good. It's not important whether it's an ARM9 or not btw.
-> You should look at both anything that defines an "interrupt-controller"
-> property as an example including Documentation/devicetree/bindings/arm/vic.txt
-> and Documentation/devicetree/bindings/arm/gic.txt.
-> 
-> (taking Thomas Gleixner on Cc)
-> 
-> Since the orion irq chip is based on irqchip_generic, it would be
-> perfect to have a generic irqchip binding to go along with
-> kernel/irq/generic-chip.c. Not sure if anyone has thought about this
-> before, but it looks like we can completely avoid using
-> arch/arm/plat-orion/irq.c and arch/arm/mach-kirkwood/irq.c if we
-> do that.
+ok, I'm on it.  kernel/irq/of_generic_irq.c sound good?
 
-Right. That should be trivial to implement.
+thx,
+
+Jason.
