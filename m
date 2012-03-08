@@ -1,85 +1,54 @@
-From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [GIT PULL v4] ARM: kirkwood: fdt conversion progress
-Date: Thu, 8 Mar 2012 13:07:12 -0500
-Message-ID: <20120308180712.GL5050@titan.lakedaemon.net>
-References: <20120307221012.GH5050@titan.lakedaemon.net>
- <201203081610.21493.arnd@arndb.de>
- <CAOesGMh2etdQSOjktDGcWGfnsMhyFnVuebWRQeYuR6fvm1_DSA@mail.gmail.com>
- <20120308173029.GK5050@titan.lakedaemon.net>
- <CAOesGMikpxMd+MtnjKix7D0KiHD+e8s2YFjB3j9a=7i7S9J+0g@mail.gmail.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 06/11] PCI: Keep pci_fixup_irqs() around after init
+Date: Thu, 8 Mar 2012 19:37:31 +0100
+Message-ID: <20120308183731.GA25254@avionic-0098.mockup.avionic-design.de>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
+ <1331218291-16119-7-git-send-email-thierry.reding@avionic-design.de>
+ <CAErSpo6hbWjteESST1+O2WzbtmZq6hC-pnUB4o3MAXWG-EgU+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMikpxMd+MtnjKix7D0KiHD+e8s2YFjB3j9a=7i7S9J+0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CAErSpo6hbWjteESST1+O2WzbtmZq6hC-pnUB4o3MAXWG-EgU+g@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-tegra@vger.kernel.org, Liam Girdwood <lrg@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2012 at 09:53:06AM -0800, Olof Johansson wrote:
-> On Thu, Mar 8, 2012 at 9:30 AM, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > The following patches should be fine to merge into stable (for 3.4):
-> >
-> > af42511 ARM: orion: spi: remove enable_clock_fix which is not used
-> > d93b2ca ARM: Kirkwood: Remove tclk from kirkwood_asoc_platform_data.
-> > 2bb9207 ARM: kirkwood: fdt: use mrvl ticker symbol
-> > ec0ec68 ARM: kirkwood: fdt: absorb kirkwood_init()
-> > ...
-> > b5c25c3 ARM: kirkwood: rtc-mv devicetree bindings
-> > 5e40593 ARM: kirkwood: use devicetree for rtc-mv
-> > ...
-> 
-> Excellent. Can you build up one or more stable branches that I can
-> pull those from?
 
-Here's the pull request for stable:
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit d65b4e98d7ea3038b767b70fe8be959b2913f16d:
+* Bjorn Helgaas wrote:
+> Hmm, your patch looks OK as far as it goes, but the implementation of
+> pci_fixup_irqs() as a call-once-at-boot-time thing with a loop through
+> all the PCI devices we've found so far looks completely broken with
+> regard to hotplug.
+>=20
+> Who does the swizzle for devices hot-added after boot?
 
-  Linux 3.3-rc3 (2012-02-08 19:21:53 -0800)
+Perhaps I should have mentioned this in the commit message, but the patch
+isn't actually used in a hotplug scenario. In fact, the code is still run
+once at boot time, only very late. Grant's deferred probing allows the
+PCIe controller driver to postpone initialization until all the devices
+that it depends on (regulators) have been probed. This has the side-effect
+that the probing actually takes place *after* code and data annotated with
+__init have already been freed.
 
-are available in the git repository at:
-  git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_stable
+Thierry
 
-Andrew Lunn (2):
-      ARM: orion: spi: remove enable_clock_fix which is not used
-      ARM: Kirkwood: Remove tclk from kirkwood_asoc_platform_data.
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature
 
-Jason Cooper (6):
-      ARM: kirkwood: add dreamplug (fdt) support.
-      ARM: kirkwood: convert uart0 to devicetree.
-      ARM: kirkwood: fdt: use mrvl ticker symbol
-      ARM: kirkwood: fdt: absorb kirkwood_init()
-      ARM: kirkwood: rtc-mv devicetree bindings
-      ARM: kirkwood: use devicetree for rtc-mv
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
- arch/arm/boot/dts/kirkwood-dreamplug.dts |   25 ++++
- arch/arm/boot/dts/kirkwood.dtsi          |   12 ++
- arch/arm/mach-kirkwood/Kconfig           |   14 ++
- arch/arm/mach-kirkwood/Makefile          |    1 +
- arch/arm/mach-kirkwood/Makefile.boot     |    2 +
- arch/arm/mach-kirkwood/board-dt.c        |  206 ++++++++++++++++++++++++++++++
- arch/arm/mach-kirkwood/common.c          |   11 +-
- arch/arm/mach-kirkwood/common.h          |    7 +
- arch/arm/plat-orion/include/plat/audio.h |    1 -
- drivers/rtc/rtc-mv.c                     |    9 ++
- drivers/spi/spi-orion.c                  |    5 -
- include/linux/spi/orion_spi.h            |    1 -
- 12 files changed, 281 insertions(+), 13 deletions(-)
- create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
- create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
- create mode 100644 arch/arm/mach-kirkwood/board-dt.c
+iEYEARECAAYFAk9Y/GsACgkQZ+BJyKLjJp8qLACfYNrcwrYDwS7KUKwaRVj+cS6S
+pU8AmgM4GdvwiXkJqH4QTT/CljdHZjbS
+=DeUC
+-----END PGP SIGNATURE-----
 
-thx,
-
-Jason.
+--CE+1k2dSO48ffgeK--
