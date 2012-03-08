@@ -1,99 +1,59 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 5/6] ARM: at91: add ram controller DT support
-Date: Thu, 08 Mar 2012 11:13:45 -0600
-Message-ID: <4F58E8C9.6010608@gmail.com>
-References: <20120302192844.GB21255@game.jcrosoft.org>
- <1330718048-9314-5-git-send-email-plagnioj@jcrosoft.com>
- <4F57BDCE.1050708@gmail.com> <20120308061324.GE27213@game.jcrosoft.org>
- <4F58BE4F.5080009@gmail.com> <20120308141000.GF27213@game.jcrosoft.org>
- <4F58CF29.6020906@gmail.com> <20120308165153.GH27213@game.jcrosoft.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [GIT PULL v4] ARM: kirkwood: fdt conversion progress
+Date: Thu, 8 Mar 2012 09:15:08 -0800
+Message-ID: <CAOesGMh2etdQSOjktDGcWGfnsMhyFnVuebWRQeYuR6fvm1_DSA@mail.gmail.com>
+References: <20120307221012.GH5050@titan.lakedaemon.net>
+ <201203081610.21493.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120308165153.GH27213@game.jcrosoft.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201203081610.21493.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/2012 10:51 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 09:24 Thu 08 Mar     , Rob Herring wrote:
->> On 03/08/2012 08:10 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>> On 08:12 Thu 08 Mar     , Rob Herring wrote:
->>>> On 03/08/2012 12:13 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>>>>> diff --git a/arch/arm/mach-at91/include/mach/at91sam9x5.h b/arch/arm/mach-at91/include/mach/at91sam9x5.h
->>>>>>> index a297a77..88e43d5 100644
->>>>>>> --- a/arch/arm/mach-at91/include/mach/at91sam9x5.h
->>>>>>> +++ b/arch/arm/mach-at91/include/mach/at91sam9x5.h
->>>>>>> @@ -55,11 +55,6 @@
->>>>>>>  #define AT91SAM9X5_BASE_USART2	0xf8024000
->>>>>>>  
->>>>>>>  /*
->>>>>>> - * System Peripherals
->>>>>>> - */
->>>>>>> -#define AT91SAM9X5_BASE_DDRSDRC0	0xffffe800
->>>>>>> -
->>>>>>> -/*
->>>>>>>   * Base addresses for early serial code (uncompress.h)
->>>>>>>   */
->>>>>>>  #define AT91_DBGU	AT91_BASE_DBGU0
->>>>>>> diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
->>>>>>> index 3e48b59..f86450d 100644
->>>>>>> --- a/arch/arm/mach-at91/setup.c
->>>>>>> +++ b/arch/arm/mach-at91/setup.c
->>>>>>> @@ -315,12 +315,33 @@ static void at91_dt_rstc(void)
->>>>>>>  	of_node_put(np);
->>>>>>>  }
->>>>>>>  
->>>>>>> +static struct of_device_id ramc_ids[] = {
->>>>>>> +	{ .compatible = "atmel,at91sam9260-sdramc" },
->>>>>>> +	{ .compatible = "atmel,at91sam9g45-ddramc" },
->>>>>>> +	{ /*sentinel*/ }
->>>>>>> +};
->>>>>>> +
->>>>>>> +static void at91_dt_ramc(void)
->>>>>>> +{
->>>>>>> +	struct device_node *np;
->>>>>>> +
->>>>>>> +	np = of_find_matching_node(NULL, ramc_ids);
->>>>>>> +	if (!np)
->>>>>>> +		panic("unable to find compatible ram conroller node in dtb\n");
->>>>>>
->>>>>> You really can't boot if this fails? A WARN is better if it allows you
->>>>>> to boot until at least your console is actually up.
->>>>> if the restart is called you will have a oops so no it's a basic mandatory
->>>>> device on at91
->>>>>
->>>>
->>>> But you may never see the panic message because your console is not up.
->>>> If you WARN and can continue to boot, then the user can see the problem
->>>> and fix it. Otherwise you get nothing and have to go rebuild and turn on
->>>> earlyprintk.
->>> yeah agreed but if the restart id use before the console is enable you will
->>> have the same issue. the ramc controller are basic device so people usally
->>> don't touch it except you add a SoC support.
->>>
->>> so I prefer to panic
->>>
+Hi,
+
+On Thu, Mar 8, 2012 at 8:10 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 07 March 2012, Jason Cooper wrote:
+>> The following changes since commit d65b4e98d7ea3038b767b70fe8be959b2913f=
+16d:
 >>
->> Then panic in the restart code if it doesn't have something it needs.
-> The code is in assembly (mandatory) so difficult
-> 
-> The warn on other missing binding agreed but here please let go
-> It's basic device that except the maintainer will never touch
-> 
-> People will just include the dtsi and if you really need to debug soc init
-> enable earlyprintk is fine
+>> =A0 Linux 3.3-rc3 (2012-02-08 19:21:53 -0800)
+>>
+>> are available in the git repository at:
+>> =A0 git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt
+>>
+>> ---
+>> Arnd,
+>>
+>> My first two should match up with what you have already, the only
+>> outlier is that Jean-Christophe's patch is needed, but I don't think
+>> everyone agrees on it yet.
+>>
+>
+> Right now, Olof is handling the pull requests. I would suggest that he
+> can use your branch to replace the current staging branch but still keep
+> it in staging until everyone agrees or you replace it with a better versi=
+on.
 
-Okay.
+Jason,
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+Looking at the new pull request I see some differences in device
+support. For example, the DT conversion of orion-spi and wdt is not in
+the new branch.
+
+Is that intentional? If not I'll hold off replacing your branch.
+
+
+-Olof
