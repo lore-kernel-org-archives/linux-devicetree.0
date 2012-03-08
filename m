@@ -1,16 +1,18 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 5/5 v3] ARM: at91: sam9x5 add i2c DT support
-Date: Thu, 8 Mar 2012 18:52:04 +0100
-Message-ID: <20120308175204.GJ27213@game.jcrosoft.org>
-References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
- <1331196635-27203-5-git-send-email-plagnioj@jcrosoft.com>
- <4F58E87D.9040701@gmail.com>
+From: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [GIT PULL v4] ARM: kirkwood: fdt conversion progress
+Date: Thu, 8 Mar 2012 13:07:12 -0500
+Message-ID: <20120308180712.GL5050@titan.lakedaemon.net>
+References: <20120307221012.GH5050@titan.lakedaemon.net>
+ <201203081610.21493.arnd@arndb.de>
+ <CAOesGMh2etdQSOjktDGcWGfnsMhyFnVuebWRQeYuR6fvm1_DSA@mail.gmail.com>
+ <20120308173029.GK5050@titan.lakedaemon.net>
+ <CAOesGMikpxMd+MtnjKix7D0KiHD+e8s2YFjB3j9a=7i7S9J+0g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4F58E87D.9040701-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAOesGMikpxMd+MtnjKix7D0KiHD+e8s2YFjB3j9a=7i7S9J+0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -20,82 +22,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11:12 Thu 08 Mar     , Rob Herring wrote:
-> On 03/08/2012 02:50 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > For now on use i2c-gpio driver on the same pin as the hardware IP.
-> > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > ---
-> > v3:
-> > 
-> > 	update i2c binding (Rob comments)
-> > 
-> > Best Regards,
-> > J.
-> >  arch/arm/boot/dts/at91sam9x5.dtsi |   39 +++++++++++++++++++++++++++++++++++++
-> >  1 files changed, 39 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-> > index c294657..fdd1ac6 100644
-> > --- a/arch/arm/boot/dts/at91sam9x5.dtsi
-> > +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-> > @@ -188,4 +188,43 @@
-> >  			status = "disabled";
-> >  		};
-> >  	};
-> > +
-> > +	i2c-gpio@0 {
-> > +		compatible = "i2c-gpio";
-> > +		gpios = <&pioA 30 0 /* sda */
-> > +			 &pioA 31 0 /* scl */
-> > +			>;
-> > +		i2c-gpio,sda-open-drain;
-> > +		i2c-gpio,scl-open-drain;
-> > +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	i2c-gpio@1 {
-> > +		compatible = "i2c-gpio";
-> > +		gpios = <&pioC 0 0 /* sda */
-> > +			 &pioC 1 0 /* scl */
-> > +			>;
-> > +		i2c-gpio,sda-open-drain;
-> > +		i2c-gpio,scl-open-drain;
-> > +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	i2c-gpio@2 {
-> > +		compatible = "i2c-gpio";
-> > +		gpios = <&pioB 4 0 /* sda */
-> > +			 &pioB 5 0 /* scl */
-> > +			>;
-> > +		i2c-gpio,sda-open-drain;
-> > +		i2c-gpio,scl-open-drain;
-> > +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		status = "disabled";
-> > +	};
+On Thu, Mar 08, 2012 at 09:53:06AM -0800, Olof Johansson wrote:
+> On Thu, Mar 8, 2012 at 9:30 AM, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> > The following patches should be fine to merge into stable (for 3.4):
+> >
+> > af42511 ARM: orion: spi: remove enable_clock_fix which is not used
+> > d93b2ca ARM: Kirkwood: Remove tclk from kirkwood_asoc_platform_data.
+> > 2bb9207 ARM: kirkwood: fdt: use mrvl ticker symbol
+> > ec0ec68 ARM: kirkwood: fdt: absorb kirkwood_init()
+> > ...
+> > b5c25c3 ARM: kirkwood: rtc-mv devicetree bindings
+> > 5e40593 ARM: kirkwood: use devicetree for rtc-mv
+> > ...
 > 
-> If these are just any random gpio lines, it seems strange to define
-> these in a SOC dtsi and then disable them.
-they are not, they are the same pin as the i2c hardware IP.
+> Excellent. Can you build up one or more stable branches that I can
+> pull those from?
 
-Today the hw driver is not ready or will not work correctly (IP issue)
+Here's the pull request for stable:
 
-On hardware design we use the I2C pin but can not use the hw driver
+The following changes since commit d65b4e98d7ea3038b767b70fe8be959b2913f16d:
 
-Best Regards,
-J.
+  Linux 3.3-rc3 (2012-02-08 19:21:53 -0800)
+
+are available in the git repository at:
+  git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_stable
+
+Andrew Lunn (2):
+      ARM: orion: spi: remove enable_clock_fix which is not used
+      ARM: Kirkwood: Remove tclk from kirkwood_asoc_platform_data.
+
+Jason Cooper (6):
+      ARM: kirkwood: add dreamplug (fdt) support.
+      ARM: kirkwood: convert uart0 to devicetree.
+      ARM: kirkwood: fdt: use mrvl ticker symbol
+      ARM: kirkwood: fdt: absorb kirkwood_init()
+      ARM: kirkwood: rtc-mv devicetree bindings
+      ARM: kirkwood: use devicetree for rtc-mv
+
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |   25 ++++
+ arch/arm/boot/dts/kirkwood.dtsi          |   12 ++
+ arch/arm/mach-kirkwood/Kconfig           |   14 ++
+ arch/arm/mach-kirkwood/Makefile          |    1 +
+ arch/arm/mach-kirkwood/Makefile.boot     |    2 +
+ arch/arm/mach-kirkwood/board-dt.c        |  206 ++++++++++++++++++++++++++++++
+ arch/arm/mach-kirkwood/common.c          |   11 +-
+ arch/arm/mach-kirkwood/common.h          |    7 +
+ arch/arm/plat-orion/include/plat/audio.h |    1 -
+ drivers/rtc/rtc-mv.c                     |    9 ++
+ drivers/spi/spi-orion.c                  |    5 -
+ include/linux/spi/orion_spi.h            |    1 -
+ 12 files changed, 281 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
+ create mode 100644 arch/arm/mach-kirkwood/board-dt.c
+
+thx,
+
+Jason.
