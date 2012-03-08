@@ -1,70 +1,99 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Jason <jason@lakedaemon.net>
 Subject: Re: [PATCH 06/14] ARM: kirkwood: convert uart0 to devicetree.
-Date: Thu, 8 Mar 2012 14:32:44 -0700
-Message-ID: <20120308213244.GD16533@ponder.secretlab.ca>
+Date: Thu, 8 Mar 2012 16:50:48 -0500
+Message-ID: <20120308215048.GN5050@titan.lakedaemon.net>
 References: <cover.1331090356.git.jason@lakedaemon.net>
  <201203072113.04369.arnd@arndb.de>
  <20120308162530.GI5050@titan.lakedaemon.net>
  <201203081701.01663.arnd@arndb.de>
  <alpine.LFD.2.02.1203082026470.2742@ionos>
  <20120308194725.GM5050@titan.lakedaemon.net>
+ <20120308213244.GD16533@ponder.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20120308194725.GM5050-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20120308213244.GD16533@ponder.secretlab.ca>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>, robherring2@gmail.com
+Cc: nicolas.pitre@linaro.org, andrew@lunn.ch, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, michael@walle.cc, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2012 at 02:47:25PM -0500, Jason wrote:
-> On Thu, Mar 08, 2012 at 08:27:11PM +0100, Thomas Gleixner wrote:
-> > On Thu, 8 Mar 2012, Arnd Bergmann wrote:
+On Thu, Mar 08, 2012 at 02:32:44PM -0700, Grant Likely wrote:
+> On Thu, Mar 08, 2012 at 02:47:25PM -0500, Jason wrote:
+> > On Thu, Mar 08, 2012 at 08:27:11PM +0100, Thomas Gleixner wrote:
+> > > On Thu, 8 Mar 2012, Arnd Bergmann wrote:
+> > > 
+> > > > On Thursday 08 March 2012, Jason wrote:
+> > > > > 
+> > > > > On Wed, Mar 07, 2012 at 09:13:04PM +0000, Arnd Bergmann wrote:
+> > > > > > Finally, something could be wrong with the interrupt controller.
+> > > > > > AFAICT, you register it through the device tree now, but it's also
+> > > > > > getting initialized through kirkwood_init_irq, so the numbers
+> > > > > > would all be wrong.
+> > > > > 
+> > > > > Yes, I'm working through this now.  mv_cesa silently fails to come up
+> > > > > if it can't find the interrupt controller via fdt.  So, it needs to get
+> > > > > done.
+> > > > > 
+> > > > > Right now, I'm looking at how mach-versatile does it (vic_init()) since
+> > > > > it's also an ARM926ej-s...
+> > > > > 
+> > > > 
+> > > > Ok, sounds good. It's not important whether it's an ARM9 or not btw.
+> > > > You should look at both anything that defines an "interrupt-controller"
+> > > > property as an example including Documentation/devicetree/bindings/arm/vic.txt
+> > > > and Documentation/devicetree/bindings/arm/gic.txt.
+> > > > 
+> > > > (taking Thomas Gleixner on Cc)
+> > > > 
+> > > > Since the orion irq chip is based on irqchip_generic, it would be
+> > > > perfect to have a generic irqchip binding to go along with
+> > > > kernel/irq/generic-chip.c. Not sure if anyone has thought about this
+> > > > before, but it looks like we can completely avoid using
+> > > > arch/arm/plat-orion/irq.c and arch/arm/mach-kirkwood/irq.c if we
+> > > > do that.
+> > > 
+> > > Right. That should be trivial to implement.
 > > 
-> > > On Thursday 08 March 2012, Jason wrote:
-> > > > 
-> > > > On Wed, Mar 07, 2012 at 09:13:04PM +0000, Arnd Bergmann wrote:
-> > > > > Finally, something could be wrong with the interrupt controller.
-> > > > > AFAICT, you register it through the device tree now, but it's also
-> > > > > getting initialized through kirkwood_init_irq, so the numbers
-> > > > > would all be wrong.
-> > > > 
-> > > > Yes, I'm working through this now.  mv_cesa silently fails to come up
-> > > > if it can't find the interrupt controller via fdt.  So, it needs to get
-> > > > done.
-> > > > 
-> > > > Right now, I'm looking at how mach-versatile does it (vic_init()) since
-> > > > it's also an ARM926ej-s...
-> > > > 
-> > > 
-> > > Ok, sounds good. It's not important whether it's an ARM9 or not btw.
-> > > You should look at both anything that defines an "interrupt-controller"
-> > > property as an example including Documentation/devicetree/bindings/arm/vic.txt
-> > > and Documentation/devicetree/bindings/arm/gic.txt.
-> > > 
-> > > (taking Thomas Gleixner on Cc)
-> > > 
-> > > Since the orion irq chip is based on irqchip_generic, it would be
-> > > perfect to have a generic irqchip binding to go along with
-> > > kernel/irq/generic-chip.c. Not sure if anyone has thought about this
-> > > before, but it looks like we can completely avoid using
-> > > arch/arm/plat-orion/irq.c and arch/arm/mach-kirkwood/irq.c if we
-> > > do that.
-> > 
-> > Right. That should be trivial to implement.
+> > ok, I'm on it.  kernel/irq/of_generic_irq.c sound good?
 > 
-> ok, I'm on it.  kernel/irq/of_generic_irq.c sound good?
+> Rob Herring has done some work in this area.  Please coordinate with him.
 
-Rob Herring has done some work in this area.  Please coordinate with him.
+Rob,
 
-g.
+I'm attempting to convert mach-kirkwood boards over to devicetree,
+starting with the dreamplug.
+
+You can find my stable patches here:
+
+git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_stable
+
+and the stuff I'm still trying to figure out:
+
+git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_staging
+
+My next task looks like converting the irq code, since mv_cesa fails
+silently without the interrupt-controller specified in the dtb.
+
+The code I'm replacing can be found here:
+
+arch/arm/mach-kirkwood/irq.c
+arch/arm/plat-orion/irq.c
+
+This is the first time I've attempted something like this, so any
+pointers would be much appreciated.  Also, if there is anything I would
+need to deconflict with, please let me know.
+
+thx,
+
+Jason.
