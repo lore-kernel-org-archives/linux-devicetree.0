@@ -1,54 +1,82 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 06/11] PCI: Keep pci_fixup_irqs() around after init
-Date: Thu, 8 Mar 2012 19:37:31 +0100
-Message-ID: <20120308183731.GA25254@avionic-0098.mockup.avionic-design.de>
-References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
- <1331218291-16119-7-git-send-email-thierry.reding@avionic-design.de>
- <CAErSpo6hbWjteESST1+O2WzbtmZq6hC-pnUB4o3MAXWG-EgU+g@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [git pull] Device tree fixes for v3.3
+Date: Thu, 8 Mar 2012 11:38:45 -0700
+Message-ID: <CACxGe6tGDn6JY=aqo24MkFGPTKYmq=D+OvSV2tLPHfNTRNmF5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAErSpo6hbWjteESST1+O2WzbtmZq6hC-pnUB4o3MAXWG-EgU+g@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-tegra@vger.kernel.org, Liam Girdwood <lrg@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Some last bug fixes that should go in for v3.3.  Nothing terribly
+exciting here.  Please pull.
 
-* Bjorn Helgaas wrote:
-> Hmm, your patch looks OK as far as it goes, but the implementation of
-> pci_fixup_irqs() as a call-once-at-boot-time thing with a loop through
-> all the PCI devices we've found so far looks completely broken with
-> regard to hotplug.
->=20
-> Who does the swizzle for devices hot-added after boot?
+The following changes since commit 6b21d18ed50c7d145220b0724ea7f2613abf0f95:
 
-Perhaps I should have mentioned this in the commit message, but the patch
-isn't actually used in a hotplug scenario. In fact, the code is still run
-once at boot time, only very late. Grant's deferred probing allows the
-PCIe controller driver to postpone initialization until all the devices
-that it depends on (regulators) have been probed. This has the side-effect
-that the probing actually takes place *after* code and data annotated with
-__init have already been freed.
+  Linux 3.3-rc5 (2012-02-25 12:18:16 -0800)
 
-Thierry
+are available in the git repository at:
 
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature
+  git://git.secretlab.ca/git/linux-2.6 devicetree-for-linus
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+for you to fetch changes up to 29f141fed01a09050207c4d41fc5811520d81146:
 
-iEYEARECAAYFAk9Y/GsACgkQZ+BJyKLjJp8qLACfYNrcwrYDwS7KUKwaRVj+cS6S
-pU8AmgM4GdvwiXkJqH4QTT/CljdHZjbS
-=DeUC
------END PGP SIGNATURE-----
+  Merge branch 'fixes-for-grant' of
+git://sources.calxeda.com/kernel/linux into devicetree/merge
+(2012-02-27 14:04:40 -0700)
 
---CE+1k2dSO48ffgeK--
+----------------------------------------------------------------
+
+Minor bug fixes and documentation updates for v3.3-rc5
+
+Fixes up a duplicate #include, adds an empty implementation of
+of_find_compatible_node() and make git ignore .dtb files.  And fix
+up bus name on OF described PHYs.  Nothing exciting here.
+
+----------------------------------------------------------------
+Baruch Siach (1):
+      of/mdio: fix fixed link bus name
+
+Danny Kukawka (1):
+      of/fdt.c: asm/setup.h included twice
+
+Dave Martin (1):
+      ARM: devicetree: Add .dtb files to arch/arm/boot/.gitignore
+
+Grant Likely (1):
+      Merge branch 'fixes-for-grant' of
+git://sources.calxeda.com/kernel/linux into devicetree/merge
+
+Jamie Iles (1):
+      of: add picochip vendor prefix
+
+Shawn Guo (1):
+      dt: add empty of_find_compatible_node function
+
+Tobias Klauser (1):
+      doc: dt: Fix broken reference in gpio-leds documentation
+
+ Documentation/devicetree/bindings/gpio/led.txt     |    6 +++---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ arch/arm/boot/.gitignore                           |    1 +
+ drivers/of/fdt.c                                   |    1 -
+ drivers/of/of_mdio.c                               |    2 +-
+ include/linux/of.h                                 |    8 ++++++++
+ 6 files changed, 14 insertions(+), 5 deletions(-)
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
