@@ -1,87 +1,60 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: at91: add ram controller DT support
-Date: Thu, 08 Mar 2012 09:24:25 -0600
-Message-ID: <4F58CF29.6020906@gmail.com>
-References: <20120302192844.GB21255@game.jcrosoft.org>
- <1330718048-9314-5-git-send-email-plagnioj@jcrosoft.com>
- <4F57BDCE.1050708@gmail.com> <20120308061324.GE27213@game.jcrosoft.org>
- <4F58BE4F.5080009@gmail.com> <20120308141000.GF27213@game.jcrosoft.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 00/11] ARM: tegra: Add PCIe device tree support
+Date: Thu, 8 Mar 2012 16:43:59 +0100
+Message-ID: <20120308154359.GA544@avionic-0098.mockup.avionic-design.de>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
+ <4F58CE9D.3070605@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120308141000.GF27213-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F58CE9D.3070605@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-tegra@vger.kernel.org, Liam Girdwood <lrg@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/2012 08:10 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 08:12 Thu 08 Mar     , Rob Herring wrote:
->> On 03/08/2012 12:13 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>>> diff --git a/arch/arm/mach-at91/include/mach/at91sam9x5.h b/arch/arm/mach-at91/include/mach/at91sam9x5.h
->>>>> index a297a77..88e43d5 100644
->>>>> --- a/arch/arm/mach-at91/include/mach/at91sam9x5.h
->>>>> +++ b/arch/arm/mach-at91/include/mach/at91sam9x5.h
->>>>> @@ -55,11 +55,6 @@
->>>>>  #define AT91SAM9X5_BASE_USART2	0xf8024000
->>>>>  
->>>>>  /*
->>>>> - * System Peripherals
->>>>> - */
->>>>> -#define AT91SAM9X5_BASE_DDRSDRC0	0xffffe800
->>>>> -
->>>>> -/*
->>>>>   * Base addresses for early serial code (uncompress.h)
->>>>>   */
->>>>>  #define AT91_DBGU	AT91_BASE_DBGU0
->>>>> diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
->>>>> index 3e48b59..f86450d 100644
->>>>> --- a/arch/arm/mach-at91/setup.c
->>>>> +++ b/arch/arm/mach-at91/setup.c
->>>>> @@ -315,12 +315,33 @@ static void at91_dt_rstc(void)
->>>>>  	of_node_put(np);
->>>>>  }
->>>>>  
->>>>> +static struct of_device_id ramc_ids[] = {
->>>>> +	{ .compatible = "atmel,at91sam9260-sdramc" },
->>>>> +	{ .compatible = "atmel,at91sam9g45-ddramc" },
->>>>> +	{ /*sentinel*/ }
->>>>> +};
->>>>> +
->>>>> +static void at91_dt_ramc(void)
->>>>> +{
->>>>> +	struct device_node *np;
->>>>> +
->>>>> +	np = of_find_matching_node(NULL, ramc_ids);
->>>>> +	if (!np)
->>>>> +		panic("unable to find compatible ram conroller node in dtb\n");
->>>>
->>>> You really can't boot if this fails? A WARN is better if it allows you
->>>> to boot until at least your console is actually up.
->>> if the restart is called you will have a oops so no it's a basic mandatory
->>> device on at91
->>>
->>
->> But you may never see the panic message because your console is not up.
->> If you WARN and can continue to boot, then the user can see the problem
->> and fix it. Otherwise you get nothing and have to go rebuild and turn on
->> earlyprintk.
-> yeah agreed but if the restart id use before the console is enable you will
-> have the same issue. the ramc controller are basic device so people usally
-> don't touch it except you add a SoC support.
-> 
-> so I prefer to panic
-> 
 
-Then panic in the restart code if it doesn't have something it needs.
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+* Rob Herring wrote:
+> There is a whole bunch of PCI DT code sitting in the powerpc tree that
+> probably needs to be moved to common location and used here.
+>=20
+> This looks way too simple to be what's needed if I compare to PCI
+> bindings in powerpc dts files.
+
+My particular setup may be much simpler than the average PowerPC machine. T=
+he
+patchset is only what I need to get PCIe running on the platform, which has
+an FPGA connected to the Tegra via PCIe. For instance there is no legacy
+interrupt support (only MSI), so interrupt remapping is not required. I also
+know that OF nodes are not properly hooked up with the PCI devices yet, whi=
+ch
+I will need, among other things, to provide platform data for an SPI flash
+connected to an SPI master implemented within the FPGA. I also haven't look=
+ed
+at specifying the memory ranges via the device tree.
+
+So quite a lot may still be missing, but does that prevent any of this from
+being added to mainline? Things can be added on an as-needed basis, can't
+they?
+
+Thierry
+
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk9Y078ACgkQZ+BJyKLjJp9sGgCfTbY0+6cn/DT17IdqAu4BGFre
+5pEAn2EOzwyLrmdsqCYnvHfH+jgNwgWQ
+=oemR
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
