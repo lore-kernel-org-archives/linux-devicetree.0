@@ -1,14 +1,14 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/5 v3] ARM: at91: sam9g20 add i2c DT support
-Date: Thu, 08 Mar 2012 11:08:11 -0600
-Message-ID: <4F58E77B.4010500@gmail.com>
+Subject: Re: [PATCH 5/5 v3] ARM: at91: sam9x5 add i2c DT support
+Date: Thu, 08 Mar 2012 11:12:29 -0600
+Message-ID: <4F58E87D.9040701@gmail.com>
 References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
- <1331196635-27203-2-git-send-email-plagnioj@jcrosoft.com>
+ <1331196635-27203-5-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331196635-27203-2-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1331196635-27203-5-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -35,27 +35,22 @@ On 03/08/2012 02:50 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
 > 
 > Best Regards,
 > J.
->  arch/arm/boot/dts/at91sam9g20.dtsi |   13 +++++++++++++
->  1 files changed, 13 insertions(+), 0 deletions(-)
+>  arch/arm/boot/dts/at91sam9x5.dtsi |   39 +++++++++++++++++++++++++++++++++++++
+>  1 files changed, 39 insertions(+), 0 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-> index 4b0dc99..072b2da 100644
-> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-> @@ -189,4 +189,17 @@
+> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+> index c294657..fdd1ac6 100644
+> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+> @@ -188,4 +188,43 @@
 >  			status = "disabled";
 >  		};
 >  	};
 > +
 > +	i2c-gpio@0 {
-
-You updated the example, but not all the actual uses to i2c@0.
-
-Rob
-
 > +		compatible = "i2c-gpio";
-> +		gpios = <&pioA 23 0 /* sda */
-> +			 &pioA 24 0 /* scl */
+> +		gpios = <&pioA 30 0 /* sda */
+> +			 &pioA 31 0 /* scl */
 > +			>;
 > +		i2c-gpio,sda-open-drain;
 > +		i2c-gpio,scl-open-drain;
@@ -64,4 +59,37 @@ Rob
 > +		#size-cells = <0>;
 > +		status = "disabled";
 > +	};
+> +
+> +	i2c-gpio@1 {
+> +		compatible = "i2c-gpio";
+> +		gpios = <&pioC 0 0 /* sda */
+> +			 &pioC 1 0 /* scl */
+> +			>;
+> +		i2c-gpio,sda-open-drain;
+> +		i2c-gpio,scl-open-drain;
+> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	i2c-gpio@2 {
+> +		compatible = "i2c-gpio";
+> +		gpios = <&pioB 4 0 /* sda */
+> +			 &pioB 5 0 /* scl */
+> +			>;
+> +		i2c-gpio,sda-open-drain;
+> +		i2c-gpio,scl-open-drain;
+> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+
+If these are just any random gpio lines, it seems strange to define
+these in a SOC dtsi and then disable them.
+
+Rob
+
+
 >  };
