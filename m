@@ -1,17 +1,19 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH 06/14] ARM: kirkwood: convert uart0 to devicetree.
-Date: Thu, 8 Mar 2012 14:31:39 -0700
-Message-ID: <20120308213139.GC16533@ponder.secretlab.ca>
+Date: Thu, 8 Mar 2012 14:32:44 -0700
+Message-ID: <20120308213244.GD16533@ponder.secretlab.ca>
 References: <cover.1331090356.git.jason@lakedaemon.net>
- <80fb8cef577eee14364e95009f7a590fd9056ee3.1331090356.git.jason@lakedaemon.net>
- <201203071831.31738.arnd@arndb.de>
- <20120307192723.GE5050@titan.lakedaemon.net>
+ <201203072113.04369.arnd@arndb.de>
+ <20120308162530.GI5050@titan.lakedaemon.net>
+ <201203081701.01663.arnd@arndb.de>
+ <alpine.LFD.2.02.1203082026470.2742@ionos>
+ <20120308194725.GM5050@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120307192723.GE5050-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+In-Reply-To: <20120308194725.GM5050-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,59 +24,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 To: Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 07, 2012 at 02:27:23PM -0500, Jason wrote:
-> On Wed, Mar 07, 2012 at 06:31:31PM +0000, Arnd Bergmann wrote:
-> > On Wednesday 07 March 2012, Jason Cooper wrote:
-> > > +       serial@f1012000 {
-> > > +               compatible = "ns16550a";
-> > > +               reg = <0xf1012000 0xff>;
-> > > +               reg-shift = <2>;
-> > > +               interrupts = <33>;
-> > > +               clock-frequency = <200000000>;
-> > > +       };
+On Thu, Mar 08, 2012 at 02:47:25PM -0500, Jason wrote:
+> On Thu, Mar 08, 2012 at 08:27:11PM +0100, Thomas Gleixner wrote:
+> > On Thu, 8 Mar 2012, Arnd Bergmann wrote:
 > > 
-> > I just noticed that the length here should be inclusive, i.e. 0x100 not 0xff.
-> > This is different from the way we define resources in Linux.
+> > > On Thursday 08 March 2012, Jason wrote:
+> > > > 
+> > > > On Wed, Mar 07, 2012 at 09:13:04PM +0000, Arnd Bergmann wrote:
+> > > > > Finally, something could be wrong with the interrupt controller.
+> > > > > AFAICT, you register it through the device tree now, but it's also
+> > > > > getting initialized through kirkwood_init_irq, so the numbers
+> > > > > would all be wrong.
+> > > > 
+> > > > Yes, I'm working through this now.  mv_cesa silently fails to come up
+> > > > if it can't find the interrupt controller via fdt.  So, it needs to get
+> > > > done.
+> > > > 
+> > > > Right now, I'm looking at how mach-versatile does it (vic_init()) since
+> > > > it's also an ARM926ej-s...
+> > > > 
+> > > 
+> > > Ok, sounds good. It's not important whether it's an ARM9 or not btw.
+> > > You should look at both anything that defines an "interrupt-controller"
+> > > property as an example including Documentation/devicetree/bindings/arm/vic.txt
+> > > and Documentation/devicetree/bindings/arm/gic.txt.
+> > > 
+> > > (taking Thomas Gleixner on Cc)
+> > > 
+> > > Since the orion irq chip is based on irqchip_generic, it would be
+> > > perfect to have a generic irqchip binding to go along with
+> > > kernel/irq/generic-chip.c. Not sure if anyone has thought about this
+> > > before, but it looks like we can completely avoid using
+> > > arch/arm/plat-orion/irq.c and arch/arm/mach-kirkwood/irq.c if we
+> > > do that.
+> > 
+> > Right. That should be trivial to implement.
 > 
-> Grrr.  Now I'm getting frustrated.  I'm trying to boot without
-> earlyprintk.  Evidently, something is wrong with the above, because the
-> device boots all the way up (blinky lights come on), but I get no
-> messages after the usual "Uncompressing Linux... done, booting the
-> kernel."
-> 
-> Here's my most recent attempt:
-> 
+> ok, I'm on it.  kernel/irq/of_generic_irq.c sound good?
 
-I see that you've resolved your problem, but some comments below on the
-device node:
-
->         serial@f1012000 {
->                 device_type = "serial";
-
-Never use device_type.  It should only ever appear in the memory node, and
-I plan to remove it from there too.
-
->                 compatible = "ns16550a";
->                 reg = <0xf1012000 0x100>; /*phys addr*/
->                 virt-reg = <0xfed12000>;  /*virt addr*/
-
-Don't use virt-reg.  Nothing in the kernel uses it and the kernel will
-make it's own decision about virtual address mapping.
-
->                 reg-shift = <2>;
->                 reg-io-width = <1>;
-
-1 is the default for reg-io-width.  No need to have this property.  It
-should only be used if the device requires 32 bit accesses.
-
->                 interrupts = <33>;
->                 current-speed = <115200>;
->                 interrupt-parent = <&intc>;
->                 clock-frequency = <200000000>;
->         };
-> 
+Rob Herring has done some work in this area.  Please coordinate with him.
 
 g.
