@@ -1,88 +1,49 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 5/5 v3] ARM: at91: sam9x5 add i2c DT support
-Date: Thu,  8 Mar 2012 09:50:35 +0100
-Message-ID: <1331196635-27203-5-git-send-email-plagnioj@jcrosoft.com>
+From: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/5 v3] i2c/gpio: add DT support
+Date: Thu, 08 Mar 2012 11:52:00 +0100
+Message-ID: <4F588F50.7060906@samsung.com>
 References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1331196635-27203-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For now on use i2c-gpio driver on the same pin as the hardware IP.
+On 08.03.2012 09:50, Jean-Christophe PLAGNIOL-VILLARD wrote:
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org
----
-v3:
+> +static int __devinit of_i2c_gpio_probe(struct device_node *np,
+> +			     struct i2c_gpio_platform_data *pdata)
+> +{
+> +	u32 reg;
+> +
+> +	if (of_gpio_count(np) < 2)
+> +		return -ENODEV;
+> +
+> +	pdata->sda_pin = of_get_gpio(np, 0);
+> +	pdata->scl_pin = of_get_gpio(np, 1);
+> +
+> +	if (pdata->sda_pin < 0 || pdata->scl_pin < 0) {
+> +		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
+> +		       np->full_name, pdata->sda_pin, pdata->scl_pin);
+> +		return -ENODEV;
+> +	}
+> +
+> +	of_property_read_u32(np, "i2c-gpio,delay-us", &pdata->udelay);
+> +
 
-	update i2c binding (Rob comments)
 
-Best Regards,
-J.
- arch/arm/boot/dts/at91sam9x5.dtsi |   39 +++++++++++++++++++++++++++++++++++++
- 1 files changed, 39 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index c294657..fdd1ac6 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -188,4 +188,43 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	i2c-gpio@0 {
-+		compatible = "i2c-gpio";
-+		gpios = <&pioA 30 0 /* sda */
-+			 &pioA 31 0 /* scl */
-+			>;
-+		i2c-gpio,sda-open-drain;
-+		i2c-gpio,scl-open-drain;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c-gpio@1 {
-+		compatible = "i2c-gpio";
-+		gpios = <&pioC 0 0 /* sda */
-+			 &pioC 1 0 /* scl */
-+			>;
-+		i2c-gpio,sda-open-drain;
-+		i2c-gpio,scl-open-drain;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c-gpio@2 {
-+		compatible = "i2c-gpio";
-+		gpios = <&pioB 4 0 /* sda */
-+			 &pioB 5 0 /* scl */
-+			>;
-+		i2c-gpio,sda-open-drain;
-+		i2c-gpio,scl-open-drain;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
- };
--- 
-1.7.7
+> +	if (of_property_read_u32(np, "i2c-gpio,timeout-ms", &reg))
+> +		pdata->timeout = msecs_to_jiffies(reg);
+
+
+I've already said (two times!) that of_property_read_u32() returns
+nonzero (negative) error code on _error_.
+
+Don't you see obvious error in above code fragment?
+
+You assign to pdata->timeout on _error_.
