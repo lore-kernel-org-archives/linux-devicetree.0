@@ -1,97 +1,106 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 3/4] arm/dts: OMAP4: Add mmc controller nodes and board data
-Date: Fri, 09 Mar 2012 08:49:11 -0700
-Message-ID: <20120309154911.8C23C3E08E2@localhost>
-References: <1329998490-27555-1-git-send-email-rnayak@ti.com> <1329998490-27555-4-git-send-email-rnayak@ti.com> <CANrkHUaP7cV_vSKQYZkeF-aS5CEi2CAp3_9aDJKCVOX-67oNPg@mail.gmail.com> <4F4765EC.1000102@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F4765EC.1000102@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>, "T Krishnamoorthy, Balaji" <balajitk@ti.com>
-Cc: cjb@laptop.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
+Date: Fri, 09 Mar 2012 09:26:38 -0700
+Message-ID: <20120309162638.92E813E0880@localhost>
+References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
+ <20120309014441.8236B3E0903@localhost>
+ <20120309100435.GN27213@game.jcrosoft.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120309100435.GN27213-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Feb 2012 15:56:52 +0530, Rajendra Nayak <rnayak@ti.com> wrote:
-> On Friday 24 February 2012 03:46 PM, T Krishnamoorthy, Balaji wrote:
-> >> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> >> index 29f4589..9204f60 100644
-> >> --- a/arch/arm/boot/dts/omap4.dtsi
-> >> +++ b/arch/arm/boot/dts/omap4.dtsi
-> >> @@ -25,6 +25,11 @@
-> >>                 serial1 =&uart2;
-> >>                 serial2 =&uart3;
-> >>                 serial3 =&uart4;
-> >> +               mmc1 =&mmc1;
-> >> +               mmc2 =&mmc2;
-> >> +               mmc3 =&mmc3;
-> >> +               mmc4 =&mmc4;
-> >> +               mmc5 =&mmc5;
-> >>         };
-> >>
-> >>         cpus {
-> >> @@ -155,5 +160,31 @@
-> >>                         #size-cells =<0>;
-> >>                         ti,hwmods = "i2c4";
-> >>                 };
-> >> +
-> >> +               mmc1: mmc@1 {
-> >> +                       compatible = "ti,omap4-hsmmc";
-> >> +                       ti,hwmods = "mmc1";
-> >> +                       ti,dual-volt;
-> >> +               };
-> >> +
-> >> +               mmc2: mmc@2 {
-> >> +                       compatible = "ti,omap4-hsmmc";
-> >> +                       ti,hwmods = "mmc2";
-> >> +               };
-> >
-> > Hi Rajendra,
-> > Is there a way to control the device registration order,
-> > eMMC connected to mmc2 needs to be registered as /dev/mmcblk0p ...
-> > irrespective of whether SD card is mount or not on mmc1 card slot.
-> > So that bootargs would not have to be modified when filesystem is on eMMC.
+On Fri, 9 Mar 2012 11:04:35 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 18:44 Thu 08 Mar     , Grant Likely wrote:
+> > On Tue,  7 Feb 2012 05:13:48 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> > > of_property_read_bool
+> > > 
+> > > Search for a property in a device node and read a 32-bit value from
+> > > it. Returns 0 if <0> or if the property does not exist, 1 if <1> or none.
+> > > 
+> > > this will allow to disable a boolean
+> > > 
+> > > is-ok;          => true
+> > > is-ok = <1>;    => true
+> > > is-ok = <0>;    => false
+> > > 
+> > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > > ---
+> > > Hi,
+> > > 
+> > > 	if this is ok I'll rebase my mtd and i2c patch to use it
+> > > 
+> > > Best Regards,
+> > > J.
+> > >  drivers/of/base.c  |   30 ++++++++++++++++++++++++++++++
+> > >  include/linux/of.h |    8 ++++++++
+> > >  2 files changed, 38 insertions(+), 0 deletions(-)
+> > > 
+> > > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > > index 133908a..a0eaf08 100644
+> > > --- a/drivers/of/base.c
+> > > +++ b/drivers/of/base.c
+> > > @@ -686,6 +686,36 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
+> > >  EXPORT_SYMBOL_GPL(of_property_read_u64);
+> > >  
+> > >  /**
+> > > + * of_property_read_bool - Find and read a boolean from a property
+> > > + * @np:		device node from which the property value is to be read.
+> > > + * @propname:	name of the property to be searched.
+> > > + *
+> > > + * Search for a property in a device node and read a 32-bit value from
+> > > + * it. Returns 0 if <0> or if the property does not exist, 1 if <1> or none.
+> > > + *
+> > > + * is-ok;	=> true
+> > > + * is-ok = <1>;	=> true
+> > > + * is-ok = <0>;	=> false
+> > > + */
+> > > +int of_property_read_bool(const struct device_node *np, const char *propname)
+> > > +{
+> > > +	u32 reg;
+> > > +	int ret = of_property_read_u32(np, propname, &reg);
+> > > +
+> > > +	switch (ret) {
+> > > +	case -EINVAL:
+> > > +		return false;
+> > > +	case -ENODATA:
+> > > +		return true;
+> > > +	case 0:
+> > > +		return reg == 1;
+> > 
+> > Ugh.  so any value other than 1 returns false?  I think that will surprise
+> > most people.
+> > 
+> > I don't like this api or binding.  If it is a bool property, then why isn't
+> > simply testing for the property existance sufficient?
+> no if you want to disable it
 > 
-> I don't know if we can, but even if we could, we take care of the same
-> bootargs working on two boards (say sdp and panda) *if* on sdp I have my
-> filesystem on eMMC and on panda I have it on external card.
-> What happens if I want to use my filesystem on both boards on external
-> card?
+> if a bool is define in the dtsi and want to disable it int the dts
+> 
+> if you we can do the the invert
+> 
+> if !0 => true
+> 
+> is-ok;			=> true
+> is-ok = <val != 0>;	=> true
+> is-ok = <0>;		=> false
 
-of_alias_get_id() may be able to help you here.  It will extract the id
-numbering from the /aliases node.  That is the safe way to do global
-enumeration of devices in the device tree (instead of 'cell-index' which
-is strongly discouraged)
+This is a failure of the dtc tool, not the binding.  Accepting this binding
+means we have to live with it for a very long time.  It needs to be fixed
+in dtc instead so that properties can be deleted instead of only modified.
 
 g.
-
-> 
-> >
-> >> +
-> >> +               mmc3: mmc@3 {
-> >> +                       compatible = "ti,omap4-hsmmc";
-> >> +                       ti,hwmods = "mmc3";
-> >> +               };
-> >> +
-> >> +               mmc4: mmc@4 {
-> >> +                       compatible = "ti,omap4-hsmmc";
-> >> +                       ti,hwmods = "mmc4";
-> >> +               };
-> >> +
-> >> +               mmc5: mmc@5 {
-> >> +                       compatible = "ti,omap4-hsmmc";
-> >> +                       ti,hwmods = "mmc5";
-> >> +               };
-> >>         };
-> >>   };
-> >> --
-> >> 1.7.1
-> >>
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
