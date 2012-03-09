@@ -1,65 +1,137 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 05/11] tps6586x: Add device-tree support
-Date: Fri, 9 Mar 2012 08:53:47 +0100
-Message-ID: <20120309075347.GA27270@avionic-0098.mockup.avionic-design.de>
-References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
- <1331218291-16119-6-git-send-email-thierry.reding@avionic-design.de>
- <20120308150607.GP3638@opensource.wolfsonmicro.com>
- <20120308151545.GA23934@avionic-0098.mockup.avionic-design.de>
- <20120309051506.761B63E090F@localhost>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH v2 1/4] mmc: omap_hsmmc: Convert hsmmc driver to use device
+ tree
+Date: Fri, 09 Mar 2012 14:51:06 +0530
+Message-ID: <4F59CB82.9050607@ti.com>
+References: <1329998490-27555-1-git-send-email-rnayak@ti.com> <1329998490-27555-2-git-send-email-rnayak@ti.com> <20120309054213.9E69C3E0901@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120309051506.761B63E090F@localhost>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20120309054213.9E69C3E0901@localhost>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-mmc@vger.kernel.org, cjb@laptop.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, balajitk@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Grant,
 
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Friday 09 March 2012 11:12 AM, Grant Likely wrote:
+> On Thu, 23 Feb 2012 17:31:27 +0530, Rajendra Nayak<rnayak@ti.com>  wrote:
+>> Define dt bindings for the ti-omap-hsmmc, and adapt
+>> the driver to extract data (which was earlier passed as
+>> platform_data) from device tree.
+>>
+>> Signed-off-by: Rajendra Nayak<rnayak@ti.com>
+>> ---
+>>   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   31 +++++++++
+>>   drivers/mmc/host/omap_hsmmc.c                      |   68 ++++++++++++++++++++
+>>   2 files changed, 99 insertions(+), 0 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> new file mode 100644
+>> index 0000000..e4fa8f0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+>> @@ -0,0 +1,31 @@
+>> +* TI Highspeed MMC host controller for OMAP
+>> +
+>> +The Highspeed MMC Host Controller on TI OMAP family
+>> +provides an interface for MMC, SD, and SDIO types of memory cards.
+>> +
+>> +Required properties:
+>> +- compatible:
+>> + Should be "ti,omap2-hsmmc", for OMAP2/3 controllers
+>> + Should be "ti,omap4-hsmmc", for OMAP4 controllers
+>> +- ti,hwmods: Must be "mmc<n>", n is controller instance starting 1
+>> +- reg : should contain hsmmc registers location and length
+>> +
+>> +Optional properties:
+>> +ti,dual-volt: boolean, supports dual voltage cards
+>> +<supply-name>-supply: phandle to the regulator device tree node
+>> +"supply-name" examples are "vmmc", "vmmc_aux" etc
+>> +ti,bus-width: Number of data lines, default assumed is 1 if the property is missing.
+>> +cd-gpios: GPIOs for card detection
+>> +wp-gpios: GPIOs for write protection
+>> +ti,non-removable: non-removable slot (like eMMC)
+>
+> Binding looks okay.  A couple comments below...
+>
+> [...]
+>> +static const struct of_device_id omap_mmc_of_match[];
+>
+> If you move the omap_mmc_of_match[] table up to here then there is no
+> need for the forward declaration.
+>
+>> +
+>>   static int __init omap_hsmmc_probe(struct platform_device *pdev)
+>>   {
+>>   	struct omap_mmc_platform_data *pdata = pdev->dev.platform_data;
+>> @@ -1725,6 +1768,14 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
+>>   	struct omap_hsmmc_host *host = NULL;
+>>   	struct resource *res;
+>>   	int ret, irq;
+>> +	const struct of_device_id *match;
+>> +
+>> +	match = of_match_device(omap_mmc_of_match,&pdev->dev);
+>> +	if (match) {
+>> +		pdata = of_get_hsmmc_pdata(&pdev->dev);
+>> +		if (match->data)
+>> +			pdata->reg_offset = *(u16 *)match->data;
+>
+> Blech on the ugly cast.  It is slightly safer to do thusly:
+>
+> 	u16 *offsetp = match->data;
+> 	pdata->reg_offset = *offsetp
 
-* Grant Likely wrote:
-> On Thu, 8 Mar 2012 16:15:46 +0100, Thierry Reding <thierry.reding@avionic=
--design.de> wrote:
-> > * Mark Brown wrote:
-> > > ...they all seem to be explicitly named in the device tree so presuma=
-bly
-> > > there's enough information in there for the driver to pick any set of
-> > > regulators in any order.  This would be much nicer to use.
-> >=20
-> > I don't like it much either. The only reason that requirement exists is
-> > because it makes the assignment of the regulator ID (as defined in the
-> > include/linux/mfd/tps6586x.h header) very trivial. Would it be better to
-> > look up the ID based on the node name (sm0 --> TPS6586X_ID_SM_0, ...)?
-> >=20
-> > Then the only requirement would be that the names match.
->=20
-> Yes, please look up id via name.  Alternately you can give each child node
-> a 'reg' property and put #address-cells =3D <1>; #size-cells =3D <0>; in =
-the
-> parent (assuming the regulator number is a documented attribute of the
-> hardware and not just a convenient linux construct).
+thanks for the review. I'll repost with these changes.
 
-I'll go with the lookup via name then because as far as I can tell the
-datasheet doesn't list any specific ordering of the regulators.
+regards,
+Rajendra
 
-Thierry
+>
+>> +	}
+>>
+>>   	if (pdata == NULL) {
+>>   		dev_err(&pdev->dev, "Platform Data is missing\n");
+>> @@ -2120,12 +2171,29 @@ static struct dev_pm_ops omap_hsmmc_dev_pm_ops = {
+>>   	.runtime_resume = omap_hsmmc_runtime_resume,
+>>   };
+>>
+>> +#if defined(CONFIG_OF)
+>> +static u16 omap4_reg_offset = 0x100;
+>> +
+>> +static const struct of_device_id omap_mmc_of_match[] = {
+>> +	{
+>> +		.compatible = "ti,omap2-hsmmc",
+>> +	},
+>> +	{
+>> +		.compatible = "ti,omap4-hsmmc",
+>> +		.data =&omap4_reg_offset,
+>> +	},
+>> +	{},
+>> +}
+>> +MODULE_DEVICE_TABLE(of, omap_mmc_of_match);
+>> +#endif
+>> +
+>>   static struct platform_driver omap_hsmmc_driver = {
+>>   	.remove		= omap_hsmmc_remove,
+>>   	.driver		= {
+>>   		.name = DRIVER_NAME,
+>>   		.owner = THIS_MODULE,
+>>   		.pm =&omap_hsmmc_dev_pm_ops,
+>> +		.of_match_table = of_match_ptr(omap_mmc_of_match),
+>>   	},
+>>   };
+>>
+>> --
+>> 1.7.1
+>>
+>>
+>> _______________________________________________
+>> linaro-dev mailing list
+>> linaro-dev@lists.linaro.org
+>> http://lists.linaro.org/mailman/listinfo/linaro-dev
+>
 
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAk9ZtwsACgkQZ+BJyKLjJp/izwCfVM7Tst3EVFGbwVsUtkFh7OXm
-vloAoLAdqyysfycOnJE3uK0rbfRIDUZ5
-=NxOj
------END PGP SIGNATURE-----
-
---fdj2RfSjLxBAspz7--
