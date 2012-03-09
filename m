@@ -1,106 +1,68 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
-Date: Fri, 09 Mar 2012 09:26:38 -0700
-Message-ID: <20120309162638.92E813E0880@localhost>
-References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
- <20120309014441.8236B3E0903@localhost>
- <20120309100435.GN27213@game.jcrosoft.org>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH v3 0/4] ARM: Exynos4: Add irq domain and device tree support
+ for wakeup interrupts
+Date: Fri, 09 Mar 2012 08:32:56 -0800
+Message-ID: <4F5A30B8.6060801@samsung.com>
+References: <1329912858-32750-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120309100435.GN27213-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1329912858-32750-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 9 Mar 2012 11:04:35 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 18:44 Thu 08 Mar     , Grant Likely wrote:
-> > On Tue,  7 Feb 2012 05:13:48 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > > of_property_read_bool
-> > > 
-> > > Search for a property in a device node and read a 32-bit value from
-> > > it. Returns 0 if <0> or if the property does not exist, 1 if <1> or none.
-> > > 
-> > > this will allow to disable a boolean
-> > > 
-> > > is-ok;          => true
-> > > is-ok = <1>;    => true
-> > > is-ok = <0>;    => false
-> > > 
-> > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > > ---
-> > > Hi,
-> > > 
-> > > 	if this is ok I'll rebase my mtd and i2c patch to use it
-> > > 
-> > > Best Regards,
-> > > J.
-> > >  drivers/of/base.c  |   30 ++++++++++++++++++++++++++++++
-> > >  include/linux/of.h |    8 ++++++++
-> > >  2 files changed, 38 insertions(+), 0 deletions(-)
-> > > 
-> > > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > > index 133908a..a0eaf08 100644
-> > > --- a/drivers/of/base.c
-> > > +++ b/drivers/of/base.c
-> > > @@ -686,6 +686,36 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
-> > >  EXPORT_SYMBOL_GPL(of_property_read_u64);
-> > >  
-> > >  /**
-> > > + * of_property_read_bool - Find and read a boolean from a property
-> > > + * @np:		device node from which the property value is to be read.
-> > > + * @propname:	name of the property to be searched.
-> > > + *
-> > > + * Search for a property in a device node and read a 32-bit value from
-> > > + * it. Returns 0 if <0> or if the property does not exist, 1 if <1> or none.
-> > > + *
-> > > + * is-ok;	=> true
-> > > + * is-ok = <1>;	=> true
-> > > + * is-ok = <0>;	=> false
-> > > + */
-> > > +int of_property_read_bool(const struct device_node *np, const char *propname)
-> > > +{
-> > > +	u32 reg;
-> > > +	int ret = of_property_read_u32(np, propname, &reg);
-> > > +
-> > > +	switch (ret) {
-> > > +	case -EINVAL:
-> > > +		return false;
-> > > +	case -ENODATA:
-> > > +		return true;
-> > > +	case 0:
-> > > +		return reg == 1;
-> > 
-> > Ugh.  so any value other than 1 returns false?  I think that will surprise
-> > most people.
-> > 
-> > I don't like this api or binding.  If it is a bool property, then why isn't
-> > simply testing for the property existance sufficient?
-> no if you want to disable it
-> 
-> if a bool is define in the dtsi and want to disable it int the dts
-> 
-> if you we can do the the invert
-> 
-> if !0 => true
-> 
-> is-ok;			=> true
-> is-ok = <val != 0>;	=> true
-> is-ok = <0>;		=> false
+On 02/22/12 04:14, Thomas Abraham wrote:
+> Changes since v2:
+> - Reworked irq domain support based on v5 of the irq_domain generalization
+>    patches.
+>
+> Changes since v1: (only patch 4/4 has changes)
+> - Fixes based on Rob's comments:
+>    a. Fixed the function prototype of exynos4_init_irq_eint(void)
+>    b. Included interrupt-parent as an optional property for wakeup interrupt
+>        controller node.
+>
+> Samsung Exynos4 includes 32 external wakeup interrupt sources. The first 16
+> of these interrupts are connected to GIC SPI[31:16]. The last 16 of these
+> interrupts are grouped together into one interrupt and connected to GIC
+> SPI[32].
+>
+> This patchset adds irq domain and device tree support for these interrupts.
+> Since there are users of fixed linux irq numbers of the external wakeup
+> interrupts, the legacy mapping is used for the irq domain.
+>
+> This patchset is based on
+> http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git [for-next]
+>
+> with all irq_domain (v5) patches merged from
+> http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
+>
+> This patchset should be applied after applying the following patch.
+> [PATCH] ARM: Exynos: Add irq domain and device tree support for interrupt combiner
 
-This is a failure of the dtc tool, not the binding.  Accepting this binding
-means we have to live with it for a very long time.  It needs to be fixed
-in dtc instead so that properties can be deleted instead of only modified.
+Looks ok to me this series, but I lost above patch in my mail box.
+Thomas, could you please send updated it so that I can apply this series?
 
-g.
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
+
+>
+> Thomas Abraham (4):
+>    ARM: Exynos4: Simplify EINT number to linux irq number translation
+>    ARM: Exynos4: Add irq_domain support for gpio wakeup interrupts
+>    ARM: Exynos4: Remove arch_initcall for wakeup interrupt initialization
+>    ARM: Exynos4: Add device tree support for gpio wakeup interrupt controller
+>
+>   .../bindings/arm/samsung/wakeup-eint.txt           |   37 +++++
+>   arch/arm/mach-exynos/common.c                      |  148 ++++++++++++--------
+>   arch/arm/mach-exynos/include/mach/regs-gpio.h      |    4 +-
+>   3 files changed, 131 insertions(+), 58 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/arm/samsung/wakeup-eint.txt
