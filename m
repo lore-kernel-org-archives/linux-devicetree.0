@@ -1,28 +1,65 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH v2 4/4] arm/dts: OMAP3: Add mmc controller nodes and
- board data
-Date: Thu, 8 Mar 2012 23:51:05 -0700 (MST)
-Message-ID: <alpine.DEB.2.00.1203082348200.26656@utopia.booyaka.com>
-References: <1329998490-27555-1-git-send-email-rnayak@ti.com> <1329998490-27555-5-git-send-email-rnayak@ti.com> <20120223185718.GZ18185@atomide.com> <4F470B71.1020308@ti.com> <20120224184859.GN18185@atomide.com> <20120309054608.647473E0901@localhost>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 05/11] tps6586x: Add device-tree support
+Date: Fri, 9 Mar 2012 08:53:47 +0100
+Message-ID: <20120309075347.GA27270@avionic-0098.mockup.avionic-design.de>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
+ <1331218291-16119-6-git-send-email-thierry.reding@avionic-design.de>
+ <20120308150607.GP3638@opensource.wolfsonmicro.com>
+ <20120308151545.GA23934@avionic-0098.mockup.avionic-design.de>
+ <20120309051506.761B63E090F@localhost>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20120309054608.647473E0901@localhost>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, balajitk@ti.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120309051506.761B63E090F@localhost>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 8 Mar 2012, Grant Likely wrote:
 
-> Yes, absolutely use separate compatible values.  It is always important
-> to be specific as to the silicon implementing the IP.
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In that case, it is probably best to use the full chip name in the 
-compatible string, e.g., omap2420 or omap2430 rather than just "omap2".  
-Particularly in the case of "OMAP3," which is a largely meaningless group 
-these days with AM33xx, OMAP34xx, OMAP36xx, and AM3517, many of which are 
-quite different from each other...
+* Grant Likely wrote:
+> On Thu, 8 Mar 2012 16:15:46 +0100, Thierry Reding <thierry.reding@avionic=
+-design.de> wrote:
+> > * Mark Brown wrote:
+> > > ...they all seem to be explicitly named in the device tree so presuma=
+bly
+> > > there's enough information in there for the driver to pick any set of
+> > > regulators in any order.  This would be much nicer to use.
+> >=20
+> > I don't like it much either. The only reason that requirement exists is
+> > because it makes the assignment of the regulator ID (as defined in the
+> > include/linux/mfd/tps6586x.h header) very trivial. Would it be better to
+> > look up the ID based on the node name (sm0 --> TPS6586X_ID_SM_0, ...)?
+> >=20
+> > Then the only requirement would be that the names match.
+>=20
+> Yes, please look up id via name.  Alternately you can give each child node
+> a 'reg' property and put #address-cells =3D <1>; #size-cells =3D <0>; in =
+the
+> parent (assuming the regulator number is a documented attribute of the
+> hardware and not just a convenient linux construct).
 
+I'll go with the lookup via name then because as far as I can tell the
+datasheet doesn't list any specific ordering of the regulators.
 
-- Paul
+Thierry
+
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk9ZtwsACgkQZ+BJyKLjJp/izwCfVM7Tst3EVFGbwVsUtkFh7OXm
+vloAoLAdqyysfycOnJE3uK0rbfRIDUZ5
+=NxOj
+-----END PGP SIGNATURE-----
+
+--fdj2RfSjLxBAspz7--
