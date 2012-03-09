@@ -1,153 +1,68 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v6 2/2] of: Make of_find_node_by_path() traverse /aliases for relative paths.
-Date: Thu, 08 Mar 2012 18:33:24 -0700
-Message-ID: <20120309013324.64DF53E0901@localhost>
-References: <1330543264-18103-1-git-send-email-ddaney.cavm@gmail.com> <1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PULL] of nand generic binding
+Date: Thu, 08 Mar 2012 18:44:39 -0700
+Message-ID: <20120309014439.235C23E0901@localhost>
+References: <20120217155707.GR1214@game.jcrosoft.org>
+ <20120229152534.GH3318@game.jcrosoft.org>
+ <20120307082945.GJ21255@game.jcrosoft.org> <4F576602.8020808@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F576602.8020808-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Feb 2012 11:21:04 -0800, David Daney <ddaney.cavm@gmail.com> wrote:
-> From: David Daney <david.daney@cavium.com>
+On Wed, 07 Mar 2012 07:43:30 -0600, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 03/07/2012 02:29 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 16:25 Wed 29 Feb     , Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >> On 16:57 Fri 17 Feb     , Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >>> HI,
+> >>>
+> >>> 	please find attached the generic binding for the MTD nand
+> >>>
+> >>> 	This will add boolean and nand helpers
+> >> is it ok?
+> > I need this for 3.4
+> > 
+> > will you apply it or can I apply it via AT91
 > 
-> Currently all paths passed to of_find_node_by_path() must begin with a
-> '/', indicating a full path to the desired node.
-> 
-> Augment the look-up code so that if a path does *not* begin with '/',
-> the path is used as the name of an /aliases property.  The value of
-> this alias is then used as the full node path to be found.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
->  drivers/of/base.c |   65 ++++++++++++++++++++++++++++++++++++++++++++++++++--
->  1 files changed, 62 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 5806449..0bbe47c 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -365,22 +365,81 @@ EXPORT_SYMBOL(of_get_next_child);
->  
->  /**
->   *	of_find_node_by_path - Find a node matching a full OF path
-> - *	@path:	The full path to match
-> + *	@path: Either the full path to match, or if the path does not
-> + *	       start with '/', the name of a property of the /aliases
-> + *	       node (an alias).  In the case of an alias, the node
-> + *	       matching the alias' value will be returned.
->   *
->   *	Returns a node pointer with refcount incremented, use
->   *	of_node_put() on it when done.
->   */
->  struct device_node *of_find_node_by_path(const char *path)
->  {
-> -	struct device_node *np = allnodes;
-> +	struct device_node *np = NULL;
-> +	struct device_node *aliases = NULL;
-> +	char *alias = NULL;
-> +	char *new_path = NULL;
-> +	char *ps;
->  
->  	read_lock(&devtree_lock);
-> -	for (; np; np = np->allnext) {
-> +
-> +	/*
-> +	 * The following code has three possibilities:
-> +	 * 1) '/' at start of string; path == ps; (based at root)
-> +	 * 2) '/' at offset in string; path < ps; (relative to alias)
-> +	 * 3) '/' not found; ps == NULL; (alias only)
-> +	 *
-> +	 * If ps != path, then it is either a pure alias (ps == NULL),
-> +	 * or an alias with a relative path (path < ps).  Either way,
-> +	 * look up the path pointed to by the alias.
-> +	 */
-> +	ps = strchr(path, '/');
-> +	if (path != ps) {
-> +		aliases = of_find_node_by_path("/aliases");
-> +		if (!aliases)
-> +			goto out;
-> +
-> +		/*
-> +		 * Duplicate the alias part of the string so it can be
-> +		 * NULL terminated.
-> +		 */
-> +		alias = kstrndup(path,
-> +				 ps ? (ps - path) : strlen(path), GFP_KERNEL);
-> +		if (!alias)
-> +			goto out;
-> +		path = of_get_property(aliases, alias, NULL);
-> +		if (!path || path[0] != '/')
-> +			goto out;
+> Looks fine to me and Grant acked it, so go ahead and take with your at91
+> branch.
 
-All the aliases are already decoded at boot time now.  See
-of_alias_scan().  Instead of open-coding this, you can add an
-of_alias_lookup() function something like this (untested):
+Actually, taking another look at the of_mtd patch, that stuff really
+belongs in the drivers/mtd directory.  I'm not nacking the patch, but
+you should send a follow up to move it into the correct place.
 
-const char *of_alias_lookup(const char *alias)
-{
-	struct alias_prop *app;
-	list_for_each_entry(app, &aliases_lookup, link) {
-		if (strcmp(app->alias, alias))
-			return app->np->full_name;
-	}
-	return NULL;
-}
-
-Then most of the above code disappears.  It can instead look like:
-
-	ps = strchr(path, '/');
-	if (path != ps) {
-		char alias[ps - path + 1];
-		strncpy(alias, path, ps - path);
-		alias[ps - path] = '\0';
-		path = of_alias_lookup(alias);
-		if (path && ps)
-			/* Don't forget to free this */
-			path = kasprintf(GFP_KERNEL, "%s%s", path, ps);
-		if (!path)
-			return NULL;
-	}
+I don't like the of_property_read_bool patch.  I don't want the
+of_property_read_ functions to mix data return and error codes.
+Either return a bool with an error code in the parameter list, or the
+other way around.  Otherwise we'll end up with the same problem as
+APIs that use the ERR_PTR() pattern where callers will use it without
+understanding that the return value isn't necessarily a bool.
 
 g.
 
-> +
-> +		/* If ps is not NULL, then there is a relative path to append */
-> +		if (ps) {
-> +			new_path = kzalloc(strlen(path) + strlen(ps) + 1,
-> +					   GFP_KERNEL);
-> +			if (!new_path)
-> +				goto out;
-> +
-> +			sprintf(new_path, "%s%s", path, ps);
-> +			path = new_path;
-> +		}
-> +	}
-> +
-> +	/*
-> +	 * At this point, path now points to the full unaliased path
-> +	 * to a node, regardless of whether or not it started with an
-> +	 * alias.
-> +	 */
-> +
-> +	for (np = allnodes; np; np = np->allnext) {
->  		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
->  		    && of_node_get(np))
->  			break;
->  	}
-> +out:
-> +	if (aliases)
-> +		of_node_put(aliases);
->  	read_unlock(&devtree_lock);
-> +	kfree(alias);
-> +	kfree(new_path);
->  	return np;
->  }
->  EXPORT_SYMBOL(of_find_node_by_path);
-> -- 
-> 1.7.2.3
+> 
+> Rob
+> 
+> > 
+> > Best Regards,
+> > J.
+> > _______________________________________________
+> > devicetree-discuss mailing list
+> > devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > https://lists.ozlabs.org/listinfo/devicetree-discuss
 > 
 
 -- 
