@@ -1,57 +1,40 @@
-From: Thomas Schwinge <thomas@codesourcery.com>
-Subject: [PATCH 7/7] sm501: restore big-endian operation.
-Date: Fri, 9 Mar 2012 17:38:53 +0100
-Message-ID: <1331311133-26937-7-git-send-email-thomas@codesourcery.com>
-References: <1331311133-26937-1-git-send-email-thomas@codesourcery.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 09/11] ARM: tegra: Rewrite PCIe support as a driver
+Date: Fri, 09 Mar 2012 09:42:32 -0700
+Message-ID: <4F5A32F8.80001@wwwdotorg.org>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de> <1331218291-16119-10-git-send-email-thierry.reding@avionic-design.de> <4F5911E0.6060802@wwwdotorg.org> <20120309063739.GC25208@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1331311133-26937-1-git-send-email-thomas@codesourcery.com>
-Sender: linux-sh-owner@vger.kernel.org
-Cc: Thomas Schwinge <thomas@codesourcery.com>, Paul Mundt <lethal@linux-sh.org>, linux-sh@vger.kernel.org, Heiko Schocher <hs@denx.de>, Samuel Ortiz <sameo@linux.intel.com>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Randy Dunlap <rdunlap@xenotime.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120309063739.GC25208-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On SH, as of 37b7a97884ba64bf7d403351ac2a9476ab4f1bba we have to use the
-endianess-agnostic I/O accessor functions.
+On 03/08/2012 11:37 PM, Thierry Reding wrote:
+> * Stephen Warren wrote:
+>> On 03/08/2012 07:51 AM, Thierry Reding wrote:
+>>> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+...
+>>> diff --git a/arch/arm/mach-tegra/board.h b/arch/arm/mach-tegra/board.h
+>>
+>>> +#define TEGRA_PCIE_MAX_PORTS 2
+>>> +
+>>> +struct tegra_pcie_pdata {
+>>> +	int (*init)(struct platform_device *pdev);
+>>> +	int (*exit)(struct platform_device *pdev);
+>>> +	bool enable_ports[TEGRA_PCIE_MAX_PORTS];
+>>> +};
+>>
+>> That's a somewhat odd place to put the header; a dedicated
+>> mach-tegra/include/mach/tegra_pcie_pdata.h or
+>> include/linux/platform_data/tegra_pcie.h might make more sense.
+> 
+> mach-tegra/include/mach/pcie.h perhaps? That would be less redundant.
 
-In commit bf5f0019046d596d613caf74722ba4994e153899, Heiko fixed this for 32-bit
-PowerPC; my patch now generalizes upon that.
-
-The device is now recognized correctly for both litte-endian and big-endian
-sh7785lcr, but I have not tested this any further, as the board is situated in
-a remote data center.
-
-Signed-off-by: Thomas Schwinge <thomas@codesourcery.com>
-Cc: Paul Mundt <lethal@linux-sh.org>
-Cc: linux-sh@vger.kernel.org
-Cc: Heiko Schocher <hs@denx.de>
-Cc: Samuel Ortiz <sameo@linux.intel.com>
-Cc: linux-fbdev@vger.kernel.org
-Cc: devicetree-discuss@ozlabs.org
-Cc: Ben Dooks <ben@simtec.co.uk>
-Cc: Vincent Sanders <vince@simtec.co.uk>
-Cc: Randy Dunlap <rdunlap@xenotime.net>
----
- include/linux/sm501.h |    9 ++-------
- 1 files changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/sm501.h b/include/linux/sm501.h
-index 02fde50..0312e3c 100644
---- a/include/linux/sm501.h
-+++ b/include/linux/sm501.h
-@@ -173,10 +173,5 @@ struct sm501_platdata {
- 	unsigned int			 gpio_i2c_nr;
- };
- 
--#if defined(CONFIG_PPC32)
--#define smc501_readl(addr)		ioread32be((addr))
--#define smc501_writel(val, addr)	iowrite32be((val), (addr))
--#else
--#define smc501_readl(addr)		readl(addr)
--#define smc501_writel(val, addr)	writel(val, addr)
--#endif
-+#define smc501_readl(addr)		__raw_readl(addr)
-+#define smc501_writel(val, addr)	__raw_writel(val, addr)
--- 
-1.7.4.1
-
+New files in that directory should have tegra in the name somewhere, so
+that when multi-SoC kernels are built, and multiple mach-*/include/mach
+directories are in the include path (or files get moved from those paths
+into a single common place), you know which include file you're getting.
