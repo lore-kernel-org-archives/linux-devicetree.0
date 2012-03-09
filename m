@@ -1,7 +1,7 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PULL] of nand generic binding
-Date: Fri, 9 Mar 2012 11:09:32 +0100
-Message-ID: <20120309100932.GO27213@game.jcrosoft.org>
+Date: Fri, 9 Mar 2012 12:40:02 +0100
+Message-ID: <20120309114002.GP27213@game.jcrosoft.org>
 References: <20120217155707.GR1214@game.jcrosoft.org>
  <20120229152534.GH3318@game.jcrosoft.org>
  <20120307082945.GJ21255@game.jcrosoft.org>
@@ -46,19 +46,7 @@ On 18:44 Thu 08 Mar     , Grant Likely wrote:
 > Actually, taking another look at the of_mtd patch, that stuff really
 > belongs in the drivers/mtd directory.  I'm not nacking the patch, but
 > you should send a follow up to move it into the correct place.
-today of generic binding are all in drivers/of
-
-
-> 
-> I don't like the of_property_read_bool patch.  I don't want the
-> of_property_read_ functions to mix data return and error codes.
-> Either return a bool with an error code in the parameter list, or the
-> other way around.  Otherwise we'll end up with the same problem as
-> APIs that use the ERR_PTR() pattern where callers will use it without
-> understanding that the return value isn't necessarily a bool.
-I update as I reply
-
-and can I've a go I've all the binding for at91 reallying on it
+ok
 
 Best Regards,
 J.
