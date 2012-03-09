@@ -1,182 +1,97 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] serial: pxa: add OF support
-Date: Fri, 09 Mar 2012 08:24:10 -0700
-Message-ID: <20120309152410.4E59C3E0908@localhost>
-References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
- <1330950111-30797-2-git-send-email-haojian.zhuang@marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1330950111-30797-2-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2 3/4] arm/dts: OMAP4: Add mmc controller nodes and board data
+Date: Fri, 09 Mar 2012 08:49:11 -0700
+Message-ID: <20120309154911.8C23C3E08E2@localhost>
+References: <1329998490-27555-1-git-send-email-rnayak@ti.com> <1329998490-27555-4-git-send-email-rnayak@ti.com> <CANrkHUaP7cV_vSKQYZkeF-aS5CEi2CAp3_9aDJKCVOX-67oNPg@mail.gmail.com> <4F4765EC.1000102@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F4765EC.1000102@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>, "T Krishnamoorthy, Balaji" <balajitk@ti.com>
+Cc: cjb@laptop.org, linaro-dev@lists.linaro.org, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  5 Mar 2012 20:21:45 +0800, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
-> Parse uart device id from alias in DTS file.
+On Fri, 24 Feb 2012 15:56:52 +0530, Rajendra Nayak <rnayak@ti.com> wrote:
+> On Friday 24 February 2012 03:46 PM, T Krishnamoorthy, Balaji wrote:
+> >> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> >> index 29f4589..9204f60 100644
+> >> --- a/arch/arm/boot/dts/omap4.dtsi
+> >> +++ b/arch/arm/boot/dts/omap4.dtsi
+> >> @@ -25,6 +25,11 @@
+> >>                 serial1 =&uart2;
+> >>                 serial2 =&uart3;
+> >>                 serial3 =&uart4;
+> >> +               mmc1 =&mmc1;
+> >> +               mmc2 =&mmc2;
+> >> +               mmc3 =&mmc3;
+> >> +               mmc4 =&mmc4;
+> >> +               mmc5 =&mmc5;
+> >>         };
+> >>
+> >>         cpus {
+> >> @@ -155,5 +160,31 @@
+> >>                         #size-cells =<0>;
+> >>                         ti,hwmods = "i2c4";
+> >>                 };
+> >> +
+> >> +               mmc1: mmc@1 {
+> >> +                       compatible = "ti,omap4-hsmmc";
+> >> +                       ti,hwmods = "mmc1";
+> >> +                       ti,dual-volt;
+> >> +               };
+> >> +
+> >> +               mmc2: mmc@2 {
+> >> +                       compatible = "ti,omap4-hsmmc";
+> >> +                       ti,hwmods = "mmc2";
+> >> +               };
+> >
+> > Hi Rajendra,
+> > Is there a way to control the device registration order,
+> > eMMC connected to mmc2 needs to be registered as /dev/mmcblk0p ...
+> > irrespective of whether SD card is mount or not on mmc1 card slot.
+> > So that bootargs would not have to be modified when filesystem is on eMMC.
 > 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/tty/serial/pxa.c |   65 +++++++++++++++++++++++++++++++++++++--------
->  1 files changed, 53 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
-> index 5c8e3bb..a71855b 100644
-> --- a/drivers/tty/serial/pxa.c
-> +++ b/drivers/tty/serial/pxa.c
-> @@ -36,6 +36,7 @@
->  #include <linux/circ_buf.h>
->  #include <linux/delay.h>
->  #include <linux/interrupt.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/tty.h>
->  #include <linux/tty_flip.h>
-> @@ -44,6 +45,8 @@
->  #include <linux/io.h>
->  #include <linux/slab.h>
->  
-> +#define PXA_NAME_LEN		8
-> +
->  struct uart_pxa_port {
->  	struct uart_port        port;
->  	unsigned char           ier;
-> @@ -781,6 +784,39 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
->  };
->  #endif
->  
-> +static struct of_device_id serial_pxa_dt_ids[] = {
-> +	{ .compatible = "mrvl,pxa-uart", },
-> +	{ .compatible = "mrvl,mmp-uart", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
-> +
-> +#ifdef CONFIG_OF
-> +static int serial_pxa_probe_dt(struct platform_device *pdev,
-> +			       struct uart_pxa_port *sport)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	int ret;
-> +
-> +	if (!np)
-> +		return 1;
-> +
-> +	ret = of_alias_get_id(np, "serial");
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
-> +		return ret;
-> +	}
-> +	sport->port.line = ret;
-> +	return 0;
-> +}
-> +#else
-> +static int serial_pxa_probe_dt(struct platform_device *pdev,
-> +			       struct uart_pxa_port *sport)
-> +{
-> +	return 1;
-> +}
-> +#endif
+> I don't know if we can, but even if we could, we take care of the same
+> bootargs working on two boards (say sdp and panda) *if* on sdp I have my
+> filesystem on eMMC and on panda I have it on external card.
+> What happens if I want to use my filesystem on both boards on external
+> card?
 
-Returning 1 on success is rather odd... see comment below.
-
-> +
->  static int serial_pxa_probe(struct platform_device *dev)
->  {
->  	struct uart_pxa_port *sport;
-> @@ -808,34 +844,37 @@ static int serial_pxa_probe(struct platform_device *dev)
->  	sport->port.irq = irqres->start;
->  	sport->port.fifosize = 64;
->  	sport->port.ops = &serial_pxa_pops;
-> -	sport->port.line = dev->id;
->  	sport->port.dev = &dev->dev;
->  	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
->  	sport->port.uartclk = clk_get_rate(sport->clk);
-> -
-> -	switch (dev->id) {
-> -	case 0: sport->name = "FFUART"; break;
-> -	case 1: sport->name = "BTUART"; break;
-> -	case 2: sport->name = "STUART"; break;
-> -	case 3: sport->name = "HWUART"; break;
-> -	default:
-> -		sport->name = "???";
-> -		break;
-> +	sport->name = kzalloc(PXA_NAME_LEN, GFP_KERNEL);
-
-devm_kzalloc().  Then you don't need to unwind the allocation on failure.
-
-> +	if (!sport->name) {
-> +		ret = -ENOMEM;
-> +		goto err_clk;
->  	}
->  
-> +	ret = serial_pxa_probe_dt(dev, sport);
-> +	if (ret > 0)
-> +		sport->port.line = dev->id;
-> +	else if (ret < 0)
-> +		goto err_clk;
-> +	snprintf(sport->name, PXA_NAME_LEN - 1, "UART%d", sport->port.line + 1);
-
-returning a -/0/+ value from serial_pxa_probe_dt() is rather odd.  It's easier
-to follow code which sticks to the convention of <0 for error, 0 for success.
-I would do:
-
-	sport->port.line = dev->id;
-	ret = serial_pxa_probe_dt(dev, sport);
-	if (ret < 0)
-		goto err_clk;
-
-Then serial_pxa_probe_dt() can return an error code on failure, or 0 on
-success or no-devicetree.
-
-
-> +
->  	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
->  	if (!sport->port.membase) {
->  		ret = -ENOMEM;
-> -		goto err_clk;
-> +		goto err_name;
->  	}
->  
-> -	serial_pxa_ports[dev->id] = sport;
-> +	serial_pxa_ports[sport->port.line] = sport;
->  
->  	uart_add_one_port(&serial_pxa_reg, &sport->port);
->  	platform_set_drvdata(dev, sport);
->  
->  	return 0;
->  
-> + err_name:
-> +	kfree(sport->name);
->   err_clk:
->  	clk_put(sport->clk);
->   err_free:
-> @@ -850,6 +889,7 @@ static int serial_pxa_remove(struct platform_device *dev)
->  	platform_set_drvdata(dev, NULL);
->  
->  	uart_remove_one_port(&serial_pxa_reg, &sport->port);
-> +	kfree(sport->name);
->  	clk_put(sport->clk);
->  	kfree(sport);
->  
-> @@ -866,6 +906,7 @@ static struct platform_driver serial_pxa_driver = {
->  #ifdef CONFIG_PM
->  		.pm	= &serial_pxa_pm_ops,
->  #endif
-> +		.of_match_table = serial_pxa_dt_ids,
-
-	.of_match_table = of_match_ptr(serial_pxa_dt_ids),
-
-Otherwise looks great to me.
+of_alias_get_id() may be able to help you here.  It will extract the id
+numbering from the /aliases node.  That is the safe way to do global
+enumeration of devices in the device tree (instead of 'cell-index' which
+is strongly discouraged)
 
 g.
+
+> 
+> >
+> >> +
+> >> +               mmc3: mmc@3 {
+> >> +                       compatible = "ti,omap4-hsmmc";
+> >> +                       ti,hwmods = "mmc3";
+> >> +               };
+> >> +
+> >> +               mmc4: mmc@4 {
+> >> +                       compatible = "ti,omap4-hsmmc";
+> >> +                       ti,hwmods = "mmc4";
+> >> +               };
+> >> +
+> >> +               mmc5: mmc@5 {
+> >> +                       compatible = "ti,omap4-hsmmc";
+> >> +                       ti,hwmods = "mmc5";
+> >> +               };
+> >>         };
+> >>   };
+> >> --
+> >> 1.7.1
+> >>
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
