@@ -1,179 +1,154 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: add dma-mask binding
-Date: Thu, 08 Mar 2012 17:59:23 -0700
-Message-ID: <20120309005923.2E04F3E0901@localhost>
-References: <1331119575-6638-1-git-send-email-plagnioj@jcrosoft.com>
- <4F5793E9.9010100@gmail.com> <20120307173437.GC17087@game.jcrosoft.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120307173437.GC17087-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ben Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v6 2/2] of: Make of_find_node_by_path() traverse /aliases for relative paths.
+Date: Thu, 08 Mar 2012 18:33:24 -0700
+Message-ID: <20120309013324.64DF53E0901@localhost>
+References: <1330543264-18103-1-git-send-email-ddaney.cavm@gmail.com> <1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1330543264-18103-3-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-[cc'ing Russell and Ben because my dma-mask-foo is weak]
-
-On Wed, 7 Mar 2012 18:34:37 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 10:59 Wed 07 Mar     , Rob Herring wrote:
-> > On 03/07/2012 05:26 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > > This will allow each device to specify its dma-mask
-> > > The microblaze architecture hook is keep temporary if no dma-mask is specified
-> > > int the DT
-> > > 
-> > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > >  drivers/of/platform.c |   26 +++++++++++++++++++++++++-
-> > >  1 files changed, 25 insertions(+), 1 deletions(-)
-> > > 
-> > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > > index cae9477..bb22194 100644
-> > > --- a/drivers/of/platform.c
-> > > +++ b/drivers/of/platform.c
-> > > @@ -121,6 +121,26 @@ void of_device_make_bus_id(struct device *dev)
-> > >  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
-> > >  }
-> > >  
-> > > +static u64* of_get_dma_mask(struct device_node *np)
-> > > +{
-> > > +	const __be32 *prop;
-> > > +	int len;
-> > > +	u64 *dma_mask;
-> > > +
-> > > +	prop = of_get_property(np, "dma-mask", &len);
-> > 
-> > This would need some documentation. There is already "dma-ranges"
-> > defined for OF which nay do what's needed.
-> what is dma-ranges I see no doc about it
-> but I don't think it could be used for the dma mask
-
-As Rob says, it's documented in ePAPR.
-
-> > 
-> > > +
-> > > +	if (!prop)
-> > > +		return NULL;
-> > > +
-> > > +	dma_mask = kzalloc(sizeof(u64), GFP_KERNEL);
-> > 
-> > This seems kind of wasteful for 1 u64.
-> no choice dma_mask must be a pointer
-
-We could merely add an empty dma_mask u64 to the containing struct
-platform_device and then assign the pointer to dev.dma_mask if it is
-needed.  That would eliminate the malloc.  Or we could by default
-use dev->dev.dma_mask = &dev->dev.coherent_dma_mask;  Drivers or
-notifier code could override whatever we setup here as the default.
-
-dma-ranges really is the property that should be used for this, but
-dma-ranges can describe a different set of permutations than dma_mask.
-The former can have any number of valid DMA windows, but dma_mask
-is based on per-address-line values.  (The whole dma_mask approach
-appears insufficient to me, but I don't understand all the background
-details as to why it is implemented that way).
-
-I'd like to avoid defining a new mechanism for describing the valid
-dma layout if at all possible.  This could be done with a new function
-to fetch and parse each of the dma-ranges tuples and extract the
-intersect of the ranges.  It will never be a perfect translation,
-particularly because RAM doesn't start at 0 on a lot of platforms.
-
-So, let's call the base of ram X, and the top of ram X+S.  Then let's
-assume that dma_mask is intended to filter out high address (instead
-of broken DMA low addresses) and that the DMA limitations are based
-on attached address lines, not arbitrary start-end addresses, so if
-we let number of address lines be 'A', then dma_mask = 2^A-1
-(ideally).  Individual bits could also be blanked out, but what that
-really means in a practical sense is that those address lines must be
-0.  There isn't a way to constrain address bits that must be set to 1.
-
-Okay, so if we assume that linux will never choose a dma address below
-X (because there is no RAM there; except in the iommu case which can
-put dma addresses where it needs to regardless), then we only need to
-worry about the upper range for a device.  We could derive a dma_mask
-by calling of_translate_address on the base address of each dma-ranges
-tuple and finding the one that starts at or below the base of memory.
-Then the default dma_mask can perhaps be calculated thusly (using 'Y'
-for top of the chosen dma-range tuple):
-
-	dma_mask = (2 ^ fls64(Y)) - 1;
-
-Alternately, we could simply decide to do as you suggest and define a
-dma-mask property because that approach is sufficient for a lot of
-hardware and is therefore is a reasonable binding.
-
-Thoughts?
-
-> > 
-> > > +	if (!dma_mask)
-> > > +		return NULL;
-> > > +
-> > > +	*dma_mask = of_read_number(prop, len / 4);
-> > > +
-> > > +	return dma_mask;
-> > > +}
-> > > +
-> > >  /**
-> > >   * of_device_alloc - Allocate and initialize an of_device
-> > >   * @np: device node to assign to device
-> > > @@ -161,10 +181,14 @@ struct platform_device *of_device_alloc(struct device_node *np,
-> > >  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
-> > >  	}
-> > >  
-> > > +	dev->dev.dma_mask = of_get_dma_mask(np);
-> > >  	dev->dev.of_node = of_node_get(np);
-> > > +
-> > >  #if defined(CONFIG_MICROBLAZE)
-> > > -	dev->dev.dma_mask = &dev->archdata.dma_mask;
-> > 
-> > And doing it this way for didn't get a warm reception either:
-> > 
-> > http://lists.ozlabs.org/pipermail/devicetree-discuss/2011-April/005285.html
-> > 
-> > Do you really need this to be something other than ~0UL and if so does
-> > it need to be per device or system wide?
-> > 
-> > You can solve this with bus notifiers in your at91 code. Here's an
-> > example which I did (but no longer need):
-> > 
-> > static u64 highbank_dma_mask = DMA_BIT_MASK(32);
-> IIRC on at91 all of them that need it have a DMA_BIT_MASK(32)
+On Wed, 29 Feb 2012 11:21:04 -0800, David Daney <ddaney.cavm@gmail.com> wrote:
+> From: David Daney <david.daney@cavium.com>
 > 
+> Currently all paths passed to of_find_node_by_path() must begin with a
+> '/', indicating a full path to the desired node.
 > 
-> > 
-> > static int highbank_platform_notifier(struct notifier_block *nb,
-> > 				  unsigned long event, void *__dev)
-> > {
-> > 	struct device *dev = __dev;
-> > 
-> > 	if (event != BUS_NOTIFY_ADD_DEVICE)
-> > 		return NOTIFY_DONE;
-> > 
-> > 	if (of_device_is_compatible(dev->of_node, "calxeda,hb-nfc"))
-> > 		dev->dma_mask = &highbank_dma_mask;
-> execpt as example today I need it on 2 node (OHCI & EHCI)
+> Augment the look-up code so that if a path does *not* begin with '/',
+> the path is used as the name of an /aliases property.  The value of
+> this alias is then used as the full node path to be found.
 > 
-> and if more device need I don't want to end up with more fixup
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  drivers/of/base.c |   65 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+>  1 files changed, 62 insertions(+), 3 deletions(-)
 > 
-> I really prefer to set it via DT
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 5806449..0bbe47c 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -365,22 +365,81 @@ EXPORT_SYMBOL(of_get_next_child);
+>  
+>  /**
+>   *	of_find_node_by_path - Find a node matching a full OF path
+> - *	@path:	The full path to match
+> + *	@path: Either the full path to match, or if the path does not
+> + *	       start with '/', the name of a property of the /aliases
+> + *	       node (an alias).  In the case of an alias, the node
+> + *	       matching the alias' value will be returned.
+>   *
+>   *	Returns a node pointer with refcount incremented, use
+>   *	of_node_put() on it when done.
+>   */
+>  struct device_node *of_find_node_by_path(const char *path)
+>  {
+> -	struct device_node *np = allnodes;
+> +	struct device_node *np = NULL;
+> +	struct device_node *aliases = NULL;
+> +	char *alias = NULL;
+> +	char *new_path = NULL;
+> +	char *ps;
+>  
+>  	read_lock(&devtree_lock);
+> -	for (; np; np = np->allnext) {
+> +
+> +	/*
+> +	 * The following code has three possibilities:
+> +	 * 1) '/' at start of string; path == ps; (based at root)
+> +	 * 2) '/' at offset in string; path < ps; (relative to alias)
+> +	 * 3) '/' not found; ps == NULL; (alias only)
+> +	 *
+> +	 * If ps != path, then it is either a pure alias (ps == NULL),
+> +	 * or an alias with a relative path (path < ps).  Either way,
+> +	 * look up the path pointed to by the alias.
+> +	 */
+> +	ps = strchr(path, '/');
+> +	if (path != ps) {
+> +		aliases = of_find_node_by_path("/aliases");
+> +		if (!aliases)
+> +			goto out;
+> +
+> +		/*
+> +		 * Duplicate the alias part of the string so it can be
+> +		 * NULL terminated.
+> +		 */
+> +		alias = kstrndup(path,
+> +				 ps ? (ps - path) : strlen(path), GFP_KERNEL);
+> +		if (!alias)
+> +			goto out;
+> +		path = of_get_property(aliases, alias, NULL);
+> +		if (!path || path[0] != '/')
+> +			goto out;
+
+All the aliases are already decoded at boot time now.  See
+of_alias_scan().  Instead of open-coding this, you can add an
+of_alias_lookup() function something like this (untested):
+
+const char *of_alias_lookup(const char *alias)
+{
+	struct alias_prop *app;
+	list_for_each_entry(app, &aliases_lookup, link) {
+		if (strcmp(app->alias, alias))
+			return app->np->full_name;
+	}
+	return NULL;
+}
+
+Then most of the above code disappears.  It can instead look like:
+
+	ps = strchr(path, '/');
+	if (path != ps) {
+		char alias[ps - path + 1];
+		strncpy(alias, path, ps - path);
+		alias[ps - path] = '\0';
+		path = of_alias_lookup(alias);
+		if (path && ps)
+			/* Don't forget to free this */
+			path = kasprintf(GFP_KERNEL, "%s%s", path, ps);
+		if (!path)
+			return NULL;
+	}
+
+g.
+
+> +
+> +		/* If ps is not NULL, then there is a relative path to append */
+> +		if (ps) {
+> +			new_path = kzalloc(strlen(path) + strlen(ps) + 1,
+> +					   GFP_KERNEL);
+> +			if (!new_path)
+> +				goto out;
+> +
+> +			sprintf(new_path, "%s%s", path, ps);
+> +			path = new_path;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * At this point, path now points to the full unaliased path
+> +	 * to a node, regardless of whether or not it started with an
+> +	 * alias.
+> +	 */
+> +
+> +	for (np = allnodes; np; np = np->allnext) {
+>  		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
+>  		    && of_node_get(np))
+>  			break;
+>  	}
+> +out:
+> +	if (aliases)
+> +		of_node_put(aliases);
+>  	read_unlock(&devtree_lock);
+> +	kfree(alias);
+> +	kfree(new_path);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_by_path);
+> -- 
+> 1.7.2.3
 > 
-> Best Regards,
-> J.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
 email sent from notmuch.vim plugin
