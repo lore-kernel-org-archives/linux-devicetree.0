@@ -1,239 +1,182 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/4 v4] of_spi: add generic binding support to specify cs
-	gpio
-Date: Fri, 09 Mar 2012 08:14:45 -0700
-Message-ID: <20120309151445.97E2B3E0901@localhost>
-References: <1331122989-14451-1-git-send-email-plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v2 1/7] serial: pxa: add OF support
+Date: Fri, 09 Mar 2012 08:24:10 -0700
+Message-ID: <20120309152410.4E59C3E0908@localhost>
+References: <1330950111-30797-1-git-send-email-haojian.zhuang@marvell.com>
+ <1330950111-30797-2-git-send-email-haojian.zhuang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1331122989-14451-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1330950111-30797-2-git-send-email-haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  7 Mar 2012 13:23:06 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> This will allow to use gpio for chip select with no modification in the
-> driver binding
+On Mon,  5 Mar 2012 20:21:45 +0800, Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> Parse uart device id from alias in DTS file.
 > 
-> When use the cs-gpios, the gpio number will be passed via the cs_gpio field
-> and the number of chip select will automatically increased.
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > ---
-> v4:
-> 	use cs_gpio to pass the gpio number
+>  drivers/tty/serial/pxa.c |   65 +++++++++++++++++++++++++++++++++++++--------
+>  1 files changed, 53 insertions(+), 12 deletions(-)
 > 
-> Best Regards,
-> J.
->  Documentation/devicetree/bindings/spi/spi-bus.txt |    6 ++
->  drivers/spi/spi.c                                 |   57 +++++++++++++++++++-
->  include/linux/spi/spi.h                           |    6 ++
->  3 files changed, 66 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index e782add..c253379 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -12,6 +12,7 @@ The SPI master node requires the following properties:
->  - #size-cells     - should be zero.
->  - compatible      - name of SPI bus controller following generic names
->      		recommended practice.
-> +- cs-gpios	  - (optional) gpios chip select.
->  No other properties are required in the SPI bus node.  It is assumed
->  that a driver for an SPI bus device will understand that it is an SPI bus.
->  However, the binding does not attempt to define the specific method for
-> @@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
->  chip selects.  Individual drivers can define additional properties to
->  support describing the chip select layout.
+> diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+> index 5c8e3bb..a71855b 100644
+> --- a/drivers/tty/serial/pxa.c
+> +++ b/drivers/tty/serial/pxa.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/circ_buf.h>
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/tty.h>
+>  #include <linux/tty_flip.h>
+> @@ -44,6 +45,8 @@
+>  #include <linux/io.h>
+>  #include <linux/slab.h>
 >  
-> +If cs-gpios is used the number of chip select will automatically increased.
+> +#define PXA_NAME_LEN		8
 > +
->  SPI slave nodes must be children of the SPI master node and can
->  contain the following properties.
->  - reg             - (required) chip select address of device.
-> @@ -34,6 +37,9 @@ contain the following properties.
->  - spi-cs-high     - (optional) Empty property indicating device requires
->      		chip select active high
+>  struct uart_pxa_port {
+>  	struct uart_port        port;
+>  	unsigned char           ier;
+> @@ -781,6 +784,39 @@ static const struct dev_pm_ops serial_pxa_pm_ops = {
+>  };
+>  #endif
 >  
-> +If a gpio chipselect is used for the SPI slave the gpio number will be passed
-> +via the controller_data
+> +static struct of_device_id serial_pxa_dt_ids[] = {
+> +	{ .compatible = "mrvl,pxa-uart", },
+> +	{ .compatible = "mrvl,mmp-uart", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, serial_pxa_dt_ids);
 > +
->  SPI example for an MPC5200 SPI bus:
->  	spi@f00 {
->  		#address-cells = <1>;
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index b2ccdea..c1d0955 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -28,6 +28,7 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/spi/spi.h>
->  #include <linux/of_spi.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/export.h>
->  
-> @@ -322,6 +323,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
->  	spi->dev.parent = &master->dev;
->  	spi->dev.bus = &spi_bus_type;
->  	spi->dev.release = spidev_release;
-> +	spi->cs_gpio = -EINVAL;
->  	device_initialize(&spi->dev);
->  	return spi;
->  }
-> @@ -339,15 +341,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
->  int spi_add_device(struct spi_device *spi)
->  {
->  	static DEFINE_MUTEX(spi_add_lock);
-> -	struct device *dev = spi->master->dev.parent;
-> +	struct spi_master *master = spi->master;
-> +	struct device *dev = master->dev.parent;
->  	struct device *d;
->  	int status;
->  
->  	/* Chipselects are numbered 0..max; validate. */
-> -	if (spi->chip_select >= spi->master->num_chipselect) {
-> +	if (spi->chip_select >= master->num_chipselect) {
->  		dev_err(dev, "cs%d >= max %d\n",
->  			spi->chip_select,
-> -			spi->master->num_chipselect);
-> +			master->num_chipselect);
->  		return -EINVAL;
->  	}
->  
-> @@ -371,6 +374,13 @@ int spi_add_device(struct spi_device *spi)
->  		goto done;
->  	}
->  
-> +	if (master->num_gpio_cs &&
-> +	    spi->chip_select >= master->first_gpio_cs) {
-> +		int num = spi->chip_select - master->first_gpio_cs;
-> +
-> +		spi->cs_gpio = master->cs_gpios[num];
-
-spi->cs_gpio isn't used anywhere.
-
-> +	}
-> +
->  	/* Drivers may modify this initial i/o setup, but will
->  	 * normally rely on the device being setup.  Devices
->  	 * using SPI_CS_HIGH can't coexist well otherwise...
-> @@ -561,6 +571,43 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
->  }
->  EXPORT_SYMBOL_GPL(spi_alloc_master);
->  
 > +#ifdef CONFIG_OF
-> +static int of_spi_register_master(struct spi_master *master)
+> +static int serial_pxa_probe_dt(struct platform_device *pdev,
+> +			       struct uart_pxa_port *sport)
 > +{
-> +	int nb, i;
-> +	int *cs;
-> +	struct device_node *np = master->dev.of_node;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int ret;
 > +
 > +	if (!np)
-> +		return 0;
+> +		return 1;
 > +
-> +	nb = of_gpio_named_count(np, "cs-gpios");
-> +
-> +	if (nb < 1)
-> +		return 0;
-> +
-> +	cs = devm_kzalloc(&master->dev, sizeof(int) * nb, GFP_KERNEL);
-> +	master->cs_gpios = cs;
-> +
-> +	if (!master->cs_gpios)
-> +		return -ENOMEM;
-> +
-> +	master->first_gpio_cs = master->num_chipselect;
-> +	master->num_chipselect += nb;
-> +	master->num_gpio_cs = nb;
-
-I think this can be simplified.  Rather than trying to optimize by having
-a set of integrated cs lines followed by a gpio set, I think it would be
-better to have a single cs_gpios table that covers the whole range of
-num_chipselect; even if they overlap natural cs lines.  That will make for
-an easier to use binding since users won't need to remember how many natural
-cs lines are on the device when filling the cs-gpios property.  It will
-also make the code simpler because first_gpio_cs and num_gpio_cs can both
-be eliminated.  It also means the core can have exact knowledge about which
-gpio is associated with which cs number.
-
-> +
-> +	for (i = 0; i < nb; i++)
-> +		cs[i] = of_get_named_gpio(np, "cs-gpios", i);
-> +
+> +	ret = of_alias_get_id(np, "serial");
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
+> +		return ret;
+> +	}
+> +	sport->port.line = ret;
 > +	return 0;
 > +}
 > +#else
-> +static int of_spi_register_master(struct spi_master *master)
+> +static int serial_pxa_probe_dt(struct platform_device *pdev,
+> +			       struct uart_pxa_port *sport)
 > +{
-> +	return 0;
+> +	return 1;
 > +}
 > +#endif
-> +
->  /**
->   * spi_register_master - register SPI master controller
->   * @master: initialized master, originally from spi_alloc_master()
-> @@ -592,6 +639,10 @@ int spi_register_master(struct spi_master *master)
->  	if (!dev)
->  		return -ENODEV;
->  
-> +	status = of_spi_register_master(master);
-> +	if (status)
-> +		return status;
-> +
->  	/* even if it's just one always-selected device, there must
->  	 * be at least one chipselect
->  	 */
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 176fce9..7dcf031 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -89,6 +89,7 @@ struct spi_device {
->  	void			*controller_state;
->  	void			*controller_data;
->  	char			modalias[SPI_NAME_SIZE];
-> +	int			cs_gpio;	/* chip select gpio */
->  
->  	/*
->  	 * likely need more hooks for more protocol options affecting how
-> @@ -318,6 +319,11 @@ struct spi_master {
->  
->  	/* called on release() to free memory provided by spi_master */
->  	void			(*cleanup)(struct spi_device *spi);
-> +
-> +	/* gpio chip select */
-> +	int			*cs_gpios;
-> +	int			first_gpio_cs;
-> +	int			num_gpio_cs;
->  };
->  
->  static inline void *spi_master_get_devdata(struct spi_master *master)
-> -- 
-> 1.7.7
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
+Returning 1 on success is rather odd... see comment below.
 
-------------------------------------------------------------------------------
-Virtualization & Cloud Management Using Capacity Planning
-Cloud computing makes use of virtualization - but cloud computing 
-also focuses on allowing computing to be delivered as a service.
-http://www.accelacomm.com/jaw/sfnl/114/51521223/
+> +
+>  static int serial_pxa_probe(struct platform_device *dev)
+>  {
+>  	struct uart_pxa_port *sport;
+> @@ -808,34 +844,37 @@ static int serial_pxa_probe(struct platform_device *dev)
+>  	sport->port.irq = irqres->start;
+>  	sport->port.fifosize = 64;
+>  	sport->port.ops = &serial_pxa_pops;
+> -	sport->port.line = dev->id;
+>  	sport->port.dev = &dev->dev;
+>  	sport->port.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
+>  	sport->port.uartclk = clk_get_rate(sport->clk);
+> -
+> -	switch (dev->id) {
+> -	case 0: sport->name = "FFUART"; break;
+> -	case 1: sport->name = "BTUART"; break;
+> -	case 2: sport->name = "STUART"; break;
+> -	case 3: sport->name = "HWUART"; break;
+> -	default:
+> -		sport->name = "???";
+> -		break;
+> +	sport->name = kzalloc(PXA_NAME_LEN, GFP_KERNEL);
+
+devm_kzalloc().  Then you don't need to unwind the allocation on failure.
+
+> +	if (!sport->name) {
+> +		ret = -ENOMEM;
+> +		goto err_clk;
+>  	}
+>  
+> +	ret = serial_pxa_probe_dt(dev, sport);
+> +	if (ret > 0)
+> +		sport->port.line = dev->id;
+> +	else if (ret < 0)
+> +		goto err_clk;
+> +	snprintf(sport->name, PXA_NAME_LEN - 1, "UART%d", sport->port.line + 1);
+
+returning a -/0/+ value from serial_pxa_probe_dt() is rather odd.  It's easier
+to follow code which sticks to the convention of <0 for error, 0 for success.
+I would do:
+
+	sport->port.line = dev->id;
+	ret = serial_pxa_probe_dt(dev, sport);
+	if (ret < 0)
+		goto err_clk;
+
+Then serial_pxa_probe_dt() can return an error code on failure, or 0 on
+success or no-devicetree.
+
+
+> +
+>  	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
+>  	if (!sport->port.membase) {
+>  		ret = -ENOMEM;
+> -		goto err_clk;
+> +		goto err_name;
+>  	}
+>  
+> -	serial_pxa_ports[dev->id] = sport;
+> +	serial_pxa_ports[sport->port.line] = sport;
+>  
+>  	uart_add_one_port(&serial_pxa_reg, &sport->port);
+>  	platform_set_drvdata(dev, sport);
+>  
+>  	return 0;
+>  
+> + err_name:
+> +	kfree(sport->name);
+>   err_clk:
+>  	clk_put(sport->clk);
+>   err_free:
+> @@ -850,6 +889,7 @@ static int serial_pxa_remove(struct platform_device *dev)
+>  	platform_set_drvdata(dev, NULL);
+>  
+>  	uart_remove_one_port(&serial_pxa_reg, &sport->port);
+> +	kfree(sport->name);
+>  	clk_put(sport->clk);
+>  	kfree(sport);
+>  
+> @@ -866,6 +906,7 @@ static struct platform_driver serial_pxa_driver = {
+>  #ifdef CONFIG_PM
+>  		.pm	= &serial_pxa_pm_ops,
+>  #endif
+> +		.of_match_table = serial_pxa_dt_ids,
+
+	.of_match_table = of_match_ptr(serial_pxa_dt_ids),
+
+Otherwise looks great to me.
+
+g.
