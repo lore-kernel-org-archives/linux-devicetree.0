@@ -1,83 +1,142 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/5 v3] ARM: at91: sam9g20 add i2c DT support
-Date: Thu, 08 Mar 2012 22:26:00 -0700
-Message-ID: <20120309052600.B13BA3E0649@localhost>
-References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
- <1331196635-27203-2-git-send-email-plagnioj@jcrosoft.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331196635-27203-2-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 4/4] misc: emif: add device tree support to emif driver
+Date: Thu, 08 Mar 2012 22:37:04 -0700
+Message-ID: <20120309053704.E40433E0901@localhost>
+References: <1331224437-4808-1-git-send-email-aneesh@ti.com> <1331224437-4808-5-git-send-email-aneesh@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1331224437-4808-5-git-send-email-aneesh@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Aneesh V <aneesh@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-arm-kernel@lists.infradead.org, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  8 Mar 2012 09:50:32 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> For now on use i2c-gpio driver on the same pin as the hardware IP.
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+On Thu,  8 Mar 2012 22:03:57 +0530, Aneesh V <aneesh@ti.com> wrote:
+> Cc: Rajendra Nayak <rnayak@ti.com>
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Signed-off-by: Aneesh V <aneesh@ti.com>
 > ---
-> v3:
+> Changes since RFC v4:
+> - Rebased to the latest version of EMIF series
+> - Replace kzalloc()/kfree() with devm_* variants
+> ---
+>  drivers/misc/emif.c |  289 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 files changed, 288 insertions(+), 1 deletions(-)
 > 
-> 	update i2c binding (Rob comments)
-> 
-> Best Regards,
-> J.
->  arch/arm/boot/dts/at91sam9g20.dtsi |   13 +++++++++++++
->  1 files changed, 13 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-> index 4b0dc99..072b2da 100644
-> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-> @@ -189,4 +189,17 @@
->  			status = "disabled";
->  		};
->  	};
+> diff --git a/drivers/misc/emif.c b/drivers/misc/emif.c
+> index 79fb161..0aaa61e 100644
+> --- a/drivers/misc/emif.c
+> +++ b/drivers/misc/emif.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/module.h>
+> @@ -49,6 +50,7 @@
+>   *				frequency in effect at the moment)
+>   * @plat_data:			Pointer to saved platform data.
+>   * @debugfs_root:		dentry to the root folder for EMIF in debugfs
+> + * @np_ddr:			Pointer to ddr device tree node
+>   */
+>  struct emif_data {
+>  	u8				duplicate;
+> @@ -63,6 +65,9 @@ struct emif_data {
+>  	struct emif_regs		*curr_regs;
+>  	struct emif_platform_data	*plat_data;
+>  	struct dentry			*debugfs_root;
+> +#if defined(CONFIG_OF)
+> +	struct device_node		*np_ddr;
+> +#endif
+
+Don't bother with the #if/#endif wrapper here.
+
+>  };
+>  
+>  static struct emif_data *emif1;
+> @@ -1147,6 +1152,270 @@ static int is_custom_config_valid(struct emif_custom_configs *cust_cfgs,
+>  	return valid;
+>  }
+>  
+> +#if defined(CONFIG_OF)
+> +static void __init of_get_custom_configs(struct device_node *np_emif,
+
+__devinit. Same through the rest of the file.
+
+[...]
+> +	return NULL;
+> +out:
+> +	return emif;
+> +}
+> +#endif
 > +
-> +	i2c-gpio@0 {
+>  static struct emif_data * __init get_device_details(
 
-i2c@0
+This function also must be __devinit
 
-> +		compatible = "i2c-gpio";
-> +		gpios = <&pioA 23 0 /* sda */
-> +			 &pioA 24 0 /* scl */
-> +			>;
-> +		i2c-gpio,sda-open-drain;
-> +		i2c-gpio,scl-open-drain;
-> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		status = "disabled";
-> +	};
+>  		struct platform_device *pdev)
+>  {
+> @@ -1266,7 +1535,13 @@ static int __init emif_probe(struct platform_device *pdev)
+>  	struct resource		*res;
+>  	int			irq;
+>  
+> -	emif = get_device_details(pdev);
+> +#if defined(CONFIG_OF)
+> +	if (pdev->dev.of_node)
+> +		emif = of_get_device_details(pdev->dev.of_node, &pdev->dev);
+> +	else
+> +#endif
+> +		emif = get_device_details(pdev);
+> +
+>  	if (!emif) {
+>  		pr_err("%s: error getting device data\n", __func__);
+>  		goto error;
+> @@ -1643,11 +1918,23 @@ static void __attribute__((unused)) freq_post_notify_handling(void)
+>  	spin_unlock_irqrestore(&emif_lock, irq_state);
+>  }
+>  
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id emif_of_match[] = {
+> +		{ .compatible = "ti,emif-4d" },
+> +		{ .compatible = "ti,emif-4d5" },
+> +		{},
+> +};
+> +MODULE_DEVICE_TABLE(of, emif_of_match);
+> +#endif
+> +
+>  static struct platform_driver emif_driver = {
+>  	.remove		= __exit_p(emif_remove),
 
-gpio-driven i2c busses are inherently board-specific.  Why is this
-in the SoC include file?
+Not part of this patch I realize, but this is a bug.  .remove must
+be in the __devexit section and the __devexit_p() wrapper must
+be used.  Similarly, emif_probe must be in the __devinit section.
 
-Otherwise I think this patch series looks okay.
+>  	.shutdown	= emif_shutdown,
+>  	.driver = {
+>  		.name = "emif",
+> +#if defined(CONFIG_OF)
+> +		.of_match_table = of_match_ptr(emif_of_match),
+> +#endif
+
+The of_match_ptr() macro makes the #if/#endif wrapper redundant.
+
+Otherwise, on brief review this patch looks right.
 
 g.
 
+
+>  	},
 >  };
+>  
 > -- 
-> 1.7.7
+> 1.7.1
+> 
 > 
 > _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
 Grant Likely, B.Sc, P.Eng.
