@@ -1,40 +1,74 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 09/11] ARM: tegra: Rewrite PCIe support as a driver
-Date: Fri, 09 Mar 2012 09:42:32 -0700
-Message-ID: <4F5A32F8.80001@wwwdotorg.org>
-References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de> <1331218291-16119-10-git-send-email-thierry.reding@avionic-design.de> <4F5911E0.6060802@wwwdotorg.org> <20120309063739.GC25208@avionic-0098.mockup.avionic-design.de>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v3 0/4] ARM: Exynos4: Add irq domain and device tree
+ support for wakeup interrupts
+Date: Fri, 9 Mar 2012 22:13:56 +0530
+Message-ID: <CAJuYYwTFzuzhWo0CXt4mn8N3pKefKgX6h-NFCkvh4ZYhsw+_OA@mail.gmail.com>
+References: <1329912858-32750-1-git-send-email-thomas.abraham@linaro.org>
+	<4F5A30B8.6060801@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120309063739.GC25208-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4F5A30B8.6060801@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/2012 11:37 PM, Thierry Reding wrote:
-> * Stephen Warren wrote:
->> On 03/08/2012 07:51 AM, Thierry Reding wrote:
->>> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-...
->>> diff --git a/arch/arm/mach-tegra/board.h b/arch/arm/mach-tegra/board.h
+On 9 March 2012 22:02, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> On 02/22/12 04:14, Thomas Abraham wrote:
 >>
->>> +#define TEGRA_PCIE_MAX_PORTS 2
->>> +
->>> +struct tegra_pcie_pdata {
->>> +	int (*init)(struct platform_device *pdev);
->>> +	int (*exit)(struct platform_device *pdev);
->>> +	bool enable_ports[TEGRA_PCIE_MAX_PORTS];
->>> +};
+>> Changes since v2:
+>> - Reworked irq domain support based on v5 of the irq_domain generali=
+zation
+>> =A0 patches.
 >>
->> That's a somewhat odd place to put the header; a dedicated
->> mach-tegra/include/mach/tegra_pcie_pdata.h or
->> include/linux/platform_data/tegra_pcie.h might make more sense.
-> 
-> mach-tegra/include/mach/pcie.h perhaps? That would be less redundant.
+>> Changes since v1: (only patch 4/4 has changes)
+>> - Fixes based on Rob's comments:
+>> =A0 a. Fixed the function prototype of exynos4_init_irq_eint(void)
+>> =A0 b. Included interrupt-parent as an optional property for wakeup
+>> interrupt
+>> =A0 =A0 =A0 controller node.
+>>
+>> Samsung Exynos4 includes 32 external wakeup interrupt sources. The f=
+irst
+>> 16
+>> of these interrupts are connected to GIC SPI[31:16]. The last 16 of =
+these
+>> interrupts are grouped together into one interrupt and connected to =
+GIC
+>> SPI[32].
+>>
+>> This patchset adds irq domain and device tree support for these
+>> interrupts.
+>> Since there are users of fixed linux irq numbers of the external wak=
+eup
+>> interrupts, the legacy mapping is used for the irq domain.
+>>
+>> This patchset is based on
+>> http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.g=
+it
+>> [for-next]
+>>
+>> with all irq_domain (v5) patches merged from
+>> http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
+>>
+>> This patchset should be applied after applying the following patch.
+>> [PATCH] ARM: Exynos: Add irq domain and device tree support for inte=
+rrupt
+>> combiner
+>
+>
+> Looks ok to me this series, but I lost above patch in my mail box.
+> Thomas, could you please send updated it so that I can apply this ser=
+ies?
 
-New files in that directory should have tegra in the name somewhere, so
-that when multi-SoC kernels are built, and multiple mach-*/include/mach
-directories are in the include path (or files get moved from those paths
-into a single common place), you know which include file you're getting.
+Dear Mr. Kim,
+
+Sure. I will test and send the patchset based on the your latest
+for-next branch.
+
+Thanks,
+Thomas.
+
+[...]
