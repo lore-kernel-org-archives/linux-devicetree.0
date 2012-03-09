@@ -1,205 +1,147 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/4 v5] of_spi: add generic binding support to specify cs gpio
-Date: Fri,  9 Mar 2012 19:25:44 +0100
-Message-ID: <1331317544-21735-1-git-send-email-plagnioj@jcrosoft.com>
-References: <1331122989-14451-1-git-send-email-plagnioj@jcrosoft.co>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
+Date: Fri, 09 Mar 2012 10:45:50 -0800
+Message-ID: <4F5A4FDE.1030305@gmail.com>
+References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com> <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com> <4F50D7C2.7080204@gmail.com> <4F510B8E.3070201@cavium.com> <20120302190744.571E03E1C63@localhost> <4F511FB0.5070901@cavium.com> <4F527285.1020500@gmail.com> <4F52F90C.5060306@gmail.com> <20120309055704.465823E0901@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331122989-14451-1-git-send-email-plagnioj-sclMFOaUSTDQFizaE/u3fw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120309055704.465823E0901@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: David Daney <david.s.daney@gmail.com>, Rob Herring <robherring2@gmail.com>, David Daney <ddaney.cavm@gmail.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This will allow to use gpio for chip select with no modification in the
-driver binding
+On 03/08/2012 09:57 PM, Grant Likely wrote:
+> On Sat, 03 Mar 2012 21:09:32 -0800, David Daney<david.s.daney@gmail.com>  wrote:
+>> On 03/03/2012 11:35 AM, Rob Herring wrote:
+>>> On 03/02/2012 01:29 PM, David Daney wrote:
+>>>> On 03/02/2012 11:07 AM, Grant Likely wrote:
+>>>>> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
+>>>>> +                          unsigned int line,
+>>>>> +                          unsigned int bit,
+>>>>> +                          struct irq_domain *domain,
+>>>>>                                struct irq_chip *chip,
+>>>>>                                irq_flow_handler_t handler)
+>>>>>      {
+>>>>> +    struct irq_data *irqd;
+>>>>>          union octeon_ciu_chip_data cd;
+>>>>>
+>>>>>          irq_set_chip_and_handler(irq, chip, handler);
+>>>>> -
+>>>>>          cd.l = 0;
+>>>>>          cd.s.line = line;
+>>>>>          cd.s.bit = bit;
+>>>>>
+>>>>>          irq_set_chip_data(irq, cd.p);
+>>>>>          octeon_irq_ciu_to_irq[line][bit] = irq;
+>>>>> +
+>>>>> +    irqd = irq_get_irq_data(irq);
+>>>>> +    irqd->hwirq = line<<     6 | bit;
+>>>>> +    irqd->domain = domain;
+>>>>>>> I think the domain code will set these.
+>>>>>> It is my understanding that the domain code only does this for:
+>>>>>>
+>>>>>> o irq_domain_add_legacy()
+>>>>>>
+>>>>>> o irq_create_direct_mapping()
+>>>>>>
+>>>>>> o irq_create_mapping()
+>>>>>>
+>>>>>> We use none of those.  So I do it here.
+>>>>>>
+>>>>>> If there is a better way, I am open to suggestions.
+>>>>> irq_create_mapping is called by irq_create_of_mapping() which is
+>>>>> in turn called by irq_of_parse_and-map().  irq_domain always
+>>>>> manages the hwirq and domain values.  Driver code cannot manipulate
+>>>>> them manually.
+>>>>>
+>>>> I really must be missing something.
+>>>>
+>>>> Given:
+>>>>
+>>>> 1) I must have a mapping between hwirq and irq that I control so that
+>>>> non-OF code using the OCTEON_IRQ_* constants continues to work.
+>>> Those defines are what you need to work to get rid of.
+>>
+>> We are not starting from a blank slate here.  There is a lot of in-tree
+>> code using these symbols.  We cannot make them disappear with wishful
+>> thinking.
+>>
+>> The first step is a switch to irq_domains using the existing mappings.
+>>
+>> After we do that, I have patches to transition some drivers to use the
+>> OF mapping via irq_domains.  After those are merged, we can work toward
+>> getting rid of OCTEON_IRQ_*.  But I think it must be the last step in
+>> the process, not the first.
+>>>
+>>>> 2) irq_create_mapping() will allocate a random irq value if none is
+>>>> already assigned to the hwirq.
+>>>>
+>>>> Therefore: To avoid having random irq values assigned, I must manually
+>>>> assign them.
+>>>>
+>>> So you should be using legacy domain if you need to maintain fixed hwirq
+>>> to linux irq numbers. "linear" is a bit confusing as it doesn't mean
+>>> linear 1:1 irq number assignment, but linear search.
+>>
+>> My reading of Grant's code in linux-next directly contradicts this
+>> statement.  There is no code in irqdomain.c, that I can see, that allows
+>> me to have an arbitrary mapping of irq<-->  hwirq values.
+>
+> There are 4 kinds of mappings available; legacy, linear, radix and nomap.
+>
 
-When use the cs-gpios, the gpio number will be passed via the cs_gpio field
-and the number of chip select will automatically increased.
+Yes, I had discovered that.
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
----
-v5:
-	update grant comment to simplify the cs_gpio management
+> Ignore nomap and radix; you don't want them.
+>
+> legacy maps a contiguous range of hwirq numbers to a contiguous range of
+> linux irq numbers.  To preserve the exising #define mappings but still add
+> DT support, this is the one that you want.
 
-Best Regards,
-J.
- Documentation/devicetree/bindings/spi/spi-bus.txt |    6 ++
- drivers/spi/spi.c                                 |   55 +++++++++++++++++++-
- include/linux/spi/spi.h                           |    4 ++
- 3 files changed, 62 insertions(+), 3 deletions(-)
+This is precisely the point that you and Rob seem to have missed in the 
+last three or four back-and-forths about this.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index e782add..c253379 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -12,6 +12,7 @@ The SPI master node requires the following properties:
- - #size-cells     - should be zero.
- - compatible      - name of SPI bus controller following generic names
-     		recommended practice.
-+- cs-gpios	  - (optional) gpios chip select.
- No other properties are required in the SPI bus node.  It is assumed
- that a driver for an SPI bus device will understand that it is an SPI bus.
- However, the binding does not attempt to define the specific method for
-@@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
- chip selects.  Individual drivers can define additional properties to
- support describing the chip select layout.
- 
-+If cs-gpios is used the number of chip select will automatically increased.
-+
- SPI slave nodes must be children of the SPI master node and can
- contain the following properties.
- - reg             - (required) chip select address of device.
-@@ -34,6 +37,9 @@ contain the following properties.
- - spi-cs-high     - (optional) Empty property indicating device requires
-     		chip select active high
- 
-+If a gpio chipselect is used for the SPI slave the gpio number will be passed
-+via the cs_gpio
-+
- SPI example for an MPC5200 SPI bus:
- 	spi@f00 {
- 		#address-cells = <1>;
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index b2ccdea..446eee5 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -28,6 +28,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/spi/spi.h>
- #include <linux/of_spi.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
- #include <linux/export.h>
- 
-@@ -322,6 +323,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
- 	spi->dev.parent = &master->dev;
- 	spi->dev.bus = &spi_bus_type;
- 	spi->dev.release = spidev_release;
-+	spi->cs_gpio = -EINVAL;
- 	device_initialize(&spi->dev);
- 	return spi;
- }
-@@ -339,15 +341,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
- int spi_add_device(struct spi_device *spi)
- {
- 	static DEFINE_MUTEX(spi_add_lock);
--	struct device *dev = spi->master->dev.parent;
-+	struct spi_master *master = spi->master;
-+	struct device *dev = master->dev.parent;
- 	struct device *d;
- 	int status;
- 
- 	/* Chipselects are numbered 0..max; validate. */
--	if (spi->chip_select >= spi->master->num_chipselect) {
-+	if (spi->chip_select >= master->num_chipselect) {
- 		dev_err(dev, "cs%d >= max %d\n",
- 			spi->chip_select,
--			spi->master->num_chipselect);
-+			master->num_chipselect);
- 		return -EINVAL;
- 	}
- 
-@@ -371,6 +374,9 @@ int spi_add_device(struct spi_device *spi)
- 		goto done;
- 	}
- 
-+	if (master->cs_gpios)
-+		spi->cs_gpio = master->cs_gpios[spi->chip_select];
-+
- 	/* Drivers may modify this initial i/o setup, but will
- 	 * normally rely on the device being setup.  Devices
- 	 * using SPI_CS_HIGH can't coexist well otherwise...
-@@ -561,6 +567,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
- }
- EXPORT_SYMBOL_GPL(spi_alloc_master);
- 
-+#ifdef CONFIG_OF
-+static int of_spi_register_master(struct spi_master *master)
-+{
-+	int nb, i;
-+	int *cs;
-+	struct device_node *np = master->dev.of_node;
-+
-+	if (!np)
-+		return 0;
-+
-+	nb = of_gpio_named_count(np, "cs-gpios");
-+
-+	if (nb < 1)
-+		return 0;
-+
-+	cs = devm_kzalloc(&master->dev,
-+			  sizeof(int) * (master->num_chipselect + nb),
-+			  GFP_KERNEL);
-+	master->cs_gpios = cs;
-+
-+	if (!master->cs_gpios)
-+		return -ENOMEM;
-+
-+	memset(cs, -EINVAL, master->num_chipselect);
-+	master->num_chipselect += nb;
-+	cs += master->num_chipselect;
-+
-+	for (i = 0; i < nb; i++)
-+		cs[i] = of_get_named_gpio(np, "cs-gpios", i);
-+
-+	return 0;
-+}
-+#else
-+static int of_spi_register_master(struct spi_master *master)
-+{
-+	return 0;
-+}
-+#endif
-+
- /**
-  * spi_register_master - register SPI master controller
-  * @master: initialized master, originally from spi_alloc_master()
-@@ -592,6 +637,10 @@ int spi_register_master(struct spi_master *master)
- 	if (!dev)
- 		return -ENODEV;
- 
-+	status = of_spi_register_master(master);
-+	if (status)
-+		return status;
-+
- 	/* even if it's just one always-selected device, there must
- 	 * be at least one chipselect
- 	 */
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 176fce9..328d492 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -89,6 +89,7 @@ struct spi_device {
- 	void			*controller_state;
- 	void			*controller_data;
- 	char			modalias[SPI_NAME_SIZE];
-+	int			cs_gpio;	/* chip select gpio */
- 
- 	/*
- 	 * likely need more hooks for more protocol options affecting how
-@@ -318,6 +319,9 @@ struct spi_master {
- 
- 	/* called on release() to free memory provided by spi_master */
- 	void			(*cleanup)(struct spi_device *spi);
-+
-+	/* gpio chip select */
-+	int			*cs_gpios;
- };
- 
- static inline void *spi_master_get_devdata(struct spi_master *master)
--- 
-1.7.7
+Probably I have not explained well enough why legacy will not work.
+
+We have three different interrupt controllers (although only one is 
+currently in-tree).  hwirq to irq mapping for them is more or less as 
+follows:
+
+irq                 hwirqCIU        hwirqCIU2      hwirqCIU3
+----------------------------------------------------------------------
+OCTEON_IRQ_USB0     56               81             934562
+OCTEON_IRQ_TWSI     45              224             100543
+OCTEON_IRQ_UART0    34              228               4572
+.
+.
+.
+
+Now what we notice here is that there is no possible 1:1 linearly 
+increasing mapping possible for the irq and *all* three hwirq sets.  We 
+want a single binary that contains support for all three interrupt 
+controllers, so the OCTEON_IRQ_* values have to be the same for all 
+three interrupt controllers.  Because of this, legacy mapping is 
+*impossible*.
+
+Since the possible ranges of the hwirq values is very large and quite 
+sparse, probably the radix mapping will be required.
+
+Also to support non-OF drivers and architecture specific code for the 
+near future, I really think the existing IRQ values *must* be preserved.
+
+Therefore, as I said above, we need a way for my SOC/board code to 
+specify the mapping.
+
+Perhaps we need to add an optional function to struct irq_domain_ops 
+that would allow the default mapping to be overridden on a per 
+irq_domain basis.
+
+Otherwise, I think I will have to keep poking into the internal 
+irq_domain data structures to get the mappings I want.
+
+What do you think?
+
+David Daney
