@@ -1,15 +1,15 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: add dma-mask binding
-Date: Fri, 09 Mar 2012 13:32:45 +1100
-Message-ID: <1331260365.3105.46.camel@pasglop>
-References: <1331119575-6638-1-git-send-email-plagnioj@jcrosoft.com>
- <4F5793E9.9010100@gmail.com> <20120307173437.GC17087@game.jcrosoft.org>
- <20120309005923.2E04F3E0901@localhost>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 01/14] ARM: orion: spi: remove enable_clock_fix which is
+ not used
+Date: Thu, 08 Mar 2012 21:33:19 -0700
+Message-ID: <20120309043319.316C93E0903@localhost>
+References: <cover.1331090356.git.jason@lakedaemon.net>
+ <b0fe0cfb7e76a869a8ba7f7344de75eb122e206c.1331090356.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120309005923.2E04F3E0901@localhost>
+In-Reply-To: <b0fe0cfb7e76a869a8ba7f7344de75eb122e206c.1331090356.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,51 +19,55 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: arnd-r2nGTMty4D4@public.gmane.org
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2012-03-08 at 17:59 -0700, Grant Likely wrote:
-
-> > > This would need some documentation. There is already "dma-ranges"
-> > > defined for OF which nay do what's needed.
-> > what is dma-ranges I see no doc about it
-> > but I don't think it could be used for the dma mask
+On Wed,  7 Mar 2012 03:44:42 +0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 > 
-> As Rob says, it's documented in ePAPR.
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-dma-ranges is generally defined for bridges to indicate the dma window
-to system memory, it's not been by actual devices so far. It provides
-the opposite of "ranges", ie a translation from children to parent
-address space.
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-So it's not quite the same thing.
-
-Now the fact that we are limited to power-of-2 masks is a Linux
-implementation detail. We might want to make the device-tree a bit more
-flexible and use something like dma-limit instead. However hardware
-limits tend to be in term of number of bits anyways so it's not a big
-issue.
-
-I don't see a need to keep a "ranges" type of semantic. If we ever do
-that we can do a new binding for it or add a dma-base...
-
-> We could merely add an empty dma_mask u64 to the containing struct
-> platform_device and then assign the pointer to dev.dma_mask if it is
-> needed.  That would eliminate the malloc.
-
-Agreed.
-
->   Or we could by default
-> use dev->dev.dma_mask = &dev->dev.coherent_dma_mask;  Drivers or
-> notifier code could override whatever we setup here as the default.
+> ---
+>  drivers/spi/spi-orion.c       |    5 -----
+>  include/linux/spi/orion_spi.h |    1 -
+>  2 files changed, 0 insertions(+), 6 deletions(-)
 > 
-> dma-ranges really is the property that should be used for this, but
-> dma-ranges can describe a different set of permutations than dma_mask.
+> diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
+> index 13448c8..e496f79 100644
+> --- a/drivers/spi/spi-orion.c
+> +++ b/drivers/spi/spi-orion.c
+> @@ -359,11 +359,6 @@ static int orion_spi_setup(struct spi_device *spi)
+>  
+>  	orion_spi = spi_master_get_devdata(spi->master);
+>  
+> -	/* Fix ac timing if required.   */
+> -	if (orion_spi->spi_info->enable_clock_fix)
+> -		orion_spi_setbits(orion_spi, ORION_SPI_IF_CONFIG_REG,
+> -				  (1 << 14));
+> -
+>  	if ((spi->max_speed_hz == 0)
+>  			|| (spi->max_speed_hz > orion_spi->max_speed))
+>  		spi->max_speed_hz = orion_spi->max_speed;
+> diff --git a/include/linux/spi/orion_spi.h b/include/linux/spi/orion_spi.h
+> index decf6d8..b4d9fa6 100644
+> --- a/include/linux/spi/orion_spi.h
+> +++ b/include/linux/spi/orion_spi.h
+> @@ -11,7 +11,6 @@
+>  
+>  struct orion_spi_info {
+>  	u32	tclk;		/* no <linux/clk.h> support yet */
+> -	u32	enable_clock_fix;
+>  };
+>  
+>  
+> -- 
+> 1.7.3.4
+> 
 
-I don't think so. As I said, dma-ranges is about a bridge/bus exposing
-DMA windows & translations. It has nothing to do with the device
-intrinsic DMA'ing capabilities.
- 
-Cheers,
-Ben.
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies,Ltd.
