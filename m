@@ -1,103 +1,97 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
-Date: Thu, 08 Mar 2012 22:57:04 -0700
-Message-ID: <20120309055704.465823E0901@localhost>
-References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com> <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com> <4F50D7C2.7080204@gmail.com> <4F510B8E.3070201@cavium.com> <20120302190744.571E03E1C63@localhost> <4F511FB0.5070901@cavium.com> <4F527285.1020500@gmail.com> <4F52F90C.5060306@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4F52F90C.5060306@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.s.daney@gmail.com>, Rob Herring <robherring2@gmail.com>
-Cc: David Daney <david.daney@cavium.com>, David Daney <ddaney.cavm@gmail.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 11/11] ARM: tegra: pcie: Add device tree support
+Date: Fri, 9 Mar 2012 07:31:16 +0100
+Message-ID: <20120309063115.GA25208@avionic-0098.mockup.avionic-design.de>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
+ <1331218291-16119-12-git-send-email-thierry.reding@avionic-design.de>
+ <4F59253D.7070100@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============9067474724657529063=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4F59253D.7070100-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 03 Mar 2012 21:09:32 -0800, David Daney <david.s.daney@gmail.com> wrote:
-> On 03/03/2012 11:35 AM, Rob Herring wrote:
-> > On 03/02/2012 01:29 PM, David Daney wrote:
-> >> On 03/02/2012 11:07 AM, Grant Likely wrote:
-> >>> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
-> >>> +                          unsigned int line,
-> >>> +                          unsigned int bit,
-> >>> +                          struct irq_domain *domain,
-> >>>                               struct irq_chip *chip,
-> >>>                               irq_flow_handler_t handler)
-> >>>     {
-> >>> +    struct irq_data *irqd;
-> >>>         union octeon_ciu_chip_data cd;
-> >>>
-> >>>         irq_set_chip_and_handler(irq, chip, handler);
-> >>> -
-> >>>         cd.l = 0;
-> >>>         cd.s.line = line;
-> >>>         cd.s.bit = bit;
-> >>>
-> >>>         irq_set_chip_data(irq, cd.p);
-> >>>         octeon_irq_ciu_to_irq[line][bit] = irq;
-> >>> +
-> >>> +    irqd = irq_get_irq_data(irq);
-> >>> +    irqd->hwirq = line<<    6 | bit;
-> >>> +    irqd->domain = domain;
-> >>>>> I think the domain code will set these.
-> >>>> It is my understanding that the domain code only does this for:
-> >>>>
-> >>>> o irq_domain_add_legacy()
-> >>>>
-> >>>> o irq_create_direct_mapping()
-> >>>>
-> >>>> o irq_create_mapping()
-> >>>>
-> >>>> We use none of those.  So I do it here.
-> >>>>
-> >>>> If there is a better way, I am open to suggestions.
-> >>> irq_create_mapping is called by irq_create_of_mapping() which is
-> >>> in turn called by irq_of_parse_and-map().  irq_domain always
-> >>> manages the hwirq and domain values.  Driver code cannot manipulate
-> >>> them manually.
-> >>>
-> >> I really must be missing something.
-> >>
-> >> Given:
-> >>
-> >> 1) I must have a mapping between hwirq and irq that I control so that
-> >> non-OF code using the OCTEON_IRQ_* constants continues to work.
-> > Those defines are what you need to work to get rid of.
-> 
-> We are not starting from a blank slate here.  There is a lot of in-tree 
-> code using these symbols.  We cannot make them disappear with wishful 
-> thinking.
-> 
-> The first step is a switch to irq_domains using the existing mappings.
-> 
-> After we do that, I have patches to transition some drivers to use the 
-> OF mapping via irq_domains.  After those are merged, we can work toward 
-> getting rid of OCTEON_IRQ_*.  But I think it must be the last step in 
-> the process, not the first.
-> >
-> >> 2) irq_create_mapping() will allocate a random irq value if none is
-> >> already assigned to the hwirq.
-> >>
-> >> Therefore: To avoid having random irq values assigned, I must manually
-> >> assign them.
-> >>
-> > So you should be using legacy domain if you need to maintain fixed hwirq
-> > to linux irq numbers. "linear" is a bit confusing as it doesn't mean
-> > linear 1:1 irq number assignment, but linear search.
-> 
-> My reading of Grant's code in linux-next directly contradicts this 
-> statement.  There is no code in irqdomain.c, that I can see, that allows 
-> me to have an arbitrary mapping of irq <--> hwirq values.
 
-There are 4 kinds of mappings available; legacy, linear, radix and nomap.
+--===============9067474724657529063==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
+Content-Disposition: inline
 
-Ignore nomap and radix; you don't want them.
 
-legacy maps a contiguous range of hwirq numbers to a contiguous range of
-linux irq numbers.  To preserve the exising #define mappings but still add
-DT support, this is the one that you want.  The downside is that it requires
-all the irq_descs to be allocated ahead of time (which probably isn't a
-problem for you).
+--gBBFr7Ir9EOA20Yy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The linear map has a linear reverse map lookup table that allows arbitrary
-irq <--> hwirq mappings.  This mapping is preferred, but it doesn't work
-if you need to preserve #defined irq mappings.
+* Stephen Warren wrote:
+> On 03/08/2012 07:51 AM, Thierry Reding wrote:
+> > This commit adds support for instantiating the Tegra PCIe controller
+> > from a device tree.
+> >=20
+> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+>=20
+> > diff --git a/Documentation/devicetree/bindings/pci/tegra-pcie.txt b/Doc=
+umentation/devicetree/bindings/pci/tegra-pcie.txt
+>=20
+> > +NVIDIA Tegra PCIe controller
+> > +
+> > +Required properties:
+> > +- compatible: "nvidia,tegra20-pcie"
+> > +- reg: physical base address and length of the controller's registers
+> > +- interrupts: the interrupt outputs of the controller
+> > +
+> > +Optional properties:
+> > +- pex-clk-supply: supply voltage for internal reference clock
+> > +- vdd-supply: power supply for controller (1.05V)
+>=20
+> Mark, Liam,
+>=20
+> Should those *-supply properties really be optional? I got the
+> impression talking to Mark in a different thread that all regulators
+> should exist, although their implementation may be via a fixed
+> regulator, with no GPIO, as determined by the board design.
 
-g.
+If I read the TrimSlice code correctly, there is no regulator setup required
+to make PCIe work there presumably because they hardwire the proper voltage=
+s.
+On the other hand, maybe a better solution in this case would be to use the
+dummy regulator in those cases.
+
+Thierry
+
+--gBBFr7Ir9EOA20Yy
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk9Zo7MACgkQZ+BJyKLjJp+/iwCgiDXU0dcQ1FjrN2HsjdQOr5t/
+9GEAn0zL3ekkbOzXL9+9lWi7StLwDECy
+=000z
+-----END PGP SIGNATURE-----
+
+--gBBFr7Ir9EOA20Yy--
+
+--===============9067474724657529063==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============9067474724657529063==--
