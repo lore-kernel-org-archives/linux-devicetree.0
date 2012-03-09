@@ -1,73 +1,54 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 01/14] ARM: orion: spi: remove enable_clock_fix which is
- not used
-Date: Thu, 08 Mar 2012 21:33:19 -0700
-Message-ID: <20120309043319.316C93E0903@localhost>
-References: <cover.1331090356.git.jason@lakedaemon.net>
- <b0fe0cfb7e76a869a8ba7f7344de75eb122e206c.1331090356.git.jason@lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <b0fe0cfb7e76a869a8ba7f7344de75eb122e206c.1331090356.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Subject: Re: [PATCH 05/11] tps6586x: Add device-tree support
+Date: Thu, 08 Mar 2012 22:15:06 -0700
+Message-ID: <20120309051506.761B63E090F@localhost>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de> <1331218291-16119-6-git-send-email-thierry.reding@avionic-design.de> <20120308150607.GP3638@opensource.wolfsonmicro.com> <20120308151545.GA23934@avionic-0098.mockup.avionic-design.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120308151545.GA23934-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  7 Mar 2012 03:44:42 +0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> 
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+On Thu, 8 Mar 2012 16:15:46 +0100, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> * Mark Brown wrote:
+> > On Thu, Mar 08, 2012 at 03:51:25PM +0100, Thierry Reding wrote:
+> > 
+> > > +- gpio-controller: mark the device as a GPIO controller
+> > > +- regulators: list of regulators provided by this controller, must be in the
+> > > +  following order:
+> > > +    SM0, SM1, SM2, LDO0, LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7, LDO8, LDO9
+> > 
+> > This ordering requirement is fairly sad, if there are unused regulators
+> > they still need to be listed even though...
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+It's worse than that; the DT provides absolutely no guarantees about the
+ordering of either child nodes or properties.
 
-> ---
->  drivers/spi/spi-orion.c       |    5 -----
->  include/linux/spi/orion_spi.h |    1 -
->  2 files changed, 0 insertions(+), 6 deletions(-)
+> > 
+> > > +			sm0_reg: sm0 {
+> > > +				regulator-min-microvolt = < 725000>;
+> > > +				regulator-max-microvolt = <1500000>;
+> > > +				regulator-boot-on;
+> > > +				regulator-always-on;
+> > > +			};
+> > > +
+> > > +			sm1_reg: sm1 {
+> > 
+> > ...they all seem to be explicitly named in the device tree so presumably
+> > there's enough information in there for the driver to pick any set of
+> > regulators in any order.  This would be much nicer to use.
 > 
-> diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-> index 13448c8..e496f79 100644
-> --- a/drivers/spi/spi-orion.c
-> +++ b/drivers/spi/spi-orion.c
-> @@ -359,11 +359,6 @@ static int orion_spi_setup(struct spi_device *spi)
->  
->  	orion_spi = spi_master_get_devdata(spi->master);
->  
-> -	/* Fix ac timing if required.   */
-> -	if (orion_spi->spi_info->enable_clock_fix)
-> -		orion_spi_setbits(orion_spi, ORION_SPI_IF_CONFIG_REG,
-> -				  (1 << 14));
-> -
->  	if ((spi->max_speed_hz == 0)
->  			|| (spi->max_speed_hz > orion_spi->max_speed))
->  		spi->max_speed_hz = orion_spi->max_speed;
-> diff --git a/include/linux/spi/orion_spi.h b/include/linux/spi/orion_spi.h
-> index decf6d8..b4d9fa6 100644
-> --- a/include/linux/spi/orion_spi.h
-> +++ b/include/linux/spi/orion_spi.h
-> @@ -11,7 +11,6 @@
->  
->  struct orion_spi_info {
->  	u32	tclk;		/* no <linux/clk.h> support yet */
-> -	u32	enable_clock_fix;
->  };
->  
->  
-> -- 
-> 1.7.3.4
+> I don't like it much either. The only reason that requirement exists is
+> because it makes the assignment of the regulator ID (as defined in the
+> include/linux/mfd/tps6586x.h header) very trivial. Would it be better to
+> look up the ID based on the node name (sm0 --> TPS6586X_ID_SM_0, ...)?
 > 
+> Then the only requirement would be that the names match.
 
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies,Ltd.
+Yes, please look up id via name.  Alternately you can give each child node
+a 'reg' property and put #address-cells = <1>; #size-cells = <0>; in the
+parent (assuming the regulator number is a documented attribute of the
+hardware and not just a convenient linux construct).
+
+g.
