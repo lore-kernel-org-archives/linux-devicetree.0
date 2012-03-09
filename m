@@ -1,70 +1,103 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 4/4] arm/dts: OMAP3: Add mmc controller nodes and board data
-Date: Thu, 08 Mar 2012 22:46:08 -0700
-Message-ID: <20120309054608.647473E0901@localhost>
-References: <1329998490-27555-1-git-send-email-rnayak@ti.com> <1329998490-27555-5-git-send-email-rnayak@ti.com> <20120223185718.GZ18185@atomide.com> <4F470B71.1020308@ti.com> <20120224184859.GN18185@atomide.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20120224184859.GN18185@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>
-Cc: linux-omap@vger.kernel.org, linaro-dev@lists.linaro.org, balajitk@ti.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, cjb@laptop.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 4/5] MIPS: Octeon: Setup irq_domains for interrupts.
+Date: Thu, 08 Mar 2012 22:57:04 -0700
+Message-ID: <20120309055704.465823E0901@localhost>
+References: <1330563422-14078-1-git-send-email-ddaney.cavm@gmail.com> <1330563422-14078-5-git-send-email-ddaney.cavm@gmail.com> <4F50D7C2.7080204@gmail.com> <4F510B8E.3070201@cavium.com> <20120302190744.571E03E1C63@localhost> <4F511FB0.5070901@cavium.com> <4F527285.1020500@gmail.com> <4F52F90C.5060306@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4F52F90C.5060306@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.s.daney@gmail.com>, Rob Herring <robherring2@gmail.com>
+Cc: David Daney <david.daney@cavium.com>, David Daney <ddaney.cavm@gmail.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Feb 2012 10:49:00 -0800, Tony Lindgren <tony@atomide.com> wrote:
-> * Rajendra Nayak <rnayak@ti.com> [120223 19:29]:
-> > On Friday 24 February 2012 12:27 AM, Tony Lindgren wrote:
-> > >>--- a/arch/arm/boot/dts/omap3.dtsi
-> > >>+++ b/arch/arm/boot/dts/omap3.dtsi
-> > >>@@ -113,5 +113,31 @@
-> > >>  			#size-cells =<0>;
-> > >>  			ti,hwmods = "i2c3";
-> > >>  		};
-> > >>+
-> > >>+		mmc1: mmc@1 {
-> > >>+			compatible = "ti,omap2-hsmmc";
-> > >>+			ti,hwmods = "mmc1";
-> > >>+			ti,dual-volt;
-> > >>+		};
-> > >>+
-> > >>+		mmc2: mmc@2 {
-> > >>+			compatible = "ti,omap2-hsmmc";
-> > >>+			ti,hwmods = "mmc2";
-> > >>+		};
-> > >>+
-> > >>+		mmc3: mmc@3 {
-> > >>+			compatible = "ti,omap2-hsmmc";
-> > >>+			ti,hwmods = "mmc3";
-> > >>+		};
-> > >>+
-> > >>+		mmc4: mmc@4 {
-> > >>+			compatible = "ti,omap2-hsmmc";
-> > >>+			ti,hwmods = "mmc4";
-> > >>+		};
-> > >>+
-> > >>+		mmc5: mmc@5 {
-> > >>+			compatible = "ti,omap2-hsmmc";
-> > >>+			ti,hwmods = "mmc5";
-> > >>+		};
-> > >>  	};
-> > >>  };
-> > >
-> > >These all should all be "ti,omap3-hsmmc" I guess?
-> > 
-> > Well, I defined the binding such that both omap2 and omap3
-> > can use the same compatible "ti,omap2-hsmmc" since there is
-> > no difference in the way they are defined or handled. If thats
-> > confusing, I can have separate compatibles.
-> > Btw, I guess we do the same with a few other re-used IPs as well,
-> > I just checked and mcpsi does the same.
+On Sat, 03 Mar 2012 21:09:32 -0800, David Daney <david.s.daney@gmail.com> wrote:
+> On 03/03/2012 11:35 AM, Rob Herring wrote:
+> > On 03/02/2012 01:29 PM, David Daney wrote:
+> >> On 03/02/2012 11:07 AM, Grant Likely wrote:
+> >>> +static void __init octeon_irq_set_ciu_mapping(unsigned int irq,
+> >>> +                          unsigned int line,
+> >>> +                          unsigned int bit,
+> >>> +                          struct irq_domain *domain,
+> >>>                               struct irq_chip *chip,
+> >>>                               irq_flow_handler_t handler)
+> >>>     {
+> >>> +    struct irq_data *irqd;
+> >>>         union octeon_ciu_chip_data cd;
+> >>>
+> >>>         irq_set_chip_and_handler(irq, chip, handler);
+> >>> -
+> >>>         cd.l = 0;
+> >>>         cd.s.line = line;
+> >>>         cd.s.bit = bit;
+> >>>
+> >>>         irq_set_chip_data(irq, cd.p);
+> >>>         octeon_irq_ciu_to_irq[line][bit] = irq;
+> >>> +
+> >>> +    irqd = irq_get_irq_data(irq);
+> >>> +    irqd->hwirq = line<<    6 | bit;
+> >>> +    irqd->domain = domain;
+> >>>>> I think the domain code will set these.
+> >>>> It is my understanding that the domain code only does this for:
+> >>>>
+> >>>> o irq_domain_add_legacy()
+> >>>>
+> >>>> o irq_create_direct_mapping()
+> >>>>
+> >>>> o irq_create_mapping()
+> >>>>
+> >>>> We use none of those.  So I do it here.
+> >>>>
+> >>>> If there is a better way, I am open to suggestions.
+> >>> irq_create_mapping is called by irq_create_of_mapping() which is
+> >>> in turn called by irq_of_parse_and-map().  irq_domain always
+> >>> manages the hwirq and domain values.  Driver code cannot manipulate
+> >>> them manually.
+> >>>
+> >> I really must be missing something.
+> >>
+> >> Given:
+> >>
+> >> 1) I must have a mapping between hwirq and irq that I control so that
+> >> non-OF code using the OCTEON_IRQ_* constants continues to work.
+> > Those defines are what you need to work to get rid of.
 > 
-> Yeah let's use separate compatibles to avoid confusion.
-> For omap2 we also have the ti,omap2-mmc in addition to
-> ti,omap2-hsmmc..
+> We are not starting from a blank slate here.  There is a lot of in-tree 
+> code using these symbols.  We cannot make them disappear with wishful 
+> thinking.
+> 
+> The first step is a switch to irq_domains using the existing mappings.
+> 
+> After we do that, I have patches to transition some drivers to use the 
+> OF mapping via irq_domains.  After those are merged, we can work toward 
+> getting rid of OCTEON_IRQ_*.  But I think it must be the last step in 
+> the process, not the first.
+> >
+> >> 2) irq_create_mapping() will allocate a random irq value if none is
+> >> already assigned to the hwirq.
+> >>
+> >> Therefore: To avoid having random irq values assigned, I must manually
+> >> assign them.
+> >>
+> > So you should be using legacy domain if you need to maintain fixed hwirq
+> > to linux irq numbers. "linear" is a bit confusing as it doesn't mean
+> > linear 1:1 irq number assignment, but linear search.
+> 
+> My reading of Grant's code in linux-next directly contradicts this 
+> statement.  There is no code in irqdomain.c, that I can see, that allows 
+> me to have an arbitrary mapping of irq <--> hwirq values.
 
-Yes, absolutely use separate compatible values.  It is always important
-to be specific as to the silicon implementing the IP.  The omap3 instance
-can also carry the omap2 string in its compatible list:
+There are 4 kinds of mappings available; legacy, linear, radix and nomap.
 
-	compatible = "ti,omap3-hsmmc", "ti,omap2-hsmmc";
+Ignore nomap and radix; you don't want them.
+
+legacy maps a contiguous range of hwirq numbers to a contiguous range of
+linux irq numbers.  To preserve the exising #define mappings but still add
+DT support, this is the one that you want.  The downside is that it requires
+all the irq_descs to be allocated ahead of time (which probably isn't a
+problem for you).
+
+The linear map has a linear reverse map lookup table that allows arbitrary
+irq <--> hwirq mappings.  This mapping is preferred, but it doesn't work
+if you need to preserve #defined irq mappings.
 
 g.
