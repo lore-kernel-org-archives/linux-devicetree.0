@@ -1,68 +1,57 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v3 0/4] ARM: Exynos4: Add irq domain and device tree support
- for wakeup interrupts
-Date: Fri, 09 Mar 2012 08:32:56 -0800
-Message-ID: <4F5A30B8.6060801@samsung.com>
-References: <1329912858-32750-1-git-send-email-thomas.abraham@linaro.org>
+From: Thomas Schwinge <thomas@codesourcery.com>
+Subject: [PATCH 7/7] sm501: restore big-endian operation.
+Date: Fri, 9 Mar 2012 17:38:53 +0100
+Message-ID: <1331311133-26937-7-git-send-email-thomas@codesourcery.com>
+References: <1331311133-26937-1-git-send-email-thomas@codesourcery.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1329912858-32750-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, patches@linaro.org
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1331311133-26937-1-git-send-email-thomas@codesourcery.com>
+Sender: linux-sh-owner@vger.kernel.org
+Cc: Thomas Schwinge <thomas@codesourcery.com>, Paul Mundt <lethal@linux-sh.org>, linux-sh@vger.kernel.org, Heiko Schocher <hs@denx.de>, Samuel Ortiz <sameo@linux.intel.com>, linux-fbdev@vger.kernel.org, devicetree-discuss@ozlabs.org, Ben Dooks <ben@simtec.co.uk>, Vincent Sanders <vince@simtec.co.uk>, Randy Dunlap <rdunlap@xenotime.net>
 List-Id: devicetree@vger.kernel.org
 
-On 02/22/12 04:14, Thomas Abraham wrote:
-> Changes since v2:
-> - Reworked irq domain support based on v5 of the irq_domain generalization
->    patches.
->
-> Changes since v1: (only patch 4/4 has changes)
-> - Fixes based on Rob's comments:
->    a. Fixed the function prototype of exynos4_init_irq_eint(void)
->    b. Included interrupt-parent as an optional property for wakeup interrupt
->        controller node.
->
-> Samsung Exynos4 includes 32 external wakeup interrupt sources. The first 16
-> of these interrupts are connected to GIC SPI[31:16]. The last 16 of these
-> interrupts are grouped together into one interrupt and connected to GIC
-> SPI[32].
->
-> This patchset adds irq domain and device tree support for these interrupts.
-> Since there are users of fixed linux irq numbers of the external wakeup
-> interrupts, the legacy mapping is used for the irq domain.
->
-> This patchset is based on
-> http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git [for-next]
->
-> with all irq_domain (v5) patches merged from
-> http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
->
-> This patchset should be applied after applying the following patch.
-> [PATCH] ARM: Exynos: Add irq domain and device tree support for interrupt combiner
+On SH, as of 37b7a97884ba64bf7d403351ac2a9476ab4f1bba we have to use the
+endianess-agnostic I/O accessor functions.
 
-Looks ok to me this series, but I lost above patch in my mail box.
-Thomas, could you please send updated it so that I can apply this series?
+In commit bf5f0019046d596d613caf74722ba4994e153899, Heiko fixed this for 32-bit
+PowerPC; my patch now generalizes upon that.
 
-Thanks.
+The device is now recognized correctly for both litte-endian and big-endian
+sh7785lcr, but I have not tested this any further, as the board is situated in
+a remote data center.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+Signed-off-by: Thomas Schwinge <thomas@codesourcery.com>
+Cc: Paul Mundt <lethal@linux-sh.org>
+Cc: linux-sh@vger.kernel.org
+Cc: Heiko Schocher <hs@denx.de>
+Cc: Samuel Ortiz <sameo@linux.intel.com>
+Cc: linux-fbdev@vger.kernel.org
+Cc: devicetree-discuss@ozlabs.org
+Cc: Ben Dooks <ben@simtec.co.uk>
+Cc: Vincent Sanders <vince@simtec.co.uk>
+Cc: Randy Dunlap <rdunlap@xenotime.net>
+---
+ include/linux/sm501.h |    9 ++-------
+ 1 files changed, 2 insertions(+), 7 deletions(-)
 
->
-> Thomas Abraham (4):
->    ARM: Exynos4: Simplify EINT number to linux irq number translation
->    ARM: Exynos4: Add irq_domain support for gpio wakeup interrupts
->    ARM: Exynos4: Remove arch_initcall for wakeup interrupt initialization
->    ARM: Exynos4: Add device tree support for gpio wakeup interrupt controller
->
->   .../bindings/arm/samsung/wakeup-eint.txt           |   37 +++++
->   arch/arm/mach-exynos/common.c                      |  148 ++++++++++++--------
->   arch/arm/mach-exynos/include/mach/regs-gpio.h      |    4 +-
->   3 files changed, 131 insertions(+), 58 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/arm/samsung/wakeup-eint.txt
+diff --git a/include/linux/sm501.h b/include/linux/sm501.h
+index 02fde50..0312e3c 100644
+--- a/include/linux/sm501.h
++++ b/include/linux/sm501.h
+@@ -173,10 +173,5 @@ struct sm501_platdata {
+ 	unsigned int			 gpio_i2c_nr;
+ };
+ 
+-#if defined(CONFIG_PPC32)
+-#define smc501_readl(addr)		ioread32be((addr))
+-#define smc501_writel(val, addr)	iowrite32be((val), (addr))
+-#else
+-#define smc501_readl(addr)		readl(addr)
+-#define smc501_writel(val, addr)	writel(val, addr)
+-#endif
++#define smc501_readl(addr)		__raw_readl(addr)
++#define smc501_writel(val, addr)	__raw_writel(val, addr)
+-- 
+1.7.4.1
+
