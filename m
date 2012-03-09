@@ -1,69 +1,36 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
-Date: Fri, 9 Mar 2012 17:36:08 +0100
-Message-ID: <20120309163608.GQ27213@game.jcrosoft.org>
-References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
- <20120309014441.8236B3E0903@localhost>
- <20120309100435.GN27213@game.jcrosoft.org>
- <20120309162638.92E813E0880@localhost>
+From: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/2] i2c-s3c2410: Updates for exynos4210 and DT-based systems
+Date: Fri, 09 Mar 2012 18:04:44 +0100
+Message-ID: <1331312686-2077-1-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120309162638.92E813E0880@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+Cc: thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > > +int of_property_read_bool(const struct device_node *np, const char *propname)
-> > > > +{
-> > > > +	u32 reg;
-> > > > +	int ret = of_property_read_u32(np, propname, &reg);
-> > > > +
-> > > > +	switch (ret) {
-> > > > +	case -EINVAL:
-> > > > +		return false;
-> > > > +	case -ENODATA:
-> > > > +		return true;
-> > > > +	case 0:
-> > > > +		return reg == 1;
-> > > 
-> > > Ugh.  so any value other than 1 returns false?  I think that will surprise
-> > > most people.
-> > > 
-> > > I don't like this api or binding.  If it is a bool property, then why isn't
-> > > simply testing for the property existance sufficient?
-> > no if you want to disable it
-> > 
-> > if a bool is define in the dtsi and want to disable it int the dts
-> > 
-> > if you we can do the the invert
-> > 
-> > if !0 => true
-> > 
-> > is-ok;			=> true
-> > is-ok = <val != 0>;	=> true
-> > is-ok = <0>;		=> false
-> 
-> This is a failure of the dtc tool, not the binding.  Accepting this binding
-> means we have to live with it for a very long time.  It needs to be fixed
-> in dtc instead so that properties can be deleted instead of only modified.
-I understand your idea but today if you put and value in the property it's true.
+Hi,
 
-So is-ok = <0>; is true also which is illogical as in any language a boolean is
-true (1) or false (0). When I read the property I will understand false not true
+This patchset reworks i2c-s3c2410 driver a bit to better handle
+device tree-enabled platforms and adds two quirks required by
+exynos4210-specific I2C controller used by s5p-hdmi driver.
 
-And I see no good way to add the "delete" in dtc.
+This patchset is based on "i2c-bjdooks/for-34/i2c/i2c-samsung" branch
+taken from:
 
-Best Regards,
-J.
+  git://git.fluff.org/bjdooks/linux.git
+
+Karol Lewandowski (1):
+  i2c-s3c2410: Rework device type handling
+
+Tomasz Stanislawski (1):
+  i2c-s3c2410: Add HDMIPHY quirk for S3C2440
+
+ .../devicetree/bindings/i2c/samsung-i2c.txt        |   10 ++-
+ drivers/i2c/busses/i2c-s3c2410.c                   |   90 ++++++++++++--------
+ 2 files changed, 62 insertions(+), 38 deletions(-)
+
+-- 
+1.7.9
