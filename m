@@ -1,40 +1,59 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] drivers/ata/pata_mpc52xx.c: add missing kfree
-Date: Sat, 10 Mar 2012 11:22:40 -0800
-Message-ID: <1331407360.1762.8.camel@joe2Laptop>
-References: <1331402199-8000-1-git-send-email-Julia.Lawall@lip6.fr>
-	 <20120310181315.GA4139@pengutronix.de>
-	 <1331404377.14442.19.camel@joe2Laptop>
-	 <20120310184407.GB4139@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20120310184407.GB4139@pengutronix.de>
-Sender: linux-ide-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>
-Cc: Anatolij Gustschin <agust@denx.de>, Julia Lawall <Julia.Lawall@lip6.fr>, Jeff Garzik <jgarzik@pobox.com>, kernel-janitors@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Julia Lawall <Julia.Lawall@lip6.fr>
+Subject: [PATCH] drivers/ata/pata_mpc52xx.c: drop unneeded devm cleanup functions
+Date: Sat, 10 Mar 2012 22:35:52 +0100
+Message-ID: <1331415352-10260-1-git-send-email-Julia.Lawall@lip6.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeff Garzik <jgarzik@pobox.com>
+Cc: kernel-janitors@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2012-03-10 at 19:44 +0100, Wolfram Sang wrote:
-> > Anatolij is not listed as a maintainer for this file
-> > nor has he ever written or signed a patch for it.
-> I noticed that Grant was in CC, assumed that it was because of his previous MPC
-> maintainership and mentioned that Anatolij took over. Nothing more, just wanted
-> to help.
+From: Julia Lawall <Julia.Lawall@lip6.fr>
 
-Actually, it's because there's a K: of_get_property
-line in OPEN FIRMWARE and the file has one.
+There is no need to call the devm cleanup functions on failure of a probe
+or remove function.
 
-I suppose that get_maintainers could be told to
-ignore K: entries when using -f <file>.
+Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+Acked-by: Wolfram Sang <w.sang@pengutronix.de>
 
-> > It'd be possible to add patterns to MAINTAINERS
-> > if Anatolij really wants to see changes to drivers.
-> It seems a bit too much for my taste (hardly readable? false positives?),
+---
+Changed subject.  Included Wolfram's ACK.
 
-There are no false positives as far as I can tell.
-Just using *mpc5* doesn't give any either today.
-It's perlish so the whole thing is gibberish anyway.
+ drivers/ata/pata_mpc52xx.c |   11 -----------
+ 1 file changed, 11 deletions(-)
 
-
+diff --git a/drivers/ata/pata_mpc52xx.c b/drivers/ata/pata_mpc52xx.c
+index 00748ae..1f02008 100644
+--- a/drivers/ata/pata_mpc52xx.c
++++ b/drivers/ata/pata_mpc52xx.c
+@@ -806,17 +806,12 @@ mpc52xx_ata_probe(struct platform_device *op)
+ 	return 0;
+ 
+  err:
+-	devm_release_mem_region(&op->dev, res_mem.start, sizeof(*ata_regs));
+ 	if (ata_irq)
+ 		irq_dispose_mapping(ata_irq);
+ 	if (task_irq)
+ 		irq_dispose_mapping(task_irq);
+ 	if (dmatsk)
+ 		bcom_ata_release(dmatsk);
+-	if (ata_regs)
+-		devm_iounmap(&op->dev, ata_regs);
+-	if (priv)
+-		devm_kfree(&op->dev, priv);
+ 	return rv;
+ }
+ 
+@@ -835,12 +830,6 @@ mpc52xx_ata_remove(struct platform_device *op)
+ 	bcom_ata_release(priv->dmatsk);
+ 	irq_dispose_mapping(priv->ata_irq);
+ 
+-	/* Clear up IO allocations */
+-	devm_iounmap(&op->dev, priv->ata_regs);
+-	devm_release_mem_region(&op->dev, priv->ata_regs_pa,
+-				sizeof(*priv->ata_regs));
+-	devm_kfree(&op->dev, priv);
+-
+ 	return 0;
+ }
+ 
