@@ -1,253 +1,55 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/4 v5] of_spi: add generic binding support to specify cs
-	gpio
-Date: Sun, 11 Mar 2012 08:07:31 -0600
-Message-ID: <20120311140731.2D4F93E0979@localhost>
-References: <1331122989-14451-1-git-send-email-plagnioj@jcrosoft.co>
-	<1331317544-21735-1-git-send-email-plagnioj@jcrosoft.com>
+From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Subject: [PATCH 0/2] Add support for DNS-320 and DNS-325 using devicetree
+Date: Sun, 11 Mar 2012 14:33:24 +0000
+Message-ID: <1331476406-9844-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1331317544-21735-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  9 Mar 2012 19:25:44 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> This will allow to use gpio for chip select with no modification in the
-> driver binding
-> 
-> When use the cs-gpios, the gpio number will be passed via the cs_gpio field
-> and the number of chip select will automatically increased.
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-> ---
-> v5:
-> 	update grant comment to simplify the cs_gpio management
-> 
-> Best Regards,
-> J.
->  Documentation/devicetree/bindings/spi/spi-bus.txt |    6 ++
->  drivers/spi/spi.c                                 |   55 +++++++++++++++++++-
->  include/linux/spi/spi.h                           |    4 ++
->  3 files changed, 62 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index e782add..c253379 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -12,6 +12,7 @@ The SPI master node requires the following properties:
->  - #size-cells     - should be zero.
->  - compatible      - name of SPI bus controller following generic names
->      		recommended practice.
-> +- cs-gpios	  - (optional) gpios chip select.
->  No other properties are required in the SPI bus node.  It is assumed
->  that a driver for an SPI bus device will understand that it is an SPI bus.
->  However, the binding does not attempt to define the specific method for
-> @@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
->  chip selects.  Individual drivers can define additional properties to
->  support describing the chip select layout.
->  
-> +If cs-gpios is used the number of chip select will automatically increased.
-> +
->  SPI slave nodes must be children of the SPI master node and can
->  contain the following properties.
->  - reg             - (required) chip select address of device.
-> @@ -34,6 +37,9 @@ contain the following properties.
->  - spi-cs-high     - (optional) Empty property indicating device requires
->      		chip select active high
->  
-> +If a gpio chipselect is used for the SPI slave the gpio number will be passed
-> +via the cs_gpio
-> +
->  SPI example for an MPC5200 SPI bus:
->  	spi@f00 {
->  		#address-cells = <1>;
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index b2ccdea..446eee5 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -28,6 +28,7 @@
->  #include <linux/mod_devicetable.h>
->  #include <linux/spi/spi.h>
->  #include <linux/of_spi.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/export.h>
->  
-> @@ -322,6 +323,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
->  	spi->dev.parent = &master->dev;
->  	spi->dev.bus = &spi_bus_type;
->  	spi->dev.release = spidev_release;
-> +	spi->cs_gpio = -EINVAL;
->  	device_initialize(&spi->dev);
->  	return spi;
->  }
-> @@ -339,15 +341,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
->  int spi_add_device(struct spi_device *spi)
->  {
->  	static DEFINE_MUTEX(spi_add_lock);
-> -	struct device *dev = spi->master->dev.parent;
-> +	struct spi_master *master = spi->master;
-> +	struct device *dev = master->dev.parent;
->  	struct device *d;
->  	int status;
->  
->  	/* Chipselects are numbered 0..max; validate. */
-> -	if (spi->chip_select >= spi->master->num_chipselect) {
-> +	if (spi->chip_select >= master->num_chipselect) {
->  		dev_err(dev, "cs%d >= max %d\n",
->  			spi->chip_select,
-> -			spi->master->num_chipselect);
-> +			master->num_chipselect);
->  		return -EINVAL;
->  	}
->  
-> @@ -371,6 +374,9 @@ int spi_add_device(struct spi_device *spi)
->  		goto done;
->  	}
->  
-> +	if (master->cs_gpios)
-> +		spi->cs_gpio = master->cs_gpios[spi->chip_select];
-> +
+As agreed with Arnd Bergmann and Jason Cooper, include any board setup that
+cannot be done in devicetree in board-dt.c, then replace with devicetree
+entries.
 
-I still don't understand the need for this.  Only the master driver will need
-this data, and it is already stored in the master->cs_gpios array.  Why
-does it need to get duplicated into the spi_device?
+The NAND driver is converted to devicetree as part of this patch series, 
+although I don't feel qualified to explain the parameters actually mean so 
+have left documentation fields blank.
 
->  	/* Drivers may modify this initial i/o setup, but will
->  	 * normally rely on the device being setup.  Devices
->  	 * using SPI_CS_HIGH can't coexist well otherwise...
-> @@ -561,6 +567,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
->  }
->  EXPORT_SYMBOL_GPL(spi_alloc_master);
->  
-> +#ifdef CONFIG_OF
-> +static int of_spi_register_master(struct spi_master *master)
-> +{
-> +	int nb, i;
-> +	int *cs;
-> +	struct device_node *np = master->dev.of_node;
-> +
-> +	if (!np)
-> +		return 0;
-> +
-> +	nb = of_gpio_named_count(np, "cs-gpios");
-> +
-> +	if (nb < 1)
-> +		return 0;
-> +
-> +	cs = devm_kzalloc(&master->dev,
-> +			  sizeof(int) * (master->num_chipselect + nb),
-> +			  GFP_KERNEL);
+The patches should apply cleanly to staging/kirkwood/dt, although 
+kirkwood-dns320.dts attempts to override the orion-wdt definition with a
+lower TCLK, even though the orion-wdt work isn't merged yet. If this would
+be better to remove I shall.
 
-sizeof(*cs)
+Cheers,
 
-> +	master->cs_gpios = cs;
-> +
-> +	if (!master->cs_gpios)
-> +		return -ENOMEM;
-> +
-> +	memset(cs, -EINVAL, master->num_chipselect);
-> +	master->num_chipselect += nb;
+Jamie Lentin (2):
+  ARM: kirkwood: Basic support for DNS-320 and DNS-325
+  ARM: kirkwood: Convert orion-nand to fdt
 
-Looks buggy.  Should be:
-	if (nb > master->num_chipselect)
-		master->num_chipselect = nb;
-
-However, this is actually quite risky.  Changing the size of
-num_chipselect without the driver knowing about it will most likely
-cause breakage in drivers.  Drivers may use it as an array index, and
-if it gets increased then there will be problems.  In fact, drivers
-are probably using spi->chip_select as an array or register index so I
-don't think it can be transparently extended to include gpios.
-
-So, this function must change.  It cannot be called automatically
-from spi_register_master().  It needs to be a library function that spi bus
-drivers must call explicitly so they are prepared for a change in the
-num_chipselect value.
-
-Also, if we're doing this, then the gpio cs manipulation hook should be
-moved out of spi_bitbang and into the core spi_master.  There should
-also be a stock function for manipulating gpio chip selects. I don't want
-spi driver authors under the impression that they should open code the
-chip select manipulation.
-
-> +	cs += master->num_chipselect;
-> +
-> +	for (i = 0; i < nb; i++)
-> +		cs[i] = of_get_named_gpio(np, "cs-gpios", i);
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int of_spi_register_master(struct spi_master *master)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  /**
->   * spi_register_master - register SPI master controller
->   * @master: initialized master, originally from spi_alloc_master()
-> @@ -592,6 +637,10 @@ int spi_register_master(struct spi_master *master)
->  	if (!dev)
->  		return -ENODEV;
->  
-> +	status = of_spi_register_master(master);
-> +	if (status)
-> +		return status;
-> +
->  	/* even if it's just one always-selected device, there must
->  	 * be at least one chipselect
->  	 */
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 176fce9..328d492 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -89,6 +89,7 @@ struct spi_device {
->  	void			*controller_state;
->  	void			*controller_data;
->  	char			modalias[SPI_NAME_SIZE];
-> +	int			cs_gpio;	/* chip select gpio */
->  
->  	/*
->  	 * likely need more hooks for more protocol options affecting how
-> @@ -318,6 +319,9 @@ struct spi_master {
->  
->  	/* called on release() to free memory provided by spi_master */
->  	void			(*cleanup)(struct spi_device *spi);
-> +
-> +	/* gpio chip select */
-> +	int			*cs_gpios;
->  };
->  
->  static inline void *spi_master_get_devdata(struct spi_master *master)
-> -- 
-> 1.7.7
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+ .../devicetree/bindings/mtd/orion-nand.txt         |   41 +++
+ arch/arm/boot/dts/kirkwood-dns320.dts              |   96 +++++++
+ arch/arm/boot/dts/kirkwood-dns325.dts              |   82 ++++++
+ arch/arm/mach-kirkwood/Kconfig                     |   18 ++
+ arch/arm/mach-kirkwood/Makefile.boot               |    2 +
+ arch/arm/mach-kirkwood/board-dt.c                  |  264 ++++++++++++++++++++
+ arch/arm/mach-kirkwood/common.c                    |    6 +
+ drivers/mtd/nand/orion_nand.c                      |   39 +++-
+ 8 files changed, 546 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
+ create mode 100644 arch/arm/boot/dts/kirkwood-dns320.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-dns325.dts
 
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
-
-------------------------------------------------------------------------------
-Virtualization & Cloud Management Using Capacity Planning
-Cloud computing makes use of virtualization - but cloud computing 
-also focuses on allowing computing to be delivered as a service.
-http://www.accelacomm.com/jaw/sfnl/114/51521223/
+1.7.9.1
