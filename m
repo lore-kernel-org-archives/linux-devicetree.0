@@ -1,37 +1,54 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] drivers/ata/pata_mpc52xx.c: add missing kfree
-Date: Sun, 11 Mar 2012 14:04:51 +0400
-Message-ID: <4F5C78C3.1070208@mvista.com>
-References: <1331402199-8000-1-git-send-email-Julia.Lawall@lip6.fr>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 03/11] regulator: fixed: Support driver probe deferral
+Date: Sun, 11 Mar 2012 12:58:00 +0000
+Message-ID: <20120311125759.GH3233@opensource.wolfsonmicro.com>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
+ <1331218291-16119-4-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331402199-8000-1-git-send-email-Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeff Garzik <jgarzik-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Enx9fNJ0XV5HaWRu"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1331218291-16119-4-git-send-email-thierry.reding@avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-tegra@vger.kernel.org, Liam Girdwood <lrg@ti.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 10-03-2012 21:56, Julia Lawall wrote:
+--Enx9fNJ0XV5HaWRu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> From: Julia Lawall<Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+On Thu, Mar 08, 2012 at 03:51:23PM +0100, Thierry Reding wrote:
+> If the specified GPIO is not found, return -EPROBE_DEFER. This will
+> cause the driver to be probed again later when the required GPIO may
+> have become available.
 
-> There is no need to call the devm cleanup functions on failure of a probe
-> or remove function.
+Might be worth pushing this into gpiolib?  It seems like wanting to
+defer if a GPIO is not found will be the overwhelmingly common case
+given that the GPIO numbers need to be explicitly specified.
 
-    This doesn't correlate with the subject.
+--Enx9fNJ0XV5HaWRu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Signed-off-by: Julia Lawall<Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-WBR, Sergei
+iQIcBAEBAgAGBQJPXKFQAAoJEBus8iNuMP3dz7AP/3Dk+fPk0N59gRitOBUApI78
+OjAmynj4JG0OeDs+5u0VsDOn7Xc8KlaXgTQ7T+q1PW98dM/frOoRdZ/g1/KoNCkE
+c0hEIcAzDVE3LrLhgGPBTGxYK5lGW9E/wJw0b3ARzS1bd28fNHqn9Be2gTafEIlx
+N7y4cR0Y0huUAw3UyJacism1L7jQsT1q5S7SfHmQpWP/Nf1DRWNWzvH54IHQFxKn
+PiFf19lZLr38s1GXL0ucUSnYB8thX1aNn8/Xnj4K9lipzMMFDmmEhS7DQakPvh8P
+DRYrh92THwczX+X9YSnAEr3Pmkr8hPbajK+vitnZUg+bosLYJdMaNOtOzBLZWoN8
+Qt/8/hs9AevUhIoAH+4AHDO2UmVy5UVabWdVfaJTYG9eujhbkehNGMIVb+cJZ/nG
+QPWNsUVXEyA8+BT3kUd4Rv7S5K5pmjqcwTE8M1NZEmeYVVHlNeBVpL/z7uNaYXhA
+Fo07eo+/sooprGNwoQyZsbb3g0Rmz/zzqLir9OWnuD9VsgSeqHzcyKpSEg/sYZDN
+oWbs6VshCZ6BLCRp3WkiHcDITabnhKityzyl9tpS65vnVSq5cRpKIuM6X3VSTl4R
+zSTbtXf8siIV/08sNKjDcVVXVuS0MqUoOZrk1b7v6kewRp2yw2nuab8TplQ2eBrx
+MYMuv8Siqqqdn55xx7Yf
+=f9Aw
+-----END PGP SIGNATURE-----
+
+--Enx9fNJ0XV5HaWRu--
