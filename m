@@ -1,54 +1,253 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 03/11] regulator: fixed: Support driver probe deferral
-Date: Sun, 11 Mar 2012 12:58:00 +0000
-Message-ID: <20120311125759.GH3233@opensource.wolfsonmicro.com>
-References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
- <1331218291-16119-4-git-send-email-thierry.reding@avionic-design.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/4 v5] of_spi: add generic binding support to specify cs
+	gpio
+Date: Sun, 11 Mar 2012 08:07:31 -0600
+Message-ID: <20120311140731.2D4F93E0979@localhost>
+References: <1331122989-14451-1-git-send-email-plagnioj@jcrosoft.co>
+	<1331317544-21735-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Enx9fNJ0XV5HaWRu"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1331218291-16119-4-git-send-email-thierry.reding@avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-tegra@vger.kernel.org, Liam Girdwood <lrg@ti.com>, Jesse Barnes <jbarnes@virtuousgeek.org>, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1331317544-21735-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri,  9 Mar 2012 19:25:44 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> This will allow to use gpio for chip select with no modification in the
+> driver binding
+> 
+> When use the cs-gpios, the gpio number will be passed via the cs_gpio field
+> and the number of chip select will automatically increased.
+> 
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> ---
+> v5:
+> 	update grant comment to simplify the cs_gpio management
+> 
+> Best Regards,
+> J.
+>  Documentation/devicetree/bindings/spi/spi-bus.txt |    6 ++
+>  drivers/spi/spi.c                                 |   55 +++++++++++++++++++-
+>  include/linux/spi/spi.h                           |    4 ++
+>  3 files changed, 62 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index e782add..c253379 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -12,6 +12,7 @@ The SPI master node requires the following properties:
+>  - #size-cells     - should be zero.
+>  - compatible      - name of SPI bus controller following generic names
+>      		recommended practice.
+> +- cs-gpios	  - (optional) gpios chip select.
+>  No other properties are required in the SPI bus node.  It is assumed
+>  that a driver for an SPI bus device will understand that it is an SPI bus.
+>  However, the binding does not attempt to define the specific method for
+> @@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
+>  chip selects.  Individual drivers can define additional properties to
+>  support describing the chip select layout.
+>  
+> +If cs-gpios is used the number of chip select will automatically increased.
+> +
+>  SPI slave nodes must be children of the SPI master node and can
+>  contain the following properties.
+>  - reg             - (required) chip select address of device.
+> @@ -34,6 +37,9 @@ contain the following properties.
+>  - spi-cs-high     - (optional) Empty property indicating device requires
+>      		chip select active high
+>  
+> +If a gpio chipselect is used for the SPI slave the gpio number will be passed
+> +via the cs_gpio
+> +
+>  SPI example for an MPC5200 SPI bus:
+>  	spi@f00 {
+>  		#address-cells = <1>;
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index b2ccdea..446eee5 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/of_spi.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/export.h>
+>  
+> @@ -322,6 +323,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
+>  	spi->dev.parent = &master->dev;
+>  	spi->dev.bus = &spi_bus_type;
+>  	spi->dev.release = spidev_release;
+> +	spi->cs_gpio = -EINVAL;
+>  	device_initialize(&spi->dev);
+>  	return spi;
+>  }
+> @@ -339,15 +341,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
+>  int spi_add_device(struct spi_device *spi)
+>  {
+>  	static DEFINE_MUTEX(spi_add_lock);
+> -	struct device *dev = spi->master->dev.parent;
+> +	struct spi_master *master = spi->master;
+> +	struct device *dev = master->dev.parent;
+>  	struct device *d;
+>  	int status;
+>  
+>  	/* Chipselects are numbered 0..max; validate. */
+> -	if (spi->chip_select >= spi->master->num_chipselect) {
+> +	if (spi->chip_select >= master->num_chipselect) {
+>  		dev_err(dev, "cs%d >= max %d\n",
+>  			spi->chip_select,
+> -			spi->master->num_chipselect);
+> +			master->num_chipselect);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -371,6 +374,9 @@ int spi_add_device(struct spi_device *spi)
+>  		goto done;
+>  	}
+>  
+> +	if (master->cs_gpios)
+> +		spi->cs_gpio = master->cs_gpios[spi->chip_select];
+> +
 
---Enx9fNJ0XV5HaWRu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I still don't understand the need for this.  Only the master driver will need
+this data, and it is already stored in the master->cs_gpios array.  Why
+does it need to get duplicated into the spi_device?
 
-On Thu, Mar 08, 2012 at 03:51:23PM +0100, Thierry Reding wrote:
-> If the specified GPIO is not found, return -EPROBE_DEFER. This will
-> cause the driver to be probed again later when the required GPIO may
-> have become available.
+>  	/* Drivers may modify this initial i/o setup, but will
+>  	 * normally rely on the device being setup.  Devices
+>  	 * using SPI_CS_HIGH can't coexist well otherwise...
+> @@ -561,6 +567,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+>  }
+>  EXPORT_SYMBOL_GPL(spi_alloc_master);
+>  
+> +#ifdef CONFIG_OF
+> +static int of_spi_register_master(struct spi_master *master)
+> +{
+> +	int nb, i;
+> +	int *cs;
+> +	struct device_node *np = master->dev.of_node;
+> +
+> +	if (!np)
+> +		return 0;
+> +
+> +	nb = of_gpio_named_count(np, "cs-gpios");
+> +
+> +	if (nb < 1)
+> +		return 0;
+> +
+> +	cs = devm_kzalloc(&master->dev,
+> +			  sizeof(int) * (master->num_chipselect + nb),
+> +			  GFP_KERNEL);
 
-Might be worth pushing this into gpiolib?  It seems like wanting to
-defer if a GPIO is not found will be the overwhelmingly common case
-given that the GPIO numbers need to be explicitly specified.
+sizeof(*cs)
 
---Enx9fNJ0XV5HaWRu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +	master->cs_gpios = cs;
+> +
+> +	if (!master->cs_gpios)
+> +		return -ENOMEM;
+> +
+> +	memset(cs, -EINVAL, master->num_chipselect);
+> +	master->num_chipselect += nb;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
+Looks buggy.  Should be:
+	if (nb > master->num_chipselect)
+		master->num_chipselect = nb;
 
-iQIcBAEBAgAGBQJPXKFQAAoJEBus8iNuMP3dz7AP/3Dk+fPk0N59gRitOBUApI78
-OjAmynj4JG0OeDs+5u0VsDOn7Xc8KlaXgTQ7T+q1PW98dM/frOoRdZ/g1/KoNCkE
-c0hEIcAzDVE3LrLhgGPBTGxYK5lGW9E/wJw0b3ARzS1bd28fNHqn9Be2gTafEIlx
-N7y4cR0Y0huUAw3UyJacism1L7jQsT1q5S7SfHmQpWP/Nf1DRWNWzvH54IHQFxKn
-PiFf19lZLr38s1GXL0ucUSnYB8thX1aNn8/Xnj4K9lipzMMFDmmEhS7DQakPvh8P
-DRYrh92THwczX+X9YSnAEr3Pmkr8hPbajK+vitnZUg+bosLYJdMaNOtOzBLZWoN8
-Qt/8/hs9AevUhIoAH+4AHDO2UmVy5UVabWdVfaJTYG9eujhbkehNGMIVb+cJZ/nG
-QPWNsUVXEyA8+BT3kUd4Rv7S5K5pmjqcwTE8M1NZEmeYVVHlNeBVpL/z7uNaYXhA
-Fo07eo+/sooprGNwoQyZsbb3g0Rmz/zzqLir9OWnuD9VsgSeqHzcyKpSEg/sYZDN
-oWbs6VshCZ6BLCRp3WkiHcDITabnhKityzyl9tpS65vnVSq5cRpKIuM6X3VSTl4R
-zSTbtXf8siIV/08sNKjDcVVXVuS0MqUoOZrk1b7v6kewRp2yw2nuab8TplQ2eBrx
-MYMuv8Siqqqdn55xx7Yf
-=f9Aw
------END PGP SIGNATURE-----
+However, this is actually quite risky.  Changing the size of
+num_chipselect without the driver knowing about it will most likely
+cause breakage in drivers.  Drivers may use it as an array index, and
+if it gets increased then there will be problems.  In fact, drivers
+are probably using spi->chip_select as an array or register index so I
+don't think it can be transparently extended to include gpios.
 
---Enx9fNJ0XV5HaWRu--
+So, this function must change.  It cannot be called automatically
+from spi_register_master().  It needs to be a library function that spi bus
+drivers must call explicitly so they are prepared for a change in the
+num_chipselect value.
+
+Also, if we're doing this, then the gpio cs manipulation hook should be
+moved out of spi_bitbang and into the core spi_master.  There should
+also be a stock function for manipulating gpio chip selects. I don't want
+spi driver authors under the impression that they should open code the
+chip select manipulation.
+
+> +	cs += master->num_chipselect;
+> +
+> +	for (i = 0; i < nb; i++)
+> +		cs[i] = of_get_named_gpio(np, "cs-gpios", i);
+> +
+> +	return 0;
+> +}
+> +#else
+> +static int of_spi_register_master(struct spi_master *master)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  /**
+>   * spi_register_master - register SPI master controller
+>   * @master: initialized master, originally from spi_alloc_master()
+> @@ -592,6 +637,10 @@ int spi_register_master(struct spi_master *master)
+>  	if (!dev)
+>  		return -ENODEV;
+>  
+> +	status = of_spi_register_master(master);
+> +	if (status)
+> +		return status;
+> +
+>  	/* even if it's just one always-selected device, there must
+>  	 * be at least one chipselect
+>  	 */
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 176fce9..328d492 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -89,6 +89,7 @@ struct spi_device {
+>  	void			*controller_state;
+>  	void			*controller_data;
+>  	char			modalias[SPI_NAME_SIZE];
+> +	int			cs_gpio;	/* chip select gpio */
+>  
+>  	/*
+>  	 * likely need more hooks for more protocol options affecting how
+> @@ -318,6 +319,9 @@ struct spi_master {
+>  
+>  	/* called on release() to free memory provided by spi_master */
+>  	void			(*cleanup)(struct spi_device *spi);
+> +
+> +	/* gpio chip select */
+> +	int			*cs_gpios;
+>  };
+>  
+>  static inline void *spi_master_get_devdata(struct spi_master *master)
+> -- 
+> 1.7.7
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
+
+------------------------------------------------------------------------------
+Virtualization & Cloud Management Using Capacity Planning
+Cloud computing makes use of virtualization - but cloud computing 
+also focuses on allowing computing to be delivered as a service.
+http://www.accelacomm.com/jaw/sfnl/114/51521223/
