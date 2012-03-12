@@ -1,70 +1,95 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] stmmac: Add device-tree support
-Date: Mon, 12 Mar 2012 18:02:26 +0100
-Message-ID: <20120312170226.GE13869@game.jcrosoft.org>
-References: <1331561157-3820-1-git-send-email-sr@denx.de>
- <4F5E0993.9020000@gmail.com>
- <201203121606.26926.sr@denx.de>
- <4F5E169D.3070508@st.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
+Date: Mon, 12 Mar 2012 11:16:19 -0600
+Message-ID: <4F5E2F63.6070303@wwwdotorg.org>
+References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org> <20120312143407.GA4513@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F5E169D.3070508@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Cc: Stefan Roese <sr@denx.de>, Rob Herring <robherring2@gmail.com>, netdev@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120312143407.GA4513@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@freescale.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@stericsson.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "dongas86@gmail.com" <dongas86@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16:30 Mon 12 Mar     , Giuseppe CAVALLARO wrote:
-> On 3/12/2012 4:06 PM, Stefan Roese wrote:
-> > Hi Rob,
-> > 
-> > On Monday 12 March 2012 15:34:59 Rob Herring wrote:
-> >> On 03/12/2012 09:05 AM, Stefan Roese wrote:
-> >>> This patch adds support to configure the STMMAC ethernet driver via
-> >>> device-tree instead of platform_data.
-> >>>
-> >>> Currently, only the properties needed on SPEAr600 are provided. All
-> >>> other properties should be added once needed on other platforms.
-> >>>
-> >>> Signed-off-by: Stefan Roese <sr@denx.de>
-> >>> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> >>> Cc: Viresh Kumar <viresh.kumar@st.com>
-> >>> ---
-> >>>
-> >>>  Documentation/devicetree/bindings/net/stmmac.txt   |   38 +++++++++++
-> >>>  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   66
-> >>>  +++++++++++++++++++- 2 files changed, 103 insertions(+), 1 deletion(-)
-> >>>  create mode 100644 Documentation/devicetree/bindings/net/stmmac.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt
-> >>> b/Documentation/devicetree/bindings/net/stmmac.txt new file mode 100644
-> >>> index 0000000..386a47f
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> >>> @@ -0,0 +1,38 @@
-> >>> +* STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
-> >>> +
-> >>> +Required properties:
-> >>> +- compatible: Should be "stm,gmac"
-> >>
-> >> This is too generic. This should be 1 string per version of h/w.
-> > 
-> > Viresh, Giuseppe, can you please suggest a proper string for the SPEAr600 
-> > STMMAC core, including version?
-> >  
-> >> 'stm' should be 'st' according to vendor-prefixes.txt.
-> 
-> I'm not familiar with devicetree; maybe we should have:
-> 
-> "stmicro,mac100"
-> "stmicro,gmac"
-> 
-> or: st instead of stmicro if you prefer.
-you need to put the first soc where the ip appear on gmac it's sti7105
+On 03/12/2012 08:34 AM, Dong Aisheng wrote:
+> On Sat, Mar 10, 2012 at 02:14:33AM +0800, Stephen Warren wrote:
+>> The core pin controller bindings define:
+>> * The fact that pin controllers expose pin configurations as nodes in
+>>   device tree.
+>> * That the bindings for those pin configuration nodes is defined by the
+>>   individual pin controller drivers.
+>> * A standardized set of properties for client devices to define numbered
+>>   or named pin configuration states, each referring to some number of the
+>>   afore-mentioned pin configuration nodes.
+>> * That the bindings for the client devices determines the set of numbered
+>>   or named states that must exist.
 
-but with PM IIRC it's sti7108
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
 
-Best Regards,
-J.
+>> +Required properties:
+>> +pinctrl-0:	List of phandles, each pointing at a pin configuration
+>> +		node. These referenced pin configuration nodes must be child
+>> +		nodes of the pin controller that they configure. Multiple
+>> +		entries may exist in this list so that multiple pin
+>> +		controllers may be configured, or so that a state may be built
+>> +		from multiple nodes for a single pin controller, each
+>> +		contributing part of the overall configuration. See the next
+>> +		section of this document for details of the format of these
+>> +		pin configuration nodes.
+>> +
+>> +		In some cases, it may be useful to define a state, but for it
+>> +		to be empty. This may be required when a common IP block is
+>> +		used in an SoC either without a pin controller, or where the
+>> +		pin controller does not affect the HW module in question. If
+>> +		the binding for that IP block requires certain pin states to
+>> +		exist, they must still be defined, but may be left empty.
+>> +
+>
+> It looks this functions similar as the PIN_MAP_DUMMY_STATE you introduced
+> before to address the issues that the shared IP block may need or not need
+> pinctrl configuration on different platforms(correct me if wrong).
+
+Yes, it's to generate the dummy states.
+
+> Then, there may be cases like below which may look a bit confusing
+> to people.
+> device {
+> 	pinctrl-names = "active", "idle";
+> 	pinctrl-0;
+> 	pinctrl-1;
+> };
+
+I'd personally expect the syntax to look like:
+
+device {
+	pinctrl-names = "active", "idle";
+	pinctrl-0 = <>;
+	pinctrl-1 = <>;
+};
+
+which has an explicitly empty value. Admittedly, these would both
+compile down to the exact same thing in the DTB, but I think the
+interpretation of the above is pretty readable.
+
+> I'm wondering if we can let each individual driver to handle this special case?
+> Like checking device id then make decision whether call pinctrl_* APIs.
+> Then we can just do not define those properties for devices who
+> do not need pin configurations.
+
+The individual client drivers certainly could work that way.
+
+However, the disadvantage is that the client driver then needs explicit
+code to deal with this case, and this needs to be triggered by using a
+different compatible flag (or perhaps some other explicit property).
+You'd have to write this code over and over for each individual driver.
+
+That also means that if you were the first user of an IP block in a
+system which didn't need pin muxing for it, you'd have to modify the
+kernel to support pinctrl being optional before you could use that device.
+
+If the pinctrl subsystem itself hides this from the client driver, then
+you'd never need to add any code to any driver to support this case, and
+all you'd need to do is write a few lines of device tree to use the
+driver; no code changes.
