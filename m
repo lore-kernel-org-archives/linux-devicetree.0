@@ -1,122 +1,100 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] stmmac: Add device-tree support
-Date: Mon, 12 Mar 2012 15:07:26 -0500
-Message-ID: <4F5E577E.7090808@gmail.com>
-References: <1331561157-3820-1-git-send-email-sr@denx.de> <201203121606.26926.sr@denx.de> <4F5E169D.3070508@st.com> <201203121723.38411.sr@denx.de> <4F5E2858.4000708@st.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v3 0/2] regulator: add irq domain and device tree support
+ for MAX8997
+Date: Tue, 13 Mar 2012 02:40:03 +0530
+Message-ID: <CAJuYYwQMB0ANS6noscRe6P4d0JKmTPLP_1r2Sr6-N3amAZiD5Q@mail.gmail.com>
+References: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4F5E2858.4000708@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Cc: Stefan Roese <sr@denx.de>, netdev@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, dg77.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2012 11:46 AM, Giuseppe CAVALLARO wrote:
-> On 3/12/2012 5:23 PM, Stefan Roese wrote:
->> On Monday 12 March 2012 16:30:37 Giuseppe CAVALLARO wrote:
->>>>>> +Required properties:
->>>>>> +- compatible: Should be "stm,gmac"
->>>>>
->>>>> This is too generic. This should be 1 string per version of h/w.
->>>>
->>>> Viresh, Giuseppe, can you please suggest a proper string for the SPEAr600
->>>> STMMAC core, including version?
->>>>
->>>>> 'stm' should be 'st' according to vendor-prefixes.txt.
->>>
->>> I'm not familiar with devicetree; maybe we should have:
->>>
->>> "stmicro,mac100"
->>> "stmicro,gmac"
->>>
->>> or: st instead of stmicro if you prefer.
->>>
->>> in fact, stmmac is for mac100 and gmac devices.
->>
->> How about "st,spear600-gmac" for SPEAr600 then?
-> 
-> IIUC, as final result we should have something like this... that sounds
-> quite good to me.
-> 
-> ST/ARM SPEAr
-> "st,spear600-gmac"
-> "st,spear1310-gmac"
->   ...
-> 
-> ST/SH
-> 
-> "st,stx7108-gmac"
-> "st,stx7106-gmac"
-> "st,stx7109-mac"    ->>> mac10/100
-> ...
-> 
-> MIPS
-> "st,Loongson1B"
-> 
+Hi Rob/Grant,
 
-This seems fine to me.
+On 23 February 2012 18:08, Thomas Abraham <thomas.abraham@linaro.org> w=
+rote:
+> Changes since v2:
+> - Atleast one voltage level has to be specfied for Buck 1/2/5 even if=
+ GPIO
+> =A0DVS option is not used (suggested by MyungJoo Ham).
+> - Reworked the irq_domain support based the v5 of irq_domain generali=
+zation
+> =A0patches.
+>
+> MAX8997 is a multi-function device which includes support for regulat=
+ors, rtc,
+> battery charger and other sub-blocks. This patchset adds device tree =
+support
+> for the pmic (regulators) sub-block.
+>
+> The first patch adds irq domain support for the interrupts supported =
+by max8997
+> mainly for removing the need to pass a irq_base from the platform cod=
+e. The
+> irq_base could not anyway be passed in case of device tree based inst=
+antiation.
+> The reverse mapping method used is linear since the sub-drivers of ma=
+x8997 has
+> access to the max8997 irq_domain from which the linux irq number can =
+be
+> obtained.
+>
+> The second patch adds device tree support for max8997. This patch mod=
+ifies both
+> mfd and regulator portions of the max8997 code.
+>
+> This patchset is based on the following tree.
+> http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.gi=
+t [for-next]
+>
+> with all patches merged from
+> http://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git =
+[for-next]
+> http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
+>
+> and depends on the following patchset.
+> [PATCH v3 0/4] ARM: Exynos4: Add irq domain and device tree support f=
+or wakeup interrupts.
+>
+> This patchset has been tested on Origen board.
+>
+> Thomas Abraham (2):
+> =A0mfd: add irq domain support for max8997 interrupts
+> =A0regulator: add device tree support for max8997
 
-Rob
+Any comments for this patch series?
 
->>  
->>>> Okay.
->>>>
->>>>>> +- reg: Address and length of the register set for the device
->>>>>> +- interrupt-parent: Should be the phandle for the interrupt controller
->>>>>> +  that services interrupts for this device
->>>>>> +- interrupts: Should contain the STMMAC interrupts
->>>>>> +- interrupt-names: Should contain the interrupt names "macirq"
->>>>>> +  "eth_wake_irq" if this interrupt is supported in the "interrupts"
->>>>>> +  property
->>>>>
->>>>> You should be able to tell this from the compatible string and number of
->>>>> interrupts.
->>>>
->>>> Yes. Currently the driver uses platform_get_irq_byname() to register the
->>>> irq's. That's why I added these properties. Is there something wrong with
->>>> using it this way?
->>>>
->>>>>> +- phy-mode: String, operation mode of the PHY interface.
->>>>>> +  Supported values are: "mii", "rmii", "gmii", "rgmii".
->>>>>> +- phy-addr: MDIO address of the PHY
->>>>>
->>>>> This is normally probed or the mdio bus is a sub-node of the MAC node.
->>>>> See arch/powerpc/boot/dts/mpc8377_mds.dts for an example.
->>>>
->>>> Okay, I'll rework this.
->>>>
->>>>>> +
->>>>>> +Optional properties:
->>>>>> +- stm,prog-burst-len: Specify the burst length
->>>>>> +- stm,has-gmac: Indicates that the controller supports 1000Mbps
->>>>>> +- stm,has-pmt: Indicates that the controller supports power management
->>>>>
->>>>> I think these should all be encoded by the compatible string.
->>>
->>> and should we have all the other flags e.g. tx_coe etc?
->>> (see stmmac.txt)
->>
->> As Rob suggested, some of these flags/parameters are implicitly defined by the 
->> compatible string. If this is not the case, then sure, those flags/parameters 
->> need to be provided via the device-tree as well. I just don't need "tx_coe" 
->> etc. for my platform (SPEAr600) as far as I know. I suggest to add support for 
->> them once they are really needed/used by other platforms.
-> 
-> Ok, but on SPEAr indeed some of these are not used at all.
-> If you agree, we can go head with these and then we will add new ones
-> next time. In the meantime, I will try to be more familiar with
-> devicetree and provide further patches
-> 
-> peppe
-> 
->>
->> Thanks,
->> Stefan
->> --
->> To unsubscribe from this list: send the line "unsubscribe netdev" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-> 
+Thanks,
+Thomas.
+
+>
+> =A0.../devicetree/bindings/regulator/max8997-pmic.txt | =A0134 ++++++=
++++++++++++++
+> =A0arch/arm/mach-exynos/mach-nuri.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0 =A04 -
+> =A0arch/arm/mach-exynos/mach-origen.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ | =A0 =A01 -
+> =A0drivers/mfd/max8997-irq.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0| =A0 60 +++++----
+> =A0drivers/mfd/max8997.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0| =A0 73 ++++++++++-
+> =A0drivers/regulator/max8997.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0| =A0139 +++++++++++++++++++-
+> =A0include/linux/mfd/max8997-private.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+| =A0 =A04 +-
+> =A0include/linux/mfd/max8997.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0| =A0 =A02 +-
+> =A08 files changed, 382 insertions(+), 35 deletions(-)
+> =A0create mode 100644 Documentation/devicetree/bindings/regulator/max=
+8997-pmic.txt
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
+ng-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
