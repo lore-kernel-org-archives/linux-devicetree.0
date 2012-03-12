@@ -1,14 +1,15 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] dtc: Add -i option to support search paths
-Date: Tue, 13 Mar 2012 10:53:32 +1100
-Message-ID: <20120312235332.GD24916@truffala.fritz.box>
-References: <1331082612-10612-1-git-send-email-sjg@chromium.org>
+Subject: Re: Some slightly random musings on device tree expression syntax
+Date: Tue, 13 Mar 2012 10:57:43 +1100
+Message-ID: <20120312235743.GE24916@truffala.fritz.box>
+References: <4F580005.403@wwwdotorg.org>
+ <E1S75gQ-0005WK-0D@jdl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1331082612-10612-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <E1S75gQ-0005WK-0D-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,47 +19,50 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 06, 2012 at 05:10:12PM -0800, Simon Glass wrote:
-> It is often inconvenient to place device tree files in the same directory
-> as their includes, or to specify the full path to include files.
+On Mon, Mar 12, 2012 at 08:53:05AM -0500, Jon Loeliger wrote:
+> > I was thinking some more about how to expand the device tree syntax to
+> > allow expressions.
 > 
-> An example of this is in U-Boot where we have a .dtsi file for each SOC
-> type, and this is included by the board .dts file. We need to either use
-> a mechanism like:
+> Excellent!
 > 
-> /include/ ARCH_CPU_DTS
+> > I wondered if we should use a concept/syntax more
+> > inspired by template processors. Playing with jinja2 and gpp led me
+> > towards (...) being an inline expression syntax that can calculate
+> > integers or strings and get replaced by the string representation of the
+> > expression, and ! at the start of a line introducing a statement
+> > context. So, below are my somewhat wandering thoughts on the matter.
+> > However, the idea still raises a lot of questions that'd need to be
+> > resolved.
+> > 
+> > I note a few things:
+> > 
+> > * Using the (...) syntax to indicate which parts of the file should be
+> > evaluated and the substituted solves the issue that David had with Jon's
+> > proposal re: how do you know when a node name is literal text vs.
+> > concatenated to some expression.
 > 
-> with sed or cpp to perform the replacement with the correct path, or
-> we must specify the full path in the file:
-> 
-> /include/ "../../arch/arm/dts/tegra20.dtsi"
-> 
-> The first option is not desirable since it requires anyone compiling the
-> file to first pre-process it. The second is not desirable since it
-> introduces a path which is project-specific into a file which is supposed
-> to be a hardware description. For example Linux and U-Boot are unlikely to
-> put these include files in the same place.
-> 
-> It is much more convenient to specify the search patch on the command line
-> as is done with C pre-processors, for example.
-> 
-> Introduce a -i option to add to the list of search paths used to find
-> source and include files.
-> 
-> We cannot use -I as it is already in use. Other suggestions welcome.
+> So the M4 solution then.
 
-Looks pretty nice.  Include paths is a feature we've been kind of
-wanting for a bit, and this implementation looks reasonable. Obviously
-the fact that it's -i not -I like gcc isn't great, but as you say -I
-is already used, and I can't see a better option.
+Erm.. use of (...) to disambiguate expressions seems an independent
+matter from whether we use m4 or a macro preprocessor versus
+in-dtc-proper expression evaluation.
 
-The only potential problem I can see is that it uses the same search
-path for /include/ and /incbin/.  I'm not sure if that's what we want
-or not.
+> > * As an aside, I wonder if we couldn't transparently allow <1 2 3> or
+> > <1, 2, 3> for cell list syntax, thus not requiring the brackets in
+> > previously proposed <(1 + 0) (1 + 1) (4 - 1)> syntax, but rather <1 + 0,
+> > 1 + 1, 4 - 1>?
+> 
+> That's the sort of direction I advocated earlier.
+
+Hrm.  I don't think this is a good idea.  Having two different cell
+list formats seems to me to encourage confusions for minimal benefit.
+I think (...) will generally delimit expressions more readably anyway.
+Especially since it would match using that syntax to distinguish
+expressions in other places, like node or property names.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
