@@ -1,32 +1,30 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 11/11] ARM: tegra: pcie: Add device tree support
-Date: Mon, 12 Mar 2012 12:06:11 +0000
-Message-ID: <20120312120610.GA14020@sirena.org.uk>
-References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
- <1331218291-16119-12-git-send-email-thierry.reding@avionic-design.de>
- <4F59253D.7070100@wwwdotorg.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
+Date: Mon, 12 Mar 2012 21:06:53 +0800
+Message-ID: <20120312130651.GB19513@S2101-09.ap.freescale.net>
+References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4F59253D.7070100-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@stericsson.com>, B29396@freescale.com, s.hauer@pengutronix.de, dongas86@gmail.com, thomas.abraham@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 08, 2012 at 02:31:41PM -0700, Stephen Warren wrote:
-> On 03/08/2012 07:51 AM, Thierry Reding wrote:
+On Fri, Mar 09, 2012 at 11:14:33AM -0700, Stephen Warren wrote:
+> The core pin controller bindings define:
+> * The fact that pin controllers expose pin configurations as nodes in
+>   device tree.
+> * That the bindings for those pin configuration nodes is defined by the
+>   individual pin controller drivers.
+> * A standardized set of properties for client devices to define numbered
+>   or named pin configuration states, each referring to some number of the
+>   afore-mentioned pin configuration nodes.
+> * That the bindings for the client devices determines the set of numbered
+>   or named states that must exist.
+> 
+> Signed-off-by: Stephen Warren <swarren@wwwdotorg.org>
 
-> > +- vdd-supply: power supply for controller (1.05V)
-
-> Should those *-supply properties really be optional? I got the
-> impression talking to Mark in a different thread that all regulators
-> should exist, although their implementation may be via a fixed
-> regulator, with no GPIO, as determined by the board design.
-
-Depends on the electronics, if the device can function without a supply
-then it is OK for it to be optional.  This is moderately unusual but not
-unknown.  It's obviously also OK to omit the supply if the system
-doesn't use software regulators at all, though a kernel with regulator
-support enabled would need to use dummy regulators to stub things out.
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
