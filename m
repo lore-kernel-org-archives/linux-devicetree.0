@@ -1,36 +1,115 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: kirkwood: Basic support for DNS-320 and DNS-325
-Date: Mon, 12 Mar 2012 16:43:25 +0000
-Message-ID: <201203121643.26133.arnd@arndb.de>
-References: <1331476406-9844-1-git-send-email-jm@lentin.co.uk>
- <201203120811.23137.arnd@arndb.de>
- <20120312161004.GB5050@titan.lakedaemon.net>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCH] stmmac: Add device-tree support
+Date: Mon, 12 Mar 2012 17:46:16 +0100
+Message-ID: <4F5E2858.4000708@st.com>
+References: <1331561157-3820-1-git-send-email-sr@denx.de> <201203121606.26926.sr@denx.de> <4F5E169D.3070508@st.com> <201203121723.38411.sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120312161004.GB5050-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <201203121723.38411.sr@denx.de>
+Sender: netdev-owner@vger.kernel.org
+To: Stefan Roese <sr@denx.de>
+Cc: Rob Herring <robherring2@gmail.com>, netdev@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 March 2012, Jason Cooper wrote:
-> Okay, that's what smelled funny.  wdt and intc both only have registers
-> in virtual address space defined.  Can I assume they map like everything
-> else to corresponding physical addresses?
+On 3/12/2012 5:23 PM, Stefan Roese wrote:
+> On Monday 12 March 2012 16:30:37 Giuseppe CAVALLARO wrote:
+>>>>> +Required properties:
+>>>>> +- compatible: Should be "stm,gmac"
+>>>>
+>>>> This is too generic. This should be 1 string per version of h/w.
+>>>
+>>> Viresh, Giuseppe, can you please suggest a proper string for the SPEAr600
+>>> STMMAC core, including version?
+>>>
+>>>> 'stm' should be 'st' according to vendor-prefixes.txt.
+>>
+>> I'm not familiar with devicetree; maybe we should have:
+>>
+>> "stmicro,mac100"
+>> "stmicro,gmac"
+>>
+>> or: st instead of stmicro if you prefer.
+>>
+>> in fact, stmmac is for mac100 and gmac devices.
 > 
-> eg wdt@fed20300 -> wdt@f1020300 ?
+> How about "st,spear600-gmac" for SPEAr600 then?
 
-Yes, correct. Or just uses 20300 as the address if you remap everything
-using the ranges property.
+IIUC, as final result we should have something like this... that sounds
+quite good to me.
 
-	Arnd
+ST/ARM SPEAr
+"st,spear600-gmac"
+"st,spear1310-gmac"
+  ...
+
+ST/SH
+
+"st,stx7108-gmac"
+"st,stx7106-gmac"
+"st,stx7109-mac"    ->>> mac10/100
+...
+
+MIPS
+"st,Loongson1B"
+
+>  
+>>> Okay.
+>>>
+>>>>> +- reg: Address and length of the register set for the device
+>>>>> +- interrupt-parent: Should be the phandle for the interrupt controller
+>>>>> +  that services interrupts for this device
+>>>>> +- interrupts: Should contain the STMMAC interrupts
+>>>>> +- interrupt-names: Should contain the interrupt names "macirq"
+>>>>> +  "eth_wake_irq" if this interrupt is supported in the "interrupts"
+>>>>> +  property
+>>>>
+>>>> You should be able to tell this from the compatible string and number of
+>>>> interrupts.
+>>>
+>>> Yes. Currently the driver uses platform_get_irq_byname() to register the
+>>> irq's. That's why I added these properties. Is there something wrong with
+>>> using it this way?
+>>>
+>>>>> +- phy-mode: String, operation mode of the PHY interface.
+>>>>> +  Supported values are: "mii", "rmii", "gmii", "rgmii".
+>>>>> +- phy-addr: MDIO address of the PHY
+>>>>
+>>>> This is normally probed or the mdio bus is a sub-node of the MAC node.
+>>>> See arch/powerpc/boot/dts/mpc8377_mds.dts for an example.
+>>>
+>>> Okay, I'll rework this.
+>>>
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +- stm,prog-burst-len: Specify the burst length
+>>>>> +- stm,has-gmac: Indicates that the controller supports 1000Mbps
+>>>>> +- stm,has-pmt: Indicates that the controller supports power management
+>>>>
+>>>> I think these should all be encoded by the compatible string.
+>>
+>> and should we have all the other flags e.g. tx_coe etc?
+>> (see stmmac.txt)
+> 
+> As Rob suggested, some of these flags/parameters are implicitly defined by the 
+> compatible string. If this is not the case, then sure, those flags/parameters 
+> need to be provided via the device-tree as well. I just don't need "tx_coe" 
+> etc. for my platform (SPEAr600) as far as I know. I suggest to add support for 
+> them once they are really needed/used by other platforms.
+
+Ok, but on SPEAr indeed some of these are not used at all.
+If you agree, we can go head with these and then we will add new ones
+next time. In the meantime, I will try to be more familiar with
+devicetree and provide further patches
+
+peppe
+
+> 
+> Thanks,
+> Stefan
+> --
+> To unsubscribe from this list: send the line "unsubscribe netdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
