@@ -1,95 +1,73 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
-Date: Mon, 12 Mar 2012 11:16:19 -0600
-Message-ID: <4F5E2F63.6070303@wwwdotorg.org>
-References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org> <20120312143407.GA4513@shlinux2.ap.freescale.net>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] dtc: Add -i option to support search paths
+Date: Mon, 12 Mar 2012 10:13:36 -0700
+Message-ID: <CAPnjgZ25BdFBdr4sH8CeFgC3Oyd+hhJ+DNk9yY6E42c1WWGnfA@mail.gmail.com>
+References: <1331082612-10612-1-git-send-email-sjg@chromium.org>
+ <E1S75hq-0005Wi-Jb@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120312143407.GA4513@shlinux2.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@stericsson.com>, Dong Aisheng-B29396 <B29396@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "dongas86@gmail.com" <dongas86@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <E1S75hq-0005Wi-Jb-CYoMK+44s/E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2012 08:34 AM, Dong Aisheng wrote:
-> On Sat, Mar 10, 2012 at 02:14:33AM +0800, Stephen Warren wrote:
->> The core pin controller bindings define:
->> * The fact that pin controllers expose pin configurations as nodes in
->>   device tree.
->> * That the bindings for those pin configuration nodes is defined by the
->>   individual pin controller drivers.
->> * A standardized set of properties for client devices to define numbered
->>   or named pin configuration states, each referring to some number of the
->>   afore-mentioned pin configuration nodes.
->> * That the bindings for the client devices determines the set of numbered
->>   or named states that must exist.
+Hi Jon,
 
->> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-
->> +Required properties:
->> +pinctrl-0:	List of phandles, each pointing at a pin configuration
->> +		node. These referenced pin configuration nodes must be child
->> +		nodes of the pin controller that they configure. Multiple
->> +		entries may exist in this list so that multiple pin
->> +		controllers may be configured, or so that a state may be built
->> +		from multiple nodes for a single pin controller, each
->> +		contributing part of the overall configuration. See the next
->> +		section of this document for details of the format of these
->> +		pin configuration nodes.
->> +
->> +		In some cases, it may be useful to define a state, but for it
->> +		to be empty. This may be required when a common IP block is
->> +		used in an SoC either without a pin controller, or where the
->> +		pin controller does not affect the HW module in question. If
->> +		the binding for that IP block requires certain pin states to
->> +		exist, they must still be defined, but may be left empty.
->> +
+On Mon, Mar 12, 2012 at 6:54 AM, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org> wrote:
+>> It is often inconvenient to place device tree files in the same directory
+>> as their includes, or to specify the full path to include files.
+>>
+>> An example of this is in U-Boot where we have a .dtsi file for each SOC
+>> type, and this is included by the board .dts file. We need to either use
+>> a mechanism like:
+>>
+>> /include/ ARCH_CPU_DTS
+>>
+>> with sed or cpp to perform the replacement with the correct path, or
+>> we must specify the full path in the file:
+>>
+>> /include/ "../../arch/arm/dts/tegra20.dtsi"
+>>
+>> The first option is not desirable since it requires anyone compiling the
+>> file to first pre-process it. The second is not desirable since it
+>> introduces a path which is project-specific into a file which is supposed
+>> to be a hardware description. For example Linux and U-Boot are unlikely =
+to
+>> put these include files in the same place.
+>>
+>> It is much more convenient to specify the search patch on the command li=
+ne
+>> as is done with C pre-processors, for example.
+>>
+>> Introduce a -i option to add to the list of search paths used to find
+>> source and include files.
+>>
+>> We cannot use -I as it is already in use. Other suggestions welcome.
+>>
+>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 >
-> It looks this functions similar as the PIN_MAP_DUMMY_STATE you introduced
-> before to address the issues that the shared IP block may need or not need
-> pinctrl configuration on different platforms(correct me if wrong).
+> Any comments here? =A0I'm inclined to aply it as is.
 
-Yes, it's to generate the dummy states.
+My main concern is to make sure that -i is the best choice for this.
+So it would be good to have thoughts on that at least.
 
-> Then, there may be cases like below which may look a bit confusing
-> to people.
-> device {
-> 	pinctrl-names = "active", "idle";
-> 	pinctrl-0;
-> 	pinctrl-1;
-> };
+Apart from that, I will send a new patch which adds one more test and
+fixes a typo.
 
-I'd personally expect the syntax to look like:
+Regards,
+Simon
 
-device {
-	pinctrl-names = "active", "idle";
-	pinctrl-0 = <>;
-	pinctrl-1 = <>;
-};
-
-which has an explicitly empty value. Admittedly, these would both
-compile down to the exact same thing in the DTB, but I think the
-interpretation of the above is pretty readable.
-
-> I'm wondering if we can let each individual driver to handle this special case?
-> Like checking device id then make decision whether call pinctrl_* APIs.
-> Then we can just do not define those properties for devices who
-> do not need pin configurations.
-
-The individual client drivers certainly could work that way.
-
-However, the disadvantage is that the client driver then needs explicit
-code to deal with this case, and this needs to be triggered by using a
-different compatible flag (or perhaps some other explicit property).
-You'd have to write this code over and over for each individual driver.
-
-That also means that if you were the first user of an IP block in a
-system which didn't need pin muxing for it, you'd have to modify the
-kernel to support pinctrl being optional before you could use that device.
-
-If the pinctrl subsystem itself hides this from the client driver, then
-you'd never need to add any code to any driver to support this case, and
-all you'd need to do is write a few lines of device tree to use the
-driver; no code changes.
+>
+> Thanks,
+> jdl
