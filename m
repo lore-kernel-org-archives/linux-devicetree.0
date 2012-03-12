@@ -1,115 +1,48 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Subject: Re: [PATCH] stmmac: Add device-tree support
-Date: Mon, 12 Mar 2012 17:46:16 +0100
-Message-ID: <4F5E2858.4000708@st.com>
-References: <1331561157-3820-1-git-send-email-sr@denx.de> <201203121606.26926.sr@denx.de> <4F5E169D.3070508@st.com> <201203121723.38411.sr@denx.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 10/11] ARM: tegra: pcie: Add MSI support
+Date: Mon, 12 Mar 2012 10:57:10 -0600
+Message-ID: <4F5E2AE6.3030404@wwwdotorg.org>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de> <1331218291-16119-11-git-send-email-thierry.reding@avionic-design.de> <4F59213F.6070107@wwwdotorg.org> <20120312080023.GA13788@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <201203121723.38411.sr@denx.de>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan Roese <sr@denx.de>
-Cc: Rob Herring <robherring2@gmail.com>, netdev@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120312080023.GA13788-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/12/2012 5:23 PM, Stefan Roese wrote:
-> On Monday 12 March 2012 16:30:37 Giuseppe CAVALLARO wrote:
->>>>> +Required properties:
->>>>> +- compatible: Should be "stm,gmac"
->>>>
->>>> This is too generic. This should be 1 string per version of h/w.
->>>
->>> Viresh, Giuseppe, can you please suggest a proper string for the SPEAr600
->>> STMMAC core, including version?
->>>
->>>> 'stm' should be 'st' according to vendor-prefixes.txt.
->>
->> I'm not familiar with devicetree; maybe we should have:
->>
->> "stmicro,mac100"
->> "stmicro,gmac"
->>
->> or: st instead of stmicro if you prefer.
->>
->> in fact, stmmac is for mac100 and gmac devices.
-> 
-> How about "st,spear600-gmac" for SPEAr600 then?
-
-IIUC, as final result we should have something like this... that sounds
-quite good to me.
-
-ST/ARM SPEAr
-"st,spear600-gmac"
-"st,spear1310-gmac"
-  ...
-
-ST/SH
-
-"st,stx7108-gmac"
-"st,stx7106-gmac"
-"st,stx7109-mac"    ->>> mac10/100
+On 03/12/2012 02:00 AM, Thierry Reding wrote:
+> * Stephen Warren wrote:
+>> On 03/08/2012 07:51 AM, Thierry Reding wrote:
+>>> diff --git a/arch/arm/mach-tegra/pcie.c b/arch/arm/mach-tegra/pcie.c
 ...
-
-MIPS
-"st,Loongson1B"
-
->  
->>> Okay.
->>>
->>>>> +- reg: Address and length of the register set for the device
->>>>> +- interrupt-parent: Should be the phandle for the interrupt controller
->>>>> +  that services interrupts for this device
->>>>> +- interrupts: Should contain the STMMAC interrupts
->>>>> +- interrupt-names: Should contain the interrupt names "macirq"
->>>>> +  "eth_wake_irq" if this interrupt is supported in the "interrupts"
->>>>> +  property
->>>>
->>>> You should be able to tell this from the compatible string and number of
->>>> interrupts.
->>>
->>> Yes. Currently the driver uses platform_get_irq_byname() to register the
->>> irq's. That's why I added these properties. Is there something wrong with
->>> using it this way?
->>>
->>>>> +- phy-mode: String, operation mode of the PHY interface.
->>>>> +  Supported values are: "mii", "rmii", "gmii", "rgmii".
->>>>> +- phy-addr: MDIO address of the PHY
->>>>
->>>> This is normally probed or the mdio bus is a sub-node of the MAC node.
->>>> See arch/powerpc/boot/dts/mpc8377_mds.dts for an example.
->>>
->>> Okay, I'll rework this.
->>>
->>>>> +
->>>>> +Optional properties:
->>>>> +- stm,prog-burst-len: Specify the burst length
->>>>> +- stm,has-gmac: Indicates that the controller supports 1000Mbps
->>>>> +- stm,has-pmt: Indicates that the controller supports power management
->>>>
->>>> I think these should all be encoded by the compatible string.
+>> Free the IRQ descriptors in the error paths?
+...
+>>> +	for (msi = 0; msi < INT_PCI_MSI_NR; msi++) {
+>>> +		unsigned int irq = irq_find_mapping(pcie->msi_domain, msi);
+>>> +
+>>> +		irq_set_chip_data(irq, pcie);
+>>> +		irq_set_chip_and_handler(irq, &pcie->msi_chip,
+>>> +					 handle_simple_irq);
+>>> +		set_irq_flags(irq, IRQF_VALID);
+>>> +	}
+>>> +
+>>> +	err = platform_get_irq(pdev, 1);
+>>> +	if (err < 0) {
+>>> +		dev_err(&pdev->dev, "failed to get IRQ: %d\n", err);
 >>
->> and should we have all the other flags e.g. tx_coe etc?
->> (see stmmac.txt)
+>> Same here, and undo setting IRQF_VALID?
 > 
-> As Rob suggested, some of these flags/parameters are implicitly defined by the 
-> compatible string. If this is not the case, then sure, those flags/parameters 
-> need to be provided via the device-tree as well. I just don't need "tx_coe" 
-> etc. for my platform (SPEAr600) as far as I know. I suggest to add support for 
-> them once they are really needed/used by other platforms.
+> Does it make sense to explicitly unset the IRQF_VALID flag when the IRQ
+> descriptors are free'd afterwards anyway?
 
-Ok, but on SPEAr indeed some of these are not used at all.
-If you agree, we can go head with these and then we will add new ones
-next time. In the meantime, I will try to be more familiar with
-devicetree and provide further patches
+Good point. Probably not per my gut instinct.
 
-peppe
+...
+> I'm also Cc'ing Thomas
+> Gleixner as maintainer of the IRQ subsystem, he probably knows best how
+> dynamically allocated interrupts should be cleaned up.
 
-> 
-> Thanks,
-> Stefan
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+But yes, best to check with someone more familiar with interrupts.
