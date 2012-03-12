@@ -1,19 +1,15 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/4 v5] of_spi: add generic binding support to specify
- cs gpio
-Date: Mon, 12 Mar 2012 18:11:47 +0100
-Message-ID: <20120312171147.GF13869@game.jcrosoft.org>
-References: <1331122989-14451-1-git-send-email-plagnioj@jcrosoft.co>
- <1331317544-21735-1-git-send-email-plagnioj@jcrosoft.com>
- <20120311140731.2D4F93E0979@localhost>
- <20120311182537.GS27213@game.jcrosoft.org>
- <20120312154019.1DB653E0950@localhost>
+From: "Jamie Lentin" <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: kirkwood: Basic support for DNS-320 and DNS-325
+Date: Mon, 12 Mar 2012 17:59:50 -0000
+Message-ID: <op.wa2j90zu4cuzmg@gonzo.lentin.co.uk>
+References: <1331476406-9844-1-git-send-email-jm@lentin.co.uk>
+ <1331476406-9844-2-git-send-email-jm@lentin.co.uk>
+ <20120312030232.GX5050@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120312154019.1DB653E0950@localhost>
+In-Reply-To: <20120312030232.GX5050-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -23,206 +19,614 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09:40 Mon 12 Mar     , Grant Likely wrote:
-> On Sun, 11 Mar 2012 19:25:37 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > On 08:07 Sun 11 Mar     , Grant Likely wrote:
-> > > On Fri,  9 Mar 2012 19:25:44 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > > > This will allow to use gpio for chip select with no modification in the
-> > > > driver binding
-> > > > 
-> > > > When use the cs-gpios, the gpio number will be passed via the cs_gpio field
-> > > > and the number of chip select will automatically increased.
-> > > > 
-> > > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > > > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > > > Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-> > > > ---
-> > > > v5:
-> > > > 	update grant comment to simplify the cs_gpio management
-> > > > 
-> > > > Best Regards,
-> > > > J.
-> > > >  Documentation/devicetree/bindings/spi/spi-bus.txt |    6 ++
-> > > >  drivers/spi/spi.c                                 |   55 +++++++++++++++++++-
-> > > >  include/linux/spi/spi.h                           |    4 ++
-> > > >  3 files changed, 62 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > > > index e782add..c253379 100644
-> > > > --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > > > +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> > > > @@ -12,6 +12,7 @@ The SPI master node requires the following properties:
-> > > >  - #size-cells     - should be zero.
-> > > >  - compatible      - name of SPI bus controller following generic names
-> > > >      		recommended practice.
-> > > > +- cs-gpios	  - (optional) gpios chip select.
-> > > >  No other properties are required in the SPI bus node.  It is assumed
-> > > >  that a driver for an SPI bus device will understand that it is an SPI bus.
-> > > >  However, the binding does not attempt to define the specific method for
-> > > > @@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
-> > > >  chip selects.  Individual drivers can define additional properties to
-> > > >  support describing the chip select layout.
-> > > >  
-> > > > +If cs-gpios is used the number of chip select will automatically increased.
-> > > > +
-> > > >  SPI slave nodes must be children of the SPI master node and can
-> > > >  contain the following properties.
-> > > >  - reg             - (required) chip select address of device.
-> > > > @@ -34,6 +37,9 @@ contain the following properties.
-> > > >  - spi-cs-high     - (optional) Empty property indicating device requires
-> > > >      		chip select active high
-> > > >  
-> > > > +If a gpio chipselect is used for the SPI slave the gpio number will be passed
-> > > > +via the cs_gpio
-> > > > +
-> > > >  SPI example for an MPC5200 SPI bus:
-> > > >  	spi@f00 {
-> > > >  		#address-cells = <1>;
-> > > > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> > > > index b2ccdea..446eee5 100644
-> > > > --- a/drivers/spi/spi.c
-> > > > +++ b/drivers/spi/spi.c
-> > > > @@ -28,6 +28,7 @@
-> > > >  #include <linux/mod_devicetable.h>
-> > > >  #include <linux/spi/spi.h>
-> > > >  #include <linux/of_spi.h>
-> > > > +#include <linux/of_gpio.h>
-> > > >  #include <linux/pm_runtime.h>
-> > > >  #include <linux/export.h>
-> > > >  
-> > > > @@ -322,6 +323,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
-> > > >  	spi->dev.parent = &master->dev;
-> > > >  	spi->dev.bus = &spi_bus_type;
-> > > >  	spi->dev.release = spidev_release;
-> > > > +	spi->cs_gpio = -EINVAL;
-> > > >  	device_initialize(&spi->dev);
-> > > >  	return spi;
-> > > >  }
-> > > > @@ -339,15 +341,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
-> > > >  int spi_add_device(struct spi_device *spi)
-> > > >  {
-> > > >  	static DEFINE_MUTEX(spi_add_lock);
-> > > > -	struct device *dev = spi->master->dev.parent;
-> > > > +	struct spi_master *master = spi->master;
-> > > > +	struct device *dev = master->dev.parent;
-> > > >  	struct device *d;
-> > > >  	int status;
-> > > >  
-> > > >  	/* Chipselects are numbered 0..max; validate. */
-> > > > -	if (spi->chip_select >= spi->master->num_chipselect) {
-> > > > +	if (spi->chip_select >= master->num_chipselect) {
-> > > >  		dev_err(dev, "cs%d >= max %d\n",
-> > > >  			spi->chip_select,
-> > > > -			spi->master->num_chipselect);
-> > > > +			master->num_chipselect);
-> > > >  		return -EINVAL;
-> > > >  	}
-> > > >  
-> > > > @@ -371,6 +374,9 @@ int spi_add_device(struct spi_device *spi)
-> > > >  		goto done;
-> > > >  	}
-> > > >  
-> > > > +	if (master->cs_gpios)
-> > > > +		spi->cs_gpio = master->cs_gpios[spi->chip_select];
-> > > > +
-> > > 
-> > > I still don't understand the need for this.  Only the master driver will need
-> > > this data, and it is already stored in the master->cs_gpios array.  Why
-> > > does it need to get duplicated into the spi_device?
-> > yeah can drop it
-> > > 
-> > > >  	/* Drivers may modify this initial i/o setup, but will
-> > > >  	 * normally rely on the device being setup.  Devices
-> > > >  	 * using SPI_CS_HIGH can't coexist well otherwise...
-> > > > @@ -561,6 +567,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(spi_alloc_master);
-> > > >  
-> > > > +#ifdef CONFIG_OF
-> > > > +static int of_spi_register_master(struct spi_master *master)
-> > > > +{
-> > > > +	int nb, i;
-> > > > +	int *cs;
-> > > > +	struct device_node *np = master->dev.of_node;
-> > > > +
-> > > > +	if (!np)
-> > > > +		return 0;
-> > > > +
-> > > > +	nb = of_gpio_named_count(np, "cs-gpios");
-> > > > +
-> > > > +	if (nb < 1)
-> > > > +		return 0;
-> > > > +
-> > > > +	cs = devm_kzalloc(&master->dev,
-> > > > +			  sizeof(int) * (master->num_chipselect + nb),
-> > > > +			  GFP_KERNEL);
-> > > 
-> > > sizeof(*cs)
-> > > 
-> > > > +	master->cs_gpios = cs;
-> > > > +
-> > > > +	if (!master->cs_gpios)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	memset(cs, -EINVAL, master->num_chipselect);
-> > > > +	master->num_chipselect += nb;
-> > > 
-> > > Looks buggy.  Should be:
-> > > 	if (nb > master->num_chipselect)
-> > > 		master->num_chipselect = nb;
-> > > 
-> > > However, this is actually quite risky.  Changing the size of
-> > > num_chipselect without the driver knowing about it will most likely
-> > > cause breakage in drivers.  Drivers may use it as an array index, and
-> > > if it gets increased then there will be problems.  In fact, drivers
-> > > are probably using spi->chip_select as an array or register index so I
-> > > don't think it can be transparently extended to include gpios.
-> > > 
-> > > So, this function must change.  It cannot be called automatically
-> > > from spi_register_master().  It needs to be a library function that spi bus
-> > > drivers must call explicitly so they are prepared for a change in the
-> > > num_chipselect value.
-> > I'll prefer to let the spi framework manage it
-> 
-> I understand your preference, but it must not carry the risk of breakage.
-so can we do this in two step add the new generic gpio management and them
-make it manage by the spi framework when everyone switch to it
-> 
-> spi devices cannot be added if the cs number is larger than num_chipselect;
-> even if those devices are backed by gpios.  The controller driver still
-> needs to understand they are there and modify it's own num_chipselects
-> value.  Otherwise transfer requests will pass a CS number larger than
-> the bus drivers know what to do with.
-> 
-> > > Also, if we're doing this, then the gpio cs manipulation hook should be
-> > > moved out of spi_bitbang and into the core spi_master.  There should
-> > > also be a stock function for manipulating gpio chip selects. I don't want
-> > > spi driver authors under the impression that they should open code the
-> > > chip select manipulation.
-> > yeah I was thinking about it too
-> > 
-> > how about we split it in two
-> > 
-> > num_hw_cs manage by the drivers
-> > 
-> > and
-> > 
-> > num_gpio_cs for cs gpio
-> > 
-> > and num_chipselect (hw + cs) will for internal use
-> > 
-> > the gpio cs will be after the hw cs.
-> 
-> As already discussed, don't split the number space.  Keep gpio cs numbers
-> based at zero and let them overlap the hw cs numbers.
-I did not want it, and agreed with the overlap
+On Mon, 12 Mar 2012 03:02:32 -0000, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>  
+wrote:
 
-I just want to let drivers just manage the hw cs, the gpio one are manage by
-the spi framework
+> On Sun, Mar 11, 2012 at 02:33:25PM +0000, Jamie Lentin wrote:
+>> Add support for the DNS-320 and DNS-325. Describe as much as currently  
+>> possible
+>> in the devicetree files, leave everything else in board-dt.c to be  
+>> patched
+>> later.
+>>
+>> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+>
+> Great work!  comments, below.
+>> ---
+>>  arch/arm/boot/dts/kirkwood-dns320.dts |   54 ++++++
+>>  arch/arm/boot/dts/kirkwood-dns325.dts |   40 +++++
+>>  arch/arm/mach-kirkwood/Kconfig        |   18 ++
+>>  arch/arm/mach-kirkwood/Makefile.boot  |    2 +
+>>  arch/arm/mach-kirkwood/board-dt.c     |  294  
+>> +++++++++++++++++++++++++++++++++
+>>  5 files changed, 408 insertions(+), 0 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/kirkwood-dns320.dts
+>>  create mode 100644 arch/arm/boot/dts/kirkwood-dns325.dts
+>>
+>> diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts  
+>> b/arch/arm/boot/dts/kirkwood-dns320.dts
+>> new file mode 100644
+>> index 0000000..c039041
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/kirkwood-dns320.dts
+>> @@ -0,0 +1,54 @@
+>> +/dts-v1/;
+>> +
+>> +/include/ "kirkwood.dtsi"
+>> +
+>> +/ {
+>> +	model = "D-Link DNS-320 NAS (Rev A1)";
+>> +	compatible = "dlink,dns-320-a1", "dlink,dns-320",  
+>> "dlink,dns-kirkwood", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+>
+> s/marvell/mrvl/g for compatible properties.
+>
 
-Best Regards,
-J.
+Okay.
+
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0x00000000 0x8000000>;
+>> +	};
+>> +
+>> +	chosen {
+>> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+>> +	};
+>> +
+>> +	wdt@fed20300 {
+>> +		compatible = "mrvl,orion-wdt";
+>> +		reg = <0xfed20300 0x28>;
+>> +		clock-frequency = <166666667>;
+>> +	};
+>
+> This hasn't made it into my stable branch yet, waiting on common clock
+> to land (may be 3.5).  Please use kirkwood_wdt_init() in the mean time.
+>
+
+So just to be clear kirkwood_dt_stable on git.infradead.org, as opposed to  
+any branches on arm-soc?
+
+>> +	serial@f1012000 {
+>> +		compatible = "ns16550a";
+>> +		reg = <0xf1012000 0xff>;
+>> +		reg-shift = <2>;
+>> +		interrupts = <33>;
+>> +		clock-frequency = <166666667>;
+>> +	};
+>> +
+>> +	serial@f1012100 {
+>> +		compatible = "ns16550a";
+>> +		reg = <0xf1012100 0xff>;
+>> +		reg-shift = <2>;
+>> +		interrupts = <34>;
+>> +		clock-frequency = <166666667>;
+>> +	};
+>> +
+>> +	sata@f1080000 {
+>> +		compatible = "mrvl,orion-sata";
+>> +		reg = <0xf1080000 0x5000>;
+>> +		interrupts = <21>;
+>> +		nr-ports = <2>;
+>> +	};
+>> +
+>> +	ehci@f1050000 {
+>> +		compatible = "mrvl,orion-ehci";
+>> +		reg = <0xf1050000 0x1000>;
+>> +		interrupts = <19>;
+>> +		dma-mask = <0xffffffff>;
+>> +		phy-version = "";
+>> +	};
+>
+> sata and ehci both require working dma and interrupt controller.  I
+> should have the interrupt controller done soon.  mv_cesa will then work.
+> dma will be after that.
+
+I found this out the hard way, but saw that dma-mask was supported in  
+staging/kirkwood/dt on arm-soc and managed to get working USB using it.  
+I'll switch back for now.
+
+> Basically, anything in mach-kirkwood/common.c that passes kirkwood_tclk
+> is on hold for devicetree.
+
+Including serial ports?
+
+>> +};
+>> diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts  
+>> b/arch/arm/boot/dts/kirkwood-dns325.dts
+>> new file mode 100644
+>> index 0000000..a7c2c26
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/kirkwood-dns325.dts
+>> @@ -0,0 +1,40 @@
+>> +/dts-v1/;
+>> +
+>> +/include/ "kirkwood.dtsi"
+>> +
+>> +/ {
+>> +	model = "D-Link DNS-325 NAS (Rev A1)";
+>> +	compatible = "dlink,dns-325-a1", "dlink,dns-325",  
+>> "dlink,dns-kirkwood", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+>
+> same as above, mrvl.
+>
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0x00000000 0x10000000>;
+>> +	};
+>> +
+>> +	chosen {
+>> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+>> +	};
+>
+> make sure to test serial with earlyprintk disabled.  That bit me once.
+>
+
+Thanks. I didn't think to try that!
+
+>> +
+>> +	serial@f1012000 {
+>> +		compatible = "ns16550a";
+>> +		reg = <0xf1012000 0xff>;
+>> +		reg-shift = <2>;
+>> +		interrupts = <33>;
+>> +		clock-frequency = <200000000>;
+>> +	};
+>> +
+>> +	sata@f1080000 {
+>> +		compatible = "mrvl,orion-sata";
+>> +		reg = <0xf1080000 0x5000>;
+>> +		interrupts = <21>;
+>> +		nr-ports = <2>;
+>> +	};
+>> +
+>> +	ehci@f1050000 {
+>> +		compatible = "mrvl,orion-ehci";
+>> +		reg = <0xf1050000 0x1000>;
+>> +		interrupts = <19>;
+>> +		dma-mask = <0xffffffff>;
+>> +		phy-version = "";
+>> +	};
+>> +};
+>> diff --git a/arch/arm/mach-kirkwood/Kconfig  
+>> b/arch/arm/mach-kirkwood/Kconfig
+>> index 90ceab7..6c76e18 100644
+>> --- a/arch/arm/mach-kirkwood/Kconfig
+>> +++ b/arch/arm/mach-kirkwood/Kconfig
+>> @@ -58,6 +58,24 @@ config MACH_DREAMPLUG_DT
+>>  	  Say 'Y' here if you want your kernel to support the
+>>  	  Marvell DreamPlug (Flattened Device Tree).
+>>
+>> +config MACH_DNS320_DT
+>> +	bool "D-Link DNS-320 (Flattened Device Tree)"
+>> +	select ARCH_KIRKWOOD_DT
+>> +	select CONFIG_MTD_OF_PARTS
+>> +	select CONFIG_SERIAL_OF_PLATFORM
+>> +	help
+>> +	  Say 'Y' here if you want your kernel to support the
+>> +	  D-Link DNS-320 (Flattened Device Tree).
+>> +
+>> +config MACH_DNS325_DT
+>> +	bool "D-Link DNS-325 (Flattened Device Tree)"
+>> +	select ARCH_KIRKWOOD_DT
+>> +	select CONFIG_MTD_OF_PARTS
+>> +	select CONFIG_SERIAL_OF_PLATFORM
+>> +	help
+>> +	  Say 'Y' here if you want your kernel to support the
+>> +	  D-Link DNS-325 (Flattened Device Tree).
+>> +
+>>  config MACH_TS219
+>>  	bool "QNAP TS-110, TS-119, TS-119P+, TS-210, TS-219, TS-219P and  
+>> TS-219P+ Turbo NAS"
+>>  	help
+>> diff --git a/arch/arm/mach-kirkwood/Makefile.boot  
+>> b/arch/arm/mach-kirkwood/Makefile.boot
+>> index 16f9385..9c5e45f 100644
+>> --- a/arch/arm/mach-kirkwood/Makefile.boot
+>> +++ b/arch/arm/mach-kirkwood/Makefile.boot
+>> @@ -3,3 +3,5 @@ params_phys-y	:= 0x00000100
+>>  initrd_phys-y	:= 0x00800000
+>>
+>>  dtb-$(CONFIG_MACH_DREAMPLUG_DT) += kirkwood-dreamplug.dtb
+>> +dtb-$(CONFIG_MACH_DNS320_DT) += kirkwood-dns320.dtb
+>> +dtb-$(CONFIG_MACH_DNS325_DT) += kirkwood-dns325.dtb
+>> diff --git a/arch/arm/mach-kirkwood/board-dt.c  
+>> b/arch/arm/mach-kirkwood/board-dt.c
+>> index 12dec38..0885713 100644
+>> --- a/arch/arm/mach-kirkwood/board-dt.c
+>> +++ b/arch/arm/mach-kirkwood/board-dt.c
+>> @@ -15,6 +15,7 @@
+>>  #include <linux/platform_device.h>
+>>  #include <linux/irqdomain.h>
+>>  #include <linux/mtd/partitions.h>
+>> +#include <linux/i2c.h>
+>>  #include <linux/ata_platform.h>
+>>  #include <linux/mv643xx_eth.h>
+>>  #include <linux/of.h>
+>> @@ -23,6 +24,9 @@
+>>  #include <linux/of_irq.h>
+>>  #include <linux/of_platform.h>
+>>  #include <linux/gpio.h>
+>> +#include <linux/input.h>
+>> +#include <linux/gpio_keys.h>
+>> +#include <linux/gpio-fan.h>
+>>  #include <linux/leds.h>
+>>  #include <linux/mtd/physmap.h>
+>>  #include <linux/spi/flash.h>
+>> @@ -150,6 +154,291 @@ static void __init dreamplug_init(void)
+>>  	platform_device_register(&dreamplug_leds);
+>>  }
+>>
+>> +/*****************************************************************************
+>> + * DNS-320 & DNS-325 specifics
+>> +  
+>> ****************************************************************************/
+>> +
+>> +static struct mtd_partition dnskw_nand_parts[] = {
+>> +	{
+>> +		.name		= "u-boot",
+>> +		.offset		= 0,
+>> +		.size		= SZ_1M,
+>> +		.mask_flags	= MTD_WRITEABLE
+>> +	}, {
+>> +		.name		= "uImage",
+>> +		.offset		= MTDPART_OFS_NXTBLK,
+>> +		.size		= 5 * SZ_1M
+>> +	}, {
+>> +		.name		= "ramdisk",
+>> +		.offset		= MTDPART_OFS_NXTBLK,
+>> +		.size		= 5 * SZ_1M
+>> +	}, {
+>> +		.name		= "image",
+>> +		.offset		= MTDPART_OFS_NXTBLK,
+>> +		.size		= 102 * SZ_1M
+>> +	}, {
+>> +		.name		= "mini firmware",
+>> +		.offset		= MTDPART_OFS_NXTBLK,
+>> +		.size		= 10 * SZ_1M
+>> +	}, {
+>> +		.name		= "config",
+>> +		.offset		= MTDPART_OFS_NXTBLK,
+>> +		.size		= 5 * SZ_1M
+>> +	},
+>> +};
+>
+> You should probably squeeze in a partition for the dtb.  ;-)
+>
+> Is the config partition the u-boot environment?  That usually is much
+> smaller than what you have alotted.  So, you might be able to split that
+> to make room for the dtb.
+>
+
+The partition scheme is the same as D-Link's kernel. The config area is a  
+jffs2 filesystem that contains their config files. It seemed to me that  
+copying the partition table was the right thing to do to allow the NAND to  
+be read, even though in practice it's not that useful---I'm not sure even  
+D-Link pay much attention to it, there's all sorts of odd offsets in their  
+code.
+
+The other option would be to ignore the nonsense and replace it with  
+something useful. This would be more convenient for me because it'd mean I  
+don't have to replace it with my partition scheme :). Any opinions?
+
+>> +
+>> +static struct mv643xx_eth_platform_data dnskw_ge00_data = {
+>> +	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
+>> +};
+>> +
+>> +static unsigned int dnskw_mpp_config[] __initdata = {
+>> +	MPP13_UART1_TXD,	/* Custom ... */
+>> +	MPP14_UART1_RXD,	/* ... Controller (DNS-320 only) */
+>> +	MPP20_SATA1_ACTn,	/* LED: White Right HDD */
+>> +	MPP21_SATA0_ACTn,	/* LED: White Left HDD */
+>> +	MPP24_GPIO,
+>> +	MPP25_GPIO,
+>> +	MPP26_GPIO,	/* LED: Power */
+>> +	MPP27_GPIO,	/* LED: Red Right HDD */
+>> +	MPP28_GPIO,	/* LED: Red Left HDD */
+>> +	MPP29_GPIO,	/* LED: Red USB (DNS-325 only) */
+>> +	MPP30_GPIO,
+>> +	MPP31_GPIO,
+>> +	MPP32_GPIO,
+>> +	MPP33_GPO,
+>> +	MPP34_GPIO,	/* Button: Front power */
+>> +	MPP35_GPIO,	/* LED: Red USB (DNS-320 only) */
+>> +	MPP36_GPIO,	/* Power: MV88F6281_DEV_ID Board */
+>> +	MPP37_GPIO,	/* Power: Boot when power applied */
+>> +	MPP38_GPIO,
+>> +	MPP39_GPIO,	/* Power: SATA0 */
+>> +	MPP40_GPIO,	/* Power: SATA1 */
+>> +	MPP41_GPIO,
+>> +	MPP42_GPIO,
+>> +	MPP43_GPIO,	/* LED: White USB */
+>> +	MPP44_GPIO,	/* Fan: Tachometer Pin */
+>> +	MPP45_GPIO,	/* Fan: high speed */
+>> +	MPP46_GPIO,	/* Fan: low speed */
+>> +	MPP47_GPIO,	/* Button: Back unmount */
+>> +	MPP48_GPIO,	/* Button: Back reset */
+>> +	MPP49_GPIO,	/* Pin of unused U5 (DNS-320 only) */
+>> +	0
+>> +};
+>> +
+>> +static struct gpio_led dns325_led_pins[] = {
+>> +	{
+>> +		.name	= "dns325:white:power",
+>> +		.gpio	= 26,
+>> +		.active_low = 1,
+>> +		.default_trigger = "default-on",
+>> +	},
+>> +	{
+>> +		.name	= "dns325:white:usb",
+>> +		.gpio	= 43,
+>> +		.active_low = 1,
+>> +	},
+>> +	{
+>> +		.name	= "dns325:red:l_hdd",
+>> +		.gpio	= 28,
+>> +		.active_low = 1,
+>> +	},
+>> +	{
+>> +		.name	= "dns325:red:r_hdd",
+>> +		.gpio	= 27,
+>> +		.active_low = 1,
+>> +	},
+>> +	{
+>> +		.name	= "dns325:red:usb",
+>> +		.gpio	= 29,
+>> +		.active_low = 1,
+>> +	},
+>> +};
+>> +
+>> +static struct gpio_led_platform_data dns325_led_data = {
+>> +	.num_leds	= ARRAY_SIZE(dns325_led_pins),
+>> +	.leds		= dns325_led_pins,
+>> +};
+>> +
+>> +static struct platform_device dns325_led_device = {
+>> +	.name		= "leds-gpio",
+>> +	.id		= -1,
+>> +	.dev		= {
+>> +		.platform_data	= &dns325_led_data,
+>> +	},
+>> +};
+>> +
+>> +static struct gpio_led dns320_led_pins[] = {
+>> +	{
+>> +		.name	= "dns320:blue:power",
+>> +		.gpio	= 26,
+>> +		.active_low = 1,
+>> +		.default_trigger = "default-on",
+>> +	},
+>> +	{
+>> +		.name	= "dns320:blue:usb",
+>> +		.gpio	= 43,
+>> +		.active_low = 1,
+>> +	},
+>> +	{
+>> +		.name	= "dns320:orange:l_hdd",
+>> +		.gpio	= 28,
+>> +		.active_low = 1,
+>> +	},
+>> +	{
+>> +		.name	= "dns320:orange:r_hdd",
+>> +		.gpio	= 27,
+>> +		.active_low = 1,
+>> +	},
+>> +	{
+>> +		.name	= "dns320:orange:usb",
+>> +		.gpio	= 35,
+>> +		.active_low = 1,
+>> +	},
+>> +};
+>> +
+>> +static struct gpio_led_platform_data dns320_led_data = {
+>> +	.num_leds	= ARRAY_SIZE(dns320_led_pins),
+>> +	.leds		= dns320_led_pins,
+>> +};
+>> +
+>> +static struct platform_device dns320_led_device = {
+>> +	.name		= "leds-gpio",
+>> +	.id		= -1,
+>> +	.dev		= {
+>> +		.platform_data	= &dns320_led_data,
+>> +	},
+>> +};
+>> +
+>> +static struct i2c_board_info dns325_i2c_board_info[] __initdata = {
+>> +	{
+>> +		I2C_BOARD_INFO("lm75", 0x48),
+>> +	},
+>> +	/* Something at 0x0c also */
+>> +};
+>> +
+>> +static struct gpio_keys_button dnskw_button_pins[] = {
+>> +	{
+>> +		.code		= KEY_POWER,
+>> +		.gpio		= 34,
+>> +		.desc		= "Power button",
+>> +		.active_low	= 1,
+>> +	},
+>> +	{
+>> +		.code		= KEY_EJECTCD,
+>> +		.gpio		= 47,
+>> +		.desc		= "USB unmount button",
+>> +		.active_low	= 1,
+>> +	},
+>> +	{
+>> +		.code		= KEY_RESTART,
+>> +		.gpio		= 48,
+>> +		.desc		= "Reset button",
+>> +		.active_low	= 1,
+>> +	},
+>> +};
+>> +
+>> +static struct gpio_keys_platform_data dnskw_button_data = {
+>> +	.buttons	= dnskw_button_pins,
+>> +	.nbuttons	= ARRAY_SIZE(dnskw_button_pins),
+>> +};
+>> +
+>> +static struct platform_device dnskw_button_device = {
+>> +	.name		= "gpio-keys",
+>> +	.id		= -1,
+>> +	.num_resources	= 0,
+>> +	.dev		= {
+>> +		.platform_data	= &dnskw_button_data,
+>> +	}
+>> +};
+>> +
+>> +/* Fan: ADDA AD045HB-G73 40mm 6000rpm@5v */
+>> +static struct gpio_fan_speed dnskw_fan_speed[] = {
+>> +	{    0,  0 },
+>> +	{ 3000,	 1 },
+>> +	{ 6000,	 2 },
+>> +};
+>> +static unsigned dnskw_fan_pins[] = {46, 45};
+>> +
+>> +static struct gpio_fan_platform_data dnskw_fan_data = {
+>> +	.num_ctrl	= ARRAY_SIZE(dnskw_fan_pins),
+>> +	.ctrl		= dnskw_fan_pins,
+>> +	.num_speed	= ARRAY_SIZE(dnskw_fan_speed),
+>> +	.speed		= dnskw_fan_speed,
+>> +};
+>> +
+>> +static struct platform_device dnskw_fan_device = {
+>> +	.name	= "gpio-fan",
+>> +	.id	= -1,
+>> +	.dev	= {
+>> +		.platform_data	= &dnskw_fan_data,
+>> +	},
+>> +};
+>> +
+>> +static void __init dnskw_gpio_register(unsigned gpio, char *name, int  
+>> def)
+>> +{
+>> +	if (gpio_request(gpio, name) == 0 &&
+>> +	    gpio_direction_output(gpio, 0) == 0) {
+>> +		gpio_set_value(gpio, def);
+>> +		if (gpio_export(gpio, 0) != 0)
+>> +			pr_err("dnskw: Failed to export GPIO %s\n", name);
+>> +	} else
+>> +		pr_err("dnskw: Failed to register %s\n", name);
+>> +}
+>> +
+>> +static void dnskw_power_off(void)
+>> +{
+>> +	gpio_set_value(36, 1);
+>> +}
+>> +
+>> +static void __init dnskw_init(void)
+>> +{
+>> +	u32 dev, rev;
+>> +
+>> +	kirkwood_mpp_conf(dnskw_mpp_config);
+>> +	kirkwood_nand_init(ARRAY_AND_SIZE(dnskw_nand_parts), 25);
+>> +
+>> +	kirkwood_ge00_init(&dnskw_ge00_data);
+>> +	kirkwood_i2c_init();
+>> +
+>> +	platform_device_register(&dnskw_button_device);
+>> +	platform_device_register(&dnskw_fan_device);
+>> +
+>> +	if (of_machine_is_compatible("dlink,dns-325")) {
+>> +		i2c_register_board_info(0, dns325_i2c_board_info,
+>> +					ARRAY_SIZE(dns325_i2c_board_info));
+>> +		platform_device_register(&dns325_led_device);
+>> +
+>> +	} else if (of_machine_is_compatible("dlink,dns-320")) {
+>> +		platform_device_register(&dns320_led_device);
+>> +	}
+>
+> braces not needed.
+>
+>> +
+>> +	/* Register power off routine */
+>> +	kirkwood_pcie_id(&dev, &rev);
+>> +	if (dev == MV88F6281_DEV_ID) {
+>> +		pr_info("PCI-E Device ID: MV88F6281, configuring power-off");
+>> +		if (gpio_request(36, "dnskw:power:off") == 0 &&
+>> +		    gpio_direction_output(36, 0) == 0)
+>> +			pm_power_off = dnskw_power_off;
+>> +		else
+>> +			pr_err("dnskw: failed to configure power-off GPIO\n");
+>> +	} else {
+>> +		/*
+>> +		 * Dlink code also defines 0x6192, and sets LOW_BASE +
+>> +		 * 0x01000000 high. Either cargo-culted code or another model.
+>> +		 */
+>
+> I'm just curious, what is cargo-culted?
+>
+
+http://en.wikipedia.org/wiki/Cargo_cult_programming
+
+In this case, I originally thought that the line was relevant to  
+supporting the DNS-320 (I assumed it had a MV88F6192 based on it's lower  
+TCLK), but it seems it uses the MV88F6281 too. So either D-link have been  
+blindly including this logic or there is a model somewhere that uses the  
+different SoC.
+
+On reflection, it's probably best to remove this entirely. Testing the  
+pcie_id isn't achieving anything and is likely to confuse when it comes to  
+porting the power-off to devicetree.
+
+>> +		pr_err("Unknown PCI-E Device ID %x, no power-off", dev);
+>> +	}
+>> +
+>> +	/*
+>> +	 * Supply power to HDDs. Bootloader should have turned on sata0  
+>> already
+>> +	 */
+>
+> Don't assume the bootloader does or doesn't do anything.  Put the
+> peripheral into a known state and work from there.
+>
+
+It doesn't, it turns both HDDs on. I'll clarify the comment though.
+
+>> +	dnskw_gpio_register(39, "dnskw:power:sata0", 1);
+>> +	dnskw_gpio_register(40, "dnskw:power:sata1", 1);
+>> +
+>> +	/* Set NAS to turn back on after a power failure */
+>> +	dnskw_gpio_register(37, "dnskw:power:recover", 1);
+>> +}
+>> +
+>
+> I doubt this board is the only one that wants to be added while the
+> conversion to devicetree is progressing.  It makes more sense to me to
+> break the above out to a separate file, eg board-dnskw.c.  I'll follow
+> and break out the dreamplug code to board-dreamplug.c.  Otherwise, I see
+> board-dt.c becoming a long mess.
+>
+> Arnd, sound okay to you?
+>
+>>  static void __init kirkwood_dt_init(void)
+>>  {
+>>  	struct device_node *node;
+>> @@ -186,11 +475,16 @@ static void __init kirkwood_dt_init(void)
+>>  	if (of_machine_is_compatible("globalscale,dreamplug"))
+>>  		dreamplug_init();
+>>
+>> +	if (of_machine_is_compatible("dlink,dns-kirkwood"))
+>> +		dnskw_init();
+>> +
+>>  	of_platform_populate(NULL, kirkwood_dt_match_table, NULL, NULL);
+>>  }
+>>
+>>  static const char *kirkwood_dt_board_compat[] = {
+>>  	"globalscale,dreamplug",
+>> +	"dlink,dns-320",
+>> +	"dlink,dns-325",
+>>  	NULL
+>>  };
+>>
+>> --
+>> 1.7.9.1
+>>
+
+
+-- 
+Jamie Lentin
