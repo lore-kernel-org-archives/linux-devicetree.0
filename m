@@ -1,78 +1,65 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: kirkwood: Basic support for DNS-320 and DNS-325
-Date: Mon, 12 Mar 2012 10:27:16 -0400
-Message-ID: <20120312142716.GA5050@titan.lakedaemon.net>
-References: <1331476406-9844-1-git-send-email-jm@lentin.co.uk>
- <1331476406-9844-2-git-send-email-jm@lentin.co.uk>
- <20120312030232.GX5050@titan.lakedaemon.net>
- <201203120817.19777.arnd@arndb.de>
- <op.wa197mq94cuzmg@gonzo.lentin.co.uk>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 11/11] ARM: tegra: pcie: Add device tree support
+Date: Mon, 12 Mar 2012 15:28:58 +0100
+Message-ID: <20120312142857.GA6694@avionic-0098.mockup.avionic-design.de>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
+ <1331218291-16119-12-git-send-email-thierry.reding@avionic-design.de>
+ <4F59253D.7070100@wwwdotorg.org>
+ <20120312120610.GA14020@sirena.org.uk>
+ <20120312141705.GA16395@avionic-0098.mockup.avionic-design.de>
+ <20120312142340.GI3110@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <op.wa197mq94cuzmg-x9DHNcFvAEtNwP/n92qj9LVCufUGDwFn@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20120312142340.GI3110@opensource.wolfsonmicro.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Liam Girdwood <lrg@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Jesse Barnes <jbarnes@virtuousgeek.org>, Colin Cross <ccross@android.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 12, 2012 at 02:22:24PM -0000, Jamie Lentin wrote:
-> On Mon, 12 Mar 2012 08:17:19 -0000, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> 
-> >On Monday 12 March 2012, Jason Cooper wrote:
-> >>> +     dnskw_gpio_register(39, "dnskw:power:sata0", 1);
-> >>> +     dnskw_gpio_register(40, "dnskw:power:sata1", 1);
-> >>> +
-> >>> +     /* Set NAS to turn back on after a power failure */
-> >>> +     dnskw_gpio_register(37, "dnskw:power:recover", 1);
-> >>> +}
-> >>> +
-> >>
-> >>I doubt this board is the only one that wants to be added while the
-> >>conversion to devicetree is progressing.  It makes more sense to me to
-> >>break the above out to a separate file, eg board-dnskw.c.  I'll follow
-> >>and break out the dreamplug code to board-dreamplug.c.  Otherwise, I see
-> >>board-dt.c becoming a long mess.
-> >>
-> >>Arnd, sound okay to you?
-> >
-> >Either way is fine with me. I personally wouldn't expect many more boards
-> >to come in before the DT conversion has mostly completed, but I guess you
-> >have a better feeling for what other hardware is out there that people
-> >are interested in.
-> >
-> 
-> It probably depends on how easy it is to add the gpiochips into
-> devicetree. Being able to put the LED, buttons and fans in
-> devicetree would make board-dt.c much more manageable. I started to
-> look into it and wasn't immediately obvious, but will have a closer
-> look.
-> 
-> Happy to resubmit, breaking it out into a board-dnskw.c though.
 
-Yeah, let's go ahead and do that.  pinmux and the above are going to take
-a while to sort out.  In the mean time, there's:
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-sheevaplug
-guruplug
-guruplug-serverplus
-Lacie-*
-Seagate-*
-rd-boards-*
+* Mark Brown wrote:
+> On Mon, Mar 12, 2012 at 03:17:05PM +0100, Thierry Reding wrote:
+>=20
+> > My understanding of the fixed regulator was that it was meant to be use=
+d for
+> > fixed voltage supplies that can still be enabled or disabled (for examp=
+le as
+> > supplied by a GPIO) but not regulators that are fix in the sense that t=
+hey
+> > cannot be enabled or disabled at all but are always on.
+>=20
+> No, not at all.  It's for any random supply that doesn't have much
+> meaningful control - as you'll see from the code the GPIO is totally
+> optional if you look at the git history you'll see that the GPIO was
+> added some time after the driver was originally merged.
+>=20
+> > Is that how it is supposed to work?
+>=20
+> Yes.
 
-just to name a few.  Plus it'll give me something to do while we wait
-for pinmux/common clock to land.
+In that case I'll mark the *-supply properties required. Would it be a good
+idea to mention this (or even give an example with fixed regulators) in the
+binding documentation or can I assume this to be common knowledge?
 
-thx,
+Thierry
 
-Jason.
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk9eCCkACgkQZ+BJyKLjJp9I1ACgiMzqgAdYjfb+BL10fzPhkzop
+EqkAn3JIOG3z+7homikIN0PSCRHrOtnv
+=J/oZ
+-----END PGP SIGNATURE-----
+
+--XsQoSWH+UP9D9v3l--
