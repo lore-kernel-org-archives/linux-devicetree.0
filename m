@@ -1,367 +1,225 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: kirkwood: Convert orion-nand to fdt
-Date: Sun, 11 Mar 2012 23:23:03 -0400
-Message-ID: <20120312032303.GZ5050@titan.lakedaemon.net>
-References: <1331476406-9844-1-git-send-email-jm@lentin.co.uk>
- <1331476406-9844-3-git-send-email-jm@lentin.co.uk>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 1/2] i2c-s3c2410: Rework device type handling
+Date: Mon, 12 Mar 2012 11:28:16 +0530
+Message-ID: <CAJuYYwRDb-NvOzpzWtV8erw8UZeHjBUDUPjm-Cg0GTz6BCCV5w@mail.gmail.com>
+References: <1331312686-2077-1-git-send-email-k.lewandowsk@samsung.com>
+	<1331312686-2077-2-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1331476406-9844-3-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1331312686-2077-2-git-send-email-k.lewandowsk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: ben-linux@fluff.org, m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, t.stanislaws@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 11, 2012 at 02:33:26PM +0000, Jamie Lentin wrote:
-> The DNS-320 and 325 have a NAND partitioned to store uboot, uimage and root
-> filesystem. Store this information in devicetree.
-> 
-> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+On 9 March 2012 22:34, Karol Lewandowski <k.lewandowsk@samsung.com> wro=
+te:
+> Reorganize driver a bit to better handle device tree-based systems:
+>
+> =A0- move machine type to driver's private structure instead of
+> =A0 quering platform device variants in runtime
+>
+> =A0- replace s3c24xx_i2c_type enum with plain unsigned int that can
+> =A0 hold not only device type but also hw revision-specific quirks
+>
+> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
->  .../devicetree/bindings/mtd/orion-nand.txt         |   41 +++++++++++++++++++
->  arch/arm/boot/dts/kirkwood-dns320.dts              |   42 ++++++++++++++++++++
->  arch/arm/boot/dts/kirkwood-dns325.dts              |   42 ++++++++++++++++++++
->  arch/arm/mach-kirkwood/board-dt.c                  |   30 --------------
->  arch/arm/mach-kirkwood/common.c                    |    6 +++
->  drivers/mtd/nand/orion_nand.c                      |   39 +++++++++++++++++-
->  6 files changed, 168 insertions(+), 32 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-> new file mode 100644
-> index 0000000..53fd469
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
-> @@ -0,0 +1,41 @@
-> +NAND support for Marvell Orion SoC platforms
-> +
-> +Required properties:
-> +- compatible : "mrvl,orion-nand".
-> +- reg : Base physical address of the NAND and length of memory mapped
-> +	region
-> +
-> +Optional properties:
-> +- cle :
-> +- ale :
-> +- width :
-> +- chip-delay :
-> +
-> +Examples:
-> +
-> +nand@f4000000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	cle = <0>;
-> +	ale = <1>;
-> +	width = <8>;
-> +	chip-delay = <25>;
-> +	compatible = "mrvl,orion-nand";
-> +	reg = <0xf4000000 0x400>;
-> +
-> +	partition@0 {
-> +		label = "u-boot";
-> +		reg = <0x0000000 0x100000>;
-> +		read-only;
-> +	};
-> +
-> +	partition@100000 {
-> +		label = "uImage";
-> +		reg = <0x0100000 0x200000>;
-> +	};
-> +
-> +	partition@300000 {
-> +		label = "root";
-> +		reg = <0x0300000 0x7d00000>;
-> +	};
-
-You may want the example to include a partition for the dtb.
-
-I'll let more experienced folks comment on the guts of the nand
-bindings.
-
-thx,
-
-Jason.
-
-> +};
-> diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
-> index c039041..6772f9d 100644
-> --- a/arch/arm/boot/dts/kirkwood-dns320.dts
-> +++ b/arch/arm/boot/dts/kirkwood-dns320.dts
-> @@ -51,4 +51,46 @@
->  		dma-mask = <0xffffffff>;
->  		phy-version = "";
->  	};
-> +
-> +	nand@f4000000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		cle = <0>;
-> +		ale = <1>;
-> +		width = <8>;
-> +		chip-delay = <25>;
-> +		compatible = "mrvl,orion-nand";
-> +		reg = <0xf4000000 0x400>;
-> +
-> +		partition@0 {
-> +			label = "u-boot";
-> +			reg = <0x0000000 0x100000>;
-> +			read-only;
-> +		};
-> +
-> +		partition@100000 {
-> +			label = "uImage";
-> +			reg = <0x0100000 0x500000>;
-> +		};
-> +
-> +		partition@600000 {
-> +			label = "ramdisk";
-> +			reg = <0x0600000 0x500000>;
-> +		};
-> +
-> +		partition@b00000 {
-> +			label = "image";
-> +			reg = <0x0b00000 0x6600000>;
-> +		};
-> +
-> +		partition@7100000 {
-> +			label = "mini firmware";
-> +			reg = <0x7100000 0xa00000>;
-> +		};
-> +
-> +		partition@7b00000 {
-> +			label = "config";
-> +			reg = <0x7b00000 0x500000>;
-> +		};
-> +	};
->  };
-> diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts b/arch/arm/boot/dts/kirkwood-dns325.dts
-> index a7c2c26..34740ad 100644
-> --- a/arch/arm/boot/dts/kirkwood-dns325.dts
-> +++ b/arch/arm/boot/dts/kirkwood-dns325.dts
-> @@ -37,4 +37,46 @@
->  		dma-mask = <0xffffffff>;
->  		phy-version = "";
->  	};
-> +
-> +	nand@f4000000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		cle = <0>;
-> +		ale = <1>;
-> +		width = <8>;
-> +		chip-delay = <25>;
-> +		compatible = "mrvl,orion-nand";
-> +		reg = <0xf4000000 0x400>;
-> +
-> +		partition@0 {
-> +			label = "u-boot";
-> +			reg = <0x0000000 0x100000>;
-> +			read-only;
-> +		};
-> +
-> +		partition@100000 {
-> +			label = "uImage";
-> +			reg = <0x0100000 0x500000>;
-> +		};
-> +
-> +		partition@600000 {
-> +			label = "ramdisk";
-> +			reg = <0x0600000 0x500000>;
-> +		};
-> +
-> +		partition@b00000 {
-> +			label = "image";
-> +			reg = <0x0b00000 0x6600000>;
-> +		};
-> +
-> +		partition@7100000 {
-> +			label = "mini firmware";
-> +			reg = <0x7100000 0xa00000>;
-> +		};
-> +
-> +		partition@7b00000 {
-> +			label = "config";
-> +			reg = <0x7b00000 0x500000>;
-> +		};
-> +	};
->  };
-> diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-> index 0885713..d5bc60a 100644
-> --- a/arch/arm/mach-kirkwood/board-dt.c
-> +++ b/arch/arm/mach-kirkwood/board-dt.c
-> @@ -158,35 +158,6 @@ static void __init dreamplug_init(void)
->   * DNS-320 & DNS-325 specifics
->   ****************************************************************************/
->  
-> -static struct mtd_partition dnskw_nand_parts[] = {
-> -	{
-> -		.name		= "u-boot",
-> -		.offset		= 0,
-> -		.size		= SZ_1M,
-> -		.mask_flags	= MTD_WRITEABLE
-> -	}, {
-> -		.name		= "uImage",
-> -		.offset		= MTDPART_OFS_NXTBLK,
-> -		.size		= 5 * SZ_1M
-> -	}, {
-> -		.name		= "ramdisk",
-> -		.offset		= MTDPART_OFS_NXTBLK,
-> -		.size		= 5 * SZ_1M
-> -	}, {
-> -		.name		= "image",
-> -		.offset		= MTDPART_OFS_NXTBLK,
-> -		.size		= 102 * SZ_1M
-> -	}, {
-> -		.name		= "mini firmware",
-> -		.offset		= MTDPART_OFS_NXTBLK,
-> -		.size		= 10 * SZ_1M
-> -	}, {
-> -		.name		= "config",
-> -		.offset		= MTDPART_OFS_NXTBLK,
-> -		.size		= 5 * SZ_1M
-> -	},
+> =A0drivers/i2c/busses/i2c-s3c2410.c | =A0 56 +++++++++++++-----------=
+-------------
+> =A01 files changed, 20 insertions(+), 36 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2=
+c-s3c2410.c
+> index 737f721..5b400c6 100644
+> --- a/drivers/i2c/busses/i2c-s3c2410.c
+> +++ b/drivers/i2c/busses/i2c-s3c2410.c
+> @@ -44,8 +44,12 @@
+> =A0#include <plat/regs-iic.h>
+> =A0#include <plat/iic.h>
+>
+> -/* i2c controller state */
+> +/* type */
+> +#define TYPE_BITS =A0 =A0 =A0 =A0 =A0 =A0 =A00x000000ff
+> +#define TYPE_S3C2410 =A0 =A0 =A0 =A0 =A0 0x00000001
+> +#define TYPE_S3C2440 =A0 =A0 =A0 =A0 =A0 0x00000002
+>
+> +/* i2c controller state */
+> =A0enum s3c24xx_i2c_state {
+> =A0 =A0 =A0 =A0STATE_IDLE,
+> =A0 =A0 =A0 =A0STATE_START,
+> @@ -54,14 +58,10 @@ enum s3c24xx_i2c_state {
+> =A0 =A0 =A0 =A0STATE_STOP
+> =A0};
+>
+> -enum s3c24xx_i2c_type {
+> - =A0 =A0 =A0 TYPE_S3C2410,
+> - =A0 =A0 =A0 TYPE_S3C2440,
 > -};
 > -
->  static struct mv643xx_eth_platform_data dnskw_ge00_data = {
->  	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
->  };
-> @@ -395,7 +366,6 @@ static void __init dnskw_init(void)
->  	u32 dev, rev;
->  
->  	kirkwood_mpp_conf(dnskw_mpp_config);
-> -	kirkwood_nand_init(ARRAY_AND_SIZE(dnskw_nand_parts), 25);
->  
->  	kirkwood_ge00_init(&dnskw_ge00_data);
->  	kirkwood_i2c_init();
-> diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-> index 70ee7ac..f135854 100644
-> --- a/arch/arm/mach-kirkwood/common.c
-> +++ b/arch/arm/mach-kirkwood/common.c
-> @@ -505,6 +505,12 @@ static int __init kirkwood_clock_gate(void)
->  		of_node_put(np);
->  	}
->  
-> +	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-nand");
-> +	if (np && of_device_is_available(np)) {
-> +		kirkwood_clk_ctrl |= CGC_RUNIT;
-> +		of_node_put(np);
-> +	}
+> =A0struct s3c24xx_i2c {
+> =A0 =A0 =A0 =A0spinlock_t =A0 =A0 =A0 =A0 =A0 =A0 =A0lock;
+> =A0 =A0 =A0 =A0wait_queue_head_t =A0 =A0 =A0 wait;
+> + =A0 =A0 =A0 unsigned int =A0 =A0 =A0 =A0 =A0 =A0type;
+> =A0 =A0 =A0 =A0unsigned int =A0 =A0 =A0 =A0 =A0 =A0suspended:1;
+>
+> =A0 =A0 =A0 =A0struct i2c_msg =A0 =A0 =A0 =A0 =A0*msg;
+> @@ -88,28 +88,6 @@ struct s3c24xx_i2c {
+> =A0#endif
+> =A0};
+>
+> -/* default platform data removed, dev should always carry data. */
+> -
+> -/* s3c24xx_i2c_is2440()
+> - *
+> - * return true is this is an s3c2440
+> -*/
+> -
+> -static inline int s3c24xx_i2c_is2440(struct s3c24xx_i2c *i2c)
+> -{
+> - =A0 =A0 =A0 struct platform_device *pdev =3D to_platform_device(i2c=
+->dev);
+> - =A0 =A0 =A0 enum s3c24xx_i2c_type type;
+> -
+> -#ifdef CONFIG_OF
+> - =A0 =A0 =A0 if (i2c->dev->of_node)
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 return of_device_is_compatible(i2c->dev=
+->of_node,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 "samsun=
+g,s3c2440-i2c");
+> -#endif
+> -
+> - =A0 =A0 =A0 type =3D platform_get_device_id(pdev)->driver_data;
+> - =A0 =A0 =A0 return type =3D=3D TYPE_S3C2440;
+> -}
+> -
+> =A0/* s3c24xx_i2c_master_complete
+> =A0*
+> =A0* complete the message and wake up the caller, using the given ret=
+urn code,
+> @@ -676,7 +654,7 @@ static int s3c24xx_i2c_clockrate(struct s3c24xx_i=
+2c *i2c, unsigned int *got)
+>
+> =A0 =A0 =A0 =A0writel(iiccon, i2c->regs + S3C2410_IICCON);
+>
+> - =A0 =A0 =A0 if (s3c24xx_i2c_is2440(i2c)) {
+> + =A0 =A0 =A0 if (i2c->type & TYPE_S3C2440) {
+
+This should be changed to
+if (i2c->type =3D=3D TYPE_S3C2440)
+
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0unsigned long sda_delay;
+>
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (pdata->sda_delay) {
+> @@ -847,6 +825,8 @@ static int s3c24xx_i2c_init(struct s3c24xx_i2c *i=
+2c)
+> =A0}
+>
+> =A0#ifdef CONFIG_OF
+> +static const struct of_device_id s3c24xx_i2c_match[];
 > +
->  	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-sata");
->  	if (np && of_device_is_available(np)) {
->  		int nr_ports;
-> diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-> index 29f505a..5ae0030 100644
-> --- a/drivers/mtd/nand/orion_nand.c
-> +++ b/drivers/mtd/nand/orion_nand.c
-> @@ -13,6 +13,7 @@
->  #include <linux/slab.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of.h>
->  #include <linux/mtd/mtd.h>
->  #include <linux/mtd/nand.h>
->  #include <linux/mtd/partitions.h>
-> @@ -74,11 +75,13 @@ static void orion_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
->  static int __init orion_nand_probe(struct platform_device *pdev)
->  {
->  	struct mtd_info *mtd;
-> +	struct mtd_part_parser_data ppdata = {};
->  	struct nand_chip *nc;
->  	struct orion_nand_data *board;
->  	struct resource *res;
->  	void __iomem *io_base;
->  	int ret = 0;
-> +	u32 val = 0;
->  
->  	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
->  	if (!nc) {
-> @@ -101,7 +104,24 @@ static int __init orion_nand_probe(struct platform_device *pdev)
->  		goto no_res;
->  	}
->  
-> -	board = pdev->dev.platform_data;
-> +	if (pdev->dev.of_node) {
-> +		board = kzalloc(sizeof(struct orion_nand_data), GFP_KERNEL);
-> +		if (!board) {
-> +			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
-> +			ret = -ENOMEM;
-> +			goto no_res;
-> +		}
-> +		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
-> +			board->cle = (u8)val;
-> +		if (!of_property_read_u32(pdev->dev.of_node, "ale", &val))
-> +			board->ale = (u8)val;
-> +		if (!of_property_read_u32(pdev->dev.of_node, "width", &val))
-> +			board->width = (u8)val;
-> +		if (!of_property_read_u32(pdev->dev.of_node,
-> +						"chip-delay", &val))
-> +			board->chip_delay = (u8)val;
-> +	} else
-> +		board = pdev->dev.platform_data;
->  
->  	mtd->priv = nc;
->  	mtd->owner = THIS_MODULE;
-> @@ -129,7 +149,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
->  	}
->  
->  	mtd->name = "orion_nand";
-> -	ret = mtd_device_parse_register(mtd, NULL, 0,
-> +	ppdata.of_node = pdev->dev.of_node;
-> +	ret = mtd_device_parse_register(mtd, NULL, &ppdata,
->  			board->parts, board->nr_parts);
->  	if (ret) {
->  		nand_release(mtd);
-> @@ -141,6 +162,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
->  no_dev:
->  	platform_set_drvdata(pdev, NULL);
->  	iounmap(io_base);
-> +	if (pdev->dev.of_node)
-> +		kfree(board);
->  no_res:
->  	kfree(nc);
->  
-> @@ -156,16 +179,28 @@ static int __devexit orion_nand_remove(struct platform_device *pdev)
->  
->  	iounmap(nc->IO_ADDR_W);
->  
-> +	if (pdev->dev.of_node)
-> +		kfree(nc->priv);
->  	kfree(nc);
->  
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OF
-> +static struct of_device_id orion_nand_of_match_table[] = {
-> +	{ .compatible = "mrvl,orion-nand", },
-> +	{},
-> +};
-> +#else
-> +#define orion_nand_of_match_table NULL
-> +#endif
+> =A0/* s3c24xx_i2c_parse_dt
+> =A0*
+> =A0* Parse the device tree node and retreive the platform data.
+> @@ -856,11 +836,16 @@ static void
+> =A0s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i=
+2c)
+> =A0{
+> =A0 =A0 =A0 =A0struct s3c2410_platform_i2c *pdata =3D i2c->pdata;
+> + =A0 =A0 =A0 const struct of_device_id *match;
+>
+> =A0 =A0 =A0 =A0if (!np)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return;
+>
+> =A0 =A0 =A0 =A0pdata->bus_num =3D -1; /* i2c bus number is dynamicall=
+y assigned */
 > +
->  static struct platform_driver orion_nand_driver = {
->  	.remove		= __devexit_p(orion_nand_remove),
->  	.driver		= {
->  		.name	= "orion_nand",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(orion_nand_of_match_table),
->  	},
->  };
->  
-> -- 
-> 1.7.9.1
-> 
+> + =A0 =A0 =A0 match =3D of_match_node(&s3c24xx_i2c_match[0], np);
+
+This could be
+match =3D of_match_node(s3c24xx_i2c_match, np);
+
+> + =A0 =A0 =A0 i2c->type =3D (unsigned int)match->data;
+> +
+
+This function (s3c24xx_i2c_parse_dt) is intended to retrieve the data
+from i2c device node. It would be better to not add the determination
+of the i2c type inside this function.
+
+> =A0 =A0 =A0 =A0of_property_read_u32(np, "samsung,i2c-sda-delay", &pda=
+ta->sda_delay);
+> =A0 =A0 =A0 =A0of_property_read_u32(np, "samsung,i2c-slave-addr", &pd=
+ata->slave_addr);
+> =A0 =A0 =A0 =A0of_property_read_u32(np, "samsung,i2c-max-bus-freq",
+> @@ -906,9 +891,10 @@ static int s3c24xx_i2c_probe(struct platform_dev=
+ice *pdev)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0goto err_noclk;
+> =A0 =A0 =A0 =A0}
+>
+> - =A0 =A0 =A0 if (pdata)
+> + =A0 =A0 =A0 if (pdata) {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0memcpy(i2c->pdata, pdata, sizeof(*pdat=
+a));
+> - =A0 =A0 =A0 else
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c->type =3D platform_get_device_id(pd=
+ev)->driver_data;
+> + =A0 =A0 =A0 } else
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0s3c24xx_i2c_parse_dt(pdev->dev.of_node=
+, i2c);
+
+It would be better to move the task of retrieving the driver data to a
+separate function. An example of this listed below (copied from the
+samsung uart driver).
+
+static inline struct s3c24xx_serial_drv_data *s3c24xx_get_driver_data(
+                        struct platform_device *pdev)
+{
+#ifdef CONFIG_OF
+        if (pdev->dev.of_node) {
+                const struct of_device_id *match;
+                match =3D of_match_node(s3c24xx_uart_dt_match, pdev->de=
+v.of_node);
+                return (struct s3c24xx_serial_drv_data *)match->data;
+        }
+#endif
+        return (struct s3c24xx_serial_drv_data *)
+                        platform_get_device_id(pdev)->driver_data;
+}
+
+>
+> =A0 =A0 =A0 =A0strlcpy(i2c->adap.name, "s3c2410-i2c", sizeof(i2c->ada=
+p.name));
+> @@ -1123,13 +1109,11 @@ MODULE_DEVICE_TABLE(platform, s3c24xx_driver_=
+ids);
+>
+> =A0#ifdef CONFIG_OF
+> =A0static const struct of_device_id s3c24xx_i2c_match[] =3D {
+> - =A0 =A0 =A0 { .compatible =3D "samsung,s3c2410-i2c" },
+> - =A0 =A0 =A0 { .compatible =3D "samsung,s3c2440-i2c" },
+> + =A0 =A0 =A0 { .compatible =3D "samsung,s3c2410-i2c", .data =3D (voi=
+d *)TYPE_S3C2410 },
+> + =A0 =A0 =A0 { .compatible =3D "samsung,s3c2440-i2c", .data =3D (voi=
+d *)TYPE_S3C2440 },
+> =A0 =A0 =A0 =A0{},
+> =A0};
+> =A0MODULE_DEVICE_TABLE(of, s3c24xx_i2c_match);
+> -#else
+> -#define s3c24xx_i2c_match NULL
+> =A0#endif
+>
+> =A0static struct platform_driver s3c24xx_i2c_driver =3D {
+> @@ -1140,7 +1124,7 @@ static struct platform_driver s3c24xx_i2c_drive=
+r =3D {
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.owner =A0=3D THIS_MODULE,
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.name =A0 =3D "s3c-i2c",
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.pm =A0 =A0 =3D S3C24XX_DEV_PM_OPS,
+> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D s3c24xx_i2c_match,
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .of_match_table =3D of_match_ptr(s3c24x=
+x_i2c_match),
+
+Should this change be a separate patch?
+
+Thanks,
+Thomas.
