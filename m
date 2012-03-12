@@ -1,66 +1,83 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: kirkwood: Basic support for DNS-320 and DNS-325
-Date: Mon, 12 Mar 2012 12:10:04 -0400
-Message-ID: <20120312161004.GB5050@titan.lakedaemon.net>
-References: <1331476406-9844-1-git-send-email-jm@lentin.co.uk>
- <201203111746.09757.arnd@arndb.de>
- <20120312031751.GY5050@titan.lakedaemon.net>
- <201203120811.23137.arnd@arndb.de>
+From: Stefan Roese <sr@denx.de>
+Subject: Re: [PATCH] stmmac: Add device-tree support
+Date: Mon, 12 Mar 2012 17:23:38 +0100
+Message-ID: <201203121723.38411.sr@denx.de>
+References: <1331561157-3820-1-git-send-email-sr@denx.de> <201203121606.26926.sr@denx.de> <4F5E169D.3070508@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201203120811.23137.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4F5E169D.3070508@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Cc: Rob Herring <robherring2@gmail.com>, netdev@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 12, 2012 at 08:11:22AM +0000, Arnd Bergmann wrote:
-> On Monday 12 March 2012, Jason Cooper wrote:
-> > > Or even use the ranges property to remap everything into
-> > > a simpler address range:
-> > > 
-> > >       ocp@f1000000 {
-> > >               compatible = "simple-bus";
-> > >               ranges = <0 0xf1000000 0x1000000>;
-> > >               #address-cells = 1;
-> > >               #size-cells = 1;
-> > > 
-> > >               serial@12000 {
-> > >                       reg = <0x12000 0x100>;
-> > >                       ...
-> > >               };
-> > > 
-> > >               ...
-> > >       };
+On Monday 12 March 2012 16:30:37 Giuseppe CAVALLARO wrote:
+> >>> +Required properties:
+> >>> +- compatible: Should be "stm,gmac"
+> >> 
+> >> This is too generic. This should be 1 string per version of h/w.
 > > 
-> > Okay, that's pretty slick.  The wdt and intc are at 0xfed00000, is that
-> > another ocp bus?  Or, am I missing something?
+> > Viresh, Giuseppe, can you please suggest a proper string for the SPEAr600
+> > STMMAC core, including version?
+> > 
+> >> 'stm' should be 'st' according to vendor-prefixes.txt.
 > 
-> If they are on those addresses, yes. If you have a data sheet, you should
-> look at what the buses are named there, "ocp" was just an example and I
-> took that name from the <mach/kirkwood.h> file.
+> I'm not familiar with devicetree; maybe we should have:
 > 
-> It does seem though that the 0xfed00000 address is where Linux maps
-> the same 0xf1000000 range in its own virtual address space, so it's
-> not something that should appear in the device tree.
+> "stmicro,mac100"
+> "stmicro,gmac"
+> 
+> or: st instead of stmicro if you prefer.
+> 
+> in fact, stmmac is for mac100 and gmac devices.
 
-Okay, that's what smelled funny.  wdt and intc both only have registers
-in virtual address space defined.  Can I assume they map like everything
-else to corresponding physical addresses?
+How about "st,spear600-gmac" for SPEAr600 then?
+ 
+> > Okay.
+> > 
+> >>> +- reg: Address and length of the register set for the device
+> >>> +- interrupt-parent: Should be the phandle for the interrupt controller
+> >>> +  that services interrupts for this device
+> >>> +- interrupts: Should contain the STMMAC interrupts
+> >>> +- interrupt-names: Should contain the interrupt names "macirq"
+> >>> +  "eth_wake_irq" if this interrupt is supported in the "interrupts"
+> >>> +  property
+> >> 
+> >> You should be able to tell this from the compatible string and number of
+> >> interrupts.
+> > 
+> > Yes. Currently the driver uses platform_get_irq_byname() to register the
+> > irq's. That's why I added these properties. Is there something wrong with
+> > using it this way?
+> > 
+> >>> +- phy-mode: String, operation mode of the PHY interface.
+> >>> +  Supported values are: "mii", "rmii", "gmii", "rgmii".
+> >>> +- phy-addr: MDIO address of the PHY
+> >> 
+> >> This is normally probed or the mdio bus is a sub-node of the MAC node.
+> >> See arch/powerpc/boot/dts/mpc8377_mds.dts for an example.
+> > 
+> > Okay, I'll rework this.
+> > 
+> >>> +
+> >>> +Optional properties:
+> >>> +- stm,prog-burst-len: Specify the burst length
+> >>> +- stm,has-gmac: Indicates that the controller supports 1000Mbps
+> >>> +- stm,has-pmt: Indicates that the controller supports power management
+> >> 
+> >> I think these should all be encoded by the compatible string.
+> 
+> and should we have all the other flags e.g. tx_coe etc?
+> (see stmmac.txt)
 
-eg wdt@fed20300 -> wdt@f1020300 ?
+As Rob suggested, some of these flags/parameters are implicitly defined by the 
+compatible string. If this is not the case, then sure, those flags/parameters 
+need to be provided via the device-tree as well. I just don't need "tx_coe" 
+etc. for my platform (SPEAr600) as far as I know. I suggest to add support for 
+them once they are really needed/used by other platforms.
 
-thx,
-
-Jason.
+Thanks,
+Stefan
