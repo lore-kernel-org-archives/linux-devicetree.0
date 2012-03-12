@@ -1,155 +1,66 @@
-From: Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH v3] drivers/ata/pata_mpc52xx.c: clean up error handling code
-Date: Sun, 11 Mar 2012 21:12:09 +0100
-Message-ID: <1331496729-12850-1-git-send-email-Julia.Lawall@lip6.fr>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Jeff Garzik <jgarzik@pobox.com>
-Cc: kernel-janitors@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, wharms@bfs.de, w.sang@pengutronix.de, agust@denx.de
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add support for DNS-320 and DNS-325 using devicetree
+Date: Sun, 11 Mar 2012 22:36:32 -0400
+Message-ID: <20120312023632.GW5050@titan.lakedaemon.net>
+References: <1331476406-9844-1-git-send-email-jm@lentin.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1331476406-9844-1-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@lip6.fr>
+On Sun, Mar 11, 2012 at 02:33:24PM +0000, Jamie Lentin wrote:
+> As agreed with Arnd Bergmann and Jason Cooper, include any board setup that
+> cannot be done in devicetree in board-dt.c, then replace with devicetree
+> entries.
+> 
+> The NAND driver is converted to devicetree as part of this patch series, 
+> although I don't feel qualified to explain the parameters actually mean so 
+> have left documentation fields blank.
 
-This patch makes a number of changes with respect to the error-handling
-code:
+Thanks!
 
-* Remove cleanup calls for the devm functions in both the error handling
-  code and the remove function.  This cleanup is done automatically.
+> The patches should apply cleanly to staging/kirkwood/dt, although 
+> kirkwood-dns320.dts attempts to override the orion-wdt definition with a
+> lower TCLK, even though the orion-wdt work isn't merged yet. If this would
+> be better to remove I shall.
 
-* The previous change simplifies the cleanup code at the end of the
-  function such that there is nothing to do on the failure of the call to
-  devm_ioremap.  So it is changed to just return directly.
+It would be better if you base off of my stable branch.  You won't have
+the clock issues (wdt isn't merged there yet).  Also, my staging branch
+has been in flux and will soon be renamed/removed.
 
-* There is no need for the ifs in the cleanup code at the end of the
-  function, because in each case the cleanup needed is statically
-  known.  Drop the ifs, add new err labels, and drop the initializations of
-  the tested variables to NULL.
-
-* Change the call to request_irq to a call to devm_request_irq, so that it
-  is cleaned up on exit.
-
-* Cause the return value of devm_request_irq to go into the returned
-  variable rv rather than the unused variable ret.  Drop ret.
-
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-
----
-This subsumes the previous patch that only removed the calls to the devm
-cleanup functions.  It is not tested.  I am not sure about the correctness
-of the use of devm_request_irq, since there were no calls to free_irq
-before.  I also don't know if there was a reason for not returning the
-return value of request_irq previously.
-
- drivers/ata/pata_mpc52xx.c |   44 +++++++++++++++-----------------------------
- 1 file changed, 15 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/ata/pata_mpc52xx.c b/drivers/ata/pata_mpc52xx.c
-index 00748ae..d2c102f 100644
---- a/drivers/ata/pata_mpc52xx.c
-+++ b/drivers/ata/pata_mpc52xx.c
-@@ -687,11 +687,11 @@ mpc52xx_ata_probe(struct platform_device *op)
- 	int ata_irq = 0;
- 	struct mpc52xx_ata __iomem *ata_regs;
- 	struct mpc52xx_ata_priv *priv = NULL;
--	int rv, ret, task_irq = 0;
-+	int rv, task_irq;
- 	int mwdma_mask = 0, udma_mask = 0;
- 	const __be32 *prop;
- 	int proplen;
--	struct bcom_task *dmatsk = NULL;
-+	struct bcom_task *dmatsk;
- 
- 	/* Get ipb frequency */
- 	ipb_freq = mpc5xxx_get_bus_frequency(op->dev.of_node);
-@@ -717,8 +717,7 @@ mpc52xx_ata_probe(struct platform_device *op)
- 	ata_regs = devm_ioremap(&op->dev, res_mem.start, sizeof(*ata_regs));
- 	if (!ata_regs) {
- 		dev_err(&op->dev, "error mapping device registers\n");
--		rv = -ENOMEM;
--		goto err;
-+		return -ENOMEM;
- 	}
- 
- 	/*
-@@ -753,7 +752,7 @@ mpc52xx_ata_probe(struct platform_device *op)
- 	if (!priv) {
- 		dev_err(&op->dev, "error allocating private structure\n");
- 		rv = -ENOMEM;
--		goto err;
-+		goto err1;
- 	}
- 
- 	priv->ipb_period = 1000000000 / (ipb_freq / 1000);
-@@ -776,15 +775,15 @@ mpc52xx_ata_probe(struct platform_device *op)
- 	if (!dmatsk) {
- 		dev_err(&op->dev, "bestcomm initialization failed\n");
- 		rv = -ENOMEM;
--		goto err;
-+		goto err1;
- 	}
- 
- 	task_irq = bcom_get_task_irq(dmatsk);
--	ret = request_irq(task_irq, &mpc52xx_ata_task_irq, 0,
-+	rv = devm_request_irq(&op->dev, task_irq, &mpc52xx_ata_task_irq, 0,
- 				"ATA task", priv);
--	if (ret) {
-+	if (rv) {
- 		dev_err(&op->dev, "error requesting DMA IRQ\n");
--		goto err;
-+		goto err2;
- 	}
- 	priv->dmatsk = dmatsk;
- 
-@@ -792,7 +791,7 @@ mpc52xx_ata_probe(struct platform_device *op)
- 	rv = mpc52xx_ata_hw_init(priv);
- 	if (rv) {
- 		dev_err(&op->dev, "error initializing hardware\n");
--		goto err;
-+		goto err2;
- 	}
- 
- 	/* Register ourselves to libata */
-@@ -800,23 +799,16 @@ mpc52xx_ata_probe(struct platform_device *op)
- 				  mwdma_mask, udma_mask);
- 	if (rv) {
- 		dev_err(&op->dev, "error registering with ATA layer\n");
--		goto err;
-+		goto err2;
- 	}
- 
- 	return 0;
- 
-- err:
--	devm_release_mem_region(&op->dev, res_mem.start, sizeof(*ata_regs));
--	if (ata_irq)
--		irq_dispose_mapping(ata_irq);
--	if (task_irq)
--		irq_dispose_mapping(task_irq);
--	if (dmatsk)
--		bcom_ata_release(dmatsk);
--	if (ata_regs)
--		devm_iounmap(&op->dev, ata_regs);
--	if (priv)
--		devm_kfree(&op->dev, priv);
-+ err2:
-+	irq_dispose_mapping(task_irq);
-+	bcom_ata_release(dmatsk);
-+ err1:
-+	irq_dispose_mapping(ata_irq);
- 	return rv;
- }
- 
-@@ -835,12 +827,6 @@ mpc52xx_ata_remove(struct platform_device *op)
- 	bcom_ata_release(priv->dmatsk);
- 	irq_dispose_mapping(priv->ata_irq);
- 
--	/* Clear up IO allocations */
--	devm_iounmap(&op->dev, priv->ata_regs);
--	devm_release_mem_region(&op->dev, priv->ata_regs_pa,
--				sizeof(*priv->ata_regs));
--	devm_kfree(&op->dev, priv);
--
- 	return 0;
- }
- 
-
+> Cheers,
+> 
+> Jamie Lentin (2):
+>   ARM: kirkwood: Basic support for DNS-320 and DNS-325
+>   ARM: kirkwood: Convert orion-nand to fdt
+> 
+>  .../devicetree/bindings/mtd/orion-nand.txt         |   41 +++
+>  arch/arm/boot/dts/kirkwood-dns320.dts              |   96 +++++++
+>  arch/arm/boot/dts/kirkwood-dns325.dts              |   82 ++++++
+>  arch/arm/mach-kirkwood/Kconfig                     |   18 ++
+>  arch/arm/mach-kirkwood/Makefile.boot               |    2 +
+>  arch/arm/mach-kirkwood/board-dt.c                  |  264 ++++++++++++++++++++
+>  arch/arm/mach-kirkwood/common.c                    |    6 +
+>  drivers/mtd/nand/orion_nand.c                      |   39 +++-
+>  8 files changed, 546 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
+>  create mode 100644 arch/arm/boot/dts/kirkwood-dns320.dts
+>  create mode 100644 arch/arm/boot/dts/kirkwood-dns325.dts
+> 
+> -- 
+> 1.7.9.1
+> 
