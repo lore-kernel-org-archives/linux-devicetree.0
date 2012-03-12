@@ -1,63 +1,122 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/1] of: introduce helper to manage boolean
-Date: Mon, 12 Mar 2012 14:39:06 -0500
-Message-ID: <4F5E50DA.6080000@freescale.com>
-References: <1328588028-24766-1-git-send-email-plagnioj@jcrosoft.com>
- <20120309014441.8236B3E0903@localhost>
- <20120309100435.GN27213@game.jcrosoft.org>
- <20120309162638.92E813E0880@localhost>
- <20120309163608.GQ27213@game.jcrosoft.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] stmmac: Add device-tree support
+Date: Mon, 12 Mar 2012 15:07:26 -0500
+Message-ID: <4F5E577E.7090808@gmail.com>
+References: <1331561157-3820-1-git-send-email-sr@denx.de> <201203121606.26926.sr@denx.de> <4F5E169D.3070508@st.com> <201203121723.38411.sr@denx.de> <4F5E2858.4000708@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120309163608.GQ27213-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4F5E2858.4000708@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Cc: Stefan Roese <sr@denx.de>, netdev@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2012 10:36 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>> Ugh.  so any value other than 1 returns false?  I think that will surprise
->>>> most people.
+On 03/12/2012 11:46 AM, Giuseppe CAVALLARO wrote:
+> On 3/12/2012 5:23 PM, Stefan Roese wrote:
+>> On Monday 12 March 2012 16:30:37 Giuseppe CAVALLARO wrote:
+>>>>>> +Required properties:
+>>>>>> +- compatible: Should be "stm,gmac"
+>>>>>
+>>>>> This is too generic. This should be 1 string per version of h/w.
 >>>>
->>>> I don't like this api or binding.  If it is a bool property, then why isn't
->>>> simply testing for the property existance sufficient?
->>> no if you want to disable it
+>>>> Viresh, Giuseppe, can you please suggest a proper string for the SPEAr600
+>>>> STMMAC core, including version?
+>>>>
+>>>>> 'stm' should be 'st' according to vendor-prefixes.txt.
 >>>
->>> if a bool is define in the dtsi and want to disable it int the dts
+>>> I'm not familiar with devicetree; maybe we should have:
 >>>
->>> if you we can do the the invert
+>>> "stmicro,mac100"
+>>> "stmicro,gmac"
 >>>
->>> if !0 => true
+>>> or: st instead of stmicro if you prefer.
 >>>
->>> is-ok;			=> true
->>> is-ok = <val != 0>;	=> true
->>> is-ok = <0>;		=> false
+>>> in fact, stmmac is for mac100 and gmac devices.
 >>
->> This is a failure of the dtc tool, not the binding.  Accepting this binding
->> means we have to live with it for a very long time.  It needs to be fixed
->> in dtc instead so that properties can be deleted instead of only modified.
-> I understand your idea but today if you put and value in the property it's true.
+>> How about "st,spear600-gmac" for SPEAr600 then?
 > 
-> So is-ok = <0>; is true also which is illogical as in any language a boolean is
-> true (1) or false (0). When I read the property I will understand false not true
+> IIUC, as final result we should have something like this... that sounds
+> quite good to me.
+> 
+> ST/ARM SPEAr
+> "st,spear600-gmac"
+> "st,spear1310-gmac"
+>   ...
+> 
+> ST/SH
+> 
+> "st,stx7108-gmac"
+> "st,stx7106-gmac"
+> "st,stx7109-mac"    ->>> mac10/100
+> ...
+> 
+> MIPS
+> "st,Loongson1B"
+> 
 
-You could say similar things about is-ok = "no" or is-ok = "" or is-ok =
-"I'd rather you didn't"... it's expected that violating the binding may
-produce illogical results.
+This seems fine to me.
 
-> And I see no good way to add the "delete" in dtc.
+Rob
 
-It shouldn't be that hard, just needs a new keyword and/or bit of syntax
-to express what you want it to do.
-
--Scott
+>>  
+>>>> Okay.
+>>>>
+>>>>>> +- reg: Address and length of the register set for the device
+>>>>>> +- interrupt-parent: Should be the phandle for the interrupt controller
+>>>>>> +  that services interrupts for this device
+>>>>>> +- interrupts: Should contain the STMMAC interrupts
+>>>>>> +- interrupt-names: Should contain the interrupt names "macirq"
+>>>>>> +  "eth_wake_irq" if this interrupt is supported in the "interrupts"
+>>>>>> +  property
+>>>>>
+>>>>> You should be able to tell this from the compatible string and number of
+>>>>> interrupts.
+>>>>
+>>>> Yes. Currently the driver uses platform_get_irq_byname() to register the
+>>>> irq's. That's why I added these properties. Is there something wrong with
+>>>> using it this way?
+>>>>
+>>>>>> +- phy-mode: String, operation mode of the PHY interface.
+>>>>>> +  Supported values are: "mii", "rmii", "gmii", "rgmii".
+>>>>>> +- phy-addr: MDIO address of the PHY
+>>>>>
+>>>>> This is normally probed or the mdio bus is a sub-node of the MAC node.
+>>>>> See arch/powerpc/boot/dts/mpc8377_mds.dts for an example.
+>>>>
+>>>> Okay, I'll rework this.
+>>>>
+>>>>>> +
+>>>>>> +Optional properties:
+>>>>>> +- stm,prog-burst-len: Specify the burst length
+>>>>>> +- stm,has-gmac: Indicates that the controller supports 1000Mbps
+>>>>>> +- stm,has-pmt: Indicates that the controller supports power management
+>>>>>
+>>>>> I think these should all be encoded by the compatible string.
+>>>
+>>> and should we have all the other flags e.g. tx_coe etc?
+>>> (see stmmac.txt)
+>>
+>> As Rob suggested, some of these flags/parameters are implicitly defined by the 
+>> compatible string. If this is not the case, then sure, those flags/parameters 
+>> need to be provided via the device-tree as well. I just don't need "tx_coe" 
+>> etc. for my platform (SPEAr600) as far as I know. I suggest to add support for 
+>> them once they are really needed/used by other platforms.
+> 
+> Ok, but on SPEAr indeed some of these are not used at all.
+> If you agree, we can go head with these and then we will add new ones
+> next time. In the meantime, I will try to be more familiar with
+> devicetree and provide further patches
+> 
+> peppe
+> 
+>>
+>> Thanks,
+>> Stefan
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe netdev" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> 
