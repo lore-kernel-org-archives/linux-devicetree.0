@@ -1,115 +1,223 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Subject: Re: [PATCH] stmmac: Add device-tree support
-Date: Mon, 12 Mar 2012 16:30:37 +0100
-Message-ID: <4F5E169D.3070508@st.com>
-References: <1331561157-3820-1-git-send-email-sr@denx.de> <4F5E0993.9020000@gmail.com> <201203121606.26926.sr@denx.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/4 v5] of_spi: add generic binding support to specify cs
+ gpio
+Date: Mon, 12 Mar 2012 09:40:19 -0600
+Message-ID: <20120312154019.1DB653E0950@localhost>
+References: <1331122989-14451-1-git-send-email-plagnioj@jcrosoft.co>
+ <1331317544-21735-1-git-send-email-plagnioj@jcrosoft.com>
+ <20120311140731.2D4F93E0979@localhost>
+ <20120311182537.GS27213@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <201203121606.26926.sr@denx.de>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan Roese <sr@denx.de>
-Cc: Rob Herring <robherring2@gmail.com>, netdev@vger.kernel.org, Viresh Kumar <viresh.kumar@st.com>, devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120311182537.GS27213-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/12/2012 4:06 PM, Stefan Roese wrote:
-> Hi Rob,
-> 
-> On Monday 12 March 2012 15:34:59 Rob Herring wrote:
->> On 03/12/2012 09:05 AM, Stefan Roese wrote:
->>> This patch adds support to configure the STMMAC ethernet driver via
->>> device-tree instead of platform_data.
->>>
->>> Currently, only the properties needed on SPEAr600 are provided. All
->>> other properties should be added once needed on other platforms.
->>>
->>> Signed-off-by: Stefan Roese <sr@denx.de>
->>> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
->>> Cc: Viresh Kumar <viresh.kumar@st.com>
->>> ---
->>>
->>>  Documentation/devicetree/bindings/net/stmmac.txt   |   38 +++++++++++
->>>  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   66
->>>  +++++++++++++++++++- 2 files changed, 103 insertions(+), 1 deletion(-)
->>>  create mode 100644 Documentation/devicetree/bindings/net/stmmac.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt
->>> b/Documentation/devicetree/bindings/net/stmmac.txt new file mode 100644
->>> index 0000000..386a47f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
->>> @@ -0,0 +1,38 @@
->>> +* STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
->>> +
->>> +Required properties:
->>> +- compatible: Should be "stm,gmac"
->>
->> This is too generic. This should be 1 string per version of h/w.
-> 
-> Viresh, Giuseppe, can you please suggest a proper string for the SPEAr600 
-> STMMAC core, including version?
->  
->> 'stm' should be 'st' according to vendor-prefixes.txt.
+On Sun, 11 Mar 2012 19:25:37 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 08:07 Sun 11 Mar     , Grant Likely wrote:
+> > On Fri,  9 Mar 2012 19:25:44 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> > > This will allow to use gpio for chip select with no modification in the
+> > > driver binding
+> > > 
+> > > When use the cs-gpios, the gpio number will be passed via the cs_gpio field
+> > > and the number of chip select will automatically increased.
+> > > 
+> > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > > Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> > > ---
+> > > v5:
+> > > 	update grant comment to simplify the cs_gpio management
+> > > 
+> > > Best Regards,
+> > > J.
+> > >  Documentation/devicetree/bindings/spi/spi-bus.txt |    6 ++
+> > >  drivers/spi/spi.c                                 |   55 +++++++++++++++++++-
+> > >  include/linux/spi/spi.h                           |    4 ++
+> > >  3 files changed, 62 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > > index e782add..c253379 100644
+> > > --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > > +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> > > @@ -12,6 +12,7 @@ The SPI master node requires the following properties:
+> > >  - #size-cells     - should be zero.
+> > >  - compatible      - name of SPI bus controller following generic names
+> > >      		recommended practice.
+> > > +- cs-gpios	  - (optional) gpios chip select.
+> > >  No other properties are required in the SPI bus node.  It is assumed
+> > >  that a driver for an SPI bus device will understand that it is an SPI bus.
+> > >  However, the binding does not attempt to define the specific method for
+> > > @@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
+> > >  chip selects.  Individual drivers can define additional properties to
+> > >  support describing the chip select layout.
+> > >  
+> > > +If cs-gpios is used the number of chip select will automatically increased.
+> > > +
+> > >  SPI slave nodes must be children of the SPI master node and can
+> > >  contain the following properties.
+> > >  - reg             - (required) chip select address of device.
+> > > @@ -34,6 +37,9 @@ contain the following properties.
+> > >  - spi-cs-high     - (optional) Empty property indicating device requires
+> > >      		chip select active high
+> > >  
+> > > +If a gpio chipselect is used for the SPI slave the gpio number will be passed
+> > > +via the cs_gpio
+> > > +
+> > >  SPI example for an MPC5200 SPI bus:
+> > >  	spi@f00 {
+> > >  		#address-cells = <1>;
+> > > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> > > index b2ccdea..446eee5 100644
+> > > --- a/drivers/spi/spi.c
+> > > +++ b/drivers/spi/spi.c
+> > > @@ -28,6 +28,7 @@
+> > >  #include <linux/mod_devicetable.h>
+> > >  #include <linux/spi/spi.h>
+> > >  #include <linux/of_spi.h>
+> > > +#include <linux/of_gpio.h>
+> > >  #include <linux/pm_runtime.h>
+> > >  #include <linux/export.h>
+> > >  
+> > > @@ -322,6 +323,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
+> > >  	spi->dev.parent = &master->dev;
+> > >  	spi->dev.bus = &spi_bus_type;
+> > >  	spi->dev.release = spidev_release;
+> > > +	spi->cs_gpio = -EINVAL;
+> > >  	device_initialize(&spi->dev);
+> > >  	return spi;
+> > >  }
+> > > @@ -339,15 +341,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
+> > >  int spi_add_device(struct spi_device *spi)
+> > >  {
+> > >  	static DEFINE_MUTEX(spi_add_lock);
+> > > -	struct device *dev = spi->master->dev.parent;
+> > > +	struct spi_master *master = spi->master;
+> > > +	struct device *dev = master->dev.parent;
+> > >  	struct device *d;
+> > >  	int status;
+> > >  
+> > >  	/* Chipselects are numbered 0..max; validate. */
+> > > -	if (spi->chip_select >= spi->master->num_chipselect) {
+> > > +	if (spi->chip_select >= master->num_chipselect) {
+> > >  		dev_err(dev, "cs%d >= max %d\n",
+> > >  			spi->chip_select,
+> > > -			spi->master->num_chipselect);
+> > > +			master->num_chipselect);
+> > >  		return -EINVAL;
+> > >  	}
+> > >  
+> > > @@ -371,6 +374,9 @@ int spi_add_device(struct spi_device *spi)
+> > >  		goto done;
+> > >  	}
+> > >  
+> > > +	if (master->cs_gpios)
+> > > +		spi->cs_gpio = master->cs_gpios[spi->chip_select];
+> > > +
+> > 
+> > I still don't understand the need for this.  Only the master driver will need
+> > this data, and it is already stored in the master->cs_gpios array.  Why
+> > does it need to get duplicated into the spi_device?
+> yeah can drop it
+> > 
+> > >  	/* Drivers may modify this initial i/o setup, but will
+> > >  	 * normally rely on the device being setup.  Devices
+> > >  	 * using SPI_CS_HIGH can't coexist well otherwise...
+> > > @@ -561,6 +567,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(spi_alloc_master);
+> > >  
+> > > +#ifdef CONFIG_OF
+> > > +static int of_spi_register_master(struct spi_master *master)
+> > > +{
+> > > +	int nb, i;
+> > > +	int *cs;
+> > > +	struct device_node *np = master->dev.of_node;
+> > > +
+> > > +	if (!np)
+> > > +		return 0;
+> > > +
+> > > +	nb = of_gpio_named_count(np, "cs-gpios");
+> > > +
+> > > +	if (nb < 1)
+> > > +		return 0;
+> > > +
+> > > +	cs = devm_kzalloc(&master->dev,
+> > > +			  sizeof(int) * (master->num_chipselect + nb),
+> > > +			  GFP_KERNEL);
+> > 
+> > sizeof(*cs)
+> > 
+> > > +	master->cs_gpios = cs;
+> > > +
+> > > +	if (!master->cs_gpios)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	memset(cs, -EINVAL, master->num_chipselect);
+> > > +	master->num_chipselect += nb;
+> > 
+> > Looks buggy.  Should be:
+> > 	if (nb > master->num_chipselect)
+> > 		master->num_chipselect = nb;
+> > 
+> > However, this is actually quite risky.  Changing the size of
+> > num_chipselect without the driver knowing about it will most likely
+> > cause breakage in drivers.  Drivers may use it as an array index, and
+> > if it gets increased then there will be problems.  In fact, drivers
+> > are probably using spi->chip_select as an array or register index so I
+> > don't think it can be transparently extended to include gpios.
+> > 
+> > So, this function must change.  It cannot be called automatically
+> > from spi_register_master().  It needs to be a library function that spi bus
+> > drivers must call explicitly so they are prepared for a change in the
+> > num_chipselect value.
+> I'll prefer to let the spi framework manage it
 
-I'm not familiar with devicetree; maybe we should have:
+I understand your preference, but it must not carry the risk of breakage.
 
-"stmicro,mac100"
-"stmicro,gmac"
+spi devices cannot be added if the cs number is larger than num_chipselect;
+even if those devices are backed by gpios.  The controller driver still
+needs to understand they are there and modify it's own num_chipselects
+value.  Otherwise transfer requests will pass a CS number larger than
+the bus drivers know what to do with.
 
-or: st instead of stmicro if you prefer.
-
-in fact, stmmac is for mac100 and gmac devices.
-
+> > Also, if we're doing this, then the gpio cs manipulation hook should be
+> > moved out of spi_bitbang and into the core spi_master.  There should
+> > also be a stock function for manipulating gpio chip selects. I don't want
+> > spi driver authors under the impression that they should open code the
+> > chip select manipulation.
+> yeah I was thinking about it too
 > 
-> Okay.
->  
->>> +- reg: Address and length of the register set for the device
->>> +- interrupt-parent: Should be the phandle for the interrupt controller
->>> +  that services interrupts for this device
->>> +- interrupts: Should contain the STMMAC interrupts
->>> +- interrupt-names: Should contain the interrupt names "macirq"
->>> +  "eth_wake_irq" if this interrupt is supported in the "interrupts"
->>> +  property
->>
->> You should be able to tell this from the compatible string and number of
->> interrupts.
+> how about we split it in two
 > 
-> Yes. Currently the driver uses platform_get_irq_byname() to register the 
-> irq's. That's why I added these properties. Is there something wrong with 
-> using it this way?
->  
->>> +- phy-mode: String, operation mode of the PHY interface.
->>> +  Supported values are: "mii", "rmii", "gmii", "rgmii".
->>> +- phy-addr: MDIO address of the PHY
->>
->> This is normally probed or the mdio bus is a sub-node of the MAC node.
->> See arch/powerpc/boot/dts/mpc8377_mds.dts for an example.
+> num_hw_cs manage by the drivers
 > 
-> Okay, I'll rework this.
+> and
 > 
->>> +
->>> +Optional properties:
->>> +- stm,prog-burst-len: Specify the burst length
->>> +- stm,has-gmac: Indicates that the controller supports 1000Mbps
->>> +- stm,has-pmt: Indicates that the controller supports power management
->>
->> I think these should all be encoded by the compatible string.
+> num_gpio_cs for cs gpio
+> 
+> and num_chipselect (hw + cs) will for internal use
+> 
+> the gpio cs will be after the hw cs.
 
-and should we have all the other flags e.g. tx_coe etc?
-(see stmmac.txt)
-
-Peppe
+As already discussed, don't split the number space.  Keep gpio cs numbers
+based at zero and let them overlap the hw cs numbers.
 
 > 
-> You mean that by defining a specific compatible string (e.g.
-> "st,gmac-spear600"), these settings are implicitly set? And should therefore 
-> be omitted from the dts?
-> 
-> Thanks,
-> Stefan
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> and we move the gpio cs from spi_bitbang to spi_master
+
+Yes, please move the gpio cs handling.
+
+g.
