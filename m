@@ -1,189 +1,101 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] i2c-s3c2410: Add HDMIPHY quirk for S3C2440
-Date: Mon, 12 Mar 2012 11:38:52 +0530
-Message-ID: <CAJuYYwQ1QmnZ5L_FO3zW3TzfpS=XTDQFf-T14noehQyDzwqDTA@mail.gmail.com>
-References: <1331312686-2077-1-git-send-email-k.lewandowsk@samsung.com>
-	<1331312686-2077-3-git-send-email-k.lewandowsk@samsung.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 10/11] ARM: tegra: pcie: Add MSI support
+Date: Mon, 12 Mar 2012 09:00:23 +0100
+Message-ID: <20120312080023.GA13788@avionic-0098.mockup.avionic-design.de>
+References: <1331218291-16119-1-git-send-email-thierry.reding@avionic-design.de>
+ <1331218291-16119-11-git-send-email-thierry.reding@avionic-design.de>
+ <4F59213F.6070107@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1331312686-2077-3-git-send-email-k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F59213F.6070107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jesse Barnes <jbarnes-Y1mF5jBUw70BENJcbMCuUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 March 2012 22:34, Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wro=
-te:
-> From: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> This patch adds support for s3c2440 I2C bus controller dedicated HDMI=
-PHY device on
-> Exynos4 platform. Some quirks are introduced due to differences betwe=
-en HDMIPHY
-> and other I2C controllers on Exynos4. =A0These differences are:
-> - no GPIOs, HDMIPHY is inside the SoC and the controller is connected
-> =A0internally
-> - due to unknown reason (probably HW bug in HDMIPHY and/or the contro=
-ller) a
-> =A0transfer fails to finish. The controller hangs after sending the l=
-ast byte,
-> =A0the workaround for this bug is resetting the controller after each=
- transfer
->
-> Signed-off-by: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Tested-by: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> =A0.../devicetree/bindings/i2c/samsung-i2c.txt =A0 =A0 =A0 =A0| =A0 1=
-0 +++++-
-> =A0drivers/i2c/busses/i2c-s3c2410.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 34 ++++++++++++++++++++
-> =A02 files changed, 42 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt b/=
-Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-> index 38832c7..ac0917c 100644
-> --- a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-> +++ b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-> @@ -10,14 +10,20 @@ Required properties:
-> =A0 =A0 region.
-> =A0 - interrupts: interrupt number to the cpu.
-> =A0 - samsung,i2c-sda-delay: Delay (in ns) applied to data line (SDA)=
- edges.
-> - =A0- gpios: The order of the gpios should be the following: <SDA, S=
-CL>.
-> - =A0 =A0The gpio specifier depends on the gpio controller.
->
-> =A0Optional properties:
-> + =A0- gpios: The order of the gpios should be the following: <SDA, S=
-CL>.
-> + =A0 =A0The gpio specifier depends on the gpio controller. Required =
-in all cases
-> + =A0 =A0except when "samsung,i2c-no-gpio" is also specified.
-> + =A0- samsung,i2c-no-gpio: input/output lines of the controller are
-> + =A0 =A0permanently wired to the respective client, there are no gpi=
-o
-> + =A0 =A0lines that need to be configured to enable this controller
-> =A0 - samsung,i2c-slave-addr: Slave address in multi-master enviromen=
-t. If not
-> =A0 =A0 specified, default value is 0.
-> =A0 - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. I=
-f not
-> =A0 =A0 specified, the default value in Hz is 100000.
-> + =A0- samsung,i2c-quirk-hdmiphy: Quirk for HDMI PHY block on S3C2440=
- -
-> + =A0 =A0reduce timeout and reset controller when doing transefers
->
-> =A0Example:
->
-> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2=
-c-s3c2410.c
-> index 5b400c6..9f3be51 100644
-> --- a/drivers/i2c/busses/i2c-s3c2410.c
-> +++ b/drivers/i2c/busses/i2c-s3c2410.c
-> @@ -48,6 +48,8 @@
-> =A0#define TYPE_BITS =A0 =A0 =A0 =A0 =A0 =A0 =A00x000000ff
-> =A0#define TYPE_S3C2410 =A0 =A0 =A0 =A0 =A0 0x00000001
-> =A0#define TYPE_S3C2440 =A0 =A0 =A0 =A0 =A0 0x00000002
-> +#define FLAG_HDMIPHY =A0 =A0 =A0 =A0 =A0 0x00000100
-> +#define FLAG_NO_GPIO =A0 =A0 =A0 =A0 =A0 0x00000200
->
-> =A0/* i2c controller state */
-> =A0enum s3c24xx_i2c_state {
-> @@ -449,6 +451,13 @@ static int s3c24xx_i2c_set_master(struct s3c24xx=
-_i2c *i2c)
-> =A0 =A0 =A0 =A0unsigned long iicstat;
-> =A0 =A0 =A0 =A0int timeout =3D 400;
->
-> + =A0 =A0 =A0 /* the timeout for HDMIPHY is reduced to 10 ms because
-> + =A0 =A0 =A0 =A0* the hangup is expected to happen, so waiting 400 m=
-s
-> + =A0 =A0 =A0 =A0* causes only unnecessary system hangup
-> + =A0 =A0 =A0 =A0*/
-> + =A0 =A0 =A0 if (i2c->type & FLAG_HDMIPHY)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 timeout =3D 10;
-> +
-> =A0 =A0 =A0 =A0while (timeout-- > 0) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0iicstat =3D readl(i2c->regs + S3C2410_=
-IICSTAT);
->
-> @@ -458,6 +467,15 @@ static int s3c24xx_i2c_set_master(struct s3c24xx=
-_i2c *i2c)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0msleep(1);
-> =A0 =A0 =A0 =A0}
->
-> + =A0 =A0 =A0 /* hang-up of bus dedicated for HDMIPHY occurred, reset=
-ting */
-> + =A0 =A0 =A0 if (i2c->type & FLAG_HDMIPHY) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writel(0, i2c->regs + S3C2410_IICCON);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writel(0, i2c->regs + S3C2410_IICSTAT);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 writel(0, i2c->regs + S3C2410_IICDS);
-> +
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
-> + =A0 =A0 =A0 }
-> +
-> =A0 =A0 =A0 =A0return -ETIMEDOUT;
-> =A0}
->
-> @@ -739,6 +757,9 @@ static int s3c24xx_i2c_parse_dt_gpio(struct s3c24=
-xx_i2c *i2c)
-> =A0{
-> =A0 =A0 =A0 =A0int idx, gpio, ret;
->
-> + =A0 =A0 =A0 if (i2c->type & FLAG_NO_GPIO)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return 0;
-> +
-> =A0 =A0 =A0 =A0for (idx =3D 0; idx < 2; idx++) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0gpio =3D of_get_gpio(i2c->dev->of_node=
-, idx);
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0if (!gpio_is_valid(gpio)) {
-> @@ -763,6 +784,10 @@ free_gpio:
-> =A0static void s3c24xx_i2c_dt_gpio_free(struct s3c24xx_i2c *i2c)
-> =A0{
-> =A0 =A0 =A0 =A0unsigned int idx;
-> +
-> + =A0 =A0 =A0 if (i2c->type & FLAG_NO_GPIO)
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 return;
-> +
-> =A0 =A0 =A0 =A0for (idx =3D 0; idx < 2; idx++)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0gpio_free(i2c->gpios[idx]);
-> =A0}
-> @@ -846,6 +871,12 @@ s3c24xx_i2c_parse_dt(struct device_node *np, str=
-uct s3c24xx_i2c *i2c)
-> =A0 =A0 =A0 =A0match =3D of_match_node(&s3c24xx_i2c_match[0], np);
-> =A0 =A0 =A0 =A0i2c->type =3D (unsigned int)match->data;
->
-> + =A0 =A0 =A0 if (i2c->type =3D=3D TYPE_S3C2440 && of_get_property(np=
-, "samsung,i2c-quirk-hdmiphy", NULL))
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c->type |=3D FLAG_HDMIPHY;
-> +
-> + =A0 =A0 =A0 if (of_get_property(np, "samsung,i2c-no-gpio", NULL))
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 i2c->type |=3D FLAG_NO_GPIO;
-> +
-> =A0 =A0 =A0 =A0of_property_read_u32(np, "samsung,i2c-sda-delay", &pda=
-ta->sda_delay);
-> =A0 =A0 =A0 =A0of_property_read_u32(np, "samsung,i2c-slave-addr", &pd=
-ata->slave_addr);
-> =A0 =A0 =A0 =A0of_property_read_u32(np, "samsung,i2c-max-bus-freq",
-> @@ -1103,6 +1134,9 @@ static struct platform_device_id s3c24xx_driver=
-_ids[] =3D {
-> =A0 =A0 =A0 =A0}, {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.name =A0 =A0 =A0 =A0 =A0 =3D "s3c2440=
--i2c",
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0.driver_data =A0 =A0=3D TYPE_S3C2440,
-> + =A0 =A0 =A0 }, {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .name =A0 =A0 =A0 =A0 =A0 =3D "s3c2440-=
-hdmiphy-i2c",
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 .driver_data =A0 =A0=3D TYPE_S3C2440 | =
-=46LAG_HDMIPHY | FLAG_NO_GPIO,
-> =A0 =A0 =A0 =A0}, { },
-> =A0};
-> =A0MODULE_DEVICE_TABLE(platform, s3c24xx_driver_ids);
-> --
-> 1.7.9
->
 
-Reviewed-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+* Stephen Warren wrote:
+> On 03/08/2012 07:51 AM, Thierry Reding wrote:
+> > diff --git a/arch/arm/mach-tegra/pcie.c b/arch/arm/mach-tegra/pcie.c
+>=20
+> > +static int tegra_pcie_enable_msi(struct platform_device *pdev)
+> > +{
+> > +	struct tegra_pcie_info *pcie =3D platform_get_drvdata(pdev);
+> > +	volatile void *pages;
+> > +	unsigned long base;
+> > +	unsigned int msi;
+> > +	int msi_base;
+> > +	int err;
+> > +	u32 reg;
+> > +
+> > +	mutex_init(&pcie->msi_lock);
+> > +
+> > +	msi_base =3D irq_alloc_descs(-1, 0, INT_PCI_MSI_NR, 0);
+> > +	if (msi_base < 0) {
+> > +		dev_err(&pdev->dev, "failed to allocate IRQs\n");
+> > +		return msi_base;
+> > +	}
+> > +
+> > +	pcie->msi_domain =3D irq_domain_add_legacy(pcie->dev->of_node,
+> > +						 INT_PCI_MSI_NR, msi_base,
+> > +						 0, &irq_domain_simple_ops,
+> > +						 NULL);
+> > +	if (!pcie->msi_domain) {
+> > +		dev_err(&pdev->dev, "failed to create IRQ domain\n");
+>=20
+> Free the IRQ descriptors in the error paths?
+>=20
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	pcie->msi_chip.name =3D "PCIe-MSI";
+> > +	pcie->msi_chip.irq_enable =3D unmask_msi_irq;
+> > +	pcie->msi_chip.irq_disable =3D mask_msi_irq;
+> > +	pcie->msi_chip.irq_mask =3D mask_msi_irq;
+> > +	pcie->msi_chip.irq_unmask =3D unmask_msi_irq;
+> > +
+> > +	for (msi =3D 0; msi < INT_PCI_MSI_NR; msi++) {
+> > +		unsigned int irq =3D irq_find_mapping(pcie->msi_domain, msi);
+> > +
+> > +		irq_set_chip_data(irq, pcie);
+> > +		irq_set_chip_and_handler(irq, &pcie->msi_chip,
+> > +					 handle_simple_irq);
+> > +		set_irq_flags(irq, IRQF_VALID);
+> > +	}
+> > +
+> > +	err =3D platform_get_irq(pdev, 1);
+> > +	if (err < 0) {
+> > +		dev_err(&pdev->dev, "failed to get IRQ: %d\n", err);
+>=20
+> Same here, and undo setting IRQF_VALID?
+
+Does it make sense to explicitly unset the IRQF_VALID flag when the IRQ
+descriptors are free'd afterwards anyway? I also think it would be necessary
+to free the struct irq_domain, but I wasn't able to find any function that
+does this other than just calling kfree(), which obviously wouldn't be
+enough. Maybe Grant can shed some light onto this. I'm also Cc'ing Thomas
+Gleixner as maintainer of the IRQ subsystem, he probably knows best how
+dynamically allocated interrupts should be cleaned up.
+
+Thierry
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk9drRcACgkQZ+BJyKLjJp/AZgCeIDUD27UF8iH7y5YnSyzVP2yz
+aF0AoKetLTaFLoBmwOsdBx+s8FE0yb6D
+=IuDf
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
