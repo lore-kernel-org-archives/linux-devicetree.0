@@ -1,13 +1,15 @@
-From: Randy Dunlap <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
-Date: Sun, 11 Mar 2012 20:21:00 -0700
-Message-ID: <4F5D6B9C.2060702@xenotime.net>
-References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: kirkwood: Convert orion-nand to fdt
+Date: Sun, 11 Mar 2012 23:23:03 -0400
+Message-ID: <20120312032303.GZ5050@titan.lakedaemon.net>
+References: <1331476406-9844-1-git-send-email-jm@lentin.co.uk>
+ <1331476406-9844-3-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331316873-20052-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1331476406-9844-3-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,167 +19,349 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2012 10:14 AM, Stephen Warren wrote:
-
-> The core pin controller bindings define:
-> * The fact that pin controllers expose pin configurations as nodes in
->   device tree.
-> * That the bindings for those pin configuration nodes is defined by the
->   individual pin controller drivers.
-> * A standardized set of properties for client devices to define numbered
->   or named pin configuration states, each referring to some number of the
->   afore-mentioned pin configuration nodes.
-> * That the bindings for the client devices determines the set of numbered
->   or named states that must exist.
+On Sun, Mar 11, 2012 at 02:33:26PM +0000, Jamie Lentin wrote:
+> The DNS-320 and 325 have a NAND partitioned to store uboot, uimage and root
+> filesystem. Store this information in devicetree.
 > 
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 > ---
->  .../bindings/pinctrl/pinctrl-bindings.txt          |  118 ++++++++++++++++++++
->  1 files changed, 118 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>  .../devicetree/bindings/mtd/orion-nand.txt         |   41 +++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-dns320.dts              |   42 ++++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-dns325.dts              |   42 ++++++++++++++++++++
+>  arch/arm/mach-kirkwood/board-dt.c                  |   30 --------------
+>  arch/arm/mach-kirkwood/common.c                    |    6 +++
+>  drivers/mtd/nand/orion_nand.c                      |   39 +++++++++++++++++-
+>  6 files changed, 168 insertions(+), 32 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/orion-nand.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> diff --git a/Documentation/devicetree/bindings/mtd/orion-nand.txt b/Documentation/devicetree/bindings/mtd/orion-nand.txt
 > new file mode 100644
-> index 0000000..cce9f01
+> index 0000000..53fd469
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> @@ -0,0 +1,118 @@
-> +== Introduction ==
-> +
-> +Hardware modules that control pin multiplexing or configuration parameters
-> +such as pull-up/down, tri-state, drive-strength etc are designated as pin
-> +controllers. Each pin controller must be represented as a node in device tree,
-> +just like any other hardware module.
-> +
-> +Hardware modules whose signals are affected by pin configuration are
-> +designated client devices. Again, each client device must be represented as a
-> +node in device tree, just like any other hardware module.
-> +
-> +For a client device to operate correctly, certain pin controllers must
-> +set up certain specific pin configurations. Some client devices need a
-> +single static pin configuration, e.g. set up during initialization. Others
-> +need to reconfigure pins at run-time, for example to tri-state pins when the
-> +device is inactive. Hence, each client device can define a set of named
-> +states. The number and names of those states is defined by the client device's
-> +own binding.
-> +
-> +The common pinctrl bindings defined in this file provide an infra-structure
-
-
-                                                               infrastructure
-
-> +for client device device tree nodes to map those state names to the pin
-
-
-              ^^^^^^^^^^^^^ on purpose?
-
-> +configuration used by those states.
-> +
-> +Note that pin controllers themselves may also be client devices of themselves.
-> +For example, a pin controller may set up its own "active" state when the
-> +driver loads. This would allow representing a board's static pin configuration
-> +in a single place, rather than splitting it across multiple client device
-> +nodes. The decision to do this or not somewhat rests with the author of
-> +individual board device tree files, and any requirements imposed by the
-> +bindings for the individual client devices in use by that board, i.e. whether
-> +they require certain specific named states for dynamic pin configuration.
-> +
-> +== Pinctrl client devices ==
-> +
-> +For each client device individually, every pin state is assigned an integer
-> +ID. These numbers start at 0, and are contiguous. For each state ID, a unique
-> +property exists to define the pin configuration. Each state may also be
-> +assigned a name. When names are used, another property exists to map from
-> +those names to the integer IDs.
-> +
-> +Each client device's own binding determines the set of states the must be
-> +defined in its device tree node, and whether to define the set of state
-> +IDs that must be provided, or whether to define the set of state names that
-> +must be provided.
+> +++ b/Documentation/devicetree/bindings/mtd/orion-nand.txt
+> @@ -0,0 +1,41 @@
+> +NAND support for Marvell Orion SoC platforms
 > +
 > +Required properties:
-> +pinctrl-0:	List of phandles, each pointing at a pin configuration
-> +		node. These referenced pin configuration nodes must be child
-> +		nodes of the pin controller that they configure. Multiple
-> +		entries may exist in this list so that multiple pin
-> +		controllers may be configured, or so that a state may be built
-> +		from multiple nodes for a single pin controller, each
-> +		contributing part of the overall configuration. See the next
-> +		section of this document for details of the format of these
-> +		pin configuration nodes.
-> +
-> +		In some cases, it may be useful to define a state, but for it
-> +		to be empty. This may be required when a common IP block is
-> +		used in an SoC either without a pin controller, or where the
-> +		pin controller does not affect the HW module in question. If
-> +		the binding for that IP block requires certain pin states to
-> +		exist, they must still be defined, but may be left empty.
+> +- compatible : "mrvl,orion-nand".
+> +- reg : Base physical address of the NAND and length of memory mapped
+> +	region
 > +
 > +Optional properties:
-> +pinctrl-1:	List of phandles, each pointing at a pin configuration
-> +		node within a pin controller.
-> +...
-> +pinctrl-n:	List of phandles, each pointing at a pin configuration
-> +		node within a pin controller.
-> +pinctrl-names:	The list of names to assign states. List entry 0 defines the
-> +		name for integer state ID 0, list entry 1 for state ID 1, and
-> +		so on.
+> +- cle :
+> +- ale :
+> +- width :
+> +- chip-delay :
 > +
-> +For example:
+> +Examples:
 > +
-> +	/* For a client device requiring named states */
-> +	device {
-> +		pinctrl-names = "active", "idle";
-> +		pinctrl-0 = <&state_0_node_a>;
-> +		pinctrl-1 = <&state_1_node_a &state_1_node_b>;
+> +nand@f4000000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	cle = <0>;
+> +	ale = <1>;
+> +	width = <8>;
+> +	chip-delay = <25>;
+> +	compatible = "mrvl,orion-nand";
+> +	reg = <0xf4000000 0x400>;
+> +
+> +	partition@0 {
+> +		label = "u-boot";
+> +		reg = <0x0000000 0x100000>;
+> +		read-only;
 > +	};
 > +
-> +	/* For the same device if using state IDs */
-> +	device {
-> +		pinctrl-0 = <&state_0_node_a>;
-> +		pinctrl-1 = <&state_1_node_a &state_1_node_b>;
+> +	partition@100000 {
+> +		label = "uImage";
+> +		reg = <0x0100000 0x200000>;
 > +	};
 > +
-> +== Pin controller devices ==
+> +	partition@300000 {
+> +		label = "root";
+> +		reg = <0x0300000 0x7d00000>;
+> +	};
+
+You may want the example to include a partition for the dtb.
+
+I'll let more experienced folks comment on the guts of the nand
+bindings.
+
+thx,
+
+Jason.
+
+> +};
+> diff --git a/arch/arm/boot/dts/kirkwood-dns320.dts b/arch/arm/boot/dts/kirkwood-dns320.dts
+> index c039041..6772f9d 100644
+> --- a/arch/arm/boot/dts/kirkwood-dns320.dts
+> +++ b/arch/arm/boot/dts/kirkwood-dns320.dts
+> @@ -51,4 +51,46 @@
+>  		dma-mask = <0xffffffff>;
+>  		phy-version = "";
+>  	};
 > +
-> +Pin controller devices should contain the pin configuration nodes that client
-> +devices reference.
+> +	nand@f4000000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		cle = <0>;
+> +		ale = <1>;
+> +		width = <8>;
+> +		chip-delay = <25>;
+> +		compatible = "mrvl,orion-nand";
+> +		reg = <0xf4000000 0x400>;
 > +
-> +For example:
-> +
-> +	pincontroller {
-> +		... /* Standard DT properties for the device itself elided */
-> +
-> +		state_0_node_a {
-> +			...
+> +		partition@0 {
+> +			label = "u-boot";
+> +			reg = <0x0000000 0x100000>;
+> +			read-only;
 > +		};
-> +		state_1_node_a {
-> +			...
+> +
+> +		partition@100000 {
+> +			label = "uImage";
+> +			reg = <0x0100000 0x500000>;
 > +		};
-> +		state_1_node_b {
-> +			...
+> +
+> +		partition@600000 {
+> +			label = "ramdisk";
+> +			reg = <0x0600000 0x500000>;
 > +		};
+> +
+> +		partition@b00000 {
+> +			label = "image";
+> +			reg = <0x0b00000 0x6600000>;
+> +		};
+> +
+> +		partition@7100000 {
+> +			label = "mini firmware";
+> +			reg = <0x7100000 0xa00000>;
+> +		};
+> +
+> +		partition@7b00000 {
+> +			label = "config";
+> +			reg = <0x7b00000 0x500000>;
+> +		};
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/kirkwood-dns325.dts b/arch/arm/boot/dts/kirkwood-dns325.dts
+> index a7c2c26..34740ad 100644
+> --- a/arch/arm/boot/dts/kirkwood-dns325.dts
+> +++ b/arch/arm/boot/dts/kirkwood-dns325.dts
+> @@ -37,4 +37,46 @@
+>  		dma-mask = <0xffffffff>;
+>  		phy-version = "";
+>  	};
+> +
+> +	nand@f4000000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		cle = <0>;
+> +		ale = <1>;
+> +		width = <8>;
+> +		chip-delay = <25>;
+> +		compatible = "mrvl,orion-nand";
+> +		reg = <0xf4000000 0x400>;
+> +
+> +		partition@0 {
+> +			label = "u-boot";
+> +			reg = <0x0000000 0x100000>;
+> +			read-only;
+> +		};
+> +
+> +		partition@100000 {
+> +			label = "uImage";
+> +			reg = <0x0100000 0x500000>;
+> +		};
+> +
+> +		partition@600000 {
+> +			label = "ramdisk";
+> +			reg = <0x0600000 0x500000>;
+> +		};
+> +
+> +		partition@b00000 {
+> +			label = "image";
+> +			reg = <0x0b00000 0x6600000>;
+> +		};
+> +
+> +		partition@7100000 {
+> +			label = "mini firmware";
+> +			reg = <0x7100000 0xa00000>;
+> +		};
+> +
+> +		partition@7b00000 {
+> +			label = "config";
+> +			reg = <0x7b00000 0x500000>;
+> +		};
+> +	};
+>  };
+> diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+> index 0885713..d5bc60a 100644
+> --- a/arch/arm/mach-kirkwood/board-dt.c
+> +++ b/arch/arm/mach-kirkwood/board-dt.c
+> @@ -158,35 +158,6 @@ static void __init dreamplug_init(void)
+>   * DNS-320 & DNS-325 specifics
+>   ****************************************************************************/
+>  
+> -static struct mtd_partition dnskw_nand_parts[] = {
+> -	{
+> -		.name		= "u-boot",
+> -		.offset		= 0,
+> -		.size		= SZ_1M,
+> -		.mask_flags	= MTD_WRITEABLE
+> -	}, {
+> -		.name		= "uImage",
+> -		.offset		= MTDPART_OFS_NXTBLK,
+> -		.size		= 5 * SZ_1M
+> -	}, {
+> -		.name		= "ramdisk",
+> -		.offset		= MTDPART_OFS_NXTBLK,
+> -		.size		= 5 * SZ_1M
+> -	}, {
+> -		.name		= "image",
+> -		.offset		= MTDPART_OFS_NXTBLK,
+> -		.size		= 102 * SZ_1M
+> -	}, {
+> -		.name		= "mini firmware",
+> -		.offset		= MTDPART_OFS_NXTBLK,
+> -		.size		= 10 * SZ_1M
+> -	}, {
+> -		.name		= "config",
+> -		.offset		= MTDPART_OFS_NXTBLK,
+> -		.size		= 5 * SZ_1M
+> -	},
+> -};
+> -
+>  static struct mv643xx_eth_platform_data dnskw_ge00_data = {
+>  	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
+>  };
+> @@ -395,7 +366,6 @@ static void __init dnskw_init(void)
+>  	u32 dev, rev;
+>  
+>  	kirkwood_mpp_conf(dnskw_mpp_config);
+> -	kirkwood_nand_init(ARRAY_AND_SIZE(dnskw_nand_parts), 25);
+>  
+>  	kirkwood_ge00_init(&dnskw_ge00_data);
+>  	kirkwood_i2c_init();
+> diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
+> index 70ee7ac..f135854 100644
+> --- a/arch/arm/mach-kirkwood/common.c
+> +++ b/arch/arm/mach-kirkwood/common.c
+> @@ -505,6 +505,12 @@ static int __init kirkwood_clock_gate(void)
+>  		of_node_put(np);
+>  	}
+>  
+> +	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-nand");
+> +	if (np && of_device_is_available(np)) {
+> +		kirkwood_clk_ctrl |= CGC_RUNIT;
+> +		of_node_put(np);
 > +	}
 > +
-> +The contents of each of those pin configuration child nodes is defined
-> +entirely by the binding for the individual pin controller device. There
-> +exists no common standard for this content.
+>  	np = of_find_compatible_node(NULL, NULL, "mrvl,orion-sata");
+>  	if (np && of_device_is_available(np)) {
+>  		int nr_ports;
+> diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
+> index 29f505a..5ae0030 100644
+> --- a/drivers/mtd/nand/orion_nand.c
+> +++ b/drivers/mtd/nand/orion_nand.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/of.h>
+>  #include <linux/mtd/mtd.h>
+>  #include <linux/mtd/nand.h>
+>  #include <linux/mtd/partitions.h>
+> @@ -74,11 +75,13 @@ static void orion_nand_read_buf(struct mtd_info *mtd, uint8_t *buf, int len)
+>  static int __init orion_nand_probe(struct platform_device *pdev)
+>  {
+>  	struct mtd_info *mtd;
+> +	struct mtd_part_parser_data ppdata = {};
+>  	struct nand_chip *nc;
+>  	struct orion_nand_data *board;
+>  	struct resource *res;
+>  	void __iomem *io_base;
+>  	int ret = 0;
+> +	u32 val = 0;
+>  
+>  	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
+>  	if (!nc) {
+> @@ -101,7 +104,24 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+>  		goto no_res;
+>  	}
+>  
+> -	board = pdev->dev.platform_data;
+> +	if (pdev->dev.of_node) {
+> +		board = kzalloc(sizeof(struct orion_nand_data), GFP_KERNEL);
+> +		if (!board) {
+> +			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
+> +			ret = -ENOMEM;
+> +			goto no_res;
+> +		}
+> +		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
+> +			board->cle = (u8)val;
+> +		if (!of_property_read_u32(pdev->dev.of_node, "ale", &val))
+> +			board->ale = (u8)val;
+> +		if (!of_property_read_u32(pdev->dev.of_node, "width", &val))
+> +			board->width = (u8)val;
+> +		if (!of_property_read_u32(pdev->dev.of_node,
+> +						"chip-delay", &val))
+> +			board->chip_delay = (u8)val;
+> +	} else
+> +		board = pdev->dev.platform_data;
+>  
+>  	mtd->priv = nc;
+>  	mtd->owner = THIS_MODULE;
+> @@ -129,7 +149,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	mtd->name = "orion_nand";
+> -	ret = mtd_device_parse_register(mtd, NULL, 0,
+> +	ppdata.of_node = pdev->dev.of_node;
+> +	ret = mtd_device_parse_register(mtd, NULL, &ppdata,
+>  			board->parts, board->nr_parts);
+>  	if (ret) {
+>  		nand_release(mtd);
+> @@ -141,6 +162,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+>  no_dev:
+>  	platform_set_drvdata(pdev, NULL);
+>  	iounmap(io_base);
+> +	if (pdev->dev.of_node)
+> +		kfree(board);
+>  no_res:
+>  	kfree(nc);
+>  
+> @@ -156,16 +179,28 @@ static int __devexit orion_nand_remove(struct platform_device *pdev)
+>  
+>  	iounmap(nc->IO_ADDR_W);
+>  
+> +	if (pdev->dev.of_node)
+> +		kfree(nc->priv);
+>  	kfree(nc);
+>  
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static struct of_device_id orion_nand_of_match_table[] = {
+> +	{ .compatible = "mrvl,orion-nand", },
+> +	{},
+> +};
+> +#else
+> +#define orion_nand_of_match_table NULL
+> +#endif
 > +
-> +The pin configuration nodes need not be direct children of the pin controller
-> +device; they may be grand-children for example. Whether this is legal, and
-
-
-                       grandchildren, for example.
-
-> +whether there is any interaction between the child and intermediate parent
-> +nodes, is again defined entirely by the binding for the individual pin
-> +controller device.
-
-
-
--- 
-~Randy
+>  static struct platform_driver orion_nand_driver = {
+>  	.remove		= __devexit_p(orion_nand_remove),
+>  	.driver		= {
+>  		.name	= "orion_nand",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(orion_nand_of_match_table),
+>  	},
+>  };
+>  
+> -- 
+> 1.7.9.1
+> 
