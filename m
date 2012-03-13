@@ -1,135 +1,245 @@
-From: Dong Aisheng <aisheng.dong@freescale.com>
-Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
-Date: Tue, 13 Mar 2012 11:20:10 +0800
-Message-ID: <20120313032010.GB4513@shlinux2.ap.freescale.net>
-References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
- <20120312143407.GA4513@shlinux2.ap.freescale.net>
- <4F5E2F63.6070303@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F5E2F63.6070303@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "dongas86@gmail.com" <dongas86@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "tony@atomide.com" <tony@atomide.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 1/2] mfd: add irq domain support for max8997 interrupts
+Date: Mon, 12 Mar 2012 21:28:32 -0600
+Message-ID: <20120313032832.655983E07E4@localhost>
+References: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org> <1330000688-11226-2-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1330000688-11226-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>, linux-kernel@vger.kernel.org
+Cc: k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, dg77.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 13, 2012 at 01:16:19AM +0800, Stephen Warren wrote:
-> On 03/12/2012 08:34 AM, Dong Aisheng wrote:
-> > On Sat, Mar 10, 2012 at 02:14:33AM +0800, Stephen Warren wrote:
-> >> The core pin controller bindings define:
-> >> * The fact that pin controllers expose pin configurations as nodes in
-> >>   device tree.
-> >> * That the bindings for those pin configuration nodes is defined by the
-> >>   individual pin controller drivers.
-> >> * A standardized set of properties for client devices to define numbered
-> >>   or named pin configuration states, each referring to some number of the
-> >>   afore-mentioned pin configuration nodes.
-> >> * That the bindings for the client devices determines the set of numbered
-> >>   or named states that must exist.
+On Thu, 23 Feb 2012 18:08:07 +0530, Thomas Abraham <thomas.abraham@linaro.org> wrote:
+> Add irq domain support for max8997 interrupts. The reverse mapping method
+> used is linear mapping since the sub-drivers of max8997 such as regulator
+> and charger drivers can use the max8997 irq_domain to get the linux irq
+> number for max8997 interrupts. All uses of irq_base in platform data and
+> max8997 driver private data are removed.
 > 
-> >> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> 
-> >> +Required properties:
-> >> +pinctrl-0:	List of phandles, each pointing at a pin configuration
-> >> +		node. These referenced pin configuration nodes must be child
-> >> +		nodes of the pin controller that they configure. Multiple
-> >> +		entries may exist in this list so that multiple pin
-> >> +		controllers may be configured, or so that a state may be built
-> >> +		from multiple nodes for a single pin controller, each
-> >> +		contributing part of the overall configuration. See the next
-> >> +		section of this document for details of the format of these
-> >> +		pin configuration nodes.
-> >> +
-> >> +		In some cases, it may be useful to define a state, but for it
-> >> +		to be empty. This may be required when a common IP block is
-> >> +		used in an SoC either without a pin controller, or where the
-> >> +		pin controller does not affect the HW module in question. If
-> >> +		the binding for that IP block requires certain pin states to
-> >> +		exist, they must still be defined, but may be left empty.
-> >> +
-> >
-> > It looks this functions similar as the PIN_MAP_DUMMY_STATE you introduced
-> > before to address the issues that the shared IP block may need or not need
-> > pinctrl configuration on different platforms(correct me if wrong).
-> 
-> Yes, it's to generate the dummy states.
-> 
-> > Then, there may be cases like below which may look a bit confusing
-> > to people.
-> > device {
-> > 	pinctrl-names = "active", "idle";
-> > 	pinctrl-0;
-> > 	pinctrl-1;
-> > };
-> 
-> I'd personally expect the syntax to look like:
-> 
-> device {
-> 	pinctrl-names = "active", "idle";
-> 	pinctrl-0 = <>;
-> 	pinctrl-1 = <>;
-> };
-> 
-> which has an explicitly empty value. Admittedly, these would both
-> compile down to the exact same thing in the DTB, but I think the
-> interpretation of the above is pretty readable.
-> 
-> > I'm wondering if we can let each individual driver to handle this special case?
-> > Like checking device id then make decision whether call pinctrl_* APIs.
-> > Then we can just do not define those properties for devices who
-> > do not need pin configurations.
-> 
-> The individual client drivers certainly could work that way.
-> 
-> However, the disadvantage is that the client driver then needs explicit
-> code to deal with this case, and this needs to be triggered by using a
-Since this is purely specific to IP block(e.g. the driver knows this ip used
-in which platform does not need pin configuration), so i guess it's natural
-that the driver can also handle it instead of device tree, just like
-a lot of existing drivers in kernel do similar things for tricks
-on different SoCs.
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  arch/arm/mach-exynos/mach-nuri.c    |    4 --
+>  arch/arm/mach-exynos/mach-origen.c  |    1 -
+>  drivers/mfd/max8997-irq.c           |   60 ++++++++++++++++++++--------------
+>  drivers/mfd/max8997.c               |    1 -
+>  include/linux/mfd/max8997-private.h |    4 ++-
+>  include/linux/mfd/max8997.h         |    1 -
+>  6 files changed, 38 insertions(+), 33 deletions(-)
 
-> different compatible flag (or perhaps some other explicit property).
-> You'd have to write this code over and over for each individual driver.
-> 
-I still do not understand why need a more special compatible flag?
-My understanding is that in device driver side, they can do:
-if (is_soc_a || is_soc_b) {
-	pinctrl_get(dev, "default");
-	....
-} else if (is_soc_c) {
-	/* do nothing */
-}
-I can't see why we still need a special compatible flag to tell driver.
-Just do not define pinctrl-* properties for that devices in device tree.
-Did i understand wrong?
+Nice patch.  Nice diffstat too.  Some comments below, but I'm happy with where
+this is at.
 
-> That also means that if you were the first user of an IP block in a
-> system which didn't need pin muxing for it, you'd have to modify the
-> kernel to support pinctrl being optional before you could use that device.
-> 
-Why need modify the kernel?
-Assuming above example.
-I'm a bit confused.
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-> If the pinctrl subsystem itself hides this from the client driver, then
-> you'd never need to add any code to any driver to support this case, and
-> all you'd need to do is write a few lines of device tree to use the
-> driver; no code changes.
 > 
-Yes, that is the benefit.
-My only concern is that if this may make people confuse when see
-such code in device tree since we,i guess, still do not have such examples
-in device tree. And i'm afraid this is a bit not HW oriented.
-device {
-	pinctrl-names = "active", "idle";
-	pinctrl-0 = <>;
-	pinctrl-1 = <>;
-};
-So i'm asking if we do it in driver.
-Maybe device tree people can give some comments.
+> diff --git a/arch/arm/mach-exynos/mach-nuri.c b/arch/arm/mach-exynos/mach-nuri.c
+> index a6b9162..1e9ba12 100644
+> --- a/arch/arm/mach-exynos/mach-nuri.c
+> +++ b/arch/arm/mach-exynos/mach-nuri.c
+> @@ -1078,12 +1078,8 @@ static struct platform_device nuri_max8903_device = {
+>  static void __init nuri_power_init(void)
+>  {
+>  	int gpio;
+> -	int irq_base = IRQ_GPIO_END + 1;
+>  	int ta_en = 0;
+>  
+> -	nuri_max8997_pdata.irq_base = irq_base;
+> -	irq_base += MAX8997_IRQ_NR;
+> -
+>  	gpio = EXYNOS4_GPX0(7);
+>  	gpio_request(gpio, "AP_PMIC_IRQ");
+>  	s3c_gpio_cfgpin(gpio, S3C_GPIO_SFN(0xf));
+> diff --git a/arch/arm/mach-exynos/mach-origen.c b/arch/arm/mach-exynos/mach-origen.c
+> index 02c242e..328dadb 100644
+> --- a/arch/arm/mach-exynos/mach-origen.c
+> +++ b/arch/arm/mach-exynos/mach-origen.c
+> @@ -424,7 +424,6 @@ static struct max8997_platform_data __initdata origen_max8997_pdata = {
+>  	.buck1_gpiodvs	= false,
+>  	.buck2_gpiodvs	= false,
+>  	.buck5_gpiodvs	= false,
+> -	.irq_base	= IRQ_GPIO_END + 1,
+>  
+>  	.ignore_gpiodvs_side_effect = true,
+>  	.buck125_default_idx = 0x0,
+> diff --git a/drivers/mfd/max8997-irq.c b/drivers/mfd/max8997-irq.c
+> index 09274cf..3d8c9d1 100644
+> --- a/drivers/mfd/max8997-irq.c
+> +++ b/drivers/mfd/max8997-irq.c
+> @@ -142,7 +142,8 @@ static void max8997_irq_sync_unlock(struct irq_data *data)
+>  static const inline struct max8997_irq_data *
+>  irq_to_max8997_irq(struct max8997_dev *max8997, int irq)
+>  {
+> -	return &max8997_irqs[irq - max8997->irq_base];
+> +	struct irq_data *data = irq_get_irq_data(irq);
+> +	return &max8997_irqs[data->hwirq];
 
-Regards
-Dong Aisheng
+Hahaha.  The max8997_irqs table is kind of overdone when the group and mask values
+can be arithmetically derived from the hwirq number..
+
+This change is fine, but the driver could use some refactoring.  :-)
+
+>  }
+>  
+>  static void max8997_irq_mask(struct irq_data *data)
+> @@ -182,7 +183,7 @@ static irqreturn_t max8997_irq_thread(int irq, void *data)
+>  	u8 irq_reg[MAX8997_IRQ_GROUP_NR] = {};
+>  	u8 irq_src;
+>  	int ret;
+> -	int i;
+> +	int i, cur_irq;
+>  
+>  	ret = max8997_read_reg(max8997->i2c, MAX8997_REG_INTSRC, &irq_src);
+>  	if (ret < 0) {
+> @@ -269,8 +270,10 @@ static irqreturn_t max8997_irq_thread(int irq, void *data)
+>  
+>  	/* Report */
+>  	for (i = 0; i < MAX8997_IRQ_NR; i++) {
+> -		if (irq_reg[max8997_irqs[i].group] & max8997_irqs[i].mask)
+> -			handle_nested_irq(max8997->irq_base + i);
+> +		if (irq_reg[max8997_irqs[i].group] & max8997_irqs[i].mask) {
+> +			cur_irq = irq_find_mapping(max8997->irq_domain, i);
+> +			handle_nested_irq(cur_irq);
+> +		}
+
+Well, if you're using the linear mapping, then only actually allocated irqs will
+have a mapping set up.  So the driver could simply do:
+
+	for (i = 0; i < MAX8997_IRQ_NR; i++) {
+		cur_irq = irq_find_mapping(max8997->irq_domain, i);
+		if (cur_irq)
+			handle_nested_irq(cur_irq);
+	}
+
+>  	}
+>  
+>  	return IRQ_HANDLED;
+> @@ -278,26 +281,40 @@ static irqreturn_t max8997_irq_thread(int irq, void *data)
+>  
+>  int max8997_irq_resume(struct max8997_dev *max8997)
+>  {
+> -	if (max8997->irq && max8997->irq_base)
+> -		max8997_irq_thread(max8997->irq_base, max8997);
+> +	if (max8997->irq && max8997->irq_domain)
+> +		max8997_irq_thread(0, max8997);
+> +	return 0;
+> +}
+> +
+> +static int max8997_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> +					irq_hw_number_t hw)
+> +{
+> +	struct max8997_dev *max8997 = d->host_data;
+> +
+> +	irq_set_chip_data(irq, max8997);
+> +	irq_set_chip_and_handler(irq, &max8997_irq_chip, handle_edge_irq);
+> +	irq_set_nested_thread(irq, 1);
+> +#ifdef CONFIG_ARM
+> +	set_irq_flags(irq, IRQF_VALID);
+> +#else
+> +	irq_set_noprobe(irq);
+> +#endif
+>  	return 0;
+>  }
+>  
+> +static struct irq_domain_ops max8997_irq_domain_ops = {
+> +	.map = max8997_irq_domain_map,
+> +};
+> +
+>  int max8997_irq_init(struct max8997_dev *max8997)
+>  {
+> +	struct irq_domain *domain;
+>  	int i;
+> -	int cur_irq;
+>  	int ret;
+>  	u8 val;
+>  
+>  	if (!max8997->irq) {
+>  		dev_warn(max8997->dev, "No interrupt specified.\n");
+> -		max8997->irq_base = 0;
+> -		return 0;
+> -	}
+> -
+> -	if (!max8997->irq_base) {
+> -		dev_err(max8997->dev, "No interrupt base specified.\n");
+>  		return 0;
+>  	}
+>  
+> @@ -327,18 +344,11 @@ int max8997_irq_init(struct max8997_dev *max8997)
+>  					true : false;
+>  	}
+>  
+> -	/* Register with genirq */
+> -	for (i = 0; i < MAX8997_IRQ_NR; i++) {
+> -		cur_irq = i + max8997->irq_base;
+> -		irq_set_chip_data(cur_irq, max8997);
+> -		irq_set_chip_and_handler(cur_irq, &max8997_irq_chip,
+> -				handle_edge_irq);
+> -		irq_set_nested_thread(cur_irq, 1);
+> -#ifdef CONFIG_ARM
+> -		set_irq_flags(cur_irq, IRQF_VALID);
+> -#else
+> -		irq_set_noprobe(cur_irq);
+> -#endif
+> +	domain = irq_domain_add_linear(NULL, MAX8997_IRQ_NR,
+> +					&max8997_irq_domain_ops, &max8997);
+> +	if (!domain) {
+> +		dev_err(max8997->dev, "could not create irq domain\n");
+> +		return -ENODEV;
+>  	}
+>  
+>  	ret = request_threaded_irq(max8997->irq, NULL, max8997_irq_thread,
+> diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
+> index cb83a7a..20ecad3 100644
+> --- a/drivers/mfd/max8997.c
+> +++ b/drivers/mfd/max8997.c
+> @@ -143,7 +143,6 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
+>  	if (!pdata)
+>  		goto err;
+>  
+> -	max8997->irq_base = pdata->irq_base;
+>  	max8997->ono = pdata->ono;
+>  
+>  	mutex_init(&max8997->iolock);
+> diff --git a/include/linux/mfd/max8997-private.h b/include/linux/mfd/max8997-private.h
+> index 3f4deb6..830152c 100644
+> --- a/include/linux/mfd/max8997-private.h
+> +++ b/include/linux/mfd/max8997-private.h
+> @@ -23,6 +23,8 @@
+>  #define __LINUX_MFD_MAX8997_PRIV_H
+>  
+>  #include <linux/i2c.h>
+> +#include <linux/export.h>
+> +#include <linux/irqdomain.h>
+>  
+>  #define MAX8997_REG_INVALID	(0xff)
+>  
+> @@ -325,7 +327,7 @@ struct max8997_dev {
+>  
+>  	int irq;
+>  	int ono;
+> -	int irq_base;
+> +	struct irq_domain *irq_domain;
+>  	struct mutex irqlock;
+>  	int irq_masks_cur[MAX8997_IRQ_GROUP_NR];
+>  	int irq_masks_cache[MAX8997_IRQ_GROUP_NR];
+> diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
+> index fff5905..818486c 100644
+> --- a/include/linux/mfd/max8997.h
+> +++ b/include/linux/mfd/max8997.h
+> @@ -155,7 +155,6 @@ struct max8997_led_platform_data {
+>  
+>  struct max8997_platform_data {
+>  	/* IRQ */
+> -	int irq_base;
+>  	int ono;
+>  	int wakeup;
+>  
+> -- 
+> 1.6.6.rc2
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
