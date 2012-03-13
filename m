@@ -1,167 +1,135 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH 3/7 v2] ARM: orion: wdt: use resource vice direct access
-Date: Tue, 13 Mar 2012 01:57:45 +0000
-Message-ID: <e8cd3863d70b322ee7625d0e49af0acdb82644fc.1331601448.git.jason@lakedaemon.net>
-References: <cover.1331601448.git.jason@lakedaemon.net>
+From: Dong Aisheng <aisheng.dong@freescale.com>
+Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
+Date: Tue, 13 Mar 2012 11:20:10 +0800
+Message-ID: <20120313032010.GB4513@shlinux2.ap.freescale.net>
+References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
+ <20120312143407.GA4513@shlinux2.ap.freescale.net>
+ <4F5E2F63.6070303@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1331601448.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-In-Reply-To: <cover.1331601448.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-References: <cover.1330625877.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
- <cover.1331601448.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4F5E2F63.6070303@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "dongas86@gmail.com" <dongas86@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+On Tue, Mar 13, 2012 at 01:16:19AM +0800, Stephen Warren wrote:
+> On 03/12/2012 08:34 AM, Dong Aisheng wrote:
+> > On Sat, Mar 10, 2012 at 02:14:33AM +0800, Stephen Warren wrote:
+> >> The core pin controller bindings define:
+> >> * The fact that pin controllers expose pin configurations as nodes in
+> >>   device tree.
+> >> * That the bindings for those pin configuration nodes is defined by the
+> >>   individual pin controller drivers.
+> >> * A standardized set of properties for client devices to define numbered
+> >>   or named pin configuration states, each referring to some number of the
+> >>   afore-mentioned pin configuration nodes.
+> >> * That the bindings for the client devices determines the set of numbered
+> >>   or named states that must exist.
+> 
+> >> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> 
+> >> +Required properties:
+> >> +pinctrl-0:	List of phandles, each pointing at a pin configuration
+> >> +		node. These referenced pin configuration nodes must be child
+> >> +		nodes of the pin controller that they configure. Multiple
+> >> +		entries may exist in this list so that multiple pin
+> >> +		controllers may be configured, or so that a state may be built
+> >> +		from multiple nodes for a single pin controller, each
+> >> +		contributing part of the overall configuration. See the next
+> >> +		section of this document for details of the format of these
+> >> +		pin configuration nodes.
+> >> +
+> >> +		In some cases, it may be useful to define a state, but for it
+> >> +		to be empty. This may be required when a common IP block is
+> >> +		used in an SoC either without a pin controller, or where the
+> >> +		pin controller does not affect the HW module in question. If
+> >> +		the binding for that IP block requires certain pin states to
+> >> +		exist, they must still be defined, but may be left empty.
+> >> +
+> >
+> > It looks this functions similar as the PIN_MAP_DUMMY_STATE you introduced
+> > before to address the issues that the shared IP block may need or not need
+> > pinctrl configuration on different platforms(correct me if wrong).
+> 
+> Yes, it's to generate the dummy states.
+> 
+> > Then, there may be cases like below which may look a bit confusing
+> > to people.
+> > device {
+> > 	pinctrl-names = "active", "idle";
+> > 	pinctrl-0;
+> > 	pinctrl-1;
+> > };
+> 
+> I'd personally expect the syntax to look like:
+> 
+> device {
+> 	pinctrl-names = "active", "idle";
+> 	pinctrl-0 = <>;
+> 	pinctrl-1 = <>;
+> };
+> 
+> which has an explicitly empty value. Admittedly, these would both
+> compile down to the exact same thing in the DTB, but I think the
+> interpretation of the above is pretty readable.
+> 
+> > I'm wondering if we can let each individual driver to handle this special case?
+> > Like checking device id then make decision whether call pinctrl_* APIs.
+> > Then we can just do not define those properties for devices who
+> > do not need pin configurations.
+> 
+> The individual client drivers certainly could work that way.
+> 
+> However, the disadvantage is that the client driver then needs explicit
+> code to deal with this case, and this needs to be triggered by using a
+Since this is purely specific to IP block(e.g. the driver knows this ip used
+in which platform does not need pin configuration), so i guess it's natural
+that the driver can also handle it instead of device tree, just like
+a lot of existing drivers in kernel do similar things for tricks
+on different SoCs.
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
-Note: This code is the exact same as that originally Acked by Grant.  I've
-simply removed the fdt bindings, as I need to hold off until common clock is
-added.  If it's not appropriate to retain his Ack here, please let me know.
+> different compatible flag (or perhaps some other explicit property).
+> You'd have to write this code over and over for each individual driver.
+> 
+I still do not understand why need a more special compatible flag?
+My understanding is that in device driver side, they can do:
+if (is_soc_a || is_soc_b) {
+	pinctrl_get(dev, "default");
+	....
+} else if (is_soc_c) {
+	/* do nothing */
+}
+I can't see why we still need a special compatible flag to tell driver.
+Just do not define pinctrl-* properties for that devices in device tree.
+Did i understand wrong?
 
- arch/arm/plat-orion/common.c |    7 ++++++-
- drivers/watchdog/orion_wdt.c |   24 +++++++++++++++---------
- 2 files changed, 21 insertions(+), 10 deletions(-)
+> That also means that if you were the first user of an IP block in a
+> system which didn't need pin muxing for it, you'd have to modify the
+> kernel to support pinctrl being optional before you could use that device.
+> 
+Why need modify the kernel?
+Assuming above example.
+I'm a bit confused.
 
-diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
-index e5a2fde..eadd1cd 100644
---- a/arch/arm/plat-orion/common.c
-+++ b/arch/arm/plat-orion/common.c
-@@ -21,6 +21,7 @@
- #include <plat/orion_wdt.h>
- #include <plat/mv_xor.h>
- #include <plat/ehci-orion.h>
-+#include <mach/bridge-regs.h>
- 
- /* Fill in the resources structure and link it into the platform
-    device structure. There is always a memory region, and nearly
-@@ -568,13 +569,17 @@ void __init orion_spi_1_init(unsigned long mapbase,
-  ****************************************************************************/
- static struct orion_wdt_platform_data orion_wdt_data;
- 
-+static struct resource orion_wdt_resource =
-+		DEFINE_RES_MEM(TIMER_VIRT_BASE, 0x28);
-+
- static struct platform_device orion_wdt_device = {
- 	.name		= "orion_wdt",
- 	.id		= -1,
- 	.dev		= {
- 		.platform_data	= &orion_wdt_data,
- 	},
--	.num_resources	= 0,
-+	.resource	= &orion_wdt_resource,
-+	.num_resources	= 1,
- };
- 
- void __init orion_wdt_init(unsigned long tclk)
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 4ad78f8..1368e4c 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -28,9 +28,9 @@
- /*
-  * Watchdog timer block registers.
-  */
--#define TIMER_CTRL		(TIMER_VIRT_BASE + 0x0000)
-+#define TIMER_CTRL		0x0000
- #define  WDT_EN			0x0010
--#define WDT_VAL			(TIMER_VIRT_BASE + 0x0024)
-+#define WDT_VAL			0x0024
- 
- #define WDT_MAX_CYCLE_COUNT	0xffffffff
- #define WDT_IN_USE		0
-@@ -40,6 +40,7 @@ static int nowayout = WATCHDOG_NOWAYOUT;
- static int heartbeat = -1;		/* module parameter (seconds) */
- static unsigned int wdt_max_duration;	/* (seconds) */
- static unsigned int wdt_tclk;
-+static void __iomem *wdt_reg;
- static unsigned long wdt_status;
- static DEFINE_SPINLOCK(wdt_lock);
- 
-@@ -48,7 +49,7 @@ static void orion_wdt_ping(void)
- 	spin_lock(&wdt_lock);
- 
- 	/* Reload watchdog duration */
--	writel(wdt_tclk * heartbeat, WDT_VAL);
-+	writel(wdt_tclk * heartbeat, wdt_reg + WDT_VAL);
- 
- 	spin_unlock(&wdt_lock);
- }
-@@ -60,7 +61,7 @@ static void orion_wdt_enable(void)
- 	spin_lock(&wdt_lock);
- 
- 	/* Set watchdog duration */
--	writel(wdt_tclk * heartbeat, WDT_VAL);
-+	writel(wdt_tclk * heartbeat, wdt_reg + WDT_VAL);
- 
- 	/* Clear watchdog timer interrupt */
- 	reg = readl(BRIDGE_CAUSE);
-@@ -68,9 +69,9 @@ static void orion_wdt_enable(void)
- 	writel(reg, BRIDGE_CAUSE);
- 
- 	/* Enable watchdog timer */
--	reg = readl(TIMER_CTRL);
-+	reg = readl(wdt_reg + TIMER_CTRL);
- 	reg |= WDT_EN;
--	writel(reg, TIMER_CTRL);
-+	writel(reg, wdt_reg + TIMER_CTRL);
- 
- 	/* Enable reset on watchdog */
- 	reg = readl(RSTOUTn_MASK);
-@@ -92,9 +93,9 @@ static void orion_wdt_disable(void)
- 	writel(reg, RSTOUTn_MASK);
- 
- 	/* Disable watchdog timer */
--	reg = readl(TIMER_CTRL);
-+	reg = readl(wdt_reg + TIMER_CTRL);
- 	reg &= ~WDT_EN;
--	writel(reg, TIMER_CTRL);
-+	writel(reg, wdt_reg + TIMER_CTRL);
- 
- 	spin_unlock(&wdt_lock);
- }
-@@ -102,7 +103,7 @@ static void orion_wdt_disable(void)
- static int orion_wdt_get_timeleft(int *time_left)
- {
- 	spin_lock(&wdt_lock);
--	*time_left = readl(WDT_VAL) / wdt_tclk;
-+	*time_left = readl(wdt_reg + WDT_VAL) / wdt_tclk;
- 	spin_unlock(&wdt_lock);
- 	return 0;
- }
-@@ -236,6 +237,7 @@ static struct miscdevice orion_wdt_miscdev = {
- static int __devinit orion_wdt_probe(struct platform_device *pdev)
- {
- 	struct orion_wdt_platform_data *pdata = pdev->dev.platform_data;
-+	struct resource *res;
- 	int ret;
- 
- 	if (pdata) {
-@@ -245,6 +247,10 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+
-+	wdt_reg = ioremap(res->start, resource_size(res));
-+
- 	if (orion_wdt_miscdev.parent)
- 		return -EBUSY;
- 	orion_wdt_miscdev.parent = &pdev->dev;
--- 
-1.7.3.4
+> If the pinctrl subsystem itself hides this from the client driver, then
+> you'd never need to add any code to any driver to support this case, and
+> all you'd need to do is write a few lines of device tree to use the
+> driver; no code changes.
+> 
+Yes, that is the benefit.
+My only concern is that if this may make people confuse when see
+such code in device tree since we,i guess, still do not have such examples
+in device tree. And i'm afraid this is a bit not HW oriented.
+device {
+	pinctrl-names = "active", "idle";
+	pinctrl-0 = <>;
+	pinctrl-1 = <>;
+};
+So i'm asking if we do it in driver.
+Maybe device tree people can give some comments.
+
+Regards
+Dong Aisheng
