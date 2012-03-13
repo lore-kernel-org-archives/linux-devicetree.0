@@ -1,77 +1,24 @@
-From: Stefan Roese <sr@denx.de>
+From: Viresh Kumar <viresh.kumar@st.com>
 Subject: Re: [PATCH v2] stmmac: Add device-tree support
-Date: Tue, 13 Mar 2012 11:29:34 +0100
-Message-ID: <201203131129.34449.sr@denx.de>
-References: <1331623394-14600-1-git-send-email-sr@denx.de> <4F5F0AF2.1070508@st.com>
+Date: Tue, 13 Mar 2012 16:41:18 +0530
+Message-ID: <4F5F2B56.2060504@st.com>
+References: <1331623394-14600-1-git-send-email-sr@denx.de> <4F5F0AF2.1070508@st.com> <201203131129.34449.sr@denx.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4F5F0AF2.1070508@st.com>
+In-Reply-To: <201203131129.34449.sr@denx.de>
 Sender: netdev-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@st.com>
+To: Stefan Roese <sr@denx.de>
 Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>, spear-devel <spear-devel@list.st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 March 2012 09:53:06 Viresh Kumar wrote:
-> On 3/13/2012 12:53 PM, Stefan Roese wrote:
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> > b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> > 
-> > +#ifdef CONFIG_OF
-> > +static int __devinit stmmac_probe_config_dt(struct platform_device
-> > *pdev, +					    struct 
-plat_stmmacenet_data *plat,
-> > +					    const char **mac)
-> > +{
-> 
-> <snip...>
-> 
-> > +}
-> > +#else
-> > +static int __devinit stmmac_probe_config_dt(struct platform_device
-> > *pdev, +					    struct 
-plat_stmmacenet_data *plat,
-> > +					    const char **mac)
-> > +{
-> > +	return ERR_PTR(-ENOSYS);
-> 
-> why ERR_PTR()?
+On 3/13/2012 3:59 PM, Stefan Roese wrote:
+> Consistency. pr_err is used in this driver. So I'm sticking to it with this 
+> patch as well.
 
-Thanks for spotting. Will fix in next version.
- 
-> > +}
-> > +#endif /* CONFIG_OF */
-> > +
-> > 
-> >  /**
-> >  
-> >   * stmmac_pltfr_probe
-> >   * @pdev: platform device pointer
-> > 
-> > @@ -58,7 +101,25 @@ static int stmmac_pltfr_probe(struct platform_device
-> > *pdev)
-> > 
-> >  		ret = -ENOMEM;
-> >  		goto out_release_region;
-> >  	
-> >  	}
-> > 
-> > -	plat_dat = pdev->dev.platform_data;
-> > +
-> > +	if (pdev->dev.of_node) {
-> > +		plat_dat = devm_kzalloc(&pdev->dev,
-> > +					sizeof(struct 
-plat_stmmacenet_data),
-> > +					GFP_KERNEL);
-> > +		if (!plat_dat) {
-> > +			pr_err("%s: ERROR: no memory", __func__);
-> 
-> why don't we use dev_err here?
+Hmmm. I don't know, but can you add another patch before this one to move those
+prints.
 
-Consistency. pr_err is used in this driver. So I'm sticking to it with this 
-patch as well.
- 
-Thanks,
-Stefan
+-- 
+viresh
