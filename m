@@ -1,116 +1,66 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: [PATCH 0/7 v4] ARM: kirkwood: fdt: convert kirkwood to fdt
-Date: Tue, 13 Mar 2012 01:57:42 +0000
-Message-ID: <cover.1331601448.git.jason@lakedaemon.net>
-References: <cover.1330625877.git.jason@lakedaemon.net>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: [PATCH 1/7] ARM: orion: spi: remove enable_clock_fix which is not used
+Date: Tue, 13 Mar 2012 01:57:43 +0000
+Message-ID: <09fda0555ea860b7b6bfdf3fef0ebe08926edaa1.1331601448.git.jason@lakedaemon.net>
+References: <cover.1331601448.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1330625877.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1331601448.git.jason@lakedaemon.net>
+In-Reply-To: <cover.1331601448.git.jason@lakedaemon.net>
+References: <cover.1330625877.git.jason@lakedaemon.net>
+ <cover.1331601448.git.jason@lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arnd@arndb.de, olof@lixom.net
+Cc: nicolas.pitre@linaro.org, andrew@lunn.ch, Jason Cooper <jason@lakedaemon.net>, jm@lentin.co.uk, grant.likely@secretlab.ca, michael@walle.cc, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This series begins the process of converting all of the drivers initialized
-from kirkwood_init() to devicetree.
+From: Andrew Lunn <andrew@lunn.ch>
 
-The first three patches are code cleanup from Andrew Lunn.
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Jason Cooper <jason@lakedaemon.net>
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+---
+ drivers/spi/spi-orion.c       |    5 -----
+ include/linux/spi/orion_spi.h |    1 -
+ 2 files changed, 0 insertions(+), 6 deletions(-)
 
-The rest of the series is the initial conversion to devicetree for kirkwood,
-use by dreamplug, and devicetree bindings for drivers that don't use tclk or
-pinux.  These should be safe to merge as they won't interfere with the
-clk/clkdev work Andrew Lunn is working on.
-
-Overall changes since v3:
-
-	- squashed several fixup patches into the series (use mrvl, use
-	  inclusive address sizes)
-	- applied Arnd's suggestion for serial ports in kirkwood.dtsi, added my
-	  idea of defining serial clock in dts.
-	- moved dreamplug_init() out of board-dt.c (into board-dreamplug.c) to
-	  facilitate the orderly arrival of new boards with fdt support (Jamie
-	  Lentin's boards)
-	- moved all non-fdt cleanups to the beginning of the series.
-	- removed mv_cesa, mv_sata, and orion-ehci from this series as they
-	  depend on intc/dma/clock to work properly
-	- removed Ack's and Reviewed-By's on patches with significant changes
-		- Grant's Ack remains on the "wdt: use resource" patch as it is
-		  a reduced scope version (no fdt bindings), otherwise,
-		  identical to code originally Acked.  Please let me know if
-		  that's not appropriate.
-
-Overall changes since v2:
-
-	- added Andrew Lunn's cleanup patches
-	- reshuffled to more logical order
-	- wrapped all struct of_device_id[]'s in #ifdef CONFIG_OF
-	- s/marvell,/mrvl,/g
-	- added orion-ehci
-	- added mv_sata
-	- prevent clocks from gating when booting from devicetree
-
-Drivers yet to be converted are:
-
-	mv_cesa:    needs intc in fdt (next on list)
-	mv_sata:    needs dma, intc
-	orion-ehci: needs dma, intc
-	orion-spi:  uses tclk
-	orion-wdt:  uses tclk
-	mvsdio:     uses tclk
-	i2c:        uses freq_m/freq_n, not sure if that should use clk/clkdev
-	mv_xor:     haven't figured out howto do shared resources/dma in fdt
-	ge0/ge1:    haven't looked at it yet
-	nand:       not needed for dreamplug, Jamie Lentin is working on it
-
-Please be aware that this is a complete reshuffle of the whole series and is
-based purely against v3.3-rc3.
-
-Interested folks can pull from:
-
-git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_for_3.4
-
-
-Andrew Lunn (3):
-  ARM: orion: spi: remove enable_clock_fix which is not used
-  ARM: Kirkwood: Remove tclk from kirkwood_asoc_platform_data.
-  ARM: orion: wdt: use resource vice direct access
-
-Jason Cooper (4):
-  ARM: kirkwood: add dreamplug (fdt) support.
-  ARM: kirkwood: convert uart0 to devicetree.
-  ARM: kirkwood: rtc-mv devicetree bindings
-  ARM: kirkwood: use devicetree for rtc-mv
-
- arch/arm/boot/dts/kirkwood-dreamplug.dts |   24 +++++
- arch/arm/boot/dts/kirkwood.dtsi          |   36 +++++++
- arch/arm/mach-kirkwood/Kconfig           |   14 +++
- arch/arm/mach-kirkwood/Makefile          |    2 +
- arch/arm/mach-kirkwood/Makefile.boot     |    2 +
- arch/arm/mach-kirkwood/board-dreamplug.c |  149 ++++++++++++++++++++++++++++++
- arch/arm/mach-kirkwood/board-dt.c        |   75 +++++++++++++++
- arch/arm/mach-kirkwood/common.c          |   11 +-
- arch/arm/mach-kirkwood/common.h          |   11 ++
- arch/arm/plat-orion/common.c             |    7 +-
- arch/arm/plat-orion/include/plat/audio.h |    1 -
- drivers/rtc/rtc-mv.c                     |    9 ++
- drivers/spi/spi-orion.c                  |    5 -
- drivers/watchdog/orion_wdt.c             |   24 +++--
- include/linux/spi/orion_spi.h            |    1 -
- 15 files changed, 348 insertions(+), 23 deletions(-)
- create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
- create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
- create mode 100644 arch/arm/mach-kirkwood/board-dreamplug.c
- create mode 100644 arch/arm/mach-kirkwood/board-dt.c
-
+diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
+index 13448c8..e496f79 100644
+--- a/drivers/spi/spi-orion.c
++++ b/drivers/spi/spi-orion.c
+@@ -359,11 +359,6 @@ static int orion_spi_setup(struct spi_device *spi)
+ 
+ 	orion_spi = spi_master_get_devdata(spi->master);
+ 
+-	/* Fix ac timing if required.   */
+-	if (orion_spi->spi_info->enable_clock_fix)
+-		orion_spi_setbits(orion_spi, ORION_SPI_IF_CONFIG_REG,
+-				  (1 << 14));
+-
+ 	if ((spi->max_speed_hz == 0)
+ 			|| (spi->max_speed_hz > orion_spi->max_speed))
+ 		spi->max_speed_hz = orion_spi->max_speed;
+diff --git a/include/linux/spi/orion_spi.h b/include/linux/spi/orion_spi.h
+index decf6d8..b4d9fa6 100644
+--- a/include/linux/spi/orion_spi.h
++++ b/include/linux/spi/orion_spi.h
+@@ -11,7 +11,6 @@
+ 
+ struct orion_spi_info {
+ 	u32	tclk;		/* no <linux/clk.h> support yet */
+-	u32	enable_clock_fix;
+ };
+ 
+ 
 -- 
 1.7.3.4
