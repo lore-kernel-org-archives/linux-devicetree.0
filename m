@@ -1,100 +1,116 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v3 0/2] regulator: add irq domain and device tree support
- for MAX8997
-Date: Tue, 13 Mar 2012 02:40:03 +0530
-Message-ID: <CAJuYYwQMB0ANS6noscRe6P4d0JKmTPLP_1r2Sr6-N3amAZiD5Q@mail.gmail.com>
-References: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: [PATCH 0/7 v4] ARM: kirkwood: fdt: convert kirkwood to fdt
+Date: Tue, 13 Mar 2012 01:57:42 +0000
+Message-ID: <cover.1331601448.git.jason@lakedaemon.net>
+References: <cover.1330625877.git.jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, dg77.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1330625877.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob/Grant,
+This series begins the process of converting all of the drivers initialized
+from kirkwood_init() to devicetree.
 
-On 23 February 2012 18:08, Thomas Abraham <thomas.abraham@linaro.org> w=
-rote:
-> Changes since v2:
-> - Atleast one voltage level has to be specfied for Buck 1/2/5 even if=
- GPIO
-> =A0DVS option is not used (suggested by MyungJoo Ham).
-> - Reworked the irq_domain support based the v5 of irq_domain generali=
-zation
-> =A0patches.
->
-> MAX8997 is a multi-function device which includes support for regulat=
-ors, rtc,
-> battery charger and other sub-blocks. This patchset adds device tree =
-support
-> for the pmic (regulators) sub-block.
->
-> The first patch adds irq domain support for the interrupts supported =
-by max8997
-> mainly for removing the need to pass a irq_base from the platform cod=
-e. The
-> irq_base could not anyway be passed in case of device tree based inst=
-antiation.
-> The reverse mapping method used is linear since the sub-drivers of ma=
-x8997 has
-> access to the max8997 irq_domain from which the linux irq number can =
-be
-> obtained.
->
-> The second patch adds device tree support for max8997. This patch mod=
-ifies both
-> mfd and regulator portions of the max8997 code.
->
-> This patchset is based on the following tree.
-> http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.gi=
-t [for-next]
->
-> with all patches merged from
-> http://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git =
-[for-next]
-> http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
->
-> and depends on the following patchset.
-> [PATCH v3 0/4] ARM: Exynos4: Add irq domain and device tree support f=
-or wakeup interrupts.
->
-> This patchset has been tested on Origen board.
->
-> Thomas Abraham (2):
-> =A0mfd: add irq domain support for max8997 interrupts
-> =A0regulator: add device tree support for max8997
+The first three patches are code cleanup from Andrew Lunn.
 
-Any comments for this patch series?
+The rest of the series is the initial conversion to devicetree for kirkwood,
+use by dreamplug, and devicetree bindings for drivers that don't use tclk or
+pinux.  These should be safe to merge as they won't interfere with the
+clk/clkdev work Andrew Lunn is working on.
 
-Thanks,
-Thomas.
+Overall changes since v3:
 
->
-> =A0.../devicetree/bindings/regulator/max8997-pmic.txt | =A0134 ++++++=
-+++++++++++++
-> =A0arch/arm/mach-exynos/mach-nuri.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 =A04 -
-> =A0arch/arm/mach-exynos/mach-origen.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- | =A0 =A01 -
-> =A0drivers/mfd/max8997-irq.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0| =A0 60 +++++----
-> =A0drivers/mfd/max8997.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0| =A0 73 ++++++++++-
-> =A0drivers/regulator/max8997.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0| =A0139 +++++++++++++++++++-
-> =A0include/linux/mfd/max8997-private.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
-| =A0 =A04 +-
-> =A0include/linux/mfd/max8997.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0| =A0 =A02 +-
-> =A08 files changed, 382 insertions(+), 35 deletions(-)
-> =A0create mode 100644 Documentation/devicetree/bindings/regulator/max=
-8997-pmic.txt
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
-ng-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
+	- squashed several fixup patches into the series (use mrvl, use
+	  inclusive address sizes)
+	- applied Arnd's suggestion for serial ports in kirkwood.dtsi, added my
+	  idea of defining serial clock in dts.
+	- moved dreamplug_init() out of board-dt.c (into board-dreamplug.c) to
+	  facilitate the orderly arrival of new boards with fdt support (Jamie
+	  Lentin's boards)
+	- moved all non-fdt cleanups to the beginning of the series.
+	- removed mv_cesa, mv_sata, and orion-ehci from this series as they
+	  depend on intc/dma/clock to work properly
+	- removed Ack's and Reviewed-By's on patches with significant changes
+		- Grant's Ack remains on the "wdt: use resource" patch as it is
+		  a reduced scope version (no fdt bindings), otherwise,
+		  identical to code originally Acked.  Please let me know if
+		  that's not appropriate.
+
+Overall changes since v2:
+
+	- added Andrew Lunn's cleanup patches
+	- reshuffled to more logical order
+	- wrapped all struct of_device_id[]'s in #ifdef CONFIG_OF
+	- s/marvell,/mrvl,/g
+	- added orion-ehci
+	- added mv_sata
+	- prevent clocks from gating when booting from devicetree
+
+Drivers yet to be converted are:
+
+	mv_cesa:    needs intc in fdt (next on list)
+	mv_sata:    needs dma, intc
+	orion-ehci: needs dma, intc
+	orion-spi:  uses tclk
+	orion-wdt:  uses tclk
+	mvsdio:     uses tclk
+	i2c:        uses freq_m/freq_n, not sure if that should use clk/clkdev
+	mv_xor:     haven't figured out howto do shared resources/dma in fdt
+	ge0/ge1:    haven't looked at it yet
+	nand:       not needed for dreamplug, Jamie Lentin is working on it
+
+Please be aware that this is a complete reshuffle of the whole series and is
+based purely against v3.3-rc3.
+
+Interested folks can pull from:
+
+git://git.infradead.org/users/jcooper/linux-kirkwood.git kirkwood_dt_for_3.4
+
+
+Andrew Lunn (3):
+  ARM: orion: spi: remove enable_clock_fix which is not used
+  ARM: Kirkwood: Remove tclk from kirkwood_asoc_platform_data.
+  ARM: orion: wdt: use resource vice direct access
+
+Jason Cooper (4):
+  ARM: kirkwood: add dreamplug (fdt) support.
+  ARM: kirkwood: convert uart0 to devicetree.
+  ARM: kirkwood: rtc-mv devicetree bindings
+  ARM: kirkwood: use devicetree for rtc-mv
+
+ arch/arm/boot/dts/kirkwood-dreamplug.dts |   24 +++++
+ arch/arm/boot/dts/kirkwood.dtsi          |   36 +++++++
+ arch/arm/mach-kirkwood/Kconfig           |   14 +++
+ arch/arm/mach-kirkwood/Makefile          |    2 +
+ arch/arm/mach-kirkwood/Makefile.boot     |    2 +
+ arch/arm/mach-kirkwood/board-dreamplug.c |  149 ++++++++++++++++++++++++++++++
+ arch/arm/mach-kirkwood/board-dt.c        |   75 +++++++++++++++
+ arch/arm/mach-kirkwood/common.c          |   11 +-
+ arch/arm/mach-kirkwood/common.h          |   11 ++
+ arch/arm/plat-orion/common.c             |    7 +-
+ arch/arm/plat-orion/include/plat/audio.h |    1 -
+ drivers/rtc/rtc-mv.c                     |    9 ++
+ drivers/spi/spi-orion.c                  |    5 -
+ drivers/watchdog/orion_wdt.c             |   24 +++--
+ include/linux/spi/orion_spi.h            |    1 -
+ 15 files changed, 348 insertions(+), 23 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-dreamplug.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood.dtsi
+ create mode 100644 arch/arm/mach-kirkwood/board-dreamplug.c
+ create mode 100644 arch/arm/mach-kirkwood/board-dt.c
+
+-- 
+1.7.3.4
