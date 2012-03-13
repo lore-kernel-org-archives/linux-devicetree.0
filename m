@@ -1,41 +1,92 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 7/7] ARM: kirkwood: use devicetree for rtc-mv
-Date: Tue, 13 Mar 2012 09:58:30 +0000
-Message-ID: <201203130958.31223.arnd@arndb.de>
-References: <cover.1331601448.git.jason@lakedaemon.net>
- <92d02581e0fce75f84d61edf55678108237e881a.1331601448.git.jason@lakedaemon.net>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: kirkwood: rtc-mv devicetree bindings
+Date: Tue, 13 Mar 2012 11:03:47 +0100
+Message-ID: <20120313100347.GA10400@pengutronix.de>
+References: <cover.1330625877.git.jason@lakedaemon.net>
+ <cover.1331601448.git.jason@lakedaemon.net>
+ <0b9921e304cb46af9c4fbc8b7b8c8b9ba3d18654.1331601448.git.jason@lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <92d02581e0fce75f84d61edf55678108237e881a.1331601448.git.jason@lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: nicolas.pitre@linaro.org, andrew@lunn.ch, jm@lentin.co.uk, grant.likely@secretlab.ca, michael@walle.cc, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0b9921e304cb46af9c4fbc8b7b8c8b9ba3d18654.1331601448.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 March 2012, Jason Cooper wrote:
-> 
-> Signed-off-by: Jason Cooper <jason@lakedaemon.net>
+On Tue, Mar 13, 2012 at 01:57:48AM +0000, Jason Cooper wrote:
+> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 > ---
->  arch/arm/boot/dts/kirkwood.dtsi   |    6 ++++++
->  arch/arm/mach-kirkwood/board-dt.c |    1 -
->  arch/arm/mach-kirkwood/common.c   |    2 +-
->  arch/arm/mach-kirkwood/common.h   |    1 -
->  4 files changed, 7 insertions(+), 3 deletions(-)
-> 
+>  drivers/rtc/rtc-mv.c |    9 +++++++++
+>  1 files changed, 9 insertions(+), 0 deletions(-)
+> =
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> diff --git a/drivers/rtc/rtc-mv.c b/drivers/rtc/rtc-mv.c
+> index 768e2ed..0dd8421 100644
+> --- a/drivers/rtc/rtc-mv.c
+> +++ b/drivers/rtc/rtc-mv.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/bcd.h>
+>  #include <linux/io.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/of.h>
+>  #include <linux/delay.h>
+>  #include <linux/gfp.h>
+>  #include <linux/module.h>
+> @@ -294,11 +295,19 @@ static int __exit mv_rtc_remove(struct platform_dev=
+ice *pdev)
+>  	return 0;
+>  }
+>  =
 
-I think you can just merge this with patch 6, as they are two halves
-of the same work.
+> +#ifdef CONFIG_OF
+> +static struct of_device_id rtc_mv_of_match_table[] =3D {
+> +	{ .compatible =3D "mrvl,orion-rtc", },
+> +	{}
+> +};
+> +#endif
+I guess it's a matter of taste, but you could use __maybe_unused instead
+of #ifdef .. #endif.
 
-	Arnd
+Best regards
+Uwe
+
+> +
+>  static struct platform_driver mv_rtc_driver =3D {
+>  	.remove		=3D __exit_p(mv_rtc_remove),
+>  	.driver		=3D {
+>  		.name	=3D "rtc-mv",
+>  		.owner	=3D THIS_MODULE,
+> +		.of_match_table =3D of_match_ptr(rtc_mv_of_match_table),
+>  	},
+>  };
+>  =
+
+> -- =
+
+> 1.7.3.4
+> =
+
+> =
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> =
+
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
