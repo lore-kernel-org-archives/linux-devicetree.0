@@ -1,251 +1,198 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Tue, 13 Mar 2012 15:47:12 +0100
-Message-ID: <1331650032-15274-1-git-send-email-sr@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+From: Stefan Roese <sr@denx.de>
+Subject: [PATCH v3] stmmac: Add device-tree support
+Date: Tue, 13 Mar 2012 15:56:37 +0100
+Message-ID: <1331650597-16747-1-git-send-email-sr@denx.de>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a generic target for SPEAr600 board that can be
-configured via the device-tree. Currently only interrupts are
-configured via device-tree. Other peripheral devices (e.g.
-ethernet, I2C, SMI flash, FSMC NAND flash etc) will follow in
-later patches.
+This patch adds support to configure the STMMAC ethernet driver via
+device-tree instead of platform_data.
 
-Only the spear600-evb is currently supported. Other SPEAr600
-based boards will follow later.
+Currently, only the properties needed on SPEAr600 are provided. All
+other properties should be added once needed on other platforms.
 
-Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Stefan Roese <sr@denx.de>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 ---
- Documentation/devicetree/bindings/arm/spear.txt |    6 ++
- arch/arm/boot/dts/spear600-evb.dts              |   23 +++++++
- arch/arm/boot/dts/spear600.dtsi                 |   49 +++++++++++++++
- arch/arm/mach-spear6xx/Kconfig                  |    7 +++
- arch/arm/mach-spear6xx/Makefile                 |    1 +
- arch/arm/mach-spear6xx/board-dt.c               |   75 +++++++++++++++++++++++
- 6 files changed, 161 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/spear.txt
- create mode 100644 arch/arm/boot/dts/spear600-evb.dts
- create mode 100644 arch/arm/boot/dts/spear600.dtsi
- create mode 100644 arch/arm/mach-spear6xx/board-dt.c
+v3:
+- Fixed return value (removed ERR_PTR)
+- Changed "gmac0: stmmac@e0800000" to "gmac0: ethernet@e0800000"
+- Removed phy-addr for real from code
+- Fixed indentation issue
 
-diff --git a/Documentation/devicetree/bindings/arm/spear.txt b/Documentation/devicetree/bindings/arm/spear.txt
+v2:
+- Renamed stm -> st
+- Renamed compatible to "st,spear600-gmac"
+- Removed "prog-burst-len", "had-gmac", has-pmt" properties.
+  They are now implicitly set for "st,spear600-gmac" compatible
+  devices.
+- Removed phy-addr
+- Used "if (pdev->dev.of_node)" to distinguish between DT
+  and non-DT version instead of #ifdef
+
+ Documentation/devicetree/bindings/net/stmmac.txt   |   28 ++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   74 +++++++++++++++++++-
+ 2 files changed, 100 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/stmmac.txt
+
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
 new file mode 100644
-index 0000000..8e9f83e
+index 0000000..1f62623
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/spear.txt
-@@ -0,0 +1,6 @@
-+ST SPEAr Platforms Device Tree Bindings
-+---------------------------------------
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -0,0 +1,28 @@
++* STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
 +
-+SPEAr600 EVB (Evaluation Board)
-+Required root node properties:
-+    - compatible = "st,spear600-evb";
-diff --git a/arch/arm/boot/dts/spear600-evb.dts b/arch/arm/boot/dts/spear600-evb.dts
-new file mode 100644
-index 0000000..f92d099
---- /dev/null
-+++ b/arch/arm/boot/dts/spear600-evb.dts
-@@ -0,0 +1,23 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * Copyright 2012 Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++Required properties:
++- compatible: Should be "st,spear600-gmac"
++- reg: Address and length of the register set for the device
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- interrupts: Should contain the STMMAC interrupts
++- interrupt-names: Should contain the interrupt names "macirq"
++  "eth_wake_irq" if this interrupt is supported in the "interrupts"
++  property
++- phy-mode: String, operation mode of the PHY interface.
++  Supported values are: "mii", "rmii", "gmii", "rgmii".
 +
-+/dts-v1/;
-+/include/ "spear600.dtsi"
++Optional properties:
++- mac-address: 6 bytes, mac address
 +
-+/ {
-+	model = "ST SPEAr600 Evaluation Board";
-+	compatible = "st,spear600-evb";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+};
-diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
-new file mode 100644
-index 0000000..82b086d
---- /dev/null
-+++ b/arch/arm/boot/dts/spear600.dtsi
-@@ -0,0 +1,49 @@
-+/*
-+ * Copyright 2011 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * Copyright 2012 Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++Examples:
 +
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	cpus {
-+		cpu@0 {
-+			compatible = "arm,arm926ejs";
-+		};
++	gmac0: ethernet@e0800000 {
++		compatible = "st,spear600-gmac";
++		reg = <0xe0800000 0x8000>;
++		interrupt-parent = <&vic1>;
++		interrupts = <24 23>;
++		interrupt-names = "macirq", "eth_wake_irq";
++		mac-address = [000000000000]; /* Filled in by U-Boot */
++		phy-mode = "gmii";
 +	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0>; /* Filled by U-Boot */
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		vic0: interrupt-controller@f1100000 {
-+			compatible = "arm,pl190-vic";
-+			interrupt-controller;
-+			reg = <0xf1100000 0x1000>;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		vic1: interrupt-controller@f1000000 {
-+			compatible = "arm,pl190-vic";
-+			interrupt-controller;
-+			reg = <0xf1000000 0x1000>;
-+			#interrupt-cells = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-spear6xx/Kconfig b/arch/arm/mach-spear6xx/Kconfig
-index ff4ae5b..7777f72 100644
---- a/arch/arm/mach-spear6xx/Kconfig
-+++ b/arch/arm/mach-spear6xx/Kconfig
-@@ -11,6 +11,13 @@ config BOARD_SPEAR600_EVB
- 	help
- 	  Supports ST SPEAr600 Evaluation Board
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 3aad981..116529a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -24,8 +24,48 @@
  
-+config BOARD_SPEAR600_DT
-+	bool "SPEAr600 generic board configured via device-tree"
-+	select MACH_SPEAR600
-+	select USE_OF
-+	help
-+	  Supports ST SPEAr600 boards configured via the device-tree
-+
- endmenu
- 
- config MACH_SPEAR600
-diff --git a/arch/arm/mach-spear6xx/Makefile b/arch/arm/mach-spear6xx/Makefile
-index cc1a4d8..e2d79b8 100644
---- a/arch/arm/mach-spear6xx/Makefile
-+++ b/arch/arm/mach-spear6xx/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_MACH_SPEAR600) += spear600.o
- 
- # spear600 boards files
- obj-$(CONFIG_BOARD_SPEAR600_EVB) += spear600_evb.o
-+obj-$(CONFIG_BOARD_SPEAR600_DT) += board-dt.o
-diff --git a/arch/arm/mach-spear6xx/board-dt.c b/arch/arm/mach-spear6xx/board-dt.c
-new file mode 100644
-index 0000000..ee4ff33
---- /dev/null
-+++ b/arch/arm/mach-spear6xx/board-dt.c
-@@ -0,0 +1,75 @@
-+/*
-+ * arch/arm/mach-spear6xx/board-dt.c
-+ *
-+ * Generic SPEAr600 platform support
-+ *
-+ * Copyright (C) 2009 ST Microelectronics
-+ * Viresh Kumar<viresh.kumar-qxv4g6HH51o@public.gmane.org>
-+ *
-+ * Copyright 2012 Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
 +#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <asm/hardware/vic.h>
-+#include <asm/mach/arch.h>
-+#include <asm/mach-types.h>
-+#include <mach/generic.h>
-+#include <mach/hardware.h>
-+
-+static struct amba_device *amba_devs[] __initdata = {
-+	&gpio_device[0],
-+	&gpio_device[1],
-+	&gpio_device[2],
-+	&uart_device[0],
-+	&uart_device[1],
-+};
-+
-+static struct platform_device *plat_devs[] __initdata = {
-+};
-+
-+static void __init spear600_dt_init(void)
++#include <linux/of_net.h>
+ #include "stmmac.h"
+ 
++#ifdef CONFIG_OF
++static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
++					    struct plat_stmmacenet_data *plat,
++					    const char **mac)
 +{
-+	unsigned int i;
++	struct device_node *np = pdev->dev.of_node;
 +
-+	/* call spear600 machine init function */
-+	spear600_init();
++	if (!np)
++		return -ENODEV;
 +
-+	/* Add Platform Devices */
-+	platform_add_devices(plat_devs, ARRAY_SIZE(plat_devs));
++	*mac = of_get_mac_address(np);
++	plat->interface = of_get_phy_mode(np);
++	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
++					   sizeof(struct stmmac_mdio_bus_data),
++					   GFP_KERNEL);
 +
-+	/* Add Amba Devices */
-+	for (i = 0; i < ARRAY_SIZE(amba_devs); i++)
-+		amba_device_register(amba_devs[i], &iomem_resource);
++	/*
++	 * Currently only the properties needed on SPEAr600
++	 * are provided. All other properties should be added
++	 * once needed on other platforms.
++	 */
++	if (of_device_is_compatible(np, "st,spear600-gmac")) {
++		plat->pbl = 8;
++		plat->has_gmac = 1;
++		plat->pmt = 1;
++	}
++
++	return 0;
 +}
-+
-+static const char *spear600_dt_board_compat[] = {
-+	"st,spear600-evb",
-+	NULL
-+};
-+
-+static const struct of_device_id vic_of_match[] __initconst = {
-+	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
-+	{ /* Sentinel */ }
-+};
-+
-+static void __init spear6xx_dt_init_irq(void)
++#else
++static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
++					    struct plat_stmmacenet_data *plat,
++					    const char **mac)
 +{
-+	of_irq_init(vic_of_match);
++	return -ENOSYS;
 +}
++#endif /* CONFIG_OF */
 +
-+DT_MACHINE_START(SPEAR600_DT, "ST-SPEAR600-DT")
-+	.map_io		=	spear6xx_map_io,
-+	.init_irq	=	spear6xx_dt_init_irq,
-+	.handle_irq	=	vic_handle_irq,
-+	.timer		=	&spear6xx_timer,
-+	.init_machine	=	spear600_dt_init,
-+	.restart	=	spear_restart,
-+	.dt_compat	=	spear600_dt_board_compat,
-+MACHINE_END
+ /**
+  * stmmac_pltfr_probe
+  * @pdev: platform device pointer
+@@ -39,7 +79,8 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	void __iomem *addr = NULL;
+ 	struct stmmac_priv *priv = NULL;
+-	struct plat_stmmacenet_data *plat_dat;
++	struct plat_stmmacenet_data *plat_dat = NULL;
++	const char *mac = NULL;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res)
+@@ -58,7 +99,25 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+ 		ret = -ENOMEM;
+ 		goto out_release_region;
+ 	}
+-	plat_dat = pdev->dev.platform_data;
++
++	if (pdev->dev.of_node) {
++		plat_dat = devm_kzalloc(&pdev->dev,
++					sizeof(struct plat_stmmacenet_data),
++					GFP_KERNEL);
++		if (!plat_dat) {
++			pr_err("%s: ERROR: no memory", __func__);
++			ret = -ENOMEM;
++			goto out_unmap;
++		}
++
++		ret = stmmac_probe_config_dt(pdev, plat_dat, &mac);
++		if (ret) {
++			pr_err("%s: main dt probe failed", __func__);
++			goto out_unmap;
++		}
++	} else {
++		plat_dat = pdev->dev.platform_data;
++	}
+ 
+ 	/* Custom initialisation (if needed)*/
+ 	if (plat_dat->init) {
+@@ -73,6 +132,10 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+ 		goto out_unmap;
+ 	}
+ 
++	/* Get MAC address if available (DT) */
++	if (mac)
++		memcpy(priv->dev->dev_addr, mac, ETH_ALEN);
++
+ 	/* Get the MAC information */
+ 	priv->dev->irq = platform_get_irq_byname(pdev, "macirq");
+ 	if (priv->dev->irq == -ENXIO) {
+@@ -178,6 +241,12 @@ static const struct dev_pm_ops stmmac_pltfr_pm_ops = {
+ static const struct dev_pm_ops stmmac_pltfr_pm_ops;
+ #endif /* CONFIG_PM */
+ 
++static const struct of_device_id stmmac_dt_ids[] = {
++	{ .compatible = "st,spear600-gmac", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, stmmac_dt_ids);
++
+ static struct platform_driver stmmac_driver = {
+ 	.probe = stmmac_pltfr_probe,
+ 	.remove = stmmac_pltfr_remove,
+@@ -185,6 +254,7 @@ static struct platform_driver stmmac_driver = {
+ 		   .name = STMMAC_RESOURCE_NAME,
+ 		   .owner = THIS_MODULE,
+ 		   .pm = &stmmac_pltfr_pm_ops,
++		   .of_match_table = of_match_ptr(stmmac_dt_ids),
+ 		   },
+ };
+ 
 -- 
 1.7.9.2
