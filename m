@@ -1,84 +1,46 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 5/5 v4] ARM: at91: sam9x5 add i2c DT support
-Date: Tue, 13 Mar 2012 13:33:44 +0100
-Message-ID: <1331642024-19869-5-git-send-email-plagnioj@jcrosoft.com>
-References: <a>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/1] of: add NULL parameter check for of_device_is_available
+Date: Tue, 13 Mar 2012 07:46:15 -0500
+Message-ID: <4F5F4197.4070605@gmail.com>
+References: <1331638805-17136-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1331638805-17136-1-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-For now on use i2c-gpio driver on the same pin as the hardware IP.
+On 03/13/2012 06:40 AM, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> This function will return 1 even the device node passed in
+> is NULL which is a little error-prone.
+> Change to return 0 if the device node passed in is NULL.
+> 
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-Acked-by: Rob Herring <rob.herring@calxeda.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org
----
- arch/arm/boot/dts/at91sam9x5.dtsi |   39 +++++++++++++++++++++++++++++++++++++
- 1 files changed, 39 insertions(+), 0 deletions(-)
+Applied.
 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index c294657..f0104f4 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -188,4 +188,43 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	i2c@0 {
-+		compatible = "i2c-gpio";
-+		gpios = <&pioA 30 0 /* sda */
-+			 &pioA 31 0 /* scl */
-+			>;
-+		i2c-gpio,sda-open-drain;
-+		i2c-gpio,scl-open-drain;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c@1 {
-+		compatible = "i2c-gpio";
-+		gpios = <&pioC 0 0 /* sda */
-+			 &pioC 1 0 /* scl */
-+			>;
-+		i2c-gpio,sda-open-drain;
-+		i2c-gpio,scl-open-drain;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c@2 {
-+		compatible = "i2c-gpio";
-+		gpios = <&pioB 4 0 /* sda */
-+			 &pioB 5 0 /* scl */
-+			>;
-+		i2c-gpio,sda-open-drain;
-+		i2c-gpio,scl-open-drain;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
- };
--- 
-1.7.7
+Rob
+
+> ---
+>  drivers/of/base.c |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 133908a..b9347d8 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -280,6 +280,9 @@ int of_device_is_available(const struct device_node *device)
+>  	const char *status;
+>  	int statlen;
+>  
+> +	if (device == NULL)
+> +		return 0;
+> +
+>  	status = of_get_property(device, "status", &statlen);
+>  	if (status == NULL)
+>  		return 1;
