@@ -1,11 +1,13 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3] of: introduce helper to manage boolean
-Date: Tue, 13 Mar 2012 18:03:49 +0100
-Message-ID: <1331658229-3401-1-git-send-email-plagnioj@jcrosoft.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3] of: introduce helper to manage boolean
+Date: Tue, 13 Mar 2012 17:21:11 +0000
+Message-ID: <201203131721.11973.arnd@arndb.de>
+References: <1331658229-3401-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1331658229-3401-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -19,52 +21,14 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-of_property_read_bool
+On Tuesday 13 March 2012, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> of_property_read_bool
+> 
+> Search for a property in a device node.
+> Returns true if the property exist false otherwise.
+> 
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-Search for a property in a device node.
-Returns true if the property exist false otherwise.
-
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
-v3:
-
-	include Grant comment
-
-	Grant can I get the go please?
-
-Best Regards,
-J.
- include/linux/of.h |   16 ++++++++++++++++
- 1 files changed, 16 insertions(+), 0 deletions(-)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a75a831..a992cdf 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -342,6 +342,22 @@ static inline int of_machine_is_compatible(const char *compat)
- #define of_match_node(_matches, _node)	NULL
- #endif /* CONFIG_OF */
- 
-+/**
-+ * of_property_read_bool - Findfrom a property
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device node.
-+ * Returns true if the property exist false otherwise.
-+ */
-+static inline bool of_property_read_bool(const struct device_node *np,
-+					 const char *propname)
-+{
-+	struct property *prop = of_find_property(np, propname, NULL);
-+
-+	return prop ? false : true;
-+}
-+
- static inline int of_property_read_u32(const struct device_node *np,
- 				       const char *propname,
- 				       u32 *out_value)
--- 
-1.7.7
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
