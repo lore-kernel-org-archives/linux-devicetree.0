@@ -1,158 +1,71 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
-Date: Tue, 13 Mar 2012 11:23:51 -0600
-Message-ID: <20120313172351.97C5E3E053B@localhost>
-References: <1331628428-24017-1-git-send-email-b29396@freescale.com> <1331628428-24017-2-git-send-email-b29396@freescale.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1331628428-24017-2-git-send-email-b29396@freescale.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, rob.herring@calxeda.com, cjb@laptop.org, rdunlap@xenotime.net, vinod.koul@linux.intel.com
+From: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] i2c-s3c2410: Add HDMIPHY quirk for S3C2440
+Date: Tue, 13 Mar 2012 18:27:38 +0100
+Message-ID: <4F5F838A.6030908@samsung.com>
+References: <1331657679-31302-1-git-send-email-k.lewandowsk@samsung.com>
+ <1331657679-31302-4-git-send-email-k.lewandowsk@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1331657679-31302-4-git-send-email-k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Mar 2012 16:47:04 +0800, Dong Aisheng <b29396@freescale.com> wrote:
-> From: Dong Aisheng <dong.aisheng@linaro.org>
+Hi Karol,
+Please refer to comments below,
+
+Regards,
+Tomasz Stanislawski
+
+On 03/13/2012 05:54 PM, Karol Lewandowski wrote:
+> This patch adds support for s3c2440 I2C bus controller dedicated HDMIPHY device on
+> Exynos4 platform. Some quirks are introduced due to differences between HDMIPHY
+> and other I2C controllers on Exynos4.  These differences are:
+> - no GPIOs, HDMIPHY is inside the SoC and the controller is connected
+>   internally
+> - due to unknown reason (probably HW bug in HDMIPHY and/or the controller) a
+>   transfer fails to finish. The controller hangs after sending the last byte,
+>   the workaround for this bug is resetting the controller after each transfer
 > 
-> This patch includes basic dt support which can boot via nfs rootfs.
-> 
-> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> Signed-off-by: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Tested-by: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.txt |    4 +
->  arch/arm/boot/dts/imx28-evk.dts               |   31 +++++++++
->  arch/arm/boot/dts/imx28.dtsi                  |   88 +++++++++++++++++++++++++
->  arch/arm/mach-mxs/Kconfig                     |    9 +++
->  arch/arm/mach-mxs/Makefile                    |    1 +
->  arch/arm/mach-mxs/imx28-dt.c                  |   67 +++++++++++++++++++
->  6 files changed, 200 insertions(+), 0 deletions(-)
+>  .../devicetree/bindings/i2c/samsung-i2c.txt        |   10 ++++-
+>  drivers/i2c/busses/i2c-s3c2410.c                   |   36 ++++++++++++++++++++
+>  2 files changed, 44 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index 54bddda..9f21faf 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -1,6 +1,10 @@
->  Freescale i.MX Platforms Device Tree Bindings
->  -----------------------------------------------
+[snip]
+> @@ -871,6 +896,14 @@ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
+>  		return;
 >  
-> +i.MX28 Evaluation Kit
-> +Required root node properties:
-> +    - compatible = "fsl,imx28-evk", "fsl,imx28";
+>  	pdata->bus_num = -1; /* i2c bus number is dynamically assigned */
 > +
->  i.MX51 Babbage Board
->  Required root node properties:
->      - compatible = "fsl,imx51-babbage", "fsl,imx51";
-> diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
-> new file mode 100644
-> index 0000000..9758dc4
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx28-evk.dts
-> @@ -0,0 +1,31 @@
-> +/*
-> + * Copyright 2012 Freescale Semiconductor, Inc.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "imx28.dtsi"
-> +
-> +/ {
-> +	model = "Freescale i.MX28 Evaluation Kit";
-> +	compatible = "fsl,imx28-evk", "fsl,imx28";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x40000000 0x08000000>;
-> +	};
-> +
-> +	ahb@80080000 {
-> +		fec@800f0000 {
-> +			phy-mode = "rmii";
-> +			local-mac-address = [00 04 9F 01 7D 5B];
+> +	if (s3c24xx_i2c_is_type(i2c, TYPE_S3C2440) &&
 
-Generally a bad idea to put a specific mac address into the device tree.
-Better to fill it with zeros.  Otherwise all the dev boards will end up using
-the same value.
+I think that type checking should be removed because hdmiphy quirk is something
+orthogonal to the controller type.
 
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> new file mode 100644
-> index 0000000..acf0dab
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -0,0 +1,88 @@
-> +/*
-> + * Copyright 2012 Freescale Semiconductor, Inc.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
+> +	    of_get_property(np, "samsung,i2c-quirk-hdmiphy", NULL))
+> +		i2c->type |= FLAG_HDMIPHY;
 > +
-> +/include/ "skeleton.dtsi"
+> +	if (of_get_property(np, "samsung,i2c-no-gpio", NULL))
+> +		i2c->type |= FLAG_NO_GPIO;
 > +
-> +/ {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	interrupt-parent = <&icoll>;
-> +
-> +	aliases {
-> +		serial0 = &uart1;
-> +	};
-> +
-> +	cpus {
-> +		cpu@0 {
-> +			compatible = "arm,arm926ejs";
-> +		};
-> +	};
-> +
-> +	apb@80000000 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0x80000000 0x80000>;
-> +		ranges;
-> +
-> +		apbh@80000000 {
-> +			compatible = "simple-bus";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0x80000000 0x3c900>;
-> +			ranges;
-> +
-> +			icoll: interrupt-controller@80000000 {
-> +				compatible = "fsl,imx28-icoll";
-> +				interrupt-controller;
-> +				#interrupt-cells = <1>;
-> +				reg = <0x80000000 0x2000>;
-> +			};
-> +		};
-> +
-> +		apbx@80040000 {
-> +			compatible = "simple-bus";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0x80040000 0x40000>;
-> +			ranges;
-> +
-> +			uart1: uart@80074000 {
-> +				compatible = "arm,pl011", "arm,primecell";
-> +				reg = <0x80074000 0x2000>;
-> +				interrupts = <47>;
-> +			};
-> +		};
-
-What is the purpose of the apbh and apbx busses?  Will more device nodes
-get added to them later, or does each only contain a single device?
-
-g.
+>  	of_property_read_u32(np, "samsung,i2c-sda-delay", &pdata->sda_delay);
+>  	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
+>  	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
+> @@ -1128,6 +1161,9 @@ static struct platform_device_id s3c24xx_driver_ids[] = {
+>  	}, {
+>  		.name		= "s3c2440-i2c",
+>  		.driver_data	= TYPE_S3C2440,
+> +	}, {
+> +		.name		= "s3c2440-hdmiphy-i2c",
+> +		.driver_data	= TYPE_S3C2440 | FLAG_HDMIPHY | FLAG_NO_GPIO,
+>  	}, { },
+>  };
+>  MODULE_DEVICE_TABLE(platform, s3c24xx_driver_ids);
