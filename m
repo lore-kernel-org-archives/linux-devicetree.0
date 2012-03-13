@@ -1,151 +1,93 @@
-From: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] i2c-s3c2410: Add HDMIPHY quirk for S3C2440
-Date: Tue, 13 Mar 2012 19:13:25 +0100
-Message-ID: <1331662405-7877-1-git-send-email-k.lewandowsk@samsung.com>
-References: <4F5F838A.6030908@samsung.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] gpio: Add Altera GPIO driver
+Date: Tue, 13 Mar 2012 12:13:24 -0600
+Message-ID: <20120313181324.EBBA83E053B@localhost>
+References: <1328551142-8439-1-git-send-email-tklauser@distanz.ch>
+	<20120312160418.816A83E07B0@localhost>
+	<20120313113126.GL21503@distanz.ch>
+Reply-To: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <4F5F838A.6030908-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
-Cc: thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
+In-Reply-To: <20120313113126.GL21503-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+List-Unsubscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/options/nios2-dev>,
+	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sopc.et.ntust.edu.tw/pipermail/nios2-dev>
+List-Post: <mailto:nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
+List-Help: <mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=help>
+List-Subscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/listinfo/nios2-dev>,
+	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=subscribe>
+Sender: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+Errors-To: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+To: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for s3c2440 I2C bus controller dedicated HDMIPHY device on
-Exynos4 platform. Some quirks are introduced due to differences between HDMIPHY
-and other I2C controllers on Exynos4.  These differences are:
-- no GPIOs, HDMIPHY is inside the SoC and the controller is connected
-  internally
-- due to unknown reason (probably HW bug in HDMIPHY and/or the controller) a
-  transfer fails to finish. The controller hangs after sending the last byte,
-  the workaround for this bug is resetting the controller after each transfer
+On Tue, 13 Mar 2012 12:31:26 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
+> On 2012-03-12 at 17:04:18 +0100, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > On Mon,  6 Feb 2012 18:59:02 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
+> > > This driver supports the Altera PIO core.
+> > > 
+> > > Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
+> > > Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+> > > ---
+> > > This driver was submitted already about a year ago by Thomas, was
+> > > adjusted by him according to some remarks made by Grant and was then
+> > > included in the -mm tree [1] for some time but dropped again
+> > > (couldn't find out when and why exactly).
+> > > 
+> > > [0] http://article.gmane.org/gmane.linux.drivers.devicetree/4231
+> > > [1] http://article.gmane.org/gmane.linux.kernel.commits.mm/65119
+> > > 
+> > > So this is a new attempt towards getting this driver into mainline
+> > > from the nios2 tree. The following changes have been made atop the
+> > > version submitted by Thomas:
+> > > 
+> > > - Changed driver name to new naming convention
+> > > - Usage of of_property_read_u32 in the probe function
+> > 
+> > This looks like a pretty generic memory-mapped gpio chip.  It should use the
+> > gpio-generic infrastructure instead of open-coding all of the accessor hooks.
+> 
+> Thanks a lot for the hint.
+> 
+> I'm trying to figure out how this could work together with
+> of_mm_gpio_chip which we use in the driver. Both bgpio_chip and
+> of_mm_gpio_chip contain a struct gpio_chip, so I suppose we can only
+> "be" either one of them in our driver? What would be the prefered way to
+> do this?
 
-Signed-off-by: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Tested-by: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/i2c/samsung-i2c.txt        |   11 +++++-
- drivers/i2c/busses/i2c-s3c2410.c                   |   35 ++++++++++++++++++++
- 2 files changed, 44 insertions(+), 2 deletions(-)
+Hmmm, you are correct.  However, of_mm_gpio_chip() is the only part of
+drivers/of/gpio.c that isn't usable by gpio-generic.c.  Focus on gpio-generic.
 
-diff --git a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-index 38832c7..c6670f9 100644
---- a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/samsung-i2c.txt
-@@ -10,14 +10,21 @@ Required properties:
-     region.
-   - interrupts: interrupt number to the cpu.
-   - samsung,i2c-sda-delay: Delay (in ns) applied to data line (SDA) edges.
--  - gpios: The order of the gpios should be the following: <SDA, SCL>.
--    The gpio specifier depends on the gpio controller.
- 
- Optional properties:
-+  - gpios: The order of the gpios should be the following: <SDA, SCL>.
-+    The gpio specifier depends on the gpio controller. Required in all cases
-+    except when "samsung,i2c-no-gpio" is also specified.
-+  - samsung,i2c-no-gpio: input/output lines of the controller are
-+    permanently wired to the respective client, there are no gpio
-+    lines that need to be configured to enable this controller
-   - samsung,i2c-slave-addr: Slave address in multi-master enviroment. If not
-     specified, default value is 0.
-   - samsung,i2c-max-bus-freq: Desired frequency in Hz of the bus. If not
-     specified, the default value in Hz is 100000.
-+  - samsung,i2c-quirk-hdmiphy: Quirk for HDMI PHY block found on
-+    Exynos4 platform - reduce timeout and reset controller after each
-+    transfer
- 
- Example:
- 
-diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-index f84d26f..fa5f8c4 100644
---- a/drivers/i2c/busses/i2c-s3c2410.c
-+++ b/drivers/i2c/busses/i2c-s3c2410.c
-@@ -52,6 +52,8 @@ static const struct of_device_id s3c24xx_i2c_match[];
- #define TYPE_BITS		0x000000ff
- #define TYPE_S3C2410		0x00000001
- #define TYPE_S3C2440		0x00000002
-+#define FLAG_HDMIPHY		0x00000100
-+#define FLAG_NO_GPIO		0x00000200
- 
- /* i2c controller state */
- enum s3c24xx_i2c_state {
-@@ -481,6 +483,13 @@ static int s3c24xx_i2c_set_master(struct s3c24xx_i2c *i2c)
- 	unsigned long iicstat;
- 	int timeout = 400;
- 
-+	/* the timeout for HDMIPHY is reduced to 10 ms because
-+	 * the hangup is expected to happen, so waiting 400 ms
-+	 * causes only unnecessary system hangup
-+	 */
-+	if (i2c->type & FLAG_HDMIPHY)
-+		timeout = 10;
-+
- 	while (timeout-- > 0) {
- 		iicstat = readl(i2c->regs + S3C2410_IICSTAT);
- 
-@@ -490,6 +499,15 @@ static int s3c24xx_i2c_set_master(struct s3c24xx_i2c *i2c)
- 		msleep(1);
- 	}
- 
-+	/* hang-up of bus dedicated for HDMIPHY occurred, resetting */
-+	if (i2c->type & FLAG_HDMIPHY) {
-+		writel(0, i2c->regs + S3C2410_IICCON);
-+		writel(0, i2c->regs + S3C2410_IICSTAT);
-+		writel(0, i2c->regs + S3C2410_IICDS);
-+
-+		return 0;
-+	}
-+
- 	return -ETIMEDOUT;
- }
- 
-@@ -771,6 +789,9 @@ static int s3c24xx_i2c_parse_dt_gpio(struct s3c24xx_i2c *i2c)
- {
- 	int idx, gpio, ret;
- 
-+	if (i2c->type & FLAG_NO_GPIO)
-+		return 0;
-+
- 	for (idx = 0; idx < 2; idx++) {
- 		gpio = of_get_gpio(i2c->dev->of_node, idx);
- 		if (!gpio_is_valid(gpio)) {
-@@ -795,6 +816,10 @@ free_gpio:
- static void s3c24xx_i2c_dt_gpio_free(struct s3c24xx_i2c *i2c)
- {
- 	unsigned int idx;
-+
-+	if (i2c->type & FLAG_NO_GPIO)
-+		return;
-+
- 	for (idx = 0; idx < 2; idx++)
- 		gpio_free(i2c->gpios[idx]);
- }
-@@ -871,6 +896,13 @@ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
- 		return;
- 
- 	pdata->bus_num = -1; /* i2c bus number is dynamically assigned */
-+
-+	if (of_get_property(np, "samsung,i2c-quirk-hdmiphy", NULL))
-+		i2c->type |= FLAG_HDMIPHY;
-+
-+	if (of_get_property(np, "samsung,i2c-no-gpio", NULL))
-+		i2c->type |= FLAG_NO_GPIO;
-+
- 	of_property_read_u32(np, "samsung,i2c-sda-delay", &pdata->sda_delay);
- 	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
- 	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
-@@ -1128,6 +1160,9 @@ static struct platform_device_id s3c24xx_driver_ids[] = {
- 	}, {
- 		.name		= "s3c2440-i2c",
- 		.driver_data	= TYPE_S3C2440,
-+	}, {
-+		.name		= "s3c2440-hdmiphy-i2c",
-+		.driver_data	= TYPE_S3C2440 | FLAG_HDMIPHY | FLAG_NO_GPIO,
- 	}, { },
- };
- MODULE_DEVICE_TABLE(platform, s3c24xx_driver_ids);
+> Also as we need to register the driver from platform specific setup code
+> (in the out-of-mainline nios2 port only atm) very early on, we don't
+> have a struct platform_device or struct device available which we would
+> need to pass to bgpio_init. What's the best way to solve this?
+
+There are 2 halves to gpio-generic.  The library of helper functions (get/set/etc.)
+and the basic-mmio-gpio device driver.  It /should/ be safe to call bgpio_init without
+a struct platform_device, but right now the code doesn't protect against it.  That is
+a bug that you can easily fix.
+
+However, why are you initializing it very early in platform specific code?  That is
+very strongly discouraged.  GPIO controllers are just another device.
+
+> And another issue I came across: gpio-generic only seems to support
+> 8/16/32/64 bit wide GPIO registers. The Altera GPIO controller can have
+> from 1 to 32 bits per register depending on the configuration in the
+> FPGA (though it will still always be a 32bit register). In bgpio_init
+> the size passed is checked for being a number of 2 and the number then
+> written to the bits member. What would be the best way to still
+> determine the "real" number of GPIOs available in the driver then?
+
+The gpio-generic code is a work in progress; feel free to submit patches to get
+it to behave the way you need it to.  Ultimately, I want all simple mm gpio drivers
+to use gpio-generic.
+
+g.
+
 -- 
-1.7.9
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
