@@ -1,34 +1,37 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 2/2] regulator: add device tree support for max8997
-Date: Tue, 13 Mar 2012 12:18:03 -0600
-Message-ID: <20120313181803.B45073E053B@localhost>
-References: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org> <1330000688-11226-3-git-send-email-thomas.abraham@linaro.org> <20120313034306.16CF73E07E4@localhost> <CAJuYYwRAXyU7d7qhGUX-=qWUJ0M1KB3XCGPOnUxToP=0XOhzqg@mail.gmail.com>
+From: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] max17042_battery: Use devm_kzalloc() where applicable
+Date: Tue, 13 Mar 2012 23:18:31 +0400
+Message-ID: <20120313191831.GA2187@oksana.dev.rtsoft.ru>
+References: <1329933982-2529-1-git-send-email-k.lewandowsk@samsung.com>
+ <1329933982-2529-2-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwRAXyU7d7qhGUX-=qWUJ0M1KB3XCGPOnUxToP=0XOhzqg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, dg77.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1329933982-2529-2-git-send-email-k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Mar 2012 12:14:42 +0530, Thomas Abraham <thomas.abraham@lina=
-ro.org> wrote:
-> On 13 March 2012 09:13, Grant Likely <grant.likely@secretlab.ca> wrot=
-e:
-> > On Thu, 23 Feb 2012 18:08:08 +0530, Thomas Abraham <thomas.abraham@=
-linaro.org> wrote:
-> > Otherwise, the patch looks pretty good. =C2=A0(although seeing the =
-decode function
-> > has got me thinking that we need a much better way of decoding the =
-dt data).
->=20
-> The parsing function looks huge since there is lot of data to pick up
-> from the dt node.
+On Wed, Feb 22, 2012 at 07:06:20PM +0100, Karol Lewandowski wrote:
+> This allows us to simplify probe and exit function.
+> 
+> Signed-off-by: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
 
-Oh, I understand that you have to do it this way; I just think the core=
- code
-should make it a lot easier.  :-)
+Applied, thanks!
 
-g.
+-- 
+Anton Vorontsov
+Email: cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
