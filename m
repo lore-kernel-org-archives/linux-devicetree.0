@@ -1,47 +1,77 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/5 v3] i2c/gpio: add DT support
-Date: Tue, 13 Mar 2012 11:22:08 +0100
-Message-ID: <20120313102208.GA2488@pengutronix.de>
-References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
- <20120313073748.GA7746@pengutronix.de>
- <20120313091104.GE18320@game.jcrosoft.org>
+From: Stefan Roese <sr@denx.de>
+Subject: Re: [PATCH v2] stmmac: Add device-tree support
+Date: Tue, 13 Mar 2012 11:29:34 +0100
+Message-ID: <201203131129.34449.sr@denx.de>
+References: <1331623394-14600-1-git-send-email-sr@denx.de> <4F5F0AF2.1070508@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120313091104.GE18320-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4F5F0AF2.1070508@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@st.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>, spear-devel <spear-devel@list.st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 13 March 2012 09:53:06 Viresh Kumar wrote:
+> On 3/13/2012 12:53 PM, Stefan Roese wrote:
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> > b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> > 
+> > +#ifdef CONFIG_OF
+> > +static int __devinit stmmac_probe_config_dt(struct platform_device
+> > *pdev, +					    struct 
+plat_stmmacenet_data *plat,
+> > +					    const char **mac)
+> > +{
+> 
+> <snip...>
+> 
+> > +}
+> > +#else
+> > +static int __devinit stmmac_probe_config_dt(struct platform_device
+> > *pdev, +					    struct 
+plat_stmmacenet_data *plat,
+> > +					    const char **mac)
+> > +{
+> > +	return ERR_PTR(-ENOSYS);
+> 
+> why ERR_PTR()?
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for spotting. Will fix in next version.
+ 
+> > +}
+> > +#endif /* CONFIG_OF */
+> > +
+> > 
+> >  /**
+> >  
+> >   * stmmac_pltfr_probe
+> >   * @pdev: platform device pointer
+> > 
+> > @@ -58,7 +101,25 @@ static int stmmac_pltfr_probe(struct platform_device
+> > *pdev)
+> > 
+> >  		ret = -ENOMEM;
+> >  		goto out_release_region;
+> >  	
+> >  	}
+> > 
+> > -	plat_dat = pdev->dev.platform_data;
+> > +
+> > +	if (pdev->dev.of_node) {
+> > +		plat_dat = devm_kzalloc(&pdev->dev,
+> > +					sizeof(struct 
+plat_stmmacenet_data),
+> > +					GFP_KERNEL);
+> > +		if (!plat_dat) {
+> > +			pr_err("%s: ERROR: no memory", __func__);
+> 
+> why don't we use dev_err here?
 
-
-> will update and send it via AT91  with your ack
-
-Please wait with my ack until I saw the update.
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAk9fH9AACgkQD27XaX1/VRsbmgCfddnkEJ8cpKcn1XuLErBDhftl
-Pf0AoK29cwotJiOYTrCAYOtjuY67o0xT
-=AXpn
------END PGP SIGNATURE-----
-
---RnlQjJ0d97Da+TV1--
+Consistency. pr_err is used in this driver. So I'm sticking to it with this 
+patch as well.
+ 
+Thanks,
+Stefan
