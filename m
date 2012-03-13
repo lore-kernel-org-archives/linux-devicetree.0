@@ -1,198 +1,35 @@
-From: Stefan Roese <sr@denx.de>
-Subject: [PATCH v3] stmmac: Add device-tree support
-Date: Tue, 13 Mar 2012 15:56:37 +0100
-Message-ID: <1331650597-16747-1-git-send-email-sr@denx.de>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, Giuseppe Cavallaro <peppe.cavallaro@st.com>
+From: Zach Sadecki <zsadecki@itwatchdogs.com>
+Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
+Date: Tue, 13 Mar 2012 09:59:39 -0500
+Message-ID: <4F5F60DB.9090801@itwatchdogs.com>
+References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
+ <1331628428-24017-2-git-send-email-b29396@freescale.com>
+ <4F5F5B3F.2000303@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4F5F5B3F.2000303@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: vinod.koul@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, rdunlap@xenotime.net, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, cjb@laptop.org, Dong Aisheng <b29396@freescale.com>, s.hauer@pengutronix.de, shawn.guo@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to configure the STMMAC ethernet driver via
-device-tree instead of platform_data.
-
-Currently, only the properties needed on SPEAr600 are provided. All
-other properties should be added once needed on other platforms.
-
-Signed-off-by: Stefan Roese <sr@denx.de>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
----
-v3:
-- Fixed return value (removed ERR_PTR)
-- Changed "gmac0: stmmac@e0800000" to "gmac0: ethernet@e0800000"
-- Removed phy-addr for real from code
-- Fixed indentation issue
-
-v2:
-- Renamed stm -> st
-- Renamed compatible to "st,spear600-gmac"
-- Removed "prog-burst-len", "had-gmac", has-pmt" properties.
-  They are now implicitly set for "st,spear600-gmac" compatible
-  devices.
-- Removed phy-addr
-- Used "if (pdev->dev.of_node)" to distinguish between DT
-  and non-DT version instead of #ifdef
-
- Documentation/devicetree/bindings/net/stmmac.txt   |   28 ++++++++
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   74 +++++++++++++++++++-
- 2 files changed, 100 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/stmmac.txt
-
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-new file mode 100644
-index 0000000..1f62623
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -0,0 +1,28 @@
-+* STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
-+
-+Required properties:
-+- compatible: Should be "st,spear600-gmac"
-+- reg: Address and length of the register set for the device
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+- interrupts: Should contain the STMMAC interrupts
-+- interrupt-names: Should contain the interrupt names "macirq"
-+  "eth_wake_irq" if this interrupt is supported in the "interrupts"
-+  property
-+- phy-mode: String, operation mode of the PHY interface.
-+  Supported values are: "mii", "rmii", "gmii", "rgmii".
-+
-+Optional properties:
-+- mac-address: 6 bytes, mac address
-+
-+Examples:
-+
-+	gmac0: ethernet@e0800000 {
-+		compatible = "st,spear600-gmac";
-+		reg = <0xe0800000 0x8000>;
-+		interrupt-parent = <&vic1>;
-+		interrupts = <24 23>;
-+		interrupt-names = "macirq", "eth_wake_irq";
-+		mac-address = [000000000000]; /* Filled in by U-Boot */
-+		phy-mode = "gmii";
-+	};
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 3aad981..116529a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -24,8 +24,48 @@
- 
- #include <linux/platform_device.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_net.h>
- #include "stmmac.h"
- 
-+#ifdef CONFIG_OF
-+static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
-+					    struct plat_stmmacenet_data *plat,
-+					    const char **mac)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	*mac = of_get_mac_address(np);
-+	plat->interface = of_get_phy_mode(np);
-+	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
-+					   sizeof(struct stmmac_mdio_bus_data),
-+					   GFP_KERNEL);
-+
-+	/*
-+	 * Currently only the properties needed on SPEAr600
-+	 * are provided. All other properties should be added
-+	 * once needed on other platforms.
-+	 */
-+	if (of_device_is_compatible(np, "st,spear600-gmac")) {
-+		plat->pbl = 8;
-+		plat->has_gmac = 1;
-+		plat->pmt = 1;
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
-+					    struct plat_stmmacenet_data *plat,
-+					    const char **mac)
-+{
-+	return -ENOSYS;
-+}
-+#endif /* CONFIG_OF */
-+
- /**
-  * stmmac_pltfr_probe
-  * @pdev: platform device pointer
-@@ -39,7 +79,8 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *addr = NULL;
- 	struct stmmac_priv *priv = NULL;
--	struct plat_stmmacenet_data *plat_dat;
-+	struct plat_stmmacenet_data *plat_dat = NULL;
-+	const char *mac = NULL;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res)
-@@ -58,7 +99,25 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
- 		ret = -ENOMEM;
- 		goto out_release_region;
- 	}
--	plat_dat = pdev->dev.platform_data;
-+
-+	if (pdev->dev.of_node) {
-+		plat_dat = devm_kzalloc(&pdev->dev,
-+					sizeof(struct plat_stmmacenet_data),
-+					GFP_KERNEL);
-+		if (!plat_dat) {
-+			pr_err("%s: ERROR: no memory", __func__);
-+			ret = -ENOMEM;
-+			goto out_unmap;
-+		}
-+
-+		ret = stmmac_probe_config_dt(pdev, plat_dat, &mac);
-+		if (ret) {
-+			pr_err("%s: main dt probe failed", __func__);
-+			goto out_unmap;
-+		}
-+	} else {
-+		plat_dat = pdev->dev.platform_data;
-+	}
- 
- 	/* Custom initialisation (if needed)*/
- 	if (plat_dat->init) {
-@@ -73,6 +132,10 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
- 		goto out_unmap;
- 	}
- 
-+	/* Get MAC address if available (DT) */
-+	if (mac)
-+		memcpy(priv->dev->dev_addr, mac, ETH_ALEN);
-+
- 	/* Get the MAC information */
- 	priv->dev->irq = platform_get_irq_byname(pdev, "macirq");
- 	if (priv->dev->irq == -ENXIO) {
-@@ -178,6 +241,12 @@ static const struct dev_pm_ops stmmac_pltfr_pm_ops = {
- static const struct dev_pm_ops stmmac_pltfr_pm_ops;
- #endif /* CONFIG_PM */
- 
-+static const struct of_device_id stmmac_dt_ids[] = {
-+	{ .compatible = "st,spear600-gmac", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, stmmac_dt_ids);
-+
- static struct platform_driver stmmac_driver = {
- 	.probe = stmmac_pltfr_probe,
- 	.remove = stmmac_pltfr_remove,
-@@ -185,6 +254,7 @@ static struct platform_driver stmmac_driver = {
- 		   .name = STMMAC_RESOURCE_NAME,
- 		   .owner = THIS_MODULE,
- 		   .pm = &stmmac_pltfr_pm_ops,
-+		   .of_match_table = of_match_ptr(stmmac_dt_ids),
- 		   },
- };
- 
--- 
-1.7.9.2
+On 03/13/2012 09:35 AM, Rob Herring wrote:
+> +	ahb@80080000 {
+> +		fec@800f0000 {
+> Use generic names: ethernet@800f0000
+Generic is good, but consistency is better, IMHO.  grepping existing dts 
+files in 3.2.9 finds 6 instances of "fec@" and 0 instances of "ethernet@"
+>> +			uart1: uart@80074000 {
+> Use generic names: uart1: serial@...
+Same comment here, but unfortunately there is already inconsistency in 
+existing files...  25 instances of "serial@" and 35 instances of "uart@"
