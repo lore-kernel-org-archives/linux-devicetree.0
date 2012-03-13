@@ -1,79 +1,67 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: FW: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
-Date: Tue, 13 Mar 2012 07:52:05 -0600
-Message-ID: <20120313135205.804843E0B1B@localhost>
-References: <79CD15C6BA57404B839C016229A409A831810F81@DBDE01.ent.ti.com>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/5 v4] i2c/gpio: add DT support
+Date: Tue, 13 Mar 2012 15:08:22 +0100
+Message-ID: <20120313140822.GD2488@pengutronix.de>
+References: <1331642024-19869-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <79CD15C6BA57404B839C016229A409A831810F81-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+KJYzRxRHjYqLGl5"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1331642024-19869-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Mar 2012 10:27:10 +0000, "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org> wrote:
-> Grant,
-> 
-> Sorry for writing you privately...
-> 
-> There are some DTS patches pending for you ACK, can you please
-> Ack them so that Benoit can pull in for v3.4?
 
-We've gotten to the point where I no longer need to ack each and every DT related
-patch.  I'm not the only one capable of good DT review.  As long as someone with
-good DT background looks at them (like Arnd, Rob, me, or Shawn) then you're okay
-to merge.
+--+KJYzRxRHjYqLGl5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-g.
+On Tue, Mar 13, 2012 at 01:33:40PM +0100, Jean-Christophe PLAGNIOL-VILLARD =
+wrote:
 
-> 
-> Thanks,
-> Vaibhav
-> 
-> -----Original Message-----
-> From: Cousson, Benoit 
-> Sent: Thursday, March 01, 2012 4:09 AM
-> To: Tony Lindgren
-> Cc: Hiremath, Vaibhav; linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-> Subject: Re: [PATCH-V1] arm/dts: Add support for TI OMAP3 EVM board
-> 
-> On 2/29/2012 11:31 PM, Tony Lindgren wrote:
-> > * Hiremath, Vaibhav<hvaibhav-l0cyMroinI0@public.gmane.org>  [120105 02:46]:
-> ...
-> >> Can this merged? OR anybody has any comments here?
-> >
-> > For reference, looks like this one is queued up as
-> > commit f0e15e2b0c6b3e89daade25a1e9a2d80136c14c3.
-> 
-> Yes, it is, I included it in my DTS pull-request because it was the only 
-> one with Grant's ack.
-> 
-> I have the whole series ready to be pulled but was waiting for DT 
-> maintainers acked-by.
-> 
-> I still have these four ones in my branch.
-> 
-> d5c9442 arm/dts: Add support for TI AM3517/05 EVM board
-> 3b5fa9a arm/dts: omap3-evm: Add i2c and twl4030 support
-> 7f4ca5f arm/dts: Add support for TI AM335x EVM board
-> d0c3aca ARM: OMAP2+: board-generic: Add DT support for AM33xx devices
-> 
-> In fact the board one already has the proper ack, only the DTS are 
-> missing it.
-> 
-> Regards,
-> Benoit
+> update to use devm_kzalloc for private data
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
+Hmm, you need really to work on the commit messages, not everybody is
+familiar with DT and its implications:
+
+"To achieve DT support, we need to populate a custom platform_data in a
+private struct from DT information. To simplify code, the adapter and
+algorithm are also put into the private struct."
+
+Something like this?
+
+> ---
+> v4:
+>=20
+> 	fix timeout
+
+You need to work on the changelogs as well :)
+
+> 	use gpio_is_valid
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--+KJYzRxRHjYqLGl5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAk9fVNYACgkQD27XaX1/VRuaPACfZxSWramyrOFoOEMXcx7VGLrN
+5doAn2A8SLRjQS9GQKAEu5V7RA7YXiUT
+=y1jw
+-----END PGP SIGNATURE-----
+
+--+KJYzRxRHjYqLGl5--
