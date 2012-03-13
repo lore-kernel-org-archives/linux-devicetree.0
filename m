@@ -1,39 +1,32 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: [PATCH 1/1] of: add NULL parameter check for of_device_is_available
-Date: Tue, 13 Mar 2012 19:40:05 +0800
-Message-ID: <1331638805-17136-1-git-send-email-b29396@freescale.com>
+From: Stefan Roese <sr@denx.de>
+Subject: Re: [PATCH v2] stmmac: Add device-tree support
+Date: Tue, 13 Mar 2012 12:40:45 +0100
+Message-ID: <201203131240.46050.sr@denx.de>
+References: <1331623394-14600-1-git-send-email-sr@denx.de> <201203131129.34449.sr@denx.de> <4F5F2B56.2060504@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4F5F2B56.2060504@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@st.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>, spear-devel <spear-devel@list.st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dong Aisheng <dong.aisheng@linaro.org>
+On Tuesday 13 March 2012 12:11:18 Viresh Kumar wrote:
+> On 3/13/2012 3:59 PM, Stefan Roese wrote:
+> > Consistency. pr_err is used in this driver. So I'm sticking to it with
+> > this patch as well.
+> 
+> Hmmm. I don't know, but can you add another patch before this one to move
+> those prints.
 
-This function will return 1 even the device node passed in
-is NULL which is a little error-prone.
-Change to return 0 if the device node passed in is NULL.
+Sure, I could. But I have to admit that this is currently not top of my 
+priority.
 
-Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
----
- drivers/of/base.c |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+Peppe as driver maintainer might have some input here. Is this dev_err vs 
+pr_err a show-stopper for this patch?
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 133908a..b9347d8 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -280,6 +280,9 @@ int of_device_is_available(const struct device_node *device)
- 	const char *status;
- 	int statlen;
- 
-+	if (device == NULL)
-+		return 0;
-+
- 	status = of_get_property(device, "status", &statlen);
- 	if (status == NULL)
- 		return 1;
--- 
-1.7.0.4
+Thanks,
+Stefan
