@@ -1,250 +1,311 @@
-From: Stefan Roese <sr@denx.de>
-Subject: Re: [PATCH v2] stmmac: Add device-tree support
-Date: Tue, 13 Mar 2012 15:28:04 +0100
-Message-ID: <201203131528.04318.sr@denx.de>
-References: <1331623394-14600-1-git-send-email-sr@denx.de> <4F5F5753.6080601@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
+Date: Tue, 13 Mar 2012 09:35:43 -0500
+Message-ID: <4F5F5B3F.2000303@gmail.com>
+References: <1331628428-24017-1-git-send-email-b29396@freescale.com> <1331628428-24017-2-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4F5F5753.6080601@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: netdev@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>, devicetree-discuss@ozlabs.org, spear-devel@list.st.com
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1331628428-24017-2-git-send-email-b29396@freescale.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vinod.koul@linux.intel.com, s.hauer@pengutronix.de, rob.herring@calxeda.com, grant.likely@secretlab.ca, rdunlap@xenotime.net, kernel@pengutronix.de, cjb@laptop.org, shawn.guo@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+On 03/13/2012 03:47 AM, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> This patch includes basic dt support which can boot via nfs rootfs.
+> 
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt |    4 +
+>  arch/arm/boot/dts/imx28-evk.dts               |   31 +++++++++
+>  arch/arm/boot/dts/imx28.dtsi                  |   88 +++++++++++++++++++++++++
+>  arch/arm/mach-mxs/Kconfig                     |    9 +++
+>  arch/arm/mach-mxs/Makefile                    |    1 +
+>  arch/arm/mach-mxs/imx28-dt.c                  |   67 +++++++++++++++++++
+>  6 files changed, 200 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index 54bddda..9f21faf 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -1,6 +1,10 @@
+>  Freescale i.MX Platforms Device Tree Bindings
+>  -----------------------------------------------
+>  
+> +i.MX28 Evaluation Kit
+> +Required root node properties:
+> +    - compatible = "fsl,imx28-evk", "fsl,imx28";
+> +
+>  i.MX51 Babbage Board
+>  Required root node properties:
+>      - compatible = "fsl,imx51-babbage", "fsl,imx51";
+> diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
+> new file mode 100644
+> index 0000000..9758dc4
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx28-evk.dts
+> @@ -0,0 +1,31 @@
+> +/*
+> + * Copyright 2012 Freescale Semiconductor, Inc.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +/include/ "imx28.dtsi"
+> +
+> +/ {
+> +	model = "Freescale i.MX28 Evaluation Kit";
+> +	compatible = "fsl,imx28-evk", "fsl,imx28";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x40000000 0x08000000>;
+> +	};
+> +
+> +	ahb@80080000 {
+> +		fec@800f0000 {
 
-thanks for the review. I'll fix the issues and send an updated patch version.
+Use generic names: ethernet@800f0000
 
-Stefan
+> +			phy-mode = "rmii";
+> +			local-mac-address = [00 04 9F 01 7D 5B];
+> +			status = "okay";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> new file mode 100644
+> index 0000000..acf0dab
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -0,0 +1,88 @@
+> +/*
+> + * Copyright 2012 Freescale Semiconductor, Inc.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	interrupt-parent = <&icoll>;
+> +
+> +	aliases {
+> +		serial0 = &uart1;
+> +	};
+> +
+> +	cpus {
+> +		cpu@0 {
+> +			compatible = "arm,arm926ejs";
+> +		};
+> +	};
+> +
+> +	apb@80000000 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0x80000000 0x80000>;
+> +		ranges;
+> +
+> +		apbh@80000000 {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			reg = <0x80000000 0x3c900>;
+> +			ranges;
+> +
+> +			icoll: interrupt-controller@80000000 {
+> +				compatible = "fsl,imx28-icoll";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +				reg = <0x80000000 0x2000>;
+> +			};
+> +		};
+> +
+> +		apbx@80040000 {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			reg = <0x80040000 0x40000>;
+> +			ranges;
+> +
+> +			uart1: uart@80074000 {
 
-On Tuesday 13 March 2012 15:18:59 Rob Herring wrote:
-> On 03/13/2012 02:23 AM, Stefan Roese wrote:
-> > This patch adds support to configure the STMMAC ethernet driver via
-> > device-tree instead of platform_data.
-> > 
-> > Currently, only the properties needed on SPEAr600 are provided. All
-> > other properties should be added once needed on other platforms.
-> > 
-> > Signed-off-by: Stefan Roese <sr@denx.de>
-> > Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> > ---
-> > v2:
-> > - Renamed stm -> st
-> > - Renamed compatible to "st,spear600-gmac"
-> > - Removed "prog-burst-len", "had-gmac", has-pmt" properties.
-> > 
-> >   They are now implicitly set for "st,spear600-gmac" compatible
-> >   devices.
-> > 
-> > - Removed phy-addr
-> > - Used "if (pdev->dev.of_node)" to distinguish between DT
-> > 
-> >   and non-DT version instead of #ifdef
-> >  
-> >  Documentation/devicetree/bindings/net/stmmac.txt   |   28 ++++++++
-> >  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   76
-> >  +++++++++++++++++++- 2 files changed, 102 insertions(+), 2 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/net/stmmac.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/stmmac.txt
-> > b/Documentation/devicetree/bindings/net/stmmac.txt new file mode 100644
-> > index 0000000..a91f4e1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> > @@ -0,0 +1,28 @@
-> > +* STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
-> > +
-> > +Required properties:
-> > +- compatible: Should be "st,spear600-gmac"
-> > +- reg: Address and length of the register set for the device
-> > +- interrupt-parent: Should be the phandle for the interrupt controller
-> > +  that services interrupts for this device
-> > +- interrupts: Should contain the STMMAC interrupts
-> > +- interrupt-names: Should contain the interrupt names "macirq"
-> > +  "eth_wake_irq" if this interrupt is supported in the "interrupts"
-> > +  property
-> > +- phy-mode: String, operation mode of the PHY interface.
-> > +  Supported values are: "mii", "rmii", "gmii", "rgmii".
-> > +
-> > +Optional properties:
-> > +- mac-address: 6 bytes, mac address
-> > +
-> > +Examples:
-> > +
-> > +	gmac0: stmmac@e0800000 {
-> 
-> Use generic names: gmac0: ethernet@e0800000
-> 
-> > +		compatible = "st,spear600-gmac";
-> > +		reg = <0xe0800000 0x8000>;
-> > +		interrupt-parent = <&vic1>;
-> > +		interrupts = <24 23>;
-> > +		interrupt-names = "macirq", "eth_wake_irq";
-> > +		mac-address = [000000000000]; /* Filled in by U-Boot */
-> > +		phy-mode = "gmii";
-> > +	};
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> > b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c index
-> > 3aad981..ed8b477 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-> > @@ -24,8 +24,50 @@
-> > 
-> >  #include <linux/platform_device.h>
-> >  #include <linux/io.h>
-> > 
-> > +#include <linux/of.h>
-> > +#include <linux/of_net.h>
-> > 
-> >  #include "stmmac.h"
-> > 
-> > +#ifdef CONFIG_OF
-> > +static int __devinit stmmac_probe_config_dt(struct platform_device
-> > *pdev, +					    struct 
-plat_stmmacenet_data *plat,
-> > +					    const char **mac)
-> > +{
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +
-> > +	if (!np)
-> > +		return -ENODEV;
-> > +
-> > +	*mac = of_get_mac_address(np);
-> > +
-> > +	plat->interface = of_get_phy_mode(np);
-> > +	of_property_read_u32(np, "phy-addr", &plat->phy_addr);
-> 
-> This property doesn't exist anymore.
-> 
-> > +	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
-> > +					   sizeof(struct 
-stmmac_mdio_bus_data),
-> > +					   GFP_KERNEL);
-> > +
-> > +	/*
-> > +	 * Currently only the properties needed on SPEAr600
-> > +	 * are provided. All other properties should be added
-> > +	 * once needed on other platforms.
-> > +	 */
-> > +        if (of_device_is_compatible(np, "st,spear600-gmac")) {
-> 
-> indent is using spaces.
-> 
-> > +		plat->pbl = 8;
-> > +		plat->has_gmac = 1;
-> > +		plat->pmt = 1;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +#else
-> > +static int __devinit stmmac_probe_config_dt(struct platform_device
-> > *pdev, +					    struct 
-plat_stmmacenet_data *plat,
-> > +					    const char **mac)
-> > +{
-> > +	return ERR_PTR(-ENOSYS);
-> > +}
-> > +#endif /* CONFIG_OF */
-> > +
-> > 
-> >  /**
-> >  
-> >   * stmmac_pltfr_probe
-> >   * @pdev: platform device pointer
-> > 
-> > @@ -39,7 +81,8 @@ static int stmmac_pltfr_probe(struct platform_device
-> > *pdev)
-> > 
-> >  	struct resource *res;
-> >  	void __iomem *addr = NULL;
-> >  	struct stmmac_priv *priv = NULL;
-> > 
-> > -	struct plat_stmmacenet_data *plat_dat;
-> > +	struct plat_stmmacenet_data *plat_dat = NULL;
-> > +	const char *mac = NULL;
-> > 
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	if (!res)
-> > 
-> > @@ -58,7 +101,25 @@ static int stmmac_pltfr_probe(struct platform_device
-> > *pdev)
-> > 
-> >  		ret = -ENOMEM;
-> >  		goto out_release_region;
-> >  	
-> >  	}
-> > 
-> > -	plat_dat = pdev->dev.platform_data;
-> > +
-> > +	if (pdev->dev.of_node) {
-> > +		plat_dat = devm_kzalloc(&pdev->dev,
-> > +					sizeof(struct 
-plat_stmmacenet_data),
-> > +					GFP_KERNEL);
-> > +		if (!plat_dat) {
-> > +			pr_err("%s: ERROR: no memory", __func__);
-> > +			ret = -ENOMEM;
-> > +			goto out_unmap;
-> > +		}
-> > +
-> > +		ret = stmmac_probe_config_dt(pdev, plat_dat, &mac);
-> > +		if (ret) {
-> > +			pr_err("%s: main dt probe failed", __func__);
-> > +			goto out_unmap;
-> > +		}
-> > +	} else {
-> > +		plat_dat = pdev->dev.platform_data;
-> > +	}
-> > 
-> >  	/* Custom initialisation (if needed)*/
-> >  	if (plat_dat->init) {
-> > 
-> > @@ -73,6 +134,10 @@ static int stmmac_pltfr_probe(struct platform_device
-> > *pdev)
-> > 
-> >  		goto out_unmap;
-> >  	
-> >  	}
-> > 
-> > +	/* Get MAC address if available (DT) */
-> > +	if (mac)
-> > +		memcpy(priv->dev->dev_addr, mac, ETH_ALEN);
-> > +
-> > 
-> >  	/* Get the MAC information */
-> >  	priv->dev->irq = platform_get_irq_byname(pdev, "macirq");
-> >  	if (priv->dev->irq == -ENXIO) {
-> > 
-> > @@ -178,6 +243,12 @@ static const struct dev_pm_ops stmmac_pltfr_pm_ops =
-> > {
-> > 
-> >  static const struct dev_pm_ops stmmac_pltfr_pm_ops;
-> >  #endif /* CONFIG_PM */
-> > 
-> > +static const struct of_device_id stmmac_dt_ids[] = {
-> > +	{ .compatible = "st,spear600-gmac", },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, stmmac_dt_ids);
-> > +
-> > 
-> >  static struct platform_driver stmmac_driver = {
-> >  
-> >  	.probe = stmmac_pltfr_probe,
-> >  	.remove = stmmac_pltfr_remove,
-> > 
-> > @@ -185,6 +256,7 @@ static struct platform_driver stmmac_driver = {
-> > 
-> >  		   .name = STMMAC_RESOURCE_NAME,
-> >  		   .owner = THIS_MODULE,
-> >  		   .pm = &stmmac_pltfr_pm_ops,
-> > 
-> > +		   .of_match_table = of_match_ptr(stmmac_dt_ids),
-> > 
-> >  		   },
-> >  
-> >  };
+Use generic names: uart1: serial@...
+
+> +				compatible = "arm,pl011", "arm,primecell";
+> +				reg = <0x80074000 0x2000>;
+
+This is really only 0x1000 in length.
+
+> +				interrupts = <47>;
+> +			};
+> +		};
+> +	};
+> +
+> +	ahb@80080000 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0x80080000 0x80000>;
+> +		ranges;
+> +
+> +		fec@800f0000 {
+> +			compatible = "fsl,imx28-fec";
+> +			reg = <0x800f0000 0x4000>;
+
+This too IIRC.
+
+> +			interrupts = <101>;
+> +			status = "disabled";
+> +		};
+> +
+> +		fec@800f4000 {
+> +			compatible = "fsl,imx28-fec";
+> +			reg = <0x800f4000 0x4000>;
+> +			interrupts = <102>;
+> +			status = "disabled";
+> +		};
+> +
+> +	};
+> +};
+> diff --git a/arch/arm/mach-mxs/Kconfig b/arch/arm/mach-mxs/Kconfig
+> index c57f996..6ab66af 100644
+> --- a/arch/arm/mach-mxs/Kconfig
+> +++ b/arch/arm/mach-mxs/Kconfig
+> @@ -17,6 +17,15 @@ config SOC_IMX28
+>  
+>  comment "MXS platforms:"
+>  
+> +config MACH_IMX28_DT
+
+Perhaps this should be more generic like MACH_MXS_DT to eventually
+support MX23 as well?
+
+> +	bool "Support i.MX28 platforms from device tree"
+> +	select SOC_IMX28
+> +	select USE_OF
+> +	select MACH_MX28EVK
+
+This should not be selected here.
+
+> +	help
+> +	  Include support for Freescale i.MX28 based platforms
+> +	  using the device tree for discovery
+> +
+>  config MACH_STMP378X_DEVB
+>  	bool "Support STMP378x_devb Platform"
+>  	select SOC_IMX23
+> diff --git a/arch/arm/mach-mxs/Makefile b/arch/arm/mach-mxs/Makefile
+> index 908bf9a..25a4122 100644
+> --- a/arch/arm/mach-mxs/Makefile
+> +++ b/arch/arm/mach-mxs/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_PM) += pm.o
+>  obj-$(CONFIG_SOC_IMX23) += clock-mx23.o
+>  obj-$(CONFIG_SOC_IMX28) += clock-mx28.o
+>  
+> +obj-$(CONFIG_MACH_IMX28_DT) += imx28-dt.o
+>  obj-$(CONFIG_MACH_STMP378X_DEVB) += mach-stmp378x_devb.o
+>  obj-$(CONFIG_MACH_MX23EVK) += mach-mx23evk.o
+>  obj-$(CONFIG_MACH_MX28EVK) += mach-mx28evk.o
+> diff --git a/arch/arm/mach-mxs/imx28-dt.c b/arch/arm/mach-mxs/imx28-dt.c
+> new file mode 100644
+> index 0000000..78d1129
+> --- /dev/null
+> +++ b/arch/arm/mach-mxs/imx28-dt.c
+> @@ -0,0 +1,67 @@
+> +/*
+> + * Copyright 2011 Freescale Semiconductor, Inc.
+> + * Copyright 2011 Linaro Ltd.
+
+It's 2012 now.
+
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/time.h>
+> +#include <mach/common.h>
+> +#include <mach/mx28.h>
+> +
+> +static const struct of_dev_auxdata imx28_auxdata_lookup[] __initconst = {
+> +	OF_DEV_AUXDATA("arm,pl011", MX28_DUART_BASE_ADDR, "duart", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx28-fec", MX28_ENET_MAC0_BASE_ADDR, "imx28-fec.0", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx28-fec", MX28_ENET_MAC1_BASE_ADDR, "imx28-fec.1", NULL),
+
+Why do you need the old names?
+
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static void __init imx28_init(void)
+> +{
+> +	of_platform_populate(NULL, of_default_bus_match_table,
+> +			     imx28_auxdata_lookup, NULL);
+> +}
+> +
+> +static const struct of_device_id icoll_of_match[] __initconst = {
+> +	{ .compatible = "fsl,imx28-icoll", },
+> +	{},
+> +};
+> +
+> +static void __init imx28_dt_init_irq(void)
+> +{
+> +	irq_domain_generate_simple(icoll_of_match, MX28_ICOLL_BASE_ADDR, 0);
+
+Please do "proper" domain support for the interrupt controller and use
+of_irq_init.
+
+> +	mx28_init_irq();
+> +}
+> +
+> +static void __init imx28_timer_init(void)
+> +{
+> +	mx28_clocks_init();
+> +}
+> +
+> +static struct sys_timer imx28_timer = {
+> +	.init = imx28_timer_init,
+> +};
+> +
+> +static const char *imx28_dt_compat[] __initdata = {
+> +	"fsl,imx28-evk",
+> +	NULL,
+> +};
+> +
+> +DT_MACHINE_START(IMX28, "Freescale i.MX28 (Device Tree)")
+> +	.map_io		= mx28_map_io,
+> +	.init_irq	= imx28_dt_init_irq,
+> +	.timer		= &imx28_timer,
+> +	.init_machine	= imx28_init,
+> +	.dt_compat	= imx28_dt_compat,
+> +	.restart	= mxs_restart,
+> +MACHINE_END
+
