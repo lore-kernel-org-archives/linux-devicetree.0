@@ -1,37 +1,53 @@
-From: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] max17042_battery: Use devm_kzalloc() where applicable
-Date: Tue, 13 Mar 2012 23:18:31 +0400
-Message-ID: <20120313191831.GA2187@oksana.dev.rtsoft.ru>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [PATCH 2/3] max17042_battery: Preserve properties outside of
+ platform data
+Date: Tue, 13 Mar 2012 23:21:10 +0400
+Message-ID: <20120313192110.GB2187@oksana.dev.rtsoft.ru>
 References: <1329933982-2529-1-git-send-email-k.lewandowsk@samsung.com>
- <1329933982-2529-2-git-send-email-k.lewandowsk@samsung.com>
+ <1329933982-2529-3-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1329933982-2529-2-git-send-email-k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1329933982-2529-3-git-send-email-k.lewandowsk@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2012 at 07:06:20PM +0100, Karol Lewandowski wrote:
-> This allows us to simplify probe and exit function.
+On Wed, Feb 22, 2012 at 07:06:21PM +0100, Karol Lewandowski wrote:
+> Add fields originally found in platform data back to max17042_chip,
+> as the former data structure might be not available on device
+> tree-based systems.
 > 
-> Signed-off-by: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> This commit makes it possible to safely declare platform data with
+> __initdata tag.
+> 
+> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
+>  drivers/power/max17042_battery.c |   36 +++++++++++++++++++++++-------------
+>  1 files changed, 23 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/power/max17042_battery.c b/drivers/power/max17042_battery.c
+> index 21a3650..49c1377 100644
+> --- a/drivers/power/max17042_battery.c
+> +++ b/drivers/power/max17042_battery.c
+> @@ -33,7 +33,8 @@
+>  struct max17042_chip {
+>  	struct i2c_client *client;
+>  	struct power_supply battery;
+> -	struct max17042_platform_data *pdata;
+> +	bool enable_current_sense;
+> +	u32 r_sns;
 
-Applied, thanks!
+Dirk Brandewie implemented config_data in addition to these
+fields, so this patch would have needed a rework. So I decided
+to drop this particular patch and rework patch 3/3 to make OF
+helper allocat pdata instead.
+
+Thanks,
 
 -- 
 Anton Vorontsov
-Email: cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Email: cbouatmailru@gmail.com
