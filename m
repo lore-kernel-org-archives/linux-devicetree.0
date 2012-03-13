@@ -1,93 +1,34 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] gpio: Add Altera GPIO driver
-Date: Tue, 13 Mar 2012 12:13:24 -0600
-Message-ID: <20120313181324.EBBA83E053B@localhost>
-References: <1328551142-8439-1-git-send-email-tklauser@distanz.ch>
-	<20120312160418.816A83E07B0@localhost>
-	<20120313113126.GL21503@distanz.ch>
-Reply-To: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 2/2] regulator: add device tree support for max8997
+Date: Tue, 13 Mar 2012 12:18:03 -0600
+Message-ID: <20120313181803.B45073E053B@localhost>
+References: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org> <1330000688-11226-3-git-send-email-thomas.abraham@linaro.org> <20120313034306.16CF73E07E4@localhost> <CAJuYYwRAXyU7d7qhGUX-=qWUJ0M1KB3XCGPOnUxToP=0XOhzqg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
-In-Reply-To: <20120313113126.GL21503-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-List-Unsubscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/options/nios2-dev>,
-	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sopc.et.ntust.edu.tw/pipermail/nios2-dev>
-List-Post: <mailto:nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
-List-Help: <mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=help>
-List-Subscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/listinfo/nios2-dev>,
-	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=subscribe>
-Sender: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
-Errors-To: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
-To: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAJuYYwRAXyU7d7qhGUX-=qWUJ0M1KB3XCGPOnUxToP=0XOhzqg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, dg77.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Mar 2012 12:31:26 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
-> On 2012-03-12 at 17:04:18 +0100, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > On Mon,  6 Feb 2012 18:59:02 +0100, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org> wrote:
-> > > This driver supports the Altera PIO core.
-> > > 
-> > > Signed-off-by: Thomas Chou <thomas-SDxUXYEhEBiCuPEqFHbRBg@public.gmane.org>
-> > > Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-> > > ---
-> > > This driver was submitted already about a year ago by Thomas, was
-> > > adjusted by him according to some remarks made by Grant and was then
-> > > included in the -mm tree [1] for some time but dropped again
-> > > (couldn't find out when and why exactly).
-> > > 
-> > > [0] http://article.gmane.org/gmane.linux.drivers.devicetree/4231
-> > > [1] http://article.gmane.org/gmane.linux.kernel.commits.mm/65119
-> > > 
-> > > So this is a new attempt towards getting this driver into mainline
-> > > from the nios2 tree. The following changes have been made atop the
-> > > version submitted by Thomas:
-> > > 
-> > > - Changed driver name to new naming convention
-> > > - Usage of of_property_read_u32 in the probe function
-> > 
-> > This looks like a pretty generic memory-mapped gpio chip.  It should use the
-> > gpio-generic infrastructure instead of open-coding all of the accessor hooks.
-> 
-> Thanks a lot for the hint.
-> 
-> I'm trying to figure out how this could work together with
-> of_mm_gpio_chip which we use in the driver. Both bgpio_chip and
-> of_mm_gpio_chip contain a struct gpio_chip, so I suppose we can only
-> "be" either one of them in our driver? What would be the prefered way to
-> do this?
+On Tue, 13 Mar 2012 12:14:42 +0530, Thomas Abraham <thomas.abraham@lina=
+ro.org> wrote:
+> On 13 March 2012 09:13, Grant Likely <grant.likely@secretlab.ca> wrot=
+e:
+> > On Thu, 23 Feb 2012 18:08:08 +0530, Thomas Abraham <thomas.abraham@=
+linaro.org> wrote:
+> > Otherwise, the patch looks pretty good. =C2=A0(although seeing the =
+decode function
+> > has got me thinking that we need a much better way of decoding the =
+dt data).
+>=20
+> The parsing function looks huge since there is lot of data to pick up
+> from the dt node.
 
-Hmmm, you are correct.  However, of_mm_gpio_chip() is the only part of
-drivers/of/gpio.c that isn't usable by gpio-generic.c.  Focus on gpio-generic.
-
-> Also as we need to register the driver from platform specific setup code
-> (in the out-of-mainline nios2 port only atm) very early on, we don't
-> have a struct platform_device or struct device available which we would
-> need to pass to bgpio_init. What's the best way to solve this?
-
-There are 2 halves to gpio-generic.  The library of helper functions (get/set/etc.)
-and the basic-mmio-gpio device driver.  It /should/ be safe to call bgpio_init without
-a struct platform_device, but right now the code doesn't protect against it.  That is
-a bug that you can easily fix.
-
-However, why are you initializing it very early in platform specific code?  That is
-very strongly discouraged.  GPIO controllers are just another device.
-
-> And another issue I came across: gpio-generic only seems to support
-> 8/16/32/64 bit wide GPIO registers. The Altera GPIO controller can have
-> from 1 to 32 bits per register depending on the configuration in the
-> FPGA (though it will still always be a 32bit register). In bgpio_init
-> the size passed is checked for being a number of 2 and the number then
-> written to the bits member. What would be the best way to still
-> determine the "real" number of GPIOs available in the driver then?
-
-The gpio-generic code is a work in progress; feel free to submit patches to get
-it to behave the way you need it to.  Ultimately, I want all simple mm gpio drivers
-to use gpio-generic.
+Oh, I understand that you have to do it this way; I just think the core=
+ code
+should make it a lot easier.  :-)
 
 g.
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies,Ltd.
