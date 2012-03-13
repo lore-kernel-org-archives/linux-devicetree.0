@@ -1,71 +1,58 @@
-From: Viresh Kumar <viresh.kumar@st.com>
-Subject: Re: [PATCH v2] stmmac: Add device-tree support
-Date: Tue, 13 Mar 2012 14:23:06 +0530
-Message-ID: <4F5F0AF2.1070508@st.com>
-References: <1331623394-14600-1-git-send-email-sr@denx.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
+Date: Tue, 13 Mar 2012 10:14:11 +0100
+Message-ID: <CACRpkdY3BAD+w3X6ZLPpfkO2=yKFjbU=N11wPP4v7TfZqcy7Dg@mail.gmail.com>
+References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1331623394-14600-1-git-send-email-sr@denx.de>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan Roese <sr@denx.de>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>, spear-devel <spear-devel@list.st.com>, Peppe CAVALLARO <peppe.cavallaro@st.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@stericsson.com>, B29396@freescale.com, s.hauer@pengutronix.de, dongas86@gmail.com, shawn.guo@linaro.org, thomas.abraham@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On 3/13/2012 12:53 PM, Stefan Roese wrote:
+On Fri, Mar 9, 2012 at 7:14 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-
-> +#ifdef CONFIG_OF
-> +static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
-> +					    struct plat_stmmacenet_data *plat,
-> +					    const char **mac)
-> +{
-
-<snip...>
-
-> +}
-> +#else
-> +static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
-> +					    struct plat_stmmacenet_data *plat,
-> +					    const char **mac)
-> +{
-> +	return ERR_PTR(-ENOSYS);
-
-why ERR_PTR()?
-
-> +}
-> +#endif /* CONFIG_OF */
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -0,0 +1,118 @@
+> +== Introduction ==
 > +
->  /**
->   * stmmac_pltfr_probe
->   * @pdev: platform device pointer
+> +Hardware modules that control pin multiplexing or configuration parameters
+> +such as pull-up/down, tri-state, drive-strength etc are designated as pin
+> +controllers. Each pin controller must be represented as a node in device tree,
+> +just like any other hardware module.
 
-> @@ -58,7 +101,25 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
->  		ret = -ENOMEM;
->  		goto out_release_region;
->  	}
-> -	plat_dat = pdev->dev.platform_data;
-> +
-> +	if (pdev->dev.of_node) {
-> +		plat_dat = devm_kzalloc(&pdev->dev,
-> +					sizeof(struct plat_stmmacenet_data),
-> +					GFP_KERNEL);
-> +		if (!plat_dat) {
-> +			pr_err("%s: ERROR: no memory", __func__);
+Maybe put in a reference to Documentation/pinctrl.txt for in-depth
+discussion? Also some stuff may be moved over there as generic
+information. A lot of the text here does not seem to be about the
+device tree ...
 
-why don't we use dev_err here?
+However maybe the use case is outside the Linux kernel too
+and in that case I'm happy with it.
 
-> +			ret = -ENOMEM;
-> +			goto out_unmap;
-> +		}
-> +
-> +		ret = stmmac_probe_config_dt(pdev, plat_dat, &mac);
-> +		if (ret) {
-> +			pr_err("%s: main dt probe failed", __func__);
+> +For a client device to operate correctly, certain pin controllers must
+> +set up certain specific pin configurations. Some client devices need a
+> +single static pin configuration, e.g. set up during initialization. Others
+> +need to reconfigure pins at run-time, for example to tri-state pins when the
+> +device is inactive. Hence, each client device can define a set of named
+> +states. The number and names of those states is defined by the client device's
+> +own binding.
 
-here too?
+Just so I understand: is "pin configuration" here strictly what we
+handle in pinconf.c or does it include multiplexing (pinmux.c)?
 
--- 
-viresh
+I guess it's not multiplexing, just making sure.
+
+Maybe state explicitly that multiplexing is not part of pin config,
+else someone will invariably get confused.
+
+> +Note that pin controllers themselves may also be client devices of themselves.
+
+Insert something about this being known as config hogging.
+
+The rest I barely understand so I leave it for the others to discuss...
+
+Yours,
+Linus Walleij
