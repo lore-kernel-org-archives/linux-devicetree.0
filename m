@@ -1,74 +1,194 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 2/5 v3] ARM: at91: sam9g20 add i2c DT support
-Date: Tue, 13 Mar 2012 08:08:13 +0100
-Message-ID: <20120313070813.GD18320@game.jcrosoft.org>
-References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
- <1331196635-27203-2-git-send-email-plagnioj@jcrosoft.com>
- <4F58E77B.4010500@gmail.com>
- <20120309095336.GK27213@game.jcrosoft.org>
- <4F5A0CB5.2020203@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4F5A0CB5.2020203@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Stefan Roese <sr@denx.de>
+Subject: [PATCH v2] stmmac: Add device-tree support
+Date: Tue, 13 Mar 2012 08:23:14 +0100
+Message-ID: <1331623394-14600-1-git-send-email-sr@denx.de>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07:59 Fri 09 Mar     , Rob Herring wrote:
-> On 03/09/2012 03:53 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 11:08 Thu 08 Mar     , Rob Herring wrote:
-> >> On 03/08/2012 02:50 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >>> For now on use i2c-gpio driver on the same pin as the hardware IP.
-> >>>
-> >>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> >>> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-> >>> Cc: devicetree-discuss@lists.ozlabs.org
-> >>> ---
-> >>> v3:
-> >>>
-> >>> 	update i2c binding (Rob comments)
-> >>>
-> >>> Best Regards,
-> >>> J.
-> >>>  arch/arm/boot/dts/at91sam9g20.dtsi |   13 +++++++++++++
-> >>>  1 files changed, 13 insertions(+), 0 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-> >>> index 4b0dc99..072b2da 100644
-> >>> --- a/arch/arm/boot/dts/at91sam9g20.dtsi
-> >>> +++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-> >>> @@ -189,4 +189,17 @@
-> >>>  			status = "disabled";
-> >>>  		};
-> >>>  	};
-> >>> +> > +	i2c-gpio@0 {
-> >>
-> >> You updated the example, but not all the actual uses to i2c@0.
-> > on purpose as on some soc we will have HW and soft binding
-> > 
-> > on the board you put the alias
-> > 
-> 
-> I'm not sure I follow.
-> 
-> If you use the h/w block, then you would have i2c@<addr> while for gpio
-> it's basically an index.
-> 
-> Also, I don't think you need an alias for i2c. You should not care about
-> bus numbering as devices should be sub nodes.
-forget about it tired when I reply
+This patch adds support to configure the STMMAC ethernet driver via
+device-tree instead of platform_data.
 
-Best Regards,
-J.
+Currently, only the properties needed on SPEAr600 are provided. All
+other properties should be added once needed on other platforms.
+
+Signed-off-by: Stefan Roese <sr@denx.de>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+---
+v2:
+- Renamed stm -> st
+- Renamed compatible to "st,spear600-gmac"
+- Removed "prog-burst-len", "had-gmac", has-pmt" properties.
+  They are now implicitly set for "st,spear600-gmac" compatible
+  devices.
+- Removed phy-addr
+- Used "if (pdev->dev.of_node)" to distinguish between DT
+  and non-DT version instead of #ifdef
+
+ Documentation/devicetree/bindings/net/stmmac.txt   |   28 ++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   76 +++++++++++++++++++-
+ 2 files changed, 102 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/stmmac.txt
+
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+new file mode 100644
+index 0000000..a91f4e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -0,0 +1,28 @@
++* STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
++
++Required properties:
++- compatible: Should be "st,spear600-gmac"
++- reg: Address and length of the register set for the device
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- interrupts: Should contain the STMMAC interrupts
++- interrupt-names: Should contain the interrupt names "macirq"
++  "eth_wake_irq" if this interrupt is supported in the "interrupts"
++  property
++- phy-mode: String, operation mode of the PHY interface.
++  Supported values are: "mii", "rmii", "gmii", "rgmii".
++
++Optional properties:
++- mac-address: 6 bytes, mac address
++
++Examples:
++
++	gmac0: stmmac@e0800000 {
++		compatible = "st,spear600-gmac";
++		reg = <0xe0800000 0x8000>;
++		interrupt-parent = <&vic1>;
++		interrupts = <24 23>;
++		interrupt-names = "macirq", "eth_wake_irq";
++		mac-address = [000000000000]; /* Filled in by U-Boot */
++		phy-mode = "gmii";
++	};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 3aad981..ed8b477 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -24,8 +24,50 @@
+ 
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_net.h>
+ #include "stmmac.h"
+ 
++#ifdef CONFIG_OF
++static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
++					    struct plat_stmmacenet_data *plat,
++					    const char **mac)
++{
++	struct device_node *np = pdev->dev.of_node;
++
++	if (!np)
++		return -ENODEV;
++
++	*mac = of_get_mac_address(np);
++
++	plat->interface = of_get_phy_mode(np);
++	of_property_read_u32(np, "phy-addr", &plat->phy_addr);
++	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
++					   sizeof(struct stmmac_mdio_bus_data),
++					   GFP_KERNEL);
++
++	/*
++	 * Currently only the properties needed on SPEAr600
++	 * are provided. All other properties should be added
++	 * once needed on other platforms.
++	 */
++        if (of_device_is_compatible(np, "st,spear600-gmac")) {
++		plat->pbl = 8;
++		plat->has_gmac = 1;
++		plat->pmt = 1;
++	}
++
++	return 0;
++}
++#else
++static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
++					    struct plat_stmmacenet_data *plat,
++					    const char **mac)
++{
++	return ERR_PTR(-ENOSYS);
++}
++#endif /* CONFIG_OF */
++
+ /**
+  * stmmac_pltfr_probe
+  * @pdev: platform device pointer
+@@ -39,7 +81,8 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	void __iomem *addr = NULL;
+ 	struct stmmac_priv *priv = NULL;
+-	struct plat_stmmacenet_data *plat_dat;
++	struct plat_stmmacenet_data *plat_dat = NULL;
++	const char *mac = NULL;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res)
+@@ -58,7 +101,25 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+ 		ret = -ENOMEM;
+ 		goto out_release_region;
+ 	}
+-	plat_dat = pdev->dev.platform_data;
++
++	if (pdev->dev.of_node) {
++		plat_dat = devm_kzalloc(&pdev->dev,
++					sizeof(struct plat_stmmacenet_data),
++					GFP_KERNEL);
++		if (!plat_dat) {
++			pr_err("%s: ERROR: no memory", __func__);
++			ret = -ENOMEM;
++			goto out_unmap;
++		}
++
++		ret = stmmac_probe_config_dt(pdev, plat_dat, &mac);
++		if (ret) {
++			pr_err("%s: main dt probe failed", __func__);
++			goto out_unmap;
++		}
++	} else {
++		plat_dat = pdev->dev.platform_data;
++	}
+ 
+ 	/* Custom initialisation (if needed)*/
+ 	if (plat_dat->init) {
+@@ -73,6 +134,10 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+ 		goto out_unmap;
+ 	}
+ 
++	/* Get MAC address if available (DT) */
++	if (mac)
++		memcpy(priv->dev->dev_addr, mac, ETH_ALEN);
++
+ 	/* Get the MAC information */
+ 	priv->dev->irq = platform_get_irq_byname(pdev, "macirq");
+ 	if (priv->dev->irq == -ENXIO) {
+@@ -178,6 +243,12 @@ static const struct dev_pm_ops stmmac_pltfr_pm_ops = {
+ static const struct dev_pm_ops stmmac_pltfr_pm_ops;
+ #endif /* CONFIG_PM */
+ 
++static const struct of_device_id stmmac_dt_ids[] = {
++	{ .compatible = "st,spear600-gmac", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, stmmac_dt_ids);
++
+ static struct platform_driver stmmac_driver = {
+ 	.probe = stmmac_pltfr_probe,
+ 	.remove = stmmac_pltfr_remove,
+@@ -185,6 +256,7 @@ static struct platform_driver stmmac_driver = {
+ 		   .name = STMMAC_RESOURCE_NAME,
+ 		   .owner = THIS_MODULE,
+ 		   .pm = &stmmac_pltfr_pm_ops,
++		   .of_match_table = of_match_ptr(stmmac_dt_ids),
+ 		   },
+ };
+ 
+-- 
+1.7.9.2
