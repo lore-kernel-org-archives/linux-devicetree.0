@@ -1,54 +1,38 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v1 3/5] ARM: imx28evk: add mmc dt support
-Date: Tue, 13 Mar 2012 17:52:14 +0100
-Message-ID: <20120313165214.GO26642@pengutronix.de>
-References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
- <1331628428-24017-4-git-send-email-b29396@freescale.com>
- <4F5F5C22.1080506@gmail.com>
+From: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/3 v2] Updates for exynos4210 and DT-based systems
+Date: Tue, 13 Mar 2012 17:54:36 +0100
+Message-ID: <1331657679-31302-1-git-send-email-k.lewandowsk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4F5F5C22.1080506@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Dong Aisheng <b29396@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vinod.koul@linux.intel.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, rdunlap@xenotime.net, kernel@pengutronix.de, cjb@laptop.org, shawn.guo@freescale.com
+Content-Type: TEXT/PLAIN
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+Cc: thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 13, 2012 at 09:39:30AM -0500, Rob Herring wrote:
-> On 03/13/2012 03:47 AM, Dong Aisheng wrote:
-> > From: Dong Aisheng <dong.aisheng@linaro.org>
-> > 
-> > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/imx28-evk.dts |   14 ++++++++++++++
-> >  arch/arm/boot/dts/imx28.dtsi    |   33 +++++++++++++++++++++++++++++++++
-> >  arch/arm/mach-mxs/imx28-dt.c    |    2 ++
-> >  3 files changed, 49 insertions(+), 0 deletions(-)
-> 
-> snip
-> 
-> > diff --git a/arch/arm/mach-mxs/imx28-dt.c b/arch/arm/mach-mxs/imx28-dt.c
-> > index 78d1129..429b88e 100644
-> > --- a/arch/arm/mach-mxs/imx28-dt.c
-> > +++ b/arch/arm/mach-mxs/imx28-dt.c
-> > @@ -23,6 +23,8 @@ static const struct of_dev_auxdata imx28_auxdata_lookup[] __initconst = {
-> >  	OF_DEV_AUXDATA("arm,pl011", MX28_DUART_BASE_ADDR, "duart", NULL),
-> >  	OF_DEV_AUXDATA("fsl,imx28-fec", MX28_ENET_MAC0_BASE_ADDR, "imx28-fec.0", NULL),
-> >  	OF_DEV_AUXDATA("fsl,imx28-fec", MX28_ENET_MAC1_BASE_ADDR, "imx28-fec.1", NULL),
-> > +	OF_DEV_AUXDATA("fsl,imx28-mmc", MX28_SSP0_BASE_ADDR, "mxs-mmc.0", NULL),
-> > +	OF_DEV_AUXDATA("fsl,imx28-mmc", MX28_SSP1_BASE_ADDR, "mxs-mmc.1", NULL),
-> 
-> Why is this needed?
+Changes since v1:
+ - Move unrelated code fragment to separate patch (of_match_ptr())
+ - Move device-type handling to separate function and rework its
+   internals a bit
 
-These are needed for the drivers which have still the mxs-mmc.* names
-to find their clocks. Alternatively we could also add the appropriate
-clocks to the clock file. Don't know if that's better though.
+This patchset reworks i2c-s3c2410 driver a bit to better handle
+device tree-enabled platforms and adds two quirks required by
+exynos4210-specific I2C controller used by s5p-hdmi driver.
 
-Sascha
+This patchset is based on "i2c-bjdooks/for-34/i2c/i2c-samsung" branch
+taken from:
+
+  git://git.fluff.org/bjdooks/linux.git
+
+Karol Lewandowski (3):
+  i2c-s3c2410: Drop unused define
+  i2c-s3c2410: Rework device type handling
+  i2c-s3c2410: Add HDMIPHY quirk for S3C2440
+
+ .../devicetree/bindings/i2c/samsung-i2c.txt        |   10 ++-
+ drivers/i2c/busses/i2c-s3c2410.c                   |   93 +++++++++++++++-----
+ 2 files changed, 77 insertions(+), 26 deletions(-)
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.9
