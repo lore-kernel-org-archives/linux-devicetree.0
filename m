@@ -1,62 +1,55 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v3 1/2] mfd: add irq domain support for max8997 interrupts
-Date: Tue, 13 Mar 2012 13:45:24 +0530
-Message-ID: <CAJuYYwSQ-HRBU31=nWyzwqEBxj9LeAMOLQQVcAdf89dO9U0-sQ@mail.gmail.com>
-References: <1330000688-11226-1-git-send-email-thomas.abraham@linaro.org>
-	<1330000688-11226-2-git-send-email-thomas.abraham@linaro.org>
-	<20120313032832.655983E07E4@localhost>
-	<CAJuYYwTKMWgits6xd0UUvRPwr40NwJfO2HncUOW9J=EZbFs8=Q@mail.gmail.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH v1 0/5] dt: add basic imx28 support
+Date: Tue, 13 Mar 2012 16:47:03 +0800
+Message-ID: <1331628428-24017-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwTKMWgits6xd0UUvRPwr40NwJfO2HncUOW9J=EZbFs8=Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, k.lewandowsk@samsung.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, dg77.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: s.hauer@pengutronix.de, shawn.guo@freescale.com, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, cjb@laptop.org, rdunlap@xenotime.net, vinod.koul@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 13 March 2012 11:35, Thomas Abraham <thomas.abraham@linaro.org> wrot=
-e:
-> On 13 March 2012 08:58, Grant Likely <grant.likely@secretlab.ca> wrot=
-e:
->> On Thu, 23 Feb 2012 18:08:07 +0530, Thomas Abraham <thomas.abraham@l=
-inaro.org> wrote:
->>> Add irq domain support for max8997 interrupts. The reverse mapping =
-method
->>> used is linear mapping since the sub-drivers of max8997 such as reg=
-ulator
->>> and charger drivers can use the max8997 irq_domain to get the linux=
- irq
->>> number for max8997 interrupts. All uses of irq_base in platform dat=
-a and
->>> max8997 driver private data are removed.
->>>
->>> Cc: Grant Likely <grant.likely@secretlab.ca>
->>> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
->>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->>> ---
->>> =A0arch/arm/mach-exynos/mach-nuri.c =A0 =A0| =A0 =A04 --
->>> =A0arch/arm/mach-exynos/mach-origen.c =A0| =A0 =A01 -
->>> =A0drivers/mfd/max8997-irq.c =A0 =A0 =A0 =A0 =A0 | =A0 60 +++++++++=
-+++++++++++--------------
->>> =A0drivers/mfd/max8997.c =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A01 -
->>> =A0include/linux/mfd/max8997-private.h | =A0 =A04 ++-
->>> =A0include/linux/mfd/max8997.h =A0 =A0 =A0 =A0 | =A0 =A01 -
->>> =A06 files changed, 38 insertions(+), 33 deletions(-)
+This patch series adds basic imx28 dt support including fec, mmc and dma.
 
-[...]
+Tested on mx28evk.
 
->>
->> Hahaha. =A0The max8997_irqs table is kind of overdone when the group=
- and mask values
->> can be arithmetically derived from the hwirq number..
->
-> Yes, I agree. Each group could have maximum of 8 interrupts. Then,
-> data->hwirq % 8 will be the group number and data->hwirq & 7 would be
+TODO:
+Convert the remaining devices to support dt.
+mxs-auart, mxs-gpio, i2c, flexcan, saif, rtc, pwm, fb.
 
-Typo here. group number =3D data->hwirq >> 3 and mask =3D data->hwirq &=
- 7.
+Dong Aisheng (5):
+  ARM: imx28: add basic dt support
+  mmc: mxs-mmc: add dt probe support
+  ARM: imx28evk: add mmc dt support
+  dma: mxs-dma: add dt probe support
+  ARM: mxs: add mxs dma dt support
 
-Thanks,
-Thomas.
+ Documentation/devicetree/bindings/arm/fsl.txt      |    4 +
+ .../devicetree/bindings/dma/fsl-mxs-dma.txt        |   17 +++
+ .../devicetree/bindings/mmc/fsl-mxs-mmc.txt        |   23 ++++
+ arch/arm/boot/dts/imx28-evk.dts                    |   45 +++++++
+ arch/arm/boot/dts/imx28.dtsi                       |  131 ++++++++++++++++++++
+ arch/arm/mach-mxs/Kconfig                          |    9 ++
+ arch/arm/mach-mxs/Makefile                         |    1 +
+ arch/arm/mach-mxs/devices-mx23.h                   |    2 +
+ arch/arm/mach-mxs/devices-mx28.h                   |    2 +
+ arch/arm/mach-mxs/devices/platform-dma.c           |    3 +-
+ arch/arm/mach-mxs/imx28-dt.c                       |   71 +++++++++++
+ arch/arm/mach-mxs/include/mach/devices-common.h    |    3 +
+ arch/arm/mach-mxs/mach-apx4devkit.c                |    1 +
+ arch/arm/mach-mxs/mach-m28evk.c                    |    1 +
+ arch/arm/mach-mxs/mach-mx23evk.c                   |    1 +
+ arch/arm/mach-mxs/mach-mx28evk.c                   |    1 +
+ arch/arm/mach-mxs/mach-stmp378x_devb.c             |    1 +
+ arch/arm/mach-mxs/mach-tx28.c                      |    1 +
+ drivers/dma/mxs-dma.c                              |   44 +++++--
+ drivers/mmc/host/mxs-mmc.c                         |   82 ++++++++++++-
+ 20 files changed, 424 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/fsl-mxs-mmc.txt
+ create mode 100644 arch/arm/boot/dts/imx28-evk.dts
+ create mode 100644 arch/arm/boot/dts/imx28.dtsi
+ create mode 100644 arch/arm/mach-mxs/imx28-dt.c
+
+
