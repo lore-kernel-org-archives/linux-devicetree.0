@@ -1,7 +1,7 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 4/5 v4] ARM: at91: sam9g45 add i2c DT support
-Date: Tue, 13 Mar 2012 13:33:43 +0100
-Message-ID: <1331642024-19869-4-git-send-email-plagnioj@jcrosoft.com>
+Subject: [PATCH 5/5 v4] ARM: at91: sam9x5 add i2c DT support
+Date: Tue, 13 Mar 2012 13:33:44 +0100
+Message-ID: <1331642024-19869-5-git-send-email-plagnioj@jcrosoft.com>
 References: <a>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -29,26 +29,52 @@ Acked-by: Rob Herring <rob.herring@calxeda.com>
 Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
 Cc: devicetree-discuss@lists.ozlabs.org
 ---
- arch/arm/boot/dts/at91sam9g45.dtsi |   13 +++++++++++++
- 1 files changed, 13 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/at91sam9x5.dtsi |   39 +++++++++++++++++++++++++++++++++++++
+ 1 files changed, 39 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index d79021b..92fe5a5 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -197,4 +197,17 @@
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index c294657..f0104f4 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -188,4 +188,43 @@
  			status = "disabled";
  		};
  	};
 +
 +	i2c@0 {
 +		compatible = "i2c-gpio";
-+		gpios = <&pioA 20 0 /* sda */
-+			 &pioA 21 0 /* scl */
++		gpios = <&pioA 30 0 /* sda */
++			 &pioA 31 0 /* scl */
 +			>;
 +		i2c-gpio,sda-open-drain;
 +		i2c-gpio,scl-open-drain;
-+		i2c-gpio,delay-us = <5>;	/* ~100 kHz */
++		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c@1 {
++		compatible = "i2c-gpio";
++		gpios = <&pioC 0 0 /* sda */
++			 &pioC 1 0 /* scl */
++			>;
++		i2c-gpio,sda-open-drain;
++		i2c-gpio,scl-open-drain;
++		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c@2 {
++		compatible = "i2c-gpio";
++		gpios = <&pioB 4 0 /* sda */
++			 &pioB 5 0 /* scl */
++			>;
++		i2c-gpio,sda-open-drain;
++		i2c-gpio,scl-open-drain;
++		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +		status = "disabled";
