@@ -1,99 +1,47 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 4/7 v4] ARM: kirkwood: add dreamplug (fdt) support.
-Date: Tue, 13 Mar 2012 10:10:42 +0000
-Message-ID: <201203131010.43095.arnd@arndb.de>
-References: <cover.1331601448.git.jason@lakedaemon.net>
- <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason@lakedaemon.net>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/5 v3] i2c/gpio: add DT support
+Date: Tue, 13 Mar 2012 11:22:08 +0100
+Message-ID: <20120313102208.GA2488@pengutronix.de>
+References: <1331196635-27203-1-git-send-email-plagnioj@jcrosoft.com>
+ <20120313073748.GA7746@pengutronix.de>
+ <20120313091104.GE18320@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <0032addd7e94c5d4d1a3a0be77fe79bcffee53db.1331601448.git.jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, michael-QKn5cuLxLXY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120313091104.GE18320-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 March 2012, Jason Cooper wrote:
-> Initially, copied guruplug-setup.c and did s/guruplug/dreamplug/g.
-> Then, switched to SPI based NOR flash.
-> 
-> After talking to Arnd Bergman, chose an incremental approach to adding
-> devicetree support.  First, we use the dtb to tell us we are on the
-> dreamplug, then we gradually port over drivers.
-> 
-> Driver porting will start with the uart (see next patch), and progress
-> from there.  Next, all drivers not needing common clock (kirkwood_tclk)
-> or pinmux.  Then, remain drivers as that support hits the tree.
-> 
-> We need to absorb kirkwood_init() into kirkwood_dt_init() so that as we
-> convert drivers, we can remove the platform call, eg
-> kirkwood_rtc_init().  This maintains compatibility with non-fdt
-> configurations because they still call kirkwood_init() in common.c.
-> 
-> As drivers are converted, we will reinstate the 'static' qualifier in
-> common.c.
-> 
-> Signed-off-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-Patches 4 and 5 both look ok, but since I merged the earlier versions
-of these into the stable next/board branch of arm-soc.git, you will have
-to generate these as incremental patches now, and adapt the changeset
-comments accordingly.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-One small issue:
 
-> --- a/arch/arm/mach-kirkwood/Kconfig
-> +++ b/arch/arm/mach-kirkwood/Kconfig
-> @@ -44,6 +44,20 @@ config MACH_GURUPLUG
->  	  Say 'Y' here if you want your kernel to support the
->  	  Marvell GuruPlug Reference Board.
->  
-> +config ARCH_KIRKWOOD_DT
-> +	bool "Marvell Kirkwood Flattened Device Tree"
-> +	select USE_OF
-> +	help
-> +	  Say 'Y' here if you want your kernel to support the
-> +	  Marvell Kirkwood using flattened device tree.
-> +
-> +config MACH_DREAMPLUG_DT
-> +	bool "Marvell DreamPlug (Flattened Device Tree)"
-> +	select ARCH_KIRKWOOD_DT
-> +	help
-> +	  Say 'Y' here if you want your kernel to support the
-> +	  Marvell DreamPlug (Flattened Device Tree).
-> +
+> will update and send it via AT91  with your ack
 
-You allow ARCH_KIRKWOOD_DT to be enabled without also enabling
-dreamplug. That is ok, but
+Please wait with my ack until I saw the update.
 
-> +
-> +	if (of_machine_is_compatible("globalscale,dreamplug"))
-> +		dreamplug_init();
-> +
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
-you call a function from dreamplug.o in board-dt.o and
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-> +/* board init functions for drivers not converted to fdt */
-> +void dreamplug_init(void);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
 
-you have an unconditional forward declaration in the header.
+iEYEARECAAYFAk9fH9AACgkQD27XaX1/VRsbmgCfddnkEJ8cpKcn1XuLErBDhftl
+Pf0AoK29cwotJiOYTrCAYOtjuY67o0xT
+=AXpn
+-----END PGP SIGNATURE-----
 
-The idiomatic way to deal with this is to replace turn the
-declaration into
-
-#ifdef CONFIG_DREAMPLUG_DT
-void dreamplug_init(void);
-#else
-static inline void dreamplug_init(void) {}
-#endif
-
-	Arnd
+--RnlQjJ0d97Da+TV1--
