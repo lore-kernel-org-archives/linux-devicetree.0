@@ -1,53 +1,60 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Wed, 14 Mar 2012 15:32:42 +0530
-Message-ID: <4F606CC2.9000402@st.com>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <201203131644.12048.arnd@arndb.de> <4F604400.1040805@st.com>
- <201203140958.27289.arnd@arndb.de>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: [PATCH] [media] s5p-g2d: Make it possible to instantiate driver from DT
+Date: Wed, 14 Mar 2012 12:16:36 +0100
+Message-ID: <1331723796-11620-1-git-send-email-k.lewandowsk@samsung.com>
+References: <CAJuYYwQ54idFZGvyujimrhhedSveK9ob8j+686D6ABdavAA_SA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203140958.27289.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: TEXT/PLAIN
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwQ54idFZGvyujimrhhedSveK9ob8j+686D6ABdavAA_SA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: k.debski@samsung.com
+Cc: m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, thomas.abraham@linaro.org, Karol Lewandowski <k.lewandowsk@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/14/2012 3:28 PM, Arnd Bergmann wrote:
-> No problem, we are all learning things as we are working on them.
-> 
-> The idea with DT is that you no longer need any board files because all of
-> the information in those files is now passed as a data structure to the kernel
-> at boot time. Platforms that are fully converted to DT don't have any
-> board files but just have one DT_MACHINE_START entry for all of them in
-> the common platform files. Since spear600 has very little board specific
-> contents at the moment, it is very easy to get to this point now, and
-> that will actually help support other boards without having to do more
-> patches to add board files.
-> 
-> When this work is completed, we might actually be able to extend the
-> spear6xx DT code to also support spear3xx and spear13xx, renaming it
-> to mach-spear. In that case, we would probably need one DT_MACHINE_START
-> entry for each family and would not be able to actually build 13xx together
-> with the other ones, but I guess a lot of the infrastructure could be shared.
-> 
-> I would suggest you read Documentation/devicetree/booting-without-of.txt
-> to get a better understanding of what this is all about.
+This driver requires standard properties like (address and irq)
+which are automatically marshalled for drivers by OF core.
 
-You pointed exactly to the doubt i had.
-That was very helpful. I really appreciate it.
+Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ drivers/media/video/s5p-g2d/g2d.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-Thanks a lot.
-
+diff --git a/drivers/media/video/s5p-g2d/g2d.c b/drivers/media/video/s5p-g2d/g2d.c
+index febaa67..6a8db51 100644
+--- a/drivers/media/video/s5p-g2d/g2d.c
++++ b/drivers/media/video/s5p-g2d/g2d.c
+@@ -20,6 +20,7 @@
+ #include <linux/interrupt.h>
+ 
+ #include <linux/platform_device.h>
++#include <linux/of.h>
+ #include <media/v4l2-mem2mem.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ioctl.h>
+@@ -795,12 +796,21 @@ static int g2d_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id g2d_dt_match[] = {
++	{ .compatible = "samsung,s5pv210-g2d" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, g2d_dt_match);
++#endif
++
+ static struct platform_driver g2d_pdrv = {
+ 	.probe		= g2d_probe,
+ 	.remove		= g2d_remove,
+ 	.driver		= {
+ 		.name = G2D_NAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(g2d_dt_match),
+ 	},
+ };
+ 
 -- 
-viresh
+1.7.9
