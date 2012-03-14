@@ -1,131 +1,114 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Wed, 14 Mar 2012 08:40:17 +0100
-Message-ID: <201203140840.18333.sr@denx.de>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <201203131644.12048.arnd@arndb.de>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v1 3/5] ARM: imx28evk: add mmc dt support
+Date: Wed, 14 Mar 2012 08:28:39 +0100
+Message-ID: <20120314072839.GH18320@game.jcrosoft.org>
+References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
+ <1331628428-24017-4-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203131644.12048.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1331628428-24017-4-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vinod.koul@linux.intel.com, s.hauer@pengutronix.de, rob.herring@calxeda.com, rdunlap@xenotime.net, kernel@pengutronix.de, cjb@laptop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 16:47 Tue 13 Mar     , Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> ---
+>  arch/arm/boot/dts/imx28-evk.dts |   14 ++++++++++++++
+>  arch/arm/boot/dts/imx28.dtsi    |   33 +++++++++++++++++++++++++++++++++
+>  arch/arm/mach-mxs/imx28-dt.c    |    2 ++
+>  3 files changed, 49 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
+> index 9758dc4..61350ab 100644
+> --- a/arch/arm/boot/dts/imx28-evk.dts
+> +++ b/arch/arm/boot/dts/imx28-evk.dts
+> @@ -21,6 +21,20 @@
+>  		reg = <0x40000000 0x08000000>;
+>  	};
+>  
+> +        apb@80000000 {
+> +                apbh@80000000 {
+> +			mmc1: ssp@80010000 {
+> +				slot-8bit;
+> +				status = "okay";
+> +			};
+> +
+> +			mmc2: ssp@80012000 {
+> +				slot-8bit;
+> +				status = "okay";
+> +			};
+> +		};
+> +	};
+> +
+>  	ahb@80080000 {
+>  		fec@800f0000 {
+>  			phy-mode = "rmii";
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index acf0dab..71c7bfb 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -46,6 +46,39 @@
+>  				#interrupt-cells = <1>;
+>  				reg = <0x80000000 0x2000>;
+>  			};
+> +
+> +			ssp@80010000 {
+> +				compatible = "fsl,imx28-mmc";
+> +				reg = <0x80010000 2000>;
+> +				/* <irq_err irq_dma> */
+> +				interrupts = <96 82>;
+> +				dma_channel = <0>;
+> +				status = "disabled";
+> +			};
+> +
+> +			ssp@80012000 {
+> +				compatible = "fsl,imx28-mmc";
+> +				reg = <0x80012000 2000>;
+> +				interrupts = <97 83>;
+> +				dma_channel = <1>;
+> +				status = "disabled";
+> +			};
+> +
+> +			ssp@80014000 {
+> +				compatible = "fsl,imx28-mmc";
+> +				reg = <0x80014000 2000>;
+> +				interrupts = <98 84>;
+> +				dma_channel = <2>;
+> +				status = "disabled";
+> +			};
+> +
+> +			ssp@80016000 {
+> +				compatible = "fsl,imx28-mmc";
+> +				reg = <0x80016000 2000>;
+> +				interrupts = <99 85>;
+> +				dma_channel = <3>;
+> +				status = "disabled";
+> +			};
+>  		};
+>  
+>  		apbx@80040000 {
+> diff --git a/arch/arm/mach-mxs/imx28-dt.c b/arch/arm/mach-mxs/imx28-dt.c
+> index 78d1129..429b88e 100644
+> --- a/arch/arm/mach-mxs/imx28-dt.c
+> +++ b/arch/arm/mach-mxs/imx28-dt.c
+> @@ -23,6 +23,8 @@ static const struct of_dev_auxdata imx28_auxdata_lookup[] __initconst = {
+>  	OF_DEV_AUXDATA("arm,pl011", MX28_DUART_BASE_ADDR, "duart", NULL),
+>  	OF_DEV_AUXDATA("fsl,imx28-fec", MX28_ENET_MAC0_BASE_ADDR, "imx28-fec.0", NULL),
+>  	OF_DEV_AUXDATA("fsl,imx28-fec", MX28_ENET_MAC1_BASE_ADDR, "imx28-fec.1", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx28-mmc", MX28_SSP0_BASE_ADDR, "mxs-mmc.0", NULL),
+> +	OF_DEV_AUXDATA("fsl,imx28-mmc", MX28_SSP1_BASE_ADDR, "mxs-mmc.1", NULL),
+do we really need to continue to add OF_DEV_AUXDATA
 
-On Tuesday 13 March 2012 17:44:11 Arnd Bergmann wrote:
-> On Tuesday 13 March 2012, Stefan Roese wrote:
-> > This patch adds a generic target for SPEAr600 board that can be
-> > configured via the device-tree. Currently only interrupts are
-> > configured via device-tree. Other peripheral devices (e.g.
-> > ethernet, I2C, SMI flash, FSMC NAND flash etc) will follow in
-> > later patches.
-> > 
-> > Only the spear600-evb is currently supported. Other SPEAr600
-> > based boards will follow later.
-> > 
-> > Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-> > Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-> 
-> Hi Stefan,
-> 
-> This is very cool, welcome onboard for the DT conversion with spear600!
-> 
-> > +static struct amba_device *amba_devs[] __initdata = {
-> > +	&gpio_device[0],
-> > +	&gpio_device[1],
-> > +	&gpio_device[2],
-> > +	&uart_device[0],
-> > +	&uart_device[1],
-> > +};
-> 
-> I would suggest you convert these to DT next so you can remove the
-> amba_devs list. Which devices are these? If they are pl061 and
-> pl010/pl011, the binding should be really easy to do.
+instead add a clkdev entry
 
-Yes. I really wanted to do that. But from a quick look at the pl011 driver 
-(drivers/tty/serial/amba-pl011.c), this driver doesn't support DT probing. I 
-might have missed something here though. And ideas?
- 
-> > +static struct platform_device *plat_devs[] __initdata = {
-> > +};
-> 
-> This could be dropped right away, because you would never
-> add anything here.
+IIRC OF_DEV_AUXDATA was a temporary solution, we need to stop to use it more
+and more
 
-Yes.
- 
-> > +static void __init spear600_dt_init(void)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	/* call spear600 machine init function */
-> > +	spear600_init();
-> 
-> spear600_init currently is an empty function, I think you can
-> drop that one too.
-
-Okay.
- 
-> > +	/* Add Platform Devices */
-> > +	platform_add_devices(plat_devs, ARRAY_SIZE(plat_devs));
-> > +
-> > +	/* Add Amba Devices */
-> > +	for (i = 0; i < ARRAY_SIZE(amba_devs); i++)
-> > +		amba_device_register(amba_devs[i], &iomem_resource);
-> 
-> So although all of this can go away soon, you will have to
-> add a call to of_platform_populate() here in order to add the
-> devices from the device tree.
-
-Okay.
-
-> > +}
-> > +
-> > +static const char *spear600_dt_board_compat[] = {
-> > +	"st,spear600-evb",
-> > +	NULL
-> > +};
-> > +
-> > +static const struct of_device_id vic_of_match[] __initconst = {
-> > +	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
-> > +	{ /* Sentinel */ }
-> > +};
-> > +
-> > +static void __init spear6xx_dt_init_irq(void)
-> > +{
-> > +	of_irq_init(vic_of_match);
-> > +}
-> > +
-> > +DT_MACHINE_START(SPEAR600_DT, "ST-SPEAR600-DT")
-> > +	.map_io		=	spear6xx_map_io,
-> > +	.init_irq	=	spear6xx_dt_init_irq,
-> > +	.handle_irq	=	vic_handle_irq,
-> > +	.timer		=	&spear6xx_timer,
-> > +	.init_machine	=	spear600_dt_init,
-> > +	.restart	=	spear_restart,
-> > +	.dt_compat	=	spear600_dt_board_compat,
-> > +MACHINE_END
-> 
-> Since there is only one upstream board file and that is for the same board,
-> we can soon collapse all of it into the base platform support.
-> 
-> I think you should add all the code from this file to spear6xx.c instead
-> of adding a new file. We can then delete the spear600.c and spear600_evb.c
-> files once the DT support has matured.
-
-Sounds like a plan. I'll rework the patch soon.
-
-Thanks,
-Stefan
+Best Reards,
+J.
