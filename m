@@ -1,41 +1,38 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v1 2/5] mmc: mxs-mmc: add dt probe support
-Date: Wed, 14 Mar 2012 08:09:22 +0100
-Message-ID: <201203140809.22676.marek.vasut@gmail.com>
-References: <1331628428-24017-1-git-send-email-b29396@freescale.com> <201203140658.25854.marek.vasut@gmail.com> <20120314065512.GB25735@shlinux2.ap.freescale.net>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
+Date: Wed, 14 Mar 2012 12:38:48 +0530
+Message-ID: <4F604400.1040805@st.com>
+References: <1331650032-15274-1-git-send-email-sr@denx.de>
+ <201203131644.12048.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20120314065512.GB25735@shlinux2.ap.freescale.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, Guo Shawn-R65073 <r65073@freescale.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201203131644.12048.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Dong Aisheng,
+On 3/13/2012 10:14 PM, Arnd Bergmann wrote:
+> I think you should add all the code from this file to spear6xx.c instead
+> of adding a new file. We can then delete the spear600.c and spear600_evb.c
+> files once the DT support has matured.
 
-> On Wed, Mar 14, 2012 at 01:58:25PM +0800, Marek Vasut wrote:
-> > Dear Dong Aisheng,
-> > 
-> > > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> 
-> ........
-> 
-> > > +static const struct of_device_id mxs_mmc_dt_ids[] = {
-> > > +	{ .compatible = "fsl,imx23-mmc", .data = NULL, },
-> > > +	{ .compatible = "fsl,imx28-mmc", .data = NULL, },
-> > 
-> > Do you really need two distinct ones here?
-> 
-> Hmm, my original purpose is to put soc difference data in .data
-> to remove cpu_is_* function calls in the driver later.
-> Do you think if any issue?
-> 
+But what if have another board in future, and this is what Stefan is going
+to do soon, as they have another board.
 
-Well, what's the difference between the interfaces on mx233 and mx28? Is it 
-something that can't be encoded otherwise? I think they're not so different.
+So we may actually move this code to spear600_evb.c instead.
 
-Best regards,
-Marek Vasut
+Sorry for any bad suggestions, i am new to DT. :)
+
+-- 
+viresh
