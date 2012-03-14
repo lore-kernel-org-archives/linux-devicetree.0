@@ -1,59 +1,46 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4] Input: keyboard - add device tree bindings for simple
- key matrixes
-Date: Tue, 13 Mar 2012 21:42:05 -0700
-Message-ID: <20120314044205.GA3964@core.coreip.homeip.net>
-References: <1325484557-27695-1-git-send-email-olof@lixom.net>
- <1325626648-9425-1-git-send-email-olof@lixom.net>
- <74CDBE0F657A3D45AFBB94109FB122FF17761F11FF@HQMAIL01.nvidia.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
+Date: Wed, 14 Mar 2012 13:38:16 +0800
+Message-ID: <20120314053814.GC21337@S2101-09.ap.freescale.net>
+References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
+ <1331628428-24017-2-git-send-email-b29396@freescale.com>
+ <4F5F5B3F.2000303@gmail.com>
+ <4F5F60DB.9090801@itwatchdogs.com>
+ <20120313172807.AC4763E053B@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17761F11FF@HQMAIL01.nvidia.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Warren <swarren@nvidia.com>
-Cc: Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rakesh Iyer <riyer@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "sjg@chromium.org" <sjg@chromium.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+In-Reply-To: <20120313172807.AC4763E053B@localhost>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Zach Sadecki <zsadecki@itwatchdogs.com>, Rob Herring <robherring2@gmail.com>, Dong Aisheng <b29396@freescale.com>, vinod.koul@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, rdunlap@xenotime.net, shawn.guo@freescale.com, kernel@pengutronix.de, cjb@laptop.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 03, 2012 at 02:37:44PM -0800, Stephen Warren wrote:
-> Olof Johansson wrote at Tuesday, January 03, 2012 2:37 PM:
-> > This adds a simple device tree binding for simple key matrix data and
-> > a helper to fill in the platform data.
-> > 
-> > The implementation is in a shared file outside if drivers/input/keyboard
-> > since some drivers in drivers/input/misc might be making use of it
-> > as well.
-> > 
-> > Changes since v3:
-> >  * Dropped compatible field in matrix-keymap.txt
-> >  * Dropped linux,fn-key
-> >  * Dropped linux,fn-keymap optional property but included guideline on
-> >    naming convention
-> >  * Now passing property name in to the helper function (or will assume
-> >    "linux,keymap" if passed NULL)
+On Tue, Mar 13, 2012 at 11:28:07AM -0600, Grant Likely wrote:
+> On Tue, 13 Mar 2012 09:59:39 -0500, Zach Sadecki <zsadecki@itwatchdogs.com> wrote:
+> > On 03/13/2012 09:35 AM, Rob Herring wrote:
+> > > +	ahb@80080000 {
+> > > +		fec@800f0000 {
+> > > Use generic names: ethernet@800f0000
+> > Generic is good, but consistency is better, IMHO.  grepping existing dts 
+> > files in 3.2.9 finds 6 instances of "fec@" and 0 instances of "ethernet@"
+> > >> +			uart1: uart@80074000 {
+> > > Use generic names: uart1: serial@...
+> > Same comment here, but unfortunately there is already inconsistency in 
+> > existing files...  25 instances of "serial@" and 35 instances of "uart@"
 > 
-> > diff --git a/drivers/input/of_keymap.c b/drivers/input/of_keymap.c
+> No, Rob is correct.  The generic names recommended practice is well
+> established and documented.  Expand your grep search to include
+> arch/powerpc/bot/dts/*.
 > 
-> > +struct matrix_keymap_data *
-> > +matrix_keyboard_of_fill_keymap(struct device_node *np, char *propname)
-> > +{
-> ...
-> > +	kd = kmalloc(sizeof(*kd), GFP_KERNEL);
-> > +	if (!kd)
-> > +		return NULL;
+> See section 2.2.2 of ePAPR[1]
 > 
-> Should that use kzalloc in case struct matrix_keymap_data grows some
-> new fields that people will assume are set to zero since the struct
-> would usually be in .data? Still, people should probably grep the code
-> when making such changes...
+> [1]https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
 > 
-> Otherwise,
-> 
-> Acked-by: Stephen Warren <swarren@nvidia.com>
-> 
-
-Applied, thanks everyone.
+I will probably need to patch imx5 and imx6 dts files with the
+inconsistency fixed.
 
 -- 
-Dmitry
+Regards,
+Shawn
