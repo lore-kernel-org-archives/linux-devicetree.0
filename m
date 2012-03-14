@@ -1,75 +1,59 @@
-From: "Turquette, Mike" <mturquette@ti.com>
-Subject: Re: [PATCH 1/7] clk: fix orphan list iterator to be safe
-Date: Tue, 13 Mar 2012 19:10:59 -0700
-Message-ID: <CAJOA=zMRnnQmSzOf_Vtvk_1tVooXoKD0oeKeyFWRzLkneRmKiA@mail.gmail.com>
-References: <1331680947-29861-1-git-send-email-robherring2@gmail.com>
- <1331680947-29861-2-git-send-email-robherring2@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4] Input: keyboard - add device tree bindings for simple
+ key matrixes
+Date: Tue, 13 Mar 2012 21:42:05 -0700
+Message-ID: <20120314044205.GA3964@core.coreip.homeip.net>
+References: <1325484557-27695-1-git-send-email-olof@lixom.net>
+ <1325626648-9425-1-git-send-email-olof@lixom.net>
+ <74CDBE0F657A3D45AFBB94109FB122FF17761F11FF@HQMAIL01.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1331680947-29861-2-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <74CDBE0F657A3D45AFBB94109FB122FF17761F11FF@HQMAIL01.nvidia.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>
+Cc: Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rakesh Iyer <riyer@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "sjg@chromium.org" <sjg@chromium.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 13, 2012 at 4:22 PM, Rob Herring <robherring2@gmail.com> wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
->
-> __clk_reparent can remove orphans, so the list iterator needs to be the
-> safe from removal version.
->
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+On Tue, Jan 03, 2012 at 02:37:44PM -0800, Stephen Warren wrote:
+> Olof Johansson wrote at Tuesday, January 03, 2012 2:37 PM:
+> > This adds a simple device tree binding for simple key matrix data and
+> > a helper to fill in the platform data.
+> > 
+> > The implementation is in a shared file outside if drivers/input/keyboard
+> > since some drivers in drivers/input/misc might be making use of it
+> > as well.
+> > 
+> > Changes since v3:
+> >  * Dropped compatible field in matrix-keymap.txt
+> >  * Dropped linux,fn-key
+> >  * Dropped linux,fn-keymap optional property but included guideline on
+> >    naming convention
+> >  * Now passing property name in to the helper function (or will assume
+> >    "linux,keymap" if passed NULL)
+> 
+> > diff --git a/drivers/input/of_keymap.c b/drivers/input/of_keymap.c
+> 
+> > +struct matrix_keymap_data *
+> > +matrix_keyboard_of_fill_keymap(struct device_node *np, char *propname)
+> > +{
+> ...
+> > +	kd = kmalloc(sizeof(*kd), GFP_KERNEL);
+> > +	if (!kd)
+> > +		return NULL;
+> 
+> Should that use kzalloc in case struct matrix_keymap_data grows some
+> new fields that people will assume are set to zero since the struct
+> would usually be in .data? Still, people should probably grep the code
+> when making such changes...
+> 
+> Otherwise,
+> 
+> Acked-by: Stephen Warren <swarren@nvidia.com>
+> 
 
-Thanks Rob.  I've taken this in for the next series.
+Applied, thanks everyone.
 
-Regards,
-Mike
-
-> ---
-> =A0drivers/clk/clk.c | =A0 =A04 ++--
-> =A01 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index c7c3bc5..802eda4 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -1172,7 +1172,7 @@ void __clk_init(struct device *dev, struct clk *clk)
-> =A0{
-> =A0 =A0 =A0 =A0int i;
-> =A0 =A0 =A0 =A0struct clk *orphan;
-> - =A0 =A0 =A0 struct hlist_node *tmp;
-> + =A0 =A0 =A0 struct hlist_node *tmp, *tmp2;
->
-> =A0 =A0 =A0 =A0if (!clk)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return;
-> @@ -1246,7 +1246,7 @@ void __clk_init(struct device *dev, struct clk *clk)
-> =A0 =A0 =A0 =A0 * walk the list of orphan clocks and reparent any that ar=
-e children of
-> =A0 =A0 =A0 =A0 * this clock
-> =A0 =A0 =A0 =A0 */
-> - =A0 =A0 =A0 hlist_for_each_entry(orphan, tmp, &clk_orphan_list, child_n=
-ode)
-> + =A0 =A0 =A0 hlist_for_each_entry_safe(orphan, tmp, tmp2, &clk_orphan_li=
-st, child_node)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0__clk_reparent(orphan, __clk_init_parent(o=
-rphan));
->
-> =A0 =A0 =A0 =A0/*
-> --
-> 1.7.5.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+Dmitry
