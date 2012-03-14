@@ -1,520 +1,373 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v2] ARM: SPEAr600: Add device-tree support to SPEAr600
- boards
-Date: Wed, 14 Mar 2012 18:24:35 +0100
-Message-ID: <20120314172435.GP18320@game.jcrosoft.org>
-References: <1331737232-25477-1-git-send-email-sr@denx.de>
- <20120314162152.GN18320@game.jcrosoft.org>
- <201203141749.05899.sr@denx.de>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [RFC PATCH] of: DMA helpers: manage generic requests specification
+Date: Wed, 14 Mar 2012 18:47:39 +0100
+Message-ID: <4F60D9BB.9060709@atmel.com>
+References: <4F22DEF2.5000807@ti.com> <1330527248-4350-1-git-send-email-nicolas.ferre@atmel.com> <20120305153648.GG27229@ponder.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201203141749.05899.sr@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Roese <sr@denx.de>
-Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120305153648.GG27229@ponder.secretlab.ca>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, swarren@nvidia.com
+Cc: b-cousson@ti.com, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, plagnioj@jcrosoft.com, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 17:49 Wed 14 Mar     , Stefan Roese wrote:
-> On Wednesday 14 March 2012 17:21:52 Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 16:00 Wed 14 Mar     , Stefan Roese wrote:
-> > > This patch adds a generic target for SPEAr600 board that can be
-> > > configured via the device-tree. Currently the following devices
-> > > are supported via the devicetree:
-> > > 
-> > > - VIC interrupts
-> > > - PL011 UART
-> > > - PL061 GPIO
-> > > - Synopsys DW I2C
-> > > - Synopsys DW ethernet
-> > > 
-> > > Other peripheral devices (e.g. SMI flash, FSMC NAND flash etc) will
-> > > follow in later patches.
-> > > 
-> > > Only the spear600-evb is currently supported. Other SPEAr600
-> > > based boards will follow later.
-> > > 
-> > > Additionally the file spear600.c is deleted. It contained only
-> > > one empty function and is not needed. So lets just remove it.
-> > > 
-> > > Signed-off-by: Stefan Roese <sr@denx.de>
-> > > Cc: Viresh Kumar <viresh.kumar@st.com>
-> > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > ---
-> > > v2:
-> > > - Added DT support to spear6xx.c instead of creating board-dt.c
-> > > - Removed UART (PL011) and GPIO (PL061) platform data for
-> > > 
-> > >   devicetree board port. This works now via DT probing
-> > > 
-> > > - Added OF_DEV_AUXDATA for clock device name matching for some
-> > > 
-> > >   device drivers
-> > > 
-> > > - Removed sper600.c file completely
-> > > - Added DW I2C and ethernet nodes to the dts files
-> > > - Added other DT nodes (SMI, FSMC, ECHI, OHCI), currently disabled
-> > > 
-> > >   since the corresponding device drivers don't support DT probing
-> > > 
-> > > - Removed Linaro/FSL copyright notice from SPEAr DT files (copy-paste
-> > > cruft) - Many smaller modification to the dts/dtsi files
-> > > - Changed Documentation/devicetree/bindings/arm/spear.txt to match
-> > > 
-> > >   the changed bindings
-> > >  
-> > >  Documentation/devicetree/bindings/arm/spear.txt |    8 ++
-> > >  arch/arm/boot/dts/spear600-evb.dts              |   30 +++++
-> > >  arch/arm/boot/dts/spear600.dtsi                 |  162
-> > >  +++++++++++++++++++++++ arch/arm/mach-spear6xx/Kconfig                 
-> > >  |    7 +
-> > >  arch/arm/mach-spear6xx/Makefile                 |    3 -
-> > >  arch/arm/mach-spear6xx/spear600.c               |   25 ----
-> > >  arch/arm/mach-spear6xx/spear600_evb.c           |    3 -
-> > >  arch/arm/mach-spear6xx/spear6xx.c               |   69 +++++++++-
-> > >  8 files changed, 270 insertions(+), 37 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/spear.txt
-> > >  create mode 100644 arch/arm/boot/dts/spear600-evb.dts
-> > >  create mode 100644 arch/arm/boot/dts/spear600.dtsi
-> > >  delete mode 100644 arch/arm/mach-spear6xx/spear600.c
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/spear.txt
-> > > b/Documentation/devicetree/bindings/arm/spear.txt new file mode 100644
-> > > index 0000000..f8e54f0
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/arm/spear.txt
-> > > @@ -0,0 +1,8 @@
-> > > +ST SPEAr Platforms Device Tree Bindings
-> > > +---------------------------------------
-> > > +
-> > > +Boards with the ST SPEAr600 SoC shall have the following properties:
-> > > +
-> > > +Required root node property:
-> > > +
-> > > +compatible = "st,spear600";
-> > > diff --git a/arch/arm/boot/dts/spear600-evb.dts
-> > > b/arch/arm/boot/dts/spear600-evb.dts new file mode 100644
-> > > index 0000000..cbfda8d
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/spear600-evb.dts
-> > > @@ -0,0 +1,30 @@
-> > > +/*
-> > > + * Copyright 2012 Stefan Roese <sr@denx.de>
-> > > + *
-> > > + * The code contained herein is licensed under the GNU General Public
-> > > + * License. You may obtain a copy of the GNU General Public License
-> > > + * Version 2 or later at the following locations:
-> > > + *
-> > > + * http://www.opensource.org/licenses/gpl-license.html
-> > > + * http://www.gnu.org/copyleft/gpl.html
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +/include/ "spear600.dtsi"
-> > > +
-> > > +/ {
-> > > +	model = "ST SPEAr600 Evaluation Board";
-> > > +	compatible = "st,spear600-evb", "st,spear600";
-> > > +	#address-cells = <1>;
-> > > +	#size-cells = <1>;
-> > 
-> > please put the mem size here
+On 03/05/2012 04:36 PM, Grant Likely :
+> On Wed, Feb 29, 2012 at 03:54:08PM +0100, Nicolas Ferre wrote:
+>> By making DMA controllers register a generic translation
+>> function, we allow the management of any type of DMA requests
+>> specification.
+>> The void * output of an of_dma_xlate() function that will be implemented
+>> by the DMA controller can carry any type of "dma-request" argument.
+>>
+>> The DMA client will search its associated DMA controller in the list
+>> and call the registered of_dam_xlate() function to retrieve the
+>> request values.
+>>
+>> One simple xlate function is provided for the "single number" type
+>> of request biding.
+>>
+>> This implementation is independent from dmaengine so it can also be
+>> used by legacy drivers.
+>>
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>> Cc: Benoit Cousson <b-cousson@ti.com>
+>> Cc: Stephen Warren <swarren@nvidia.com>
+>> Cc: Grant Likely <grant.likely@secretlab.ca>
+>> Cc: Russell King <linux@arm.linux.org.uk>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> ---
+>> Hi all,
+>>
+>> Here are my thoughts about the DMA helpers for device tree.
+>> This patch goes on top of Benoit's ones. My goal was to keep this separated
+>> from any DMA infrastructure (dmaengine not needed, nor any other DMA
+>> implementation).
+>>
+>> It is to keep the ball rolling, so do not hesitate to comment.
+>>
+>> Best regards,
+>>
+>>
+>>  Documentation/devicetree/bindings/dma/dma.txt |   29 +++--
+>>  drivers/of/dma.c                              |  161 ++++++++++++++++++++++---
+>>  include/linux/of_dma.h                        |   33 +++++-
+>>  3 files changed, 186 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+>> index 7f2a301..c49e98d 100644
+>> --- a/Documentation/devicetree/bindings/dma/dma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/dma.txt
+>> @@ -6,9 +6,8 @@ DMA request line that goes from an IP to a DMA controller.
+>>  
+>>  * DMA controller
+>>  
+>> -Required properties:
+>> -    - dma-controller: Mark the device as a DMA controller
+>> -    - #dma-cells: Number of cell for each DMA line, must be one.
+>> +Required property:
+>> +    - #dma-cells: Number of cells for each DMA line.
+>>  
+>>  
+>>  Example:
+>> @@ -17,7 +16,6 @@ Example:
+>>  		compatible = "ti,sdma-omap4"
+>>  		reg = <0x48000000 0x1000>;
+>>  		interrupts = <12>;
+>> -        dma-controller;
+>>  		#dma-cells = <1>;
+>>  	};
+>>  
+>> @@ -25,20 +23,23 @@ Example:
+>>  
+>>  * DMA client
+>>  
+>> -Client drivers should specify the DMA request numbers using a phandle to
+>> -the controller + the DMA request number on that controller.
+>> +Client drivers should specify the DMA request property using a phandle to
+>> +the controller. If needed, the DMA request identity on that controller is then
+>> +added followed by optional request specifications.
+>>  
+>> -Required properties:
+>> -    - dma-request: List of pair phandle + dma-request per line
+>> +Required property:
+>> +    - dma-request: List of phandle + dma-request + request specifications,
+>> +      one group per request "line".
+>> +Optional property:
+>>      - dma-request-names: list of strings in the same order as the dma-request
+>>        in the dma-request property.
+>>  
+>>  
+>>  Example:
+>>  
+>> -    i2c1: i2c@1 {
+>> -        ...
+>> -        dma-request = <&sdma 2 &sdma 3>;
+>> -        dma-request-names = "tx", "rx";
+>> -        ...
+>> -    };
+>> +	i2c1: i2c@1 {
+>> +		...
+>> +		dma-request = <&sdma 2 &sdma 3>;
+>> +		dma-request-names = "tx", "rx";
+>> +		...
+>> +	};
+>> diff --git a/drivers/of/dma.c b/drivers/of/dma.c
+>> index d4927e2..e0c6fd9 100644
+>> --- a/drivers/of/dma.c
+>> +++ b/drivers/of/dma.c
+>> @@ -13,41 +13,145 @@
+>>  #include <linux/device.h>
+>>  #include <linux/err.h>
+>>  #include <linux/module.h>
+>> +#include <linux/rculist.h>
+>> +#include <linux/slab.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_dma.h>
+>>  
+>> +static LIST_HEAD(of_dma_list);
+>> +
+>> +/**
+>> + * of_dma_find_controller() - Find a DMA controller in DT DMA helpers list
+>> + * @np:		device node of DMA controller
+>> + */
+>> +static struct of_dma *of_dma_find_controller(struct device_node *np)
+>> +{
+>> +	struct of_dma	*ofdma;
+>> +
+>> +	list_for_each_entry_rcu(ofdma, &of_dma_list, of_dma_controllers) {
+>> +		if (ofdma->of_node == np)
+>> +			return ofdma;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>>  /**
+>> - * of_get_dma_request() - Get a DMA request number and dma-controller node
+>> + * of_dma_controller_register() - Register a DMA controller to DT DMA helpers
+>> + * @np:			device node of DMA controller
+>> + * @of_dma_xlate:	generic translation function which converts a phandle
+>> + *			arguments list into a generic output value
+>> + *
+>> + * Returns 0 on success or appropriate errno value on error.
+>> + *
+>> + * If #dma-cells is not specified in DMA controller device tree node, we assume
+>> + * that the DMA controller phandle will come without argument.
+>> + *
+>> + * Allocated memory sould be freed with apropriate of_dma_controller_free()
+>> + * call.
+>> + */
+>> +int of_dma_controller_register(struct device_node *np,
+>> +			int (*of_dma_xlate)(struct of_phandle_args *, void *))
+>> +{
+>> +	struct of_dma	*ofdma;
+>> +	int		*nbcells;
+>> +
+>> +	if (!np || !of_dma_xlate) {
+>> +		pr_err("%s: not enouth information provided\n", __func__);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ofdma = kzalloc(sizeof(*ofdma), GFP_KERNEL);
+>> +	if (!ofdma)
+>> +		return -ENOMEM;
+>> +
+>> +	nbcells = (int *)of_get_property(np, "#dma-cells", NULL);
 > 
-> Might I ask why? Other *.dtsi files don't have it either.
-do not expect the bootloader to put it. I t's not mandatory
+> No cast required; but nbcells should be a (const __be32 *) instead of an int*.
 > 
-> > > +
-> > > +	soc {
-> > > +		gmac0: ethernet@e0800000 {
-> > > +			phy-mode = "gmii";
-> > > +		};
-> > > +
-> > > +		i2c@d0200000 {
-> > > +			clock-frequency = <400000>;
-> > > +		};
-> > > +	};
-> > > +};
-> > > diff --git a/arch/arm/boot/dts/spear600.dtsi
-> > > b/arch/arm/boot/dts/spear600.dtsi new file mode 100644
-> > > index 0000000..e45e58f
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/spear600.dtsi
-> > > @@ -0,0 +1,162 @@
-> > > +/*
-> > > + * Copyright 2012 Stefan Roese <sr@denx.de>
-> > > + *
-> > > + * The code contained herein is licensed under the GNU General Public
-> > > + * License. You may obtain a copy of the GNU General Public License
-> > > + * Version 2 or later at the following locations:
-> > > + *
-> > > + * http://www.opensource.org/licenses/gpl-license.html
-> > > + * http://www.gnu.org/copyleft/gpl.html
-> > > + */
-> > > +
-> > > +/include/ "skeleton.dtsi"
-> > > +
-> > > +/ {
-> > > +	compatible = "st,spear600";
-> > > +
-> > > +	cpus {
-> > > +		cpu@0 {
-> > > +			compatible = "arm,arm926ejs";
-> > > +		};
-> > > +	};
-> > > +
-> > > +	memory {
-> > > +		device_type = "memory";
-> > > +		reg = <0 0>; /* Filled by U-Boot */
-> > 
-> > please put the max mem of the SoC here
+>> +	if (!nbcells)
+>> +		/*
+>> +		 * no #dma-cells properties: assume no argument to
+>> +		 * dma-request property on slave side
+>> +		 */
+>> +		ofdma->of_dma_n_cells = 0;
+>> +	else
+>> +		ofdma->of_dma_n_cells = be32_to_cpup(nbcells);
+>> +
+>> +	ofdma->of_node = np;
+>> +	ofdma->of_dma_xlate = of_dma_xlate;
+>> +
+>> +	/* Now queue of_dma controller structure in list */
+>> +	list_add_tail_rcu(&ofdma->of_dma_controllers, &of_dma_list);
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(of_dma_controller_register);
 > 
-> Why? It's always updated by the bootloader. And a max. mem size (when not 
-> updated to the correct mem size by the bootloader) would crash the board if it 
-> is equipped with less memory.
-yes but we descripbe the soc here and on the dts you reduce it
-Never expect the bootloader to update it.
+> EXPORT_SYMBOL_GPL
+> 
+>> +
+>> +/**
+>> + * of_dma_controller_free() - Remove a DMA controller from DT DMA helpers list
+>> + * @np:		device node of DMA controller
+>> + *
+>> + * Memory allocated by of_dma_controller_register() is freed here.
+>> + */
+>> +void of_dma_controller_free(struct device_node *np)
+>> +{
+>> +	struct of_dma	*ofdma;
+>> +
+>> +	ofdma = of_dma_find_controller(np);
+>> +	if (ofdma) {
+>> +		list_del_rcu(&ofdma->of_dma_controllers);
+>> +		kfree(ofdma);
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL(of_dma_controller_free);
+>> +
+>> +/**
+>> + * of_get_dma_request() - Get the associated DMA request data
+>>   * @np:		device node to get DMA request from
+>> - * @propname:	property name containing DMA specifier(s)
+>>   * @index:	index of the DMA request
+>> - * @ctrl_np:	a device_node pointer to fill in
+>> + * @out_data:	a output that can be filled in by the of_dma_xlate() function
+>>   *
+>> - * Returns DMA number along to the dma controller node, or one of the errno
+>> - * value on the error condition. If @ctrl_np is not NULL the function also
+>> - * fills in the DMA controller device_node pointer.
+>> + * Returns return value of of_dma_xlate() and fills out_data (if provided).
+>> + * On error returns the appropriate errno value.
+>>   */
+>>  int of_get_dma_request(struct device_node *np, int index,
+>> -		       struct device_node **ctrl_np)
+>> +		       void *out_data)
+>>  {
+>> -	int ret = -EINVAL;
+>> -	struct of_phandle_args dma_spec;
+>> +	struct of_phandle_args	dma_spec;
+>> +	struct of_dma		*ofdma;
+>> +	int			ret;
+>>  
+>>  	ret = of_parse_phandle_with_args(np, "dma-request", "#dma-cells",
+>>  					 index, &dma_spec);
+>>  	if (ret) {
+>> -		pr_debug("%s: can't parse dma property\n", __func__);
+>> +		pr_err("%s: can't parse dma property\n", np->full_name);
+>>  		goto err0;
+>>  	}
+>>  
+>> -	if (dma_spec.args_count > 0)
+>> -		ret = dma_spec.args[0];
+>> +	if (list_empty(&of_dma_list)) {
+>> +		pr_debug("%s: empty DMA controller list\n",
+>> +			 np->full_name);
+>> +		ret = -ENOENT;
+>> +		goto err1;
+>> +	}
+>>  
+>> -	if (ctrl_np)
+>> -		*ctrl_np = dma_spec.np;
+>> -	else
+>> -		of_node_put(dma_spec.np);
+>> +	ofdma = of_dma_find_controller(dma_spec.np);
+>> +	if (!ofdma) {
+>> +		pr_debug("%s: DMA controller %s isn't registered\n",
+>> +			 np->full_name, dma_spec.np->full_name);
+>> +		ret = -ENODEV;
+>> +		goto err1;
+>> +	}
+>>  
+>> +	if (dma_spec.args_count != ofdma->of_dma_n_cells) {
+>> +		pr_debug("%s: wrong #dma-cells for %s\n",
+>> +			 np->full_name, dma_spec.np->full_name);
+>> +		ret = -EINVAL;
+>> +		goto err1;
+>> +	}
+>> +
+>> +	ret = ofdma->of_dma_xlate(&dma_spec, out_data);
+>> +
+>> +err1:
+>> +	of_node_put(dma_spec.np);
+>>  err0:
+>>  	pr_debug("%s exited with status %d\n", __func__, ret);
+>>  	return ret;
+>> @@ -55,6 +159,24 @@ err0:
+>>  EXPORT_SYMBOL(of_get_dma_request);
+>>  
+>>  /**
+>> + * of_dma_xlate_onenumbercell() - Generic DMA xlate for direct one cell bindings
+>> + *
+>> + * Device Tree DMA translation function which works with one cell bindings
+>> + * where the cell values map directly to the hardware request number understood
+>> + * by the DMA controller.
+>> + */
+>> +int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec, void *req_nbr)
+>> +{
+>> +	if (!dma_spec)
+>> +		return -EINVAL;
+>> +	if (WARN_ON(dma_spec->args_count != 1))
+>> +		return -EINVAL;
+>> +	*(int *)req_nbr = dma_spec->args[0];
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL(of_dma_xlate_onenumbercell);
+>> +
+>> +/**
+>>   * of_dma_count - Count DMA requests for a device
+>>   * @np:		device node to count DMAs for
+>>   *
+>> @@ -105,13 +227,14 @@ int of_dma_to_resource(struct device_node *dev, int index, struct resource *r)
+>>  {
+>>  	const char *name = NULL;
+>>  	int dma;
+>> +	int ret;
+>>  
+>>  	if (!r)
+>>  		return -EINVAL;
+>>  
+>> -	dma = of_get_dma_request(dev, index, NULL);
+>> -	if (dma < 0)
+>> -		return dma;
+>> +	ret = of_get_dma_request(dev, index, &dma);
+>> +	if (ret < 0)
+>> +		return ret;
+>>  
+>>  	/*
+>>  	 * Get optional "dma-request-names" property to add a name
+>> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+>> index 575163d..fbf98de 100644
+>> --- a/include/linux/of_dma.h
+>> +++ b/include/linux/of_dma.h
+>> @@ -17,18 +17,38 @@
+>>  
+>>  struct device_node;
+>>  
+>> -#ifdef CONFIG_OF_GPIO
+>> +#ifdef CONFIG_OF_DMA
+>>  
+>> +struct of_dma {
+>> +	struct list_head of_dma_controllers;
+>> +	struct device_node *of_node;
+>> +	int of_dma_n_cells;
+>> +	int (*of_dma_xlate)(struct of_phandle_args *dma_spec, void *data);
+>> +};
+> 
+> The api makes struct of_dma private; so this should be moved to the .c
+> file.
+> 
+> Otherwise, this looks okay to me.
 
-It's a possibility not mandatory
+Hi Grant and Stephen,
 
+I plan to resend a squashed version of Benoit's patch and mine about
+those DMA helpers (we talked about this with Benoit). I tried to address
+all remarks by Benoit and Grant.
 
->  
-> > > +	};
-> > > +
-> > > +	soc {
-> > 
-> > please put the name of the bus not soc
-> 
-> Okay.
-> 
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <1>;
-> > > +		compatible = "simple-bus";
-> > > +		ranges;
-> > > +
-> > > +		vic0: interrupt-controller@f1100000 {
-> > > +			compatible = "arm,pl190-vic";
-> > > +			interrupt-controller;
-> > > +			reg = <0xf1100000 0x1000>;
-> > > +			#interrupt-cells = <1>;
-> > > +		};
-> > > +
-> > > +		vic1: interrupt-controller@f1000000 {
-> > > +			compatible = "arm,pl190-vic";
-> > > +			interrupt-controller;
-> > > +			reg = <0xf1000000 0x1000>;
-> > > +			#interrupt-cells = <1>;
-> > > +		};
-> > > +
-> > > +		serial@d0000000 {
-> > > +			compatible = "arm,pl011", "arm,primecell";
-> > > +			reg = <0xd0000000 0x1000>;
-> > > +			interrupt-parent = <&vic0>;
-> > > +			interrupts = <24>;
-> > > +		};
-> > > +
-> > > +		serial@d0080000 {
-> > > +			compatible = "arm,pl011", "arm,primecell";
-> > > +			reg = <0xd0080000 0x1000>;
-> > > +			interrupt-parent = <&vic0>;
-> > > +			interrupts = <25>;
-> > > +		};
-> > > +
-> > > +		/* local/cpu GPIO */
-> > > +		gpio0: gpio@f0100000 {
-> > > +			#gpio-cells = <2>;
-> > > +			compatible = "arm,pl061", "arm,primecell";
-> > > +			gpio-controller;
-> > > +			reg = <0xf0100000 0x1000>;
-> > > +			interrupt-parent = <&vic0>;
-> > > +			interrupts = <18>;
-> > > +		};
-> > > +
-> > > +		/* basic GPIO */
-> > > +		gpio1: gpio@fc980000 {
-> > > +			#gpio-cells = <2>;
-> > > +			compatible = "arm,pl061", "arm,primecell";
-> > > +			gpio-controller;
-> > > +			reg = <0xfc980000 0x1000>;
-> > > +			interrupt-parent = <&vic1>;
-> > > +			interrupts = <19>;
-> > > +		};
-> > > +
-> > > +		/* appl GPIO */
-> > > +		gpio2: gpio@d8100000 {
-> > > +			#gpio-cells = <2>;
-> > > +			compatible = "arm,pl061", "arm,primecell";
-> > > +			gpio-controller;
-> > > +			reg = <0xd8100000 0x1000>;
-> > > +			interrupt-parent = <&vic1>;
-> > > +			interrupts = <4>;
-> > > +		};
-> > > +
-> > > +		gmac0: ethernet@e0800000 {
-> > > +			compatible = "st,spear600-gmac";
-> > > +			reg = <0xe0800000 0x8000>;
-> > > +			interrupt-parent = <&vic1>;
-> > > +			interrupts = <24 23>;
-> > > +			interrupt-names = "macirq", "eth_wake_irq";
-> > > +			mac-address = [000000000000]; /* Filled in by U-Boot 
-> */
-drop this no dummy data
-> > > +		};
-> > > +
-> > > +		i2c@d0200000 {
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <0>;
-> > > +			compatible = "snps,designware-i2c";
-> > > +			reg = <0xd0200000 0x1000>;
-> > > +			interrupt-parent = <&vic0>;
-> > > +			interrupts = <28>;
-> > > +		};
-> > > +
-> > > +		fsmc0: flash@d1800000 {
-> > > +			status = "disabled";
-> > > +			compatible = "st,spear600-fsmc-nand";
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <1>;
-> > > +			reg = <0xd1800000 0x1000	/* FSMC Register */
-> > > +			       0xd2000000 0x4000>;	/* NAND Base */
-> > > +			reg-names = "fsmc_regs", "nand_data";
-> > > +		};
-> > > +
-> > > +		smi0: flash@fc000000 {
-> > > +			status = "disabled";
-> > > +			compatible = "st,spear600-smi";
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <1>;
-> > > +			reg = <0xfc000000 0x1000>;
-> > > +			interrupt-parent = <&vic1>;
-> > > +			interrupts = <12>;
-> > > +		};
-> > > +
-> > > +		ehci@e1800000 {
-> > > +			status = "disabled";
-> > > +			compatible = "st,spear600-ehci", "usb-ehci";
-> > > +			reg = <0xe1800000 0x1000>;
-> > > +			interrupt-parent = <&vic1>;
-> > > +			interrupts = <27>;
-> > > +		};
-> > > +
-> > > +		ehci@e2000000 {
-> > > +			status = "disabled";
-> > > +			compatible = "st,spear600-ehci", "usb-ehci";
-> > > +			reg = <0xe2000000 0x1000>;
-> > > +			interrupt-parent = <&vic1>;
-> > > +			interrupts = <29>;
-> > > +		};
-> > > +
-> > > +		ohci@e1900000 {
-> > > +			status = "disabled";
-> > > +			compatible = "st,spear600-ohci", "usb-ohci";
-> > > +			reg = <0xe1900000 0x1000>;
-> > > +			interrupt-parent = <&vic1>;
-> > > +			interrupts = <26>;
-> > > +		};
-> > > +
-> > > +		ohci@e2100000 {
-> > > +			status = "disabled";
-> > > +			compatible = "st,spear600-ohci", "usb-ohci";
-> > > +			reg = <0xe2100000 0x1000>;
-> > > +			interrupt-parent = <&vic1>;
-> > > +			interrupts = <28>;
-> > > +		};
-> > 
-> > all of this need a Doc for the ST bindings
-> 
-> Sure. I only provided those nodes on Arnd's special request. They are 
-> currently disabled. And documentation will follow with the DT device driver 
-> patches.
-no update it after
-> 
-> > > +	};
-> > > +};
-> > > diff --git a/arch/arm/mach-spear6xx/Kconfig
-> > > b/arch/arm/mach-spear6xx/Kconfig index ff4ae5b..7777f72 100644
-> > > --- a/arch/arm/mach-spear6xx/Kconfig
-> > > +++ b/arch/arm/mach-spear6xx/Kconfig
-> > > @@ -11,6 +11,13 @@ config BOARD_SPEAR600_EVB
-> > > 
-> > >  	help
-> > >  	
-> > >  	  Supports ST SPEAr600 Evaluation Board
-> > > 
-> > > +config BOARD_SPEAR600_DT
-> > > +	bool "SPEAr600 generic board configured via device-tree"
-> > > +	select MACH_SPEAR600
-> > > +	select USE_OF
-> > > +	help
-> > > +	  Supports ST SPEAr600 boards configured via the device-tree
-> > > +
-> > > 
-> > >  endmenu
-> > >  
-> > >  config MACH_SPEAR600
-> > > 
-> > > diff --git a/arch/arm/mach-spear6xx/Makefile
-> > > b/arch/arm/mach-spear6xx/Makefile index cc1a4d8..6f87c3a 100644
-> > > --- a/arch/arm/mach-spear6xx/Makefile
-> > > +++ b/arch/arm/mach-spear6xx/Makefile
-> > > @@ -5,8 +5,5 @@
-> > > 
-> > >  # common files
-> > >  obj-y	+= clock.o spear6xx.o
-> > > 
-> > > -# spear600 specific files
-> > > -obj-$(CONFIG_MACH_SPEAR600) += spear600.o
-> > > -
-> > > 
-> > >  # spear600 boards files
-> > >  obj-$(CONFIG_BOARD_SPEAR600_EVB) += spear600_evb.o
-> > > 
-> > > diff --git a/arch/arm/mach-spear6xx/spear600.c
-> > > b/arch/arm/mach-spear6xx/spear600.c deleted file mode 100644
-> > > index d0e6eea..0000000
-> > > --- a/arch/arm/mach-spear6xx/spear600.c
-> > > +++ /dev/null
-> > > @@ -1,25 +0,0 @@
-> > > -/*
-> > > - * arch/arm/mach-spear6xx/spear600.c
-> > > - *
-> > > - * SPEAr600 machine source file
-> > > - *
-> > > - * Copyright (C) 2009 ST Microelectronics
-> > > - * Rajeev Kumar<rajeev-dlh.kumar@st.com>
-> > > - *
-> > > - * This file is licensed under the terms of the GNU General Public
-> > > - * License version 2. This program is licensed "as is" without any
-> > > - * warranty of any kind, whether express or implied.
-> > > - */
-> > > -
-> > > -#include <linux/ptrace.h>
-> > > -#include <asm/irq.h>
-> > > -#include <mach/generic.h>
-> > > -#include <mach/hardware.h>
-> > > -
-> > > -/* Add spear600 specific devices here */
-> > > -
-> > > -void __init spear600_init(void)
-> > > -{
-> > > -	/* call spear6xx family common init function */
-> > > -	spear6xx_init();
-> > > -}
-> > > diff --git a/arch/arm/mach-spear6xx/spear600_evb.c
-> > > b/arch/arm/mach-spear6xx/spear600_evb.c index c6e4254..c4949aa 100644
-> > > --- a/arch/arm/mach-spear6xx/spear600_evb.c
-> > > +++ b/arch/arm/mach-spear6xx/spear600_evb.c
-> > > @@ -32,9 +32,6 @@ static void __init spear600_evb_init(void)
-> > > 
-> > >  {
-> > >  
-> > >  	unsigned int i;
-> > > 
-> > > -	/* call spear600 machine init function */
-> > > -	spear600_init();
-> > > -
-> > > 
-> > >  	/* Add Platform Devices */
-> > >  	platform_add_devices(plat_devs, ARRAY_SIZE(plat_devs));
-> > > 
-> > > diff --git a/arch/arm/mach-spear6xx/spear6xx.c
-> > > b/arch/arm/mach-spear6xx/spear6xx.c index e0f6628..aca20f0 100644
-> > > --- a/arch/arm/mach-spear6xx/spear6xx.c
-> > > +++ b/arch/arm/mach-spear6xx/spear6xx.c
-> > > @@ -6,6 +6,8 @@
-> > > 
-> > >   * Copyright (C) 2009 ST Microelectronics
-> > >   * Rajeev Kumar<rajeev-dlh.kumar@st.com>
-> > >   *
-> > > 
-> > > + * Copyright 2012 Stefan Roese <sr@denx.de>
-> > > + *
-> > > 
-> > >   * This file is licensed under the terms of the GNU General Public
-> > >   * License version 2. This program is licensed "as is" without any
-> > >   * warranty of any kind, whether express or implied.
-> > > 
-> > > @@ -15,6 +17,10 @@
-> > > 
-> > >  #include <linux/amba/pl061.h>
-> > >  #include <linux/ptrace.h>
-> > >  #include <linux/io.h>
-> > > 
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/of_irq.h>
-> > > +#include <linux/of_platform.h>
-> > > 
-> > >  #include <asm/hardware/vic.h>
-> > >  #include <asm/irq.h>
-> > >  #include <asm/mach/arch.h>
-> > > 
-> > > @@ -99,12 +105,6 @@ struct amba_device gpio_device[] = {
-> > > 
-> > >  	}
-> > >  
-> > >  };
-> > > 
-> > > -/* This will add devices, and do machine specific tasks */
-> > > -void __init spear6xx_init(void)
-> > > -{
-> > > -	/* nothing to do for now */
-> > > -}
-> > > -
-> > > 
-> > >  /* This will initialize vic */
-> > >  void __init spear6xx_init_irq(void)
-> > >  {
-> > > 
-> > > @@ -181,3 +181,60 @@ static void __init spear6xx_timer_init(void)
-> > > 
-> > >  struct sys_timer spear6xx_timer = {
-> > >  
-> > >  	.init = spear6xx_timer_init,
-> > >  
-> > >  };
-> > > 
-> > > +
-> > > +/*
-> > > + * Devicetree specific init structs/functions:
-> > > + * Once the SPEAr600 devicetree support has matured, we can remove
-> > > + * spear600_evb.c and the non-devicetree support above in this file.
-> > > + */
-> > > +
-> > > +/*
-> > > + * Add auxdata so that clock name matching doesn't fail in device
-> > > + * drivers
-> > > + */
-> > > +struct of_dev_auxdata spear600_auxdata_lookup[] __initdata = {
-> > > +	OF_DEV_AUXDATA("arm,pl011", SPEAR6XX_ICM1_UART0_BASE,
-> > > +		       "uart0", NULL),
-> > > +	OF_DEV_AUXDATA("arm,pl011", SPEAR6XX_ICM1_UART1_BASE,
-> > > +		       "uart1", NULL),
-> > > +	OF_DEV_AUXDATA("arm,pl061", SPEAR6XX_CPU_GPIO_BASE,
-> > > +		       "gpio0", NULL),
-> > > +	OF_DEV_AUXDATA("arm,pl061", SPEAR6XX_ICM3_GPIO_BASE,
-> > > +		       "gpio1", NULL),
-> > > +	OF_DEV_AUXDATA("arm,pl061", SPEAR6XX_ICM2_GPIO_BASE,
-> > > +		       "gpio2", NULL),
-> > > +	OF_DEV_AUXDATA("snps,designware-i2c", SPEAR6XX_ICM1_I2C_BASE,
-> > > +		       "i2c_designware.0", NULL),
-> > 
-> > update the clkdev no more OF_DEV_AUXDATA
-> 
-> That will break non-DT boards. We can change it in clkdev later, once DT 
-> support has stabalized for SPEAr600. And remove all this then.
-it will not just add new entry
+I do have the will to avoid the treats of memory corruption in case of
+malformed DT data, as Stephen was saying. But, on the other hand I do
+not know really if this can happen: if the .xlate() function which is
+provided by the DMA controller is well written, it should check for
+proper args_count or maximum string size. I do not have the feeling that
+adding an enum will enforce the security here.
 
-as done on AT91 as example and requested for imx recently too
+Do you know a way to enforce security of this "void *" parameter or the
+check of number of cells + the due diligence of .xlate() function
+writers will be enough?
 
-Best Regards,
-J.
+Best regards,
+-- 
+Nicolas Ferre
