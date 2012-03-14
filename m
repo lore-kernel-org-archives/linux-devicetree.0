@@ -1,100 +1,52 @@
-From: H Hartley Sweeten <hartleys-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>
-Subject: RE: [PATCH v4 02/10] pwm: Allow chips to support multiple PWMs.
-Date: Wed, 14 Mar 2012 15:42:37 -0500
-Message-ID: <ADE657CA350FB648AAC2C43247A983F0020695DB57DC@AUSP01VMBX24.collaborationhost.net>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v4 03/10] pwm: Add device tree support
+Date: Wed, 14 Mar 2012 21:46:37 +0100
+Message-ID: <20120314204637.GA12334@avionic-0098.mockup.avionic-design.de>
 References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de>
- <1331740593-10807-3-git-send-email-thierry.reding@avionic-design.de>
+ <1331740593-10807-4-git-send-email-thierry.reding@avionic-design.de>
+ <20120314201138.GU3852@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331740593-10807-3-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120314201138.GU3852-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 14, 2012 8:56 AM, Thierry Reding wrote:
-> 
-> Many PWM controllers provide access to more than a single PWM output and
-> may even share some resource among them. Allowing a PWM chip to provide
-> multiple PWM devices enables better sharing of those resources. As a
-> side-effect this change allows easy integration with the device tree
-> where a given PWM can be looked up based on the PWM chip's phandle and a
-> corresponding index.
->
-> This commit modifies the PWM core to support multiple PWMs per struct
-> pwm_chip. It achieves this in a similar way to how gpiolib works, by
-> allowing PWM ranges to be requested dynamically (pwm_chip.base == -1) or
-> starting at a given offset (pwm_chip.base >= 0). A chip specifies how
-> many PWMs it controls using the npwm member. Each of the functions in
-> the pwm_ops structure gets an additional argument that specified the PWM
-> number (it can be converted to a per-chip index by subtracting the
-> chip's base).
->
-> The total maximum number of PWM devices is currently fixed to 1024 while
-> the data is actually stored in a radix tree, thus saving resources if
-> not all of them are used.
->
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> ---
 
-<snip>
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index df9681b..7261911 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
+* Sascha Hauer wrote:
+> On Wed, Mar 14, 2012 at 04:56:26PM +0100, Thierry Reding wrote:
+> > +static inline struct pwm_device *of_pwm_request(struct device_node *np,
+> > +						const char *propname,
+> > +						int index);
+>                                                          ^^^
+>=20
+> No semicolon here please.
 
-<snip>
+Ugh. I've been doing extra compile tests to make sure the series stays
+bisectible, but I guess I need to add further tests with !PWM and !OF
+configurations.
 
->  /**
-> - * struct pwm_ops - PWM operations
-> + * struct pwm_ops - PWM controller operations
->   * @request: optional hook for requesting a PWM
->   * @free: optional hook for freeing a PWM
->   * @config: configure duty cycles and period length for this PWM
->   * @enable: enable PWM output toggling
->   * @disable: disable PWM output toggling
-> + * @dbg_show: optional routine to show contents in debugfs
-> + * @owner: helps prevent removal of modules exporting active PWMs
->   */
->  struct pwm_ops {
-> -	int			(*request)(struct pwm_chip *chip);
-> -	void			(*free)(struct pwm_chip *chip);
-> -	int			(*config)(struct pwm_chip *chip, int duty_ns,
-> -						int period_ns);
-> -	int			(*enable)(struct pwm_chip *chip);
-> -	void			(*disable)(struct pwm_chip *chip);
-> +	int			(*request)(struct pwm_chip *chip,
-> +					   struct pwm_device *pwm);
-> +	void			(*free)(struct pwm_chip *chip,
-> +					struct pwm_device *pwm);
-> +	int			(*config)(struct pwm_chip *chip,
-> +					  struct pwm_device *pwm,
-> +					  int duty_ns, int period_ns);
-> +	int			(*enable)(struct pwm_chip *chip,
-> +					  struct pwm_device *pwm);
-> +	void			(*disable)(struct pwm_chip *chip,
-> +					   struct pwm_device *pwm);
-> +#ifdef CONFIG_DEBUG_FS
-> +	void			(*dbg_show)(struct pwm_chip *chip,
-> +					    struct seq_file *s);
-> +#endif
+Thanks,
+Thierry
 
-This doesn't compile...
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature
 
-include/linux/pwm.h:87: warning: 'struct seq_file' declared inside parameter list
-include/linux/pwm.h:87: warning: its scope is only this definition or declaration, which is probably not what you want
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Regards,
-Hartley
+iEYEARECAAYFAk9hA60ACgkQZ+BJyKLjJp8l2ACfTWEaAcT5D6vJnls8HXrh1PH2
+NTEAn178ZfeteLYCTNpiKI6J7U+7xIg8
+=os+U
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
