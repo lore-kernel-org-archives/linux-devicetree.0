@@ -1,71 +1,250 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v1 2/5] mmc: mxs-mmc: add dt probe support
-Date: Wed, 14 Mar 2012 12:17:19 +0100
-Message-ID: <201203141217.19842.marek.vasut@gmail.com>
-References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
- <201203140809.22676.marek.vasut@gmail.com>
- <20120314072603.GC8494@shlinux2.ap.freescale.net>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCH] stmmac: Add device-tree support
+Date: Wed, 14 Mar 2012 12:38:22 +0100
+Message-ID: <4F60832E.6060100@st.com>
+References: <1331561157-3820-1-git-send-email-sr@denx.de> <20120312143825.GB13869@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120314072603.GC8494@shlinux2.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: Guo Shawn-R65073 <r65073@freescale.com>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20120312143825.GB13869@game.jcrosoft.org>
+Sender: netdev-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Stefan Roese <sr@denx.de>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@ozlabs.org, Viresh Kumar <viresh.kumar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Dong Aisheng,
+On 3/12/2012 3:38 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 15:05 Mon 12 Mar     , Stefan Roese wrote:
+>> This patch adds support to configure the STMMAC ethernet driver via
+>> device-tree instead of platform_data.
+>>
+>> Currently, only the properties needed on SPEAr600 are provided. All
+>> other properties should be added once needed on other platforms.
+>>
+>> Signed-off-by: Stefan Roese <sr@denx.de>
+>> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>> Cc: Viresh Kumar <viresh.kumar@st.com>
+>> ---
+>>  Documentation/devicetree/bindings/net/stmmac.txt   |   38 +++++++++++
+>>  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   66 +++++++++++++++++++-
+>>  2 files changed, 103 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/net/stmmac.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+>> new file mode 100644
+>> index 0000000..386a47f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+>> @@ -0,0 +1,38 @@
+>> +* STMicroelectronics 10/100/1000 Ethernet driver (GMAC)
+>> +
+>> +Required properties:
+>> +- compatible: Should be "stm,gmac"
 
-> On Wed, Mar 14, 2012 at 08:09:22AM +0100, Marek Vasut wrote:
-> > Dear Dong Aisheng,
-> > 
-> > > On Wed, Mar 14, 2012 at 01:58:25PM +0800, Marek Vasut wrote:
-> > > > Dear Dong Aisheng,
-> > > > 
-> > > > > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> > > 
-> > > ........
-> > > 
-> > > > > +static const struct of_device_id mxs_mmc_dt_ids[] = {
-> > > > > +	{ .compatible = "fsl,imx23-mmc", .data = NULL, },
-> > > > > +	{ .compatible = "fsl,imx28-mmc", .data = NULL, },
-> > > > 
-> > > > Do you really need two distinct ones here?
-> > > 
-> > > Hmm, my original purpose is to put soc difference data in .data
-> > > to remove cpu_is_* function calls in the driver later.
-> > > Do you think if any issue?
-> > 
-> > Well, what's the difference between the interfaces on mx233 and mx28? Is
-> > it something that can't be encoded otherwise? I think they're not so
-> > different.
-> 
-> Not much difference except the one register offset and ip version.
-> See:
-> #define SSP_VERSION_LATEST      4
-> #define ssp_is_old()            (host->version < SSP_VERSION_LATEST)
-> ..
-> #define HW_SSP_VERSION (cpu_is_mx23() ? 0x110 : 0x130)
-> The ip version can be handled in driver, but for offset...
-> it depends on cpu_is_* macro.
-> Putting the HW_SSP_VERSION offset difference in .data can eliminate the
-> need of cpu_is_*.
-> 
-> Despite of that, since they're two devices,
-> i guess it's ok to put two compatible string there, right?
-> Or you thought just put one as below?
-> { .compatible = "fsl,mxs-mmc", .data = NULL, },
-> 
-No, I understand now /wrt the register layout.
+> this IP have 2 version at least the GMAC for the second generation and mac for
+> the first generation
 
-Best regards,
-Marek Vasut
+yes you are right. STMMAC supports two device generations I named:
+dwma10/100 and dwmac1000 (gmac).
+
+Concerning the latter, we support several different versions of the
+synopsys GMAC cores ... from 3.30 to 3.61a.
+
+For example, stx7108 and Stx7109 have the same GMAC core (also SPEAr600
+IIRC).
+SPEAr13xx has 3.50a
+New ST SoC Stxh415 has the 3.60a. etc.
+
+>> +- reg: Address and length of the register set for the device
+>> +- interrupt-parent: Should be the phandle for the interrupt controller
+>> +  that services interrupts for this device
+>> +- interrupts: Should contain the STMMAC interrupts
+>> +- interrupt-names: Should contain the interrupt names "macirq"
+>> +  "eth_wake_irq" if this interrupt is supported in the "interrupts"
+>> +  property
+> optionnal
+
+yes
+
+note that there will be a new field for lpi IRQ as well
+
+>> +- phy-mode: String, operation mode of the PHY interface.
+>> +  Supported values are: "mii", "rmii", "gmii", "rgmii".
+>> +- phy-addr: MDIO address of the PHY
+>> +
+>> +Optional properties:
+>> +- stm,prog-burst-len: Specify the burst length
+>> +- stm,has-gmac: Indicates that the controller supports 1000Mbps
+> this IP support more mode 10/100/300/1000
+
+has_gmac was used to understand on devices w/o the HW cap registers if
+the core is a gmac... another useful parameter could be : enh_desc
+
+In fact, there are several possible HW configurations:
+
+gmac core + enh desc
+gmac core + norm_desc
+mac  core + norm_des
+
+...
+
+W/o cap register (present in new cores newer than 3.50) we need to pass
+this info from the plt.
+
+>> +- stm,has-pmt: Indicates that the controller supports power management
+>> +- mac-address: 6 bytes, mac address
+>> +
+>> +Examples:
+>> +
+>> +	gmac0: stmmac@e0800000 {
+>> +		compatible = "stm,gmac";
+>> +		reg = <0xe0800000 0x8000>;
+>> +		interrupt-parent = <&vic1>;
+>> +		interrupts = <24 23>;
+>> +		interrupt-names = "macirq", "eth_wake_irq";
+>> +		mac-address = [000000000000]; /* Filled in by U-Boot */
+>> +
+>> +		stm,prog-burst-len = <8>;
+>> +		stm,has-gmac;
+>> +		stm,has-pmt;
+>> +
+>> +		phy-mode = "gmii";
+>> +		phy-addr = <0>;
+>> +	};
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> index 3aad981..fcf46c7 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+>> @@ -24,8 +24,43 @@
+>>  
+>>  #include <linux/platform_device.h>
+>>  #include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_net.h>
+>>  #include "stmmac.h"
+>>  
+>> +#ifdef CONFIG_OF
+>> +static int __devinit stmmac_probe_config_dt(struct platform_device *pdev,
+>> +					    struct plat_stmmacenet_data *plat,
+>> +					    const char **mac)
+>> +{
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +
+>> +	if (!np)
+>> +		return -ENODEV;
+>> +
+>> +	*mac = of_get_mac_address(np);
+>> +
+>> +	plat->interface = of_get_phy_mode(np);
+>> +	of_property_read_u32(np, "phy-addr", &plat->phy_addr);
+>> +	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
+>> +					   sizeof(struct stmmac_mdio_bus_data),
+>> +					   GFP_KERNEL);
+>> +
+>> +	/*
+>> +	 * Currently only the properties needed on SPEAr600
+>> +	 * are provided. All other properties should be added
+>> +	 * once needed on other platforms.
+>> +	 */
+>> +	of_property_read_u32(np, "stm,prog-burst-len", &plat->pbl);
+>> +	if (of_get_property(np, "stm,has-gmac", NULL))
+>> +		plat->has_gmac = 1;
+>> +	if (of_get_property(np, "stm,has-pmt", NULL))
+>> +		plat->pmt = 1;
+>> +
+>> +	return 0;
+>> +}
+>> +#endif /* CONFIG_OF */
+>> +
+>>  /**
+>>   * stmmac_pltfr_probe
+>>   * @pdev: platform device pointer
+>> @@ -39,7 +74,8 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+>>  	struct resource *res;
+>>  	void __iomem *addr = NULL;
+>>  	struct stmmac_priv *priv = NULL;
+>> -	struct plat_stmmacenet_data *plat_dat;
+>> +	struct plat_stmmacenet_data *plat_dat = NULL;
+>> +	const char *mac = NULL;
+>>  
+>>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>  	if (!res)
+>> @@ -58,6 +94,22 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+>>  		ret = -ENOMEM;
+>>  		goto out_release_region;
+>>  	}
+>> +
+>> +#ifdef CONFIG_OF
+>> +	plat_dat = devm_kzalloc(&pdev->dev, sizeof(struct plat_stmmacenet_data),
+>> +				GFP_KERNEL);
+>> +	if (!plat_dat) {
+>> +		pr_err("%s: ERROR: no memory", __func__);
+>> +		ret = -ENOMEM;
+>> +		goto out_unmap;
+>> +	}
+>> +
+>> +	ret = stmmac_probe_config_dt(pdev, plat_dat, &mac);
+>> +	if (ret) {
+>> +		pr_err("%s: main dt probe failed", __func__);
+>> +		goto out_unmap;
+>> +	}
+>> +#else
+> This must be check at runtime, we can boot a kernel with or without DT.
+> 
+> Best Reards,
+> J.
+>>  	plat_dat = pdev->dev.platform_data;
+>>  
+>>  	/* Custom initialisation (if needed)*/
+>> @@ -66,6 +118,7 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+>>  		if (unlikely(ret))
+>>  			goto out_unmap;
+>>  	}
+>> +#endif
+>>  
+>>  	priv = stmmac_dvr_probe(&(pdev->dev), plat_dat, addr);
+>>  	if (!priv) {
+>> @@ -73,6 +126,10 @@ static int stmmac_pltfr_probe(struct platform_device *pdev)
+>>  		goto out_unmap;
+>>  	}
+>>  
+>> +	/* Get MAC address if available (DT) */
+>> +	if (mac)
+>> +		memcpy(priv->dev->dev_addr, mac, ETH_ALEN);
+>> +
+>>  	/* Get the MAC information */
+>>  	priv->dev->irq = platform_get_irq_byname(pdev, "macirq");
+>>  	if (priv->dev->irq == -ENXIO) {
+>> @@ -178,6 +235,12 @@ static const struct dev_pm_ops stmmac_pltfr_pm_ops = {
+>>  static const struct dev_pm_ops stmmac_pltfr_pm_ops;
+>>  #endif /* CONFIG_PM */
+>>  
+>> +static const struct of_device_id stmmac_dt_ids[] = {
+>> +	{ .compatible = "stm,gmac", },
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, stmmac_dt_ids);
+>> +
+>>  static struct platform_driver stmmac_driver = {
+>>  	.probe = stmmac_pltfr_probe,
+>>  	.remove = stmmac_pltfr_remove,
+>> @@ -185,6 +248,7 @@ static struct platform_driver stmmac_driver = {
+>>  		   .name = STMMAC_RESOURCE_NAME,
+>>  		   .owner = THIS_MODULE,
+>>  		   .pm = &stmmac_pltfr_pm_ops,
+>> +		   .of_match_table = of_match_ptr(stmmac_dt_ids),
+>>  		   },
+>>  };
+>>  
+>> -- 
+>> 1.7.9.2
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe netdev" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe netdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
