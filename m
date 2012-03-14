@@ -1,13 +1,13 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Wed, 14 Mar 2012 12:35:05 +0530
-Message-ID: <4F604321.9000204@st.com>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 2/7] of: add clock providers
+Date: Wed, 14 Mar 2012 08:07:28 +0100
+Message-ID: <20120314070728.GC2659@avionic-0098.mockup.avionic-design.de>
+References: <1331680947-29861-1-git-send-email-robherring2@gmail.com>
+ <1331680947-29861-3-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============7251872851859870872=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331650032-15274-1-git-send-email-sr-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <1331680947-29861-3-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,170 +17,81 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Cc: "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-Other than Arnd's comments:
+--===============7251872851859870872==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KDt/GgjP6HVcx58l"
+Content-Disposition: inline
 
-On 3/13/2012 8:17 PM, Stefan Roese wrote:
 
-> diff --git a/arch/arm/boot/dts/spear600-evb.dts b/arch/arm/boot/dts/spear600-evb.dts
+--KDt/GgjP6HVcx58l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+* Rob Herring wrote:
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+[...]
+> +clock-output-names: Recommended to be a list of strings of clock output signal
+> +		    names indexed by the first cell in the clock specifier.
+> +		    However, the meaning of clock-output-name is domain
+
+"clock-output-names"?
+
+> +		    specific to the clock provider, and is only provided to
+> +		    encourage using the same meaning for the majority of clock
+> +		    providers.  This format may not work for clock providers
+> +		    using a complex clock specifier format.  In those cases it
+> +		    is recommended to omit this property and create a binding
+> +		    specific names property.
+> +
+> +		    Clock consumer nodes must never directly reference
+> +		    the provider's clock-output-name property.
+
+Ditto.
+
+[...]
+> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
 > new file mode 100644
-> index 0000000..f92d099
+> index 0000000..9a75342
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/spear600-evb.dts
-> @@ -0,0 +1,23 @@
-> +/*
-> + * Copyright 2011 Freescale Semiconductor, Inc.
-> + * Copyright 2011 Linaro Ltd.
-> + *
-
-Just for knowledge, why are above two here? Is including them suggested for
-all dts files?
-
-> + * Copyright 2012 Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
+> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
+> @@ -0,0 +1,21 @@
+> +Binding for simple fixed-rate clock sources.
 > +
-
-
-> diff --git a/arch/arm/mach-spear6xx/Kconfig b/arch/arm/mach-spear6xx/Kconfig
-> index ff4ae5b..7777f72 100644
-> --- a/arch/arm/mach-spear6xx/Kconfig
-> +++ b/arch/arm/mach-spear6xx/Kconfig
-> @@ -11,6 +11,13 @@ config BOARD_SPEAR600_EVB
->  	help
->  	  Supports ST SPEAr600 Evaluation Board
->  
-> +config BOARD_SPEAR600_DT
-> +	bool "SPEAr600 generic board configured via device-tree"
-> +	select MACH_SPEAR600
-> +	select USE_OF
-> +	help
-> +	  Supports ST SPEAr600 boards configured via the device-tree
+> +This binding uses the common clock binding[1].
 > +
->  endmenu
->  
->  config MACH_SPEAR600
-> diff --git a/arch/arm/mach-spear6xx/Makefile b/arch/arm/mach-spear6xx/Makefile
-> index cc1a4d8..e2d79b8 100644
-> --- a/arch/arm/mach-spear6xx/Makefile
-> +++ b/arch/arm/mach-spear6xx/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_MACH_SPEAR600) += spear600.o
->  
->  # spear600 boards files
->  obj-$(CONFIG_BOARD_SPEAR600_EVB) += spear600_evb.o
-> +obj-$(CONFIG_BOARD_SPEAR600_DT) += board-dt.o
-> diff --git a/arch/arm/mach-spear6xx/board-dt.c b/arch/arm/mach-spear6xx/board-dt.c
-> new file mode 100644
-> index 0000000..ee4ff33
-> --- /dev/null
-> +++ b/arch/arm/mach-spear6xx/board-dt.c
-> @@ -0,0 +1,75 @@
-> +/*
-> + * arch/arm/mach-spear6xx/board-dt.c
-> + *
-> + * Generic SPEAr600 platform support
-> + *
-> + * Copyright (C) 2009 ST Microelectronics
-> + * Viresh Kumar<viresh.kumar-qxv4g6HH51o@public.gmane.org>
+> +[1] Documentation/devicetree/bindings/clock/fixed-clock.txt
 
-                  ^
-Thanks for this. Can add space here between r & <.
+This document references itself.
 
-> + *
-> + * Copyright 2012 Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
+Thierry
 
-keeping header files in alphabetical order makes life easy at
-later stages. :)
+--KDt/GgjP6HVcx58l
+Content-Type: application/pgp-signature
 
-> +#include <asm/hardware/vic.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach-types.h>
-> +#include <mach/generic.h>
-> +#include <mach/hardware.h>
-> +
-> +static struct amba_device *amba_devs[] __initdata = {
-> +	&gpio_device[0],
-> +	&gpio_device[1],
-> +	&gpio_device[2],
-> +	&uart_device[0],
-> +	&uart_device[1],
-> +};
-> +
-> +static struct platform_device *plat_devs[] __initdata = {
-> +};
-> +
-> +static void __init spear600_dt_init(void)
-> +{
-> +	unsigned int i;
-> +
-> +	/* call spear600 machine init function */
-> +	spear600_init();
-> +
-> +	/* Add Platform Devices */
-> +	platform_add_devices(plat_devs, ARRAY_SIZE(plat_devs));
-> +
-> +	/* Add Amba Devices */
-> +	for (i = 0; i < ARRAY_SIZE(amba_devs); i++)
-> +		amba_device_register(amba_devs[i], &iomem_resource);
-> +}
-> +
-> +static const char *spear600_dt_board_compat[] = {
-> +	"st,spear600-evb",
-> +	NULL
-> +};
-> +
-> +static const struct of_device_id vic_of_match[] __initconst = {
-> +	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
-> +	{ /* Sentinel */ }
-> +};
-> +
-> +static void __init spear6xx_dt_init_irq(void)
-> +{
-> +	of_irq_init(vic_of_match);
-> +}
-> +
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-What about adding this routine in vic.c file, which can then be used 
-by all platforms, instead of replicating this code.
+iEYEARECAAYFAk9gQ7AACgkQZ+BJyKLjJp8bUACeJBTnXhnd2KszWXZSjJO8GcE8
+BHcAn15rlgTDFWmbD0TwZoRrEFt7567L
+=PZ8n
+-----END PGP SIGNATURE-----
 
-> +DT_MACHINE_START(SPEAR600_DT, "ST-SPEAR600-DT")
+--KDt/GgjP6HVcx58l--
 
-It looks this is not a generic file for all boards, but for a
-single board? And that would be evb only?
+--===============7251872851859870872==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-If above is true, we may name this file and internal stuff more
-appropriately.
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-> +	.map_io		=	spear6xx_map_io,
-> +	.init_irq	=	spear6xx_dt_init_irq,
-> +	.handle_irq	=	vic_handle_irq,
-> +	.timer		=	&spear6xx_timer,
-> +	.init_machine	=	spear600_dt_init,
-> +	.restart	=	spear_restart,
-> +	.dt_compat	=	spear600_dt_board_compat,
-> +MACHINE_END
-
-Thanks for the patch. :)
-
--- 
-viresh
+--===============7251872851859870872==--
