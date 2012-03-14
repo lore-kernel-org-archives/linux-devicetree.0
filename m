@@ -1,58 +1,38 @@
-From: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] omap hsmmc device tree support
-Date: Wed, 14 Mar 2012 11:37:24 -0400
-Message-ID: <87pqcfdwi3.fsf@laptop.org>
-References: <1331564560-23276-1-git-send-email-rnayak@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: dtc expressions
+Date: Wed, 14 Mar 2012 09:40:13 -0600
+Message-ID: <4F60BBDD.2000807@wwwdotorg.org>
+References: <20120314144611.GZ24916@truffala.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1331564560-23276-1-git-send-email-rnayak-l0cyMroinI0@public.gmane.org> (Rajendra
-	Nayak's message of "Mon, 12 Mar 2012 20:32:36 +0530")
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120314144611.GZ24916-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 03/14/2012 08:46 AM, David Gibson wrote:
+> So, in order to actually make progress on the dtc expressions / macros
+> / whatnot stuff, I really think I should dust off my integer (constant)
+> expressions patch, and we can apply that.
+> 
+> While we still have disagreements on a bunch of stuff here, I think
+> we're at least agreed on what integer expressions should look like.
+> And even if we change approaches later (e.g. to your ifs and fors in
+> dtc approach) the integer expression syntax won't change, only the
+> implementation.
 
-On Mon, Mar 12 2012, Rajendra Nayak wrote:
-> The series adds device tree support for OMAP hsmmc
-> driver.
->
-> Changes in V2:
-> -1- Minor fixes based on comments from Grant.
-> -2- Added a seperate compatible for omap3.
-> -3- Added a new binding "ti,needs-special-reset"
-> to handle some mmc modules which need special
-> softreset sequence.
-> -4- Updated board dts files with "status = disable;"
-> for unused mmc modules.
->
-> Rob,
-> I retained your ack on patch 1 despite the additional
-> binding that I added to handle the special softreset
-> sequence. Let me know if you have any issues with it.
->
-> Chris.
-> Patch 1 and Patch 2 apply cleanly on mmc-next and can
-> be taken in from the mmc tree after relevent acks from
-> DT folks.
-> Patch 3 and Patch 4 which update dts files, I plan to
-> push via linux-omap/Tony's tree.
-
-Thanks, I've pushed patches 1 and 2 to mmc-next for 3.4, with Balaji's
-Tested-by.
-
-- Chris.
--- 
-Chris Ball   <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>   <http://printf.net/>
-One Laptop Per Child
+I'd love to see something like that. I've don't think I've actually
+looked through your patches for that yet; I briefly looked at Jon's
+since they're in a branch in the dtc repo, but I don't think I managed
+to track down the patches you sent for this.
