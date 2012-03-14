@@ -1,58 +1,74 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Wed, 14 Mar 2012 09:58:26 +0000
-Message-ID: <201203140958.27289.arnd@arndb.de>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <201203131644.12048.arnd@arndb.de> <4F604400.1040805@st.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v3 0/4] ARM: Exynos4: Add irq domain and device tree
+ support for wakeup interrupts
+Date: Wed, 14 Mar 2012 15:32:49 +0530
+Message-ID: <CAJuYYwQxiz9tcx=15MK2vvhR71yhQyFBXrVDR0QO4YDdJ4Xvbw@mail.gmail.com>
+References: <1329912858-32750-1-git-send-email-thomas.abraham@linaro.org>
+	<4F5A30B8.6060801@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F604400.1040805-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4F5A30B8.6060801@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 March 2012, Viresh Kumar wrote:
-> On 3/13/2012 10:14 PM, Arnd Bergmann wrote:
-> > I think you should add all the code from this file to spear6xx.c instead
-> > of adding a new file. We can then delete the spear600.c and spear600_evb.c
-> > files once the DT support has matured.
-> 
-> But what if have another board in future, and this is what Stefan is going
-> to do soon, as they have another board.
-> 
-> So we may actually move this code to spear600_evb.c instead.
-> 
-> Sorry for any bad suggestions, i am new to DT. :)
+Dear Mr. Kim,
 
-No problem, we are all learning things as we are working on them.
+On 9 March 2012 22:02, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> On 02/22/12 04:14, Thomas Abraham wrote:
+>>
+>> Changes since v2:
+>> - Reworked irq domain support based on v5 of the irq_domain generali=
+zation
+>> =A0 patches.
+>>
+>> Changes since v1: (only patch 4/4 has changes)
+>> - Fixes based on Rob's comments:
+>> =A0 a. Fixed the function prototype of exynos4_init_irq_eint(void)
+>> =A0 b. Included interrupt-parent as an optional property for wakeup
+>> interrupt
+>> =A0 =A0 =A0 controller node.
+>>
+>> Samsung Exynos4 includes 32 external wakeup interrupt sources. The f=
+irst
+>> 16
+>> of these interrupts are connected to GIC SPI[31:16]. The last 16 of =
+these
+>> interrupts are grouped together into one interrupt and connected to =
+GIC
+>> SPI[32].
+>>
+>> This patchset adds irq domain and device tree support for these
+>> interrupts.
+>> Since there are users of fixed linux irq numbers of the external wak=
+eup
+>> interrupts, the legacy mapping is used for the irq domain.
+>>
+>> This patchset is based on
+>> http://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.g=
+it
+>> [for-next]
+>>
+>> with all irq_domain (v5) patches merged from
+>> http://git.secretlab.ca/git/linux-2.6.git [irqdomain/next]
+>>
+>> This patchset should be applied after applying the following patch.
+>> [PATCH] ARM: Exynos: Add irq domain and device tree support for inte=
+rrupt
+>> combiner
+>
+>
+> Looks ok to me this series, but I lost above patch in my mail box.
+> Thomas, could you please send updated it so that I can apply this ser=
+ies?
 
-The idea with DT is that you no longer need any board files because all of
-the information in those files is now passed as a data structure to the kernel
-at boot time. Platforms that are fully converted to DT don't have any
-board files but just have one DT_MACHINE_START entry for all of them in
-the common platform files. Since spear600 has very little board specific
-contents at the moment, it is very easy to get to this point now, and
-that will actually help support other boards without having to do more
-patches to add board files.
+The device tree support patches for wakeup interrupts and interrupt
+combiner do not apply cleanly to the for-next branch due to the
+Exynos5 additions.  So I will rebase, test and post an updated version
+of these patches.
 
-When this work is completed, we might actually be able to extend the
-spear6xx DT code to also support spear3xx and spear13xx, renaming it
-to mach-spear. In that case, we would probably need one DT_MACHINE_START
-entry for each family and would not be able to actually build 13xx together
-with the other ones, but I guess a lot of the infrastructure could be shared.
-
-I would suggest you read Documentation/devicetree/booting-without-of.txt
-to get a better understanding of what this is all about.
-
-	Arnd
+Thanks,
+Thomas.
