@@ -1,66 +1,41 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Wed, 14 Mar 2012 13:27:00 +0000
-Message-ID: <201203141327.01038.arnd@arndb.de>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <201203140948.44823.arnd@arndb.de> <201203141136.48513.sr@denx.de>
+From: Stefan Roese <sr@denx.de>
+Subject: Re: [PATCH] stmmac: Add device-tree support
+Date: Wed, 14 Mar 2012 14:37:42 +0100
+Message-ID: <201203141437.42673.sr@denx.de>
+References: <1331561157-3820-1-git-send-email-sr@denx.de> <201203141307.55808.arnd@arndb.de> <4F609A48.6050702@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203141136.48513.sr-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4F609A48.6050702@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, netdev@vger.kernel.org, devicetree-discuss@ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 March 2012, Stefan Roese wrote:
-> On Wednesday 14 March 2012 10:48:44 Arnd Bergmann wrote:
-> > > > I would suggest you convert these to DT next so you can remove the
-> > > > amba_devs list. Which devices are these? If they are pl061 and
-> > > > pl010/pl011, the binding should be really easy to do.
-> > > 
-> > > Yes. I really wanted to do that. But from a quick look at the pl011
-> > > driver (drivers/tty/serial/amba-pl011.c), this driver doesn't support DT
-> > > probing. I might have missed something here though. And ideas?
+On Wednesday 14 March 2012 14:16:56 Giuseppe CAVALLARO wrote:
+> >> Concerning the latter, we support several different versions of the
+> >> synopsys GMAC cores ... from 3.30 to 3.61a.
+> >> 
+> >> For example, stx7108 and Stx7109 have the same GMAC core (also SPEAr600
+> >> IIRC).
+> >> SPEAr13xx has 3.50a
+> >> New ST SoC Stxh415 has the 3.60a. etc.
 > > 
-> > amba primecell devices don't actually need to register to a "compatible"
-> > property, they are probed using the primecell ID, and the device tree
-> > is just used to tell the system about memory and IRQ resources.
-> 
-> Ahh, I see. Let me see, if I can get this working...
-
-I just saw that there is a patch series for pl061 that Rob Herring did at  
-
-git://sources.calxeda.com/kernel/linux.git irqdomain-for-grant
-
-Please have a look at that branch first.
-
-> > Don't worry about the the gpio and uart devices if they are not in the
-> > first initial version. I do think that they should be done fairly soon
-> > though, before we get into most of the other devices.
+> > In that case, you should definitely list the exact device versions in the
+> > compatible string, like:
 > > 
-> > It's ok if you put a lot of the other devices in the dts file though,
-> > like the ethernet device, it gives a better overview of what is actually
-> > there, even if the driver does not actually use it yet.
+> > compatible = "stm,spear600-gmac", "snps,dw-gmac-3.50a", "snps,dw-gmac";
 > 
-> My initial idea was to push the devices once their DT support is accepted. 
-> Otherwise the bindings are still not settled.
+> looks good to me
 
-Right, that makes sense. However, you can add a property containing
+So whats the Synopsys version for SPEAr600? 
 
-	status = "disabled;
+"snps,dw-gmac-3.50a" ???
 
-so that the device is visible in the source but no platform device gets
-generated. That would have no consequences at run time but can be helpful
-for review.
+Perhaps you should add this info for all supported SoC's into the device 
+driver? Or even better into the devicetree bindings Documentation?
 
-	Arnd
+Thanks,
+Stefan
