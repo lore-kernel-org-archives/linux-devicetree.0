@@ -1,68 +1,64 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v1 3/5] ARM: imx28evk: add mmc dt support
-Date: Wed, 14 Mar 2012 09:54:47 +0100
-Message-ID: <20120314085447.GL18320@game.jcrosoft.org>
-References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
- <1331628428-24017-4-git-send-email-b29396@freescale.com>
- <4F5F5C22.1080506@gmail.com>
- <20120313165214.GO26642@pengutronix.de>
- <4F5F879E.4030407@gmail.com>
- <20120314073035.GI18320@game.jcrosoft.org>
- <20120314082024.GB1180@shlinux2.ap.freescale.net>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: Re: [PATCH 2/3] max17042_battery: Preserve properties outside of
+ platform data
+Date: Wed, 14 Mar 2012 10:14:31 +0100
+Message-ID: <4F606177.3080702@samsung.com>
+References: <1329933982-2529-1-git-send-email-k.lewandowsk@samsung.com>
+ <1329933982-2529-3-git-send-email-k.lewandowsk@samsung.com>
+ <20120313192110.GB2187@oksana.dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120314082024.GB1180@shlinux2.ap.freescale.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: Rob Herring <robherring2@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Dong Aisheng-B29396 <B29396@freescale.com>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20120313192110.GB2187@oksana.dev.rtsoft.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 16:20 Wed 14 Mar     , Dong Aisheng wrote:
-> On Wed, Mar 14, 2012 at 03:30:35PM +0800, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 12:45 Tue 13 Mar     , Rob Herring wrote:
-> > > On 03/13/2012 11:52 AM, Sascha Hauer wrote:
-> > > > On Tue, Mar 13, 2012 at 09:39:30AM -0500, Rob Herring wrote:
-> > > >> On 03/13/2012 03:47 AM, Dong Aisheng wrote:
-> > > >>> From: Dong Aisheng <dong.aisheng@linaro.org>
-> > > >>>
-> > > >>> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> > > >>> ---
-> > > >>>  arch/arm/boot/dts/imx28-evk.dts |   14 ++++++++++++++
-> > > >>>  arch/arm/boot/dts/imx28.dtsi    |   33 +++++++++++++++++++++++++++++++++
-> > > >>>  arch/arm/mach-mxs/imx28-dt.c    |    2 ++
-> > > >>>  3 files changed, 49 insertions(+), 0 deletions(-)
-> > > >>
-> > > >> snip
-> > > >>
-> > > >>> diff --git a/arch/arm/mach-mxs/imx28-dt.c b/arch/arm/mach-mxs/imx28-dt.c
-> > > >>> index 78d1129..429b88e 100644
-> > > >>> --- a/arch/arm/mach-mxs/imx28-dt.c
-> > > >>> +++ b/arch/arm/mach-mxs/imx28-dt.c
-> > > >>> @@ -23,6 +23,8 @@ static const struct of_dev_auxdata imx28_auxdata_lookup[] __initconst = {
-> > > >>>  	OF_DEV_AUXDATA("arm,pl011", MX28_DUART_BASE_ADDR, "duart", NULL),
-> > > >>>  	OF_DEV_AUXDATA("fsl,imx28-fec", MX28_ENET_MAC0_BASE_ADDR, "imx28-fec.0", NULL),
-> > > >>>  	OF_DEV_AUXDATA("fsl,imx28-fec", MX28_ENET_MAC1_BASE_ADDR, "imx28-fec.1", NULL),
-> > > >>> +	OF_DEV_AUXDATA("fsl,imx28-mmc", MX28_SSP0_BASE_ADDR, "mxs-mmc.0", NULL),
-> > > >>> +	OF_DEV_AUXDATA("fsl,imx28-mmc", MX28_SSP1_BASE_ADDR, "mxs-mmc.1", NULL),
-> > > >>
-> > > >> Why is this needed?
-> > > > 
-> > > > These are needed for the drivers which have still the mxs-mmc.* names
-> > > > to find their clocks. Alternatively we could also add the appropriate
-> > > > clocks to the clock file. Don't know if that's better though.
-> > > 
-> > > Ah, yes I should have known that... If clk lookup is all that's needed,
-> > > I'd suggest adding the necessary clk lookups either here or in the clock
-> > > code. Not much difference, but at least it removes the use of
-> > > *_BASE_ADDR defines.
-> > Agreed we do this on AT91
-> > 
-> I'm willing to do like that.
-> But i'm new to this, can you help point our where the code i can reference
-> in Rob suggested way?
-mach-at91
+On 13.03.2012 20:21, Anton Vorontsov wrote:
 
-Best Regards,
-J.
+> On Wed, Feb 22, 2012 at 07:06:21PM +0100, Karol Lewandowski wrote:
+>> Add fields originally found in platform data back to max17042_chip,
+>> as the former data structure might be not available on device
+>> tree-based systems.
+>>
+>> This commit makes it possible to safely declare platform data with
+>> __initdata tag.
+>>
+>> Signed-off-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>  drivers/power/max17042_battery.c |   36 +++++++++++++++++++++++-------------
+>>  1 files changed, 23 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/power/max17042_battery.c b/drivers/power/max17042_battery.c
+>> index 21a3650..49c1377 100644
+>> --- a/drivers/power/max17042_battery.c
+>> +++ b/drivers/power/max17042_battery.c
+>> @@ -33,7 +33,8 @@
+>>  struct max17042_chip {
+>>  	struct i2c_client *client;
+>>  	struct power_supply battery;
+>> -	struct max17042_platform_data *pdata;
+>> +	bool enable_current_sense;
+>> +	u32 r_sns;
+> 
+> Dirk Brandewie implemented config_data in addition to these
+> fields, so this patch would have needed a rework. So I decided
+> to drop this particular patch and rework patch 3/3 to make OF
+> helper allocat pdata instead.
+
+
+Actually, this is how I done it for first time.  However,
+shortly after that I've seen some maintainers opposing use
+of platform data at runtime.
+This is why I've moved it to private data.
+
+On the other hand I don't like duplicating same fields in private
+and platform data.  Thus, I actually like reworked version
+a bit more.
+
+Thanks!
+-- 
+Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
