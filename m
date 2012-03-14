@@ -1,18 +1,14 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/7] dt/clock: Add handling for fixed clocks and a clock
- node setup iterator
-Date: Wed, 14 Mar 2012 21:45:39 +0800
-Message-ID: <20120314134535.GH21337@S2101-09.ap.freescale.net>
-References: <1331680947-29861-1-git-send-email-robherring2@gmail.com>
- <1331680947-29861-5-git-send-email-robherring2@gmail.com>
- <20120314075930.GF21337@S2101-09.ap.freescale.net>
- <4F609C79.2060307@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
+Date: Wed, 14 Mar 2012 14:09:50 +0000
+Message-ID: <201203141409.51034.arnd@arndb.de>
+References: <1331650032-15274-1-git-send-email-sr@denx.de>
+ <201203141327.01038.arnd@arndb.de> <201203141443.57221.sr@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F609C79.2060307-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <201203141443.57221.sr-ynQEQJNshbs@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,18 +18,22 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2012 at 08:26:17AM -0500, Rob Herring wrote:
-...
-> It also only works for root fixed clocks, but the common clock allows
-> for non-root fixed clocks. I don't think there's much use case for that
-> at least as a DT clock node.
+On Wednesday 14 March 2012, Stefan Roese wrote:
+> > I just saw that there is a patch series for pl061 that Rob Herring did at
+> > 
+> > git://sources.calxeda.com/kernel/linux.git irqdomain-for-grant
+> > 
+> > Please have a look at that branch first.
 > 
-What my example demonstrates are root fixed clocks.
+> That's for GPIO interrupt support, right? I'll postpone this GPIO interrupt 
+> support to a later patch. This one will "only" support the plain GPIO's.
+>  
 
--- 
-Regards,
-Shawn
+Could be. I haven't actually looked at the series myself, just saw the
+email topic earlier today and thought of you.
+
+	Arnd
