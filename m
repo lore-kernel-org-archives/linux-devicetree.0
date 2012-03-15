@@ -1,54 +1,54 @@
-From: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] i2c-s3c2410: Rework device type handling
-Date: Thu, 15 Mar 2012 11:04:56 +0100
-Message-ID: <4F61BEC8.4030008@samsung.com>
-References: <1331657679-31302-1-git-send-email-k.lewandowsk@samsung.com>
- <1331657679-31302-3-git-send-email-k.lewandowsk@samsung.com>
- <20120314172915.GB13393@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] of: Add generic device tree DMA helpers
+Date: Thu, 15 Mar 2012 10:09:23 +0000
+Message-ID: <201203151009.24161.arnd@arndb.de>
+References: <4F22DEF2.5000807@ti.com> <201203150922.06379.arnd@arndb.de> <20120315092652.GA16389@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20120314172915.GB13393-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120315092652.GA16389@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-omap@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, Thierry Reding <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On 14.03.2012 18:29, Mark Brown wrote:
-
-> On Tue, Mar 13, 2012 at 05:54:38PM +0100, Karol Lewandowski wrote:
+On Thursday 15 March 2012, Russell King - ARM Linux wrote:
+> On Thu, Mar 15, 2012 at 09:22:06AM +0000, Arnd Bergmann wrote:
+> > On Thursday 15 March 2012, Nicolas Ferre wrote:
+> > > Add some basic helpers to retrieve a DMA controller device_node and the
+> > > DMA request specifications. By making DMA controllers register a generic
+> > > translation function, we allow the management of any type of DMA requests
+> > > specification.
+> > > The void * output of an of_dma_xlate() function that will be implemented
+> > > by the DMA controller can carry any type of "dma-request" argument.
+> > > 
+> > > The DMA client will search its associated DMA controller in the list and
+> > > call the registered of_dam_xlate() function to retrieve the request values.
+> > > 
+> > > One simple xlate function is provided for the "single number" type of
+> > > request binding.
+> > > 
+> > > This implementation is independent from dmaengine so it can also be used
+> > > by legacy drivers.
+> > > 
+> > > For legacy reason another API will export the DMA request number into a
+> > > Linux resource of type IORESOURCE_DMA.
+> > 
+> > This looks very good. I missed the first version of this patch, but was
+> > thinking of very similar bindings.
 > 
->>  - replace s3c24xx_i2c_type enum with plain unsigned int that can
->>    hold not only device type but also hw revision-specific quirks
+> There's one issue which is concerning me - when we switch OMAP to use
+> DMA engine, it won't use numeric stuff anymore but the DMA engine way
+> of requesting a channel (match function + data).
 > 
-> Would it not be clearer to just have explicit flags for the quirks (eg,
-> as a set of bitfield flags)?
+> How does that fit into this scheme?
 
+I haven't looked at the omap dma driver much, but if it just uses a
+channel number, then I'd assume the data would be a single u32 cell
+with that number, and the match function would be trivial.
 
-That would work on runtime but we also need to initialize this
-somehow.  The way it was done today on non-dt platforms is via platform
-device variants, i.e. (taken from 3rd patch):
+Is that what you are asking about or am I missing the point?
 
-@@ -1128,6 +1161,9 @@ static struct platform_device_id s3c24xx_driver_ids[] = {
- 	}, {
- 		.name		= "s3c2440-i2c",
- 		.driver_data	= TYPE_S3C2440,
-+	}, {
-+		.name		= "s3c2440-hdmiphy-i2c",
-+		.driver_data	= TYPE_S3C2440 | FLAG_HDMIPHY | FLAG_NO_GPIO,
-
-Ability to address above scenario was sole motivation for this change.
-Without it one would need either need separate type (e.g. 
-TYPE_S3C2440_HDMIPHY) or setting flags based just on device name.
-
-Introducing separate type (TYPE_S3C2440_HDMIPHY) has been our original
-attempt to solve this issue.  However, this required adding explicit
-checks to driver code all over the place (if (type == S3C2400 ||
-type == S3c2440_HDMIPHY).
-
-Thus, I felt that sqeezing quirks into type is a bit cleaner approach.
-
-Regards,
--- 
-Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
+	Arnd
