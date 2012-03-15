@@ -1,55 +1,50 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] of: Add generic device tree DMA helpers
-Date: Thu, 15 Mar 2012 09:26:52 +0000
-Message-ID: <20120315092652.GA16389@n2100.arm.linux.org.uk>
-References: <4F22DEF2.5000807@ti.com>
- <1331800690-21518-1-git-send-email-nicolas.ferre@atmel.com>
- <201203150922.06379.arnd@arndb.de>
+From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
+Date: Thu, 15 Mar 2012 14:30:27 +0530
+Message-ID: <4F61AFAB.6080301@st.com>
+References: <1331650032-15274-1-git-send-email-sr@denx.de>
+ <4F604321.9000204@st.com> <201203150948.27918.sr@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <201203150922.06379.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Nicolas Ferre <nicolas.ferre@atmel.com>, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201203150948.27918.sr-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 15, 2012 at 09:22:06AM +0000, Arnd Bergmann wrote:
-> On Thursday 15 March 2012, Nicolas Ferre wrote:
-> > Add some basic helpers to retrieve a DMA controller device_node and the
-> > DMA request specifications. By making DMA controllers register a generic
-> > translation function, we allow the management of any type of DMA requests
-> > specification.
-> > The void * output of an of_dma_xlate() function that will be implemented
-> > by the DMA controller can carry any type of "dma-request" argument.
-> > 
-> > The DMA client will search its associated DMA controller in the list and
-> > call the registered of_dam_xlate() function to retrieve the request values.
-> > 
-> > One simple xlate function is provided for the "single number" type of
-> > request binding.
-> > 
-> > This implementation is independent from dmaengine so it can also be used
-> > by legacy drivers.
-> > 
-> > For legacy reason another API will export the DMA request number into a
-> > Linux resource of type IORESOURCE_DMA.
-> 
-> This looks very good. I missed the first version of this patch, but was
-> thinking of very similar bindings.
+On 3/15/2012 2:18 PM, Stefan Roese wrote:
+>>> > > +static const struct of_device_id vic_of_match[] __initconst = {
+>>> > > +	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
+>>> > > +	{ /* Sentinel */ }
+>>> > > +};
+>>> > > +
+>>> > > +static void __init spear6xx_dt_init_irq(void)
+>>> > > +{
+>>> > > +	of_irq_init(vic_of_match);
+>>> > > +}
+>>> > > +
+>> > 
+>> > What about adding this routine in vic.c file, which can then be used
+>> > by all platforms, instead of replicating this code.
+> We can't move vic_of_match to the vic.c, since there are differences between 
+> the boards using it. And only moving spear6xx_dt_init_irq() (renamed of 
+> course) doesn't seem worth it.
 
-There's one issue which is concerning me - when we switch OMAP to use
-DMA engine, it won't use numeric stuff anymore but the DMA engine way
-of requesting a channel (match function + data).
+I knew this. Actually my thought was, we have two compatible strings for vic:
+pl190 and pl192.
 
-How does that fit into this scheme?
+So, create two vic_of_match* arrays and two vic*_dt_init_irq() routines.
+That will solve the issue i believe.
+
+-- 
+viresh
