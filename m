@@ -1,80 +1,70 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
-Date: Thu, 15 Mar 2012 11:18:55 -0600
-Message-ID: <4F62247F.5090103@wwwdotorg.org>
-References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org> <20120312143407.GA4513@shlinux2.ap.freescale.net> <4F5E2F63.6070303@wwwdotorg.org> <20120313032010.GB4513@shlinux2.ap.freescale.net> <4F5F9F9E.7030706@wwwdotorg.org> <20120315033257.GD13022@shlinux2.ap.freescale.net>
+From: Dirk Brandewie <dirk.brandewie@gmail.com>
+Subject: Re: [patch] max17042_battery: fix a couple buffer overflows
+Date: Thu, 15 Mar 2012 10:20:34 -0700
+Message-ID: <4F6224E2.5060006@gmail.com>
+References: <20120315113732.GA364@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120315033257.GD13022@shlinux2.ap.freescale.net>
+In-Reply-To: <20120315113732.GA364@elgon.mountain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "dongas86@gmail.com" <dongas86@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "tony@atomide.com" <tony@atomide.com>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Dirk Brandewie <dirk.brandewie@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philip Rakity <prakity@marvell.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2012 09:32 PM, Dong Aisheng wrote:
-> On Wed, Mar 14, 2012 at 03:27:26AM +0800, Stephen Warren wrote:
->> On 03/12/2012 09:20 PM, Dong Aisheng wrote:
-...
->>> I can't see why we still need a special compatible flag to tell driver.
->>> Just do not define pinctrl-* properties for that devices in device tree.
->>> Did i understand wrong?
->>
->> The compatible property would be the only way to implement anything like
->> is_soc_foo. However, it's a bad idea to overload the compatible property
->> in this way.
+On 03/15/2012 04:37 AM, Dan Carpenter wrote:
+> There are a couple issues here caused by confusion between sizeof()
+> and ARRAY_SIZE().  "table_size" should be the number of elements, but we
+> should allocate it with kcalloc() so that we allocate the correct number
+> of bytes.
 >
-> I guess i might not describe my idea clearly.
-> My idea is that the compatible string does that work.
-> For example:
-> static const struct of_device_id mxs_mmc_dt_ids[] = {
->         { .compatible = "fsl,imx23-mmc", .data = NULL, },
->         { .compatible = "fsl,imx28-mmc", .data = NULL, },
->         { /* sentinel */ }
-> };
-> MODULE_DEVICE_TABLE(of, mxs_mmc_dt_ids);
+> In max17042_init_model() we don't allocate enough space so we go past
+> the end of the array in max17042_read_model_data() and
+> max17042_model_data_compare().
 >
-> Replace NULL to some special data like SOC_MX23 or SOC_MX28 can let driver
-> driver know which SoC it's running on.
-> Then driver can use private macro like is_soc_foo.
-
-OK, you could implement is_soc_foo based on the compatible flag.
-However, it's best not to do that.
-
-Instead of asking is_soc_foo(), you should really ask has_bug_xxx() or
-has_feature_xxx(), and implement those based on either the compatible
-flag, or perhaps other properties.
-
-That way, when 10 of the 20 SoCs that contain the IP block all have the
-same feature or need the same bugfix, the code that implements the
-bugfix just calls a single has_bug_xxx() rather than having to sprinkle
-many many is_soc_foo() calls through the code, which gets unmaintainable.
-
->>>> That also means that if you were the first user of an IP block in a
->>>> system which didn't need pin muxing for it, you'd have to modify the
->>>> kernel to support pinctrl being optional before you could use that device.
->>>
->>> Why need modify the kernel?
->>> Assuming above example.
->>> I'm a bit confused.
->>
->> If the driver contains code like:
->>
->> if (is_soc_a) {
->>     ...
->> } else if (is_soc_b) {
->>    ...
->> }
->> ...
->>
->> Then in order to support a new SoC, even if the driver doesn't need to
->> do anything different, you'd need to go and edit the code to add an "if
->> (is_soc_c)" condition into that list.
+> In max17042_verify_model_lock() we allocate the right amount of space
+> but we call max17042_read_model_data() with the wrong number of elements
+> and also in the for loop we go past the end of the array.
 >
-> No.
-> No changes needed if the driver does not need to do anything different.
-> Compatible string does that work
+> Signed-off-by: Dan Carpenter<dan.carpenter@oracle.com>
+Acked-by: Dirk Brandewie <dirk.brandewie@gmail.com>
 
-To make the driver support a new compatible property value, you have to
-edit the driver to add it to the of_device_id table, and recompile it.
+Typo in first ack :-(
+> ---
+> I don't have this hardware.  The original code is clearly buggy, but I
+> can't test that my fix is correct.  Please review carefully.
+>
+> diff --git a/drivers/power/max17042_battery.c b/drivers/power/max17042_battery.c
+> index e36763a..f8cd48c 100644
+> --- a/drivers/power/max17042_battery.c
+> +++ b/drivers/power/max17042_battery.c
+> @@ -328,11 +328,10 @@ static inline int max17042_model_data_compare(struct max17042_chip *chip,
+>   static int max17042_init_model(struct max17042_chip *chip)
+>   {
+>   	int ret;
+> -	int table_size =
+> -		sizeof(chip->pdata->config_data->cell_char_tbl)/sizeof(u16);
+> +	int table_size = ARRAY_SIZE(chip->pdata->config_data->cell_char_tbl);
+>   	u16 *temp_data;
+>
+> -	temp_data = kzalloc(table_size, GFP_KERNEL);
+> +	temp_data = kcalloc(table_size, sizeof(*temp_data), GFP_KERNEL);
+>   	if (!temp_data)
+>   		return -ENOMEM;
+>
+> @@ -357,12 +356,11 @@ static int max17042_init_model(struct max17042_chip *chip)
+>   static int max17042_verify_model_lock(struct max17042_chip *chip)
+>   {
+>   	int i;
+> -	int table_size =
+> -		sizeof(chip->pdata->config_data->cell_char_tbl);
+> +	int table_size = ARRAY_SIZE(chip->pdata->config_data->cell_char_tbl);
+>   	u16 *temp_data;
+>   	int ret = 0;
+>
+> -	temp_data = kzalloc(table_size, GFP_KERNEL);
+> +	temp_data = kcalloc(table_size, sizeof(*temp_data), GFP_KERNEL);
+>   	if (!temp_data)
+>   		return -ENOMEM;
+>
