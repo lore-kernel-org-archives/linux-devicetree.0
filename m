@@ -1,49 +1,54 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 09/10] pwm: Add PXA support
-Date: Thu, 15 Mar 2012 10:45:27 +0100
-Message-ID: <20120315094527.GY3852@pengutronix.de>
-References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de>
- <1331740593-10807-10-git-send-email-thierry.reding@avionic-design.de>
- <4F61343A.80103@gmail.com>
- <20120315065631.GB20502@avionic-0098.mockup.avionic-design.de>
- <20120315090540.GW3852@pengutronix.de>
- <20120315092134.GA29841@avionic-0098.adnet.avionic-design.de>
+From: Karol Lewandowski <k.lewandowsk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] i2c-s3c2410: Rework device type handling
+Date: Thu, 15 Mar 2012 11:04:56 +0100
+Message-ID: <4F61BEC8.4030008@samsung.com>
+References: <1331657679-31302-1-git-send-email-k.lewandowsk@samsung.com>
+ <1331657679-31302-3-git-send-email-k.lewandowsk@samsung.com>
+ <20120314172915.GB13393@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120315092134.GA29841-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20120314172915.GB13393-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 15, 2012 at 10:21:34AM +0100, Thierry Reding wrote:
-> * Sascha Hauer wrote:
-> > On Thu, Mar 15, 2012 at 07:56:31AM +0100, Thierry Reding wrote:
-> > > Actually I wasn't planning on keeping this patch at all. Sascha already has
-> > > the existing PWM providers converted to his original framework and offered to
-> > > rebase them onto this series once the dust settles. I only used them as
-> > > testbed to see how the driver interface works out for different hardware. But
-> > > I also think that if Sascha hasn't cleaned the driver up yet it should either
-> > > be done in his conversion patches or as follow ups.
-> > 
-> > All I have is a simple conversion to the new framework, nothing more.  I
-> > rebased my patches yesterday onto this series (unfortunately due to the
-> > additional argument pwm_device the patches do not look like just moving
-> > the drivers anymore). I also skipped the PXA patch since I saw that you
-> > already have this one. I just posted the patches to the list.
+On 14.03.2012 18:29, Mark Brown wrote:
+
+> On Tue, Mar 13, 2012 at 05:54:38PM +0100, Karol Lewandowski wrote:
 > 
-> Okay, I'll keep my Blackfin and PXA converted drivers then and will fix the
-> issues with the PXA driver brought up by Ryan. Would you be okay if I took
-> your conversion patches and added them to my series?
+>>  - replace s3c24xx_i2c_type enum with plain unsigned int that can
+>>    hold not only device type but also hw revision-specific quirks
+> 
+> Would it not be clearer to just have explicit flags for the quirks (eg,
+> as a set of bitfield flags)?
 
-Sure, go ahead.
 
-Sascha
+That would work on runtime but we also need to initialize this
+somehow.  The way it was done today on non-dt platforms is via platform
+device variants, i.e. (taken from 3rd patch):
 
+@@ -1128,6 +1161,9 @@ static struct platform_device_id s3c24xx_driver_ids[] = {
+ 	}, {
+ 		.name		= "s3c2440-i2c",
+ 		.driver_data	= TYPE_S3C2440,
++	}, {
++		.name		= "s3c2440-hdmiphy-i2c",
++		.driver_data	= TYPE_S3C2440 | FLAG_HDMIPHY | FLAG_NO_GPIO,
+
+Ability to address above scenario was sole motivation for this change.
+Without it one would need either need separate type (e.g. 
+TYPE_S3C2440_HDMIPHY) or setting flags based just on device name.
+
+Introducing separate type (TYPE_S3C2440_HDMIPHY) has been our original
+attempt to solve this issue.  However, this required adding explicit
+checks to driver code all over the place (if (type == S3C2400 ||
+type == S3c2440_HDMIPHY).
+
+Thus, I felt that sqeezing quirks into type is a bit cleaner approach.
+
+Regards,
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
