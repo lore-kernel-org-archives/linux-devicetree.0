@@ -1,84 +1,64 @@
-From: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
-Date: Thu, 15 Mar 2012 12:24:19 +0100
-Message-ID: <20120315112419.GA3852@pengutronix.de>
-References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
- <1331628428-24017-2-git-send-email-b29396@freescale.com>
- <20120313172351.97C5E3E053B@localhost>
- <20120314124512.GG1180@shlinux2.ap.freescale.net>
- <20120314141643.GP3852@pengutronix.de>
- <20120315030206.GB13022@shlinux2.ap.freescale.net>
- <20321.37353.63115.664975@ipc1.ka-ro>
- <20120315105927.GE13022@shlinux2.ap.freescale.net>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch] max17042_battery: fix a couple buffer overflows
+Date: Thu, 15 Mar 2012 14:37:32 +0300
+Message-ID: <20120315113732.GA364@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120315105927.GE13022@shlinux2.ap.freescale.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: Lothar =?iso-8859-15?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Dong Aisheng-B29396 <B29396@freescale.com>, Guo Shawn-R65073 <r65073@freescale.com>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Dirk Brandewie <dirk.brandewie@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philip Rakity <prakity@marvell.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 15, 2012 at 06:59:28PM +0800, Dong Aisheng wrote:
-> On Thu, Mar 15, 2012 at 02:53:29PM +0800, Lothar Wa=DFmann wrote:
-> > Hi,
-> >=20
-> > Dong Aisheng writes:
-> > > On Wed, Mar 14, 2012 at 10:16:43PM +0800, s.hauer@pengutronix.de =
-wrote:
-> > > > On Wed, Mar 14, 2012 at 08:45:23PM +0800, Dong Aisheng wrote:
-> > > > > On Wed, Mar 14, 2012 at 01:23:51AM +0800, Grant Likely wrote:
-> > [...]
-> > > > > But it seems this needs pass mac address to fec driver via pl=
-atforom data which is
-> > > > > not friendly to dt.
-> > > > >=20
-> > > > > Another way may be changing fec driver to get the fixed part =
-of mac address(first
-> > > > > two bytes) from device tree and read the left dynamical part =
-from otp which i'm not
-> > > > > sure is better enough.
-> > > > >=20
-> > > > > BTW, filling with zeros seems not work since it's invalid mac=
- address.
-> > > >=20
-> > > > Yes, that's the idea of using this value...
-> > > >=20
-> > > But comparing to use an invalid value, why not just do not define=
- that
-> > > local-mac-address property?
-> > >=20
-> > Because a MAC address is by definition a GLOBALLY UNIQUE IDENTIFIER
-> > which is contrary to coding a "valid" default value for it somewher=
-e!
-> > The owner of a certain MAC address range (OUI) is responsible for
-> > ensuring the uniqueness. Thus only they may assign a specific MAC
-> > address to a specific device.
-> >=20
-> Yes, you're correct.
-> So i propose to read the MAC address from MX28 OTP in fec driver inst=
-ead of
-> define it in device tree in my last mail.
-> http://www.spinics.net/lists/arm-kernel/msg165040.html
-> Do you have any comment on that way?
+There are a couple issues here caused by confusion between sizeof()
+and ARRAY_SIZE().  "table_size" should be the number of elements, but we
+should allocate it with kcalloc() so that we allocate the correct number
+of bytes.
 
-Yes, you could do that. Otherwise it's perfectly fine to pass the MAC
-address in the device tree, it's just not ok to put specific values
-into the kernel source. You could leave the values blank and let the
-bootloader fill them in. Or you could fill in valid values before you
-compile the devicetree, but be prepared for surprises once you have
-two boards in your network and use the devicetree for both.
+In max17042_init_model() we don't allocate enough space so we go past
+the end of the array in max17042_read_model_data() and
+max17042_model_data_compare().
 
-Sascha
+In max17042_verify_model_lock() we allocate the right amount of space
+but we call max17042_read_model_data() with the wrong number of elements
+and also in the for loop we go past the end of the array.
 
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+I don't have this hardware.  The original code is clearly buggy, but I
+can't test that my fix is correct.  Please review carefully.
+
+diff --git a/drivers/power/max17042_battery.c b/drivers/power/max17042_battery.c
+index e36763a..f8cd48c 100644
+--- a/drivers/power/max17042_battery.c
++++ b/drivers/power/max17042_battery.c
+@@ -328,11 +328,10 @@ static inline int max17042_model_data_compare(struct max17042_chip *chip,
+ static int max17042_init_model(struct max17042_chip *chip)
+ {
+ 	int ret;
+-	int table_size =
+-		sizeof(chip->pdata->config_data->cell_char_tbl)/sizeof(u16);
++	int table_size = ARRAY_SIZE(chip->pdata->config_data->cell_char_tbl);
+ 	u16 *temp_data;
+ 
+-	temp_data = kzalloc(table_size, GFP_KERNEL);
++	temp_data = kcalloc(table_size, sizeof(*temp_data), GFP_KERNEL);
+ 	if (!temp_data)
+ 		return -ENOMEM;
+ 
+@@ -357,12 +356,11 @@ static int max17042_init_model(struct max17042_chip *chip)
+ static int max17042_verify_model_lock(struct max17042_chip *chip)
+ {
+ 	int i;
+-	int table_size =
+-		sizeof(chip->pdata->config_data->cell_char_tbl);
++	int table_size = ARRAY_SIZE(chip->pdata->config_data->cell_char_tbl);
+ 	u16 *temp_data;
+ 	int ret = 0;
+ 
+-	temp_data = kzalloc(table_size, GFP_KERNEL);
++	temp_data = kcalloc(table_size, sizeof(*temp_data), GFP_KERNEL);
+ 	if (!temp_data)
+ 		return -ENOMEM;
+ 
