@@ -1,18 +1,11 @@
-From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
-Date: Thu, 15 Mar 2012 11:32:58 +0800
-Message-ID: <20120315033257.GD13022@shlinux2.ap.freescale.net>
-References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
- <20120312143407.GA4513@shlinux2.ap.freescale.net>
- <4F5E2F63.6070303@wwwdotorg.org>
- <20120313032010.GB4513@shlinux2.ap.freescale.net>
- <4F5F9F9E.7030706@wwwdotorg.org>
+From: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] powerpc/85xx:Add BSC9131 RDB Support
+Date: Thu, 15 Mar 2012 11:07:31 +0530
+Message-ID: <1331789851-19213-1-git-send-email-prabhakar@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4F5F9F9E.7030706-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -22,197 +15,698 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rajan Srivastava <rajan.srivastava-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Akhil Goyal <Akhil.Goyal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 14, 2012 at 03:27:26AM +0800, Stephen Warren wrote:
-> On 03/12/2012 09:20 PM, Dong Aisheng wrote:
-> > On Tue, Mar 13, 2012 at 01:16:19AM +0800, Stephen Warren wrote:
-> >> On 03/12/2012 08:34 AM, Dong Aisheng wrote:
-> >>> On Sat, Mar 10, 2012 at 02:14:33AM +0800, Stephen Warren wrote:
-> >>>> The core pin controller bindings define:
-> >>>> * The fact that pin controllers expose pin configurations as nodes in
-> >>>>   device tree.
-> >>>> * That the bindings for those pin configuration nodes is defined by the
-> >>>>   individual pin controller drivers.
-> >>>> * A standardized set of properties for client devices to define numbered
-> >>>>   or named pin configuration states, each referring to some number of the
-> >>>>   afore-mentioned pin configuration nodes.
-> >>>> * That the bindings for the client devices determines the set of numbered
-> >>>>   or named states that must exist.
-> ...
-> >>>> +Required properties:
-> >>>> +pinctrl-0:	List of phandles, each pointing at a pin configuration
-> >>>> +		node. These referenced pin configuration nodes must be child
-> >>>> +		nodes of the pin controller that they configure. Multiple
-> >>>> +		entries may exist in this list so that multiple pin
-> >>>> +		controllers may be configured, or so that a state may be built
-> >>>> +		from multiple nodes for a single pin controller, each
-> >>>> +		contributing part of the overall configuration. See the next
-> >>>> +		section of this document for details of the format of these
-> >>>> +		pin configuration nodes.
-> >>>> +
-> >>>> +		In some cases, it may be useful to define a state, but for it
-> >>>> +		to be empty. This may be required when a common IP block is
-> >>>> +		used in an SoC either without a pin controller, or where the
-> >>>> +		pin controller does not affect the HW module in question. If
-> >>>> +		the binding for that IP block requires certain pin states to
-> >>>> +		exist, they must still be defined, but may be left empty.
-> >>>> +
-> >>>
-> >>> It looks this functions similar as the PIN_MAP_DUMMY_STATE you introduced
-> >>> before to address the issues that the shared IP block may need or not need
-> >>> pinctrl configuration on different platforms(correct me if wrong).
-> >>
-> >> Yes, it's to generate the dummy states.
-> >>
-> >>> Then, there may be cases like below which may look a bit confusing
-> >>> to people.
-> >>> device {
-> >>> 	pinctrl-names = "active", "idle";
-> >>> 	pinctrl-0;
-> >>> 	pinctrl-1;
-> >>> };
-> >>
-> >> I'd personally expect the syntax to look like:
-> >>
-> >> device {
-> >> 	pinctrl-names = "active", "idle";
-> >> 	pinctrl-0 = <>;
-> >> 	pinctrl-1 = <>;
-> >> };
-> >>
-> >> which has an explicitly empty value. Admittedly, these would both
-> >> compile down to the exact same thing in the DTB, but I think the
-> >> interpretation of the above is pretty readable.
-> >>
-> >>> I'm wondering if we can let each individual driver to handle this special case?
-> >>> Like checking device id then make decision whether call pinctrl_* APIs.
-> >>> Then we can just do not define those properties for devices who
-> >>> do not need pin configurations.
-> >>
-> >> The individual client drivers certainly could work that way.
-> >>
-> >> However, the disadvantage is that the client driver then needs explicit
-> >> code to deal with this case, and this needs to be triggered by using a
-> >
-> > Since this is purely specific to IP block(e.g. the driver knows this ip used
-> > in which platform does not need pin configuration), so i guess it's natural
-> > that the driver can also handle it instead of device tree, just like
-> > a lot of existing drivers in kernel do similar things for tricks
-> > on different SoCs.
-> 
-> Well, the entire point is that the driver for the IP block shouldn't
-> know anything about which SoC it's included in, or whether pinmux is
-> needed, or what pinmux is needed, beyond what's expressed in platform
-> data or device tree. The whole point of the pinctrl is to completely
-> remove this knowledge from the driver, and centralize it in the mapping
-> table.
-> 
-Good point to me.
-The driver does not need to know which SoC it's included in,
-but it has to support that SoC first.
+BSC9131RDB is a Freescale reference design board for BSC9131 SoC.The BSC9131 is
+integrated SoC that targets Femto base station market. It combines Power
+Architecture e500v2 and DSP StarCore SC3850 core technologies with MAPLE-B2F
+baseband acceleration processing elements.
 
-> >> different compatible flag (or perhaps some other explicit property).
-> >> You'd have to write this code over and over for each individual driver.
-> >
-> > I still do not understand why need a more special compatible flag?
-> > My understanding is that in device driver side, they can do:
-> > if (is_soc_a || is_soc_b) {
-> > 	pinctrl_get(dev, "default");
-> > 	....
-> > } else if (is_soc_c) {
-> > 	/* do nothing */
-> > }
-> 
-> Drivers aren't supposed to contain "is_soc_foo" or "is_machine_foo"
-> calls. Indeed, in the case of "is_soc_foo", I don't think such an API
-> even exists. Instead, platform data or device tree should represent the
-> information that drivers need.
-> 
-Hmm, whatever platform data or device tree or device id, we can use a way
-to tell driver which SoC it is running on.
-The driver private is_soc_a macro or function can be implemented based
-that information.
+The BSC9131 SoC includes the following function and features:
+    . Power Architecture subsystem including a e500 processor with 256-Kbyte shared
+      L2 cache
+    . StarCore SC3850 DSP subsystem with a 512-Kbyte private L2 cache
+    . The Multi Accelerator Platform Engine for Femto BaseStation Baseband
+      Processing (MAPLE-B2F)
+    . A multi-standard baseband algorithm accelerator for Channel Decoding/Encoding,
+      Fourier Transforms, UMTS chip rate processing, LTE UP/DL Channel processing,
+      and CRC algorithms
+    . Consists of accelerators for Convolution, Filtering, Turbo Encoding,
+      Turbo Decoding, Viterbi decoding, Chiprate processing, and Matrix Inversion
+      operations
+    . DDR3/3L memory interface with 32-bit data width without ECC and 16-bit with
+      ECC, up to 400-MHz clock/800 MHz data rate
+    . Dedicated security engine featuring trusted boot
+    . DMA controller
+    . OCNDMA with four bidirectional channels
+    . Interfaces
+    . Two triple-speed Gigabit Ethernet controllers featuring network acceleration
+      including IEEE 1588. v2 hardware support and virtualization (eTSEC)
+    . eTSEC 1 supports RGMII/RMII
+    . eTSEC 2 supports RGMII
+    . High-speed USB 2.0 host and device controller with ULPI interface
+    . Enhanced secure digital (SD/MMC) host controller (eSDHC)
+    . Antenna interface controller (AIC), supporting three industry standard
+      JESD207/three custom ADI RF interfaces (two dual port and one single port)
+      and three MAXIM's MaxPHY serial interfaces
+    . ADI lanes support both full duplex FDD support and half duplex TDD support
+    . Universal Subscriber Identity Module (USIM) interface that facilitates
+      communication to SIM cards or Eurochip pre-paid phone cards
+    . TDM with one TDM port
+    . Two DUART, four eSPI, and two I2C controllers
+    . Integrated Flash memory controller (IFC)
+    . TDM with 256 channels
+    . GPIO
+    . Sixteen 32-bit timers
 
-> > I can't see why we still need a special compatible flag to tell driver.
-> > Just do not define pinctrl-* properties for that devices in device tree.
-> > Did i understand wrong?
-> 
-> The compatible property would be the only way to implement anything like
-> is_soc_foo. However, it's a bad idea to overload the compatible property
-> in this way.
-> 
-I guess i might not describe my idea clearly.
-My idea is that the compatible string does that work.
-For example:
-static const struct of_device_id mxs_mmc_dt_ids[] = {
-        { .compatible = "fsl,imx23-mmc", .data = NULL, },
-        { .compatible = "fsl,imx28-mmc", .data = NULL, },
-        { /* sentinel */ }
-};
-MODULE_DEVICE_TABLE(of, mxs_mmc_dt_ids);
-Replace NULL to some special data like SOC_MX23 or SOC_MX28 can let driver
-driver know which SoC it's running on.
-Then driver can use private macro like is_soc_foo.
+The DSP portion of the SoC consists of DSP core (SC3850) and various
+accelerators pertaining to DSP operations.
 
-> >> That also means that if you were the first user of an IP block in a
-> >> system which didn't need pin muxing for it, you'd have to modify the
-> >> kernel to support pinctrl being optional before you could use that device.
-> >
-> > Why need modify the kernel?
-> > Assuming above example.
-> > I'm a bit confused.
-> 
-> If the driver contains code like:
-> 
-> if (is_soc_a) {
->     ...
-> } else if (is_soc_b) {
->    ...
-> }
-> ...
-> 
-> Then in order to support a new SoC, even if the driver doesn't need to
-> do anything different, you'd need to go and edit the code to add an "if
-> (is_soc_c)" condition into that list.
-> 
-No.
-No changes needed if the driver does not need to do anything different.
-Compatible string does that work
-For example, in a new soc which is fully compatible with current driver.
-It can just add device like:
-mmc@80010000 {
-	compatible = "fsl, xxx-mmc", "fsl,imx28-mmc";
-	reg = <..>;
-	...
-}
+ BSC9131RDB Overview
+ ----------------------
+     BSC9131 SoC
+     1Gbyte DDR3 (on board DDR)
+     128Mbyte 2K page size NAND Flash
+     256 Kbit M24256 I2C EEPROM
+     128 Mbit SPI Flash memory
+     USB-ULPI
+     eTSEC1: Connected to RGMII PHY
+     eTSEC2: Connected to RGMII PHY
+     DUART interface: supports one UARTs up to 115200 bps for console display
 
-> >> If the pinctrl subsystem itself hides this from the client driver, then
-> >> you'd never need to add any code to any driver to support this case, and
-> >> all you'd need to do is write a few lines of device tree to use the
-> >> driver; no code changes.
-> >>
-> > Yes, that is the benefit.
-> >
-> > My only concern is that if this may make people confuse when see
-> > such code in device tree since we,i guess, still do not have such examples
-> > in device tree. And i'm afraid this is a bit not HW oriented.
-> > device {
-> > 	pinctrl-names = "active", "idle";
-> > 	pinctrl-0 = <>;
-> > 	pinctrl-1 = <>;
-> > };
-> > So i'm asking if we do it in driver.
-> > Maybe device tree people can give some comments.
-> 
-> I personally don't think it's that confusing. A zero-length list is
-> after all still a list. That said, let me see if I can add such an
-> example to the binding document; the documentation does talk about this
-> case, but we can certainly add another example to highlight it.
-> 
-If dt does allow this, i'm also ok with it.
+ Linux runs on e500v2 core and access some DSP peripherals like AIC
 
-Regards
-Dong Aisheng
+Signed-off-by: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Akhil Goyal <Akhil.Goyal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Rajan Srivastava <rajan.srivastava-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+Note:   Name of PSC9131 has been changed to BSC9131 because of new nomenclature
+	Please reject earlier patch"powerpc/85xx:Add BSC9131 RDB Support"
+	  http://patchwork.ozlabs.org/patch/146349/
+
+ Beased on http://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git
+	    branch master
+
+ arch/powerpc/boot/dts/bsc9131rdb.dts          |   34 +++++
+ arch/powerpc/boot/dts/bsc9131rdb.dtsi         |  179 +++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/bsc9131si-post.dtsi |  172 ++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/bsc9131si-pre.dtsi  |   59 ++++++++
+ arch/powerpc/platforms/85xx/Kconfig           |    9 ++
+ arch/powerpc/platforms/85xx/Makefile          |    1 +
+ arch/powerpc/platforms/85xx/bsc913x_board.c   |   96 +++++++++++++
+ 7 files changed, 550 insertions(+), 0 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/bsc9131rdb.dts
+ create mode 100644 arch/powerpc/boot/dts/bsc9131rdb.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/bsc9131si-post.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/bsc9131si-pre.dtsi
+ create mode 100644 arch/powerpc/platforms/85xx/bsc913x_board.c
+
+diff --git a/arch/powerpc/boot/dts/bsc9131rdb.dts b/arch/powerpc/boot/dts/bsc9131rdb.dts
+new file mode 100644
+index 0000000..e13d2d4
+--- /dev/null
++++ b/arch/powerpc/boot/dts/bsc9131rdb.dts
+@@ -0,0 +1,34 @@
++/*
++ * BSC9131 RDB Device Tree Source
++ *
++ * Copyright 2011-2012 Freescale Semiconductor Inc.
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
++
++/include/ "fsl/bsc9131si-pre.dtsi"
++
++/ {
++	model = "fsl,bsc9131rdb";
++	compatible = "fsl,bsc9131rdb";
++
++	memory {
++		device_type = "memory";
++	};
++
++	board_ifc: ifc: ifc@ff71e000 {
++		/* NAND Flash on board */
++		ranges = <0x0 0x0 0x0 0xff800000 0x00004000>;
++		reg = <0x0 0xff71e000 0x0 0x2000>;
++	};
++
++	board_soc: soc: soc@ff700000 {
++		ranges = <0x0 0x0 0xff700000 0x100000>;
++	};
++};
++
++/include/ "bsc9131rdb.dtsi"
++/include/ "fsl/bsc9131si-post.dtsi"
+diff --git a/arch/powerpc/boot/dts/bsc9131rdb.dtsi b/arch/powerpc/boot/dts/bsc9131rdb.dtsi
+new file mode 100644
+index 0000000..d274c014
+--- /dev/null
++++ b/arch/powerpc/boot/dts/bsc9131rdb.dtsi
+@@ -0,0 +1,179 @@
++/*
++ * BSC9131 RDB Device Tree Source stub (no addresses or top-level ranges)
++ *
++ * Copyright 2011-2012 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++&board_ifc {
++
++	nand@0,0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "fsl,ifc-nand";
++		reg = <0x0 0x0 0x4000>;
++
++		partition@0 {
++			/* This location must not be altered  */
++			/* 3MB for u-boot Bootloader Image */
++			reg = <0x0 0x00300000>;
++			label = "NAND U-Boot Image";
++			read-only;
++		};
++
++		partition@300000 {
++			/* 1MB for DTB Image */
++			reg = <0x00300000 0x00100000>;
++			label = "NAND DTB Image";
++		};
++
++		partition@400000 {
++			/* 8MB for Linux Kernel Image */
++			reg = <0x00400000 0x00800000>;
++			label = "NAND Linux Kernel Image";
++		};
++
++		partition@c00000 {
++			/* Rest space for Root file System Image */
++			reg = <0x00c00000 0x07400000>;
++			label = " NAND RFS Image";
++		};
++	};
++};
++
++&board_soc {
++	i2c@3000 {
++		gpio3: gpio@21 {
++			compatible = "nxp,pca9555";
++			reg = <0x21>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			polarity = <0x00>;
++		};
++		gpio4: gpio@23 {
++			compatible = "nxp,pca9555";
++			reg = <0x23>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			polarity = <0x00>;
++		};
++		gpio5: gpio@27 {
++			compatible = "nxp,pca9555";
++			reg = <0x27>;
++			#gpio-cells = <2>;
++			gpio-controller;
++			polarity = <0x00>;
++		};
++		hwmon@4c {
++			compatible = "adi,adt7461";
++			reg = <0x4c>;
++		};
++		eeprom@52 {
++			compatible = "st-micro,24c02";
++			reg = <0x52>;
++		};
++	};
++
++	/* BSC9131RDB does not have any device on i2c@3100 */
++	i2c@3100 {
++		status = "disabled";
++	};
++
++	spi@7000 {
++		flash@0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "spansion,s25sl12801";
++			reg = <0>;
++			spi-max-frequency = <50000000>;
++
++			/* 512KB for u-boot Bootloader Image */
++			partition@0 {
++				reg = <0x0 0x00080000>;
++				label = "SPI Flash U-Boot Image";
++				read-only;
++			};
++
++			/* 512KB for DTB Image */
++			partition@80000 {
++				reg = <0x00080000 0x00080000>;
++				label = "SPI Flash DTB Image";
++			};
++
++			/* 4MB for Linux Kernel Image */
++			partition@100000 {
++				reg = <0x00100000 0x00400000>;
++				label = "SPI Flash Kernel Image";
++			};
++
++			/* 4MB for Compressed RFS Image */
++			partition@500000 {
++				reg = <0x00500000 0x00400000>;
++				label = "SPI Flash Compressed RFS Image";
++			};
++
++			/* 7MB for JFFS2 based RFS */
++			partition@900000 {
++				reg = <0x00900000 0x00700000>;
++				label = "SPI Flash JFFS2 RFS Image";
++			};
++		};
++	};
++
++	usb@22000 {
++		phy_type = "ulpi";
++	};
++
++	mdio@24000 {
++		phy0: ethernet-phy@0 {
++			interrupts = <3 1 0 0>;
++			reg = <0x0>;
++		};
++
++		phy1: ethernet-phy@1 {
++			interrupts = <2 1 0 0>;
++			reg = <0x3>;
++		};
++	};
++
++	sdhci@2e000 {
++		status = "disabled";
++	};
++
++	enet0: ethernet@b0000 {
++		phy-handle = <&phy0>;
++		phy-connection-type = "rgmii-id";
++	};
++
++	enet1: ethernet@b1000 {
++		phy-handle = <&phy1>;
++		phy-connection-type = "rgmii-id";
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/bsc9131si-post.dtsi b/arch/powerpc/boot/dts/fsl/bsc9131si-post.dtsi
+new file mode 100644
+index 0000000..513a652
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/bsc9131si-post.dtsi
+@@ -0,0 +1,172 @@
++/*
++ * BSC9131 Silicon/SoC Device Tree Source (post include)
++ *
++ * Copyright 2011-2012 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++&ifc {
++	#address-cells = <2>;
++	#size-cells = <1>;
++	compatible = "fsl,ifc", "simple-bus";
++	interrupts = <16 2 0 0 20 2 0 0>;
++};
++
++&soc {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	device_type = "soc";
++	compatible = "fsl,bsc9131-immr", "simple-bus";
++	bus-frequency = <0>;		// Filled out by uboot.
++
++	ecm-law@0 {
++		compatible = "fsl,ecm-law";
++		reg = <0x0 0x1000>;
++		fsl,num-laws = <12>;
++	};
++
++	ecm@1000 {
++		compatible = "fsl,bsc9131-ecm", "fsl,ecm";
++		reg = <0x1000 0x1000>;
++		interrupts = <16 2 0 0>;
++	};
++
++	memory-controller@2000 {
++		compatible = "fsl,bsc9131-memory-controller";
++		reg = <0x2000 0x1000>;
++		interrupts = <16 2 0 0>;
++	};
++
++/include/ "pq3-i2c-0.dtsi"
++	i2c@3000 {
++		interrupts = <17 2 0 0>;
++	};
++
++/include/ "pq3-i2c-1.dtsi"
++	i2c@3100 {
++		interrupts = <17 2 0 0>;
++	};
++
++/include/ "pq3-duart-0.dtsi"
++	serial0: serial@4500 {
++		interrupts = <18 2 0 0>;
++	};
++
++	serial1: serial@4600 {
++		interrupts = <18 2 0 0 >;
++	};
++/include/ "pq3-espi-0.dtsi"
++	spi0: spi@7000 {
++		fsl,espi-num-chipselects = <1>;
++		interrupts = <22 0x2 0 0>;
++	};
++
++/include/ "pq3-gpio-0.dtsi"
++	gpio-controller@f000 {
++		interrupts = <19 0x2 0 0>;
++		};
++
++	L2: l2-cache-controller@20000 {
++		compatible = "fsl,bsc9131-l2-cache-controller";
++		reg = <0x20000 0x1000>;
++		cache-line-size = <32>;	// 32 bytes
++		cache-size = <0x40000>; // L2,256K
++		interrupts = <16 2 0 0>;
++	};
++
++/include/ "pq3-dma-0.dtsi"
++
++dma@21300 {
++
++	dma-channel@0 {
++		interrupts = <62 2 0 0>;
++	};
++
++	dma-channel@80 {
++		interrupts = <63 2 0 0>;
++	};
++
++	dma-channel@100 {
++		interrupts = <64 2 0 0>;
++	};
++
++	dma-channel@180 {
++		interrupts = <65 2 0 0>;
++	};
++};
++
++/include/ "pq3-usb2-dr-0.dtsi"
++usb@22000 {
++	compatible = "fsl-usb2-dr","fsl-usb2-dr-v2.2";
++	interrupts = <40 0x2 0 0>;
++};
++
++/include/ "pq3-esdhc-0.dtsi"
++	sdhc@2e000 {
++		fsl,sdhci-auto-cmd12;
++		interrupts = <41 0x2 0 0>;
++	};
++
++/include/ "pq3-mpic.dtsi"
++
++timer@41100 {
++	compatible = "fsl,mpic-v1.2-msgr", "fsl,mpic-msg";
++	reg = <0x41400 0x200>;
++	interrupts = <
++		0xb0 2
++		0xb1 2
++		0xb2 2
++		0xb3 2>;
++};
++
++/include/ "pq3-etsec2-0.dtsi"
++enet0: ethernet@b0000 {
++	queue-group@b0000 {
++		fsl,rx-bit-map = <0xff>;
++		fsl,tx-bit-map = <0xff>;
++		interrupts = <26 2 0 0 27 2 0 0 28 2 0 0>;
++	};
++};
++
++/include/ "pq3-etsec2-1.dtsi"
++enet1: ethernet@b1000 {
++	queue-group@b1000 {
++		fsl,rx-bit-map = <0xff>;
++		fsl,tx-bit-map = <0xff>;
++		interrupts = <33 2 0 0 34 2 0 0 35 2 0 0>;
++	};
++};
++
++global-utilities@e0000 {
++		compatible = "fsl,bsc9131-guts";
++		reg = <0xe0000 0x1000>;
++		fsl,has-rstcr;
++	};
++};
+diff --git a/arch/powerpc/boot/dts/fsl/bsc9131si-pre.dtsi b/arch/powerpc/boot/dts/fsl/bsc9131si-pre.dtsi
+new file mode 100644
+index 0000000..743e4ae
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/bsc9131si-pre.dtsi
+@@ -0,0 +1,59 @@
++/*
++ * BSC9131 Silicon/SoC Device Tree Source (pre include)
++ *
++ * Copyright 2011-2012 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/dts-v1/;
++/ {
++	compatible = "fsl,BSC9131";
++	#address-cells = <2>;
++	#size-cells = <2>;
++	interrupt-parent = <&mpic>;
++
++	aliases {
++		serial0 = &serial0;
++		ethernet0 = &enet0;
++		ethernet1 = &enet1;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		PowerPC,BSC9131@0 {
++			device_type = "cpu";
++			compatible = "fsl,e500v2";
++			reg = <0x0>;
++			next-level-cache = <&L2>;
++		};
++	};
++};
+diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platforms/85xx/Kconfig
+index d7946be..9fb5b03 100644
+--- a/arch/powerpc/platforms/85xx/Kconfig
++++ b/arch/powerpc/platforms/85xx/Kconfig
+@@ -91,6 +91,15 @@ config P1023_RDS
+ 	help
+ 	  This option enables support for the P1023 RDS board
+ 
++config BSC9131_RDB
++	bool "Freescale BSC9131RDB"
++	select DEFAULT_UIMAGE
++	help
++	  This option enables support for the Freescale BSC9131RDB board.
++	  The BSC9131 is a heterogeneous SoC containing an e500v2 powerpc and a
++	  StarCore SC3850 DSP
++	  Manufacturer : Freescale Semiconductor, Inc
++
+ config SOCRATES
+ 	bool "Socrates"
+ 	select DEFAULT_UIMAGE
+diff --git a/arch/powerpc/platforms/85xx/Makefile b/arch/powerpc/platforms/85xx/Makefile
+index 9cb2d43..25b376c 100644
+--- a/arch/powerpc/platforms/85xx/Makefile
++++ b/arch/powerpc/platforms/85xx/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_P3041_DS)    += p3041_ds.o corenet_ds.o
+ obj-$(CONFIG_P3060_QDS)   += p3060_qds.o corenet_ds.o
+ obj-$(CONFIG_P4080_DS)    += p4080_ds.o corenet_ds.o
+ obj-$(CONFIG_P5020_DS)    += p5020_ds.o corenet_ds.o
++obj-$(CONFIG_BSC9131_RDB) += bsc913x_board.o
+ obj-$(CONFIG_STX_GP3)	  += stx_gp3.o
+ obj-$(CONFIG_TQM85xx)	  += tqm85xx.o
+ obj-$(CONFIG_SBC8560)     += sbc8560.o
+diff --git a/arch/powerpc/platforms/85xx/bsc913x_board.c b/arch/powerpc/platforms/85xx/bsc913x_board.c
+new file mode 100644
+index 0000000..934c3b5
+--- /dev/null
++++ b/arch/powerpc/platforms/85xx/bsc913x_board.c
+@@ -0,0 +1,96 @@
++/*
++ * BSC9131RDB Board Setup
++ *
++ * Author: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
++ *
++ * Copyright 2011-2012 Freescale Semiconductor Inc.
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
++
++#include <linux/of_platform.h>
++#include <linux/pci.h>
++#include <asm/mpic.h>
++#include <sysdev/fsl_soc.h>
++#include <asm/udbg.h>
++
++void __init bsc913x_board_pic_init(void)
++{
++	struct mpic *mpic;
++	struct resource r;
++	struct device_node *np;
++
++	np = of_find_node_by_type(NULL, "open-pic");
++	if (!np) {
++		pr_err("bsc913x: Could not find open-pic node\n");
++		return;
++	}
++
++	if (of_address_to_resource(np, 0, &r)) {
++		pr_err("bsc913x: Failed to map mpic register space\n");
++		of_node_put(np);
++		return;
++	}
++
++	mpic = mpic_alloc(np, r.start, MPIC_WANTS_RESET |
++	  MPIC_BIG_ENDIAN | MPIC_BROKEN_FRR_NIRQS | MPIC_SINGLE_DEST_CPU,
++	  0, 256, " OpenPIC  ");
++
++	of_node_put(np);
++
++	if (!mpic)
++		pr_err("bsc913x: Failed to allocate MPIC structure\n");
++	else
++		mpic_init(mpic);
++}
++
++/*
++ * Setup the architecture
++ */
++static void __init bsc913x_board_setup_arch(void)
++{
++	if (ppc_md.progress)
++		ppc_md.progress("bsc913x_board_setup_arch()", 0);
++
++	pr_info("bsc913x board from Freescale Semiconductor\n");
++}
++
++static struct of_device_id __initdata bsc913x_board_ids[] = {
++	{ .type = "soc", },
++	{ .type = "dsp", },
++	{ .compatible = "soc", },
++	{ .compatible = "simple-bus", },
++	{ .compatible = "gianfar", },
++	{},
++};
++
++static int __init bsc913x_board_publish_devices(void)
++{
++	return of_platform_bus_probe(NULL, bsc913x_board_ids, NULL);
++}
++machine_device_initcall(bsc9131_rdb, bsc913x_board_publish_devices);
++
++/*
++ * Called very early, device-tree isn't unflattened
++ */
++
++static int __init bsc9131_rdb_probe(void)
++{
++	unsigned long root = of_get_flat_dt_root();
++
++	return of_flat_dt_is_compatible(root, "fsl,bsc9131rdb");
++}
++
++define_machine(bsc9131_rdb) {
++	.name			= "BSC9131 RDB",
++	.probe			= bsc9131_rdb_probe,
++	.setup_arch		= bsc913x_board_setup_arch,
++	.init_IRQ		= bsc913x_board_pic_init,
++	.get_irq		= mpic_get_irq,
++	.restart		= fsl_rstcr_restart,
++	.calibrate_decr		= generic_calibrate_decr,
++	.progress		= udbg_progress,
++};
+-- 
+1.7.5.4
