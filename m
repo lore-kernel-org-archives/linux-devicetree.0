@@ -1,70 +1,32 @@
-From: Dirk Brandewie <dirk.brandewie@gmail.com>
-Subject: Re: [patch] max17042_battery: fix a couple buffer overflows
-Date: Thu, 15 Mar 2012 09:57:43 -0700
-Message-ID: <4F621F87.3040408@gmail.com>
-References: <20120315113732.GA364@elgon.mountain>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
+Date: Thu, 15 Mar 2012 11:12:57 -0600
+Message-ID: <4F622319.5060402@wwwdotorg.org>
+References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>	<20120314212616.GR12083@atomide.com> <CACRpkdY9Hi84KOESr1R94PNpvAPn7aMKE4kUcG-O6FMaX84qAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120315113732.GA364@elgon.mountain>
+In-Reply-To: <CACRpkdY9Hi84KOESr1R94PNpvAPn7aMKE4kUcG-O6FMaX84qAA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Dirk Brandewie <dirk.brandewie@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Philip Rakity <prakity@marvell.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@stericsson.com>, B29396@freescale.com, s.hauer@pengutronix.de, dongas86@gmail.com, shawn.guo@linaro.org, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2012 04:37 AM, Dan Carpenter wrote:
-> There are a couple issues here caused by confusion between sizeof()
-> and ARRAY_SIZE().  "table_size" should be the number of elements, but we
-> should allocate it with kcalloc() so that we allocate the correct number
-> of bytes.
->
-> In max17042_init_model() we don't allocate enough space so we go past
-> the end of the array in max17042_read_model_data() and
-> max17042_model_data_compare().
->
-> In max17042_verify_model_lock() we allocate the right amount of space
-> but we call max17042_read_model_data() with the wrong number of elements
-> and also in the for loop we go past the end of the array.
->
-> Signed-off-by: Dan Carpenter<dan.carpenter@oracle.com>
+On 03/15/2012 10:51 AM, Linus Walleij wrote:
+...
+> Hm, both you guys agree, then I will be happy that we merge this.
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Acked-by: Dirk Brandewie <dirk.brandewie@intel.com>
+Great. I'll repost a new version very soon based on the feedback (just a
+couple of grammar issues and an added example).
 
-> ---
-> I don't have this hardware.  The original code is clearly buggy, but I
-> can't test that my fix is correct.  Please review carefully.
->
-> diff --git a/drivers/power/max17042_battery.c b/drivers/power/max17042_battery.c
-> index e36763a..f8cd48c 100644
-> --- a/drivers/power/max17042_battery.c
-> +++ b/drivers/power/max17042_battery.c
-> @@ -328,11 +328,10 @@ static inline int max17042_model_data_compare(struct max17042_chip *chip,
->   static int max17042_init_model(struct max17042_chip *chip)
->   {
->   	int ret;
-> -	int table_size =
-> -		sizeof(chip->pdata->config_data->cell_char_tbl)/sizeof(u16);
-> +	int table_size = ARRAY_SIZE(chip->pdata->config_data->cell_char_tbl);
->   	u16 *temp_data;
->
-> -	temp_data = kzalloc(table_size, GFP_KERNEL);
-> +	temp_data = kcalloc(table_size, sizeof(*temp_data), GFP_KERNEL);
->   	if (!temp_data)
->   		return -ENOMEM;
->
-> @@ -357,12 +356,11 @@ static int max17042_init_model(struct max17042_chip *chip)
->   static int max17042_verify_model_lock(struct max17042_chip *chip)
->   {
->   	int i;
-> -	int table_size =
-> -		sizeof(chip->pdata->config_data->cell_char_tbl);
-> +	int table_size = ARRAY_SIZE(chip->pdata->config_data->cell_char_tbl);
->   	u16 *temp_data;
->   	int ret = 0;
->
-> -	temp_data = kzalloc(table_size, GFP_KERNEL);
-> +	temp_data = kcalloc(table_size, sizeof(*temp_data), GFP_KERNEL);
->   	if (!temp_data)
->   		return -ENOMEM;
->
+> Since it's just toching DT dirs I guess it should go through Grant,
+> but I'm happy to take it in pinctrl too.
+
+I've seen many bindings go through the tree for the subsystem they
+correspond to, as part of the series that implements them. I'm not
+bothered either way though - I'll let you work this out with Grant once
+I post the final version.
+
+(I'm hoping to post the actual implementation today, maybe tomorrow)
