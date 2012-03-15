@@ -1,474 +1,160 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: Add generic device tree DMA helpers
-Date: Thu, 15 Mar 2012 09:38:10 +0100
-Message-ID: <1331800690-21518-1-git-send-email-nicolas.ferre@atmel.com>
-References: <4F22DEF2.5000807@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 03/10] pwm: Add device tree support
+Date: Thu, 15 Mar 2012 08:40:42 +0000
+Message-ID: <201203150840.42659.arnd@arndb.de>
+References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de> <1331740593-10807-4-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4F22DEF2.5000807-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1331740593-10807-4-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add some basic helpers to retrieve a DMA controller device_node and the
-DMA request specifications. By making DMA controllers register a generic
-translation function, we allow the management of any type of DMA requests
-specification.
-The void * output of an of_dma_xlate() function that will be implemented
-by the DMA controller can carry any type of "dma-request" argument.
+On Wednesday 14 March 2012, Thierry Reding wrote:
+> This patch adds helpers to support device tree bindings for the generic
+> PWM API. Device tree binding documentation for PWM controllers is also
+> provided.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> ---
+> Changes in v4:
+>   - add OF-specific code removed from patch 2
+>   - make of_node_to_pwmchip() and of_pwm_simple_xlate() static
+>   - rename of_get_named_pwm() to of_pwm_request(), return a struct
+>     pwm_device, get rid of the now unused spec parameter and use the
+>     device_node.name field as the PWM's name
+>   - return a requested struct pwm_device from pwm_chip.of_xlate and
+>     drop the now unused spec parameter
+>   - move OF support code into drivers/pwm/core.c
+>   - used deferred probing if a PWM chip is not available yet
+> 
+> Changes in v2:
+>   - add device tree binding documentation
+>   - add of_xlate to parse controller-specific PWM-specifier
 
-The DMA client will search its associated DMA controller in the list and
-call the registered of_dam_xlate() function to retrieve the request values.
+Looks very cool now, and much simpler!
 
-One simple xlate function is provided for the "single number" type of
-request binding.
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 6ea51dc..d47b8ee 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -57,6 +57,12 @@ config OF_GPIO
+>  	help
+>  	  OpenFirmware GPIO accessors
+>  
+> +config OF_PWM
+> +	def_bool y
+> +	depends on PWM
+> +	help
+> +	  OpenFirmware PWM accessors
+> +
+>  config OF_I2C
+>  	def_tristate I2C
+>  	depends on I2C && !SPARC
 
-This implementation is independent from dmaengine so it can also be used
-by legacy drivers.
+You might want to remove this one now and just use CONFIG_OF in the driver,
+unless there is  a reason to keep it here.
 
-For legacy reason another API will export the DMA request number into a
-Linux resource of type IORESOURCE_DMA.
+> +#ifdef CONFIG_OF_PWM
+> +static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
+> +{
+> +	struct pwm_chip *chip;
+> +
+> +	mutex_lock(&pwm_lock);
+> +
+> +	list_for_each_entry(chip, &pwm_chips, list)
+> +		if (chip->dev && chip->dev->of_node == np) {
+> +			mutex_unlock(&pwm_lock);
+> +			return chip;
+> +		}
+> +
+> +	mutex_unlock(&pwm_lock);
+> +
+> +	return ERR_PTR(-EPROBE_DEFER);
+> +}
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/dma/dma.txt |   45 +++++
- drivers/of/Kconfig                            |    5 +
- drivers/of/Makefile                           |    1 +
- drivers/of/dma.c                              |  260 +++++++++++++++++++++++++
- include/linux/of_dma.h                        |   67 +++++++
- 5 files changed, 378 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/dma.txt
- create mode 100644 drivers/of/dma.c
- create mode 100644 include/linux/of_dma.h
+EPROBE_DEFER doesn't exist yet in my kernel, and I wonder if it's actually
+safe to be used this way, because it can result in arbitrary drivers using
+this to be put on the defered probe list. It certainly sounds like the
+right thing to do in the long run though.
 
-diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-new file mode 100644
-index 0000000..c49e98d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma.txt
-@@ -0,0 +1,45 @@
-+* Generic DMA Controller and DMA request bindings
-+
-+Generic binding to provide a way for a driver to retrieve the
-+DMA request line that goes from an IP to a DMA controller.
-+
-+
-+* DMA controller
-+
-+Required property:
-+    - #dma-cells: Number of cells for each DMA line.
-+
-+
-+Example:
-+
-+	sdma: dma-controller@48000000 {
-+		compatible = "ti,sdma-omap4"
-+		reg = <0x48000000 0x1000>;
-+		interrupts = <12>;
-+		#dma-cells = <1>;
-+	};
-+
-+
-+
-+* DMA client
-+
-+Client drivers should specify the DMA request property using a phandle to
-+the controller. If needed, the DMA request identity on that controller is then
-+added followed by optional request specifications.
-+
-+Required property:
-+    - dma-request: List of phandle + dma-request + request specifications,
-+      one group per request "line".
-+Optional property:
-+    - dma-request-names: list of strings in the same order as the dma-request
-+      in the dma-request property.
-+
-+
-+Example:
-+
-+	i2c1: i2c@1 {
-+		...
-+		dma-request = <&sdma 2 &sdma 3>;
-+		dma-request-names = "tx", "rx";
-+		...
-+	};
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 268163d..7d1f06b 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -90,4 +90,9 @@ config OF_PCI_IRQ
- 	help
- 	  OpenFirmware PCI IRQ routing helpers
- 
-+config OF_DMA
-+	def_bool y
-+	help
-+	  Device Tree DMA routing helpers
-+
- endmenu # OF
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index a73f5a5..6eb50c6 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -12,3 +12,4 @@ obj-$(CONFIG_OF_SELFTEST) += selftest.o
- obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
- obj-$(CONFIG_OF_PCI)	+= of_pci.o
- obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
-+obj-$(CONFIG_OF_DMA)	+= dma.o
-diff --git a/drivers/of/dma.c b/drivers/of/dma.c
-new file mode 100644
-index 0000000..3315844
---- /dev/null
-+++ b/drivers/of/dma.c
-@@ -0,0 +1,260 @@
-+/*
-+ * Device tree helpers for DMA request / controller
-+ *
-+ * Based on of_gpio.c
-+ *
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/rculist.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
-+
-+static LIST_HEAD(of_dma_list);
-+
-+struct of_dma {
-+	struct list_head of_dma_controllers;
-+	struct device_node *of_node;
-+	int of_dma_n_cells;
-+	int (*of_dma_xlate)(struct of_phandle_args *dma_spec, void *data);
-+};
-+
-+/**
-+ * of_dma_find_controller() - Find a DMA controller in DT DMA helpers list
-+ * @np:		device node of DMA controller
-+ */
-+static struct of_dma *of_dma_find_controller(struct device_node *np)
-+{
-+	struct of_dma	*ofdma;
-+
-+	list_for_each_entry_rcu(ofdma, &of_dma_list, of_dma_controllers) {
-+		if (ofdma->of_node == np)
-+			return ofdma;
-+	}
-+
-+	return NULL;
-+}
-+
-+/**
-+ * of_dma_controller_register() - Register a DMA controller to DT DMA helpers
-+ * @np:			device node of DMA controller
-+ * @of_dma_xlate:	generic translation function which converts a phandle
-+ *			arguments list into a generic output value
-+ *
-+ * Returns 0 on success or appropriate errno value on error.
-+ *
-+ * If #dma-cells is not specified in DMA controller device tree node, we assume
-+ * that the DMA controller phandle will come without argument.
-+ *
-+ * Allocated memory should be freed with appropriate of_dma_controller_free()
-+ * call.
-+ */
-+int of_dma_controller_register(struct device_node *np,
-+			int (*of_dma_xlate)(struct of_phandle_args *, void *))
-+{
-+	struct of_dma	*ofdma;
-+	const __be32	*nbcells;
-+
-+	if (!np || !of_dma_xlate) {
-+		pr_err("%s: not enough information provided\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	ofdma = kzalloc(sizeof(*ofdma), GFP_KERNEL);
-+	if (!ofdma)
-+		return -ENOMEM;
-+
-+	nbcells = of_get_property(np, "#dma-cells", NULL);
-+	if (!nbcells)
-+		/*
-+		 * no #dma-cells properties: assume no argument to
-+		 * dma-request property on slave side
-+		 */
-+		ofdma->of_dma_n_cells = 0;
-+	else
-+		ofdma->of_dma_n_cells = be32_to_cpup(nbcells);
-+
-+	ofdma->of_node = np;
-+	ofdma->of_dma_xlate = of_dma_xlate;
-+
-+	/* Now queue of_dma controller structure in list */
-+	list_add_tail_rcu(&ofdma->of_dma_controllers, &of_dma_list);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_dma_controller_register);
-+
-+/**
-+ * of_dma_controller_free() - Remove a DMA controller from DT DMA helpers list
-+ * @np:		device node of DMA controller
-+ *
-+ * Memory allocated by of_dma_controller_register() is freed here.
-+ */
-+void of_dma_controller_free(struct device_node *np)
-+{
-+	struct of_dma	*ofdma;
-+
-+	ofdma = of_dma_find_controller(np);
-+	if (ofdma) {
-+		list_del_rcu(&ofdma->of_dma_controllers);
-+		kfree(ofdma);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(of_dma_controller_free);
-+
-+/**
-+ * of_get_dma_request() - Get the associated DMA request data
-+ * @np:		device node to get DMA request from
-+ * @index:	index of the DMA request
-+ * @out_data:	a output that can be filled in by the of_dma_xlate() function
-+ *
-+ * Returns return value of of_dma_xlate() and fills out_data (if provided).
-+ * On error returns the appropriate errno value.
-+ */
-+int of_get_dma_request(struct device_node *np, int index,
-+		       void *out_data)
-+{
-+	struct of_phandle_args	dma_spec;
-+	struct of_dma		*ofdma;
-+	int			ret;
-+
-+	ret = of_parse_phandle_with_args(np, "dma-request", "#dma-cells",
-+					 index, &dma_spec);
-+	if (ret) {
-+		pr_err("%s: can't parse dma property\n", np->full_name);
-+		goto err0;
-+	}
-+
-+	if (list_empty(&of_dma_list)) {
-+		pr_debug("%s: empty DMA controller list\n",
-+			 np->full_name);
-+		ret = -ENOENT;
-+		goto err1;
-+	}
-+
-+	ofdma = of_dma_find_controller(dma_spec.np);
-+	if (!ofdma) {
-+		pr_debug("%s: DMA controller %s isn't registered\n",
-+			 np->full_name, dma_spec.np->full_name);
-+		ret = -ENODEV;
-+		goto err1;
-+	}
-+
-+	if (dma_spec.args_count != ofdma->of_dma_n_cells) {
-+		pr_debug("%s: wrong #dma-cells for %s\n",
-+			 np->full_name, dma_spec.np->full_name);
-+		ret = -EINVAL;
-+		goto err1;
-+	}
-+
-+	ret = ofdma->of_dma_xlate(&dma_spec, out_data);
-+
-+err1:
-+	of_node_put(dma_spec.np);
-+err0:
-+	pr_debug("%s exited with status %d\n", __func__, ret);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(of_get_dma_request);
-+
-+/**
-+ * of_dma_xlate_onenumbercell() - Generic DMA xlate for direct one cell bindings
-+ *
-+ * Device Tree DMA translation function which works with one cell bindings
-+ * where the cell values map directly to the hardware request number understood
-+ * by the DMA controller.
-+ */
-+int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec, void *dma_req)
-+{
-+	if (!dma_spec)
-+		return -EINVAL;
-+	if (WARN_ON(dma_spec->args_count != 1))
-+		return -EINVAL;
-+	*(int *)dma_req = dma_spec->args[0];
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_dma_xlate_onenumbercell);
-+
-+/**
-+ * of_dma_count - Count DMA requests for a device
-+ * @np:		device node to count DMAs for
-+ *
-+ * The function returns the count of DMA requests specified for a node.
-+ *
-+ * Note that the empty DMA specifiers counts too. For example,
-+ *
-+ * dma-request = <0
-+ *                &sdma 1
-+ *                0
-+ *                &sdma 3>;
-+ *
-+ * defines four DMAs (so this function will return 4), two of which
-+ * are not specified.
-+ */
-+unsigned int of_dma_count(struct device_node *np)
-+{
-+	unsigned int cnt = 0;
-+
-+	do {
-+		int ret;
-+
-+		ret = of_parse_phandle_with_args(np, "dma-request",
-+						 "#dma-cells", cnt, NULL);
-+		/* A hole in the dma-request = <> counts anyway. */
-+		if (ret < 0 && ret != -EEXIST)
-+			break;
-+	} while (++cnt);
-+
-+	return cnt;
-+}
-+EXPORT_SYMBOL_GPL(of_dma_count);
-+
-+/**
-+ * of_dma_to_resource - Decode a node's DMA and return it as a resource
-+ * @dev: pointer to device tree node
-+ * @index: zero-based index of the DMA request
-+ * @r: pointer to resource structure to return result into.
-+ *
-+ * Using a resource to export a DMA request number to a driver should
-+ * be used only for legacy purpose and on system when only one DMA controller
-+ * is present.
-+ * The proper and only scalable way is to use the native of_get_dma_request API
-+ * in order retrieve both the DMA controller device node and the DMA request
-+ * line for that controller.
-+ */
-+int of_dma_to_resource(struct device_node *dev, int index, struct resource *r)
-+{
-+	const char *name = NULL;
-+	int dma;
-+	int ret;
-+
-+	if (!r)
-+		return -EINVAL;
-+
-+	ret = of_get_dma_request(dev, index, &dma);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * Get optional "dma-request-names" property to add a name
-+	 * to the resource.
-+	 */
-+	of_property_read_string_index(dev, "dma-request-names", index,
-+				      &name);
-+
-+	r->start = dma;
-+	r->end = dma;
-+	r->flags = IORESOURCE_DMA;
-+	r->name = name ? name : dev->full_name;
-+
-+	return dma;
-+}
-+EXPORT_SYMBOL_GPL(of_dma_to_resource);
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-new file mode 100644
-index 0000000..c6147bb
---- /dev/null
-+++ b/include/linux/of_dma.h
-@@ -0,0 +1,67 @@
-+/*
-+ * OF helpers for DMA request / controller
-+ *
-+ * Based on of_gpio.h
-+ *
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __LINUX_OF_DMA_H
-+#define __LINUX_OF_DMA_H
-+
-+#include <linux/of.h>
-+
-+struct device_node;
-+
-+#ifdef CONFIG_OF_DMA
-+
-+extern int of_dma_controller_register(struct device_node *np,
-+			int (*of_dma_xlate)(struct of_phandle_args *, void *));
-+extern void of_dma_controller_free(struct device_node *np);
-+extern int of_get_dma_request(struct device_node *np, int index,
-+			      void *out_data);
-+extern unsigned int of_dma_count(struct device_node *np);
-+extern int of_dma_to_resource(struct device_node *dev, int index,
-+			      struct resource *r);
-+
-+extern int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec,
-+				      void *dma_req);
-+#else /* CONFIG_OF_DMA */
-+
-+static int of_dma_controller_register(struct device_node *np,
-+			int (*of_dma_xlate)(struct of_phandle_args *, void *))
-+{
-+	return -ENOSYS;
-+}
-+
-+static void of_dma_controller_free(struct device_node *np) {}
-+
-+extern int of_get_dma_request(struct device_node *np, int index,
-+			      void *out_data)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline unsigned int of_dma_count(struct device_node *np)
-+{
-+	return 0;
-+}
-+
-+static int of_dma_to_resource(struct device_node *dev, int index,
-+			      struct resource *r);
-+{
-+	return -ENOSYS;
-+}
-+
-+static int of_dma_xlate_onenumbercell(struct of_phandle_args *dma_spec,
-+				      void *dma_req)
-+{
-+	return -ENOSYS;
-+}
-+#endif /* CONFIG_OF_DMA */
-+
-+#endif /* __LINUX_OF_DMA_H */
--- 
-1.7.9
+> +#else
+> +static inline void of_pwmchip_add(struct pwm_chip *pc)
+> +{
+> +}
+> +
+> +static inline void of_pwmchip_remove(struct pwm_chip *pc)
+> +{
+> +}
+> +#endif /* CONFIG_OF_PWM */
+> +
+>  /**
+>   * pwm_set_chip_data - set private chip data for a PWM
+>   * @pwm: PWM device
+> @@ -184,6 +254,7 @@ int pwmchip_add(struct pwm_chip *chip)
+>  
+>  	INIT_LIST_HEAD(&chip->list);
+>  	list_add(&chip->list, &pwm_chips);
+> +	of_pwmchip_add(chip);
+>  
+>  out:
+>  	mutex_unlock(&pwm_lock);
+
+You could express the same thing using 
+
+	if (IS_ENABLED(CONFIG_OF_PWM))
+		of_pwmchip_add(chip);
+
+The advantage of this is that you always get compile coverage for the
+entire file, but the function is automatically discarded by the
+compiler when the condition is false at compile time. That obviously
+doesn't work for exported functions.
+
+> +#ifdef CONFIG_OF
+> +/**
+> + * of_pwm_request() - request a PWM via the PWM framework
+> + * @np: device node to get the PWM from
+> + * @propname: property name containing PWM specifier(s)
+> + * @index: index of the PWM
+> + *
+> + * Returns the PWM device parsed from the phandle specified in the given
+> + * property of a device tree node or NULL on failure. Values parsed from
+> + * the device tree are stored in the returned PWM device object.
+> + */
+> +struct pwm_device *of_pwm_request(struct device_node *np,
+> +				  const char *propname, int index)
+> +{
+> +	struct pwm_device *pwm = NULL;
+> +	struct of_phandle_args args;
+> +	struct pwm_chip *pc;
+> +	int err;
+> +
+> +	err = of_parse_phandle_with_args(np, propname, "#pwm-cells", index,
+> +					 &args);
+
+Wow, I just looked up what of_parse_phandle_with_args() does and that is
+extremely helpful indeed.
+
+>  /*
+> @@ -102,6 +104,12 @@ struct pwm_chip {
+>  	unsigned int		npwm;
+>  
+>  	struct pwm_device	*pwms;
+> +
+> +#ifdef CONFIG_OF_PWM
+> +	struct pwm_device *	(*of_xlate)(struct pwm_chip *pc,
+> +					    const struct of_phandle_args *args);
+> +	unsigned int		of_pwm_n_cells;
+> +#endif
+>  };
+>  
+>  int pwm_set_chip_data(struct pwm_device *pwm, void *data);
+
+If you use IS_ENABLED() as I suggested above, this #ifdef will have to go
+away, too, which is a very small size overhead.
+
+	Arnd
