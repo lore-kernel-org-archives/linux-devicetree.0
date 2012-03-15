@@ -1,240 +1,82 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/5 v5] i2c/gpio: add DT support
-Date: Thu, 15 Mar 2012 16:56:12 +0100
-Message-ID: <1331826972-14386-1-git-send-email-plagnioj@jcrosoft.com>
-References: <1331642024-19869-1-git-send-email-plagnioj@jcrosoft.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH] of: Add generic device tree DMA helpers
+Date: Thu, 15 Mar 2012 17:30:49 +0100
+Message-ID: <4F621939.9040906@ti.com>
+References: <4F22DEF2.5000807@ti.com> <1331800690-21518-1-git-send-email-nicolas.ferre@atmel.com> <201203150922.06379.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331642024-19869-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201203150922.06379.arnd@arndb.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-omap@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-To achieve DT support, we need to populate a custom platform_data in a
-private struct from DT information. To simplify code, the adapter and
-algorithm are also put into the private struct.
+On 3/15/2012 10:22 AM, Arnd Bergmann wrote:
+> On Thursday 15 March 2012, Nicolas Ferre wrote:
+>> Add some basic helpers to retrieve a DMA controller device_node and the
+>> DMA request specifications. By making DMA controllers register a generic
+>> translation function, we allow the management of any type of DMA requests
+>> specification.
+>> The void * output of an of_dma_xlate() function that will be implemented
+>> by the DMA controller can carry any type of "dma-request" argument.
+>>
+>> The DMA client will search its associated DMA controller in the list and
+>> call the registered of_dam_xlate() function to retrieve the request values.
+>>
+>> One simple xlate function is provided for the "single number" type of
+>> request binding.
+>>
+>> This implementation is independent from dmaengine so it can also be used
+>> by legacy drivers.
+>>
+>> For legacy reason another API will export the DMA request number into a
+>> Linux resource of type IORESOURCE_DMA.
+>
+> This looks very good. I missed the first version of this patch, but was
+> thinking of very similar bindings.
+>
+>> +Client drivers should specify the DMA request property using a phandle to
+>> +the controller. If needed, the DMA request identity on that controller is then
+>> +added followed by optional request specifications.
+>> +
+>> +Required property:
+>> +    - dma-request: List of phandle + dma-request + request specifications,
+>> +      one group per request "line".
+>> +Optional property:
+>> +    - dma-request-names: list of strings in the same order as the dma-request
+>> +      in the dma-request property.
+>> +
+>> +
+>> +Example:
+>> +
+>> +	i2c1: i2c@1 {
+>> +		...
+>> +		dma-request =<&sdma 2&sdma 3>;
+>> +		dma-request-names = "tx", "rx";
+>> +		...
+>> +	};
+>
+> This is slightly different from how the proposed pwm binding works that
+> Thierry is working on, which uses an arbitrary property name instead of
+> requiring the use of a specific property but then allowing to give names
+> in another property.
+>
+> I don't care much which way it's done, but please try to agree on one
+> approach that is used for both.
+>
+> The one you have here is already used by reg and irq, while the other
+> one is used in gpio.
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio_i2c.txt          |   32 +++++++
- drivers/i2c/busses/i2c-gpio.c                      |   94 +++++++++++++++----
- 2 files changed, 106 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_i2c.txt
+This was done like IRQ on purpose, because an Interrupt ReQuest line and 
+a DMA Request line are really similar for the HW point of view at IP level.
+I'm not sure what Thierry have done for pwm, but I thing that having the 
+same scheme for reg, irq and dma was what we agreed with Grant during 
+Plumbers.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_i2c.txt b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
-new file mode 100644
-index 0000000..4f8ec94
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio_i2c.txt
-@@ -0,0 +1,32 @@
-+Device-Tree bindings for i2c gpio driver
-+
-+Required properties:
-+	- compatible = "i2c-gpio";
-+	- gpios: sda and scl gpio
-+
-+
-+Optional properties:
-+	- i2c-gpio,sda-open-drain: sda as open drain
-+	- i2c-gpio,scl-open-drain: scl as open drain
-+	- i2c-gpio,scl-output-only: scl as output only
-+	- i2c-gpio,delay-us: delay between GPIO operations (may depend on each platform)
-+	- i2c-gpio,timeout-ms: timeout to get data
-+
-+Example nodes:
-+
-+i2c@0 {
-+	compatible = "i2c-gpio";
-+	gpios = <&pioA 23 0 /* sda */
-+		 &pioA 24 0 /* scl */
-+		>;
-+	i2c-gpio,sda-open-drain;
-+	i2c-gpio,scl-open-drain;
-+	i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	rv3029c2@56 {
-+		compatible = "rv3029c2";
-+		reg = <0x56>;
-+	};
-+};
-diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-index a651779..c0330a4 100644
---- a/drivers/i2c/busses/i2c-gpio.c
-+++ b/drivers/i2c/busses/i2c-gpio.c
-@@ -14,8 +14,15 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_i2c.h>
- 
--#include <asm/gpio.h>
-+struct i2c_gpio_private_data {
-+	struct i2c_adapter adap;
-+	struct i2c_algo_bit_data bit_data;
-+	struct i2c_gpio_platform_data pdata;
-+};
- 
- /* Toggle SDA by changing the direction of the pin */
- static void i2c_gpio_setsda_dir(void *data, int state)
-@@ -78,24 +85,62 @@ static int i2c_gpio_getscl(void *data)
- 	return gpio_get_value(pdata->scl_pin);
- }
- 
-+static int __devinit of_i2c_gpio_probe(struct device_node *np,
-+			     struct i2c_gpio_platform_data *pdata)
-+{
-+	u32 reg;
-+
-+	if (of_gpio_count(np) < 2)
-+		return -ENODEV;
-+
-+	pdata->sda_pin = of_get_gpio(np, 0);
-+	pdata->scl_pin = of_get_gpio(np, 1);
-+
-+	if (!gpio_is_valid(pdata->sda_pin) || !gpio_is_valid(pdata->scl_pin)) {
-+		pr_err("%s: invalid GPIO pins, sda=%d/scl=%d\n",
-+		       np->full_name, pdata->sda_pin, pdata->scl_pin);
-+		return -ENODEV;
-+	}
-+
-+	of_property_read_u32(np, "i2c-gpio,delay-us", &pdata->udelay);
-+
-+	if (!of_property_read_u32(np, "i2c-gpio,timeout-ms", &reg))
-+		pdata->timeout = msecs_to_jiffies(reg);
-+
-+	pdata->sda_is_open_drain =
-+		of_property_read_bool(np, "i2c-gpio,sda-open-drain");
-+	pdata->scl_is_open_drain =
-+		of_property_read_bool(np, "i2c-gpio,scl-open-drain");
-+	pdata->scl_is_output_only =
-+		of_property_read_bool(np, "i2c-gpio,scl-output-only");
-+
-+	return 0;
-+}
-+
- static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- {
-+	struct i2c_gpio_private_data *priv;
- 	struct i2c_gpio_platform_data *pdata;
- 	struct i2c_algo_bit_data *bit_data;
- 	struct i2c_adapter *adap;
- 	int ret;
- 
--	pdata = pdev->dev.platform_data;
--	if (!pdata)
--		return -ENXIO;
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	adap = &priv->adap;
-+	bit_data = &priv->bit_data;
-+	pdata = &priv->pdata;
- 
--	ret = -ENOMEM;
--	adap = kzalloc(sizeof(struct i2c_adapter), GFP_KERNEL);
--	if (!adap)
--		goto err_alloc_adap;
--	bit_data = kzalloc(sizeof(struct i2c_algo_bit_data), GFP_KERNEL);
--	if (!bit_data)
--		goto err_alloc_bit_data;
-+	if (pdev->dev.of_node) {
-+		ret = of_i2c_gpio_probe(pdev->dev.of_node, pdata);
-+		if (ret)
-+			return ret;
-+	} else {
-+		if (!pdev->dev.platform_data)
-+			return -ENXIO;
-+		memcpy(pdata, pdev->dev.platform_data, sizeof(*pdata));
-+	}
- 
- 	ret = gpio_request(pdata->sda_pin, "sda");
- 	if (ret)
-@@ -143,6 +188,7 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- 	adap->algo_data = bit_data;
- 	adap->class = I2C_CLASS_HWMON | I2C_CLASS_SPD;
- 	adap->dev.parent = &pdev->dev;
-+	adap->dev.of_node = pdev->dev.of_node;
- 
- 	/*
- 	 * If "dev->id" is negative we consider it as zero.
-@@ -154,7 +200,9 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_add_bus;
- 
--	platform_set_drvdata(pdev, adap);
-+	of_i2c_register_devices(adap);
-+
-+	platform_set_drvdata(pdev, priv);
- 
- 	dev_info(&pdev->dev, "using pins %u (SDA) and %u (SCL%s)\n",
- 		 pdata->sda_pin, pdata->scl_pin,
-@@ -168,34 +216,40 @@ err_add_bus:
- err_request_scl:
- 	gpio_free(pdata->sda_pin);
- err_request_sda:
--	kfree(bit_data);
--err_alloc_bit_data:
--	kfree(adap);
--err_alloc_adap:
- 	return ret;
- }
- 
- static int __devexit i2c_gpio_remove(struct platform_device *pdev)
- {
-+	struct i2c_gpio_private_data *priv;
- 	struct i2c_gpio_platform_data *pdata;
- 	struct i2c_adapter *adap;
- 
--	adap = platform_get_drvdata(pdev);
--	pdata = pdev->dev.platform_data;
-+	priv = platform_get_drvdata(pdev);
-+	adap = &priv->adap;
-+	pdata = &priv->pdata;
- 
- 	i2c_del_adapter(adap);
- 	gpio_free(pdata->scl_pin);
- 	gpio_free(pdata->sda_pin);
--	kfree(adap->algo_data);
--	kfree(adap);
- 
- 	return 0;
- }
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id i2c_gpio_dt_ids[] = {
-+	{ .compatible = "i2c-gpio", },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, i2c_gpio_dt_ids);
-+#endif
-+
- static struct platform_driver i2c_gpio_driver = {
- 	.driver		= {
- 		.name	= "i2c-gpio",
- 		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(i2c_gpio_dt_ids),
- 	},
- 	.probe		= i2c_gpio_probe,
- 	.remove		= __devexit_p(i2c_gpio_remove),
--- 
-1.7.7
+GPIO scheme will be probably good enough as well, but the idea was to be 
+consistent in the binding for similar information.
+
+Regards,
+Benoit
