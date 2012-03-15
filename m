@@ -1,65 +1,90 @@
-From: =?utf-8?Q?Lothar_Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
-Date: Thu, 15 Mar 2012 07:53:29 +0100
-Message-ID: <20321.37353.63115.664975@ipc1.ka-ro>
-References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
-	<1331628428-24017-2-git-send-email-b29396@freescale.com>
-	<20120313172351.97C5E3E053B@localhost>
-	<20120314124512.GG1180@shlinux2.ap.freescale.net>
-	<20120314141643.GP3852@pengutronix.de>
-	<20120315030206.GB13022@shlinux2.ap.freescale.net>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v4 09/10] pwm: Add PXA support
+Date: Thu, 15 Mar 2012 07:56:31 +0100
+Message-ID: <20120315065631.GB20502@avionic-0098.mockup.avionic-design.de>
+References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de>
+ <1331740593-10807-10-git-send-email-thierry.reding@avionic-design.de>
+ <4F61343A.80103@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120315030206.GB13022@shlinux2.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <aisheng.dong@freescale.com>
-Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Guo Shawn-R65073 <r65073@freescale.com>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, Dong Aisheng-B29396 <B29396@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tjCHc7DPkfUGtrlw"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F61343A.80103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Dong Aisheng writes:
-> On Wed, Mar 14, 2012 at 10:16:43PM +0800, s.hauer@pengutronix.de wrot=
-e:
-> > On Wed, Mar 14, 2012 at 08:45:23PM +0800, Dong Aisheng wrote:
-> > > On Wed, Mar 14, 2012 at 01:23:51AM +0800, Grant Likely wrote:
-[...]
-> > > But it seems this needs pass mac address to fec driver via platfo=
-rom data which is
-> > > not friendly to dt.
-> > >=20
-> > > Another way may be changing fec driver to get the fixed part of m=
-ac address(first
-> > > two bytes) from device tree and read the left dynamical part from=
- otp which i'm not
-> > > sure is better enough.
-> > >=20
-> > > BTW, filling with zeros seems not work since it's invalid mac add=
-ress.
-> >=20
-> > Yes, that's the idea of using this value...
-> >=20
-> But comparing to use an invalid value, why not just do not define tha=
-t
-> local-mac-address property?
+--tjCHc7DPkfUGtrlw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+* Ryan Mallon wrote:
+> On 15/03/12 02:56, Thierry Reding wrote:
 >=20
-Because a MAC address is by definition a GLOBALLY UNIQUE IDENTIFIER
-which is contrary to coding a "valid" default value for it somewhere!
-The owner of a certain MAC address range (OUI) is responsible for
-ensuring the uniqueness. Thus only they may assign a specific MAC
-address to a specific device.
+> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> > ---
+> > Changes in v3:
+> >   - update PWM ops for changes in patch 2
+>=20
+> Couple of quick notes, mostly for future work.
+>=20
+> > +	/* NOTE: the clock to PWM has to be enabled first
+> > +	 * before writing to the registers
+> > +	 */
+> > +	clk_enable(pc->clk);
+>=20
+>=20
+> Should be fixed to also call clk_prepare (and clk_unprepare after
+> clk_disable). Could be done in a follow up patch.
+>=20
+> > +	__raw_writel(prescale, pc->mmio_base + offset + PWMCR);
+> > +	__raw_writel(dc, pc->mmio_base + offset + PWMDCR);
+> > +	__raw_writel(pv, pc->mmio_base + offset + PWMPCR);
+>=20
+>=20
+> Should we fix this driver to use readl/writel instead of the __raw
+> variants? The memory is properly ioremaped, and to my understanding the
+> __raw memory accessors should be avoided outside of core code. This
+> could be done in a follow up patch if you want to keep this patch as
+> mostly just a move of the code.
 
+Actually I wasn't planning on keeping this patch at all. Sascha already has
+the existing PWM providers converted to his original framework and offered =
+to
+rebase them onto this series once the dust settles. I only used them as
+testbed to see how the driver interface works out for different hardware. B=
+ut
+I also think that if Sascha hasn't cleaned the driver up yet it should eith=
+er
+be done in his conversion patches or as follow ups.
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
+Sascha: how do you plan on going forward with this? It seems like the driver
+interface is pretty much done now and I expect the next round to be the las=
+t,
+unless I forget to properly work through the TODO list again. If you are bu=
+sy
+with other stuff I can probably find some time to help with porting your
+converted drivers.
 
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+I'm also wondering which tree this will go in through. Does it make sense to
+have an extra tree just for the PWM framework or can it go in via some other
+general purpose tree? Who do I need to prod?
 
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+Thierry
+
+--tjCHc7DPkfUGtrlw
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAk9hkp8ACgkQZ+BJyKLjJp8bhQCfR49b6dKHYpFpbA4eDxZT5WZ0
+CZMAmgMC1Uok9b+nFcVkVh8APLV2Isr5
+=N+g2
+-----END PGP SIGNATURE-----
+
+--tjCHc7DPkfUGtrlw--
