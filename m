@@ -1,14 +1,13 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
-Date: Thu, 15 Mar 2012 13:39:36 +0000
-Message-ID: <201203151339.36173.arnd@arndb.de>
-References: <1331650032-15274-1-git-send-email-sr@denx.de>
- <4F61AFAB.6080301@st.com> <201203151138.51508.sr@denx.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v4] of: introduce helper to manage boolean
+Date: Thu, 15 Mar 2012 03:54:54 -0600
+Message-ID: <20120315095454.9294E3E08CB@localhost>
+References: <1331660903-10193-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201203151138.51508.sr-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <1331660903-10193-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,40 +17,81 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 March 2012, Stefan Roese wrote:
-> On Thursday 15 March 2012 10:00:27 Viresh Kumar wrote:
-> > On 3/15/2012 2:18 PM, Stefan Roese wrote:
-> > >>> > > +static const struct of_device_id vic_of_match[] __initconst = {
-> > >>> > > +     { .compatible = "arm,pl190-vic", .data = vic_of_init, },
-> > >>> > > +     { /* Sentinel */ }
-> > >>> > > +};
-> > >>> > > +
-> > >>> > > +static void __init spear6xx_dt_init_irq(void)
-> > >>> > > +{
-> > >>> > > +     of_irq_init(vic_of_match);
-> > >>> > > +}
-> > >>> > > +
-> > >> > 
-> > >> > What about adding this routine in vic.c file, which can then be used
-> > >> > by all platforms, instead of replicating this code.
-> > > 
-> > > We can't move vic_of_match to the vic.c, since there are differences
-> > > between the boards using it. And only moving spear6xx_dt_init_irq()
-> > > (renamed of course) doesn't seem worth it.
-> > 
-> > I knew this. Actually my thought was, we have two compatible strings for
-> > vic: pl190 and pl192.
-> > 
-> > So, create two vic_of_match* arrays and two vic*_dt_init_irq() routines.
-> > That will solve the issue i believe.
+On Tue, 13 Mar 2012 18:48:23 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> of_property_read_bool
 > 
-> I still don't think its worth it. But please feel free to send an add-on 
-> patch, to "clean this up".
+> Search for a property in a device node.
+> Returns true if the property exist false otherwise.
+> 
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-What's wrong with one vic_dt_init_irq() function and an array with two entries?
+One comment below; but otherwise:
 
-	Arnd
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+
+Feel free to merge via whatever tree needs it.
+
+g.
+
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> ---
+> v4:
+> 
+> 	send the right version
+> 
+> 	include Grant comment
+> 
+> 	Grant can I get the go please?
+> 
+> Best Regards,
+> J.
+>  include/linux/of.h |   16 ++++++++++++++++
+>  1 files changed, 16 insertions(+), 0 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index a75a831..a992cdf 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -342,6 +342,22 @@ static inline int of_machine_is_compatible(const char *compat)
+>  #define of_match_node(_matches, _node)	NULL
+>  #endif /* CONFIG_OF */
+>  
+> +/**
+> + * of_property_read_bool - Findfrom a property
+> + * @np:		device node from which the property value is to be read.
+> + * @propname:	name of the property to be searched.
+> + *
+> + * Search for a property in a device node.
+> + * Returns true if the property exist false otherwise.
+> + */
+> +static inline bool of_property_read_bool(const struct device_node *np,
+> +					 const char *propname)
+> +{
+> +	struct property *prop = of_find_property(np, propname, NULL);
+> +
+> +	return prop ? true : false;
+> +}
+
+Could simply be:
+{
+	return of_find_property(...) != NULL;
+}
+
+
+> +
+>  static inline int of_property_read_u32(const struct device_node *np,
+>  				       const char *propname,
+>  				       u32 *out_value)
+> -- 
+> 1.7.7
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies,Ltd.
