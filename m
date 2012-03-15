@@ -1,54 +1,45 @@
-From: H Hartley Sweeten <hartleys@visionengravers.com>
-Subject: RE: [PATCH v4 00/10] Add PWM framework and device tree support.
-Date: Wed, 14 Mar 2012 18:19:50 -0500
-Message-ID: <ADE657CA350FB648AAC2C43247A983F0020695DB5858@AUSP01VMBX24.collaborationhost.net>
-References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de>
+From: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 09/10] pwm: Add PXA support
+Date: Thu, 15 Mar 2012 11:13:46 +1100
+Message-ID: <4F61343A.80103@gmail.com>
+References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de> <1331740593-10807-10-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@avionic-design.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
-Cc: Ryan Mallon <rmallon@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1331740593-10807-10-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 14, 2012 8:56 AM, Thierry Reding wrote:
-> 
-> This patch series adds very rudimentary device-tree support for PWM
-> devices. With all of these patches applied (plus one board-specific
-> patch that is not included), I'm able to control the backlight on the
-> device I'm working on using the sysfs interface provided by the pwm-bl
-> driver and the backlight class.
+On 15/03/12 02:56, Thierry Reding wrote:
 
-Hello Thierry,
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> ---
+> Changes in v3:
+>   - update PWM ops for changes in patch 2
 
-Are you planning on adding a sysfs interface for generic userspace access
-to the PWM devices?
+Couple of quick notes, mostly for future work.
 
-I have tested your patches (with a couple fixes already mentioned) on a
-ep93xx board and have converted the drivers/misc/ep93xx_pwm.c driver
-to use the framework.  Everything "seems" to work but my use for the
-PWM is from userspace so I can't really test anything.
+> +	/* NOTE: the clock to PWM has to be enabled first
+> +	 * before writing to the registers
+> +	 */
+> +	clk_enable(pc->clk);
 
-I have hacked in the sysfs interface from the ep93xx_pwm driver but it
-is a hack... It's not really using the framework to control the PWM since
-all the sysfs knobs are directly accessing the pwm registers.
 
-Anyway, I would be happy to convert the current driver to the new framework
-and get it out of drivers/misc and into a proper location. But, before I can do
-that, I need to be able to control the PWM from userspace somehow.
+Should be fixed to also call clk_prepare (and clk_unprepare after
+clk_disable). Could be done in a follow up patch.
 
-Maybe an interface similar to the one gpiolib provides with CONFIG_GPIO_SYSFS?
+> +	__raw_writel(prescale, pc->mmio_base + offset + PWMCR);
+> +	__raw_writel(dc, pc->mmio_base + offset + PWMDCR);
+> +	__raw_writel(pv, pc->mmio_base + offset + PWMPCR);
 
-Regards,
-Hartley
+
+Should we fix this driver to use readl/writel instead of the __raw
+variants? The memory is properly ioremaped, and to my understanding the
+__raw memory accessors should be avoided outside of core code. This
+could be done in a follow up patch if you want to keep this patch as
+mostly just a move of the code.
+
+~Ryan
