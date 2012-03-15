@@ -1,55 +1,388 @@
-From: Dong Aisheng <aisheng.dong@freescale.com>
-Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
-Date: Thu, 15 Mar 2012 11:05:09 +0800
-Message-ID: <20120315030508.GC13022@shlinux2.ap.freescale.net>
-References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
- <1331628428-24017-2-git-send-email-b29396@freescale.com>
- <20120314194123.GR26642@pengutronix.de>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2] dtc: Add -i option to support search paths
+Date: Wed, 14 Mar 2012 20:04:13 -0700
+Message-ID: <1331780653-13750-1-git-send-email-sjg@chromium.org>
+References: <1331082612-10612-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120314194123.GR26642@pengutronix.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Guo Shawn-R65073 <r65073@freescale.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "cjb@laptop.org" <cjb@laptop.org>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1331082612-10612-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 15, 2012 at 03:41:23AM +0800, Sascha Hauer wrote:
-> On Tue, Mar 13, 2012 at 04:47:04PM +0800, Dong Aisheng wrote:
-> > From: Dong Aisheng <dong.aisheng@linaro.org>
-> > 
-> > This patch includes basic dt support which can boot via nfs rootfs.
-> > 
-> > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.txt |    4 +
-> >  arch/arm/boot/dts/imx28-evk.dts               |   31 +++++++++
-> >  arch/arm/boot/dts/imx28.dtsi                  |   88 +++++++++++++++++++++++++
-> >  arch/arm/mach-mxs/Kconfig                     |    9 +++
-> >  arch/arm/mach-mxs/Makefile                    |    1 +
-> >  arch/arm/mach-mxs/imx28-dt.c                  |   67 +++++++++++++++++++
-> >  6 files changed, 200 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> > index 54bddda..9f21faf 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> > @@ -1,6 +1,10 @@
-> 
-> > +
-> > +static const char *imx28_dt_compat[] __initdata = {
-> > +	"fsl,imx28-evk",
-> > +	NULL,
-> > +};
-> > +
-> 
-> I suggest to add a generic "fsl,imx28" entry here. It helps people to
-> start an unpatched kernel on their boards.
-> 
-Good point.
-Thanks for reminder.
+It is often inconvenient to place device tree files in the same directory
+as their includes, or to specify the full path to include files.
 
-Regards
-Dong Aisheng
+An example of this is in U-Boot where we have a .dtsi file for each SOC
+type, and this is included by the board .dts file. We need to either use
+a mechanism like:
 
+/include/ ARCH_CPU_DTS
+
+with sed or cpp to perform the replacement with the correct path, or
+we must specify the full path in the file:
+
+/include/ "../../arch/arm/dts/tegra20.dtsi"
+
+The first option is not desirable since it requires anyone compiling the
+file to first pre-process it. The second is not desirable since it
+introduces a path which is project-specific into a file which is supposed
+to be a hardware description. For example Linux and U-Boot are unlikely to
+put these include files in the same place.
+
+It is much more convenient to specify the search patch on the command line
+as is done with C pre-processors, for example.
+
+Introduce a -i option to add to the list of search paths used to find
+source and include files.
+
+We cannot use -I as it is already in use. Other suggestions welcome.
+
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes in v2:
+- Add test for finding a file in the same dir as the last file read
+- Fix comment typo
+- Move struct search_path to C file
+
+ dtc.c                                      |    8 ++-
+ srcpos.c                                   |   92 +++++++++++++++++++++++++--
+ srcpos.h                                   |   29 +++++++++
+ tests/run_tests.sh                         |   11 +++
+ tests/search_dir/search_test.dtsi          |    4 +
+ tests/search_dir/search_test2.dtsi         |    3 +
+ tests/search_dir_b/search_paths_subdir.dts |    6 ++
+ tests/search_dir_b/search_test_b.dtsi      |    4 +
+ tests/search_dir_b/search_test_b2.dtsi     |    5 ++
+ tests/search_dir_b/search_test_c.dtsi      |    2 +
+ tests/search_paths.dts                     |    6 ++
+ tests/search_paths_b.dts                   |    6 ++
+ 12 files changed, 168 insertions(+), 8 deletions(-)
+ create mode 100644 tests/search_dir/search_test.dtsi
+ create mode 100644 tests/search_dir/search_test2.dtsi
+ create mode 100644 tests/search_dir_b/search_paths_subdir.dts
+ create mode 100644 tests/search_dir_b/search_test_b.dtsi
+ create mode 100644 tests/search_dir_b/search_test_b2.dtsi
+ create mode 100644 tests/search_dir_b/search_test_c.dtsi
+ create mode 100644 tests/search_paths.dts
+ create mode 100644 tests/search_paths_b.dts
+
+diff --git a/dtc.c b/dtc.c
+index 7a0c605..83aef32 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -82,6 +82,8 @@ static void  __attribute__ ((noreturn)) usage(void)
+ 	fprintf(stderr, "\t\tSet the physical boot cpu\n");
+ 	fprintf(stderr, "\t-f\n");
+ 	fprintf(stderr, "\t\tForce - try to produce output even if the input tree has errors\n");
++	fprintf(stderr, "\t-i\n");
++	fprintf(stderr, "\t\tAdd a path to search for include files\n");
+ 	fprintf(stderr, "\t-s\n");
+ 	fprintf(stderr, "\t\tSort nodes and properties before outputting (only useful for\n\t\tcomparing trees)\n");
+ 	fprintf(stderr, "\t-v\n");
+@@ -113,7 +115,8 @@ int main(int argc, char *argv[])
+ 	minsize    = 0;
+ 	padsize    = 0;
+ 
+-	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:vH:s")) != EOF) {
++	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:s"))
++			!= EOF) {
+ 		switch (opt) {
+ 		case 'I':
+ 			inform = optarg;
+@@ -148,6 +151,9 @@ int main(int argc, char *argv[])
+ 		case 'b':
+ 			cmdline_boot_cpuid = strtoll(optarg, NULL, 0);
+ 			break;
++		case 'i':
++			srcfile_add_search_path(optarg);
++			break;
+ 		case 'v':
+ 			printf("Version: %s\n", DTC_VERSION);
+ 			exit(0);
+diff --git a/srcpos.c b/srcpos.c
+index 36a38e9..3ee523d 100644
+--- a/srcpos.c
++++ b/srcpos.c
+@@ -24,6 +24,15 @@
+ #include "dtc.h"
+ #include "srcpos.h"
+ 
++/* A node in our list of directories to search for source/include files */
++struct search_path {
++	struct search_path *next;	/* next node in list, NULL for end */
++	const char *dirname;		/* name of directory to search */
++};
++
++/* This is the list of directories that we search for source files */
++static struct search_path *search_path_head, **search_path_tail;
++
+ 
+ static char *dirname(const char *path)
+ {
+@@ -47,6 +56,64 @@ struct srcfile_state *current_srcfile; /* = NULL */
+ #define MAX_SRCFILE_DEPTH     (100)
+ static int srcfile_depth; /* = 0 */
+ 
++
++/**
++ * Try to open a file in a given directory.
++ *
++ * If the filename is an absolute path, then dirname is ignored. If it is a
++ * relative path, then we look in that directory for the file.
++ *
++ * @param dirname	Directory to look in, or NULL for none
++ * @param fname		Filename to look for
++ * @param fp		Set to NULL if file did not open
++ * @return allocated filename on success (caller must free), NULL on failure
++ */
++static char *try_open(const char *dirname, const char *fname, FILE **fp)
++{
++	char *fullname;
++
++	if (!dirname || fname[0] == '/')
++		fullname = xstrdup(fname);
++	else
++		fullname = join_path(dirname, fname);
++
++	*fp = fopen(fullname, "r");
++	if (!*fp) {
++		free(fullname);
++		fullname = NULL;
++	}
++
++	return fullname;
++}
++
++/**
++ * Open a file for read access
++ *
++ * If it is a relative filename, we search the full search path for it.
++ *
++ * @param fname	Filename to open
++ * @param fp	Returns pointer to opened FILE, or NULL on failure
++ * @return pointer to allocated filename, which caller must free
++ */
++static char *fopen_any_on_path(const char *fname, FILE **fp)
++{
++	const char *cur_dir = NULL;
++	struct search_path *node;
++	char *fullname;
++
++	/* Try current directory first */
++	assert(fp);
++	if (current_srcfile)
++		cur_dir = current_srcfile->dir;
++	fullname = try_open(cur_dir, fname, fp);
++
++	/* Failing that, try each search path in turn */
++	for (node = search_path_head; !*fp && node; node = node->next)
++		fullname = try_open(node->dirname, fname, fp);
++
++	return fullname;
++}
++
+ FILE *srcfile_relative_open(const char *fname, char **fullnamep)
+ {
+ 	FILE *f;
+@@ -56,13 +123,7 @@ FILE *srcfile_relative_open(const char *fname, char **fullnamep)
+ 		f = stdin;
+ 		fullname = xstrdup("<stdin>");
+ 	} else {
+-		if (!current_srcfile || !current_srcfile->dir
+-		    || (fname[0] == '/'))
+-			fullname = xstrdup(fname);
+-		else
+-			fullname = join_path(current_srcfile->dir, fname);
+-
+-		f = fopen(fullname, "r");
++		fullname = fopen_any_on_path(fname, &f);
+ 		if (!f)
+ 			die("Couldn't open \"%s\": %s\n", fname,
+ 			    strerror(errno));
+@@ -119,6 +180,23 @@ int srcfile_pop(void)
+ 	return current_srcfile ? 1 : 0;
+ }
+ 
++void srcfile_add_search_path(const char *dirname)
++{
++	struct search_path *node;
++
++	/* Create the node */
++	node = xmalloc(sizeof(*node));
++	node->next = NULL;
++	node->dirname = xstrdup(dirname);
++
++	/* Add to the end of our list */
++	if (search_path_tail)
++		*search_path_tail = node;
++	else
++		search_path_head = node;
++	search_path_tail = &node->next;
++}
++
+ /*
+  * The empty source position.
+  */
+diff --git a/srcpos.h b/srcpos.h
+index ce980ca..5617916 100644
+--- a/srcpos.h
++++ b/srcpos.h
+@@ -33,10 +33,39 @@ struct srcfile_state {
+ extern FILE *depfile; /* = NULL */
+ extern struct srcfile_state *current_srcfile; /* = NULL */
+ 
++/**
++ * Open a source file.
++ *
++ * If the source file is a relative pathname, then it is searched for in the
++ * current directory (the directory of the last source file read) and after
++ * that in the search path.
++ *
++ * We work through the search path in order from the first path specified to
++ * the last.
++ *
++ * If the file is not found, then this function does not return, but calls
++ * die().
++ *
++ * @param fname		Filename to search
++ * @param fullnamep	If non-NULL, it is set to the allocated filename of the
++ *			file that was opened. The caller is then responsible
++ *			for freeing the pointer.
++ * @return pointer to opened FILE
++ */
+ FILE *srcfile_relative_open(const char *fname, char **fullnamep);
++
+ void srcfile_push(const char *fname);
+ int srcfile_pop(void);
+ 
++/**
++ * Add a new directory to the search path for input files
++ *
++ * The new path is added at the end of the list.
++ *
++ * @param dirname	Directory to add
++ */
++void srcfile_add_search_path(const char *dirname);
++
+ struct srcpos {
+     int first_line;
+     int first_column;
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index a561433..8f0328c 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -412,6 +412,17 @@ dtc_tests () {
+     # Dependencies
+     run_dtc_test -I dts -O dtb -o dependencies.test.dtb -d dependencies.test.d dependencies.dts
+     run_wrap_test cmp dependencies.test.d dependencies.cmp
++
++    # Search paths
++    run_wrap_error_test $DTC -I dts -O dtb -o search_paths.dtb search_paths.dts
++    run_dtc_test -i search_dir -I dts -O dtb -o search_paths.dtb \
++	search_paths.dts
++    run_wrap_error_test $DTC -i search_dir_b -I dts -O dtb \
++	-o search_paths_b.dtb search_paths_b.dts
++    run_dtc_test -i search_dir_b -i search_dir -I dts -O dtb \
++	-o search_paths_b.dtb search_paths_b.dts
++    run_dtc_test -I dts -O dtb -o search_paths_subdir.dtb \
++	search_dir_b/search_paths_subdir.dts
+ }
+ 
+ cmp_tests () {
+diff --git a/tests/search_dir/search_test.dtsi b/tests/search_dir/search_test.dtsi
+new file mode 100644
+index 0000000..217fb80
+--- /dev/null
++++ b/tests/search_dir/search_test.dtsi
+@@ -0,0 +1,4 @@
++/include/ "search_test2.dtsi"
++
++/ {
++};
+diff --git a/tests/search_dir/search_test2.dtsi b/tests/search_dir/search_test2.dtsi
+new file mode 100644
+index 0000000..7b9099e
+--- /dev/null
++++ b/tests/search_dir/search_test2.dtsi
+@@ -0,0 +1,3 @@
++
++/ {
++};
+diff --git a/tests/search_dir_b/search_paths_subdir.dts b/tests/search_dir_b/search_paths_subdir.dts
+new file mode 100644
+index 0000000..5c5c962
+--- /dev/null
++++ b/tests/search_dir_b/search_paths_subdir.dts
+@@ -0,0 +1,6 @@
++/dts-v1/;
++
++/include/ "search_test_c.dtsi"
++
++/ {
++};
+diff --git a/tests/search_dir_b/search_test_b.dtsi b/tests/search_dir_b/search_test_b.dtsi
+new file mode 100644
+index 0000000..b06a7d6
+--- /dev/null
++++ b/tests/search_dir_b/search_test_b.dtsi
+@@ -0,0 +1,4 @@
++/include/ "search_test_b2.dtsi"
++
++/ {
++};
+diff --git a/tests/search_dir_b/search_test_b2.dtsi b/tests/search_dir_b/search_test_b2.dtsi
+new file mode 100644
+index 0000000..2526b43
+--- /dev/null
++++ b/tests/search_dir_b/search_test_b2.dtsi
+@@ -0,0 +1,5 @@
++
++/include/ "search_test.dtsi"
++
++/ {
++};
+diff --git a/tests/search_dir_b/search_test_c.dtsi b/tests/search_dir_b/search_test_c.dtsi
+new file mode 100644
+index 0000000..336d7a2
+--- /dev/null
++++ b/tests/search_dir_b/search_test_c.dtsi
+@@ -0,0 +1,2 @@
++/ {
++};
+diff --git a/tests/search_paths.dts b/tests/search_paths.dts
+new file mode 100644
+index 0000000..a2bf179
+--- /dev/null
++++ b/tests/search_paths.dts
+@@ -0,0 +1,6 @@
++/dts-v1/;
++
++/include/ "search_test.dtsi"
++
++/ {
++};
+diff --git a/tests/search_paths_b.dts b/tests/search_paths_b.dts
+new file mode 100644
+index 0000000..6ace6e2
+--- /dev/null
++++ b/tests/search_paths_b.dts
+@@ -0,0 +1,6 @@
++/dts-v1/;
++
++/include/ "search_test_b.dtsi"
++
++/ {
++};
+-- 
+1.7.7.3
