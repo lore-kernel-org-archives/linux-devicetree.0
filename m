@@ -1,101 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3] ARM: SPEAr600: Add device-tree support to SPEAr600
- boards
-Date: Thu, 15 Mar 2012 11:40:27 +0000
-Message-ID: <201203151140.27453.arnd@arndb.de>
-References: <1331808632-22585-1-git-send-email-sr@denx.de>
- <4F61CC81.1020902@st.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 03/10] pwm: Add device tree support
+Date: Thu, 15 Mar 2012 12:44:37 +0000
+Message-ID: <201203151244.37483.arnd@arndb.de>
+References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de> <201203150840.42659.arnd@arndb.de> <20120315102944.GB3138@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4F61CC81.1020902@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@st.com>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Stefan Roese <sr@denx.de>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>, spear-devel <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120315102944.GB3138-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 March 2012, Viresh Kumar wrote:
-> On 3/15/2012 4:20 PM, Stefan Roese wrote:
+On Thursday 15 March 2012, Mark Brown wrote:
+> Similar code is going in for regulators in 3.4 along with the core
+> -EPROBE_DEFER change (though not OF specific) and I sent a similar patch
+> for GPIOs too, hopefully Grant will ack it in time for it to make it in.
 > 
-> > diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
+> My theory is that since you need to explicitly know that the thing
+> you're requesting is there in order to request it (eg, have a PWM number
+> or DT link) the overwhemlingly common case for a failure to request will
+> be that the provider didn't register yet which is exactly the case where
+> deferral is desired.  It therefore seems sensible to have the framework
+> default the drivers to retrying rather than have almost every individual
+> driver look at the failure, figure out if it was a missing provider, and
+> then retry.  Drivers that have a good reason to fail can always check
+> for -EPROBE_DEFER and override it.
 > 
-> > +/ {
-> > +       compatible = "st,spear600";
-> > +
-> > +       cpus {
-> > +               cpu@0 {
-> > +                       compatible = "arm,arm926ejs";
-> > +               };
-> > +       };
-> > +
-> > +       memory {
-> > +               device_type = "memory";
-> > +               reg = <0 0x40000000>; /* Real value updated by U-Boot */
-> > +       };
-> > +
-> > +       ahb {
-> 
-> What is the significance of this name? As i see gpio/spi etc in this list,
-> which are on apb bus.
+> The result should be that we can take advantage of probe deferral over
+> large areas of the kernel without having to go and explicitly modify so
+> many drivers - if the frameworks like GPIO, clk and regulator can do
+> this that ought to cover 90% of the cases where probe deferral will be
+> needed without having to do anything more than have good error handling
+> paths on probe which is a good idea anyway.
 
-That sounds like it should be corrected, the device tree should reflect
-the physical hierarchy where possible, e.g.
+Ok, makes sense.
 
-	ahb0 {
-		#address-cells = <1>;
-		#size-cells = <1>;
-		compatible = "simple-bus";
-		ranges = <0xe0000000 0xe0000000 0x10000000>;
-
-		ethernet@e0800000 {
-			...
-		};
-
-		...
-	};
-
-	ahb1 {
-		#address-cells = <1>;
-		#size-cells = <1>;
-		compatible = "simple-bus";
-		ranges = <0xd0000000 0xd0000000 0x10000000>;
-		ranges = <0xf0000000 0xf0000000 0x10000000>;
-
-		apb {
-			#address-cells = <1>;
-			#size-cells = <1>;
-			compatible = "simple-bus";
-			ranges = <0x0 0xf0000000 0x10000000>;
+Thanks,
 	
-			gpio@f0100000 {
-				/* note: reg relative to local ranges property */
-				reg = <0x100000 0x1000>;
-				...
-			};
-			...
-		};
-		...
-
-
-               i2c@d0200000 {
-                        reg = <0xd0200000 0x1000>;
-			...
-               };
-
-	};
-
-I don't have the data sheet, so the bus hierarchy above is completely made up,
-but I guess you get the idea. If each bus has its own local register range, it
-may be helpful to use the ranges property to remap the reg properties in the
-way that I did in the apb example above.
-
 	Arnd
