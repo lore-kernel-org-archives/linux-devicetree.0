@@ -1,93 +1,128 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4] of: introduce helper to manage boolean
-Date: Thu, 15 Mar 2012 15:18:43 +0100
-Message-ID: <20120315141843.GQ18320@game.jcrosoft.org>
-References: <1331660903-10193-1-git-send-email-plagnioj@jcrosoft.com>
- <20120315095454.9294E3E08CB@localhost>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v2] ARM: SPEAr600: Add device-tree support to SPEAr600
+ boards
+Date: Thu, 15 Mar 2012 16:32:31 +0100
+Message-ID: <20120315153231.GA7757@game.jcrosoft.org>
+References: <1331737232-25477-1-git-send-email-sr@denx.de>
+ <201203141749.05899.sr@denx.de>
+ <20120314172435.GP18320@game.jcrosoft.org>
+ <201203142001.58762.sr@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20120315095454.9294E3E08CB@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <201203142001.58762.sr@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Roese <sr@denx.de>
+Cc: devicetree-discuss@ozlabs.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03:54 Thu 15 Mar     , Grant Likely wrote:
-> On Tue, 13 Mar 2012 18:48:23 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > of_property_read_bool
+On 20:01 Wed 14 Mar     , Stefan Roese wrote:
+> On Wednesday 14 March 2012 18:24:35 Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > > > > diff --git a/arch/arm/boot/dts/spear600-evb.dts
+> > > > > b/arch/arm/boot/dts/spear600-evb.dts new file mode 100644
+> > > > > index 0000000..cbfda8d
+> > > > > --- /dev/null
+> > > > > +++ b/arch/arm/boot/dts/spear600-evb.dts
+> > > > > @@ -0,0 +1,30 @@
+> > > > > +/*
+> > > > > + * Copyright 2012 Stefan Roese <sr@denx.de>
+> > > > > + *
+> > > > > + * The code contained herein is licensed under the GNU General
+> > > > > Public + * License. You may obtain a copy of the GNU General Public
+> > > > > License + * Version 2 or later at the following locations:
+> > > > > + *
+> > > > > + * http://www.opensource.org/licenses/gpl-license.html
+> > > > > + * http://www.gnu.org/copyleft/gpl.html
+> > > > > + */
+> > > > > +
+> > > > > +/dts-v1/;
+> > > > > +/include/ "spear600.dtsi"
+> > > > > +
+> > > > > +/ {
+> > > > > +	model = "ST SPEAr600 Evaluation Board";
+> > > > > +	compatible = "st,spear600-evb", "st,spear600";
+> > > > > +	#address-cells = <1>;
+> > > > > +	#size-cells = <1>;
+> > > > 
+> > > > please put the mem size here
+> > > 
+> > > Might I ask why? Other *.dtsi files don't have it either.
 > > 
-> > Search for a property in a device node.
-> > Returns true if the property exist false otherwise.
-> > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > do not expect the bootloader to put it. I t's not mandatory
 > 
-> One comment below; but otherwise:
-> 
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> 
-> Feel free to merge via whatever tree needs it.
-> 
-> g.
-> 
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > ---
-> > v4:
+> But the memory node it is already present in spear600.dtsi (see below). Do we 
+> really need to duplicate this in the board specific dts file?
+no if the mem is the same size please drop the commentabout bootloader update
+it's a common knowlegde on DT for ARM
+>  
+> > > > > +
+> > > > > +	soc {
+> > > > > +		gmac0: ethernet@e0800000 {
+> > > > > +			phy-mode = "gmii";
+> > > > > +		};
+> > > > > +
+> > > > > +		i2c@d0200000 {
+> > > > > +			clock-frequency = <400000>;
+> > > > > +		};
+> > > > > +	};
+> > > > > +};
+> > > > > diff --git a/arch/arm/boot/dts/spear600.dtsi
+> > > > > b/arch/arm/boot/dts/spear600.dtsi new file mode 100644
+> > > > > index 0000000..e45e58f
+> > > > > --- /dev/null
+> > > > > +++ b/arch/arm/boot/dts/spear600.dtsi
+> > > > > @@ -0,0 +1,162 @@
+> > > > > +/*
+> > > > > + * Copyright 2012 Stefan Roese <sr@denx.de>
+> > > > > + *
+> > > > > + * The code contained herein is licensed under the GNU General
+> > > > > Public + * License. You may obtain a copy of the GNU General Public
+> > > > > License + * Version 2 or later at the following locations:
+> > > > > + *
+> > > > > + * http://www.opensource.org/licenses/gpl-license.html
+> > > > > + * http://www.gnu.org/copyleft/gpl.html
+> > > > > + */
+> > > > > +
+> > > > > +/include/ "skeleton.dtsi"
+> > > > > +
+> > > > > +/ {
+> > > > > +	compatible = "st,spear600";
+> > > > > +
+> > > > > +	cpus {
+> > > > > +		cpu@0 {
+> > > > > +			compatible = "arm,arm926ejs";
+> > > > > +		};
+> > > > > +	};
+> > > > > +
+> > > > > +	memory {
+> > > > > +		device_type = "memory";
+> > > > > +		reg = <0 0>; /* Filled by U-Boot */
+> > > > 
+> > > > please put the max mem of the SoC here
+> > > 
+> > > Why? It's always updated by the bootloader. And a max. mem size (when not
+> > > updated to the correct mem size by the bootloader) would crash the board
+> > > if it is equipped with less memory.
 > > 
-> > 	send the right version
-> > 
-> > 	include Grant comment
-> > 
-> > 	Grant can I get the go please?
-> > 
-> > Best Regards,
-> > J.
-> >  include/linux/of.h |   16 ++++++++++++++++
-> >  1 files changed, 16 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/include/linux/of.h b/include/linux/of.h
-> > index a75a831..a992cdf 100644
-> > --- a/include/linux/of.h
-> > +++ b/include/linux/of.h
-> > @@ -342,6 +342,22 @@ static inline int of_machine_is_compatible(const char *compat)
-> >  #define of_match_node(_matches, _node)	NULL
-> >  #endif /* CONFIG_OF */
-> >  
-> > +/**
-> > + * of_property_read_bool - Findfrom a property
-> > + * @np:		device node from which the property value is to be read.
-> > + * @propname:	name of the property to be searched.
-> > + *
-> > + * Search for a property in a device node.
-> > + * Returns true if the property exist false otherwise.
-> > + */
-> > +static inline bool of_property_read_bool(const struct device_node *np,
-> > +					 const char *propname)
-> > +{
-> > +	struct property *prop = of_find_property(np, propname, NULL);
-> > +
-> > +	return prop ? true : false;
-> > +}
+> > yes but we descripbe the soc here and on the dts you reduce it
+> > Never expect the bootloader to update it.
 > 
-> Could simply be:
-> {
-> 	return of_find_property(...) != NULL;
-ok fine no preference sned the pull to Arnd with the reset of the DT for at91
+> Without update to real size we're doomed.
+yes but the board dts is supposed to udpate it
 
-please check the USB too I gusee they can go too  but maybe  for the atmel
-high-speed device you will have some comment
+you put the max in the soc dtsi
+
+and the real mem size in board dts
 
 Best Regards,
 J.
