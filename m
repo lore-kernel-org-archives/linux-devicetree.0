@@ -1,14 +1,20 @@
-From: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: SPEAr600: Add device-tree support to SPEAr600
- boards
-Date: Thu, 15 Mar 2012 16:33:29 +0530
-Message-ID: <4F61CC81.1020902@st.com>
-References: <1331808632-22585-1-git-send-email-sr@denx.de>
+From: =?utf-8?Q?Lothar_Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
+Date: Thu, 15 Mar 2012 12:22:04 +0100
+Message-ID: <20321.53468.310199.875966@ipc1.ka-ro>
+References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
+ <1331628428-24017-2-git-send-email-b29396@freescale.com>
+ <20120313172351.97C5E3E053B@localhost>
+ <20120314124512.GG1180@shlinux2.ap.freescale.net>
+ <20120314141643.GP3852@pengutronix.de>
+ <20120315030206.GB13022@shlinux2.ap.freescale.net>
+ <20321.37353.63115.664975@ipc1.ka-ro>
+ <20120315105927.GE13022@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331808632-22585-1-git-send-email-sr-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <20120315105927.GE13022-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -18,88 +24,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Cc: "devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org" <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guo Shawn-R65073 <r65073-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org" <rdunlap-/UHa2rfvQTnk1uMJSBkQmQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/15/2012 4:20 PM, Stefan Roese wrote:
-
-> diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
-
-> +/ {
-> +       compatible = "st,spear600";
-> +
-> +       cpus {
-> +               cpu@0 {
-> +                       compatible = "arm,arm926ejs";
-> +               };
-> +       };
-> +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0 0x40000000>; /* Real value updated by U-Boot */
-> +       };
-> +
-> +       ahb {
-
-What is the significance of this name? As i see gpio/spi etc in this list,
-which are on apb bus.
-
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               compatible = "simple-bus";
-> +               ranges;
-> +
-
-> +               /* local/cpu GPIO */
-> +               gpio0: gpio@f0100000 {
-> +                       #gpio-cells = <2>;
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       gpio-controller;
-> +                       reg = <0xf0100000 0x1000>;
-> +                       interrupt-parent = <&vic0>;
-> +                       interrupts = <18>;
-> +               };
-> +
-> +               /* basic GPIO */
-> +               gpio1: gpio@fc980000 {
-> +                       #gpio-cells = <2>;
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       gpio-controller;
-> +                       reg = <0xfc980000 0x1000>;
-> +                       interrupt-parent = <&vic1>;
-> +                       interrupts = <19>;
-> +               };
-> +
-> +               /* appl GPIO */
-> +               gpio2: gpio@d8100000 {
-> +                       #gpio-cells = <2>;
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       gpio-controller;
-> +                       reg = <0xd8100000 0x1000>;
-> +                       interrupt-parent = <&vic1>;
-> +                       interrupts = <4>;
-> +               };
-> +
-
-> +};
-
-> diff --git a/arch/arm/mach-spear6xx/clock.c b/arch/arm/mach-spear6xx/clock.c
-> index ac70e0d..358f280 100644
-> --- a/arch/arm/mach-spear6xx/clock.c
-> +++ b/arch/arm/mach-spear6xx/clock.c
-> @@ -641,8 +641,8 @@ static struct clk_lookup spear_clk_lookups[] = {
->         { .con_id = "gpt0_synth_clk",   .clk = &gpt0_synth_clk},
->         { .con_id = "gpt2_synth_clk",   .clk = &gpt2_synth_clk},
->         { .con_id = "gpt3_synth_clk",   .clk = &gpt3_synth_clk},
-> -       { .dev_id = "uart0",            .clk = &uart0_clk},
-> -       { .dev_id = "uart1",            .clk = &uart1_clk},
-> +       { .dev_id = "d0000000.serial",  .clk = &uart0_clk},
-> +       { .dev_id = "d0080000.serial",  .clk = &uart1_clk},
-
-I didn't got Jean's comment at that time, but now it is ultra clear.
-
-Acked-by: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-
--- 
-viresh
+SGksCgpEb25nIEFpc2hlbmcgd3JpdGVzOgo+IE9uIFRodSwgTWFyIDE1LCAyMDEyIGF0IDAyOjUz
+OjI5UE0gKzA4MDAsIExvdGhhciBXYcOfbWFubiB3cm90ZToKPiA+IEhpLAo+ID4gCj4gPiBEb25n
+IEFpc2hlbmcgd3JpdGVzOgo+ID4gPiBPbiBXZWQsIE1hciAxNCwgMjAxMiBhdCAxMDoxNjo0M1BN
+ICswODAwLCBzLmhhdWVyQHBlbmd1dHJvbml4LmRlIHdyb3RlOgo+ID4gPiA+IE9uIFdlZCwgTWFy
+IDE0LCAyMDEyIGF0IDA4OjQ1OjIzUE0gKzA4MDAsIERvbmcgQWlzaGVuZyB3cm90ZToKPiA+ID4g
+PiA+IE9uIFdlZCwgTWFyIDE0LCAyMDEyIGF0IDAxOjIzOjUxQU0gKzA4MDAsIEdyYW50IExpa2Vs
+eSB3cm90ZToKPiA+IFsuLi5dCj4gPiA+ID4gPiBCdXQgaXQgc2VlbXMgdGhpcyBuZWVkcyBwYXNz
+IG1hYyBhZGRyZXNzIHRvIGZlYyBkcml2ZXIgdmlhIHBsYXRmb3JvbSBkYXRhIHdoaWNoIGlzCj4g
+PiA+ID4gPiBub3QgZnJpZW5kbHkgdG8gZHQuCj4gPiA+ID4gPiAKPiA+ID4gPiA+IEFub3RoZXIg
+d2F5IG1heSBiZSBjaGFuZ2luZyBmZWMgZHJpdmVyIHRvIGdldCB0aGUgZml4ZWQgcGFydCBvZiBt
+YWMgYWRkcmVzcyhmaXJzdAo+ID4gPiA+ID4gdHdvIGJ5dGVzKSBmcm9tIGRldmljZSB0cmVlIGFu
+ZCByZWFkIHRoZSBsZWZ0IGR5bmFtaWNhbCBwYXJ0IGZyb20gb3RwIHdoaWNoIGknbSBub3QKPiA+
+ID4gPiA+IHN1cmUgaXMgYmV0dGVyIGVub3VnaC4KPiA+ID4gPiA+IAo+ID4gPiA+ID4gQlRXLCBm
+aWxsaW5nIHdpdGggemVyb3Mgc2VlbXMgbm90IHdvcmsgc2luY2UgaXQncyBpbnZhbGlkIG1hYyBh
+ZGRyZXNzLgo+ID4gPiA+IAo+ID4gPiA+IFllcywgdGhhdCdzIHRoZSBpZGVhIG9mIHVzaW5nIHRo
+aXMgdmFsdWUuLi4KPiA+ID4gPiAKPiA+ID4gQnV0IGNvbXBhcmluZyB0byB1c2UgYW4gaW52YWxp
+ZCB2YWx1ZSwgd2h5IG5vdCBqdXN0IGRvIG5vdCBkZWZpbmUgdGhhdAo+ID4gPiBsb2NhbC1tYWMt
+YWRkcmVzcyBwcm9wZXJ0eT8KPiA+ID4gCj4gPiBCZWNhdXNlIGEgTUFDIGFkZHJlc3MgaXMgYnkg
+ZGVmaW5pdGlvbiBhIEdMT0JBTExZIFVOSVFVRSBJREVOVElGSUVSCj4gPiB3aGljaCBpcyBjb250
+cmFyeSB0byBjb2RpbmcgYSAidmFsaWQiIGRlZmF1bHQgdmFsdWUgZm9yIGl0IHNvbWV3aGVyZSEK
+PiA+IFRoZSBvd25lciBvZiBhIGNlcnRhaW4gTUFDIGFkZHJlc3MgcmFuZ2UgKE9VSSkgaXMgcmVz
+cG9uc2libGUgZm9yCj4gPiBlbnN1cmluZyB0aGUgdW5pcXVlbmVzcy4gVGh1cyBvbmx5IHRoZXkg
+bWF5IGFzc2lnbiBhIHNwZWNpZmljIE1BQwo+ID4gYWRkcmVzcyB0byBhIHNwZWNpZmljIGRldmlj
+ZS4KPiA+IAo+IFllcywgeW91J3JlIGNvcnJlY3QuCj4gU28gaSBwcm9wb3NlIHRvIHJlYWQgdGhl
+IE1BQyBhZGRyZXNzIGZyb20gTVgyOCBPVFAgaW4gZmVjIGRyaXZlciBpbnN0ZWFkIG9mCj4gZGVm
+aW5lIGl0IGluIGRldmljZSB0cmVlIGluIG15IGxhc3QgbWFpbC4KPiBodHRwOi8vd3d3LnNwaW5p
+Y3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNnMTY1MDQwLmh0bWwKPiBEbyB5b3UgaGF2ZSBhbnkg
+Y29tbWVudCBvbiB0aGF0IHdheT8KPiAKVGhhdCBwYXRjaCBzZXRzIHRoZSBPVUkgdG8gdGhlIEZy
+ZWVzY2FsZSBvd25lZCBNQUMgcmFuZ2UuIFRodXMgb25seQpGcmVlc2NhbGUgcHJvZHVjdHMgbWF5
+IGJlIGFibGUgdG8gdXNlIHRoZSBkcml2ZXIuCgpBbnl3YXkgdGhlcmUgaXMgbm8gZGVmaW5pdGUg
+c3BlYyBob3cgdGhlIE1BQyBhZGRyZXNzKGVzKSBhcmUgc3RvcmVkCmluIHRoZSBmdXNlIG1hcC4g
+VGh1cyByZWFkaW5nIHRoZSBNQUMgZnJvbSB0aGVyZSBpcyBtb3JlIG9yIGxlc3MKcGxhdGZvcm0g
+c3BlY2lmaWMuCgpDdXJyZW50bHkgSSdtIHNldHRpbmcgdXAgdGhlIE1BQyBhZGRyZXNzIGZvciBv
+dXIgVFgyOCBmcm9tIHRoZSBmdXNlcwppbiB0aGUgcGxhdGZvcm0gY29kZSBwYXNzZWQgdmlhIHBs
+YXRmb3JtX2RhdGEsIGJ1dCB0aGF0IHdpbGwgb2J2aW91c2x5Cm5vdCB3b3JrIHdpdGggRFQuCgpU
+aGUgY29ycmVjdCB3YXkgd291bGQgcHJvYmFibHkgYmUgdG8gcGFzcyB0aGUgTUFDIGZyb20gdGhl
+IGJvb3Rsb2FkZXIKdmlhIGEgRFQgYmxvYi4gQnV0IHRoYXQgd291bGQgcmVxdWlyZSBhbGwgYm9v
+dGxvYWRlcnMgdG8gYmUgdXBkYXRlZApmaXJzdCB0byBzdXBwb3J0IERUUy4gOigKCkFuIGludGVy
+bWVkaWF0ZSBzb2x1dGlvbiBjb3VsZCBiZSB1c2luZyBPRl9ERVZfQVVYREFUQSB0byBwYXNzIGEK
+cGxhdGZvcm1fZGF0YSBzdHJ1Y3QgdGhhdCBtYXkgY29udGFpbiBhIE1BQyBhZGRyZXNzIHNldCB1
+cCBieSB0aGUKcGxhdGZvcm0gY29kZS4KCgpMb3RoYXIgV2HDn21hbm4KLS0gCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCgpLYS1SbyBl
+bGVjdHJvbmljcyBHbWJIIHwgUGFzY2Fsc3RyYcOfZSAyMiB8IEQgLSA1MjA3NiBBYWNoZW4KUGhv
+bmU6ICs0OSAyNDA4IDE0MDItMCB8IEZheDogKzQ5IDI0MDggMTQwMi0xMApHZXNjaMOkZnRzZsO8
+aHJlcjogTWF0dGhpYXMgS2F1c3NlbgpIYW5kZWxzcmVnaXN0ZXJlaW50cmFnOiBBbXRzZ2VyaWNo
+dCBBYWNoZW4sIEhSQiA0OTk2Cgp3d3cua2Fyby1lbGVjdHJvbmljcy5kZSB8IGluZm9Aa2Fyby1l
+bGVjdHJvbmljcy5kZQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vz
+c0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZp
+Y2V0cmVlLWRpc2N1c3MK
