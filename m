@@ -1,82 +1,52 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH] of: Add generic device tree DMA helpers
-Date: Thu, 15 Mar 2012 17:30:49 +0100
-Message-ID: <4F621939.9040906@ti.com>
-References: <4F22DEF2.5000807@ti.com> <1331800690-21518-1-git-send-email-nicolas.ferre@atmel.com> <201203150922.06379.arnd@arndb.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
+Date: Thu, 15 Mar 2012 17:51:08 +0100
+Message-ID: <CACRpkdY9Hi84KOESr1R94PNpvAPn7aMKE4kUcG-O6FMaX84qAA@mail.gmail.com>
+References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
+ <20120314212616.GR12083@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201203150922.06379.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-omap@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@avionic-design.de>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120314212616.GR12083-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/15/2012 10:22 AM, Arnd Bergmann wrote:
-> On Thursday 15 March 2012, Nicolas Ferre wrote:
->> Add some basic helpers to retrieve a DMA controller device_node and the
->> DMA request specifications. By making DMA controllers register a generic
->> translation function, we allow the management of any type of DMA requests
->> specification.
->> The void * output of an of_dma_xlate() function that will be implemented
->> by the DMA controller can carry any type of "dma-request" argument.
+On Wed, Mar 14, 2012 at 10:26 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> [120309 10:17]:
+>> The core pin controller bindings define:
+>> * The fact that pin controllers expose pin configurations as nodes in
+>> =A0 device tree.
+>> * That the bindings for those pin configuration nodes is defined by the
+>> =A0 individual pin controller drivers.
+>> * A standardized set of properties for client devices to define numbered
+>> =A0 or named pin configuration states, each referring to some number of =
+the
+>> =A0 afore-mentioned pin configuration nodes.
+>> * That the bindings for the client devices determines the set of numbered
+>> =A0 or named states that must exist.
 >>
->> The DMA client will search its associated DMA controller in the list and
->> call the registered of_dam_xlate() function to retrieve the request values.
->>
->> One simple xlate function is provided for the "single number" type of
->> request binding.
->>
->> This implementation is independent from dmaengine so it can also be used
->> by legacy drivers.
->>
->> For legacy reason another API will export the DMA request number into a
->> Linux resource of type IORESOURCE_DMA.
+>> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 >
-> This looks very good. I missed the first version of this patch, but was
-> thinking of very similar bindings.
+> Great, looks good to me:
 >
->> +Client drivers should specify the DMA request property using a phandle to
->> +the controller. If needed, the DMA request identity on that controller is then
->> +added followed by optional request specifications.
->> +
->> +Required property:
->> +    - dma-request: List of phandle + dma-request + request specifications,
->> +      one group per request "line".
->> +Optional property:
->> +    - dma-request-names: list of strings in the same order as the dma-request
->> +      in the dma-request property.
->> +
->> +
->> +Example:
->> +
->> +	i2c1: i2c@1 {
->> +		...
->> +		dma-request =<&sdma 2&sdma 3>;
->> +		dma-request-names = "tx", "rx";
->> +		...
->> +	};
->
-> This is slightly different from how the proposed pwm binding works that
-> Thierry is working on, which uses an arbitrary property name instead of
-> requiring the use of a specific property but then allowing to give names
-> in another property.
->
-> I don't care much which way it's done, but please try to agree on one
-> approach that is used for both.
->
-> The one you have here is already used by reg and irq, while the other
-> one is used in gpio.
+> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
-This was done like IRQ on purpose, because an Interrupt ReQuest line and 
-a DMA Request line are really similar for the HW point of view at IP level.
-I'm not sure what Thierry have done for pwm, but I thing that having the 
-same scheme for reg, irq and dma was what we agreed with Grant during 
-Plumbers.
+Hm, both you guys agree, then I will be happy that we merge this.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-GPIO scheme will be probably good enough as well, but the idea was to be 
-consistent in the binding for similar information.
+Since it's just toching DT dirs I guess it should go through Grant,
+but I'm happy to take it in pinctrl too.
 
-Regards,
-Benoit
+Yours,
+Linus Walleij
