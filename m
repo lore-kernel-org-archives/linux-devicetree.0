@@ -1,13 +1,18 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2] dtc: Add -i option to support search paths
-Date: Wed, 14 Mar 2012 20:04:13 -0700
-Message-ID: <1331780653-13750-1-git-send-email-sjg@chromium.org>
-References: <1331082612-10612-1-git-send-email-sjg@chromium.org>
+From: Dong Aisheng <aisheng.dong-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] dt: pinctrl: Document device tree binding
+Date: Thu, 15 Mar 2012 11:32:58 +0800
+Message-ID: <20120315033257.GD13022@shlinux2.ap.freescale.net>
+References: <1331316873-20052-1-git-send-email-swarren@wwwdotorg.org>
+ <20120312143407.GA4513@shlinux2.ap.freescale.net>
+ <4F5E2F63.6070303@wwwdotorg.org>
+ <20120313032010.GB4513@shlinux2.ap.freescale.net>
+ <4F5F9F9E.7030706@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1331082612-10612-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4F5F9F9E.7030706-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
@@ -17,372 +22,197 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It is often inconvenient to place device tree files in the same directory
-as their includes, or to specify the full path to include files.
+On Wed, Mar 14, 2012 at 03:27:26AM +0800, Stephen Warren wrote:
+> On 03/12/2012 09:20 PM, Dong Aisheng wrote:
+> > On Tue, Mar 13, 2012 at 01:16:19AM +0800, Stephen Warren wrote:
+> >> On 03/12/2012 08:34 AM, Dong Aisheng wrote:
+> >>> On Sat, Mar 10, 2012 at 02:14:33AM +0800, Stephen Warren wrote:
+> >>>> The core pin controller bindings define:
+> >>>> * The fact that pin controllers expose pin configurations as nodes in
+> >>>>   device tree.
+> >>>> * That the bindings for those pin configuration nodes is defined by the
+> >>>>   individual pin controller drivers.
+> >>>> * A standardized set of properties for client devices to define numbered
+> >>>>   or named pin configuration states, each referring to some number of the
+> >>>>   afore-mentioned pin configuration nodes.
+> >>>> * That the bindings for the client devices determines the set of numbered
+> >>>>   or named states that must exist.
+> ...
+> >>>> +Required properties:
+> >>>> +pinctrl-0:	List of phandles, each pointing at a pin configuration
+> >>>> +		node. These referenced pin configuration nodes must be child
+> >>>> +		nodes of the pin controller that they configure. Multiple
+> >>>> +		entries may exist in this list so that multiple pin
+> >>>> +		controllers may be configured, or so that a state may be built
+> >>>> +		from multiple nodes for a single pin controller, each
+> >>>> +		contributing part of the overall configuration. See the next
+> >>>> +		section of this document for details of the format of these
+> >>>> +		pin configuration nodes.
+> >>>> +
+> >>>> +		In some cases, it may be useful to define a state, but for it
+> >>>> +		to be empty. This may be required when a common IP block is
+> >>>> +		used in an SoC either without a pin controller, or where the
+> >>>> +		pin controller does not affect the HW module in question. If
+> >>>> +		the binding for that IP block requires certain pin states to
+> >>>> +		exist, they must still be defined, but may be left empty.
+> >>>> +
+> >>>
+> >>> It looks this functions similar as the PIN_MAP_DUMMY_STATE you introduced
+> >>> before to address the issues that the shared IP block may need or not need
+> >>> pinctrl configuration on different platforms(correct me if wrong).
+> >>
+> >> Yes, it's to generate the dummy states.
+> >>
+> >>> Then, there may be cases like below which may look a bit confusing
+> >>> to people.
+> >>> device {
+> >>> 	pinctrl-names = "active", "idle";
+> >>> 	pinctrl-0;
+> >>> 	pinctrl-1;
+> >>> };
+> >>
+> >> I'd personally expect the syntax to look like:
+> >>
+> >> device {
+> >> 	pinctrl-names = "active", "idle";
+> >> 	pinctrl-0 = <>;
+> >> 	pinctrl-1 = <>;
+> >> };
+> >>
+> >> which has an explicitly empty value. Admittedly, these would both
+> >> compile down to the exact same thing in the DTB, but I think the
+> >> interpretation of the above is pretty readable.
+> >>
+> >>> I'm wondering if we can let each individual driver to handle this special case?
+> >>> Like checking device id then make decision whether call pinctrl_* APIs.
+> >>> Then we can just do not define those properties for devices who
+> >>> do not need pin configurations.
+> >>
+> >> The individual client drivers certainly could work that way.
+> >>
+> >> However, the disadvantage is that the client driver then needs explicit
+> >> code to deal with this case, and this needs to be triggered by using a
+> >
+> > Since this is purely specific to IP block(e.g. the driver knows this ip used
+> > in which platform does not need pin configuration), so i guess it's natural
+> > that the driver can also handle it instead of device tree, just like
+> > a lot of existing drivers in kernel do similar things for tricks
+> > on different SoCs.
+> 
+> Well, the entire point is that the driver for the IP block shouldn't
+> know anything about which SoC it's included in, or whether pinmux is
+> needed, or what pinmux is needed, beyond what's expressed in platform
+> data or device tree. The whole point of the pinctrl is to completely
+> remove this knowledge from the driver, and centralize it in the mapping
+> table.
+> 
+Good point to me.
+The driver does not need to know which SoC it's included in,
+but it has to support that SoC first.
 
-An example of this is in U-Boot where we have a .dtsi file for each SOC
-type, and this is included by the board .dts file. We need to either use
-a mechanism like:
+> >> different compatible flag (or perhaps some other explicit property).
+> >> You'd have to write this code over and over for each individual driver.
+> >
+> > I still do not understand why need a more special compatible flag?
+> > My understanding is that in device driver side, they can do:
+> > if (is_soc_a || is_soc_b) {
+> > 	pinctrl_get(dev, "default");
+> > 	....
+> > } else if (is_soc_c) {
+> > 	/* do nothing */
+> > }
+> 
+> Drivers aren't supposed to contain "is_soc_foo" or "is_machine_foo"
+> calls. Indeed, in the case of "is_soc_foo", I don't think such an API
+> even exists. Instead, platform data or device tree should represent the
+> information that drivers need.
+> 
+Hmm, whatever platform data or device tree or device id, we can use a way
+to tell driver which SoC it is running on.
+The driver private is_soc_a macro or function can be implemented based
+that information.
 
-/include/ ARCH_CPU_DTS
+> > I can't see why we still need a special compatible flag to tell driver.
+> > Just do not define pinctrl-* properties for that devices in device tree.
+> > Did i understand wrong?
+> 
+> The compatible property would be the only way to implement anything like
+> is_soc_foo. However, it's a bad idea to overload the compatible property
+> in this way.
+> 
+I guess i might not describe my idea clearly.
+My idea is that the compatible string does that work.
+For example:
+static const struct of_device_id mxs_mmc_dt_ids[] = {
+        { .compatible = "fsl,imx23-mmc", .data = NULL, },
+        { .compatible = "fsl,imx28-mmc", .data = NULL, },
+        { /* sentinel */ }
+};
+MODULE_DEVICE_TABLE(of, mxs_mmc_dt_ids);
+Replace NULL to some special data like SOC_MX23 or SOC_MX28 can let driver
+driver know which SoC it's running on.
+Then driver can use private macro like is_soc_foo.
 
-with sed or cpp to perform the replacement with the correct path, or
-we must specify the full path in the file:
+> >> That also means that if you were the first user of an IP block in a
+> >> system which didn't need pin muxing for it, you'd have to modify the
+> >> kernel to support pinctrl being optional before you could use that device.
+> >
+> > Why need modify the kernel?
+> > Assuming above example.
+> > I'm a bit confused.
+> 
+> If the driver contains code like:
+> 
+> if (is_soc_a) {
+>     ...
+> } else if (is_soc_b) {
+>    ...
+> }
+> ...
+> 
+> Then in order to support a new SoC, even if the driver doesn't need to
+> do anything different, you'd need to go and edit the code to add an "if
+> (is_soc_c)" condition into that list.
+> 
+No.
+No changes needed if the driver does not need to do anything different.
+Compatible string does that work
+For example, in a new soc which is fully compatible with current driver.
+It can just add device like:
+mmc@80010000 {
+	compatible = "fsl, xxx-mmc", "fsl,imx28-mmc";
+	reg = <..>;
+	...
+}
 
-/include/ "../../arch/arm/dts/tegra20.dtsi"
+> >> If the pinctrl subsystem itself hides this from the client driver, then
+> >> you'd never need to add any code to any driver to support this case, and
+> >> all you'd need to do is write a few lines of device tree to use the
+> >> driver; no code changes.
+> >>
+> > Yes, that is the benefit.
+> >
+> > My only concern is that if this may make people confuse when see
+> > such code in device tree since we,i guess, still do not have such examples
+> > in device tree. And i'm afraid this is a bit not HW oriented.
+> > device {
+> > 	pinctrl-names = "active", "idle";
+> > 	pinctrl-0 = <>;
+> > 	pinctrl-1 = <>;
+> > };
+> > So i'm asking if we do it in driver.
+> > Maybe device tree people can give some comments.
+> 
+> I personally don't think it's that confusing. A zero-length list is
+> after all still a list. That said, let me see if I can add such an
+> example to the binding document; the documentation does talk about this
+> case, but we can certainly add another example to highlight it.
+> 
+If dt does allow this, i'm also ok with it.
 
-The first option is not desirable since it requires anyone compiling the
-file to first pre-process it. The second is not desirable since it
-introduces a path which is project-specific into a file which is supposed
-to be a hardware description. For example Linux and U-Boot are unlikely to
-put these include files in the same place.
-
-It is much more convenient to specify the search patch on the command line
-as is done with C pre-processors, for example.
-
-Introduce a -i option to add to the list of search paths used to find
-source and include files.
-
-We cannot use -I as it is already in use. Other suggestions welcome.
-
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v2:
-- Add test for finding a file in the same dir as the last file read
-- Fix comment typo
-- Move struct search_path to C file
-
- dtc.c                                      |    8 ++-
- srcpos.c                                   |   92 +++++++++++++++++++++++++--
- srcpos.h                                   |   29 +++++++++
- tests/run_tests.sh                         |   11 +++
- tests/search_dir/search_test.dtsi          |    4 +
- tests/search_dir/search_test2.dtsi         |    3 +
- tests/search_dir_b/search_paths_subdir.dts |    6 ++
- tests/search_dir_b/search_test_b.dtsi      |    4 +
- tests/search_dir_b/search_test_b2.dtsi     |    5 ++
- tests/search_dir_b/search_test_c.dtsi      |    2 +
- tests/search_paths.dts                     |    6 ++
- tests/search_paths_b.dts                   |    6 ++
- 12 files changed, 168 insertions(+), 8 deletions(-)
- create mode 100644 tests/search_dir/search_test.dtsi
- create mode 100644 tests/search_dir/search_test2.dtsi
- create mode 100644 tests/search_dir_b/search_paths_subdir.dts
- create mode 100644 tests/search_dir_b/search_test_b.dtsi
- create mode 100644 tests/search_dir_b/search_test_b2.dtsi
- create mode 100644 tests/search_dir_b/search_test_c.dtsi
- create mode 100644 tests/search_paths.dts
- create mode 100644 tests/search_paths_b.dts
-
-diff --git a/dtc.c b/dtc.c
-index 7a0c605..83aef32 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -82,6 +82,8 @@ static void  __attribute__ ((noreturn)) usage(void)
- 	fprintf(stderr, "\t\tSet the physical boot cpu\n");
- 	fprintf(stderr, "\t-f\n");
- 	fprintf(stderr, "\t\tForce - try to produce output even if the input tree has errors\n");
-+	fprintf(stderr, "\t-i\n");
-+	fprintf(stderr, "\t\tAdd a path to search for include files\n");
- 	fprintf(stderr, "\t-s\n");
- 	fprintf(stderr, "\t\tSort nodes and properties before outputting (only useful for\n\t\tcomparing trees)\n");
- 	fprintf(stderr, "\t-v\n");
-@@ -113,7 +115,8 @@ int main(int argc, char *argv[])
- 	minsize    = 0;
- 	padsize    = 0;
- 
--	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:vH:s")) != EOF) {
-+	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:s"))
-+			!= EOF) {
- 		switch (opt) {
- 		case 'I':
- 			inform = optarg;
-@@ -148,6 +151,9 @@ int main(int argc, char *argv[])
- 		case 'b':
- 			cmdline_boot_cpuid = strtoll(optarg, NULL, 0);
- 			break;
-+		case 'i':
-+			srcfile_add_search_path(optarg);
-+			break;
- 		case 'v':
- 			printf("Version: %s\n", DTC_VERSION);
- 			exit(0);
-diff --git a/srcpos.c b/srcpos.c
-index 36a38e9..3ee523d 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -24,6 +24,15 @@
- #include "dtc.h"
- #include "srcpos.h"
- 
-+/* A node in our list of directories to search for source/include files */
-+struct search_path {
-+	struct search_path *next;	/* next node in list, NULL for end */
-+	const char *dirname;		/* name of directory to search */
-+};
-+
-+/* This is the list of directories that we search for source files */
-+static struct search_path *search_path_head, **search_path_tail;
-+
- 
- static char *dirname(const char *path)
- {
-@@ -47,6 +56,64 @@ struct srcfile_state *current_srcfile; /* = NULL */
- #define MAX_SRCFILE_DEPTH     (100)
- static int srcfile_depth; /* = 0 */
- 
-+
-+/**
-+ * Try to open a file in a given directory.
-+ *
-+ * If the filename is an absolute path, then dirname is ignored. If it is a
-+ * relative path, then we look in that directory for the file.
-+ *
-+ * @param dirname	Directory to look in, or NULL for none
-+ * @param fname		Filename to look for
-+ * @param fp		Set to NULL if file did not open
-+ * @return allocated filename on success (caller must free), NULL on failure
-+ */
-+static char *try_open(const char *dirname, const char *fname, FILE **fp)
-+{
-+	char *fullname;
-+
-+	if (!dirname || fname[0] == '/')
-+		fullname = xstrdup(fname);
-+	else
-+		fullname = join_path(dirname, fname);
-+
-+	*fp = fopen(fullname, "r");
-+	if (!*fp) {
-+		free(fullname);
-+		fullname = NULL;
-+	}
-+
-+	return fullname;
-+}
-+
-+/**
-+ * Open a file for read access
-+ *
-+ * If it is a relative filename, we search the full search path for it.
-+ *
-+ * @param fname	Filename to open
-+ * @param fp	Returns pointer to opened FILE, or NULL on failure
-+ * @return pointer to allocated filename, which caller must free
-+ */
-+static char *fopen_any_on_path(const char *fname, FILE **fp)
-+{
-+	const char *cur_dir = NULL;
-+	struct search_path *node;
-+	char *fullname;
-+
-+	/* Try current directory first */
-+	assert(fp);
-+	if (current_srcfile)
-+		cur_dir = current_srcfile->dir;
-+	fullname = try_open(cur_dir, fname, fp);
-+
-+	/* Failing that, try each search path in turn */
-+	for (node = search_path_head; !*fp && node; node = node->next)
-+		fullname = try_open(node->dirname, fname, fp);
-+
-+	return fullname;
-+}
-+
- FILE *srcfile_relative_open(const char *fname, char **fullnamep)
- {
- 	FILE *f;
-@@ -56,13 +123,7 @@ FILE *srcfile_relative_open(const char *fname, char **fullnamep)
- 		f = stdin;
- 		fullname = xstrdup("<stdin>");
- 	} else {
--		if (!current_srcfile || !current_srcfile->dir
--		    || (fname[0] == '/'))
--			fullname = xstrdup(fname);
--		else
--			fullname = join_path(current_srcfile->dir, fname);
--
--		f = fopen(fullname, "r");
-+		fullname = fopen_any_on_path(fname, &f);
- 		if (!f)
- 			die("Couldn't open \"%s\": %s\n", fname,
- 			    strerror(errno));
-@@ -119,6 +180,23 @@ int srcfile_pop(void)
- 	return current_srcfile ? 1 : 0;
- }
- 
-+void srcfile_add_search_path(const char *dirname)
-+{
-+	struct search_path *node;
-+
-+	/* Create the node */
-+	node = xmalloc(sizeof(*node));
-+	node->next = NULL;
-+	node->dirname = xstrdup(dirname);
-+
-+	/* Add to the end of our list */
-+	if (search_path_tail)
-+		*search_path_tail = node;
-+	else
-+		search_path_head = node;
-+	search_path_tail = &node->next;
-+}
-+
- /*
-  * The empty source position.
-  */
-diff --git a/srcpos.h b/srcpos.h
-index ce980ca..5617916 100644
---- a/srcpos.h
-+++ b/srcpos.h
-@@ -33,10 +33,39 @@ struct srcfile_state {
- extern FILE *depfile; /* = NULL */
- extern struct srcfile_state *current_srcfile; /* = NULL */
- 
-+/**
-+ * Open a source file.
-+ *
-+ * If the source file is a relative pathname, then it is searched for in the
-+ * current directory (the directory of the last source file read) and after
-+ * that in the search path.
-+ *
-+ * We work through the search path in order from the first path specified to
-+ * the last.
-+ *
-+ * If the file is not found, then this function does not return, but calls
-+ * die().
-+ *
-+ * @param fname		Filename to search
-+ * @param fullnamep	If non-NULL, it is set to the allocated filename of the
-+ *			file that was opened. The caller is then responsible
-+ *			for freeing the pointer.
-+ * @return pointer to opened FILE
-+ */
- FILE *srcfile_relative_open(const char *fname, char **fullnamep);
-+
- void srcfile_push(const char *fname);
- int srcfile_pop(void);
- 
-+/**
-+ * Add a new directory to the search path for input files
-+ *
-+ * The new path is added at the end of the list.
-+ *
-+ * @param dirname	Directory to add
-+ */
-+void srcfile_add_search_path(const char *dirname);
-+
- struct srcpos {
-     int first_line;
-     int first_column;
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index a561433..8f0328c 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -412,6 +412,17 @@ dtc_tests () {
-     # Dependencies
-     run_dtc_test -I dts -O dtb -o dependencies.test.dtb -d dependencies.test.d dependencies.dts
-     run_wrap_test cmp dependencies.test.d dependencies.cmp
-+
-+    # Search paths
-+    run_wrap_error_test $DTC -I dts -O dtb -o search_paths.dtb search_paths.dts
-+    run_dtc_test -i search_dir -I dts -O dtb -o search_paths.dtb \
-+	search_paths.dts
-+    run_wrap_error_test $DTC -i search_dir_b -I dts -O dtb \
-+	-o search_paths_b.dtb search_paths_b.dts
-+    run_dtc_test -i search_dir_b -i search_dir -I dts -O dtb \
-+	-o search_paths_b.dtb search_paths_b.dts
-+    run_dtc_test -I dts -O dtb -o search_paths_subdir.dtb \
-+	search_dir_b/search_paths_subdir.dts
- }
- 
- cmp_tests () {
-diff --git a/tests/search_dir/search_test.dtsi b/tests/search_dir/search_test.dtsi
-new file mode 100644
-index 0000000..217fb80
---- /dev/null
-+++ b/tests/search_dir/search_test.dtsi
-@@ -0,0 +1,4 @@
-+/include/ "search_test2.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_dir/search_test2.dtsi b/tests/search_dir/search_test2.dtsi
-new file mode 100644
-index 0000000..7b9099e
---- /dev/null
-+++ b/tests/search_dir/search_test2.dtsi
-@@ -0,0 +1,3 @@
-+
-+/ {
-+};
-diff --git a/tests/search_dir_b/search_paths_subdir.dts b/tests/search_dir_b/search_paths_subdir.dts
-new file mode 100644
-index 0000000..5c5c962
---- /dev/null
-+++ b/tests/search_dir_b/search_paths_subdir.dts
-@@ -0,0 +1,6 @@
-+/dts-v1/;
-+
-+/include/ "search_test_c.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_dir_b/search_test_b.dtsi b/tests/search_dir_b/search_test_b.dtsi
-new file mode 100644
-index 0000000..b06a7d6
---- /dev/null
-+++ b/tests/search_dir_b/search_test_b.dtsi
-@@ -0,0 +1,4 @@
-+/include/ "search_test_b2.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_dir_b/search_test_b2.dtsi b/tests/search_dir_b/search_test_b2.dtsi
-new file mode 100644
-index 0000000..2526b43
---- /dev/null
-+++ b/tests/search_dir_b/search_test_b2.dtsi
-@@ -0,0 +1,5 @@
-+
-+/include/ "search_test.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_dir_b/search_test_c.dtsi b/tests/search_dir_b/search_test_c.dtsi
-new file mode 100644
-index 0000000..336d7a2
---- /dev/null
-+++ b/tests/search_dir_b/search_test_c.dtsi
-@@ -0,0 +1,2 @@
-+/ {
-+};
-diff --git a/tests/search_paths.dts b/tests/search_paths.dts
-new file mode 100644
-index 0000000..a2bf179
---- /dev/null
-+++ b/tests/search_paths.dts
-@@ -0,0 +1,6 @@
-+/dts-v1/;
-+
-+/include/ "search_test.dtsi"
-+
-+/ {
-+};
-diff --git a/tests/search_paths_b.dts b/tests/search_paths_b.dts
-new file mode 100644
-index 0000000..6ace6e2
---- /dev/null
-+++ b/tests/search_paths_b.dts
-@@ -0,0 +1,6 @@
-+/dts-v1/;
-+
-+/include/ "search_test_b.dtsi"
-+
-+/ {
-+};
--- 
-1.7.7.3
+Regards
+Dong Aisheng
