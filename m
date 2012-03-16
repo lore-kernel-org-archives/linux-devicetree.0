@@ -1,112 +1,117 @@
-From: Poonam Aggrwal <poonam.aggrwal@freescale.com>
-Subject: [PATCH] Device Tree Bindings for Freescale TDM controller
-Date: Fri, 16 Mar 2012 07:00:51 +0530
-Message-ID: <1331861451-15427-1-git-send-email-poonam.aggrwal@freescale.com>
+From: Dong Aisheng <aisheng.dong@freescale.com>
+Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
+Date: Fri, 16 Mar 2012 11:01:35 +0800
+Message-ID: <20120316030134.GA5161@shlinux2.ap.freescale.net>
+References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
+ <1331628428-24017-2-git-send-email-b29396@freescale.com>
+ <20120313172351.97C5E3E053B@localhost>
+ <20120314124512.GG1180@shlinux2.ap.freescale.net>
+ <20120314141643.GP3852@pengutronix.de>
+ <20120315030206.GB13022@shlinux2.ap.freescale.net>
+ <20321.37353.63115.664975@ipc1.ka-ro>
+ <20120315105927.GE13022@shlinux2.ap.freescale.net>
+ <20321.53468.310199.875966@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
-Cc: Sandeep Singh <Sandeep@freescale.com>, Poonam Aggrwal <poonam.aggrwal@freescale.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20321.53468.310199.875966@ipc1.ka-ro>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Guo Shawn-R65073 <r65073@freescale.com>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Poonam Aggrwal <poonam.aggrwal@freescale.com> 
+On Thu, Mar 15, 2012 at 07:22:04PM +0800, Lothar Wa=DFmann wrote:
+> Hi,
+>=20
+> Dong Aisheng writes:
+> > On Thu, Mar 15, 2012 at 02:53:29PM +0800, Lothar Wa=DFmann wrote:
+> > > Hi,
+> > >=20
+> > > Dong Aisheng writes:
+> > > > On Wed, Mar 14, 2012 at 10:16:43PM +0800, s.hauer@pengutronix.d=
+e wrote:
+> > > > > On Wed, Mar 14, 2012 at 08:45:23PM +0800, Dong Aisheng wrote:
+> > > > > > On Wed, Mar 14, 2012 at 01:23:51AM +0800, Grant Likely wrot=
+e:
+> > > [...]
+> > > > > > But it seems this needs pass mac address to fec driver via =
+platforom data which is
+> > > > > > not friendly to dt.
+> > > > > >=20
+> > > > > > Another way may be changing fec driver to get the fixed par=
+t of mac address(first
+> > > > > > two bytes) from device tree and read the left dynamical par=
+t from otp which i'm not
+> > > > > > sure is better enough.
+> > > > > >=20
+> > > > > > BTW, filling with zeros seems not work since it's invalid m=
+ac address.
+> > > > >=20
+> > > > > Yes, that's the idea of using this value...
+> > > > >=20
+> > > > But comparing to use an invalid value, why not just do not defi=
+ne that
+> > > > local-mac-address property?
+> > > >=20
+> > > Because a MAC address is by definition a GLOBALLY UNIQUE IDENTIFI=
+ER
+> > > which is contrary to coding a "valid" default value for it somewh=
+ere!
+> > > The owner of a certain MAC address range (OUI) is responsible for
+> > > ensuring the uniqueness. Thus only they may assign a specific MAC
+> > > address to a specific device.
+> > >=20
+> > Yes, you're correct.
+> > So i propose to read the MAC address from MX28 OTP in fec driver in=
+stead of
+> > define it in device tree in my last mail.
+> > http://www.spinics.net/lists/arm-kernel/msg165040.html
+> > Do you have any comment on that way?
+> >=20
+> That patch sets the OUI to the Freescale owned MAC range. Thus only
+> Freescale products may be able to use the driver.
+>=20
+No.
+My proposal is only set the fixed part(first two octets) in board dts f=
+ile,
+each board knows it's value, and read the left 4 octets from OCOTP dyna=
+mically.
+Obviously the freeescale board dts file is only for FSL platforms.
+Other platforms can define their fix part of MAC address in their dts f=
+ile.
 
-This TDM controller is available in various Freescale SOCs like MPC8315, P1020,
-P1022, P1010.
+> Anyway there is no definite spec how the MAC address(es) are stored
+> in the fuse map. Thus reading the MAC from there is more or less
+> platform specific.
+>=20
+It's just provide one more option since there are customers storing the=
+ MAC
+in the fuse map.
 
-Signed-off-by: Sandeep Singh <Sandeep@freescale.com>
-Signed-off-by: Poonam Aggrwal <poonam.aggrwal@freescale.com>
----
- Documentation/devicetree/bindings/tdm/fsl-tdm.txt |   71 +++++++++++++++++++++
- 1 files changed, 71 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> Currently I'm setting up the MAC address for our TX28 from the fuses
+> in the platform code passed via platform_data, but that will obviousl=
+y
+> not work with DT.
+>=20
+Non-dt can also use my proposal, then you only need to pass the fixed p=
+art of
+MAC via platfrom data, the left will be read by fec driver.
 
-diff --git a/Documentation/devicetree/bindings/tdm/fsl-tdm.txt b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-new file mode 100644
-index 0000000..61431e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-@@ -0,0 +1,71 @@
-+=====================================================================
-+TDM Device Tree Binding
-+Copyright (C) 2012 Freescale Semiconductor Inc.
-+
-+NOTE: The bindings described in this document are preliminary
-+and subject to change.
-+
-+=====================================================================
-+TDM (Time Division Multiplexing)
-+
-+DESCRIPTION
-+
-+The TDM is full duplex serial port designed to allow various devices including
-+digital signal processors (DSPs) to communicate with a variety of serial devices
-+including industry standard framers, codecs, other DSPs and microprocessors.
-+
-+The below properties describe the device tree bindings for Freescale TDM
-+controller.
-+This TDM controller is available on various Freescale Processors like
-+MPC8313, P1020, P1022 and P1010.
-+
-+PROPERTIES
-+
-+  - compatible
-+      Usage: required
-+      Value type: <string>
-+      Definition: Should contain "fsl,mpc8315-tdm".
-+	  So mpc8313 will have compatible = "fsl,mpc8315-tdm";
-+	  p1010 will have compatible "fsl,p1010-tdm", "fsl,mpc8315-tdm";
-+
-+  - reg
-+      Usage: required
-+      Value type: <tdm-reg-offset tdm-reg-size dmac-reg-offset dmac-reg-size>
-+      Definition: A standard property. Specifies the physical address
-+	  offset and length of the TDM registers and TDM DMAC registers for
-+	  the device.
-+
-+  - clock-frequency
-+      Usage: optional
-+      Value type: <u32>
-+      Definition: The frequency at which the TDM block is operating.
-+
-+  - interrupts
-+      Usage: required
-+      Value type: <tdm-err-intr tdm-err-intr-type dmac-intr dmac-intr-type>
-+      Definition: This field defines two interrupt specifiers namely interrupt
-+	  number and interrupt type for TDM error and TDM DMAC.
-+
-+  - phy-handle
-+      Usage: optional
-+      Value type: <phandle>
-+      Definition: Phandle of the line controller node or framer node eg. SLIC,
-+	  E1\T1 etc.
-+
-+  - fsl-max-time-slots
-+      Usage: required
-+      Value type: <u32>
-+      Definition: Maximum number of 8-bit time slots in one TDM frame.
-+	  This is the maximum number which TDM hardware supports.
-+
-+EXAMPLE
-+
-+	tdm@16000 {
-+		device_type = "tdm";
-+		compatible = "fsl,p1010-tdm", "fsl,mpc8315-tdm";
-+		reg = <0x16000 0x200 0x2c000 0x2000>;
-+		clock-frequency = <0>;
-+		interrupts = <16 8 62 8>;
-+		phy-handle = <zarlink1>
-+		fsl-max-time-slots = <128>
-+	};
--- 
-1.5.6.5
+> The correct way would probably be to pass the MAC from the bootloader
+> via a DT blob. But that would require all bootloaders to be updated
+> first to support DTS. :(
+>=20
+But uboot will face the same problem that can not define a valid MAC
+in dts, did i undertand correctly?
+
+> An intermediate solution could be using OF_DEV_AUXDATA to pass a
+> platform_data struct that may contain a MAC address set up by the
+> platform code.
+>=20
+Yes, it's a way but i'm afraid will not get accepted by dt people.
+
+Regards
+Dong Aisheng
+
