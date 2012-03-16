@@ -1,70 +1,82 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v4] ARM: SPEAr600: Add device-tree support to SPEAr600
- boards
-Date: Fri, 16 Mar 2012 12:51:56 +0100
-Message-ID: <20120316115156.GG7757@game.jcrosoft.org>
-References: <1331890216-8361-1-git-send-email-sr@denx.de>
- <4F630D39.2090905@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] of: Add generic device tree DMA helpers
+Date: Fri, 16 Mar 2012 12:04:19 +0000
+Message-ID: <201203161204.19800.arnd@arndb.de>
+References: <4F22DEF2.5000807@ti.com> <201203161003.02163.arnd@arndb.de> <4F6321DB.50600@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4F630D39.2090905@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@st.com>
-Cc: spear-devel <spear-devel@list.st.com>, Stefan Roese <sr@denx.de>, "devicetree-discuss@ozlabs.org" <devicetree-discuss@ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F6321DB.50600@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-omap@vger.kernel.org, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 15:21 Fri 16 Mar     , Viresh Kumar wrote:
-> On 3/16/2012 3:00 PM, Stefan Roese wrote:
-> > This patch adds a generic target for SPEAr600 board that can be
-> > configured via the device-tree. Currently the following devices
-> > are supported via the devicetree:
-> > 
-> > - VIC interrupts
-> > - PL011 UART
-> > - PL061 GPIO
-> > - Synopsys DW I2C
-> > - Synopsys DW ethernet
-> > 
-> > Signed-off-by: Stefan Roese <sr@denx.de>
-> > Cc: Viresh Kumar <viresh.kumar@st.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> 
-> Acked-by: Viresh Kumar <viresh.kumar@st.com>
-> 
-> I have one query (as part of my learning of DT) to all DT experts:
-> 
-> > 
-> > +                       /* local/cpu GPIO */
-> > +                       gpio0: gpio@f0100000 {
-> > +                               #gpio-cells = <2>;
-> > +                               compatible = "arm,pl061", "arm,primecell";
-> > +                               gpio-controller;
-> > +                               reg = <0xf0100000 0x1000>;
-> > +                               interrupt-parent = <&vic0>;
-> > +                               interrupts = <18>;
-> > +                       };
-> > +
-> > 
-> 
-> Can we add name property here:
-> 				name = "gpio0"
-> 
-> So that we don't need to do below stuff.
-no the nae of the device is f0100000.gpio"
+On Friday 16 March 2012, Cousson, Benoit wrote:
+> And it seems that other ARM SoCs are using it for the same purpose. 
+> There are at least 230+ IORESOURCE_DMA instances in the kernel today.
 
-so what do stefan is right
+These tend to be the ones that don't use dmaengine but either the
+ISA dma api or a platform specific variant of that, right?
 
-Best Regards,
-J.
+Also, I think that most of those definitions are for the same few
+devices. The number that I see is much lower:
+
+$ git grep -l IORESOURCE_DMA drivers/ sound/ | wc -l
+     51
+
+Out of those, a quite number are mips or blackfin or xtensa based, or are
+for legacy ISA devices, which leaves 29 drivers for ARM. 
+
+> For the moment it is still used in a lot of places, and without any 
+> other better API yet, it is still useful. As written it is there only 
+> for simple single DMA controller case.
+> 
+> By maintaining that IORESOURCE_DMA for the moment we can adapt some 
+> driver to DT without having to change the way they are retrieving 
+> information. By using IORESOURCE_IRQ and IORESOURCE_MEM, we had the same 
+> advantage.
+
+The main difference to IORESOURCE_IRQ and IORESOURCE_MEM that I see
+is that those are going to start for any forseeable time and are actually
+helpful in a lot of ways. We are not going to remove the single number
+space for interrupts in the next few years. For DMA, the dmaengine API
+has already moved away from the flat number space of the ISA API.
+
+> Otherwise how are we supposed to get the DMA channel for non-DT boot 
+> until we have migrated everything to DT? A bunch of ARM SoC are using 
+> IORESOURCE_DMA for the same purpose.
+> 
+> The goal here is really to maintain that during the transition phase 
+> only. As soon as the full DT support is there, we can switch to the of_ API.
+> 
+> Ideally, we should define and use a generic API non dependent of DT. 
+> AFAIK, that does not exist so far.
+> And since most drivers are not using dmaengine, we do not even have a 
+> common DMA fmwk to define an API on top.
+> 
+> I fully agree that this IORESOURCE_DMA is not scalable for multiple 
+> controller, ugly, and must be avoided like the plague.
+> But what other options do we have during the transition?
+
+We could use the same binding for the nonstandard controllers, but
+keep the dma channel number lookup separate for those, and let them
+call of_get_dma_request directly.
+
+Since there are not too many drivers using those controllers with
+dma resources today, it's fairly easy to go through those as we write
+the driver bindings and just do
+
+	err = of_get_dma_request(pdev->dev.of_node, 0, &dma);
+	if (err) {
+		struct resource *r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+		if (r)
+			dma = r->start;
+	}
+
+For the drivers that we convert to DT before we convert them to dmaengine,
+and not do anything if we convert them to dmaengine first.
+
+	Arnd
