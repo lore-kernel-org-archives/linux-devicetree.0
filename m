@@ -1,48 +1,88 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v4 01/10] PWM: add pwm framework support
-Date: Fri, 16 Mar 2012 08:28:14 +0100
-Message-ID: <20120316072814.GB8226@avionic-0098.mockup.avionic-design.de>
-References: <1331740593-10807-1-git-send-email-thierry.reding@avionic-design.de>
- <1331740593-10807-2-git-send-email-thierry.reding@avionic-design.de>
- <20120316071951.GB7758@S2101-09.ap.freescale.net>
+From: =?utf-8?Q?Lothar_Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH v1 1/5] ARM: imx28: add basic dt support
+Date: Fri, 16 Mar 2012 08:48:13 +0100
+Message-ID: <20322.61501.432329.124466@ipc1.ka-ro>
+References: <1331628428-24017-1-git-send-email-b29396@freescale.com>
+	<1331628428-24017-2-git-send-email-b29396@freescale.com>
+	<20120313172351.97C5E3E053B@localhost>
+	<20120314124512.GG1180@shlinux2.ap.freescale.net>
+	<20120314141643.GP3852@pengutronix.de>
+	<20120315030206.GB13022@shlinux2.ap.freescale.net>
+	<20321.37353.63115.664975@ipc1.ka-ro>
+	<20120315105927.GE13022@shlinux2.ap.freescale.net>
+	<20321.53468.310199.875966@ipc1.ka-ro>
+	<20120316030134.GA5161@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120316071951.GB7758-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Matthias Kaehlcke <matthias-RprLehDfhQ3k1uMJSBkQmQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kurt Van Dijck <kurt.van.dijck-/BeEPy95v10@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20120316030134.GA5161@shlinux2.ap.freescale.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Dong Aisheng <aisheng.dong@freescale.com>
+Cc: Dong Aisheng-B29396 <B29396@freescale.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Guo Shawn-R65073 <r65073@freescale.com>, "vinod.koul@linux.intel.com" <vinod.koul@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "cjb@laptop.org" <cjb@laptop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---NDin8bjvE/0mNLFQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Dong Aisheng writes:
+> On Thu, Mar 15, 2012 at 07:22:04PM +0800, Lothar Wa=C3=9Fmann wrote:
+[...]
+> My proposal is only set the fixed part(first two octets) in board dts=
+ file,
+> each board knows it's value, and read the left 4 octets from OCOTP dy=
+namically.
+>
+The OUI part is three bytes, not two! But anyway, since there is no
+definition on how the MAC has to be stored in OCOTP there is no way
+for the driver to know how to interpret the data it may read from
+there.
 
-* Shawn Guo wrote:
-> On Wed, Mar 14, 2012 at 04:56:24PM +0100, Thierry Reding wrote:
-> ...
-> > +PPWM core
+> > Anyway there is no definite spec how the MAC address(es) are stored
+> > in the fuse map. Thus reading the MAC from there is more or less
+> > platform specific.
+> >=20
+> It's just provide one more option since there are customers storing t=
+he MAC
+> in the fuse map.
 >=20
-> s/PPWM/PWM?
+How would the driver know, whether and how the customer has stored the
+MAC address in OCOTP? E.g. on our TX28 modules the FULL MAC is stored
+in the CUSTOM registers in OCOTP.
 
-Yes, I noticed that as well just yesterday.
+> > Currently I'm setting up the MAC address for our TX28 from the fuse=
+s
+> > in the platform code passed via platform_data, but that will obviou=
+sly
+> > not work with DT.
+> >=20
+> Non-dt can also use my proposal, then you only need to pass the fixed=
+ part of
+> MAC via platfrom data, the left will be read by fec driver.
+>=20
+Reading the MAC from fuses is platform sepcific. The driver cannot
+know how the MAC is stored there and needs to rely on platform
+specific code to do this.
 
-Thanks,
-Thierry
+> > The correct way would probably be to pass the MAC from the bootload=
+er
+> > via a DT blob. But that would require all bootloaders to be updated
+> > first to support DTS. :(
+> >=20
+> But uboot will face the same problem that can not define a valid MAC
+> in dts, did i undertand correctly?
+>=20
+That's why I said "would require all bootloaders to be updated first
+to support DTS".
 
---NDin8bjvE/0mNLFQ
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
 
-iEYEARECAAYFAk9i644ACgkQZ+BJyKLjJp+e6ACeKE4pv9ZKGWYruSbp6tBxrGxJ
-tPsAoKqyOpJXP5jlk/SdaqkF5xPE9i7e
-=hIqH
------END PGP SIGNATURE-----
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
 
---NDin8bjvE/0mNLFQ--
+www.karo-electronics.de | info@karo-electronics.de
+___________________________________________________________
