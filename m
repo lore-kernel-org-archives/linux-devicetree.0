@@ -1,124 +1,51 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] of: Add generic device tree DMA helpers
-Date: Fri, 16 Mar 2012 14:36:05 +0100
-Message-ID: <4F6341C5.4060009@atmel.com>
-References: <4F22DEF2.5000807@ti.com> <201203161003.02163.arnd@arndb.de> <4F6321DB.50600@ti.com> <201203161204.19800.arnd@arndb.de> <4F634000.8010408@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] powerpc/85xx:Add usb controller version info
+Date: Fri, 16 Mar 2012 10:06:56 -0500
+Message-ID: <AB89D415-45D5-42A5-B145-83BFA80694DB@kernel.crashing.org>
+References: <1326865248-3333-1-git-send-email-ramneek.mehresh@freescale.com>
+Mime-Version: 1.0 (Apple Message framework v1257)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F634000.8010408@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, grant.likely@secretlab.ca
-Cc: linux-arm-kernel@lists.infradead.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-omap@vger.kernel.org, Russell King <linux@arm.linux.org.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1326865248-3333-1-git-send-email-ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/16/2012 02:28 PM, Cousson, Benoit :
-> On 3/16/2012 1:04 PM, Arnd Bergmann wrote:
->> On Friday 16 March 2012, Cousson, Benoit wrote:
->>> And it seems that other ARM SoCs are using it for the same purpose.
->>> There are at least 230+ IORESOURCE_DMA instances in the kernel today.
->>
->> These tend to be the ones that don't use dmaengine but either the
->> ISA dma api or a platform specific variant of that, right?
->>
->> Also, I think that most of those definitions are for the same few
->> devices. The number that I see is much lower:
->>
->> $ git grep -l IORESOURCE_DMA drivers/ sound/ | wc -l
->>       51
-> 
-> Gosh, good point... I've just done a dumb grep, but most of them are in
-> the device creation inside arch code:-(
-> 
-> Assuming OMAP driver does contains omap in the name, the result is
-> indeed way smaller.
-> 
-> git grep -l IORESOURCE_DMA drivers/ sound/ | grep omap
-> 
-> drivers/crypto/omap-aes.c
-> drivers/crypto/omap-sham.c
-> drivers/spi/spi-omap2-mcspi.c
-> drivers/tty/serial/omap-serial.c
-> sound/soc/omap/omap-dmic.c
-> sound/soc/omap/omap-hdmi.c
-> 
-> We do have 127 DMA requests and only 6 drivers are using them, that's a
-> pity...
-> 
->> Out of those, a quite number are mips or blackfin or xtensa based, or are
->> for legacy ISA devices, which leaves 29 drivers for ARM.
->>
->>> For the moment it is still used in a lot of places, and without any
->>> other better API yet, it is still useful. As written it is there only
->>> for simple single DMA controller case.
->>>
->>> By maintaining that IORESOURCE_DMA for the moment we can adapt some
->>> driver to DT without having to change the way they are retrieving
->>> information. By using IORESOURCE_IRQ and IORESOURCE_MEM, we had the same
->>> advantage.
->>
->> The main difference to IORESOURCE_IRQ and IORESOURCE_MEM that I see
->> is that those are going to start for any forseeable time and are actually
->> helpful in a lot of ways. We are not going to remove the single number
->> space for interrupts in the next few years. For DMA, the dmaengine API
->> has already moved away from the flat number space of the ISA API.
->>
->>> Otherwise how are we supposed to get the DMA channel for non-DT boot
->>> until we have migrated everything to DT? A bunch of ARM SoC are using
->>> IORESOURCE_DMA for the same purpose.
->>>
->>> The goal here is really to maintain that during the transition phase
->>> only. As soon as the full DT support is there, we can switch to the
->>> of_ API.
->>>
->>> Ideally, we should define and use a generic API non dependent of DT.
->>> AFAIK, that does not exist so far.
->>> And since most drivers are not using dmaengine, we do not even have a
->>> common DMA fmwk to define an API on top.
->>>
->>> I fully agree that this IORESOURCE_DMA is not scalable for multiple
->>> controller, ugly, and must be avoided like the plague.
->>> But what other options do we have during the transition?
->>
->> We could use the same binding for the nonstandard controllers, but
->> keep the dma channel number lookup separate for those, and let them
->> call of_get_dma_request directly.
->>
->> Since there are not too many drivers using those controllers with
->> dma resources today, it's fairly easy to go through those as we write
->> the driver bindings and just do
->>
->>     err = of_get_dma_request(pdev->dev.of_node, 0,&dma);
->>     if (err) {
->>         struct resource *r = platform_get_resource(pdev,
->> IORESOURCE_DMA, 0);
->>         if (r)
->>             dma = r->start;
->>     }
->>
->> For the drivers that we convert to DT before we convert them to
->> dmaengine,
->> and not do anything if we convert them to dmaengine first.
-> 
-> Considering the small amount of OMAP drivers really using
-> IORESOURCE_DMA, I guess this is fair enough.
-> 
-> Bottom-line, I do not have any more issue removing this of_dma_to_resource.
-> 
-> 
-> Nico,
-> Is that OK for you to repost the patch without this function?
 
-Yes sure, I will repost a V2 soon.
+On Jan 17, 2012, at 11:40 PM, Ramneek Mehresh wrote:
 
-I also try to have an integration in DT selftest.c:
-- that will show some possibilities of the API
-- that will give some examples of usage (1 or 2 xlate() functions)
-- that made me review my code and find a weakness
-- that will allow to monitor non-regression (obviously)
-=> WIP...
+> Add usb controller version info for the following:
+> MPC8536, P1010, P1020, P1021, P1022, P1023, P2020, P2041,
+> P3041, P3060, P5020
+> 
+> Signed-off-by: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+> Applies on git://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git
+> (branch next)
+> 
+> arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi |    4 ++--
+> arch/powerpc/boot/dts/fsl/p1010si-post.dtsi   |    3 +++
+> arch/powerpc/boot/dts/fsl/p1020si-post.dtsi   |    6 ++++++
+> arch/powerpc/boot/dts/fsl/p1021si-post.dtsi   |    3 +++
+> arch/powerpc/boot/dts/fsl/p1022si-post.dtsi   |    6 ++++++
+> arch/powerpc/boot/dts/fsl/p1023si-post.dtsi   |    3 +++
+> arch/powerpc/boot/dts/fsl/p2020si-post.dtsi   |    3 +++
+> arch/powerpc/boot/dts/fsl/p2041si-post.dtsi   |    2 ++
+> arch/powerpc/boot/dts/fsl/p3041si-post.dtsi   |    2 ++
+> arch/powerpc/boot/dts/fsl/p3060si-post.dtsi   |    6 ++++++
+> arch/powerpc/boot/dts/fsl/p5020si-post.dtsi   |    2 ++
+> 11 files changed, 38 insertions(+), 2 deletions(-)
 
-Bye,
--- 
-Nicolas Ferre
+applied
+
+- k
