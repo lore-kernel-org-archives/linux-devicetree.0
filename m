@@ -1,7 +1,8 @@
 From: Jason Cooper <jason@lakedaemon.net>
-Subject: [PATCH 3/9 v3] ARM: orion: wdt: use resource vice direct access
-Date: Fri, 16 Mar 2012 04:21:23 +0000
-Message-ID: <04a5c4c305df36619b1cf12a3e2bb21de9378b15.1331868507.git.jason@lakedaemon.net>
+Subject: [PATCH 6/9 v2] ARM: kirkwood: fdt: facilitate new boards during fdt
+ migration
+Date: Fri, 16 Mar 2012 04:21:26 +0000
+Message-ID: <232cbb0b517d8497ff1e5ad22d48ef2713b473e6.1331868507.git.jason@lakedaemon.net>
 References: <cover.1331868507.git.jason@lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,151 +25,375 @@ To: arnd@arndb.de, olof@lixom.net
 Cc: nicolas.pitre@linaro.org, andrew@lunn.ch, Jason Cooper <jason@lakedaemon.net>, jm@lentin.co.uk, grant.likely@secretlab.ca, michael@walle.cc, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Move all dreamplug-specific code out of board-dt.c and into
+board-dreamplug.c.  This way new boards that are added during the
+conversion to fdt don't clutter up board-dt.c.
+
 Signed-off-by: Jason Cooper <jason@lakedaemon.net>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
 ---
 
-Changes from v2:
+Changes from v1:
 
-    - Corrected authorship to myself.  The author was inadvertently changed to
-      Andrew Lunn with a wayward 'commit --amend' during a 'rebase -i' to split
-      the wdt patch.  Andrew brought it to my attention.  Thanks, Andrew!
+    - This code was broken out into a separate patch so that it could apply
+      cleanly to code already in arm-soc/next/boards
+    - protected the declaration of dreamplug_init() in common.h with #ifdef on
+      CONFIG_MACH_DREAMPLUG_DT
 
-Notes from v2:
-Note: This code is the exact same as that originally Acked by Grant.  I've
-simply removed the fdt bindings, as I need to hold off until common clock is
-added.  If it's not appropriate to retain his Ack here, please let me know.
+ arch/arm/mach-kirkwood/Makefile          |    1 +
+ arch/arm/mach-kirkwood/board-dreamplug.c |  152 ++++++++++++++++++++++++++++++
+ arch/arm/mach-kirkwood/board-dt.c        |  133 +--------------------------
+ arch/arm/mach-kirkwood/common.h          |    8 ++
+ 4 files changed, 162 insertions(+), 132 deletions(-)
+ create mode 100644 arch/arm/mach-kirkwood/board-dreamplug.c
 
- arch/arm/plat-orion/common.c |    7 ++++++-
- drivers/watchdog/orion_wdt.c |   24 +++++++++++++++---------
- 2 files changed, 21 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
-index 089899a..74daf5e 100644
---- a/arch/arm/plat-orion/common.c
-+++ b/arch/arm/plat-orion/common.c
-@@ -21,6 +21,7 @@
- #include <plat/orion_wdt.h>
- #include <plat/mv_xor.h>
- #include <plat/ehci-orion.h>
-+#include <mach/bridge-regs.h>
+diff --git a/arch/arm/mach-kirkwood/Makefile b/arch/arm/mach-kirkwood/Makefile
+index acbc5e1..e299a95 100644
+--- a/arch/arm/mach-kirkwood/Makefile
++++ b/arch/arm/mach-kirkwood/Makefile
+@@ -21,3 +21,4 @@ obj-$(CONFIG_MACH_T5325)		+= t5325-setup.o
  
- /* Fill in the resources structure and link it into the platform
-    device structure. There is always a memory region, and nearly
-@@ -568,13 +569,17 @@ void __init orion_spi_1_init(unsigned long mapbase,
-  ****************************************************************************/
- static struct orion_wdt_platform_data orion_wdt_data;
- 
-+static struct resource orion_wdt_resource =
-+		DEFINE_RES_MEM(TIMER_VIRT_BASE, 0x28);
+ obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
+ obj-$(CONFIG_ARCH_KIRKWOOD_DT)		+= board-dt.o
++obj-$(CONFIG_MACH_DREAMPLUG_DT)		+= board-dreamplug.o
+diff --git a/arch/arm/mach-kirkwood/board-dreamplug.c b/arch/arm/mach-kirkwood/board-dreamplug.c
+new file mode 100644
+index 0000000..9854539
+--- /dev/null
++++ b/arch/arm/mach-kirkwood/board-dreamplug.c
+@@ -0,0 +1,152 @@
++/*
++ * Copyright 2012 (C), Jason Cooper <jason@lakedaemon.net>
++ *
++ * arch/arm/mach-kirkwood/board-dreamplug.c
++ *
++ * Marvell DreamPlug Reference Board Init for drivers not converted to
++ * flattened device tree yet.
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
- static struct platform_device orion_wdt_device = {
- 	.name		= "orion_wdt",
- 	.id		= -1,
- 	.dev		= {
- 		.platform_data	= &orion_wdt_data,
- 	},
--	.num_resources	= 0,
-+	.resource	= &orion_wdt_resource,
-+	.num_resources	= 1,
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/platform_device.h>
++#include <linux/mtd/partitions.h>
++#include <linux/ata_platform.h>
++#include <linux/mv643xx_eth.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_fdt.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/gpio.h>
++#include <linux/leds.h>
++#include <linux/mtd/physmap.h>
++#include <linux/spi/flash.h>
++#include <linux/spi/spi.h>
++#include <linux/spi/orion_spi.h>
++#include <asm/mach-types.h>
++#include <asm/mach/arch.h>
++#include <asm/mach/map.h>
++#include <mach/kirkwood.h>
++#include <mach/bridge-regs.h>
++#include <plat/mvsdio.h>
++#include "common.h"
++#include "mpp.h"
++
++struct mtd_partition dreamplug_partitions[] = {
++	{
++		.name	= "u-boot",
++		.size	= SZ_512K,
++		.offset = 0,
++	},
++	{
++		.name	= "u-boot env",
++		.size	= SZ_64K,
++		.offset = SZ_512K + SZ_512K,
++	},
++	{
++		.name	= "dtb",
++		.size	= SZ_64K,
++		.offset = SZ_512K + SZ_512K + SZ_512K,
++	},
++};
++
++static const struct flash_platform_data dreamplug_spi_slave_data = {
++	.type		= "mx25l1606e",
++	.name		= "spi_flash",
++	.parts		= dreamplug_partitions,
++	.nr_parts	= ARRAY_SIZE(dreamplug_partitions),
++};
++
++static struct spi_board_info __initdata dreamplug_spi_slave_info[] = {
++	{
++		.modalias	= "m25p80",
++		.platform_data	= &dreamplug_spi_slave_data,
++		.irq		= -1,
++		.max_speed_hz	= 50000000,
++		.bus_num	= 0,
++		.chip_select	= 0,
++	},
++};
++
++static struct mv643xx_eth_platform_data dreamplug_ge00_data = {
++	.phy_addr	= MV643XX_ETH_PHY_ADDR(0),
++};
++
++static struct mv643xx_eth_platform_data dreamplug_ge01_data = {
++	.phy_addr	= MV643XX_ETH_PHY_ADDR(1),
++};
++
++static struct mv_sata_platform_data dreamplug_sata_data = {
++	.n_ports	= 1,
++};
++
++static struct mvsdio_platform_data dreamplug_mvsdio_data = {
++	/* unfortunately the CD signal has not been connected */
++};
++
++static struct gpio_led dreamplug_led_pins[] = {
++	{
++		.name			= "dreamplug:blue:bluetooth",
++		.gpio			= 47,
++		.active_low		= 1,
++	},
++	{
++		.name			= "dreamplug:green:wifi",
++		.gpio			= 48,
++		.active_low		= 1,
++	},
++	{
++		.name			= "dreamplug:green:wifi_ap",
++		.gpio			= 49,
++		.active_low		= 1,
++	},
++};
++
++static struct gpio_led_platform_data dreamplug_led_data = {
++	.leds		= dreamplug_led_pins,
++	.num_leds	= ARRAY_SIZE(dreamplug_led_pins),
++};
++
++static struct platform_device dreamplug_leds = {
++	.name	= "leds-gpio",
++	.id	= -1,
++	.dev	= {
++		.platform_data	= &dreamplug_led_data,
++	}
++};
++
++static unsigned int dreamplug_mpp_config[] __initdata = {
++	MPP0_SPI_SCn,
++	MPP1_SPI_MOSI,
++	MPP2_SPI_SCK,
++	MPP3_SPI_MISO,
++	MPP47_GPIO,	/* Bluetooth LED */
++	MPP48_GPIO,	/* Wifi LED */
++	MPP49_GPIO,	/* Wifi AP LED */
++	0
++};
++
++void __init dreamplug_init(void)
++{
++	/*
++	 * Basic setup. Needs to be called early.
++	 */
++	kirkwood_mpp_conf(dreamplug_mpp_config);
++
++	spi_register_board_info(dreamplug_spi_slave_info,
++				ARRAY_SIZE(dreamplug_spi_slave_info));
++	kirkwood_spi_init();
++
++	kirkwood_ehci_init();
++	kirkwood_ge00_init(&dreamplug_ge00_data);
++	kirkwood_ge01_init(&dreamplug_ge01_data);
++	kirkwood_sata_init(&dreamplug_sata_data);
++	kirkwood_sdio_init(&dreamplug_mvsdio_data);
++
++	platform_device_register(&dreamplug_leds);
++}
+diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+index 9bd35ac..975ad01 100644
+--- a/arch/arm/mach-kirkwood/board-dt.c
++++ b/arch/arm/mach-kirkwood/board-dt.c
+@@ -3,7 +3,7 @@
+  *
+  * arch/arm/mach-kirkwood/board-dt.c
+  *
+- * Marvell DreamPlug Reference Board Setup
++ * Flattened Device Tree board initialization
+  *
+  * This file is licensed under the terms of the GNU General Public
+  * License version 2.  This program is licensed "as is" without any
+@@ -12,149 +12,18 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+-#include <linux/platform_device.h>
+-#include <linux/mtd/partitions.h>
+-#include <linux/ata_platform.h>
+-#include <linux/mv643xx_eth.h>
+ #include <linux/of.h>
+-#include <linux/of_address.h>
+-#include <linux/of_fdt.h>
+-#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+-#include <linux/gpio.h>
+-#include <linux/leds.h>
+-#include <linux/mtd/physmap.h>
+-#include <linux/spi/flash.h>
+-#include <linux/spi/spi.h>
+-#include <linux/spi/orion_spi.h>
+-#include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+-#include <mach/kirkwood.h>
+ #include <mach/bridge-regs.h>
+-#include <plat/mvsdio.h>
+ #include "common.h"
+-#include "mpp.h"
+ 
+ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
+ 	{ .compatible = "simple-bus", },
+ 	{ }
  };
  
- void __init orion_wdt_init(unsigned long tclk)
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 4ad78f8..1368e4c 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -28,9 +28,9 @@
- /*
-  * Watchdog timer block registers.
-  */
--#define TIMER_CTRL		(TIMER_VIRT_BASE + 0x0000)
-+#define TIMER_CTRL		0x0000
- #define  WDT_EN			0x0010
--#define WDT_VAL			(TIMER_VIRT_BASE + 0x0024)
-+#define WDT_VAL			0x0024
- 
- #define WDT_MAX_CYCLE_COUNT	0xffffffff
- #define WDT_IN_USE		0
-@@ -40,6 +40,7 @@ static int nowayout = WATCHDOG_NOWAYOUT;
- static int heartbeat = -1;		/* module parameter (seconds) */
- static unsigned int wdt_max_duration;	/* (seconds) */
- static unsigned int wdt_tclk;
-+static void __iomem *wdt_reg;
- static unsigned long wdt_status;
- static DEFINE_SPINLOCK(wdt_lock);
- 
-@@ -48,7 +49,7 @@ static void orion_wdt_ping(void)
- 	spin_lock(&wdt_lock);
- 
- 	/* Reload watchdog duration */
--	writel(wdt_tclk * heartbeat, WDT_VAL);
-+	writel(wdt_tclk * heartbeat, wdt_reg + WDT_VAL);
- 
- 	spin_unlock(&wdt_lock);
- }
-@@ -60,7 +61,7 @@ static void orion_wdt_enable(void)
- 	spin_lock(&wdt_lock);
- 
- 	/* Set watchdog duration */
--	writel(wdt_tclk * heartbeat, WDT_VAL);
-+	writel(wdt_tclk * heartbeat, wdt_reg + WDT_VAL);
- 
- 	/* Clear watchdog timer interrupt */
- 	reg = readl(BRIDGE_CAUSE);
-@@ -68,9 +69,9 @@ static void orion_wdt_enable(void)
- 	writel(reg, BRIDGE_CAUSE);
- 
- 	/* Enable watchdog timer */
--	reg = readl(TIMER_CTRL);
-+	reg = readl(wdt_reg + TIMER_CTRL);
- 	reg |= WDT_EN;
--	writel(reg, TIMER_CTRL);
-+	writel(reg, wdt_reg + TIMER_CTRL);
- 
- 	/* Enable reset on watchdog */
- 	reg = readl(RSTOUTn_MASK);
-@@ -92,9 +93,9 @@ static void orion_wdt_disable(void)
- 	writel(reg, RSTOUTn_MASK);
- 
- 	/* Disable watchdog timer */
--	reg = readl(TIMER_CTRL);
-+	reg = readl(wdt_reg + TIMER_CTRL);
- 	reg &= ~WDT_EN;
--	writel(reg, TIMER_CTRL);
-+	writel(reg, wdt_reg + TIMER_CTRL);
- 
- 	spin_unlock(&wdt_lock);
- }
-@@ -102,7 +103,7 @@ static void orion_wdt_disable(void)
- static int orion_wdt_get_timeleft(int *time_left)
+-struct mtd_partition dreamplug_partitions[] = {
+-	{
+-		.name	= "u-boot",
+-		.size	= SZ_512K,
+-		.offset = 0,
+-	},
+-	{
+-		.name	= "u-boot env",
+-		.size	= SZ_64K,
+-		.offset = SZ_512K + SZ_512K,
+-	},
+-	{
+-		.name	= "dtb",
+-		.size	= SZ_64K,
+-		.offset = SZ_512K + SZ_512K + SZ_512K,
+-	},
+-};
+-
+-static const struct flash_platform_data dreamplug_spi_slave_data = {
+-	.type		= "mx25l1606e",
+-	.name		= "spi_flash",
+-	.parts		= dreamplug_partitions,
+-	.nr_parts	= ARRAY_SIZE(dreamplug_partitions),
+-};
+-
+-static struct spi_board_info __initdata dreamplug_spi_slave_info[] = {
+-	{
+-		.modalias	= "m25p80",
+-		.platform_data	= &dreamplug_spi_slave_data,
+-		.irq		= -1,
+-		.max_speed_hz	= 50000000,
+-		.bus_num	= 0,
+-		.chip_select	= 0,
+-	},
+-};
+-
+-static struct mv643xx_eth_platform_data dreamplug_ge00_data = {
+-	.phy_addr	= MV643XX_ETH_PHY_ADDR(0),
+-};
+-
+-static struct mv643xx_eth_platform_data dreamplug_ge01_data = {
+-	.phy_addr	= MV643XX_ETH_PHY_ADDR(1),
+-};
+-
+-static struct mv_sata_platform_data dreamplug_sata_data = {
+-	.n_ports	= 1,
+-};
+-
+-static struct mvsdio_platform_data dreamplug_mvsdio_data = {
+-	/* unfortunately the CD signal has not been connected */
+-};
+-
+-static struct gpio_led dreamplug_led_pins[] = {
+-	{
+-		.name			= "dreamplug:blue:bluetooth",
+-		.gpio			= 47,
+-		.active_low		= 1,
+-	},
+-	{
+-		.name			= "dreamplug:green:wifi",
+-		.gpio			= 48,
+-		.active_low		= 1,
+-	},
+-	{
+-		.name			= "dreamplug:green:wifi_ap",
+-		.gpio			= 49,
+-		.active_low		= 1,
+-	},
+-};
+-
+-static struct gpio_led_platform_data dreamplug_led_data = {
+-	.leds		= dreamplug_led_pins,
+-	.num_leds	= ARRAY_SIZE(dreamplug_led_pins),
+-};
+-
+-static struct platform_device dreamplug_leds = {
+-	.name	= "leds-gpio",
+-	.id	= -1,
+-	.dev	= {
+-		.platform_data	= &dreamplug_led_data,
+-	}
+-};
+-
+-static unsigned int dreamplug_mpp_config[] __initdata = {
+-	MPP0_SPI_SCn,
+-	MPP1_SPI_MOSI,
+-	MPP2_SPI_SCK,
+-	MPP3_SPI_MISO,
+-	MPP47_GPIO,	/* Bluetooth LED */
+-	MPP48_GPIO,	/* Wifi LED */
+-	MPP49_GPIO,	/* Wifi AP LED */
+-	0
+-};
+-
+-static void __init dreamplug_init(void)
+-{
+-	/*
+-	 * Basic setup. Needs to be called early.
+-	 */
+-	kirkwood_mpp_conf(dreamplug_mpp_config);
+-
+-	spi_register_board_info(dreamplug_spi_slave_info,
+-				ARRAY_SIZE(dreamplug_spi_slave_info));
+-	kirkwood_spi_init();
+-
+-	kirkwood_ehci_init();
+-	kirkwood_ge00_init(&dreamplug_ge00_data);
+-	kirkwood_ge01_init(&dreamplug_ge01_data);
+-	kirkwood_sata_init(&dreamplug_sata_data);
+-	kirkwood_sdio_init(&dreamplug_mvsdio_data);
+-
+-	platform_device_register(&dreamplug_leds);
+-}
+-
+ static void __init kirkwood_dt_init(void)
  {
- 	spin_lock(&wdt_lock);
--	*time_left = readl(WDT_VAL) / wdt_tclk;
-+	*time_left = readl(wdt_reg + WDT_VAL) / wdt_tclk;
- 	spin_unlock(&wdt_lock);
- 	return 0;
- }
-@@ -236,6 +237,7 @@ static struct miscdevice orion_wdt_miscdev = {
- static int __devinit orion_wdt_probe(struct platform_device *pdev)
- {
- 	struct orion_wdt_platform_data *pdata = pdev->dev.platform_data;
-+	struct resource *res;
- 	int ret;
+ 	pr_info("Kirkwood: %s, TCLK=%d.\n", kirkwood_id(), kirkwood_tclk);
+diff --git a/arch/arm/mach-kirkwood/common.h b/arch/arm/mach-kirkwood/common.h
+index c382447..4737578 100644
+--- a/arch/arm/mach-kirkwood/common.h
++++ b/arch/arm/mach-kirkwood/common.h
+@@ -51,6 +51,14 @@ void kirkwood_nand_init_rnb(struct mtd_partition *parts, int nr_parts, int (*dev
+ void kirkwood_audio_init(void);
+ void kirkwood_restart(char, const char *);
  
- 	if (pdata) {
-@@ -245,6 +247,10 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++/* board init functions for boards not fully converted to fdt */
++#ifdef CONFIG_MACH_DREAMPLUG_DT
++void dreamplug_init(void);
++#else
++static inline void dreamplug_init(void) {};
++#endif
 +
-+	wdt_reg = ioremap(res->start, resource_size(res));
-+
- 	if (orion_wdt_miscdev.parent)
- 		return -EBUSY;
- 	orion_wdt_miscdev.parent = &pdev->dev;
++/* early init functions not converted to fdt yet */
+ char *kirkwood_id(void);
+ void kirkwood_l2_init(void);
+ void kirkwood_rtc_init(void);
 -- 
 1.7.3.4
