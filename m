@@ -1,127 +1,652 @@
-From: Zhao Chenhui <chenhui.zhao@freescale.com>
-Subject: [PATCH] fsl_pmc: update device bindings
-Date: Fri, 16 Mar 2012 17:31:02 +0800
-Message-ID: <1331890262-25391-1-git-send-email-chenhui.zhao@freescale.com>
+From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v4] ARM: SPEAr600: Add device-tree support to SPEAr600 boards
+Date: Fri, 16 Mar 2012 10:30:16 +0100
+Message-ID: <1331890216-8361-1-git-send-email-sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, leoli@freescale.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Li Yang <leoli@freescale.com>
+This patch adds a generic target for SPEAr600 board that can be
+configured via the device-tree. Currently the following devices
+are supported via the devicetree:
 
- * Added compatible "fsl,p1022-pmc".
- * Added clock nodes to control the clock of wake-up source.
- * Used "fsl,pmc-handle" property to connect device and clock node.
+- VIC interrupts
+- PL011 UART
+- PL061 GPIO
+- Synopsys DW I2C
+- Synopsys DW ethernet
 
-Signed-off-by: Li Yang <leoli@freescale.com>
-Signed-off-by: Zhao Chenhui <chenhui.zhao@freescale.com>
+Other peripheral devices (e.g. SMI flash, FSMC NAND flash etc) will
+follow in later patches.
+
+Only the spear600-evb is currently supported. Other SPEAr600
+based boards will follow later.
+
+Since the current mainline SPEAr600 code only supports the SPEAr600
+evaluation board, with nearly zero peripheral devices (only UART
+and GPIO), it makes sense to switch over to DT based configuration
+completely now. So this patch also removes all non-DT stuff, mainly
+platform device data. The files spear600.c and spear600_evb.c are
+removed completely.
+
+Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/powerpc/fsl/pmc.txt        |   65 ++++++++++++--------
- 1 files changed, 40 insertions(+), 25 deletions(-)
+v4:
+- Added memory node to all dts/dtsi files
+- Reorganizes bus topology in the dtsi file, to match the
+  real SoC layout
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/pmc.txt b/Documentation/devicetree/bindings/powerpc/fsl/pmc.txt
-index 07256b7..d296e88 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/pmc.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/pmc.txt
-@@ -9,22 +9,26 @@ Properties:
- 
-   "fsl,mpc8548-pmc" should be listed for any chip whose PMC is
-   compatible.  "fsl,mpc8536-pmc" should also be listed for any chip
--  whose PMC is compatible, and implies deep-sleep capability.
-+  whose PMC is compatible, and implies deep-sleep capability and
-+  wake on user defined packet(wakeup on ARP). "fsl,p1022-pmc"
-+  should be listed for any chip whose PMC is compatible, and
-+  implies lossless Ethernet capability during sleep or deep sleep.
- 
-   "fsl,mpc8641d-pmc" should be listed for any chip whose PMC is
-   compatible; all statements below that apply to "fsl,mpc8548-pmc" also
-   apply to "fsl,mpc8641d-pmc".
- 
-   Compatibility does not include bit assignments in SCCR/PMCDR/DEVDISR; these
--  bit assignments are indicated via the sleep specifier in each device's
--  sleep property.
-+  bit assignments are indicated via the clock nodes. Device which has a
-+  controllable clock source should have a "fsl,pmc-handle" property pointing
-+  to the clock node.
- 
- - reg: For devices compatible with "fsl,mpc8349-pmc", the first resource
-   is the PMC block, and the second resource is the Clock Configuration
-   block.
- 
--  For devices compatible with "fsl,mpc8548-pmc", the first resource
--  is a 32-byte block beginning with DEVDISR.
-+  For devices compatible with "fsl,mpc8548-pmc", the resource is a 32-byte
-+  block beginning with the register DEVDISR.
- 
- - interrupts: For "fsl,mpc8349-pmc"-compatible devices, the first
-   resource is the PMC block interrupt.
-@@ -33,31 +37,42 @@ Properties:
-   this is a phandle to an "fsl,gtm" node on which timer 4 can be used as
-   a wakeup source from deep sleep.
- 
--Sleep specifiers:
--
--  fsl,mpc8349-pmc: Sleep specifiers consist of one cell.  For each bit
--  that is set in the cell, the corresponding bit in SCCR will be saved
--  and cleared on suspend, and restored on resume.  This sleep controller
--  supports disabling and resuming devices at any time.
--
--  fsl,mpc8536-pmc: Sleep specifiers consist of three cells, the third of
--  which will be ORed into PMCDR upon suspend, and cleared from PMCDR
--  upon resume.  The first two cells are as described for fsl,mpc8578-pmc.
--  This sleep controller only supports disabling devices during system
--  sleep, or permanently.
-+Clock nodes:
-+The clock nodes are to describe the masks in PM controller registers for each
-+soc clock.
-+- fsl,pmcdr-mask: For "fsl,mpc8548-pmc"-compatible devices, some blocks as
-+  wake-up sources can run in low power mode. If a block used as a wake-up
-+  source in low power mode, the corresponding bit in the register PMCDR should
-+  be cleared on suspend and set on resume. If setting bits of the mask,
-+  the corresponding blocks will be used as wake-up sources.
- 
--  fsl,mpc8548-pmc: Sleep specifiers consist of one or two cells, the
--  first of which will be ORed into DEVDISR (and the second into
--  DEVDISR2, if present -- this cell should be zero or absent if the
--  hardware does not have DEVDISR2) upon a request for permanent device
--  disabling.  This sleep controller does not support configuring devices
--  to disable during system sleep (unless supported by another compatible
--  match), or dynamically.
-+- fsl,sccr-mask: For "fsl,mpc8349-pmc"-compatible devices, the corresponding
-+  bit specified by the mask in SCCR will be saved and cleared on suspend, and
-+  restored on resume.
- 
--Example:
-+- fsl,devdisr-mask: Contain one or two cells, depending on the availability of
-+  DEVDISR2 register.  For compatible devices, the mask will be ORed into DEVDISR
-+  or DEVDISR2 when the clock should be permenently disabled.
- 
-+Example 1:
- 	power@b00 {
- 		compatible = "fsl,mpc8313-pmc", "fsl,mpc8349-pmc";
- 		reg = <0xb00 0x100 0xa00 0x100>;
- 		interrupts = <80 8>;
- 	};
+v3:
+- Removed non-DT SPEAr600 board support completely
+- Removed OF_DEV_AUXDATA and changed clkdev instead, since we
+  don't support non-DT targets any more
+- Changed gmac0 -> gmac etc for single instance devices in the
+  dts
+- Added max memory size to memory node (instead of 0)
+- Dropped mac-address property
+- Removed some headers from spear6xx.c
+
+v2:
+- Added DT support to spear6xx.c instead of creating board-dt.c
+- Removed UART (PL011) and GPIO (PL061) platform data for
+  devicetree board port. This works now via DT probing
+- Added OF_DEV_AUXDATA for clock device name matching for some
+  device drivers
+- Removed sper600.c file completely
+- Added DW I2C and ethernet nodes to the dts files
+- Added other DT nodes (SMI, FSMC, ECHI, OHCI), currently disabled
+  since the corresponding device drivers don't support DT probing
+- Removed Linaro/FSL copyright notice from SPEAr DT files (copy-paste cruft)
+- Many smaller modification to the dts/dtsi files
+- Changed Documentation/devicetree/bindings/arm/spear.txt to match
+  the changed bindings
+
+ Documentation/devicetree/bindings/arm/spear.txt |    8 ++
+ arch/arm/boot/dts/spear600-evb.dts              |   37 +++++
+ arch/arm/boot/dts/spear600.dtsi                 |  170 +++++++++++++++++++++++
+ arch/arm/mach-spear6xx/Kconfig                  |    7 +-
+ arch/arm/mach-spear6xx/Makefile                 |    6 -
+ arch/arm/mach-spear6xx/clock.c                  |   14 +-
+ arch/arm/mach-spear6xx/spear600.c               |   25 ----
+ arch/arm/mach-spear6xx/spear600_evb.c           |   54 -------
+ arch/arm/mach-spear6xx/spear6xx.c               |  132 +++++-------------
+ 9 files changed, 262 insertions(+), 191 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/spear.txt
+ create mode 100644 arch/arm/boot/dts/spear600-evb.dts
+ create mode 100644 arch/arm/boot/dts/spear600.dtsi
+ delete mode 100644 arch/arm/mach-spear6xx/spear600.c
+ delete mode 100644 arch/arm/mach-spear6xx/spear600_evb.c
+
+diff --git a/Documentation/devicetree/bindings/arm/spear.txt b/Documentation/devicetree/bindings/arm/spear.txt
+new file mode 100644
+index 0000000..f8e54f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/spear.txt
+@@ -0,0 +1,8 @@
++ST SPEAr Platforms Device Tree Bindings
++---------------------------------------
 +
-+Example 2:
-+	power@e0070 {
-+		compatible = "fsl,mpc8548-pmc", "fsl,mpc8536-pmc";
-+		reg = <0xe0070 0x20>;
++Boards with the ST SPEAr600 SoC shall have the following properties:
 +
-+		etsec1_clk: soc-clk@24 {
-+			fsl,pmcdr-mask = <0x00000080>;
++Required root node property:
++
++compatible = "st,spear600";
+diff --git a/arch/arm/boot/dts/spear600-evb.dts b/arch/arm/boot/dts/spear600-evb.dts
+new file mode 100644
+index 0000000..bf706b2
+--- /dev/null
++++ b/arch/arm/boot/dts/spear600-evb.dts
+@@ -0,0 +1,37 @@
++/*
++ * Copyright 2012 Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++/include/ "spear600.dtsi"
++
++/ {
++	model = "ST SPEAr600 Evaluation Board";
++	compatible = "st,spear600-evb", "st,spear600";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	memory {
++		device_type = "memory";
++		reg = <0 0x10000000>;
++	};
++
++	ahb {
++		gmac: ethernet@e0800000 {
++			phy-mode = "gmii";
 +		};
-+		etsec2_clk: soc-clk@25 {
-+			fsl,pmcdr-mask = <0x00000040>;
-+		};
-+		etsec3_clk: soc-clk@26 {
-+			fsl,pmcdr-mask = <0x00000020>;
++
++		apb {
++			i2c@d0200000 {
++				clock-frequency = <400000>;
++			};
 +		};
 +	};
++};
+diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
+new file mode 100644
+index 0000000..cf14762
+--- /dev/null
++++ b/arch/arm/boot/dts/spear600.dtsi
+@@ -0,0 +1,170 @@
++/*
++ * Copyright 2012 Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/include/ "skeleton.dtsi"
++
++/ {
++	compatible = "st,spear600";
++
++	cpus {
++		cpu@0 {
++			compatible = "arm,arm926ejs";
++		};
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0 0x40000000>;
++	};
++
++	ahb {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
++
++		vic0: interrupt-controller@f1100000 {
++			compatible = "arm,pl190-vic";
++			interrupt-controller;
++			reg = <0xf1100000 0x1000>;
++			#interrupt-cells = <1>;
++		};
++
++		vic1: interrupt-controller@f1000000 {
++			compatible = "arm,pl190-vic";
++			interrupt-controller;
++			reg = <0xf1000000 0x1000>;
++			#interrupt-cells = <1>;
++		};
++
++		gmac: ethernet@e0800000 {
++			compatible = "st,spear600-gmac";
++			reg = <0xe0800000 0x8000>;
++			interrupt-parent = <&vic1>;
++			interrupts = <24 23>;
++			interrupt-names = "macirq", "eth_wake_irq";
++		};
++
++		fsmc: flash@d1800000 {
++			status = "disabled";
++			compatible = "st,spear600-fsmc-nand";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0xd1800000 0x1000	/* FSMC Register */
++			       0xd2000000 0x4000>;	/* NAND Base */
++			reg-names = "fsmc_regs", "nand_data";
++			st,ale-off = <0x20000>;
++			st,cle-off = <0x10000>;
++		};
++
++		smi: flash@fc000000 {
++			status = "disabled";
++			compatible = "st,spear600-smi";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0xfc000000 0x1000>;
++			interrupt-parent = <&vic1>;
++			interrupts = <12>;
++		};
++
++		ehci@e1800000 {
++			status = "disabled";
++			compatible = "st,spear600-ehci", "usb-ehci";
++			reg = <0xe1800000 0x1000>;
++			interrupt-parent = <&vic1>;
++			interrupts = <27>;
++		};
++
++		ehci@e2000000 {
++			status = "disabled";
++			compatible = "st,spear600-ehci", "usb-ehci";
++			reg = <0xe2000000 0x1000>;
++			interrupt-parent = <&vic1>;
++			interrupts = <29>;
++		};
++
++		ohci@e1900000 {
++			status = "disabled";
++			compatible = "st,spear600-ohci", "usb-ohci";
++			reg = <0xe1900000 0x1000>;
++			interrupt-parent = <&vic1>;
++			interrupts = <26>;
++		};
++
++		ohci@e2100000 {
++			status = "disabled";
++			compatible = "st,spear600-ohci", "usb-ohci";
++			reg = <0xe2100000 0x1000>;
++			interrupt-parent = <&vic1>;
++			interrupts = <28>;
++		};
++
++		apb {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "simple-bus";
++			ranges;
++
++			serial@d0000000 {
++				compatible = "arm,pl011", "arm,primecell";
++				reg = <0xd0000000 0x1000>;
++				interrupt-parent = <&vic0>;
++				interrupts = <24>;
++			};
++
++			serial@d0080000 {
++				compatible = "arm,pl011", "arm,primecell";
++				reg = <0xd0080000 0x1000>;
++				interrupt-parent = <&vic0>;
++				interrupts = <25>;
++			};
++
++			/* local/cpu GPIO */
++			gpio0: gpio@f0100000 {
++				#gpio-cells = <2>;
++				compatible = "arm,pl061", "arm,primecell";
++				gpio-controller;
++				reg = <0xf0100000 0x1000>;
++				interrupt-parent = <&vic0>;
++				interrupts = <18>;
++			};
++
++			/* basic GPIO */
++			gpio1: gpio@fc980000 {
++				#gpio-cells = <2>;
++				compatible = "arm,pl061", "arm,primecell";
++				gpio-controller;
++				reg = <0xfc980000 0x1000>;
++				interrupt-parent = <&vic1>;
++				interrupts = <19>;
++			};
++
++			/* appl GPIO */
++			gpio2: gpio@d8100000 {
++				#gpio-cells = <2>;
++				compatible = "arm,pl061", "arm,primecell";
++				gpio-controller;
++				reg = <0xd8100000 0x1000>;
++				interrupt-parent = <&vic1>;
++				interrupts = <4>;
++			};
++
++			i2c@d0200000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "snps,designware-i2c";
++				reg = <0xd0200000 0x1000>;
++				interrupt-parent = <&vic0>;
++				interrupts = <28>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/mach-spear6xx/Kconfig b/arch/arm/mach-spear6xx/Kconfig
+index ff4ae5b..fbe298b 100644
+--- a/arch/arm/mach-spear6xx/Kconfig
++++ b/arch/arm/mach-spear6xx/Kconfig
+@@ -5,11 +5,12 @@
+ if ARCH_SPEAR6XX
+ 
+ menu "SPEAr6xx Implementations"
+-config BOARD_SPEAR600_EVB
+-	bool "SPEAr600 Evaluation Board"
++config BOARD_SPEAR600_DT
++	bool "SPEAr600 generic board configured via device-tree"
+ 	select MACH_SPEAR600
++	select USE_OF
+ 	help
+-	  Supports ST SPEAr600 Evaluation Board
++	  Supports ST SPEAr600 boards configured via the device-tree
+ 
+ endmenu
+ 
+diff --git a/arch/arm/mach-spear6xx/Makefile b/arch/arm/mach-spear6xx/Makefile
+index cc1a4d8..76e5750 100644
+--- a/arch/arm/mach-spear6xx/Makefile
++++ b/arch/arm/mach-spear6xx/Makefile
+@@ -4,9 +4,3 @@
+ 
+ # common files
+ obj-y	+= clock.o spear6xx.o
+-
+-# spear600 specific files
+-obj-$(CONFIG_MACH_SPEAR600) += spear600.o
+-
+-# spear600 boards files
+-obj-$(CONFIG_BOARD_SPEAR600_EVB) += spear600_evb.o
+diff --git a/arch/arm/mach-spear6xx/clock.c b/arch/arm/mach-spear6xx/clock.c
+index ac70e0d..358f280 100644
+--- a/arch/arm/mach-spear6xx/clock.c
++++ b/arch/arm/mach-spear6xx/clock.c
+@@ -641,8 +641,8 @@ static struct clk_lookup spear_clk_lookups[] = {
+ 	{ .con_id = "gpt0_synth_clk",	.clk = &gpt0_synth_clk},
+ 	{ .con_id = "gpt2_synth_clk",	.clk = &gpt2_synth_clk},
+ 	{ .con_id = "gpt3_synth_clk",	.clk = &gpt3_synth_clk},
+-	{ .dev_id = "uart0",		.clk = &uart0_clk},
+-	{ .dev_id = "uart1",		.clk = &uart1_clk},
++	{ .dev_id = "d0000000.serial",	.clk = &uart0_clk},
++	{ .dev_id = "d0080000.serial",	.clk = &uart1_clk},
+ 	{ .dev_id = "firda",		.clk = &firda_clk},
+ 	{ .dev_id = "clcd",		.clk = &clcd_clk},
+ 	{ .dev_id = "gpt0",		.clk = &gpt0_clk},
+@@ -655,20 +655,20 @@ static struct clk_lookup spear_clk_lookups[] = {
+ 	{ .con_id = "usbh.1_clk",	.clk = &usbh1_clk},
+ 	/* clock derived from ahb clk */
+ 	{ .con_id = "apb_clk",		.clk = &apb_clk},
+-	{ .dev_id = "i2c_designware.0",	.clk = &i2c_clk},
++	{ .dev_id = "d0200000.i2c",	.clk = &i2c_clk},
+ 	{ .dev_id = "dma",		.clk = &dma_clk},
+ 	{ .dev_id = "jpeg",		.clk = &jpeg_clk},
+ 	{ .dev_id = "gmac",		.clk = &gmac_clk},
+ 	{ .dev_id = "smi",		.clk = &smi_clk},
+-	{ .con_id = "fsmc",		.clk = &fsmc_clk},
++	{ .dev_id = "fsmc-nand",	.clk = &fsmc_clk},
+ 	/* clock derived from apb clk */
+ 	{ .dev_id = "adc",		.clk = &adc_clk},
+ 	{ .dev_id = "ssp-pl022.0",	.clk = &ssp0_clk},
+ 	{ .dev_id = "ssp-pl022.1",	.clk = &ssp1_clk},
+ 	{ .dev_id = "ssp-pl022.2",	.clk = &ssp2_clk},
+-	{ .dev_id = "gpio0",		.clk = &gpio0_clk},
+-	{ .dev_id = "gpio1",		.clk = &gpio1_clk},
+-	{ .dev_id = "gpio2",		.clk = &gpio2_clk},
++	{ .dev_id = "f0100000.gpio",	.clk = &gpio0_clk},
++	{ .dev_id = "fc980000.gpio",	.clk = &gpio1_clk},
++	{ .dev_id = "d8100000.gpio",	.clk = &gpio2_clk},
+ };
+ 
+ void __init spear6xx_clk_init(void)
+diff --git a/arch/arm/mach-spear6xx/spear600.c b/arch/arm/mach-spear6xx/spear600.c
+deleted file mode 100644
+index d0e6eea..0000000
+--- a/arch/arm/mach-spear6xx/spear600.c
++++ /dev/null
+@@ -1,25 +0,0 @@
+-/*
+- * arch/arm/mach-spear6xx/spear600.c
+- *
+- * SPEAr600 machine source file
+- *
+- * Copyright (C) 2009 ST Microelectronics
+- * Rajeev Kumar<rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org>
+- *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2. This program is licensed "as is" without any
+- * warranty of any kind, whether express or implied.
+- */
+-
+-#include <linux/ptrace.h>
+-#include <asm/irq.h>
+-#include <mach/generic.h>
+-#include <mach/hardware.h>
+-
+-/* Add spear600 specific devices here */
+-
+-void __init spear600_init(void)
+-{
+-	/* call spear6xx family common init function */
+-	spear6xx_init();
+-}
+diff --git a/arch/arm/mach-spear6xx/spear600_evb.c b/arch/arm/mach-spear6xx/spear600_evb.c
+deleted file mode 100644
+index c6e4254..0000000
+--- a/arch/arm/mach-spear6xx/spear600_evb.c
++++ /dev/null
+@@ -1,54 +0,0 @@
+-/*
+- * arch/arm/mach-spear6xx/spear600_evb.c
+- *
+- * SPEAr600 evaluation board source file
+- *
+- * Copyright (C) 2009 ST Microelectronics
+- * Viresh Kumar<viresh.kumar-qxv4g6HH51o@public.gmane.org>
+- *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2. This program is licensed "as is" without any
+- * warranty of any kind, whether express or implied.
+- */
+-
+-#include <asm/hardware/vic.h>
+-#include <asm/mach/arch.h>
+-#include <asm/mach-types.h>
+-#include <mach/generic.h>
+-#include <mach/hardware.h>
+-
+-static struct amba_device *amba_devs[] __initdata = {
+-	&gpio_device[0],
+-	&gpio_device[1],
+-	&gpio_device[2],
+-	&uart_device[0],
+-	&uart_device[1],
+-};
+-
+-static struct platform_device *plat_devs[] __initdata = {
+-};
+-
+-static void __init spear600_evb_init(void)
+-{
+-	unsigned int i;
+-
+-	/* call spear600 machine init function */
+-	spear600_init();
+-
+-	/* Add Platform Devices */
+-	platform_add_devices(plat_devs, ARRAY_SIZE(plat_devs));
+-
+-	/* Add Amba Devices */
+-	for (i = 0; i < ARRAY_SIZE(amba_devs); i++)
+-		amba_device_register(amba_devs[i], &iomem_resource);
+-}
+-
+-MACHINE_START(SPEAR600, "ST-SPEAR600-EVB")
+-	.atag_offset	=	0x100,
+-	.map_io		=	spear6xx_map_io,
+-	.init_irq	=	spear6xx_init_irq,
+-	.handle_irq	=	vic_handle_irq,
+-	.timer		=	&spear6xx_timer,
+-	.init_machine	=	spear600_evb_init,
+-	.restart	=	spear_restart,
+-MACHINE_END
+diff --git a/arch/arm/mach-spear6xx/spear6xx.c b/arch/arm/mach-spear6xx/spear6xx.c
+index e0f6628..2ed8b14 100644
+--- a/arch/arm/mach-spear6xx/spear6xx.c
++++ b/arch/arm/mach-spear6xx/spear6xx.c
+@@ -6,111 +6,21 @@
+  * Copyright (C) 2009 ST Microelectronics
+  * Rajeev Kumar<rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org>
+  *
++ * Copyright 2012 Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
++ *
+  * This file is licensed under the terms of the GNU General Public
+  * License version 2. This program is licensed "as is" without any
+  * warranty of any kind, whether express or implied.
+  */
+ 
+-#include <linux/types.h>
+-#include <linux/amba/pl061.h>
+-#include <linux/ptrace.h>
+-#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
+ #include <asm/hardware/vic.h>
+-#include <asm/irq.h>
+ #include <asm/mach/arch.h>
+ #include <mach/generic.h>
+ #include <mach/hardware.h>
+-#include <mach/irqs.h>
+-
+-/* Add spear6xx machines common devices here */
+-/* uart device registration */
+-struct amba_device uart_device[] = {
+-	{
+-		.dev = {
+-			.init_name = "uart0",
+-		},
+-		.res = {
+-			.start = SPEAR6XX_ICM1_UART0_BASE,
+-			.end = SPEAR6XX_ICM1_UART0_BASE + SZ_4K - 1,
+-			.flags = IORESOURCE_MEM,
+-		},
+-		.irq = {IRQ_UART_0, NO_IRQ},
+-	}, {
+-		.dev = {
+-			.init_name = "uart1",
+-		},
+-		.res = {
+-			.start = SPEAR6XX_ICM1_UART1_BASE,
+-			.end = SPEAR6XX_ICM1_UART1_BASE + SZ_4K - 1,
+-			.flags = IORESOURCE_MEM,
+-		},
+-		.irq = {IRQ_UART_1, NO_IRQ},
+-	}
+-};
+-
+-/* gpio device registration */
+-static struct pl061_platform_data gpio_plat_data[] = {
+-	{
+-		.gpio_base	= 0,
+-		.irq_base	= SPEAR_GPIO0_INT_BASE,
+-	}, {
+-		.gpio_base	= 8,
+-		.irq_base	= SPEAR_GPIO1_INT_BASE,
+-	}, {
+-		.gpio_base	= 16,
+-		.irq_base	= SPEAR_GPIO2_INT_BASE,
+-	},
+-};
+-
+-struct amba_device gpio_device[] = {
+-	{
+-		.dev = {
+-			.init_name = "gpio0",
+-			.platform_data = &gpio_plat_data[0],
+-		},
+-		.res = {
+-			.start = SPEAR6XX_CPU_GPIO_BASE,
+-			.end = SPEAR6XX_CPU_GPIO_BASE + SZ_4K - 1,
+-			.flags = IORESOURCE_MEM,
+-		},
+-		.irq = {IRQ_LOCAL_GPIO, NO_IRQ},
+-	}, {
+-		.dev = {
+-			.init_name = "gpio1",
+-			.platform_data = &gpio_plat_data[1],
+-		},
+-		.res = {
+-			.start = SPEAR6XX_ICM3_GPIO_BASE,
+-			.end = SPEAR6XX_ICM3_GPIO_BASE + SZ_4K - 1,
+-			.flags = IORESOURCE_MEM,
+-		},
+-		.irq = {IRQ_BASIC_GPIO, NO_IRQ},
+-	}, {
+-		.dev = {
+-			.init_name = "gpio2",
+-			.platform_data = &gpio_plat_data[2],
+-		},
+-		.res = {
+-			.start = SPEAR6XX_ICM2_GPIO_BASE,
+-			.end = SPEAR6XX_ICM2_GPIO_BASE + SZ_4K - 1,
+-			.flags = IORESOURCE_MEM,
+-		},
+-		.irq = {IRQ_APPL_GPIO, NO_IRQ},
+-	}
+-};
+-
+-/* This will add devices, and do machine specific tasks */
+-void __init spear6xx_init(void)
+-{
+-	/* nothing to do for now */
+-}
+-
+-/* This will initialize vic */
+-void __init spear6xx_init_irq(void)
+-{
+-	vic_init((void __iomem *)VA_SPEAR6XX_CPU_VIC_PRI_BASE, 0, ~0, 0);
+-	vic_init((void __iomem *)VA_SPEAR6XX_CPU_VIC_SEC_BASE, 32, ~0, 0);
+-}
+ 
+ /* Following will create static virtual/physical mappings */
+ static struct map_desc spear6xx_io_desc[] __initdata = {
+@@ -181,3 +91,33 @@ static void __init spear6xx_timer_init(void)
+ struct sys_timer spear6xx_timer = {
+ 	.init = spear6xx_timer_init,
+ };
++
++static void __init spear600_dt_init(void)
++{
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++}
++
++static const char *spear600_dt_board_compat[] = {
++	"st,spear600",
++	NULL
++};
++
++static const struct of_device_id vic_of_match[] __initconst = {
++	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
++	{ /* Sentinel */ }
++};
++
++static void __init spear6xx_dt_init_irq(void)
++{
++	of_irq_init(vic_of_match);
++}
++
++DT_MACHINE_START(SPEAR600_DT, "ST SPEAr600 (Flattened Device Tree)")
++	.map_io		=	spear6xx_map_io,
++	.init_irq	=	spear6xx_dt_init_irq,
++	.handle_irq	=	vic_handle_irq,
++	.timer		=	&spear6xx_timer,
++	.init_machine	=	spear600_dt_init,
++	.restart	=	spear_restart,
++	.dt_compat	=	spear600_dt_board_compat,
++MACHINE_END
 -- 
-1.6.4.1
-
-
+1.7.9.2
