@@ -1,155 +1,334 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH] Device Tree Bindings for Freescale TDM controller
-Date: Fri, 16 Mar 2012 13:29:33 -0500
-Message-ID: <4F63868D.1030507@freescale.com>
-References: <1331861451-15427-1-git-send-email-poonam.aggrwal@freescale.com>
-Mime-Version: 1.0
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] powerpc/85xx:Add BSC9131 RDB Support
+Date: Fri, 16 Mar 2012 15:12:51 -0500
+Message-ID: <F0619813-5CAC-4D15-9D9E-827A609DD573@kernel.crashing.org>
+References: <1331789851-19213-1-git-send-email-prabhakar@freescale.com>
+Mime-Version: 1.0 (Apple Message framework v1257)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1331861451-15427-1-git-send-email-poonam.aggrwal@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-To: Poonam Aggrwal <poonam.aggrwal@freescale.com>
-Cc: Sandeep Singh <Sandeep@freescale.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1331789851-19213-1-git-send-email-prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rajan Srivastava <rajan.srivastava-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Akhil Goyal <Akhil.Goyal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2012 08:30 PM, Poonam Aggrwal wrote:
-> From: Poonam Aggrwal <poonam.aggrwal@freescale.com> 
 > 
-> This TDM controller is available in various Freescale SOCs like MPC8315, P1020,
-> P1022, P1010.
 > 
-> Signed-off-by: Sandeep Singh <Sandeep@freescale.com>
-> Signed-off-by: Poonam Aggrwal <poonam.aggrwal@freescale.com>
-> ---
->  Documentation/devicetree/bindings/tdm/fsl-tdm.txt |   71 +++++++++++++++++++++
->  1 files changed, 71 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/tdm/fsl-tdm.txt b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
+> diff --git a/arch/powerpc/boot/dts/bsc9131rdb.dtsi b/arch/powerpc/boot/dts/bsc9131rdb.dtsi
 > new file mode 100644
-> index 0000000..61431e3
+> index 0000000..d274c014
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/tdm/fsl-tdm.txt
-> @@ -0,0 +1,71 @@
-> +=====================================================================
-> +TDM Device Tree Binding
-> +Copyright (C) 2012 Freescale Semiconductor Inc.
+> +++ b/arch/powerpc/boot/dts/bsc9131rdb.dtsi
+> @@ -0,0 +1,179 @@
+> +/*
+> + * BSC9131 RDB Device Tree Source stub (no addresses or top-level ranges)
+> + *
+> + * Copyright 2011-2012 Freescale Semiconductor Inc.
+> + *
+> + * Redistribution and use in source and binary forms, with or without
+> + * modification, are permitted provided that the following conditions are met:
+> + *     * Redistributions of source code must retain the above copyright
+> + *       notice, this list of conditions and the following disclaimer.
+> + *     * Redistributions in binary form must reproduce the above copyright
+> + *       notice, this list of conditions and the following disclaimer in the
+> + *       documentation and/or other materials provided with the distribution.
+> + *     * Neither the name of Freescale Semiconductor nor the
+> + *       names of its contributors may be used to endorse or promote products
+> + *       derived from this software without specific prior written permission.
+> + *
+> + *
+> + * ALTERNATIVELY, this software may be distributed under the terms of the
+> + * GNU General Public License ("GPL") as published by the Free Software
+> + * Foundation, either version 2 of that License or (at your option) any
+> + * later version.
+> + *
+> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
+> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
+> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
 > +
-> +NOTE: The bindings described in this document are preliminary
-> +and subject to change.
+> +&board_ifc {
 > +
-> +=====================================================================
-> +TDM (Time Division Multiplexing)
+> +	nand@0,0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "fsl,ifc-nand";
+> +		reg = <0x0 0x0 0x4000>;
 > +
-> +DESCRIPTION
+> +		partition@0 {
+> +			/* This location must not be altered  */
+> +			/* 3MB for u-boot Bootloader Image */
+> +			reg = <0x0 0x00300000>;
+> +			label = "NAND U-Boot Image";
+> +			read-only;
+> +		};
 > +
-> +The TDM is full duplex serial port designed to allow various devices including
-> +digital signal processors (DSPs) to communicate with a variety of serial devices
-> +including industry standard framers, codecs, other DSPs and microprocessors.
+> +		partition@300000 {
+> +			/* 1MB for DTB Image */
+> +			reg = <0x00300000 0x00100000>;
+> +			label = "NAND DTB Image";
+> +		};
 > +
-> +The below properties describe the device tree bindings for Freescale TDM
-> +controller.
-> +This TDM controller is available on various Freescale Processors like
-> +MPC8313, P1020, P1022 and P1010.
+> +		partition@400000 {
+> +			/* 8MB for Linux Kernel Image */
+> +			reg = <0x00400000 0x00800000>;
+> +			label = "NAND Linux Kernel Image";
+> +		};
 > +
-> +PROPERTIES
+> +		partition@c00000 {
+> +			/* Rest space for Root file System Image */
+> +			reg = <0x00c00000 0x07400000>;
+> +			label = " NAND RFS Image";
+> +		};
+> +	};
+> +};
 > +
-> +  - compatible
-> +      Usage: required
-> +      Value type: <string>
-> +      Definition: Should contain "fsl,mpc8315-tdm".
-> +	  So mpc8313 will have compatible = "fsl,mpc8315-tdm";
-> +	  p1010 will have compatible "fsl,p1010-tdm", "fsl,mpc8315-tdm";
+> +&board_soc {
+> +	i2c@3000 {
+> +		gpio3: gpio@21 {
+> +			compatible = "nxp,pca9555";
 
-Shouldn't mpc8313 have:
-compatible = "fsl,mpc8313-tdm", "fsl,mpc8315-tdm"?
+Is there any binding spec for nxp,
 
-I thought we were going to use 8313 as the canonical implementation, not
-8315.
+> +			reg = <0x21>;
+> +			#gpio-cells = <2>;
+> +			gpio-controller;
+> +			polarity = <0x00>;
+> +		};
+> +		gpio4: gpio@23 {
+> +			compatible = "nxp,pca9555";
+> +			reg = <0x23>;
+> +			#gpio-cells = <2>;
+> +			gpio-controller;
+> +			polarity = <0x00>;
+> +		};
+> +		gpio5: gpio@27 {
+> +			compatible = "nxp,pca9555";
+> +			reg = <0x27>;
+> +			#gpio-cells = <2>;
+> +			gpio-controller;
+> +			polarity = <0x00>;
+> +		};
+> +		hwmon@4c {
+> +			compatible = "adi,adt7461";
+> +			reg = <0x4c>;
+> +		};
+> +		eeprom@52 {
+> +			compatible = "st-micro,24c02";
 
-> +  - reg
-> +      Usage: required
-> +      Value type: <tdm-reg-offset tdm-reg-size dmac-reg-offset dmac-reg-size>
-> +      Definition: A standard property. Specifies the physical address
-> +	  offset and length of the TDM registers and TDM DMAC registers for
-> +	  the device.
+should this have a compatible with atmel,24c02?
 
-Just say there's two reg resources, and that the first is the TDM
-registers and the second is the TDM DMAC registers.
-
-It's typically not going to be the actual physical address, but rather
-an offset that gets translated through a parent node's ranges.
-
-Remove "value type"; it's standard.
-
-> +  - clock-frequency
-> +      Usage: optional
-> +      Value type: <u32>
-> +      Definition: The frequency at which the TDM block is operating.
-
-Will this frequency ever need to be > 4GHz?
-
-Might want to specify as u32 or u64, as ePAPR suggests.
-
-> +  - interrupts
-> +      Usage: required
-> +      Value type: <tdm-err-intr tdm-err-intr-type dmac-intr dmac-intr-type>
-> +      Definition: This field defines two interrupt specifiers namely interrupt
-> +	  number and interrupt type for TDM error and TDM DMAC.
-
-What is "tdm-err-intr-type"?  The interrupt specifier encoding is
-defined by the interrupt controller.  There might be one cell, two
-cells, four cells, etc.  Remove "value type", it's standard.
-
-> +  - phy-handle
-> +      Usage: optional
-> +      Value type: <phandle>
-> +      Definition: Phandle of the line controller node or framer node eg. SLIC,
-> +	  E1\T1 etc.
-
-Use a forward slash -- this isn't a Windows filesystem path. :-)
-
-> +  - fsl-max-time-slots
-> +      Usage: required
-> +      Value type: <u32>
-> +      Definition: Maximum number of 8-bit time slots in one TDM frame.
-> +	  This is the maximum number which TDM hardware supports.
-
-fsl,tdm-max-time-slots
-
+> +			reg = <0x52>;
+> +		};
+> +	};
 > +
-> +EXAMPLE
+> +	/* BSC9131RDB does not have any device on i2c@3100 */
+> +	i2c@3100 {
+> +		status = "disabled";
+> +	};
 > +
-> +	tdm@16000 {
-> +		device_type = "tdm";
+> +	spi@7000 {
+> +		flash@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			compatible = "spansion,s25sl12801";
+> +			reg = <0>;
+> +			spi-max-frequency = <50000000>;
+> +
+> +			/* 512KB for u-boot Bootloader Image */
+> +			partition@0 {
+> +				reg = <0x0 0x00080000>;
+> +				label = "SPI Flash U-Boot Image";
+> +				read-only;
+> +			};
+> +
+> +			/* 512KB for DTB Image */
+> +			partition@80000 {
+> +				reg = <0x00080000 0x00080000>;
+> +				label = "SPI Flash DTB Image";
+> +			};
+> +
+> +			/* 4MB for Linux Kernel Image */
+> +			partition@100000 {
+> +				reg = <0x00100000 0x00400000>;
+> +				label = "SPI Flash Kernel Image";
+> +			};
+> +
+> +			/* 4MB for Compressed RFS Image */
+> +			partition@500000 {
+> +				reg = <0x00500000 0x00400000>;
+> +				label = "SPI Flash Compressed RFS Image";
+> +			};
+> +
+> +			/* 7MB for JFFS2 based RFS */
+> +			partition@900000 {
+> +				reg = <0x00900000 0x00700000>;
+> +				label = "SPI Flash JFFS2 RFS Image";
+> +			};
+> +		};
+> +	};
+> +
+> +	usb@22000 {
+> +		phy_type = "ulpi";
+> +	};
+> +
+> +	mdio@24000 {
+> +		phy0: ethernet-phy@0 {
+> +			interrupts = <3 1 0 0>;
+> +			reg = <0x0>;
+> +		};
+> +
+> +		phy1: ethernet-phy@1 {
+> +			interrupts = <2 1 0 0>;
+> +			reg = <0x3>;
+> +		};
+> +	};
+> +
+> +	sdhci@2e000 {
+> +		status = "disabled";
+> +	};
+> +
+> +	enet0: ethernet@b0000 {
+> +		phy-handle = <&phy0>;
+> +		phy-connection-type = "rgmii-id";
+> +	};
+> +
+> +	enet1: ethernet@b1000 {
+> +		phy-handle = <&phy1>;
+> +		phy-connection-type = "rgmii-id";
+> +	};
+> +};
 
-No device_type
 
-> +		compatible = "fsl,p1010-tdm", "fsl,mpc8315-tdm";
-> +		reg = <0x16000 0x200 0x2c000 0x2000>;
-> +		clock-frequency = <0>;
+> diff --git a/arch/powerpc/platforms/85xx/bsc913x_board.c b/arch/powerpc/platforms/85xx/bsc913x_board.c
 
-Show a real clock-frequency, perhaps with a comment saying it's
-typically filled in by boot software.
+should be bsc913x_rdb.c
 
-> +		interrupts = <16 8 62 8>;
-> +		phy-handle = <zarlink1>
+> new file mode 100644
+> index 0000000..934c3b5
+> --- /dev/null
+> +++ b/arch/powerpc/platforms/85xx/bsc913x_board.c
+> @@ -0,0 +1,96 @@
+> +/*
+> + * BSC9131RDB Board Setup
+> + *
+> + * Author: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> + *
+> + * Copyright 2011-2012 Freescale Semiconductor Inc.
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
+> +
+> +#include <linux/of_platform.h>
+> +#include <linux/pci.h>
+> +#include <asm/mpic.h>
+> +#include <sysdev/fsl_soc.h>
+> +#include <asm/udbg.h>
+> +
+> +void __init bsc913x_board_pic_init(void)
+> +{
+> +	struct mpic *mpic;
+> +	struct resource r;
+> +	struct device_node *np;
+> +
+> +	np = of_find_node_by_type(NULL, "open-pic");
+> +	if (!np) {
+> +		pr_err("bsc913x: Could not find open-pic node\n");
+> +		return;
+> +	}
+> +
+> +	if (of_address_to_resource(np, 0, &r)) {
+> +		pr_err("bsc913x: Failed to map mpic register space\n");
+> +		of_node_put(np);
+> +		return;
+> +	}
+> +
+> +	mpic = mpic_alloc(np, r.start, MPIC_WANTS_RESET |
+> +	  MPIC_BIG_ENDIAN | MPIC_BROKEN_FRR_NIRQS | MPIC_SINGLE_DEST_CPU,
+> +	  0, 256, " OpenPIC  ");
+> +
+> +	of_node_put(np);
+> +
+> +	if (!mpic)
+> +		pr_err("bsc913x: Failed to allocate MPIC structure\n");
+> +	else
+> +		mpic_init(mpic);
 
-That phy-handle is invalid syntax, perhaps you meant:
 
-	phy-handle = <&zarlink1>;
+Please update to match current board code
 
-> +		fsl-max-time-slots = <128>
+> +}
+> +
+> +/*
+> + * Setup the architecture
+> + */
+> +static void __init bsc913x_board_setup_arch(void)
+> +{
+> +	if (ppc_md.progress)
+> +		ppc_md.progress("bsc913x_board_setup_arch()", 0);
+> +
+> +	pr_info("bsc913x board from Freescale Semiconductor\n");
+> +}
+> +
+> +static struct of_device_id __initdata bsc913x_board_ids[] = {
+> +	{ .type = "soc", },
+> +	{ .type = "dsp", },
 
-Missing semicolons on the last two properties.
+remove dsp, doesn't show up anywhere else
 
--Scott
+> +	{ .compatible = "soc", },
+> +	{ .compatible = "simple-bus", },
+> +	{ .compatible = "gianfar", },
+> +	{},
+> +};
+> +
+> +static int __init bsc913x_board_publish_devices(void)
+> +{
+> +	return of_platform_bus_probe(NULL, bsc913x_board_ids, NULL);
+> +}
+> +machine_device_initcall(bsc9131_rdb, bsc913x_board_publish_devices);
+> +
+> +/*
+> + * Called very early, device-tree isn't unflattened
+> + */
+> +
+> +static int __init bsc9131_rdb_probe(void)
+> +{
+> +	unsigned long root = of_get_flat_dt_root();
+> +
+> +	return of_flat_dt_is_compatible(root, "fsl,bsc9131rdb");
+> +}
+> +
+> +define_machine(bsc9131_rdb) {
+> +	.name			= "BSC9131 RDB",
+> +	.probe			= bsc9131_rdb_probe,
+> +	.setup_arch		= bsc913x_board_setup_arch,
+> +	.init_IRQ		= bsc913x_board_pic_init,
+> +	.get_irq		= mpic_get_irq,
+> +	.restart		= fsl_rstcr_restart,
+> +	.calibrate_decr		= generic_calibrate_decr,
+> +	.progress		= udbg_progress,
+> +};
+> -- 
+> 1.7.5.4
+> 
+> 
