@@ -1,52 +1,171 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/9 v5] ARM: kirkwood: fdt: convert kirkwood to fdt
-Date: Fri, 16 Mar 2012 20:41:12 +0000
-Message-ID: <201203162041.12831.arnd@arndb.de>
-References: <cover.1330625877.git.jason@lakedaemon.net>
- <201203162018.27957.arnd@arndb.de>
- <20120316202815.GI20243@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120316202815.GI20243@titan.lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: nicolas.pitre@linaro.org, andrew@lunn.ch, jm@lentin.co.uk, grant.likely@secretlab.ca, michael@walle.cc, olof@lixom.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 1/8] dt: add property iteration helpers
+Date: Fri, 16 Mar 2012 14:54:22 -0600
+Message-ID: <1331931269-12262-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, B29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 16 March 2012, Jason Cooper wrote:
-> I was going to give it a day or two more, and if no one brought up
-> anything earth-shattering, I was going to submit the pull-request for
-> this series on Sunday.  I can do it now if you think it's ok.
+This patch adds macros for_each_u32_property_value and
+for_each_string_property_value, which iterate over an array of values
+within a device-tree property. Usage is for example:
 
-I've already pulled it now, and I'm not going to take any new patches
-for v3.4 any more. I expect Linus to open up the merge window
-any time now, and he does not like to see patches sent to him
-that have not been in linux-next before the merge window opened.
+struct of_iter_string_prop iter;
+for_each_string_property_value(iter, np, "pins")
+        printk("Got value %s\n", iter.value);
 
-So the deal is that anything that is in now stays in unless someone
-reports a serious problem and in that case it gets removed.
-Any simple bugs can be fixed by sending follow-up patches of
-course.
+Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+---
+ include/linux/of_iter_prop.h |  139 ++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 139 insertions(+), 0 deletions(-)
+ create mode 100644 include/linux/of_iter_prop.h
 
-> > I'm willing to take it and have put it into next/dt2 for now so it
-> > makes it into linux-next. I'm not taking a newer version for v3.4 any
-> > more, so if anyone has concerns over some of your patches in the
-> > series, it all gets removed again and we will have to postpone them
-> > until v3.5.
-> 
-> The problematic patch (sata_mv) has been removed.  So, there should be
-> no issue.
-
-Ok, thanks for the confirmation.
-
-	Arnd
+diff --git a/include/linux/of_iter_prop.h b/include/linux/of_iter_prop.h
+new file mode 100644
+index 0000000..57e9e6a
+--- /dev/null
++++ b/include/linux/of_iter_prop.h
+@@ -0,0 +1,139 @@
++/*
++ * Copyright (c) 2011-2012 NVIDIA CORPORATION. All rights reserved.
++ *
++ * Iterate over properties that store arrays.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#ifndef __OF_ITER_PROP_H__
++#define __OF_ITER_PROP_H__
++
++#include <linux/of.h>
++
++#ifdef CONFIG_OF
++struct of_iter_u32_prop {
++	const struct property *prop;
++	int len;
++	const __be32 *pvalue;
++	u32 value;
++};
++
++static inline void of_iter_u32_next(struct of_iter_u32_prop *iter)
++{
++	if (!iter->len)
++		return;
++
++	iter->len--;
++	if (iter->len)
++		iter->value = be32_to_cpup(iter->pvalue++);
++}
++
++static inline void of_iter_u32_init(struct of_iter_u32_prop *iter,
++				    const struct device_node *np,
++				    const char *name)
++{
++	iter->prop = of_find_property(np, name, &iter->len);
++	if (!iter->prop) {
++		iter->len = 0;
++		return;
++	}
++
++	iter->pvalue = iter->prop->value;
++	if (!iter->pvalue) {
++		iter->len = 0;
++		return;
++	}
++
++	iter->len /= sizeof(*iter->pvalue);
++
++	if (iter->len)
++		iter->value = be32_to_cpup(iter->pvalue++);
++}
++
++static inline bool of_iter_u32_test(struct of_iter_u32_prop *iter)
++{
++	return iter->len > 0;
++}
++
++#define for_each_u32_property_value(iter, np, prop_name) \
++	for (of_iter_u32_init(&iter, np, prop_name); \
++	     of_iter_u32_test(&iter); \
++	     of_iter_u32_next(&iter))
++
++struct of_iter_string_prop {
++	const struct property *prop;
++	int len;
++	const char *value;
++	const char *after;
++};
++
++static inline void of_iter_string_init(struct of_iter_string_prop *iter,
++				       const struct device_node *np,
++				       const char *name)
++{
++	iter->prop = of_find_property(np, name, &iter->len);
++	if (!iter->prop) {
++		iter->value = NULL;
++		return;
++	}
++
++	iter->value = iter->prop->value;
++	if (!iter->value)
++		return;
++
++	iter->after = iter->value + iter->len;
++}
++
++static inline bool of_iter_string_test(struct of_iter_string_prop *iter)
++{
++	if (!iter->value)
++		return false;
++
++	return iter->value < iter->after;
++}
++
++static inline void of_iter_string_next(struct of_iter_string_prop *iter)
++{
++	int len;
++
++	if (!iter->value)
++		return;
++
++	len = strnlen(iter->value, iter->len);
++	iter->len -= len + 1;
++	iter->value += len + 1;
++}
++
++#define for_each_string_property_value(iter, np, prop_name) \
++	for (of_iter_string_init(&iter, np, prop_name); \
++	     of_iter_string_test(&iter); \
++	     of_iter_string_next(&iter))
++
++#else
++struct of_iter_u32_prop {
++	u32 value;
++};
++
++#define for_each_u32_property_value(iter, np, prop_name) \
++	while (0)
++
++struct of_iter_string_prop {
++	const char *value;
++};
++
++#define for_each_string_property_value(iter, np, prop_name) \
++	while (0)
++
++#endif /* CONFIG_OF */
++
++#endif /* __OF_ITER_PROP_H__ */
+-- 
+1.7.0.4
